@@ -1,0 +1,24 @@
+.fieldset {
+    position: relative;
+    border-width: 1px;
+    border-style: solid;
+    margin-bottom: 10px;
+    padding: 50px;
+}
+
+#tree-test {
+    position: relative;
+}
+
+#tree-test .nodeInterface {
+    position: relative;
+}
+
+.tree-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: "flex-start";
+    /* align-items: flex-center; OR flex-start / flex-end*/
+    /* use this to align the tree in the middle or left or right.*/
+    position: relative;
+}

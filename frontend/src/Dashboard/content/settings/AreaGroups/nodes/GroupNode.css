@@ -1,0 +1,20 @@
+.tree-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 7px;
+    /* border: 1px dashed orange; */
+}
+
+.tree-block-wrap {
+    padding: 1rem 1rem 1rem 1rem;
+    /* padding: 0 100px 10px 0; */
+}
+
+.tree-row {
+    font-size: 7px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}

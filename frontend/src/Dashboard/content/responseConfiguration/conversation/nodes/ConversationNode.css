@@ -1,0 +1,18 @@
+.tree-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 7px;
+    z-index: 10;
+}
+
+.tree-block-wrap {
+    padding: 1rem 1rem 1rem 1rem;
+}
+
+.tree-row {
+    font-size: 7px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}

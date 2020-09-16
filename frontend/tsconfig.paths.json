@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./src",
+        "paths": {
+            "@api-client/*": ["client/*"],
+            "@common/*": ["common/*"],
+            "@components/*": ["components/*"],
+            "@conversation/*": ["Dashboard/layouts/content/responseConfiguration/conversation/*"],
+            "@public-routes": ["routes/Routes.tsx"],
+            "@protected-routes": ["routes/ProtectedRoute.tsx"],
+            "@Palavyr-Types": ["globalTypes.ts"],
+            "@landing/*": ["landing/*"],
+        }
+    }
+}

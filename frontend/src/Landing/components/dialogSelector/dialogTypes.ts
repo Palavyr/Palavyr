@@ -1,0 +1,1 @@
+export type DialogTypes = "login" | "termsOfService" | "changePassword" | "register" | null;
