@@ -51,7 +51,7 @@ x64/
 
 # OS generated files #
 .DS_Store*
-Icon?
+# Icon? # Conflics with my icon Box!
 
 # Visual C++ cache files
 ipch/
@@ -142,7 +142,7 @@ UpgradeLog*.htm
 
 # Temp files when opening LibreOffice on ubuntu
 .~lock.*
- 
+
 # svn
 .svn
 

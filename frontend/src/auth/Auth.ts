@@ -1,4 +1,4 @@
-import { LocalStorage } from "localstorage/LocalStorage";
+import { LocalStorage } from "localStorage/LocalStorage";
 import { LoginClient } from "client/LoginClient";
 import { LogoutClient } from "client/LogoutClient";
 

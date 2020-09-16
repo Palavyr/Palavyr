@@ -5,7 +5,7 @@
             "@api-client/*": ["client/*"],
             "@common/*": ["common/*"],
             "@components/*": ["components/*"],
-            "@conversation/*": ["Dashboard/layouts/content/responseConfiguration/conversation/*"],
+            "@conversation/*": ["dashboard/layouts/content/responseConfiguration/conversation/*"],
             "@public-routes": ["routes/Routes.tsx"],
             "@protected-routes": ["routes/ProtectedRoute.tsx"],
             "@Palavyr-Types": ["globalTypes.ts"],

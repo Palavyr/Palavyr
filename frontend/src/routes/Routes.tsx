@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { LandingPage } from "landing/Landing";
+import { LandingPage } from "@landing/Landing";
 import { ProtectedRoute } from "@protected-routes";
 import DashboardLayout from "dashboard/layouts/DashboardLayout";
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ApiClient } from '@api-client/Client';
-import { LocalStorage } from 'localstorage/LocalStorage';
+import { LocalStorage } from 'localStorage/LocalStorage';
 import classNames from 'classnames';
 import { Card, Typography, FormControl, InputLabel, OutlinedInput, makeStyles } from '@material-ui/core';
 import { ColoredButton } from '@common/components/borrowed/ColoredButton';

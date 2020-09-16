@@ -1,4 +1,4 @@
-import { LocalStorage } from "localstorage/LocalStorage";
+import { LocalStorage } from "localStorage/LocalStorage";
 
 /*
 This will retrieve login credental data from localstorage and send it with the requestover to the server for retrieval.

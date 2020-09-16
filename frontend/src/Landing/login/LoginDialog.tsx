@@ -6,7 +6,6 @@ import { useCallback, useState } from "react";
 import { useHistory } from "react-router-dom";
 import React from "react";
 import { FormDialogContent, FormStatusTypes } from "@common/components/borrowed/FormDialogContent";
-import { LocalStorage } from "localstorage/LocalStorage";
 
 
 interface ILoginDialog {
