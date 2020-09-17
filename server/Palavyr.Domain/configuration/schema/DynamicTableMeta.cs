@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Server.Domain.Configuration.constants;
 
-namespace Server.Domain.App.schema
+namespace Server.Domain.Configuration.schema
 {
     public class DynamicTableMeta
     {

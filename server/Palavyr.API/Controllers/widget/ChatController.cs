@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Web.Http.Cors;
 using Server.Domain;
+using Server.Domain.conversations;
 
 namespace Palavyr.API.Controllers
 {

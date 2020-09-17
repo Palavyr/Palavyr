@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using EmailService;
 using Microsoft.Extensions.Hosting;
 using Palavyr.Common.Constants;
+using Server.Domain.Accounts;
 
 
 namespace Palavyr.API.Controllers

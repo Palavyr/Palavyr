@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using DashboardServer.API.chatUtils;
 using Server.Domain;
-using Server.Domain.AccountDB;
+using Server.Domain.Accounts;
+using Server.Domain.Configuration.schema;
 
 
 namespace PDFService

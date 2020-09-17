@@ -1,6 +1,6 @@
 ﻿using Palavyr.Common.uniqueIdentifiers;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.devControllers
 {
     public class FakeDataHolder
     {

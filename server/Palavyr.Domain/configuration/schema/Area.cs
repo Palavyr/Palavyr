@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Server.Domain.App.schema;
 
-namespace Server.Domain
+namespace Server.Domain.Configuration.schema
 {
     public class Area
     {

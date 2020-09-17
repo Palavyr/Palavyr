@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.API.ReceiverTypes;
 using Palavyr.API.ResponseTypes;
 using Palavyr.Common.uniqueIdentifiers;
+using Server.Domain.Accounts;
 
 
 namespace Palavyr.API.Controllers

@@ -7,6 +7,7 @@ using Server.Domain;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.pathUtils;
 using Palavyr.API.ResponseTypes;
+using Server.Domain.conversations;
 
 namespace Palavyr.API.responseTypes
 {

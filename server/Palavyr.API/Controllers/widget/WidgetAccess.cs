@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.API.ResponseTypes;
 using Server.Domain;
+using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.Controllers
 {

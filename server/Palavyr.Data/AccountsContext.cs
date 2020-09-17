@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Server.Domain.AccountDB;
+using Server.Domain.Accounts;
 
 namespace DashboardServer.Data
 {

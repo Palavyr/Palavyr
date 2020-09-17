@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using Server.Domain;
-using Server.Domain.App.schema;
-using Server.Domain.DynamicTables;
+using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.Controllers
 {

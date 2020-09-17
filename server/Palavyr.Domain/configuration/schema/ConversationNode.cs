@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-
-namespace Server.Domain
+namespace Server.Domain.Configuration.schema
 {
     public class ConversationNode
     {

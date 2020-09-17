@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
 using Server.Domain;
+using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.Controllers
 {

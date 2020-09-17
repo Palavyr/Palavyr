@@ -1,7 +1,6 @@
 ﻿ using Microsoft.EntityFrameworkCore;
 using Server.Domain;
- using Server.Domain.App.schema;
- using Server.Domain.DynamicTables;
+ using Server.Domain.Configuration.schema;
 
  namespace DashboardServer.Data
 {

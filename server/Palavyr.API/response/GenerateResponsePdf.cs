@@ -20,6 +20,9 @@ using Palavyr.API.ResponseTypes;
 using Palavyr.Common.FileSystem.FormFilePaths;
 using Palavyr.Common.FileSystem.MagicStrings;
 using Palavyr.FileSystem.FileSystem.LocalServices;
+using Server.Domain.Accounts;
+using Server.Domain.Configuration.constants;
+using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.GeneratePdf
 {

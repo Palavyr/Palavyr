@@ -7,8 +7,7 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore.Internal;
 using Palavyr.API.receiverTypes;
-using Server.Domain.App.schema;
-using Server.Domain.DynamicTables;
+using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.Controllers
 {

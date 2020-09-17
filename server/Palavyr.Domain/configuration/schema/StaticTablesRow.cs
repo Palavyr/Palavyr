@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace Server.Domain
+namespace Server.Domain.Configuration.schema
 {
     public class StaticTableRow
     {

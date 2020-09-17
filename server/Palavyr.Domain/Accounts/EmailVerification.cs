@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Server.Domain.AccountDB
+namespace Server.Domain.Accounts
 {
     public class EmailVerification
     {

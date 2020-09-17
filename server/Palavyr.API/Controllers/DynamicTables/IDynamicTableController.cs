@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.API.receiverTypes;
-using Server.Domain.DynamicTables;
+using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.Controllers
 {

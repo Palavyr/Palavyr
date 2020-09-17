@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Server.Domain
+namespace Server.Domain.conversations
 {
     public class CompletedConversation
     {

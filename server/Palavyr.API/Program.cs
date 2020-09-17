@@ -10,8 +10,8 @@ namespace Palavyr.API
 {
     /// <summary>
     /// TO get initial migrations working:
-    ///     dotnet-ef migrations add init -s .\Palavyr.API\ --project .\Palavyr.Data\
-    ///     dotnet-ef database update -s ..\Palavyr.API\
+    ///     dotnet ef migrations add init -s .\Palavyr.API\ --project .\Palavyr.Data\
+    ///     dotnet ef database update -s ..\Palavyr.API\
     /// </summary>
     public class Program
     {

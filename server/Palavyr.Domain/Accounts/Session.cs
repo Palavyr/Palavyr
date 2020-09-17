@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Server.Domain.AccountDB
+namespace Server.Domain.Accounts
 {
     public class Session
     {

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.API.receiverTypes;
 using Server.Domain;
+using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.Controllers
 {

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Data;
 
-namespace Server.Domain
+namespace Server.Domain.conversations
 {
     public class ConversationUpdate
     {
@@ -15,10 +14,11 @@ namespace Server.Domain
         public DateTime TimeStamp { get; set; }
         public bool IsCompleted { get; set; }
         public string AccountId { get; set; }
-        
-        public static ConversationUpdate CreateNew(string conversationId, string prompt, string userResponse, string nodeId, bool nodeCritical, string nodeType, string accountId)
+
+        public static ConversationUpdate CreateNew(string conversationId, string prompt, string userResponse,
+            string nodeId, bool nodeCritical, string nodeType, string accountId)
         {
-            return new ConversationUpdate()
+            return new ConversationUpdate
             {
                 ConversationId = conversationId,
                 Prompt = prompt,
@@ -34,7 +34,7 @@ namespace Server.Domain
 
         public ConversationUpdate CreateFromPartial(string accountId)
         {
-            return new ConversationUpdate()
+            return new ConversationUpdate
             {
                 ConversationId = ConversationId,
                 Prompt = Prompt,
@@ -47,6 +47,5 @@ namespace Server.Domain
                 AccountId = accountId
             };
         }
-        
     }
 }

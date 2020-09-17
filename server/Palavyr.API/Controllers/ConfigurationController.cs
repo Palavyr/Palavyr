@@ -8,6 +8,7 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
 using Palavyr.API.ReceiverTypes;
 using Server.Domain;
+using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.Controllers
 {

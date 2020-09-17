@@ -7,6 +7,7 @@ using Palavyr.Common.FileSystem.FileSystem.FormDirectoryPaths;
 using Palavyr.Common.FileSystem.FormFilePaths;
 using Palavyr.Common.FileSystem.MagicStrings;
 using Server.Domain;
+using Server.Domain.Configuration.schema;
 
 namespace Palavyr.Background
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Server.Domain
+namespace Server.Domain.Configuration.constants
 {
     public static class DynamicTableTypes
     {

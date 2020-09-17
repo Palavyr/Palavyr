@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DashboardServer.API.chatUtils;
-using Server.Domain.AccountDB;
+using Server.Domain.Accounts;
 
 namespace PDFService
 {

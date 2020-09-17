@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Palavyr.API.pathUtils;
 using Palavyr.API.ReceiverTypes;
 using Server.Domain;
+using Server.Domain.Configuration.schema;
 
 
 namespace Palavyr.API.Controllers

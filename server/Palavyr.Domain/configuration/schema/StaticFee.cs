@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Server.Domain
+namespace Server.Domain.Configuration.schema
 {
     public class StaticFee
     {

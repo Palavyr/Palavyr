@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using DashboardServer.Data;
+﻿using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Palavyr.API.Controllers;
 using Palavyr.Common.Constants;
-using Server.Domain.AccountDB;
+using Server.Domain.Accounts;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.devControllers
 {
     [Route("api/setup")]
     [ApiController]
@@ -90,7 +91,6 @@ namespace Palavyr.API.Controllers
             DeleteAllData();
             CreateFakeData(devData);
             CreateFakeData(demoData);
-
         }
     }
 }

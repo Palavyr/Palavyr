@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.API.pathUtils;
 using Palavyr.API.ReceiverTypes;
 using Palavyr.API.ResponseTypes;
+using Server.Domain.Configuration.schema;
 
 
 namespace Palavyr.API.Controllers

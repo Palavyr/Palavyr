@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Server.Domain;
-using Server.Domain.App.schema;
-using Server.Domain.DynamicTables;
+using Server.Domain.Configuration.constants;
+using Server.Domain.Configuration.schema;
+using Server.Domain.conversations;
 
 namespace Palavyr.API.Controllers
 {

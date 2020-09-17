@@ -60,7 +60,8 @@ namespace Palavyr.API
                             .WithOrigins(
                                 "http://palavyr.com",
                                 "http://www.palavyr.com",
-                                "http://localhost/"
+                                "http://localhost/",
+                                "https://localhost/"
                             );
                     });
             });

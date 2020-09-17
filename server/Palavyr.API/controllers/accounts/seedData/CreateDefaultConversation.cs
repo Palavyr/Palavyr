@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Server.Domain;
+using Server.Domain.Configuration.constants;
+using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.Controllers
 {
