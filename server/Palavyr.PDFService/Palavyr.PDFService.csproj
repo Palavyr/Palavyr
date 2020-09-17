@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>PDFService</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="GrapeCity.Documents.Pdf" Version="3.2.0.548" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Palavyr.Data\Palavyr.Data.csproj" />
+    </ItemGroup>
+
+</Project>

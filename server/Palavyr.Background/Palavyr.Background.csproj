@@ -21,9 +21,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DashboardServer.Data\DashboardServer.Data.csproj" />
-      <ProjectReference Include="..\DashboardServer.Domain\DashboardServer.Domain.csproj" />
       <ProjectReference Include="..\Palavyr.Common\Palavyr.Common.csproj" />
+      <ProjectReference Include="..\Palavyr.Data\Palavyr.Data.csproj" />
+      <ProjectReference Include="..\Palavyr.Domain\Palavyr.Domain.csproj" />
     </ItemGroup>
 
 </Project>
