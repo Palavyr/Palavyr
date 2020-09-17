@@ -7,24 +7,26 @@
     <title>Document</title>
 </head>
 
-<body style='background: #282630; display: flex; justify-content: center;'>
-    <div id='card' style='border-radius: 7px; width: 87%; background: rgb(238, 238, 238); padding: 2rem; margin: 3rem;'>
+<body style='display: flex; justify-content: center;'>
+    <div id='card'
+        style='border-radius: 7px; width: 700px; background: rgb(248, 248, 248); padding: 2rem; margin: 3rem;'>
         <section id='header'>
-            <h2>Palavyr Account Setup: Email Confirmation</h2>
+            <h2>{%Company%} The Right Touch&eacute</h2>
             <br />
         </section>
         <section id='body'>
             <p>
             <h4>
-                Hello and welcome to Palavyr!
+                Hi {%Name%},
+                <br /><br />
+                Thank you for contacting {%Company%}!
             </h4>
             </p>
             <p>
                 <span>
-                    In order to complete the sign-up process and configure your first chat, we just need to confirm
-                    that email address!
-
-                    Since you're looking at this email now, chances are, you're the same person that signed up!
+                    Your business means a lot to us, and we're glad you were able to find what you needed using our chat
+                    service.
+                    If there is anything else we can do to assist you, please don't hesitate to get in touch!
                 </span>
             </p>
             <p>
@@ -35,7 +37,7 @@
                 </span>
                 <span>
                     <p>
-                        Click this link to confirm your email address:
+                        Use this code in the dashboard to confirm your email address and unlock Palavyr:
                     </p>
                     <br />
                     {confirmationLink}

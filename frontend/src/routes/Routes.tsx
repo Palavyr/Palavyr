@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { LandingPage } from "@landing/Landing";
 import { ProtectedRoute } from "@protected-routes";
-import DashboardLayout from "dashboard/layouts/DashboardLayout";
+import { DashboardLayout } from "dashboard/layouts/DashboardLayout";
 
 export const Routes = () => {
     return (

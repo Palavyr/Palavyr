@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 
-import { useTheme, makeStyles } from "@material-ui/core/styles";
+import { useTheme } from "@material-ui/core/styles";
 import SideBarHeader from "./sidebar/SideBarHeader";
 import SideBarMenu from "./sidebar/SideBarMenu";
 import { useDashboardStyles } from "./dashboard.styles";
@@ -26,7 +26,6 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { EditorHelp } from "dashboard/content/help/EditorHelp";
 import { WelcomeToTheDashboard } from "dashboard/content/welcome/WelcomeToTheDashboard";
 
-
 const fetchSidebarInfo = (areaData: Areas) => {
     const areaIdentifiers = areaData.map((x: AreaTable) => x.areaIdentifier);
     const areaNames = areaData.map((x: AreaTable) => x.areaName);
@@ -34,9 +33,7 @@ const fetchSidebarInfo = (areaData: Areas) => {
 };
 
 
-
-
-const DashboardLayout = () => {
+export const DashboardLayout = () => {
 
     const { contentType, areaIdentifier } = useParams<{ contentType: string; areaIdentifier: string }>();
 
@@ -53,6 +50,8 @@ const DashboardLayout = () => {
     const [modalState, setModalState] = useState<boolean>(false);
     const [currentViewName, setViewName] = useState<string>('');
     const [active, setIsActive] = useState<boolean | null>(null);
+    const [numAreasAllowed, setNumAreasAllowed] = useState<number | undefined>()
+
     const classes = useDashboardStyles(helpOpen);
     const theme = useTheme<any>();
 
@@ -61,6 +60,9 @@ const DashboardLayout = () => {
 
         var isActive = (await client.Settings.Account.checkIsActive()).data as boolean;
         setIsActive(isActive);
+
+        var numAllowedBySubscription = (await client.Settings.Subscriptions.getNumAreas()).data as number;
+        setNumAreasAllowed(numAllowedBySubscription);
 
         var res = await client.Area.GetAreas();
         const [areaIdentifiers, areaNames] = fetchSidebarInfo(res.data);
@@ -152,7 +154,7 @@ const DashboardLayout = () => {
                 variant="persistent"
                 anchor="right"
                 open={helpOpen}
-                classes={{paper: classes.helpDrawerPaper}}
+                classes={{ paper: classes.helpDrawerPaper }}
             >
                 <div className={classes.helpDrawerHeader}>
                     <IconButton onClick={handleHelpDrawerClose}>
@@ -163,8 +165,14 @@ const DashboardLayout = () => {
                 <Divider />
                 {(contentType === "editor") && <EditorHelp />}
             </Drawer>
-            <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} />
+
+            {
+                numAreasAllowed && (
+                    sidebarIds.length < numAreasAllowed
+                        ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} />
+                        : <div>TEST</div>
+                )
+            }
         </div>
     );
 };
-export default DashboardLayout;
