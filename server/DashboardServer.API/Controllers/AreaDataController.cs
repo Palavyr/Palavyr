@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Palavyr.Background;
 using Server.Domain;
 
 

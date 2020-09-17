@@ -1,4 +1,4 @@
-﻿namespace Palavyr.FileSystem
+﻿namespace Palavyr.Common.FileSystem.MagicStrings
 {
     public class MagicAWSStrings
     {

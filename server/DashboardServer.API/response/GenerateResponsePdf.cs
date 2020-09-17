@@ -17,7 +17,9 @@ using PDFService;
 using Server.Domain;
 using Server.Domain.AccountDB;
 using Microsoft.Extensions.Logging;
-using Palavyr.FileSystem;
+using Palavyr.Common.FileSystem.FormFilePaths;
+using Palavyr.Common.FileSystem.MagicStrings;
+using Palavyr.FileSystem.FileSystem.LocalServices;
 
 namespace DashboardServer.API.GeneratePdf
 {
@@ -31,7 +33,7 @@ namespace DashboardServer.API.GeneratePdf
         private static readonly HttpClient client = new HttpClient();
         private HttpRequest Request { get; set; }
 
-        private const string PdfServiceUrl = "http://localhost:5600/create-pdf"; //
+        // private const string PdfServiceUrl = "http://localhost:5600/create-pdf"; //
 
         public PdfResponseGenerator(DashContext dashContext, AccountsContext accountContext,
             ConvoContext dynamicTableContext, string accountId, string areaId, HttpRequest request)
@@ -49,7 +51,7 @@ namespace DashboardServer.API.GeneratePdf
             var areaData = GetDeepAreaData(); // This was fucking stupid. Impossible to test.
             var userAccount = GetUserAccount();
             var accountId = userAccount.AccountId;
-            
+
             var criticalResponses = new CriticalResponses(new List<Dictionary<string, string>>()
             {
                 new Dictionary<string, string>() {{"Very important info", "Crucial response"}},
@@ -62,8 +64,10 @@ namespace DashboardServer.API.GeneratePdf
                 dynamicTables);
 
             var randomFileName = Guid.NewGuid().ToString();
-            var localWriteToPath_PDFPreview = PathFormUtils.FormFullResponsePreviewLocalPath(accountId, randomFileName, "pdf");
-            var fileId = await GeneratePdfFromHtml(html, PdfServiceUrl, localWriteToPath_PDFPreview, randomFileName);
+            var localWriteToPath_PDFPreview =
+                FormFilePath.FormResponsePreviewLocalFilePath(accountId, randomFileName, "pdf");
+            var fileId = await GeneratePdfFromHtml(html, LocalServices.PdfServiceUrl, localWriteToPath_PDFPreview,
+                randomFileName);
 
             var link = CreatePreviewUrlLink(AccountId, fileId);
             var fileLink = FileLink.CreateLink("Preview", link, fileId);
@@ -83,7 +87,7 @@ namespace DashboardServer.API.GeneratePdf
             var areaData = GetDeepAreaData(); // This was fucking stupid. Impossible to test.
             var userAccount = GetUserAccount();
             var accountId = userAccount.AccountId;
-            
+
             var criticalResponses = new CriticalResponses(new List<Dictionary<string, string>>()
             {
                 new Dictionary<string, string>() {{"Example info", "Crucial response"}},
@@ -98,18 +102,21 @@ namespace DashboardServer.API.GeneratePdf
                 criticalResponses,
                 staticTables,
                 dynamicTables);
-            
-            var randomFileName = Guid.NewGuid().ToString();
-            var localWriteToPath_PDFPreview = PathFormUtils.FormFullResponsePreviewLocalPath(accountId, randomFileName, "pdf");
-            await GeneratePdfFromHtml(html, PdfServiceUrl, localWriteToPath_PDFPreview, randomFileName);
 
-            var link = await UriUtils.CreatePreSignedPreviewUrlLink(_logger, AccountId, localWriteToPath_PDFPreview, s3Client);
+            var randomFileName = Guid.NewGuid().ToString();
+            var localWriteToPath_PDFPreview =
+                FormFilePath.FormResponsePreviewLocalFilePath(accountId, randomFileName, "pdf");
+            await GeneratePdfFromHtml(html, LocalServices.PdfServiceUrl, localWriteToPath_PDFPreview, randomFileName);
+
+            var link = await UriUtils.CreatePreSignedPreviewUrlLink(_logger, AccountId, localWriteToPath_PDFPreview,
+                s3Client);
             var fileLink = FileLink.CreateLink("Preview", link, localWriteToPath_PDFPreview);
 
             if (File.Exists(localWriteToPath_PDFPreview))
             {
                 File.Delete(localWriteToPath_PDFPreview);
             }
+
             return fileLink;
         }
 
@@ -119,7 +126,7 @@ namespace DashboardServer.API.GeneratePdf
             CultureInfo culture,
             string localWriteToPath,
             string identifier
-            )
+        )
         {
             var areaData = GetDeepAreaData();
             var userAccount = GetUserAccount();
@@ -134,20 +141,21 @@ namespace DashboardServer.API.GeneratePdf
                 CollectRealDynamicTables(areaData, AccountId, dynamicResponse, culture); // TODO Support  multiple
             var html = PdfGenerator.GenerateNewPDF(userAccount, areaData, criticalResponses, staticTables,
                 dynamicTables);
-            
-            var fileName = await GeneratePdfFromHtml(html, PdfServiceUrl, localWriteToPath, identifier);
+
+            var fileName = await GeneratePdfFromHtml(html, LocalServices.PdfServiceUrl, localWriteToPath, identifier);
             return fileName;
         }
 
-        private async Task<string> GeneratePdfFromHtml(string htmlString, string serviceUrl, string localWriteToPath, string identifier)
+        private async Task<string> GeneratePdfFromHtml(string htmlString, string serviceUrl, string localWriteToPath,
+            string identifier)
         {
             var values = new Dictionary<string, string>
             {
-                {"html", htmlString.Trim()},
-                {"path", localWriteToPath},
-                {"Id", identifier}
+                {LocalServices.html, htmlString.Trim()},
+                {LocalServices.path, localWriteToPath},
+                {LocalServices.id, identifier}
             };
-            
+
             var content = new FormUrlEncodedContent(values);
             var response = await client.PostAsync(Path.Combine(serviceUrl, AccountId), content);
             var fileName = await response.Content.ReadAsStringAsync();

@@ -13,7 +13,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.FileSystem;
+using Palavyr.Common.FileSystem.FormFilePaths;
+using Palavyr.Common.FileSystem.MagicStrings;
 
 namespace DashboardServer.API.Controllers.Emails
 {
@@ -53,7 +54,7 @@ namespace DashboardServer.API.Controllers.Emails
             var culture = new CultureInfo(locale);
 
             var randomFileName = Guid.NewGuid().ToString();
-            var localWriteToPath_PDFResponse = PathFormUtils.FormFullResponseLocalPath(accountId, randomFileName, "pdf");
+            var localWriteToPath_PDFResponse = FormFilePath.FormResponseLocalFilePath(accountId, randomFileName, "pdf");
 
             await pdfGenerator.GeneratePdfResponseAsync(criticalResponses, userDetails, culture, localWriteToPath_PDFResponse, randomFileName);
             var fullPDFResponsePath = ResponsePDFPaths.GetResponsePDFAsDiskPath(_logger, accountId, localWriteToPath_PDFResponse);

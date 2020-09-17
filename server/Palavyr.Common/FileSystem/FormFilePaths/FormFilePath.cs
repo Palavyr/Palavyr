@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Palavyr.Common.FileSystem.MagicStrings;
 
-namespace Palavyr.FileSystem
+namespace Palavyr.Common.FileSystem.FormFilePaths
 {
     
     /// <summary>
     ///  Here we enshrine the directory structure of Palavyr
     /// </summary>
-    public static class PathFormUtils
+    public static class FormFilePath
     {
         /// <summary>
         ///  Eg. C:\PalavyrData\UserData\{accountId}\AreaData\{areaId}\Attachments\{someFile.pdf}
@@ -17,7 +18,7 @@ namespace Palavyr.FileSystem
         /// <param name="areaId"></param>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public static string FormFullAttachmentPath(string accountId, string areaId, string fileName)
+        public static string FormAttachmentFilePath(string accountId, string areaId, string fileName)
         {
             return Path.Combine(
                 MagicPathStrings.InstallationRoot, 
@@ -36,7 +37,7 @@ namespace Palavyr.FileSystem
         /// <param name="safeFileNameStem"></param>
         /// <param name="fileType"></param>
         /// <returns></returns>
-        public static string FormFullResponsePreviewLocalPath(string accountId, string safeFileNameStem, string fileType = "pdf")
+        public static string FormResponsePreviewLocalFilePath(string accountId, string safeFileNameStem, string fileType = "pdf")
         {
             return Path.Combine(
                 MagicPathStrings.InstallationRoot,
@@ -54,7 +55,7 @@ namespace Palavyr.FileSystem
         /// <param name="safeFileNameStem"></param>
         /// <param name="filetype"></param>
         /// <returns></returns>
-        public static string FormFullResponseLocalPath(string accountId, string safeFileNameStem, string fileType = "pdf")
+        public static string FormResponseLocalFilePath(string accountId, string safeFileNameStem, string fileType = "pdf")
         {
             return Path.Combine(
                 MagicPathStrings.InstallationRoot,

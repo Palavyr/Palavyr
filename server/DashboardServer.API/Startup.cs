@@ -89,6 +89,7 @@ namespace DashboardServer.API
             services.AddSingleton<ICreatePalavyrSnapshot, CreatePalavyrSnapshot>();
             services.AddSingleton<IRemoveOldS3Archives, RemoveOldS3Archives>();
             services.AddSingleton<IRemoveStaleSessions, RemoveStaleSessions>();
+            services.AddSingleton<IValidateAttachments, ValidateAttachments>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -145,6 +146,18 @@ namespace DashboardServer.API
                             () => serviceProvider.GetService<IRemoveStaleSessions>().CleanSessionDB(),
                             Cron.Hourly
                         );
+                    recurringJobManager
+                        .AddOrUpdate(
+                            "Validate All Attachment DB Entries",
+                            () => serviceProvider.GetService<IValidateAttachments>().ValidateAllAttachments(),
+                            Cron.Weekly
+                            );
+                    recurringJobManager
+                        .AddOrUpdate(
+                            "Validate All Files",
+                            () => serviceProvider.GetService<IValidateAttachments>().ValidateAllFiles(),
+                            Cron.Weekly
+                            );
                 }
                 catch (Exception ex)
                 {
