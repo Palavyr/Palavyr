@@ -104,6 +104,11 @@ export class ApiClient {
     }
 
     public Settings = {
+
+        Subscriptions: {
+            getNumAreas: async (): Promise<AxiosResponse> => this.client.get(`subscriptions/count`)
+        },
+
         Account: {
 
             getApiKey: async (): Promise<AxiosResponse> => this.client.get(`account/settings/apikey`),
