@@ -61,7 +61,13 @@ namespace Palavyr.API
                                 "http://palavyr.com",
                                 "http://www.palavyr.com",
                                 "http://localhost/",
-                                "https://localhost/"
+                                "https://localhost/",
+                                "http://localhost",
+                                "https://localhost",
+                                "http://localhost:5000/",
+                                "https://localhost:5001/",
+                                "http://localhost:5000",
+                                "https://localhost:5001"
                             );
                     });
             });
@@ -99,7 +105,7 @@ namespace Palavyr.API
             IWebHostEnvironment env,
             IRecurringJobManager recurringJobManager,
             IServiceProvider serviceProvider
-            )
+        )
         {
             var option = new BackgroundJobServerOptions {WorkerCount = 1};
             app.UseHangfireServer(option);
@@ -152,13 +158,13 @@ namespace Palavyr.API
                             "Validate All Attachment DB Entries",
                             () => serviceProvider.GetService<IValidateAttachments>().ValidateAllAttachments(),
                             Cron.Weekly
-                            );
+                        );
                     recurringJobManager
                         .AddOrUpdate(
                             "Validate All Files",
                             () => serviceProvider.GetService<IValidateAttachments>().ValidateAllFiles(),
                             Cron.Weekly
-                            );
+                        );
                 }
                 catch (Exception ex)
                 {
