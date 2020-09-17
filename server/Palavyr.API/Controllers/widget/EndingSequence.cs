@@ -70,7 +70,7 @@ namespace Palavyr.API.Controllers
 
             foreach (var node in nodeList)
             {
-                if (node.NodeType == NodeTypes.EndingSequence || node.NodeType == NodeTypes.Egress)
+                if (node.NodeType == NodeTypes.EndingSequence || node.NodeType == NodeTypes.TooComplicated)
                 {
                     node.NodeChildrenString = NodeTypes.Name; // First in the ending sequence
                 }

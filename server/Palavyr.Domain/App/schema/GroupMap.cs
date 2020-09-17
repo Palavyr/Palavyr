@@ -4,14 +4,14 @@ namespace Server.Domain
 {
     public class GroupMap
     {
-        internal static GroupMap CreateInstance(string groupId, string parentGroup, string groupName, string accountId)
+        private static GroupMap CreateInstance(string groupId, string parentGroup, string groupName, string accountId)
         {
             return new GroupMap(groupId, parentGroup, groupName, accountId);
         }
 
         [Key] public int Id { get; set; }
         public string GroupId { get; set; }
-        public string ParentId { get; set; }
+        private string ParentId { get; set; }
         public string GroupName { get; set; }
         public string AccountId { get; set; }
 

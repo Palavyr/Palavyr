@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.Common.uniqueIdentifiers
 {
     /// <summary>
     /// https://stackoverflow.com/questions/4181198/how-to-hash-a-password/10402129#10402129

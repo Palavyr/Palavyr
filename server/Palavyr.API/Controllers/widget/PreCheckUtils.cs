@@ -62,7 +62,7 @@ namespace Palavyr.API.Controllers
         private static int TraverseTheTreeFromTheTop(List<ConversationNode> nodeList, ConversationNode node)
         {
             var count = 0;
-            if (node.NodeType == NodeTypes.Egress || node.NodeType == NodeTypes.EndingSequence)
+            if (node.NodeType == NodeTypes.TooComplicated || node.NodeType == NodeTypes.EndingSequence)
             {
                 return count + 1;
             }
@@ -87,7 +87,7 @@ namespace Palavyr.API.Controllers
 
         private static int GetNumTerminal(List<ConversationNode> nodeList)
         {
-            return nodeList.Count(node => node.NodeType == NodeTypes.Egress || node.NodeType == NodeTypes.EndingSequence);
+            return nodeList.Count(node => node.NodeType == NodeTypes.TooComplicated || node.NodeType == NodeTypes.EndingSequence);
         }
 
         private static ConversationNode GetParentNode(List<ConversationNode> nodeList, ConversationNode curNode)

@@ -16,13 +16,13 @@ namespace Server.Domain.App.schema
         public string AreaIdentifier { get; set; }
         public bool ValuesAsPaths { get; set; } = false; // for tables that specify various options, whether or not to use each option to create a new tree path.
         
-        public static DynamicTableMeta CreateNew(string tableName, string prettyName, string tableType, string tableId, string areaId, string accountId)
+        public static DynamicTableMeta CreateNew(string tableTag, string prettyName, string tableType, string tableId, string areaId, string accountId)
         {
             return new DynamicTableMeta()
             {
                 TableId = tableId,
                 TableType = tableType,
-                TableTag = tableName,
+                TableTag = tableTag,
                 AreaIdentifier = areaId,
                 AccountId = accountId,
                 PrettyName = prettyName

@@ -55,13 +55,13 @@ namespace EmailService
             {
                 Console.WriteLine("Sending Email...");
                 await EmailClient.SendEmailAsync(sendRequest);
-                Console.WriteLine("Email Sent Successfully. No bouncebacks.");
                 return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Email was not sent. ");
                 Console.WriteLine("Error: " + ex.Message);
+                //TODO: If this errors, then we need to send a response that the email couldn't be sent, and then record the email in the bounceback DB.
                 return false;
             }
         }

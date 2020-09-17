@@ -35,60 +35,62 @@ namespace Palavyr.API.Controllers
 
 
         /// <summary>
-        /// Creates a new account table record and  a new database
+        /// Creates a new account table record and data
         /// </summary>
         /// <returns></returns>
         [HttpPost("create")]
-        public async Task<StatusCodeResult> CreateNewAccount([FromBody] AccountDetails newAccount)
+        public async Task<StatusCodeResult> CreateNewAccount([FromBody] AccountDetails newAccountRequest)
         {
-            var newAccountId = GetNewAccountId();
-            var randomUserId = Guid.NewGuid().ToString(); // TODO: decide how to make use of the username concept here
+            var newAccountId = NewAccountUtils.GetNewAccountId();
+            var newUserId = Guid.NewGuid().ToString(); // TODO: decide how to make use of the username concept here
             var newApiKey = Guid.NewGuid().ToString();
 
-            var account = AccountContext.Accounts.SingleOrDefault(row => row.EmailAddress == newAccount.EmailAddress);
+            // confirm account doesn't already exist
+            var account = AccountContext.Accounts.SingleOrDefault(row => row.EmailAddress == newAccountRequest.EmailAddress);
             if (account != null)
             {
                 return new ConflictResult();
             }
             
-            var newAccountRecord = UserAccount.CreateAccount(
-                randomUserId,
-                newAccount.EmailAddress,
-                PasswordHashing.CreateHashedPassword(newAccount.Password),
+            // Add the new account
+            var newAccount = UserAccount.CreateAccount(
+                newUserId,
+                newAccountRequest.EmailAddress,
+                newAccountRequest.Password,
                 newAccountId,
                 newApiKey);
+            await AccountContext.Accounts.AddAsync(newAccount);
 
-            await AccountContext.Accounts.AddAsync(newAccountRecord);
-
+            // Add the default subscription (free with 2 areas)
             var newSubscription = Subscription.CreateNew(newAccountId, newApiKey, SubscriptionConstants.DefaultNumAreas);
             await AccountContext.Subscriptions.AddAsync(newSubscription);
             
-            var data = new AccountSeedData(newAccountId);
-            await DashContext.Areas.AddRangeAsync(data.Areas);
-            await DashContext.Groups.AddRangeAsync(data.Groups);
-
+            // install seed Data
+            var seeData = new SeedData(newAccountId);
+            await DashContext.Areas.AddRangeAsync(seeData.Areas);
+            await DashContext.Groups.AddRangeAsync(seeData.Groups);
+            await DashContext.Areas.AddRangeAsync(seeData.Areas);
+            await DashContext.Groups.AddRangeAsync(seeData.Groups);
+            await DashContext.WidgetPreferences.AddAsync(seeData.WidgetPreference);
+            await DashContext.SelectOneFlats.AddRangeAsync(seeData.DefaultDynamicTables);
+            await DashContext.DynamicTableMetas.AddRangeAsync(seeData.DefaultDynamicTableMetas);
             await DashContext.SaveChangesAsync();
 
+            // prepare the account confirmation email
             var confirmationToken = Guid.NewGuid().ToString();
-            var fromAddress = "gradie.machine.learning@gmail.com";
-            var subject = "Welcome to Palavyr - Email Verification";
-            await AccountContext.EmailVerifications.AddAsync(EmailVerification.CreateNew(confirmationToken, newAccount.EmailAddress, newAccountId));
+            await AccountContext.EmailVerifications.AddAsync(EmailVerification.CreateNew(confirmationToken, newAccountRequest.EmailAddress, newAccountId));
             await AccountContext.SaveChangesAsync();
-            
-            var htmlBody = EmailConfirmationHTML.GetConfirmationEmailBody(newAccount, confirmationToken);
-            var textBody = EmailConfirmationHTML.GetConfirmationEmailBodyText(newAccount, confirmationToken);
 
-            var ok = await Client.SendEmail(fromAddress, newAccount.EmailAddress, subject, htmlBody, textBody);
+            // send the confirmation email - handle a bounceback if the email address is not real
+            const string fromAddress = "gradie.machine.learning@gmail.com"; // TODO: Replace with company email asap
+            const string subject = "Welcome to Palavyr - Email Verification";
+            var htmlBody = EmailConfirmationHTML.GetConfirmationEmailBody(newAccountRequest, confirmationToken);
+            var textBody = EmailConfirmationHTML.GetConfirmationEmailBodyText(newAccountRequest, confirmationToken);
+            var ok = await Client.SendEmail(fromAddress, newAccountRequest.EmailAddress, subject, htmlBody, textBody);
 
             return ok ? (StatusCodeResult) new OkResult() : new NotFoundResult();
         }
-
-        public string GetNewAccountId()
-        {
-            var ids = Guid.NewGuid().ToString().Split('-').Take(2).ToList();
-            return string.Join('-', ids);
-        }
-
+        
 
         [HttpPost("confirmation/{authToken}/action/setup")]
         public bool ConfirmEmailAddress(string authToken)

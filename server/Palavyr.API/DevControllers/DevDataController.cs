@@ -11,57 +11,19 @@ namespace Palavyr.API.Controllers
     public class DefaultDataController : BaseController
     {
         public DefaultDataController(AccountsContext accountContext, ConvoContext convoContext, DashContext dashContext, IWebHostEnvironment env) : base(accountContext, convoContext, dashContext, env) { }
-
-        public void CreateFakeDemoData()
+        
+        public void CreateFakeData(FakeDataHolder dh)
         {
-            // demo account
-            var rawPassword = "abc123";
-            var hashedPassword = PasswordHashing.CreateHashedPassword(rawPassword);
-            var accountId = "zsd2342";
-            var apiKey = "abc456";
-            
-            var devAccount = UserAccount.CreateAccount("Cool User", "demo@gmail.com", hashedPassword, accountId, apiKey, "Demo Dev Company", "+61-01-2345-6789", true, "en-AU");
-            var subscription = Subscription.CreateNew(accountId, apiKey, SubscriptionConstants.DefaultNumAreas);
-            var data = new DevData("DemoData");
+            var devAccount = UserAccount.CreateAccount(dh.UserName, dh.Email, dh.HashedPassword, dh.AccountId, dh.ApiKey, dh.CompanyName, dh.PhoneNumber, dh.Active, dh.Locale);
+            var subscription = Subscription.CreateNew(dh.AccountId, dh.ApiKey, SubscriptionConstants.DefaultNumAreas);
+            var data = new DevData(dh.AccountId);
+            var devSession = Session.CreateNew(dh.AccountId, dh.ApiKey);
 
-            AccountContext.Accounts.Add(devAccount);
             AccountContext.Subscriptions.Add(subscription);
-            AccountContext.SaveChanges();
-
-            // dev session
-            var devSession = Session.CreateNew(accountId, "abc123");
-            AccountContext.Sessions.Add(devSession);
-            AccountContext.SaveChanges();
-
-
-            DashContext.Areas.AddRange(data.Areas);
-            DashContext.Groups.AddRange(data.Groups);
-            DashContext.WidgetPreferences.Add(data.WidgetPreference);
-            DashContext.SelectOneFlats.AddRange(data.SelectOneFlatsDefaultData);
-            DashContext.DynamicTableMetas.AddRange(data.DynamicTableMetas);
-            DashContext.SaveChanges();
-            
-            ConvoContext.CompletedConversations.AddRange(data.CompleteConversations);
-            ConvoContext.SaveChanges();
-        }
-
-        public void CreateFakeData()
-        {
-            // dev account
-            var rawPassword = "qwerty";
-            var hashedPassword = PasswordHashing.CreateHashedPassword(rawPassword);
-            
-            var devAccount = UserAccount.CreateAccount("Admin", "paul.e.gradie@gmail.com", hashedPassword, "dashboardDev", "abc123", "Pauls Dev Company", "+61-04-4970-2364", true, "en-AU");
             AccountContext.Accounts.Add(devAccount);
-            AccountContext.SaveChanges();
-            
-            // dev session
-            var devSession = Session.CreateNew("dashboardDev", "abc123");
             AccountContext.Sessions.Add(devSession);
             AccountContext.SaveChanges();
-            
-            
-            var data = new DevData();
+
             DashContext.Areas.AddRange(data.Areas);
             DashContext.Groups.AddRange(data.Groups);
             DashContext.WidgetPreferences.Add(data.WidgetPreference);
@@ -100,9 +62,35 @@ namespace Palavyr.API.Controllers
         [HttpPut]
         public void RefreshData()
         {
+            var devData = new FakeDataHolder(
+             "qwerty",
+            "dashboard",
+            "abc123",
+            "paul.e.gradie@gmail.com",
+            "Admin",
+            "Pauls Dev Company",
+            "+61-04-4970-2364",
+            true,
+            "en-AU"
+             );
+            
+            
+            var demoData = new FakeDataHolder(
+                "abc123",
+                "zsd2342",
+                "abc456",
+                "palavyrDemo@gmail.com",
+                "Cool User",
+                "Demo Dev Company",
+                "+61-01-2345-6789",
+                true, 
+                "en-AU"
+            );
+
             DeleteAllData();
-            CreateFakeData();
-            CreateFakeDemoData();
+            CreateFakeData(devData);
+            CreateFakeData(demoData);
+
         }
     }
 }
