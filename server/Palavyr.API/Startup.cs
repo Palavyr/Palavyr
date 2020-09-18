@@ -17,6 +17,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.Background;
+using Palavyr.Common.FileSystem;
 
 namespace Palavyr.API
 {
@@ -111,7 +112,7 @@ namespace Palavyr.API
             app.UseHangfireServer(option);
             app.UseHangfireDashboard();
 
-            var appDataPath = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), MagicString.DataFolder);
+            var appDataPath = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), MagicPathStrings.DataFolder);
             if (string.IsNullOrEmpty(Configuration["WebRootPath"]))
                 Configuration["WebRootPath"] = Environment.CurrentDirectory;
 

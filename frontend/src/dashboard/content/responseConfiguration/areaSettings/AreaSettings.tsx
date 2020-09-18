@@ -51,7 +51,7 @@ export const AreaSettings = ({ areaName, areaIdentifier, setViewName }: IAreaSet
     const handleAreaDelete = async () => {
 
         await client.Area.deleteArea(areaIdentifier);
-        history.push("/");
+        history.push("/dashboard");
         window.location.reload();
     }
 

@@ -5,7 +5,7 @@ import { DummyConvo } from 'test/dummyNodeData/dummyNodes';
 
 
 export default {
-    title: "Common/Borrowed/ConversationNodeInterface",
+    title: "Dashboard/Conversation/ConversationNodeInterface",
     component: ConversationNodeInterface
 } as Meta;
 

@@ -11,15 +11,12 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using PDFService;
-using Server.Domain;
-using Server.Domain.AccountDB;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.pathUtils;
 using Palavyr.API.receiverTypes;
 using Palavyr.API.ResponseTypes;
-using Palavyr.Common.FileSystem.FormFilePaths;
-using Palavyr.Common.FileSystem.MagicStrings;
-using Palavyr.FileSystem.FileSystem.LocalServices;
+using Palavyr.Common.FileSystem;
+using Palavyr.Common.FileSystem.LocalServices;
 using Server.Domain.Accounts;
 using Server.Domain.Configuration.constants;
 using Server.Domain.Configuration.schema;
@@ -104,18 +101,16 @@ namespace Palavyr.API.GeneratePdf
                 staticTables,
                 dynamicTables);
 
-            var randomFileName = Guid.NewGuid().ToString();
-            var localWriteToPath_PDFPreview =
-                FormFilePath.FormResponsePreviewLocalFilePath(accountId, randomFileName, "pdf");
-            await GeneratePdfFromHtml(html, LocalServices.PdfServiceUrl, localWriteToPath_PDFPreview, randomFileName);
+            var safeFileNameStem = Guid.NewGuid().ToString();
+            var safeFileNamePath = FormFilePath.FormResponsePreviewLocalFilePath(accountId, safeFileNameStem);
+            await GeneratePdfFromHtml(html, LocalServices.PdfServiceUrl, safeFileNamePath, safeFileNameStem);
 
-            var link = await UriUtils.CreatePreSignedPreviewUrlLink(_logger, AccountId, localWriteToPath_PDFPreview,
-                s3Client);
-            var fileLink = FileLink.CreateLink("Preview", link, localWriteToPath_PDFPreview);
+                var link = await UriUtils.CreatePreSignedPreviewUrlLink(_logger, AccountId, safeFileNameStem, safeFileNamePath, s3Client);
+            var fileLink = FileLink.CreateLink("Preview", link, safeFileNamePath);
 
-            if (File.Exists(localWriteToPath_PDFPreview))
+            if (File.Exists(safeFileNamePath))
             {
-                File.Delete(localWriteToPath_PDFPreview);
+                File.Delete(safeFileNamePath);
             }
 
             return fileLink;
@@ -147,8 +142,7 @@ namespace Palavyr.API.GeneratePdf
             return fileName;
         }
 
-        private async Task<string> GeneratePdfFromHtml(string htmlString, string serviceUrl, string localWriteToPath,
-            string identifier)
+        private async Task<string> GeneratePdfFromHtml(string htmlString, string serviceUrl, string localWriteToPath, string identifier)
         {
             var values = new Dictionary<string, string>
             {
@@ -158,7 +152,7 @@ namespace Palavyr.API.GeneratePdf
             };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(Path.Combine(serviceUrl, AccountId), content);
+            var response = await client.PostAsync(serviceUrl, content);
             var fileName = await response.Content.ReadAsStringAsync();
             return fileName;
         }
@@ -171,7 +165,7 @@ namespace Palavyr.API.GeneratePdf
                 {
                     // TODO: take these values from the environment
                     Scheme = "https", Host = "localhost", Port = 5001,
-                    Path = Path.Combine(accountId, MagicString.PreviewPDF, fileId)
+                    Path = Path.Combine(accountId, MagicPathStrings.PreviewPDF, fileId)
                 };
             return builder.Uri.ToString();
         }
@@ -240,7 +234,7 @@ namespace Palavyr.API.GeneratePdf
                 {
                     case DynamicTableTypes.SelectOneFlat:
                         var tableRows = DashContext.SelectOneFlats
-                            .Where(row => row.AccountId == accountId && row.AreaId == data.AreaIdentifier).ToList();
+                            .Where(row => row.AccountId == accountId && row.AreaIdentifier == data.AreaIdentifier).ToList();
                         var randomTableRow = tableRows[0]; // TODO: allow this to be specified via frontend
                         const bool perPerson = false; // TODO: Allow to specify true
                         var row = new TableRow(
@@ -281,7 +275,7 @@ namespace Palavyr.API.GeneratePdf
                     case DynamicTableTypes.SelectOneFlat:
                         var dbRow = DashContext
                             .SelectOneFlats
-                            .Where(row => row.AccountId == accountId && row.AreaId == data.AreaIdentifier)
+                            .Where(row => row.AccountId == accountId && row.AreaIdentifier == data.AreaIdentifier)
                             .Single(row =>
                                 row.Option ==
                                 selectedOption.Values

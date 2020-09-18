@@ -13,8 +13,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.API.GeneratePdf;
 using Palavyr.API.pathUtils;
 using Palavyr.API.receiverTypes;
-using Palavyr.Common.FileSystem.FormFilePaths;
-using Palavyr.Common.FileSystem.MagicStrings;
+using Palavyr.Common.FileSystem;
 
 namespace Palavyr.API.Controllers.Emails
 {
@@ -53,11 +52,11 @@ namespace Palavyr.API.Controllers.Emails
             var locale = account.Locale;
             var culture = new CultureInfo(locale);
 
-            var randomFileName = Guid.NewGuid().ToString();
-            var localWriteToPath_PDFResponse = FormFilePath.FormResponseLocalFilePath(accountId, randomFileName, "pdf");
+            var safeFileNameStem = Guid.NewGuid().ToString();
+            var safeFilePath = FormFilePath.FormResponsePDFFilePath(accountId, safeFileNameStem);
 
-            await pdfGenerator.GeneratePdfResponseAsync(criticalResponses, userDetails, culture, localWriteToPath_PDFResponse, randomFileName);
-            var fullPDFResponsePath = ResponsePDFPaths.GetResponsePDFAsDiskPath(_logger, accountId, localWriteToPath_PDFResponse);
+            await pdfGenerator.GeneratePdfResponseAsync(criticalResponses, userDetails, culture, safeFilePath, safeFileNameStem);
+            var fullPDFResponsePath = FormFilePath.FormResponsePDFFilePath(accountId, safeFilePath);
             if (DiskUtils.ValidatePathExists(fullPDFResponsePath))
                 attachmentFiles.Add(fullPDFResponsePath);
 

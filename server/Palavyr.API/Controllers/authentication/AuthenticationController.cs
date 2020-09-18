@@ -3,10 +3,10 @@ using System.Linq;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Server.Domain.AccountDB;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.ReceiverTypes;
 using Palavyr.API.ResponseTypes;
+using Palavyr.Common.requests;
 using Palavyr.Common.uniqueIdentifiers;
 using Server.Domain.Accounts;
 
@@ -28,7 +28,7 @@ namespace Palavyr.API.Controllers
         [HttpPost("login")]
         public Credentials PerformLogin([FromHeader] string action, LoginCredentials credentials)
         {
-            if (action != MagicString.LoginAction) throw new Exception();
+            if (action != MagicUrlStrings.LoginAction) throw new Exception();
             
             // take credentials and check against the database
             var byUsername = AccountContext.Accounts.SingleOrDefault(row => row.UserName == credentials.Username);
@@ -52,7 +52,7 @@ namespace Palavyr.API.Controllers
         [HttpPost("session/{sessionId}")]
         public bool CheckSession([FromHeader] string action, string sessionId)
         {
-            if (action != MagicString.LoginAction) throw new Exception();
+            if (action != MagicUrlStrings.LoginAction) throw new Exception();
 
             var result = AccountContext.Sessions.SingleOrDefault(row => row.SessionId == sessionId);
             return result != null && result.Expiration < DateTime.Now;

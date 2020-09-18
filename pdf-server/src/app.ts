@@ -37,12 +37,12 @@ app.post("/create-pdf", (req: Request, res: Response, next: NextFunction) => {
     const savePath = req.body.path;
     const identifier = req.body.id;
     const STANDARD_PAPER_OPTIONS = createOptions(identifier)
-
+    console.log("REQUEST RECEIVED: " + savePath)
     pdf.create(html, STANDARD_PAPER_OPTIONS).toFile(savePath, (err: any) => {
         if (err) {
             res.send(Promise.reject())
         }
-        res.send("Success");
+        res.send(savePath);
     })
 })
 

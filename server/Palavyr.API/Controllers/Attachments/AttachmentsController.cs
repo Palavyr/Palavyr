@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Server.Domain;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.pathUtils;
 using Palavyr.API.ReceiverTypes;
 using Palavyr.API.ResponseTypes;
+using Palavyr.Common.FileSystem;
 using Server.Domain.Configuration.schema;
 
 
@@ -67,7 +67,7 @@ namespace Palavyr.API.Controllers
         [HttpDelete("{areaId}/filelink")]
         public Task<FileLink[]> DeleteAttachment(string areaId, [FromHeader] string accountId, Text text)
         {
-            var filePath = AttachmentPaths.FormAttachmentPath(accountId, areaId, text.FileId);
+            var filePath = FormFilePath.FormAttachmentFilePath(accountId, areaId, text.FileId);
             if (DiskUtils.ValidatePathExists(filePath))
             {
                 System.IO.File.Delete(filePath);
@@ -89,7 +89,7 @@ namespace Palavyr.API.Controllers
             [FromForm(Name = "files")] IList<IFormFile> attachmentFiles)
         {
             // TODO write filename only to the database, then generate GUID to use as filename, then save, then use the db map of guid to filename to get the file.
-            var filePath = DiskUtils.GetAttachmentsFolderAsDiskPath(accountId, areaId);
+            var attachmentDir = FormDirectoryPaths.FormAttachmentDirectoryWithCreate(accountId, areaId);
             foreach (var formFile in attachmentFiles)
             {
                 Console.WriteLine(formFile.FileName);
@@ -99,7 +99,7 @@ namespace Palavyr.API.Controllers
                 var fileMap = FileNameMap.CreateFileMap(safeFileName, riskyFileName, accountId, areaId);
                 DashContext.FileNameMaps.AddAsync(fileMap);
 
-                var fileSavePath = Path.Combine(filePath, safeFileName);
+                var fileSavePath = Path.Combine(attachmentDir, safeFileName);
                 using var fileStream = new FileStream(fileSavePath, FileMode.Create);
                 formFile.CopyTo(fileStream);
             }
@@ -112,7 +112,7 @@ namespace Palavyr.API.Controllers
         [ActionName("Decode")]
         public async Task<FileLink[]> SaveAttachment([FromHeader] string accountId, string areaId, [FromForm(Name = "files")] IFormFile attachmentFile)
         {
-            var filePath = DiskUtils.GetAttachmentsFolderAsDiskPath(accountId, areaId);
+            var attachmentDir = FormDirectoryPaths.FormAttachmentDirectoryWithCreate(accountId, areaId);
             var safeFileName = Guid.NewGuid() + ".pdf";
             var riskyFileName = attachmentFile.FileName;
 
@@ -121,7 +121,7 @@ namespace Palavyr.API.Controllers
             await DashContext.FileNameMaps.AddAsync(fileNameMap); // must be async
             await DashContext.SaveChangesAsync();
 
-            var fileSavePath = Path.Combine(filePath, safeFileName);
+            var fileSavePath = Path.Combine(attachmentDir, safeFileName);
             await using var fileStream = new FileStream(fileSavePath, FileMode.Create);
             await attachmentFile.CopyToAsync(fileStream);
             fileStream.Close();

@@ -24,7 +24,7 @@ namespace Palavyr.API.Controllers
         {
             var oneFlats = DashContext.SelectOneFlats.Where(
                 row => row.AccountId == accountId
-                       && row.AreaId == areaId
+                       && row.AreaIdentifier == areaId
                        && row.TableId == tableId).ToList();
             return oneFlats;
         }
@@ -45,14 +45,14 @@ namespace Palavyr.API.Controllers
         {
             DashContext.SelectOneFlats.RemoveRange(DashContext
                 .SelectOneFlats
-                .Where(row => row.AccountId == accountId && row.AreaId == areaId && row.TableId == tableId));
+                .Where(row => row.AccountId == accountId && row.AreaIdentifier == areaId && row.TableId == tableId));
 
             var mappedTableRows = new List<SelectOneFlat>();
             foreach (var row in dynamicTable.SelectOneFlat)
             {
                 var mappedRow = SelectOneFlat.CreateNew(
                     row.AccountId,
-                    row.AreaId,
+                    row.AreaIdentifier,
                     row.Option,
                     row.ValueMin,
                     row.ValueMax,
@@ -71,7 +71,7 @@ namespace Palavyr.API.Controllers
             DashContext.SaveChanges();
 
             return DashContext.SelectOneFlats
-                .Where(row => row.AccountId == accountId && row.AreaId == areaId && row.TableId == tableId)
+                .Where(row => row.AccountId == accountId && row.AreaIdentifier == areaId && row.TableId == tableId)
                 .ToList();
         }
 
@@ -90,7 +90,7 @@ namespace Palavyr.API.Controllers
                 .SelectOneFlats
                 .RemoveRange(
                     DashContext.SelectOneFlats.Where(row =>
-                        row.AccountId == accountId && row.AreaId == areaId && row.TableId == tableId));
+                        row.AccountId == accountId && row.AreaIdentifier == areaId && row.TableId == tableId));
 
             DashContext.SaveChanges();
 

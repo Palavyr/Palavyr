@@ -22,15 +22,18 @@ namespace PDFService
 
         private TableRow SumTableRows(List<TableRow> rows, CultureInfo culture)
         {
-            var useRange = false;
+            var useRange = rows.Select(row => row.Range).Any();
             var minTotal = 0.00;
             var maxTotal = 0.00;
             foreach (var row in rows)
             {
-                if (row.Range == true)
+                if (row.Range)
                 {
-                    useRange = true;
                     maxTotal += row.Max;
+                }
+                else
+                {
+                    maxTotal += row.Min;
                 }
                 minTotal += row.Min;
             }

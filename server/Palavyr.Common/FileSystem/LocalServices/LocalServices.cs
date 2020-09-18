@@ -1,6 +1,6 @@
-﻿namespace Palavyr.FileSystem.FileSystem.LocalServices
+﻿namespace Palavyr.Common.FileSystem.LocalServices
 {
-    public class LocalServices
+    public static class LocalServices
     {
         public const string PdfServiceUrl = "http://localhost:5600/create-pdf";
         public const string html = "html";

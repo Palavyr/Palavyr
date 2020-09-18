@@ -29,7 +29,7 @@ const createNavLink = (areaIdentifier: string, contentType: string) => {
 
 const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }: ISideBarMenu) => {
     const [convosOpen, setConvosOpen] = useState(true);
-    console.log("Is active? " + active)
+    // console.log("Is active? " + active)
     const history = useHistory();
 
     return (

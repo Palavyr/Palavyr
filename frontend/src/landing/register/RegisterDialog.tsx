@@ -8,7 +8,7 @@ import { TermsOfServiceDialog } from "legal/TermsOfService";
 import { ApiClient } from "@api-client/Client";
 import Auth from "auth/Auth";
 import { useHistory } from "react-router-dom";
-import { LocalStorage } from "localStorage/LocalStorage";
+import { LocalStorage } from "localStorage/localStorage";
 
 
 

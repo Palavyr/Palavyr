@@ -8,7 +8,7 @@ export class ApiClient {
     private client: AxiosInstance
     constructor(serverURL: string = serverUrl) {
 
-        console.log("Server-URL: " + serverURL)
+        // console.log("Server-URL: " + serverURL)
         var sessionId = getSessionIdFromLocalStorage();
 
         this.client = axios.create(
@@ -100,6 +100,9 @@ export class ApiClient {
         DeleteConversationNodesByIds: async (nodeIds: string): Promise<AxiosResponse> => this.client.delete("convos/nodes", { data: { nodeIds: nodeIds.split(",") } }),
         UpdateConversation: async (areaIdentifier: string, nodelist: Conversation): Promise<AxiosResponse> => this.client.put(`convos/update/${areaIdentifier}`, nodelist),
         PutConversationNode: async (nodeId: string, updatedNode: ConvoTableRow): Promise<ConvoTableRow> => this.client.put(`convos/nodes/${nodeId}`, updatedNode),
+    }
+
+    public WidgetDemo = {
         RunConversationPrecheck: async (): Promise<AxiosResponse> => this.client.get(`widget/demo/precheck`),
     }
 

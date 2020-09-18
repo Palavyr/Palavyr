@@ -17,7 +17,8 @@ export const App = () => {
     const [selectedOption, setSelectedOption] = useState<SelectedOption | null>(null);
     const [isReady, setIsReady] = useState<boolean>(false);
 
-    const { secretKey } = useParams();
+    const { secretKey } = useParams<{ secretKey: string }>();
+
     const client = CreateClient(secretKey);
 
     const runAppPrecheck = useCallback(async () => {

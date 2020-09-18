@@ -28,15 +28,15 @@ namespace Server.Domain.Configuration.schema
             {
                 AreaIdentifier = areaId,
                 AreaName = areaName,
-                Prologue = "Initial Prologue",
-                Epilogue = "Initial Epilogue",
+                Prologue = "",
+                Epilogue = "",
                 EmailTemplate = "<h2>Upload your custom email template</h2>",
                 ConversationNodes = ConversationNode.CreateDefaultNode(areaId, accountId),
                 StaticTablesMetas = StaticTablesMeta.CreateDefaultMetas(areaId, accountId),
                 IsComplete = false,
-                AreaDisplayTitle = "A short display title used with the widget.",
+                AreaDisplayTitle = "Change this in the area Settings.",
                 AccountId = accountId,
-                DynamicTableMetas = DynamicTableMeta.CreateDefaultMetas(areaId, accountId)
+                DynamicTableMetas = null
             };
         }
     }

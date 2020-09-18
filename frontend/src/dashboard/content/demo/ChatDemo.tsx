@@ -2,6 +2,7 @@ import { AreaTable } from "@Palavyr-Types";
 import React, { useState, useCallback, useEffect } from "react";
 import { ApiClient } from "@api-client/Client";
 import { Grid, Paper, Typography, makeStyles } from "@material-ui/core";
+import { widgetUrl } from "@api-client/clientUtils";
 
 
 export type PreCheckResult = {
@@ -39,7 +40,7 @@ export const ChatDemo = () => {
 
     const loadMissingNodes = useCallback(async () => {
 
-        var res = await client.Conversations.RunConversationPrecheck();
+        var res = await client.WidgetDemo.RunConversationPrecheck();
         var PreCheckResult = res.data as PreCheckResult;
         if (!PreCheckResult.isReady) {
             var areas = PreCheckResult.incompleteAreas.map((x: AreaTable) => {
@@ -80,7 +81,7 @@ export const ChatDemo = () => {
             >
                 <Paper className={classes.paper} >
                     <div>
-                        <iframe title="demo" className={classes.frame} src={`https://widget.palavyr.com/widget/${apiKey}`}></iframe>
+                        <iframe title="demo" className={classes.frame} src={`${widgetUrl}/widget/${apiKey}`}></iframe>
                     </div>
                 </Paper>
             </Grid>

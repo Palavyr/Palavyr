@@ -16,7 +16,7 @@ namespace DashboardServer.Data.Migrations.Convo
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.6");
 
-            modelBuilder.Entity("Server.Domain.CompletedConversation", b =>
+            modelBuilder.Entity("Server.Domain.conversations.CompletedConversation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,7 +57,7 @@ namespace DashboardServer.Data.Migrations.Convo
                     b.ToTable("CompletedConversations");
                 });
 
-            modelBuilder.Entity("Server.Domain.ConversationUpdate", b =>
+            modelBuilder.Entity("Server.Domain.conversations.ConversationUpdate", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

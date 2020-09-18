@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Data;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
@@ -56,24 +57,18 @@ namespace Palavyr.API.Controllers
             DashContext.SaveChanges();
             return new OkResult();
         }
-
+        
         [HttpDelete("delete/{areaId}")]
         public StatusCodeResult DeleteArea([FromHeader] string accountId, string areaId)
         {
-            var areaData = DashContext.Areas
-                .Where(row => row.AccountId == accountId)
-                .Include(row => row.ConversationNodes)
-                .Include(row => row.StaticTablesMetas)
-                .ThenInclude(meta => meta.StaticTableRows)
-                .ThenInclude(row => row.Fee)
-                .Single(row => row.AreaIdentifier == areaId);
-            
-            DashContext.Areas.Remove(areaData);
-
+            DashContext.Areas.RemoveRange( DashContext.Areas.Where(row => row.AreaIdentifier == areaId && row.AccountId == accountId));
             DashContext.ConversationNodes.RemoveRange(DashContext.ConversationNodes.Where(row => row.AreaIdentifier == areaId && row.AccountId == accountId));
+            DashContext.DynamicTableMetas.RemoveRange(DashContext.DynamicTableMetas.Where(row => row.AreaIdentifier == areaId && row.AccountId == accountId));
+            DashContext.FileNameMaps.RemoveRange(DashContext.FileNameMaps.Where(row => row.AreaIdentifier == areaId && row.AccountId == accountId));
+            DashContext.SelectOneFlats.RemoveRange(DashContext.SelectOneFlats.Where(row => row.AreaIdentifier == areaId && row.AccountId == accountId));
+            DashContext.StaticFees.RemoveRange(DashContext.StaticFees.Where(row => row.AreaIdentifier == areaId && row.AccountId == accountId));
             DashContext.StaticTablesMetas.RemoveRange(DashContext.StaticTablesMetas.Where(row => row.AreaIdentifier == areaId&& row.AccountId == accountId));
             DashContext.StaticTablesRows.RemoveRange(DashContext.StaticTablesRows.Where(row => row.AreaIdentifier == areaId && row.AccountId == accountId));
-            
             DashContext.SaveChanges();
 
             DiskUtils.DeleteAreaFolder(accountId, areaId);

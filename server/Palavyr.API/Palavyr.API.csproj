@@ -44,5 +44,9 @@
       <ProjectReference Include="..\Palavyr.PDFService\Palavyr.PDFService.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="utils" />
+    </ItemGroup>
+
 
 </Project>

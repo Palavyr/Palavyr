@@ -36,7 +36,7 @@ namespace Server.Domain.Accounts
             string locale)
         {
             UserName = userName;
-            Password = PasswordHashing.CreateHashedPassword(password);
+            Password = password;
             EmailAddress = emailAddress;
             AccountId = accountId;
             ApiKey = apiKey;

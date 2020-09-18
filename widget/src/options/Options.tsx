@@ -12,7 +12,7 @@ interface IOptionSelector {
 
 export const OptionSelector = ({ setSelectedOption }: IOptionSelector) => {
 
-    const { secretKey } = useParams();
+    const { secretKey } = useParams< { secretKey: string }>();
     const Client = CreateClient(secretKey);
 
     const [useGroups, setUseGroups] = useState<boolean>();
@@ -30,7 +30,7 @@ export const OptionSelector = ({ setSelectedOption }: IOptionSelector) => {
 
         setOptions(options);
 
-    }, [Client.Widget.Access])
+    }, [])
 
     useEffect(() => {
         loadPreference();

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { LocalStorage } from 'localStorage/LocalStorage';
+import { LocalStorage } from 'localStorage/localStorage';
 
 
 export const UserDetails = () => {

@@ -3,10 +3,7 @@ using System.IO;
 using System.Linq;
 using DashboardServer.Data;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.FileSystem.FileSystem.FormDirectoryPaths;
-using Palavyr.Common.FileSystem.FormFilePaths;
-using Palavyr.Common.FileSystem.MagicStrings;
-using Server.Domain;
+using Palavyr.Common.FileSystem;
 using Server.Domain.Configuration.schema;
 
 namespace Palavyr.Background
@@ -36,7 +33,7 @@ namespace Palavyr.Background
             foreach (var attachment in attachments)
             {
                 var diskPath =
-                    FormFilePath.FormAttachmentFilePath(attachment.AccountId, attachment.AreaId, attachment.SafeName);
+                    FormFilePath.FormAttachmentFilePath(attachment.AccountId, attachment.AreaIdentifier, attachment.SafeName);
                 if (!File.Exists(diskPath))
                 {
                     staleDbEntries.Add(attachment);
@@ -67,7 +64,7 @@ namespace Palavyr.Background
                     .ToList();
                 foreach (var areaIdentifier in areas)
                 {
-                    var attachmentDir = FormDirectoryPaths.FormAttachmentDirectory(account, areaIdentifier);
+                    var attachmentDir = FormDirectoryPaths.FormAttachmentDirectoryWithCreate(account, areaIdentifier);
                     var dirInfo = new DirectoryInfo(attachmentDir);
                     var dirContents = dirInfo.GetFiles("*.pdf");
                     foreach (var fileInfo in dirContents)

@@ -16,11 +16,10 @@ interface ICustomWidget {
 
 export const CustomWidget = ({ option }: ICustomWidget) => {
 
-    const { secretKey } = useParams();
+    const { secretKey } = useParams< {secretKey: string } >();
     const client = CreateClient(secretKey);
     const [prefs, setPrefs] = useState<Preferences>();
     const [, setUserInput] = useState<string>(); // TODO: send through convo
-    // userInput
 
     const initializeConvo = useCallback(async () => {
         var Nodes = await client.Widget.Access.fetchNodes(option.areaId)

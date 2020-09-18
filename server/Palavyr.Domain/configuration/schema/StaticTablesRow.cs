@@ -25,7 +25,7 @@ namespace Server.Domain.Configuration.schema
                 {
                     RowOrder = 0,
                     Description = "Default fee description",
-                    Fee = StaticFee.DefaultFee(accountId),
+                    Fee = StaticFee.DefaultFee(accountId, areaId),
                     Range = false,
                     PerPerson = false,
                     TableOrder = tableId,
@@ -42,7 +42,7 @@ namespace Server.Domain.Configuration.schema
             {
                 RowOrder = row.RowOrder,
                 Description = row.Description,
-                Fee = StaticFee.BindTemplate(row.Fee, accountId),
+                Fee = StaticFee.BindTemplate(row.Fee, accountId, row.AreaIdentifier),
                 Range = row.Range,
                 PerPerson = row.PerPerson,
                 TableOrder = row.TableOrder,

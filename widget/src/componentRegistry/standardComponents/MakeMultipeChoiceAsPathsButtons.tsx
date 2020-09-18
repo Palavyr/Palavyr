@@ -8,12 +8,35 @@ import { ResponseButton } from '../../common/ResponseButton';
 import { MessageWrapper } from '../common';
 
 
+const sortChildrenByOptions = (children: ConvoTableRow[]) => {
+
+    return children.sort((a, b) => {
+
+        if (a.optionPath == null || b.optionPath == null) {
+            return 0
+        }
+        var nameA = a.optionPath.toUpperCase(); // ignore upper and lowercase
+        var nameB = b.optionPath.toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        // names must be equal
+        return 0;
+      });
+}
+
+
+
 export const makeMultipleChoiceAsPathButtons = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
     // TODO: lift this widget and add  'isInputDisabled()'
     addResponseMessage(node.text);
     toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const children = getChildNodes(node.nodeChildrenString, nodeList);
+    const sortedChildren = sortChildrenByOptions(children);
 
     const Component: React.ElementType<{}> = () => {
         const noBorder = {borderBottom: "none"}
@@ -22,7 +45,7 @@ export const makeMultipleChoiceAsPathButtons = ({ node, nodeList, client, convoI
                 <Table>
                     <TableRow>
                         {
-                            children.map((child: ConvoTableRow) => {
+                            sortedChildren.map((child: ConvoTableRow) => {
                                 return (
                                     <TableCell style={noBorder}>
                                         <ResponseButton

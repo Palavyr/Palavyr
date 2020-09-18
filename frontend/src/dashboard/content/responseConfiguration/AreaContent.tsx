@@ -95,7 +95,7 @@ export const AreaContent = ({ active, areaIdentifier, areaName, setLoaded, setVi
             </div>
         )
     }
-    console.log(location.pathname);
+    // console.log(location.pathname);
     return active ?
         (
             (location.pathname === "/dashboard" || location.pathname === "/dashboard/editor") ? <WelcomeToTheDashboard /> : <EditorInterface />

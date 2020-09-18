@@ -9,19 +9,19 @@ namespace Server.Domain.Configuration.schema
         public string SafeName { get; set; }
         public string RiskyName { get; set; }
         public string AccountId { get; set; }
-        public string AreaId { get; set; }
+        public string AreaIdentifier { get; set; }
 
-        private FileNameMap(string safeName, string riskyName, string accountId, string areaId)
+        private FileNameMap(string safeName, string riskyName, string accountId, string areaIdentifier)
         {
             SafeName = safeName;
             RiskyName = riskyName;
             AccountId = accountId;
-            AreaId = areaId;
+            AreaIdentifier = areaIdentifier;
         }
 
-        public static FileNameMap CreateFileMap(string safeName, string riskyName, string accountId, string areaId)
+        public static FileNameMap CreateFileMap(string safeName, string riskyName, string accountId, string areaIdentifier)
         {
-            return new FileNameMap(safeName, riskyName, accountId, areaId);
+            return new FileNameMap(safeName, riskyName, accountId, areaIdentifier);
         }
     }
 }

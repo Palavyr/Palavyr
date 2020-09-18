@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http.Cors;
-using Microsoft.AspNetCore.Mvc;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
-using Server.Domain;
+using Microsoft.AspNetCore.Mvc;
 using Server.Domain.Configuration.constants;
 using Server.Domain.Configuration.schema;
-
 
 namespace Palavyr.API.Controllers
 {

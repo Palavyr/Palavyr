@@ -100,13 +100,6 @@ namespace Palavyr.API.Controllers
                 newNode.IsCritical
             );
             DashContext.ConversationNodes.Add(mappedNode);
-            
-            // newNode.AccountId = accountId;
-            
-            // var oldNode = DashContext.ConversationNodes.Single(row => row.NodeId == nodeId);
-            // var nodeUpdate = ConversationUtils.UpdateNodeProperties(oldNode, newNode);
-            // nodeUpdate.Id = oldNode.Id;
-            // DashContext.ConversationNodes.Update(nodeUpdate);
             DashContext.SaveChanges();
             return new OkResult();
         }
@@ -141,8 +134,6 @@ namespace Palavyr.API.Controllers
                     node.IsCritical
                 );
                 mappedTransactions.Add(mappedNode);
-                // transaction.Id = null;
-                // transaction.AccountId = accountId;
             }
 
             area.ConversationNodes.AddRange(mappedTransactions);
