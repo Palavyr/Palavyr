@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.PDFService", "Palav
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.EmailService", "Palavyr.EmailService\Palavyr.EmailService.csproj", "{C5433525-3138-40A9-A5EC-38E08935F509}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PalavyrServer.Tests", "PalavyrServer.Tests\PalavyrServer.Tests.csproj", "{3CCE0B8A-0DA0-4611-A651-E1F6280D8D02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.Tests", "Palavyr.Tests\Palavyr.Tests.csproj", "{3CCE0B8A-0DA0-4611-A651-E1F6280D8D02}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.Background", "Palavyr.Background\Palavyr.Background.csproj", "{A5D1779C-CF03-48E0-9378-C96B29091C5F}"
 EndProject

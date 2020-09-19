@@ -23,20 +23,20 @@ namespace EmailService
             }
             return body;
         }
-        
+
         //https://stackoverflow.com/questions/6743139/send-attachments-with-amazon-ses
         private static MimeMessage GetMessage(string fromAddressLabel, string fromAddress, string toAddressLabel, string toAddress, string subject, string htmlBody, string textBody, List<string> filePaths)
         {
             var from  = new MailboxAddress(fromAddressLabel ?? "", fromAddress); // TODO support Labels
             var to = new MailboxAddress(toAddressLabel ?? "", toAddress);
             var body = GetMessageBodyWithAttachments(htmlBody, textBody, filePaths).ToMessageBody();
-            
+
             var message = new MimeMessage();
             message.From.Add(from);
             message.To.Add(to);
             message.Subject = subject;
             message.Body = body;
-            
+
             return message;
         }
 
@@ -46,7 +46,7 @@ namespace EmailService
             message.WriteTo(stream);
             return stream;
         }
-        
+
         public async Task<bool> SendEmailWithAttachments(string fromAddress,
             string toAddress,
             string subject,
@@ -59,13 +59,11 @@ namespace EmailService
 
             var message = GetMessage(fromAddressLabel, fromAddress, toAddressLabel, toAddress, subject, htmlBody,
                 textBody, filePaths);
-            
+
             var rawSendRequest = new SendRawEmailRequest()
             {
                 RawMessage = new RawMessage(GetMessageStream(message)),
             };
-
-            Task<SendRawEmailResponse> response;
             try
             {
                 await EmailClient.SendRawEmailAsync(rawSendRequest);
