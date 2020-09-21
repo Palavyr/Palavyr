@@ -13,7 +13,7 @@ const webpack = require('webpack');
 module.exports = (ENV) => {
 
     const envPath = ENV.production ? ".env.production" : ".env.development";
-    console.log("RUNNING in.... " + ENV)
+    console.log("Building in.... " + envPath)
     return {
         entry: {
             "palavyr-build": './src/index.tsx',
