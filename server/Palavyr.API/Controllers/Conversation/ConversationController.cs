@@ -12,7 +12,6 @@ using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.controllers.Conversation
 {
-    // [EnableCors(origins: "*", headers: "*", methods: "*")]
     [Route("api/convos/")]
     [ApiController]
     public class ConversationController : BaseController
