@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using Amazon.S3;
 using Amazon.SimpleEmail;
@@ -61,6 +60,8 @@ namespace Palavyr.API
                             .WithOrigins(
                                 "http://palavyr.com",
                                 "http://www.palavyr.com",
+                                "https://palavyr.com",
+                                "https://www.palavyr.com",
                                 "http://localhost/",
                                 "https://localhost/",
                                 "http://localhost",

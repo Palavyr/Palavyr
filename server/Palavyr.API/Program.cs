@@ -1,10 +1,10 @@
 using System;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using NLog.Web;
-using EnvironmentName = Microsoft.AspNetCore.Hosting.EnvironmentName;
 
 namespace Palavyr.API
 {
@@ -42,7 +42,7 @@ namespace Palavyr.API
             
             Console.WriteLine("Server is running: " + env);
 
-            if (env == EnvironmentName.Staging || env == EnvironmentName.Production)
+            if (env == Environments.Staging || env == Environments.Production)
                 builder.UseIIS();
             
             builder.UseStartup<Startup>();
