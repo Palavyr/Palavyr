@@ -1,29 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http.Cors;
-using Microsoft.AspNetCore.Mvc;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Palavyr.API.Controllers;
 using Palavyr.API.receiverTypes;
-using Server.Domain;
 using Server.Domain.Configuration.schema;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.controllers.Conversation
 {
     // [EnableCors(origins: "*", headers: "*", methods: "*")]
     [Route("api/convos/")]
     [ApiController]
     public class ConversationController : BaseController
     {
+        private static ILogger<PreviewController> _logger;
+
         public ConversationController(
+            ILogger<PreviewController> logger,
             AccountsContext accountContext,
             ConvoContext convoContext,
             DashContext dashContext,
             IWebHostEnvironment env
         ) : base(accountContext, convoContext, dashContext, env)
         {
+            _logger = logger;
+
         }
 
         [HttpGet]
@@ -86,21 +91,34 @@ namespace Palavyr.API.Controllers
         [HttpPut("nodes/{nodeId}")]
         public OkResult UpdateConversationNode([FromHeader] string accountId, string nodeId, [FromBody] ConversationNode newNode)
         {
-            DashContext.ConversationNodes.Remove(DashContext.ConversationNodes.Single(row => row.NodeId == nodeId));
+            _logger.LogInformation("------ UPDATING NODE ---------");
+            try
+            {
 
-            var mappedNode = ConversationNode.CreateNew(
-                newNode.NodeId,
-                newNode.NodeType,
-                newNode.Text,
-                newNode.AreaIdentifier,
-                newNode.NodeChildrenString,
-                newNode.ValueOptions,
-                accountId,
-                newNode.IsRoot,
-                newNode.IsCritical
-            );
-            DashContext.ConversationNodes.Add(mappedNode);
-            DashContext.SaveChanges();
+
+                DashContext.ConversationNodes.Remove(DashContext.ConversationNodes.Single(row => row.NodeId == nodeId));
+
+                var mappedNode = ConversationNode.CreateNew(
+                    newNode.NodeId,
+                    newNode.NodeType,
+                    newNode.Text,
+                    newNode.AreaIdentifier,
+                    newNode.NodeChildrenString,
+                    newNode.ValueOptions,
+                    accountId,
+                    newNode.IsRoot,
+                    newNode.IsCritical
+                );
+
+                DashContext.ConversationNodes.Add(mappedNode);
+                DashContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                var message = ex.Message;
+                _logger.LogInformation("COULD NOT UPDATE BECAUSE:" + message);
+            }
+
             return new OkResult();
         }
 
