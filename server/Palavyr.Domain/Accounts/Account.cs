@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Palavyr.Common.uniqueIdentifiers;
 
 namespace Server.Domain.Accounts
 {
@@ -19,7 +18,7 @@ namespace Server.Domain.Accounts
         public string AccountLogoUri { get; set; }
 
         public string ApiKey { get; set; }
-        public bool Active { get; set; } = false;
+        public bool Active { get; set; }
         public string Locale { get; set; } = "en-AU";
 
         [NotMapped] public readonly string DefaultLocale = "en-AU";

@@ -74,14 +74,23 @@ namespace Palavyr.API
                     });
             });
             services.AddControllers();
-            services.AddDbContext<AccountsContext>(
-                opt => opt.UseSqlite(Configuration.GetConnectionString("AccountsContextSqlite")));
-            services.AddDbContext<ConvoContext>(
-                opt => opt.UseSqlite(Configuration.GetConnectionString("ConvoContextSqlite"))
-            );
-            services.AddDbContext<DashContext>(
-                opt => opt.UseSqlite(Configuration.GetConnectionString("DashContextSqlite"))
-            );
+            services.AddDbContext<AccountsContext>(opt =>
+                opt.UseNpgsql(Configuration.GetConnectionString("AccountsContextPostgres")));
+            services.AddDbContext<ConvoContext>(opt =>
+                opt.UseNpgsql(Configuration.GetConnectionString("ConvoContextPostgres")));
+            services.AddDbContext<DashContext>(opt =>
+                opt.UseNpgsql(Configuration.GetConnectionString("DashContextPostgres")));
+
+
+
+            // services.AddDbContext<AccountsContext>(
+            //     opt => opt.UseSqlite(Configuration.GetConnectionString("AccountsContextSqlite")));
+            // services.AddDbContext<ConvoContext>(
+            //     opt => opt.UseSqlite(Configuration.GetConnectionString("ConvoContextSqlite"))
+            // );
+            // services.AddDbContext<DashContext>(
+            //     opt => opt.UseSqlite(Configuration.GetConnectionString("DashContextSqlite"))
+            // );
 
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddAWSService<IAmazonSimpleEmailService>();
@@ -131,6 +140,7 @@ namespace Palavyr.API
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             app.UseHangfireDashboard();
 
+            Console.WriteLine("VARIABLE HERE : {}");
 
             if (env.IsProduction())
             {

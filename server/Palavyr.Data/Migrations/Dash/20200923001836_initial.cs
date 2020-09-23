@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace DashboardServer.Data.Migrations
+namespace DashboardServer.Data.Migrations.Dash
 {
-    public partial class initialCreate : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,7 +12,7 @@ namespace DashboardServer.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     AreaIdentifier = table.Column<string>(nullable: true),
                     AreaName = table.Column<string>(nullable: true),
                     AreaDisplayTitle = table.Column<string>(nullable: true),
@@ -32,7 +33,7 @@ namespace DashboardServer.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     SafeName = table.Column<string>(nullable: true),
                     RiskyName = table.Column<string>(nullable: true),
                     AccountId = table.Column<string>(nullable: true),
@@ -48,7 +49,7 @@ namespace DashboardServer.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     GroupId = table.Column<string>(nullable: true),
                     ParentId = table.Column<string>(nullable: true),
                     GroupName = table.Column<string>(nullable: true),
@@ -64,7 +65,7 @@ namespace DashboardServer.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     AccountId = table.Column<string>(nullable: true),
                     AreaIdentifier = table.Column<string>(nullable: true),
                     TableId = table.Column<string>(nullable: true),
@@ -84,7 +85,7 @@ namespace DashboardServer.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Min = table.Column<double>(nullable: false),
                     Max = table.Column<double>(nullable: false),
                     FeeId = table.Column<string>(nullable: true),
@@ -101,7 +102,7 @@ namespace DashboardServer.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(nullable: true),
                     Subtitle = table.Column<string>(nullable: true),
                     Placeholder = table.Column<string>(nullable: true),
@@ -118,7 +119,7 @@ namespace DashboardServer.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     NodeId = table.Column<string>(nullable: true),
                     NodeType = table.Column<string>(nullable: true),
                     Fallback = table.Column<bool>(nullable: false),
@@ -148,7 +149,7 @@ namespace DashboardServer.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     TableTag = table.Column<string>(nullable: true),
                     PrettyName = table.Column<string>(nullable: true),
                     TableType = table.Column<string>(nullable: true),
@@ -174,7 +175,7 @@ namespace DashboardServer.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     TableOrder = table.Column<int>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     AreaIdentifier = table.Column<string>(nullable: true),
@@ -197,7 +198,7 @@ namespace DashboardServer.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     RowOrder = table.Column<int>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     FeeId = table.Column<int>(nullable: true),

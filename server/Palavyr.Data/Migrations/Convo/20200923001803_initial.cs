@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DashboardServer.Data.Migrations.Convo
 {
-    public partial class initialCreate : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +13,7 @@ namespace DashboardServer.Data.Migrations.Convo
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ConversationId = table.Column<string>(nullable: true),
                     ResponsePdfId = table.Column<string>(nullable: true),
                     TimeStamp = table.Column<DateTime>(nullable: false),
@@ -34,7 +35,7 @@ namespace DashboardServer.Data.Migrations.Convo
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ConversationId = table.Column<string>(nullable: true),
                     Prompt = table.Column<string>(nullable: true),
                     UserResponse = table.Column<string>(nullable: true),
