@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace DashboardServer.Data.Migrations.Dash
+namespace DashboardServer.Data.Migrations.ConfigurationMigrations
 {
     [DbContext(typeof(DashContext))]
     partial class DashContextModelSnapshot : ModelSnapshot

@@ -3,17 +3,15 @@ using System;
 using DashboardServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace DashboardServer.Data.Migrations.Convo
+namespace DashboardServer.Data.Migrations.ConvoMigrations
 {
     [DbContext(typeof(ConvoContext))]
-    [Migration("20200923001803_initial")]
-    partial class initial
+    partial class ConvoContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

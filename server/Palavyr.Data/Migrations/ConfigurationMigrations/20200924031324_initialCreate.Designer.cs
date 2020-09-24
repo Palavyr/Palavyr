@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace DashboardServer.Data.Migrations.Dash
+namespace DashboardServer.Data.Migrations.ConfigurationMigrations
 {
     [DbContext(typeof(DashContext))]
-    [Migration("20200923001836_initial")]
-    partial class initial
+    [Migration("20200924031324_initialCreate")]
+    partial class initialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace DashboardServer.Data.Migrations.Convo
+namespace DashboardServer.Data.Migrations.ConvoMigrations
 {
-    public partial class initial : Migration
+    public partial class initialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

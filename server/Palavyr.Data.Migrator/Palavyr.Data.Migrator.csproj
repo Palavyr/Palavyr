@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>Palavyr.Data.Migrater</RootNamespace>
+    <UserSecretsId>48e6608b-8b91-40b9-ad16-a3cae3933cd4</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="dbup-postgresql" Version="4.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.8" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Scripts\Account\0001-accounts_migration-initialCreate.sql" />
+    <None Remove="Scripts\Config\0001-configuration_migration-initialCreate.sql" />
+    <None Update="appsettings.Staging.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.Production.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.Development.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Palavyr.Data\Palavyr.Data.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scripts" />
+  </ItemGroup>
+</Project>

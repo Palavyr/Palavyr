@@ -1,9 +1,6 @@
-﻿using System;
-using System.Web.Http.Cors;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
-using Server.Domain;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +11,6 @@ using Palavyr.API.responseTypes;
 namespace Palavyr.API.Controllers
 {
 
-    // [EnableCors(origins: "*", headers: "*", methods: "*", exposedHeaders: "X-My-Header")]
     [Route("api/enquiries")]
     [ApiController]
     public class EnquiriesController : BaseController
@@ -40,7 +36,7 @@ namespace Palavyr.API.Controllers
         public async Task<List<Enquiry>> GetCompletedConversations([FromHeader] string accountId)
         {
             var completedConvos = ConvoContext.CompletedConversations.ToList();
-            _logger.LogInformation("0. Completed Convos: " + completedConvos[0].ToString());
+            _logger.LogInformation("0. Completed Convos: " + completedConvos[0]);
             
             var Enquiries = new List<Enquiry>();
             foreach (var completedConvo in completedConvos)

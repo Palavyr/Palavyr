@@ -8,23 +8,17 @@ using NLog.Web;
 
 namespace Palavyr.API
 {
-    /// <summary>
-    /// TO get initial migrations working:
-    ///     dotnet ef migrations add init -s .\Palavyr.API\ --project .\Palavyr.Data\
-    ///     dotnet ef database update -s ..\Palavyr.API\
-    /// </summary>
     public class Program
     {
-       
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();
         }
-
+        
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
+            
             var builder = WebHost.CreateDefaultBuilder(args);
             builder.ConfigureLogging((hostingContext, logging) =>
             {

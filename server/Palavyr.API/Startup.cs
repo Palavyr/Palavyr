@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.Background;
 using Palavyr.Common.FileSystem;
+using static Microsoft.Extensions.Hosting.Environments;
 
 namespace Palavyr.API
 {
@@ -33,6 +34,9 @@ namespace Palavyr.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // ReSharper disable once HeapView.ClosureAllocation
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -51,17 +55,21 @@ namespace Palavyr.API
                                 "Authorization",
                                 "X-Requested-With"
                             )
-                            .WithMethods(
-                                "DELETE",
-                                "POST",
-                                "GET",
-                                "OPTIONS",
-                                "PUT")
-                            .WithOrigins(
+                            .WithMethods("DELETE", "POST", "GET", "OPTIONS", "PUT");
+
+                        if (env == Staging || env == Production)
+                        {
+                            builder.WithOrigins(
                                 "http://palavyr.com",
                                 "http://www.palavyr.com",
                                 "https://palavyr.com",
-                                "https://www.palavyr.com",
+                                "https://www.palavyr.com"
+                            );
+                        }
+
+                        if (env == Development)
+                        {
+                            builder.WithOrigins(
                                 "http://localhost/",
                                 "https://localhost/",
                                 "http://localhost",
@@ -71,26 +79,33 @@ namespace Palavyr.API
                                 "http://localhost:5000",
                                 "https://localhost:5001"
                             );
+                        }
                     });
             });
+            
             services.AddControllers();
-            services.AddDbContext<AccountsContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString("AccountsContextPostgres")));
-            services.AddDbContext<ConvoContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString("ConvoContextPostgres")));
-            services.AddDbContext<DashContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString("DashContextPostgres")));
 
+            if (env == Development)
+            {
+                services.AddDbContext<AccountsContext>(opt =>
+                    opt.UseNpgsql(Configuration.GetConnectionString("DevAccountsContextPostgres")));
+                services.AddDbContext<ConvoContext>(opt =>
+                    opt.UseNpgsql(Configuration.GetConnectionString("DevConvoContextPostgres")));
+                services.AddDbContext<DashContext>(opt =>
+                    opt.UseNpgsql(Configuration.GetConnectionString("DevDashContextPostgres")));
+            }
+            else
+            {
+                services.AddDbContext<AccountsContext>(opt =>
+                    opt.UseNpgsql(Configuration.GetConnectionString("AccountsContextPostgres")));
+                services.AddDbContext<ConvoContext>(opt =>
+                    opt.UseNpgsql(Configuration.GetConnectionString("ConvoContextPostgres")));
+                services.AddDbContext<DashContext>(opt =>
+                    opt.UseNpgsql(Configuration.GetConnectionString("DashContextPostgres")));    
+            }
 
+            
 
-            // services.AddDbContext<AccountsContext>(
-            //     opt => opt.UseSqlite(Configuration.GetConnectionString("AccountsContextSqlite")));
-            // services.AddDbContext<ConvoContext>(
-            //     opt => opt.UseSqlite(Configuration.GetConnectionString("ConvoContextSqlite"))
-            // );
-            // services.AddDbContext<DashContext>(
-            //     opt => opt.UseSqlite(Configuration.GetConnectionString("DashContextSqlite"))
-            // );
 
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddAWSService<IAmazonSimpleEmailService>();
@@ -110,7 +125,6 @@ namespace Palavyr.API
             services.AddSingleton<IValidateAttachments, ValidateAttachments>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
             IApplicationBuilder app,
             IWebHostEnvironment env,
@@ -139,9 +153,7 @@ namespace Palavyr.API
             app.UseMiddleware<AuthenticateByLoginOrSession>();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             app.UseHangfireDashboard();
-
-            Console.WriteLine("VARIABLE HERE : {}");
-
+            
             if (env.IsProduction())
             {
                 _logger.LogInformation("Preparing to archive teh project");

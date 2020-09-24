@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Server.Domain.conversations
 {
     public class ConversationUpdate
     {
+        [Key]
         public int Id { get; set; }
         public string ConversationId { get; set; }
         public string Prompt { get; set; }
