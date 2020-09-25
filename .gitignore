@@ -3,7 +3,7 @@
 *.user
 *.sln.docstates
 **/dist/*
-
+**/temp/*
 # Build results
 [Dd]ebug/
 [Rr]elease/
