@@ -82,29 +82,15 @@ namespace Palavyr.API
                         }
                     });
             });
-            
+
             services.AddControllers();
 
-            if (env == Development)
-            {
-                services.AddDbContext<AccountsContext>(opt =>
-                    opt.UseNpgsql(Configuration.GetConnectionString("DevAccountsContextPostgres")));
-                services.AddDbContext<ConvoContext>(opt =>
-                    opt.UseNpgsql(Configuration.GetConnectionString("DevConvoContextPostgres")));
-                services.AddDbContext<DashContext>(opt =>
-                    opt.UseNpgsql(Configuration.GetConnectionString("DevDashContextPostgres")));
-            }
-            else
-            {
-                services.AddDbContext<AccountsContext>(opt =>
-                    opt.UseNpgsql(Configuration.GetConnectionString("AccountsContextPostgres")));
-                services.AddDbContext<ConvoContext>(opt =>
-                    opt.UseNpgsql(Configuration.GetConnectionString("ConvoContextPostgres")));
-                services.AddDbContext<DashContext>(opt =>
-                    opt.UseNpgsql(Configuration.GetConnectionString("DashContextPostgres")));    
-            }
-
-            
+            services.AddDbContext<AccountsContext>(opt =>
+                opt.UseNpgsql(Configuration.GetConnectionString("AccountsContextPostgres")));
+            services.AddDbContext<ConvoContext>(opt =>
+                opt.UseNpgsql(Configuration.GetConnectionString("ConvoContextPostgres")));
+            services.AddDbContext<DashContext>(opt =>
+                opt.UseNpgsql(Configuration.GetConnectionString("DashContextPostgres")));
 
 
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
@@ -153,7 +139,7 @@ namespace Palavyr.API
             app.UseMiddleware<AuthenticateByLoginOrSession>();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             app.UseHangfireDashboard();
-            
+
             if (env.IsProduction())
             {
                 _logger.LogInformation("Preparing to archive teh project");

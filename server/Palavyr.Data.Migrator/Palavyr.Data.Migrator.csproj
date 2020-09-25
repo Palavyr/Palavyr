@@ -30,6 +30,9 @@
     <ProjectReference Include="..\Palavyr.Data\Palavyr.Data.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Scripts" />
+    <EmbeddedResource Include="Scripts\Account\0001-accounts_migration-initialCreate.sql" />
+    <EmbeddedResource Include="Scripts\Config\0001-configuration_migration-initialCreate.sql" />
+    <None Remove="Scripts\Convo\0001-convo_migration-initialCreate.sql" />
+    <EmbeddedResource Include="Scripts\Convo\0001-convo_migration-initialCreate.sql" />
   </ItemGroup>
 </Project>

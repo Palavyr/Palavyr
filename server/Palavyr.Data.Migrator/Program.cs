@@ -2,8 +2,7 @@
 using System.Reflection;
 using DbUp;
 using Microsoft.Extensions.Configuration;
-using static Microsoft.Extensions.Hosting.Environments;
-using Microsoft.Extensions.Configuration.UserSecrets;
+
 
 namespace Palavyr.Data.Migrator
 {
@@ -21,38 +20,14 @@ namespace Palavyr.Data.Migrator
                 .AddJsonFile(appsettings, false)
                 .AddUserSecrets(assembly, true)
                 .Build();
-
-
-            string accountsConnection;
-            string convoConnection;
-            string dashConnection;
-            if (env == Development)
-            {
-                Console.WriteLine("USING SECRETS ON DEV");
-                accountsConnection = configuration.GetConnectionString("DevAccountsContextPostgres");
-                convoConnection = configuration.GetConnectionString("DevConvoContextPostgres");
-                dashConnection = configuration.GetConnectionString("DevDashContextPostgres");
-            }
-            else
-            {
-                Console.WriteLine("USING SECRETS ON PROD/STAGING");
-                accountsConnection = configuration.GetConnectionString("AccountsContextPostgres");
-                convoConnection = configuration.GetConnectionString("ConvoContextPostgres");
-                dashConnection = configuration.GetConnectionString("DashContextPostgres");
-                Console.WriteLine($"CONNECTIONS: {accountsConnection}");
-            }
             
-            EnsureDatabase.For.PostgresqlDatabase(accountsConnection);
-            EnsureDatabase.For.PostgresqlDatabase(convoConnection);
-            EnsureDatabase.For.PostgresqlDatabase(dashConnection);
-
-            var accountsRes = ApplyMigration(accountsConnection);
+            var accountsRes = ApplyMigrations(env, "AccountsContextPostgres", "accounts_migration", configuration);
             if (accountsRes == -1) return -1;
             
-            var convoRes = ApplyMigration(convoConnection);
+            var convoRes = ApplyMigrations(env, "ConvoContextPostgres", "convo_migration", configuration);
             if (convoRes == -1) return -1;
             
-            var configRes = ApplyMigration(dashConnection);
+            var configRes = ApplyMigrations(env, "DashContextPostgres", "configuration_migration", configuration);
             if (configRes == -1) return -1;
             
             Console.ForegroundColor = ConsoleColor.Green;
@@ -61,12 +36,20 @@ namespace Palavyr.Data.Migrator
             return 0;
         }
 
-        private static int ApplyMigration(string connectionString)
+        private static int ApplyMigrations(string env, string configKey, string filterName, IConfiguration config)
+        {
+            var connection = config.GetConnectionString(configKey);
+            EnsureDatabase.For.PostgresqlDatabase(connection);
+            var accountsRes = DeployMigration(connection, filterName);
+            return accountsRes;
+        }
+        
+        private static int DeployMigration(string connectionString, string filterName)
         {
             var upgrader =
                 DeployChanges.To
                     .PostgresqlDatabase(connectionString)
-                    .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly()) // reflection used to get the db context
+                    .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), name => name.Contains(filterName)) // reflection used to get the db context
                     .LogToConsole()
                     .WithTransactionPerScript()
                     .Build();

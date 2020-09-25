@@ -15,9 +15,9 @@ $migrator = ".\\Palavyr.Data.Migrator";
 
 function WriteSecrets($projectPath) {
     Write-Host "Setting Connection Strings for $projectPath..."
-    dotnet user-secrets set ConnectionStrings:DevAccountsContextPostgres "Server=$server;Port=$port;Database=Accounts;User Id=$user;Password=$pass" --project $projectPath
-    dotnet user-secrets set ConnectionStrings:DevConvoContextPostgres "Server=$server;Port=$port;Database=Conversations;User Id=$user;Password=$pass" --project $projectPath
-    dotnet user-secrets set ConnectionStrings:DevDashContextPostgres "Server=$server;Port=$port;Database=Configuration;User Id=$user;Password=$pass" --project $projectPath
+    dotnet user-secrets set ConnectionStrings:AccountsContextPostgres "Server=$server;Port=$port;Database=Accounts;User Id=$user;Password=$pass" --project $projectPath
+    dotnet user-secrets set ConnectionStrings:ConvoContextPostgres "Server=$server;Port=$port;Database=Conversations;User Id=$user;Password=$pass" --project $projectPath
+    dotnet user-secrets set ConnectionStrings:DashContextPostgres "Server=$server;Port=$port;Database=Configuration;User Id=$user;Password=$pass" --project $projectPath
     
 }
 

@@ -82,7 +82,7 @@ catch {
 }
 
 try {
-    Write-Host "`r`nAdding migration for Configuration"
+    Write-Host "`r`nAdding migration for Configuration at: "
     dotnet-ef migrations add $name -p .\Palavyr.Data\ -s .\Palavyr.API\ -o "$Migrations\\ConfigurationMigrations" -c DashContext
     $ConfigResult = $?;
 }

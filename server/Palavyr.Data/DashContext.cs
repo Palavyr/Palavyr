@@ -6,9 +6,8 @@ using Server.Domain;
 {
     public class DashContext : DbContext
     {
-        public DashContext(DbContextOptions<DashContext> options) : base(options)
-        {
-        }
+        public DashContext(DbContextOptions<DashContext> options) : base(options) { }
+        
         public DbSet<Area> Areas { get; set; }
         public DbSet<ConversationNode> ConversationNodes { get; set; }
         public DbSet<FileNameMap> FileNameMaps { get; set; }
