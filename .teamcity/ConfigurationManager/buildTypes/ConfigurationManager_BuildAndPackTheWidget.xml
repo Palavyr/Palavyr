@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="15213669-0709-4187-9972-eb425bad0916" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2020.1/project-config.xsd">
+  <name>Build and Pack the Widget</name>
+  <description>Builds and zips the widget</description>
+  <settings>
+    <options>
+      <option name="artifactRules" value="palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip" />
+      <option name="buildNumberPattern" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
+      <option name="publishArtifactCondition" value="SUCCESSFUL" />
+    </options>
+    <parameters />
+    <build-runners>
+      <runner id="RUNNER_3" name="Install Dependencies" type="simpleRunner">
+        <parameters>
+          <param name="script.content" value="npm install" />
+          <param name="teamcity.build.workingDir" value="widget" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_4" name="Build the widget" type="simpleRunner">
+        <parameters>
+          <param name="script.content" value="npm run build" />
+          <param name="teamcity.build.workingDir" value="widget" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_5" name="Package the widget" type="octopus.pack.package">
+        <parameters>
+          <param name="octopus_packageformat" value="Zip" />
+          <param name="octopus_packageid" value="palavyr.widget" />
+          <param name="octopus_packageoutputpath" value="widget\pack" />
+          <param name="octopus_packagesourcepath" value="widget\build" />
+          <param name="octopus_packageversion" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
+          <param name="octopus_publishartifacts" value="true" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="ConfigurationManager_HttpsGithubComPalavyrConfigurationManagerGitRefsHeadsMaster" />
+    </vcs-settings>
+    <requirements />
+    <build-triggers />
+    <dependencies>
+      <depend-on sourceBuildTypeId="ConfigurationManager_CreateVersionNumber">
+        <options>
+          <option name="run-build-if-dependency-failed" value="CANCEL" />
+          <option name="run-build-if-dependency-failed-to-start" value="CANCEL" />
+          <option name="run-build-on-the-same-agent" value="true" />
+        </options>
+      </depend-on>
+    </dependencies>
+    <cleanup />
+  </settings>
+</build-type>
+

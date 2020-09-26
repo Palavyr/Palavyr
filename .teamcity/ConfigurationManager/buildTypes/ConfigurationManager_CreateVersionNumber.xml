@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="8040efae-0ce6-4dc9-9a13-d35aa0ecb90b" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2020.1/project-config.xsd">
+  <name>Create Version Number</name>
+  <description>Create the common version number to be used across all snapshot dependencies</description>
+  <settings>
+    <options>
+      <option name="buildNumberPattern" value="0.0.%build.counter%" />
+    </options>
+    <parameters />
+    <build-runners>
+      <runner id="RUNNER_16" name="Dummy Step" type="simpleRunner">
+        <parameters>
+          <param name="script.content"><![CDATA[echo "Building"
+echo %build.counter%]]></param>
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="ConfigurationManager_HttpsGithubComPalavyrConfigurationManagerGitRefsHeadsMaster" />
+    </vcs-settings>
+    <requirements />
+    <build-triggers />
+    <cleanup />
+  </settings>
+</build-type>
+

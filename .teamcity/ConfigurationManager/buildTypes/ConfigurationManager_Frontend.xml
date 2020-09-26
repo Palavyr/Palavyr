@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="2dd44166-8ff7-41ef-934b-9c1f890922b4" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2020.1/project-config.xsd">
+  <name>Build and Pack Frontend</name>
+  <description>Build the frontend</description>
+  <settings>
+    <options>
+      <option name="artifactRules" value="palavyr.frontend.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip" />
+      <option name="buildNumberPattern" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
+      <option name="publishArtifactCondition" value="SUCCESSFUL" />
+    </options>
+    <parameters />
+    <build-runners>
+      <runner id="RUNNER_14" name="Install node dependencies" type="simpleRunner">
+        <parameters>
+          <param name="script.content" value="npm install" />
+          <param name="teamcity.build.workingDir" value="frontend" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_13" name="Build the frontend" type="simpleRunner">
+        <parameters>
+          <param name="script.content" value="npm run build" />
+          <param name="teamcity.build.workingDir" value="frontend" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_15" name="Package the frontend" type="octopus.pack.package">
+        <parameters>
+          <param name="octopus_packageformat" value="Zip" />
+          <param name="octopus_packageid" value="palavyr.frontend" />
+          <param name="octopus_packageoutputpath" value="frontend\pack" />
+          <param name="octopus_packagesourcepath" value="frontend\dist" />
+          <param name="octopus_packageversion" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
+          <param name="octopus_publishartifacts" value="true" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="ConfigurationManager_HttpsGithubComPalavyrConfigurationManagerGitRefsHeadsMaster" />
+    </vcs-settings>
+    <requirements />
+    <build-triggers />
+    <dependencies>
+      <depend-on sourceBuildTypeId="ConfigurationManager_CreateVersionNumber">
+        <options>
+          <option name="run-build-if-dependency-failed" value="RUN_ADD_PROBLEM" />
+          <option name="run-build-if-dependency-failed-to-start" value="RUN_ADD_PROBLEM" />
+          <option name="run-build-on-the-same-agent" value="true" />
+        </options>
+      </depend-on>
+    </dependencies>
+    <cleanup />
+  </settings>
+</build-type>
+

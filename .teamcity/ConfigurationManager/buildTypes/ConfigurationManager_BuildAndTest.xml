@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="a274bfe4-8304-4484-96e4-5950c9b885d3" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2020.1/project-config.xsd">
+  <name>Build and Test API Server</name>
+  <description>Publish the server and run the tests</description>
+  <settings>
+    <options>
+      <option name="artifactRules" value="palavyr.server.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip" />
+      <option name="buildNumberPattern" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
+      <option name="publishArtifactCondition" value="SUCCESSFUL" />
+      <option name="shouldFailBuildOnAnyErrorMessage" value="true" />
+    </options>
+    <disabled-settings>
+      <setting-ref ref="vcsTrigger" />
+    </disabled-settings>
+    <parameters />
+    <build-runners>
+      <runner id="RUNNER_9" name="Publish API server" type="dotnet">
+        <parameters>
+          <param name="args" value="-c Release /p:Version=%dep.ConfigurationManager_CreateVersionNumber.system.build.number% -r linux-x64" />
+          <param name="command" value="publish" />
+          <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
+          <param name="outputDir" value="publish" />
+          <param name="paths" value="Palavyr-Server.sln" />
+          <param name="teamcity.build.workingDir" value="server" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="verbosity" value="Normal" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_8" name="Run Unit Tests" type="dotnet">
+        <parameters>
+          <param name="command" value="test" />
+          <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
+          <param name="paths" value="publish\Palavyr.Tests.dll" />
+          <param name="skipBuild" value="true" />
+          <param name="teamcity.build.workingDir" value="server" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_10" name="Pack Server API" type="octopus.pack.package">
+        <parameters>
+          <param name="octopus_packageformat" value="Zip" />
+          <param name="octopus_packageid" value="palavyr.server" />
+          <param name="octopus_packageoutputpath" value="server\pack" />
+          <param name="octopus_packagesourcepath" value="server\publish" />
+          <param name="octopus_packageversion" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
+          <param name="octopus_publishartifacts" value="true" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="ConfigurationManager_HttpsGithubComPalavyrConfigurationManagerGitRefsHeadsMaster" />
+    </vcs-settings>
+    <requirements />
+    <build-triggers>
+      <build-trigger id="vcsTrigger" type="vcsTrigger">
+        <parameters>
+          <param name="enableQueueOptimization" value="true" />
+          <param name="quietPeriodMode" value="DO_NOT_USE" />
+          <param name="triggerRules"><![CDATA[-:**.md
++:server/*]]></param>
+        </parameters>
+      </build-trigger>
+    </build-triggers>
+    <dependencies>
+      <depend-on sourceBuildTypeId="ConfigurationManager_CreateVersionNumber">
+        <options>
+          <option name="run-build-if-dependency-failed" value="RUN_ADD_PROBLEM" />
+          <option name="run-build-on-the-same-agent" value="true" />
+        </options>
+      </depend-on>
+    </dependencies>
+    <cleanup />
+  </settings>
+</build-type>
+

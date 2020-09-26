@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="dd31cd2f-9cbc-4cf8-b67e-86d1c731a914" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2020.1/project-config.xsd">
+  <name>Push Packages to Octopus Cloud</name>
+  <description>Push published packages to Octopus Deploy</description>
+  <settings>
+    <options>
+      <option name="artifactRules" value="palavyr.server.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip&#xA;palavyr.frontend.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip&#xA;palavyr.pdfserver.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip&#xA;palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip" />
+      <option name="buildNumberPattern" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
+      <option name="cleanBuild" value="true" />
+      <option name="publishArtifactCondition" value="SUCCESSFUL" />
+    </options>
+    <disabled-settings>
+      <setting-ref ref="TRIGGER_1" />
+    </disabled-settings>
+    <parameters />
+    <build-runners>
+      <runner id="RUNNER_12" name="Push to Octopus Cloud" type="octopus.push.package">
+        <parameters>
+          <param name="octopus_forcepush" value="true" />
+          <param name="octopus_host" value="https://palavyr.octopus.app" />
+          <param name="octopus_packagepaths"><![CDATA[palavyr.server.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip
+palavyr.frontend.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip
+palavyr.pdfserver.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip
+palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip]]></param>
+          <param name="octopus_publishartifacts" value="true" />
+          <param name="octopus_space_name" value="Palavyr" />
+          <param name="secure:octopus_apikey" value="credentialsJSON:206075a8-c12f-4f17-a3be-213a6915ef08" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="ConfigurationManager_HttpsGithubComPalavyrConfigurationManagerGitRefsHeadsMaster" />
+    </vcs-settings>
+    <requirements />
+    <build-triggers>
+      <build-trigger id="TRIGGER_1" type="buildDependencyTrigger">
+        <parameters>
+          <param name="afterSuccessfulBuildOnly" value="true" />
+          <param name="branchFilter" value="+:&lt;default&gt;" />
+          <param name="dependsOn" value="ConfigurationManager_BuildAndTest" />
+        </parameters>
+      </build-trigger>
+      <build-trigger id="vcsTrigger" type="vcsTrigger">
+        <parameters>
+          <param name="branchFilter" value="+:*" />
+          <param name="enableQueueOptimization" value="true" />
+          <param name="quietPeriodMode" value="DO_NOT_USE" />
+          <param name="triggerRules"><![CDATA[-:**.md
++:*]]></param>
+          <param name="watchChangesInDependencies" value="true" />
+        </parameters>
+      </build-trigger>
+    </build-triggers>
+    <artifact-dependencies>
+      <dependency id="ARTIFACT_DEPENDENCY_2" sourceBuildTypeId="ConfigurationManager_Frontend" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="palavyr.frontend.*.zip" />
+      </dependency>
+      <dependency id="ARTIFACT_DEPENDENCY_4" sourceBuildTypeId="ConfigurationManager_BuildAndPackTheWidget" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="palavyr.widget.*.zip" />
+      </dependency>
+      <dependency id="ARTIFACT_DEPENDENCY_1" sourceBuildTypeId="ConfigurationManager_BuildAndTest" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="palavyr.server.*.zip" />
+      </dependency>
+      <dependency id="ARTIFACT_DEPENDENCY_3" sourceBuildTypeId="ConfigurationManager_BuildInternalExpressPdfServer" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="palavyr.pdfserver.*.zip" />
+      </dependency>
+    </artifact-dependencies>
+    <dependencies>
+      <depend-on sourceBuildTypeId="ConfigurationManager_BuildAndTest">
+        <options>
+          <option name="run-build-if-dependency-failed" value="RUN_ADD_PROBLEM" />
+          <option name="run-build-on-the-same-agent" value="true" />
+        </options>
+      </depend-on>
+      <depend-on sourceBuildTypeId="ConfigurationManager_CreateVersionNumber">
+        <options>
+          <option name="run-build-if-dependency-failed" value="RUN_ADD_PROBLEM" />
+          <option name="take-started-build-with-same-revisions" value="true" />
+          <option name="take-successful-builds-only" value="true" />
+        </options>
+      </depend-on>
+      <depend-on sourceBuildTypeId="ConfigurationManager_Frontend">
+        <options>
+          <option name="run-build-if-dependency-failed" value="RUN_ADD_PROBLEM" />
+        </options>
+      </depend-on>
+      <depend-on sourceBuildTypeId="ConfigurationManager_BuildInternalExpressPdfServer">
+        <options>
+          <option name="run-build-if-dependency-failed" value="CANCEL" />
+          <option name="run-build-if-dependency-failed-to-start" value="CANCEL" />
+        </options>
+      </depend-on>
+      <depend-on sourceBuildTypeId="ConfigurationManager_BuildAndPackTheWidget">
+        <options>
+          <option name="run-build-if-dependency-failed" value="CANCEL" />
+          <option name="run-build-if-dependency-failed-to-start" value="CANCEL" />
+        </options>
+      </depend-on>
+    </dependencies>
+    <cleanup />
+  </settings>
+</build-type>
+
