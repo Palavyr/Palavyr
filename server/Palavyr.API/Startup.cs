@@ -122,12 +122,18 @@ namespace Palavyr.API
             app.UseHangfireServer(option);
             app.UseHangfireDashboard();
 
+            Console.WriteLine($"ENVIRONMENT: {Environment.SystemDirectory}");
+            Console.WriteLine($"PathROOT: {Path.GetPathRoot(Environment.SystemDirectory)}");
+            
             var appDataPath = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), MagicPathStrings.DataFolder);
+            Console.WriteLine($"APPDATAPATH: {appDataPath}");
+
             if (string.IsNullOrEmpty(Configuration["WebRootPath"]))
                 Configuration["WebRootPath"] = Environment.CurrentDirectory;
 
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
+            
             app.UseHttpsRedirection(); // when we enable ssl
             app.UseStaticFiles(new StaticFileOptions()
             {
@@ -139,7 +145,7 @@ namespace Palavyr.API
             app.UseMiddleware<AuthenticateByLoginOrSession>();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             app.UseHangfireDashboard();
-
+            
             if (env.IsProduction())
             {
                 _logger.LogInformation("Preparing to archive teh project");
