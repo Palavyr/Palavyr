@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware;
+using Palavyr.API.pathUtils;
 using Palavyr.Background;
 using Palavyr.Common.FileSystem;
 using static Microsoft.Extensions.Hosting.Environments;
@@ -122,12 +123,7 @@ namespace Palavyr.API
             app.UseHangfireServer(option);
             app.UseHangfireDashboard();
 
-            Console.WriteLine($"ENVIRONMENT: {Environment.SystemDirectory}");
-            Console.WriteLine($"PathROOT: {Path.GetPathRoot(Environment.SystemDirectory)}");
-            
-            var appDataPath = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), MagicPathStrings.DataFolder);
-            Console.WriteLine($"APPDATAPATH: {appDataPath}");
-
+            var appDataPath = resolveAppDataPath();
             if (string.IsNullOrEmpty(Configuration["WebRootPath"]))
                 Configuration["WebRootPath"] = Environment.CurrentDirectory;
 
@@ -187,6 +183,34 @@ namespace Palavyr.API
                     _logger.LogCritical("ERROR OMGOMGOMG WHY?: " + ex.Message);
                 }
             }
+
+            
+        }
+        private static string resolveAppDataPath()
+        {
+            string appDataPath;
+            var osVersion = Environment.OSVersion;
+            if (osVersion.Platform != PlatformID.Unix)
+            {
+                Console.WriteLine("Surely we are running on windows! ------------------");
+                appDataPath = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), MagicPathStrings.DataFolder);
+            }
+            else
+            {
+                Console.WriteLine("Surely we are running on LINUX! ----------------");
+                var home = Environment.GetEnvironmentVariable("HOME");
+                if (home == null)
+                {
+                    Console.WriteLine("HOME VARIABLE NOT SET");
+                }
+
+                appDataPath = Path.Combine(home, MagicPathStrings.DataFolder);
+            }
+            Console.WriteLine($"APPDATAPATH: {appDataPath}");
+            
+            DiskUtils.CreateDir(appDataPath);
+            
+            return appDataPath;
         }
     }
 }

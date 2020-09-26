@@ -35,10 +35,15 @@ namespace Palavyr.API
                 .UseNLog();
             
             Console.WriteLine("Server is running: " + env);
-
-            if (env == Environments.Staging || env == Environments.Production)
-                builder.UseIIS();
             
+            OperatingSystem osVersion = Environment.OSVersion;
+            Console.WriteLine($"PROGRAM OS Platform: {osVersion.Platform.ToString()}");
+            if (osVersion.Platform != PlatformID.Unix)
+            {
+                if (env == Environments.Staging || env == Environments.Production)
+                    builder.UseIIS();
+            }
+
             builder.UseStartup<Startup>();
             return builder;
         }

@@ -8,6 +8,11 @@ This repo is two part:
 2. The frontend portal (written in typescript/react)
 ---
 
+#### Starting the listening tentacle on the ubuntu server
+sudo /opt/octopus/tentacle/Tentacle service --install --start --instance "palavyrUbuntuTentacle"
+
+
+    
 ## Database Migrations
 
 
