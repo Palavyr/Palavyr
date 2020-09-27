@@ -36,12 +36,6 @@ namespace Palavyr.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-
-            var newEnv = Environment.GetEnvironmentVariable("MACHINE_ENV") ?? "WTF NOT FOUND!";
-            Console.WriteLine($"MACHINE ENV?: {newEnv.ToString()}");
-            Console.WriteLine($"Current env: {env.EnvironmentName}");
-            Console.WriteLine($"ENV IS STAGING? {env.IsStaging().ToString()}");
-            
             var appSettings = $"appsettings.{env.EnvironmentName.ToLower()}.json";
             Console.WriteLine($"THIS IS WHAT IS BEING READ for APPSETTIGNS: {appSettings}");
             var assembly = Assembly.GetExecutingAssembly();
@@ -120,6 +114,10 @@ namespace Palavyr.API
                     Console.WriteLine($"STARTUP-3: env = {env}");
                     services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
                 }
+                else
+                {
+                    Console.WriteLine("LOCAL DEV NOT UNIX NOT STAGING OR DEV");
+                }
             }
             else
             {
@@ -127,7 +125,7 @@ namespace Palavyr.API
                 if (env.IsStaging() || env.IsProduction())
                 {
                     Console.WriteLine($"STARTUP-5: env = {env}");
-                    services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
+                    // services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
                 }
             }
 
