@@ -105,7 +105,7 @@ namespace Palavyr.API
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddAWSService<IAmazonSimpleEmailService>();
             services.AddAWSService<IAmazonS3>();
-            services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
+            // services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
 
             if (Environment.OSVersion.Platform != PlatformID.Unix)
             {

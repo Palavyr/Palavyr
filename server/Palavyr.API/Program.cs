@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -21,7 +22,31 @@ namespace Palavyr.API
             var builder = Host
                 .CreateDefaultBuilder(args)
                 .UseSystemd()
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
+                        .UseStartup<Startup>()
+                        .ConfigureKestrel(options =>
+                            {
+                                if (env == Environments.Staging || env == Environments.Production)
+                                {
+                                    Console.WriteLine("KESTREL-1: IN STAGING OR PROD");
+                                    options.Listen(IPAddress.Loopback, 80);
+                                    options.Listen(IPAddress.Loopback, 443,
+                                        listenOptions =>
+                                        {
+                                            listenOptions.UseHttps("testCert.pfx",
+                                                "testPassword");
+                                        });
+                                }
+                                else
+                                {
+                                    options.Listen(IPAddress.Loopback, 5000);
+                                    options.Listen(IPAddress.Loopback, 5001);
+                                }
+                            }
+                        );
+                })
                 .ConfigureLogging((hostingContext, logging) =>
                 {
                     logging.ClearProviders();
