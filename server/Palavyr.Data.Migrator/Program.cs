@@ -12,11 +12,11 @@ namespace Palavyr.Data.Migrator
         {
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
             Console.WriteLine($"Current env: {env}");
-            var appsettings = $"appsettings.{env}.json";
+            var appsettings = $"appsettings.{env}.migrator.json";
 
             var assembly = Assembly.GetExecutingAssembly();
             var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", true)
+                .AddJsonFile("appsettings.migrator.json", true)
                 .AddJsonFile(appsettings, false)
                 .AddUserSecrets(assembly, true)
                 .Build();

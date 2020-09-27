@@ -26,19 +26,29 @@ namespace Palavyr.API
 {
     public class Startup
     {
-        private IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; set; }
         private readonly ILogger<Startup> _logger;
 
-        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory)
+        public Startup(ILoggerFactory loggerFactory)
         {
-            Configuration = configuration;
+            // Configuration = configuration;
             _logger = loggerFactory.CreateLogger<Startup>();
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // ReSharper disable once HeapView.ClosureAllocation
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+            
+            Console.WriteLine($"Current env: {env}");
+            var appsettings = $"appsettings.{env}.migrator.json";
+            Configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", true)
+                .AddJsonFile(appsettings, false)
+                .Build();
+
+            
+            // ReSharper disable once HeapView.ClosureAllocation
+            // var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
             _logger.LogDebug($"Startup-1: ENV VARIABLE ASPNETCORE_ENVIRONMENT = {env}");
             services.AddCors(options =>
             {
