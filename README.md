@@ -34,6 +34,22 @@ sudo /opt/octopus/tentacle/Tentacle service --install --start --instance "palavy
 ### Running kestrel as a service
 https://swimburger.net/blog/dotnet/how-to-run-aspnet-core-as-a-service-on-linux
 
+Once the service config is installed to 
+
+    /etc/systemd/system/PalavyrServer.service
+
+    sudo cp PalavyrServer.service /etc/systemd/system/PalavyrServer.service
+    sudo systemctl daemon-reload
+
+To query the status of the service:
+
+    systemctl status PalavyrServer
+
+To enable automatic restart of the service in event of a crash:
+
+    sudo systemctl enable AspNetSite
+
+
 
 
 #### Getting postgres to work and also attaching to postgres on EC2 from local 

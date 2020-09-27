@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using Amazon.S3;
 using Amazon.SimpleEmail;
 using DashboardServer.Data;
@@ -25,29 +26,32 @@ namespace Palavyr.API
     public class Startup
     {
         private IConfiguration Configuration { get; set; }
-        private readonly ILogger<Startup> _logger;
+        private ILogger<Startup> _logger { get; set; }
         private IWebHostEnvironment env { get; set; }
         
-        public Startup(ILoggerFactory loggerFactory, IWebHostEnvironment Env)
+        public Startup(IWebHostEnvironment Env)
         {
-            _logger = loggerFactory.CreateLogger<Startup>();
             env = Env;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
             var newEnv = Environment.GetEnvironmentVariable("MACHINE_ENV") ?? "WTF NOT FOUND!";
             Console.WriteLine($"MACHINE ENV?: {newEnv.ToString()}");
             Console.WriteLine($"Current env: {env.EnvironmentName}");
             Console.WriteLine($"ENV IS STAGING? {env.IsStaging().ToString()}");
-            var appSettings = $"appsettings.{env.EnvironmentName.ToLower()}.json";
-            Configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", true)
-                .AddJsonFile(appSettings, false)
-                .Build();
             
-            _logger.LogDebug($"Startup-1: ENV VARIABLE ASPNETCORE_ENVIRONMENT = {env.EnvironmentName}");
+            var appSettings = $"appsettings.{env.EnvironmentName.ToLower()}.json";
+            Console.WriteLine($"THIS IS WHAT IS BEING READ for APPSETTIGNS: {appSettings}");
+            var assembly = Assembly.GetExecutingAssembly();
+            Configuration = new ConfigurationBuilder()
+                .AddJsonFile(appSettings, false)
+                .AddJsonFile("appsettings.json", true)
+                .AddUserSecrets(assembly, true)
+                .Build();
+
+            Console.WriteLine($"Startup-1: ENV VARIABLE ASPNETCORE_ENVIRONMENT = {env.EnvironmentName}");
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -110,19 +114,19 @@ namespace Palavyr.API
 
             if (Environment.OSVersion.Platform != PlatformID.Unix)
             {
-                _logger.LogDebug($"STARTUP-2: Platform = {Environment.OSVersion.Platform.ToString()}");
+                Console.WriteLine($"STARTUP-2: Platform = {Environment.OSVersion.Platform.ToString()}");
                 if (env.IsStaging() || env.IsProduction())
                 {
-                    _logger.LogDebug($"STARTUP-3: env = {env}");
+                    Console.WriteLine($"STARTUP-3: env = {env}");
                     services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
                 }
             }
             else
             {
-                _logger.LogDebug($"STARTUP-4: Platform = {Environment.OSVersion.Platform.ToString()}");
+                Console.WriteLine($"STARTUP-4: Platform = {Environment.OSVersion.Platform.ToString()}");
                 if (env.IsStaging() || env.IsProduction())
                 {
-                    _logger.LogDebug($"STARTUP-5: env = {env}");
+                    Console.WriteLine($"STARTUP-5: env = {env}");
                     services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
                 }
             }
@@ -134,19 +138,22 @@ namespace Palavyr.API
                     .UseMemoryStorage());
             services.AddHangfireServer();
 
-            services.AddSingleton<ICreatePalavyrSnapshot, CreatePalavyrSnapshot>();
-            services.AddSingleton<IRemoveOldS3Archives, RemoveOldS3Archives>();
-            services.AddSingleton<IRemoveStaleSessions, RemoveStaleSessions>();
-            services.AddSingleton<IValidateAttachments, ValidateAttachments>();
+            services.AddScoped<ICreatePalavyrSnapshot, CreatePalavyrSnapshot>();
+            services.AddScoped<IRemoveOldS3Archives, RemoveOldS3Archives>();
+            services.AddScoped<IRemoveStaleSessions, RemoveStaleSessions>();
+            services.AddScoped<IValidateAttachments, ValidateAttachments>();
         }
 
         public void Configure(
             IApplicationBuilder app,
             IWebHostEnvironment env,
             IRecurringJobManager recurringJobManager,
-            IServiceProvider serviceProvider
+            IServiceProvider serviceProvider,
+            ILoggerFactory loggerFactory
         )
         {
+            _logger = loggerFactory.CreateLogger<Startup>();
+
             var option = new BackgroundJobServerOptions {WorkerCount = 1};
             app.UseHangfireServer(option);
             app.UseHangfireDashboard();
@@ -229,15 +236,15 @@ namespace Palavyr.API
             {
                 _logger.LogDebug("STARTUP-7: We are running on LINUX.");
                 var home = Environment.GetEnvironmentVariable("HOME");
-                _logger.LogDebug($"STARTUP: HOME env variable = {home}");
+                _logger.LogDebug($"STARTUP-8: HOME env variable = {home}");
                 if (home == null)
                 {
-                    _logger.LogDebug($"STARTUP-8: HOME VARIABLE NOT SET");
+                    _logger.LogDebug($"STARTUP-9: HOME VARIABLE NOT SET");
                 }
 
                 appDataPath = Path.Combine(home, MagicPathStrings.DataFolder);
             }
-            _logger.LogDebug($"STARTUP-9: APPDATAPATH: {appDataPath}");
+            _logger.LogDebug($"STARTUP-10: APPDATAPATH: {appDataPath}");
             
             DiskUtils.CreateDir(appDataPath);
             
