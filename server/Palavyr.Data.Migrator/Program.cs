@@ -10,9 +10,9 @@ namespace Palavyr.Data.Migrator
     {
         static int Main(string[] args)
         {
-            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
-            Console.WriteLine($"Current env: {env}");
-            var appsettings = $"appsettings.{env}.migrator.json";
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            Console.WriteLine($"DATAMIGRATOR: Current env: {env}");
+            var appsettings = $"appsettings.{env.ToLower()}.migrator.json";
 
             var assembly = Assembly.GetExecutingAssembly();
             var configuration = new ConfigurationBuilder()

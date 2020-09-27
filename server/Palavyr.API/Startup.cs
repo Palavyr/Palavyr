@@ -1,26 +1,24 @@
 using System;
 using System.IO;
-using Amazon.Extensions.NETCore.Setup;
 using Amazon.S3;
 using Amazon.SimpleEmail;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
 using DashboardServer.Data;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.API.pathUtils;
 using Palavyr.Background;
 using Palavyr.Common.FileSystem;
-using static Microsoft.Extensions.Hosting.Environments;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace Palavyr.API
 {
@@ -28,28 +26,28 @@ namespace Palavyr.API
     {
         private IConfiguration Configuration { get; set; }
         private readonly ILogger<Startup> _logger;
-
-        public Startup(ILoggerFactory loggerFactory)
+        private string Staging { get; } = "Staging";
+        private string Production { get; } = "Production";
+        private string Development { get; } = "Development";
+        private IWebHostEnvironment env { get; set; }
+        
+        public Startup(ILoggerFactory loggerFactory, IWebHostEnvironment Env)
         {
-            // Configuration = configuration;
             _logger = loggerFactory.CreateLogger<Startup>();
+            env = Env;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
-            
-            Console.WriteLine($"Current env: {env}");
-            var appsettings = $"appsettings.{env}.migrator.json";
+            // var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            Console.WriteLine($"Current env: {env.EnvironmentName}");
+            var appSettings = $"appsettings.{env.EnvironmentName.ToLower()}.json";
             Configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true)
-                .AddJsonFile(appsettings, false)
+                .AddJsonFile(appSettings, false)
                 .Build();
-
             
-            // ReSharper disable once HeapView.ClosureAllocation
-            // var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
-            _logger.LogDebug($"Startup-1: ENV VARIABLE ASPNETCORE_ENVIRONMENT = {env}");
+            _logger.LogDebug($"Startup-1: ENV VARIABLE ASPNETCORE_ENVIRONMENT = {env.EnvironmentName}");
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -70,7 +68,7 @@ namespace Palavyr.API
                             )
                             .WithMethods("DELETE", "POST", "GET", "OPTIONS", "PUT");
 
-                        if (env == Staging || env == Production)
+                        if (env.IsStaging() || env.IsProduction())
                         {
                             builder.WithOrigins(
                                 "http://palavyr.com",
@@ -80,7 +78,7 @@ namespace Palavyr.API
                             );
                         }
 
-                        if (env == Development)
+                        if (env.IsDevelopment())
                         {
                             builder.WithOrigins(
                                 "http://localhost/",
@@ -113,7 +111,7 @@ namespace Palavyr.API
             if (Environment.OSVersion.Platform != PlatformID.Unix)
             {
                 _logger.LogDebug($"STARTUP-2: Platform = {Environment.OSVersion.Platform.ToString()}");
-                if (env == Staging || env == Production)
+                if (env.IsStaging() || env.IsProduction())
                 {
                     _logger.LogDebug($"STARTUP-3: env = {env}");
                     services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
@@ -122,7 +120,7 @@ namespace Palavyr.API
             else
             {
                 _logger.LogDebug($"STARTUP-4: Platform = {Environment.OSVersion.Platform.ToString()}");
-                if (env == Staging || env == Production)
+                if (env.IsStaging() || env.IsProduction())
                 {
                     _logger.LogDebug($"STARTUP-5: env = {env}");
                     services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));

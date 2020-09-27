@@ -16,13 +16,13 @@
   <ItemGroup>
     <None Remove="Scripts\Account\0001-accounts_migration-initialCreate.sql" />
     <None Remove="Scripts\Config\0001-configuration_migration-initialCreate.sql" />
-    <None Update="appsettings.Staging.migrator.json">
+    <None Update="appsettings.staging.migrator.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="appsettings.Production.migrator.json">
+    <None Update="appsettings.production.migrator.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="appsettings.Development.migrator.json">
+    <None Update="appsettings.development.migrator.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
