@@ -138,7 +138,7 @@ namespace Palavyr.API
                     .UseMemoryStorage());
             services.AddHangfireServer();
 
-            services.AddScoped<ICreatePalavyrSnapshot, CreatePalavyrSnapshot>();
+            // services.AddScoped<ICreatePalavyrSnapshot, CreatePalavyrSnapshot>();
             services.AddScoped<IRemoveOldS3Archives, RemoveOldS3Archives>();
             services.AddScoped<IRemoveStaleSessions, RemoveStaleSessions>();
             services.AddScoped<IValidateAttachments, ValidateAttachments>();

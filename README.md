@@ -1,5 +1,9 @@
 # Palavyr Configuration Manager
 
+
+### IT IS VERY IMPORTANT THAT YOU DO NOT RUN THE SERVER USING SUDO - THIS WILL OVERRIDE ALL ENVIRONMENTAL VARIABLES 
+
+
 ## Setup
 
 This repo is two part:
