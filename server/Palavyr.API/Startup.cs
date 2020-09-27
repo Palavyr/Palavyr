@@ -105,6 +105,7 @@ namespace Palavyr.API
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddAWSService<IAmazonSimpleEmailService>();
             services.AddAWSService<IAmazonS3>();
+            services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
 
             if (Environment.OSVersion.Platform != PlatformID.Unix)
             {
@@ -117,6 +118,7 @@ namespace Palavyr.API
                 else
                 {
                     Console.WriteLine("LOCAL DEV NOT UNIX NOT STAGING OR DEV");
+
                 }
             }
             else
@@ -125,8 +127,8 @@ namespace Palavyr.API
                 if (env.IsStaging() || env.IsProduction())
                 {
                     Console.WriteLine($"STARTUP-5: env = {env}");
-                    // services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
                 }
+
             }
 
             services.AddHangfire(config =>

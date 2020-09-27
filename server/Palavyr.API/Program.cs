@@ -21,6 +21,7 @@ namespace Palavyr.API
             var builder = Host
                 .CreateDefaultBuilder(args)
                 .UseSystemd()
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
                 .ConfigureLogging((hostingContext, logging) =>
                 {
                     logging.ClearProviders();
@@ -43,21 +44,17 @@ namespace Palavyr.API
                         .ConfigureWebHostDefaults(webBuilder =>
                         {
                             webBuilder
-                                .UseIIS()
-                                .UseStartup<Startup>();
-
+                                .UseIIS();
                         });
                 }
                 else
                 {
                     Console.WriteLine($"PROGRAM-4: ENVIRONMENT = {env}");
-                    builder.ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
                 }
             }
             else
             {
                 Console.WriteLine($"PROGRAM-5: OS Platform: {Environment.OSVersion.Platform.ToString()}");
-                builder.ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
             }
 
             return builder;
