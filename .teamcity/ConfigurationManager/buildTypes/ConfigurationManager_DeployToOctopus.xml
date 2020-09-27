@@ -84,11 +84,6 @@ palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number
           <option name="take-successful-builds-only" value="true" />
         </options>
       </depend-on>
-      <depend-on sourceBuildTypeId="ConfigurationManager_Frontend">
-        <options>
-          <option name="run-build-if-dependency-failed" value="RUN_ADD_PROBLEM" />
-        </options>
-      </depend-on>
       <depend-on sourceBuildTypeId="ConfigurationManager_BuildInternalExpressPdfServer">
         <options>
           <option name="run-build-if-dependency-failed" value="CANCEL" />
@@ -99,6 +94,12 @@ palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number
         <options>
           <option name="run-build-if-dependency-failed" value="CANCEL" />
           <option name="run-build-if-dependency-failed-to-start" value="CANCEL" />
+        </options>
+      </depend-on>
+      <depend-on sourceBuildTypeId="ConfigurationManager_Frontend">
+        <options>
+          <option name="run-build-if-dependency-failed" value="RUN_ADD_PROBLEM" />
+          <option name="take-started-build-with-same-revisions" value="true" />
         </options>
       </depend-on>
     </dependencies>
