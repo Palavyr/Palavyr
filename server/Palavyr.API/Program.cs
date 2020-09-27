@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -35,16 +36,28 @@ namespace Palavyr.API
                 .UseNLog();
             
             Console.WriteLine("Server is running: " + env);
-            
             OperatingSystem osVersion = Environment.OSVersion;
             Console.WriteLine($"PROGRAM OS Platform: {osVersion.Platform.ToString()}");
             if (osVersion.Platform != PlatformID.Unix)
             {
                 if (env == Environments.Staging || env == Environments.Production)
-                    builder.UseIIS();
+                {
+                    builder
+                        .UseIIS()
+                        .UseStartup<Startup>();
+                }
+                else
+                {
+                    Console.WriteLine("Working from laptop");
+                    builder.UseStartup<Startup>();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Using Kestral as a server on UBUNTU");
+                builder.UseStartup<Startup>();
             }
 
-            builder.UseStartup<Startup>();
             return builder;
         }
     }

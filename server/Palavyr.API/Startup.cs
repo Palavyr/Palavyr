@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Amazon.Extensions.NETCore.Setup;
 using Amazon.S3;
 using Amazon.SimpleEmail;
 using Microsoft.AspNetCore.Builder;
@@ -19,6 +20,8 @@ using Palavyr.API.pathUtils;
 using Palavyr.Background;
 using Palavyr.Common.FileSystem;
 using static Microsoft.Extensions.Hosting.Environments;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace Palavyr.API
 {
@@ -93,11 +96,22 @@ namespace Palavyr.API
             services.AddDbContext<DashContext>(opt =>
                 opt.UseNpgsql(Configuration.GetConnectionString("DashContextPostgres")));
 
-
+            // AWS Services
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddAWSService<IAmazonSimpleEmailService>();
             services.AddAWSService<IAmazonS3>();
-            services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
+            
+            var osVersion = Environment.OSVersion;
+            if (osVersion.Platform != PlatformID.Unix)
+            {
+                if (env == Staging || env == Production)
+                    services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
+            }
+            else
+            {
+                if (env == Staging || env == Production)
+                    services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
+            }
 
             services.AddHangfire(config =>
                 config
@@ -129,7 +143,9 @@ namespace Palavyr.API
 
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
-            
+            else
+                app.UseHsts();
+
             app.UseHttpsRedirection(); // when we enable ssl
             app.UseStaticFiles(new StaticFileOptions()
             {

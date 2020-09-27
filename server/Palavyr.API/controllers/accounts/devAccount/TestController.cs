@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http.Cors;
 using Microsoft.AspNetCore.Mvc;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
-using Server.Domain;
 using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.Controllers
 {
-    // [EnableCors(origins: "*", headers: "*", methods: "*")] 
     [Route("api/test/")]
     [ApiController]
     public class TestController : BaseController

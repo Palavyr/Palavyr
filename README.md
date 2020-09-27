@@ -12,6 +12,71 @@ This repo is two part:
 sudo /opt/octopus/tentacle/Tentacle service --install --start --instance "palavyrUbuntuTentacle"
 
 
+# Working on linux to set up postgress and finding processes on ports and killing them
+ https://appuals.com/how-to-kill-process-on-port/
+
+
+
+    # get the process associated with a given port
+    sudo lsof -i:5000
+
+    # example output from above
+    COMMAND   PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+    dotnet  53198 root  199u  IPv4 146484      0t0  TCP localhost:5000 (LISTEN)
+    dotnet  53198 root  201u  IPv6 146489      0t0  TCP ip6-localhost:5000 (LISTEN)
+
+    # kill a process on that port
+    sudo kill {PID}
+
+    # list ports that are in use
+    sudo ss -tulwn
+
+
+#### Getting postgres to work and also attaching to postgres on EC2 from local 
+https://www.shubhamdipt.com/blog/postgresql-on-ec2-ubuntu-in-aws/
+
+    sudo apt-get update && sudo apt-get -y upgrade
+    sudo apt-get install postgresql postgresql-contrib​
+
+    # go into psql
+    sudo -u postgres psql
+    postgres=#\password​
+
+    # Edit pg_hba.conf in vim
+    sudo vim /etc/postgresql/10/main/pg_hba.conf
+
+    # Near bottom of file after local rules, add rule (allows remote access):
+    host    all             all             0.0.0.0/0               md5
+
+    # save file​
+
+    # Edit config in vim
+    sudo vim /etc/postgresql/10/main/postgresql.conf
+
+    # Change line 59 to listen to external requests:
+    listen_address='*'
+    
+    # save file​
+
+    # Restart postgres server
+    sudo /etc/init.d/postgresql restart​
+
+### Set up ftp with ubuntu EASY
+https://www.youtube.com/watch?v=Qxs7CYguo70&ab_channel=MicrowaveSam
+
+
+### Certificates
+https://www.rushtime.in/softwares/download-openssl-for-windows-free/
+I was able to get a free certificate from zero SSL - it came in three parts (ca_bundle, certificate.crt, private.key)
+
+I converted this to a .pfx using openssl.exe from
+
+command: 
+    pkcs12 -export -out C:\Users\paule\code\palavyr\server.palavyr.com\ready_certificate.pfx -inkey C:\Users\paule\code\palavyr\server.palavyr.com\private.key -in C:\Users\paule\code\palavyr\server.palavyr.com\certificate.crt
+
+This gave me a cert that i stored in ocotpus deploy. There is a password. hint: ducks are rub. how many days of christmas.
+
+
     
 ## Database Migrations
 

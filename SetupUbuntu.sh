@@ -3,6 +3,17 @@
 mkdir palavyrServer
 mkdir palavyrPDF
 
+## Create the credentials directory
+cd $HOME
+mkdir .aws
+cd .aws
+## CREATE credentials and include
+  # [default]
+  # aws_access_key_id = ##
+  # aws_secret_access_key = ##
+  # region = ap-southeast-2
+
+
 ## Install dotnet core
 wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
 sudo dpkg -i packages-microsoft-prod.deb
@@ -38,6 +49,12 @@ sudo npm install pm2 -g                     # process manager
 sudo apt-get update && sudo apt-get -y upgrade
 sudo apt install postgresql postgresql-contrib
 
+## Setting the configs correctl
+#https://www.shubhamdipt.com/blog/postgresql-on-ec2-ubuntu-in-aws/  
+
+sudo -u postgres psql
+postgres=#\password​
+
 ## start the db
 Success. You can now start the database server using:
     pg_ctlcluster 12 main start
@@ -46,4 +63,6 @@ Success. You can now start the database server using:
 
 psql -U postgres -W 
 username=postgres
-CREATE SERVER myserver FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host 'foo', dbname 'foodb', port '5432');
+CREATE SERVER myserver FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host 'localhost', dbname 'palavyr_staging', port '5432');
+
+
