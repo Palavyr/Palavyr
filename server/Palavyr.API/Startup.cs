@@ -37,6 +37,8 @@ namespace Palavyr.API
         public void ConfigureServices(IServiceCollection services)
         {
             // var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var newEnv = Environment.GetEnvironmentVariable("MACHINE_ENV") ?? "WTF NOT FOUND!";
+            Console.WriteLine($"MACHINE ENV?: {newEnv.ToString()}");
             Console.WriteLine($"Current env: {env.EnvironmentName}");
             Console.WriteLine($"ENV IS STAGING? {env.IsStaging().ToString()}");
             var appSettings = $"appsettings.{env.EnvironmentName.ToLower()}.json";
