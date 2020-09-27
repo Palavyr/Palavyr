@@ -20,7 +20,6 @@ using Palavyr.API.pathUtils;
 using Palavyr.Background;
 using Palavyr.Common.FileSystem;
 using static Microsoft.Extensions.Hosting.Environments;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace Palavyr.API
@@ -40,7 +39,7 @@ namespace Palavyr.API
         {
             // ReSharper disable once HeapView.ClosureAllocation
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
-
+            _logger.LogDebug($"Startup-1: ENV VARIABLE ASPNETCORE_ENVIRONMENT = {env}");
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -100,17 +99,24 @@ namespace Palavyr.API
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddAWSService<IAmazonSimpleEmailService>();
             services.AddAWSService<IAmazonS3>();
-            
-            var osVersion = Environment.OSVersion;
-            if (osVersion.Platform != PlatformID.Unix)
+
+            if (Environment.OSVersion.Platform != PlatformID.Unix)
             {
+                _logger.LogDebug($"STARTUP-2: Platform = {Environment.OSVersion.Platform.ToString()}");
                 if (env == Staging || env == Production)
+                {
+                    _logger.LogDebug($"STARTUP-3: env = {env}");
                     services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
+                }
             }
             else
             {
+                _logger.LogDebug($"STARTUP-4: Platform = {Environment.OSVersion.Platform.ToString()}");
                 if (env == Staging || env == Production)
+                {
+                    _logger.LogDebug($"STARTUP-5: env = {env}");
                     services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
+                }
             }
 
             services.AddHangfire(config =>
@@ -202,27 +208,28 @@ namespace Palavyr.API
 
             
         }
-        private static string resolveAppDataPath()
+        private string resolveAppDataPath()
         {
             string appDataPath;
             var osVersion = Environment.OSVersion;
             if (osVersion.Platform != PlatformID.Unix)
             {
-                Console.WriteLine("Surely we are running on windows! ------------------");
+                _logger.LogDebug("STARTUP-6: We are running on windows.");
                 appDataPath = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), MagicPathStrings.DataFolder);
             }
             else
             {
-                Console.WriteLine("Surely we are running on LINUX! ----------------");
+                _logger.LogDebug("STARTUP-7: We are running on LINUX.");
                 var home = Environment.GetEnvironmentVariable("HOME");
+                _logger.LogDebug($"STARTUP: HOME env variable = {home}");
                 if (home == null)
                 {
-                    Console.WriteLine("HOME VARIABLE NOT SET");
+                    _logger.LogDebug($"STARTUP-8: HOME VARIABLE NOT SET");
                 }
 
                 appDataPath = Path.Combine(home, MagicPathStrings.DataFolder);
             }
-            Console.WriteLine($"APPDATAPATH: {appDataPath}");
+            _logger.LogDebug($"STARTUP-9: APPDATAPATH: {appDataPath}");
             
             DiskUtils.CreateDir(appDataPath);
             

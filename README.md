@@ -31,6 +31,10 @@ sudo /opt/octopus/tentacle/Tentacle service --install --start --instance "palavy
     # list ports that are in use
     sudo ss -tulwn
 
+### Running kestrel as a service
+https://swimburger.net/blog/dotnet/how-to-run-aspnet-core-as-a-service-on-linux
+
+
 
 #### Getting postgres to work and also attaching to postgres on EC2 from local 
 https://www.shubhamdipt.com/blog/postgresql-on-ec2-ubuntu-in-aws/

@@ -18,8 +18,8 @@ namespace Palavyr.API
         
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
-            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+            Console.WriteLine("PROGRAM-1: {env}");
             var builder = WebHost.CreateDefaultBuilder(args);
             builder.ConfigureLogging((hostingContext, logging) =>
             {
@@ -35,26 +35,25 @@ namespace Palavyr.API
             })
                 .UseNLog();
             
-            Console.WriteLine("Server is running: " + env);
-            OperatingSystem osVersion = Environment.OSVersion;
-            Console.WriteLine($"PROGRAM OS Platform: {osVersion.Platform.ToString()}");
-            if (osVersion.Platform != PlatformID.Unix)
+            if (Environment.OSVersion.Platform != PlatformID.Unix)
             {
+                Console.WriteLine($"PROGRAM-2: OS Platform: {Environment.OSVersion.Platform.ToString()}");
                 if (env == Environments.Staging || env == Environments.Production)
                 {
+                    Console.WriteLine($"PROGRAM-3: ENVIRONMENT = {env}");
                     builder
                         .UseIIS()
                         .UseStartup<Startup>();
                 }
                 else
                 {
-                    Console.WriteLine("Working from laptop");
+                    Console.WriteLine($"PROGRAM-4: ENVIRONMENT = {env}");
                     builder.UseStartup<Startup>();
                 }
             }
             else
             {
-                Console.WriteLine("Using Kestral as a server on UBUNTU");
+                Console.WriteLine($"PROGRAM-5: OS Platform: {Environment.OSVersion.Platform.ToString()}");
                 builder.UseStartup<Startup>();
             }
 
