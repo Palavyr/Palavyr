@@ -26,9 +26,6 @@ namespace Palavyr.API
     {
         private IConfiguration Configuration { get; set; }
         private readonly ILogger<Startup> _logger;
-        private string Staging { get; } = "Staging";
-        private string Production { get; } = "Production";
-        private string Development { get; } = "Development";
         private IWebHostEnvironment env { get; set; }
         
         public Startup(ILoggerFactory loggerFactory, IWebHostEnvironment Env)
@@ -41,6 +38,7 @@ namespace Palavyr.API
         {
             // var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             Console.WriteLine($"Current env: {env.EnvironmentName}");
+            Console.WriteLine($"ENV IS STAGING? {env.IsStaging().ToString()}");
             var appSettings = $"appsettings.{env.EnvironmentName.ToLower()}.json";
             Configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true)

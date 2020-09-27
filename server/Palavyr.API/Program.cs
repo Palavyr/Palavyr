@@ -19,7 +19,7 @@ namespace Palavyr.API
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            Console.WriteLine("PROGRAM-1: {env}");
+            Console.WriteLine($"PROGRAM-1: {env.ToString()}");
             var builder = WebHost.CreateDefaultBuilder(args);
             builder.ConfigureLogging((hostingContext, logging) =>
             {
