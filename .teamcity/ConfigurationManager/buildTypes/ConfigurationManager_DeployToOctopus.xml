@@ -106,6 +106,13 @@ palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number
           <option name="take-started-build-with-same-revisions" value="true" />
         </options>
       </depend-on>
+      <depend-on sourceBuildTypeId="ConfigurationManager_BuildAndTestApiServerUbuntu">
+        <options>
+          <option name="run-build-if-dependency-failed" value="CANCEL" />
+          <option name="run-build-if-dependency-failed-to-start" value="CANCEL" />
+          <option name="run-build-on-the-same-agent" value="true" />
+        </options>
+      </depend-on>
     </dependencies>
     <cleanup />
   </settings>
