@@ -18,7 +18,8 @@
         <parameters>
           <param name="octopus_forcepush" value="true" />
           <param name="octopus_host" value="https://palavyr.octopus.app" />
-          <param name="octopus_packagepaths"><![CDATA[palavyr.server.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip
+          <param name="octopus_packagepaths"><![CDATA[palavyr.server.windows.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip
+palavyr.server.linux.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip
 palavyr.frontend.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip
 palavyr.pdfserver.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip
 palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip]]></param>
