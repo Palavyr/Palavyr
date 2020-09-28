@@ -19,7 +19,6 @@ using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.Controllers
 {
-    // [EnableCors(origins: "*", headers: "*", methods: "*", exposedHeaders: "X-My-Header")]
     [Route("api/files")]
     [ApiController]
     public class FileController : BaseController

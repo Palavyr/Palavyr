@@ -1,6 +1,8 @@
-﻿using DashboardServer.Data;
+﻿using System;
+using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Palavyr.API.Controllers;
 using Palavyr.API.controllers.accounts.seedData;
 using Palavyr.API.devControllers;
@@ -13,11 +15,24 @@ namespace Palavyr.API.controllers.accounts.devAccount
     [ApiController]
     public class DefaultDataController : BaseController
     {
-        public DefaultDataController(AccountsContext accountContext, ConvoContext convoContext, DashContext dashContext, IWebHostEnvironment env) : base(accountContext, convoContext, dashContext, env) { }
+        
+        private static ILogger<FileController> _logger;
+
+        public DefaultDataController(
+            ILogger<FileController> logger,
+            AccountsContext accountContext,
+            ConvoContext convoContext,
+            DashContext dashContext,
+            IWebHostEnvironment env)
+            : base(accountContext, convoContext, dashContext, env)
+        {
+            _logger = logger;
+        }
 
         [HttpPut]
         public void RefreshData()
         {
+            _logger.LogDebug("This is an attempt to Refresh database data.");
             var devData = new DevDataHolder(
                 "qwerty",
                 "dashboard",
@@ -29,7 +44,6 @@ namespace Palavyr.API.controllers.accounts.devAccount
                 true,
                 "en-AU"
             );
-            
             
             var demoData = new DevDataHolder(
                 "abc123",
@@ -43,9 +57,37 @@ namespace Palavyr.API.controllers.accounts.devAccount
                 "en-AU"
             );
 
-            DeleteAllData();
-            PopulateDBs(devData);
-            PopulateDBs(demoData);
+            try
+            {
+                _logger.LogDebug("Trying to Deleting All Data currently in the database!");
+                DeleteAllData();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug($"Error deleting all data... {ex.Message}");
+            }
+
+            try
+            {
+                _logger.LogDebug("-----Attempting to populate with dev data...");
+                PopulateDBs(devData);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug($"Error loading dev data: {ex.Message}");
+            }
+
+            try
+            {
+                _logger.LogDebug("-----Attempting to populate with demo data...");
+                PopulateDBs(demoData);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug($"----Error populating Demo Data: {ex.Message}");
+            }
+            
         }
 
         public void PopulateDBs(DevDataHolder dh)
