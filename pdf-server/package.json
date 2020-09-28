@@ -22,7 +22,6 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "html-pdf": "^2.2.0",
-    "pm2": "^4.4.1",
     "uuidv4": "^6.2.2"
   },
   "devDependencies": {

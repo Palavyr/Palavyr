@@ -25,27 +25,23 @@ namespace Palavyr.API
 {
     public class Startup
     {
-        private IConfiguration Configuration { get; set; }
-        private ILogger<Startup> _logger { get; set; }
-        private IWebHostEnvironment env { get; set; }
-        
         public Startup(IWebHostEnvironment Env)
         {
             env = Env;
         }
+        private IConfiguration Configuration { get; set; }
+        private ILogger<Startup> _logger { get; set; }
+        private IWebHostEnvironment env { get; set; } 
 
         public void ConfigureServices(IServiceCollection services)
         {
             var appSettings = $"appsettings.{env.EnvironmentName.ToLower()}.json";
-            Console.WriteLine($"THIS IS WHAT IS BEING READ for APPSETTIGNS: {appSettings}");
-            var assembly = Assembly.GetExecutingAssembly();
             Configuration = new ConfigurationBuilder()
                 .AddJsonFile(appSettings, false)
                 .AddJsonFile("appsettings.json", true)
-                .AddUserSecrets(assembly, true)
+                .AddUserSecrets(Assembly.GetExecutingAssembly(), true)
                 .Build();
 
-            Console.WriteLine($"Startup-1: ENV VARIABLE ASPNETCORE_ENVIRONMENT = {env.EnvironmentName}");
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -53,6 +49,7 @@ namespace Palavyr.API
                     {
                         builder
                             .SetIsOriginAllowed(_ => true)
+                            .WithMethods("DELETE", "POST", "GET", "OPTIONS", "PUT")
                             .WithHeaders(
                                 "action",
                                 "Server",
@@ -63,8 +60,7 @@ namespace Palavyr.API
                                 "Access-Control-Allow-Methods",
                                 "Authorization",
                                 "X-Requested-With"
-                            )
-                            .WithMethods("DELETE", "POST", "GET", "OPTIONS", "PUT");
+                            );
 
                         if (env.IsStaging() || env.IsProduction())
                         {
@@ -74,9 +70,8 @@ namespace Palavyr.API
                                 "https://palavyr.com",
                                 "https://www.palavyr.com"
                             );
-                        }
-
-                        if (env.IsDevelopment())
+                        } 
+                        else
                         {
                             builder.WithOrigins(
                                 "http://localhost/",
@@ -105,20 +100,13 @@ namespace Palavyr.API
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddAWSService<IAmazonSimpleEmailService>();
             services.AddAWSService<IAmazonS3>();
-            // services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
 
             Console.WriteLine($"STARTUP-2: Platform = {Environment.OSVersion.Platform.ToString()}");
             if (Environment.OSVersion.Platform != PlatformID.Unix)
             {
                 if (env.IsStaging() || env.IsProduction())
                 {
-                    Console.WriteLine($"STARTUP-3: env = {env}");
                     services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
-                }
-                else
-                {
-                    Console.WriteLine("LOCAL DEV NOT UNIX NOT STAGING OR DEV");
-
                 }
             }
             else
@@ -153,7 +141,6 @@ namespace Palavyr.API
         )
         {
             _logger = loggerFactory.CreateLogger<Startup>();
-
             var option = new BackgroundJobServerOptions {WorkerCount = 1};
             app.UseHangfireServer(option);
             app.UseHangfireDashboard();
@@ -234,7 +221,6 @@ namespace Palavyr.API
             }
             else
             {
-                _logger.LogDebug("STARTUP-7: We are running on LINUX.");
                 var home = Environment.GetEnvironmentVariable("HOME");
                 _logger.LogDebug($"STARTUP-8: HOME env variable = {home}");
                 if (home == null)

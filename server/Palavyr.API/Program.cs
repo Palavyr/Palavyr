@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -12,59 +13,91 @@ namespace Palavyr.API
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            /// Use with Windows IIS
+            CreateIISHostBuilder(args).Build().Run();
+            
+            /// use with Ubuntu
+            // CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateWebHostBuilder(string[] args)
+        /// <summary>
+        ///  Use with IIS
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static IHostBuilder CreateIISHostBuilder(string[] args)
         {
+            // in case we need it
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "NOT SET or NOT FOUND";
-            Console.WriteLine($"PROGRAM-1: {env.ToString()}");
-            var builder = Host
+            var host = Host
                 .CreateDefaultBuilder(args)
-                .UseSystemd()
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder
-                        .UseStartup<Startup>()
-                        .ConfigureKestrel(options =>
-                            {
-                                if (env == Environments.Staging || env == Environments.Production)
-                                {
-                                    options.Listen(IPAddress.Loopback, 80);
-                                    options.Listen(IPAddress.Loopback, 443,
-                                        listenOptions =>
-                                        {
-                                            listenOptions.UseHttps("testCert.pfx",
-                                                "testPassword");
-                                        });
-                                }
-                                else
-                                {
-                                    options.Listen(IPAddress.Loopback, 5000);
-                                    options.Listen(IPAddress.Loopback, 5001);
-                                }
-                            }
-                        );
-                })
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
                 .ConfigureLogging((hostingContext, logging) =>
-                {
-                    logging.ClearProviders();
-                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                    logging.SetMinimumLevel(LogLevel.Trace);
-                    logging.AddConsole();
-                    logging.AddDebug();
-                    logging.AddEventSourceLogger();
-                    logging.AddNLog();
-                })
+                    {
+                        logging.ClearProviders();
+                        logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                        logging.SetMinimumLevel(LogLevel.Trace);
+                        logging.AddConsole();
+                        logging.AddDebug();
+                        logging.AddEventSourceLogger();
+                        logging.AddNLog();
+                    })
                 .UseNLog();
-
-            Console.WriteLine($"PROGRAM-2: OS Platform: {Environment.OSVersion.Platform.ToString()}");
-            if (Environment.OSVersion.Platform != PlatformID.Unix)
-            {
-                if (env == Environments.Staging || env == Environments.Production)
-                    builder.ConfigureWebHostDefaults(webBuilder => { webBuilder.UseIIS(); });
-            }
-            return builder;
+            return host;
         }
+        
+        
+        //
+        // public static IHostBuilder CreateWebHostBuilder(string[] args)
+        // {
+        //     var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "NOT SET or NOT FOUND";
+        //     Console.WriteLine($"PROGRAM-1: {env.ToString()}");
+        //     var host = Host
+        //         .CreateDefaultBuilder(args)
+        //         .UseSystemd()
+        //         .ConfigureWebHostDefaults(webBuilder =>
+        //         {
+        //             webBuilder
+        //                 .UseStartup<Startup>()
+        //                 .ConfigureKestrel(options =>
+        //                     {
+        //                         if (env == Environments.Staging || env == Environments.Production)
+        //                         {
+        //                             options.Listen(IPAddress.Loopback, 80);
+        //                             options.Listen(IPAddress.Loopback, 443,
+        //                                 listenOptions =>
+        //                                 {
+        //                                     listenOptions.UseHttps("testCert.pfx",
+        //                                         "testPassword");
+        //                                 });
+        //                         }
+        //                         else
+        //                         {
+        //                             options.Listen(IPAddress.Loopback, 5000);
+        //                             options.Listen(IPAddress.Loopback, 5001);
+        //                         }
+        //                     }
+        //                 );
+        //         })
+        //         .ConfigureLogging((hostingContext, logging) =>
+        //         {
+        //             logging.ClearProviders();
+        //             logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+        //             logging.SetMinimumLevel(LogLevel.Trace);
+        //             logging.AddConsole();
+        //             logging.AddDebug();
+        //             logging.AddEventSourceLogger();
+        //             logging.AddNLog();
+        //         })
+        //         .UseNLog();
+        //
+        //     Console.WriteLine($"PROGRAM-2: OS Platform: {Environment.OSVersion.Platform.ToString()}");
+        //     if (Environment.OSVersion.Platform != PlatformID.Unix)
+        //     {
+        //         if (env == Environments.Staging || env == Environments.Production)
+        //             host.ConfigureWebHostDefaults(webBuilder => { webBuilder.UseIIS(); });
+        //     }
+        //     return host;
+        // }
     }
 }
