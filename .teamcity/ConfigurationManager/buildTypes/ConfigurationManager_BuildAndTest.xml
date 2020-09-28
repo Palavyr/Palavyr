@@ -16,7 +16,7 @@
     <build-runners>
       <runner id="RUNNER_9" name="Publish API server" type="dotnet">
         <parameters>
-          <param name="args" value="-c Release /p:Version=%dep.ConfigurationManager_CreateVersionNumber.system.build.number% --self-contained false" />
+          <param name="args" value="-c Release /p:Version=%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
           <param name="command" value="publish" />
           <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
           <param name="outputDir" value="publish" />
