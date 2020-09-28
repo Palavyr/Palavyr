@@ -39,7 +39,7 @@
       <runner id="RUNNER_10" name="Pack Server API" type="octopus.pack.package">
         <parameters>
           <param name="octopus_packageformat" value="Zip" />
-          <param name="octopus_packageid" value="palavyr.server" />
+          <param name="octopus_packageid" value="palavyr.server.linux" />
           <param name="octopus_packageoutputpath" value="server\pack" />
           <param name="octopus_packagesourcepath" value="server\publish" />
           <param name="octopus_packageversion" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
