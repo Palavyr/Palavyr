@@ -30,7 +30,6 @@ namespace Palavyr.API
                             {
                                 if (env == Environments.Staging || env == Environments.Production)
                                 {
-                                    Console.WriteLine("KESTREL-1: IN STAGING OR PROD");
                                     options.Listen(IPAddress.Loopback, 80);
                                     options.Listen(IPAddress.Loopback, 443,
                                         listenOptions =>
@@ -59,29 +58,12 @@ namespace Palavyr.API
                 })
                 .UseNLog();
 
+            Console.WriteLine($"PROGRAM-2: OS Platform: {Environment.OSVersion.Platform.ToString()}");
             if (Environment.OSVersion.Platform != PlatformID.Unix)
             {
-                Console.WriteLine($"PROGRAM-2: OS Platform: {Environment.OSVersion.Platform.ToString()}");
                 if (env == Environments.Staging || env == Environments.Production)
-                {
-                    Console.WriteLine($"PROGRAM-3: ENVIRONMENT = {env}");
-                    builder
-                        .ConfigureWebHostDefaults(webBuilder =>
-                        {
-                            webBuilder
-                                .UseIIS();
-                        });
-                }
-                else
-                {
-                    Console.WriteLine($"PROGRAM-4: ENVIRONMENT = {env}");
-                }
+                    builder.ConfigureWebHostDefaults(webBuilder => { webBuilder.UseIIS(); });
             }
-            else
-            {
-                Console.WriteLine($"PROGRAM-5: OS Platform: {Environment.OSVersion.Platform.ToString()}");
-            }
-
             return builder;
         }
     }

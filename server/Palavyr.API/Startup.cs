@@ -107,9 +107,9 @@ namespace Palavyr.API
             services.AddAWSService<IAmazonS3>();
             // services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
 
+            Console.WriteLine($"STARTUP-2: Platform = {Environment.OSVersion.Platform.ToString()}");
             if (Environment.OSVersion.Platform != PlatformID.Unix)
             {
-                Console.WriteLine($"STARTUP-2: Platform = {Environment.OSVersion.Platform.ToString()}");
                 if (env.IsStaging() || env.IsProduction())
                 {
                     Console.WriteLine($"STARTUP-3: env = {env}");
