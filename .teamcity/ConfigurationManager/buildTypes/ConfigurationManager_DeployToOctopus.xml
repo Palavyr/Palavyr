@@ -4,7 +4,7 @@
   <description>Push published packages to Octopus Deploy</description>
   <settings>
     <options>
-      <option name="artifactRules" value="palavyr.server.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip&#xA;palavyr.frontend.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip&#xA;palavyr.pdfserver.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip&#xA;palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip" />
+      <option name="artifactRules" value="palavyr.server.windows.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip&#xA;palavyr.server.linux.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip&#xA;palavyr.frontend.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip&#xA;palavyr.pdfserver.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip&#xA;palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip" />
       <option name="buildNumberPattern" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
       <option name="cleanBuild" value="true" />
       <option name="publishArtifactCondition" value="SUCCESSFUL" />
