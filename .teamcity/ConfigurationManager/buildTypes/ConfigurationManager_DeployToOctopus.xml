@@ -61,6 +61,10 @@ palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number
         <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
         <artifact sourcePath="palavyr.widget.*.zip" />
       </dependency>
+      <dependency id="ARTIFACT_DEPENDENCY_5" sourceBuildTypeId="ConfigurationManager_BuildAndTestApiServerUbuntu" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="palavyr.server.linux.*.zip" />
+      </dependency>
       <dependency id="ARTIFACT_DEPENDENCY_1" sourceBuildTypeId="ConfigurationManager_BuildAndTest" cleanDestination="false">
         <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
         <artifact sourcePath="palavyr.server.windows.*.zip" />
