@@ -169,7 +169,7 @@ namespace Palavyr.API
             if (env.IsProduction())
             {
                 app.UseHangfireDashboard();
-dev                _logger.LogInformation("Preparing to archive teh project");
+                _logger.LogInformation("Preparing to archive teh project");
                 try
                 {
                     recurringJobManager
