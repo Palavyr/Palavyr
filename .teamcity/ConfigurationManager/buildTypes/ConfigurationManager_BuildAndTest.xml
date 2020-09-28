@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="a274bfe4-8304-4484-96e4-5950c9b885d3" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2020.1/project-config.xsd">
-  <name>Build and Test API Server</name>
+  <name>Build and Test API Server Windows</name>
   <description>Publish the server and run the tests</description>
   <settings>
     <options>
