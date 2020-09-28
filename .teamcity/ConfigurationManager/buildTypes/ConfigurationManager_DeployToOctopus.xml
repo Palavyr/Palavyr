@@ -63,7 +63,7 @@ palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number
       </dependency>
       <dependency id="ARTIFACT_DEPENDENCY_1" sourceBuildTypeId="ConfigurationManager_BuildAndTest" cleanDestination="false">
         <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
-        <artifact sourcePath="palavyr.server.*.zip" />
+        <artifact sourcePath="palavyr.server.windows.*.zip" />
       </dependency>
       <dependency id="ARTIFACT_DEPENDENCY_3" sourceBuildTypeId="ConfigurationManager_BuildInternalExpressPdfServer" cleanDestination="false">
         <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
