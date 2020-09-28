@@ -4,7 +4,7 @@
   <description>Publish the server and run the tests</description>
   <settings>
     <options>
-      <option name="artifactRules" value="palavyr.server.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip" />
+      <option name="artifactRules" value="palavyr.server.windows.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip" />
       <option name="buildNumberPattern" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
       <option name="publishArtifactCondition" value="SUCCESSFUL" />
       <option name="shouldFailBuildOnAnyErrorMessage" value="true" />
