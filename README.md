@@ -1,6 +1,9 @@
 # Palavyr Configuration Manager
 
 
+## Super uer in pgadmin 
+https://chartio.com/learn/postgresql/create-a-user-with-pgadmin/
+
 ## Getting the certificate thumbprint is easy@
 
     Get-ChildItem -path cert:\LocalMachine\Root

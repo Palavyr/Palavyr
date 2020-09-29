@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Amazon.SimpleEmail.Model;
+using Microsoft.Extensions.Logging;
 using MimeKit;
 
 
@@ -47,6 +48,18 @@ namespace EmailService
             return stream;
         }
 
+        /// <summary>
+        /// Send an email WITH attachments
+        /// </summary>
+        /// <param name="fromAddress"></param>
+        /// <param name="toAddress"></param>
+        /// <param name="subject"></param>
+        /// <param name="htmlBody"></param>
+        /// <param name="textBody"></param>
+        /// <param name="filePaths"></param>
+        /// <param name="fromAddressLabel"></param>
+        /// <param name="toAddressLabel"></param>
+        /// <returns>bool - Success is True, Fail is false</returns>
         public async Task<bool> SendEmailWithAttachments(string fromAddress,
             string toAddress,
             string subject,
@@ -64,16 +77,18 @@ namespace EmailService
             {
                 RawMessage = new RawMessage(GetMessageStream(message)),
             };
+            
+            _logger.LogDebug("Trying to send email...");
             try
             {
                 await EmailClient.SendRawEmailAsync(rawSendRequest);
-                Console.WriteLine("Email Sent Successfully");
+                _logger.LogDebug("Email Sent Successfully");
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Email (with attachments) was not sent. ");
-                Console.WriteLine("Error: " + ex.Message);
+                _logger.LogDebug("Email (with attachments) was not sent. ");
+                _logger.LogDebug("Error: " + ex.Message);
                 return false;
             }
         }
