@@ -40,6 +40,7 @@ palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number
           <param name="quietPeriodMode" value="DO_NOT_USE" />
           <param name="triggerRules"><![CDATA[-:**.md
 +:*]]></param>
+          <param name="watchChangesInDependencies" value="true" />
         </parameters>
       </build-trigger>
     </build-triggers>
