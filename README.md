@@ -3,6 +3,8 @@
 
 ### IT IS VERY IMPORTANT THAT YOU DO NOT RUN THE SERVER USING SUDO - THIS WILL OVERRIDE ALL ENVIRONMENTAL VARIABLES 
 
+### IIS Is locknig a file... heres what you can do
+https://stackoverflow.com/questions/49660923/why-is-iis-worker-process-locking-a-file
 
 ## Setup
 
