@@ -94,7 +94,7 @@ namespace Palavyr.API.CustomMiddleware
             else if (ACTION == MagicUrlStrings.DevAccess)
             {
                 _logger.LogInformation("ACCESSING USING THE DEV BACKDOOR");
-                if (env.IsDevelopment())
+                if (env.IsDevelopment() || env.IsStaging())
                 {
                     context.Request.Headers[MagicUrlStrings.AccountId] = MagicUrlStrings.DevAccount;
                     await _next(context);
