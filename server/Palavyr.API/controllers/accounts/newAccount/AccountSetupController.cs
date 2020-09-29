@@ -104,6 +104,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
         [HttpPost("confirmation/{authToken}/action/setup")]
         public bool ConfirmEmailAddress(string authToken)
         {
+            _logger.LogDebug("Attempting to confirm email via auth Token");
             var emailVerification = AccountContext.EmailVerifications.SingleOrDefault(row => row.AuthenticationToken == authToken.Trim());
             if (emailVerification == null)
                 return false;
