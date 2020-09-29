@@ -1,6 +1,11 @@
 # Palavyr Configuration Manager
 
 
+## Getting the certificate thumbprint is easy@
+
+    Get-ChildItem -path cert:\LocalMachine\Root
+    # (root, or whichever. Run cert:\LocalMachine to get a list)
+
 ### IT IS VERY IMPORTANT THAT YOU DO NOT RUN THE SERVER USING SUDO - THIS WILL OVERRIDE ALL ENVIRONMENTAL VARIABLES 
 
 ### IIS Is locknig a file... heres what you can do

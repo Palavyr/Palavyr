@@ -150,8 +150,8 @@ namespace Palavyr.API
 
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
-            else
-                app.UseHsts();
+            // else
+            //     app.UseHsts();
 
             app.UseHttpsRedirection(); // when we enable ssl
             app.UseStaticFiles(new StaticFileOptions()
