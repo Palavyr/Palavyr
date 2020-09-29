@@ -6,7 +6,7 @@
   <param name="authMethod" value="PASSWORD" />
   <param name="branch" value="refs/heads/master" />
   <param name="ignoreKnownHosts" value="true" />
-  <param name="secure:password" value="credentialsJSON:8312c65a-91ef-4d0b-8c58-2e20c74cdd53" />
+  <param name="secure:password" value="credentialsJSON:6733b2fc-c52e-47a4-b68b-7e05b68cf00e" />
   <param name="submoduleCheckout" value="CHECKOUT" />
   <param name="teamcity:branchSpec" value="refs/heads/*" />
   <param name="url" value="https://github.com/Palavyr/Configuration-Manager.git" />
