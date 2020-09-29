@@ -66,7 +66,6 @@
       <depend-on sourceBuildTypeId="ConfigurationManager_CreateVersionNumber">
         <options>
           <option name="run-build-if-dependency-failed" value="RUN_ADD_PROBLEM" />
-          <option name="run-build-on-the-same-agent" value="true" />
         </options>
       </depend-on>
     </dependencies>
