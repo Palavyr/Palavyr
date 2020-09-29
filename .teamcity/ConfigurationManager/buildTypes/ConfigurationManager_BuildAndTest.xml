@@ -65,7 +65,8 @@
     <dependencies>
       <depend-on sourceBuildTypeId="ConfigurationManager_CreateVersionNumber">
         <options>
-          <option name="run-build-if-dependency-failed" value="RUN_ADD_PROBLEM" />
+          <option name="run-build-if-dependency-failed" value="CANCEL" />
+          <option name="run-build-if-dependency-failed-to-start" value="CANCEL" />
         </options>
       </depend-on>
     </dependencies>
