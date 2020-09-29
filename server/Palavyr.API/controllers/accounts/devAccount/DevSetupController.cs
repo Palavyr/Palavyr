@@ -60,11 +60,14 @@ namespace Palavyr.API.controllers.accounts.devAccount
             try
             {
                 _logger.LogDebug("Trying to Deleting All Data currently in the database!");
+                Console.WriteLine("Trying to Deleting All Data currently in the database!");
+
                 DeleteAllData();
             }
             catch (Exception ex)
             {
                 _logger.LogDebug($"Error deleting all data... {ex.Message}");
+                Console.WriteLine($"Error deleting all data... {ex.Message}");
             }
 
             try

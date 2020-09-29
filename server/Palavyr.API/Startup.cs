@@ -154,11 +154,11 @@ namespace Palavyr.API
             //     app.UseHsts();
 
             app.UseHttpsRedirection(); // when we enable ssl
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(appDataPath),
-                RequestPath = new PathString("")
-            });
+            // app.UseStaticFiles(new StaticFileOptions()
+            // {
+            //     FileProvider = new PhysicalFileProvider(appDataPath),
+            //     RequestPath = new PathString("")
+            // });
             app.UseRouting();
             app.UseCors();
             app.UseMiddleware<AuthenticateByLoginOrSession>();
