@@ -22,7 +22,6 @@ To complete the process, all you need to do is use the code provided below after
 message to palavyr.com and let us know that you've confirmed that you own the email address. With that, its smooth sailing!
 
 Account: {details.EmailAddress}
-Password: {details.Password}
 
 Use this code in the dashboard to confirm your email address and unlock Palavyr:
 
@@ -79,7 +78,6 @@ Founder
                 </span>
                 <p>
                     Account: {details.EmailAddress}<br />
-                    Password: {details.Password}
                 </p>
                 <span>
                     <p>
