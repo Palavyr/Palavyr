@@ -16,10 +16,10 @@ namespace Palavyr.API.controllers.accounts.devAccount
     public class DefaultDataController : BaseController
     {
         
-        private static ILogger<FileController> _logger;
+        private static ILogger<DefaultDataController> _logger;
 
         public DefaultDataController(
-            ILogger<FileController> logger,
+            ILogger<DefaultDataController> logger,
             AccountsContext accountContext,
             ConvoContext convoContext,
             DashContext dashContext,

@@ -3,16 +3,22 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
+using Microsoft.Extensions.Logging;
 
 namespace EmailService
 {
     public partial class SESEmail
     {
+        private readonly ILogger<SESEmail> _logger;
 
         private IAmazonSimpleEmailService EmailClient { get;}
-
-        public SESEmail(IAmazonSimpleEmailService client)
+        
+        public SESEmail(
+            ILogger<SESEmail> _logger,
+            IAmazonSimpleEmailService client
+            )
         {
+            this._logger = _logger;
             EmailClient = client;
         }
 
@@ -53,14 +59,14 @@ namespace EmailService
 
             try
             {
-                Console.WriteLine("Sending Email...");
+                _logger.LogDebug("Sending Email...");
                 await EmailClient.SendEmailAsync(sendRequest);
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Email was not sent. ");
-                Console.WriteLine("Error: " + ex.Message);
+                _logger.LogDebug("Email was not sent. ");
+                _logger.LogDebug("Error: " + ex.Message);
                 //TODO: If this errors, then we need to send a response that the email couldn't be sent, and then record the email in the bounceback DB.
                 return false;
             }
