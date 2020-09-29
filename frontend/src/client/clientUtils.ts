@@ -12,10 +12,11 @@ export const serverUrl = process.env.API_URL as string;
 export const webUrl = process.env.WEB_URL as string;
 export const widgetUrl = process.env.WIDGET_URL as string;
 
-console.log("Process.Env Variables gathered for the current env...")
-console.log("WIDGET_URL: " + widgetUrl);
-console.log("SERVER_URL: " + serverUrl);
-console.log("WEB_URL: " + webUrl);
+// Enable for debugging if necessary 
+// console.log("Process.Env Variables gathered for the current env...")
+// console.log("WIDGET_URL: " + widgetUrl);
+// console.log("SERVER_URL: " + serverUrl);
+// console.log("WEB_URL: " + webUrl);
 
 if (serverUrl === undefined) {
     console.log("SERVER URL UNDEFINED")
