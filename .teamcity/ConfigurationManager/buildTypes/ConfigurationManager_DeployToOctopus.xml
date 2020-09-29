@@ -116,7 +116,8 @@ palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number
       </depend-on>
       <depend-on sourceBuildTypeId="ConfigurationManager_Frontend">
         <options>
-          <option name="run-build-if-dependency-failed" value="RUN_ADD_PROBLEM" />
+          <option name="run-build-if-dependency-failed" value="CANCEL" />
+          <option name="run-build-if-dependency-failed-to-start" value="CANCEL" />
           <option name="take-started-build-with-same-revisions" value="true" />
           <option name="take-successful-builds-only" value="true" />
         </options>
