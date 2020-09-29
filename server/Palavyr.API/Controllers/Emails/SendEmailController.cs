@@ -29,7 +29,7 @@ namespace Palavyr.API.Controllers.Emails
             IWebHostEnvironment env, IAmazonSimpleEmailService SES, IConfiguration config) : base(accountContext, convoContext, dashContext, env)
         {
             Config = config;
-            Client = new SESEmail(SES);
+            Client = new SESEmail(logger, SES);
             _logger = logger;
         }
 

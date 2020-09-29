@@ -6,6 +6,7 @@ using DashboardServer.Data;
 using EmailService;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Palavyr.API.Controllers;
 using Palavyr.API.controllers.accounts.seedData;
 using Palavyr.Common.Constants;
@@ -19,20 +20,21 @@ namespace Palavyr.API.controllers.accounts.newAccount
     [ApiController]
     public class AccountSetup : BaseController
     {
-        // private static ILogger<Authentication> _logger;
+        private static ILogger<AccountSetup> _logger;
         private SESEmail Client { get; set; } // Startup.cs handles finding credentials from appsettings.json through GetAWSOptions
 
         public AccountSetup(
+            ILogger<AccountSetup> logger,
             IAmazonSimpleEmailService SES,
             AccountsContext accountContext,
             ConvoContext convoContext,
             DashContext dashContext,
             IWebHostEnvironment env) : base(accountContext, convoContext, dashContext, env)
         {
-            Client = new SESEmail(SES);
+            Client = new SESEmail(logger, SES);
+            _logger = logger;
         }
-
-
+        
         /// <summary>
         /// Creates a new account table record and data
         /// </summary>
