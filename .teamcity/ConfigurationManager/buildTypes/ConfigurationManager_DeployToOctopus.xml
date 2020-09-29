@@ -76,12 +76,6 @@ palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number
       </dependency>
     </artifact-dependencies>
     <dependencies>
-      <depend-on sourceBuildTypeId="ConfigurationManager_BuildAndTest">
-        <options>
-          <option name="run-build-if-dependency-failed" value="RUN_ADD_PROBLEM" />
-          <option name="run-build-on-the-same-agent" value="true" />
-        </options>
-      </depend-on>
       <depend-on sourceBuildTypeId="ConfigurationManager_CreateVersionNumber">
         <options>
           <option name="run-build-if-dependency-failed" value="RUN_ADD_PROBLEM" />
@@ -113,6 +107,11 @@ palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number
         <options>
           <option name="run-build-if-dependency-failed" value="CANCEL" />
           <option name="run-build-if-dependency-failed-to-start" value="CANCEL" />
+        </options>
+      </depend-on>
+      <depend-on sourceBuildTypeId="ConfigurationManager_BuildAndTest">
+        <options>
+          <option name="run-build-if-dependency-failed" value="RUN_ADD_PROBLEM" />
         </options>
       </depend-on>
     </dependencies>
