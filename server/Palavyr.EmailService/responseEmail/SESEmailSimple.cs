@@ -75,7 +75,7 @@ namespace EmailService
             catch (Exception ex)
             {
                 _logger.LogDebug("Email was not sent. ");
-                _logger.LogDebug("Error: " + ex.Message);
+                _logger.LogDebug($"Error: {ex.Message}");
                 //TODO: If this errors, then we need to send a response that the email couldn't be sent, and then record the email in the bounceback DB.
                 return false;
             }
