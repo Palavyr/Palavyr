@@ -37,7 +37,7 @@ namespace Palavyr.Background
             try
             {
                 var response = await S3Client.DeleteObjectsAsync(request);
-                _logger.LogInformation($"Successfully Deleted objects. Response: {response.HttpStatusCode}");
+                _logger.LogInformation($"Successfully Deleted objects. Http status Response: {response.HttpStatusCode}");
             }
             catch (Exception ex)
             {

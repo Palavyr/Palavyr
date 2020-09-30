@@ -27,7 +27,7 @@ dotnet user-secrets clear --project $migrator;
 WriteSecrets($api)
 WriteSecrets($migrator)
 
-#################
+##################
 # WRITE AWS SECRETS
 Write-Host "`r`nSetting Secrets for AWS Credentials"
 $prof = Get-AWSCredential $awsProfile;
