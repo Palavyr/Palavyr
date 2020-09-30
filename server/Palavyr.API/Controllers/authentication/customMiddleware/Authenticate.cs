@@ -106,7 +106,7 @@ namespace Palavyr.API.CustomMiddleware
             else
             {
                 _logger.LogCritical("NO ACTION HEADER FOUND");
-                throw new AccessViolationException("Must provide action string in header.");
+                throw new AccessViolationException("Must provide action string in header for non login request.");
                 
             }
                 
