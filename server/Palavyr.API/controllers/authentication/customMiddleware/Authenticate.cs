@@ -96,9 +96,11 @@ namespace Palavyr.API.CustomMiddleware
                 _logger.LogInformation("ACCESSING USING THE DEV BACKDOOR");
                 if (env.IsDevelopment() || env.IsStaging())
                 {
+                    _logger.LogDebug("Accessing the app without credentials in staging OR dev. ");
                     context.Request.Headers[MagicUrlStrings.AccountId] = MagicUrlStrings.DevAccount;
                     await _next(context);
                 }
+                _logger.LogDebug("NOT ACCESSING THE APPLICATION. DEV BACKDOOR NOT AVAILABLE IN PRODUCTION. EXITING.");
             }
 
             else
