@@ -23,18 +23,6 @@ namespace Palavyr.API.controllers.accounts.newAccount
         private static ILogger<AccountSetup> _logger;
         private SESEmail Client { get; set; } // Startup.cs handles finding credentials from appsettings.json through GetAWSOptions
 
-        public AccountSetup(
-            ILogger<AccountSetup> logger,
-            IAmazonSimpleEmailService SES,
-            AccountsContext accountContext,
-            ConvoContext convoContext,
-            DashContext dashContext,
-            IWebHostEnvironment env) : base(accountContext, convoContext, dashContext, env)
-        {
-            Client = new SESEmail(logger, SES);
-            _logger = logger;
-        }
-        
         /// <summary>
         /// Creates a new account table record and data
         /// </summary>
@@ -81,13 +69,11 @@ namespace Palavyr.API.controllers.accounts.newAccount
             await DashContext.WidgetPreferences.AddAsync(seeData.WidgetPreference);
             await DashContext.SelectOneFlats.AddRangeAsync(seeData.DefaultDynamicTables);
             await DashContext.DynamicTableMetas.AddRangeAsync(seeData.DefaultDynamicTableMetas);
-            await DashContext.SaveChangesAsync();
 
             // prepare the account confirmation email
             _logger.LogDebug("Provide an account setup confirmation token");
             var confirmationToken = Guid.NewGuid().ToString().Split("-")[0];
             await AccountContext.EmailVerifications.AddAsync(EmailVerification.CreateNew(confirmationToken, newAccountRequest.EmailAddress, newAccountId));
-            await AccountContext.SaveChangesAsync();
 
             // send the confirmation email - handle a bounceback if the email address is not real
             const string fromAddress = "gradie.machine.learning@gmail.com"; // TODO: Replace with company email asap
@@ -96,10 +82,29 @@ namespace Palavyr.API.controllers.accounts.newAccount
             var htmlBody = EmailConfirmationHTML.GetConfirmationEmailBody(newAccountRequest, confirmationToken);
             var textBody = EmailConfirmationHTML.GetConfirmationEmailBodyText(newAccountRequest, confirmationToken);
             var ok = await Client.SendEmail(fromAddress, newAccountRequest.EmailAddress, subject, htmlBody, textBody);
+
+            if (ok)
+            {
+                await AccountContext.SaveChangesAsync();
+                await DashContext.SaveChangesAsync();
+            }
+            
             _logger.LogDebug("Send Email result was " + (ok ? "OK" : "FAIL"));
             return ok ? (StatusCodeResult) new OkResult() : new NotFoundResult();
         }
-        
+
+        public AccountSetup(
+            ILogger<AccountSetup> logger,
+            IAmazonSimpleEmailService SES,
+            AccountsContext accountContext,
+            ConvoContext convoContext,
+            DashContext dashContext,
+            IWebHostEnvironment env) : base(accountContext, convoContext, dashContext, env)
+        {
+            Client = new SESEmail(logger, SES);
+            _logger = logger;
+        }
+
 
         [HttpPost("confirmation/{authToken}/action/setup")]
         public bool ConfirmEmailAddress(string authToken)
