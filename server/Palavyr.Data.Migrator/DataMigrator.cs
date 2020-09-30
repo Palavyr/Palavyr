@@ -18,6 +18,8 @@ namespace Palavyr.Data.Migrator
         private const string ConfigConfigKey = "DashContextPostgres";
         private const string ConfigFilterName = "configuration_migration";
 
+        private const string Environment = "Environment";
+        
         private static ILogger _logger { get; set; }
 
         static int Main(string[] args)
@@ -33,16 +35,17 @@ namespace Palavyr.Data.Migrator
             });
             _logger = loggerFactory.CreateLogger<DataMigrator>();
 
-            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", EnvironmentVariableTarget.User);
+            // var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", EnvironmentVariableTarget.Process);
 
-            _logger.LogInformation($"Data Migrations being performed in {env}");
 
             var assembly = Assembly.GetExecutingAssembly();
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.migrator.json", true)
                 .AddUserSecrets(assembly, true)
                 .Build();
-            
+            var env = configuration.GetValue<string>("Environment");
+            _logger.LogInformation($"Data Migrations being performed in {env}");
+
             var accountsRes = ApplyMigrations(env, AccountConfigKey, AccountFilterName, configuration);
             if (accountsRes == -1) return -1;
             

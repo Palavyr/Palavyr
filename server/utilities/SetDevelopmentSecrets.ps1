@@ -28,6 +28,13 @@ WriteSecrets($api)
 WriteSecrets($migrator)
 
 ##################
+# Write Migrator Environment
+
+Write-Host "`r`nSetting Environment for $migrator"
+dotnet user-secrets set Environment "Development" --project $migrator;
+
+
+##################
 # WRITE AWS SECRETS
 Write-Host "`r`nSetting Secrets for AWS Credentials"
 $prof = Get-AWSCredential $awsProfile;
@@ -38,3 +45,5 @@ $secretKey = $credentials.SecretKey;
 dotnet user-secrets set AWS:AccessKey "$accessKey" --project $api
 dotnet user-secrets set AWS:SecretKey "$secretKey" --project $api
 dotnet user-secrets set AWS:Region "ap-southeast-2" --project $api
+
+Clear-Host
