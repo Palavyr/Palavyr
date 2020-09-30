@@ -35,12 +35,13 @@ namespace Palavyr.API.Controllers
         [HttpGet("estimate/{areaId}")]
         public async Task<FileLink> GetConfigurationPreview([FromHeader] string accountId, string areaId)
         {
+            _logger.LogDebug("Attempting to generate a new preview");
             var account = AccountContext.Accounts.Single(row => row.AccountId == accountId);
             var locale = account.Locale;
             var culture = new CultureInfo(locale);
             
-            var pdfGenerator = new PdfResponseGenerator(DashContext, AccountContext, ConvoContext, accountId, areaId, Request);
-            return await pdfGenerator.CreatePdfResponsePreviewAsync(S3Client, _logger, culture);
+            var pdfGenerator = new PdfResponseGenerator(DashContext, AccountContext, ConvoContext, accountId, areaId, Request, _logger);
+            return await pdfGenerator.CreatePdfResponsePreviewAsync(S3Client, culture);
         }
     }
 }

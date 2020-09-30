@@ -32,9 +32,10 @@ namespace Palavyr.API.GeneratePdf
         private string AreaId { get; set; }
         private static readonly HttpClient client = new HttpClient();
         private HttpRequest Request { get; set; }
+        private ILogger _logger;
         
         public PdfResponseGenerator(DashContext dashContext, AccountsContext accountContext,
-            ConvoContext dynamicTableContext, string accountId, string areaId, HttpRequest request)
+            ConvoContext dynamicTableContext, string accountId, string areaId, HttpRequest request, ILogger logger)
         {
             DashContext = dashContext;
             AccountContext = accountContext;
@@ -42,6 +43,7 @@ namespace Palavyr.API.GeneratePdf
             AccountId = accountId;
             AreaId = areaId;
             Request = request;
+            _logger = logger;
         }
 
         public async Task<FileLink> CreatePdfResponsePreviewAsync(CultureInfo culture)
@@ -49,23 +51,40 @@ namespace Palavyr.API.GeneratePdf
             var areaData = GetDeepAreaData(); // This was fucking stupid. Impossible to test.
             var userAccount = GetUserAccount();
             var accountId = userAccount.AccountId;
-
+            _logger.LogDebug("-------------CreatePdfResponsePreviewAsync-------------------");
             var criticalResponses = new CriticalResponses(new List<Dictionary<string, string>>()
             {
                 new Dictionary<string, string>() {{"Very important info", "Crucial response"}},
                 new Dictionary<string, string>() {{"An Important Question", "An insightful response"}},
             });
+            
+            _logger.LogDebug("Attempting to collect table data....");
             var staticTables = CollectStaticTables(areaData, culture);
             var dynamicTables = CollectPreviewDynamicTables(areaData, AccountId, culture);
 
+            _logger.LogDebug($"Generating PDF Html string to send to express server...");
             var html = PdfGenerator.GenerateNewPDF(userAccount, areaData, criticalResponses, staticTables,
                 dynamicTables);
 
             var randomFileName = Guid.NewGuid().ToString();
             var localWriteToPath_PDFPreview =
                 FormFilePath.FormResponsePreviewLocalFilePath(accountId, randomFileName, "pdf");
-            var fileId = await GeneratePdfFromHtml(html, LocalServices.PdfServiceUrl, localWriteToPath_PDFPreview,
-                randomFileName);
+            
+            _logger.LogDebug($"Local path used to save the pdf from express (being sent to the express server: {localWriteToPath_PDFPreview}");
+
+            string fileId;
+            try
+            {
+                fileId = await GeneratePdfFromHtml(html, LocalServices.PdfServiceUrl, localWriteToPath_PDFPreview,
+                    randomFileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Failed to convert and write the HTML to PDF using the express server.");
+                _logger.LogCritical($"Attempted to use url: {LocalServices.PdfServiceUrl}");
+                _logger.LogCritical($"Encountered Error: {ex.Message}");
+                throw new Exception();
+            }
 
             var link = CreatePreviewUrlLink(AccountId, fileId);
             var fileLink = FileLink.CreateLink("Preview", link, fileId);
@@ -79,7 +98,6 @@ namespace Palavyr.API.GeneratePdf
         /// <returns></returns>
         public async Task<FileLink> CreatePdfResponsePreviewAsync(
             IAmazonS3 s3Client,
-            ILogger _logger,
             CultureInfo culture)
         {
             var areaData = GetDeepAreaData(); // This was fucking stupid. Impossible to test.
@@ -157,9 +175,10 @@ namespace Palavyr.API.GeneratePdf
             return fileName;
         }
 
-        private static string CreatePreviewUrlLink(string accountId, string fileId)
+        private string CreatePreviewUrlLink(string accountId, string fileId)
         {
             // var host = Request.Host.Value; //TODO:  Get this from config (request.host)
+            _logger.LogDebug("Attempting to create new file URI for preview.");
             var builder =
                 new UriBuilder()
                 {
@@ -167,6 +186,7 @@ namespace Palavyr.API.GeneratePdf
                     Scheme = "https", Host = "localhost", Port = 5001,
                     Path = Path.Combine(accountId, MagicPathStrings.PreviewPDF, fileId)
                 };
+            _logger.LogDebug($"URI used for the preview: {builder.Uri.ToString()}");
             return builder.Uri.ToString();
         }
 

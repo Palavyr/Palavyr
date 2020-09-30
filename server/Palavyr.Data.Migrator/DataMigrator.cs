@@ -18,9 +18,9 @@ namespace Palavyr.Data.Migrator
         private const string ConfigConfigKey = "DashContextPostgres";
         private const string ConfigFilterName = "configuration_migration";
 
-        private ILogger _logger { get; set; }
+        private static ILogger _logger { get; set; }
 
-        int Main(string[] args)
+        static int Main(string[] args)
         {
             using var loggerFactory = LoggerFactory.Create(builder =>
             {
@@ -55,7 +55,7 @@ namespace Palavyr.Data.Migrator
             return 0;
         }
 
-        private int ApplyMigrations(string env, string configKey, string filterName, IConfiguration config)
+        private static int ApplyMigrations(string env, string configKey, string filterName, IConfiguration config)
         {
             _logger.LogInformation($"Deploying migration for {configKey} in {env}.");
             var connection = config.GetConnectionString(configKey);
@@ -64,7 +64,7 @@ namespace Palavyr.Data.Migrator
             return accountsRes;
         }
         
-        private int DeployMigration(string connectionString, string filterName)
+        private static int DeployMigration(string connectionString, string filterName)
         {
             var upgrader =
                 DeployChanges.To

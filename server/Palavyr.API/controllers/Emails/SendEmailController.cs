@@ -44,7 +44,7 @@ namespace Palavyr.API.Controllers.Emails
         public async Task<StatusCodeResult> SendEmail(string apiKey, string areaId, [FromBody] EmailRequest userDetails)
         {
             var accountId = SetUserDb(apiKey);
-            var pdfGenerator = new PdfResponseGenerator(DashContext, AccountContext, ConvoContext, accountId, areaId, Request);
+            var pdfGenerator = new PdfResponseGenerator(DashContext, AccountContext, ConvoContext, accountId, areaId, Request, _logger);
             var criticalResponses = new CriticalResponses(userDetails.KeyValues);
             var attachmentFiles = AttachmentPaths.ListAttachmentsAsDiskPaths(accountId, areaId);
 
