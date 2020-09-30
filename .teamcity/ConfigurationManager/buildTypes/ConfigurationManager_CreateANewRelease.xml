@@ -18,7 +18,6 @@
           <param name="octopus_releasenumber" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
           <param name="octopus_space_name" value="Palavyr" />
           <param name="octopus_version" value="3.0+" />
-          <param name="octopus_waitfordeployments" value="true" />
           <param name="secure:octopus_apikey" value="credentialsJSON:206075a8-c12f-4f17-a3be-213a6915ef08" />
           <param name="teamcity.step.mode" value="default" />
         </parameters>
