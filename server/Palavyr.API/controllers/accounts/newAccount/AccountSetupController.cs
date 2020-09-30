@@ -114,6 +114,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             if (emailVerification == null)
                 return false;
 
+            _logger.LogDebug("Email Address found.");
             var accountId = emailVerification.AccountId;
             var account = AccountContext.Accounts.SingleOrDefault(row => row.AccountId == accountId);
             if (account == null)
