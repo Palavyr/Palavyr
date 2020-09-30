@@ -41,7 +41,9 @@ namespace Palavyr.API.Controllers
             var culture = new CultureInfo(locale);
             
             var pdfGenerator = new PdfResponseGenerator(DashContext, AccountContext, ConvoContext, accountId, areaId, Request, _logger);
-            return await pdfGenerator.CreatePdfResponsePreviewAsync(S3Client, culture);
+            var fileLink = await pdfGenerator.CreatePdfResponsePreviewAsync(S3Client, culture);
+            return fileLink;
+
         }
     }
 }

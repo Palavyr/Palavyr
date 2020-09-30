@@ -33,7 +33,7 @@ namespace Palavyr.API.GeneratePdf
         private static readonly HttpClient client = new HttpClient();
         private HttpRequest Request { get; set; }
         private ILogger _logger;
-        
+
         public PdfResponseGenerator(DashContext dashContext, AccountsContext accountContext,
             ConvoContext dynamicTableContext, string accountId, string areaId, HttpRequest request, ILogger logger)
         {
@@ -57,7 +57,7 @@ namespace Palavyr.API.GeneratePdf
                 new Dictionary<string, string>() {{"Very important info", "Crucial response"}},
                 new Dictionary<string, string>() {{"An Important Question", "An insightful response"}},
             });
-            
+
             _logger.LogDebug("Attempting to collect table data....");
             var staticTables = CollectStaticTables(areaData, culture);
             var dynamicTables = CollectPreviewDynamicTables(areaData, AccountId, culture);
@@ -69,8 +69,9 @@ namespace Palavyr.API.GeneratePdf
             var randomFileName = Guid.NewGuid().ToString();
             var localWriteToPath_PDFPreview =
                 FormFilePath.FormResponsePreviewLocalFilePath(accountId, randomFileName, "pdf");
-            
-            _logger.LogDebug($"Local path used to save the pdf from express (being sent to the express server: {localWriteToPath_PDFPreview}");
+
+            _logger.LogDebug(
+                $"Local path used to save the pdf from express (being sent to the express server: {localWriteToPath_PDFPreview}");
 
             string fileId;
             try
@@ -96,10 +97,10 @@ namespace Palavyr.API.GeneratePdf
         /// </summary>
         /// <param name="s3Client"></param>
         /// <returns></returns>
-        public async Task<FileLink> CreatePdfResponsePreviewAsync(
-            IAmazonS3 s3Client,
-            CultureInfo culture)
+        public async Task<FileLink> CreatePdfResponsePreviewAsync(IAmazonS3 s3Client, CultureInfo culture)
         {
+            _logger.LogDebug("-------------CreatePdfResponsePreviewAsync-------------------");
+
             var areaData = GetDeepAreaData(); // This was fucking stupid. Impossible to test.
             var userAccount = GetUserAccount();
             var accountId = userAccount.AccountId;
@@ -109,9 +110,12 @@ namespace Palavyr.API.GeneratePdf
                 new Dictionary<string, string>() {{"Example info", "Crucial response"}},
                 new Dictionary<string, string>() {{"Selected to Include", "An insightful response"}},
             });
+
+            _logger.LogDebug("Attempting to collect table data....");
             var staticTables = CollectStaticTables(areaData, culture);
             var dynamicTables = CollectPreviewDynamicTables(areaData, AccountId, culture);
 
+            _logger.LogDebug($"Generating PDF Html string to send to express server...");
             var html = PdfGenerator.GenerateNewPDF(
                 userAccount,
                 areaData,
@@ -121,13 +125,40 @@ namespace Palavyr.API.GeneratePdf
 
             var safeFileNameStem = Guid.NewGuid().ToString();
             var safeFileNamePath = FormFilePath.FormResponsePreviewLocalFilePath(accountId, safeFileNameStem);
-            await GeneratePdfFromHtml(html, LocalServices.PdfServiceUrl, safeFileNamePath, safeFileNameStem);
 
-                var link = await UriUtils.CreatePreSignedPreviewUrlLink(_logger, AccountId, safeFileNameStem, safeFileNamePath, s3Client);
+            _logger.LogDebug(
+                $"Attemping to create pdf file from html at {safeFileNamePath} using URL {LocalServices.PdfServiceUrl}");
+
+            try
+            {
+                await GeneratePdfFromHtml(html, LocalServices.PdfServiceUrl, safeFileNamePath, safeFileNameStem);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Failed to convert and write the HTML to PDF using the express server.");
+                _logger.LogCritical($"Attempted to use url: {LocalServices.PdfServiceUrl}");
+                _logger.LogCritical($"Encountered Error: {ex.Message}");
+                throw new Exception();
+            }
+
+            string link;
+            try
+            {
+                link = await UriUtils.CreatePreSignedPreviewUrlLink(_logger, AccountId, safeFileNameStem,
+                    safeFileNamePath, s3Client);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Failed to create presigned preview Url Link from S3.");
+                _logger.LogCritical($"Encountered Error: {ex.Message}");
+                throw new Exception();
+            }
+
             var fileLink = FileLink.CreateLink("Preview", link, safeFileNamePath);
 
             if (File.Exists(safeFileNamePath))
             {
+                _logger.LogDebug($"Deleted local path (currently on S3). Path {safeFileNamePath}");
                 File.Delete(safeFileNamePath);
             }
 
@@ -160,7 +191,8 @@ namespace Palavyr.API.GeneratePdf
             return fileName;
         }
 
-        private async Task<string> GeneratePdfFromHtml(string htmlString, string serviceUrl, string localWriteToPath, string identifier)
+        private async Task<string> GeneratePdfFromHtml(string htmlString, string serviceUrl, string localWriteToPath,
+            string identifier)
         {
             var values = new Dictionary<string, string>
             {
@@ -254,7 +286,8 @@ namespace Palavyr.API.GeneratePdf
                 {
                     case DynamicTableTypes.SelectOneFlat:
                         var tableRows = DashContext.SelectOneFlats
-                            .Where(row => row.AccountId == accountId && row.AreaIdentifier == data.AreaIdentifier).ToList();
+                            .Where(row => row.AccountId == accountId && row.AreaIdentifier == data.AreaIdentifier)
+                            .ToList();
                         var randomTableRow = tableRows[0]; // TODO: allow this to be specified via frontend
                         const bool perPerson = false; // TODO: Allow to specify true
                         var row = new TableRow(
