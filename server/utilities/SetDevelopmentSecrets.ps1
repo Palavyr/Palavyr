@@ -1,4 +1,4 @@
-param([string]$pass = "0987654321", [string]$user = "postgres")
+param([string]$pass = "0987654321", [string]$user = "postgres", [string]$awsProfile = "default")
 
 ### sets the secret password used to connect to the postgres DB in DEV.
 
@@ -14,16 +14,27 @@ $api = ".\\Palavyr.API";
 $migrator = ".\\Palavyr.Data.Migrator";
 
 function WriteSecrets($projectPath) {
-    Write-Host "Setting Connection Strings for $projectPath..."
+    Write-Host "`r`nSetting Connection Strings for $projectPath...`r`n"
     dotnet user-secrets set ConnectionStrings:AccountsContextPostgres "Server=$server;Port=$port;Database=Accounts;User Id=$user;Password=$pass" --project $projectPath
     dotnet user-secrets set ConnectionStrings:ConvoContextPostgres "Server=$server;Port=$port;Database=Conversations;User Id=$user;Password=$pass" --project $projectPath
     dotnet user-secrets set ConnectionStrings:DashContextPostgres "Server=$server;Port=$port;Database=Configuration;User Id=$user;Password=$pass" --project $projectPath
-    
 }
 
-Write-Host "Clearing previous Secrets"
+Write-Host "`r`nClearing previous Secrets`r`n"
 dotnet user-secrets clear --project $api;
 dotnet user-secrets clear --project $migrator;
 
 WriteSecrets($api)
 WriteSecrets($migrator)
+
+#################
+# WRITE AWS SECRETS
+Write-Host "`r`nSetting Secrets for AWS Credentials"
+$prof = Get-AWSCredential $awsProfile;
+$credentials = $prof.GetCredentials();
+$accessKey = $credentials.AccessKey;
+$secretKey = $credentials.SecretKey;
+
+dotnet user-secrets set AWS:AccessKey "$accessKey" --project $api
+dotnet user-secrets set AWS:SecretKey "$secretKey" --project $api
+dotnet user-secrets set AWS:Region "ap-southeast-2" --project $api

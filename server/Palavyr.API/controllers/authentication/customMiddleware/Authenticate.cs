@@ -8,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Palavyr.Common.requests;
 
-
 //https://thecodebuzz.com/access-database-middleware-entity-framework-net-core/
 namespace Palavyr.API.CustomMiddleware
 {
@@ -27,6 +26,7 @@ namespace Palavyr.API.CustomMiddleware
         public async Task InvokeAsync(HttpContext context, IWebHostEnvironment env, AccountsContext accountContext)
         {
     
+            _logger.LogInformation($"Currently operating in {env.EnvironmentName}");
             var ACTION = context.Request.Headers[Common.requests.MagicUrlStrings.Action].ToString();
 
             if (string.IsNullOrEmpty(ACTION) && (context.Request.Path.ToString().EndsWith("/action/setup")))
@@ -93,7 +93,7 @@ namespace Palavyr.API.CustomMiddleware
             
             else if (ACTION == MagicUrlStrings.DevAccess)
             {
-                _logger.LogInformation("ACCESSING USING THE DEV BACKDOOR");
+                _logger.LogInformation("-----ACCESSING USING THE DEV BACKDOOR-----");
                 if (env.IsDevelopment() || env.IsStaging())
                 {
                     _logger.LogDebug("Accessing the app without credentials in staging OR dev. ");
@@ -105,9 +105,8 @@ namespace Palavyr.API.CustomMiddleware
 
             else
             {
-                _logger.LogCritical("NO ACTION HEADER FOUND");
+                _logger.LogDebug("NO ACTION HEADER FOUND");
                 throw new AccessViolationException("Must provide action string in header for non login request.");
-                
             }
                 
             

@@ -39,6 +39,7 @@ namespace Palavyr.API
                         logging.AddDebug();
                         logging.AddEventSourceLogger();
                         logging.AddNLog();
+                        logging.AddSeq();
                     })
                 .UseNLog();
             return host;

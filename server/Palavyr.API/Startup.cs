@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using System.Reflection;
+using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.SimpleEmail;
 using DashboardServer.Data;
@@ -8,11 +8,9 @@ using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware;
@@ -28,19 +26,18 @@ namespace Palavyr.API
         {
             env = Env;
         }
+
         private IConfiguration Configuration { get; set; }
         private ILogger<Startup> _logger { get; set; }
-        private IWebHostEnvironment env { get; set; } 
+        private IWebHostEnvironment env { get; set; }
+
+        private readonly string ConfigurationDBStringKey = "DashContextPostgres";
+        private readonly string AccountDBStringKey = "AccountsContextPostgres";
+        private readonly string ConvoDBStringKey = "ConvoContextPostgres";
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var appSettings = $"appsettings.{env.EnvironmentName.ToLower()}.json";
-            Configuration = new ConfigurationBuilder()
-                .AddJsonFile(appSettings, false)
-                .AddJsonFile("appsettings.json", true)
-                .AddUserSecrets(Assembly.GetExecutingAssembly(), true)
-                .Build();
-
+            services.AddLogging(loggingBuilder => { loggingBuilder.AddSeq(); });
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -61,16 +58,7 @@ namespace Palavyr.API
                                 "X-Requested-With"
                             );
 
-                        if (env.IsStaging() || env.IsProduction())
-                        {
-                            builder.WithOrigins(
-                                "http://palavyr.com",
-                                "http://www.palavyr.com",
-                                "https://palavyr.com",
-                                "https://www.palavyr.com"
-                            );
-                        } 
-                        else
+                        if (env.IsDevelopment())
                         {
                             builder.WithOrigins(
                                 "http://localhost/",
@@ -83,52 +71,63 @@ namespace Palavyr.API
                                 "https://localhost:5001"
                             );
                         }
+                        else
+                        {
+                            builder.WithOrigins(
+                                "http://staging.palavyr.com",
+                                "http://www.staging.palavyr.com",
+                                "https://staging.palavyr.com",
+                                "https://www.staging.palavyr.com",
+                                
+                                "http://palavyr.com",
+                                "http://www.palavyr.com",
+                                "https://palavyr.com",
+                                "https://www.palavyr.com"
+                            );
+                        }
                     });
             });
 
             services.AddControllers();
-
             services.AddDbContext<AccountsContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString("AccountsContextPostgres")));
+                opt.UseNpgsql(Configuration.GetConnectionString(AccountDBStringKey)));
             services.AddDbContext<ConvoContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString("ConvoContextPostgres")));
+                opt.UseNpgsql(Configuration.GetConnectionString(ConvoDBStringKey)));
             services.AddDbContext<DashContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString("DashContextPostgres")));
+                opt.UseNpgsql(Configuration.GetConnectionString(ConfigurationDBStringKey)));
 
             // AWS Services
-            services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
+            var accessKey = Configuration.GetSection("AWS:SecretKey").Value;
+            var secretKey = Configuration.GetSection("AWS:SecretKey").Value;
+            var awsOptions = Configuration.GetAWSOptions();
+            awsOptions.Credentials = new BasicAWSCredentials(accessKey, secretKey);
+            services.AddDefaultAWSOptions(awsOptions);
             services.AddAWSService<IAmazonSimpleEmailService>();
             services.AddAWSService<IAmazonS3>();
 
-            Console.WriteLine($"STARTUP-2: Platform = {Environment.OSVersion.Platform.ToString()}");
             if (Environment.OSVersion.Platform != PlatformID.Unix)
             {
-                if (env.IsStaging() || env.IsProduction())
+                if (!env.IsDevelopment())
                 {
                     services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
                 }
             }
-            else
+
+            if (env.IsProduction())
             {
-                Console.WriteLine($"STARTUP-4: Platform = {Environment.OSVersion.Platform.ToString()}");
-                if (env.IsStaging() || env.IsProduction())
-                {
-                    Console.WriteLine($"STARTUP-5: env = {env}");
-                }
+                services.AddHangfire(config =>
+                    config
+                        .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                        .UseSimpleAssemblyNameTypeSerializer()
+                        .UseMemoryStorage());
+                services.AddHangfireServer();
 
+                // TODO: add service to allow snapshot
+                services.AddScoped<ICreatePalavyrSnapshot, CreatePalavyrSnapshot>();
+                services.AddScoped<IRemoveOldS3Archives, RemoveOldS3Archives>();
+                services.AddScoped<IRemoveStaleSessions, RemoveStaleSessions>();
+                services.AddScoped<IValidateAttachments, ValidateAttachments>();
             }
-
-            services.AddHangfire(config =>
-                config
-                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                    .UseSimpleAssemblyNameTypeSerializer()
-                    .UseMemoryStorage());
-            services.AddHangfireServer();
-
-            // services.AddScoped<ICreatePalavyrSnapshot, CreatePalavyrSnapshot>();
-            services.AddScoped<IRemoveOldS3Archives, RemoveOldS3Archives>();
-            services.AddScoped<IRemoveStaleSessions, RemoveStaleSessions>();
-            services.AddScoped<IValidateAttachments, ValidateAttachments>();
         }
 
         public void Configure(
@@ -140,29 +139,24 @@ namespace Palavyr.API
         )
         {
             _logger = loggerFactory.CreateLogger<Startup>();
-            var option = new BackgroundJobServerOptions {WorkerCount = 1};
-            app.UseHangfireServer(option);
-            app.UseHangfireDashboard();
-
+            
             var appDataPath = resolveAppDataPath();
             if (string.IsNullOrEmpty(Configuration["WebRootPath"]))
                 Configuration["WebRootPath"] = Environment.CurrentDirectory;
 
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
-            // else
-            //     app.UseHsts();
 
-            app.UseHttpsRedirection(); // when we enable ssl
-
+            app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors();
             app.UseMiddleware<AuthenticateByLoginOrSession>();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-            app.UseHangfireDashboard();
-            
+
             if (env.IsProduction())
             {
+                var option = new BackgroundJobServerOptions {WorkerCount = 1};
+                app.UseHangfireServer(option);
                 app.UseHangfireDashboard();
                 _logger.LogInformation("Preparing to archive teh project");
                 try
@@ -203,9 +197,8 @@ namespace Palavyr.API
                     _logger.LogCritical("ERROR OMGOMGOMG WHY?: " + ex.Message);
                 }
             }
-
-            
         }
+
         private string resolveAppDataPath()
         {
             string appDataPath;
@@ -226,10 +219,11 @@ namespace Palavyr.API
 
                 appDataPath = Path.Combine(home, MagicPathStrings.DataFolder);
             }
+
             _logger.LogDebug($"STARTUP-10: APPDATAPATH: {appDataPath}");
-            
+
             DiskUtils.CreateDir(appDataPath);
-            
+
             return appDataPath;
         }
     }
