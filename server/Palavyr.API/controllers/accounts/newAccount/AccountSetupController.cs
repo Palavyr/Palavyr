@@ -130,6 +130,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
         [HttpGet("isActive")]
         public bool CheckIsActive([FromHeader] string accountId)
         {
+            _logger.LogDebug("Activation controller hit!");
             var account = AccountContext.Accounts.Single(row => row.AccountId == accountId);
             var isActive = account.Active;
             return isActive;
