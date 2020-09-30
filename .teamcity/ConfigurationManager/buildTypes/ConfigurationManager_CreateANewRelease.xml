@@ -29,11 +29,10 @@
     <build-triggers>
       <build-trigger id="vcsTrigger" type="vcsTrigger">
         <parameters>
-          <param name="branchFilter" value="+:*" />
+          <param name="branchFilter" value="+:&lt;default&gt;" />
           <param name="perCheckinTriggering" value="true" />
           <param name="quietPeriodMode" value="DO_NOT_USE" />
-          <param name="triggerRules"><![CDATA[-:**.md
-+:*]]></param>
+          <param name="triggerRules" value="-:**.md" />
           <param name="watchChangesInDependencies" value="true" />
         </parameters>
       </build-trigger>
