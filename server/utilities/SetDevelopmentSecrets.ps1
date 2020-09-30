@@ -1,4 +1,4 @@
-param([string]$pass = "0987654321", [string]$user = "postgres", [string]$awsProfile = "default")
+param([string]$pass = "0987654321", [string]$user = "postgres", [string]$awsProfile = "palavyr")
 
 ### sets the secret password used to connect to the postgres DB in DEV.
 
