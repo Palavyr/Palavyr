@@ -3,6 +3,9 @@
   <name>Create a new Release</name>
   <description>Automatically creates a new release and deploys it to staging</description>
   <settings>
+    <options>
+      <option name="buildNumberPattern" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
+    </options>
     <parameters />
     <build-runners>
       <runner id="RUNNER_6" name="Create a new release on Octopus Deploy" type="octopus.create.release">
