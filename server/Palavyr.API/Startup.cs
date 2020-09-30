@@ -22,9 +22,10 @@ namespace Palavyr.API
 {
     public class Startup
     {
-        public Startup(IWebHostEnvironment Env)
+        public Startup(IWebHostEnvironment Env, IConfiguration configuration)
         {
             env = Env;
+            Configuration = configuration;
         }
 
         private IConfiguration Configuration { get; set; }
@@ -78,7 +79,6 @@ namespace Palavyr.API
                                 "http://www.staging.palavyr.com",
                                 "https://staging.palavyr.com",
                                 "https://www.staging.palavyr.com",
-                                
                                 "http://palavyr.com",
                                 "http://www.palavyr.com",
                                 "https://palavyr.com",
@@ -112,22 +112,17 @@ namespace Palavyr.API
                     services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
                 }
             }
-
-            if (env.IsProduction())
-            {
-                services.AddHangfire(config =>
-                    config
-                        .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                        .UseSimpleAssemblyNameTypeSerializer()
-                        .UseMemoryStorage());
-                services.AddHangfireServer();
-
-                // TODO: add service to allow snapshot
-                services.AddScoped<ICreatePalavyrSnapshot, CreatePalavyrSnapshot>();
-                services.AddScoped<IRemoveOldS3Archives, RemoveOldS3Archives>();
-                services.AddScoped<IRemoveStaleSessions, RemoveStaleSessions>();
-                services.AddScoped<IValidateAttachments, ValidateAttachments>();
-            }
+            
+            services.AddHangfire(config =>
+                config
+                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseMemoryStorage());
+            services.AddHangfireServer();
+            // services.AddScoped<ICreatePalavyrSnapshot, CreatePalavyrSnapshot>();
+            services.AddScoped<IRemoveOldS3Archives, RemoveOldS3Archives>();
+            services.AddScoped<IRemoveStaleSessions, RemoveStaleSessions>();
+            services.AddScoped<IValidateAttachments, ValidateAttachments>();
         }
 
         public void Configure(
@@ -139,7 +134,7 @@ namespace Palavyr.API
         )
         {
             _logger = loggerFactory.CreateLogger<Startup>();
-            
+
             var appDataPath = resolveAppDataPath();
             if (string.IsNullOrEmpty(Configuration["WebRootPath"]))
                 Configuration["WebRootPath"] = Environment.CurrentDirectory;
@@ -161,12 +156,12 @@ namespace Palavyr.API
                 _logger.LogInformation("Preparing to archive teh project");
                 try
                 {
-                    recurringJobManager
-                        .AddOrUpdate(
-                            "Create S3 Snapshot",
-                            () => serviceProvider.GetService<ICreatePalavyrSnapshot>()
-                                .CreateDatabaseAndUserDataSnapshot(),
-                            Cron.Daily);
+                    // recurringJobManager
+                    //     .AddOrUpdate(
+                    //         "Create S3 Snapshot",
+                    //         () => serviceProvider.GetService<ICreatePalavyrSnapshot>()
+                    //             .CreateDatabaseAndUserDataSnapshot(),
+                    //         Cron.Daily);
                     recurringJobManager
                         .AddOrUpdate(
                             "Keep only the last 50 snapshots",
