@@ -161,8 +161,9 @@ namespace Palavyr.API.GeneratePdf
 
             if (File.Exists(safeFileNamePath))
             {
-                _logger.LogDebug($"Deleted local path (currently on S3). Path {safeFileNamePath}");
+                File.SetAttributes(safeFileNamePath, FileAttributes.Normal);
                 File.Delete(safeFileNamePath);
+                _logger.LogDebug($"Deleted local path (currently on S3). Path {safeFileNamePath}");
             }
 
             return fileLink;

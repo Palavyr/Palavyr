@@ -35,7 +35,7 @@ namespace Palavyr.API.controllers.accounts.devAccount
             _logger.LogDebug("This is an attempt to Refresh database data.");
             var devData = new DevDataHolder(
                 "qwerty",
-                "dashboard",
+                "devdashboard",
                 "abc123",
                 "paul.e.gradie@gmail.com",
                 "Admin",
