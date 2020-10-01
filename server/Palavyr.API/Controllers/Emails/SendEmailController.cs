@@ -43,13 +43,15 @@ namespace Palavyr.API.Controllers.Emails
         [HttpPost("{apiKey}/area/{areaId}/email/send")]
         public async Task<StatusCodeResult> SendEmail(string apiKey, string areaId, [FromBody] EmailRequest userDetails)
         {
+            _logger.LogDebug("Attempting to send email from widget");
             var accountId = SetUserDb(apiKey);
             var pdfGenerator = new PdfResponseGenerator(DashContext, AccountContext, ConvoContext, accountId, areaId, Request, _logger);
             var criticalResponses = new CriticalResponses(userDetails.KeyValues);
             var attachmentFiles = AttachmentPaths.ListAttachmentsAsDiskPaths(accountId, areaId);
-
+            
             var account = AccountContext.Accounts.Single(row => row.AccountId == accountId);
             var locale = account.Locale;
+            _logger.LogDebug($"Locale being used: {locale}");
             var culture = new CultureInfo(locale);
 
             var safeFileNameStem = Guid.NewGuid().ToString();
