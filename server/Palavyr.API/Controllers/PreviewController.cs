@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Amazon.S3;
@@ -41,7 +42,22 @@ namespace Palavyr.API.Controllers
             var culture = new CultureInfo(locale);
             
             var pdfGenerator = new PdfResponseGenerator(DashContext, AccountContext, ConvoContext, accountId, areaId, Request, _logger);
-            var fileLink = await pdfGenerator.CreatePdfResponsePreviewAsync(S3Client, culture);
+
+            FileLink fileLink;
+            try
+            {
+                fileLink = await pdfGenerator.CreatePdfResponsePreviewAsync(S3Client, culture);
+                _logger.LogDebug("Successfully created a Response preview!");
+                _logger.LogDebug($"File Link: {fileLink.Link}");
+                _logger.LogDebug($"File Id: {fileLink.FileId}");
+                _logger.LogDebug($"File Name: {fileLink.FileName}");
+            }
+            catch (Exception e)
+            {
+                _logger.LogDebug($"Failed to Create a preview! Error: {e.Message}");
+                throw new Exception();
+            }
+            
             return fileLink;
 
         }
