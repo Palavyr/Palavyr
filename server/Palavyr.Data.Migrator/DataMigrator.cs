@@ -35,9 +35,6 @@ namespace Palavyr.Data.Migrator
             });
             _logger = loggerFactory.CreateLogger<DataMigrator>();
 
-            // var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", EnvironmentVariableTarget.Process);
-
-
             var assembly = Assembly.GetExecutingAssembly();
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.migrator.json", true)
