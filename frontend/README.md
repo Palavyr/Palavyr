@@ -1,140 +1,46 @@
-# Configuration Manager Frontend
+# Configuration Manager FrontEnd
 
-This UI lets users configure both the chat widget content as well as the resultant fee estimates.
+The Frontend for the configuration manager is where users can configure their conversations, as well as the responses that are sent. Users can configure decision trees, provide detailed or itemized fee estimates, and configure the emails that sent in reponse to a successful convrsation.
 
+# Setup and dev
 
+The frontend requires [node.js](https://nodejs.org/en/) and npm to install. With this, you can run:
 
+    npm install
 
+This will install dependencies needed. 
 
+The frontend has a custom webpack configuration that works well with storybook. To start the webpack dev server, run:
 
+    npm start
 
+Alternatively, if you'd like to start all services together including this one, navigate up one directory and run:
 
+    ./startServices.ps1
 
+This will run the frontend and express server.
 
-#### Setting up webpack with aliases and typescript
-https://medium.com/better-programming/the-right-usage-of-aliases-in-webpack-typescript-4418327f47fa
-
-#### Fixing the Cannot GET /dashboard error
-https://ui.dev/react-router-cannot-get-url-refresh/
-
-#### What if I can't find the type definitions for some external library? I have t make my own:
-https://www.credera.com/insights/typescript-adding-custom-type-definitions-for-existing-libraries/
-
-#### Missing Microsoft Server!
-https://stackoverflow.com/questions/22104739/iis-manager-cannot-verify-whether-the-built-in-account-has-access
-
-#### FTP on Windows server with iis
-https://www.youtube.com/watch?v=MSYubvIs8NI&ab_channel=CodewithMarci
-
-#### Getting the website happening
-https://www.youtube.com/watch?v=ik3NanW0dAc&ab_channel=CloudLearning
+The front end webpack server runs on port 8080.
 
 
-#### AWS Tips on hosting we app on IIS windows server -- best guide realy
-https://aws.amazon.com/getting-started/hands-on/host-net-web-app/
+# Hosting
+
+The frontend is hosted using AWS S3 static website hosting. SSL is provided via CloudFront and the Certificate Manager and DNS is provided by Route53. Records of how this is configured is currently in Notes.md.
+
+For compatibility with react router and webpack, ensure that both the target and error files point to index.html. Cloudfront should also redirect 403 and 404 errors to 200, with redirects to index.html. React router history will take care of the rest.
+
+# Storybook
+
+Storybook is currently used to visually test the components. Soon jest testing will be implemented. To run storybook, do:
+
+    npm run storybook
+
+Testing is currently scant and needs to soon become a major focus.
 
 
-#### Turns out hosting asp.net core web api on windows server in aws is a fucking nightmare. Instead azure.
-https://medium.com/@lifei.8886196/how-to-deploy-net-core-web-api-to-azure-a127bfb20d09
-
-
-#### CORS must come AFter useRouting and before UseEndpoints
-https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-3.1
-
-#### We also should install the cors module for IIS
-https://www.iis.net/downloads/microsoft/iis-cors-module
-
-#### If we use S3, we want SLL?
-https://medium.com/@sbuckpesch/setup-aws-s3-static-website-hosting-using-ssl-acm-34d41d32e394
-
-
-#### THIS MAY FIX CORS
-https://stackoverflow.com/questions/59511862/faliure-to-use-cors-in-webapi-in-net-core-3-1
-
-#### NPE> CLOSEST BULLSHIT TO MY PROBLEM:
-https://stackoverflow.com/questions/21445885/duplicate-headers-received-from-iis-in-cors-process?rq=1
-
-
-#### Refreshing my single page react app bundld with webpack gives a 404 - need to map all urls to the index.html
-https://hackernoon.com/hosting-static-react-websites-on-aws-s3-cloudfront-with-ssl-924e5c134455
-
-
-#### Silly boy, you need to specify the error page as the index.html in s3
-https://stackoverflow.com/questions/51218979/react-router-doesnt-work-in-aws-s3-bucket
-
-
-#### How I made my site Secure with SSL in AWS
-https://tynick.com/blog/05-30-2019/how-to-create-s3-static-website-with-https-its-so-easy/
-
-#### How I will handle bouncebacks
-https://aws.amazon.com/blogs/messaging-and-targeting/handling-bounces-and-complaints/
-
-
-#### How I installed SSL certificates on to the IIS windows server ( I did this on the server )
-https://www.win-acme.com/
-https://github.com/win-acme/win-acme
-
-
-#### How I ran SQL Migrations
-1. export the  migration as a script (dotnet ef migrations script --context AccountsContext --output addRego --startup ..\DashboardServer.API\)
-2. https://database.guide/5-ways-to-run-sql-script-from-file-sqlite/
-
-
-#### How I added Culture Info for currency
-https://lonewolfonline.net/list-net-culture-country-codes/
-https://stackoverflow.com/questions/2453951/c-sharp-double-tostring-formatting-with-two-decimal-places-but-no-rounding
-
-
-#### How I made IIS Always running
-https://docs.hangfire.io/en/latest/deployment-to-production/making-aspnet-app-always-running.html
-
-
-#### How I got hangfire wrking!
-https://www.youtube.com/watch?v=sQyY0xvJ4-o&ab_channel=DotNetCoreCentral
-
-
-#### Special headers...
-// "Server": "Microsoft-IIS/10.0",
-// "Access-Control-Allow-Origin": "*",
-// "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With",
-// "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS, PUT"
-// "Access-Control-Allow-Headers": "*",
-// "Access-Control-Allow-Methods": "*"
-
-
-#### Old SQLServer connction strings
-"Server": "Server=RegEx;Database=DashboardDev;Integrated Security=True;Connect Timeout=5;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
-"ServerAccounts": "Server=RegEx;Database=Accounts;Integrated Security=True;Connect Timeout=5;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
-"DynamicTables": "Server=RegEx;Database=DynamicTables;Integrated Security=True;Connect Timeout=5;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
-
-
-
-### Per user sqlite string example
-"Sqlite": "Data Source=C:\\ConvoBuilderUserData\\user-1\\database\\user-1.db"
-
-
-
-#### Test a Preflight request
-curl -H "Origin: https://localhost/" -H "Access-Control-Request-Method: POST" -H "Access-Control-Request-Headers: X-Requested-With" -X OPTIONS --verbose https://server.palavyr.com
-
-
-
-#### Old setup for scripts on webpack
-
-"scripts": {
-    "start": "set NODE_ENV=development && webpack-dev-server --config ./webpack/webpack.config.dev.js --mode development --open --hot --progress",
-    "build": "set NODE_ENV=production webpack --mode production --config ./webpack/webpack.config.prod.js",
-    "test": "jest --coverage",
-    "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
-  },
-
-
-
-# Bucket Settings
+### S3 bucket settings
 
 ### CORS policy:
-
 
 <?xml version="1.0" encoding="UTF-8"?>
 <CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
@@ -164,11 +70,3 @@ curl -H "Origin: https://localhost/" -H "Access-Control-Request-Method: POST" -H
         }
     ]
 }
-
-Endpoint:
-http://palavyr.com.s3-website-us-east-1.amazonaws.com
-
-
-
-
-#### Solutions fo
