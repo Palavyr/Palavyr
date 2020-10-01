@@ -4,7 +4,7 @@ import pdf, { CreateOptions } from "html-pdf";
 
 
 const app: Application = express();
-const port: string = process.env.PORT || "5603";
+const port: string = process.env.PORT || "5603";  // Critical This port is hard coded in the API 
 console.log("starting PDF service on port: " + port)
 
 // middleware
