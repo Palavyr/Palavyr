@@ -127,11 +127,12 @@ namespace Palavyr.API.GeneratePdf
             var safeFileNamePath = FormFilePath.FormResponsePreviewLocalFilePath(accountId, safeFileNameStem);
 
             _logger.LogDebug(
-                $"Attemping to create pdf file from html at {safeFileNamePath} using URL {LocalServices.PdfServiceUrl}");
+                $"Attempting to create pdf file from html at {safeFileNamePath} using URL {LocalServices.PdfServiceUrl}");
 
             try
             {
                 await GeneratePdfFromHtml(html, LocalServices.PdfServiceUrl, safeFileNamePath, safeFileNameStem);
+                _logger.LogDebug($"Successfully wrote the pdf file to disk at {safeFileNamePath}!");
             }
             catch (Exception ex)
             {
@@ -139,6 +140,7 @@ namespace Palavyr.API.GeneratePdf
                 _logger.LogCritical($"Attempted to use url: {LocalServices.PdfServiceUrl}");
                 _logger.LogCritical($"Encountered Error: {ex.Message}");
                 throw new Exception();
+                
             }
 
             string link;
@@ -146,6 +148,7 @@ namespace Palavyr.API.GeneratePdf
             {
                 link = await UriUtils.CreatePreSignedPreviewUrlLink(_logger, AccountId, safeFileNameStem,
                     safeFileNamePath, s3Client);
+                _logger.LogDebug("Successfully created a presigned link to the pdf!");
             }
             catch (Exception ex)
             {

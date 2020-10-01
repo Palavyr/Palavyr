@@ -23,30 +23,45 @@ namespace Palavyr.API.pathUtils
         /// <param name="fromFilePath"></param>
         /// <param name="s3Client"></param>
         /// <returns></returns>
-        private static async Task<string> CreatePresignedUrl(ILogger _logger, string accountId, string safeFileNameWithSuffix, string fromFilePath, IAmazonS3 s3Client)
+        private static async Task<string> CreatePresignedUrl(ILogger _logger, string accountId,
+            string safeFileNameWithSuffix, string fromFilePath, IAmazonS3 s3Client)
         {
             var fileKey = Path.Combine(accountId, safeFileNameWithSuffix).Replace("\\", "/");
+            _logger.LogDebug($"Using the following path to write to S3: {fileKey}");
+            _logger.LogDebug($"Writing to bucket: {MagicAWSStrings.AWSPreviewBucket}");
             var putRequest = new PutObjectRequest()
             {
                 BucketName = MagicAWSStrings.AWSPreviewBucket,
                 FilePath = fromFilePath,
                 Key = fileKey
             };
-            
+
             try
             {
                 var response = await s3Client.PutObjectAsync(putRequest);
+                _logger.LogDebug("Successfully wrote object to S3!");
             }
             catch (Exception ex)
             {
+                _logger.LogDebug("Failed to write to S3.");
                 _logger.LogCritical("##### Exception: " + ex.Message);
+                throw new Exception();
             }
-            
-            var expiration = DateTime.Now.AddHours(3);
-            var preSignedUrl = s3Client.GeneratePreSignedURL(MagicAWSStrings.AWSPreviewBucket, fileKey, expiration,new Dictionary<string, object>());
 
-            Console.WriteLine("PreSigned URL: " + preSignedUrl);
-            
+            var expiration = DateTime.Now.AddHours(3);
+            string preSignedUrl;
+            try
+            {
+                preSignedUrl = s3Client.GeneratePreSignedURL(MagicAWSStrings.AWSPreviewBucket, fileKey, expiration,
+                    new Dictionary<string, object>());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug("Failed to create a presigned url");
+                _logger.LogCritical($"Error: {ex.Message}");
+                throw new Exception();
+            }
+            _logger.LogDebug("PreSigned URL: " + preSignedUrl);
             return preSignedUrl;
         }
         

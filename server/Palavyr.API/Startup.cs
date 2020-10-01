@@ -32,10 +32,11 @@ namespace Palavyr.API
         private ILogger<Startup> _logger { get; set; }
         private IWebHostEnvironment env { get; set; }
 
-        private readonly string ConfigurationDBStringKey = "DashContextPostgres";
-        private readonly string AccountDBStringKey = "AccountsContextPostgres";
-        private readonly string ConvoDBStringKey = "ConvoContextPostgres";
-
+        private const string _configurationDbStringKey = "DashContextPostgres";
+        private const string _accountDbStringKey = "AccountsContextPostgres";
+        private const string _convoDbStringKey = "ConvoContextPostgres";
+        private const string _accessKeySection = "AWS:AccessKey";
+        private const string _secretKeySection = "AWS:SecretKey";
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddLogging(loggingBuilder => { loggingBuilder.AddSeq(); });
@@ -90,16 +91,17 @@ namespace Palavyr.API
 
             services.AddControllers();
             services.AddDbContext<AccountsContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString(AccountDBStringKey)));
+                opt.UseNpgsql(Configuration.GetConnectionString(_accountDbStringKey)));
             services.AddDbContext<ConvoContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString(ConvoDBStringKey)));
+                opt.UseNpgsql(Configuration.GetConnectionString(_convoDbStringKey)));
             services.AddDbContext<DashContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString(ConfigurationDBStringKey)));
+                opt.UseNpgsql(Configuration.GetConnectionString(_configurationDbStringKey)));
 
             // AWS Services
-            var accessKey = Configuration.GetSection("AWS:SecretKey").Value;
-            var secretKey = Configuration.GetSection("AWS:SecretKey").Value;
+            var accessKey = Configuration.GetSection(_accessKeySection).Value;
+            var secretKey = Configuration.GetSection(_secretKeySection).Value;
             var awsOptions = Configuration.GetAWSOptions();
+            
             awsOptions.Credentials = new BasicAWSCredentials(accessKey, secretKey);
             services.AddDefaultAWSOptions(awsOptions);
             services.AddAWSService<IAmazonSimpleEmailService>();
