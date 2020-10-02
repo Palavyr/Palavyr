@@ -4,12 +4,11 @@ using System.IO;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
-using Palavyr.Common.FileSystem;
-using Palavyr.Common.FileSystem.MagicStrings;
+using Palavyr.Common.FileSystem.FormPaths.MagicStrings;
 using Microsoft.Extensions.Logging;
 
 
-namespace Palavyr.API.pathUtils
+namespace Palavyr.Common.FileSystem.FormPaths
 {
     public static class UriUtils
     {
@@ -35,7 +34,6 @@ namespace Palavyr.API.pathUtils
                 FilePath = fromFilePath,
                 Key = fileKey
             };
-
             try
             {
                 var response = await s3Client.PutObjectAsync(putRequest);

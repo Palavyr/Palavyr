@@ -1,7 +1,6 @@
 ﻿using System.IO;
-using Palavyr.Common.FileSystem;
 
-namespace Palavyr.API.pathUtils
+namespace Palavyr.Common.FileSystem.FormPaths
 {
     public static class DiskUtils
     {
@@ -16,10 +15,21 @@ namespace Palavyr.API.pathUtils
         public static void DeleteAreaFolder(string accountId, string areaId)
         {
             var areaDir = FormDirectoryPaths.FormAreaDir(accountId, areaId);
-            var dirInfo = new DirectoryInfo(areaDir);
+            DeleteFolder(areaDir);
+        }
+
+        /// <summary>
+        /// This will recursively delete a directory (and thus with its contents)
+        /// If file permissions are restricted on the directory or any of its subdir contents,
+        /// this may throw an error
+        /// </summary>
+        /// <param name="directoryPath"></param>
+        private static void DeleteFolder(string directoryPath)
+        {
+            var dirInfo = new DirectoryInfo(directoryPath);
             if (dirInfo.Exists)
             {
-                Directory.Delete(areaDir);
+                Directory.Delete(directoryPath, true);
             }
         }
     }

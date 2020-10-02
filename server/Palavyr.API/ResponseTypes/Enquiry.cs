@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using Server.Domain;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.pathUtils;
+using Palavyr.Common.FileSystem.FormPaths;
 using Palavyr.API.ResponseTypes;
 using Server.Domain.conversations;
 

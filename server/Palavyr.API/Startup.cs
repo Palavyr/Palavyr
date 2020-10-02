@@ -14,9 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware;
-using Palavyr.API.pathUtils;
 using Palavyr.Background;
-using Palavyr.Common.FileSystem;
+using Palavyr.Common.FileSystem.FormPaths;
 
 namespace Palavyr.API
 {

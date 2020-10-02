@@ -74,7 +74,6 @@ namespace Palavyr.API.controllers.Conversation
                     node.IsCritical
                 );
                 mappedConversation.Add(mappedNode);
-                // node.Id = null;
             }
             DashContext.ConversationNodes.AddRange(mappedConversation);
             DashContext.SaveChanges();
@@ -95,8 +94,6 @@ namespace Palavyr.API.controllers.Conversation
             _logger.LogInformation("------ UPDATING NODE ---------");
             try
             {
-
-
                 DashContext.ConversationNodes.Remove(DashContext.ConversationNodes.Single(row => row.NodeId == nodeId));
 
                 var mappedNode = ConversationNode.CreateNew(

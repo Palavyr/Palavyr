@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-
-namespace Palavyr.Common.FileSystem
+namespace Palavyr.Common.FileSystem.FormPaths
 {
     
     /// <summary>
@@ -26,7 +25,7 @@ namespace Palavyr.Common.FileSystem
         }
         
         /// <summary>
-        ///  E.g. C:\\ConvoBuilderUserData\\UserData\\${accountId}\\PreviewPDF\\${safeFileName}.pdf
+        ///  E.g. C:\\PalavyrData\\UserData\\${accountId}\\PreviewPDF\\${safeFileName}.pdf
         /// </summary>
         /// <param name="accountId"></param>
         /// <param name="safeFileNameStem"></param>

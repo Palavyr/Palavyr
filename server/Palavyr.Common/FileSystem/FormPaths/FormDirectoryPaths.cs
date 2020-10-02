@@ -1,7 +1,6 @@
 ﻿using System.IO;
-using Palavyr.API.pathUtils;
 
-namespace Palavyr.Common.FileSystem
+namespace Palavyr.Common.FileSystem.FormPaths
 
 {
     public static class FormDirectoryPaths
