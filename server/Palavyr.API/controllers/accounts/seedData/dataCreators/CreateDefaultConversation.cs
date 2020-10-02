@@ -80,6 +80,7 @@ namespace Palavyr.API.Controllers
                     ValueOptions = "Ruby|peg|Black and Tan|peg|Blenheim",
                     AccountId = accountId
                 },
+                
                 new ConversationNode()
                 {
                     NodeId = node6Id,
