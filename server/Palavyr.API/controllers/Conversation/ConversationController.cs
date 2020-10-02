@@ -38,13 +38,14 @@ namespace Palavyr.API.controllers.Conversation
 
 
         [HttpGet("{areaId}")]
-        public IQueryable<ConversationNode> GetConversation([FromHeader] string accountId, string areaId)
+        public List<ConversationNode> GetConversation([FromHeader] string accountId, string areaId)
         {
             var result = DashContext
                 .ConversationNodes
                 .Where(row => row.AccountId == accountId)
                 .Where(row => row.AreaIdentifier == areaId);
-            return result;
+            var asList = result.ToList();
+            return asList;
         }
 
         [HttpPut("update/{areaId}")]
@@ -66,6 +67,7 @@ namespace Palavyr.API.controllers.Conversation
                     node.Text,
                     node.AreaIdentifier,
                     node.NodeChildrenString,
+                    node.OptionPath,
                     node.ValueOptions,
                     node.AccountId,
                     node.IsRoot,
@@ -103,6 +105,7 @@ namespace Palavyr.API.controllers.Conversation
                     newNode.Text,
                     newNode.AreaIdentifier,
                     newNode.NodeChildrenString,
+                    newNode.OptionPath,
                     newNode.ValueOptions,
                     accountId,
                     newNode.IsRoot,
@@ -145,6 +148,7 @@ namespace Palavyr.API.controllers.Conversation
                     node.Text,
                     node.AreaIdentifier,
                     node.NodeChildrenString,
+                    node.OptionPath,
                     node.ValueOptions,
                     accountId,
                     node.IsRoot,

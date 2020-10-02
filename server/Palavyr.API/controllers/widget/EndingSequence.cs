@@ -21,6 +21,7 @@ namespace Palavyr.API.Controllers
                 areaId,
                 NodeTypes.Phone,
                 "",
+                "",
                 accountId,
                 false,
                 true
@@ -31,6 +32,7 @@ namespace Palavyr.API.Controllers
                 "Could you please provide your phone number? If you would prefer to keep your phone number private, leave this input blank.",
                 areaId, 
                 NodeTypes.Email,
+                "",
                 "",
                 accountId,
                 false,
@@ -43,6 +45,7 @@ namespace Palavyr.API.Controllers
                 areaId, 
                 NodeTypes.SendEmail,
                 "",
+                "",
                 accountId,
                 false,
                 true
@@ -54,6 +57,7 @@ namespace Palavyr.API.Controllers
                 areaId,
                 NodeTypes.Restart,
                 "",
+                "",
                 accountId,
                 false,
                 false
@@ -64,6 +68,7 @@ namespace Palavyr.API.Controllers
                 "Thanks for your time. I'm going to restart this window now.",
                 areaId,
                 "Terminate",
+                "",
                 "",
                 accountId,
                 false,

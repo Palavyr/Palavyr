@@ -41,7 +41,7 @@ namespace Server.Domain.Configuration.schema
             };
         }
 
-        public static ConversationNode CreateNew(string nodeId, string nodeType, string text, string areaIdentifier, string nodeChildrenString, string valueOptions, string accountId, bool isRoot = false, bool isCritical = true)
+        public static ConversationNode CreateNew(string nodeId, string nodeType, string text, string areaIdentifier, string nodeChildrenString, string optionPath, string valueOptions, string accountId, bool isRoot = false, bool isCritical = true)
         {
             return new ConversationNode()
             {
@@ -52,6 +52,7 @@ namespace Server.Domain.Configuration.schema
                 IsRoot = isRoot,
                 AreaIdentifier = areaIdentifier,
                 NodeChildrenString = nodeChildrenString,
+                OptionPath = optionPath,
                 ValueOptions = valueOptions,
                 IsCritical = isCritical,
                 AccountId = accountId
