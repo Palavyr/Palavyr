@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom';
 import CreateClient from '../client/Client';
 import { renderNextComponent, ConvoContextProperties } from '../componentRegistry';
 import { getRootNode } from '../componentRegistry/utils';
-import { uuid } from 'uuidv4';
 import { useState, useCallback, useEffect } from 'react';
 import fetchIpData from '../region/FetchIP';
 
@@ -22,15 +21,16 @@ export const CustomWidget = ({ option }: ICustomWidget) => {
     const [, setUserInput] = useState<string>(); // TODO: send through convo
 
     const initializeConvo = useCallback(async () => {
-        var Nodes = await client.Widget.Access.fetchNodes(option.areaId)
-        var Prefs = await client.Widget.Access.fetchPreferences()
-        var Region = (await fetchIpData).country;
 
-        setPrefs(Prefs.data);
+        var newConversation = await client.Widget.Access.createConvo(option.areaId);
+        var nodes = newConversation.data.conversationNodes;
+        var prefs = newConversation.data.widgetPreference;
+        var convoId = newConversation.data.conversationId;
+        var region = (await fetchIpData).country;
 
-        var newConvoId = uuid();
+        setPrefs(prefs.data);
 
-        var rootNode = getRootNode(Nodes.data);
+        var rootNode = getRootNode(nodes);
 
         const convoContext: any = {};
         convoContext[ConvoContextProperties.DynamicResponse] = [];
@@ -38,9 +38,9 @@ export const CustomWidget = ({ option }: ICustomWidget) => {
         convoContext[ConvoContextProperties.EmailAddress] = "";
         convoContext[ConvoContextProperties.PhoneNumber] = "";
         convoContext[ConvoContextProperties.Name] = "";
-        convoContext[ConvoContextProperties.Region] = Region;
+        convoContext[ConvoContextProperties.Region] = region;
 
-        renderNextComponent(rootNode, Nodes.data, client, newConvoId, convoContext);
+        renderNextComponent(rootNode, nodes, client, convoId, convoContext);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

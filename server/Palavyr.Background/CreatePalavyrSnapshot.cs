@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Logging;
+using Palavyr.Common.uniqueIdentifiers;
 
 namespace Palavyr.Background
 {
@@ -27,7 +28,7 @@ namespace Palavyr.Background
 
         public async Task CreateDatabaseAndUserDataSnapshot()
         {
-            var snapshotTimeStamp = DateTime.Now.ToString(Utils.DateTimeFormat);
+            var snapshotTimeStamp = DateTime.Now.ToString(TimeUtils.DateTimeFormat);
             await SaveSnapshot(Utils.Databases, snapshotTimeStamp, DatabaseDirectory);
             await SaveSnapshot(Utils.UserData, snapshotTimeStamp, UserDataDirectory);
         }

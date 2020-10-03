@@ -51,3 +51,10 @@ export type ConversationUpdate = {
     NodeType: string;
 }
 
+export type CompleteConverationDetails = {
+     ConversationId: string;
+     AreaIdentifier: string;
+     Name: string;
+     Email: string;
+     PhoneNumber: string;
+}

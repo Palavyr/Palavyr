@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Palavyr.API.ResponseTypes;
-using Server.Domain;
 using Server.Domain.Configuration.constants;
 using Server.Domain.Configuration.schema;
 
@@ -18,7 +17,7 @@ namespace Palavyr.API.Controllers
         {
             var incompleteAreas = new List<Area>();
 
-            var ready = true;
+            var isReady = true;
             foreach (var area in areas)
             {
                 var nodeList = area.ConversationNodes;
@@ -30,14 +29,14 @@ namespace Palavyr.API.Controllers
                     AllRequiredNodesSatisfied(nodeList, requiredNodes),
                 };
 
-                ready = checks.TrueForAll(x => x == true);
+                isReady = checks.TrueForAll(x => x == true);
 
-                if (ready) continue;
+                if (isReady) continue;
                 incompleteAreas.Add(area);
                 Console.WriteLine($"Area not currently ready: {area.AreaName}");
 
             }
-            return PreCheckResult.CreateResult(ready, incompleteAreas);
+            return PreCheckResult.CreateConvoResult(incompleteAreas, isReady);
         }
 
 

@@ -2,13 +2,10 @@
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using System.Web.Http.Cors;
-using Server.Domain;
 using Server.Domain.conversations;
 
 namespace Palavyr.API.Controllers
 {
-    // [EnableCors(origins: "*", headers: "*", methods: "*", exposedHeaders: "X-My-Header")] 
     [Route("api/widget")]
     [ApiController]
     public class ChatController : BaseController

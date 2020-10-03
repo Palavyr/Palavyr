@@ -35,7 +35,7 @@ namespace Palavyr.API.Controllers
         [HttpGet]
         public async Task<List<Enquiry>> GetCompletedConversations([FromHeader] string accountId)
         {
-            _logger.LogDebug("Attempting to collect enquiries");
+            _logger.LogDebug("----------------------Attempting to collect enquiries");
             var completedConvos = ConvoContext.CompletedConversations.ToList();
             _logger.LogDebug($"Found --{completedConvos.Count}-- convos.");
             var Enquiries = new List<Enquiry>();

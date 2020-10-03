@@ -7,16 +7,28 @@ namespace Palavyr.API.ResponseTypes
     {
         public bool IsReady { get; set; }
         public List<Area> IncompleteAreas { get; set; }
+        public bool ApiKeyExists { get; set; }
 
         PreCheckResult(bool isReady, List<Area> incompleteAreas)
         {
             IsReady = isReady;
-            IncompleteAreas = incompleteAreas;
+            IncompleteAreas = incompleteAreas;            
+        }
+        PreCheckResult(bool apiKeyExists)
+        {
+
+            ApiKeyExists = apiKeyExists;
         }
 
-        public static PreCheckResult CreateResult(bool isReady, List<Area> incompleteAreas)
+        public static PreCheckResult CreateConvoResult(List<Area> incompleteAreas, bool isReady)
         {
-            return new PreCheckResult(isReady, incompleteAreas);
+            return new PreCheckResult(isReady: isReady, incompleteAreas: incompleteAreas);
+        }
+
+        public static PreCheckResult CreateApiKeyResult(bool apiKeyExists)
+        {
+            return new PreCheckResult(apiKeyExists: apiKeyExists);
         }
     }
+    
 }

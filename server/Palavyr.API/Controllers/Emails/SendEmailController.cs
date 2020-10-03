@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Amazon.SimpleEmail;
@@ -40,12 +39,12 @@ namespace Palavyr.API.Controllers.Emails
 
        
         [HttpPost("{apiKey}/area/{areaId}/email/send")]
-        public async Task<StatusCodeResult> SendEmail(string apiKey, string areaId, [FromBody] EmailRequest userDetails)
+        public async Task<bool> SendEmail(string apiKey, string areaId, [FromBody] EmailRequest emailRequest)
         {
             _logger.LogDebug("Attempting to send email from widget");
             var accountId = SetUserDb(apiKey);
             var pdfGenerator = new PdfResponseGenerator(DashContext, AccountContext, ConvoContext, accountId, areaId, Request, _logger);
-            var criticalResponses = new CriticalResponses(userDetails.KeyValues);
+            var criticalResponses = new CriticalResponses(emailRequest.KeyValues);
             var attachmentFiles = AttachmentPaths.ListAttachmentsAsDiskPaths(accountId, areaId);
             
             var account = AccountContext.Accounts.Single(row => row.AccountId == accountId);
@@ -53,16 +52,16 @@ namespace Palavyr.API.Controllers.Emails
             _logger.LogDebug($"Locale being used: {locale}");
             var culture = new CultureInfo(locale);
 
-            var safeFileNameStem = Guid.NewGuid().ToString();
+            var safeFileNameStem = emailRequest.ConversationId;
             var safeFilePath = FormFilePath.FormResponsePDFFilePath(accountId, safeFileNameStem);
 
-            await pdfGenerator.GeneratePdfResponseAsync(criticalResponses, userDetails, culture, safeFilePath, safeFileNameStem);
+            await pdfGenerator.GeneratePdfResponseAsync(criticalResponses, emailRequest, culture, safeFilePath, safeFileNameStem);
             var fullPDFResponsePath = FormFilePath.FormResponsePDFFilePath(accountId, safeFilePath);
             if (DiskUtils.ValidatePathExists(fullPDFResponsePath))
                 attachmentFiles.Add(fullPDFResponsePath);
 
             var fromAddress = AccountContext.Accounts.Single(row => row.AccountId == accountId).EmailAddress;
-            var toAddress = userDetails.EmailAddress;
+            var toAddress = emailRequest.EmailAddress;
             var subject =
                 "This subject line will be configured by user per area and default to a default address in the account settings.";
             var htmlBody = DashContext.Areas.Single(row => row.AreaIdentifier == areaId).EmailTemplate;
@@ -73,8 +72,8 @@ namespace Palavyr.API.Controllers.Emails
                 ok = await Client.SendEmail(fromAddress, toAddress, subject, htmlBody, textBody);
             else
                 ok = await Client.SendEmailWithAttachments(fromAddress, toAddress, subject, htmlBody, textBody, attachmentFiles);
-            
-            return ok ? (StatusCodeResult) new OkResult() : new NotFoundResult();
+
+            return ok;
         }
     }
 }

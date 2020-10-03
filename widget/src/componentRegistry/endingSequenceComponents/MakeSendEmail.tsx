@@ -5,8 +5,25 @@ import { Table, TableRow, TableCell } from '@material-ui/core';
 import { responseAction, IProgressTheChat, ConvoContextProperties } from '..';
 import { MessageWrapper } from '../common';
 import { ResponseButton } from '../../common/ResponseButton';
+import { CompleteConverationDetails } from '../../types';
 
 
+const assembleCompletedConvo = (
+    conversationId: string,
+    areaIdentifier: string,
+    name: string,
+    email: string,
+    PhoneNumber: string
+): CompleteConverationDetails => {
+
+    return {
+        ConversationId: conversationId,
+        AreaIdentifier: areaIdentifier,
+        Name: name,
+        Email: email,
+        PhoneNumber: PhoneNumber
+    }
+}
 
 export const makeSendEmail = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
     // TODO: lift this widget and add  'isInputDisabled()'
@@ -18,14 +35,19 @@ export const makeSendEmail = ({ node, nodeList, client, convoId, convoContext }:
 
     const sendEmail = async () => {
         const email = convoContext[ConvoContextProperties.EmailAddress];
+        const name = convoContext[ConvoContextProperties.Name];
+        const phone = convoContext[ConvoContextProperties.PhoneNumber]
         const dynamicResponse = convoContext[ConvoContextProperties.DynamicResponse];
         const keyvalues = convoContext[ConvoContextProperties.KeyValues];
 
-        await client.Widget.Access.sendConfirmationEmail(areaId, email, dynamicResponse, keyvalues);
-        // TODO: handle emailing erros and whatnot in makeSendEmail
+        var res = (await client.Widget.Access.sendConfirmationEmail(areaId, email, dynamicResponse, keyvalues, convoId)).data;        
+        if (res) {
+            var completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone)
+            await client.Widget.Access.postCompleteConversation(completeConvo)
+        }   
     }
 
-    const Component: React.ElementType<{}> = () => {
+    const SuccessComponent: React.ElementType<{}> = () => {
         return (
             <MessageWrapper>
                 <Table>
@@ -53,5 +75,9 @@ export const makeSendEmail = ({ node, nodeList, client, convoId, convoContext }:
             </MessageWrapper >
         )
     }
-    return Component;
+
+    // TODO: The backup here is and if else
+    // if (res.success) { return SuccessComponent } else {return "Shall I retry ? component and execute that pathway."}
+
+    return SuccessComponent;
 }

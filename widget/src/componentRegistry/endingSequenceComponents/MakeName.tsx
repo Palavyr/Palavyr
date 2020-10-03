@@ -30,7 +30,7 @@ export const makeName = ({ node, nodeList, client, convoId, convoContext }: IPro
                     <TableRow >
                         <TableCell style={noBorder}>
                             <TextField
-                                label="Name"
+                                label={ConvoContextProperties.Name}
                                 type="text"
                                 onChange={
                                     (event) => {
@@ -48,9 +48,9 @@ export const makeName = ({ node, nodeList, client, convoId, convoContext }: IPro
                                     (e) => {
                                         e.preventDefault();
                                         if (node.isCritical) {
-                                            convoContext[ConvoContextProperties.KeyValues].push({ "Name": nameResponse })
+                                            convoContext[ConvoContextProperties.KeyValues].push({ [ConvoContextProperties.Name]: nameResponse })
                                         }
-                                        convoContext["Name"] = nameResponse;
+                                        convoContext[ConvoContextProperties.Name] = nameResponse;
 
                                         responseAction(node, child, nodeList, client, convoId, nameResponse, convoContext)
                                         toggleInputDisabled()

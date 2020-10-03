@@ -4,6 +4,7 @@ using Amazon.S3;
 using Microsoft.Extensions.Logging;
 using Palavyr.Common.FileSystem.FormPaths;
 using Palavyr.API.ResponseTypes;
+using Palavyr.Common.uniqueIdentifiers;
 using Server.Domain.conversations;
 
 namespace Palavyr.API.responseTypes
@@ -13,7 +14,7 @@ namespace Palavyr.API.responseTypes
         public int Id { get; set; }
         public string ConversationId { get; set; }
         public FileLink ResponsePdfLink { get; set; }
-        public DateTime TimeStamp { get; set; }
+        public string TimeStamp { get; set; }
         public string AccountId { get; set; }
         public string AreaName { get; set; }
         public string EmailTemplateUsed { get; set; }
@@ -31,7 +32,7 @@ namespace Palavyr.API.responseTypes
                 Id = conversation.Id,
                 ConversationId = conversation.ConversationId,
                 ResponsePdfLink = fileLink,
-                TimeStamp = conversation.TimeStamp,
+                TimeStamp = conversation.TimeStamp.ToString(TimeUtils.DateTimeFormat),
                 AccountId = conversation.AccountId,
                 AreaName = conversation.AreaName,
                 EmailTemplateUsed = conversation.EmailTemplateUsed,

@@ -1,5 +1,5 @@
 import axios, { AxiosResponse, AxiosInstance } from "axios";
-import { ConversationUpdate, AreaTable } from "../types";
+import { ConversationUpdate, AreaTable, CompleteConverationDetails } from "../types";
 
 const serverUrl = "https://localhost:5001/api/";
 // const env = process.env.PUBLIC_URL;
@@ -9,11 +9,12 @@ export interface IClient {
         Access: {
             runPreCheck: () => Promise<AxiosResponse>;
             fetchGroups: () => Promise<AxiosResponse>;
-            fetchNodes: (areaId: string) => Promise<AxiosResponse>;
-            fetchPreferences: () => Promise<AxiosResponse>;
+            createConvo: (areaId: string) => Promise<AxiosResponse>;
             fetchAreas: () => Promise<AxiosResponse>;
             postUpdateAsync: (update: ConversationUpdate) => Promise<AxiosResponse>;
-            sendConfirmationEmail: (areaIdentifier: string, emailAddress: string, dynamicResponse: string, keyValues: KeyValues) => Promise<AxiosResponse>;
+            sendConfirmationEmail: (areaIdentifier: string, emailAddress: string, dynamicResponse: string, keyValues: KeyValues, conviId: string) => Promise<AxiosResponse>;
+            postCompleteConversation: (completeConvo: CompleteConverationDetails) => Promise<AxiosResponse>;
+        
         }
     },
 }
@@ -38,15 +39,16 @@ const CreateClient = (secretKey: string): IClient => {
             Access: {
                 runPreCheck: async (): Promise<AxiosResponse> => AxiosClient.get(`widget/${secretKey}/precheck`),
                 fetchGroups: async (): Promise<AxiosResponse> => AxiosClient.get(`widget/${secretKey}/groups`),
-                fetchNodes: async (areaId: string): Promise<AxiosResponse> => AxiosClient.get(`widget/${secretKey}/${areaId}/nodes`),
-                fetchPreferences: async (): Promise<AxiosResponse> => AxiosClient.get(`widget/${secretKey}/preferences`),
+                createConvo: async (areaId: string): Promise<AxiosResponse> => AxiosClient.get(`widget/${secretKey}/${areaId}/create`),
                 fetchAreas: async (): Promise<AxiosResponse<Array<AreaTable>>> => AxiosClient.get(`widget/${secretKey}/areas`),
                 postUpdateAsync: async(update: ConversationUpdate): Promise<AxiosResponse> => AxiosClient.post(`widget/${secretKey}/conversation`, update),
-                sendConfirmationEmail: async(areaIdentifier: string, emailAddress: string, dynamicResponse: string, keyValues: KeyValues): Promise<AxiosResponse> => AxiosClient.post(`widget/${secretKey}/area/${areaIdentifier}/email/send`, {
+                sendConfirmationEmail: async(areaIdentifier: string, emailAddress: string, dynamicResponse: string, keyValues: KeyValues, convoId: string): Promise<AxiosResponse> => AxiosClient.post(`widget/${secretKey}/area/${areaIdentifier}/email/send`, {
+                    ConversationId: convoId,
                     EmailAddress: emailAddress,
                     DynamicResponse: dynamicResponse,
                     KeyValues: keyValues
-                })
+                }),
+                postCompleteConversation: async(completeConvo: CompleteConverationDetails) => AxiosClient.post(`widget/${secretKey}/complete`, completeConvo)
             }
         },
         secretKey: secretKey
