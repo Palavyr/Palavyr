@@ -83,7 +83,7 @@ namespace Palavyr.API.Controllers
         [HttpGet("{apiKey}/precheck")]
         public PreCheckResult RunWidgetPreCheck(string apiKey)
         {
-            _logger.LogDebug("Running Widget Precheck....");
+            _logger.LogDebug("Running live widget pre-check...");
 
             _logger.LogDebug("Checking if account ID exists...");
             var accountId = GetAccountId(apiKey);
@@ -97,9 +97,10 @@ namespace Palavyr.API.Controllers
                 .Where(row => row.AccountId == accountId)
                 .Include(row => row.ConversationNodes)
                 .ToList();
-            _logger.LogDebug("Collected areas.... running precheck");
-            PreCheckResult result = PreCheckUtils.RunConversationsPreCheck(areas);
-            _logger.LogDebug($"Precheck run successful. Result: Isready?: {result.IsReady} and Incomplete areas: {result.IncompleteAreas.ToList()}");
+            
+            _logger.LogDebug("Running conversations pre-check...");
+            PreCheckResult result = PreCheckUtils.RunConversationsPreCheck(areas, _logger);
+            _logger.LogDebug($"Pre-check run successful. Result: Isready:{result.IsReady} and incomplete areas: {result.IncompleteAreas.ToList()}");
             return result;
         }
 
@@ -119,10 +120,9 @@ namespace Palavyr.API.Controllers
                 .ToList();
 
             _logger.LogDebug("Collected areas.... running precheck");
-            PreCheckResult result = PreCheckUtils.RunConversationsPreCheck(areas);
-            _logger.LogDebug($"Precheck run successful. Result: Isready -- {result.IsReady} and Incomplete areas: {result.IncompleteAreas.ToList()}");
+            PreCheckResult result = PreCheckUtils.RunConversationsPreCheck(areas, _logger);
             
-            //TODO: the precheck is hitting demo chat from inside
+            _logger.LogDebug($"Precheck run successful. Result: Isready -- {result.IsReady} and Incomplete areas: {result.IncompleteAreas.ToList()}");
             return result;
         }
 

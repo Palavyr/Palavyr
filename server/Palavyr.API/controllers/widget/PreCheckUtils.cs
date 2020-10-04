@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 using Palavyr.API.ResponseTypes;
 using Server.Domain.Configuration.constants;
 using Server.Domain.Configuration.schema;
@@ -13,7 +14,7 @@ namespace Palavyr.API.Controllers
     /// </summary>
     public static class PreCheckUtils
     {
-        public static PreCheckResult RunConversationsPreCheck(List<Area> areas)
+        public static PreCheckResult RunConversationsPreCheck(List<Area> areas, ILogger _logger)
         {
             var incompleteAreas = new List<Area>();
 
@@ -33,8 +34,7 @@ namespace Palavyr.API.Controllers
 
                 if (isReady) continue;
                 incompleteAreas.Add(area);
-                Console.WriteLine($"Area not currently ready: {area.AreaName}");
-
+                _logger.LogDebug($"Area not currently ready: {area.AreaName}");
             }
             return PreCheckResult.CreateConvoResult(incompleteAreas, isReady);
         }
