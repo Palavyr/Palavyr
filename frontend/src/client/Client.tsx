@@ -8,7 +8,6 @@ export class ApiClient {
     private client: AxiosInstance
     constructor(serverURL: string = serverUrl) {
 
-        // console.log("Server-URL: " + serverURL)
         var sessionId = getSessionIdFromLocalStorage();
 
         this.client = axios.create(

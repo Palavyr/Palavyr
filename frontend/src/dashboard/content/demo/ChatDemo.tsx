@@ -72,7 +72,7 @@ export const ChatDemo = () => {
     }, [loadApiKey])
 
 
-    return ( apiKey &&
+    return (
         <>
             <Grid
                 container
