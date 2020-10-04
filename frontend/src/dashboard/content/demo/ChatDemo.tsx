@@ -39,8 +39,7 @@ export const ChatDemo = () => {
     const classes = useStyles();
 
     const loadMissingNodes = useCallback(async () => {
-
-        var res = await client.WidgetDemo.RunConversationPrecheck();
+        var res = await client.WidgetDemo.RunConversationPrecheck();        
         var PreCheckResult = res.data as PreCheckResult;
         if (!PreCheckResult.isReady) {
             var areas = PreCheckResult.incompleteAreas.map((x: AreaTable) => {
@@ -51,6 +50,7 @@ export const ChatDemo = () => {
             })
             setIncompleteAreas(areas)
         }
+
 
     }, [])
 
@@ -72,7 +72,7 @@ export const ChatDemo = () => {
     }, [loadApiKey])
 
 
-    return (
+    return ( apiKey &&
         <>
             <Grid
                 container
@@ -92,9 +92,9 @@ export const ChatDemo = () => {
                         direction="column"
                         alignItems="center"
                     >
-                    <Typography>The Demo will load once you've fully assembled each of your areas!</Typography>
+                        <Typography>The Demo will load once you've fully assembled each of your areas!</Typography>
                         {
-                            incompleteAreas.map((area, index)=> {
+                            incompleteAreas.map((area, index) => {
                                 return (
                                     <Grid key={index} item>
                                         Name: {area.areaName}

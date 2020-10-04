@@ -121,6 +121,8 @@ namespace Palavyr.API.Controllers
             _logger.LogDebug("Collected areas.... running precheck");
             PreCheckResult result = PreCheckUtils.RunConversationsPreCheck(areas);
             _logger.LogDebug($"Precheck run successful. Result: Isready -- {result.IsReady} and Incomplete areas: {result.IncompleteAreas.ToList()}");
+            
+            //TODO: the precheck is hitting demo chat from inside
             return result;
         }
 

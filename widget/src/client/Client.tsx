@@ -1,8 +1,6 @@
 import axios, { AxiosResponse, AxiosInstance } from "axios";
 import { ConversationUpdate, AreaTable, CompleteConverationDetails } from "../types";
-
-const serverUrl = "https://localhost:5001/api/";
-// const env = process.env.PUBLIC_URL;
+import { serverUrl } from "./clientUtils";
 
 export interface IClient {
     Widget: {
@@ -32,7 +30,7 @@ const CreateClient = (secretKey: string): IClient => {
             }
         }
     )
-    AxiosClient.defaults.baseURL = serverUrl;
+    AxiosClient.defaults.baseURL = serverUrl + "/api/"
 
     let Client = {
         Widget: {
