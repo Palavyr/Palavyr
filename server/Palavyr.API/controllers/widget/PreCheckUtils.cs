@@ -29,8 +29,6 @@ namespace Palavyr.API.Controllers
                 List<bool> checks;
                 try
                 {
-
-
                     checks = new List<bool>()
                     {
                         AllNodesAreSet(nodeList),

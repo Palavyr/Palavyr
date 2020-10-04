@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Amazon.SimpleEmail;
 using DashboardServer.Data;
 using EmailService;
+using EmailService.verification;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -22,6 +23,19 @@ namespace Palavyr.API.controllers.accounts.newAccount
     {
         private static ILogger<AccountSetup> _logger;
         private SESEmail Client { get; set; } // Startup.cs handles finding credentials from appsettings.json through GetAWSOptions
+        private SenderVerification Verifier { get; set; }
+        public AccountSetup(
+            ILogger<AccountSetup> logger,
+            IAmazonSimpleEmailService SESClient,
+            AccountsContext accountContext,
+            ConvoContext convoContext,
+            DashContext dashContext,
+            IWebHostEnvironment env) : base(accountContext, convoContext, dashContext, env)
+        {
+            Client = new SESEmail(logger, SESClient);
+            Verifier = new SenderVerification(logger, SESClient);
+            _logger = logger;
+        }
 
         /// <summary>
         /// Creates a new account table record and data
@@ -74,40 +88,26 @@ namespace Palavyr.API.controllers.accounts.newAccount
             _logger.LogDebug("Provide an account setup confirmation token");
             var confirmationToken = Guid.NewGuid().ToString().Split("-")[0];
             await AccountContext.EmailVerifications.AddAsync(EmailVerification.CreateNew(confirmationToken, newAccountRequest.EmailAddress, newAccountId));
-
-            // send the confirmation email - handle a bounceback if the email address is not real
-            const string fromAddress = "gradie.machine.learning@gmail.com"; // TODO: Replace with company email asap
-            const string subject = "Welcome to Palavyr - Email Verification";
-            _logger.LogDebug($"Sending emails from {fromAddress}");
+            
+            _logger.LogDebug($"Sending emails from {EmailConstants.PalavyrMain}");
             var htmlBody = EmailConfirmationHTML.GetConfirmationEmailBody(newAccountRequest, confirmationToken);
             var textBody = EmailConfirmationHTML.GetConfirmationEmailBodyText(newAccountRequest, confirmationToken);
-            var ok = await Client.SendEmail(fromAddress, newAccountRequest.EmailAddress, subject, htmlBody, textBody);
 
-            if (ok)
+            var sendEmailOk = await Client.SendEmail(EmailConstants.PalavyrMain, newAccountRequest.EmailAddress, EmailConstants.PalavyrSubject, htmlBody, textBody);
+            
+            if (sendEmailOk)
             {
                 await AccountContext.SaveChangesAsync();
                 await DashContext.SaveChangesAsync();
             }
             
-            _logger.LogDebug("Send Email result was " + (ok ? "OK" : "FAIL"));
-            return ok ? (StatusCodeResult) new OkResult() : new NotFoundResult();
-        }
-
-        public AccountSetup(
-            ILogger<AccountSetup> logger,
-            IAmazonSimpleEmailService SES,
-            AccountsContext accountContext,
-            ConvoContext convoContext,
-            DashContext dashContext,
-            IWebHostEnvironment env) : base(accountContext, convoContext, dashContext, env)
-        {
-            Client = new SESEmail(logger, SES);
-            _logger = logger;
+            _logger.LogDebug("Send Email result was " + (sendEmailOk ? "OK" : " a FAIL"));
+            return sendEmailOk ? (StatusCodeResult) new OkResult() : new NotFoundResult();
         }
 
 
         [HttpPost("confirmation/{authToken}/action/setup")]
-        public bool ConfirmEmailAddress(string authToken)
+        public async Task<bool> ConfirmEmailAddress(string authToken)
         {
             _logger.LogDebug("Attempting to confirm email via auth Token.");
             var emailVerification = AccountContext.EmailVerifications.SingleOrDefault(row => row.AuthenticationToken == authToken.Trim());
@@ -122,19 +122,26 @@ namespace Palavyr.API.controllers.accounts.newAccount
 
             account.Active = true;
             AccountContext.EmailVerifications.Remove(emailVerification);
-            AccountContext.SaveChanges();
+    
+            _logger.LogDebug("Verifying email address. Already verified using an authtoken, so this is okay");
+            var emailVerified = await Verifier.VerifyEmailAddress(emailVerification.EmailAddress);
 
-            return true;
+            if (emailVerified)
+            {
+                await AccountContext.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
         }
 
         [HttpGet("isActive")]
         public bool CheckIsActive([FromHeader] string accountId)
         {
-            _logger.LogDebug("Activation controller hit! AGain!");
+            _logger.LogDebug("Activation controller hit! Again!");
             var account = AccountContext.Accounts.Single(row => row.AccountId == accountId);
             var isActive = account.Active;
             return isActive;
         }
-        
     }
 }

@@ -10,7 +10,6 @@ namespace EmailService
     public partial class SESEmail
     {
         private readonly ILogger _logger;
-
         private IAmazonSimpleEmailService EmailClient { get;}
         
         public SESEmail(
