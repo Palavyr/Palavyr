@@ -98,7 +98,7 @@ namespace Palavyr.API.Controllers
                 .Include(row => row.ConversationNodes)
                 .ToList();
             
-            _logger.LogDebug("Running conversations pre-check...");
+            _logger.LogDebug("Running live widget conversations pre-check...");
             PreCheckResult result = PreCheckUtils.RunConversationsPreCheck(areas, _logger);
             _logger.LogDebug($"Pre-check run successful. Result: Isready:{result.IsReady} and incomplete areas: {result.IncompleteAreas.ToList()}");
             return result;
@@ -112,17 +112,17 @@ namespace Palavyr.API.Controllers
         [HttpGet("demo/precheck")]
         public PreCheckResult RunDemoPreCheck([FromHeader] string accountId)
         {
-            _logger.LogDebug("Collecting areas for precheck...");
+            _logger.LogDebug("Collecting areas for DEMO pre-check...");
             var areas = DashContext
                 .Areas
                 .Where(row => row.AccountId == accountId)
                 .Include(row => row.ConversationNodes)
                 .ToList();
 
-            _logger.LogDebug("Collected areas.... running precheck");
+            _logger.LogDebug("Collected areas.... running DEMO pre-check");
             PreCheckResult result = PreCheckUtils.RunConversationsPreCheck(areas, _logger);
             
-            _logger.LogDebug($"Precheck run successful. Result: Isready -- {result.IsReady} and Incomplete areas: {result.IncompleteAreas.ToList()}");
+            _logger.LogDebug($"Pre-check run successful. Result: Isready -- {result.IsReady} and Incomplete areas: {result.IncompleteAreas.ToList()}");
             return result;
         }
 

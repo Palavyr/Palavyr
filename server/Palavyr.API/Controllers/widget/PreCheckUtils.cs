@@ -17,25 +17,40 @@ namespace Palavyr.API.Controllers
         public static PreCheckResult RunConversationsPreCheck(List<Area> areas, ILogger _logger)
         {
             var incompleteAreas = new List<Area>();
-
+            _logger.LogDebug("Attempting RunConversationsPreCheck...");
+            
             var isReady = true;
             foreach (var area in areas)
             {
                 var nodeList = area.ConversationNodes;
                 var requiredNodes = area.DynamicTableMetas.Select(row => row.TableType).ToList();
-                var checks = new List<bool>()
+
+                _logger.LogDebug($"Required Nodes Found. Number of required nodes: {requiredNodes.Count}");
+                List<bool> checks;
+                try
                 {
-                    AllNodesAreSet(nodeList),
-                    AllBranchesTerminate(nodeList),
-                    AllRequiredNodesSatisfied(nodeList, requiredNodes),
-                };
+
+
+                    checks = new List<bool>()
+                    {
+                        AllNodesAreSet(nodeList),
+                        AllBranchesTerminate(nodeList),
+                        AllRequiredNodesSatisfied(nodeList, requiredNodes),
+                    };
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogDebug($"Node checks failed: {ex.Message}");
+                    throw;
+                }
 
                 isReady = checks.TrueForAll(x => x == true);
-
+                _logger.LogDebug($"Checked isReady status: {isReady}");
                 if (isReady) continue;
                 incompleteAreas.Add(area);
                 _logger.LogDebug($"Area not currently ready: {area.AreaName}");
             }
+            _logger.LogDebug("Pre-check Complete. Returning result.");
             return PreCheckResult.CreateConvoResult(incompleteAreas, isReady);
         }
 
