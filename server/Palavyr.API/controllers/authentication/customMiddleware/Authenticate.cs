@@ -50,21 +50,15 @@ namespace Palavyr.API.CustomMiddleware
             {
 
                 if (context.Request.Path == "/api/authentication/login")
-                {
                     await _next(context);
-                }
+                else if (context.Request.Path == "/api/authentication/sessionlogin")
+                    await _next(context);
                 else if (context.Request.Path == "/api/authentication/session")
-                {
                     await _next(context);
-                }
                 else if (context.Request.Path == "/api/account/create")
-                {
                     await _next(context);
-                }
                 else
-                {
                     throw new Exception("Wrong url for login");
-                }
             }
 
             else if (ACTION == MagicUrlStrings.LogoutAction)

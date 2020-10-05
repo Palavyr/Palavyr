@@ -98,11 +98,11 @@ namespace Palavyr.API.controllers.accounts.devAccount
             var devAccount = UserAccount.CreateAccount(dh.UserName, dh.Email, dh.HashedPassword, dh.AccountId, dh.ApiKey, dh.CompanyName, dh.PhoneNumber, dh.Active, dh.Locale);
             var subscription = Subscription.CreateNew(dh.AccountId, dh.ApiKey, SubscriptionConstants.DefaultNumAreas);
             var data = new DevSeedData(dh.AccountId);
-            var devSession = Session.CreateNew(dh.AccountId, dh.ApiKey);
+            // var devSession = Session.CreateNew(dh.AccountId, dh.ApiKey);
 
             AccountContext.Subscriptions.Add(subscription);
             AccountContext.Accounts.Add(devAccount);
-            AccountContext.Sessions.Add(devSession);
+            // AccountContext.Sessions.Add(devSession);
             AccountContext.SaveChanges();
 
             DashContext.Areas.AddRange(data.Areas);

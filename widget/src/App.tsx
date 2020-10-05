@@ -36,7 +36,7 @@ export const App = () => {
         <>
             {(isReady === true) && (selectedOption === null) && <OptionSelector setSelectedOption={setSelectedOption} />}
             {(isReady === true) && (selectedOption !== null) && <CustomWidget option={selectedOption} />}
-            {(isReady === false) && <span>Not ready</span>}
+            {(isReady === false) && <span style={{textAlign: "center", margin: "2rem"}}>Not ready</span>}
         </>
     )
 }

@@ -1,4 +1,5 @@
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const TypeScriptLoaderRule = () => {
     return {
@@ -50,20 +51,27 @@ const StylesLoader = () => {
     return {
         test: /\.css$/i,
         use: [
-            { loader: 'style-loader' },
-            { loader: 'css-loader' },
-            // { loader: 'css-to-mui-loader' },
-            // { loader: "sass-loader" },
-            // {
-            //     loader: 'less-loader',
-            //     options: {
-            //         lessOptions: {
-            //             strictMath: true,
-            //         },
-            //     },
-            // }
+            MiniCssExtractPlugin.loader,
+            // 'style-loader',
+            'css-loader' ,
         ],
         exclude: path.resolve(__dirname, '/node_modules')
+    }
+}
+
+const CSSModules = () => {
+    return {
+        test: /\.css$/,
+        use: [
+            'style-loader',
+            {
+                loader: 'css-loader',
+                options: {
+                    importLoaders: 1,
+                    modules: true
+                }
+            }
+        ]
     }
 }
 
@@ -89,8 +97,17 @@ const MUILoaderRule = () => {
     }
 }
 
+const CSSMinify = () => {
+    return {
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader']
+    }
+}
+
 
 module.exports = {
+    CSSModules,
+    CSSMinify,
     TypeScriptLoaderRule,
     FileLoaderRule,
     SVGRule,

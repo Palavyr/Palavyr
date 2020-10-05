@@ -1,14 +1,13 @@
 import { makeStyles } from "@material-ui/core";
 import React, { useState, useCallback, useEffect } from "react";
 import { Conversation, DynamicTableMetas, DynamicTableMeta } from "@Palavyr-Types";
-import { getRootNode, getMissingNodes, removeNodes, addNodes } from "./nodes/conversationNodeUtils";
+import { getRootNode, getMissingNodes, addNodes } from "./nodes/conversationNodeUtils";
 import { NodeTypeOptions } from "./nodes/NodeTypeOptions";
 import { ApiClient } from "@api-client/Client";
 import { TableData } from "../response/tables/dynamicTable/tableComponents/SelectOneFlat/SelectOneFlatTypes";
 import { cloneDeep } from "lodash";
 import { ConversationNode } from "./nodes/ConversationNode";
 import { MissingDynamicNodes } from "./MissingDynamicNodes";
-import classNames from "classnames";
 import "./ConvoTree.css";
 
 
@@ -17,34 +16,11 @@ export interface IConvoTree {
     treeName: string;
 }
 
-// const useStyles = makeStyles(
-//     {
-        // fieldset: {
-        //     position: "relative",
-        //     borderWidth: "1px",
-        //     borderStyle: "solid",
-        //     marginBottom: "10px",
-        //     padding: "50px"
-        // },
-
-        // treeTest: {
-        //     position: "relative"
-        // },
-
-        // treeWrap: {
-        //     display: "flex",
-        //     flexDirection: "column",
-        //     alignItems: "flex-start",
-        //     position: "relative"
-        // }
-//     }
-// )
 
 export type RequiredDetails = {
     type: string;
     prettyName: string;
 }
-
 
 export const makeUniqueTableName = (tableMeta: DynamicTableMeta) => {
     return [tableMeta.tableType, tableMeta.tableId].join("-")
@@ -52,9 +28,7 @@ export const makeUniqueTableName = (tableMeta: DynamicTableMeta) => {
 
 export const ConvoTree = ({ areaIdentifier, treeName }: IConvoTree) => {
 
-    // const classes = useStyles();
-
-    const [, setLoaded] = useState<boolean>(false);
+    const [loaded, setLoaded] = useState<boolean>(false);
     const [nodeList, setNodes] = useState<Conversation>([]); // nodeList and state updater for the tree
     const rootNode = getRootNode(nodeList);
     const [dynamicNodeTypes, setDynamicNodeTypes] = useState<NodeTypeOptions>({});
@@ -117,31 +91,32 @@ export const ConvoTree = ({ areaIdentifier, treeName }: IConvoTree) => {
             })
         }
         setNodes(cloneDeep(nodes));
-        setLoaded(true);
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier])
 
     useEffect(() => {
         loadNodes();
+        setLoaded(true);
         return () => {
+            
             setLoaded(false)
         }
     }, [areaIdentifier, loadNodes])
 
     useEffect(() => {
-
         if (nodeList.length > 0) {
             const nodeTypes = getMissingNodes(nodeList, requiredNodes);
             setMissingNodeTypes(nodeTypes);
         }
-
+        
         // Disabling this here because we don't want to rerender on requriedNodes change (thought that seems almost what we want, but actually isn't)
         // We compute this on the nodeList in fact, and the requiredNodes only change when we change areaIdentifier (or update the dynamic tables option on the other tab)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier, nodeList])
 
     return (
-        <>
+        <div>
             {missingNodeTypes.length > 0 && <MissingDynamicNodes missingNodeTypes={missingNodeTypes} />}
             <form onSubmit={() => null}>
                 <fieldset className="fieldset" id="tree-test">
@@ -165,6 +140,6 @@ export const ConvoTree = ({ areaIdentifier, treeName }: IConvoTree) => {
                     </div>
                 </fieldset>
             </form>
-        </>
+        </div>
     );
 };

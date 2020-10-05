@@ -9,6 +9,7 @@ import { ChangeCompanyName } from "./account/ChangeCompanyName";
 import { ChangePhoneNumber } from "./account/ChangePhoneNumber";
 import { ChangeLogoImage } from "./account/ChangeLogoImage";
 import { areaTabProps, TabPanel, PanelRange } from "@common/ContentUtils";
+import { ChangeLocale } from "./account/ChangeLocale";
 
 interface IAreaContent {
     areaName: string;
@@ -20,7 +21,7 @@ interface IAreaContent {
 
 
 export const SettingsContent = ({ areaIdentifier, areaName, classes, setLoaded }: IAreaContent) => {
-    const [tab, setTab] = useState<PanelRange>(0); // tabs
+    const [tab, setTab] = useState<PanelRange>(5); // tabs
 
     useEffect(() => {
         setLoaded(true);
@@ -39,32 +40,30 @@ export const SettingsContent = ({ areaIdentifier, areaName, classes, setLoaded }
                 <Tabs value={tab} onChange={handleTabChange} aria-label="simple tabs example">
                     <Tab label="Password" {...areaTabProps(0)} />
                     <Tab label="Email" {...areaTabProps(1)} />
-                    <Tab label="UserName" {...areaTabProps(2)} />
-                    <Tab label="Company Name" {...areaTabProps(3)} />
-                    <Tab label="Phone Number" {...areaTabProps(4)} />
-                    <Tab label="Response Logo" {...areaTabProps(5)} />
-
+                    <Tab label="Company Name" {...areaTabProps(2)} />
+                    <Tab label="Phone Number" {...areaTabProps(3)} />
+                    <Tab label="Response Logo" {...areaTabProps(4)} />
+                    <Tab label="Locale" {...areaTabProps(5)} />
                 </Tabs>
             </AppBar>
 
             <TabPanel value={tab} index={0}>
                 <ChangePassword />
             </TabPanel>
-
             <TabPanel value={tab} index={1}>
                 <ChangeEmail />
             </TabPanel>
             <TabPanel value={tab} index={2}>
-                <ChangeUserName />
-            </TabPanel>
-            <TabPanel value={tab} index={3}>
                 <ChangeCompanyName />
             </TabPanel>
-            <TabPanel value={tab} index={4}>
+            <TabPanel value={tab} index={3}>
                 <ChangePhoneNumber />
             </TabPanel>
-            <TabPanel value={tab} index={5}>
+            <TabPanel value={tab} index={4}>
                 <ChangeLogoImage />
+            </TabPanel>
+            <TabPanel value={tab} index={5}>
+                <ChangeLocale />
             </TabPanel>
 
             {/* <TabPanel value={tab} index={5}>

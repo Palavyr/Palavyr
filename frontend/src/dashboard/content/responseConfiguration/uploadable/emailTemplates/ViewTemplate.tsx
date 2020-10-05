@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Container, Paper } from "@material-ui/core";
 
 interface IViewEmailTemplate {
-    updateableEmailTemplate: string;
-    setUpdateableEmailTemplate: any;
+    emailTemplate: string;
 }
 
 const style = {
@@ -11,17 +10,14 @@ const style = {
     padding: "1.2rem"
 }
 
-export const ViewEmailTemplate = ({ updateableEmailTemplate, setUpdateableEmailTemplate }: IViewEmailTemplate) => {
+export const ViewEmailTemplate = ({ emailTemplate }: IViewEmailTemplate) => {
+    // Shall maintain no state.
+    // state is maintained in the Email configuration, which also handles state for the editor. 
 
-    useEffect(() => {
-        return () => {
-            setUpdateableEmailTemplate(null!);
-        }
-    })
     return (
         <Container >
             <Paper elevation={12} style={style}>
-                <div dangerouslySetInnerHTML={{ __html: updateableEmailTemplate }}></div>
+                <div dangerouslySetInnerHTML={{ __html: emailTemplate }}></div>
             </Paper>
         </Container>
     )

@@ -4,7 +4,7 @@ import transitions from "@material-ui/core/styles/transitions";
 
 export const useFooterStyles = makeStyles(theme => ({
     footerInner: {
-        backgroundColor: theme.palette.common.black,
+        backgroundColor: "",
         paddingTop: theme.spacing(8),
         paddingLeft: theme.spacing(2),
         paddingRight: theme.spacing(2),
@@ -56,6 +56,6 @@ export const useFooterStyles = makeStyles(theme => ({
         }
     },
     whiteBg: {
-        backgroundColor: theme.palette.common.white
+        backgroundColor: "#efedf4"
     }
 }));

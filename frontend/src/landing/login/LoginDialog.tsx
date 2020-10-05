@@ -53,7 +53,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
             loginPassword,
             success,
             error
-            );
+        );
 
         if (!successfulResponse) {
             setTimeout(() => {

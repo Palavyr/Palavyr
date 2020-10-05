@@ -6,8 +6,9 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
-const { TypeScriptLoaderRule, FileLoaderRule, SVGRule, BabelLoaderRule, StylesLoader, URLLoaderRule } = require("./webpack/rules");
+const { TypeScriptLoaderRule, FileLoaderRule, SVGRule, BabelLoaderRule, StylesLoader, URLLoaderRule, CSSMinify } = require("./webpack/rules");
 const webpack = require('webpack');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 
 module.exports = (ENV) => {
@@ -19,7 +20,8 @@ module.exports = (ENV) => {
             "palavyr-build": './src/index.tsx',
         },
         plugins: [
-            new Dotenv({path: envPath}),
+            new MiniCssExtractPlugin(),
+            new Dotenv({ path: envPath }),
             new CleanWebpackPlugin(), //for < v2 versions of CleanWebpackPlugin
             new HtmlWebpackPlugin({ title: 'Palavyr Prod' }),
             new ManifestPlugin(manifestOptions),
@@ -38,13 +40,14 @@ module.exports = (ENV) => {
         module: {
             rules: [
                 TypeScriptLoaderRule(),
+                StylesLoader(),
                 FileLoaderRule(),
                 SVGRule(),
                 BabelLoaderRule(),
-                StylesLoader(),
                 URLLoaderRule(),
                 //new rule here
             ],
         },
+       
     }
 }

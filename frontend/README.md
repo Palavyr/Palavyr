@@ -23,6 +23,18 @@ This will run the frontend and express server.
 The front end webpack server runs on port 8080.
 
 
+## Checking the production build
+
+To check the production build locally, build the distribution:
+
+    npm run build
+
+and then, from the dist directory, run:
+
+    http-server
+
+`http-server` should be globally installed (`npm install -g http-server`).
+
 # Hosting
 
 The frontend is hosted using AWS S3 static website hosting. SSL is provided via CloudFront and the Certificate Manager and DNS is provided by Route53. Records of how this is configured is currently in Notes.md.

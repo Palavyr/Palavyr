@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@material-ui/core";
 
-export type PanelRange = 0 | 1 | 2 | 3 | 4 | 5;
+export type PanelRange = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 interface ITabPanel {
     value: PanelRange;

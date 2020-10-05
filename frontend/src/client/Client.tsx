@@ -122,11 +122,13 @@ export class ApiClient {
             updateEmail: async (newEmail: string): Promise<AxiosResponse> => this.client.put(`account/settings/update/email`, { EmailAddress: newEmail }),
             updateUserName: async (newUserName: string): Promise<AxiosResponse> => this.client.put(`account/settings/update/username/`, { UserName: newUserName }),
             updatePhoneNumber: async (newPhoneNumber: string): Promise<AxiosResponse> => this.client.put(`account/settings/update/phonenumber`, { PhoneNumber: newPhoneNumber }),
+            updateLocale: async (newLocale: string): Promise<AxiosResponse> => this.client.put(`account/settings/update/locale`, {Locale: newLocale}),
 
             getCompanyName: async (): Promise<AxiosResponse> => this.client.get(`account/settings/companyname`),
             getEmail: async (): Promise<AxiosResponse> => this.client.get(`account/settings/email`),
             getUserName: async (): Promise<AxiosResponse> => this.client.get(`account/settings/username`),
             getPhoneNumber: async (): Promise<AxiosResponse> => this.client.get(`account/settings/phonenumber`),
+            getLocale: async (): Promise<AxiosResponse> => this.client.get(`account/settings/locale`)
         },
         Groups: {
             GetGroups: async (): Promise<AxiosResponse> => this.client.get(`group/`),

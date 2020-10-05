@@ -8,7 +8,8 @@ import { Header } from "./components/header/Header";
 import { ThreeItemRow, ThreeItemRowObject } from "./components/ThreeItemRow/ThreeItemRow";
 import { Footer } from "./components/footer/Footer";
 import { DialogTypes } from "@landing/components/dialogSelector/dialogTypes";
-
+import Auth from "auth/Auth";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -16,12 +17,13 @@ const useStyles = makeStyles((theme) => ({
         overflowX: "hidden",
     },
     frame: {
+        position: "static",
+        right: "40px",
         height: "500px",
         width: "320px",
         borderRadius: "9px",
         border: "0px",
-        position: "fixed",
-        zIndex: 999
+        // zIndex: 9999
     }
 }));
 
@@ -46,13 +48,14 @@ const listOfThree: Array<ThreeItemRowObject> = [
 
 
 export const LandingPage = () => {
-
     const classes = useStyles();
 
     const [selectedTab, setSelectedTab] = useState<string | null>(null);
     const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState<boolean>(false);
     const [dialogOpen, setDialogOpen] = useState<DialogTypes>(null);
     const [isCookieRulesDialogOpen, setIsCookieRulesDialogOpen] = useState<boolean>(false);
+
+    const history = useHistory();
 
     const openLoginDialog = useCallback(() => {
         setDialogOpen("login");
@@ -94,20 +97,21 @@ export const LandingPage = () => {
         setIsCookieRulesDialogOpen(false);
     }, [setIsCookieRulesDialogOpen]);
 
-    const testCallback = useCallback(async () => {
-        console.log("Attempting reach the server...")
-
+    const attemptLogin = useCallback(async () => {
+        const success = () => {
+            setTimeout(() => {
+                history.push("/dashboard");
+            }, 150);
+        }
+        await Auth.loginWithSessionToken(success, () => { });
+        return false; // TODO: implement this with Auth.ts
     }, [])
 
-
-    const attemptLogin = () => {
-        return false; // TODO: implement this with Auth.ts
-    }
-
     useEffect(() => {
-        testCallback()
         attemptLogin();
-    })
+        return () => {
+        }
+    }, [])
 
     return (
         <>
@@ -141,10 +145,9 @@ export const LandingPage = () => {
                 <Header />
                 <ThreeItemRow listOfThree={listOfThree} />
                 <Footer />
+
             </div>
-            {/* <div> */}
-                {/* <iframe className={classes.frame} title="demo" src="http://localhost:3400/widget/abc123"></iframe> */}
-            {/* </div> */}
+
         </>
     );
 };

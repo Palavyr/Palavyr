@@ -1,25 +1,28 @@
 import { makeStyles } from "@material-ui/core";
 
 
-export const useNavBarStyles = makeStyles(theme => ({
+export const useNavBarStyles = makeStyles({
     root: {},
     menuButton: {},
     appBar: {
-        boxShadow: theme.shadows[6],
-        backgroundColor: theme.palette.common.white
+        // height: "75px"
+        // boxShadow: theme.shadows[6],
     },
     toolbar: {
         display: "flex",
         justifyContent: "space-between"
     },
     menuButtonText: {
-        fontSize: theme.typography.body1.fontSize,
-        fontWeight: theme.typography.h6.fontWeight
+        fontSize: "large"
+        // fontSize: theme.typography.body1.fontSize,
+        // fontWeight: theme.typography.h6.fontWeight
     },
     brandText: {
-        marginLeft: "5rem"
+        fontWeight: "bolder",
+        marginLeft: "5rem",
+        color: "white"
     },
     noDecoration: {
         textDecoration: "none !important"
     }
-}));
+});

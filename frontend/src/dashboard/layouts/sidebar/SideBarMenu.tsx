@@ -29,7 +29,6 @@ const createNavLink = (areaIdentifier: string, contentType: string) => {
 
 const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }: ISideBarMenu) => {
     const [convosOpen, setConvosOpen] = useState(true);
-    // console.log("Is active? " + active)
     const history = useHistory();
 
     return (
@@ -73,13 +72,13 @@ const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }: ISideB
 
                 <ListItem disabled={!active} button onClick={() => history.push('/dashboard/enquiries/')}>
                     <ListItemIcon>
-                        <InboxIcon key={uuid()} />
+                        <InboxIcon key={"23534hhuip"} />
                     </ListItemIcon>
                     <ListItemText primary={"Check Enquiries"} />
                 </ListItem>
                 <ListItem disabled={!active} button onClick={() => history.push('/dashboard/demo/')}>
                     <ListItemIcon>
-                        <CompareIcon key={uuid()} />
+                        <CompareIcon key={"iuhi3453jb"} />
                     </ListItemIcon>
                     <ListItemText primary={"Chat Demo"} />
                 </ListItem>

@@ -16,7 +16,7 @@ export const socialIcons: Array<SocialIcon> = [
             </svg>
         ),
         label: "Github",
-        href: "https://github.com/paulegradie"
+        href: "https://github.com/Palavyr/Issues"
     },
     {
         icon: (
@@ -64,6 +64,6 @@ export const socialIcons: Array<SocialIcon> = [
             </svg>
         ),
         label: "Twitter",
-        href: "https://www.twitter.com/"
+        href: "https://www.twitter.com/palavyr"
     }
 ];

@@ -1,19 +1,19 @@
 ﻿using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
 using System.Linq;
-using System.Web.Http.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Palavyr.API.GeneratePdf;
 using Palavyr.API.ReceiverTypes;
 
 
 namespace Palavyr.API.Controllers
 {
-    // [EnableCors(origins: "*", headers: "*", methods: "*", exposedHeaders: "X-My-Header")] 
     [Route("api/email")]
     [ApiController]
     public class EmailTemplateController : BaseController
     {
         public EmailTemplateController(AccountsContext accountContext, ConvoContext convoContext, DashContext dashContext, IWebHostEnvironment env) : base(accountContext, convoContext, dashContext, env) { }
+        
         [HttpGet("{areaId}/emailTemplate")]
         public string GetEmailTemplate([FromHeader] string accountId, string areaId)
         {
@@ -22,6 +22,12 @@ namespace Palavyr.API.Controllers
                 .Where(row => row.AccountId == accountId)
                 .Single(row => row.AreaIdentifier == areaId)
                 .EmailTemplate;
+            
+            // Substitute Variables
+            const string clientName = "[Insert Name]";
+            var companyName = AccountContext.Accounts.SingleOrDefault(row => row.AccountId == accountId).CompanyName;
+            var logoUri = AccountContext.Accounts.SingleOrDefault(row => row.AccountId == accountId).AccountLogoUri;
+            emailTemplate = SupportedSubstitutions.MakeVariableSubstitutions(emailTemplate, companyName, clientName, logoUri);
             return emailTemplate;
         }
 

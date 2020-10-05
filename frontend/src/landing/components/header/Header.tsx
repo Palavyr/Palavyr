@@ -49,15 +49,16 @@ export const Header = withWidth()(({ width }: IHaveWidth) => {
                                                         Use Palavyr to configure a custom chat widget for your site to engage customers.
                                                 </Typography>
                                                 </Box>
-                                                <Button
+                                                {/* <Button
                                                     variant="contained"
                                                     color="secondary"
                                                     fullWidth
                                                     className={classes.extraLargeButton}
                                                     classes={{ label: classes.extraLargeButtonLabel }}
+                                                    onClick={() => {}}
                                                 >
-                                                    Try Palavyn!
-                                                </Button>
+                                                    Try Palavyr!
+                                                </Button> */}
                                             </div>
                                         </Box>
                                     </Grid>

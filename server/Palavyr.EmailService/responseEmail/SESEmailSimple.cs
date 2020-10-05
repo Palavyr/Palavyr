@@ -75,7 +75,6 @@ namespace EmailService
             {
                 _logger.LogDebug("Email was not sent. ");
                 _logger.LogDebug($"Error: {ex.Message}");
-                // This should only send true or false
                 //TODO: If this errors, then we need to send a response that the email couldn't be sent, and then record the email in the bounceback DB.
                 return false;
             }

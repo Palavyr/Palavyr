@@ -24,19 +24,19 @@ namespace Palavyr.API.Controllers
         {
             _logger = logger;
         }
-        
+
         [HttpPost("login")]
         public Credentials PerformLogin([FromHeader] string action, LoginCredentials credentials)
         {
             if (action != MagicUrlStrings.LoginAction) throw new Exception();
-            
+
             // take credentials and check against the database
             var byUsername = AccountContext.Accounts.SingleOrDefault(row => row.UserName == credentials.Username);
             var byEmail = AccountContext.Accounts.SingleOrDefault(row => row.EmailAddress == credentials.EmailAddress);
 
             var userAccount = byUsername ?? byEmail;
             if (userAccount == null) return Credentials.CreateUnauthenticatedResponse("Could not find user.");
-            
+
             if (!PasswordHashing.ComparePasswords(userAccount.Password, credentials.Password))
             {
                 return Credentials.CreateUnauthenticatedResponse("Password does not match.");
@@ -45,7 +45,7 @@ namespace Palavyr.API.Controllers
             var newSession = Session.CreateNew(userAccount.AccountId, userAccount.ApiKey);
             AccountContext.Sessions.Add(newSession);
             AccountContext.SaveChanges();
-                
+
             return Credentials.CreateAuthenticatedResponse(newSession.SessionId, newSession.ApiKey);
         }
 
@@ -56,6 +56,46 @@ namespace Palavyr.API.Controllers
 
             var result = AccountContext.Sessions.SingleOrDefault(row => row.SessionId == sessionId);
             return result != null && result.Expiration < DateTime.Now;
+        }
+
+        [HttpPost("sessionlogin")]
+        public Credentials PerformSessionLogin([FromHeader] string action, LoginCredentials credentials)
+        {
+            // lookup sessionID - is it valid? retrieve accountID
+            var sessionToken = credentials.sessionToken;
+            if (sessionToken == null) 
+                return Credentials.CreateUnauthenticatedResponse("No active Session.");
+            var session = AccountContext.Sessions.SingleOrDefault(row => row.SessionId == sessionToken);
+            
+            if (session == null)
+            {
+                return Credentials.CreateUnauthenticatedResponse("Session not found.");
+            }
+            // if expired or non existent
+            if (session.Expiration < DateTime.Now | session == null)
+            {
+                // TODO: DOES THIS WORK RIGHT? {
+                if (session != null)
+                {
+                    AccountContext.Sessions.Remove(session);
+                    AccountContext.SaveChanges();
+                }
+
+                return Credentials.CreateUnauthenticatedResponse("Session Id Expired.");
+            }
+
+            var account = AccountContext.Accounts.SingleOrDefault(row => row.EmailAddress == credentials.EmailAddress);
+            if (credentials.EmailAddress != account.EmailAddress)
+                return Credentials.CreateUnauthenticatedResponse("Current email address does not match the session Id");
+
+            // // remove old session and create a new session
+            // AccountContext.Sessions.Remove(session);
+            // var newSession = Session.CreateNew(session.AccountId, session.ApiKey);
+            // AccountContext.Sessions.Add(newSession);
+
+            // save changes
+            AccountContext.SaveChanges();
+            return Credentials.CreateAuthenticatedResponse(session.SessionId, session.ApiKey);
         }
     }
 }

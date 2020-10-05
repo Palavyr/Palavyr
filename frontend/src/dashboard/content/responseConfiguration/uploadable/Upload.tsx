@@ -25,6 +25,9 @@ export type FileUpload = Blob & {
 const useStyles = makeStyles(theme => ({
     heading: {
 
+    },
+    accordian: {
+        width: "100%"
     }
 }))
 
@@ -33,7 +36,7 @@ export const Upload = ({ accordState, toggleAccord, modalState, toggleModal, han
 
     const classes = useStyles();
     return (
-        <Accordion expanded={accordState} >
+        <Accordion className={classes.accordian} expanded={accordState} >
             <AccordionSummary onClick={toggleAccord} expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
                 <Typography className={classes.heading}>
                     <strong>{summary}</strong>

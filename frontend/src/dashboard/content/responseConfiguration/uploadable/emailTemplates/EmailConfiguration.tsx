@@ -2,7 +2,10 @@ import React, { useState, useCallback, useEffect } from "react";
 import { ApiClient } from "@api-client/Client";
 import { Upload } from "../Upload";
 import { ViewEmailTemplate } from "./ViewTemplate";
-import { MyEditor } from "./Editor";
+import { EmailEditor } from "./EmailEditor";
+import { SaveOrCancel } from "@common/components/SaveOrCancel";
+import { makeStyles } from "@material-ui/core";
+
 
 interface IEmailConfiguration {
     areaIdentifier: string;
@@ -32,14 +35,21 @@ const uploadDetails = () => {
 const buttonText = "Add Email Template";
 const summary = "Upload a new Email Response";
 
-
+const useStyles = makeStyles(theme => ({
+    saveOrCancel: {
+        marginTop: "2rem",
+        textAlign: "right"
+    }
+}))
+ 
 export const EmailConfiguration = ({ areaIdentifier }: IEmailConfiguration) => {
     var client = new ApiClient();
-
+    var classes = useStyles();
     let fileReader = new FileReader();
 
     const [loaded, setLoaded] = useState<boolean>(false);
-    const [emailTemplate, setEmailTemplate] = useState<string>("");
+
+    const [emailTemplate, setEmailTemplate] = useState("");
 
     const [modalState, setModalState] = useState(false);
     const toggleModal = () => {
@@ -49,6 +59,11 @@ export const EmailConfiguration = ({ areaIdentifier }: IEmailConfiguration) => {
     const [accordState, setAccordState] = useState(false);
     const toggleAccord = () => {
         setAccordState(!accordState)
+    }
+
+    const [editorAccordstate, setEditorAccordState] = useState(false);
+    const toggleEditorAccord = () => {
+        setEditorAccordState(!editorAccordstate);
     }
 
     const handleFileRead = async (e: any) => {
@@ -70,11 +85,19 @@ export const EmailConfiguration = ({ areaIdentifier }: IEmailConfiguration) => {
         }
     }
 
+    const saveEditorData = async () => {
+        const data = emailTemplate;
+        var res = await client.Configuration.Email.SaveEmailTemplate(areaIdentifier, data)
+    }
+
     const loadEmailTemplate = useCallback(async () => {
         var res = await client.Configuration.Email.GetEmailTemplate(areaIdentifier);
         setEmailTemplate(res.data);
         setLoaded(true)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        return () => {
+            setLoaded(false);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier])
 
     useEffect(() => {
@@ -82,8 +105,8 @@ export const EmailConfiguration = ({ areaIdentifier }: IEmailConfiguration) => {
         return () => {
             setLoaded(false)
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [emailTemplate, areaIdentifier, loadEmailTemplate])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [areaIdentifier, loadEmailTemplate])
 
     return (
         <>
@@ -99,8 +122,25 @@ export const EmailConfiguration = ({ areaIdentifier }: IEmailConfiguration) => {
                 uploadDetails={uploadDetails}
                 acceptedFiles={['text/html', 'text/plain']}
             />
-            {loaded && <ViewEmailTemplate setUpdateableEmailTemplate={setEmailTemplate} updateableEmailTemplate={emailTemplate} />}
-            <MyEditor />
+            <EmailEditor
+                accordState={editorAccordstate}
+                toggleAccord={toggleEditorAccord}
+                setEmailTemplate={setEmailTemplate}
+                emailTemplate={emailTemplate}
+            >
+                <div className={classes.saveOrCancel}>
+                    <SaveOrCancel
+                        onSave={() => saveEditorData()}
+                        onCancel={() => loadEmailTemplate()}
+                    />
+                </div>
+            </EmailEditor>
+            {
+                loaded &&
+                <ViewEmailTemplate
+                    emailTemplate={emailTemplate}
+                />
+            }
         </>
     );
 };

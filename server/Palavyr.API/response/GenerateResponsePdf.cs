@@ -31,7 +31,7 @@ namespace Palavyr.API.GeneratePdf
         private string AreaId { get; set; }
         private static readonly HttpClient client = new HttpClient();
         private HttpRequest Request { get; set; }
-        private ILogger _logger;
+        private readonly ILogger _logger;
 
         public PdfResponseGenerator(DashContext dashContext, AccountsContext accountContext,
             ConvoContext dynamicTableContext, string accountId, string areaId, HttpRequest request, ILogger logger)
@@ -189,7 +189,15 @@ namespace Palavyr.API.GeneratePdf
                 CollectRealDynamicTables(areaData, AccountId, dynamicResponse, culture); // TODO Support  multiple
             var html = PdfGenerator.GenerateNewPDF(userAccount, areaData, criticalResponses, staticTables,
                 dynamicTables);
+            
+            // Substitute Variables
+            var nameElement = emailRequest.KeyValues.SingleOrDefault(dict => dict.ContainsKey("Name"));
+            nameElement.TryGetValue("Name", out var clientName);
+            var companyName = AccountContext.Accounts.SingleOrDefault(row => row.AccountId == AccountId).CompanyName;
+            var logoUri = AccountContext.Accounts.SingleOrDefault(row => row.AccountId == AccountId).AccountLogoUri;
 
+            html = SupportedSubstitutions.MakeVariableSubstitutions(html, companyName, clientName, logoUri);
+            
             var fileName = await GeneratePdfFromHtml(html, LocalServices.PdfServiceUrl, localWriteToPath, identifier);
             return fileName;
         }

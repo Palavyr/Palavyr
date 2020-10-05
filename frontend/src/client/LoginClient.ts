@@ -22,6 +22,10 @@ export class LoginClient {
             UserName: username,
             EmailAddress: email,
             Password: password
+        }),
+        RequestLoginViaSession: async (email: string, sessionId: string): Promise<AxiosResponse> => this.client.post("authentication/sessionlogin", {
+            EmailAddress: email,
+            sessionToken: sessionId
         })
     }
 

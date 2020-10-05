@@ -50,6 +50,24 @@ class Auth {
         }
     }
 
+    async loginWithSessionToken(callback: () => any, errorCallback: (response) => any) {
+        const loginClient = new LoginClient();
+        const email = LocalStorage.getEmailAddress();
+        const sessionId = LocalStorage.getSessionId();
+        if (email === "" || email === undefined || email === null|| sessionId === "" || sessionId === undefined || sessionId === null) {
+            return false;
+        }
+        const authenticationResponse = (await loginClient.Login.RequestLoginViaSession(email, sessionId)).data;
+        if (authenticationResponse.authenticated) {
+            this.authenticated = true;
+            callback()
+        } else {
+            errorCallback(authenticationResponse);
+            return false;
+        }
+
+    }
+
     async logout(callback: () => any) {
         const logoutClient = new LogoutClient();
 

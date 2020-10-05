@@ -56,7 +56,7 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawer
                                                 onClick={handleMobileDrawerClose}
                                             >
                                                 <Button
-                                                    color="secondary"
+                                                    style={{color: "white"}}
                                                     size="large"
                                                     classes={{ text: classes.menuButtonText }}
                                                 >
@@ -67,7 +67,7 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawer
                                     }
                                     return (
                                         <Button
-                                            color="secondary"
+                                            style={{color:"white"}}
                                             size="large"
                                             onClick={element.onClick}
                                             classes={{ text: classes.menuButtonText }}

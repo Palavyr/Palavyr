@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.API.Controllers;
 using Palavyr.API.ReceiverTypes;
+using Server.Domain.AccountDB;
 
 namespace Palavyr.API.controllers.accounts.newAccount
 {
@@ -17,19 +18,19 @@ namespace Palavyr.API.controllers.accounts.newAccount
         }
 
         [HttpPut("update/password")]
-        public bool UpdatePassword([FromHeader] string accountId, LoginCredentials login)
+        public bool UpdatePassword([FromHeader] string accountId, AccountDetails accountDetails)
         {
             var account = AccountContext
                 .Accounts
                 .Single(row => row.AccountId == accountId);
 
-            var oldHashedPassword = login.OldPassword;
-            if (oldHashedPassword != login.Password)
+            var oldHashedPassword = accountDetails.OldPassword;
+            if (oldHashedPassword != accountDetails.Password)
             {
                 return false;
             }
 
-            account.Password = login.Password;
+            account.Password = accountDetails.Password;
             AccountContext.SaveChanges();
             return true;
         }
@@ -74,12 +75,28 @@ namespace Palavyr.API.controllers.accounts.newAccount
         [HttpPut("update/phonenumber")]
         public StatusCodeResult UpdatePhoneNumber([FromHeader] string accountId, LoginCredentials login)
         {
-            var account = AccountContext.Accounts.Single(row => row.AccountId == accountId);
+            var account = AccountContext.Accounts.SingleOrDefault(row => row.AccountId == accountId);
             account.PhoneNumber = login.PhoneNumber;
             AccountContext.SaveChanges();
             return new OkResult();
         }
 
+        [HttpPut("update/locale")]
+        public StatusCodeResult UpdateLocale([FromHeader] string accountId, AccountDetails accountDetails)
+        {
+            var account = AccountContext.Accounts.SingleOrDefault(row => row.AccountId == accountId);
+            account.Locale = accountDetails.Locale;
+            AccountContext.SaveChanges();
+            return new OkResult();
+        }
+
+        [HttpGet("locale")]
+        public string GetLocale([FromHeader] string accountId)
+        {
+            var account = AccountContext.Accounts.SingleOrDefault(row => row.AccountId == accountId);
+            return account.Locale ?? "";
+        }
+        
         [HttpGet("companyname")]
         public string GetCompanyName([FromHeader] string accountId)
         {

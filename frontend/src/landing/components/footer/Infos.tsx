@@ -11,6 +11,6 @@ type Info = {
 export const infos: Array<Info> = [
     {
         icon: <EmailIcon />,
-        description: "palavyr@company.com",
+        description: "info.palavyr@gmail.com",
     }
 ];

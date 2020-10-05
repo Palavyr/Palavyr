@@ -26,6 +26,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { EditorHelp } from "dashboard/content/help/EditorHelp";
 import { WelcomeToTheDashboard } from "dashboard/content/welcome/WelcomeToTheDashboard";
 
+
 const fetchSidebarInfo = (areaData: Areas) => {
     const areaIdentifiers = areaData.map((x: AreaTable) => x.areaIdentifier);
     const areaNames = areaData.map((x: AreaTable) => x.areaName);
@@ -76,8 +77,9 @@ export const DashboardLayout = () => {
     }, [areaIdentifier])
 
     useEffect(() => {
-        loadAreas()
+        
         setLoaded(true)
+        loadAreas()
         return () => {
             setLoaded(false)
             setViewName("");
