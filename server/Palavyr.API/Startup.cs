@@ -69,7 +69,9 @@ namespace Palavyr.API
                                 "http://localhost:5000/",
                                 "https://localhost:5001/",
                                 "http://localhost:5000",
-                                "https://localhost:5001"
+                                "https://localhost:5001",
+                                "http://localhost:3600",
+                                "https://localhost:3500"
                             );
                         }
                         else
@@ -82,7 +84,11 @@ namespace Palavyr.API
                                 "http://palavyr.com",
                                 "http://www.palavyr.com",
                                 "https://palavyr.com",
-                                "https://www.palavyr.com"
+                                "https://www.palavyr.com",
+                                "https://staging.widget.palavyr.com",
+                                "https://widget.palavyr.com",
+                                "http://staging.widget.palavyr.com",
+                                "http://widget.palavyr.com"
                             );
                         }
                     });
