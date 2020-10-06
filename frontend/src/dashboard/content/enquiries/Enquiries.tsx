@@ -2,7 +2,7 @@ import { ApiClient } from "@api-client/Client";
 import React, { useState, useCallback, useEffect } from "react";
 import { EnquiryRow } from "@Palavyr-Types";
 import { Statement } from "@common/components/Statement";
-import { Divider, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody } from "@material-ui/core";
+import { Divider, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody, Table } from "@material-ui/core";
 
 export const Enquires = () => {
 
@@ -27,40 +27,42 @@ export const Enquires = () => {
 
 
     return (
-        <>
+        <div>
             <Statement title={title} details={details} />
             <Divider />
             <TableContainer component={Paper}>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Id</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Email</TableCell>
-                        <TableCell>Phone Number</TableCell>
-                        <TableCell>Estimate</TableCell>
-                        <TableCell>Area</TableCell>
-                        <TableCell>Time</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {
-                        enquiries.map((enq: EnquiryRow) => {
-                            return (
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Id</TableCell>
+                            <TableCell>Name</TableCell>
+                            <TableCell>Email</TableCell>
+                            <TableCell>Phone Number</TableCell>
+                            <TableCell>Estimate</TableCell>
+                            <TableCell>Area</TableCell>
+                            <TableCell>Time</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {
+                            enquiries.map((enq: EnquiryRow) => {
+                                return (
 
-                                <TableRow style={{ fontWeight: enq.seen ? "normal" : "bold" }} key={enq.conversationId + "whaaa"}>
-                                    <TableCell key={enq.conversationId + "a"}>{enq.id}</TableCell>
-                                    <TableCell key={enq.conversationId + "b"}>{enq.name}</TableCell>
-                                    <TableCell key={enq.conversationId + "c"}>{enq.email}</TableCell>
-                                    <TableCell key={enq.conversationId + "d"}>{enq.phoneNumber}</TableCell>
-                                    <TableCell key={enq.conversationId + "e"}><a href={enq.responsePdfLink.link}>{enq.responsePdfLink.fileName}</a></TableCell>
-                                    <TableCell key={enq.conversationId + "f"}>{enq.areaName}</TableCell>
-                                    <TableCell key={enq.conversationId + "g"}>{enq.timeStamp}</TableCell>
-                                </TableRow>
-                            )
-                        })
-                    }
-                </TableBody>
+                                    <TableRow style={{ fontWeight: enq.seen ? "normal" : "bold" }} key={enq.conversationId + "whaaa"}>
+                                        <TableCell key={enq.conversationId + "a"}>{enq.id}</TableCell>
+                                        <TableCell key={enq.conversationId + "b"}>{enq.name}</TableCell>
+                                        <TableCell key={enq.conversationId + "c"}>{enq.email}</TableCell>
+                                        <TableCell key={enq.conversationId + "d"}>{enq.phoneNumber}</TableCell>
+                                        <TableCell key={enq.conversationId + "e"}><a href={enq.responsePdfLink.link}>{enq.responsePdfLink.fileName}</a></TableCell>
+                                        <TableCell key={enq.conversationId + "f"}>{enq.areaName}</TableCell>
+                                        <TableCell key={enq.conversationId + "g"}>{enq.timeStamp}</TableCell>
+                                    </TableRow>
+                                )
+                            })
+                        }
+                    </TableBody>
+                </Table>
             </TableContainer>
-        </>
+        </div>
     )
 }
