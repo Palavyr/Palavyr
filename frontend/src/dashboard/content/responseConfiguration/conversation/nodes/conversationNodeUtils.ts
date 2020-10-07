@@ -1,7 +1,7 @@
 import { Conversation, ConvoNode, Responses } from "@Palavyr-Types";
 import { NodeTypeOptionsDefinition } from "./NodeTypeOptions";
 import { cloneDeep } from "lodash";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 import { ApiClient } from "@api-client/Client";
 import { RequiredDetails } from "../ConvoTree";
 

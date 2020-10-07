@@ -34,12 +34,12 @@ namespace Palavyr.Data.Migrator
                     .AddEventLog();
             });
             _logger = loggerFactory.CreateLogger<DataMigrator>();
-
             var assembly = Assembly.GetExecutingAssembly();
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.migrator.json", true)
                 .AddUserSecrets(assembly, true)
                 .Build();
+            
             var env = configuration.GetValue<string>("Environment");
             _logger.LogInformation($"Data Migrations being performed in {env}");
 

@@ -8,7 +8,7 @@ import { GroupInterface } from "./nodes/GroupNodeInterface";
 import { Statement } from "@common/components/Statement";
 import { Button, Divider, Grid } from "@material-ui/core";
 import { UnassignedAreas } from "./UnassignedAreas";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 
 

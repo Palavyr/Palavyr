@@ -1,7 +1,7 @@
 import React from "react";
 import { LineStyles } from "./LineTypes";
 import { defaultBorderColor, defaultBorderStyle, defaultBorderWidth } from "./LineUtils";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 
 
 export type LineProps = {

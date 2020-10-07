@@ -6,7 +6,7 @@ import { EmailConfiguration } from "./uploadable/emailTemplates/EmailConfigurati
 import { AttachmentConfiguration } from "./uploadable/attachments/AttachmentConfiguration";
 import { ConfigurationPreview } from "./previews/ConfigurationPreview";
 import { AreaSettings } from "./areaSettings/AreaSettings";
-import { AppBar, Tabs, Tab } from "@material-ui/core";
+import { AppBar, Tabs, Tab, makeStyles } from "@material-ui/core";
 import { PleaseConfirmYourEmail } from "../welcome/PleaseConfirmYourEmail";
 import { WelcomeToTheDashboard } from "../welcome/WelcomeToTheDashboard";
 import { useLocation } from "react-router-dom";
@@ -59,13 +59,19 @@ export interface IAreaContent {
     areaIdentifier: string;
     setLoaded: any;
     setViewName: any;
-    classes: any;
 }
 
+const useTabsStyles = makeStyles({
+    root: {
+        flexGrow: 1,
+      },
+})
 
-export const AreaContent = ({ active, areaIdentifier, areaName, setLoaded, setViewName, classes}: IAreaContent) => {
+
+export const AreaContent = ({ active, areaIdentifier, areaName, setLoaded, setViewName}: IAreaContent) => {
     const [tab, setTab] = useState<PanelRange>(0);
     const location = useLocation();
+    const classes = useTabsStyles();
 
     useEffect(() => {
         setLoaded(true);
@@ -80,7 +86,7 @@ export const AreaContent = ({ active, areaIdentifier, areaName, setLoaded, setVi
 
     const EditorInterface = () => {
         return (
-            <div className={classes.contentRoot}>
+            <div className={classes.root}>
                 <AppBar position="static">
                     <Tabs value={tab} onChange={handleTabChange} aria-label="simple tabs example">
                         <Tab label="Conversation Builder" {...areaTabProps(0)} />

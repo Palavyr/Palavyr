@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { StaticTableMetas, StaticTableRows, StaticTableRow, staticTableMetaTemplate, StaticTableMeta, AnyVoidFunction } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { ApiClient } from "@api-client/Client";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 
 
 export class StaticTablesModifier {

@@ -327,6 +327,10 @@ https://hub.docker.com/_/microsoft-windows-servercore-iis
 
     RUN ping 127.0.0.1 -n 6 > nul
 
+    or
+
+    RUN sleep 10 # powershell
+
 
 
 ### How to clear the docker cache

@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { getChildNodes } from "./conversationNodeUtils";
 import { SteppedLineTo } from "../treeLines/SteppedLineTo";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 import { ConversationNodeInterface } from "./ConversationNodeInterface";
 import "./ConversationNode.css";
 
@@ -33,33 +33,7 @@ export const connectionStyle: lineStyle = {
     zIndex: 0,
 };
 
-
-const useStyles = makeStyles({
-    // treeItem: {
-    //     display: "flex",
-    //     flexDirection: "column",
-    //     alignItems: "center",
-    //     fontSize: "7px",
-    //     border: "1px dashed orange"
-
-    // },
-    // treeBlockWrap: {
-    //     padding: "1rem 1rem 1rem 1rem",
-    //     border: "2px solid green"
-    // },
-    // treeRow: {
-    //     fontSize: "7px",
-    //     display: "flex",
-    //     flexDirection: "row",
-    //     alignItems: "flex-start",
-    //     border: "3px solid red"
-    // }
-})
-
-
 export const ConversationNode = ({ nodeList, node, parentId: parentId, addNodes, setNodes, parentState, changeParentState, dynamicNodeTypes }: IConversationNode) => {
-
-    const classes = useStyles();
 
     const [nodeState, changeNodeState] = useState<boolean>(true);
     const [loaded, setLoaded] = useState(false)

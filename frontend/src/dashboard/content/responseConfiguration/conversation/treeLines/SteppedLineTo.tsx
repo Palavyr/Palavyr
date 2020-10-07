@@ -2,7 +2,7 @@ import { Anchor, Selector, LineStyles } from "./LineTypes";
 import { parseAnchor, getPoints, defaultBorderWidth } from "./LineUtils";
 import { LineProps, Line } from "./Line";
 import React from "react";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 
 
 export type SteppedLineToProps = {

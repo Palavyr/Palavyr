@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles, FormControl, InputLabel, Select, MenuItem, FormHelperText } from "@material-ui/core";
 import { NodeOptions, NodeTypeOptions } from "./NodeTypeOptions";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 
 
 const useStyles = makeStyles(() => ({

@@ -1,6 +1,5 @@
-import { useNavBarStyles } from "./NavBar.styles";
 import React from "react";
-import { AppBar, Toolbar, Typography, Hidden, IconButton, Button } from "@material-ui/core";
+import { AppBar, Toolbar, Typography, Hidden, IconButton, Button, makeStyles } from "@material-ui/core";
 import { menuItems } from "./NavMenuItems";
 import { Link } from "react-router-dom";
 import MenuIcon from '@material-ui/icons/Menu';
@@ -15,9 +14,38 @@ export interface INavBar {
     selectTab: any;
 }
 
+const useStyles = makeStyles({
+    root: {},
+    menuButton: {},
+    appBar: {
+        height: "6rem",
+        position: "static",
+        // boxShadow: theme.shadows[6],
+    },
+    toolbar: {
+        backgroundColor: "black",
+        height: "100%",
+        display: "flex",
+        justifyContent: "space-between"
+    },
+    menuButtonText: {
+        fontSize: "large",
+        // fontSize: theme.typography.body1.fontSize,
+        // fontWeight: theme.typography.h6.fontWeight
+    },
+    brandText: {
+        fontWeight: "bolder",
+        marginLeft: "5rem",
+        color: "#c7ecee"
+    },
+    noDecoration: {
+        textDecoration: "none !important"
+    }
+});
+
 export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawerOpen, handleMobileDrawerClose, mobileDrawerOpen, selectedTab, selectTab }: INavBar) => {
 
-    const classes = useNavBarStyles();
+    const classes = useStyles();
 
     return (
         <div className={classes.root}>

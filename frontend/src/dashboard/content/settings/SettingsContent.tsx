@@ -4,24 +4,31 @@ import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import { ChangePassword } from "./security/changePassword";
 import { ChangeEmail } from "./account/ChangeEmail";
-import { ChangeUserName } from "./account/ChangeUserName";
+// import { ChangeUserName } from "./account/ChangeUserName";
 import { ChangeCompanyName } from "./account/ChangeCompanyName";
 import { ChangePhoneNumber } from "./account/ChangePhoneNumber";
 import { ChangeLogoImage } from "./account/ChangeLogoImage";
 import { areaTabProps, TabPanel, PanelRange } from "@common/ContentUtils";
 import { ChangeLocale } from "./account/ChangeLocale";
+import { makeStyles } from "@material-ui/core";
 
 interface IAreaContent {
     areaName: string;
     areaIdentifier: string;
-    classes: any;
     setLoaded: any;
 }
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+      backgroundColor: theme.palette.background.paper,
+    },
+  }));
 
+export const SettingsContent = ({ areaIdentifier, areaName, setLoaded }: IAreaContent) => {
 
-export const SettingsContent = ({ areaIdentifier, areaName, classes, setLoaded }: IAreaContent) => {
     const [tab, setTab] = useState<PanelRange>(5); // tabs
+    const classes = useStyles();
 
     useEffect(() => {
         setLoaded(true);
@@ -35,9 +42,9 @@ export const SettingsContent = ({ areaIdentifier, areaName, classes, setLoaded }
     };
 
     return (
-        <div className={classes.contentRoot}>
+        <div className={classes.root}>
             <AppBar position="static">
-                <Tabs value={tab} onChange={handleTabChange} aria-label="simple tabs example">
+                <Tabs value={tab} onChange={handleTabChange} aria-label="simple tabs">
                     <Tab label="Password" {...areaTabProps(0)} />
                     <Tab label="Email" {...areaTabProps(1)} />
                     <Tab label="Company Name" {...areaTabProps(2)} />

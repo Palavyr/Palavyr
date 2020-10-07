@@ -1,7 +1,7 @@
 import { Groups, GroupNodeType } from "@Palavyr-Types";
 import { makeStyles } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 import { getChildNodes } from "../groupNodeUtils";
 
 

@@ -55,6 +55,12 @@ export const AreaSettings = ({ areaName, areaIdentifier, setViewName }: IAreaSet
         window.location.reload();
     }
 
+    const verifyEmailAddress = async () => {
+
+
+        return "Fill out the fucntion";
+    }
+
     return (
         <Grid container spacing={3}>
             <SettingsGridRowText
@@ -79,6 +85,13 @@ export const AreaSettings = ({ areaName, areaIdentifier, setViewName }: IAreaSet
                 onClick={handleAreaDelete}
                 clearVal={false}
                 buttonText={"Permanently Delete"}
+            />
+            <SettingsGridRowText
+                name="Send From Email"
+                details="The email address that email respones will be sent from."
+                onClick={verifyEmailAddress}
+                clearVal={false}
+                buttonText="Send"
             />
         </Grid>
         // TODO: Force users to type in the area name in order to delete it.

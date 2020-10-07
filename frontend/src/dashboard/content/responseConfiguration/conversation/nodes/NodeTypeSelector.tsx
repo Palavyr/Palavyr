@@ -18,20 +18,28 @@ export interface INodeTypeSelector {
 export const NodeTypeSelector = ({ node, nodeList, addNodes, setNodes, parentState, changeParentState, dynamicNodeTypes }: INodeTypeSelector) => {
 
     const [option, setSelectedOption] = useState<string>("");
+    const [loaded, setLoaded] = useState<boolean>(false);
 
     useEffect(() => {
+
+        setLoaded(true);
 
         if (node.nodeType === null) {
             setSelectedOption("");
         } else {
             setSelectedOption(node.nodeType);
-
         }
+        return () => {
+            setLoaded(false);
+        }
+
     }, [node.nodeType]);
 
-    const completeNodeTypes = {
-        ...NodeTypeOptionsDefinition,
-        ...dynamicNodeTypes
+    let completeNodeTypes: NodeTypeOptions;
+    if (loaded) {
+        completeNodeTypes = { ...NodeTypeOptionsDefinition, ...dynamicNodeTypes }
+    } else {
+        completeNodeTypes = {}
     }
 
     const handleChange = (event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>) => {
@@ -56,6 +64,6 @@ export const NodeTypeSelector = ({ node, nodeList, addNodes, setNodes, parentSta
     };
 
     return (
-            <CustomNodeSelect onChange={handleChange} option={option} completeNodeTypes={completeNodeTypes} />
+        loaded ? <CustomNodeSelect onChange={handleChange} option={option} completeNodeTypes={completeNodeTypes} /> : null
     );
 };

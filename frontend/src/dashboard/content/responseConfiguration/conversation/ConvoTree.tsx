@@ -1,4 +1,3 @@
-import { makeStyles } from "@material-ui/core";
 import React, { useState, useCallback, useEffect } from "react";
 import { Conversation, DynamicTableMetas, DynamicTableMeta } from "@Palavyr-Types";
 import { getRootNode, getMissingNodes, addNodes } from "./nodes/conversationNodeUtils";
@@ -10,12 +9,10 @@ import { ConversationNode } from "./nodes/ConversationNode";
 import { MissingDynamicNodes } from "./MissingDynamicNodes";
 import "./ConvoTree.css";
 
-
 export interface IConvoTree {
     areaIdentifier: string;
     treeName: string;
 }
-
 
 export type RequiredDetails = {
     type: string;
@@ -52,6 +49,8 @@ export const ConvoTree = ({ areaIdentifier, treeName }: IConvoTree) => {
         })
         if (formattedRequiredNodes.length > 0) {
             setRequiredNodes(formattedRequiredNodes);
+        } else {
+            setRequiredNodes([])
         }
 
         if (formattedRequiredNodes.length > 0) {
@@ -60,7 +59,7 @@ export const ConvoTree = ({ areaIdentifier, treeName }: IConvoTree) => {
             // used in the dropdown select menu in the convotree
             dynamicTableMetas.forEach(async (tableMeta: DynamicTableMeta) => {
 
-                var res = await client
+                var dynamicTableRows = (await client
                     .Configuration
                     .Tables
                     .Dynamic
@@ -68,8 +67,7 @@ export const ConvoTree = ({ areaIdentifier, treeName }: IConvoTree) => {
                         areaIdentifier,
                         tableMeta.tableType,
                         tableMeta.tableId
-                    );
-                var dynamicTableRows = res.data as TableData;
+                    )).data as TableData;
 
                 var valueOptions = dynamicTableRows.map(x => x.option);
 
@@ -90,16 +88,16 @@ export const ConvoTree = ({ areaIdentifier, treeName }: IConvoTree) => {
                 setDynamicNodeTypes(dynamicNodeTypes);
             })
         }
+        // eslint-disable-next-line
         setNodes(cloneDeep(nodes));
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier])
 
     useEffect(() => {
-        loadNodes();
         setLoaded(true);
+        loadNodes();
         return () => {
-            
             setLoaded(false)
         }
     }, [areaIdentifier, loadNodes])
@@ -109,7 +107,6 @@ export const ConvoTree = ({ areaIdentifier, treeName }: IConvoTree) => {
             const nodeTypes = getMissingNodes(nodeList, requiredNodes);
             setMissingNodeTypes(nodeTypes);
         }
-        
         // Disabling this here because we don't want to rerender on requriedNodes change (thought that seems almost what we want, but actually isn't)
         // We compute this on the nodeList in fact, and the requiredNodes only change when we change areaIdentifier (or update the dynamic tables option on the other tab)
         // eslint-disable-next-line react-hooks/exhaustive-deps

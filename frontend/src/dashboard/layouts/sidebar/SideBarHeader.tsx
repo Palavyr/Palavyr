@@ -2,14 +2,30 @@ import React from "react";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import IconButton from "@material-ui/core/IconButton";
+import { makeStyles, useTheme } from "@material-ui/core";
 
 interface SideBarHeaderProps {
     handleDrawerClose: () => void;
-    classes: any;
-    theme: any;
 }
 
-const SideBarHeader = ({ handleDrawerClose, classes, theme }: SideBarHeaderProps) => {
+const useStyles = makeStyles(theme => ({
+    drawerHeader: {
+        border: "0px solid white",
+        backgroundColor: "#686de0",
+        display: "flex",
+        alignItems: "center",
+        padding: theme.spacing(0, 1),
+        // necessary for content to be below app bar
+        justifyContent: "flex-end",
+        ...theme.mixins.toolbar,
+    }
+}))
+
+export const SideBarHeader = ({ handleDrawerClose }: SideBarHeaderProps) => {
+
+    const classes = useStyles();
+    const theme = useTheme();
+
     return (
         <div className={classes.drawerHeader}>
             <IconButton onClick={() => handleDrawerClose()}>
@@ -21,5 +37,3 @@ const SideBarHeader = ({ handleDrawerClose, classes, theme }: SideBarHeaderProps
         </div>
     );
 };
-
-export default SideBarHeader;

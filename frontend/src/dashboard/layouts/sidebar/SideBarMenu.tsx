@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory, NavLink } from "react-router-dom";
-import { List, ListItem, ListItemIcon, ListItemText, Collapse, Divider } from "@material-ui/core";
+import { List, ListItem, ListItemIcon, ListItemText, Collapse, Divider, makeStyles } from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ChatIcon from '@material-ui/icons/Chat';
@@ -13,7 +13,7 @@ import CompareIcon from '@material-ui/icons/Compare';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { uuid } from 'uuidv4';
+import { v4 as uuid } from 'uuid';
 
 
 export interface ISideBarMenu {
@@ -27,16 +27,33 @@ const createNavLink = (areaIdentifier: string, contentType: string) => {
     return `/dashboard/${contentType}/${areaIdentifier}`;
 };
 
-const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }: ISideBarMenu) => {
+const useStyles = makeStyles({
+    SideBarList: {
+        color: "#c7ecee"
+    },
+    icon: {
+        color: "#c7ecee"
+    },
+    navlink: {
+        textDecoration: "none",
+        color: "#c7ecee",
+        fontSize: "10px"
+    }
+})
+
+export const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }: ISideBarMenu) => {
+    
+    const classes = useStyles();
+    
     const [convosOpen, setConvosOpen] = useState(true);
     const history = useHistory();
 
     return (
-        <>
+        <div className={classes.SideBarList}>
             <List>
                 <ListItem button onClick={() => setConvosOpen(!convosOpen)}>
                     <ListItemIcon>
-                        <DesktopWindowsIcon />
+                        <DesktopWindowsIcon className={classes.icon} />
                     </ListItemIcon>
                     <ListItemText
                         primary={"Convo Areas"}
@@ -49,9 +66,9 @@ const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }: ISideB
                 <Collapse in={convosOpen} timeout="auto" unmountOnExit>
                     {areaIdentifiers.map((areaIdentifier, index) => {
                         return (
-                           <NavLink key={areaIdentifier} to={createNavLink(areaIdentifier, 'editor')}>
+                           <NavLink key={areaIdentifier} to={createNavLink(areaIdentifier, 'editor')} className={classes.navlink}>
                                 <ListItem disabled={!active} button key={areaIdentifier}>
-                                    <ListItemIcon>
+                                    <ListItemIcon className={classes.icon}>
                                         <ChatIcon />
                                     </ListItemIcon>
                                     <ListItemText primary={areaNames[index]} />
@@ -61,7 +78,7 @@ const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }: ISideB
                     })}
                     <ListItem disabled={!active} button key={"New Area"} onClick={toggleModal}>
                         <ListItemIcon onClick={toggleModal}>
-                            <AddCircleOutlineIcon />
+                            <AddCircleOutlineIcon className={classes.icon}/>
                         </ListItemIcon>
                         <ListItemText primary={"Add New Area"} />
                     </ListItem>
@@ -71,14 +88,14 @@ const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }: ISideB
 
 
                 <ListItem disabled={!active} button onClick={() => history.push('/dashboard/enquiries/')}>
-                    <ListItemIcon>
-                        <InboxIcon key={"23534hhuip"} />
+                    <ListItemIcon className={classes.icon}>
+                        <InboxIcon className={classes.icon} key={"23534hhuip"} />
                     </ListItemIcon>
                     <ListItemText primary={"Check Enquiries"} />
                 </ListItem>
                 <ListItem disabled={!active} button onClick={() => history.push('/dashboard/demo/')}>
                     <ListItemIcon>
-                        <CompareIcon key={"iuhi3453jb"} />
+                        <CompareIcon className={classes.icon} key={"iuhi3453jb"} />
                     </ListItemIcon>
                     <ListItemText primary={"Chat Demo"} />
                 </ListItem>
@@ -88,20 +105,20 @@ const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }: ISideB
 
             <List>
                 <ListItem disabled={!active} button onClick={() => history.push('/dashboard/settings/')}>
-                    <ListItemIcon>
-                        <SettingsIcon key={0} />
+                    <ListItemIcon className={classes.icon}>
+                        <SettingsIcon className={classes.icon} key={0} />
                     </ListItemIcon>
                     <ListItemText primary={"Settings"} />
                 </ListItem>
                 <ListItem disabled={!active} button onClick={() => history.push('/dashboard/getwidget/')}>
                     <ListItemIcon>
-                        <GetAppIcon key={0} />
+                        <GetAppIcon className={classes.icon} key={0} />
                     </ListItemIcon>
                     <ListItemText primary={"Get Widget"} />
                 </ListItem>
                 <ListItem disabled={!active} button onClick={() => history.push('/dashboard/subscribe/')}>
                     <ListItemIcon>
-                        <SubscriptionsIcon key={0} />
+                        <SubscriptionsIcon className={classes.icon} key={0} />
                     </ListItemIcon>
                     <ListItemText primary={"Subscribe"} />
                 </ListItem>
@@ -114,13 +131,11 @@ const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }: ISideB
                     }}
                 >
                     <ListItemIcon>
-                        <ExitToAppIcon />
+                        <ExitToAppIcon className={classes.icon} />
                     </ListItemIcon>
                     <ListItemText primary={"Log Out"} />
                 </ListItem>
             </List>
-        </>
+        </div>
     );
 };
-
-export default SideBarMenu;
