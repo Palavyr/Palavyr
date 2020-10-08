@@ -35,7 +35,10 @@ const fetchSidebarInfo = (areaData: Areas) => {
 
 const useStyles = makeStyles(theme => ({
     root: {
+        position: "absolute", // Required - finalized
         display: "flex",
+        width: "100%",
+        top: "8px"
     },
     menuDrawer: {
         width: DRAWER_WIDTH,
@@ -52,7 +55,6 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         alignItems: "center",
         padding: theme.spacing(0, 1),
-        // necessary for content to be below app bar
         justifyContent: "flex-end",
         ...theme.mixins.toolbar,
     },
@@ -154,7 +156,8 @@ export const DashboardLayout = () => {
     const closeModal = () => {
         setModalState(false);
     };
-
+    const thema = useTheme();
+    console.log("Dash: " + thema.mixins.toolbar.minHeight);
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -207,7 +210,7 @@ export const DashboardLayout = () => {
                 numAreasAllowed && (
                     sidebarIds.length < numAreasAllowed
                         ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} />
-                        : <div>TEST</div>
+                        : null
                 )
             }
         </div>

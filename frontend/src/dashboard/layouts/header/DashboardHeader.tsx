@@ -1,5 +1,5 @@
 import React from "react";
-import { AppBar, Toolbar, IconButton, Typography, makeStyles } from "@material-ui/core";
+import { AppBar, Toolbar, IconButton, Typography, makeStyles, useTheme } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu';
 import classNames from "classnames";
 import HelpIcon from '@material-ui/icons/Help';
@@ -28,11 +28,10 @@ const useStyles = makeStyles(theme => ({
     },
     toolbar: {
         color: "#c7ecee",
-        border: "3px dashed black",
         width: "100%",
         display: "flex",
         justifyContent: "space-between",
-        ...theme.mixins.toolbar
+        // ...theme.mixins.toolbar
     },
 
 
@@ -58,7 +57,7 @@ const useStyles = makeStyles(theme => ({
         marginLeft: theme.spacing(5),
         alignSelf: "right",
         textAlign: "right",
-        marginRight: "2rem"
+        // marginRight: "1rem"
     },
 }))
 
@@ -66,7 +65,8 @@ const useStyles = makeStyles(theme => ({
 export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
 
     const classes = useStyles();
-
+    const themr = useTheme();
+    console.log("Header: " + themr.mixins.toolbar.minHeight);
     return (
         <AppBar
             position="absolute"
@@ -91,7 +91,7 @@ export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawe
                     </div>
                 </div>
                 <div className={classes.helpIcon}>
-                    <UserDetails />
+                    {/* <UserDetails /> */}
                     <IconButton color="inherit" aria-label="open help drawer" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(classes.helpMenuButton, helpOpen && classes.hide)}>
                         <HelpIcon />
                     </IconButton>

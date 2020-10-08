@@ -42,9 +42,9 @@ const useStyles = makeStyles({
 })
 
 export const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }: ISideBarMenu) => {
-    
+
     const classes = useStyles();
-    
+
     const [convosOpen, setConvosOpen] = useState(true);
     const history = useHistory();
 
@@ -53,10 +53,10 @@ export const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }:
             <List>
                 <ListItem button onClick={() => setConvosOpen(!convosOpen)}>
                     <ListItemIcon>
-                        <DesktopWindowsIcon className={classes.icon} />
+                        {/* <DesktopWindowsIcon className={classes.icon} /> */}
                     </ListItemIcon>
                     <ListItemText
-                        primary={"Convo Areas"}
+                        primary={"Areas"}
                         onClick={() => {
                             setConvosOpen(!convosOpen);
                         }}

@@ -57,7 +57,6 @@ export const AreaSettings = ({ areaName, areaIdentifier, setViewName }: IAreaSet
 
     const verifyEmailAddress = async () => {
 
-
         return "Fill out the fucntion";
     }
 

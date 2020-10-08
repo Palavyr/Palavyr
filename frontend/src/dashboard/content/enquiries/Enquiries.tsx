@@ -9,7 +9,7 @@ export const Enquires = () => {
     const client = new ApiClient();
 
     const title = "Check your enquiries";
-    const details = "This table lists all of the completes enquires you have received. Enquiries you have not checked will be in bold."
+    const details = "This table lists all of the completed enquires you have received. Enquiries you have not checked will be in bold."
 
     const [enquiries, setEnquiries] = useState<Array<EnquiryRow>>([]);
 

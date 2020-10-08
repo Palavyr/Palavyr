@@ -39,7 +39,7 @@ export const ChatDemo = () => {
     const classes = useStyles();
 
     const loadMissingNodes = useCallback(async () => {
-        var res = await client.WidgetDemo.RunConversationPrecheck();        
+        var res = await client.WidgetDemo.RunConversationPrecheck();
         var PreCheckResult = res.data as PreCheckResult;
         if (!PreCheckResult.isReady) {
             var areas = PreCheckResult.incompleteAreas.map((x: AreaTable) => {

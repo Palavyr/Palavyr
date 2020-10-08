@@ -10,6 +10,13 @@ import { AppBar, Tabs, Tab, makeStyles } from "@material-ui/core";
 import { PleaseConfirmYourEmail } from "../welcome/PleaseConfirmYourEmail";
 import { WelcomeToTheDashboard } from "../welcome/WelcomeToTheDashboard";
 import { useLocation } from "react-router-dom";
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
+import FilterFramesIcon from '@material-ui/icons/FilterFrames';
+import SubjectIcon from '@material-ui/icons/Subject';
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+
 
 interface ITabs {
     tab: PanelRange;
@@ -61,14 +68,21 @@ export interface IAreaContent {
     setViewName: any;
 }
 
-const useTabsStyles = makeStyles({
+const useTabsStyles = makeStyles(theme => ({
     root: {
+        width: "100%",
+        position: "absolute",
         flexGrow: 1,
       },
-})
+      appbar: {
+          width: "100%",
+          top: theme.mixins.toolbar.minHeight
+      }
+}))
 
 
 export const AreaContent = ({ active, areaIdentifier, areaName, setLoaded, setViewName}: IAreaContent) => {
+
     const [tab, setTab] = useState<PanelRange>(0);
     const location = useLocation();
     const classes = useTabsStyles();
@@ -87,14 +101,14 @@ export const AreaContent = ({ active, areaIdentifier, areaName, setLoaded, setVi
     const EditorInterface = () => {
         return (
             <div className={classes.root}>
-                <AppBar position="static">
-                    <Tabs value={tab} onChange={handleTabChange} aria-label="simple tabs example">
-                        <Tab label="Conversation Builder" {...areaTabProps(0)} />
-                        <Tab label="Estimate Configuration" {...areaTabProps(1)} />
-                        <Tab label="Email Configuration" {...areaTabProps(2)} />
-                        <Tab label="PDF Attachments" {...areaTabProps(3)} />
-                        <Tab label="Estimate Preview" {...areaTabProps(4)} />
-                        <Tab label="Settings" {...areaTabProps(5)} />
+                <AppBar position="static" className={classes.appbar}>
+                    <Tabs centered value={tab} onChange={handleTabChange} aria-label="simple tabs example">
+                        <Tab icon={<AccountTreeIcon />} label="Conversation" {...areaTabProps(0)} />
+                        <Tab icon={<FilterFramesIcon />} label="Estimate" {...areaTabProps(1)} />
+                        <Tab icon={<SubjectIcon />} label="Email" {...areaTabProps(2)} />
+                        <Tab icon={<PictureAsPdfIcon />} label="Attachments" {...areaTabProps(3)} />
+                        <Tab icon={<VisibilityIcon />} label="Preview" {...areaTabProps(4)} />
+                        <Tab icon={<SettingsApplicationsIcon />} label="Settings" {...areaTabProps(5)} />
                     </Tabs>
                 </AppBar>
                 <TabPanels tab={tab} areaName={areaName} areaIdentifier={areaIdentifier} setViewName={setViewName} />

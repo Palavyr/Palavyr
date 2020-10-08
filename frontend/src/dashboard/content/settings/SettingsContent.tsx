@@ -11,6 +11,15 @@ import { ChangeLogoImage } from "./account/ChangeLogoImage";
 import { areaTabProps, TabPanel, PanelRange } from "@common/ContentUtils";
 import { ChangeLocale } from "./account/ChangeLocale";
 import { makeStyles } from "@material-ui/core";
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import LockOpenIcon from '@material-ui/icons/LockOpen';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+import PhoneIcon from '@material-ui/icons/Phone';
+import BrandingWatermarkIcon from '@material-ui/icons/BrandingWatermark';
+import PublicIcon from '@material-ui/icons/Public';
+
+
 
 interface IAreaContent {
     areaName: string;
@@ -44,13 +53,13 @@ export const SettingsContent = ({ areaIdentifier, areaName, setLoaded }: IAreaCo
     return (
         <div className={classes.root}>
             <AppBar position="static">
-                <Tabs value={tab} onChange={handleTabChange} aria-label="simple tabs">
-                    <Tab label="Password" {...areaTabProps(0)} />
-                    <Tab label="Email" {...areaTabProps(1)} />
-                    <Tab label="Company Name" {...areaTabProps(2)} />
-                    <Tab label="Phone Number" {...areaTabProps(3)} />
-                    <Tab label="Response Logo" {...areaTabProps(4)} />
-                    <Tab label="Locale" {...areaTabProps(5)} />
+                <Tabs centered value={tab} onChange={handleTabChange} aria-label="simple tabs">
+                    <Tab icon={<LockOpenIcon />} label="Password" {...areaTabProps(0)} />
+                    <Tab icon={<MailOutlineIcon />} label="Email" {...areaTabProps(1)} />
+                    <Tab icon={<PermIdentityIcon />} label="Company Name" {...areaTabProps(2)} />
+                    <Tab icon={<PhoneIcon />} label="Phone Number" {...areaTabProps(3)} />
+                    <Tab icon={<BrandingWatermarkIcon />} label="Response Logo" {...areaTabProps(4)} />
+                    <Tab icon={<PublicIcon />} label="Locale" {...areaTabProps(5)} />
                 </Tabs>
             </AppBar>
 

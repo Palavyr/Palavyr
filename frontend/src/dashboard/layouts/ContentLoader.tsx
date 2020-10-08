@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import { makeStyles } from "@material-ui/core";
+import { Hidden, makeStyles, useTheme } from "@material-ui/core";
 import { DRAWER_WIDTH, HELP_DRAWER_WIDTH } from "@common/constants";
 
 interface IContentLoader {
@@ -10,8 +10,9 @@ interface IContentLoader {
 
 const useStyles = makeStyles(theme => ({
     content: {
+        position: "relative", // TESTING
         flexGrow: 1,
-        padding: theme.spacing(3),
+        top: theme.mixins.toolbar.minHeight,
         transition: theme.transitions.create("margin", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
@@ -25,13 +26,15 @@ const useStyles = makeStyles(theme => ({
         }),
         marginLeft: 0,
     },
-    appBarSpacer: theme.mixins.toolbar,
+    // appBarSpacer: theme.mixins.toolbar,
 
 }))
 
 
 export const ContentLoader = ({ open, children }: IContentLoader) => {
     const classes = useStyles();
+    const them = useTheme();
+    console.log("WOw: " + them.mixins.toolbar.minHeight);
     return (
         <main
             className={
@@ -42,7 +45,7 @@ export const ContentLoader = ({ open, children }: IContentLoader) => {
             }
         >
             {/* appbar spacer needed */}
-            <div className={classes.appBarSpacer} />
+            {/* <div className={classes.appBarSpacer} /> */}
             {/* */}
 
             <div>

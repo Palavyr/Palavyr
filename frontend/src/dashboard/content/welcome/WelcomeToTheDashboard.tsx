@@ -4,14 +4,13 @@ import { makeStyles, Card, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     card: {
-        width: "100%",
-        margin: "3rem",
-        padding: "2rem",
+
 
     },
     wrapper: {
-        alignContent: "center",
-        alignItems: "center"
+        position: "relative",
+        height: "100%",
+        textAlign: "center"
     }
 }))
 
@@ -25,7 +24,7 @@ export const WelcomeToTheDashboard = () => {
                     Welcome to palavyr!
                 </Typography>
                 Here we will include a nice concise tutorial on how to use this webapp.
-        </Card>
+            </Card>
         </div>
     )
 }

@@ -3,6 +3,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles, useTheme } from "@material-ui/core";
+import { UserDetails } from "../header/UserDetails";
 
 interface SideBarHeaderProps {
     handleDrawerClose: () => void;
@@ -27,13 +28,16 @@ export const SideBarHeader = ({ handleDrawerClose }: SideBarHeaderProps) => {
     const theme = useTheme();
 
     return (
-        <div className={classes.drawerHeader}>
-            <IconButton onClick={() => handleDrawerClose()}>
-                <div>
-                    <span>Menu</span>
-                    {theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                </div>
-            </IconButton>
-        </div>
+        <>
+            <div className={classes.drawerHeader}>
+                <IconButton onClick={() => handleDrawerClose()}>
+                    <div>
+                        <span>Menu</span>
+                        {theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                    </div>
+                </IconButton>
+            </div>
+            <UserDetails />
+        </>
     );
 };

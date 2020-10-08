@@ -8,6 +8,7 @@ import { cloneDeep } from "lodash";
 import { ConversationNode } from "./nodes/ConversationNode";
 import { MissingDynamicNodes } from "./MissingDynamicNodes";
 import "./ConvoTree.css";
+import { makeStyles } from "@material-ui/core";
 
 export interface IConvoTree {
     areaIdentifier: string;
@@ -23,6 +24,13 @@ export const makeUniqueTableName = (tableMeta: DynamicTableMeta) => {
     return [tableMeta.tableType, tableMeta.tableId].join("-")
 }
 
+const useStyles = makeStyles(theme => ({
+    conversation: {
+        position: "static",
+        overflow: "auto",
+    }
+}))
+
 export const ConvoTree = ({ areaIdentifier, treeName }: IConvoTree) => {
 
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -32,6 +40,8 @@ export const ConvoTree = ({ areaIdentifier, treeName }: IConvoTree) => {
 
     const [requiredNodes, setRequiredNodes] = useState<Array<RequiredDetails>>([]);
     const [missingNodeTypes, setMissingNodeTypes] = useState<Array<RequiredDetails>>([]);
+
+    const classes = useStyles();
 
     const loadNodes = useCallback(async () => {
         var client = new ApiClient();
@@ -113,7 +123,7 @@ export const ConvoTree = ({ areaIdentifier, treeName }: IConvoTree) => {
     }, [areaIdentifier, nodeList])
 
     return (
-        <div>
+        <div className={classes.conversation}>
             {missingNodeTypes.length > 0 && <MissingDynamicNodes missingNodeTypes={missingNodeTypes} />}
             <form onSubmit={() => null}>
                 <fieldset className="fieldset" id="tree-test">

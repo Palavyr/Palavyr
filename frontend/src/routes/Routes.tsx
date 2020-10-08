@@ -7,12 +7,10 @@ import { DashboardLayout } from "dashboard/layouts/DashboardLayout";
 export const Routes = () => {
     return (
         <Router>
-            {/* <Switch> */}
-                <Route exact path="/" component={LandingPage} />
-                <ProtectedRoute exact path="/dashboard/:contentType/:areaIdentifier" component={DashboardLayout} />
-                <ProtectedRoute exact path="/dashboard/:contentType/" component={DashboardLayout} />
-                <ProtectedRoute exact path="/dashboard/" component={DashboardLayout} />
-            {/* </Switch> */}
+            <Route exact path="/" component={LandingPage} />
+            <ProtectedRoute exact path="/dashboard/:contentType/:areaIdentifier" component={DashboardLayout} />
+            <ProtectedRoute exact path="/dashboard/:contentType/" component={DashboardLayout} />
+            <ProtectedRoute exact path="/dashboard/" component={DashboardLayout} />
         </Router>
     );
 }
