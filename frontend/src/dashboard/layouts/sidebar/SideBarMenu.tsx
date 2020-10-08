@@ -21,6 +21,9 @@ export interface ISideBarMenu {
     areaNames: Array<string>;
     toggleModal: () => void;
     active: boolean;
+    setAlertState: any;
+    setViewName: any;
+    checkAreaCount: any;
 }
 
 const createNavLink = (areaIdentifier: string, contentType: string) => {
@@ -41,7 +44,7 @@ const useStyles = makeStyles({
     }
 })
 
-export const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }: ISideBarMenu) => {
+export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifiers, areaNames, toggleModal, setAlertState }: ISideBarMenu) => {
 
     const classes = useStyles();
 
@@ -52,11 +55,12 @@ export const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }:
         <div className={classes.SideBarList}>
             <List>
                 <ListItem button onClick={() => setConvosOpen(!convosOpen)}>
-                    <ListItemIcon>
-                        {/* <DesktopWindowsIcon className={classes.icon} /> */}
-                    </ListItemIcon>
+                    {/* <ListItemIcon>
+                        <DesktopWindowsIcon className={classes.icon} />
+                    </ListItemIcon> */}
                     <ListItemText
-                        primary={"Areas"}
+                        style={{ textAlign: "center" }}
+                        primary="Areas"
                         onClick={() => {
                             setConvosOpen(!convosOpen);
                         }}
@@ -66,7 +70,7 @@ export const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }:
                 <Collapse in={convosOpen} timeout="auto" unmountOnExit>
                     {areaIdentifiers.map((areaIdentifier, index) => {
                         return (
-                           <NavLink key={areaIdentifier} to={createNavLink(areaIdentifier, 'editor')} className={classes.navlink}>
+                            <NavLink key={areaIdentifier} to={createNavLink(areaIdentifier, 'editor')} className={classes.navlink}>
                                 <ListItem disabled={!active} button key={areaIdentifier}>
                                     <ListItemIcon className={classes.icon}>
                                         <ChatIcon />
@@ -76,9 +80,12 @@ export const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }:
                             </NavLink>
                         );
                     })}
-                    <ListItem disabled={!active} button key={"New Area"} onClick={toggleModal}>
-                        <ListItemIcon onClick={toggleModal}>
-                            <AddCircleOutlineIcon className={classes.icon}/>
+                    <ListItem disabled={!active} button key={"New Area"} onClick={() => {
+                        checkAreaCount();
+
+                    }}>
+                        <ListItemIcon onClick={checkAreaCount}>
+                            <AddCircleOutlineIcon className={classes.icon} />
                         </ListItemIcon>
                         <ListItemText primary={"Add New Area"} />
                     </ListItem>
@@ -87,13 +94,19 @@ export const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }:
                 <Divider />
 
 
-                <ListItem disabled={!active} button onClick={() => history.push('/dashboard/enquiries/')}>
+                <ListItem disabled={!active} button onClick={() => {
+                    setViewName("Enquiries");
+                    history.push('/dashboard/enquiries/')
+                }}>
                     <ListItemIcon className={classes.icon}>
                         <InboxIcon className={classes.icon} key={"23534hhuip"} />
                     </ListItemIcon>
                     <ListItemText primary={"Check Enquiries"} />
                 </ListItem>
-                <ListItem disabled={!active} button onClick={() => history.push('/dashboard/demo/')}>
+                <ListItem disabled={!active} button onClick={() => {
+                    setViewName("Widget Demo")
+                    history.push('/dashboard/demo/')
+                }}>
                     <ListItemIcon>
                         <CompareIcon className={classes.icon} key={"iuhi3453jb"} />
                     </ListItemIcon>
@@ -104,19 +117,28 @@ export const SideBarMenu = ({ active, areaIdentifiers, areaNames, toggleModal }:
             <Divider />
 
             <List>
-                <ListItem disabled={!active} button onClick={() => history.push('/dashboard/settings/')}>
+                <ListItem disabled={!active} button onClick={() => {
+                    setViewName("General Settings");
+                    history.push('/dashboard/settings/')
+                }}>
                     <ListItemIcon className={classes.icon}>
                         <SettingsIcon className={classes.icon} key={0} />
                     </ListItemIcon>
                     <ListItemText primary={"Settings"} />
                 </ListItem>
-                <ListItem disabled={!active} button onClick={() => history.push('/dashboard/getwidget/')}>
+                <ListItem disabled={!active} button onClick={() => {
+                    setViewName("Get Widget")
+                    history.push('/dashboard/getwidget/')
+                }}>
                     <ListItemIcon>
                         <GetAppIcon className={classes.icon} key={0} />
                     </ListItemIcon>
                     <ListItemText primary={"Get Widget"} />
                 </ListItem>
-                <ListItem disabled={!active} button onClick={() => history.push('/dashboard/subscribe/')}>
+                <ListItem disabled={!active} button onClick={() => {
+                    setViewName("Subscriptions")
+                    history.push('/dashboard/subscribe/')
+                }}>
                     <ListItemIcon>
                         <SubscriptionsIcon className={classes.icon} key={0} />
                     </ListItemIcon>

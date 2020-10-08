@@ -24,6 +24,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
+import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 
 
 const fetchSidebarInfo = (areaData: Areas) => {
@@ -86,6 +87,7 @@ export const DashboardLayout = () => {
     const [currentViewName, setViewName] = useState<string>('');
     const [active, setIsActive] = useState<boolean | null>(null);
     const [numAreasAllowed, setNumAreasAllowed] = useState<number | undefined>()
+    const [alertState, setAlertState] = useState<boolean>(false);
 
     const classes = useStyles(helpOpen);
     const theme = useTheme();
@@ -156,6 +158,15 @@ export const DashboardLayout = () => {
     const closeModal = () => {
         setModalState(false);
     };
+    const checkAreaCount = () => {
+        if (numAreasAllowed && (sidebarIds.length >= numAreasAllowed)) {
+            setAlertState(true);
+        } else {
+            openModal();
+        }
+    }
+
+
     const thema = useTheme();
     console.log("Dash: " + thema.mixins.toolbar.minHeight);
     return (
@@ -173,7 +184,7 @@ export const DashboardLayout = () => {
             >
                 <SideBarHeader handleDrawerClose={handleDrawerClose} />
                 <Divider />
-                <SideBarMenu active={active ?? false} areaIdentifiers={sidebarIds} areaNames={sidebarNames} toggleModal={openModal} />
+                <SideBarMenu checkAreaCount={checkAreaCount} setViewName={setViewName} active={active ?? false} areaIdentifiers={sidebarIds} areaNames={sidebarNames} toggleModal={openModal} setAlertState={setAlertState} />
             </Drawer>
 
             {/* Any type of content should be loaded here */}
@@ -205,14 +216,17 @@ export const DashboardLayout = () => {
                 <Divider />
                 {(contentType === "editor") && <EditorHelp />}
             </Drawer>
-
             {
                 numAreasAllowed && (
-                    sidebarIds.length < numAreasAllowed
+                    (sidebarIds.length < numAreasAllowed)
                         ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} />
                         : null
                 )
             }
+           (alertState)
+           ? <CustomAlert setAlert={setAlertState} alertState={alertState} alert={{ title: "Maximum areas reached", message: "Thanks for using Palavyr! Please consider purchasing a subscription to increase the number of areas you can provide. <a src='www.google.com' />"  }} />
+           : null
+           {/* TODO: Remove dive space herewhen this renders. */}
         </div>
     );
 };
