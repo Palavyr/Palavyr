@@ -28,24 +28,35 @@ namespace Palavyr.API.Controllers
         [HttpPost("login")]
         public Credentials PerformLogin([FromHeader] string action, LoginCredentials credentials)
         {
+            _logger.LogDebug("Attempting To Login using");
             if (action != MagicUrlStrings.LoginAction) throw new Exception();
 
             // take credentials and check against the database
+            
+            _logger.LogDebug("Attempting to retrieve credentials.");
             var byUsername = AccountContext.Accounts.SingleOrDefault(row => row.UserName == credentials.Username);
             var byEmail = AccountContext.Accounts.SingleOrDefault(row => row.EmailAddress == credentials.EmailAddress);
 
             var userAccount = byUsername ?? byEmail;
-            if (userAccount == null) return Credentials.CreateUnauthenticatedResponse("Could not find user.");
+
+            if (userAccount == null)
+            {
+                _logger.LogDebug($"Could not find user by username: {credentials.Username} or email: {credentials.EmailAddress}");
+                return Credentials.CreateUnauthenticatedResponse("Could not find user.");
+            }
 
             if (!PasswordHashing.ComparePasswords(userAccount.Password, credentials.Password))
             {
+                _logger.LogDebug("The provided password did not match!");
                 return Credentials.CreateUnauthenticatedResponse("Password does not match.");
             }
-
+        
+            _logger.LogDebug("Attempting to create a new Session.");
             var newSession = Session.CreateNew(userAccount.AccountId, userAccount.ApiKey);
+            _logger.LogDebug($"New Session created: {newSession.SessionId}");
             AccountContext.Sessions.Add(newSession);
             AccountContext.SaveChanges();
-
+            _logger.LogDebug("Session saved to DB. Returning auth response.");
             return Credentials.CreateAuthenticatedResponse(newSession.SessionId, newSession.ApiKey);
         }
 
