@@ -166,6 +166,12 @@ export const DashboardLayout = () => {
         }
     }
 
+    const alertDetails = {
+        title: "Maximum areas reached",
+        message: "Thanks for using Palavyr! Please consider purchasing a subscription to increase the number of areas you can provide.",
+        link: "/dashboard/subscribe",
+        linktext: "Subscriptions"
+    }
 
     const thema = useTheme();
     console.log("Dash: " + thema.mixins.toolbar.minHeight);
@@ -223,10 +229,7 @@ export const DashboardLayout = () => {
                         : null
                 )
             }
-           (alertState)
-           ? <CustomAlert setAlert={setAlertState} alertState={alertState} alert={{ title: "Maximum areas reached", message: "Thanks for using Palavyr! Please consider purchasing a subscription to increase the number of areas you can provide. <a src='www.google.com' />"  }} />
-           : null
-           {/* TODO: Remove dive space herewhen this renders. */}
+           <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
         </div>
     );
 };

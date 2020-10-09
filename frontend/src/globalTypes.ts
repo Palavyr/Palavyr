@@ -172,6 +172,8 @@ export type DynamicTableMetas = Array<DynamicTableMeta>;
 export type AlertType = {
     title: string;
     message: string;
+    link?: string;
+    linktext?: string;
 }
 
 
