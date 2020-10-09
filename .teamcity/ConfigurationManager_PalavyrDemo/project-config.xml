@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" parent-id="ConfigurationManager" uuid="11e4da9f-3dc3-41a7-abec-a8c7d66c9f6a" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2020.1/project-config.xsd">
+  <name>Palavyr Demo</name>
+  <description>Simple build configuration to push the demo site to Octopus</description>
+  <parameters />
+  <cleanup />
+</project>
+
