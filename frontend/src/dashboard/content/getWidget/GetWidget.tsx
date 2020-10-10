@@ -41,7 +41,7 @@ export const GetWidget = () => {
             </Typography>
 
             <Typography component={"pre"} paragraph>
-                <strong>&lt;iframe src="https://widget.palavyr.com/wiget/{apikey}" /&gt;</strong>
+                <strong>&lt;iframe src="https://widget.palavyr.com/widget/{apikey}" /&gt;</strong>
             </Typography>
         </Card>
     )

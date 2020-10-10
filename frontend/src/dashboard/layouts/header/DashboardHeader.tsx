@@ -3,7 +3,6 @@ import { AppBar, Toolbar, IconButton, Typography, makeStyles, useTheme } from "@
 import MenuIcon from '@material-ui/icons/Menu';
 import classNames from "classnames";
 import HelpIcon from '@material-ui/icons/Help';
-import { UserDetails } from "./UserDetails";
 
 const drawerWidth: number = 240;
 
@@ -31,7 +30,6 @@ const useStyles = makeStyles(theme => ({
         width: "100%",
         display: "flex",
         justifyContent: "space-between",
-        // ...theme.mixins.toolbar
     },
 
 
@@ -91,7 +89,6 @@ export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawe
                     </div>
                 </div>
                 <div className={classes.helpIcon}>
-                    {/* <UserDetails /> */}
                     <IconButton color="inherit" aria-label="open help drawer" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(classes.helpMenuButton, helpOpen && classes.hide)}>
                         <HelpIcon />
                     </IconButton>

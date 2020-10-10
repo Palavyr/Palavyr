@@ -76,7 +76,8 @@ const useTabsStyles = makeStyles(theme => ({
       },
       appbar: {
           width: "100%",
-          top: theme.mixins.toolbar.minHeight
+          top: theme.mixins.toolbar.minHeight,
+          height: "72px"
       }
 }))
 

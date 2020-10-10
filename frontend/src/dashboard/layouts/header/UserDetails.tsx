@@ -8,8 +8,10 @@ const useStyles = makeStyles(theme => ({
     },
     logwrapper: {
         textAlign: "center",
-        paddingTop: "0.7rem",
-        paddingBottom: "0.7rem"
+        paddingTop: "1rem",
+        paddingBottom: "0.7rem",
+        // height: "200px"
+        height: "72px"
     }
 }))
 
@@ -20,7 +22,9 @@ export const UserDetails = () => {
 
     return (
         <div className={classes.logwrapper}>
-            <span className={classes.loggedin}>Logged in as: {email}</span>
+            <span className={classes.loggedin}>Logged in as:</span>
+            <br></br>
+            <span className={classes.loggedin}>{email}</span>
         </div>
     )
 }

@@ -56,6 +56,7 @@ namespace Palavyr.API.Controllers
             _logger.LogDebug($"New Session created: {newSession.SessionId}");
             AccountContext.Sessions.Add(newSession);
             AccountContext.SaveChanges();
+            
             _logger.LogDebug("Session saved to DB. Returning auth response.");
             return Credentials.CreateAuthenticatedResponse(newSession.SessionId, newSession.ApiKey);
         }

@@ -25,6 +25,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
+import classNames from "classnames";
 
 
 const fetchSidebarInfo = (areaData: Areas) => {
@@ -43,8 +44,10 @@ const useStyles = makeStyles(theme => ({
     },
     menuDrawer: {
         width: DRAWER_WIDTH,
-        flexShrink: 0,
-
+        flexShrink: 0
+    },
+    menuBorder: {
+        // border: "3px solid black"
     },
     helpDrawer: (helpOpen: boolean) => {
         return {
@@ -180,12 +183,14 @@ export const DashboardLayout = () => {
             <CssBaseline />
             <DashboardHeader open={open} handleDrawerOpen={handleDrawerOpen} handleHelpDrawerOpen={handleHelpDrawerOpen} helpOpen={helpOpen} title={currentViewName} />
             <Drawer
-                className={classes.menuDrawer}
+                className={classNames(classes.menuDrawer, classes.menuBorder)}
                 variant="persistent"
                 anchor="left"
                 open={open}
                 classes={{
                     paper: classes.menuDrawerPaper,
+                    root: classes.menuBorder,
+                    modal: classes.menuBorder
                 }}
             >
                 <SideBarHeader handleDrawerClose={handleDrawerClose} />

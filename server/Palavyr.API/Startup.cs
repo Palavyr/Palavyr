@@ -141,7 +141,7 @@ namespace Palavyr.API
         )
         {
             _logger = loggerFactory.CreateLogger<Startup>();
-
+            _logger.LogDebug("Starting Configure method in startup.cs");
             var appDataPath = resolveAppDataPath();
             if (string.IsNullOrEmpty(Configuration["WebRootPath"]))
                 Configuration["WebRootPath"] = Environment.CurrentDirectory;
