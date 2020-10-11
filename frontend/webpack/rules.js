@@ -36,6 +36,24 @@ const SVGRule = () => {
     }
 }
 
+const LiteLoadSVGs = () => {
+    return {
+        loader: 'react-svg-loader',
+        options: {
+            jsx: true // true outputs JSX tags
+        }
+    }
+}
+
+const SVGRLoader = () => {
+    return {
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
+    }
+}
+
+
+
 const BabelLoaderRule = () => {
     return {
         test: /\.js$/,
@@ -53,7 +71,7 @@ const StylesLoader = () => {
         use: [
             MiniCssExtractPlugin.loader,
             // 'style-loader',
-            'css-loader' ,
+            'css-loader',
         ],
         exclude: path.resolve(__dirname, '/node_modules')
     }
@@ -106,6 +124,8 @@ const CSSMinify = () => {
 
 
 module.exports = {
+    SVGRLoader,
+    LiteLoadSVGs,
     CSSModules,
     CSSMinify,
     TypeScriptLoaderRule,

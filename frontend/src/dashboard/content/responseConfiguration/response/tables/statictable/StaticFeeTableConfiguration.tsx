@@ -27,7 +27,9 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(1),
     },
     header: {
-        background: "#90caf9",
+        // background: "#90caf9",
+        background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
+
         borderTopRightRadius: "8px",
         borderTopLeftRadius: "8px",
     },
@@ -41,7 +43,7 @@ export const StaticTableConfiguration = ({ title, staticTables, tableSaver, modi
 
     return (
         <Accordion defaultExpanded>
-            <AccordionSummary className={classes.header} expandIcon={<ExpandMoreIcon />} aria-controls="panel-content" id="panel-header">
+            <AccordionSummary className={classes.header} expandIcon={<ExpandMoreIcon style={{color: "white"}} />} aria-controls="panel-content" id="panel-header">
                 <Typography variant="h2" className={classes.title}>{title}</Typography>
             </AccordionSummary>
             <Divider />

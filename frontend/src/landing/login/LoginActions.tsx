@@ -26,6 +26,11 @@ const useStyles = makeStyles(theme => ({
         cursor: "auto",
         color: theme.palette.text.disabled,
     },
+    loginbutton: {
+        color: "white",
+        backgroundColor: "#3e5f82",
+
+    }
 }));
 
 
@@ -36,10 +41,11 @@ export const LoginActions = ({ isLoading, openChangePasswordDialog }: ILoginActi
     return (
         <>
             <Button
+                className={classes.loginbutton}
                 type="submit"
                 fullWidth
                 variant="contained"
-                color="secondary"
+                // color="secondary"
                 disabled={isLoading}
                 size="large"
             >

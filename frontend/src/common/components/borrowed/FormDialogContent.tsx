@@ -89,15 +89,11 @@ export const FormDialogContent = ({ loginEmail, setLoginEmail, loginPassword, se
             />
             {status === "verificationEmailSend" ? (
                 <HighlightedInformation>
-                    We have send instructions on how to reset your password to your
+                    We have sent instructions on how to reset your password to your
                     email address
                 </HighlightedInformation>
-            ) : (
-                    <HighlightedInformation>
-                        <b>Access is restricted until we go live.</b>
-                        <br />
-                    </HighlightedInformation>
-                )}
+            ) : null
+            }
         </>
     )
 }

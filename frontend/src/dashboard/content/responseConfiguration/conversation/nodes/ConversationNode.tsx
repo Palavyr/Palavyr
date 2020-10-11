@@ -1,6 +1,5 @@
 import { Conversation, ConvoNode, Responses } from "@Palavyr-Types";
 import { NodeTypeOptions } from "./NodeTypeOptions";
-import { makeStyles } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { getChildNodes } from "./conversationNodeUtils";
 import { SteppedLineTo } from "../treeLines/SteppedLineTo";
@@ -20,14 +19,14 @@ export interface IConversationNode {
 }
 
 export type lineStyle = {
-    borderColor: "black";
+    borderColor: "black" | string;
     borderStyle: "solid";
     borderWidth: number;
     zIndex: number;
 };
 
 export const connectionStyle: lineStyle = {
-    borderColor: "black",
+    borderColor: "#54585A",
     borderStyle: "solid",
     borderWidth: 1,
     zIndex: 0,

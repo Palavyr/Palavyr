@@ -26,7 +26,8 @@ const useStyles = makeStyles(theme => ({
         background: "#efefef"
     },
     header: {
-        background: "#90caf9",
+        background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
+        // background: "#90caf9",
         borderTopRightRadius: "8px",
         borderTopLeftRadius: "8px",
     },
@@ -47,7 +48,7 @@ export const ExpandableTextBox = ({ updatableValue, title, onChange, onSave, chi
         <Accordion className={classes.body} defaultExpanded>
             <AccordionSummary
                 className={classes.header}
-                expandIcon={<ExpandMoreIcon />}
+                expandIcon={<ExpandMoreIcon style={{color: "white"}}/>}
                 aria-controls="panel-content"
                 id="panel-header"
             >

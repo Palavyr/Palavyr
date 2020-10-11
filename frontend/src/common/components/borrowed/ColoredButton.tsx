@@ -9,13 +9,14 @@ export interface IColoredButton {
     variant: "text" | "outlined" | "contained" | undefined;
     type?: "button" | "reset" | "submit" | undefined;
     disabled?: boolean;
+    classes?: string;
 }
 
-export const ColoredButton = memo(({ color, children, onClick, variant, type, disabled }: IColoredButton) => {
+export const ColoredButton = memo(({ color, children, onClick, variant, type, disabled, classes }: IColoredButton) => {
 
 
     return (
-        <Button variant={variant} onClick={onClick} color={color} type={type} disabled={disabled}>
+        <Button className={classes} variant={variant} onClick={onClick} color={color} type={type} disabled={disabled}>
             {children}
         </Button>
     );

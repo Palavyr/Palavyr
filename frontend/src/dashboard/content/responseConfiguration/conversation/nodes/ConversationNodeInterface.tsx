@@ -24,16 +24,23 @@ export interface IConversationNodeInterface {
 type StyleProps = {
     nodeText: string;
     nodeType: string;
+    checked: boolean;
 }
 const useStyles = makeStyles(theme => ({
     root: (props: StyleProps) => ({
         minWidth: "275px",
         maxWidth: "300px",
-        // maxHeight: "350px",
-        borderColor: props.nodeType === "" ? "Red" : "lightgray",
+        borderColor: props.nodeType === "" ? "Red" : "#54585A",
         borderWidth: props.nodeType === "" ? "5px" : "2px",
-        borderRadius: "3px"
+        borderRadius: "3px",
+        background: "#f8f8f9"
     }),
+    card: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "area"
+
+    },
     bullet: {
         display: "inline-block",
         margin: "0 2px",
@@ -45,20 +52,36 @@ const useStyles = makeStyles(theme => ({
     pos: {
         marginBottom: 12,
     },
-    textCard: (props: StyleProps) => {
-        return {
+    textCard: (props: StyleProps) => ({
+
+            border: "1px solid gray",
             padding: "10px",
-            textAlign: "left",
-            // minHeight: "50px",
+            textAlign: "center",
+            color: (props.nodeText === "Ask your question!") ? "white" : "black",
             background: (props.nodeText === "Ask your question!") ? "red" : "white",
-        }
-    },
+            '&:hover': {
+                background: "lightgray",
+                color: "black"
+            }
+    }),
     text: {
         margin: ".1rem",
-        fontSize: "12px"
+        fontSize: "16px"
     },
     formstyle: {
-        fontSize: "12px"
+        fontSize: "12px",
+        alignSelf: "bottom"
+    },
+    editorStyle: {
+        fontSize: "12px",
+        color: "lightgray"
+    },
+    formLabelStyle: (props: StyleProps) => ({
+        fontSize: "12px",
+        color: props.checked ? "black" : "lightgray",
+    }),
+    interfaceElement: {
+        paddingBottom: "1rem"
     }
 }))
 
@@ -68,38 +91,40 @@ export const ConversationNodeInterface = ({ dynamicNodeTypes, node, nodeList, op
     const [modalState, setModalState] = useState<boolean>(false);
 
     var client = new ApiClient();
-    const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text })
+    const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text, checked: node.isCritical })
 
     return (
         <Card className={classNames(classes.root, node.nodeId)} variant="outlined">
-            <CardContent>
-                <Typography variant={node.isRoot ? "h5" : "body1"} align={"center"}>
-                    {node.isRoot ? "Convo Start" : optionPath}
+            <CardContent className={classes.card}>
+                <Typography className={classes.interfaceElement} variant={node.isRoot ? "h5" : "body1"} align="center">
+                    {node.isRoot ? "Begin" : "If " + optionPath}
                 </Typography>
-                <NodeTypeSelector 
+                <Card elevation={0} className={classNames(classes.interfaceElement, classes.textCard)} onClick={() => setModalState(true)}>
+                    <Typography className={classes.text} variant="body2" component="span" noWrap={false} >
+                        {node.text}
+                    </Typography>
+                    <Typography align="center" className={classes.editorStyle} onClick={() => setModalState(true)}>Click to Edit</Typography>
+                </Card>
+                <NodeTypeSelector
                     dynamicNodeTypes={dynamicNodeTypes}
                     node={node}
                     nodeList={nodeList}
                     addNodes={addNodes}
                     setNodes={setNodes}
-                    parentState={parentState} 
-                    changeParentState={changeParentState} 
+                    parentState={parentState}
+                    changeParentState={changeParentState}
                 />
-                <hr></hr>
-                <Card className={classes.textCard} onClick={() => setModalState(true)}>
-                    <Typography className={classes.text} variant="body2" component="span" noWrap={false} >
-                        {node.text}
-                    </Typography>
-                </Card>
-                <hr></hr>
                 <FormControlLabel
                     className={classes.formstyle}
+                    classes={{
+                        label: classes.formLabelStyle
+                    }}
                     control={
                         <Checkbox
                             className={classes.formstyle}
                             size="small"
                             checked={node.isCritical}
-                            value={"WTF"}
+                            value={""}
                             name={"crit-" + node.nodeId}
                             onChange={async (event) => {
                                 var newNode = cloneDeep(node);

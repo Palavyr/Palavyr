@@ -20,7 +20,8 @@ const useStyles = makeStyles(theme => ({
         flexDirection: "column",
         alignItems: "center",
         paddingBottom: theme.spacing(3),
-        maxWidth: 420
+        maxWidth: 420,
+
     },
     actions: {
         marginTop: theme.spacing(2)

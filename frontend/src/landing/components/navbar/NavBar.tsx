@@ -11,113 +11,106 @@ export interface INavBar {
     handleMobileDrawerClose: any;
     mobileDrawerOpen: any;
     selectedTab: string | null;
-    selectTab: any;
+    setSelectedTab: any;
 }
 
 const useStyles = makeStyles({
-    root: {},
     menuButton: {},
+    clear: {
+        border: "0px solid white",
+
+    },
     appBar: {
         height: "6rem",
-        position: "static",
-        // boxShadow: theme.shadows[6],
+        position: "sticky",
+        boxShadow: "0 0 black",
+        marginBottom: "3rem"
     },
     toolbar: {
-        backgroundColor: "black",
         height: "100%",
         display: "flex",
         justifyContent: "space-between"
     },
     menuButtonText: {
         fontSize: "large",
-        // fontSize: theme.typography.body1.fontSize,
-        // fontWeight: theme.typography.h6.fontWeight
+        color: "white",
+        backgroundColor: "#3e5f82",
+        marginRight: "1rem",
+        '&:hover': {
+            backgroundColor: "white",
+            color: "#3e5f82"
+        }
     },
     brandText: {
+        // color: "black",
+        fontSize: 64,
         fontWeight: "bolder",
-        marginLeft: "5rem",
-        color: "#c7ecee"
+        color: "black"
+    },
+    brandTextSmall: {
+        fontWeight: "bolder",
+        color: "black"
+        // color: "#c7ecee"
     },
     noDecoration: {
         textDecoration: "none !important"
     }
 });
 
-export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawerOpen, handleMobileDrawerClose, mobileDrawerOpen, selectedTab, selectTab }: INavBar) => {
+export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawerOpen, handleMobileDrawerClose, mobileDrawerOpen, selectedTab, setSelectedTab }: INavBar) => {
 
     const classes = useStyles();
 
     return (
-        <div className={classes.root}>
-            <AppBar position="fixed" className={classes.appBar}>
-                <Toolbar className={classes.toolbar}>
-                    <div>
-                        <Typography
-                            variant="h3"
-                            className={classes.brandText}
-                            display="inline"
-                            color="primary"
-                        >
-                            Palavyr
-                        </Typography>
-
-                    </div>
-                    <div>
-                        <Hidden mdUp>
-                            <IconButton
-                                className={classes.menuButton}
-                                onClick={handleMobileDrawerOpen}
-                                aria-label="Open Navigation"
-                            >
-                                <MenuIcon color="primary" />
-                            </IconButton>
-                        </Hidden>
-                        <Hidden smDown>
-                            {
-                                menuItems(openRegisterDialog, openLoginDialog).map(element => {
-                                    if (element.link) {
-                                        return (
-                                            <Link
-                                                key={element.name}
-                                                to={element.link}
-                                                className={classes.noDecoration}
-                                                onClick={handleMobileDrawerClose}
-                                            >
-                                                <Button
-                                                    style={{color: "white"}}
-                                                    size="large"
-                                                    classes={{ text: classes.menuButtonText }}
-                                                >
-                                                    {element.name}
-                                                </Button>
-                                            </Link>
-                                        );
-                                    }
-                                    return (
+        <AppBar position="fixed" className={classes.appBar} color="transparent" classes={{root: classes.clear}}>
+            <Toolbar className={classes.toolbar}>
+                <div>
+                    <Typography variant="body2" className={classes.brandText} display="inline" >
+                        Palavyr
+                    </Typography>
+                    <Typography variant="body2" className={classes.brandTextSmall} display="inline">
+                        .com
+                    </Typography>
+                </div>
+                <div>
+                    {
+                        menuItems(openRegisterDialog, openLoginDialog).map(element => {
+                            if (element.link) {
+                                return (
+                                    <Link
+                                        key={element.name}
+                                        to={element.link}
+                                        className={classes.noDecoration}
+                                        onClick={handleMobileDrawerClose}
+                                    >
                                         <Button
-                                            style={{color:"white"}}
+                                            disableElevation
+                                            variant="contained"
                                             size="large"
-                                            onClick={element.onClick}
-                                            classes={{ text: classes.menuButtonText }}
-                                            key={element.name}
+                                            className={classes.menuButtonText}
+                                            // classes={{ text: classes.menuButtonText }}
                                         >
                                             {element.name}
                                         </Button>
-                                    );
-                                })
+                                    </Link>
+                                );
                             }
-                        </Hidden>
-                    </div>
-
-                </Toolbar>
-            </AppBar>
-            {/* <NavigationDrawer
-                menuItems={menuItems}
-                anchor="right"
-                open={mobileDrawerOpen}
-                selectedItem={selectedTab}
-                onClose={handleMobileDrawerClose}
-            /> */}
-        </div>
+                            return (
+                                <Button
+                                    disableElevation
+                                    variant="contained"
+                                    size="large"
+                                    onClick={element.onClick}
+                                    className={classes.menuButtonText}
+                                    key={element.name}
+                                >
+                                    {element.name}
+                                </Button>
+                            );
+                        })
+                    }
+                </div>
+            </Toolbar>
+        </AppBar>
     );
 };

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Meta } from '@storybook/react/types-6-0';
-import { ThreeItemRow, IThreeItemRow, ThreeItemRowObject } from './ThreeItemRow';
+import { ThreeItemRow, IThreeItemRow, ItemRowObject } from './ThreeItemRow';
 
 
 export default {
@@ -11,7 +11,7 @@ export default {
 
 const Template = (args: IThreeItemRow) => <ThreeItemRow {...args} />;
 
-const data: Array<ThreeItemRowObject> = [
+const data: Array<ItemRowObject> = [
     {
         title: "Engage potential clients",
         text: "Collect all of the information that you need to engage, sort, and secure a potential client.",

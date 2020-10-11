@@ -22,7 +22,13 @@ const useStyles = makeStyles(theme => ({
         paddingRight: theme.spacing(2)
     },
     backIcon: {
-        marginRight: theme.spacing(1)
+        marginRight: theme.spacing(1),
+        color: "white",
+        backgroundColor: "#3e5f82",
+    },
+    backButton: {
+        color: "white",
+        backgroundColor: "#3e5f82",
     }
 }));
 
@@ -181,6 +187,7 @@ export const TermsOfServiceDialog = ({ onClose }: ITermsOfServiceDialog) => {
             </DialogContent>
             <DialogActions className={classes.dialogActions}>
                 <ColoredButton
+                    classes={classes.backButton}
                     onClick={onClose}
                     variant="contained"
                     color="secondary"

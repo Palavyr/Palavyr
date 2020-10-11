@@ -27,7 +27,8 @@
   },
   "include": [
     "src/**/*",
-    "src/**/*.d.ts"
+    "src/**/*.d.ts",
+    "customTypes/*.d.ts"
   ],
   "exclude": ["node_modules"],
   "extends": "./tsconfig.paths.json",

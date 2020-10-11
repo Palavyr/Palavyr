@@ -86,7 +86,7 @@ export const ResponseConfiguration = ({ areaIdentifier }: IResponseConfiguration
             </ExpandableTextBox>
 
             <DynamicTableConfiguration
-                title="Customomized Fees"
+                title="Customized Fees"
                 areaIdentifier={areaIdentifier}
             />
 

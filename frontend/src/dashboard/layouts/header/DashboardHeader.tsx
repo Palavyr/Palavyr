@@ -16,7 +16,8 @@ interface DashboardHeaderProps {
 
 const useStyles = makeStyles(theme => ({
     topbar: {
-        backgroundColor: "green",
+        // backgroundColor: "green",
+        background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
         position: "fixed",
     },
     appBar: {

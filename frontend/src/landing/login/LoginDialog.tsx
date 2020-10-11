@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import { useHistory } from "react-router-dom";
 import React from "react";
 import { FormDialogContent, FormStatusTypes } from "@common/components/borrowed/FormDialogContent";
+import { makeStyles } from "@material-ui/core";
 
 
 interface ILoginDialog {
@@ -15,6 +16,12 @@ interface ILoginDialog {
     openChangePasswordDialog: () => void;
 }
 
+const useStyles = makeStyles(theme => ({
+    background: {
+        background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
+
+    }
+}))
 
 export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDialog }: ILoginDialog) => {
 
@@ -22,7 +29,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [loginEmail, setLoginEmail] = useState<string>("");
     const [loginPassword, setLoginPassword] = useState<string>("");
-
+    const classes = useStyles();
 
     const history = useHistory();
 

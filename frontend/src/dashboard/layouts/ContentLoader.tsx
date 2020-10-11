@@ -10,6 +10,7 @@ interface IContentLoader {
 
 const useStyles = makeStyles(theme => ({
     content: {
+        // backroundColor: "green",
         position: "relative", // TESTING
         flexGrow: 1,
         top: theme.mixins.toolbar.minHeight,

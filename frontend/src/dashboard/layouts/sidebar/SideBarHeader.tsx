@@ -12,7 +12,7 @@ interface SideBarHeaderProps {
 const useStyles = makeStyles(theme => ({
     drawerHeader: {
         border: "0px solid white",
-        backgroundColor: "#686de0",
+        // backgroundColor: "#686de0",
         display: "flex",
         alignItems: "center",
         padding: theme.spacing(0, 1),
@@ -32,9 +32,9 @@ export const SideBarHeader = ({ handleDrawerClose }: SideBarHeaderProps) => {
             <div className={classes.drawerHeader}>
                 <IconButton onClick={() => handleDrawerClose()}>
                     <div>
-                        <span>Menu</span>
                         {theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                    </div>
+                        {/* <span>Menu</span> */}
+                        </div>
                 </IconButton>
             </div>
             <UserDetails />

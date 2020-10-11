@@ -73,13 +73,23 @@ const useTabsStyles = makeStyles(theme => ({
         width: "100%",
         position: "absolute",
         flexGrow: 1,
-      },
+        background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)",
+        height: "100%"
+    },
       appbar: {
-          width: "100%",
+         background: "#c7ecee",
+            width: "100%",
           top: theme.mixins.toolbar.minHeight,
           height: "72px"
+      },
+      icon: {
+          color: "navy"
+      },
+      tabtext: {
+          color: "navy"
       }
 }))
+// background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)"
 
 
 export const AreaContent = ({ active, areaIdentifier, areaName, setLoaded, setViewName}: IAreaContent) => {
@@ -104,12 +114,12 @@ export const AreaContent = ({ active, areaIdentifier, areaName, setLoaded, setVi
             <div className={classes.root}>
                 <AppBar position="static" className={classes.appbar}>
                     <Tabs centered value={tab} onChange={handleTabChange} aria-label="simple tabs example">
-                        <Tab icon={<AccountTreeIcon />} label="Conversation" {...areaTabProps(0)} />
-                        <Tab icon={<FilterFramesIcon />} label="Estimate" {...areaTabProps(1)} />
-                        <Tab icon={<SubjectIcon />} label="Email" {...areaTabProps(2)} />
-                        <Tab icon={<PictureAsPdfIcon />} label="Attachments" {...areaTabProps(3)} />
-                        <Tab icon={<VisibilityIcon />} label="Preview" {...areaTabProps(4)} />
-                        <Tab icon={<SettingsApplicationsIcon />} label="Settings" {...areaTabProps(5)} />
+                        <Tab className={classes.tabtext} icon={<AccountTreeIcon className={classes.icon} />} label="Conversation" {...areaTabProps(0)} />
+                        <Tab className={classes.tabtext} icon={<FilterFramesIcon className={classes.icon}/>} label="Estimate" {...areaTabProps(1)} />
+                        <Tab className={classes.tabtext} icon={<SubjectIcon className={classes.icon}/>} label="Email" {...areaTabProps(2)} />
+                        <Tab className={classes.tabtext} icon={<PictureAsPdfIcon className={classes.icon}/>} label="Attachments" {...areaTabProps(3)} />
+                        <Tab className={classes.tabtext} icon={<VisibilityIcon className={classes.icon}/>} label="Preview" {...areaTabProps(4)} />
+                        <Tab className={classes.tabtext} icon={<SettingsApplicationsIcon className={classes.icon}/>} label="Settings" {...areaTabProps(5)} />
                     </Tabs>
                 </AppBar>
                 <TabPanels tab={tab} areaName={areaName} areaIdentifier={areaIdentifier} setViewName={setViewName} />

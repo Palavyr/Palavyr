@@ -4,12 +4,8 @@ import { FormDialog } from "@common/components/borrowed/FormDialog";
 import { VisibilityPasswordTextField } from "@common/components/borrowed/VisibilityPasswordTextField";
 import { HighlightedInformation } from "@common/components/borrowed/HighlightedInformation";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
-import { TermsOfServiceDialog } from "legal/TermsOfService";
-import { ApiClient } from "@api-client/Client";
 import Auth from "auth/Auth";
 import { useHistory } from "react-router-dom";
-import { LocalStorage } from "localStorage/localStorage";
-
 
 
 const useStyles = makeStyles((theme) => ({
@@ -25,7 +21,11 @@ const useStyles = makeStyles((theme) => ({
         },
         "&:enabled:focus": {
             color: theme.palette.primary.dark,
-        },
+        }
+    },
+    registerbutton: {
+        color: "white",
+        backgroundColor: "#3e5f82",
     },
 }));
 
@@ -153,7 +153,6 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
                 register();
             }}
             hideBackdrop
-            // hasCloseIcon
             content={
                 <>
                     <TextField
@@ -226,7 +225,7 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
                             service.
                         </FormHelperText>
                     )}
-                    {status === "accountCreated" ? (
+                    {/* {status === "accountCreated" ? (
                         <HighlightedInformation>
                             We have created your account. Please click on the link in the
                             email we have sent to you before logging in.
@@ -235,16 +234,17 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
                             <HighlightedInformation>
                                 Registration is currently in Demo Mode. <br /> <strong>Accounts are subject to arbitrary deletion.</strong>
                             </HighlightedInformation>
-                        )}
+                        )} */}
                 </>
             }
             actions={
                 <Button
+                    className={classes.registerbutton}
                     type="submit"
                     fullWidth
                     variant="contained"
                     size="large"
-                    color="secondary"
+                    // color="secondary"
                     disabled={isLoading}
                 >
                     Register

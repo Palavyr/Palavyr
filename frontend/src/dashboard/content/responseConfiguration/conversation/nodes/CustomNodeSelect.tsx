@@ -8,8 +8,15 @@ const useStyles = makeStyles(() => ({
     formControl: {
         minWidth: 120,
         width: "100%",
-        textAlign: "center"
+        textAlign: "center",
     },
+    selectbox: {
+        border: "1px solid gray",
+        borderBottom: "0px solid black",
+        borderRadius: "0px",
+        borderBottomLeftRadius: "3px",
+        borderBottomRightRadius: "3px"
+    }
 }));
 
 export interface ISelectNodeType {
@@ -26,7 +33,7 @@ export const CustomNodeSelect = ({ onChange, option, completeNodeTypes }: ISelec
         <div>
             <FormControl className={classes.formControl}>
                 <InputLabel id="simple-select-helper-label"></InputLabel>
-                <Select labelId="simple-select-helper-label" id="simple-select-helper" value={option} onChange={onChange}>
+                <Select className={classes.selectbox} labelId="simple-select-helper-label" id="simple-select-helper" value={option} onChange={onChange}>
                     {
                         Object.keys(completeNodeTypes).map(key => {
                             var nodeObj: NodeOptions = completeNodeTypes[key];
@@ -34,7 +41,7 @@ export const CustomNodeSelect = ({ onChange, option, completeNodeTypes }: ISelec
                         })
                     }
                 </Select>
-                <FormHelperText className={classes.formControl}>Select the type of node</FormHelperText>
+                <FormHelperText className={classes.formControl}>Select</FormHelperText>
             </FormControl>
         </div>
     );

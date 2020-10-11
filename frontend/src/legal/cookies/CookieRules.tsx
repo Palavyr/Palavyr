@@ -15,7 +15,13 @@ const useStyles = makeStyles(theme => ({
         zIndex: 1400
     },
     backIcon: {
-        marginRight: theme.spacing(1)
+        marginRight: theme.spacing(1),
+        color: "white",
+        backgroundColor: "#3e5f82",
+    },
+    backButton: {
+        color: "white",
+        backgroundColor: "#3e5f82",
     }
 }));
 
@@ -133,6 +139,7 @@ export const CookieRules = ({ onClose, open }: ICookieRules) => {
             </DialogContent>
             <DialogActions className={classes.dialogActions}>
                 <ColoredButton
+                    classes={classes.backButton}
                     onClick={onClose}
                     variant="contained"
                     color="secondary"

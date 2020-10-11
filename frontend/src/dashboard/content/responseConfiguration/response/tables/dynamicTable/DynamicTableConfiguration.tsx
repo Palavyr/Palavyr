@@ -16,7 +16,8 @@ const useStyles = makeStyles(theme => ({
         fontSize: "28pt"
     },
     header: {
-        background: "#90caf9",
+        // background: "#90caf9",
+        background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
         borderTopRightRadius: "8px",
         borderTopLeftRadius: "8px",
     },
@@ -59,7 +60,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier }: IDynamicTab
     return (
         <>
             <Accordion defaultExpanded>
-                <AccordionSummary className={classes.header} expandIcon={<ExpandMoreIcon />} aria-controls="panel-content" id="panel-header">
+                <AccordionSummary className={classes.header} expandIcon={<ExpandMoreIcon style={{color: "white"}}/>} aria-controls="panel-content" id="panel-header">
                     <Typography variant="h2" className={classes.title}>{title}</Typography>
                 </AccordionSummary>
                 <Suspense fallback={<h1>Loading Dynamic Tables...</h1>}>

@@ -38,10 +38,13 @@ const useStyles = makeStyles((theme => ({
     section: {
         border: `3px dashed ${theme.palette.common.black}`,
         margin: "1.2rem",
-        borderRadius: "5px"
+        borderRadius: "5px",
+        background: "#E8E8E8"
     },
     table: {
-        border: "none"
+        border: "none",
+        background: "#E8E8E8"
+
     }
 })))
 
