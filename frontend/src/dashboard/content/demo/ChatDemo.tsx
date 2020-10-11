@@ -3,6 +3,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { ApiClient } from "@api-client/Client";
 import { Grid, Paper, Typography, makeStyles } from "@material-ui/core";
 import { widgetUrl } from "@api-client/clientUtils";
+import classNames from "classnames";
 
 
 export type PreCheckResult = {
@@ -18,15 +19,29 @@ export type IncompleteAreas = {
 
 const useStyles = makeStyles(theme => ({
     paper: {
-        height: "80%",
-        widgth: "50%",
-        alignItems: "center"
+        // height: "100%",
+        // widgth: "50%",
+        alignItems: "center",
+        marginTop: "4rem",
+        background: "none",
+        border: "0px solid black",
+        boxShadow: "0 0 black"
     },
+    grid: {
+        border: "1px solid black"
+    },
+
     frame: {
         height: "500px",
-        width: "320px",
+        width: "380px",
         borderRadius: "9px",
         border: "0px"
+    },
+    container: {
+        height: "100%"
+    },
+    widgetcell: {
+        height: "100%"
     }
 }))
 
@@ -63,49 +78,31 @@ export const ChatDemo = () => {
         var res = await client.Settings.Account.getApiKey();
         var apiKey = res.data as string;
         setApiKey(apiKey);
-
     }, [])
-
 
     useEffect(() => {
         loadApiKey();
     }, [loadApiKey])
 
-
     return (
-        <>
-            <Grid
-                container
-                direction="column"
-                alignItems="center"
-            >
+        <Grid className={classNames(classes.grid, classes.container)} container>
+            <Grid className={classNames(classes.grid, classes.widgetcell)} container xs={6}>
                 <Paper className={classes.paper} >
                     <div>
                         <iframe title="demo" className={classes.frame} src={`${widgetUrl}/widget/${apiKey}`}></iframe>
                     </div>
                 </Paper>
             </Grid>
-            {incompleteAreas.length > 0 && (
-                <>
-                    <Grid
-                        container
-                        direction="column"
-                        alignItems="center"
-                    >
-                        <Typography>The Demo will load once you've fully assembled each of your areas!</Typography>
-                        {
-                            incompleteAreas.map((area, index) => {
-                                return (
-                                    <Grid key={index} item>
-                                        Name: {area.areaName}
-                                Title: {area.areaDisplayTitle}
-                                    </Grid>
-                                )
-                            })
-                        }
-                    </Grid>
-                </>
-            )}
-        </>
+            <Grid className={classes.grid} container xs={6}>
+                {
+                    incompleteAreas.length > 0 && (
+                        <>
+                            <Typography>The Demo will load once you've fully assembled each of your areas!</Typography>
+                            {incompleteAreas.map((area, index) => <span>Name: {area.areaName} Title: {area.areaDisplayTitle}</span>)}
+                        </>
+                    )
+                }
+            </Grid>
+        </Grid>
     )
 }

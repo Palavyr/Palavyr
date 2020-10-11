@@ -11,15 +11,17 @@ const useStyles = makeStyles(theme => ({
     body: {
         display: "flex",
         justifyContent: "space-evenly",
-        background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)"
-
+        background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)",
+        paddingRight: "18%",
+        paddingLeft: "18%"
     },
     paperCommon: {
         margin: "1rem",
         width: "30%",
         textAlign: "center",
         borderRadius: "0px",
-        alignContent: "center"
+        alignContent: "center",
+        marginTop: "3rem"
     },
     paperFree: {
         backgroundColor: "#0093CB",
