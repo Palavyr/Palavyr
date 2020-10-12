@@ -165,7 +165,7 @@ export const getMissingNodes = (nodeList: Conversation, requiredNodes: Array<Req
 }
 
 export const updateNodeList = (nodeList: Conversation, newNode: ConvoNode) => {
-    var filteredList = nodeList.filter(x => x.nodeId !== newNode.nodeId);
+    var filteredList = nodeList.filter(x => x.nodeId !== newNode.nodeId); // does this do anything...? it remove the newNode, and then adds it back in?
     return [...filteredList, newNode]
 }
 

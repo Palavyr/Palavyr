@@ -49,45 +49,30 @@ export const NodeEditorModal = ({ modalState, setModalState, node, nodeList, cha
         setModalState(false);
     }
 
-    // TODO: NEED TO COMBINED THESE TWO CALLS somehow.
-    const handleUpdateText = async (value: string) => {
-        var res = await client.Conversations.GetConversationNode(node.nodeId);
-        var newNode = cloneDeep(res.data);
-        newNode.text = value;
-        await client.Conversations.PutConversationNode(newNode.nodeId, newNode);
-        var newNodeList = updateNodeList(nodeList, newNode);
-        setNodes(newNodeList);
-    }
+    const handleUpdateNode = async (value: string, valueOptions: string[]) => {
 
-    const handleUpdateOptions = async (valueOptions: string[]) => {
-        var res = await client.Conversations.GetConversationNode(node.nodeId);
-        var newNode = cloneDeep(res.data);
+        var nodeData = cloneDeep((await client.Conversations.GetConversationNode(node.nodeId)).data as ConvoNode);
+        nodeData.text = value;
 
-        let optionPaths;
-        if (node.nodeType === NodeTypeOptionsDefinition.MultipleChoiceAsPath.value){
-            optionPaths = valueOptions;
-            const numChildren: number = optionPaths.filter(x => x !== null && x !== "").length
-            const childIds = createNewChildIDs(numChildren);
-
-            await addNodes(node, nodeList, childIds, optionPaths, valueOptions, setNodes); // create new nodes and update the Database
-
+        if (isMultiOptionType(node.nodeType)) {
+            let optionPaths;
+            let childIds;
+            if (node.nodeType === NodeTypeOptionsDefinition.MultipleChoiceAsPath.value) {
+                optionPaths = valueOptions;
+                const numChildren: number = optionPaths.filter(x => x !== null && x !== "").length
+                childIds = createNewChildIDs(numChildren);
+            } else {
+                optionPaths = NodeTypeOptionsDefinition.MultipleChoiceContinue.pathOptions;
+                const numChildren: number = optionPaths.filter(x => x !== null && x !== "").length
+                childIds = createNewChildIDs(numChildren);
+            }
+            nodeData.valueOptions = valueOptions.join(ValueOptionDelimiter);
+            await addNodes(nodeData, nodeList, childIds, optionPaths, valueOptions, setNodes); // create new nodes and update the Database
         } else {
-
-            optionPaths = NodeTypeOptionsDefinition.MultipleChoiceContinue.pathOptions;
-            const numChildren: number = optionPaths.filter(x => x !== null && x !== "").length
-            const childIds = createNewChildIDs(numChildren);
-
-            await addNodes(node, nodeList, childIds, optionPaths, valueOptions, setNodes); // create new nodes and update the Database
-
+            await client.Conversations.PutConversationNode(nodeData.nodeId, nodeData);
+            var newNodeList = updateNodeList(nodeList, nodeData);
+            setNodes(newNodeList);
         }
-
-        // changeParentState(!parentState) // rerender lines
-
-        newNode.valueOptions = valueOptions.join(ValueOptionDelimiter);
-        await client.Conversations.PutConversationNode(newNode.nodeId, newNode);
-        var newNodeList = updateNodeList(nodeList, newNode);
-        setNodes(newNodeList);
-
     }
 
     return (
@@ -118,10 +103,11 @@ export const NodeEditorModal = ({ modalState, setModalState, node, nodeList, cha
                     onClick={
                         async (e) => {
                             e.preventDefault();
-                            await handleUpdateText(textState)
-                            if (isMultiOptionType(node.nodeType)) {
-                                await handleUpdateOptions(options)
-                            }
+                            handleUpdateNode(textState, options);
+                            // await handleUpdateText(textState)
+                            // if (isMultiOptionType(node.nodeType)) {
+                            //     await handleUpdateOptions(options)
+                            // }
                             handleCloseModal();
                         }
                     }
