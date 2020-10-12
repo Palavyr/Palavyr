@@ -26,6 +26,7 @@ import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
+import { ConversationHelp } from "helpComponents/ConversationHelp";
 
 
 const fetchSidebarInfo = (areaData: Areas) => {
@@ -69,7 +70,29 @@ const useStyles = makeStyles(theme => ({
     helpDrawerPaper: {
         width: DRAWER_WIDTH + 300,
     }
-}))
+}));
+
+type HelpTypes =
+    "editor"
+    | "settings"
+    | "demo"
+    | "enquiries"
+    | "getwidget"
+    | "subscrible"
+    | "conversation"
+    | "estimate"
+    | "email"
+    | "attachments"
+    | "preview"
+    | "areasettings"
+    | "password"
+    | "email"
+    | "companyname"
+    | "phonenumber"
+    | "logo"
+    | "locale"
+
+
 
 
 export const DashboardLayout = () => {
@@ -91,6 +114,8 @@ export const DashboardLayout = () => {
     const [active, setIsActive] = useState<boolean | null>(null);
     const [numAreasAllowed, setNumAreasAllowed] = useState<number | undefined>()
     const [alertState, setAlertState] = useState<boolean>(false);
+    const [helpType, setHelpType] = useState<string>("");
+
 
     const classes = useStyles(helpOpen);
     const theme = useTheme();
@@ -176,6 +201,20 @@ export const DashboardLayout = () => {
         linktext: "Subscriptions"
     }
 
+    const selectHelpDrawerContent = (location: HelpTypes) => {
+        switch (location) {
+            case "editor":
+                setHelpType("editor");
+                break;
+            case "settings":
+                setHelpType("settings");
+                break;
+            default:
+                return
+        }
+
+    }
+
     const thema = useTheme();
     return (
         <div className={classes.root}>
@@ -199,12 +238,12 @@ export const DashboardLayout = () => {
 
             {/* Any type of content should be loaded here */}
             <ContentLoader open={open}>
-                {contentType === "editor" && <AreaContent active={active} areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} setViewName={setViewName} />}
-                {active && contentType === "settings" && <SettingsContent areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} />}
-                {active && contentType === "demo" && <ChatDemo />}
-                {active && contentType === "enquiries" && <Enquires />}
-                {active && contentType === "getwidget" && <GetWidget />}
-                {active && contentType === "subscribe" && <Subscribe />}
+                {contentType === "editor" && <AreaContent selectHelpDrawerContent={selectHelpDrawerContent} active={active} areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} setViewName={setViewName} />}
+                {active && contentType === "settings" && <SettingsContent selectHelpDrawerContent={selectHelpDrawerContent} areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} />}
+                {active && contentType === "demo" && <ChatDemo selectHelpDrawerContent={selectHelpDrawerContent} />}
+                {active && contentType === "enquiries" && <Enquires selectHelpDrawerContent={selectHelpDrawerContent} />}
+                {active && contentType === "getwidget" && <GetWidget selectHelpDrawerContent={selectHelpDrawerContent} />}
+                {active && contentType === "subscribe" && <Subscribe selectHelpDrawerContent={selectHelpDrawerContent} />}
 
                 {contentType === undefined && <WelcomeToTheDashboard />}
             </ContentLoader>
@@ -224,7 +263,25 @@ export const DashboardLayout = () => {
                     </IconButton>
                 </div>
                 <Divider />
-                {(contentType === "editor") && <EditorHelp />}
+                {(helpType === "conversation") && <ConversationHelp />}
+                {(helpType === "editor") && <EditorHelp />}
+                {/* {(helpType === "settings") && <SettingsHelp />}
+                {(helpType === "demo") && <DemoHelp />}
+                {(helpType === "enquiries") && <EnquiryHelp />}
+                {(helpType === "getwidget") && <GetWidgetHelp />}
+                {(helpType === "subscrible") && <SubscribeHelp />}
+                {(helpType === "estimate") && <EstimateHelp />}
+                {(helpType === "email") && <EmailHelp />}
+                {(helpType === "attachments") && <AttachmentsHelp />}
+                {(helpType === "preview") && <PreviewHelp />}
+                {(helpType === "areasettings") && <AreaSettingsHelp />}
+                {(helpType === "password") && <PasswordHelp />}
+                {(helpType === "email") && <EmailHelp />}
+                {(helpType === "companyname") && <CompanyNameHelp />}
+                {(helpType === "phonenumber") && <PhoneNumberHelp />}
+                {(helpType === "logo") && <LogoHelp />}
+                {(helpType === "locale") && <LocaleHelp />} */}
+
             </Drawer>
             {
                 numAreasAllowed && (
@@ -233,7 +290,7 @@ export const DashboardLayout = () => {
                         : null
                 )
             }
-           <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
+            <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
         </div>
     );
 };

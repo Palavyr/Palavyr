@@ -13,12 +13,15 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export const GetWidget = () => {
+interface IGetWidget {
+    selectHelpDrawerContent: any;
+}
+export const GetWidget = ({selectHelpDrawerContent}: IGetWidget) => {
 
     const client = new ApiClient();
     const [apikey, setApiKey] = useState<string>("");
     const classes = useStyles();
-
+    selectHelpDrawerContent("enquiries");
     const loadApiKey = useCallback(async () => {
         var key = (await client.Settings.Account.getApiKey()).data as string;
         setApiKey(key);

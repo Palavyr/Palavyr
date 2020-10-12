@@ -14,7 +14,7 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { v4 as uuid } from 'uuid';
-
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 export interface ISideBarMenu {
     areaIdentifiers: Array<string>;
@@ -135,6 +135,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                     </ListItemIcon>
                     <ListItemText primary={"Get Widget"} />
                 </ListItem>
+
                 <ListItem disabled={!active} button onClick={() => {
                     setViewName("Subscriptions")
                     history.push('/dashboard/subscribe/')
@@ -144,6 +145,17 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                     </ListItemIcon>
                     <ListItemText primary={"Subscribe"} />
                 </ListItem>
+
+                <ListItem disabled={!active} button onClick={() => {
+                    setViewName("Subscriptions")
+                    history.push('/dashboard')
+                }}>
+                    <ListItemIcon>
+                        <HelpOutlineIcon className={classes.icon} key={0} />
+                    </ListItemIcon>
+                    <ListItemText primary={"Get Help"} />
+                </ListItem>
+
                 <ListItem
                     button
                     key={1003}
@@ -157,6 +169,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                     </ListItemIcon>
                     <ListItemText primary={"Log Out"} />
                 </ListItem>
+
             </List>
         </div>
     );

@@ -1,7 +1,10 @@
 import * as React from 'react';
 
 
-export const Subscribe = () => {
+interface ISubscribe {
+    selectHelpDrawerContent: any;
+}
+export const Subscribe = ({ selectHelpDrawerContent }: ISubscribe) => {
 
 
     return (

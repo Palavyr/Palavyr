@@ -66,6 +66,7 @@ export interface IAreaContent {
     areaIdentifier: string;
     setLoaded: any;
     setViewName: any;
+    selectHelpDrawerContent: any;
 }
 
 const useTabsStyles = makeStyles(theme => ({
@@ -92,7 +93,7 @@ const useTabsStyles = makeStyles(theme => ({
 // background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)"
 
 
-export const AreaContent = ({ active, areaIdentifier, areaName, setLoaded, setViewName}: IAreaContent) => {
+export const AreaContent = ({ active, areaIdentifier, areaName, setLoaded, setViewName, selectHelpDrawerContent}: IAreaContent) => {
 
     const [tab, setTab] = useState<PanelRange>(0);
     const location = useLocation();
@@ -106,6 +107,27 @@ export const AreaContent = ({ active, areaIdentifier, areaName, setLoaded, setVi
     }, [tab, setLoaded]); // probably need to add a tracker for when the table is saved so can reload and update
 
     const handleTabChange = (event: any, newValue: PanelRange) => {
+        switch (newValue){
+            case 0:
+                selectHelpDrawerContent("conversation");
+                break;
+            case 1:
+                selectHelpDrawerContent("estimate");
+                break;
+            case 2:
+                selectHelpDrawerContent("email");
+                break;
+            case 3:
+                selectHelpDrawerContent("attachments");
+                break;
+            case 4:
+                selectHelpDrawerContent("preview");
+                break;
+            case 5:
+                selectHelpDrawerContent("areasettings");
+            default:
+                break;
+        }
         setTab(newValue);
     };
 

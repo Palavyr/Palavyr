@@ -25,16 +25,17 @@ interface IAreaContent {
     areaName: string;
     areaIdentifier: string;
     setLoaded: any;
+    selectHelpDrawerContent: any;
 }
 
 const useStyles = makeStyles((theme) => ({
     root: {
-      flexGrow: 1,
-      backgroundColor: theme.palette.background.paper,
+        flexGrow: 1,
+        backgroundColor: theme.palette.background.paper,
     },
-  }));
+}));
 
-export const SettingsContent = ({ areaIdentifier, areaName, setLoaded }: IAreaContent) => {
+export const SettingsContent = ({ areaIdentifier, areaName, setLoaded, selectHelpDrawerContent }: IAreaContent) => {
 
     const [tab, setTab] = useState<PanelRange>(5); // tabs
     const classes = useStyles();
@@ -47,6 +48,27 @@ export const SettingsContent = ({ areaIdentifier, areaName, setLoaded }: IAreaCo
     }, [tab, setLoaded]); // probably need to add a tracker for when the table is saved so can reload and update
 
     const handleTabChange = (event: any, newValue: PanelRange) => {
+        switch (newValue){
+            case 0:
+                selectHelpDrawerContent("password");
+                break;
+            case 1:
+                selectHelpDrawerContent("email");
+                break;
+            case 2:
+                selectHelpDrawerContent("companyname");
+                break;
+            case 3:
+                selectHelpDrawerContent("phonenumber");
+                break;
+            case 4:
+                selectHelpDrawerContent("responselogo");
+                break;
+            case 5:
+                selectHelpDrawerContent("locale");
+            default:
+                break;
+        }
         setTab(newValue);
     };
 

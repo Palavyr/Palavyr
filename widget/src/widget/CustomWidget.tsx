@@ -28,7 +28,7 @@ export const CustomWidget = ({ option }: ICustomWidget) => {
         var convoId = newConversation.data.conversationId;
         var region = (await fetchIpData).country;
 
-        setPrefs(prefs.data);
+        setPrefs(prefs);
 
         var rootNode = getRootNode(nodes);
 

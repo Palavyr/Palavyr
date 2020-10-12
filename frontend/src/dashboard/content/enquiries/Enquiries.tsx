@@ -4,7 +4,10 @@ import { EnquiryRow } from "@Palavyr-Types";
 import { Statement } from "@common/components/Statement";
 import { Divider, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody, Table } from "@material-ui/core";
 
-export const Enquires = () => {
+interface IEnquiries {
+    selectHelpDrawerContent: any;
+}
+export const Enquires = ({selectHelpDrawerContent}: IEnquiries) => {
 
     const client = new ApiClient();
 
@@ -12,6 +15,7 @@ export const Enquires = () => {
     const details = "This table lists all of the completed enquires you have received. Enquiries you have not checked will be in bold."
 
     const [enquiries, setEnquiries] = useState<Array<EnquiryRow>>([]);
+    selectHelpDrawerContent("enquiries");
 
     const loadEnquiries = useCallback(async () => {
         var res = await client.Enquiries.getEnquiries();
