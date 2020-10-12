@@ -53,16 +53,15 @@ const useStyles = makeStyles(theme => ({
         marginBottom: 12,
     },
     textCard: (props: StyleProps) => ({
-
-            border: "1px solid gray",
-            padding: "10px",
-            textAlign: "center",
-            color: (props.nodeText === "Ask your question!") ? "white" : "black",
-            background: (props.nodeText === "Ask your question!") ? "red" : "white",
-            '&:hover': {
-                background: "lightgray",
-                color: "black"
-            }
+        border: "1px solid gray",
+        padding: "10px",
+        textAlign: "center",
+        color: (props.nodeText === "Ask your question!") ? "white" : "black",
+        background: (props.nodeText === "Ask your question!") ? "red" : "white",
+        '&:hover': {
+            background: "lightgray",
+            color: "black"
+        }
     }),
     text: {
         margin: ".1rem",
@@ -103,7 +102,9 @@ export const ConversationNodeInterface = ({ dynamicNodeTypes, node, nodeList, op
                     <Typography className={classes.text} variant="body2" component="span" noWrap={false} >
                         {node.text}
                     </Typography>
-                    <Typography align="center" className={classes.editorStyle} onClick={() => setModalState(true)}>Click to Edit</Typography>
+                    <Typography align="center" className={classes.editorStyle} onClick={() => setModalState(true)}>
+                        Click to Edit
+                    </Typography>
                 </Card>
                 <NodeTypeSelector
                     dynamicNodeTypes={dynamicNodeTypes}
@@ -126,14 +127,17 @@ export const ConversationNodeInterface = ({ dynamicNodeTypes, node, nodeList, op
                             checked={node.isCritical}
                             value={""}
                             name={"crit-" + node.nodeId}
-                            onChange={async (event) => {
-                                var newNode = cloneDeep(node);
-                                newNode.isCritical = event.target.checked;
-                                await client.Conversations.PutConversationNode(node.nodeId, newNode);
-                                var newNodeList = updateNodeList(nodeList, newNode);
-                                setNodes(newNodeList);
-                            }}
-                        />}
+                            onChange={
+                                async (event) => {
+                                    var newNode = cloneDeep(node);
+                                    newNode.isCritical = event.target.checked;
+                                    await client.Conversations.PutConversationNode(node.nodeId, newNode);
+                                    var newNodeList = updateNodeList(nodeList, newNode);
+                                    setNodes(newNodeList);
+                                }
+                            }
+                        />
+                    }
                     label="Show response in PDF"
                 />
                 <NodeEditorModal

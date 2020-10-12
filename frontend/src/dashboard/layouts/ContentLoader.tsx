@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import { Hidden, makeStyles, useTheme } from "@material-ui/core";
+import { makeStyles, useTheme } from "@material-ui/core";
 import { DRAWER_WIDTH, HELP_DRAWER_WIDTH } from "@common/constants";
 
 interface IContentLoader {
@@ -35,7 +35,6 @@ const useStyles = makeStyles(theme => ({
 export const ContentLoader = ({ open, children }: IContentLoader) => {
     const classes = useStyles();
     const them = useTheme();
-    console.log("WOw: " + them.mixins.toolbar.minHeight);
     return (
         <main
             className={

@@ -2,13 +2,21 @@ import * as React from 'react';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import HomeIcon from '@material-ui/icons/Home';
+import BookIcon from '@material-ui/icons/Book';
 
-export const menuItems = (openRegisterDialog: any, openLoginDialog: any) =>  ([
-    {
-        name: "Home",
-        link: "/",
-        icon: <HomeIcon className="text-white" />
-    },
+
+type menuItem = {
+    name: string;
+    link?: string;
+    icon?: React.ReactNode;
+    onClick?(): void;
+}
+export const menuItems = (openRegisterDialog: any, openLoginDialog: any): menuItem[] =>  ([
+    // {
+    //     name: "Home",
+    //     link: "/",
+    //     icon: <HomeIcon className="text-white" />
+    // },
     // {
     //     name: "Blog",
     //     link: "/blog",

@@ -177,7 +177,6 @@ export const DashboardLayout = () => {
     }
 
     const thema = useTheme();
-    console.log("Dash: " + thema.mixins.toolbar.minHeight);
     return (
         <div className={classes.root}>
             <CssBaseline />

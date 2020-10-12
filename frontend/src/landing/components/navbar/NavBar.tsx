@@ -2,7 +2,6 @@ import React from "react";
 import { AppBar, Toolbar, Typography, Hidden, IconButton, Button, makeStyles } from "@material-ui/core";
 import { menuItems } from "./NavMenuItems";
 import { Link } from "react-router-dom";
-import MenuIcon from '@material-ui/icons/Menu';
 
 export interface INavBar {
     openRegisterDialog: any;
@@ -50,7 +49,6 @@ const useStyles = makeStyles({
     brandTextSmall: {
         fontWeight: "bolder",
         color: "black"
-        // color: "#c7ecee"
     },
     noDecoration: {
         textDecoration: "none !important"
@@ -88,7 +86,6 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawer
                                             variant="contained"
                                             size="large"
                                             className={classes.menuButtonText}
-                                            // classes={{ text: classes.menuButtonText }}
                                         >
                                             {element.name}
                                         </Button>

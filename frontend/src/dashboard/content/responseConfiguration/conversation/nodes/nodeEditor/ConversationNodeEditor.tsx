@@ -43,12 +43,13 @@ export const NodeEditorModal = ({ modalState, setModalState, node, nodeList, cha
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, []) // TODO: LOOK HERE <==================================== I added this in as a test
 
     const handleCloseModal = () => {
         setModalState(false);
     }
 
+    // TODO: NEED TO COMBINED THESE TWO CALLS somehow.
     const handleUpdateText = async (value: string) => {
         var res = await client.Conversations.GetConversationNode(node.nodeId);
         var newNode = cloneDeep(res.data);
@@ -68,7 +69,7 @@ export const NodeEditorModal = ({ modalState, setModalState, node, nodeList, cha
             const numChildren: number = optionPaths.filter(x => x !== null && x !== "").length
             const childIds = createNewChildIDs(numChildren);
 
-            addNodes(node, nodeList, childIds, optionPaths, valueOptions, setNodes); // create new nodes and update the Database
+            await addNodes(node, nodeList, childIds, optionPaths, valueOptions, setNodes); // create new nodes and update the Database
 
         } else {
 
@@ -76,11 +77,11 @@ export const NodeEditorModal = ({ modalState, setModalState, node, nodeList, cha
             const numChildren: number = optionPaths.filter(x => x !== null && x !== "").length
             const childIds = createNewChildIDs(numChildren);
 
-            addNodes(node, nodeList, childIds, optionPaths, valueOptions, setNodes); // create new nodes and update the Database
+            await addNodes(node, nodeList, childIds, optionPaths, valueOptions, setNodes); // create new nodes and update the Database
 
         }
 
-        changeParentState(!parentState) // rerender lines
+        // changeParentState(!parentState) // rerender lines
 
         newNode.valueOptions = valueOptions.join(ValueOptionDelimiter);
         await client.Conversations.PutConversationNode(newNode.nodeId, newNode);
@@ -115,13 +116,12 @@ export const NodeEditorModal = ({ modalState, setModalState, node, nodeList, cha
             <DialogActions>
                 <Button
                     onClick={
-                        (e) => {
+                        async (e) => {
                             e.preventDefault();
-                            handleUpdateText(textState)
+                            await handleUpdateText(textState)
                             if (isMultiOptionType(node.nodeType)) {
-                                handleUpdateOptions(options)
+                                await handleUpdateOptions(options)
                             }
-
                             handleCloseModal();
                         }
                     }

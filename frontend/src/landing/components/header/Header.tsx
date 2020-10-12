@@ -1,10 +1,9 @@
-import { withWidth, Box, Card, Grid, Typography, isWidthUp, Button, Hidden, Divider, makeStyles } from "@material-ui/core";
+import { Box, Card, Grid, Typography, Button, Divider, makeStyles } from "@material-ui/core";
 import { IHaveWidth } from "@Palavyr-Types";
 import React from "react";
 import AOS from 'aos';
 import { NavBar } from "../navbar/NavBar";
 AOS.init({ once: true });
-// import PalavyrLogo from "../svgs/logo.svg";
 
 
 const useStyles = makeStyles(theme => ({
@@ -47,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 
 }))
 
-interface IHeader extends IHaveWidth {
+interface IHeader {
     openRegisterDialog: any;
     openLoginDialog: any;
     handleMobileDrawerOpen: any;
@@ -58,7 +57,7 @@ interface IHeader extends IHaveWidth {
 }
 
 
-export const Header = withWidth()(({ openRegisterDialog, openLoginDialog, handleMobileDrawerOpen, handleMobileDrawerClose, isMobileDrawerOpen, selectedTab, setSelectedTab, width }: IHeader) => {
+export const Header = ({ openRegisterDialog, openLoginDialog, handleMobileDrawerOpen, handleMobileDrawerClose, isMobileDrawerOpen, selectedTab, setSelectedTab }: IHeader) => {
 
     const classes = useStyles();
     return (
@@ -96,4 +95,4 @@ export const Header = withWidth()(({ openRegisterDialog, openLoginDialog, handle
             </Button>
         </div >
     );
-})
+}

@@ -65,7 +65,6 @@ export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawe
 
     const classes = useStyles();
     const themr = useTheme();
-    console.log("Header: " + themr.mixins.toolbar.minHeight);
     return (
         <AppBar
             position="absolute"

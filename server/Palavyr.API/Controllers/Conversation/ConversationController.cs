@@ -30,11 +30,11 @@ namespace Palavyr.API.controllers.Conversation
 
         }
 
-        [HttpGet]
-        public IQueryable<ConversationNode> GetAllConvos([FromHeader] string accountId)
-        {
-            return DashContext.ConversationNodes.Where(row => row.AccountId == accountId);
-        }
+        // [HttpGet]
+        // public IQueryable<ConversationNode> GetAllConvos([FromHeader] string accountId)
+        // {
+        //     return DashContext.ConversationNodes.Where(row => row.AccountId == accountId);
+        // }
 
 
         [HttpGet("{areaId}")]
@@ -89,7 +89,7 @@ namespace Palavyr.API.controllers.Conversation
         }
 
         [HttpPut("nodes/{nodeId}")]
-        public OkResult UpdateConversationNode([FromHeader] string accountId, string nodeId, [FromBody] ConversationNode newNode)
+        public OkResult PutConversationNode([FromHeader] string accountId, string nodeId, [FromBody] ConversationNode newNode)
         {
             _logger.LogInformation("------ UPDATING NODE ---------");
             try
@@ -122,8 +122,7 @@ namespace Palavyr.API.controllers.Conversation
         }
 
         [HttpPost("{areaId}")]
-        public List<ConversationNode> PostConversationNodes([FromHeader] string accountId, string areaId,
-            [FromBody] ConversationConfigurationUpdate update)
+        public List<ConversationNode> PostConversation([FromHeader] string accountId, string areaId, [FromBody] ConversationConfigurationUpdate update)
         {
             var nodesToDelete = DashContext.ConversationNodes.Where(row => update.IdsToDelete.Contains(row.NodeId));
             DashContext.ConversationNodes.RemoveRange(nodesToDelete);

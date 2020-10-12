@@ -12,8 +12,8 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         justifyContent: "space-evenly",
         background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)",
-        paddingRight: "18%",
-        paddingLeft: "18%"
+        paddingRight: "16%",
+        paddingLeft: "16%"
     },
     paperCommon: {
         margin: "1rem",
@@ -25,17 +25,19 @@ const useStyles = makeStyles(theme => ({
     },
     paperFree: {
         backgroundColor: "#0093CB",
-        color: "white"
+        color: "white",
+        border: "2px dashed white"
 
     },
     paperPremium: {
         backgroundColor: "#014B91",
-        color: "white"
-
+        color: "white",
+        border: "6px solid black"
     },
     paperPro: {
         backgroundColor: "#011E6D",
-        color: "white"
+        color: "white",
+        border: "2px dashed white"
 
     },
     icon: {
@@ -46,6 +48,11 @@ const useStyles = makeStyles(theme => ({
     title: {
         paddingTop: "1rem",
         paddingBottom: "1rem"
+    },
+    price: {
+        paddingTop: "1.2rem",
+        paddingBottom: "1.2rem",
+        display: 'inline-block'
     },
     tablecontainer: {
         marginRight: "10%",
@@ -92,18 +99,12 @@ const useStyles = makeStyles(theme => ({
 export const PricingSection = () => {
     const classes = useStyles();
 
-
-    // Custom Emails	Yes	Yes	Yes
-    // Equiries Dashboard	No	Yes	Yes
-    // Attachments	No	1/ area	Unlimited
-    // Number of Questions	3	Unlimited	Unlimited
-    // Number of Tables	1	Unlimited	Unlimited
-
     return (
         <section className={classes.body}>
             <Paper className={classNames(classes.paperCommon, classes.paperFree)} variant="outlined">
                 <FreeBreakfastIcon className={classes.icon} />
-                <Typography className={classes.title} variant="h3">Free</Typography>
+                <Typography className={classes.title} variant="h5">Lyte</Typography>
+                <Typography className={classes.price} variant="h3">FREE</Typography>
                 <div className={classes.tablecontainer}>
                     <Table className={classes.table}>
                         <TableBody className={classes.tableBody}>
@@ -138,7 +139,8 @@ export const PricingSection = () => {
             </Paper>
             <Paper className={classNames(classes.paperCommon, classes.paperPremium)} variant="outlined">
                 <CardMembershipIcon className={classes.icon} />
-                <Typography className={classes.title} variant="h3">Premium</Typography>
+                <Typography className={classes.title} variant="h5">Premium</Typography>
+                <Typography className={classes.price} variant="h3">{"$5 "}</Typography><Typography className={classes.price} variant="h5">{"/ area / month"}</Typography>
                 <div className={classes.tablecontainer}>
                     <Table className={classes.table}>
                         <TableBody className={classes.tableBody}>
@@ -173,7 +175,10 @@ export const PricingSection = () => {
             </Paper >
             <Paper className={classNames(classes.paperCommon, classes.paperPro)} variant="outlined">
                 <AccountBalanceIcon className={classes.icon} />
-                <Typography className={classes.title} variant="h3">Pro</Typography>
+                <Typography className={classes.title} variant="h5">Pro</Typography>
+                {/* <Typography className={classes.price} variant="h3">$75 /</Typography><Typography variant="h5"> month</Typography> */}
+                <Typography className={classes.price} variant="h3">{"$75 "}</Typography><Typography className={classes.price} variant="h5">{"/ month"}</Typography>
+
                 <div className={classes.tablecontainer}>
                     <Table className={classes.table}>
                         <TableBody className={classes.tableBody}>

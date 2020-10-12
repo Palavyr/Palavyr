@@ -95,9 +95,10 @@ export class ApiClient {
     public Conversations = {
         GetConversation: async (areaIdentifier: string): Promise<AxiosResponse> => this.client.get(`convos/${areaIdentifier}`),
         GetConversationNode: async (nodeId: string): Promise<AxiosResponse> => this.client.get(`convos/nodes/${nodeId}`),
-        PostConversation: async (nodelist: Conversation, areaIdentifier: string, idsToDelete: Array<string>): Promise<AxiosResponse> => this.client.post(`convos/${areaIdentifier}`, { IdsToDelete: idsToDelete, Transactions: nodelist }),
         DeleteConversationNodesByIds: async (nodeIds: string): Promise<AxiosResponse> => this.client.delete("convos/nodes", { data: { nodeIds: nodeIds.split(",") } }),
         UpdateConversation: async (areaIdentifier: string, nodelist: Conversation): Promise<AxiosResponse> => this.client.put(`convos/update/${areaIdentifier}`, nodelist),
+
+        PostConversation: async (nodelist: Conversation, areaIdentifier: string, idsToDelete: Array<string>): Promise<AxiosResponse> => this.client.post(`convos/${areaIdentifier}`, { IdsToDelete: idsToDelete, Transactions: nodelist }),
         PutConversationNode: async (nodeId: string, updatedNode: ConvoTableRow): Promise<ConvoTableRow> => this.client.put(`convos/nodes/${nodeId}`, updatedNode),
     }
 
