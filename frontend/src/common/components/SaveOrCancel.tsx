@@ -52,7 +52,6 @@ export const SaveOrCancel = ({ onSave, onCancel, onDelete, size = "small" }: ISa
 
     return (
         <>
-        {/* <div className={classes.saveCancelWrapper}> */}
             {
                 onDelete &&
                 <Button
@@ -100,7 +99,6 @@ export const SaveOrCancel = ({ onSave, onCancel, onDelete, size = "small" }: ISa
             {
                 alertState && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={{ title: "Save Successful", message: "" }} />
             }
-        {/* </div> */}
         </>
     );
 };

@@ -10,6 +10,16 @@ interface IOptionSelector {
     setSelectedOption: (option: SelectedOption) => void
 }
 
+export type WidgetPreferences = {
+    selectListColor: string;
+    headerColor: string;
+    fontFamily: string;
+    header: string;
+    title: string;
+    subtitle: string;
+    placeholder: string;
+}
+
 export const OptionSelector = ({ setSelectedOption }: IOptionSelector) => {
 
     const { secretKey } = useParams< { secretKey: string }>();
@@ -19,7 +29,7 @@ export const OptionSelector = ({ setSelectedOption }: IOptionSelector) => {
     const [options, setOptions] = useState<Array<SelectedOption>>();
 
     const loadPreference = useCallback(async () => {
-        // var Use = await Client.Widget.Access.fetchPreferences();
+        // var Use = (await Client.Widget.Access.fetchPreferences()).data as WidgetPreferences;
         // setUseGroups(Use.data.shouldGroup); // TODO: check
         setUseGroups(false);
 

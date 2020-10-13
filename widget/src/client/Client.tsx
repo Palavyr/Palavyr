@@ -1,3 +1,4 @@
+import Axios from "axios";
 import axios, { AxiosResponse, AxiosInstance } from "axios";
 import { ConversationUpdate, AreaTable, CompleteConverationDetails } from "../types";
 import { serverUrl } from "./clientUtils";
@@ -9,10 +10,11 @@ export interface IClient {
             fetchGroups: () => Promise<AxiosResponse>;
             createConvo: (areaId: string) => Promise<AxiosResponse>;
             fetchAreas: () => Promise<AxiosResponse>;
+            fetchPreferences: () => Promise<AxiosResponse>;
             postUpdateAsync: (update: ConversationUpdate) => Promise<AxiosResponse>;
             sendConfirmationEmail: (areaIdentifier: string, emailAddress: string, dynamicResponse: string, keyValues: KeyValues, conviId: string) => Promise<AxiosResponse>;
             postCompleteConversation: (completeConvo: CompleteConverationDetails) => Promise<AxiosResponse>;
-        
+
         }
     },
 }
@@ -39,6 +41,7 @@ const CreateClient = (secretKey: string): IClient => {
                 fetchGroups: async (): Promise<AxiosResponse> => AxiosClient.get(`widget/${secretKey}/groups`),
                 createConvo: async (areaId: string): Promise<AxiosResponse> => AxiosClient.get(`widget/${secretKey}/${areaId}/create`),
                 fetchAreas: async (): Promise<AxiosResponse<Array<AreaTable>>> => AxiosClient.get(`widget/${secretKey}/areas`),
+                fetchPreferences: async (): Promise<AxiosResponse> =>AxiosClient.get(`widget/${secretKey}/preferences`),
                 postUpdateAsync: async(update: ConversationUpdate): Promise<AxiosResponse> => AxiosClient.post(`widget/${secretKey}/conversation`, update),
                 sendConfirmationEmail: async(areaIdentifier: string, emailAddress: string, dynamicResponse: string, keyValues: KeyValues, convoId: string): Promise<AxiosResponse> => AxiosClient.post(`widget/${secretKey}/area/${areaIdentifier}/email/send`, {
                     ConversationId: convoId,

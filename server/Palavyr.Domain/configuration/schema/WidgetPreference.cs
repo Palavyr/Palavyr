@@ -6,14 +6,24 @@ namespace Server.Domain.Configuration.schema
     {
         [Key] 
         public int Id { get; set; }
+
+        public string Header { get; set; }
         public string Title { get; set; }
         public string Subtitle { get; set; }
         public string Placeholder { get; set; }
         public bool ShouldGroup { get; set; }
         public string AccountId { get; set; }
-
-        WidgetPreference(string title, string subtitle, string placeholder, bool shouldGroup, string accountId)
+        public string SelectListColor { get; set; }
+        public string HeaderColor { get; set; }
+        public string FontFamily { get; set; }
+        
+        WidgetPreference() { }
+        WidgetPreference(string selectListColor, string headerColor, string fontFamily, string header, string title, string subtitle, string placeholder, bool shouldGroup, string accountId)
         {
+            SelectListColor = selectListColor;
+            HeaderColor = headerColor;
+            FontFamily = fontFamily;
+            Header = header;
             Title = title;
             Subtitle = subtitle;
             Placeholder = placeholder;
@@ -21,9 +31,9 @@ namespace Server.Domain.Configuration.schema
             AccountId = accountId;
         }
 
-        public static WidgetPreference CreateNew(string title, string subtitle, string placeholder, bool shouldGroup, string accountId)
+        public static WidgetPreference CreateNew(string selectListColor, string headerColor, string fontFamily, string header, string title, string subtitle, string placeholder, bool shouldGroup, string accountId)
         {
-            return new WidgetPreference(title, subtitle, placeholder, shouldGroup, accountId);
+            return new WidgetPreference(selectListColor, headerColor, fontFamily, header, title, subtitle, placeholder, shouldGroup, accountId);
         }
     }
 }

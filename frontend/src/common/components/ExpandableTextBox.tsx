@@ -27,7 +27,6 @@ const useStyles = makeStyles(theme => ({
     },
     header: {
         background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
-        // background: "#90caf9",
         borderTopRightRadius: "8px",
         borderTopLeftRadius: "8px",
     },
@@ -36,6 +35,12 @@ const useStyles = makeStyles(theme => ({
     },
     body: {
         marginBottom: "3rem"
+    },
+    accordianActions: {
+        display: "flex",
+        padding: "8px",
+        alignItems: "center",
+        justifyContent: "flex-end",
     }
 }))
 
@@ -67,7 +72,7 @@ export const ExpandableTextBox = ({ updatableValue, title, onChange, onSave, chi
                 ></TextField>
             </div>
             <Divider light />
-            <AccordionActions>
+            <AccordionActions className={classes.accordianActions}>
                 <SaveOrCancel onSave={onSave} />
             </AccordionActions>
 

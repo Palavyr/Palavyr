@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { BrandingIcon } from '@common/icons/BrandingIcon';
 import { SimpleIconTypes, IconSizes } from '@common/icons/IconTypes';
+import { Typography } from '@material-ui/core';
 
 
 export interface IIconBox {
@@ -19,7 +20,9 @@ const safeFontSize = (size: IconSizes) => {
     } else if (size.toLowerCase() === 'large') {
         return 54;
     } else if (size.toLowerCase() === 'xlarge') {
-        return 76
+        return 76;
+    } else if (size.toLocaleLowerCase() === "xxlarge") {
+        return 92;
     }
     return 32;
 };
@@ -29,13 +32,13 @@ const defaultIconSize = 20;
 export const IconBox = ({ iconType, iconTitle, iconSize, iconColor, children }: IIconBox) => {
 
     var size = iconSize === undefined ? defaultIconSize : (typeof iconSize === "number" ? iconSize : safeFontSize(iconSize))
-    const color = iconColor ?? "skyblue";
+    const color = iconColor ?? "lightblue";
 
     return (
         <div className="text-center">
             <BrandingIcon iconType={iconType} iconColor={color} iconSize={size} />
-            <h3>{iconTitle}</h3>
-            <p>{children}</p>
+            <Typography variant="h3">{iconTitle}</Typography>
+            <Typography>{children}</Typography>
         </div>
     );
 };

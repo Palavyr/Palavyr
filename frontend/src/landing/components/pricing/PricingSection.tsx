@@ -90,6 +90,9 @@ const useStyles = makeStyles(theme => ({
     },
     no: {
         color: "#E11010"
+    },
+    money: {
+        fontFamily: "'Noto Sans TC', sans-serif"
     }
 
     // background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)"
@@ -176,8 +179,7 @@ export const PricingSection = () => {
             <Paper className={classNames(classes.paperCommon, classes.paperPro)} variant="outlined">
                 <AccountBalanceIcon className={classes.icon} />
                 <Typography className={classes.title} variant="h5">Pro</Typography>
-                {/* <Typography className={classes.price} variant="h3">$75 /</Typography><Typography variant="h5"> month</Typography> */}
-                <Typography className={classes.price} variant="h3">{"$75 "}</Typography><Typography className={classes.price} variant="h5">{"/ month"}</Typography>
+                <Typography className={classNames(classes.price, classes.money)} variant="h3">$</Typography><Typography variant="h3" className={classes.price}>75</Typography><Typography className={classes.price} variant="h5">/ month"</Typography>
 
                 <div className={classes.tablecontainer}>
                     <Table className={classes.table}>

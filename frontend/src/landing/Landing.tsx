@@ -4,12 +4,11 @@ import { CookieConsent } from "legal/cookies/CookieConsent";
 import { LandingPageDialogSelector } from "@landing/components/dialogSelector/LandingPageDialogSelector";
 import { CookieRules } from "legal/cookies/CookieRules";
 import { Header } from "./components/header/Header";
-import { ThreeItemRow, ItemRowObject } from "./components/ThreeItemRow/ThreeItemRow";
 import { Footer } from "./components/footer/Footer";
 import { DialogTypes } from "@landing/components/dialogSelector/dialogTypes";
 import Auth from "auth/Auth";
 import { useHistory } from "react-router-dom";
-import { TwoItemRow } from "./components/TwoItemRow/TwoItemRow";
+import { ItemRowObject, TwoItemRow } from "./components/TwoItemRow/TwoItemRow";
 import { PricingSection } from "./components/pricing/PricingSection";
 
 const useStyles = makeStyles((theme) => ({
@@ -34,34 +33,48 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const listOfThree: Array<ItemRowObject> = [
+const rowOne: Array<ItemRowObject> = [
     {
         title: "Engage potential clients",
         text: "Collect all of the information that you need to engage, sort, and secure a potential client.",
         type: "pencil",
+        color: "navy"
+
     },
     {
         title: "Direct Fee Estimate",
         text: "Deliver a competitive fee estimate and convince your prospective clients to sign.",
         type: "calculator",
+        color: "navy"
+    }
+]
+const rowTwo: Array<ItemRowObject> = [
+    {
+        title: "Simple Integration",
+        text: "Integrate the Palavyr.com widget into your site with as little a single line of code.",
+        type: "star",
+        color: "navy"
+
     },
     {
         title: "Persuade clients to sign",
         text: "Anticipate your client's needs ahead of time and offer a competetive fee estimate.",
         type: "check",
+        color: "navy"
     }
 ]
-
-const listOfTwo: Array<ItemRowObject> = [
+const rowThree: Array<ItemRowObject> = [
     {
-        title: "Engage potential clients",
-        text: "Collect all of the information that you need to engage, sort, and secure a potential client.",
-        type: "pencil",
+        title: "Be Transparent",
+        text: "Automate detail collection using the fully customizable Palavyr chat widget and provide transparency for your future clients.",
+        type: "rocket",
+        color: "navy"
     },
     {
-        title: "Direct Fee Estimate",
-        text: "Deliver a competitive fee estimate and convince your prospective clients to sign.",
-        type: "calculator",
+        title: "Cut to the Chase",
+        text: "Collect inquiry details and use the equiry dashboard to preemptively learn what your clients are asking about.",
+        type: "docs",
+        color: "navy"
     }
 ]
 
@@ -163,9 +176,9 @@ export const LandingPage = () => {
             <Divider />
             <PricingSection />
             <div className={classes.body}>
-                <TwoItemRow listOfTwo={listOfTwo} />
-                <TwoItemRow listOfTwo={listOfTwo} />
-                <TwoItemRow listOfTwo={listOfTwo} />
+                <TwoItemRow dataList={rowOne} />
+                <TwoItemRow dataList={rowTwo} />
+                <TwoItemRow dataList={rowThree} />
             </div>
 
             <div style={{ color: "lighgray", textAlign: "center", height: "2.8rem", width: "100%", backgroundColor: "gray" }}>

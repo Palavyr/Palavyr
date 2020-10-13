@@ -31,7 +31,7 @@ namespace Palavyr.API.Controllers
                 CreateDefaultDynamicTable.CreateDefaultTable(TableTag, accountId, areaIdentifier, dynamicTableId);
             DefaultDynamicTableMetas =
                 CreateDefaultDynamicTable.CreateDefaultMeta(TableTag, accountId, dynamicTableId, areaIdentifier);
-            WidgetPreference = WidgetPreference.CreateNew("Tobies Galore", "Experts in Cavalier King Charles Spaniels",
+            WidgetPreference = WidgetPreference.CreateNew("#E1E1E1", "#35CCE6", "Architects Daughter", "Welcome!", "Tobies Galore", "Experts in Cavalier King Charles Spaniels",
                 "Write here...", false, accountId);
             Groups.Add(GroupMap.CreateGroupMap(GroupId, null, "Group One", accountId));
             Areas = new List<Area>()

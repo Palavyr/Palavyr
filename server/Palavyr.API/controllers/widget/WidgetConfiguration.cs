@@ -54,6 +54,13 @@ namespace Palavyr.API.controllers.widget
                 prefs.Placeholder = preferences.Placeholder;
             }
 
+            if (!string.IsNullOrWhiteSpace(preferences.Header))
+            {
+                prefs.Header = preferences.Header;
+            }
+            
+            
+            
             DashContext.SaveChanges();
             return HttpStatusCode.OK;
 

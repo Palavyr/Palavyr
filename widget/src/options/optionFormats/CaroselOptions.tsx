@@ -23,9 +23,6 @@ const useStyles = makeStyles(theme => ({
         textAlign: "center",
         justifyContent: "center"
     },
-
-
-
     root: {
         minWidth: 275,
     },
@@ -46,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 export const CaroselOptions = ({ setSelectedOption, options }: ICaroselOptions) => {
 
     const history = useHistory();
-    const { secretKey } = useParams();
+    const { secretKey } = useParams<{secretKey: string}>();
     const classes = useStyles();
 
     return (
@@ -63,9 +60,7 @@ export const CaroselOptions = ({ setSelectedOption, options }: ICaroselOptions) 
             </Card>
             {
                 options &&
-                <List
-                    className={classes.mainList}
-                >
+                <List className={classes.mainList}>
                     {
                         options.map((opt, index) => {
                             return (

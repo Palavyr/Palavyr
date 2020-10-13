@@ -1,47 +1,54 @@
-import { makeStyles, Grid } from "@material-ui/core";
-import { SimpleIconTypes } from "@common/icons/IconTypes";
+import { makeStyles, Grid, Typography } from "@material-ui/core";
 import React from "react";
 import classNames from "classnames";
 import { IconBox } from "../IconBox";
+import { SimpleIconTypes } from "@common/icons/IconTypes";
 
 
 const useStyles = makeStyles(theme => ({
     colStyle: {
         alignContent: "center",
+        marginLeft: "3rem",
+        marginRight: "3rem"
     },
     container: {
         justifyContent: "center",
         paddingTop: "5rem",
         paddingBottom: "5rem",
-        textAlign: "center"
+        textAlign: "center",
     },
     iconcolor: {
-        color: "navy"
+        color: "white"
+    },
+    text: {
+        fontSize: "18pt"
     }
 }));
 
-export type TwoItemRowObject = {
+export type ItemRowObject = {
     text: string;
     type: SimpleIconTypes;
     title: string;
+    color: string;
 }
 
-export interface ITwoItemRow {
-    listOfTwo: Array<TwoItemRowObject>;
+export interface IItemRow {
+    dataList: Array<ItemRowObject>;
 }
 
-export const TwoItemRow = ({ listOfTwo }: ITwoItemRow) => {
+export const TwoItemRow = ({ dataList }: IItemRow) => {
 
     const classes = useStyles();
+    const width = 12 / dataList.length;
 
     return (
         <Grid container className={classes.container}>
             {
-                listOfTwo.map((x: TwoItemRowObject, idx: number) => {
+                dataList.map((x: ItemRowObject, idx: number) => {
                     return (
-                        <Grid item key={idx} xs={4} className={classNames(classes.colStyle, "align-center")}>
-                            <IconBox iconType={x.type} iconTitle={x.title} iconSize={"xlarge"} iconColor={classes.iconcolor}>
-                                {x.text}
+                        <Grid item key={idx} xs={width === 6 ? 4 : 6} className={classNames(classes.colStyle, "align-center")}>
+                            <IconBox iconType={x.type} iconTitle={x.title} iconSize={"xxlarge"} iconColor={x.color}>
+                                <Typography variant="body2" className={classes.text}>{x.text}</Typography>
                             </IconBox>
                         </Grid>
 

@@ -1,4 +1,4 @@
-export type IconSizes = 'Xlarge' | 'xlarge' | 'Large' | 'large' | 'Medium' | 'medium' | 'Small' | 'small'
+export type IconSizes = 'XXlarge' | 'xxlarge' | 'Xlarge' | 'xlarge' | 'Large' | 'large' | 'Medium' | 'medium' | 'Small' | 'small'
 
 export type SimpleIconTypes = "action-redo"
     | "action-undo"

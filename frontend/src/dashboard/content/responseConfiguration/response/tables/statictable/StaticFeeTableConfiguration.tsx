@@ -27,9 +27,7 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(1),
     },
     header: {
-        // background: "#90caf9",
         background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
-
         borderTopRightRadius: "8px",
         borderTopLeftRadius: "8px",
     },

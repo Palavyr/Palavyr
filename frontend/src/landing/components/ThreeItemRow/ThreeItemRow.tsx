@@ -1,8 +1,8 @@
 import { makeStyles, Grid } from "@material-ui/core";
-import { SimpleIconTypes } from "@common/icons/IconTypes";
 import React from "react";
 import classNames from "classnames";
 import { IconBox } from "../IconBox";
+import { ItemRowObject } from "../TwoItemRow/TwoItemRow";
 
 
 const useStyles = makeStyles(theme => ({
@@ -19,17 +19,12 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export type ItemRowObject = {
-    text: string;
-    type: SimpleIconTypes;
-    title: string;
-}
 
-export interface IThreeItemRow {
+export interface IItemRow {
     listOfThree: Array<ItemRowObject>;
 }
 
-export const ThreeItemRow = ({ listOfThree }: IThreeItemRow) => {
+export const ThreeItemRow = ({ listOfThree }: IItemRow) => {
 
     const classes = useStyles();
 
