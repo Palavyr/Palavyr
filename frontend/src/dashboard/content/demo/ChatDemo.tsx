@@ -7,6 +7,8 @@ import classNames from "classnames";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { HeaderEditor } from "./HeaderEditor";
 import { ChromePicker } from 'react-color';
+import { IFrame } from "./IFrame";
+import { HelpTypes } from "dashboard/layouts/DashboardLayout";
 
 
 export type PreCheckResult = {
@@ -48,14 +50,14 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         justifyContent: "center"
     },
-    frame: props => ({
-        marginTop: props ? "0rem" : "2rem",
-        marginBottom: props ? "0rem" : "2rem",
-        height: "500px",
-        width: "380px",
-        borderRadius: "9px",
-        border: "0px"
-    }),
+    // frame: props => ({
+    //     marginTop: props ? "0rem" : "2rem",
+    //     marginBottom: props ? "0rem" : "2rem",
+    //     height: "500px",
+    //     width: "380px",
+    //     borderRadius: "9px",
+    //     border: "0px"
+    // }),
     container: {
         height: "100%"
     },
@@ -123,13 +125,13 @@ const useStyles = makeStyles(theme => ({
 }))
 
 interface IChatDemo {
-    selectHelpDrawerContent: any;
+    setHelpType(helpType: HelpTypes): void;
 }
 
-export const ChatDemo = ({ selectHelpDrawerContent }: IChatDemo) => {
+export const ChatDemo = ({ setHelpType }: IChatDemo) => {
     var client = new ApiClient();
 
-    selectHelpDrawerContent("demo");
+    setHelpType("demo");
 
     const [incompleteAreas, setIncompleteAreas] = useState<Array<IncompleteAreas>>([]);
     const [apiKey, setApiKey] = useState<string>("");
@@ -144,12 +146,12 @@ export const ChatDemo = ({ selectHelpDrawerContent }: IChatDemo) => {
     const [title, setTitle] = useState<string>("");
     const [subTitle, setSubTitle] = useState<string>("");
     const [placeholder, setPlaceholder] = useState<string>("");
+    const [iframeRefreshed, reloadIframe] = useState<boolean>(false);
 
     const classes = useStyles(incompleteAreas.length > 0);
 
     const loadMissingNodes = useCallback(async () => {
-        var res = await client.WidgetDemo.RunConversationPrecheck();
-        var PreCheckResult = res.data as PreCheckResult;
+        var PreCheckResult = (await client.WidgetDemo.RunConversationPrecheck()).data as PreCheckResult;
         if (!PreCheckResult.isReady) {
             var areas = PreCheckResult.incompleteAreas.map((x: AreaTable) => {
                 return {
@@ -161,8 +163,7 @@ export const ChatDemo = ({ selectHelpDrawerContent }: IChatDemo) => {
         }
     }, [])
 
-    const savePrefs = useCallback(async () => {
-
+    const savePrefs = async () => {
         const prefs: WidgetPreferences = {
             selectListColor: selectListColor,
             headerColor: headerColor,
@@ -172,9 +173,10 @@ export const ChatDemo = ({ selectHelpDrawerContent }: IChatDemo) => {
             subtitle: subTitle,
             placeholder: placeholder
         }
-
         var res = await client.WidgetDemo.SaveWidgetPreferences(prefs);
-    }, [])
+        reloadIframe(!iframeRefreshed);
+
+    }
 
     useEffect(() => {
         loadMissingNodes();
@@ -187,10 +189,8 @@ export const ChatDemo = ({ selectHelpDrawerContent }: IChatDemo) => {
     }, [])
 
     const loadPrefs = useCallback(async () => {
-        // var prefs = (await client.WidgetDemo.GetWidetPreferences()).data as WidgetPreferences;
-        const prefs = { header: "Welcome", selectListColor: "#43jkh4", headerColor: "#kjh43k", title: "Title", subtitle: "subtitle", fontFamily: "", placeholder: "Write here..." }
-        setInitialHeader(prefs.header || "");
-
+        var prefs = (await client.WidgetDemo.GetWidetPreferences()).data as WidgetPreferences;
+        setInitialHeader(prefs.header);
         setListColor(prefs.selectListColor);
         setHeaderColor(prefs.headerColor);
         setFontFamily(prefs.fontFamily);
@@ -245,7 +245,7 @@ export const ChatDemo = ({ selectHelpDrawerContent }: IChatDemo) => {
                             && <Typography style={{ paddingTop: "2rem", paddingBottom: "2rem", color: "white" }}>The Demo will load once you've fully assembled each of your areas!</Typography>
                         }
                         <div>
-                            {apiKey && <iframe title="demo" className={classes.frame} src={`${widgetUrl}/widget/${apiKey}`}></iframe>}
+                            {apiKey && <IFrame widgetUrl={widgetUrl} apiKey={apiKey} iframeRefreshed={iframeRefreshed} incompleteAreas={incompleteAreas}/>}
                         </div>
                     </Paper>
                 </Grid>

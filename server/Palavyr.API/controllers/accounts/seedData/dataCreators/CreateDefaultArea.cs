@@ -109,7 +109,8 @@ namespace Palavyr.API.Controllers
             List<ConversationNode> conversationNodes,
             List<DynamicTableMeta> dynamicTableMetas,
             string groupId,
-            string emailTemplate
+            string emailTemplate,
+            string defaultEmail
             )
         {
 
@@ -126,7 +127,9 @@ namespace Palavyr.API.Controllers
                 ConversationNodes = conversationNodes,
                 StaticTablesMetas = areaMetas,
                 DynamicTableMetas = dynamicTableMetas,
-                GroupId = groupId
+                GroupId = groupId,
+                AreaSpecificEmail = defaultEmail,
+                EmailIsVerified = false
             };
             return area;
         }

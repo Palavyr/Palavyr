@@ -16,6 +16,7 @@ import SubjectIcon from '@material-ui/icons/Subject';
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import { HelpTypes } from "dashboard/layouts/DashboardLayout";
 
 
 interface ITabs {
@@ -30,10 +31,7 @@ const TabPanels = ({ tab, areaName, areaIdentifier, setViewName }: ITabs) => {
     return (
         <>
             <TabPanel value={tab} index={0}>
-                <ConvoTree
-                    areaIdentifier={areaIdentifier}
-                    treeName={areaName}
-                />
+                <EmailConfiguration areaIdentifier={areaIdentifier} />
             </TabPanel>
 
             <TabPanel value={tab} index={1}>
@@ -41,21 +39,23 @@ const TabPanels = ({ tab, areaName, areaIdentifier, setViewName }: ITabs) => {
             </TabPanel>
 
             <TabPanel value={tab} index={2}>
-                <EmailConfiguration areaIdentifier={areaIdentifier} />
-            </TabPanel>
-
-            <TabPanel value={tab} index={3}>
                 <AttachmentConfiguration areaIdentifier={areaIdentifier} />
             </TabPanel>
 
+            <TabPanel value={tab} index={3}>
+                <ConvoTree
+                    areaIdentifier={areaIdentifier}
+                    treeName={areaName}
+                />
+            </TabPanel>
+
             <TabPanel value={tab} index={4}>
-                <ConfigurationPreview areaIdentifier={areaIdentifier} />
+                <AreaSettings areaIdentifier={areaIdentifier} />
             </TabPanel>
 
             <TabPanel value={tab} index={5}>
-                <AreaSettings areaIdentifier={areaIdentifier} areaName={areaName} setViewName={setViewName} />
+                <ConfigurationPreview areaIdentifier={areaIdentifier} />
             </TabPanel>
-
         </>
     )
 }
@@ -66,7 +66,7 @@ export interface IAreaContent {
     areaIdentifier: string;
     setLoaded: any;
     setViewName: any;
-    selectHelpDrawerContent: any;
+    setHelpType(helpType: HelpTypes): void;
 }
 
 const useTabsStyles = makeStyles(theme => ({
@@ -77,23 +77,22 @@ const useTabsStyles = makeStyles(theme => ({
         background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)",
         height: "100%"
     },
-      appbar: {
-         background: "#c7ecee",
-            width: "100%",
-          top: theme.mixins.toolbar.minHeight,
-          height: "72px"
-      },
-      icon: {
-          color: "navy"
-      },
-      tabtext: {
-          color: "navy"
-      }
+    appbar: {
+        background: "#c7ecee",
+        width: "100%",
+        top: theme.mixins.toolbar.minHeight,
+        height: "72px"
+    },
+    icon: {
+        color: "navy"
+    },
+    tabtext: {
+        color: "navy"
+    }
 }))
-// background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)"
 
 
-export const AreaContent = ({ active, areaIdentifier, areaName, setLoaded, setViewName, selectHelpDrawerContent}: IAreaContent) => {
+export const AreaContent = ({ active, areaIdentifier, areaName, setLoaded, setViewName, setHelpType }: IAreaContent) => {
 
     const [tab, setTab] = useState<PanelRange>(0);
     const location = useLocation();
@@ -107,24 +106,25 @@ export const AreaContent = ({ active, areaIdentifier, areaName, setLoaded, setVi
     }, [tab, setLoaded]); // probably need to add a tracker for when the table is saved so can reload and update
 
     const handleTabChange = (event: any, newValue: PanelRange) => {
-        switch (newValue){
+        switch (newValue) {
             case 0:
-                selectHelpDrawerContent("conversation");
+                setHelpType("email");
                 break;
             case 1:
-                selectHelpDrawerContent("estimate");
+                setHelpType("estimate");
                 break;
             case 2:
-                selectHelpDrawerContent("email");
+                setHelpType("attachments");
                 break;
             case 3:
-                selectHelpDrawerContent("attachments");
+                setHelpType("conversation");
                 break;
             case 4:
-                selectHelpDrawerContent("preview");
+                setHelpType("areasettings");
                 break;
             case 5:
-                selectHelpDrawerContent("areasettings");
+                setHelpType("preview");
+                break;
             default:
                 break;
         }
@@ -136,12 +136,12 @@ export const AreaContent = ({ active, areaIdentifier, areaName, setLoaded, setVi
             <div className={classes.root}>
                 <AppBar position="static" className={classes.appbar}>
                     <Tabs centered value={tab} onChange={handleTabChange} aria-label="simple tabs example">
-                        <Tab className={classes.tabtext} icon={<AccountTreeIcon className={classes.icon} />} label="Conversation" {...areaTabProps(0)} />
-                        <Tab className={classes.tabtext} icon={<FilterFramesIcon className={classes.icon}/>} label="Estimate" {...areaTabProps(1)} />
-                        <Tab className={classes.tabtext} icon={<SubjectIcon className={classes.icon}/>} label="Email" {...areaTabProps(2)} />
-                        <Tab className={classes.tabtext} icon={<PictureAsPdfIcon className={classes.icon}/>} label="Attachments" {...areaTabProps(3)} />
-                        <Tab className={classes.tabtext} icon={<VisibilityIcon className={classes.icon}/>} label="Preview" {...areaTabProps(4)} />
-                        <Tab className={classes.tabtext} icon={<SettingsApplicationsIcon className={classes.icon}/>} label="Settings" {...areaTabProps(5)} />
+                        <Tab className={classes.tabtext} icon={<SubjectIcon className={classes.icon} />} label="1. Email" {...areaTabProps(0)} />
+                        <Tab className={classes.tabtext} icon={<FilterFramesIcon className={classes.icon} />} label="2. Response" {...areaTabProps(1)} />
+                        <Tab className={classes.tabtext} icon={<PictureAsPdfIcon className={classes.icon} />} label="3. Attachments" {...areaTabProps(2)} />
+                        <Tab className={classes.tabtext} icon={<AccountTreeIcon className={classes.icon} />} label="4. Conversation" {...areaTabProps(3)} />
+                        <Tab className={classes.tabtext} icon={<SettingsApplicationsIcon className={classes.icon} />} label="5. Settings" {...areaTabProps(4)} />
+                        <Tab className={classes.tabtext} icon={<VisibilityIcon className={classes.icon} />} label="6. Preview" {...areaTabProps(5)} />
                     </Tabs>
                 </AppBar>
                 <TabPanels tab={tab} areaName={areaName} areaIdentifier={areaIdentifier} setViewName={setViewName} />

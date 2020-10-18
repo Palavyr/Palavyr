@@ -79,11 +79,11 @@ export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawe
                 <div>
                     <div style={{ float: "left" }}>
                         <IconButton color="inherit" aria-label="open drawer" onClick={() => handleDrawerOpen()} edge="start" className={classNames(classes.menuButton, open && classes.hide)}>
-                            <MenuIcon />
+                            <MenuIcon style={{color: "white"}} />
                         </IconButton>
                     </div>
                     <div style={{ float: "right", paddingTop: "5px", verticalAlign: "middle" }}>
-                        <Typography variant="h4">
+                        <Typography variant="h4" style={{color: "black"}}>
                             {title}
                         </Typography>
                     </div>

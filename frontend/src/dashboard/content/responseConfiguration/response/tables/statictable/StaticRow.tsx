@@ -10,6 +10,7 @@ import CurrencyTextField from '@unicef/material-ui-currency-textfield'
 
 type styleProp = {
     index: number;
+    rangeState: boolean;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -27,7 +28,17 @@ const useStyles = makeStyles(theme => ({
     row: (props: styleProp) => ({
         background: (props.index % 2 == 0) ? "#F5F5F5" : `${theme.palette.background.paper}`,
         borderRadius: "5px"
-    })
+    }),
+    maxValInput: (props: styleProp) => {
+        if (props.rangeState) {
+            return {}
+        } else {
+            return {
+                display: "none",
+            }
+        }
+
+    },
 }));
 
 export interface IStaticRow {
@@ -46,47 +57,8 @@ export interface IStaticRow {
 
 export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modifier, minFee, maxFee, rangeState, perState, description }: IStaticRow) => {
 
-    const classes = useStyles({ index });
+    const classes = useStyles({ index, rangeState });
     const cellAlignment = "center";
-
-    let inputs: {} | null | undefined;
-
-    inputs = (
-        <>
-            <TableCell align={cellAlignment}>
-                <CurrencyTextField
-                    label="Amount"
-                    variant="standard"
-                    value={minFee}
-                    currencySymbol="$"
-                    minimumValue="0"
-                    outputFormat="string"
-                    decimalCharacter="."
-                    digitGroupSeparator=","
-                    onChange={(value: { floatValue: number | undefined; }) => {
-                        if (value.floatValue !== undefined) { modifier.setFeeMin(staticTableMetas, tableOrder, rowOrder, value.floatValue) }
-                    }}
-                />
-            </TableCell>
-            <TableCell align={cellAlignment}>
-                <CurrencyTextField
-                    label="Amount"
-                    variant="standard"
-                    disabled={!rangeState}
-                    value={maxFee}
-                    currencySymbol="$"
-                    minimumValue="0"
-                    outputFormat="string"
-                    decimalCharacter="."
-                    digitGroupSeparator=","
-                    onChange={(value: { floatValue: number | undefined; }) => {
-                        if (value.floatValue !== undefined) { modifier.setFeeMax(staticTableMetas, tableOrder, rowOrder, value.floatValue) }
-                    }}
-                />
-            </TableCell>
-        </>
-    );
-    // }
 
     return (
         <TableRow>
@@ -111,32 +83,63 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
                     }}
                 />
             </TableCell>
-            {inputs}
             <TableCell align={cellAlignment}>
-                {rangeState && "Range"}
-                {!rangeState && "Single"}
-                <br />
-                <Switch
-                    checked={rangeState}
-                    onChange={() => {
-                        modifier.changeRange(staticTableMetas, tableOrder, rowOrder);
+                <CurrencyTextField
+                    label="Amount"
+                    variant="standard"
+                    value={minFee}
+                    currencySymbol="$"
+                    minimumValue="0"
+                    outputFormat="string"
+                    decimalCharacter="."
+                    digitGroupSeparator=","
+                    onChange={(value: { floatValue: number | undefined; }) => {
+                        if (value.floatValue !== undefined) { modifier.setFeeMin(staticTableMetas, tableOrder, rowOrder, value.floatValue) }
                     }}
-                    name="perPerson"
-                    inputProps={{ "aria-label": "primary checkbox" }}
                 />
             </TableCell>
             <TableCell align={cellAlignment}>
-                {perState && "Per Person"}
-                {!perState && "Flat Fee"}
-                <br />
-                <Switch
-                    checked={perState}
-                    onChange={() => {
-                        modifier.changePer(staticTableMetas, tableOrder, rowOrder);
+                <CurrencyTextField
+                    className={classes.maxValInput}
+                    label="Amount"
+                    variant="standard"
+                    disabled={!rangeState}
+                    value={maxFee}
+                    currencySymbol="$"
+                    minimumValue="0"
+                    outputFormat="string"
+                    decimalCharacter="."
+                    digitGroupSeparator=","
+                    onChange={(value: { floatValue: number | undefined; }) => {
+                        if (value.floatValue !== undefined) { modifier.setFeeMax(staticTableMetas, tableOrder, rowOrder, value.floatValue) }
                     }}
-                    name="perPerson"
-                    inputProps={{ "aria-label": "primary checkbox" }}
                 />
+            </TableCell>
+            <TableCell align={cellAlignment}>
+                <Button
+                    variant="contained"
+                    color={rangeState ? "primary" : "secondary"}
+                    onClick={
+                        () => {
+                            modifier.changeRange(staticTableMetas, tableOrder, rowOrder)
+                        }
+                    }
+                >
+                    {rangeState ? "Range" : "Single"}
+                </Button>
+            </TableCell>
+            <TableCell align={cellAlignment}>
+                <Button
+                    variant="contained"
+                    color={perState ? "primary" : "secondary"}
+                    onClick={
+                        () => {
+                            modifier.changePer(staticTableMetas, tableOrder, rowOrder);
+                        }
+                    }
+                >
+                    {perState ? "Per Person" : "Flat Fee"}
+                </Button>
             </TableCell>
             <TableCell align={cellAlignment}>
                 {!modifier.isRowFirstPosition(rowOrder) && <ArrowDropUpIcon className={classes.largeicon} onClick={() => modifier.shiftRowUp(staticTableMetas, tableOrder, rowOrder)} />}

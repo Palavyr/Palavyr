@@ -12,6 +12,11 @@ namespace Server.Domain.Accounts
 
         [NotMapped] private readonly int ExpirationPeriod = 24;
 
+        public Session()
+        {
+            
+        }
+
         Session(string sessionId, string accountId, string apiKey)
         {
             SessionId = sessionId;

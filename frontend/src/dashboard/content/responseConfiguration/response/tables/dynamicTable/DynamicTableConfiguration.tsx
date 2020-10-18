@@ -13,13 +13,13 @@ export interface IDynamicTable {
 
 const useStyles = makeStyles(theme => ({
     title: {
-        fontSize: "28pt"
+        fontWeight: "bold"
     },
     header: {
         // background: "#90caf9",
         background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
-        borderTopRightRadius: "8px",
-        borderTopLeftRadius: "8px",
+        // borderTopRightRadius: "8px",
+        // borderTopLeftRadius: "8px",
     },
 }))
 
@@ -59,9 +59,9 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier }: IDynamicTab
 
     return (
         <>
-            <Accordion defaultExpanded>
+            <Accordion >
                 <AccordionSummary className={classes.header} expandIcon={<ExpandMoreIcon style={{color: "white"}}/>} aria-controls="panel-content" id="panel-header">
-                    <Typography variant="h2" className={classes.title}>{title}</Typography>
+                    <Typography className={classes.title}>{title}</Typography>
                 </AccordionSummary>
                 <Suspense fallback={<h1>Loading Dynamic Tables...</h1>}>
                     {(tableMetas.length === 0) && <Typography color="secondary" style={{ padding: "0.8rem" }} variant="h5"  >No dynamic tables configured for this area.</Typography>}
@@ -89,6 +89,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier }: IDynamicTab
                     <Button
                         variant="contained"
                         color="primary"
+                        style={{left: "10px", bottom: "10px"}}
                         onClick={async () => {
 
                             var res = await client.Configuration.Tables.Dynamic.createDynamicTable(areaIdentifier);

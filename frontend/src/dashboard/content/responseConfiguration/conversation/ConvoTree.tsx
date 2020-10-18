@@ -9,6 +9,7 @@ import { ConversationNode } from "./nodes/ConversationNode";
 import { MissingDynamicNodes } from "./MissingDynamicNodes";
 import "./ConvoTree.css";
 import { makeStyles } from "@material-ui/core";
+import { ConversationHelp } from "dashboard/content/help/ConversationHelp";
 
 export interface IConvoTree {
     areaIdentifier: string;
@@ -123,30 +124,33 @@ export const ConvoTree = ({ areaIdentifier, treeName }: IConvoTree) => {
     }, [areaIdentifier, nodeList])
 
     return (
-        <div className={classes.conversation}>
-            {missingNodeTypes.length > 0 && <MissingDynamicNodes missingNodeTypes={missingNodeTypes} />}
-            <form onSubmit={() => null}>
-                <fieldset className="fieldset" id="tree-test">
-                    <legend>{treeName}</legend>
-                    <div className="main-tree tree-wrap">
-                        {
-                            nodeList.length > 0
-                                ? <ConversationNode
-                                    key={"tree-start"}
-                                    parentId={rootNode.nodeId}
-                                    node={rootNode}
-                                    nodeList={nodeList}
-                                    setNodes={setNodes}
-                                    addNodes={addNodes}
-                                    parentState={true}
-                                    changeParentState={() => null}
-                                    dynamicNodeTypes={dynamicNodeTypes}
-                                />
-                                : null
-                        }
-                    </div>
-                </fieldset>
-            </form>
-        </div>
+        <>
+            <ConversationHelp />
+            <div className={classes.conversation}>
+                {missingNodeTypes.length > 0 && <MissingDynamicNodes missingNodeTypes={missingNodeTypes} />}
+                <form onSubmit={() => null}>
+                    <fieldset className="fieldset" id="tree-test">
+                        <legend>{treeName}</legend>
+                        <div className="main-tree tree-wrap">
+                            {
+                                nodeList.length > 0
+                                    ? <ConversationNode
+                                        key={"tree-start"}
+                                        parentId={rootNode.nodeId}
+                                        node={rootNode}
+                                        nodeList={nodeList}
+                                        setNodes={setNodes}
+                                        addNodes={addNodes}
+                                        parentState={true}
+                                        changeParentState={() => null}
+                                        dynamicNodeTypes={dynamicNodeTypes}
+                                    />
+                                    : null
+                            }
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </>
     );
 };

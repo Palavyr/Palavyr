@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import 'react-chat-widget/lib/styles.css';
 import { CustomWidget } from './widget/CustomWidget';
 import { OptionSelector } from './options/Options';
-import { SelectedOption, AreaTable } from './types';
+import { SelectedOption, AreaTable, WidgetPreferences } from './types';
 import { useParams } from 'react-router-dom';
 import CreateClient from './client/Client';
 
@@ -16,17 +16,20 @@ export const App = () => {
 
     const [selectedOption, setSelectedOption] = useState<SelectedOption | null>(null);
     const [isReady, setIsReady] = useState<boolean>(false);
+    const [widgetPrefs, setWidgetPrefs] = useState<WidgetPreferences>()
 
     const { secretKey } = useParams<{ secretKey: string }>();
 
     const client = CreateClient(secretKey);
 
     const runAppPrecheck = useCallback(async () => {
-        var res = await client.Widget.Access.runPreCheck();
-        var preCheckResult = res.data as PreCheckResult;
+        var preCheckResult = (await client.Widget.Access.runPreCheck()).data as PreCheckResult;
         setIsReady(preCheckResult.isReady);
-
-    }, [client.Widget.Access])
+        if(preCheckResult.isReady) {
+            var prefs = (await client.Widget.Access.fetchPreferences()).data as WidgetPreferences;
+            setWidgetPrefs(prefs);
+        }
+    }, [])
 
     useEffect(() => {
         runAppPrecheck();
@@ -34,8 +37,8 @@ export const App = () => {
 
     return (
         <>
-            {(isReady === true) && (selectedOption === null) && <OptionSelector setSelectedOption={setSelectedOption} />}
-            {(isReady === true) && (selectedOption !== null) && <CustomWidget option={selectedOption} />}
+            {(isReady === true) && (selectedOption === null) && <OptionSelector setSelectedOption={setSelectedOption} preferences={widgetPrefs} />}
+            {(isReady === true) && (selectedOption !== null) && <CustomWidget option={selectedOption} preferences={widgetPrefs} />}
             {(isReady === false) && <span style={{textAlign: "center", margin: "2rem"}}>Not ready</span>}
         </>
     )

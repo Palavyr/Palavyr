@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using Amazon.SimpleEmail;
@@ -24,9 +25,18 @@ namespace EmailService.verification
                 EmailAddress = emailAddress
             };
             _logger.LogDebug("Attempting to verify email address.");
-            var res = await EmailClient.VerifyEmailAddressAsync(request);
-            var result = res.HttpStatusCode == HttpStatusCode.OK;
-            _logger.LogDebug($"Email verification result: {result.ToString()}");
+
+            bool result;
+            try
+            {
+                var response = await EmailClient.VerifyEmailAddressAsync(request);
+                result = response.HttpStatusCode == HttpStatusCode.OK;
+            }
+            catch (Exception ex)
+            {
+                result = false;
+            }
+            _logger.LogDebug($"Email verification sent: {result.ToString()}");
             return result;
         }
     }

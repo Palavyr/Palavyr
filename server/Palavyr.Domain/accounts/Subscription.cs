@@ -11,6 +11,11 @@ namespace Server.Domain.Accounts
         public string ApiKey { get; set; }
         public int NumAreas { get; set; }
 
+        public Subscription()
+        {
+            
+        }
+
         private Subscription(string accountId, string apiKey, int numAreas)
         {
 

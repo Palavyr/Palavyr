@@ -15,7 +15,10 @@ export interface IDynamicTableSelector {
 }
 
 const selectStyle = {
-    margin: "2.2rem"
+    marginLeft: "1rem",
+    marginRight: "1rem",
+    marginBottom: "0rem",
+    marginTop: "0.2rem"
 }
 
 export const DynamicTableSelector = ({selection, setSelection, handleChange, currentTableMeta, tableOptions, parentState, changeParentState, areaIdentifier }: IDynamicTableSelector) => {

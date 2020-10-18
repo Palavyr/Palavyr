@@ -11,10 +11,15 @@ interface AttachmentList {
 }
 
 const paperStyle = {
-    padding: "2.5rem",
-    margingTop: "1rem",
-    marginBottom: "2rem"
+    // padding: "2.5rem",
 
+    paddingTop: "0.5rem",
+    paddingBottom: "0.5rem",
+    paddingLeft: "2.5rem",
+
+    margingTop: "1rem",
+    marginBottom: "2rem",
+    background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
 }
 
 const tableBodyStyle ={
@@ -25,7 +30,7 @@ export const AttachmentList = ({ fileList, setCurrentPreview, removeAttachment}:
     return (
         <Container style={{marginTop: "3rem"}}>
             <Paper elevation={18} style={paperStyle}>
-                <h2>Current PDF attachments</h2>
+                <h2 style={{color: "white"}}>Current PDF attachments</h2>
             </Paper>
             <TableContainer component={Paper}>
                 <Table >

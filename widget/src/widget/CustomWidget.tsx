@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SelectedOption, Preferences } from '../types';
+import { SelectedOption, WidgetPreferences } from '../types';
 import { addResponseMessage, toggleMsgLoader, setQuickButtons, Widget, isWidgetOpened, toggleWidget } from 'react-chat-widget';
 import { useParams } from 'react-router-dom';
 import CreateClient from '../client/Client';
@@ -11,25 +11,24 @@ import fetchIpData from '../region/FetchIP';
 
 interface ICustomWidget {
     option: SelectedOption;
+    preferences: WidgetPreferences;
 }
 
-export const CustomWidget = ({ option }: ICustomWidget) => {
+export const CustomWidget = ({ option, preferences }: ICustomWidget) => {
 
     const { secretKey } = useParams< {secretKey: string } >();
     const client = CreateClient(secretKey);
-    const [prefs, setPrefs] = useState<Preferences>();
+    const [prefs, setPrefs] = useState<WidgetPreferences>();
     const [, setUserInput] = useState<string>(); // TODO: send through convo
 
     const initializeConvo = useCallback(async () => {
 
         var newConversation = await client.Widget.Access.createConvo(option.areaId);
         var nodes = newConversation.data.conversationNodes;
-        var prefs = newConversation.data.widgetPreference;
         var convoId = newConversation.data.conversationId;
         var region = (await fetchIpData).country;
 
-        setPrefs(prefs);
-
+        setPrefs(preferences);
         var rootNode = getRootNode(nodes);
 
         const convoContext: any = {};
@@ -43,7 +42,7 @@ export const CustomWidget = ({ option }: ICustomWidget) => {
         renderNextComponent(rootNode, nodes, client, convoId, convoContext);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [preferences])
 
     useEffect(() => {
         addResponseMessage(`Welcome to this awesome chat! You chose: ${option.areaDisplay}`);
@@ -53,7 +52,7 @@ export const CustomWidget = ({ option }: ICustomWidget) => {
         return () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initializeConvo])
+    }, [initializeConvo, initializeConvo])
 
     const handleNewUserMessage = (newMessage: string) => {
         setUserInput(newMessage)

@@ -46,6 +46,7 @@ export const ChangeCompanyName = () => {
         <>
             <Grid container spacing={3}>
                 <SettingsGridRowText
+                    fullWidth
                     name={"Update company name"}
                     details={" Update the company name used when sending response."}
                     placeholder={"New Company Name"}

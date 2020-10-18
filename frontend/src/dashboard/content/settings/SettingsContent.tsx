@@ -18,6 +18,7 @@ import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import PhoneIcon from '@material-ui/icons/Phone';
 import BrandingWatermarkIcon from '@material-ui/icons/BrandingWatermark';
 import PublicIcon from '@material-ui/icons/Public';
+import { HelpTypes } from "dashboard/layouts/DashboardLayout";
 
 
 
@@ -25,7 +26,7 @@ interface IAreaContent {
     areaName: string;
     areaIdentifier: string;
     setLoaded: any;
-    selectHelpDrawerContent: any;
+    setHelpType(helpType: HelpTypes): void;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -35,9 +36,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SettingsContent = ({ areaIdentifier, areaName, setLoaded, selectHelpDrawerContent }: IAreaContent) => {
+export const SettingsContent = ({ areaIdentifier, areaName, setLoaded, setHelpType }: IAreaContent) => {
 
-    const [tab, setTab] = useState<PanelRange>(5); // tabs
+    const [tab, setTab] = useState<PanelRange>(1); // tabs
     const classes = useStyles();
 
     useEffect(() => {
@@ -50,22 +51,22 @@ export const SettingsContent = ({ areaIdentifier, areaName, setLoaded, selectHel
     const handleTabChange = (event: any, newValue: PanelRange) => {
         switch (newValue){
             case 0:
-                selectHelpDrawerContent("password");
+                setHelpType("password");
                 break;
             case 1:
-                selectHelpDrawerContent("email");
+                setHelpType("email");
                 break;
             case 2:
-                selectHelpDrawerContent("companyname");
+                setHelpType("companyname");
                 break;
             case 3:
-                selectHelpDrawerContent("phonenumber");
+                setHelpType("phonenumber");
                 break;
             case 4:
-                selectHelpDrawerContent("responselogo");
+                // setHelpType("responselogo");
                 break;
             case 5:
-                selectHelpDrawerContent("locale");
+                setHelpType("locale");
             default:
                 break;
         }

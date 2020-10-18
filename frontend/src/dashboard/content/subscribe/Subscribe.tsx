@@ -1,12 +1,13 @@
+import { HelpTypes } from 'dashboard/layouts/DashboardLayout';
 import * as React from 'react';
 
 
 interface ISubscribe {
-    selectHelpDrawerContent: any;
+    setHelpType(helpType: HelpTypes): void;
 }
-export const Subscribe = ({ selectHelpDrawerContent }: ISubscribe) => {
+export const Subscribe = ({ setHelpType }: ISubscribe) => {
 
-
+    setHelpType("subscribe")
     return (
         <div>Do a subscribe!</div>
     )

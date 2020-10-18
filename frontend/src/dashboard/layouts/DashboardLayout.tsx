@@ -26,7 +26,12 @@ import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
-import { ConversationHelp } from "helpComponents/ConversationHelp";
+import { ConversationHelp } from "dashboard/content/help/ConversationHelp";
+import { EmailHelp } from "dashboard/content/help/EmailHelp";
+import { EstimateHelp } from "dashboard/content/help/EstimateHelp";
+import { AttachmentsHelp } from "dashboard/content/help/AttachmentsHelp";
+import { AreaSettingsHelp } from "dashboard/content/help/AreaSettingsHelp";
+import { PreviewHelp } from "dashboard/content/help/PreviewHelp";
 
 
 const fetchSidebarInfo = (areaData: Areas) => {
@@ -72,13 +77,13 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-type HelpTypes =
+export type HelpTypes =
     "editor"
     | "settings"
     | "demo"
     | "enquiries"
     | "getwidget"
-    | "subscrible"
+    | "subscribe"
     | "conversation"
     | "estimate"
     | "email"
@@ -91,7 +96,6 @@ type HelpTypes =
     | "phonenumber"
     | "logo"
     | "locale"
-
 
 
 
@@ -114,7 +118,7 @@ export const DashboardLayout = () => {
     const [active, setIsActive] = useState<boolean | null>(null);
     const [numAreasAllowed, setNumAreasAllowed] = useState<number | undefined>()
     const [alertState, setAlertState] = useState<boolean>(false);
-    const [helpType, setHelpType] = useState<string>("");
+    const [helpType, setHelpType] = useState<HelpTypes | null>(null);
 
 
     const classes = useStyles(helpOpen);
@@ -201,20 +205,6 @@ export const DashboardLayout = () => {
         linktext: "Subscriptions"
     }
 
-    const selectHelpDrawerContent = (location: HelpTypes) => {
-        switch (location) {
-            case "editor":
-                setHelpType("editor");
-                break;
-            case "settings":
-                setHelpType("settings");
-                break;
-            default:
-                return
-        }
-
-    }
-
     const thema = useTheme();
     return (
         <div className={classes.root}>
@@ -238,12 +228,12 @@ export const DashboardLayout = () => {
 
             {/* Any type of content should be loaded here */}
             <ContentLoader open={open}>
-                {contentType === "editor" && <AreaContent selectHelpDrawerContent={selectHelpDrawerContent} active={active} areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} setViewName={setViewName} />}
-                {active && contentType === "settings" && <SettingsContent selectHelpDrawerContent={selectHelpDrawerContent} areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} />}
-                {active && contentType === "demo" && <ChatDemo selectHelpDrawerContent={selectHelpDrawerContent} />}
-                {active && contentType === "enquiries" && <Enquires selectHelpDrawerContent={selectHelpDrawerContent} />}
-                {active && contentType === "getwidget" && <GetWidget selectHelpDrawerContent={selectHelpDrawerContent} />}
-                {active && contentType === "subscribe" && <Subscribe selectHelpDrawerContent={selectHelpDrawerContent} />}
+                {contentType === "editor" && <AreaContent setHelpType={setHelpType} active={active} areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} setViewName={setViewName} />}
+                {active && contentType === "settings" && <SettingsContent setHelpType={setHelpType} areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} />}
+                {active && contentType === "demo" && <ChatDemo setHelpType={setHelpType} />}
+                {active && contentType === "enquiries" && <Enquires setHelpType={setHelpType} />}
+                {active && contentType === "getwidget" && <GetWidget setHelpType={setHelpType} />}
+                {active && contentType === "subscribe" && <Subscribe setHelpType={setHelpType} />}
 
                 {contentType === undefined && <WelcomeToTheDashboard />}
             </ContentLoader>
@@ -259,24 +249,26 @@ export const DashboardLayout = () => {
                 <div className={classes.helpDrawerHeader}>
                     <IconButton onClick={handleHelpDrawerClose}>
                         Close
-                        {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                        {theme.direction === 'rtl' ? <ChevronLeftIcon style={{color: "white"}} /> : <ChevronRightIcon style={{color: "white"}} />}
                     </IconButton>
                 </div>
                 <Divider />
-                {(helpType === "conversation") && <ConversationHelp />}
-                {(helpType === "editor") && <EditorHelp />}
+                {(helpType === "conversation") && <ConversationHelp defaultOpen />}
+                {(helpType === "editor") && <EditorHelp defaultOpen/>}
+                {(helpType === "email") && <EmailHelp defaultOpen/>}
+
+                {(helpType === "estimate") && <EstimateHelp defaultOpen />}
+                {(helpType === "attachments") && <AttachmentsHelp defaultOpen/>}
+                {(helpType === "areasettings") && <AreaSettingsHelp defaultOpen/>}
+                {(helpType === "preview") && <PreviewHelp defaultOpen/>}
+
+
                 {/* {(helpType === "settings") && <SettingsHelp />}
                 {(helpType === "demo") && <DemoHelp />}
                 {(helpType === "enquiries") && <EnquiryHelp />}
                 {(helpType === "getwidget") && <GetWidgetHelp />}
                 {(helpType === "subscrible") && <SubscribeHelp />}
-                {(helpType === "estimate") && <EstimateHelp />}
-                {(helpType === "email") && <EmailHelp />}
-                {(helpType === "attachments") && <AttachmentsHelp />}
-                {(helpType === "preview") && <PreviewHelp />}
-                {(helpType === "areasettings") && <AreaSettingsHelp />}
                 {(helpType === "password") && <PasswordHelp />}
-                {(helpType === "email") && <EmailHelp />}
                 {(helpType === "companyname") && <CompanyNameHelp />}
                 {(helpType === "phonenumber") && <PhoneNumberHelp />}
                 {(helpType === "logo") && <LogoHelp />}

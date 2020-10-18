@@ -21,15 +21,16 @@ interface IFeeConfiguration {
 
 const useStyles = makeStyles(theme => ({
     title: {
-        fontSize: "28pt"
+        fontWeight: "bold"
+        // fontSize: "28pt"
     },
     tablebutton: {
         margin: theme.spacing(1),
     },
     header: {
         background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
-        borderTopRightRadius: "8px",
-        borderTopLeftRadius: "8px",
+        // borderTopRightRadius: "8px",
+        // borderTopLeftRadius: "8px",
     },
 }))
 
@@ -40,9 +41,9 @@ export const StaticTableConfiguration = ({ title, staticTables, tableSaver, modi
 
 
     return (
-        <Accordion defaultExpanded>
+        <Accordion >
             <AccordionSummary className={classes.header} expandIcon={<ExpandMoreIcon style={{color: "white"}} />} aria-controls="panel-content" id="panel-header">
-                <Typography variant="h2" className={classes.title}>{title}</Typography>
+                <Typography className={classes.title}>{title}</Typography>
             </AccordionSummary>
             <Divider />
 

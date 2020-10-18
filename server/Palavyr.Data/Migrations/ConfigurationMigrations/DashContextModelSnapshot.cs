@@ -38,6 +38,12 @@ namespace DashboardServer.Data.Migrations.ConfigurationMigrations
                     b.Property<string>("AreaName")
                         .HasColumnType("text");
 
+                    b.Property<string>("AreaSpecificEmail")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("EmailIsVerified")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("EmailTemplate")
                         .HasColumnType("text");
 
@@ -339,7 +345,25 @@ namespace DashboardServer.Data.Migrations.ConfigurationMigrations
                     b.Property<string>("AccountId")
                         .HasColumnType("text");
 
+                    b.Property<string>("FontFamily")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Header")
+                        .HasColumnType("text");
+
+                    b.Property<string>("HeaderColor")
+                        .HasColumnType("text");
+
+                    b.Property<string>("HeaderFontColor")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ListFontColor")
+                        .HasColumnType("text");
+
                     b.Property<string>("Placeholder")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SelectListColor")
                         .HasColumnType("text");
 
                     b.Property<bool>("ShouldGroup")

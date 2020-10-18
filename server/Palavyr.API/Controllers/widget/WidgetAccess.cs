@@ -57,7 +57,7 @@ namespace Palavyr.API.Controllers
         public NewConversation CreateConversation(string apiKey, string areaId)
         {
             _logger.LogDebug("Fetching Preferences...");
-            var accountId = GetAccountId(apiKey);
+            var accountId = GetAccountId(apiKey) ?? throw new ArgumentNullException("GetAccountId(apiKey)");
             var widgetPreference = DashContext.WidgetPreferences.Single(row => row.AccountId == accountId);
             
             _logger.LogDebug("Fetching nodes...");
@@ -72,6 +72,14 @@ namespace Palavyr.API.Controllers
             var newConvo = NewConversation.CreateNew(widgetPreference, convoNodes);
 
             return newConvo;
+        }
+
+        [HttpGet("{apiKey}/preferences")]
+        public WidgetPreference GetWidgetPreferences(string apiKey)
+        {
+            var accountId = GetAccountId(apiKey) ?? throw new ArgumentNullException("GetAccountId(apiKey)");
+            var prefs = DashContext.WidgetPreferences.SingleOrDefault(row => row.AccountId == accountId);
+            return prefs;
         }
         
         

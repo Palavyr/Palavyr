@@ -1,98 +1,219 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { ApiClient } from "@api-client/Client";
 import { useHistory } from "react-router-dom";
-import { Grid } from "@material-ui/core";
+import { Divider, Grid, makeStyles } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
+import { AlertDetails, AreaTable, EmailVerificationResponse } from "@Palavyr-Types";
+import { Alert, AlertTitle } from "@material-ui/lab";
+import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 
 
 interface IAreaSettings {
-    areaName: string;
     areaIdentifier: string;
-    setViewName: any;
 }
 
-export const AreaSettings = ({ areaName, areaIdentifier, setViewName }: IAreaSettings) => {
+type Settings = {
+    emailAddress: string;
+    isVerified: boolean;
+    awaitingVerification: boolean;
+    areaName: string;
+    areaTitle: string;
+}
+
+const useStyles = makeStyles(theme => ({
+    titleText: {
+        fontWeight: "bold"
+    }
+}))
+
+export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
+
     var client = new ApiClient();
 
-    const [, setLoaded] = useState<boolean>();
-    const [currentDisplayTitle, setCurrentAreaDisplayTitle] = useState<string>("");
+    const [loaded, setLoaded] = useState<boolean>(false);
+    const [alertState, setAlertState] = useState<boolean>(false);
+    const [settings, setSettings] = useState<Settings>({
+        emailAddress: "",
+        isVerified: false,
+        awaitingVerification: false,
+        areaName: "",
+        areaTitle: ""
+    });
+    const [alertDetails, setAlertDetails] = useState<AlertDetails>({ title: "", message: "" })
+    const classes = useStyles();
     const history = useHistory();
 
     const loadSettings = useCallback(async () => {
 
-        var res = await client.Area.GetArea(areaIdentifier);
-        setCurrentAreaDisplayTitle(res.data.areaDisplayTitle);
+        var areaData = (await client.Area.GetArea(areaIdentifier)).data as AreaTable;
+        setSettings({
+            emailAddress: areaData.areaSpecificEmail,
+            isVerified: areaData.emailIsVerified,
+            awaitingVerification: areaData.awaitingVerification,
+            areaName: areaData.areaName,
+            areaTitle: areaData.areaDisplayTitle
+        });
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier])
 
     useEffect(() => {
-        loadSettings();
+        if (!loaded) loadSettings();
+
         setLoaded(true);
         return () => {
             setLoaded(false)
         }
-    }, [loadSettings])
+    }, [])
 
-    const handleAreaNameChange = async (newAreaName: any) => {
-
-        setViewName(newAreaName);
+    const handleAreaNameChange = async (newAreaName: string) => {
+        if (newAreaName === settings.areaName) return;
         var res = await client.Area.updateArea(areaIdentifier, newAreaName, null);
-        console.log(res);
-        window.location.reload();
+        setSettings({ ...settings, areaName: newAreaName });
+        window.location.reload(); // reloads the sidebar...
     }
 
     const handleAreaDisplayTitleChange = async (newAreaDisplayTitle: any) => {
-
+        if (newAreaDisplayTitle === settings.areaTitle) return;
         var res = await client.Area.updateArea(areaIdentifier, null, newAreaDisplayTitle);
-        console.log(res);
         window.location.reload();
+        setSettings({ ...settings, areaTitle: newAreaDisplayTitle })
     }
 
     const handleAreaDelete = async () => {
-
         await client.Area.deleteArea(areaIdentifier);
         history.push("/dashboard");
         window.location.reload();
     }
 
-    const verifyEmailAddress = async () => {
-
-        return "Fill out the fucntion";
+    const verifyEmailAddress = async (newEmailAddress: string) => {
+        if (newEmailAddress === settings.emailAddress) return
+        const res = (await client.Settings.EmailVerification.RequestEmailVerification(newEmailAddress, areaIdentifier)).data as EmailVerificationResponse;
+        setAlertDetails({ title: res.title, message: res.message })
+        setAlertState(true);
+        if (!(res.status === "Failed")) setSettings({ ...settings, emailAddress: newEmailAddress })
     }
 
+    const emailSeverity = (): "success" | "warning" | "error" | "info" | undefined => {
+        let severityLevel: "success" | "warning" | "error" | "info" | undefined;
+
+        if (settings.isVerified) {
+            severityLevel = "success";
+        } else {
+            if (settings.awaitingVerification) {
+                severityLevel = "warning";
+            } else {
+                severityLevel = "error"
+            }
+        }
+        return severityLevel;
+    }
+
+
     return (
-        <Grid container spacing={3}>
-            <SettingsGridRowText
-                name={"Update Area Name"}
-                details={" Update the name of this area for dashboard."}
-                placeholder={"New Area Name"}
-                currentValue={areaName}
-                onClick={handleAreaNameChange}
-                clearVal={false}
-            />
-            <SettingsGridRowText
-                name={"Update Area Display Title"}
-                details={" Update the area title used in the widget."}
-                placeholder={"New Area Display Title"}
-                currentValue={currentDisplayTitle}
-                onClick={handleAreaDisplayTitleChange}
-                clearVal={false}
-            />
-            <SettingsGridRowText
-                name={"Delete Area"}
-                details={"Permanently delete this area."}
-                onClick={handleAreaDelete}
-                clearVal={false}
-                buttonText={"Permanently Delete"}
-            />
-            <SettingsGridRowText
-                name="Send From Email"
-                details="The email address that email respones will be sent from."
-                onClick={verifyEmailAddress}
-                clearVal={false}
-                buttonText="Send"
-            />
-        </Grid>
-        // TODO: Force users to type in the area name in order to delete it.
+        loaded ?
+            <>
+                <Grid container spacing={3}>
+                    <Grid item xs={5}>
+                        <SettingsGridRowText
+                            alertNode={
+                                <Alert severity={settings.areaName ? "success" : "warning"}>
+                                    <AlertTitle className={classes.titleText}>Update Dashboard Display Name</AlertTitle>
+                                    Set the name of area used for your reference on this dashboard.
+                                </Alert>
+                            }
+                            title="Update Area Name"
+                            name="Update Area Name"
+                            details=" Update the name of this area for dashboard."
+                            placeholder="New Area Name"
+                            currentValue={settings.areaName}
+                            onClick={handleAreaNameChange}
+                            clearVal={false}
+                        />
+                    </Grid>
+                    <Grid item xs={5}>
+                        <SettingsGridRowText
+                            alertNode={
+                                <Alert
+                                    severity={
+                                        (settings.areaTitle === "Change this in the area Settings." || settings.areaTitle === "")
+                                            ? "error"
+                                            : "success"
+                                    }
+                                >
+                                    <AlertTitle className={classes.titleText}>Update Widget Display Name</AlertTitle>
+                            Set the name of this area as used in the widget.
+                        </Alert>
+                            }
+                            title=""
+                            name=""
+                            details="Update the area title used in the widget."
+                            placeholder="New Area Display Title"
+                            currentValue={settings.areaTitle}
+                            onClick={handleAreaDisplayTitleChange}
+                            clearVal={false}
+                        />
+                    </Grid>
+
+                    <Grid item xs={5}>
+                        <SettingsGridRowText
+                            inputType="email"
+                            alertNode={
+                                <Alert severity={emailSeverity()}>
+                                    <AlertTitle className={classes.titleText}>
+                                        {
+                                            settings.isVerified
+                                                ? "Email Verified"
+                                                : "Verify the email used to send responses for this area"
+                                        }
+                                    </AlertTitle>
+                            Submit a new email to be used for responses.
+                        </Alert>
+                            }
+                            title="Verify Email Address for this area"
+                            name="Send From Email"
+                            details="The email address that email respones will be sent from."
+                            onClick={verifyEmailAddress}
+                            clearVal={false}
+                            buttonText="Update and Verify"
+                            currentValue={settings.emailAddress}
+                            placeholder="New Email Address"
+                        />
+                    </Grid>
+                </Grid>
+                <Divider />
+                <br></br>
+                <Grid container spacing={3}>
+                    <Grid item xs={3}></Grid>
+                    <Grid item xs={6} >
+                        <Alert severity="error">
+                            <AlertTitle className={classes.titleText}>DANGER ZONE</AlertTitle>
+                            WAIT! These options are permanent.
+                        </Alert>
+                    </Grid>
+                    <Grid item xs={3}></Grid>
+                    <Grid item xs={5}>
+                        <SettingsGridRowText
+                            alertNode={
+                                <Alert severity="error">
+                                    <AlertTitle className={classes.titleText}>Permanently DELETE</AlertTitle>
+                            CAREFUL! Use this option to delete this area (and all associated data) forever.
+                        </Alert>
+                            }
+                            title="Permanently Delete Area"
+                            name="Delete Area"
+                            details="Permanently delete this area."
+                            onClick={handleAreaDelete}
+                            clearVal={false}
+                            buttonText="Permanently Delete"
+                        />
+                    </Grid>
+                </Grid>
+
+                {
+                    alertState && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
+                }
+            </>
+            : null
     )
 }

@@ -59,6 +59,7 @@ namespace Palavyr.Data.Migrator
         {
             _logger.LogInformation($"Deploying migration for {configKey} in {env}.");
             var connection = config.GetConnectionString(configKey);
+            _logger.LogInformation($"Connection String: {connection}");
             EnsureDatabase.For.PostgresqlDatabase(connection);
             var accountsRes = DeployMigration(connection, filterName);
             return accountsRes;

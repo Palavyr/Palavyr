@@ -46,4 +46,4 @@ dotnet user-secrets set AWS:AccessKey "$accessKey" --project $api
 dotnet user-secrets set AWS:SecretKey "$secretKey" --project $api
 dotnet user-secrets set AWS:Region "ap-southeast-2" --project $api
 
-Clear-Host
+# Clear-Host

@@ -15,7 +15,8 @@ const useStyles = makeStyles(() => ({
         borderBottom: "0px solid black",
         borderRadius: "0px",
         borderBottomLeftRadius: "3px",
-        borderBottomRightRadius: "3px"
+        borderBottomRightRadius: "3px",
+        backgroundColor: "white"
     }
 }));
 

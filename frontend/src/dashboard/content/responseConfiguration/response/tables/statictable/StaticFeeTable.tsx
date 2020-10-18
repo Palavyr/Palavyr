@@ -13,13 +13,12 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
 const useStyles = makeStyles((theme => ({
     staticFees: {
-        background: "#E8E8E8",
-        margin: "1rem",
-        padding: "2.6rem",
-        border: "3px dotted black",
+        margin: "1.2rem",
+        // background: "#E8E8E8",
+        background: "#C7ECEE",
+        padding: "1.3rem",
+        border: `3px dashed ${theme.palette.common.black}`,
         borderRadius: "7px",
-        marginTop: "1.5rem",
-        marginBottom: "1.5rem",
     },
     tableDescription: {
         marginBottom: "0.3rem",
@@ -27,12 +26,10 @@ const useStyles = makeStyles((theme => ({
         borderRadius: "3px",
         minWidth: "50%"
     },
-
     buttonWrapper: {
         marginTop: "1.5rem",
         marginBottom: "0.5rem",
     },
-
     feeTableButton: {
         marginLeft: "0.6rem",
         marginRight: "0.6rem",
@@ -40,6 +37,10 @@ const useStyles = makeStyles((theme => ({
         paddingLeft: "0.6rem",
         paddingRight: "0.6rem"
     },
+    headerText: {
+        fontSize: "16pt",
+        fontWight: "bold"
+    }
 
 })));
 
@@ -68,17 +69,17 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
             />
             <Table>
                 <TableHead>
-                    <TableRow>
-                        <TableCell align={cellAlignment} ></TableCell>
-                        <TableCell align={cellAlignment} >Description</TableCell>
-                        <TableCell align={cellAlignment} >Amount</TableCell>
-                        <TableCell align={cellAlignment} ></TableCell>
-                        <TableCell align={cellAlignment} >Range</TableCell>
-                        <TableCell align={cellAlignment} >Per Person</TableCell>
-                        <TableCell align={cellAlignment} ></TableCell>
+                    <TableRow style={{borderBottom: "1px solid black"}}>
+                        <TableCell align={cellAlignment} className={classes.headerText}></TableCell>
+                        <TableCell align={cellAlignment} className={classes.headerText} >Description</TableCell>
+                        <TableCell align={cellAlignment} className={classes.headerText} >Amount</TableCell>
+                        <TableCell align={cellAlignment} className={classes.headerText} >Max Amount (if range)</TableCell>
+                        <TableCell align={cellAlignment} className={classes.headerText} >Range</TableCell>
+                        <TableCell align={cellAlignment} className={classes.headerText} >Per Person</TableCell>
+                        <TableCell align={cellAlignment} className={classes.headerText} ></TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody style={{borderTop: "2px solid black"}}>
                     {staticTableMeta.staticTableRows.map((row: StaticTableRow, index: number) => (
                         <StaticRow
                             key={row.id}
@@ -96,7 +97,6 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                     ))}
                 </TableBody>
             </Table>
-            {/* <Divider /> */}
             <div className={classes.buttonWrapper}>
                 <Button startIcon={<AddBoxIcon />} variant="contained" size="small" color="primary" className={classes.feeTableButton} onClick={() => tableModifier.addRow(staticTableMetas, staticTableMeta.tableOrder)}>
                     Add Row

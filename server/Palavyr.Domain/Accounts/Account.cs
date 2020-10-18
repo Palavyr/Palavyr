@@ -11,6 +11,7 @@ namespace Server.Domain.Accounts
         public string UserName { get; set; }
         public string Password { get; set; }
         public string EmailAddress { get; set; }
+        public bool DefaultEmailIsVerified { get; set; }
         public string AccountId { get; set; }
         public string CompanyName { get; set; }
         public string PhoneNumber { get; set; }
@@ -23,6 +24,10 @@ namespace Server.Domain.Accounts
 
         [NotMapped] public readonly string DefaultLocale = "en-AU";
 
+        public UserAccount()
+        {
+            
+        }
         private UserAccount(
             string userName, 
             string emailAddress, 
@@ -37,6 +42,7 @@ namespace Server.Domain.Accounts
             UserName = userName;
             Password = password;
             EmailAddress = emailAddress;
+            DefaultEmailIsVerified = false;
             AccountId = accountId;
             ApiKey = apiKey;
             CreationDate = DateTime.Now;

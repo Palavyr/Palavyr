@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SelectedOption } from '../../types';
+import { SelectedOption, WidgetPreferences } from '../../types';
 import { useHistory, useParams } from 'react-router-dom';
 import { Paper, makeStyles, List, Card, Typography, CardContent, ListItem } from '@material-ui/core';
 
@@ -7,6 +7,7 @@ import { Paper, makeStyles, List, Card, Typography, CardContent, ListItem } from
 export interface ICaroselOptions {
     setSelectedOption: (option: SelectedOption) => void;
     options: Array<SelectedOption>;
+    preferences: WidgetPreferences;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -14,18 +15,20 @@ const useStyles = makeStyles(theme => ({
         width: "100%",
         height: "100%",
     },
-    mainList: {
+    mainList: (prefs: WidgetPreferences) => ({
+        backgroundColor: prefs.selectListColor,
         maxHeight: "100%",
         height: "100%",
         overflow: 'auto',
-    },
+    }),
     listItem: {
         textAlign: "center",
         justifyContent: "center"
     },
-    root: {
+    root: (prefs: WidgetPreferences) => ({
+        backgroundColor: prefs.headerColor,
         minWidth: 275,
-    },
+    }),
     bullet: {
         display: 'inline-block',
         margin: '0 2px',
@@ -40,11 +43,11 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-export const CaroselOptions = ({ setSelectedOption, options }: ICaroselOptions) => {
+export const CaroselOptions = ({ setSelectedOption, options, preferences }: ICaroselOptions) => {
 
     const history = useHistory();
     const { secretKey } = useParams<{secretKey: string}>();
-    const classes = useStyles();
+    const classes = useStyles(preferences);
 
     return (
         <Paper className={classes.paper}>

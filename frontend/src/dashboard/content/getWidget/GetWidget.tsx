@@ -2,6 +2,7 @@ import React, { useEffect, useCallback, useState } from "react"
 import { Typography, Divider, Card, makeStyles } from "@material-ui/core"
 import { CodeCard } from "./CodeCard"
 import { ApiClient } from "@api-client/Client"
+import { HelpTypes } from "dashboard/layouts/DashboardLayout"
 
 
 
@@ -14,14 +15,14 @@ const useStyles = makeStyles(theme => ({
 }))
 
 interface IGetWidget {
-    selectHelpDrawerContent: any;
+    setHelpType(helpType: HelpTypes): void;
 }
-export const GetWidget = ({selectHelpDrawerContent}: IGetWidget) => {
+export const GetWidget = ({setHelpType}: IGetWidget) => {
 
     const client = new ApiClient();
     const [apikey, setApiKey] = useState<string>("");
     const classes = useStyles();
-    selectHelpDrawerContent("enquiries");
+    setHelpType("enquiries");
     const loadApiKey = useCallback(async () => {
         var key = (await client.Settings.Account.getApiKey()).data as string;
         setApiKey(key);

@@ -12,10 +12,10 @@ namespace Palavyr.API
         public static void Main(string[] args)
         {
             /// Use with Windows IIS
-            CreateIISHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build().Run();
             
             /// use with Ubuntu
-            // CreateWebHostBuilder(args).Build().Run();
+            // CreateUbuntuWebHostBuilder(args).Build().Run();
         }
 
         /// <summary>
@@ -23,24 +23,24 @@ namespace Palavyr.API
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static IHostBuilder CreateIISHostBuilder(string[] args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
         {
             // in case we need it
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "NOT SET or NOT FOUND";
             var host = Host
                 .CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
                 .ConfigureLogging((hostingContext, logging) =>
-                    {
-                        logging.ClearProviders();
-                        logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                        logging.SetMinimumLevel(LogLevel.Trace);
-                        logging.AddConsole();
-                        logging.AddDebug();
-                        logging.AddEventSourceLogger();
-                        logging.AddNLog();
-                        logging.AddSeq();
-                    })
+                {
+                    logging.ClearProviders();
+                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    logging.SetMinimumLevel(LogLevel.Trace);
+                    logging.AddConsole();
+                    logging.AddDebug();
+                    logging.AddEventSourceLogger();
+                    logging.AddNLog();
+                    logging.AddSeq();
+                })
                 .UseNLog();
             return host;
         }

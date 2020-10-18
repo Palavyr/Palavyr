@@ -142,6 +142,9 @@ export class ApiClient {
             UpdateAreaGroup: async (areaIdentifier: string, groupId: string | null): Promise<AxiosResponse> => this.client.put(`group/area/${areaIdentifier}/${groupId}`),
             DeleteAreaGroup: async (areaIdentifier: string): Promise<AxiosResponse> => this.client.delete(`group/area/${areaIdentifier}`),
         },
+        EmailVerification: {
+            RequestEmailVerification: async (emailAddress: string, areaIdentifier: string): Promise<AxiosResponse> => this.client.post(`verification/email/${areaIdentifier}`, {EmailAddress: emailAddress}),
+        },
     }
 
     public Enquiries = {

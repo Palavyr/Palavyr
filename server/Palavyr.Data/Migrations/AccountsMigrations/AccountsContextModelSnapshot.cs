@@ -105,6 +105,9 @@ namespace DashboardServer.Data.Migrations.AccountsMigrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<bool>("DefaultEmailIsVerified")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("EmailAddress")
                         .HasColumnType("text");
 

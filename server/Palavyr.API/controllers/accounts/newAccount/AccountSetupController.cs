@@ -75,7 +75,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             
             // install seed Data
             _logger.LogDebug("Install new account seed data.");
-            var seeData = new SeedData(newAccountId);
+            var seeData = new SeedData(newAccountId, newAccountRequest.EmailAddress);
             await DashContext.Areas.AddRangeAsync(seeData.Areas);
             await DashContext.Groups.AddRangeAsync(seeData.Groups);
             await DashContext.Areas.AddRangeAsync(seeData.Areas);

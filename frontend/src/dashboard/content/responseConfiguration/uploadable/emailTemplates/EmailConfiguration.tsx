@@ -5,6 +5,8 @@ import { ViewEmailTemplate } from "./ViewTemplate";
 import { EmailEditor } from "./EmailEditor";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { makeStyles } from "@material-ui/core";
+import { Statement } from "@common/components/Statement";
+import { EmailHelp } from "dashboard/content/help/EmailHelp";
 
 
 interface IEmailConfiguration {
@@ -41,7 +43,7 @@ const useStyles = makeStyles(theme => ({
         textAlign: "right"
     }
 }))
- 
+
 export const EmailConfiguration = ({ areaIdentifier }: IEmailConfiguration) => {
     var client = new ApiClient();
     var classes = useStyles();
@@ -91,8 +93,8 @@ export const EmailConfiguration = ({ areaIdentifier }: IEmailConfiguration) => {
     }
 
     const loadEmailTemplate = useCallback(async () => {
-        var res = await client.Configuration.Email.GetEmailTemplate(areaIdentifier);
-        setEmailTemplate(res.data);
+        var res = (await client.Configuration.Email.GetEmailTemplate(areaIdentifier)).data;
+        setEmailTemplate(res);
         setLoaded(true)
         return () => {
             setLoaded(false);
@@ -110,6 +112,7 @@ export const EmailConfiguration = ({ areaIdentifier }: IEmailConfiguration) => {
 
     return (
         <>
+            <EmailHelp />
             <Upload
                 modalState={modalState}
                 toggleModal={toggleModal}

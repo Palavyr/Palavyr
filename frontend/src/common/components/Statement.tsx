@@ -10,6 +10,7 @@ interface IAlertInfoStatement {
     title: string;
     details?: string;
     children?: React.ReactNode;
+    defaultOpen?: boolean;
     severity?: "info" | "success" | "warning" | "error" | undefined;
     /*
         Margin in rem
@@ -31,15 +32,18 @@ const useStyle = makeStyles(theme => ({
         borderRadius: "8px",
     }),
     icon: {
-        margin: "1rem"
+        margin: "1rem",
+        "&:hover": {
+            color: "gray"
+        }
     }
 }))
 
 
-export const Statement = ({ title, details, children, fullwidth = false, severity = "info", margin = 2, titleSize = "h4" }: IAlertInfoStatement) => {
+export const Statement = ({ title, details, children, defaultOpen, fullwidth = false, severity = "info", margin = 2, titleSize = "h4" }: IAlertInfoStatement) => {
 
     const classes = useStyle({ margin })
-    const [isVisible, setIsVisible] = useState<boolean>(true);
+    const [isVisible, setIsVisible] = useState<boolean>(defaultOpen ? true : false);
 
     return (
         <>

@@ -19,16 +19,16 @@ interface IEditor {
     label?: string;
 }
 
-export const HeaderEditor = ({setEditorState, initialData, label}: IEditor) => {
+export const HeaderEditor = ({ setEditorState, initialData, label }: IEditor) => {
 
     const classes = useStyles();
-    // const initData = cloneDeep(initialData);
+    const initData = cloneDeep(initialData);
 
-        return (
+    return (
         <>
             <CKEditor
                 editor={ClassicEditor}
-                data={""}
+            data={initData}
                 onInit={editor => {
                     // You can store the "editor" and use when it is needed.
                     console.log('Editor is ready to use!', editor);

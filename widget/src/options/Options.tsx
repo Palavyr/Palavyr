@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SelectedOption, AreaTable } from '../types';
+import { SelectedOption, AreaTable, WidgetPreferences } from '../types';
 import { useParams } from 'react-router-dom';
 import CreateClient from '../client/Client';
 import { CaroselOptions } from './optionFormats/CaroselOptions';
@@ -7,20 +7,11 @@ import { useState, useCallback, useEffect } from 'react';
 import GroupedOptions from './optionFormats/GroupedOptions';
 
 interface IOptionSelector {
-    setSelectedOption: (option: SelectedOption) => void
+    setSelectedOption: (option: SelectedOption) => void;
+    preferences: WidgetPreferences;
 }
 
-export type WidgetPreferences = {
-    selectListColor: string;
-    headerColor: string;
-    fontFamily: string;
-    header: string;
-    title: string;
-    subtitle: string;
-    placeholder: string;
-}
-
-export const OptionSelector = ({ setSelectedOption }: IOptionSelector) => {
+export const OptionSelector = ({ setSelectedOption, preferences }: IOptionSelector) => {
 
     const { secretKey } = useParams< { secretKey: string }>();
     const Client = CreateClient(secretKey);
@@ -29,7 +20,7 @@ export const OptionSelector = ({ setSelectedOption }: IOptionSelector) => {
     const [options, setOptions] = useState<Array<SelectedOption>>();
 
     const loadPreference = useCallback(async () => {
-        // var Use = (await Client.Widget.Access.fetchPreferences()).data as WidgetPreferences;
+        // var prefs = (await Client.Widget.Access.fetchPreferences()).data as WidgetPreferences;
         // setUseGroups(Use.data.shouldGroup); // TODO: check
         setUseGroups(false);
 
@@ -46,5 +37,5 @@ export const OptionSelector = ({ setSelectedOption }: IOptionSelector) => {
         loadPreference();
     }, [loadPreference])
 
-    return useGroups ? <GroupedOptions /> : <CaroselOptions options={options} setSelectedOption={setSelectedOption} />;
+    return useGroups ? <GroupedOptions /> : <CaroselOptions options={options} setSelectedOption={setSelectedOption} preferences={preferences} />;
 }

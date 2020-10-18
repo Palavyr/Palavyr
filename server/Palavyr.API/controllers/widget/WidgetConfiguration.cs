@@ -58,8 +58,21 @@ namespace Palavyr.API.controllers.widget
             {
                 prefs.Header = preferences.Header;
             }
-            
-            
+
+            if (!string.IsNullOrWhiteSpace(preferences.HeaderColor))
+            {
+                prefs.HeaderColor = preferences.HeaderColor;
+            }
+
+            if (!string.IsNullOrWhiteSpace(preferences.SelectListColor))
+            {
+                prefs.SelectListColor = preferences.SelectListColor;
+            }
+
+            if (!string.IsNullOrWhiteSpace(preferences.FontFamily))
+            {
+                prefs.FontFamily = preferences.FontFamily;
+            }
             
             DashContext.SaveChanges();
             return HttpStatusCode.OK;

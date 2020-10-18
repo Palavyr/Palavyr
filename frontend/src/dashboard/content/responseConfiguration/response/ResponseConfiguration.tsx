@@ -8,10 +8,19 @@ import { ExpandableTextBox } from "@common/components/ExpandableTextBox";
 import { Statement } from "@common/components/Statement";
 import { DynamicTableConfiguration } from "./tables/dynamicTable/DynamicTableConfiguration";
 import { StaticTableConfiguration } from "./tables/statictable/StaticFeeTableConfiguration";
+import { makeStyles } from "@material-ui/core";
+import { EstimateHelp } from "dashboard/content/help/EstimateHelp";
 
 export interface IResponseConfiguration {
     areaIdentifier: string;
 }
+
+const useStyles = makeStyles(theme => ({
+    titleText: {
+        textAlign: "center",
+        fontWeight: "bold"
+    }
+}))
 
 export const ResponseConfiguration = ({ areaIdentifier }: IResponseConfiguration) => {
 
@@ -72,8 +81,10 @@ export const ResponseConfiguration = ({ areaIdentifier }: IResponseConfiguration
         }
     }, [areaIdentifier, loadEstimateConfiguration])
 
+    const classes = useStyles();
     return (
         <>
+            <EstimateHelp />
             <ExpandableTextBox title={"Introductory statement"} updatableValue={prologue} onChange={updatePrologue} onSave={savePrologue}>
                 <Statement
                     title={"Intro Statement"}

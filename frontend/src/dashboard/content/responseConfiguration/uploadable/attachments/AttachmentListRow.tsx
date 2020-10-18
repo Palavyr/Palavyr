@@ -20,7 +20,9 @@ var tableCellStyle = {
 
 var tableRowStyle = {
     margin: "3rem",
-    padding: "10rem"
+    padding: "10rem",
+    backgroundColor: "#C7ECEE",
+
 }
 
 

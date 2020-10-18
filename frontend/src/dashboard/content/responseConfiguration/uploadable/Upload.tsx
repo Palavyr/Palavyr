@@ -24,11 +24,18 @@ export type FileUpload = Blob & {
 
 const useStyles = makeStyles(theme => ({
     heading: {
-
+        fontWeight: "bold"
     },
     accordian: {
-        width: "100%"
+        width: "100%",
+    },
+    accordianHead: {
+        background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
+    },
+    accordianBody: {
+        backgroundColor: "#C7ECEE",
     }
+
 }))
 
 
@@ -37,12 +44,12 @@ export const Upload = ({ accordState, toggleAccord, modalState, toggleModal, han
     const classes = useStyles();
     return (
         <Accordion className={classes.accordian} expanded={accordState} >
-            <AccordionSummary onClick={toggleAccord} expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
+            <AccordionSummary className={classes.accordianHead} onClick={toggleAccord} expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
                 <Typography className={classes.heading}>
-                    <strong>{summary}</strong>
+                    {summary}
                 </Typography>
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails className={classes.accordianBody}>
                 <div>
                     {uploadDetails()}
                     <br></br>

@@ -1,7 +1,10 @@
 import * as React from 'react';
 
 
-export const EditorHelp = () => {
+interface Props {
+    defaultOpen?: boolean;
+}
+export const EditorHelp = ({defaultOpen = false}: Props) => {
 
     return (
         <div>

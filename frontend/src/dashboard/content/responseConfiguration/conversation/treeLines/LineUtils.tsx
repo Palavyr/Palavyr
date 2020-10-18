@@ -1,4 +1,4 @@
-// import { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { Selector, ParsedAnchor } from "./LineTypes";
 
 export const defaultAnchor = { x: 0.5, y: 0.5 };

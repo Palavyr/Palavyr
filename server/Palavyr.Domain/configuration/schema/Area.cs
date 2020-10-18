@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Server.Domain.Configuration.schema
 {
@@ -20,8 +21,11 @@ namespace Server.Domain.Configuration.schema
         public string GroupId { get; set; }
         public string AccountId { get; set; }
         public List<DynamicTableMeta> DynamicTableMetas { get; set; } = new List<DynamicTableMeta>();
+        public string AreaSpecificEmail { get; set; }
+        public bool EmailIsVerified { get; set; }
         
-        public static Area CreateNewArea(string areaName, string accountId)
+        [NotMapped] public bool AwaitingVerification { get; set; }
+        public static Area CreateNewArea(string areaName, string accountId, string emailAddress, bool emailIsVerified)
         {
             var areaId = Guid.NewGuid().ToString();
             return new Area()
@@ -36,7 +40,9 @@ namespace Server.Domain.Configuration.schema
                 IsComplete = false,
                 AreaDisplayTitle = "Change this in the area Settings.",
                 AccountId = accountId,
-                DynamicTableMetas = null
+                DynamicTableMetas = null,
+                AreaSpecificEmail = emailAddress,
+                EmailIsVerified = emailIsVerified
             };
         }
     }

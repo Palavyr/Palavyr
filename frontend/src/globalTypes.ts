@@ -98,6 +98,9 @@ export type AreaTable = {
     staticTables: StaticTableMetas;
     dynamicTableType: string;
     groupId: string;
+    areaSpecificEmail: string;
+    emailIsVerified: boolean;
+    awaitingVerification: boolean;
 };
 
 export type StaticTableMetas = Array<StaticTableMeta>;
@@ -176,6 +179,17 @@ export type AlertType = {
     linktext?: string;
 }
 
+
+export type EmailVerificationResponse = {
+    status: "Success" | "Pending" | "Failed";
+    title: string;
+    message: string;
+}
+
+export type AlertDetails = {
+    title: string;
+    message: string;
+}
 
 // Common interfaces
 

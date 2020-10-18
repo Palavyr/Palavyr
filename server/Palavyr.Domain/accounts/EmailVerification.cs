@@ -10,7 +10,12 @@ namespace Server.Domain.Accounts
         public string AuthenticationToken { get; set; }
         public string EmailAddress { get; set; }
         public string AccountId { get; set; }
-        
+
+        public EmailVerification()
+        {
+            
+        }
+
         public static EmailVerification CreateNew(string authenticationToken, string emailAddress, string accountId)
         {
             return new EmailVerification()

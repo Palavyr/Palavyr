@@ -1,6 +1,4 @@
-using DashboardServer.Data;
-
-namespace Palavyr.API.GeneratePdf
+namespace Palavyr.API.response
 {
     public static class SupportedSubstitutions
     {

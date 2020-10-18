@@ -23,18 +23,20 @@ const useStyles = makeStyles(theme => ({
         '&:hover': {
             background: "white"
         },
-        background: "#efefef"
+        background: "#C7ECEE",
+
     },
     header: {
         background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
-        borderTopRightRadius: "8px",
-        borderTopLeftRadius: "8px",
+        // borderTopRightRadius: "8px",
+        // borderTopLeftRadius: "8px",
     },
     title: {
-        fontSize: "28pt"
+        fontWeight: "bold"
+        // fontSize: "28pt"
     },
     body: {
-        marginBottom: "3rem"
+        border: "0px solid black"
     },
     accordianActions: {
         display: "flex",
@@ -50,14 +52,14 @@ export const ExpandableTextBox = ({ updatableValue, title, onChange, onSave, chi
     const classes = useStyles();
 
     return (
-        <Accordion className={classes.body} defaultExpanded>
+        <Accordion className={classes.body}>
             <AccordionSummary
                 className={classes.header}
                 expandIcon={<ExpandMoreIcon style={{color: "white"}}/>}
                 aria-controls="panel-content"
                 id="panel-header"
             >
-                <Typography variant="h2" className={classes.title}>{title}</Typography>
+                <Typography className={classes.title}>{title}</Typography>
             </AccordionSummary>
             <Divider variant="fullWidth" />
             {children}

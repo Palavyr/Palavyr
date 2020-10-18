@@ -18,6 +18,7 @@ interface IEdit {
 
 const useStyles = makeStyles(theme => ({
     heading: {
+        fontWeight: "bold"
     },
     editorContainer: {
         width: "100%"
@@ -29,6 +30,12 @@ const useStyles = makeStyles(theme => ({
     },
     accordian: {
         width: "100%"
+    },
+    accordianHead: {
+        background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
+    },
+    accordianBody: {
+        backgroundColor: "#C7ECEE",
     }
 }))
 
@@ -60,13 +67,13 @@ export const EmailEditor = ({ accordState, toggleAccord, emailTemplate, setEmail
     const classes = useStyles();
     const initData = cloneDeep(emailTemplate);
     return (
-        <Accordion expanded={accordState} >
-            <AccordionSummary onClick={toggleAccord} expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
+        <Accordion className={classes.accordian} expanded={accordState} >
+            <AccordionSummary className={classes.accordianHead} onClick={toggleAccord} expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
                 <Typography className={classes.heading}>
-                    <strong>{"Use an editor to craft your response email"}</strong>
+                    Use an editor to craft your response email
                 </Typography>
             </AccordionSummary>
-            <AccordionDetails className={classes.accordian} >
+            <AccordionDetails className={classes.accordianBody} >
                 <div className={classes.table}>
                     <div>
                         {editorDetails()}

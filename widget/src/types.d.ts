@@ -34,12 +34,16 @@ export type Registry = {
     [key: string]: any;
 }
 
-export type Preferences = {
+export type WidgetPreferences = {
     id: number;
     title: string;
     subtitle: string;
     placeholder: string;
     shouldGroup: boolean;
+    selectListColor: string;
+    headerColor: string;
+    fontFamily: string;
+    header: string;
 }
 
 export type ConversationUpdate = {

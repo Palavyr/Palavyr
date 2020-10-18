@@ -33,7 +33,10 @@ const useStyles = makeStyles(theme => ({
         borderColor: props.nodeType === "" ? "Red" : "#54585A",
         borderWidth: props.nodeType === "" ? "5px" : "2px",
         borderRadius: "3px",
-        background: "#f8f8f9"
+        // background: "#f8f8f9"
+        backgroundColor: "#C7ECEE",
+
+
     }),
     card: {
         display: "flex",
@@ -77,7 +80,7 @@ const useStyles = makeStyles(theme => ({
     },
     formLabelStyle: (props: StyleProps) => ({
         fontSize: "12px",
-        color: props.checked ? "black" : "lightgray",
+        color: props.checked ? "black" : "gray",
     }),
     interfaceElement: {
         paddingBottom: "1rem"

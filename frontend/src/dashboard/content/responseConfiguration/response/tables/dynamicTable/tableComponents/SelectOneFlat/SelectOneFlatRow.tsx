@@ -28,14 +28,22 @@ const useStyles = makeStyles(theme => ({
     input: {
         margin: "0.6rem",
         with: "55ch"
+    },
+    maxValInput: (prop: boolean) => {
+        if (prop === true) {
+            return {
+                display: "none",
+            }
+        } else {
+            return {}
+        }
     }
-
 }))
 
 
 export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelectOneFlatRow) => {
 
-    const classes = useStyles();
+    const classes = useStyles(!row.range);
     const cellAlignment = "center";
 
     return (
@@ -53,8 +61,7 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
             <TableCell align={cellAlignment}>
                 <TextField
                     className={classes.input}
-                    // style={tableInputsStyle}
-                    variant={"outlined"}
+                    variant="standard"
                     label="Option"
                     type={"text"}
                     value={row.option}
@@ -83,6 +90,7 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
             </TableCell>
             <TableCell align={cellAlignment}>
                 <CurrencyTextField
+                    className={classes.maxValInput}
                     label="Amount"
                     variant="standard"
                     disabled={!row.range}

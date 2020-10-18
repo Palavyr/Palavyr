@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.GeneratePdf;
 using Palavyr.API.receiverTypes;
+using Palavyr.API.response;
 using Palavyr.Common.FileSystem.FormPaths;
 
 namespace Palavyr.API.Controllers.Emails

@@ -10,17 +10,17 @@ using DashboardServer.API.chatUtils;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using PDFService;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.receiverTypes;
 using Palavyr.API.ResponseTypes;
 using Palavyr.Common.FileSystem.FormPaths;
 using Palavyr.Common.FileSystem.FormPaths.LocalServices;
+using PDFService;
 using Server.Domain.Accounts;
 using Server.Domain.Configuration.constants;
 using Server.Domain.Configuration.schema;
 
-namespace Palavyr.API.GeneratePdf
+namespace Palavyr.API.response
 {
     public class PdfResponseGenerator
     {

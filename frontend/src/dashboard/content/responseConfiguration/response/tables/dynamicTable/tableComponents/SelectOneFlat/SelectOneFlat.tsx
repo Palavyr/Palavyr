@@ -25,7 +25,9 @@ export interface ISelectOneFlat {
 const useStyles = makeStyles({
     tableStyles: {
         width: "100%",
-        padding: ".3rem"
+        padding: ".3rem",
+        backgroundColor: "transparent",
+        borderTop: "1px solid gray"
     },
     alignLeft: {
         position: "relative",

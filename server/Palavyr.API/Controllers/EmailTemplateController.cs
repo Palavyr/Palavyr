@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Hosting;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.API.GeneratePdf;
 using Palavyr.API.ReceiverTypes;
+using Palavyr.API.response;
 
 
 namespace Palavyr.API.Controllers

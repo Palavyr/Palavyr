@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.GeneratePdf;
+using Palavyr.API.response;
 using Palavyr.API.ResponseTypes;
 
 

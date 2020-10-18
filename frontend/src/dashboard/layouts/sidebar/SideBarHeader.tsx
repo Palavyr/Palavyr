@@ -32,8 +32,7 @@ export const SideBarHeader = ({ handleDrawerClose }: SideBarHeaderProps) => {
             <div className={classes.drawerHeader}>
                 <IconButton onClick={() => handleDrawerClose()}>
                     <div>
-                        {theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                        {/* <span>Menu</span> */}
+                        {theme.direction === "ltr" ? <ChevronLeftIcon style={{color: "white"}} /> : <ChevronRightIcon style={{color: "white"}} />}
                         </div>
                 </IconButton>
             </div>

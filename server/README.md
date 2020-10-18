@@ -4,7 +4,7 @@ This is the server that powers the Palavyr configuration manager. Its an asp.net
 
 # Setup
 
-Post gers insteall
+Postgres install
 
 Refresh the server
 
@@ -17,8 +17,11 @@ Refresh the server
 ```
 
 
+### Updating tools
 
+##### update dotnet-ef
 
+    dotnet tool update --global dotnet-ef --version 3.1.0
 
-
-
+#### Getting EF CORE TO REROLL MIGRATIONS
+https://stackoverflow.com/questions/54443131/force-dbup-to-rerun-new-scripts-during-development
