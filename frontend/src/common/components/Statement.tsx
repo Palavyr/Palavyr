@@ -47,7 +47,9 @@ export const Statement = ({ title, details, children, defaultOpen, fullwidth = f
 
     return (
         <>
-            {!isVisible && <HelpIcon className={classes.icon} onClick={() => setIsVisible(true)} />}
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                {!isVisible && <HelpIcon className={classes.icon} onClick={() => setIsVisible(true)} />}
+            </div>
             {
                 isVisible &&
                 (

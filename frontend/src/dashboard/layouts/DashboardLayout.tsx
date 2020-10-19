@@ -228,14 +228,14 @@ export const DashboardLayout = () => {
 
             {/* Any type of content should be loaded here */}
             <ContentLoader open={open}>
-                {contentType === "editor" && <AreaContent setHelpType={setHelpType} active={active} areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} setViewName={setViewName} />}
+                {contentType === "editor" && <AreaContent checkAreaCount={checkAreaCount} setHelpType={setHelpType} active={active} areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} setViewName={setViewName} />}
                 {active && contentType === "settings" && <SettingsContent setHelpType={setHelpType} areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} />}
                 {active && contentType === "demo" && <ChatDemo setHelpType={setHelpType} />}
                 {active && contentType === "enquiries" && <Enquires setHelpType={setHelpType} />}
                 {active && contentType === "getwidget" && <GetWidget setHelpType={setHelpType} />}
                 {active && contentType === "subscribe" && <Subscribe setHelpType={setHelpType} />}
 
-                {contentType === undefined && <WelcomeToTheDashboard />}
+                {contentType === undefined && <WelcomeToTheDashboard checkAreaCount={checkAreaCount} />}
             </ContentLoader>
             <Drawer
                 className={classes.helpDrawer}

@@ -55,9 +55,6 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
         <div className={classes.SideBarList}>
             <List>
                 <ListItem button onClick={() => setConvosOpen(!convosOpen)}>
-                    {/* <ListItemIcon>
-                        <DesktopWindowsIcon className={classes.icon} />
-                    </ListItemIcon> */}
                     <ListItemText
                         style={{ textAlign: "center" }}
                         primary="Areas"
@@ -110,7 +107,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                     <ListItemIcon>
                         <CompareIcon className={classes.icon} key={"iuhi3453jb"} />
                     </ListItemIcon>
-                    <ListItemText primary={"Chat Demo"} />
+                    <ListItemText primary="Chat Demo" />
                 </ListItem>
             </List>
 

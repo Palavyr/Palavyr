@@ -67,6 +67,7 @@ export interface IAreaContent {
     setLoaded: any;
     setViewName: any;
     setHelpType(helpType: HelpTypes): void;
+    checkAreaCount(): void;
 }
 
 const useTabsStyles = makeStyles(theme => ({
@@ -92,7 +93,7 @@ const useTabsStyles = makeStyles(theme => ({
 }))
 
 
-export const AreaContent = ({ active, areaIdentifier, areaName, setLoaded, setViewName, setHelpType }: IAreaContent) => {
+export const AreaContent = ({ checkAreaCount, active, areaIdentifier, areaName, setLoaded, setViewName, setHelpType }: IAreaContent) => {
 
     const [tab, setTab] = useState<PanelRange>(0);
     const location = useLocation();
@@ -150,7 +151,7 @@ export const AreaContent = ({ active, areaIdentifier, areaName, setLoaded, setVi
     }
     return active ?
         (
-            (location.pathname === "/dashboard" || location.pathname === "/dashboard/editor") ? <WelcomeToTheDashboard /> : <EditorInterface />
+            (location.pathname === "/dashboard" || location.pathname === "/dashboard/editor") ? <WelcomeToTheDashboard checkAreaCount={checkAreaCount} /> : <EditorInterface />
         )
         :
         (
