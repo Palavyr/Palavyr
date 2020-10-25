@@ -50,7 +50,7 @@ ReactDOM.render(
           {/* <Route path="/" render={() => <Redirect to="/widget/abc123" />} /> */}
 
           {/* This is the prod path */}
-          <Route exact path="/widget/:secretKey" component={App} />
+          <Route exact path="/widget" component={App} />
         </Router>
 
       </MuiThemeProvider>

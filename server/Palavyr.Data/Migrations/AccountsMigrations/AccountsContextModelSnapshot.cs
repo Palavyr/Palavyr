@@ -93,6 +93,9 @@ namespace DashboardServer.Data.Migrations.AccountsMigrations
                     b.Property<string>("AccountLogoUri")
                         .HasColumnType("text");
 
+                    b.Property<int>("AccountType")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("Active")
                         .HasColumnType("boolean");
 

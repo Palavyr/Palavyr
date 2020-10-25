@@ -32,6 +32,7 @@ import { EstimateHelp } from "dashboard/content/help/EstimateHelp";
 import { AttachmentsHelp } from "dashboard/content/help/AttachmentsHelp";
 import { AreaSettingsHelp } from "dashboard/content/help/AreaSettingsHelp";
 import { PreviewHelp } from "dashboard/content/help/PreviewHelp";
+import { PleaseConfirmYourEmail } from "dashboard/content/welcome/PleaseConfirmYourEmail";
 
 
 const fetchSidebarInfo = (areaData: Areas) => {
@@ -106,7 +107,7 @@ export const DashboardLayout = () => {
     const [sidebarNames, setSidebarNames] = useState<Array<string>>([]);
     const [sidebarIds, setSidebarIds] = useState<Array<string>>([]);
 
-    const [, setLoaded] = useState<boolean>(false);
+    const [loaded, setLoaded] = useState<boolean>(false);
 
     const history = useHistory();
 
@@ -146,8 +147,8 @@ export const DashboardLayout = () => {
 
     useEffect(() => {
 
-        setLoaded(true)
         loadAreas()
+        setLoaded(true)
         return () => {
             setLoaded(false)
             setViewName("");
@@ -228,14 +229,15 @@ export const DashboardLayout = () => {
 
             {/* Any type of content should be loaded here */}
             <ContentLoader open={open}>
-                {contentType === "editor" && <AreaContent checkAreaCount={checkAreaCount} setHelpType={setHelpType} active={active} areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} setViewName={setViewName} />}
+                {/* {loaded === true && (!active || active === undefined || active === null) && <PleaseConfirmYourEmail />} */}
+                {contentType === "editor" && (active === true) && <AreaContent checkAreaCount={checkAreaCount} setHelpType={setHelpType} active={active} areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} setViewName={setViewName} />}
                 {active && contentType === "settings" && <SettingsContent setHelpType={setHelpType} areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} />}
                 {active && contentType === "demo" && <ChatDemo setHelpType={setHelpType} />}
                 {active && contentType === "enquiries" && <Enquires setHelpType={setHelpType} />}
                 {active && contentType === "getwidget" && <GetWidget setHelpType={setHelpType} />}
                 {active && contentType === "subscribe" && <Subscribe setHelpType={setHelpType} />}
 
-                {contentType === undefined && <WelcomeToTheDashboard checkAreaCount={checkAreaCount} />}
+                {contentType === undefined && active === true && <WelcomeToTheDashboard checkAreaCount={checkAreaCount} />}
             </ContentLoader>
             <Drawer
                 className={classes.helpDrawer}

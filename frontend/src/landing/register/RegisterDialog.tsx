@@ -6,6 +6,9 @@ import { HighlightedInformation } from "@common/components/borrowed/HighlightedI
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
 import Auth from "auth/Auth";
 import { useHistory } from "react-router-dom";
+import GoogleLogin, { GoogleLoginProps, GoogleLoginResponse } from "react-google-login";
+import { DividerWithText } from "@common/components/DividerWithText";
+import { googleOAuthClientId } from "@api-client/clientUtils";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -27,7 +30,15 @@ const useStyles = makeStyles((theme) => ({
         color: "white",
         backgroundColor: "#3e5f82",
     },
+    googlebutton: {
+        textAlign: "center",
+        width: "100%",
+        marginBottom: "1rem"
+    },
+
 }));
+
+
 
 export type RegisterFormStatusTypes = "passwordsDontMatch" | "passwordTooShort" | "invalidEmail" | null;
 
@@ -53,19 +64,17 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
     const registerPasswordRepeatRef = useRef<HTMLInputElement | null>(null);
     const registerEmailRef = useRef<HTMLInputElement | null>(null);
 
-    const success = () => {
+    const defaultSuccess = () => {
         setTimeout(() => {
             history.push("/dashboard/editor");
         }, 150);
     }
 
-    const error = (response) => {
-        if (response.message === "Password does not match.") {
-            console.log(response.message)
-        } else if (response.message === "Could not find user.") {
-            console.log(response.message)
-        }
+    const defaultError = (response) => {
+        console.log(response);
+        alert("Error registering: " + response)
     }
+
 
     const register = useCallback(() => {
 
@@ -92,7 +101,8 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
         setTimeout(async () => {
             setIsLoading(false);
             if (registerEmail !== null && registerPassword !== null) {
-                var res = await Auth.register(registerEmail.value, registerPassword.value, success, error);
+                var res = await Auth.register(registerEmail.value, registerPassword.value, defaultSuccess, defaultError);
+
             }
         }, 1500);
     }, [
@@ -142,6 +152,35 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
         }
     }
 
+    const registerGoogleSuccess = () => {
+        defaultSuccess();
+    }
+
+    const registerGoogleError = (response) => {
+        defaultError(response.message);
+    }
+
+    const responseGoogleSuccess = useCallback(async (response: GoogleLoginResponse) => {
+        const termsCheckBoxRef = registerTermsCheckboxRef.current;
+        if (termsCheckBoxRef && !termsCheckBoxRef.checked) {
+            setHasTermsOfServiceError(true);
+            return;
+        }
+        if (response) {
+            var oneTimeCode = response.tokenId;
+            var accessToken = response.accessToken;
+            var other = response.googleId;
+            var res = await Auth.registerWithGoogle(oneTimeCode, accessToken, other, registerGoogleSuccess, registerGoogleError);
+        } else {
+            alert("Account not recognized")
+        }
+    }, [])
+
+    const responseGoogleFailure = () => {
+        alert("Google rego failed.")
+    }
+
+
     return (
         <FormDialog
             loading={isLoading}
@@ -155,6 +194,18 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
             hideBackdrop
             content={
                 <>
+                    <div className={classes.googlebutton} >
+                        <GoogleLogin
+                            theme="dark"
+                            clientId={googleOAuthClientId}
+                            buttonText="Sign up with Google"
+                            onSuccess={responseGoogleSuccess}
+                            onFailure={responseGoogleFailure}
+                        />
+                    </div>
+                    <br></br>
+                    <DividerWithText text={"OR"} />
+                    <br></br>
                     <TextField
                         variant="outlined"
                         margin="normal"

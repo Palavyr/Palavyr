@@ -11,7 +11,7 @@ using Palavyr.API.ReceiverTypes;
 using Server.Domain.Configuration.schema;
 using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
-using EmailService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 ///https://docs.aws.amazon.com/sdkfornet/v3/apidocs/index.html
@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Palavyr.API.Controllers
 {
+    [Authorize]
     [Route("api/areas")]
     [ApiController]
     public class AreaDataController : BaseController

@@ -1,11 +1,14 @@
 import { LocalStorage } from "localStorage/localStorage";
 import { LoginClient } from "client/LoginClient";
 import { LogoutClient } from "client/LogoutClient";
+import { callbackify } from "util";
 
 
 type Credentials = {
+    jwtToken: string;
     apiKey: string;
     sessionId: string;
+    emailAddress: string;
     authenticated: boolean;
     message: string;
 }
@@ -13,35 +16,27 @@ type Credentials = {
 class Auth {
 
     private authenticated: boolean = false;
-    private sessionId: string;
+    private loginClient = new LoginClient();
+    private logoutClient = new LogoutClient();
 
     constructor() {
         this.authenticated = LocalStorage.isAuthenticated() === true ? true : false;
     }
 
     async register(email: string, password: string, callback: () => any, errorCallback: (response) => any) {
-        const loginClient = new LoginClient();
-        const res = await loginClient.Account.registerNewAccount(email, password);
-        const result = await this.login(email, password, callback, errorCallback)
-        if (result) LocalStorage.setEmailAddress(email);
-        return result;
+        const authenticationResponse = (await this.loginClient.Account.registerNewAccount(email, password)).data as Credentials; // TODO: Check that res is successfull before logging in
+        return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
     }
 
-    async memoryLogin() {
-        return false; // TODO implement memory login so we don't have to keep typing our creds.
-    }
+    async registerWithGoogle(oneTimeCode: string, accessToken: string, tokenId: string, callback: () => void, errorCallback: (response) => void) {
+        const authenticationResponse = (await this.loginClient.Account.registerNewAccountWithGoogle(oneTimeCode, accessToken, tokenId)).data as Credentials;
+        return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);    }
 
-
-    async login(email: string | null, password: string | null, callback: () => any, errorCallback: (response) => any) {
-        const loginClient = new LoginClient();
-
-        if (email === null || password === null) return false;
-        const res = await loginClient.Login.RequestLogin(email, email, password)
-        const authenticationResponse = res.data as Credentials;
+    private processAuthenticationResponse(authenticationResponse: Credentials, callback: () => any, errorCallback: (response) => any): boolean {
         if (authenticationResponse.authenticated) {
             this.authenticated = true;
-            LocalStorage.setAuthorization(authenticationResponse.sessionId);
-            LocalStorage.setEmailAddress(email);
+            LocalStorage.setAuthorization(authenticationResponse.sessionId, authenticationResponse.jwtToken);
+            LocalStorage.setEmailAddress(authenticationResponse.emailAddress);
             callback()
             return true;
         } else {
@@ -50,31 +45,35 @@ class Auth {
         }
     }
 
-    async loginWithSessionToken(callback: () => any, errorCallback: (response) => any) {
-        const loginClient = new LoginClient();
-        const email = LocalStorage.getEmailAddress();
-        const sessionId = LocalStorage.getSessionId();
-        if (email === "" || email === undefined || email === null|| sessionId === "" || sessionId === undefined || sessionId === null) {
-            return false;
-        }
-        const authenticationResponse = (await loginClient.Login.RequestLoginViaSession(email, sessionId)).data;
-        if (authenticationResponse.authenticated) {
-            this.authenticated = true;
-            callback()
-        } else {
-            errorCallback(authenticationResponse);
-            return false;
-        }
+    async login(email: string | null, password: string | null, callback: () => any, errorCallback: (response) => any) {
 
+        if (email === null || password === null) return false;
+        const authenticationResponse = (await this.loginClient.Login.RequestLogin(email, password)).data as Credentials;
+        return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
+    }
+
+    async loginWithGoogle(oneTimeCode: string, accessToken: string, tokenId: string, callback: () => void, errorCallback: (response) => void) {
+        const authenticationResponse = (await this.loginClient.Login.RequestLoginWithGoogleToken(oneTimeCode, accessToken, tokenId)).data as Credentials;
+        return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
+    }
+
+
+    async loginFromMemory (callback: any) {
+        const token = LocalStorage.getJwtToken();
+        if (token) {
+            var response = (await this.loginClient.Status.CheckIfLoggedIn()).data as boolean;
+            if (response) {
+                callback();
+            }
+        }
     }
 
     async logout(callback: () => any) {
-        const logoutClient = new LogoutClient();
 
         const sessionId = LocalStorage.getSessionId();
         console.log("Session ID at logout: " + sessionId)
-        if (sessionId !== null) {
-            await logoutClient.Logout.RequestLogout();
+        if (sessionId !== null && sessionId !== "") {
+            await this.logoutClient.Logout.RequestLogout(sessionId);
             LocalStorage.unsetAuthorization();
             LocalStorage.unsetEmailAddress();
         }

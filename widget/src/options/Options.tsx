@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SelectedOption, AreaTable, WidgetPreferences } from '../types';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import CreateClient from '../client/Client';
 import { CaroselOptions } from './optionFormats/CaroselOptions';
 import { useState, useCallback, useEffect } from 'react';
@@ -13,7 +13,7 @@ interface IOptionSelector {
 
 export const OptionSelector = ({ setSelectedOption, preferences }: IOptionSelector) => {
 
-    const { secretKey } = useParams< { secretKey: string }>();
+    var secretKey = (new URLSearchParams(useLocation().search)).get("key")
     const Client = CreateClient(secretKey);
 
     const [useGroups, setUseGroups] = useState<boolean>();

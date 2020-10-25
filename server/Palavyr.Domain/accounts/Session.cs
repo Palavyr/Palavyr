@@ -31,6 +31,11 @@ namespace Server.Domain.Accounts
             return new Session(newSessionId, accountId, apiKey);
         }
 
+        public static Session CreateNew(string token, string accountId, string apiKey)
+        {
+            return new Session(token, accountId, apiKey);
+        }
+        
         public static Session CreateNewValidationSession(string accountId, string confirmationToken)
         {
             return new Session(confirmationToken, accountId, "NON-KEY");

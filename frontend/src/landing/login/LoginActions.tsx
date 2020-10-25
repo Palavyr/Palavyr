@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Button, Typography, makeStyles } from '@material-ui/core';
+import { Button, Typography, makeStyles, Divider } from '@material-ui/core';
 import classNames from 'classnames';
 import { ButtonCircularProgress } from '@common/components/borrowed/ButtonCircularProgress';
+import GoogleLogin from 'react-google-login';
 
 
 export interface ILoginActions {
@@ -73,7 +74,7 @@ export const LoginActions = ({ isLoading, openChangePasswordDialog }: ILoginActi
                 }}
             >
                 Forgot Password?
-        </Typography>
+            </Typography>
         </>
     )
 }

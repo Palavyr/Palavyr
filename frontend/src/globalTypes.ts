@@ -197,6 +197,65 @@ export interface IHaveWidth {
     width: "xs" | "sm" | "md" | "lg" | "xl";
 }
 
+// export type GoogleTokenObj = {
+//     access_token: string;
+//     expires_at: number;
+//     expires_in: string;
+//     first_issued_at: string;
+//     id_token: string;
+//     idpId: string;
+//     login_hint: string;
+//     scope: string;
+//     session_state: SessionState;
+//     token_type: string; // Bearer
+// }
+
+// export type ExtraQueryParams = {
+//     authuser: string;
+// }
+
+// export type SessionState = {
+//     extraQueryParams: ExtraQueryParams;
+// }
+
+// export type FirstName = string;
+// export type LastName = string;
+// export type FullName = string;
+// export type EmailAddress = string;
+// export type GoogleNT = {
+//     Ad: FullName;
+//     JJ: string;
+//     Wt: EmailAddress;
+//     dV: FirstName;
+//     fT: LastName;
+//     yT: string;
+// }
+
+// export type GoogleWC = GoogleTokenObj;
+// export type GoogleProfileObj = {
+//     email: EmailAddress;
+//     familyName: LastName;
+//     givenName: FirstName;
+//     googleId: string;
+//     imageUrl: string;
+//     name: FullName;
+// }
+
+// export type GoogleAuthResponse = {
+//     Ca: string;
+//     wc: GoogleWC;
+//     nt: GoogleNT;
+//     googleId: string;
+//     tokenObj: GoogleTokenObj;
+//     tokenId: number;
+//     accessToken: string;
+//     profileObj: GoogleProfileObj
+
+// }
+
+
+
+
 
 
 /// declarations

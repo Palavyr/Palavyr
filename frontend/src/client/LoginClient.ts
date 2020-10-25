@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
+import { syncBuiltinESMExports } from "module";
 import { serverUrl, SPECIAL_HEADERS } from "./clientUtils";
 
 
@@ -16,24 +17,29 @@ export class LoginClient {
         )
         this.client.defaults.baseURL = serverURL + "/api/";
     }
+
     public Login = {
-        RequestLogin: async (username: string, email: string, password: string): Promise<AxiosResponse> => this.client.post("authentication/login",
+        RequestLogin: async ( email: string, password: string): Promise<AxiosResponse> => this.client.post("authentication/login",
         {
-            UserName: username,
             EmailAddress: email,
             Password: password
         }),
-        RequestLoginViaSession: async (email: string, sessionId: string): Promise<AxiosResponse> => this.client.post("authentication/sessionlogin", {
-            EmailAddress: email,
-            sessionToken: sessionId
+
+        RequestLoginWithGoogleToken: async (oneTimeCode: string, accessToken: string, tokenId: string): Promise<AxiosResponse> => this.client.post("authentication/login", {
+            OneTimeCode: oneTimeCode,
+            AccessToken: accessToken,
+            TokenId: tokenId
         })
     }
 
-    public Session = {
-        RequestSession: async (sessionId: string): Promise<AxiosResponse> => this.client.post(`authentication/session/${sessionId}`)
+    public Status = {
+        CheckIfLoggedIn: async (): Promise<AxiosResponse> => this.client.get(`authentication/status`)
     }
 
     public Account = {
-        registerNewAccount: async (EmailAddress: string, Password: string): Promise<AxiosResponse> => this.client.post(`account/create`, { EmailAddress, Password })
+        registerNewAccount: async (EmailAddress: string, Password: string): Promise<AxiosResponse> => this.client.post(`account/create`, { EmailAddress, Password }),
+        registerNewAccountWithGoogle: async (oneTimeCode: string, accessToken: string, tokenId: string): Promise<AxiosResponse> => this.client.post("account/create/google", {
+            OneTimeCode: oneTimeCode, AccessToken: accessToken, TokenId: tokenId
+        })
     }
 }

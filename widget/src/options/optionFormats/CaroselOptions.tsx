@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SelectedOption, WidgetPreferences } from '../../types';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { Paper, makeStyles, List, Card, Typography, CardContent, ListItem } from '@material-ui/core';
 
 
@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 export const CaroselOptions = ({ setSelectedOption, options, preferences }: ICaroselOptions) => {
 
     const history = useHistory();
-    const { secretKey } = useParams<{secretKey: string}>();
+    var secretKey = (new URLSearchParams(useLocation().search)).get("key")
     const classes = useStyles(preferences);
 
     return (
@@ -75,7 +75,7 @@ export const CaroselOptions = ({ setSelectedOption, options, preferences }: ICar
                                     onClick={
                                         () => {
                                             setSelectedOption(opt)
-                                            history.push(`/widget/${secretKey}`)
+                                            history.push(`/widget?key=${secretKey}`)
                                         }}
                                 >
                                     {opt.areaDisplay}

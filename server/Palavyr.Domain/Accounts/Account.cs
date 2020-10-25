@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Palavyr.Common.uniqueIdentifiers;
 
 namespace Server.Domain.Accounts
 {
@@ -21,7 +22,8 @@ namespace Server.Domain.Accounts
         public string ApiKey { get; set; }
         public bool Active { get; set; }
         public string Locale { get; set; } = "en-AU";
-
+        public AccountType AccountType { get; set; }
+        
         [NotMapped] public readonly string DefaultLocale = "en-AU";
 
         public UserAccount()
@@ -37,7 +39,8 @@ namespace Server.Domain.Accounts
             string companyName, 
             string phoneNumber, 
             bool active, 
-            string locale)
+            string locale,
+            AccountType accountType)
         {
             UserName = userName;
             Password = password;
@@ -50,23 +53,30 @@ namespace Server.Domain.Accounts
             PhoneNumber = phoneNumber;
             Active = active;
             Locale = locale;
+            AccountType = accountType; 
         }
 
-        public static UserAccount CreateAccount(string userName, string emailAddress, string password, string accountId)
+
+        public static UserAccount CreateGoogleAccount(string userName, string emailAddress, string accountId, string locale)
         {
-            return new UserAccount(userName, emailAddress, password, accountId, null, null, null, false, "en-AU");
+            return new UserAccount(userName, emailAddress, null, accountId, null, null, null, false, locale, AccountType.Google);
+        }
+        
+        public static UserAccount CreateAccount(string userName, string emailAddress, string password, string accountId, AccountType accountType)
+        {
+            return new UserAccount(userName, emailAddress, password, accountId, null, null, null, false, "en-AU", accountType);
         }
 
-        public static UserAccount CreateAccount(string userName, string emailAddress, string password, string accountId, string apiKey)
+        public static UserAccount CreateAccount(string userName, string emailAddress, string password, string accountId, string apiKey, AccountType accountType)
         {
-            return new UserAccount(userName, emailAddress, password, accountId, apiKey, null, null, false, "en-AU");
+            return new UserAccount(userName, emailAddress, password, accountId, apiKey, null, null, false, "en-AU", accountType);
         }
 
         public static UserAccount CreateAccount(string userName, string emailAddress, string password, string accountId,
-            string apiKey, string companyName, string phoneNumber, bool active, string locale)
+            string apiKey, string companyName, string phoneNumber, bool active, string locale, AccountType accountType)
         {
             return new UserAccount(userName, emailAddress, password, accountId, apiKey, companyName, phoneNumber,
-                active, locale);
+                active, locale, accountType);
         }
     }
 }

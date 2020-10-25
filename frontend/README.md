@@ -8,7 +8,7 @@ The frontend requires [node.js](https://nodejs.org/en/) and npm to install. With
 
     npm install
 
-This will install dependencies needed. 
+This will install dependencies needed.
 
 The frontend has a custom webpack configuration that works well with storybook. To start the webpack dev server, run:
 
@@ -82,3 +82,33 @@ Testing is currently scant and needs to soon become a major focus.
         }
     ]
 }
+
+
+### JWT Bearer Auth with SSL ONLY
+
+https://devblogs.microsoft.com/aspnet/jwt-validation-and-authorization-in-asp-net-core/
+https://www.thecodebuzz.com/create-generate-jwt-token-asp-net-core-example/
+
+
+GREAT video on jwt
+https://www.youtube.com/watch?v=vWkPdurauaA&ab_channel=DotNetCoreCentral
+
+https://www.youtube.com/watch?v=vWkPdurauaA&ab_channel=DotNetCoreCentral
+https://docs.microsoft.com/en-us/aspnet/core/security/authentication/samples?view=aspnetcore-3.1
+https://stackoverflow.com/questions/47809437/how-to-access-current-httpcontext-in-asp-net-core-2-custom-policy-based-authoriz
+
+https://referbruv.com/blog/posts/implementing-custom-authentication-scheme-and-handler-in-aspnet-core-3x
+https://www.c-sharpcorner.com/article/asp-net-core-web-api-creating-and-validating-jwt-json-web-token/
+https://docs.microsoft.com/en-us/aspnet/core/security/authorization/simple?view=aspnetcore-3.1
+https://docs.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-3.1
+https://docs.microsoft.com/en-us/aspnet/core/security/authorization/limitingidentitybyscheme?view=aspnetcore-3.1
+
+https://medium.com/mickeysden/react-and-google-oauth-with-net-core-backend-4faaba25ead0
+https://stackoverflow.com/questions/58758198/does-addjwtbearer-do-what-i-think-it-does
+https://medium.com/@M3rken/asp-net-core-supporting-multiple-authorization-route-branching-cad3ab632410
+https://developers.google.com/identity/sign-in/web/server-side-flow#python
+https://wildermuth.com/2018/04/10/Using-JwtBearer-Authentication-in-an-API-only-ASP-NET-Core-Project
+https://stackoverflow.com/questions/40988238/sending-the-bearer-token-with-axios
+
+## Dependency injection full
+https://auth0.com/blog/dependency-injection-in-dotnet-core/

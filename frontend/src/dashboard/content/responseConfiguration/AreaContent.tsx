@@ -98,7 +98,7 @@ export const AreaContent = ({ checkAreaCount, active, areaIdentifier, areaName, 
     const [tab, setTab] = useState<PanelRange>(0);
     const location = useLocation();
     const classes = useTabsStyles();
-
+    console.log("Active??: " + active)
     useEffect(() => {
         setLoaded(true);
         return () => {
@@ -155,7 +155,7 @@ export const AreaContent = ({ checkAreaCount, active, areaIdentifier, areaName, 
         )
         :
         (
-            (active === null) ? <div>Loading...</div> : <PleaseConfirmYourEmail />
+            (active === null || active === false) ? <div>Loading...</div> : <PleaseConfirmYourEmail />
         )
 };
 

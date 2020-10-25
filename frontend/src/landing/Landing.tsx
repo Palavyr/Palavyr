@@ -135,7 +135,7 @@ export const LandingPage = () => {
                 history.push("/dashboard");
             }, 150);
         }
-        var response = await Auth.loginWithSessionToken(success, () => { });
+        await Auth.loginFromMemory(success);
         return false;
     }, [])
 

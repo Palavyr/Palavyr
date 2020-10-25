@@ -3,6 +3,7 @@ class LocalStorageAccess {
 
     private AuthString: string = "authenticated";
     private SessionString: string = "sessionId";
+    private JwtTokenString: string = "Authorization";
     private EmailString: string = "emailAddress";
 
     private _setItem(key: string, val: boolean | string) {
@@ -26,15 +27,11 @@ class LocalStorageAccess {
         this._setItem(this.EmailString, "");
     }
 
-    setAuthorization(sessionId: string) {
+    setAuthorization(sessionId: string, jwtToken: string) {
         this._setItem(this.AuthString, true);
         this._setItem(this.SessionString, sessionId)
+        this._setItem(this.JwtTokenString, jwtToken)
     }
-
-    getSessionId() {
-        return this._getItem(this.SessionString);
-    }
-
     isAuthenticated() {
         var auth = this._getItem(this.AuthString)
         return auth === "true" ? true : false;
@@ -43,6 +40,15 @@ class LocalStorageAccess {
     unsetAuthorization() {
         this._setItem(this.AuthString, false);
         this._setItem(this.SessionString, "");
+        this._setItem(this.JwtTokenString, "");
+    }
+
+    getSessionId() {
+        return this._getItem(this.SessionString);
+    }
+
+    getJwtToken() {
+        return this._getItem(this.JwtTokenString);
     }
 }
 

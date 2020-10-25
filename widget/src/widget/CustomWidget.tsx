@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { SelectedOption, WidgetPreferences } from '../types';
 import { addResponseMessage, toggleMsgLoader, setQuickButtons, Widget, isWidgetOpened, toggleWidget } from 'react-chat-widget';
-import { useParams } from 'react-router-dom';
 import CreateClient from '../client/Client';
 import { renderNextComponent, ConvoContextProperties } from '../componentRegistry';
 import { getRootNode } from '../componentRegistry/utils';
 import { useState, useCallback, useEffect } from 'react';
 import fetchIpData from '../region/FetchIP';
+import { useLocation } from 'react-router-dom';
 
 
 interface ICustomWidget {
@@ -16,7 +16,7 @@ interface ICustomWidget {
 
 export const CustomWidget = ({ option, preferences }: ICustomWidget) => {
 
-    const { secretKey } = useParams< {secretKey: string } >();
+    var secretKey = (new URLSearchParams(useLocation().search)).get("key")
     const client = CreateClient(secretKey);
     const [prefs, setPrefs] = useState<WidgetPreferences>();
     const [, setUserInput] = useState<string>(); // TODO: send through convo

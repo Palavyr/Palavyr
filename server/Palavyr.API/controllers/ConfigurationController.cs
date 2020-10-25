@@ -1,25 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http.Cors;
+using DashboardServer.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DashboardServer.Data;
-using Microsoft.AspNetCore.Hosting;
 using Palavyr.API.ReceiverTypes;
-using Server.Domain;
 using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.Controllers
 {
-    // [EnableCors(origins: "*", headers: "*", methods: "*")]
+
+    [Authorize]
     [Route("api/estimate/configuration")]
     [ApiController]
     public class ConfigurationController : BaseController
     {
         public ConfigurationController(AccountsContext accountContext, ConvoContext convoContext, DashContext dashContext, IWebHostEnvironment env) : base(accountContext, convoContext, dashContext, env) { }
 
-        [HttpGet("{areaId}")]
+        [Microsoft.AspNetCore.Mvc.HttpGet("{areaId}")]
         public Area GetEstimateConfiguration([FromHeader] string accountId, string areaId)
         {
             var areaData = DashContext
@@ -32,8 +31,8 @@ namespace Palavyr.API.Controllers
             return areaData.Single(row => row.AreaIdentifier == areaId);
         }
 
-        [HttpPut("{areaId}/logue")]
-        public StatusCodeResult UpdatePrologue([FromHeader] string accountId, string areaId, [FromBody] Logue logue)
+        [Microsoft.AspNetCore.Mvc.HttpPut("{areaId}/logue")]
+        public StatusCodeResult UpdatePrologue([FromHeader] string accountId, string areaId, [Microsoft.AspNetCore.Mvc.FromBody] Logue logue)
         {
             var areaRow = DashContext
                 .Areas
@@ -59,7 +58,8 @@ namespace Palavyr.API.Controllers
         }
 
         [HttpPut("{areaId}/static/tables/save")]
-        public List<StaticTablesMeta> SaveStaticTablesMetas(string areaId,
+        public List<StaticTablesMeta> SaveStaticTablesMetas(
+            string areaId,
             [FromHeader] string accountId,
             [FromBody] List<StaticTablesMeta> staticTableMetas)
         {

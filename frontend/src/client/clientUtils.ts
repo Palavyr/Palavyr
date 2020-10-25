@@ -8,10 +8,16 @@ export const getSessionIdFromLocalStorage = (): string => {
     return sessionId || "noIdInStorage";
 }
 
+export const getJwtTokenFromLocalStorage = (): string => {
+    var token = LocalStorage.getJwtToken();
+    return token || "noTokenInStorage";
+}
+
 export const serverUrl = process.env.API_URL as string;
 export const webUrl = process.env.WEB_URL as string;
 export const widgetUrl = process.env.WIDGET_URL as string;
 export const widgetApiKey = process.env.WIDGET_APIKEY as string;
+export const googleOAuthClientId = process.env.GOOGLE_OAUTH as string;
 
 if (serverUrl === undefined) {
     console.log("SERVER URL UNDEFINED")
@@ -24,6 +30,10 @@ if (widgetUrl === undefined) {
 }
 if (widgetApiKey === undefined) {
     console.log("WIDGET API KEY UNDEFINED")
+}
+
+if (googleOAuthClientId == undefined) {
+    console.log("GOOGLE OAUTH CLIENT ID UNDEFINED")
 }
 
 export const SPECIAL_HEADERS = {}

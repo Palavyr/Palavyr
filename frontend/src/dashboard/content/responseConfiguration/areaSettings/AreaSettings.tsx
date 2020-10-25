@@ -114,23 +114,14 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
         loaded ?
             <>
                 <Grid container spacing={3}>
-                    <Grid item xs={5}>
-                        <SettingsGridRowText
-                            alertNode={
-                                <Alert severity={settings.areaName ? "success" : "warning"}>
-                                    <AlertTitle className={classes.titleText}>Update Dashboard Display Name</AlertTitle>
-                                    Set the name of area used for your reference on this dashboard.
-                                </Alert>
-                            }
-                            title="Update Area Name"
-                            name="Update Area Name"
-                            details=" Update the name of this area for dashboard."
-                            placeholder="New Area Name"
-                            currentValue={settings.areaName}
-                            onClick={handleAreaNameChange}
-                            clearVal={false}
-                        />
+                    <Grid item xs={3}></Grid>
+                    <Grid item xs={6} >
+                        <Alert severity="info">
+                            <AlertTitle className={classes.titleText}>Important Settings</AlertTitle>
+                            These options affect the appearance and behavior of the widget.
+                        </Alert>
                     </Grid>
+                    <Grid item xs={3}></Grid>
                     <Grid item xs={5}>
                         <SettingsGridRowText
                             alertNode={
@@ -181,6 +172,38 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
                         />
                     </Grid>
                 </Grid>
+                <Divider />
+                <br></br>
+
+                <Grid container spacing={3}>
+                    <Grid item xs={3}></Grid>
+                    <Grid item xs={6} >
+                        <Alert severity="warning">
+                            <AlertTitle className={classes.titleText}>Dashboard Specific Options</AlertTitle>
+                            These options only affect what you see in the dashboard.
+                        </Alert>
+                    </Grid>
+                    <Grid item xs={3}></Grid>
+                    <Grid item xs={5}>
+                        <SettingsGridRowText
+                            alertNode={
+                                <Alert severity={settings.areaName ? "success" : "warning"}>
+                                    <AlertTitle className={classes.titleText}>Update Dashboard Display Name</AlertTitle>
+                                    Set the name of area used for your reference on this dashboard.
+                                </Alert>
+                            }
+                            title="Update Area Name"
+                            name="Update Area Name"
+                            details=" Update the name of this area for dashboard."
+                            placeholder="New Area Name"
+                            currentValue={settings.areaName}
+                            onClick={handleAreaNameChange}
+                            clearVal={false}
+                        />
+                    </Grid>
+
+                </Grid>
+
                 <Divider />
                 <br></br>
                 <Grid container spacing={3}>

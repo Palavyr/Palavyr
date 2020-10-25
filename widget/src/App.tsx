@@ -3,7 +3,7 @@ import 'react-chat-widget/lib/styles.css';
 import { CustomWidget } from './widget/CustomWidget';
 import { OptionSelector } from './options/Options';
 import { SelectedOption, AreaTable, WidgetPreferences } from './types';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import CreateClient from './client/Client';
 
 
@@ -18,11 +18,15 @@ export const App = () => {
     const [isReady, setIsReady] = useState<boolean>(false);
     const [widgetPrefs, setWidgetPrefs] = useState<WidgetPreferences>()
 
-    const { secretKey } = useParams<{ secretKey: string }>();
+    var secretKey = (new URLSearchParams(useLocation().search)).get("key")
 
     const client = CreateClient(secretKey);
+    console.log("SECRET: " + secretKey)
 
     const runAppPrecheck = useCallback(async () => {
+
+        console.log(client)
+
         var preCheckResult = (await client.Widget.Access.runPreCheck()).data as PreCheckResult;
         setIsReady(preCheckResult.isReady);
         if(preCheckResult.isReady) {

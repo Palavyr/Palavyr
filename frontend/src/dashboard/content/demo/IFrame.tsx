@@ -26,7 +26,9 @@ export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, incompleteAreas }: 
 
     const classes = useStyles(incompleteAreas.length > 0);
 
+    // https://widget.palavyr.com/widget?key={apikey}
+    return <iframe id="chatDemoIframe" title="demo" className={classes.frame} src={`${widgetUrl}/widget?key=${apiKey}`}></iframe>
 
-    return <iframe id="chatDemoIframe" title="demo" className={classes.frame} src={`${widgetUrl}/widget/${apiKey}`}></iframe>
+    // return <iframe id="chatDemoIframe" title="demo" className={classes.frame} src={`${widgetUrl}/widget/${apiKey}`}></iframe>
 
 }

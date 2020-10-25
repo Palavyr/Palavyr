@@ -1,11 +1,13 @@
 using System;
 using System.IO;
+using System.Text;
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.SimpleEmail;
 using DashboardServer.Data;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +15,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using Palavyr.API.Controllers;
+using Palavyr.API.controllers.accounts.newAccount;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.Background;
 using Palavyr.Common.FileSystem.FormPaths;
@@ -38,7 +43,39 @@ namespace Palavyr.API
         private const string _secretKeySection = "AWS:SecretKey";
         public void ConfigureServices(IServiceCollection services)
         {
+            // var key = "SomeSecretKey";
+            var key = Configuration["JWTSecretKey"] ?? throw new ArgumentNullException("Configuration[\"JWTSecretKey\"]");
+            
             services.AddLogging(loggingBuilder => { loggingBuilder.AddSeq(); });
+            services.AddHttpContextAccessor();
+
+            services
+                .AddAuthentication(o =>
+                {
+                    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(opt =>
+                {
+                    opt.RequireHttpsMetadata = true;
+                    opt.SaveToken = true;
+
+                    opt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey =
+                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        // ValidateLifetime = false,
+                        // ValidIssuer = Configuration["JwtToken:Issuer"],
+                        // ValidAudience = Configuration["JwtToken:Issuer"],
+                    };
+                })
+                .AddScheme<WidgetAuthSchemeOptions, WidgetAuthenticationHandler>(
+                    AuthenticationSchemeNames.WidgetScheme,
+                    op => { });
+               
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -128,9 +165,14 @@ namespace Palavyr.API
                     .UseMemoryStorage());
             services.AddHangfireServer();
             // services.AddScoped<ICreatePalavyrSnapshot, CreatePalavyrSnapshot>();
-            services.AddScoped<IRemoveOldS3Archives, RemoveOldS3Archives>();
-            services.AddScoped<IRemoveStaleSessions, RemoveStaleSessions>();
-            services.AddScoped<IValidateAttachments, ValidateAttachments>();
+            services.AddTransient<IRemoveOldS3Archives, RemoveOldS3Archives>();
+            services.AddTransient<IRemoveStaleSessions, RemoveStaleSessions>();
+            services.AddTransient<IValidateAttachments, ValidateAttachments>();
+            
+            services.AddTransient<IJwtAuthenticationService, JwtAuthenticationService>();
+            services.AddTransient<IAccountSetupService, AccountSetupService>();
+            services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IEmailVerificationService, EmailVerificationService>();
         }
 
         public void Configure(
@@ -153,7 +195,9 @@ namespace Palavyr.API
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors();
-            app.UseMiddleware<AuthenticateByLoginOrSession>();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseMiddleware<SetHeaders>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             if (env.IsProduction())

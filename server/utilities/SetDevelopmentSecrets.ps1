@@ -46,4 +46,12 @@ dotnet user-secrets set AWS:AccessKey "$accessKey" --project $api
 dotnet user-secrets set AWS:SecretKey "$secretKey" --project $api
 dotnet user-secrets set AWS:Region "ap-southeast-2" --project $api
 
+
+###################
+# Write JWT Secrets (Json Web Token...?)
+# dotnet user-secrets set JwtToken:Issuer "http://localhost:8080/" --project $api
+# dotnet user-secrets set JwtToken:SecretKey "tobySuperSecretKey" --project $api
+dotnet user-secrets set JWTSecretKey "SomeSecretKey345345345345ThatIsITagkhjasdhjsf" --project $api
+
+
 # Clear-Host

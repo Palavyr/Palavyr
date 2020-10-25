@@ -1,4 +1,4 @@
-import { getSessionIdFromLocalStorage, serverUrl, SPECIAL_HEADERS } from "./clientUtils";
+import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage, serverUrl, SPECIAL_HEADERS } from "./clientUtils";
 import axios, { AxiosResponse, AxiosInstance } from "axios";
 
 
@@ -7,6 +7,7 @@ export class LogoutClient {
     constructor(serverURL: string = serverUrl) {
 
         var sessionId = getSessionIdFromLocalStorage();
+        var authToken = getJwtTokenFromLocalStorage();
         // console.log("Session Id used with Logout Client: " + sessionId)
 
         this.client = axios.create(
@@ -14,6 +15,7 @@ export class LogoutClient {
                 headers: {
                     action: "logout",
                     sessionId: sessionId,
+                    Authorization: "Bearer " + authToken, //include space after Bearer
                     ...SPECIAL_HEADERS
 
                 }
@@ -23,6 +25,6 @@ export class LogoutClient {
     }
 
     public Logout = {
-        RequestLogout: async (): Promise<AxiosResponse> => this.client.post("authentication/logout")
+        RequestLogout: async (sessionId: string): Promise<AxiosResponse> => this.client.post("authentication/logout", { SessionId: sessionId })
     }
 }

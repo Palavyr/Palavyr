@@ -10,11 +10,13 @@ import { useState } from 'react';
 
 const useStyles = makeStyles(theme => ({
     contentRoot: {
+        justifyItems: "center",
         flexGrow: 1,
-        backgroundColor: theme.palette.background.paper,
-        margin: "0px",
+        backgroundColor: "transparent",
+        margin: "0px"
       },
     card: {
+        width: "30%",
         padding: "3rem",
         margin: "3rem"
     },
@@ -47,6 +49,7 @@ export const PleaseConfirmYourEmail = () => {
         } else {
             setIsLoading(false);
             setAuthStatus("CodeNotVerified");
+            alert("Authorization code incorrect.")
         }
     }
 

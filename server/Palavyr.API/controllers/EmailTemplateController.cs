@@ -1,6 +1,7 @@
 ﻿using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.API.ReceiverTypes;
 using Palavyr.API.response;
@@ -8,6 +9,7 @@ using Palavyr.API.response;
 
 namespace Palavyr.API.Controllers
 {
+    [Authorize]
     [Route("api/email")]
     [ApiController]
     public class EmailTemplateController : BaseController

@@ -18,7 +18,7 @@ const fakeAreaTables: Array<AreaTable> = [
 ]
 
 var mock = new MockAdapter(axios);
-mock.onGet(`api/widget/${fakeKey}/areas`).reply(200, fakeAreaTables);
+mock.onGet(`api/widget/areas?key=${fakeKey}`).reply(200, fakeAreaTables);
 
 
 export default {

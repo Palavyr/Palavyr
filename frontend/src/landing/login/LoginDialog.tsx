@@ -7,6 +7,7 @@ import { useHistory } from "react-router-dom";
 import React from "react";
 import { FormDialogContent, FormStatusTypes } from "@common/components/borrowed/FormDialogContent";
 import { makeStyles } from "@material-ui/core";
+import { GoogleLoginProps, GoogleLoginResponse } from "react-google-login";
 
 
 interface ILoginDialog {
@@ -29,6 +30,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [loginEmail, setLoginEmail] = useState<string>("");
     const [loginPassword, setLoginPassword] = useState<string>("");
+
     const classes = useStyles();
 
     const history = useHistory();
@@ -55,18 +57,22 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
         setIsLoading(true);
         setStatus(null);
 
-        const successfulResponse = await Auth.login(
-            loginEmail,
-            loginPassword,
-            success,
-            error
-        );
+        if (loginEmail && loginPassword) {
+            const successfulResponse = await Auth.login(
+                loginEmail,
+                loginPassword,
+                success,
+                error
+            );
 
-        if (!successfulResponse) {
-            setTimeout(() => {
-                setStatus("invalidEmail");
+            if (!successfulResponse) {
+                setTimeout(() => {
+                    setStatus("invalidEmail");
+                    setIsLoading(false);
+                }, 1500);
+            } else {
                 setIsLoading(false);
-            }, 1500);
+            }
         }
 
     }, [setIsLoading, loginEmail, loginPassword, history, setStatus]);
@@ -74,6 +80,34 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
     const onFormSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         await login();
+    }
+
+
+    const googleLogin = useCallback(
+        async (response: GoogleLoginResponse) => {
+            setIsLoading(true);
+            setStatus(null);
+            var successfulResponse = await Auth.loginWithGoogle(
+                response.tokenId,
+                response.accessToken,
+                response.googleId,
+                success,
+                error
+            )
+            if (!successfulResponse) {
+                setTimeout(() => {
+                    setStatus("invalidEmail");
+                    setIsLoading(false);
+                }, 1500);
+            }
+        },
+        []
+    )
+
+    const responseGoogle = async (response: GoogleLoginResponse) => {
+        if (response.tokenObj) {
+            await googleLogin(response);
+        }
     }
 
     return (
@@ -87,6 +121,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
             content={
                 <FormDialogContent
                     status={status}
+                    responseGoogle={responseGoogle}
                     isPasswordVisible={isPasswordVisible}
                     setIsPasswordVisible={setIsPasswordVisible}
                     loginEmail={loginEmail}

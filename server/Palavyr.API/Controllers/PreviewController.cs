@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using Microsoft.AspNetCore.Mvc;
 using DashboardServer.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.response;
@@ -13,7 +14,7 @@ using Palavyr.API.ResponseTypes;
 
 namespace Palavyr.API.Controllers
 {
-    
+    [Authorize]
     [Route("api/preview")]
     [ApiController]
     public class PreviewController : BaseController
