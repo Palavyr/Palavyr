@@ -5,6 +5,7 @@ using Amazon.SimpleEmail;
 using DashboardServer.Data;
 using EmailService;
 using EmailService.verification;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Controllers;
@@ -65,7 +66,16 @@ namespace Palavyr.API.controllers.accounts.newAccount
             
             _logger.LogDebug("Creating an account using Google registration.");
             _logger.LogDebug("Attempting to authenticate the google onetime code.");
-            var payload = _authService.ValidateGoogleTokenId(googleRegistration.OneTimeCode);
+            GoogleJsonWebSignature.Payload payload;
+            try
+            {
+                payload = _authService.ValidateGoogleTokenId(googleRegistration.OneTimeCode);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug($"Exception THROWN at onetimetoken validation: {ex.Message}");
+                return Credentials.CreateUnauthenticatedResponse(CouldNotValidateGoogleAuthToken);
+            }
             if (payload == null)
             {
                 _logger.LogDebug("Failed to authenticate the onetime code.");
