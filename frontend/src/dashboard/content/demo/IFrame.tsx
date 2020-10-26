@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IncompleteAreas } from './ChatDemo';
 
 
@@ -22,13 +22,29 @@ interface IIframe {
     incompleteAreas: Array<IncompleteAreas>;
 }
 
+function useForceUpdate() {
+    const [value, setValue] = useState(0); // integer state
+    return () => setValue(value => ++value); // update the state to force render
+}
+
+type Iframe = HTMLElement & {
+    src: string;
+}
+
 export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, incompleteAreas }: IIframe) => {
 
+    const [state, setState] = useState<boolean | null>(null);
     const classes = useStyles(incompleteAreas.length > 0);
 
-    // https://widget.palavyr.com/widget?key={apikey}
-    return <iframe id="chatDemoIframe" title="demo" className={classes.frame} src={`${widgetUrl}/widget?key=${apiKey}`}></iframe>
+    const url = `${widgetUrl}/widget?key=${apiKey}`
 
-    // return <iframe id="chatDemoIframe" title="demo" className={classes.frame} src={`${widgetUrl}/widget/${apiKey}`}></iframe>
+    useEffect(() => {
+        if (iframeRefreshed != state) {
+            setState(iframeRefreshed);
+            (document.getElementById("chatDemoIframe")! as Iframe).src = url;
+        }
+    }, [iframeRefreshed])
+
+    return <iframe id="chatDemoIframe" title="demo" className={classes.frame} src={url}></iframe>
 
 }

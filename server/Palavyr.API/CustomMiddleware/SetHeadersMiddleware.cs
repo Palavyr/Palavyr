@@ -39,45 +39,8 @@ namespace Palavyr.API.CustomMiddleware
                     }
                 }
             }
-            // else if (action == MagicUrlStrings.WidgetAccess) // TODO
-            // {
-            //
-            //     try
-            //     {
-            //         var url = context.Request.Path;
-            //         var uri = new Uri(url);
-            //         var query = HttpUtility.ParseQueryString(uri.Query);
-            //         var apiKey = query.Get("key");
-            //         if (apiKey != null)
-            //         {
-            //             var account = accountContext.Accounts.SingleOrDefault(row => row.ApiKey == apiKey);
-            //             if (account != null)
-            //                 context.Request.Headers[MagicUrlStrings.AccountId] = account.AccountId;
-            //         }
-            //     }
-            //     catch (Exception ex)
-            //     {
-            //
-            //     }
-            // }
 
             await _next(context);
-
-
-            // _logger.LogInformation($"Currently operating in {env.EnvironmentName}");
-            // var ACTION = context.Request.Headers[Common.requests.MagicUrlStrings.Action].ToString();
-
-            // if (ACTION == MagicUrlStrings.SessionAction) // needs to be in every request header
-            // {
-            //     var requestedSession = context.Request.Headers[MagicUrlStrings.SessionId].ToString();
-            //     var session = accountContext.Sessions.SingleOrDefault(row => row.SessionId == requestedSession);
-            //     if (session == null)
-            //     {
-            //         await context.Response.WriteAsync("Active session could not be found. Please log in.");
-            //         throw new Exception("No Active Session Found.");
-            //     }
-            //     context.Request.Headers[MagicUrlStrings.AccountId] = session.AccountId;
-            // }
         }
     }
 }
