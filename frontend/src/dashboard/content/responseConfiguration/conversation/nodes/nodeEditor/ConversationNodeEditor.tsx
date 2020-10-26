@@ -6,14 +6,13 @@ import { cloneDeep } from "lodash";
 import { updateNodeList, createNewChildIDs, addNodes } from "../conversationNodeUtils";
 import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button } from "@material-ui/core";
 import { MultiChoiceOptions } from "./MultiChoiceOptions";
+import { SaveOrCancel } from "@common/components/SaveOrCancel";
 
 
-export interface INodeEditorModal {
+export interface IConversationNodeEditor {
     modalState: boolean;
     setModalState: (state: boolean) => void;
     node: ConvoNode;
-    changeParentState: (parentState: boolean) => void;
-    parentState: boolean;
     setNodes: (nodeList: Conversation) => void;
     nodeList: Conversation;
 }
@@ -28,7 +27,7 @@ const isMultiOptionType = (nodeType: string) => {
 }
 
 
-export const NodeEditorModal = ({ modalState, setModalState, node, nodeList, changeParentState, parentState, setNodes }: INodeEditorModal) => {
+export const ConversationNodeEditor = ({ modalState, setModalState, node, nodeList, setNodes }: IConversationNodeEditor) => {
 
     const client = new ApiClient();
 
@@ -76,7 +75,7 @@ export const NodeEditorModal = ({ modalState, setModalState, node, nodeList, cha
     }
 
     return (
-        <Dialog open={modalState} onClose={handleCloseModal} aria-labelledby="form-dialog-title">
+        <Dialog fullWidth open={modalState} onClose={handleCloseModal} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Edit a conversation node</DialogTitle>
             <DialogContent>
                 <TextField
@@ -96,32 +95,18 @@ export const NodeEditorModal = ({ modalState, setModalState, node, nodeList, cha
                         <MultiChoiceOptions options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} />
                     </>
                 }
-
             </DialogContent>
             <DialogActions>
-                <Button
-                    onClick={
+            <SaveOrCancel
+                    onSave={
                         async (e) => {
                             e.preventDefault();
-                            handleUpdateNode(textState, options);
-                            // await handleUpdateText(textState)
-                            // if (isMultiOptionType(node.nodeType)) {
-                            //     await handleUpdateOptions(options)
-                            // }
+                            await handleUpdateNode(textState, options);
                             handleCloseModal();
                         }
                     }
-                    color="primary" variant="contained"
-                >
-                    Save
-                </Button>
-                <Button
-                    onClick={handleCloseModal}
-                    color="secondary"
-                    variant="contained"
-                >
-                    Cancel
-                </Button>
+                    onCancel={handleCloseModal}
+                />
             </DialogActions>
         </Dialog>
     );

@@ -43,9 +43,8 @@ namespace Palavyr.API
         private const string _secretKeySection = "AWS:SecretKey";
         public void ConfigureServices(IServiceCollection services)
         {
-            // var key = "SomeSecretKey";
             var key = Configuration["JWTSecretKey"] ?? throw new ArgumentNullException("Configuration[\"JWTSecretKey\"]");
-            
+
             services.AddLogging(loggingBuilder => { loggingBuilder.AddSeq(); });
             services.AddHttpContextAccessor();
 

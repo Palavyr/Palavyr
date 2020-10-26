@@ -62,24 +62,31 @@ namespace Palavyr.API.controllers.accounts.newAccount
         
         public async Task<Credentials> CreateNewAccountViaGoogle(GoogleRegistrationDetails googleRegistration)
         {
-  
+            
+            _logger.LogDebug("Creating an account using Google registration.");
+            _logger.LogDebug("Attempting to authenticate the google onetime code.");
             var payload = _authService.ValidateGoogleTokenId(googleRegistration.OneTimeCode);
             if (payload == null)
             {
+                _logger.LogDebug("Failed to authenticate the onetime code.");
+                _logger.LogDebug($"OneTimeCode: {googleRegistration.OneTimeCode}");
                 return Credentials.CreateUnauthenticatedResponse(CouldNotValidateGoogleAuthToken);
             }
 
             // TODO: check that accessToken and tokenId match
             
+            _logger.LogDebug("Checking if Email already exists as non-google account.");
             if (AccountExists(payload.Email))
             {
                 _logger.LogDebug($"Account for email address {payload.Email} already exists");
                 return Credentials.CreateUnauthenticatedResponse(AccountAlreadyExists);
             }
             
+            _logger.LogDebug("Creating New Account Details...");
             var accountId = NewAccountUtils.GetNewAccountId();
             var newUserId = Guid.NewGuid().ToString(); // TODO: decide how to make use of the username concept here
             var apiKey = Guid.NewGuid().ToString();
+            _logger.LogDebug($"New Account Details--Account: {accountId} -- user: {newUserId} -- apiKey: {apiKey}");
             
             var account = UserAccount.CreateGoogleAccount(newUserId, payload.Email, accountId, payload.Locale);
             _logger.LogDebug("Adding new account via GOOGLE...");

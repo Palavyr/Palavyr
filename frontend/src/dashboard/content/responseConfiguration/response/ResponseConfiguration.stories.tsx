@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Meta } from '@storybook/react/types-6-0';
 import { ResponseConfiguration, IResponseConfiguration } from './ResponseConfiguration';
-import { useDashboardStyles } from 'dashboard/layouts/dashboard.styles';
 
 
 export default {
@@ -9,7 +8,6 @@ export default {
     component: ResponseConfiguration
 } as Meta;
 
-const classes = useDashboardStyles();
 
 const Template = (args: IResponseConfiguration) => <ResponseConfiguration {...args} />;
 
@@ -17,5 +15,4 @@ const Template = (args: IResponseConfiguration) => <ResponseConfiguration {...ar
 export const Primary = Template.bind({});
 Primary.args = {
     areaIdentifier: "abc-123",
-    classes: classes
 }

@@ -6,7 +6,7 @@ const primary = "#97c6a3";
 const secondary = "#c6a397";
 const black = "#282630";
 const darkBlack = "rgb(36, 40, 44)";
-const background = "#efedf4";
+const background = "#54585A"; //"#efedf4";
 const warningLight = "rgba(253, 200, 69, .3)";
 const warningMain = "rgba(253, 200, 69, .5)";
 const warningDark = "rgba(253, 200, 69, .7)";
@@ -45,7 +45,8 @@ const Backuptheme = createMuiTheme({
         // E.g., shift from Red 500 to Red 300 or Red 700.
         tonalOffset: 0.2,
         background: {
-            paper: "#E8E8E8",
+            paper: "#54585A",
+            // paper: "#E8E8E8",
             default: background
         },
         // spacing

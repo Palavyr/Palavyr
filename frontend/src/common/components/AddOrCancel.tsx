@@ -4,41 +4,39 @@ import { makeStyles } from "@material-ui/core";
 import classNames from "classnames";
 import { AnyVoidFunction } from "@Palavyr-Types";
 import { CustomAlert } from "./customAlert/CutomAlert";
-import SaveIcon from '@material-ui/icons/Save';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
 
 export interface ISaveOrCancel {
     size?: "small" | "medium" | "large" | undefined;
-    onSave: AnyVoidFunction;
+    onAdd: AnyVoidFunction;
     onCancel?: AnyVoidFunction;
-    onDelete?: AnyVoidFunction;
     useModal?: boolean;
+    addText?: string;
+    cancelText?: string
 }
 
 const useStyles = makeStyles((theme => ({
     saveButton: {
         border: `1px solid ${theme.palette.primary}`,
         borderRadius: "10px",
-        background: `${theme.palette.primary}`
+        background: `${theme.palette.primary}`,
+        '&:hover': {
+            background: "#757ce8",
+        },
     },
     cancelButton: {
         border: `1px solid ${theme.palette.secondary}`,
         borderRadius: "10px",
-        background: `${theme.palette.secondary}`
-
-    },
-    delButton: {
-        border: `1px solid ${theme.palette.secondary}`,
-        borderRadius: "10px",
-        background: `${theme.palette.secondary}`
+        background: `${theme.palette.secondary}`,
+        '&:hover': {
+            background: "#FF4785"
+        },
     },
     button: {
         marginLeft: "0.1rem",
         marginRight: "0.1rem",
-        '&:hover': {
-            background: "#757ce8"
-        }
     },
     saveCancelWrapper: {
         height: "100%",
@@ -46,7 +44,7 @@ const useStyles = makeStyles((theme => ({
     }
 })))
 
-export const SaveOrCancel = ({ onSave, onCancel, onDelete, useModal, size = "small" }: ISaveOrCancel) => {
+export const AddOrCancel = ({ onAdd, onCancel, useModal, addText = "Add", cancelText = "Cancel", size = "small" }: ISaveOrCancel) => {
 
     const classes = useStyles();
     const [alertState, setAlertState] = useState<boolean>(false);
@@ -54,47 +52,36 @@ export const SaveOrCancel = ({ onSave, onCancel, onDelete, useModal, size = "sma
     return (
         <>
             {
-                onDelete &&
                 <Button
-                    startIcon={<DeleteOutlineIcon />}
-                    variant="outlined"
-                    className={classNames(classes.button, classes.delButton)}
-                    onClick={onDelete}
-                    size={size}
-                >
-                    Delete
-                </Button>
-            }
-            {
-                <Button
-                    startIcon={<SaveIcon />}
+                    endIcon={<PlaylistAddIcon />}
                     variant="outlined"
                     className={classNames(classes.button, classes.saveButton)}
                     onClick={
-                        async (e) => {
-                            await onSave(e)
-                            setAlertState(true);
+                        async () => {
+                            await onAdd()
+                            useModal && setAlertState(true);
                         }
                     }
                     size={size}
                 >
-                    Save
+                    {addText}
                 </Button>
             }
             {
                 onCancel &&
                 <Button
+                    endIcon={<DeleteOutlineIcon />}
                     variant="outlined"
                     className={classNames(classes.button, classes.cancelButton)}
                     onClick={
-                        async (e) => {
-                            await onCancel(e)
-                            setAlertState(true);
+                        async () => {
+                            await onCancel()
+                            useModal && setAlertState(true);
                         }
                     }
                     size={size}
                 >
-                    Cancel
+                    {cancelText}
                 </Button>
             }
             {

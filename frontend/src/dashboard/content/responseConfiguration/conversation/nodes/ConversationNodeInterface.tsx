@@ -7,7 +7,7 @@ import classNames from "classnames";
 import { NodeTypeSelector } from "./NodeTypeSelector";
 import { cloneDeep } from "lodash";
 import { updateNodeList } from "./conversationNodeUtils";
-import { NodeEditorModal } from "./nodeEditor/ConversationNodeEditor";
+import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
 
 
 export interface IConversationNodeInterface {
@@ -33,7 +33,6 @@ const useStyles = makeStyles(theme => ({
         borderColor: props.nodeType === "" ? "Red" : "#54585A",
         borderWidth: props.nodeType === "" ? "5px" : "2px",
         borderRadius: "3px",
-        // background: "#f8f8f9"
         backgroundColor: "#C7ECEE",
 
 
@@ -143,14 +142,12 @@ export const ConversationNodeInterface = ({ dynamicNodeTypes, node, nodeList, op
                     }
                     label="Show response in PDF"
                 />
-                <NodeEditorModal
+                <ConversationNodeEditor
                     setModalState={setModalState}
                     modalState={modalState}
                     node={node}
                     nodeList={nodeList}
                     setNodes={setNodes}
-                    changeParentState={changeParentState}
-                    parentState={parentState}
                 />
             </CardContent>
         </Card>

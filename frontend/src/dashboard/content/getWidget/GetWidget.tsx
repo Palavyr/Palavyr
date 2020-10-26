@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
 interface IGetWidget {
     setHelpType(helpType: HelpTypes): void;
 }
-export const GetWidget = ({setHelpType}: IGetWidget) => {
+export const GetWidget = ({ setHelpType }: IGetWidget) => {
 
     const client = new ApiClient();
     const [apikey, setApiKey] = useState<string>("");
@@ -34,20 +34,21 @@ export const GetWidget = ({setHelpType}: IGetWidget) => {
 
 
     return (
-        <Card className={classes.outerCard}>
-            <Typography gutterBottom={true} variant="h3">
-                Add your configured widget to your website
-            </Typography>
-            {/* <br /> */}
-            {/* <Divider variant="middle"/> */}
-            <Typography paragraph>
-                Adding the widget toy our website is so easy! Simply paste the following code into your website's html and apply custom styling:
+        <>
+            <Card className={classes.outerCard}>
+                <Typography gutterBottom={true} variant="h3">
+                    Add your configured widget to your website
             </Typography>
 
-            <Typography component={"pre"} paragraph>
-                <strong>&lt;iframe src="https://widget.palavyr.com/widget?key={apikey}" /&gt;</strong>
+                <Typography paragraph>
+                    Adding the widget toy our website is so easy! Simply paste the following code into your website's html and apply custom styling:
             </Typography>
-        </Card>
+
+                <Typography component={"pre"} paragraph>
+                    <strong>&lt;iframe src="https://widget.palavyr.com/widget?key={apikey}" /&gt;</strong>
+                </Typography>
+            </Card>
+        </>
     )
 
 }

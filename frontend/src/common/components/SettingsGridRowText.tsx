@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { Paper, Grid, TextField, Button, makeStyles, Typography } from '@material-ui/core';
+import { Paper, Grid, TextField, Button, makeStyles, Typography, Divider } from '@material-ui/core';
 import { useState } from 'react';
-import { Statement } from './Statement';
 import { AnyVoidFunction } from '@Palavyr-Types';
-import { Alert, AlertTitle } from '@material-ui/lab';
+import { SinglePurposeButton } from './SinglePurposeButton';
 
 
 export interface ISettingsGridRow {
@@ -32,6 +31,11 @@ const useStyles = makeStyles(theme => ({
         padding: "2rem",
         margin: "1rem",
         width: "100%"
+    },
+    singlePurposeButton: {
+        marginTop: "1rem",
+        color: "black",
+        background: "white"
     }
 }))
 
@@ -91,18 +95,6 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ name, details,
                         {inputType === "number" && null}
                     </Grid>
                 }
-                <Grid item xs={12}>
-
-                    <Button style={{marginTop: "1rem"}} variant="contained" color="primary" onClick={() => {
-                        onClick(inputVal);
-                        if (clearVal === true) {
-                            setInputVal("");
-                        }
-                    }}
-                    >
-                        {buttonText}
-                    </Button>
-                </Grid>
             </Grid>
             <Grid>
                 {
@@ -113,6 +105,24 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ name, details,
                     </>
                 }
             </Grid>
+            <Divider />
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <SinglePurposeButton
+                    classes={classes.singlePurposeButton}
+                    variant="contained"
+                    color="primary"
+                    buttonText={buttonText}
+                    onClick={
+                        () => {
+                            onClick(inputVal);
+                            if (clearVal === true) {
+                                setInputVal("");
+                            }
+                        }
+                    }
+
+                />
+            </div>
         </Paper >
     )
 }

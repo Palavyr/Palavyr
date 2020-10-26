@@ -6,6 +6,7 @@ import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { AlertDetails, AreaTable, EmailVerificationResponse } from "@Palavyr-Types";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
+import classNames from "classnames";
 
 
 interface IAreaSettings {
@@ -22,7 +23,16 @@ type Settings = {
 
 const useStyles = makeStyles(theme => ({
     titleText: {
-        fontWeight: "bold"
+        fontWeight: "bold",
+    },
+    alert: {
+        border: "2px solid black"
+    },
+    alertTitle: {
+        display: "flex",
+        color: "white",
+        justifyContent: "center",
+        textAlign: "left"
     }
 }))
 
@@ -116,7 +126,7 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
                 <Grid container spacing={3}>
                     <Grid item xs={3}></Grid>
                     <Grid item xs={6} >
-                        <Alert severity="info">
+                        <Alert className={classNames(classes.alert, classes.alertTitle)} variant="filled" severity="info">
                             <AlertTitle className={classes.titleText}>Important Settings</AlertTitle>
                             These options affect the appearance and behavior of the widget.
                         </Alert>
@@ -126,6 +136,7 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
                         <SettingsGridRowText
                             alertNode={
                                 <Alert
+                                    className={classes.alert}
                                     severity={
                                         (settings.areaTitle === "Change this in the area Settings." || settings.areaTitle === "")
                                             ? "error"
@@ -150,7 +161,7 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
                         <SettingsGridRowText
                             inputType="email"
                             alertNode={
-                                <Alert severity={emailSeverity()}>
+                                <Alert className={classes.alert} severity={emailSeverity()}>
                                     <AlertTitle className={classes.titleText}>
                                         {
                                             settings.isVerified
@@ -178,7 +189,7 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
                 <Grid container spacing={3}>
                     <Grid item xs={3}></Grid>
                     <Grid item xs={6} >
-                        <Alert severity="warning">
+                        <Alert className={classNames(classes.alert, classes.alertTitle)} variant="filled" severity="warning">
                             <AlertTitle className={classes.titleText}>Dashboard Specific Options</AlertTitle>
                             These options only affect what you see in the dashboard.
                         </Alert>
@@ -187,7 +198,7 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
                     <Grid item xs={5}>
                         <SettingsGridRowText
                             alertNode={
-                                <Alert severity={settings.areaName ? "success" : "warning"}>
+                                <Alert className={classes.alert} severity={settings.areaName ? "success" : "warning"}>
                                     <AlertTitle className={classes.titleText}>Update Dashboard Display Name</AlertTitle>
                                     Set the name of area used for your reference on this dashboard.
                                 </Alert>
@@ -209,7 +220,7 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
                 <Grid container spacing={3}>
                     <Grid item xs={3}></Grid>
                     <Grid item xs={6} >
-                        <Alert severity="error">
+                        <Alert className={classNames(classes.alert, classes.alertTitle)} severity="error" variant="filled">
                             <AlertTitle className={classes.titleText}>DANGER ZONE</AlertTitle>
                             WAIT! These options are permanent.
                         </Alert>
@@ -218,7 +229,7 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
                     <Grid item xs={5}>
                         <SettingsGridRowText
                             alertNode={
-                                <Alert severity="error">
+                                <Alert className={classes.alert} severity="error">
                                     <AlertTitle className={classes.titleText}>Permanently DELETE</AlertTitle>
                             CAREFUL! Use this option to delete this area (and all associated data) forever.
                         </Alert>
