@@ -9,13 +9,13 @@ namespace Palavyr.API.controllers.accounts.newAccount
 {
     public interface IEmailVerificationService
     {
-        public Task<bool> ConfirmEmailAddress(string authToken);
+        public Task<bool> ConfirmEmailAddressAsync(string authToken);
     }
     
     public class EmailVerificationService : IEmailVerificationService
     {
         private readonly AccountsContext _accountsContext;
-        private ILogger<EmailVerificationService> _logger;
+        private readonly ILogger<EmailVerificationService> _logger;
         public AccountsContext accountContext { get; set; }
         private SenderVerification Verifier { get; set; }
 
@@ -30,7 +30,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             Verifier = new SenderVerification(logger, SESClient);
         }
 
-        public async Task<bool> ConfirmEmailAddress(string authToken)
+        public async Task<bool> ConfirmEmailAddressAsync(string authToken)
         {
             _logger.LogDebug("Attempting to confirm email via auth Token.");
             var emailVerification =

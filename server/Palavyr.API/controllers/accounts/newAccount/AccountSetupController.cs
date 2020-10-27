@@ -51,21 +51,21 @@ namespace Palavyr.API.controllers.accounts.newAccount
         [HttpPost("create")]
         public async Task<Credentials> CreateNewAccount([FromBody] AccountDetails newAccountDetails)
         {
-            return await _setupService.CreateNewAccountViaDefault(newAccountDetails);
+            return await _setupService.CreateNewAccountViaDefaultAsync(newAccountDetails);
         }
 
         [AllowAnonymous]
         [HttpPost("create/google")]
         public async Task<Credentials> CreateNewAccountGoogle([FromBody] GoogleRegistrationDetails registrationDetails)
         {
-            return await _setupService.CreateNewAccountViaGoogle(registrationDetails);
+            return await _setupService.CreateNewAccountViaGoogleAsync(registrationDetails);
         }
 
 
         [HttpPost("confirmation/{authToken}/action/setup")]
         public async Task<bool> ConfirmEmailAddress(string authToken)
         {
-            return await _emailVerificationService.ConfirmEmailAddress(authToken);
+            return await _emailVerificationService.ConfirmEmailAddressAsync(authToken);
 
         }
 

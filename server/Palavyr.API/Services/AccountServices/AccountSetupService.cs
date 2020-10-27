@@ -22,8 +22,8 @@ namespace Palavyr.API.controllers.accounts.newAccount
 
     public interface IAccountSetupService
     {
-        Task<Credentials> CreateNewAccountViaDefault(AccountDetails newAccountDetails);
-        Task<Credentials> CreateNewAccountViaGoogle(GoogleRegistrationDetails registrationDetails);
+        Task<Credentials> CreateNewAccountViaDefaultAsync(AccountDetails newAccountDetails);
+        Task<Credentials> CreateNewAccountViaGoogleAsync(GoogleRegistrationDetails registrationDetails);
     }
     
     public class AccountSetupService : IAccountSetupService
@@ -61,21 +61,13 @@ namespace Palavyr.API.controllers.accounts.newAccount
             Verifier = new SenderVerification(logger, SESClient);
         }
         
-        public async Task<Credentials> CreateNewAccountViaGoogle(GoogleRegistrationDetails googleRegistration)
+        public async Task<Credentials> CreateNewAccountViaGoogleAsync(GoogleRegistrationDetails googleRegistration)
         {
             
             _logger.LogDebug("Creating an account using Google registration.");
             _logger.LogDebug("Attempting to authenticate the google onetime code.");
-            GoogleJsonWebSignature.Payload payload;
-            try
-            {
-                payload = await _authService.ValidateGoogleTokenId(googleRegistration.OneTimeCode);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogDebug($"Exception THROWN at onetimetoken validation: {ex.Message}");
-                return Credentials.CreateUnauthenticatedResponse(CouldNotValidateGoogleAuthToken);
-            }
+
+            var payload = await _authService.ValidateGoogleTokenId(googleRegistration.OneTimeCode);
             if (payload == null)
             {
                 _logger.LogDebug("Failed to authenticate the onetime code.");
@@ -109,7 +101,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             
             var token = CreateNewJwtToken(account);
             var session = CreateNewSession(account);
-            _accountsContext.Sessions.AddAsync(session);
+            await _accountsContext.Sessions.AddAsync(session);
 
             await _accountsContext.SaveChangesAsync();
             await _dashContext.SaveChangesAsync();
@@ -133,7 +125,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
   
         }
         
-        public async Task<Credentials> CreateNewAccountViaDefault(AccountDetails newAccountDetails)
+        public async Task<Credentials> CreateNewAccountViaDefaultAsync(AccountDetails newAccountDetails)
         {
             // confirm account doesn't already exist
             if (AccountExists(newAccountDetails.EmailAddress))
@@ -164,12 +156,11 @@ namespace Palavyr.API.controllers.accounts.newAccount
             
             var token = CreateNewJwtToken(account);
             var session = CreateNewSession(account);
-            _accountsContext.Sessions.AddAsync(session);
+            await _accountsContext.Sessions.AddAsync(session);
 
             await _accountsContext.SaveChangesAsync();
             await _dashContext.SaveChangesAsync();
             return Credentials.CreateAuthenticatedResponse(session.SessionId, session.ApiKey, token, account.EmailAddress);
-
         }
 
         private bool AccountExists(string emailAddress)

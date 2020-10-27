@@ -90,8 +90,8 @@ namespace Palavyr.API.Controllers
             var session = CreateNewSession(account);
             var token = CreateNewJwtToken(account);
             
-            _accountsContext.Sessions.Add(session);
-            _accountsContext.SaveChanges();
+            await _accountsContext.Sessions.AddAsync(session);
+            await _accountsContext.SaveChangesAsync();
 
             _logger.LogDebug("Session saved to DB. Returning auth response.");
             return Credentials.CreateAuthenticatedResponse(session.SessionId, session.ApiKey, token, account.EmailAddress);
@@ -102,15 +102,17 @@ namespace Palavyr.API.Controllers
         {
             try
             {
+                _logger.LogDebug("Inside the try block -- attempting to validation One Time Code");
                 return await GoogleJsonWebSignature.ValidateAsync(oneTimeCode, new GoogleJsonWebSignature.ValidationSettings());
             }
             catch (InvalidJwtException)
             {
+                _logger.LogDebug("EXCEPTION - Invalid JWT Token!");
                 return null;
             }
             catch (Exception ex)
             {
-                
+                _logger.LogDebug($"UNKNOWN EXCEPTION THROWN: {ex.Message}");
                 return null;
             }
         }
