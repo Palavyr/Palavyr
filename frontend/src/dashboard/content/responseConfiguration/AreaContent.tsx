@@ -9,7 +9,7 @@ import { AreaSettings } from "./areaSettings/AreaSettings";
 import { AppBar, Tabs, Tab, makeStyles } from "@material-ui/core";
 import { PleaseConfirmYourEmail } from "../welcome/PleaseConfirmYourEmail";
 import { WelcomeToTheDashboard } from "../welcome/WelcomeToTheDashboard";
-import { useLocation } from "react-router-dom";
+import { Redirect, useHistory, useLocation } from "react-router-dom";
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import FilterFramesIcon from '@material-ui/icons/FilterFrames';
 import SubjectIcon from '@material-ui/icons/Subject';
@@ -17,6 +17,7 @@ import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import { HelpTypes } from "dashboard/layouts/DashboardLayout";
+import { Dashboard } from "@material-ui/icons";
 
 
 interface ITabs {
@@ -97,6 +98,7 @@ export const AreaContent = ({ checkAreaCount, active, areaIdentifier, areaName, 
 
     const [tab, setTab] = useState<PanelRange>(0);
     const location = useLocation();
+    const history = useHistory();
     const classes = useTabsStyles();
     console.log("Active??: " + active)
     useEffect(() => {
@@ -105,6 +107,11 @@ export const AreaContent = ({ checkAreaCount, active, areaIdentifier, areaName, 
             setLoaded(false)
         }
     }, [tab, setLoaded]); // probably need to add a tracker for when the table is saved so can reload and update
+
+    if (!active) {
+        history.push("/dashboard");
+    }
+
 
     const handleTabChange = (event: any, newValue: PanelRange) => {
         switch (newValue) {
@@ -149,14 +156,7 @@ export const AreaContent = ({ checkAreaCount, active, areaIdentifier, areaName, 
             </div>
         )
     }
-    return active ?
-        (
-            (location.pathname === "/dashboard" || location.pathname === "/dashboard/editor") ? <WelcomeToTheDashboard checkAreaCount={checkAreaCount} /> : <EditorInterface />
-        )
-        :
-        (
-            (active === null || active === false) ? <div>Loading...</div> : <PleaseConfirmYourEmail />
-        )
+    return (location.pathname === "/dashboard" || location.pathname === "/dashboard/editor") ? <WelcomeToTheDashboard checkAreaCount={checkAreaCount} /> : <EditorInterface />
 };
 
 

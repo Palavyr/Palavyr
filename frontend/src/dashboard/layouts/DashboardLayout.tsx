@@ -229,7 +229,7 @@ export const DashboardLayout = () => {
 
             {/* Any type of content should be loaded here */}
             <ContentLoader open={open}>
-                {/* {loaded === true && (!active || active === undefined || active === null) && <PleaseConfirmYourEmail />} */}
+                {loaded === true && (active === false) && <PleaseConfirmYourEmail />}
                 {contentType === "editor" && (active === true) && <AreaContent checkAreaCount={checkAreaCount} setHelpType={setHelpType} active={active} areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} setViewName={setViewName} />}
                 {active && contentType === "settings" && <SettingsContent setHelpType={setHelpType} areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} />}
                 {active && contentType === "demo" && <ChatDemo setHelpType={setHelpType} />}
