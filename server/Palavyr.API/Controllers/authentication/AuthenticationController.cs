@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -38,9 +39,9 @@ namespace Palavyr.API.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public Credentials RequestLogin([FromBody] LoginCredentials credentials)
+        public async Task<Credentials> RequestLogin([FromBody] LoginCredentials credentials)
         {
-            return _authService.PerformLoginAction(credentials);
+            return await _authService.PerformLoginAction(credentials);
         }
 
         [HttpPost("logout")]

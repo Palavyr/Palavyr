@@ -69,7 +69,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             GoogleJsonWebSignature.Payload payload;
             try
             {
-                payload = _authService.ValidateGoogleTokenId(googleRegistration.OneTimeCode);
+                payload = await _authService.ValidateGoogleTokenId(googleRegistration.OneTimeCode);
             }
             catch (Exception ex)
             {

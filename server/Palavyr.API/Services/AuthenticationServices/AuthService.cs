@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using DashboardServer.Data;
 using Google.Apis.Auth;
 using Microsoft.Extensions.Configuration;
@@ -14,8 +15,8 @@ namespace Palavyr.API.Controllers
 {
     public interface IAuthService
     {
-        public Credentials PerformLoginAction(LoginCredentials loginCredentials);
-        public GoogleJsonWebSignature.Payload? ValidateGoogleTokenId(string accessToken);
+        public Task<Credentials> PerformLoginAction(LoginCredentials loginCredentials);
+        public Task<GoogleJsonWebSignature.Payload> ValidateGoogleTokenId(string accessToken);
     }
 
     public class AuthService : IAuthService
@@ -80,9 +81,9 @@ namespace Palavyr.API.Controllers
             CouldNot
         }
 
-        public Credentials PerformLoginAction(LoginCredentials loginCredentials)
+        public async Task<Credentials> PerformLoginAction(LoginCredentials loginCredentials)
         {
-            var (account, message) = RequestAccount(loginCredentials);
+            var (account, message) = await RequestAccount(loginCredentials);
             if (account == null)
                 return Credentials.CreateUnauthenticatedResponse(message);
 
@@ -97,13 +98,11 @@ namespace Palavyr.API.Controllers
         }
         
 
-        public GoogleJsonWebSignature.Payload? ValidateGoogleTokenId(string oneTimeCode)
+        public async Task<GoogleJsonWebSignature.Payload> ValidateGoogleTokenId(string oneTimeCode)
         {
-            GoogleJsonWebSignature.Payload payload;
             try
             {
-                return GoogleJsonWebSignature
-                    .ValidateAsync(oneTimeCode, new GoogleJsonWebSignature.ValidationSettings()).Result;
+                return await GoogleJsonWebSignature.ValidateAsync(oneTimeCode, new GoogleJsonWebSignature.ValidationSettings());
             }
             catch (InvalidJwtException)
             {
@@ -116,21 +115,21 @@ namespace Palavyr.API.Controllers
             }
         }
 
-        private AccountReturn RequestAccount(LoginCredentials loginCredentials)
+        private async Task<AccountReturn> RequestAccount(LoginCredentials loginCredentials)
         {
             var loginType = DetermineLoginType(loginCredentials);
             return loginType switch
             {
                 (LoginType.Default) => RequestAccountViaDefault(loginCredentials),
-                (LoginType.Google) => RequestAccountViaGoogle(loginCredentials),
+                (LoginType.Google) => await RequestAccountViaGoogle(loginCredentials),
                 LoginType.Error => AccountReturn.Return(null, null),
                 _ => AccountReturn.Return(null, message: null)
             };
         }
 
-        private AccountReturn RequestAccountViaGoogle(LoginCredentials credential)
+        private async Task<AccountReturn> RequestAccountViaGoogle(LoginCredentials credential)
         {
-            var payload = ValidateGoogleTokenId(credential.OneTimeCode);
+            var payload = await ValidateGoogleTokenId(credential.OneTimeCode);
             if (payload == null)
                 return AccountReturn.Return(null, CouldNotValidateGoogleAuthToken);
 
