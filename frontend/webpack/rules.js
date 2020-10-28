@@ -11,20 +11,35 @@ const TypeScriptLoaderRule = () => {
     }
 }
 
-const FileLoaderRule = () => {
+// const FileLoaderRule = () => {
+//     return {
+//         test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+//         use: [
+//             {
+//                 loader: 'file-loader',
+//                 options: {
+//                     name: '[name].[ext]',
+//                     outputPath: 'fonts/'
+//                 }
+//             }
+//         ]
+//     }
+// }
+
+const NewFileLoaderRule = () => {
     return {
-        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        test: /\.(png|jp(e*)g|gif)$/,
         use: [
             {
                 loader: 'file-loader',
                 options: {
-                    name: '[name].[ext]',
-                    outputPath: 'fonts/'
-                }
+                    name: 'images/[hash]-[name].[ext]',
+                },
             }
         ]
     }
 }
+
 
 const SVGRule = () => {
     return {
@@ -38,11 +53,21 @@ const SVGRule = () => {
 
 const LiteLoadSVGs = () => {
     return {
-        loader: 'react-svg-loader',
-        options: {
-            jsx: true // true outputs JSX tags
-        }
+        test: /\.svg$/,
+        use: [
+            {
+                loader: "babel-loader"
+            },
+            {
+                loader: "react-svg-loader",
+                options: {
+                    jsx: true // true outputs JSX tags
+                }
+            }
+        ]
     }
+
+
 }
 
 const SVGRLoader = () => {
@@ -124,12 +149,12 @@ const CSSMinify = () => {
 
 
 module.exports = {
+    NewFileLoaderRule,
     SVGRLoader,
     LiteLoadSVGs,
     CSSModules,
     CSSMinify,
     TypeScriptLoaderRule,
-    FileLoaderRule,
     SVGRule,
     BabelLoaderRule,
     StylesLoader,

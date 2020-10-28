@@ -6,7 +6,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
-const { TypeScriptLoaderRule, FileLoaderRule, SVGRule, BabelLoaderRule, StylesLoader, URLLoaderRule, CSSMinify, LiteLoadSVGs, SVGRLoader } = require("./webpack/rules");
+const { NewFileLoaderRule, TypeScriptLoaderRule, FileLoaderRule, SVGRule, BabelLoaderRule, StylesLoader, URLLoaderRule, CSSMinify, LiteLoadSVGs, SVGRLoader } = require("./webpack/rules");
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
@@ -39,14 +39,15 @@ module.exports = (ENV) => {
         },
         module: {
             rules: [
-                // LiteLoadSVGs(),
-                TypeScriptLoaderRule(),
-                StylesLoader(),
-                FileLoaderRule(),
+                TypeScriptLoaderRule(), // IN USE
+                StylesLoader(),  // IN USE
+                LiteLoadSVGs(),
                 // SVGRule(),
-                BabelLoaderRule(),
-                URLLoaderRule(),
-                SVGRLoader(),
+                BabelLoaderRule(), // IN USE
+                URLLoaderRule(), // IN USE
+                // NewFileLoaderRule(), // IN USE?
+                // FileLoaderRule(),
+                // SVGRLoader(), // IN USE
                 //new rule here
             ],
         },

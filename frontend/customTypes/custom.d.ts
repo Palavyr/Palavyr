@@ -2,33 +2,52 @@ declare module '@unicef/material-ui-currency-textfield' {
     const noTypesYet: any;
     export default noTypesYet;
 }
+declare module '*.svg' {
+  const content: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
+  export default content;
+}
 
-// declare module '*.svg' {
-//     import * as React from 'react';
+declare module '*.bmp' {
+  const src: string;
+  export default src;
+}
 
-//     export const ReactComponent: React.FunctionComponent<React.SVGProps<
-//         SVGSVGElement
-//     > & { title?: string }>;
+declare module '*.gif' {
+  const src: string;
+  export default src;
+}
 
-//     const src: string;
-//     export default src;
-// }
+declare module '*.jpg' {
+  const src: string;
+  export default src;
+}
 
+declare module '*.jpeg' {
+  const src: string;
+  export default src;
+}
 
-// declare module "\*.svg" {
-//     import React = require("react");
-//     export const ReactComponent: React.SFC<React.SVGProps<SVGSVGElement>>;
-//     const src: string;
-//     export default src;
-// }
+declare module '*.png' {
+  const src: string;
+  export default src;
+}
 
+declare module '*.webp' {
+  const src: string;
+  export default src;
+}
 
-//https://github.com/gregberge/svgr/issues/38
-interface SvgrComponent
-  extends React.StatelessComponent<React.SVGAttributes<SVGElement>> {}
+declare module '*.module.css' {
+  const classes: { readonly [key: string]: string };
+  export default classes;
+}
 
-declare module "*.svg" {
-  const ReactComponent: SvgrComponent;
+declare module '*.module.scss' {
+  const classes: { readonly [key: string]: string };
+  export default classes;
+}
 
-  export { ReactComponent };
+declare module '*.module.sass' {
+  const classes: { readonly [key: string]: string };
+  export default classes;
 }

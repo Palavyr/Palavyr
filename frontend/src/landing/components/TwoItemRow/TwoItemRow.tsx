@@ -5,6 +5,7 @@ import { IconBox } from "../IconBox";
 import { SimpleIconTypes } from "@common/icons/IconTypes";
 
 
+
 const useStyles = makeStyles(theme => ({
     colStyle: {
         alignContent: "center",
@@ -21,7 +22,7 @@ const useStyles = makeStyles(theme => ({
         color: "white"
     },
     text: {
-        fontSize: "18pt"
+        fontSize: "16pt"
     }
 }));
 
@@ -46,9 +47,17 @@ export const TwoItemRow = ({ dataList }: IItemRow) => {
             {
                 dataList.map((x: ItemRowObject, idx: number) => {
                     return (
-                        <Grid item key={idx} xs={width === 6 ? 4 : 6} className={classNames(classes.colStyle, "align-center")}>
+                        <Grid
+                            data-aos="fade-in"
+                            data-aos-offset={(100 * idx).toString()}
+                            item key={idx}
+                            xs={width === 6 ? 4 : 6}
+                            className={classNames(classes.colStyle, "align-center")}
+                        >
                             <IconBox iconType={x.type} iconTitle={x.title} iconSize={"xxlarge"} iconColor={x.color}>
+
                                 <Typography variant="body2" className={classes.text}>{x.text}</Typography>
+
                             </IconBox>
                         </Grid>
 

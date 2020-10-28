@@ -1,10 +1,8 @@
 import * as React from 'react';
 
-import 'simple-line-icons/css/simple-line-icons.css';
-import classNames from 'classnames';
 import { makeStyles } from '@material-ui/core';
 import { SimpleIconTypes } from './IconTypes';
-
+import Battery from "../../common/svgs/misc/battery.svg";
 
 export interface IBrandingIcon {
     iconType: SimpleIconTypes;
@@ -14,7 +12,11 @@ export interface IBrandingIcon {
 
 const useStyles = makeStyles(theme => ({
     icon: {
-        marginBottom: "1.2rem"
+        display: "flex",
+        justifyContent: "space-between",
+        textAlign: "center",
+        marginBottom: "1.2rem",
+        width: "100%",
     }
 }))
 
@@ -27,9 +29,10 @@ export const BrandingIcon = ({ iconType, iconColor, iconSize}: IBrandingIcon) =>
         fontSize: iconSize ?? 24
     }
     return (
-        <div
-            className={classNames(`icon-${iconType}`, classes.icon)}
-            style={style}
-        />
+        <div className={classes.icon}>
+            <div style={{width: "25%"}}></div>
+            <Battery />
+            <div style={{width: "25%"}}></div>
+        </div>
     )
 }

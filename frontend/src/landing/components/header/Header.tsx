@@ -1,9 +1,6 @@
 import { Box, Card, Grid, Typography, Button, Divider, makeStyles } from "@material-ui/core";
-import { IHaveWidth } from "@Palavyr-Types";
 import React from "react";
-import AOS from 'aos';
 import { NavBar } from "../navbar/NavBar";
-AOS.init({ once: true });
 
 
 const useStyles = makeStyles(theme => ({

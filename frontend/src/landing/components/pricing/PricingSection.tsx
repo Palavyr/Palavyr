@@ -12,12 +12,13 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         justifyContent: "space-evenly",
         background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)",
-        paddingRight: "16%",
-        paddingLeft: "16%"
+        paddingRight: "14%",
+        paddingLeft: "14%",
+        borderRadius: "4px"
     },
     paperCommon: {
         margin: "1rem",
-        width: "30%",
+        width: "28%",
         textAlign: "center",
         borderRadius: "0px",
         alignContent: "center",
@@ -26,18 +27,18 @@ const useStyles = makeStyles(theme => ({
     paperFree: {
         backgroundColor: "#0093CB",
         color: "white",
-        border: "2px dashed white"
+        // border: "2px dashed white"
 
     },
     paperPremium: {
         backgroundColor: "#014B91",
         color: "white",
-        border: "6px solid black"
+        border: "3px solid black"
     },
     paperPro: {
         backgroundColor: "#011E6D",
         color: "white",
-        border: "2px dashed white"
+        // border: "2px dashed white"
 
     },
     icon: {
@@ -50,7 +51,7 @@ const useStyles = makeStyles(theme => ({
         paddingBottom: "1rem"
     },
     price: {
-        paddingTop: "1.2rem",
+        paddingTop: "3.2rem",
         paddingBottom: "1.2rem",
         display: 'inline-block'
     },
@@ -62,6 +63,10 @@ const useStyles = makeStyles(theme => ({
     },
     table: {
         padding: "0.3rem",
+        marginTop: "4rem",
+        marginBottom: "6rem"
+        // paddingTop: "4.4rem",
+        // paddingBottom: "4.4rem"
     },
     tableBody: {
         padding: "1rem",
@@ -104,7 +109,7 @@ export const PricingSection = () => {
 
     return (
         <section className={classes.body}>
-            <Paper className={classNames(classes.paperCommon, classes.paperFree)} variant="outlined">
+            <Paper data-aos="fade-down" data-aos-delay="100" className={classNames(classes.paperCommon, classes.paperFree)} variant="outlined">
                 <FreeBreakfastIcon className={classes.icon} />
                 <Typography className={classes.title} variant="h5">Lyte</Typography>
                 <Typography className={classes.price} variant="h3">FREE</Typography>
@@ -140,10 +145,10 @@ export const PricingSection = () => {
                     </Table>
                 </div>
             </Paper>
-            <Paper className={classNames(classes.paperCommon, classes.paperPremium)} variant="outlined">
+            <Paper data-aos="fade-down" data-aos-delay="300" className={classNames(classes.paperCommon, classes.paperPremium)} variant="outlined">
                 <CardMembershipIcon className={classes.icon} />
                 <Typography className={classes.title} variant="h5">Premium</Typography>
-                <Typography className={classes.price} variant="h3">{"$5 "}</Typography><Typography className={classes.price} variant="h5">{"/ area / month"}</Typography>
+                <Typography className={classes.price} variant="h3">$50</Typography><Typography className={classes.price} variant="h5">/month</Typography>
                 <div className={classes.tablecontainer}>
                     <Table className={classes.table}>
                         <TableBody className={classes.tableBody}>
@@ -176,10 +181,10 @@ export const PricingSection = () => {
                     </Table>
                 </div>
             </Paper >
-            <Paper className={classNames(classes.paperCommon, classes.paperPro)} variant="outlined">
+            <Paper data-aos="fade-down" data-aos-delay="500" className={classNames(classes.paperCommon, classes.paperPro)} variant="outlined">
                 <AccountBalanceIcon className={classes.icon} />
                 <Typography className={classes.title} variant="h5">Pro</Typography>
-                <Typography className={classNames(classes.price, classes.money)} variant="h3">$</Typography><Typography variant="h3" className={classes.price}>75</Typography><Typography className={classes.price} variant="h5">/ month"</Typography>
+                <Typography className={classNames(classes.price, classes.money)} variant="h3">$</Typography><Typography variant="h3" className={classes.price}>75</Typography><Typography className={classes.price} variant="h5">/ month</Typography>
 
                 <div className={classes.tablecontainer}>
                     <Table className={classes.table}>

@@ -14,7 +14,9 @@ export interface INavBar {
 }
 
 const useStyles = makeStyles({
-    menuButton: {},
+    menuButton: {
+
+    },
     clear: {
         border: "0px solid white",
 
@@ -52,6 +54,16 @@ const useStyles = makeStyles({
     },
     noDecoration: {
         textDecoration: "none !important"
+    },
+    logowrap: {
+        border: "1px solid black",
+        display: "flex"
+    },
+    logo: {
+        position: "absolute",
+        border: "2px solid black",
+        height: "150px",
+        width: "150px"
     }
 });
 
@@ -60,16 +72,14 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawer
     const classes = useStyles();
 
     return (
-        <AppBar position="fixed" className={classes.appBar} color="transparent" classes={{root: classes.clear}}>
+        <AppBar position="fixed" className={classes.appBar} color="transparent" classes={{ root: classes.clear }}>
             <Toolbar className={classes.toolbar}>
-                <div>
-                    <Typography variant="body2" className={classes.brandText} display="inline" >
-                        Palavyr
-                    </Typography>
-                    <Typography variant="body2" className={classes.brandTextSmall} display="inline">
-                        .com
-                    </Typography>
-                </div>
+                <Typography variant="body2" className={classes.brandText} display="inline" >
+                    Palavyr
+                </Typography>
+                <Typography variant="body2" className={classes.brandTextSmall} display="inline">
+                    .com
+                </Typography>
                 <div>
                     {
                         menuItems(openRegisterDialog, openLoginDialog).map(element => {

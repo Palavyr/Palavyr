@@ -37,8 +37,8 @@ export const IconBox = ({ iconType, iconTitle, iconSize, iconColor, children }: 
     return (
         <div className="text-center">
             <BrandingIcon iconType={iconType} iconColor={color} iconSize={size} />
-            <Typography variant="h3">{iconTitle}</Typography>
-            <Typography>{children}</Typography>
+            <Typography component="span" variant="h4">{iconTitle}</Typography>
+            <Typography component="span">{children}</Typography>
         </div>
     );
 };

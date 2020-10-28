@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, ReactNode } from "react";
 import { Divider, makeStyles, Typography } from "@material-ui/core";
 import { CookieConsent } from "legal/cookies/CookieConsent";
 import { LandingPageDialogSelector } from "@landing/components/dialogSelector/LandingPageDialogSelector";
@@ -10,6 +10,14 @@ import Auth from "auth/Auth";
 import { useHistory } from "react-router-dom";
 import { ItemRowObject, TwoItemRow } from "./components/TwoItemRow/TwoItemRow";
 import { PricingSection } from "./components/pricing/PricingSection";
+
+import Logo from "./logo.svg";
+
+import AOS from 'aos';
+AOS.init({
+    duration: 1000
+})
+
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -24,8 +32,15 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: "9px",
         border: "0px",
     },
+    sliverDiv: {
+        color: "lighgray",
+        textAlign: "center",
+        height: "30px",
+        width: "100%",
+        backgroundColor: "gray"
+    },
     sliver: {
-        fontSize: "21pt"
+        fontSize: "16pt"
     },
     body: {
         background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)"
@@ -77,7 +92,6 @@ const rowThree: Array<ItemRowObject> = [
         color: "navy"
     }
 ]
-
 
 export const LandingPage = () => {
     const classes = useStyles();
@@ -140,7 +154,7 @@ export const LandingPage = () => {
     }, [])
 
     useEffect(() => {
-        attemptLogin();
+        // attemptLogin();
         return () => {
         }
     }, [])
@@ -173,6 +187,7 @@ export const LandingPage = () => {
                 selectedTab={selectedTab}
                 setSelectedTab={setSelectedTab}
             />
+            <Logo height="20px" width="30px" />
             <Divider />
             <PricingSection />
             <div className={classes.body}>
@@ -181,7 +196,8 @@ export const LandingPage = () => {
                 <TwoItemRow dataList={rowThree} />
             </div>
 
-            <div style={{ color: "lighgray", textAlign: "center", height: "2.8rem", width: "100%", backgroundColor: "gray" }}>
+            {/* <WhatsThePoint /> */}
+            <div className={classes.sliverDiv}>
                 <Typography className={classes.sliver}>
                     Questions? Get in touch: info.palavyr@gmail.com
                 </Typography>
