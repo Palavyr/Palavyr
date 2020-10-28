@@ -72,6 +72,7 @@ const useStyles = makeStyles({
         display: "flex",
         flexDirection: "row",
         verticalAlign: "middle",
+    }
 });
 
 export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawerOpen, handleMobileDrawerClose, mobileDrawerOpen, selectedTab, setSelectedTab }: INavBar) => {
