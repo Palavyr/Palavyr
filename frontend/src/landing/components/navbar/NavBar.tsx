@@ -1,7 +1,9 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, Hidden, IconButton, Button, makeStyles } from "@material-ui/core";
+import { AppBar, Toolbar, Typography, Hidden, IconButton, Button, makeStyles, Divider } from "@material-ui/core";
 import { menuItems } from "./NavMenuItems";
 import { Link } from "react-router-dom";
+import Logo from "../../../common/svgs/palavyrBranding/logo.svg";
+
 
 export interface INavBar {
     openRegisterDialog: any;
@@ -56,15 +58,20 @@ const useStyles = makeStyles({
         textDecoration: "none !important"
     },
     logowrap: {
-        border: "1px solid black",
-        display: "flex"
+        display: "flex",
+        flexDirection: "row",
+        verticalAlign: "middle",
     },
     logo: {
-        position: "absolute",
-        border: "2px solid black",
-        height: "150px",
-        width: "150px"
-    }
+        display: "flex",
+        flexDirection: "row",
+        height: "100%",
+        paddingRight: "1rem"
+    },
+    logotypography: {
+        display: "flex",
+        flexDirection: "row",
+        verticalAlign: "middle",
 });
 
 export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawerOpen, handleMobileDrawerClose, mobileDrawerOpen, selectedTab, setSelectedTab }: INavBar) => {
@@ -74,12 +81,19 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawer
     return (
         <AppBar position="fixed" className={classes.appBar} color="transparent" classes={{ root: classes.clear }}>
             <Toolbar className={classes.toolbar}>
-                <Typography variant="body2" className={classes.brandText} display="inline" >
-                    Palavyr
-                </Typography>
-                <Typography variant="body2" className={classes.brandTextSmall} display="inline">
-                    .com
-                </Typography>
+                <div className={classes.logowrap}>
+                    <div className={classes.logo}>
+                        <Logo height="88px" width="88px" />
+                    </div>
+                    <div className={classes.logotypography}>
+                        <Typography variant="body2" className={classes.brandText} display="inline">
+                            Palavyr
+                        </Typography>
+                        <Typography variant="body2" className={classes.brandTextSmall} display="inline">
+                            .com
+                        </Typography>
+                    </div>
+                </div>
                 <div>
                     {
                         menuItems(openRegisterDialog, openLoginDialog).map(element => {
@@ -118,6 +132,7 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawer
                     }
                 </div>
             </Toolbar>
+            <Divider light/>
         </AppBar>
     );
 };

@@ -1,38 +1,37 @@
 import * as React from 'react';
 
 import { makeStyles } from '@material-ui/core';
-import { SimpleIconTypes } from './IconTypes';
-import Battery from "../../common/svgs/misc/battery.svg";
 
 export interface IBrandingIcon {
-    iconType: SimpleIconTypes;
-    iconColor?: string;
-    iconSize?: number;
+    IconJsx: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
+    iconSize: string;
+}
+type styleProps = {
+    iconSize: string;
 }
 
 const useStyles = makeStyles(theme => ({
-    icon: {
-        display: "flex",
-        justifyContent: "space-between",
+    icon: (props: styleProps) => ({
         textAlign: "center",
         marginBottom: "1.2rem",
-        width: "100%",
+        width: props.iconSize
+    }),
+    wrapper: {
+        display: "flex",
+        justifyContent: "center"
     }
 }))
 
 
-export const BrandingIcon = ({ iconType, iconColor, iconSize}: IBrandingIcon) => {
+export const BrandingIcon = ({ IconJsx, iconSize }: IBrandingIcon) => {
 
-    const classes = useStyles();
-    const style = {
-        color: `${iconColor ?? "blue"}`,
-        fontSize: iconSize ?? 24
-    }
+    const cls = useStyles({iconSize});
+
     return (
-        <div className={classes.icon}>
-            <div style={{width: "25%"}}></div>
-            <Battery />
-            <div style={{width: "25%"}}></div>
+        <div className={cls.wrapper}>
+            <div className={cls.icon}>
+                <IconJsx />
+            </div>
         </div>
     )
 }

@@ -8,10 +8,9 @@ import { Footer } from "./components/footer/Footer";
 import { DialogTypes } from "@landing/components/dialogSelector/dialogTypes";
 import Auth from "auth/Auth";
 import { useHistory } from "react-router-dom";
-import { ItemRowObject, TwoItemRow } from "./components/TwoItemRow/TwoItemRow";
+import { TwoItemRow } from "./components/TwoItemRow/TwoItemRow";
 import { PricingSection } from "./components/pricing/PricingSection";
-
-import Logo from "./logo.svg";
+import { rowOne, rowTwo, rowThree } from "./components/landingContent/twoItemRowContent";
 
 import AOS from 'aos';
 AOS.init({
@@ -48,50 +47,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const rowOne: Array<ItemRowObject> = [
-    {
-        title: "Engage potential clients",
-        text: "Collect all of the information that you need to engage, sort, and secure a potential client.",
-        type: "pencil",
-        color: "navy"
-
-    },
-    {
-        title: "Direct Fee Estimate",
-        text: "Deliver a competitive fee estimate and convince your prospective clients to sign.",
-        type: "calculator",
-        color: "navy"
-    }
-]
-const rowTwo: Array<ItemRowObject> = [
-    {
-        title: "Simple Integration",
-        text: "Integrate the Palavyr.com widget into your site with as little a single line of code.",
-        type: "star",
-        color: "navy"
-
-    },
-    {
-        title: "Persuade clients to sign",
-        text: "Anticipate your client's needs ahead of time and offer a competetive fee estimate.",
-        type: "check",
-        color: "navy"
-    }
-]
-const rowThree: Array<ItemRowObject> = [
-    {
-        title: "Be Transparent",
-        text: "Automate detail collection using the fully customizable Palavyr chat widget and provide transparency for your future clients.",
-        type: "rocket",
-        color: "navy"
-    },
-    {
-        title: "Cut to the Chase",
-        text: "Collect inquiry details and use the equiry dashboard to preemptively learn what your clients are asking about.",
-        type: "docs",
-        color: "navy"
-    }
-]
 
 export const LandingPage = () => {
     const classes = useStyles();
@@ -187,7 +142,6 @@ export const LandingPage = () => {
                 selectedTab={selectedTab}
                 setSelectedTab={setSelectedTab}
             />
-            <Logo height="20px" width="30px" />
             <Divider />
             <PricingSection />
             <div className={classes.body}>

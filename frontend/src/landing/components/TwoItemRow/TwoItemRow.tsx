@@ -2,8 +2,6 @@ import { makeStyles, Grid, Typography } from "@material-ui/core";
 import React from "react";
 import classNames from "classnames";
 import { IconBox } from "../IconBox";
-import { SimpleIconTypes } from "@common/icons/IconTypes";
-
 
 
 const useStyles = makeStyles(theme => ({
@@ -28,9 +26,8 @@ const useStyles = makeStyles(theme => ({
 
 export type ItemRowObject = {
     text: string;
-    type: SimpleIconTypes;
+    type: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
     title: string;
-    color: string;
 }
 
 export interface IItemRow {
@@ -54,7 +51,7 @@ export const TwoItemRow = ({ dataList }: IItemRow) => {
                             xs={width === 6 ? 4 : 6}
                             className={classNames(classes.colStyle, "align-center")}
                         >
-                            <IconBox iconType={x.type} iconTitle={x.title} iconSize={"xxlarge"} iconColor={x.color}>
+                            <IconBox IconJsx={x.type} iconTitle={x.title} iconSize={40} >
 
                                 <Typography variant="body2" className={classes.text}>{x.text}</Typography>
 
