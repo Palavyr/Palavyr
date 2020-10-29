@@ -13,6 +13,7 @@ using Palavyr.API.Controllers;
 using Palavyr.API.receiverTypes;
 using Palavyr.API.ReceiverTypes;
 using Palavyr.API.response;
+using Palavyr.API.ResponseTypes;
 using Server.Domain.AccountDB;
 
 namespace Palavyr.API.controllers.accounts.newAccount
@@ -266,10 +267,11 @@ namespace Palavyr.API.controllers.accounts.newAccount
         }
 
         [HttpGet("phonenumber")]
-        public string GetPhoneNumber([FromHeader] string accountId)
+        public PhoneDetails GetPhoneNumber([FromHeader] string accountId)
         {
             var account = AccountContext.Accounts.Single(row => row.AccountId == accountId);
-            return account.PhoneNumber ?? "";
+            var phoneDetails = PhoneDetails.Create(account.PhoneNumber, account.Locale);
+            return phoneDetails;
         }
 
         [HttpGet("apikey")]

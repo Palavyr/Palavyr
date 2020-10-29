@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const SettingsContent = ({ areaIdentifier, areaName, setLoaded, setHelpType }: IAreaContent) => {
 
-    const [tab, setTab] = useState<PanelRange>(2); // tabs
+    const [tab, setTab] = useState<PanelRange>(3); // tabs
     const classes = useStyles();
 
     useEffect(() => {

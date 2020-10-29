@@ -3,6 +3,9 @@ import { Paper, Grid, TextField, Button, makeStyles, Typography, Divider } from 
 import { useState } from 'react';
 import { AnyVoidFunction } from '@Palavyr-Types';
 import { SinglePurposeButton } from './SinglePurposeButton';
+import { AlertMessage } from './SaveOrCancel';
+import { CustomAlert } from './customAlert/CutomAlert';
+import NumberFormat from 'react-number-format';
 
 
 export interface ISettingsGridRow {
@@ -10,14 +13,18 @@ export interface ISettingsGridRow {
     details?: string;
     title?: string;
     children?: React.ReactNode;
-    onClick: AnyVoidFunction;
+    onClick: (data: any) => Promise<boolean | null | undefined | void>;
     placeholder?: string;
     clearVal?: boolean;
     currentValue?: string;
     buttonText?: string;
     alertNode?: React.ReactNode;
-    inputType?: "email" | "text" | "number";
+    inputType?: "email" | "text" | "number" | "phone";
     fullWidth?: boolean;
+    useModal?: boolean;
+    modalMessage?: AlertMessage;
+    CustomInput?: React.ReactNode;
+    locale?: string;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -39,91 +46,109 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ name, details, title, children, fullWidth, inputType, alertNode, placeholder, onClick, currentValue, clearVal = false, buttonText = "Update" }: ISettingsGridRow) => {
+export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ name, details, title, children, CustomInput, locale, useModal, modalMessage, fullWidth, inputType, alertNode, placeholder, onClick, currentValue, clearVal = false, buttonText = "Update" }: ISettingsGridRow) => {
 
     const [inputVal, setInputVal] = useState<string>();
     const [inputValStatus, setInputValStatus] = useState<string | null>(null);
+    const [alertState, setAlertState] = useState<boolean>(false);
 
     const classes = useStyles();
     if (inputType === undefined) {
         inputType = "text"
     }
     return (
-        <Paper className={classes.paper}>
-            {alertNode}
-            <Grid className={classes.row} container>
-                {
-                    placeholder &&
-                    <Grid item xs={12}>
-                        {
-                            inputType === "text" &&
-                            <TextField
-                                variant="standard"
+        <>
+            <Paper className={classes.paper}>
+                {alertNode}
+                <Grid className={classes.row} container>
+                    {
+                        placeholder &&
+                        <Grid item xs={12}>
+                            {
+                                inputType === "text" &&
+                                <TextField
+                                    variant="standard"
 
-                                fullWidth={fullWidth}
-                                label={placeholder}
-                                onChange={
-                                    (e) => {
+                                    fullWidth={fullWidth}
+                                    label={placeholder}
+                                    onChange={
+                                        (e) => {
+                                            setInputVal(e.target.value)
+                                        }}
+                                    value={inputVal}
+                                />
+                            }
+                            {
+                                inputType === "email" &&
+                                <TextField
+                                    variant="standard"
+                                    error={inputValStatus === "invalidEmail"}
+                                    fullWidth={fullWidth}
+                                    label="New Email Address"
+                                    value={inputVal}
+                                    autoComplete="off"
+                                    type="email"
+                                    onChange={(e) => {
                                         setInputVal(e.target.value)
+                                        if (inputValStatus === "invalidEmail") {
+                                            setInputValStatus(null);
+                                        }
                                     }}
-                                value={inputVal}
-                            />
-                        }
-                        {
-                            inputType === "email" &&
-                            <TextField
-                                variant="standard"
-                                error={inputValStatus === "invalidEmail"}
-                                fullWidth={fullWidth}
-                                label="New Email Address"
-                                value={inputVal}
-                                autoComplete="off"
-                                type="email"
-                                onChange={(e) => {
-                                    setInputVal(e.target.value)
-                                    if (inputValStatus === "invalidEmail") {
-                                        setInputValStatus(null);
+                                    helperText={
+                                        inputValStatus === "invalidEmail" &&
+                                        "This email address isn't associated with an account."
                                     }
-                                }}
-                                helperText={
-                                    inputValStatus === "invalidEmail" &&
-                                    "This email address isn't associated with an account."
-                                }
-                                FormHelperTextProps={{ error: true }}
-                            />
+                                    FormHelperTextProps={{ error: true }}
+                                />
 
-                        }
-                        {inputType === "number" && null}
-                    </Grid>
-                }
-            </Grid>
-            <Grid>
-                {
-                    currentValue &&
-                    <>
-                        <Typography display="inline" style={{ paddingTop: "1rem" }} variant="body1">Current value: </Typography>
-                        <Typography display="inline" style={{ paddingTop: "1rem", fontWeight: "bold" }}>{currentValue}</Typography>
-                    </>
-                }
-            </Grid>
-            <Divider />
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <SinglePurposeButton
-                    classes={classes.singlePurposeButton}
-                    variant="outlined"
-                    color="primary"
-                    buttonText={buttonText}
-                    onClick={
-                        () => {
-                            onClick(inputVal);
-                            if (clearVal === true) {
-                                setInputVal("");
+                            }
+                            {inputType === "number" && null}
+                            {
+                                inputType === "phone" &&
+                                <NumberFormat
+                                    format={locale === "en-AU" ? "+61 (##) ####-####" : "+1 (###) ###-####"}
+                                    mask="_"
+                                    type="tel"
+                                    onValueChange={(values) => setInputVal(values.formattedValue)}
+                                />
+                            }
+                        </Grid>
+                    }
+                </Grid>
+                <Grid>
+                    {
+                        currentValue &&
+                        <>
+                            <Typography display="inline" style={{ paddingTop: "1rem" }} variant="body1">Current value: </Typography>
+                            <Typography display="inline" style={{ paddingTop: "1rem", fontWeight: "bold" }}>{currentValue}</Typography>
+                        </>
+                    }
+                </Grid>
+                <Divider />
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <SinglePurposeButton
+                        classes={classes.singlePurposeButton}
+                        variant="outlined"
+                        color="primary"
+                        buttonText={buttonText}
+                        onClick={
+                            () => {
+                                const res = onClick(inputVal);
+                                if (clearVal === true) {
+                                    setInputVal("");
+                                }
+                                if (res) {
+                                    setAlertState(true)
+                                }
                             }
                         }
-                    }
 
-                />
-            </div>
-        </Paper >
+                    />
+                </div>
+            </Paper >
+            {
+                alertState && useModal && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={modalMessage ?? { title: "Save Successful", message: "" }} />
+            }
+        </>
     )
 }

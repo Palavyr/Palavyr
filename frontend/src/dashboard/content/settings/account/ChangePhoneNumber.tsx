@@ -1,22 +1,30 @@
 import { ApiClient } from "@api-client/Client";
 import React, { useCallback, useState, useEffect } from "react";
-import { Grid } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
-import { CustomAlert } from "@common/components/customAlert/CutomAlert";
+import { Alert, AlertTitle } from "@material-ui/lab";
+import { makeStyles } from "@material-ui/core";
+import NumberFormat from 'react-number-format';
+
+const useStyles = makeStyles(theme => ({
+    titleText: {
+        fontWeight: "bold"
+    }
+}))
 
 
 export const ChangePhoneNumber = () => {
     var client = new ApiClient();
+    const classes = useStyles();
 
     const [, setLoaded] = useState<boolean>(false);
-    const [PhoneNumber, setPhoneNumber] = useState<string>("");
-
-    const [alertState, setAlert] = useState<boolean>(false);
+    const [phoneNumber, setPhoneNumber] = useState<string>("");
+    const [locale, setLocale] = useState<string>("");
 
     const loadPhoneNumber = useCallback(async () => {
 
-        var res = await client.Settings.Account.getPhoneNumber();
-        setPhoneNumber(res.data);
+        var data = (await client.Settings.Account.getPhoneNumber()).data;
+        setPhoneNumber(data.phoneNumber);
+        setLocale(data.locale)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -34,28 +42,39 @@ export const ChangePhoneNumber = () => {
     const handlePhoneNumberChange = async (newPhoneNumber: string) => {
 
         await client.Settings.Account.updatePhoneNumber(newPhoneNumber);
-        setAlert(true);
         setPhoneNumber(newPhoneNumber);
+        return true;
     }
 
-    const alert = {
-        title: "",
-        message: "Phone Number successfully updated."
-    }
 
     return (
-        <>
-            <Grid container spacing={3}>
-                <SettingsGridRowText
-                    name={"Update Phone Number"}
-                    details={" Update the Phone Number used when sending response."}
-                    placeholder={"New Phone Number"}
-                    onClick={handlePhoneNumberChange}
-                    clearVal={true}
-                    currentValue={PhoneNumber}
-                />
-            </Grid>
-            {alertState && <CustomAlert alertState={alertState} setAlert={setAlert} alert={alert} />}
-        </>
+        <div style={{ width: "50%" }}>
+            <SettingsGridRowText
+                fullWidth
+                inputType="phone"
+                placeholder={"New Phone Number"}
+                onClick={handlePhoneNumberChange}
+                clearVal={true}
+                currentValue={phoneNumber}
+                useModal
+                modalMessage={{
+                    title: "Phone Number successfully updated.",
+                    message: ""
+                }}
+                alertNode={
+                    <Alert severity={phoneNumber ? "info" : "error"}>
+                        <AlertTitle className={classes.titleText}>
+                            {
+                                phoneNumber
+                                    ? "Phone Number"
+                                    : "Please set your phone number."
+                            }
+                        </AlertTitle>
+                            Set your company or business contact phone number. This will be used in the header of each response PDF sent via the widget.
+                        </Alert>
+                }
+                locale={locale}
+            />
+        </div>
     )
 }

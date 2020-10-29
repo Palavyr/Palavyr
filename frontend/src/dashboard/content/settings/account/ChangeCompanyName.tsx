@@ -1,12 +1,21 @@
 import { ApiClient } from "@api-client/Client";
 import React, { useState, useCallback, useEffect } from "react";
-import { Grid } from "@material-ui/core";
+import { Grid, makeStyles } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
+import { Alert, AlertTitle } from "@material-ui/lab";
+
+
+const useStyles = makeStyles(theme => ({
+    titleText: {
+        fontWeight: "bold"
+    }
+}))
 
 
 export const ChangeCompanyName = () => {
-    var client = new ApiClient();
+    const client = new ApiClient();
+    const classes = useStyles();
 
     const [, setLoaded] = useState<boolean>(false);
     const [companyName, setCompanyName] = useState<string>("");
@@ -14,8 +23,8 @@ export const ChangeCompanyName = () => {
     const [alertState, setAlert] = useState<boolean>(false);
 
     const loadCompanyName = useCallback(async () => {
-        var res = await client.Settings.Account.getCompanyName();
-        setCompanyName(res.data);
+        const name = (await client.Settings.Account.getCompanyName()).data as string;
+        setCompanyName(name);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -33,7 +42,7 @@ export const ChangeCompanyName = () => {
     const handleCompanyNameChange = async (newCompanyName: string) => {
 
         await client.Settings.Account.updateCompanyName(newCompanyName);
-        setAlert(true);
+        // setAlert(true);
         setCompanyName(newCompanyName);
     }
 
@@ -44,18 +53,33 @@ export const ChangeCompanyName = () => {
 
     return (
         <>
-            <Grid container spacing={3}>
+            <div style={{ width: "50%" }}>
                 <SettingsGridRowText
+
                     fullWidth
-                    name={"Update company name"}
-                    details={" Update the company name used when sending response."}
                     placeholder={"New Company Name"}
                     onClick={handleCompanyNameChange}
                     clearVal={true}
                     currentValue={companyName}
+                    useModal
+                    modalMessage={{
+                        title: "Successfully updated",
+                        message: ""
+                    }}
+                    alertNode={
+                        <Alert severity={companyName === "" ? "error" : "success"}>
+                            <AlertTitle className={classes.titleText}>
+                                {
+                                    companyName === ""
+                                        ? "Please set your company name."
+                                        : "Company / Business name name."
+                                }
+                            </AlertTitle>
+                            Set your company or business name. This will be used in the header of each response PDF sent via the widget.
+                        </Alert>
+                    }
                 />
-            </Grid>
-            {alertState && <CustomAlert alertState={alertState} setAlert={setAlert} alert={alert} />}
+            </div>
         </>
     )
 }
