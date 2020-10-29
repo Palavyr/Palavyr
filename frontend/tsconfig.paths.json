@@ -9,7 +9,7 @@
             "@public-routes": ["routes/Routes.tsx"],
             "@protected-routes": ["routes/ProtectedRoute.tsx"],
             "@Palavyr-Types": ["globalTypes.ts"],
-            "@landing/*": ["landing/*"],
+            "@landing/*": ["landing/*"]
         }
     }
 }

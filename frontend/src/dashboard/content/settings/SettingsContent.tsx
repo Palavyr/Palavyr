@@ -4,14 +4,12 @@ import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import { ChangePassword } from "./security/changePassword";
 import { ChangeEmail } from "./account/ChangeEmail";
-// import { ChangeUserName } from "./account/ChangeUserName";
 import { ChangeCompanyName } from "./account/ChangeCompanyName";
 import { ChangePhoneNumber } from "./account/ChangePhoneNumber";
 import { ChangeLogoImage } from "./account/ChangeLogoImage";
 import { areaTabProps, TabPanel, PanelRange } from "@common/ContentUtils";
 import { ChangeLocale } from "./account/ChangeLocale";
 import { makeStyles } from "@material-ui/core";
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
@@ -38,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const SettingsContent = ({ areaIdentifier, areaName, setLoaded, setHelpType }: IAreaContent) => {
 
-    const [tab, setTab] = useState<PanelRange>(1); // tabs
+    const [tab, setTab] = useState<PanelRange>(2); // tabs
     const classes = useStyles();
 
     useEffect(() => {

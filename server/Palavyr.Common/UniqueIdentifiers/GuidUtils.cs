@@ -11,5 +11,12 @@ namespace Palavyr.Common.uniqueIdentifiers
             var ids = Guid.NewGuid().ToString().Split('-').Take(useNumParts).ToList();
             return string.Join('-', ids);
         }
+
+        public static string CreatePseudoRandomString(int take)
+        {
+            var ids = string.Join("", Guid.NewGuid().ToString().Split('-'));
+            var chars = string.Join("", ids.ToCharArray().Take(5));
+            return chars;
+        }
     }
 }

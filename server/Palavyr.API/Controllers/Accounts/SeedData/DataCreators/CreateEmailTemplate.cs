@@ -25,13 +25,11 @@
             <h2>{%Company%}</h2>
         </section>
         <section id='body'>
-            <p>
             <h4>
                 Hi {%Name%},
                 <br /><br />
                 Thank you for contacting {%Company%}!
             </h4>
-            </p>
             <p>
                 <span>
                     Your business means a lot to us, and we're glad you were able to find what you needed using our chat

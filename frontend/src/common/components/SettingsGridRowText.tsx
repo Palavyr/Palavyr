@@ -58,9 +58,10 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ name, details,
                         {
                             inputType === "text" &&
                             <TextField
-                                fullWidth={fullWidth}
                                 variant="standard"
-                                placeholder={placeholder}
+
+                                fullWidth={fullWidth}
+                                label={placeholder}
                                 onChange={
                                     (e) => {
                                         setInputVal(e.target.value)
@@ -109,7 +110,7 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ name, details,
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <SinglePurposeButton
                     classes={classes.singlePurposeButton}
-                    variant="contained"
+                    variant="outlined"
                     color="primary"
                     buttonText={buttonText}
                     onClick={

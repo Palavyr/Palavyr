@@ -52,6 +52,7 @@ const SVGRule = () => {
 }
 
 const LiteLoadSVGs = () => {
+
     return {
         test: /\.svg$/,
         use: [
@@ -60,8 +61,15 @@ const LiteLoadSVGs = () => {
             },
             {
                 loader: "react-svg-loader",
+                query: {
+                    svgo: {
+                        // pretty: true,
+                        plugins: [{ removeStyleElement: false}]
+                    }
+                },
                 options: {
-                    jsx: true // true outputs JSX tags
+                    jsx: true, // true outputs JSX tags
+
                 }
             }
         ]

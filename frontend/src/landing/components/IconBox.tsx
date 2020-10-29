@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { BrandingIcon } from '@common/icons/BrandingIcon';
-import { IconSizes } from '@common/icons/IconTypes';
 import { Typography } from '@material-ui/core';
 
 export interface IIconBox {

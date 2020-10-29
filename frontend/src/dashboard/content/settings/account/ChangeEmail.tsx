@@ -84,7 +84,8 @@ export const ChangeEmail = () => {
 
     return (
         <>
-            <Grid container spacing={3}>
+            {/* <Grid container spacing={3}> */}
+            <div style={{ width: "50%" }}>
                 <SettingsGridRowText
                     fullWidth
                     inputType="email"
@@ -109,7 +110,8 @@ export const ChangeEmail = () => {
                     currentValue={settings.emailAddress}
                     buttonText="Update and Verify"
                 />
-            </Grid>
+            </div>
+            {/* </Grid> */}
             {alertState && <CustomAlert alertState={alertState} setAlert={setAlertState} alert={alertDetails} />}
         </>
     )

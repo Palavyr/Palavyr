@@ -49,6 +49,10 @@ Storybook is currently used to visually test the components. Soon jest testing w
 
 Testing is currently scant and needs to soon become a major focus.
 
+# Viewing SVGs on windows
+https://github.com/tibold/svg-explorer-extension/releases
+
+
 
 ### S3 bucket settings
 

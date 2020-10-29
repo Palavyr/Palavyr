@@ -24,6 +24,7 @@ const useStyles = makeStyles({
 
     },
     appBar: {
+        marginTop: "1.5rem",
         height: "6rem",
         position: "sticky",
         boxShadow: "0 0 black",
@@ -88,9 +89,6 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawer
                     <div className={classes.logotypography}>
                         <Typography variant="body2" className={classes.brandText} display="inline">
                             Palavyr
-                        </Typography>
-                        <Typography variant="body2" className={classes.brandTextSmall} display="inline">
-                            .com
                         </Typography>
                     </div>
                 </div>

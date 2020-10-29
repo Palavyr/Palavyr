@@ -6,6 +6,8 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
+import { Alert, AlertTitle } from "@material-ui/lab";
+import { SaveOrCancel } from "@common/components/SaveOrCancel";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -13,6 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
         root: {
             display: 'flex',
             flexWrap: 'wrap',
+            justifyContent: "center"
         },
         margin: {
             margin: theme.spacing(1),
@@ -21,37 +24,28 @@ const useStyles = makeStyles((theme: Theme) =>
             marginTop: theme.spacing(3),
         },
         textField: {
-            width: '25ch',
+            width: '50ch',
         },
+        paper: {
+            backgroundColor: "#C7ECEE",
+            padding: "2rem",
+            margin: "2rem",
+            width: "50%"
+        },
+        rowStyle: {
+            padding: "1rem",
+            margin: "1rem",
+            // border: "1px solid black"
+        },
+        titleText: {
+            fontWeight: "bold"
+        }
     }),
 );
 
 
-const rowStyle = {
-    padding: "1rem",
-    margin: "1rem"
-}
-
-const paperStyle = {
-    padding: "2rem",
-    margin: "2rem",
-    width: "100%"
-}
-
 export const ChangePassword = () => {
     var client = new ApiClient();
-
-    // const [, setLoaded] = useState<boolean>(false);
-    // const [, setPassword] = useState<string>("");
-
-    const [alertState, setAlert] = useState<boolean>(false);
-
-    // useEffect(() => {
-    //     setLoaded(true);
-    //     return () => {
-    //         setLoaded(false)
-    //     }
-    // }, [setPassword])
 
     const [showOldPassword, setShowOldPassword] = useState<boolean>(false);
     const [oldPassword, setOldPassword] = useState<string>("");
@@ -69,23 +63,23 @@ export const ChangePassword = () => {
         return success;
     }
 
-    const customAlert = {
-        title: "",
-        message: "Password successfully updated."
-    }
-    const name = "Update Password";
-    const details = "Update Your Password";
+
 
     return (
         <>
-            <Grid container spacing={3}>
-                <Paper style={paperStyle}>
-                    <Statement title={name} details={details} />
-                    <Grid style={rowStyle} container spacing={2}>
-                        <FormControl className={classNames(classes.margin, classes.textField)}>
-                            <InputLabel htmlFor="standard-adornment-password">Old Password</InputLabel>
+            <Paper className={classes.paper} >
+                <Alert>
+                    <AlertTitle className={classes.titleText}>Update your password</AlertTitle>
+                    Choose a strong password that contains at least:
+                    <ul><li>6 or more characters</li><li>1 non-letter</li><li>1 uppercase letter</li></ul>
+                </Alert>
+                <Grid container spacing={3}>
+                    <Grid className={classes.rowStyle} item xs={12}>
+                        <FormControl fullWidth className={classNames(classes.margin, classes.textField)}>
+                            <InputLabel htmlFor="standard-adornment-password-old">Old Password</InputLabel>
                             <Input
-                                id="standard-adornment-password"
+                                fullWidth
+                                id="standard-adornment-password-old"
                                 type={showOldPassword ? 'text' : 'password'}
                                 value={oldPassword}
                                 onChange={(e) => setOldPassword(e.target.value)}
@@ -102,11 +96,12 @@ export const ChangePassword = () => {
                                 }
                             />
                         </FormControl>
-                        <br></br>
+                    </Grid>
+                    <Grid className={classes.rowStyle} item xs={12}>
                         <FormControl className={classNames(classes.margin, classes.textField)}>
-                            <InputLabel htmlFor="standard-adornment-password">New Password</InputLabel>
+                            <InputLabel htmlFor="standard-adornment-password-new">New Password</InputLabel>
                             <Input
-                                id="standard-adornment-password"
+                                id="standard-adornment-password-new"
                                 type={showNewPassword ? 'text' : 'password'}
                                 value={newPassword}
                                 onChange={(e) => setNewPassword(e.target.value)}
@@ -123,11 +118,12 @@ export const ChangePassword = () => {
                                 }
                             />
                         </FormControl>
-                        <br></br>
+                    </Grid>
+                    <Grid className={classes.rowStyle} item xs={12}>
                         <FormControl className={classNames(classes.margin, classes.textField)}>
-                            <InputLabel htmlFor="standard-adornment-password">Confirm New Password</InputLabel>
+                            <InputLabel htmlFor="standard-adornment-password-confirm">Confirm New Password</InputLabel>
                             <Input
-                                id="standard-adornment-password"
+                                id="standard-adornment-password-confirm"
                                 type={showNewPasswordCopy ? 'text' : 'password'}
                                 value={newPasswordCopy}
                                 onChange={(e) => setNewPasswordCopy(e.target.value)}
@@ -144,36 +140,40 @@ export const ChangePassword = () => {
                                 }
                             />
                         </FormControl>
-
-                        <Grid item xs={4}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={async () => {
-
+                    </Grid>
+                    <div style={{ display: "flex", width: "100%", justifyContent: "flex-end" }}>
+                        <SaveOrCancel
+                            onSave={
+                                async () => {
                                     if (!(newPassword === newPasswordCopy)) {
                                         alert("Passwords don't match")
                                     } else {
                                         var res = await handlePasswordChange(oldPassword, newPassword)
                                         if (res.data === true) {
-                                            setNewPassword("")
                                             setOldPassword("")
+                                            setNewPassword("")
                                             setNewPasswordCopy("")
-                                            setAlert(true);
                                         } else {
                                             alert("Password does not match that on record.")
                                         }
                                     }
-                                }}
-                            >
-                                Change Password
-                    </Button>
-                        </Grid>
+                                }
+                            }
+                            useModal
+                            size="large"
+                            customSaveMessage={
+                                {
+                                    title: "",
+                                    message: "Password successfully updated."
+                                }
+                            }
 
-                    </Grid>
-                </Paper>
-            </Grid>
-            {alertState && <CustomAlert alertState={alertState} setAlert={setAlert} alert={customAlert} />}
+                        />
+                    </div>
+                    {/* </Grid> */}
+                </Grid>
+            </Paper>
+            {/* {alertState && <CustomAlert alertState={alertState} setAlert={setAlert} alert={customAlert} />} */}
         </>
     )
 }

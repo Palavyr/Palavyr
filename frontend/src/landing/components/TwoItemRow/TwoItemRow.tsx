@@ -28,6 +28,9 @@ export type ItemRowObject = {
     text: string;
     type: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
     title: string;
+    size?: number;
+    height?: number;
+    width?: number;
 }
 
 export interface IItemRow {
@@ -51,10 +54,8 @@ export const TwoItemRow = ({ dataList }: IItemRow) => {
                             xs={width === 6 ? 4 : 6}
                             className={classNames(classes.colStyle, "align-center")}
                         >
-                            <IconBox IconJsx={x.type} iconTitle={x.title} iconSize={40} >
-
+                            <IconBox IconJsx={x.type} iconTitle={x.title} iconSize={x.size || 40} >
                                 <Typography variant="body2" className={classes.text}>{x.text}</Typography>
-
                             </IconBox>
                         </Grid>
 

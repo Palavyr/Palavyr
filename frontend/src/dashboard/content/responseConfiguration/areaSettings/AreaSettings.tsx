@@ -134,6 +134,7 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
                     <Grid item xs={3}></Grid>
                     <Grid item xs={5}>
                         <SettingsGridRowText
+                            fullWidth
                             alertNode={
                                 <Alert
                                     className={classes.alert}
@@ -150,7 +151,7 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
                             title=""
                             name=""
                             details="Update the area title used in the widget."
-                            placeholder="New Area Display Title"
+                            placeholder="New Area Name"
                             currentValue={settings.areaTitle}
                             onClick={handleAreaDisplayTitleChange}
                             clearVal={false}
@@ -159,6 +160,7 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
 
                     <Grid item xs={5}>
                         <SettingsGridRowText
+                            fullWidth
                             inputType="email"
                             alertNode={
                                 <Alert className={classes.alert} severity={emailSeverity()}>
@@ -169,17 +171,17 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
                                                 : "Verify the email used to send responses for this area"
                                         }
                                     </AlertTitle>
-                            Submit a new email to be used for responses.
-                        </Alert>
+                                    Submit a new email to be used for responses.
+                                    </Alert>
                             }
-                            title="Verify Email Address for this area"
-                            name="Send From Email"
-                            details="The email address that email respones will be sent from."
+                            title=""
+                            name=""
+                            details=""
+                            buttonText="Update and Verify"
+                            placeholder="New Email Address"
+                            currentValue={settings.emailAddress}
                             onClick={verifyEmailAddress}
                             clearVal={false}
-                            buttonText="Update and Verify"
-                            currentValue={settings.emailAddress}
-                            placeholder="New Email Address"
                         />
                     </Grid>
                 </Grid>
@@ -212,9 +214,7 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
                             clearVal={false}
                         />
                     </Grid>
-
                 </Grid>
-
                 <Divider />
                 <br></br>
                 <Grid container spacing={3}>
@@ -243,7 +243,6 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
                         />
                     </Grid>
                 </Grid>
-
                 {
                     alertState && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
                 }

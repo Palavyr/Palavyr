@@ -5,8 +5,6 @@ using Amazon.SimpleEmail;
 using DashboardServer.Data;
 using EmailService;
 using EmailService.verification;
-using Google.Apis.Auth;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Controllers;
 using Palavyr.API.controllers.accounts.seedData;
@@ -106,7 +104,6 @@ namespace Palavyr.API.controllers.accounts.newAccount
             await _accountsContext.SaveChangesAsync();
             await _dashContext.SaveChangesAsync();
             return Credentials.CreateAuthenticatedResponse(session.SessionId, session.ApiKey, token, account.EmailAddress);
-
         }
 
         private string CreateNewJwtToken(UserAccount account)
@@ -116,13 +113,11 @@ namespace Palavyr.API.controllers.accounts.newAccount
 
         private Session CreateNewSession(UserAccount account)
         {
-
             var sessionId = Guid.NewGuid().ToString();
             _logger.LogDebug("Attempting to create a new Session.");
             var session = Session.CreateNew(sessionId, account.AccountId, account.ApiKey);
             _logger.LogDebug($"New Session created: {session.SessionId}"); 
             return session;
-  
         }
         
         public async Task<Credentials> CreateNewAccountViaDefaultAsync(AccountDetails newAccountDetails)
@@ -180,8 +175,6 @@ namespace Palavyr.API.controllers.accounts.newAccount
             // install seed Data
             _logger.LogDebug("Install new account seed data.");
             var seeData = new SeedData(accountId, emailAddress);
-            await _dashContext.Areas.AddRangeAsync(seeData.Areas);
-            await _dashContext.Groups.AddRangeAsync(seeData.Groups);
             await _dashContext.Areas.AddRangeAsync(seeData.Areas);
             await _dashContext.Groups.AddRangeAsync(seeData.Groups);
             await _dashContext.WidgetPreferences.AddAsync(seeData.WidgetPreference);

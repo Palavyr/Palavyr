@@ -41,13 +41,9 @@ module.exports = (ENV) => {
             rules: [
                 TypeScriptLoaderRule(), // IN USE
                 StylesLoader(),  // IN USE
-                LiteLoadSVGs(),
-                // SVGRule(),
+                SVGRLoader(),
                 BabelLoaderRule(), // IN USE
                 URLLoaderRule(), // IN USE
-                // NewFileLoaderRule(), // IN USE?
-                // FileLoaderRule(),
-                // SVGRLoader(), // IN USE
                 //new rule here
             ],
         },

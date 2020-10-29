@@ -18,7 +18,7 @@ namespace Palavyr.API.Controllers
         public Task<Credentials> PerformLoginAction(LoginCredentials loginCredentials);
         public Task<GoogleJsonWebSignature.Payload> ValidateGoogleTokenId(string accessToken);
     }
-
+    
     public class AuthService : IAuthService
     {
         private DashContext _dashContext;
@@ -135,8 +135,11 @@ namespace Palavyr.API.Controllers
             if (payload == null)
                 return AccountReturn.Return(null, CouldNotValidateGoogleAuthToken);
 
-            // compare incoming Accesstoken and tokenId to the ones returned by google
-            
+            var Subject = payload.Subject;
+            if (payload.Subject != credential.TokenId)
+            {
+                return AccountReturn.Return(null, CouldNotFindAccount);
+            }
             
             // now verify the user exists in the Accounts database
             var account = _accountsContext.Accounts.SingleOrDefault(row => row.EmailAddress == payload.Email);

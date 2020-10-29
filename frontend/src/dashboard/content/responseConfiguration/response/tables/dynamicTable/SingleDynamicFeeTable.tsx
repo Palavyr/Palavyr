@@ -25,7 +25,8 @@ export interface ISingleDynamicFeeTable {
 
 const useStyles = makeStyles((theme => ({
     headerCol: {
-        textAlign: "center"
+        textAlign: "center",
+        fontSize: "16pt"
     },
     centerText: {
         textAlign: "center",
@@ -130,7 +131,18 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
                                 />
                             </TableCell>
                             <TableCell></TableCell>
+                            <TableCell></TableCell>
                             <TableCell align="center">
+                                <TextField
+                                    style={{fontSize: "12pt"}}
+                                    fullWidth
+                                    label="Short table description (2 or 3 words)"
+                                    value={tableTag}
+                                    onChange={(e) => {
+                                        e.preventDefault();
+                                        setTableTag(e.target.value);
+                                    }}
+                                />
                                 <Typography className={classes.headerCol}>
                                     Custom fee: {tableNumber + 1}
                                 </Typography>

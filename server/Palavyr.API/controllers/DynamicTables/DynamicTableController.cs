@@ -4,26 +4,29 @@ using System.Linq;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Palavyr.Common.uniqueIdentifiers;
 using Server.Domain.Configuration.constants;
 using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.Controllers
 {
-    
     // [EnableCors(origins: "*", headers: "*", methods: "*")] 
     [Route("api/tables/dynamic/")]
     [ApiController]
     public class DynamicTableController : BaseController
     {
-        public DynamicTableController(AccountsContext accountContext, ConvoContext convoContext, DashContext dashContext, IWebHostEnvironment env) : base(accountContext, convoContext, dashContext, env) { }
+        public DynamicTableController(AccountsContext accountContext, ConvoContext convoContext,
+            DashContext dashContext, IWebHostEnvironment env) : base(accountContext, convoContext, dashContext, env)
+        {
+        }
 
         // One controller for getting each table type. A separate call to get the type. Each table has a different
         // structure, and thus a different type. So we can't return multiple types from the same controller without
         // further generalization. This can be done later if its worth it. Adding a new controller for each type
         // isn't that big of a deal since we'll only have dozens of types probably. If we make money, then we can switch
         // to a generic pattern. Its just too complex to implement right now.
-        
-        
+
+
         /// <summary>
         /// originally used to pul a crazy string from the area table, but now should list off
         /// the current metas from the meta table for a given area
@@ -50,12 +53,13 @@ namespace Palavyr.API.Controllers
         }
 
         [HttpPut("update")]
-        public DynamicTableMeta UpdateDynamicTableMeta([FromHeader] string accountId, [FromBody] DynamicTableMeta dynamicTableMeta)
+        public DynamicTableMeta UpdateDynamicTableMeta([FromHeader] string accountId,
+            [FromBody] DynamicTableMeta dynamicTableMeta)
         {
             DashContext.DynamicTableMetas.Update(dynamicTableMeta);
             return dynamicTableMeta;
         }
-        
+
         [HttpPost("{areaId}")]
         public DynamicTableMeta CreateNewDynamicTable([FromHeader] string accountId, string areaId)
         {
@@ -67,16 +71,22 @@ namespace Palavyr.API.Controllers
             var dynamicTables = area.DynamicTableMetas.ToList();
 
             var tableId = Guid.NewGuid().ToString();
+            var tableTag = GuidUtils.CreatePseudoRandomString(5);
 
-            var newTableMeta = DynamicTableMeta.CreateNew("default Tag", DynamicTableTypes.DefaultPrettyName, DynamicTableTypes.DefaultTable, tableId,
-                areaId, accountId);
-            
+            var newTableMeta = DynamicTableMeta.CreateNew(
+                tableTag, 
+                DynamicTableTypes.DefaultPrettyName,
+                DynamicTableTypes.DefaultTable, 
+                tableId,
+                areaId, 
+                accountId);
+
             dynamicTables.Add(newTableMeta);
             area.DynamicTableMetas = dynamicTables;
             var defaultTable = SelectOneFlat.CreateTemplate(accountId, areaId, tableId);
             DashContext.SelectOneFlats.Add(defaultTable);
             DashContext.SaveChanges();
-            
+
             return newTableMeta;
         }
     }

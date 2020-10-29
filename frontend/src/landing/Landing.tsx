@@ -13,6 +13,7 @@ import { PricingSection } from "./components/pricing/PricingSection";
 import { rowOne, rowTwo, rowThree } from "./components/landingContent/twoItemRowContent";
 
 import AOS from 'aos';
+import { Sliver } from "./components/sliver/Sliver";
 AOS.init({
     duration: 1000
 })
@@ -31,21 +32,10 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: "9px",
         border: "0px",
     },
-    sliverDiv: {
-        color: "lighgray",
-        textAlign: "center",
-        height: "30px",
-        width: "100%",
-        backgroundColor: "gray"
-    },
-    sliver: {
-        fontSize: "16pt"
-    },
     body: {
         background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)"
     }
 }));
-
 
 
 export const LandingPage = () => {
@@ -151,11 +141,12 @@ export const LandingPage = () => {
             </div>
 
             {/* <WhatsThePoint /> */}
-            <div className={classes.sliverDiv}>
+            <Sliver />
+            {/* <div className={classes.sliverDiv}>
                 <Typography className={classes.sliver}>
                     Questions? Get in touch: info.palavyr@gmail.com
                 </Typography>
-            </div>
+            </div> */}
 
             <Footer />
         </div>
