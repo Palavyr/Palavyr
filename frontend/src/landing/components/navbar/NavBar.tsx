@@ -78,7 +78,6 @@ const useStyles = makeStyles({
 export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawerOpen, handleMobileDrawerClose, mobileDrawerOpen, selectedTab, setSelectedTab }: INavBar) => {
 
     const classes = useStyles();
-
     return (
         <AppBar position="fixed" className={classes.appBar} color="transparent" classes={{ root: classes.clear }}>
             <Toolbar className={classes.toolbar}>
