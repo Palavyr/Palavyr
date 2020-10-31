@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { Paper, Grid, TextField, Button, makeStyles, FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
-import { useEffect, useState } from 'react';
-import { AnyVoidFunction } from '@Palavyr-Types';
-import { Statement } from './Statement';
+import { Paper, Grid, makeStyles, FormControl, InputLabel, Typography, Divider, Select } from '@material-ui/core';
+import { useState } from 'react';
+import { CustomAlert } from './customAlert/CutomAlert';
+import { AlertMessage } from './SaveOrCancel';
 
 
 export interface ISettingsGridRow {
-    name: string;
-    details: string;
-    children?: React.ReactNode;
-    onClick: AnyVoidFunction;
     currentValue?: string;
     menuName: string;
     menu: React.ReactNode;
+    alertNode?: React.ReactNode;
+    useModal?: boolean;
+    modalMessage: AlertMessage;
+    onChange(event: any): void;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -21,13 +21,14 @@ const useStyles = makeStyles(theme => ({
         margin: "1rem"
     },
     paper: {
+        backgroundColor: "#C7ECEE",
         padding: "2rem",
-        margin: "2rem",
+        margin: "1rem",
         width: "100%"
     },
     formControl: {
         margin: theme.spacing(1),
-        minWidth: 120,
+        width: "50%"
     },
     selectEmpty: {
         marginTop: theme.spacing(2),
@@ -35,27 +36,46 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-export const SettingsGridRowList: React.FC<ISettingsGridRow> = ({ name, details, children, onClick, currentValue, menuName, menu }: ISettingsGridRow) => {
+export const SettingsGridRowList: React.FC<ISettingsGridRow> = ({ onChange, modalMessage, useModal, alertNode, currentValue, menuName, menu }: ISettingsGridRow) => {
 
     const classes = useStyles();
+    const [alertState, setAlertState] = useState<boolean>(false);
 
     return (
-        <Paper className={classes.paper}>
-            <Statement title={name} details={details} >
-                {children}
-            </Statement>
-            <Grid className={classes.row} container>
-                <FormControl className={classes.formControl}>
-                    <InputLabel id="select-list-label">{menuName}</InputLabel>
-                    {menu}
-                </FormControl>
-                {
-                    currentValue &&
-                    <Grid item xs={4}>
-                        <strong>Current: {currentValue} </strong>
-                    </Grid>
-                }
-            </Grid>
-        </Paper>
+        <>
+            <Paper className={classes.paper}>
+                {alertNode}
+                <Grid className={classes.row} container>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel id="select-list-label">{menuName}</InputLabel>
+                        <Select
+                            fullWidth
+                            labelId="select-list-locale"
+                            id="select-text-locale"
+                            value={currentValue}
+                            onChange={(event)=> {
+                                onChange(event)
+                                setAlertState(true);
+                            }}
+                        >
+                            {menu}
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Divider />
+                <Grid className={classes.row}>
+                    {
+                        currentValue &&
+                        <>
+                            <Typography display="inline" style={{ paddingTop: "1rem" }} variant="body1">Current locale: </Typography>
+                            <Typography display="inline" style={{ paddingTop: "1rem", fontWeight: "bold" }}>{currentValue}</Typography>
+                        </>
+                    }
+                </Grid>
+            </Paper>
+            {
+                alertState && useModal && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={modalMessage ?? { title: "Save Successful", message: "" }} />
+            }
+        </>
     )
 }

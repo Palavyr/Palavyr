@@ -24,21 +24,23 @@ const useStyles = makeStyles((theme: Theme) =>
             marginTop: theme.spacing(3),
         },
         textField: {
-            width: '50ch',
+            // width: '50ch',
         },
         paper: {
             backgroundColor: "#C7ECEE",
             padding: "2rem",
             margin: "2rem",
-            width: "50%"
+            width: "40%"
         },
         rowStyle: {
             padding: "1rem",
             margin: "1rem",
-            // border: "1px solid black"
         },
         titleText: {
             fontWeight: "bold"
+        },
+        input: {
+            width: "100%",
         }
     }),
 );
@@ -78,7 +80,7 @@ export const ChangePassword = () => {
                         <FormControl fullWidth className={classNames(classes.margin, classes.textField)}>
                             <InputLabel htmlFor="standard-adornment-password-old">Old Password</InputLabel>
                             <Input
-                                fullWidth
+                                className={classes.input}
                                 id="standard-adornment-password-old"
                                 type={showOldPassword ? 'text' : 'password'}
                                 value={oldPassword}
@@ -98,7 +100,7 @@ export const ChangePassword = () => {
                         </FormControl>
                     </Grid>
                     <Grid className={classes.rowStyle} item xs={12}>
-                        <FormControl className={classNames(classes.margin, classes.textField)}>
+                        <FormControl fullWidth className={classNames(classes.margin, classes.textField)}>
                             <InputLabel htmlFor="standard-adornment-password-new">New Password</InputLabel>
                             <Input
                                 id="standard-adornment-password-new"
@@ -120,7 +122,7 @@ export const ChangePassword = () => {
                         </FormControl>
                     </Grid>
                     <Grid className={classes.rowStyle} item xs={12}>
-                        <FormControl className={classNames(classes.margin, classes.textField)}>
+                        <FormControl fullWidth className={classNames(classes.margin, classes.textField)}>
                             <InputLabel htmlFor="standard-adornment-password-confirm">Confirm New Password</InputLabel>
                             <Input
                                 id="standard-adornment-password-confirm"

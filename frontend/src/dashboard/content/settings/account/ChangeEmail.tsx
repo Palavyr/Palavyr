@@ -85,7 +85,7 @@ export const ChangeEmail = () => {
     return (
         <>
             {/* <Grid container spacing={3}> */}
-            <div style={{ width: "50%" }}>
+            <div style={{ width: "60%" }}>
                 <SettingsGridRowText
                     fullWidth
                     inputType="email"
@@ -99,9 +99,13 @@ export const ChangeEmail = () => {
                                 }
                             </AlertTitle>
                             Submit a new email to be used for responses. This requires responding to a verification email being sent to your email address by Amazon Web Services.
-                            <br></br>
-                            To verify, click the verifiation link send to your inbox. The email will use the subject line:
-                            <strong>Amazon Web Services – Email Address Verification Request</strong>
+                            <p>
+                                To verify, click the verifiation link send to your inbox. The email will use the subject line:<br></br>
+                                <strong>Amazon Web Services – Email Address Verification Request</strong>
+                            </p>
+                            <p>
+                                This link will expire in <strong>24 hours</strong>.
+                            </p>
                         </Alert>
                     }
                     placeholder="New Email"

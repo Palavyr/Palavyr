@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
     titleText: {
         fontWeight: "bold"
     }
-}))
+}));
 
 
 export const ChangePhoneNumber = () => {
@@ -62,7 +62,7 @@ export const ChangePhoneNumber = () => {
                     message: ""
                 }}
                 alertNode={
-                    <Alert severity={phoneNumber ? "info" : "error"}>
+                    <Alert severity={phoneNumber ? "success" : "error"}>
                         <AlertTitle className={classes.titleText}>
                             {
                                 phoneNumber
