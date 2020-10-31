@@ -32,11 +32,23 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         backgroundColor: theme.palette.background.paper,
     },
+    appbar: {
+        background: "#c7ecee",
+        width: "100%",
+        top: theme.mixins.toolbar.minHeight,
+        height: "72px"
+    },
+    icon: {
+        color: "navy"
+    },
+    tabtext: {
+        color: "navy"
+    }
 }));
 
 export const SettingsContent = ({ areaIdentifier, areaName, setLoaded, setHelpType }: IAreaContent) => {
 
-    const [tab, setTab] = useState<PanelRange>(5); // tabs
+    const [tab, setTab] = useState<PanelRange>(4); // tabs
     const classes = useStyles();
 
     useEffect(() => {
@@ -73,14 +85,14 @@ export const SettingsContent = ({ areaIdentifier, areaName, setLoaded, setHelpTy
 
     return (
         <div className={classes.root}>
-            <AppBar position="static">
+            <AppBar position="static" className={classes.appbar}>
                 <Tabs centered value={tab} onChange={handleTabChange} aria-label="simple tabs">
-                    <Tab icon={<LockOpenIcon />} label="Password" {...areaTabProps(0)} />
-                    <Tab icon={<MailOutlineIcon />} label="Email" {...areaTabProps(1)} />
-                    <Tab icon={<PermIdentityIcon />} label="Company Name" {...areaTabProps(2)} />
-                    <Tab icon={<PhoneIcon />} label="Phone Number" {...areaTabProps(3)} />
-                    <Tab icon={<BrandingWatermarkIcon />} label="Response Logo" {...areaTabProps(4)} />
-                    <Tab icon={<PublicIcon />} label="Locale" {...areaTabProps(5)} />
+                    <Tab className={classes.tabtext} icon={<LockOpenIcon  className={classes.icon} />} label="Password" {...areaTabProps(0)} />
+                    <Tab className={classes.tabtext} icon={<MailOutlineIcon  className={classes.icon} />} label="Email" {...areaTabProps(1)} />
+                    <Tab className={classes.tabtext} icon={<PermIdentityIcon  className={classes.icon} />} label="Company Name" {...areaTabProps(2)} />
+                    <Tab className={classes.tabtext} icon={<PhoneIcon  className={classes.icon} />} label="Phone Number" {...areaTabProps(3)} />
+                    <Tab className={classes.tabtext} icon={<BrandingWatermarkIcon  className={classes.icon} />} label="Response Logo" {...areaTabProps(4)} />
+                    <Tab className={classes.tabtext} icon={<PublicIcon  className={classes.icon} />} label="Locale" {...areaTabProps(5)} />
                 </Tabs>
             </AppBar>
 
