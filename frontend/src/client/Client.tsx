@@ -128,13 +128,24 @@ export class ApiClient {
             updateEmail: async (newEmail: string): Promise<AxiosResponse> => this.client.put(`account/settings/update/email`, { EmailAddress: newEmail }),
             updateUserName: async (newUserName: string): Promise<AxiosResponse> => this.client.put(`account/settings/update/username/`, { UserName: newUserName }),
             updatePhoneNumber: async (newPhoneNumber: string): Promise<AxiosResponse> => this.client.put(`account/settings/update/phonenumber`, { PhoneNumber: newPhoneNumber }),
-            updateLocale: async (newLocale: string): Promise<AxiosResponse> => this.client.put(`account/settings/update/locale`, {Locale: newLocale}),
+            updateLocale: async (newLocale: string): Promise<AxiosResponse> => this.client.put(`account/settings/update/locale`, { Locale: newLocale }),
+            updateCompanyLogo: async (formData: FormData): Promise<AxiosResponse> => this.client.put(`account/settings/update/logo`,
+                formData,
+                {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+
+            ),
 
             getCompanyName: async (): Promise<AxiosResponse> => this.client.get(`account/settings/companyname`),
             getEmail: async (): Promise<AxiosResponse> => this.client.get(`account/settings/email`),
             getUserName: async (): Promise<AxiosResponse> => this.client.get(`account/settings/username`),
             getPhoneNumber: async (): Promise<AxiosResponse> => this.client.get(`account/settings/phonenumber`),
-            getLocale: async (): Promise<AxiosResponse> => this.client.get(`account/settings/locale`)
+            getLocale: async (): Promise<AxiosResponse> => this.client.get(`account/settings/locale`),
+            getCompanyLogo: async (): Promise<AxiosResponse> => this.client.get(`account/settings/logo`)
         },
         Groups: {
             GetGroups: async (): Promise<AxiosResponse> => this.client.get(`group/`),
@@ -145,7 +156,7 @@ export class ApiClient {
             DeleteAreaGroup: async (areaIdentifier: string): Promise<AxiosResponse> => this.client.delete(`group/area/${areaIdentifier}`),
         },
         EmailVerification: {
-            RequestEmailVerification: async (emailAddress: string, areaIdentifier: string): Promise<AxiosResponse> => this.client.post(`verification/email/${areaIdentifier}`, {EmailAddress: emailAddress}),
+            RequestEmailVerification: async (emailAddress: string, areaIdentifier: string): Promise<AxiosResponse> => this.client.post(`verification/email/${areaIdentifier}`, { EmailAddress: emailAddress }),
         },
     }
 

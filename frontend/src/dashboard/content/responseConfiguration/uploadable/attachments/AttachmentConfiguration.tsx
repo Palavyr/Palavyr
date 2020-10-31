@@ -4,7 +4,6 @@ import { FileLink } from "@Palavyr-Types";
 import { Upload } from "../Upload";
 import { AttachmentList } from "./AttachmentList";
 import { AttachmentPreview } from "./AttachmentPreview";
-import { Statement } from "@common/components/Statement";
 import { AttachmentsHelp } from "dashboard/content/help/AttachmentsHelp";
 
 

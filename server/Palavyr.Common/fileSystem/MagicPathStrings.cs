@@ -15,5 +15,6 @@ namespace Palavyr.Common.FileSystem.FormPaths
         public const string ResponsePDF = "ResponsePDF";
         public const string PreviewPDF = "PreviewPDF";
         public const string AreaData = "AreaData";
+        public const string Logo = "AccountLogo";
     }
 }

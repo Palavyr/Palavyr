@@ -27,15 +27,6 @@ namespace DashboardServer.API.chatUtils
                 }
             }
             
-            // for (var i = 0; i < CriticalValues.Count; i++)
-            // {
-            //     var val = CriticalValues[i];
-            //     response.Add(
-            //         new Dictionary<string, string>()
-            //         {
-            //             {$"Key Info #{i.ToString()}", val}
-            //         });
-            // }
             return response;
         }
     }

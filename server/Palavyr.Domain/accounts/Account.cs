@@ -54,6 +54,7 @@ namespace Server.Domain.Accounts
             Active = active;
             Locale = locale;
             AccountType = accountType; 
+            //FreeTrial
         }
 
 

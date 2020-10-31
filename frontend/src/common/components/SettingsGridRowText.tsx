@@ -6,6 +6,7 @@ import { SinglePurposeButton } from './SinglePurposeButton';
 import { AlertMessage } from './SaveOrCancel';
 import { CustomAlert } from './customAlert/CutomAlert';
 import NumberFormat from 'react-number-format';
+import { PalavyrAlert } from './PalavyrAlert';
 
 
 export interface ISettingsGridRow {
@@ -21,8 +22,8 @@ export interface ISettingsGridRow {
     alertNode?: React.ReactNode;
     inputType?: "email" | "text" | "number" | "phone";
     fullWidth?: boolean;
-    useModal?: boolean;
-    modalMessage?: AlertMessage;
+    useAlert?: boolean;
+    alertMessage?: AlertMessage;
     CustomInput?: React.ReactNode;
     locale?: string;
 }
@@ -39,14 +40,9 @@ const useStyles = makeStyles(theme => ({
         margin: "1rem",
         width: "100%"
     },
-    singlePurposeButton: {
-        marginTop: "1rem",
-        color: "black",
-        background: "white"
-    }
 }))
 
-export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ name, details, title, children, CustomInput, locale, useModal, modalMessage, fullWidth, inputType, alertNode, placeholder, onClick, currentValue, clearVal = false, buttonText = "Update" }: ISettingsGridRow) => {
+export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ name, details, title, children, CustomInput, locale, useAlert, alertMessage, fullWidth, inputType, alertNode, placeholder, onClick, currentValue, clearVal = false, buttonText = "Update" }: ISettingsGridRow) => {
 
     const [inputVal, setInputVal] = useState<string>();
     const [inputValStatus, setInputValStatus] = useState<string | null>(null);
@@ -127,7 +123,6 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ name, details,
                 <Divider />
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                     <SinglePurposeButton
-                        classes={classes.singlePurposeButton}
                         variant="outlined"
                         color="primary"
                         buttonText={buttonText}
@@ -147,7 +142,11 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ name, details,
                 </div>
             </Paper >
             {
-                alertState && useModal && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={modalMessage ?? { title: "Save Successful", message: "" }} />
+                useAlert && <PalavyrAlert
+                    alertMessage={alertMessage}
+                    alertState={alertState}
+                    setAlertState={setAlertState}
+                />
             }
         </>
     )

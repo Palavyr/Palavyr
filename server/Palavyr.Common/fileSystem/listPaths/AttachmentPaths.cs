@@ -11,12 +11,12 @@ namespace Palavyr.Common.FileSystem.FormPaths
             var files = GetAttachmentFileList(accountId, areaId);
             return files.Select(x => x.FullName).ToList();
         }
-        
+
         public static FileInfo[] GetAttachmentFileList(string accountId, string areaId)
         {
             var attachmentDir = FormDirectoryPaths.FormAttachmentDirectoryWithCreate(accountId, areaId);
             var directory = new DirectoryInfo(attachmentDir);
-            return directory.GetFiles("*");
+            return directory.GetFiles("*.pdf");
         }
     }
 }

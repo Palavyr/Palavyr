@@ -17,6 +17,7 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import BrandingWatermarkIcon from '@material-ui/icons/BrandingWatermark';
 import PublicIcon from '@material-ui/icons/Public';
 import { HelpTypes } from "dashboard/layouts/DashboardLayout";
+import { AlignCenter } from "dashboard/layouts/positioning/AlignCenter";
 
 
 
@@ -30,7 +31,7 @@ interface IAreaContent {
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        backgroundColor: theme.palette.background.paper,
+        // backgroundColor: theme.palette.background.paper,
     },
     appbar: {
         background: "#c7ecee",
@@ -59,7 +60,7 @@ export const SettingsContent = ({ areaIdentifier, areaName, setLoaded, setHelpTy
     }, [tab, setLoaded]); // probably need to add a tracker for when the table is saved so can reload and update
 
     const handleTabChange = (event: any, newValue: PanelRange) => {
-        switch (newValue){
+        switch (newValue) {
             case 0:
                 setHelpType("password");
                 break;
@@ -87,32 +88,44 @@ export const SettingsContent = ({ areaIdentifier, areaName, setLoaded, setHelpTy
         <div className={classes.root}>
             <AppBar position="static" className={classes.appbar}>
                 <Tabs centered value={tab} onChange={handleTabChange} aria-label="simple tabs">
-                    <Tab className={classes.tabtext} icon={<LockOpenIcon  className={classes.icon} />} label="Password" {...areaTabProps(0)} />
-                    <Tab className={classes.tabtext} icon={<MailOutlineIcon  className={classes.icon} />} label="Email" {...areaTabProps(1)} />
-                    <Tab className={classes.tabtext} icon={<PermIdentityIcon  className={classes.icon} />} label="Company Name" {...areaTabProps(2)} />
-                    <Tab className={classes.tabtext} icon={<PhoneIcon  className={classes.icon} />} label="Phone Number" {...areaTabProps(3)} />
-                    <Tab className={classes.tabtext} icon={<BrandingWatermarkIcon  className={classes.icon} />} label="Response Logo" {...areaTabProps(4)} />
-                    <Tab className={classes.tabtext} icon={<PublicIcon  className={classes.icon} />} label="Locale" {...areaTabProps(5)} />
+                    <Tab className={classes.tabtext} icon={<LockOpenIcon className={classes.icon} />} label="Password" {...areaTabProps(0)} />
+                    <Tab className={classes.tabtext} icon={<MailOutlineIcon className={classes.icon} />} label="Email" {...areaTabProps(1)} />
+                    <Tab className={classes.tabtext} icon={<PermIdentityIcon className={classes.icon} />} label="Company Name" {...areaTabProps(2)} />
+                    <Tab className={classes.tabtext} icon={<PhoneIcon className={classes.icon} />} label="Phone Number" {...areaTabProps(3)} />
+                    <Tab className={classes.tabtext} icon={<BrandingWatermarkIcon className={classes.icon} />} label="Response Logo" {...areaTabProps(4)} />
+                    <Tab className={classes.tabtext} icon={<PublicIcon className={classes.icon} />} label="Locale" {...areaTabProps(5)} />
                 </Tabs>
             </AppBar>
 
             <TabPanel value={tab} index={0}>
-                <ChangePassword />
+                <AlignCenter>
+                    <ChangePassword />
+                </AlignCenter>
             </TabPanel>
             <TabPanel value={tab} index={1}>
-                <ChangeEmail />
+                <AlignCenter>
+                    <ChangeEmail />
+                </AlignCenter>
             </TabPanel>
             <TabPanel value={tab} index={2}>
-                <ChangeCompanyName />
+                <AlignCenter>
+                    <ChangeCompanyName />
+                </AlignCenter>
             </TabPanel>
             <TabPanel value={tab} index={3}>
-                <ChangePhoneNumber />
+                <AlignCenter>
+                    <ChangePhoneNumber />
+                </AlignCenter>
             </TabPanel>
             <TabPanel value={tab} index={4}>
-                <ChangeLogoImage />
+                <AlignCenter>
+                    <ChangeLogoImage />
+                </AlignCenter>
             </TabPanel>
             <TabPanel value={tab} index={5}>
-                <ChangeLocale />
+                <AlignCenter>
+                    <ChangeLocale />
+                </AlignCenter>
             </TabPanel>
 
             {/* <TabPanel value={tab} index={5}>

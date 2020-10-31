@@ -63,6 +63,7 @@ export const Upload = ({ accordState, toggleAccord, modalState, toggleModal, han
                         handleFileSave(files)
                         toggleModal()
                     }}
+                    useChipsForPreview
                     acceptedFiles={acceptedFiles}
                     showPreviews={true}
                     maxFileSize={2000000}

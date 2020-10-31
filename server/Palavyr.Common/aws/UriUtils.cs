@@ -86,5 +86,17 @@ namespace Palavyr.Common.FileSystem.FormPaths
             var preSignedUrl = await CreatePresignedUrl(_logger, accountId, fileId, fromFilePath, s3Client);
             return preSignedUrl;
         }
+
+        public static async Task<string> CreateLogoImageLinkAsURI(
+            ILogger _logger, 
+            string accountId, 
+            string fileName,
+            string localFilePath,
+            IAmazonS3 s3Client)
+        {
+            _logger.LogDebug("Saving the Logo Image as URI to amazon");
+            var preSignedUrl = await CreatePresignedUrl(_logger, accountId, fileName, localFilePath, s3Client);
+            return preSignedUrl;
+        }
     }
 }

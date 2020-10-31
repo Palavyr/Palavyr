@@ -17,7 +17,6 @@ import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import { HelpTypes } from "dashboard/layouts/DashboardLayout";
-import { Dashboard } from "@material-ui/icons";
 
 
 interface ITabs {

@@ -40,9 +40,7 @@ export const ChangeCompanyName = () => {
 
 
     const handleCompanyNameChange = async (newCompanyName: string) => {
-
         await client.Settings.Account.updateCompanyName(newCompanyName);
-        // setAlert(true);
         setCompanyName(newCompanyName);
     }
 
@@ -55,14 +53,13 @@ export const ChangeCompanyName = () => {
         <>
             <div style={{ width: "50%" }}>
                 <SettingsGridRowText
-
                     fullWidth
                     placeholder={"New Company Name"}
                     onClick={handleCompanyNameChange}
                     clearVal={true}
                     currentValue={companyName}
-                    useModal
-                    modalMessage={{
+                    useAlert
+                    alertMessage={{
                         title: "Successfully updated",
                         message: ""
                     }}

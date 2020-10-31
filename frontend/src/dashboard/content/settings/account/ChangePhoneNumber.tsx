@@ -56,8 +56,8 @@ export const ChangePhoneNumber = () => {
                 onClick={handlePhoneNumberChange}
                 clearVal={true}
                 currentValue={phoneNumber}
-                useModal
-                modalMessage={{
+                useAlert
+                alertMessage={{
                     title: "Phone Number successfully updated.",
                     message: ""
                 }}

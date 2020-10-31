@@ -33,7 +33,12 @@ namespace Palavyr.Common.FileSystem.FormPaths
             DiskUtils.CreateDir(areaDir);
             return areaDir;
         }
-        
-        
+
+        public static string FormLogoImageDir(string accountId)
+        {
+            var logoImageDir = Path.Combine(FormAccountDirWithCreate(accountId), MagicPathStrings.Logo);
+            DiskUtils.CreateDir(logoImageDir);
+            return logoImageDir;
+        }
     }
 }

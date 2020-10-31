@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Amazon.S3;
 using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
 using DashboardServer.Data;
 using EmailService.verification;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Controllers;
 using Palavyr.API.receiverTypes;
 using Palavyr.API.ReceiverTypes;
 using Palavyr.API.response;
 using Palavyr.API.ResponseTypes;
+using Palavyr.Common.FileSystem.FormPaths;
+using Palavyr.Common.FileSystem.FormPaths.IO;
 using Server.Domain.AccountDB;
 
 namespace Palavyr.API.controllers.accounts.newAccount
@@ -28,8 +34,10 @@ namespace Palavyr.API.controllers.accounts.newAccount
         private IAmazonSimpleEmailService _client { get; set; }
         private static ILogger<AccountSettings> _logger;
         private SenderVerification Verifier { get; set; }
+        private IAmazonS3 _s3Client;
 
         public AccountSettings(
+            IAmazonS3 s3Client,
             ILogger<AccountSettings> logger,
             IAmazonSimpleEmailService client,
             AccountsContext accountContext,
@@ -40,6 +48,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             _logger = logger;
             Verifier = new SenderVerification(logger, client);
             _client = client;
+            _s3Client = s3Client;
         }
 
         [HttpPut("update/password")]
@@ -186,6 +195,62 @@ namespace Palavyr.API.controllers.accounts.newAccount
             return new OkResult();
         }
 
+        [HttpPut("update/logo")]
+        [ActionName("Decode")]
+        public async Task<IActionResult> UpdateCompanyLogo([FromHeader] string accountId,
+            [FromForm(Name = "files")] IFormFile file) // will take form data. Check attachments
+        {
+            // Get the directory where we save the logo images
+            var extension = Path.GetExtension(file.FileName);
+            var logoDirectory = FormDirectoryPaths.FormLogoImageDir(accountId);
+
+            var files = LogoPaths.ListLogoPathsAsDiskPaths(accountId);
+            if (files.Count > 0)
+            {
+                var dir = new DirectoryInfo(logoDirectory);
+                foreach (var fi in dir.GetFiles())
+                {
+                    fi.Delete();
+                }
+            }
+
+            var filepath = Path.Combine(logoDirectory, Guid.NewGuid().ToString()) + extension;
+
+            
+            await FileIO.SaveFile(filepath, file);
+            var account = await AccountContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
+            account.AccountLogoUri = filepath;
+            AccountContext.SaveChangesAsync();
+
+            var link = await UriUtils.CreateLogoImageLinkAsURI(
+                _logger,
+                accountId,
+                Path.GetFileName(filepath),
+                filepath,
+                _s3Client
+            );
+            
+            return Ok(link);
+        }
+
+        [HttpGet("logo")]
+        public async Task<IActionResult> GetCompanyLogo([FromHeader] string accountId)
+        {
+            /// Do I upload an image file, or allow them to use a link?
+            /// Only use an actual file for now
+            var files = LogoPaths.ListLogoPathsAsDiskPaths(accountId);
+            var logoFile = files[0]; // we only allow one logo file. If it changes, we delete it.
+            var link = await UriUtils.CreateLogoImageLinkAsURI(
+                _logger,
+                accountId,
+                Path.GetFileName(logoFile),
+                logoFile,
+                _s3Client
+            );
+            return Ok(link);
+        }
+
+
         [HttpGet("locale")]
         public string GetLocale([FromHeader] string accountId)
         {
@@ -218,7 +283,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             {
                 Identities = new List<string>() {account.EmailAddress}
             };
-            
+
             GetIdentityVerificationAttributesResponse response;
             try
             {

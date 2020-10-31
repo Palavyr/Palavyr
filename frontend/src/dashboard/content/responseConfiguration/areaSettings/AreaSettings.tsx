@@ -124,14 +124,14 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
         loaded ?
             <>
                 <Grid container spacing={3}>
-                    <Grid item xs={3}></Grid>
-                    <Grid item xs={6} >
+                    {/* <Grid item xs={3}></Grid> */}
+                    <Grid item xs={12} >
                         <Alert className={classNames(classes.alert, classes.alertTitle)} variant="filled" severity="info">
                             <AlertTitle className={classes.titleText}>Important Settings</AlertTitle>
                             These options affect the appearance and behavior of the widget.
                         </Alert>
                     </Grid>
-                    <Grid item xs={3}></Grid>
+                    {/* <Grid item xs={3}></Grid> */}
                     <Grid item xs={5}>
                         <SettingsGridRowText
                             fullWidth
@@ -189,14 +189,12 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
                 <br></br>
 
                 <Grid container spacing={3}>
-                    <Grid item xs={3}></Grid>
-                    <Grid item xs={6} >
+                    <Grid item xs={12} >
                         <Alert className={classNames(classes.alert, classes.alertTitle)} variant="filled" severity="warning">
                             <AlertTitle className={classes.titleText}>Dashboard Specific Options</AlertTitle>
                             These options only affect what you see in the dashboard.
                         </Alert>
                     </Grid>
-                    <Grid item xs={3}></Grid>
                     <Grid item xs={5}>
                         <SettingsGridRowText
                             alertNode={
@@ -218,14 +216,12 @@ export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
                 <Divider />
                 <br></br>
                 <Grid container spacing={3}>
-                    <Grid item xs={3}></Grid>
-                    <Grid item xs={6} >
+                    <Grid item xs={12} >
                         <Alert className={classNames(classes.alert, classes.alertTitle)} severity="error" variant="filled">
                             <AlertTitle className={classes.titleText}>DANGER ZONE</AlertTitle>
                             WAIT! These options are permanent.
                         </Alert>
                     </Grid>
-                    <Grid item xs={3}></Grid>
                     <Grid item xs={5}>
                         <SettingsGridRowText
                             alertNode={

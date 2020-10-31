@@ -62,8 +62,7 @@ namespace Palavyr.API.response
             var dynamicTables = CollectPreviewDynamicTables(areaData, AccountId, culture);
 
             _logger.LogDebug($"Generating PDF Html string to send to express server...");
-            var html = PdfGenerator.GenerateNewPDF(userAccount, areaData, criticalResponses, staticTables,
-                dynamicTables);
+            var html = PdfGenerator.GenerateNewPDF(userAccount, areaData, criticalResponses, staticTables, dynamicTables);
 
             var randomFileName = Guid.NewGuid().ToString();
             var localWriteToPath_PDFPreview =

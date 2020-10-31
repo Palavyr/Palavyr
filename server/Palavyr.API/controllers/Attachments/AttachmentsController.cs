@@ -83,7 +83,8 @@ namespace Palavyr.API.Controllers
         
         [HttpPost("{areaId}/savemany")]
         [ActionName("Decode")]
-        public Task<FileLink[]> SaveAttachments(string areaId, [FromHeader] string accountId,
+        public Task<FileLink[]> SaveAttachments(string areaId, 
+            [FromHeader] string accountId,
             [FromForm(Name = "files")] IList<IFormFile> attachmentFiles)
         {
             // TODO write filename only to the database, then generate GUID to use as filename, then save, then use the db map of guid to filename to get the file.
@@ -112,7 +113,7 @@ namespace Palavyr.API.Controllers
         {
             var attachmentDir = FormDirectoryPaths.FormAttachmentDirectoryWithCreate(accountId, areaId);
             var safeFileName = Guid.NewGuid() + ".pdf";
-            var riskyFileName = attachmentFile.FileName;
+                var riskyFileName = attachmentFile.FileName;
 
             var fileNameMap = FileNameMap.CreateFileMap(safeFileName, riskyFileName, accountId, areaId);
 
