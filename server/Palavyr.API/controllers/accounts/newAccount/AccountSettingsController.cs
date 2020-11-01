@@ -34,7 +34,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
         private IAmazonSimpleEmailService _client { get; set; }
         private static ILogger<AccountSettings> _logger;
         private SenderVerification Verifier { get; set; }
-        private IAmazonS3 _s3Client;
+        private readonly IAmazonS3 _s3Client;
 
         public AccountSettings(
             IAmazonS3 s3Client,

@@ -23,7 +23,7 @@ namespace Palavyr.API.Controllers
             foreach (var area in areas)
             {
                 var nodeList = area.ConversationNodes;
-                var requiredNodes = area.DynamicTableMetas.Select(row => row.TableType).ToList();
+                var requiredNodes = area.DynamicTableMetas.Select(row => string.Join("-", new[] {row.TableType, row.TableId})).ToList();
 
                 _logger.LogDebug($"Required Nodes Found. Number of required nodes: {requiredNodes.Count}");
                 List<bool> checks;

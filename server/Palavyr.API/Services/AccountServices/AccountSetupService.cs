@@ -72,8 +72,6 @@ namespace Palavyr.API.controllers.accounts.newAccount
                 _logger.LogDebug($"OneTimeCode: {googleRegistration.OneTimeCode}");
                 return Credentials.CreateUnauthenticatedResponse(CouldNotValidateGoogleAuthToken);
             }
-
-            // TODO: check that accessToken and tokenId match
             
             _logger.LogDebug("Checking if Email already exists as non-google account.");
             if (AccountExists(payload.Email))
@@ -88,7 +86,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             var apiKey = Guid.NewGuid().ToString();
             _logger.LogDebug($"New Account Details--Account: {accountId} -- user: {newUserId} -- apiKey: {apiKey}");
             
-            var account = UserAccount.CreateGoogleAccount(newUserId, payload.Email, accountId, payload.Locale);
+            var account = UserAccount.CreateGoogleAccount(newUserId, apiKey, payload.Email, accountId, payload.Locale);
             _logger.LogDebug("Adding new account via GOOGLE...");
             await _accountsContext.Accounts.AddAsync(account);
             

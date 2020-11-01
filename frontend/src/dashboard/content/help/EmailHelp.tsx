@@ -1,4 +1,5 @@
 import { Statement } from '@common/components/Statement'
+import { emphasize } from '@material-ui/core'
 import React from 'react'
 
 interface Props {
@@ -24,6 +25,8 @@ export const EmailHelp = ({defaultOpen = false}: Props) => {
                     <h4>Inline Editor</h4>
                 If you don't have a prepared html email template, you can use our inline editor. This provides functionality to fully customize your email response in rich text.
                 Behind the scenes, this editor will convert your formatted text to html.
+
+                <i>Note: The inline editor feature is only available with the pro subscription plan.</i>
             </span>
             </>
         </Statement>

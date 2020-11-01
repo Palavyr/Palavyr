@@ -10,13 +10,24 @@ import { useState } from 'react';
 
 const useStyles = makeStyles(theme => ({
     contentRoot: {
-        justifyItems: "center",
-        flexGrow: 1,
-        backgroundColor: "transparent",
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+
+        // justifyItems: "center",
+        // flexGrow: 1,
+        // background: "#c7ecee",
+        background: "transparent",
         margin: "0px"
-      },
+    },
+    //   cardWrapper: {
+    //       width: "100%",
+    //       display: "flex",
+    //       justifyContent: "cener"
+    //   },
     card: {
-        width: "30%",
+        backgroundColor: "#c7ecee",
+        width: "50%",
         padding: "3rem",
         margin: "3rem"
     },
@@ -25,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     },
     margin: {
         margin: theme.spacing(1),
-      },
+    },
 }))
 
 
@@ -60,10 +71,10 @@ export const PleaseConfirmYourEmail = () => {
                     <strong>Please provide the access token emailed to: {emailAddress}</strong>
                 </Typography>
                 <br /><br />
-
                 <FormControl fullWidth className={classes.margin} variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-confirmation-code">Confirmation Code</InputLabel>
+                    <InputLabel style={{ background: "white", borderRadius: "5px", boxShadow: "0px 0px 12px 5px white" }} htmlFor="outlined-adornment-confirmation-code">Confirmation Code</InputLabel>
                     <OutlinedInput
+                        style={{ background: "white" }}
                         placeholder="Paste your confirmation code here"
                         value={authToken}
                         id="outlined-adornment-confirmation-code"

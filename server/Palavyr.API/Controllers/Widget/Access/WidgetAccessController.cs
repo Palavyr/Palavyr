@@ -92,6 +92,7 @@ namespace Palavyr.API.Controllers
                 .Areas
                 .Where(row => row.AccountId == accountId)
                 .Include(row => row.ConversationNodes)
+                .Include(row => row.DynamicTableMetas)
                 .ToList();
             
             _logger.LogDebug("Running live widget conversations pre-check...");

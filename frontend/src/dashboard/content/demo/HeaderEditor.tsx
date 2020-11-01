@@ -3,7 +3,7 @@ import React from 'react'
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { cloneDeep } from 'lodash';
-
+// import "./Editor.css";
 
 const useStyles = makeStyles(theme => ({
     editorLabel: {
@@ -28,10 +28,13 @@ export const HeaderEditor = ({ setEditorState, initialData, label }: IEditor) =>
         <>
             <CKEditor
                 editor={ClassicEditor}
-            data={initData}
+                config={{
+                    toolbar: [ 'heading', '|', 'bold', 'italic', 'numberedList', 'bulletedList', '|', 'link' ]
+                }}
+                data={initData}
                 onInit={editor => {
                     // You can store the "editor" and use when it is needed.
-                    console.log('Editor is ready to use!', editor);
+                    // console.log('Editor is ready to use!', editor);
                 }}
                 onChange={(event, editor) => {
                     const data = editor.getData();

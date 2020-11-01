@@ -15,6 +15,8 @@ module.exports = (ENV) => {
 
     const envPath = ENV.production ? ".env.production" : ".env.development";
     console.log("Building in.... " + envPath)
+    const title = ENV.production ? "Palavyr Prod" : "Palavyr Dev";
+
     return {
         entry: {
             "palavyr-build": './src/index.tsx',
@@ -23,7 +25,7 @@ module.exports = (ENV) => {
             new MiniCssExtractPlugin(),
             new Dotenv({ path: envPath }),
             new CleanWebpackPlugin(), //for < v2 versions of CleanWebpackPlugin
-            new HtmlWebpackPlugin({ title: 'Palavyr Prod' }),
+            new HtmlWebpackPlugin({ title }),
             new ManifestPlugin(manifestOptions),
             new HtmlWebpackPlugin(htmlOptions),
             new ForkTsCheckerWebpackPlugin(),

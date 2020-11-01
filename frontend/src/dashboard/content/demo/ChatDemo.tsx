@@ -233,8 +233,6 @@ export const ChatDemo = ({ setHelpType }: IChatDemo) => {
                             </TableBody>
                         </Table>
                     </Grid>
-
-
                 </Grid>
             }
             <Grid className={classNames(classes.grid, classes.container, classes.lowercell)} container>
@@ -245,7 +243,7 @@ export const ChatDemo = ({ setHelpType }: IChatDemo) => {
                             && <Typography style={{ paddingTop: "2rem", paddingBottom: "2rem", color: "white" }}>The Demo will load once you've fully assembled each of your areas!</Typography>
                         }
                         <div>
-                            {apiKey && <IFrame widgetUrl={widgetUrl} apiKey={apiKey} iframeRefreshed={iframeRefreshed} incompleteAreas={incompleteAreas}/>}
+                            {apiKey && <IFrame widgetUrl={widgetUrl} apiKey={apiKey} iframeRefreshed={iframeRefreshed} incompleteAreas={incompleteAreas} />}
                         </div>
                     </Paper>
                 </Grid>

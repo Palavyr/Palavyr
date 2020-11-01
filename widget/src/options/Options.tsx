@@ -19,9 +19,7 @@ export const OptionSelector = ({ setSelectedOption, preferences }: IOptionSelect
     const [useGroups, setUseGroups] = useState<boolean>();
     const [options, setOptions] = useState<Array<SelectedOption>>();
 
-    const loadPreference = useCallback(async () => {
-        // var prefs = (await Client.Widget.Access.fetchPreferences()).data as WidgetPreferences;
-        // setUseGroups(Use.data.shouldGroup); // TODO: check
+    const loadAreas = useCallback(async () => {
         setUseGroups(false);
 
         var areas = await Client.Widget.Access.fetchAreas();
@@ -34,8 +32,8 @@ export const OptionSelector = ({ setSelectedOption, preferences }: IOptionSelect
     }, [])
 
     useEffect(() => {
-        loadPreference();
-    }, [loadPreference])
+        loadAreas();
+    }, [loadAreas])
 
     return useGroups ? <GroupedOptions /> : <CaroselOptions options={options} setSelectedOption={setSelectedOption} preferences={preferences} />;
 }

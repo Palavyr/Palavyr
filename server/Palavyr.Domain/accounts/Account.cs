@@ -54,13 +54,14 @@ namespace Server.Domain.Accounts
             Active = active;
             Locale = locale;
             AccountType = accountType; 
-            //FreeTrial
+            //FreeTrial = true;
+            // UpgradeDate = data 
         }
 
 
-        public static UserAccount CreateGoogleAccount(string userName, string emailAddress, string accountId, string locale)
+        public static UserAccount CreateGoogleAccount(string userName, string apikey, string emailAddress, string accountId, string locale)
         {
-            return new UserAccount(userName, emailAddress, null, accountId, null, null, null, false, locale, AccountType.Google);
+            return new UserAccount(userName, emailAddress, null, accountId, apikey, null, null, false, locale, AccountType.Google);
         }
         
         public static UserAccount CreateAccount(string userName, string emailAddress, string password, string accountId, AccountType accountType)

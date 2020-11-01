@@ -16,7 +16,7 @@ namespace Palavyr.API.Controllers
     public interface IAuthService
     {
         public Task<Credentials> PerformLoginAction(LoginCredentials loginCredentials);
-        public Task<GoogleJsonWebSignature.Payload> ValidateGoogleTokenId(string accessToken);
+        public Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenId(string accessToken);
     }
     
     public class AuthService : IAuthService
@@ -98,7 +98,7 @@ namespace Palavyr.API.Controllers
         }
         
 
-        public async Task<GoogleJsonWebSignature.Payload> ValidateGoogleTokenId(string oneTimeCode)
+        public async Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenId(string oneTimeCode)
         {
             try
             {

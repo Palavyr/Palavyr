@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@actions": [
+        "widgetCore/store/actions"
+      ],
+      "@types": [
+        "widgetCore/store/types"
+      ],
+      "@scss/*": [
+        "scss/*"
+      ],
+      "@utils/*": [
+        "utils/*"
+      ],
+      "@components/*": [
+        "app/components/*"
+      ],
+      "@tests-mocks": [
+        "./mocks"
+      ],
+      "@messagesComponents": [
+        "widgetCore/components/Widget/components/Conversation/components/Messages/components"
+      ],
+      "@quickButtonsComponents": [
+        "widgetCore/components/Widget/components/Conversation/components/QuickButtons/components"
+      ]
+    }
+  }
+}

@@ -1,27 +1,36 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
+    "compilerOptions": {
+        "strict": false,
+        "target": "es6", // "es5",
+        "baseUrl": ".",
+        "outDir": "./dist",
+        "sourceMap": true,
+        "noImplicitAny": false,
+        "jsx": "react",
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "module": "commonjs", // "esnext",
+        "moduleResolution": "node",
+        "allowJs": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "esnext"
+        ],
+
+        "noUnusedLocals": false,
+        "isolatedModules": true,
+        "noEmit": false,
+    },
+    "include": [
+        "src/**/*",
+        "src/**/*.d.ts",
+        "customTypes/*.d.ts"
     ],
-    "allowJs": true,
-    "noUnusedLocals": false,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": false,
-    "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "noImplicitAny": false,
-    "jsx": "react"
-  },
-  "include": [
-    "src"
-  ]
+    "extends": "./tsconfig.paths.json",
+    "exclude": ["node_modules", "lib"]
 }

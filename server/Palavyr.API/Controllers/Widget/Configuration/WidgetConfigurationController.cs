@@ -91,11 +91,12 @@ namespace Palavyr.API.controllers.widget
                 .Areas
                 .Where(row => row.AccountId == accountId)
                 .Include(row => row.ConversationNodes)
+                .Include(row => row.DynamicTableMetas)
                 .ToList();
 
             _logger.LogDebug("Collected areas.... running DEMO pre-check");
             var result = PreCheckUtils.RunConversationsPreCheck(areas, _logger);
-            
+                
             _logger.LogDebug($"Pre-check run successful. Result: Isready -- {result.IsReady} and Incomplete areas: {result.IncompleteAreas.ToList()}");
             return result;
         }

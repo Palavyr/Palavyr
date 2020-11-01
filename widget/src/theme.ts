@@ -4,6 +4,11 @@ import { createMuiTheme, responsiveFontSizes } from "@material-ui/core";
 // colors
 const primary = "#97c6a3";
 const secondary = "#c6a397";
+// const primary = "green";
+// const secondary = "black";
+
+
+
 const black = "#282630";
 const darkBlack = "rgb(36, 40, 44)";
 const background = "#efedf4";
@@ -89,11 +94,6 @@ const theme = createMuiTheme({
                 height: borderWidth
             }
         },
-        // MuiPrivateNotchedOutline: {
-        //     root: {
-        //         borderWidth: borderWidth
-        //     }
-        // },
         MuiListItem: {
             divider: {
                 borderBottom: `${borderWidth}px solid ${borderColor}`

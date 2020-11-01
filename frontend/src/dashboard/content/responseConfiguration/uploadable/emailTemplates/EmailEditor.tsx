@@ -66,6 +66,11 @@ export const EmailEditor = ({ accordState, toggleAccord, emailTemplate, setEmail
 
     const classes = useStyles();
     const initData = cloneDeep(emailTemplate);
+
+    const editorConfig = {
+        toolbar: [ 'heading', '|', 'bold', 'italic', 'numberedList', 'bulletedList', '|', 'indent', 'outdent', '|', 'link', 'table', 'mediaEmbed', '|', 'undo', 'redo' ]
+    }
+
     return (
         <Accordion className={classes.accordian} expanded={accordState} >
             <AccordionSummary className={classes.accordianHead} onClick={toggleAccord} expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
@@ -81,8 +86,10 @@ export const EmailEditor = ({ accordState, toggleAccord, emailTemplate, setEmail
                     <br></br>
                     <div className={classes.editorContainer}>
                         <CKEditor
+                            id="editor"
                             editor={ClassicEditor}
                             data={initData}
+                            config={editorConfig}
                             onInit={editor => {
                                 // You can store the "editor" and use when it is needed.
                                 // console.log('Editor is ready to use!', editor);

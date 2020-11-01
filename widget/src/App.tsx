@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import 'react-chat-widget/lib/styles.css';
+// import 'react-chat-widget/lib/styles.css';
 import { CustomWidget } from './widget/CustomWidget';
 import { OptionSelector } from './options/Options';
 import { SelectedOption, AreaTable, WidgetPreferences } from './types';

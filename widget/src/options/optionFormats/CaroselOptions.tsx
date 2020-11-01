@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SelectedOption, WidgetPreferences } from '../../types';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Paper, makeStyles, List, Card, Typography, CardContent, ListItem } from '@material-ui/core';
+import { useEffect } from 'react';
 
 
 export interface ICaroselOptions {
@@ -40,6 +41,13 @@ const useStyles = makeStyles(theme => ({
     pos: {
         marginBottom: 12,
     },
+    headerBehavior: {
+        // hyphens: "auto",
+        wordWrap: "break-word",
+        padding: "1rem",
+        width: "100%",
+        wordBreak: "normal"
+    }
 }))
 
 
@@ -49,17 +57,20 @@ export const CaroselOptions = ({ setSelectedOption, options, preferences }: ICar
     var secretKey = (new URLSearchParams(useLocation().search)).get("key")
     const classes = useStyles(preferences);
 
+    useEffect(() => {
+        console.log(preferences);
+    }, [])
+
     return (
         <Paper className={classes.paper}>
             <Card className={classes.root}>
-                <CardContent>
-                    <Typography variant="h5" component="h2">
-                        Welcome!
-                    </Typography>
-                    <Typography variant="body2" className={classes.pos} color="textSecondary">
-                        We want our service costs to be as transparent as possible. Select an option and use the chat to get a service cost estimate emailed directly to you.
-                    </Typography>
-                </CardContent>
+                {
+                    preferences &&
+                    <div
+                        className={classes.headerBehavior}
+                        dangerouslySetInnerHTML={{ __html: preferences.header}}
+                    />
+                }
             </Card>
             {
                 options &&
