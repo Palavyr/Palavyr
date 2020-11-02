@@ -1,109 +1,56 @@
 'use strict'
 
-const webpack = require('webpack');
-const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const autoprefixer = require('autoprefixer');
+const { manifestOptions, htmlOptions } = require(path.resolve(__dirname, './webpack/options'));
+const common = require('./webpack.common.js');
+const { merge } = require('webpack-merge');
+const ManifestPlugin = require('webpack-manifest-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
+
 
 process.env.NODE_ENV = 'production';
 
-module.exports = {
-  entry: {
-    "palavyr-widget-build": './src/index.tsx',
-  },
-  output: {
-    path: path.join(__dirname, '/dist'),
-    filename: 'index.tsx',
-  },
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js']
-  },
-  target: 'web',
-  mode: 'production',
-  module: {
-    rules: [
-      {
-        test: /\.ts(x?)$/,
-        exclude: [/node_modules/, /dev/],
-        use: ['babel-loader', 'ts-loader']
-      },
-      {
-        enforce: 'pre',
-        test: /\.js$/,
-        loader: 'source-map-loader'
-      },
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader'
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              ident: 'postcss',
-              plugins: () => [
-                require('postcss-flexbugs-fixes'), // eslint-disable-line
-                autoprefixer({
-                  browsers: ['>1%', 'last 4 versions', 'Firefox ESR', 'not ie <9'],
-                  flexbox: 'no-2009'
-                })
-              ]
-            }
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              includePaths: [path.resolve(__dirname, 'src/scss/')]
-            }
-          }
-        ]
-      },
-      {
-        test: /\.(jpg|png|gif|svg)$/,
-        use: {
-          loader: 'url-loader'
-        }
-      }
-    ]
-  },
-  plugins: [
-    new CleanWebpackPlugin(['lib']),
-    /**
-     * Known issue for the CSS Extract Plugin in Ubuntu 16.04: You'll need to install
-     * the following package: sudo apt-get install libpng16-dev
-     */
-    new MiniCssExtractPlugin({
-      filename: 'styles.css',
-      chunkFileName: '[id].css'
-    }),
-  ],
-  externals: {
-    react: {
-      commonjs: 'React',
-      commonjs2: 'react',
-      amd: 'react'
-    },
-    'react-dom': {
-      commonjs: 'ReactDOM',
-      commonjs2: 'react-dom',
-      amd: 'react-dom'
-    }
-  },
-  optimization: {
-    minimizer: [
-      new UglifyJsPlugin({
-        cache: true,
-        parallel: true
+module.exports = (ENV) => {
+  const envPath = ENV.production ? ".env.production" : ".env.development";
+
+  return merge(common(ENV), {
+    mode: 'production',
+    plugins: [
+      new CleanWebpackPlugin(),
+      new MiniCssExtractPlugin({
+        filename: 'styles.css',
+        chunkFileName: '[id].css'
       }),
-      new OptimizeCSSAssetsPlugin({})
-    ]
-  }
-};
+      new Dotenv({ path: envPath }),
+      new ManifestPlugin(manifestOptions),
+      new HtmlWebpackPlugin(htmlOptions),
+      new ForkTsCheckerWebpackPlugin(),
+
+    ],
+    externals: {
+      react: {
+        commonjs: 'React',
+        commonjs2: 'react',
+        amd: 'react'
+      },
+      'react-dom': {
+        commonjs: 'ReactDOM',
+        commonjs2: 'react-dom',
+        amd: 'react-dom'
+      }
+    },
+    optimization: {
+      minimizer: [
+        new UglifyJsPlugin({
+          cache: true,
+          parallel: true
+        }),
+        new OptimizeCSSAssetsPlugin({})
+      ]
+    }
+  })
+}

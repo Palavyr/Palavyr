@@ -71,7 +71,6 @@ namespace Palavyr.API.Controllers
             return prefs;
         }
         
-        
         /// <summary>
         /// Used by the widget
         /// </summary>

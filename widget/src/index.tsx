@@ -46,13 +46,8 @@ ReactDOM.render(
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
         <Router>
-          {/* Remove This path for production */}
-          {/* <Route path="/" render={() => <Redirect to="/widget/abc123" />} /> */}
-
-          {/* This is the prod path */}
           <Route exact path="/widget" component={App} />
         </Router>
-
       </MuiThemeProvider>
     {/* </ErrorBoundary> */}
   </React.StrictMode>,

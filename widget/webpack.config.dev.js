@@ -4,96 +4,52 @@ const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const autoprefixer = require('autoprefixer');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
+const { manifestOptions, htmlOptions } = require(path.resolve(__dirname, './webpack/options'));
+
+
+const common = require('./webpack.common.js');
+const { merge } = require('webpack-merge');
 
 process.env.NODE_ENV = 'development';
 
-module.exports = {
-  entry: {
-    main: path.resolve(__dirname, 'src/index.tsx'),
-    vendor: ['react', 'react-dom']
-  },
-  output: {
-    filename: '[name].bundle.js',
-    path: path.resolve(__dirname, './dist'),
-    publicPath: "/"
-  },
-  target: 'web',
-  mode: 'development',
-  devServer: {
-    contentBase: path.resolve(__dirname, 'dist'),
-    compress: false,
-    port: 3400,
-    hot: true
-  },
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js']
-  },
-  module: {
-    rules: [
-      {
-        test: /\.ts(x?)$/,
-        exclude: /node_modules/,
-        use: ['babel-loader', 'ts-loader']
-      },
-      {
-        enforce: "pre",
-        test: /\.js$/,
-        loader: "source-map-loader"
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
-      },
-      {
-        test: /\.scss$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: 'style-loader',
-            options: { hmr: true }
-          },
-          'css-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              ident: 'postcss',
-              plugins: () => [
-                require('postcss-flexbugs-fixes'), // eslint-disable-line
-                autoprefixer({
-                  browsers: ['>1%', 'last 4 versions', 'Firefox ESR', 'not ie <9'],
-                  flexbox: 'no-2009'
-                })
-              ]
-            }
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              includePaths: [path.resolve(__dirname,'src/scss')]
-            }
-          }
-        ]
-      },
-      {
-        test: /\.(jpg|png|gif|svg)$/,
-        use: 'url-loader'
-      }
-    ]
-  },
-  devtool: 'inline-source-map',
-  plugins: [
-    new CleanWebpackPlugin(['dist']),
-    new webpack.HotModuleReplacementPlugin(),
-    new HtmlWebpackPlugin({
-      template: './public/index.html'
-    }),
-    new webpack.ProvidePlugin({
-      'React': 'react'
-    })
-  ],
-  performance: {
-    hints: false
-  }
-};
+module.exports = (ENV) => {
+  const envPath = ENV.production ? ".env.production" : ".env.development";
+
+  return merge(common(ENV), {
+    mode: 'development',
+    devServer: {
+      contentBase: path.resolve(__dirname, 'dist'),
+      historyApiFallback: true,
+      compress: false,
+      port: 3400,
+      hot: true
+    },
+    devtool: 'inline-source-map',
+    plugins: [
+      new webpack.HotModuleReplacementPlugin(),
+
+
+      new CleanWebpackPlugin(),
+      new MiniCssExtractPlugin({
+        filename: 'styles.css',
+        chunkFileName: '[id].css'
+      }),
+      new Dotenv({ path: envPath }),
+      new ManifestPlugin(manifestOptions),
+      new HtmlWebpackPlugin(htmlOptions),
+      new ForkTsCheckerWebpackPlugin(),
+
+
+      new webpack.ProvidePlugin({
+        'React': 'react'
+      })
+    ],
+    performance: {
+      hints: false
+    }
+  })
+}
