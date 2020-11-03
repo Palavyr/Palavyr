@@ -1,13 +1,22 @@
 
+import React from "react";
 import Auth from "auth/Auth";
 import { FormDialog } from "@common/components/borrowed/FormDialog";
 import { LoginActions } from "@landing/login/LoginActions";
 import { useCallback, useState } from "react";
 import { useHistory } from "react-router-dom";
-import React from "react";
 import { FormDialogContent, FormStatusTypes } from "@common/components/borrowed/FormDialogContent";
 import { makeStyles } from "@material-ui/core";
-import { GoogleLoginProps, GoogleLoginResponse } from "react-google-login";
+import { GoogleAuthResponse } from "@Palavyr-Types";
+import { LocalStorage } from "localStorage/localStorage";
+// import { GoogleLoginResponse } from "react-google-login";
+
+
+export type GoogleResponse = {
+    tokenId: string;
+    accessToken: string;
+    googleId: string;
+}
 
 
 interface ILoginDialog {
@@ -64,7 +73,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
                 success,
                 error
             );
-
+            LocalStorage.setDefaultLoginType();
             if (!successfulResponse) {
                 setTimeout(() => {
                     setStatus("invalidEmail");
@@ -84,7 +93,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
 
 
     const googleLogin = useCallback(
-        async (response: GoogleLoginResponse) => {
+        async (response: GoogleResponse) => {
             setIsLoading(true);
             setStatus(null);
             var successfulResponse = await Auth.loginWithGoogle(
@@ -104,9 +113,19 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
         []
     )
 
-    const responseGoogle = async (response: GoogleLoginResponse) => {
-        if (response.tokenObj) {
+    const responseGoogle = async (res: GoogleAuthResponse) => {
+        console.log("wow")
+        if (res) {
+            const response: GoogleResponse = {
+                tokenId: res.wc.id_token,
+                accessToken: res.wc.access_token,
+                googleId: res.tt.CT,
+            }
+            LocalStorage.setGoogleImage(res.tt.OJ);
+            LocalStorage.setGoogleLoginType();
+            console.log("logging in with google")
             await googleLogin(response);
+
         }
     }
 

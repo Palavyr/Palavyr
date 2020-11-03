@@ -2,9 +2,12 @@ import * as React from 'react';
 import { TextField, FormControlLabel, Checkbox, Typography, makeStyles, Divider } from '@material-ui/core';
 import { VisibilityPasswordTextField } from './VisibilityPasswordTextField';
 import { HighlightedInformation } from './HighlightedInformation';
-import { GoogleLogin, GoogleLoginResponse } from 'react-google-login';
+import { GoogleLoginResponse } from 'react-google-login';
 import { DividerWithText } from '../DividerWithText';
-import { googleOAuthClientId } from '@api-client/clientUtils';
+import { GoogleLogin } from 'auth/googlebutton/GoogleLogin';
+import { GoogleResponse } from '@landing/login/LoginDialog';
+import { GoogleAuthResponse } from '@Palavyr-Types';
+// import { googleOAuthClientId } from '@api-client/clientUtils';
 
 export type FormStatusTypes = "invalidEmail" | "invalidPassword" | "verificationEmailSend" | null;
 
@@ -19,7 +22,7 @@ export interface IFormDialogContent {
     isPasswordVisible: boolean;
     setIsPasswordVisible: any
     status: FormStatusTypes;
-    responseGoogle(response: GoogleLoginResponse): void;
+    responseGoogle(res: GoogleAuthResponse): void;
 }
 
 const useStyles = makeStyles(({
@@ -41,13 +44,7 @@ export const FormDialogContent = ({ loginEmail, setLoginEmail, loginPassword, se
     return (
         <>
             <div className={classes.googlebutton} >
-                <GoogleLogin
-                    theme="dark"
-                    clientId={googleOAuthClientId}
-                    buttonText="Sign in with Google"
-                    onSuccess={responseGoogle}
-                    onFailure={responseGoogle}
-                />
+                <GoogleLogin onSuccess={responseGoogle} onFailure={responseGoogle} />
             </div>
             <br></br>
             <DividerWithText text={"OR"} />

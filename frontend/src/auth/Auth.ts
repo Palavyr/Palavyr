@@ -29,7 +29,8 @@ class Auth {
 
     async registerWithGoogle(oneTimeCode: string, accessToken: string, tokenId: string, callback: () => void, errorCallback: (response) => void) {
         const authenticationResponse = (await this.loginClient.Account.registerNewAccountWithGoogle(oneTimeCode, accessToken, tokenId)).data as Credentials;
-        return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);    }
+        return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
+    }
 
     private processAuthenticationResponse(authenticationResponse: Credentials, callback: () => any, errorCallback: (response) => any): boolean {
         if (authenticationResponse.authenticated) {
@@ -57,7 +58,7 @@ class Auth {
     }
 
 
-    async loginFromMemory (callback: any) {
+    async loginFromMemory(callback: any) {
         const token = LocalStorage.getJwtToken();
         if (token) {
             var response = (await this.loginClient.Status.CheckIfLoggedIn()).data as boolean;
@@ -67,10 +68,11 @@ class Auth {
         }
     }
 
+
     async logout(callback: () => any) {
 
         const sessionId = LocalStorage.getSessionId();
-        console.log("Session ID at logout: " + sessionId)
+        // console.log("Session ID at logout: " + sessionId)
         if (sessionId !== null && sessionId !== "") {
             await this.logoutClient.Logout.RequestLogout(sessionId);
             LocalStorage.unsetAuthorization();
@@ -79,6 +81,23 @@ class Auth {
         this.authenticated = false;
         callback();
     }
+
+    async googleLogout(callback: () => any) {
+
+
+        window.gapi.load('auth2', () => {
+            const auth2 = window.gapi.auth2.getAuthInstance()
+            if (auth2 != null) {
+                auth2.then(
+                    () => {
+                        auth2.signOut().then(async () => {
+                            auth2.disconnect().then(await this.logout(callback))
+                        })
+                    })
+            }
+        })
+    }
+
 
     isAuthenticated() {
         return this.authenticated;

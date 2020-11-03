@@ -5,6 +5,11 @@ class LocalStorageAccess {
     private SessionString: string = "sessionId";
     private JwtTokenString: string = "Authorization";
     private EmailString: string = "emailAddress";
+    private googleImage: string = "googleImage";
+    private loginType: string = "loginType";
+
+    public GoogleLoginType: string = "google";
+    public DefaultLoginType: string = "default";
 
     private _setItem(key: string, val: boolean | string) {
         const converted = val.toString();
@@ -32,6 +37,19 @@ class LocalStorageAccess {
         this._setItem(this.SessionString, sessionId)
         this._setItem(this.JwtTokenString, jwtToken)
     }
+
+    setGoogleImage(imageUrl: string) {
+        this._setItem(this.googleImage, imageUrl);
+    }
+
+    setGoogleLoginType(){
+        this._setItem(this.loginType, this.GoogleLoginType);
+    }
+    setDefaultLoginType() {
+        this._setItem(this.loginType, this.DefaultLoginType);
+    }
+
+
     isAuthenticated() {
         var auth = this._getItem(this.AuthString)
         return auth === "true" ? true : false;
@@ -41,6 +59,11 @@ class LocalStorageAccess {
         this._setItem(this.AuthString, false);
         this._setItem(this.SessionString, "");
         this._setItem(this.JwtTokenString, "");
+        this._setItem(this.loginType, "");
+    }
+
+    getLoginType() {
+        return this._getItem(this.loginType);
     }
 
     getSessionId() {
@@ -49,6 +72,10 @@ class LocalStorageAccess {
 
     getJwtToken() {
         return this._getItem(this.JwtTokenString);
+    }
+
+    getGoogleImage() {
+        return this._getItem(this.googleImage);
     }
 }
 

@@ -15,6 +15,7 @@ import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { v4 as uuid } from 'uuid';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import { LocalStorage } from "localStorage/localStorage";
 
 export interface ISideBarMenu {
     areaIdentifiers: Array<string>;
@@ -170,9 +171,17 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                     button
                     key={1003}
                     onClick={() => {
-                        console.log("Logging Out");
-                        Auth.logout(() => history.push("/"));
+
+                        const loginType = LocalStorage.getLoginType();
+
+                        if (loginType === LocalStorage.GoogleLoginType) {
+                            Auth.googleLogout(() => history.push("/"));
+                        } else {
+                            console.log("Logging Out");
+                            Auth.logout(() => history.push("/"));
+                        }
                     }}
+
                 >
                     <ListItemIcon>
                         <ExitToAppIcon className={classes.icon} />
