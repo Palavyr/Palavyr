@@ -30,19 +30,25 @@ const createNavLink = (areaIdentifier: string, contentType: string) => {
     return `/dashboard/${contentType}/${areaIdentifier}`;
 };
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     SideBarList: {
-        color: "#c7ecee"
+        color: "navy",
+        backgroundColor: "transparent"
     },
     icon: {
-        color: "#c7ecee"
+        color: "navy"
     },
     navlink: {
         textDecoration: "none",
         color: "#c7ecee",
-        fontSize: "10px"
+    },
+    sidebarText: {
+        fontWeight: "normal",
+        fontSize: "14px",
+        color: "navy"
+
     }
-})
+}));
 
 export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifiers, areaNames, toggleModal, setAlertState }: ISideBarMenu) => {
 
@@ -57,10 +63,11 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                 <ListItem button onClick={() => setConvosOpen(!convosOpen)}>
                     <ListItemText
                         style={{ textAlign: "center" }}
-                        primary="Areas"
+                        primary="Configure"
                         onClick={() => {
                             setConvosOpen(!convosOpen);
                         }}
+                        primaryTypographyProps={{ className: classes.sidebarText, style: { fontSize: "16pt", color: 'black' } }}
                     />
                     {convosOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 </ListItem>
@@ -72,7 +79,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                                     <ListItemIcon className={classes.icon}>
                                         <ChatIcon />
                                     </ListItemIcon>
-                                    <ListItemText primary={areaNames[index]} />
+                                    <ListItemText primary={areaNames[index]} primaryTypographyProps={{ className: classes.sidebarText }} />
                                 </ListItem>
                             </NavLink>
                         );
@@ -84,13 +91,19 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                         <ListItemIcon onClick={checkAreaCount}>
                             <AddCircleOutlineIcon className={classes.icon} />
                         </ListItemIcon>
-                        <ListItemText primary={"Add New Area"} />
+                        <ListItemText primary={"Add New Area"} primaryTypographyProps={{ className: classes.sidebarText }} />
                     </ListItem>
                 </Collapse>
 
                 <Divider />
 
-
+                <ListItem >
+                    <ListItemText
+                        style={{ textAlign: "center" }}
+                        primary="Review"
+                        primaryTypographyProps={{ className: classes.sidebarText, style: { fontSize: "16pt", color: "black" } }}
+                    />
+                </ListItem>
                 <ListItem disabled={!active} button onClick={() => {
                     setViewName("Enquiries");
                     history.push('/dashboard/enquiries/')
@@ -98,7 +111,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                     <ListItemIcon className={classes.icon}>
                         <InboxIcon className={classes.icon} key={"23534hhuip"} />
                     </ListItemIcon>
-                    <ListItemText primary={"Check Enquiries"} />
+                    <ListItemText primary={"Check Enquiries"} primaryTypographyProps={{ className: classes.sidebarText }} />
                 </ListItem>
                 <ListItem disabled={!active} button onClick={() => {
                     setViewName("Widget Demo")
@@ -107,7 +120,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                     <ListItemIcon>
                         <CompareIcon className={classes.icon} key={"iuhi3453jb"} />
                     </ListItemIcon>
-                    <ListItemText primary="Chat Demo" />
+                    <ListItemText primary="Chat Demo" primaryTypographyProps={{ className: classes.sidebarText }} />
                 </ListItem>
             </List>
 
@@ -121,7 +134,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                     <ListItemIcon className={classes.icon}>
                         <SettingsIcon className={classes.icon} key={0} />
                     </ListItemIcon>
-                    <ListItemText primary={"Settings"} />
+                    <ListItemText primary={"Settings"} primaryTypographyProps={{ className: classes.sidebarText }} />
                 </ListItem>
                 <ListItem disabled={!active} button onClick={() => {
                     setViewName("Get Widget")
@@ -130,7 +143,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                     <ListItemIcon>
                         <GetAppIcon className={classes.icon} key={0} />
                     </ListItemIcon>
-                    <ListItemText primary={"Get Widget"} />
+                    <ListItemText primary={"Get Widget"} primaryTypographyProps={{ className: classes.sidebarText }} />
                 </ListItem>
 
                 <ListItem disabled={!active} button onClick={() => {
@@ -140,7 +153,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                     <ListItemIcon>
                         <SubscriptionsIcon className={classes.icon} key={0} />
                     </ListItemIcon>
-                    <ListItemText primary={"Subscribe"} />
+                    <ListItemText primary={"Subscribe"} primaryTypographyProps={{ className: classes.sidebarText }} />
                 </ListItem>
 
                 <ListItem disabled={!active} button onClick={() => {
@@ -150,7 +163,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                     <ListItemIcon>
                         <HelpOutlineIcon className={classes.icon} key={0} />
                     </ListItemIcon>
-                    <ListItemText primary={"Get Help"} />
+                    <ListItemText primary={"Get Help"} primaryTypographyProps={{ className: classes.sidebarText }} />
                 </ListItem>
 
                 <ListItem
@@ -164,7 +177,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                     <ListItemIcon>
                         <ExitToAppIcon className={classes.icon} />
                     </ListItemIcon>
-                    <ListItemText primary={"Log Out"} />
+                    <ListItemText primary={"Log Out"} primaryTypographyProps={{ className: classes.sidebarText }} />
                 </ListItem>
 
             </List>

@@ -71,7 +71,8 @@ const useStyles = makeStyles(theme => ({
     },
     menuDrawerPaper: {
         width: DRAWER_WIDTH,
-        backgroundColor: "#535c68"
+        // backgroundColor: "#535c68",
+        backgroundColor: "#c7ecee"
     },
     helpDrawerPaper: {
         width: DRAWER_WIDTH + 300,
