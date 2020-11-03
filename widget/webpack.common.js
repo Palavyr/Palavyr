@@ -1,13 +1,13 @@
+const path = require('path');
 const { createRules } = require('./webpack/rules')
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const webpack = require('webpack');
-const path = require('path');
 
 module.exports = (ENV) => {
 
     const envPath = ENV.production ? ".env.production" : ".env.development";
-    console.log("Building in.... " + envPath)
+    console.log("Building in: " + envPath)
 
     return {
         entry: {

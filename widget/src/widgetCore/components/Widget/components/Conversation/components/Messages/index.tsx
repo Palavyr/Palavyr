@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, ElementRef, ImgHTMLAttributes, MouseEvent } from 'react';
+import React, { useEffect, useRef} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import format from 'date-fns/format';
 

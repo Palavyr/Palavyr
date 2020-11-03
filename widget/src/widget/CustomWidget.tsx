@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { SelectedOption, WidgetPreferences } from '../types';
-import { addResponseMessage, toggleMsgLoader, setQuickButtons, Widget, isWidgetOpened, toggleWidget } from 'react-chat-widget';
+import { addResponseMessage, toggleMsgLoader, setQuickButtons } from 'src/widgetCore/store/dispatcher';
+import {Widget, isWidgetOpened, toggleWidget} from "src/widget";
+
 import CreateClient from '../client/Client';
 import { renderNextComponent, ConvoContextProperties } from '../componentRegistry';
 import { getRootNode } from '../componentRegistry/utils';

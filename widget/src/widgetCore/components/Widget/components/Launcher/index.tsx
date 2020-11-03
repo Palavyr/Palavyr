@@ -8,8 +8,8 @@ import { setBadgeCount } from '../../../../store/actions';
 
 import './style.scss';
 
-const openLauncher = require('../../../../../assets/launcher_button.svg') as string;
-const close = require('../../../../../assets/clear-button.svg') as string;
+const openLauncher = require('assets/launcher_button.svg') as string;
+const close = require('assets/clear-button.svg') as string;
 
 type Props = {
   toggle: () => void;

@@ -11,20 +11,6 @@ const TypeScriptLoaderRule = () => {
     }
 }
 
-// const FileLoaderRule = () => {
-//     return {
-//         test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-//         use: [
-//             {
-//                 loader: 'file-loader',
-//                 options: {
-//                     name: '[name].[ext]',
-//                     outputPath: 'fonts/'
-//                 }
-//             }
-//         ]
-//     }
-// }
 
 const NewFileLoaderRule = () => {
     return {
@@ -127,6 +113,7 @@ const CSSModules = () => {
 }
 
 const URLLoaderRule = () => {
+    console.log("URLLOADER: " + path.resolve(__dirname, '/node_modules'));
     return {
         test: /\.(png|jpg|gif)$/i,
         use: [

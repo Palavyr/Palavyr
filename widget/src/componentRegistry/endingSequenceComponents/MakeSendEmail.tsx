@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { addResponseMessage, toggleInputDisabled } from 'react-chat-widget';
+import { addResponseMessage, toggleInputDisabled } from 'src/widgetCore/store/dispatcher';
 import { getChildNodes } from '../utils';
 import { Table, TableRow, TableCell } from '@material-ui/core';
 import { responseAction, IProgressTheChat, ConvoContextProperties } from '..';
@@ -40,11 +40,11 @@ export const makeSendEmail = ({ node, nodeList, client, convoId, convoContext }:
         const dynamicResponse = convoContext[ConvoContextProperties.DynamicResponse];
         const keyvalues = convoContext[ConvoContextProperties.KeyValues];
 
-        var res = (await client.Widget.Access.sendConfirmationEmail(areaId, email, dynamicResponse, keyvalues, convoId)).data;        
+        var res = (await client.Widget.Access.sendConfirmationEmail(areaId, email, dynamicResponse, keyvalues, convoId)).data;
         if (res) {
             var completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone)
             await client.Widget.Access.postCompleteConversation(completeConvo)
-        }   
+        }
     }
 
     const SuccessComponent: React.ElementType<{}> = () => {

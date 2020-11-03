@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 import { GlobalState } from 'src/widgetCore/store/types';
 
-const send = require('../../../../../../../assets/send_button.svg') as string;
+const send = require('assets/send_button.svg') as string;
 
 import './style.scss';
 

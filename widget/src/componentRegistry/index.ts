@@ -1,6 +1,6 @@
 import { Registry, ConvoTableRow, ConversationUpdate } from "../types";
 import { makeTooComplicated } from "./standardComponents/TooComplicated";
-import { renderCustomComponent, addUserMessage } from "react-chat-widget";
+import { renderCustomComponent, addUserMessage } from "src/widgetCore/store/dispatcher";
 import { IClient } from "../client/Client";
 import { makeName } from "./endingSequenceComponents/MakeName";
 import { makeEmail } from "./endingSequenceComponents/MakeEmail";
@@ -51,12 +51,12 @@ export const renderNextComponent = (node: ConvoTableRow, nodeList: Array<ConvoTa
 
     //TODO: make this impossible by geting the configuration right
     if (node.nodeType === "" || node.nodeType === null || node.nodeChildrenString === "" || node.nodeChildrenString === null) {
-        return renderCustomComponent(dummyFailComponent, {})
+        return renderCustomComponent(dummyFailComponent, {}, false)
     }
     var makeNextComponent = ComponentRegistry[node.nodeType.split("-")[0]]; // This is a bit fragile
 
     var nextComponent = makeNextComponent({node, nodeList, client, convoId, convoContext});
-    return renderCustomComponent(nextComponent, {});
+    return renderCustomComponent(nextComponent, {}, false);
 }
 
 export enum NodeTypes {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { addResponseMessage, toggleInputDisabled } from 'react-chat-widget';
+import { addResponseMessage, toggleInputDisabled } from 'src/widgetCore/store/dispatcher';
 import { IProgressTheChat } from '..';
 import { MessageWrapper } from '../common';
 import { ResponseButton } from '../../common/ResponseButton';

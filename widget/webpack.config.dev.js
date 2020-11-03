@@ -32,7 +32,6 @@ module.exports = (ENV) => {
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
 
-
       new CleanWebpackPlugin(),
       new MiniCssExtractPlugin({
         filename: 'styles.css',

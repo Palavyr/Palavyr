@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { addResponseMessage, toggleInputDisabled } from 'react-chat-widget';
+import { addResponseMessage, toggleInputDisabled } from 'src/widgetCore/store/dispatcher';
 import { getChildNodes } from '../utils';
 import { Table, TableRow, TableCell } from '@material-ui/core';
 import { responseAction, IProgressTheChat } from '..';

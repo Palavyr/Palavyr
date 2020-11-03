@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ConvoTableRow } from '../../types';
-import { addResponseMessage, toggleInputDisabled } from 'react-chat-widget';
+import { addResponseMessage, toggleInputDisabled } from 'src/widgetCore/store/dispatcher';
 import { getChildNodes } from '../utils';
 import { TableRow, TableCell, Table } from '@material-ui/core';
 import { responseAction, IProgressTheChat } from '..';
