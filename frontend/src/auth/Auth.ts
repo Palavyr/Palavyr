@@ -84,7 +84,6 @@ class Auth {
 
     async googleLogout(callback: () => any) {
 
-
         window.gapi.load('auth2', () => {
             const auth2 = window.gapi.auth2.getAuthInstance()
             if (auth2 != null) {

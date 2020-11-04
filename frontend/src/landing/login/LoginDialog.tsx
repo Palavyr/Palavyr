@@ -58,7 +58,20 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
             setStatus("invalidEmail");
         }
         setIsLoading(false);
+    }
 
+    const googleError = (response) => {
+        window.gapi.load('auth2', () => {
+            const auth2 = window.gapi.auth2.getAuthInstance()
+            if (auth2 != null) {
+                auth2.then(
+                    () => {
+                        auth2.signOut().then(async () => {
+                            auth2.disconnect().then(error(response))
+                        })
+                    })
+            }
+        })
     }
 
 
@@ -101,7 +114,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
                 response.accessToken,
                 response.googleId,
                 success,
-                error
+                googleError
             )
             if (!successfulResponse) {
                 setTimeout(() => {
