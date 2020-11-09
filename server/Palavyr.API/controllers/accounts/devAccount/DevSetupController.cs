@@ -8,8 +8,10 @@ using Palavyr.API.Controllers;
 using Palavyr.API.controllers.accounts.seedData;
 using Palavyr.API.devControllers;
 using Palavyr.Common.Constants;
-using Palavyr.Common.uniqueIdentifiers;
 using Server.Domain.Accounts;
+using Stripe;
+using AccountType = Palavyr.Common.uniqueIdentifiers.AccountType;
+using Subscription = Server.Domain.Accounts.Subscription;
 
 namespace Palavyr.API.controllers.accounts.devAccount
 {
@@ -17,8 +19,8 @@ namespace Palavyr.API.controllers.accounts.devAccount
     [ApiController]
     public class DefaultDataController : BaseController
     {
-        
         private static ILogger<DefaultDataController> _logger;
+        private readonly IStripeClient _stripeClient = new StripeClient(StripeConfiguration.ApiKey);
 
         public DefaultDataController(
             ILogger<DefaultDataController> logger,
@@ -35,8 +37,17 @@ namespace Palavyr.API.controllers.accounts.devAccount
         [HttpPut("{devKey}")]
         public void RefreshData(string devKey)
         {
+            var options = new CustomerListOptions { };
+            var service = new CustomerService(_stripeClient);
+            StripeList<Customer> customers = service.List(options);
+            foreach (var customer in customers)
+            {
+                service.Delete(customer.Id);
+            }
+
+
             if (devKey != "secretTobyface")
-            _logger.LogDebug("This is an attempt to Refresh database data.");
+                _logger.LogDebug("This is an attempt to Refresh database data.");
             var devData = new DevDataHolder(
                 "qwerty",
                 "devdashboard",
@@ -48,7 +59,7 @@ namespace Palavyr.API.controllers.accounts.devAccount
                 true,
                 "en-AU"
             );
-            
+
             var demoData = new DevDataHolder(
                 "abc123",
                 "zsd2342",
@@ -57,7 +68,7 @@ namespace Palavyr.API.controllers.accounts.devAccount
                 "Cool User",
                 "Demo Dev Company",
                 "+61-01-2345-6789",
-                true, 
+                true,
                 "en-AU"
             );
 
@@ -88,18 +99,17 @@ namespace Palavyr.API.controllers.accounts.devAccount
             {
                 _logger.LogDebug("-----Attempting to populate with demo data...");
                 PopulateDBs(demoData);
-
             }
             catch (Exception ex)
             {
                 _logger.LogDebug($"----Error populating Demo Data: {ex.Message}");
             }
-            
         }
 
         public void PopulateDBs(DevDataHolder dh)
         {
-            var devAccount = UserAccount.CreateAccount(dh.UserName, dh.Email, dh.HashedPassword, dh.AccountId, dh.ApiKey, dh.CompanyName, dh.PhoneNumber, dh.Active, dh.Locale, AccountType.Default);
+            var devAccount = UserAccount.CreateAccount(dh.UserName, dh.Email, dh.HashedPassword, dh.AccountId,
+                dh.ApiKey, dh.CompanyName, dh.PhoneNumber, dh.Active, dh.Locale, AccountType.Default);
             var subscription = Subscription.CreateNew(dh.AccountId, dh.ApiKey, SubscriptionConstants.DefaultNumAreas);
             var data = new DevSeedData(dh.AccountId, dh.Email);
 
@@ -113,7 +123,7 @@ namespace Palavyr.API.controllers.accounts.devAccount
             DashContext.SelectOneFlats.AddRange(data.DefaultDynamicTables);
             DashContext.DynamicTableMetas.AddRange(data.DefaultDynamicTableMetas);
             DashContext.SaveChanges();
-            
+
             ConvoContext.CompletedConversations.AddRange(data.CompleteConversations);
             ConvoContext.SaveChanges();
         }
@@ -125,7 +135,7 @@ namespace Palavyr.API.controllers.accounts.devAccount
             AccountContext.Subscriptions.RemoveRange(AccountContext.Subscriptions);
             AccountContext.EmailVerifications.RemoveRange(AccountContext.EmailVerifications);
             AccountContext.SaveChanges();
-            
+
             DashContext.Areas.RemoveRange(DashContext.Areas);
             DashContext.WidgetPreferences.RemoveRange(DashContext.WidgetPreferences);
             DashContext.ConversationNodes.RemoveRange(DashContext.ConversationNodes);
@@ -141,7 +151,6 @@ namespace Palavyr.API.controllers.accounts.devAccount
             ConvoContext.Conversations.RemoveRange(ConvoContext.Conversations);
             ConvoContext.CompletedConversations.RemoveRange(ConvoContext.CompletedConversations);
             ConvoContext.SaveChanges();
-
         }
     }
 }

@@ -114,13 +114,25 @@ namespace DashboardServer.Data.Migrations.AccountsMigrations
                     b.Property<string>("EmailAddress")
                         .HasColumnType("text");
 
+                    b.Property<bool>("HasUpgraded")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Locale")
                         .HasColumnType("text");
 
                     b.Property<string>("Password")
                         .HasColumnType("text");
 
+                    b.Property<int>("PaymentInterval")
+                        .HasColumnType("integer");
+
                     b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<int>("PlanType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("StripeCustomerId")
                         .HasColumnType("text");
 
                     b.Property<string>("UserName")

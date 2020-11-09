@@ -16,16 +16,15 @@ import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import PhoneIcon from '@material-ui/icons/Phone';
 import BrandingWatermarkIcon from '@material-ui/icons/BrandingWatermark';
 import PublicIcon from '@material-ui/icons/Public';
-import { HelpTypes } from "dashboard/layouts/DashboardLayout";
 import { AlignCenter } from "dashboard/layouts/positioning/AlignCenter";
+import { IGetHelp } from "@Palavyr-Types";
 
 
 
-interface IAreaContent {
+interface IAreaContent extends IGetHelp {
     areaName: string;
     areaIdentifier: string;
     setLoaded: any;
-    setHelpType(helpType: HelpTypes): void;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -49,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const SettingsContent = ({ areaIdentifier, areaName, setLoaded, setHelpType }: IAreaContent) => {
 
-    const [tab, setTab] = useState<PanelRange>(4); // tabs
+    const [tab, setTab] = useState<PanelRange>(0); // tabs
     const classes = useStyles();
 
     useEffect(() => {

@@ -16,7 +16,7 @@ import SubjectIcon from '@material-ui/icons/Subject';
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
-import { HelpTypes } from "dashboard/layouts/DashboardLayout";
+import { IGetHelp } from "@Palavyr-Types";
 
 
 interface ITabs {
@@ -60,13 +60,12 @@ const TabPanels = ({ tab, areaName, areaIdentifier, setViewName }: ITabs) => {
     )
 }
 
-export interface IAreaContent {
+export interface IAreaContent extends IGetHelp {
     active: boolean | null;
     areaName: string;
     areaIdentifier: string;
     setLoaded: any;
     setViewName: any;
-    setHelpType(helpType: HelpTypes): void;
     checkAreaCount(): void;
 }
 

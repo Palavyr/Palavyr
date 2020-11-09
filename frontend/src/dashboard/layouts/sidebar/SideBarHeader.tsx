@@ -32,7 +32,7 @@ export const SideBarHeader = ({ handleDrawerClose }: SideBarHeaderProps) => {
             <div className={classes.drawerHeader}>
                 <IconButton onClick={() => handleDrawerClose()}>
                     <div>
-                        {theme.direction === "ltr" ? <ChevronLeftIcon style={{color: "white"}} /> : <ChevronRightIcon style={{color: "white"}} />}
+                        {theme.direction === "ltr" ? <ChevronLeftIcon style={{color: "black"}} /> : <ChevronRightIcon style={{color: "black"}} />}
                         </div>
                 </IconButton>
             </div>

@@ -1,13 +1,11 @@
 import { ApiClient } from "@api-client/Client";
 import React, { useState, useCallback, useEffect } from "react";
-import { EnquiryRow } from "@Palavyr-Types";
+import { EnquiryRow, IGetHelp } from "@Palavyr-Types";
 import { Statement } from "@common/components/Statement";
 import { Divider, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody, Table } from "@material-ui/core";
-import { HelpTypes } from "dashboard/layouts/DashboardLayout";
 
-interface IEnquiries {
-    setHelpType(helpType: HelpTypes): void;
-}
+interface IEnquiries extends IGetHelp {}
+
 export const Enquires = ({setHelpType}: IEnquiries) => {
 
     const client = new ApiClient();

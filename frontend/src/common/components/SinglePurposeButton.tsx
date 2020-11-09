@@ -9,6 +9,7 @@ export interface ISinglePurposeButton {
     variant: "contained" | "outlined";
     color: "primary" | "secondary";
     buttonText: string;
+    disabled?: boolean;
     onClick: AnyFunction;
 }
 
@@ -24,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-export const SinglePurposeButton = ({ classes, variant, color, buttonText, onClick }: ISinglePurposeButton) => {
+export const SinglePurposeButton = ({ classes, variant, color, buttonText, disabled, onClick }: ISinglePurposeButton) => {
     const cls = useStyles();
     return (
         <Button
@@ -32,6 +33,7 @@ export const SinglePurposeButton = ({ classes, variant, color, buttonText, onCli
             variant={variant}
             color={color}
             onClick={onClick}
+            disabled={disabled}
         >
             {buttonText}
         </Button>

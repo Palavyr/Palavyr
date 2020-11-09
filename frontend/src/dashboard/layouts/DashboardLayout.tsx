@@ -7,7 +7,7 @@ import { ContentLoader } from "./ContentLoader";
 import { AreaContent } from "../content/responseConfiguration/AreaContent";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep } from "lodash";
-import { Areas, AreaTable } from "@Palavyr-Types";
+import { Areas, AreaTable, HelpTypes } from "@Palavyr-Types";
 import { SettingsContent } from "../content/settings/SettingsContent";
 import { ChatDemo } from "../content/demo/ChatDemo";
 import { Enquires } from "dashboard/content/enquiries/Enquiries";
@@ -33,6 +33,9 @@ import { AttachmentsHelp } from "dashboard/content/help/AttachmentsHelp";
 import { AreaSettingsHelp } from "dashboard/content/help/AreaSettingsHelp";
 import { PreviewHelp } from "dashboard/content/help/PreviewHelp";
 import { PleaseConfirmYourEmail } from "dashboard/content/welcome/PleaseConfirmYourEmail";
+import { Purchase } from "dashboard/content/purchse/Purchase";
+import { Success } from "dashboard/content/purchse/success/Success";
+import { Cancel } from "dashboard/content/purchse/cancel/Cancel";
 
 
 const fetchSidebarInfo = (areaData: Areas) => {
@@ -78,26 +81,6 @@ const useStyles = makeStyles(theme => ({
         width: DRAWER_WIDTH + 300,
     }
 }));
-
-export type HelpTypes =
-    "editor"
-    | "settings"
-    | "demo"
-    | "enquiries"
-    | "getwidget"
-    | "subscribe"
-    | "conversation"
-    | "estimate"
-    | "email"
-    | "attachments"
-    | "preview"
-    | "areasettings"
-    | "password"
-    | "email"
-    | "companyname"
-    | "phonenumber"
-    | "logo"
-    | "locale"
 
 
 
@@ -237,6 +220,9 @@ export const DashboardLayout = () => {
                 {active && contentType === "enquiries" && <Enquires setHelpType={setHelpType} />}
                 {active && contentType === "getwidget" && <GetWidget setHelpType={setHelpType} />}
                 {active && contentType === "subscribe" && <Subscribe setHelpType={setHelpType} />}
+                {active && contentType === "purchase" && <Purchase />}
+                {active && contentType === "success" && <Success />}
+
 
                 {contentType === undefined && active === true && <WelcomeToTheDashboard checkAreaCount={checkAreaCount} />}
             </ContentLoader>

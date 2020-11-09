@@ -21,6 +21,7 @@ using Palavyr.API.controllers.accounts.newAccount;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.Background;
 using Palavyr.Common.FileSystem.FormPaths;
+using Stripe;
 
 namespace Palavyr.API
 {
@@ -41,6 +42,9 @@ namespace Palavyr.API
         private const string _convoDbStringKey = "ConvoContextPostgres";
         private const string _accessKeySection = "AWS:AccessKey";
         private const string _secretKeySection = "AWS:SecretKey";
+        private const string _StripeKeySection = "Stripe:SecretKey";
+        private const string _webhookKeySection = "Stripe:WebhookKey";
+
         public void ConfigureServices(IServiceCollection services)
         {
             var key = Configuration["JWTSecretKey"] ?? throw new ArgumentNullException("Configuration[\"JWTSecretKey\"]");
@@ -107,7 +111,8 @@ namespace Palavyr.API
                                 "http://localhost:5000",
                                 "https://localhost:5001",
                                 "http://localhost:3600",
-                                "https://localhost:3500"
+                                "https://localhost:3500",
+                                "https://stipe.com"
                             );
                         }
                         else
@@ -143,6 +148,9 @@ namespace Palavyr.API
             var accessKey = Configuration.GetSection(_accessKeySection).Value;
             var secretKey = Configuration.GetSection(_secretKeySection).Value;
             var awsOptions = Configuration.GetAWSOptions();
+            StripeConfiguration.ApiKey = "sk_test_51HOtDQAnPqY603aZg1LhzHge6qQ7AEYcGPQhhCqMc5gXwfyr6XTEJJvJisBtzhFChIeOnytjCkhHK2ZmEgIuWyup00loOlq4W1";
+            // StripeConfiguration.ApiKey = Configuration.GetSection(_StripeKeySection).Value);
+            
             
             awsOptions.Credentials = new BasicAWSCredentials(accessKey, secretKey);
             services.AddDefaultAWSOptions(awsOptions);

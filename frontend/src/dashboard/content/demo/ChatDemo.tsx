@@ -1,4 +1,4 @@
-import { AreaTable } from "@Palavyr-Types";
+import { AreaTable, IGetHelp } from "@Palavyr-Types";
 import React, { useState, useCallback, useEffect } from "react";
 import { ApiClient } from "@api-client/Client";
 import { Grid, Paper, Typography, makeStyles, Divider, TextField, TableRow, TableCell, TableBody, Table, TableHead } from "@material-ui/core";
@@ -8,7 +8,6 @@ import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { HeaderEditor } from "./HeaderEditor";
 import { ChromePicker } from 'react-color';
 import { IFrame } from "./IFrame";
-import { HelpTypes } from "dashboard/layouts/DashboardLayout";
 
 
 export type PreCheckResult = {
@@ -50,14 +49,6 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         justifyContent: "center"
     },
-    // frame: props => ({
-    //     marginTop: props ? "0rem" : "2rem",
-    //     marginBottom: props ? "0rem" : "2rem",
-    //     height: "500px",
-    //     width: "380px",
-    //     borderRadius: "9px",
-    //     border: "0px"
-    // }),
     container: {
         height: "100%"
     },
@@ -124,9 +115,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-interface IChatDemo {
-    setHelpType(helpType: HelpTypes): void;
-}
+interface IChatDemo extends IGetHelp {}
 
 export const ChatDemo = ({ setHelpType }: IChatDemo) => {
     var client = new ApiClient();
