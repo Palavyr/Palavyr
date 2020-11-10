@@ -11,14 +11,12 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-interface IGetWidget extends IGetHelp { }
-
-export const GetWidget = ({ setHelpType }: IGetWidget) => {
+export const GetWidget = () => {
 
     const client = new ApiClient();
     const [apikey, setApiKey] = useState<string>("");
     const classes = useStyles();
-    setHelpType("enquiries");
+
     const loadApiKey = useCallback(async () => {
         var key = (await client.Settings.Account.getApiKey()).data as string;
         setApiKey(key);
@@ -27,7 +25,6 @@ export const GetWidget = ({ setHelpType }: IGetWidget) => {
     useEffect(() => {
         loadApiKey();
     }, [])
-
 
     return (
         <>

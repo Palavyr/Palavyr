@@ -4,7 +4,6 @@ import { List, ListItem, ListItemIcon, ListItemText, Collapse, Divider, makeStyl
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ChatIcon from '@material-ui/icons/Chat';
-import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
 import Auth from "auth/Auth";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import InboxIcon from '@material-ui/icons/Inbox';
@@ -16,15 +15,12 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { v4 as uuid } from 'uuid';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import { LocalStorage } from "localStorage/localStorage";
+import { AuthContext, DashboardContext } from "../DashboardContext";
 
 export interface ISideBarMenu {
     areaIdentifiers: Array<string>;
     areaNames: Array<string>;
-    toggleModal: () => void;
-    active: boolean;
-    setAlertState: any;
     setViewName: any;
-    checkAreaCount: any;
 }
 
 const createNavLink = (areaIdentifier: string, contentType: string) => {
@@ -51,12 +47,14 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifiers, areaNames, toggleModal, setAlertState }: ISideBarMenu) => {
+export const SideBarMenu = ({ setViewName, areaIdentifiers, areaNames}: ISideBarMenu) => {
 
     const classes = useStyles();
 
     const [convosOpen, setConvosOpen] = useState(true);
     const history = useHistory();
+    const { isActive } = React.useContext(AuthContext);
+    const { checkAreaCount } = React.useContext(DashboardContext);
 
     return (
         <div className={classes.SideBarList}>
@@ -76,7 +74,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                     {areaIdentifiers.map((areaIdentifier, index) => {
                         return (
                             <NavLink key={areaIdentifier} to={createNavLink(areaIdentifier, 'editor')} className={classes.navlink}>
-                                <ListItem disabled={!active} button key={areaIdentifier}>
+                                <ListItem disabled={!isActive} button key={areaIdentifier}>
                                     <ListItemIcon className={classes.icon}>
                                         <ChatIcon />
                                     </ListItemIcon>
@@ -85,7 +83,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                             </NavLink>
                         );
                     })}
-                    <ListItem disabled={!active} button key={"New Area"} onClick={() => {
+                    <ListItem disabled={!isActive} button key={"New Area"} onClick={() => {
                         checkAreaCount();
 
                     }}>
@@ -105,7 +103,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                         primaryTypographyProps={{ className: classes.sidebarText, style: { fontSize: "16pt", color: "black" } }}
                     />
                 </ListItem>
-                <ListItem disabled={!active} button onClick={() => {
+                <ListItem disabled={!isActive} button onClick={() => {
                     setViewName("Enquiries");
                     history.push('/dashboard/enquiries/')
                 }}>
@@ -114,7 +112,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                     </ListItemIcon>
                     <ListItemText primary={"Check Enquiries"} primaryTypographyProps={{ className: classes.sidebarText }} />
                 </ListItem>
-                <ListItem disabled={!active} button onClick={() => {
+                <ListItem disabled={!isActive} button onClick={() => {
                     setViewName("Widget Demo")
                     history.push('/dashboard/demo/')
                 }}>
@@ -128,7 +126,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
             <Divider />
 
             <List>
-                <ListItem disabled={!active} button onClick={() => {
+                <ListItem disabled={!isActive} button onClick={() => {
                     setViewName("General Settings");
                     history.push('/dashboard/settings/')
                 }}>
@@ -137,7 +135,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                     </ListItemIcon>
                     <ListItemText primary={"Settings"} primaryTypographyProps={{ className: classes.sidebarText }} />
                 </ListItem>
-                <ListItem disabled={!active} button onClick={() => {
+                <ListItem disabled={!isActive} button onClick={() => {
                     setViewName("Get Widget")
                     history.push('/dashboard/getwidget/')
                 }}>
@@ -147,7 +145,7 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                     <ListItemText primary={"Get Widget"} primaryTypographyProps={{ className: classes.sidebarText }} />
                 </ListItem>
 
-                <ListItem disabled={!active} button onClick={() => {
+                <ListItem disabled={!isActive} button onClick={() => {
                     setViewName("Subscriptions")
                     history.push('/dashboard/subscribe/')
                 }}>
@@ -157,9 +155,9 @@ export const SideBarMenu = ({ checkAreaCount, setViewName, active, areaIdentifie
                     <ListItemText primary={"Subscribe"} primaryTypographyProps={{ className: classes.sidebarText }} />
                 </ListItem>
 
-                <ListItem disabled={!active} button onClick={() => {
+                <ListItem disabled={!isActive} button onClick={() => {
                     setViewName("Subscriptions")
-                    history.push('/dashboard')
+                    history.push('/dashboard/welcome')
                 }}>
                     <ListItemIcon>
                         <HelpOutlineIcon className={classes.icon} key={0} />

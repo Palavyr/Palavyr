@@ -17,15 +17,6 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import BrandingWatermarkIcon from '@material-ui/icons/BrandingWatermark';
 import PublicIcon from '@material-ui/icons/Public';
 import { AlignCenter } from "dashboard/layouts/positioning/AlignCenter";
-import { IGetHelp } from "@Palavyr-Types";
-
-
-
-interface IAreaContent extends IGetHelp {
-    areaName: string;
-    areaIdentifier: string;
-    setLoaded: any;
-}
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -46,7 +37,16 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export const SettingsContent = ({ areaIdentifier, areaName, setLoaded, setHelpType }: IAreaContent) => {
+export const SettingsContent = () => {
+    const [, setLoaded] = useState<boolean>(false);
+    return <SettingsContentInner setLoaded={setLoaded} />
+}
+
+interface ISetLoaded {
+    setLoaded(val: boolean): void;
+}
+
+const SettingsContentInner = ({ setLoaded }: ISetLoaded ) => {
 
     const [tab, setTab] = useState<PanelRange>(0); // tabs
     const classes = useStyles();
@@ -59,27 +59,6 @@ export const SettingsContent = ({ areaIdentifier, areaName, setLoaded, setHelpTy
     }, [tab, setLoaded]); // probably need to add a tracker for when the table is saved so can reload and update
 
     const handleTabChange = (event: any, newValue: PanelRange) => {
-        switch (newValue) {
-            case 0:
-                setHelpType("password");
-                break;
-            case 1:
-                setHelpType("email");
-                break;
-            case 2:
-                setHelpType("companyname");
-                break;
-            case 3:
-                setHelpType("phonenumber");
-                break;
-            case 4:
-                // setHelpType("responselogo");
-                break;
-            case 5:
-                setHelpType("locale");
-            default:
-                break;
-        }
         setTab(newValue);
     };
 

@@ -6,7 +6,6 @@ import { Card, Divider, Grid, makeStyles, Paper, Typography } from "@material-ui
 import classNames from "classnames";
 import { pricingContainerStyles } from "@landing/components/pricing/cardStyles";
 import { useHistory } from "react-router-dom";
-import { IGetHelp } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { useCallback, useEffect, useState } from "react";
 import { SubscribeStepper } from "../purchse/SubscribeStepper";
@@ -39,8 +38,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-interface ISubscribe extends IGetHelp {}
-
 enum PurchaseTypes {
     Free = "Free",
     Premium = "Premium",
@@ -62,8 +59,8 @@ type ProductOption = {
 };
 type ProductOptions = ProductOption[];
 
-export const Subscribe = ({ setHelpType }: ISubscribe) => {
-    // setHelpType("subscribe");
+export const Subscribe = () => {
+
     const [currentPlan, setCurrentPlan] = useState<string | null>(null);
 
     const cls = useStyles();
@@ -73,7 +70,7 @@ export const Subscribe = ({ setHelpType }: ISubscribe) => {
     const history = useHistory();
 
     const goToPurchase = (productType: PurchaseTypes, productId: string | null) => {
-        history.push(`/dashboard/purchase?productType=${productType}&productId=${productId}`);
+        history.push(`/dashboard/subscribe/purchase?productType=${productType}&productId=${productId}`);
     };
 
     const OrderedProductOptions: ProductOptions = [

@@ -1,5 +1,4 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import { syncBuiltinESMExports } from "module";
 import { serverUrl, SPECIAL_HEADERS } from "./clientUtils";
 
 

@@ -82,8 +82,8 @@ const PurchaseInner = () => {
     const productType = searchParams.get("productType") as string;
     const productId = searchParams.get("productId") as string | null;
 
-    var successUrl = `${webUrl}/dashboard/success?session_id={CHECKOUT_SESSION_ID}`;
-    var cancelUrl = `${webUrl}/dashboard/canceled`;
+    var successUrl = `${webUrl}/dashboard/subscribe/success?session_id={CHECKOUT_SESSION_ID}`;
+    var cancelUrl = `${webUrl}/dashboard/subscribe/canceled`;
 
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         const interval = event.target.value as Interval;

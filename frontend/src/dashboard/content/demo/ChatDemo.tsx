@@ -117,10 +117,8 @@ const useStyles = makeStyles(theme => ({
 
 interface IChatDemo extends IGetHelp {}
 
-export const ChatDemo = ({ setHelpType }: IChatDemo) => {
+export const ChatDemo = () => {
     var client = new ApiClient();
-
-    setHelpType("demo");
 
     const [incompleteAreas, setIncompleteAreas] = useState<Array<IncompleteAreas>>([]);
     const [apiKey, setApiKey] = useState<string>("");

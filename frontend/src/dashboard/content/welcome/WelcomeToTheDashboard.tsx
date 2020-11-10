@@ -3,6 +3,7 @@ import { makeStyles, Card, Typography, Divider } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
+import { DashboardContext } from 'dashboard/layouts/DashboardContext';
 
 const useStyles = makeStyles(theme => ({
     background: {
@@ -56,14 +57,11 @@ const useStyles = makeStyles(theme => ({
 
 }))
 
-interface WelcomeToTheDashboardProps {
-    checkAreaCount(): void;
-}
-
-export const WelcomeToTheDashboard = ({ checkAreaCount }: WelcomeToTheDashboardProps) => {
+export const WelcomeToTheDashboard = () => {
 
     const classes = useStyles();
     const history = useHistory();
+    const { checkAreaCount } = React.useContext(DashboardContext);
 
     return (
         <div className={classes.wrapper}>
