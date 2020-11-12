@@ -77,7 +77,7 @@ export const pricingContainerStyles = makeStyles((theme) => ({
         margin: "1rem",
         width: "28%",
         textAlign: "center",
-        borderRadius: "0px",
+        borderRadius: "5px",
         alignContent: "center",
         marginTop: "3rem",
     },

@@ -80,7 +80,6 @@ namespace Palavyr.API.Controllers
         public PreCheckResult RunWidgetPreCheck([FromHeader] string accountId)
         {
             _logger.LogDebug("Running live widget pre-check...");
-
             _logger.LogDebug("Checking if account ID exists...");
             if (accountId == null)
             {

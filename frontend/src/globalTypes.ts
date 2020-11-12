@@ -197,6 +197,32 @@ export interface IHaveWidth {
     width: "xs" | "sm" | "md" | "lg" | "xl";
 }
 
+export interface IGetHelp {
+    setHelpType(helpType: HelpTypes): void;
+}
+
+export type HelpTypes =
+    "editor"
+    | "settings"
+    | "demo"
+    | "enquiries"
+    | "getwidget"
+    | "subscribe"
+    | "conversation"
+    | "estimate"
+    | "email"
+    | "attachments"
+    | "preview"
+    | "areasettings"
+    | "password"
+    | "email"
+    | "companyname"
+    | "phonenumber"
+    | "logo"
+    | "locale"
+
+
+
 export type GoogleTokenObj = {
     access_token: string;
     expires_at: number;
@@ -264,3 +290,78 @@ export type GoogleAuthResponse = {
 
 }
 
+
+export type Images = Array<string>;
+
+export type StripeProduct = {
+    id: string;
+    object: string;
+    active: boolean;
+    created: Date;
+    deleted: boolean | null;
+    livemode: boolean;
+    rawJObject: null;
+    stripeResponse: null;
+    metadata: object;
+    type: string;
+};
+
+export type Product = StripeProduct & {
+    attributes: Array<string>;
+    caption: string | null;
+    deactivateOn: Date | null;
+    description: string;
+    images: Images;
+    name: string;
+    packageDimensions: string | null;
+    shippable: boolean | null;
+    statementDescriptor: string | null;
+    unitLabel: string | null;
+    updated: Date;
+    url: string | null;
+};
+
+export type Products = Array<Product>;
+export type Prices = Array<Price>;
+export type Price = StripeProduct & {
+    billingScheme: string;
+    currency: "usd" | "aud" | "can" | "eur";
+    lookupKey: string | null;
+    nickname: string | null;
+    productId: string; // equals Product type id
+    product: string | null;
+    recurring: {
+        aggregateUsage: string | null;
+        interval: "month" | "year";
+        intervalCount: number;
+        trialPeriodDays: number | null;
+        usageType: string;
+        rawJObject: object;
+        stripeResponse: null;
+    };
+    tiers: null; // TODO
+    tiersMode: null; // TODO
+    transformQuantity: null; // TODO
+    unitAmount: number; // cents
+    unitAmountDecimal: number; // in cents
+};
+
+
+
+export enum GeneralSettingsLoc {
+    password,
+    email,
+    companyName,
+    phoneNumber,
+    companyLogo,
+    locale
+}
+
+export enum AreaSettingsLoc {
+    email,
+    response,
+    attachments,
+    conversation,
+    settings,
+    preview,
+}

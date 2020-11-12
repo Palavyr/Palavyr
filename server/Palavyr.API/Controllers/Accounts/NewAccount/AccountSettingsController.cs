@@ -21,6 +21,8 @@ using Palavyr.API.ResponseTypes;
 using Palavyr.Common.FileSystem.FormPaths;
 using Palavyr.Common.FileSystem.FormPaths.IO;
 using Server.Domain.AccountDB;
+using Server.Domain.Accounts;
+using Stripe;
 
 namespace Palavyr.API.controllers.accounts.newAccount
 {
@@ -35,7 +37,8 @@ namespace Palavyr.API.controllers.accounts.newAccount
         private static ILogger<AccountSettings> _logger;
         private SenderVerification Verifier { get; set; }
         private readonly IAmazonS3 _s3Client;
-
+        private readonly IStripeClient _stripeClient = new StripeClient();
+        
         public AccountSettings(
             IAmazonS3 s3Client,
             ILogger<AccountSettings> logger,
@@ -69,6 +72,17 @@ namespace Palavyr.API.controllers.accounts.newAccount
             return true;
         }
 
+        public async Task<Customer> UpdateStripeCustomerEmail(string emailAddress, string customerId)
+        {
+            var options = new CustomerUpdateOptions
+            {
+               Email = emailAddress
+            };
+            var service = new CustomerService(_stripeClient);
+            var response = await service.UpdateAsync(customerId, options);
+            return response;
+        }
+        
         [HttpPut("update/email")]
         public async Task<EmailVerificationResponse> UpdateEmail([FromHeader] string accountId,
             [FromBody] EmailVerificationRequest emailRequest)
@@ -82,6 +96,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             {
                 Identities = new List<string>() {emailRequest.EmailAddress}
             };
+            
             GetIdentityVerificationAttributesResponse response;
             try
             {
@@ -94,9 +109,18 @@ namespace Palavyr.API.controllers.accounts.newAccount
 
             var found = response.VerificationAttributes.TryGetValue(emailRequest.EmailAddress, out var status);
 
+            // stripes knowledge of the customer email doesn't have to be in sync with the palavyr understanding.
+            // If the customer email isn't verified, we still update stripe. If it remains unverified, then the
+            // customer can't use the palavyr. If they change to another email, then stripe will be updated the same
+            // and they can try to verfiy that email. Either way, we should update the stripe email to the current
+            // palavyr (verified or unverified email).
+            await UpdateStripeCustomerEmail(emailRequest.EmailAddress, account.StripeCustomerId);
+            
             bool result;
             if (found)
             {
+                // don't need to do anything more with the customer
+                
                 switch (status.VerificationStatus.Value)
                 {
                     case (Pending):
@@ -144,6 +168,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
 
             account.EmailAddress = emailRequest.EmailAddress;
             account.DefaultEmailIsVerified = false;
+
             AccountContext.SaveChangesAsync();
             return EmailVerificationResponse.CreateNew(
                 Pending,
@@ -233,6 +258,30 @@ namespace Palavyr.API.controllers.accounts.newAccount
             return Ok(link);
         }
 
+        [HttpGet("current-plan")]
+        public IActionResult GetCurrentPlan([FromHeader] string accountId)
+        {
+            var account = AccountContext.Accounts.SingleOrDefault(row => row.AccountId == accountId);
+            string planStatus;
+            switch (account.PlanType)
+            {
+                case (UserAccount.PlanTypeEnum.Free):
+                    planStatus = UserAccount.PlanTypeEnum.Free.ToString();
+                    break;
+                case (UserAccount.PlanTypeEnum.Premium):
+                    planStatus = UserAccount.PlanTypeEnum.Premium.ToString();
+                    break;    
+                case (UserAccount.PlanTypeEnum.Pro):
+                    planStatus = UserAccount.PlanTypeEnum.Pro.ToString();
+                    break;
+                default:
+                    _logger.LogDebug("Plan type was not able to be determined.");
+                    throw new Exception("Plan Type not able to be determined.");
+            }
+
+            return Ok(planStatus);
+        }
+        
         [HttpGet("logo")]
         public async Task<IActionResult> GetCompanyLogo([FromHeader] string accountId)
         {

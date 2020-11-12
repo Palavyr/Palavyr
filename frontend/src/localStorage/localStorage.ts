@@ -7,6 +7,7 @@ class LocalStorageAccess {
     private EmailString: string = "emailAddress";
     private googleImage: string = "googleImage";
     private loginType: string = "loginType";
+    private active: string = "rkjh45lh435lkh";
 
     public GoogleLoginType: string = "google";
     public DefaultLoginType: string = "default";
@@ -49,6 +50,14 @@ class LocalStorageAccess {
         this._setItem(this.loginType, this.DefaultLoginType);
     }
 
+    setIsActive(val: boolean) {
+        this._setItem(this.active, val)
+    }
+
+    isActive() {
+        var active = this._getItem(this.active);
+        return active === "true" ? true : false;
+    }
 
     isAuthenticated() {
         var auth = this._getItem(this.AuthString)
@@ -60,6 +69,8 @@ class LocalStorageAccess {
         this._setItem(this.SessionString, "");
         this._setItem(this.JwtTokenString, "");
         this._setItem(this.loginType, "");
+        this._setItem(this.googleImage, "");
+        this._setItem(this.active, false);
     }
 
     getLoginType() {

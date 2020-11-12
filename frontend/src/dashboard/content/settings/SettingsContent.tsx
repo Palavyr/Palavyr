@@ -2,13 +2,7 @@ import React, { useState, useEffect } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
-import { ChangePassword } from "./security/changePassword";
-import { ChangeEmail } from "./account/ChangeEmail";
-import { ChangeCompanyName } from "./account/ChangeCompanyName";
-import { ChangePhoneNumber } from "./account/ChangePhoneNumber";
-import { ChangeLogoImage } from "./account/ChangeLogoImage";
-import { areaTabProps, TabPanel, PanelRange } from "@common/ContentUtils";
-import { ChangeLocale } from "./account/ChangeLocale";
+import { areaTabProps, PanelRange } from "@common/ContentUtils";
 import { makeStyles } from "@material-ui/core";
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
@@ -16,22 +10,13 @@ import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import PhoneIcon from '@material-ui/icons/Phone';
 import BrandingWatermarkIcon from '@material-ui/icons/BrandingWatermark';
 import PublicIcon from '@material-ui/icons/Public';
-import { HelpTypes } from "dashboard/layouts/DashboardLayout";
 import { AlignCenter } from "dashboard/layouts/positioning/AlignCenter";
-
-
-
-interface IAreaContent {
-    areaName: string;
-    areaIdentifier: string;
-    setLoaded: any;
-    setHelpType(helpType: HelpTypes): void;
-}
+import { useHistory } from "react-router-dom";
+import { GeneralSettingsLoc } from "@Palavyr-Types";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        // backgroundColor: theme.palette.background.paper,
     },
     appbar: {
         background: "#c7ecee",
@@ -47,10 +32,28 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export const SettingsContent = ({ areaIdentifier, areaName, setLoaded, setHelpType }: IAreaContent) => {
+interface ISettingsContent {
+    children: JSX.Element[] | JSX.Element;
+}
 
-    const [tab, setTab] = useState<PanelRange>(4); // tabs
+interface ISettingsContentInner extends ISettingsContent {
+    setLoaded(val: boolean): void;
+}
+
+export const SettingsContent = ({children}: ISettingsContent ) => {
+    const [, setLoaded] = useState<boolean>(false);
+    return <SettingsContentInner setLoaded={setLoaded} children={children} />
+}
+
+
+const SettingsContentInner = ({ setLoaded, children}: ISettingsContentInner ) => {
+
     const classes = useStyles();
+    const history = useHistory();
+
+    const searchParams = new URLSearchParams(location.search);
+    const rawTab = searchParams.get("tab");
+    const tab = rawTab ? (parseInt(rawTab) as PanelRange) : 0;
 
     useEffect(() => {
         setLoaded(true);
@@ -59,86 +62,40 @@ export const SettingsContent = ({ areaIdentifier, areaName, setLoaded, setHelpTy
         }
     }, [tab, setLoaded]); // probably need to add a tracker for when the table is saved so can reload and update
 
-    const handleTabChange = (event: any, newValue: PanelRange) => {
-        switch (newValue) {
-            case 0:
-                setHelpType("password");
-                break;
-            case 1:
-                setHelpType("email");
-                break;
-            case 2:
-                setHelpType("companyname");
-                break;
-            case 3:
-                setHelpType("phonenumber");
-                break;
-            case 4:
-                // setHelpType("responselogo");
-                break;
-            case 5:
-                setHelpType("locale");
-            default:
-                break;
-        }
-        setTab(newValue);
-    };
+    const sendTo = (dest: GeneralSettingsLoc) => {
+        history.push(`/dashboard/settings/${GeneralSettingsLoc[dest]}?tab=${dest}`)
+    }
 
     return (
         <div className={classes.root}>
             <AppBar position="static" className={classes.appbar}>
-                <Tabs centered value={tab} onChange={handleTabChange} aria-label="simple tabs">
-                    <Tab className={classes.tabtext} icon={<LockOpenIcon className={classes.icon} />} label="Password" {...areaTabProps(0)} />
-                    <Tab className={classes.tabtext} icon={<MailOutlineIcon className={classes.icon} />} label="Email" {...areaTabProps(1)} />
-                    <Tab className={classes.tabtext} icon={<PermIdentityIcon className={classes.icon} />} label="Company Name" {...areaTabProps(2)} />
-                    <Tab className={classes.tabtext} icon={<PhoneIcon className={classes.icon} />} label="Phone Number" {...areaTabProps(3)} />
-                    <Tab className={classes.tabtext} icon={<BrandingWatermarkIcon className={classes.icon} />} label="Response Logo" {...areaTabProps(4)} />
-                    <Tab className={classes.tabtext} icon={<PublicIcon className={classes.icon} />} label="Locale" {...areaTabProps(5)} />
+                <Tabs centered value={tab}  aria-label="simple tabs">
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.password)} className={classes.tabtext} icon={<LockOpenIcon className={classes.icon} />} label="Password" {...areaTabProps(0)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.email)} className={classes.tabtext} icon={<MailOutlineIcon className={classes.icon} />} label="Email" {...areaTabProps(1)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.companyName)} className={classes.tabtext} icon={<PermIdentityIcon className={classes.icon} />} label="Company Name" {...areaTabProps(2)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.phoneNumber)} className={classes.tabtext} icon={<PhoneIcon className={classes.icon} />} label="Phone Number" {...areaTabProps(3)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.companyLogo)} className={classes.tabtext} icon={<BrandingWatermarkIcon className={classes.icon} />} label="Company Logo" {...areaTabProps(4)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.locale)} className={classes.tabtext} icon={<PublicIcon className={classes.icon} />} label="Locale" {...areaTabProps(5)} />
                 </Tabs>
             </AppBar>
-
-            <TabPanel value={tab} index={0}>
-                <AlignCenter>
-                    <ChangePassword />
-                </AlignCenter>
-            </TabPanel>
-            <TabPanel value={tab} index={1}>
-                <AlignCenter>
-                    <ChangeEmail />
-                </AlignCenter>
-            </TabPanel>
-            <TabPanel value={tab} index={2}>
-                <AlignCenter>
-                    <ChangeCompanyName />
-                </AlignCenter>
-            </TabPanel>
-            <TabPanel value={tab} index={3}>
-                <AlignCenter>
-                    <ChangePhoneNumber />
-                </AlignCenter>
-            </TabPanel>
-            <TabPanel value={tab} index={4}>
-                <AlignCenter>
-                    <ChangeLogoImage />
-                </AlignCenter>
-            </TabPanel>
-            <TabPanel value={tab} index={5}>
-                <AlignCenter>
-                    <ChangeLocale />
-                </AlignCenter>
-            </TabPanel>
-
-            {/* <TabPanel value={tab} index={5}>
-                <GroupTree
-                    areaIdentifier={areaIdentifier}
-                    treeName={areaName}
-                    NodeInterface={NodeInterface}
-                />
-            </TabPanel> */}
-            {/* <TabPanel value={tab} index={2}>
-                ToDo: Response configuration, such as the email address that shows up when sending a response.
-                <EmailSubject />
-            </TabPanel> */}
+            <AlignCenter>
+                {children}
+            </AlignCenter>
         </div >
     )
 };
+
+
+{/* <TabPanel value={tab} index={5}>
+    <GroupTree
+        areaIdentifier={areaIdentifier}
+        treeName={areaName}
+        NodeInterface={NodeInterface}
+    />
+</TabPanel> */}
+{/* <TabPanel value={tab} index={2}>
+    ToDo: Response configuration, such as the email address that shows up when sending a response.
+    <EmailSubject />
+</TabPanel> */}
+
+

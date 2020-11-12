@@ -12,7 +12,6 @@ namespace Palavyr.API.Controllers
         protected readonly ConvoContext ConvoContext;
         public IWebHostEnvironment Env;
         
-        
         protected BaseController(AccountsContext accountContext, ConvoContext convoContext, DashContext dashContext, IWebHostEnvironment env)
         {
             DashContext = dashContext;

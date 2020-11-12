@@ -1,10 +1,7 @@
 import React, { useEffect, useCallback, useState } from "react"
-import { Typography, Divider, Card, makeStyles } from "@material-ui/core"
-import { CodeCard } from "./CodeCard"
+import { Typography, Card, makeStyles } from "@material-ui/core"
 import { ApiClient } from "@api-client/Client"
-import { HelpTypes } from "dashboard/layouts/DashboardLayout"
-
-
+import { IGetHelp } from "@Palavyr-Types"
 
 const useStyles = makeStyles(theme => ({
     outerCard: {
@@ -14,15 +11,12 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-interface IGetWidget {
-    setHelpType(helpType: HelpTypes): void;
-}
-export const GetWidget = ({ setHelpType }: IGetWidget) => {
+export const GetWidget = () => {
 
     const client = new ApiClient();
     const [apikey, setApiKey] = useState<string>("");
     const classes = useStyles();
-    setHelpType("enquiries");
+
     const loadApiKey = useCallback(async () => {
         var key = (await client.Settings.Account.getApiKey()).data as string;
         setApiKey(key);
@@ -31,7 +25,6 @@ export const GetWidget = ({ setHelpType }: IGetWidget) => {
     useEffect(() => {
         loadApiKey();
     }, [])
-
 
     return (
         <>

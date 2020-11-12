@@ -64,10 +64,15 @@ namespace Palavyr.API.Controllers
             {
                 return Task.FromResult(AuthenticateResult.Fail("Api Key not attached to any accounts."));
             }
+
+            if (!account.Active)
+            {
+                return Task.FromResult(AuthenticateResult.Fail(
+                    "Account is not activated. Check your email for an activation code to use with the dashboard."));
+            }
             
             // try to set the account id in the header
             httpContext.Request.Headers[MagicUrlStrings.AccountId] = account.AccountId;
-
             
             // account found - apikey is legit. Now make a claim ticket...
             var claims = new[] {new Claim(ClaimTypes.SerialNumber, apiKey.ToString())};

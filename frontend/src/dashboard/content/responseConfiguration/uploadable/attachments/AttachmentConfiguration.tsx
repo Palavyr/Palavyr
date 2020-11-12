@@ -5,6 +5,7 @@ import { Upload } from "../Upload";
 import { AttachmentList } from "./AttachmentList";
 import { AttachmentPreview } from "./AttachmentPreview";
 import { AttachmentsHelp } from "dashboard/content/help/AttachmentsHelp";
+import { useParams } from "react-router-dom";
 
 
 const buttonText = "Add PDF Attachment";
@@ -18,13 +19,10 @@ const uploadDetails = () => {
     )
 }
 
-interface IAttachmentConfiguration {
-    areaIdentifier: string;
-}
-
-
-export const AttachmentConfiguration = ({ areaIdentifier }: IAttachmentConfiguration) => {
+export const AttachmentConfiguration = () => {
     var client = new ApiClient();
+
+    const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
     const [, setLoaded] = useState<boolean>(false);
     const [currentPreview, setCurrentPreview] = useState<FileLink>();

@@ -1,14 +1,10 @@
 import { ApiClient } from "@api-client/Client";
 import React, { useState, useCallback, useEffect } from "react";
-import { EnquiryRow } from "@Palavyr-Types";
+import { EnquiryRow, IGetHelp } from "@Palavyr-Types";
 import { Statement } from "@common/components/Statement";
 import { Divider, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody, Table } from "@material-ui/core";
-import { HelpTypes } from "dashboard/layouts/DashboardLayout";
 
-interface IEnquiries {
-    setHelpType(helpType: HelpTypes): void;
-}
-export const Enquires = ({setHelpType}: IEnquiries) => {
+export const Enquires = () => {
 
     const client = new ApiClient();
 
@@ -16,7 +12,6 @@ export const Enquires = ({setHelpType}: IEnquiries) => {
     const details = "This table lists all of the completed enquires you have received. Enquiries you have not checked will be in bold."
 
     const [enquiries, setEnquiries] = useState<Array<EnquiryRow>>([]);
-    setHelpType("enquiries");
 
     const loadEnquiries = useCallback(async () => {
         var res = await client.Enquiries.getEnquiries();
