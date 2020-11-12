@@ -1,5 +1,5 @@
 import { PanelRange, areaTabProps, TabPanel } from "@common/ContentUtils";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { ConvoTree } from "./conversation/ConvoTree";
 import { ResponseConfiguration } from "./response/ResponseConfiguration";
 import { EmailConfiguration } from "./uploadable/emailTemplates/EmailConfiguration";
@@ -16,48 +16,17 @@ import SubjectIcon from "@material-ui/icons/Subject";
 import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
-import { IGetHelp } from "@Palavyr-Types";
 import { AuthContext, DashboardContext } from "dashboard/layouts/DashboardContext";
-
-interface ITabs {
-    tab: PanelRange;
-    areaName: string;
-    areaIdentifier: string;
-}
-
-const TabPanels = ({ tab, areaName, areaIdentifier }: ITabs) => {
-    return (
-        <>
-            <TabPanel value={tab} index={0}>
-                <EmailConfiguration areaIdentifier={areaIdentifier} />
-            </TabPanel>
-
-            <TabPanel value={tab} index={1}>
-                <ResponseConfiguration areaIdentifier={areaIdentifier} />
-            </TabPanel>
-
-            <TabPanel value={tab} index={2}>
-                <AttachmentConfiguration areaIdentifier={areaIdentifier} />
-            </TabPanel>
-
-            <TabPanel value={tab} index={3}>
-                <ConvoTree areaIdentifier={areaIdentifier} treeName={areaName} />
-            </TabPanel>
-
-            <TabPanel value={tab} index={4}>
-                <AreaSettings areaIdentifier={areaIdentifier} />
-            </TabPanel>
-
-            <TabPanel value={tab} index={5}>
-                <ConfigurationPreview areaIdentifier={areaIdentifier} />
-            </TabPanel>
-        </>
-    );
-};
+import { AreaSettingsLoc } from "@Palavyr-Types";
 
 export interface IAreaContent {
-    setLoaded: any;
+    children: JSX.Element[] | JSX.Element;
 }
+
+export interface IAreaContentInner extends IAreaContent {
+    setLoaded: Dispatch<SetStateAction<boolean>>;
+}
+
 
 const useTabsStyles = makeStyles((theme) => ({
     root: {
@@ -81,26 +50,32 @@ const useTabsStyles = makeStyles((theme) => ({
     },
 }));
 
-export const AreaContent = () => {
+export const AreaContent = ({ children }: IAreaContent) => {
     const [, setLoaded] = useState<boolean>(false);
-    return <AreaContentInner setLoaded={setLoaded} />;
+    return <AreaContentInner setLoaded={setLoaded} children={children} />;
 };
 
-export const AreaContentInner = ({ setLoaded }: IAreaContent) => {
-    const [tab, setTab] = useState<PanelRange>(0);
+export const AreaContentInner = ({ setLoaded, children }: IAreaContentInner) => {
     const history = useHistory();
     const classes = useTabsStyles();
 
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
+    const searchParams = new URLSearchParams(location.search);
+    const rawTab = searchParams.get("tab");
+    const tab = rawTab ? (parseInt(rawTab) as PanelRange) : 0;
+
     const { areaName } = React.useContext(DashboardContext);
     const { isActive } = React.useContext(AuthContext);
-    // dashboard/editor/response/
+
+    const sendTo = (dest: AreaSettingsLoc) => {
+        history.push(`/dashboard/editor/${AreaSettingsLoc[dest]}/${areaIdentifier}?tab=${dest}`);
+    };
+
     useEffect(() => {
         setLoaded(true);
         return () => {
             setLoaded(false);
-            // setTab()
         };
     }, [tab, setLoaded]); // probably need to add a tracker for when the table is saved so can reload and update
 
@@ -111,16 +86,16 @@ export const AreaContentInner = ({ setLoaded }: IAreaContent) => {
     return (
         <div className={classes.root}>
             <AppBar position="static" className={classes.appbar}>
-                <Tabs centered value={tab} onChange={(event: any, newValue: PanelRange) => setTab(newValue)} aria-label="simple tabs example">
-                    <Tab className={classes.tabtext} icon={<SubjectIcon className={classes.icon} />} label="1. Email" {...areaTabProps(0)} />
-                    <Tab className={classes.tabtext} icon={<FilterFramesIcon className={classes.icon} />} label="2. Response" {...areaTabProps(1)} />
-                    <Tab className={classes.tabtext} icon={<PictureAsPdfIcon className={classes.icon} />} label="3. Attachments" {...areaTabProps(2)} />
-                    <Tab className={classes.tabtext} icon={<AccountTreeIcon className={classes.icon} />} label="4. Conversation" {...areaTabProps(3)} />
-                    <Tab className={classes.tabtext} icon={<SettingsApplicationsIcon className={classes.icon} />} label="5. Settings" {...areaTabProps(4)} />
-                    <Tab className={classes.tabtext} icon={<VisibilityIcon className={classes.icon} />} label="6. Preview" {...areaTabProps(5)} />
+                <Tabs centered value={tab} aria-label="simple tabs example">
+                    <Tab onClick={() => sendTo(AreaSettingsLoc.email)} className={classes.tabtext} icon={<SubjectIcon className={classes.icon} />} label="1. Email" {...areaTabProps(0)} />
+                    <Tab onClick={() => sendTo(AreaSettingsLoc.response)} className={classes.tabtext} icon={<FilterFramesIcon className={classes.icon} />} label="2. Response" {...areaTabProps(1)} />
+                    <Tab onClick={() => sendTo(AreaSettingsLoc.attachments)} className={classes.tabtext} icon={<PictureAsPdfIcon className={classes.icon} />} label="3. Attachments" {...areaTabProps(2)} />
+                    <Tab onClick={() => sendTo(AreaSettingsLoc.conversation)} className={classes.tabtext} icon={<AccountTreeIcon className={classes.icon} />} label="4. Conversation" {...areaTabProps(3)} />
+                    <Tab onClick={() => sendTo(AreaSettingsLoc.settings)} className={classes.tabtext} icon={<SettingsApplicationsIcon className={classes.icon} />} label="5. Settings" {...areaTabProps(4)} />
+                    <Tab onClick={() => sendTo(AreaSettingsLoc.preview)} className={classes.tabtext} icon={<VisibilityIcon className={classes.icon} />} label="6. Preview" {...areaTabProps(5)} />
                 </Tabs>
             </AppBar>
-            <TabPanels tab={tab} areaName={areaName ?? ""} areaIdentifier={areaIdentifier} />
+            {children}
         </div>
     );
 };

@@ -10,10 +10,8 @@ import { DynamicTableConfiguration } from "./tables/dynamicTable/DynamicTableCon
 import { StaticTableConfiguration } from "./tables/statictable/StaticFeeTableConfiguration";
 import { makeStyles } from "@material-ui/core";
 import { EstimateHelp } from "dashboard/content/help/EstimateHelp";
+import { useParams } from "react-router-dom";
 
-export interface IResponseConfiguration {
-    areaIdentifier: string;
-}
 
 const useStyles = makeStyles((theme) => ({
     titleText: {
@@ -22,7 +20,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const ResponseConfiguration = ({ areaIdentifier }: IResponseConfiguration) => {
+export const ResponseConfiguration = () => {
+
+    const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
+
     const [, setLoaded] = useState(false);
     const [prologue, setPrologue] = useState<string>("");
     const [staticTables, setStaticTables] = useState<StaticTableMetas>([]);

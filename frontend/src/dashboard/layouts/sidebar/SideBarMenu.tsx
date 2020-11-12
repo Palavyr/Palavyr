@@ -16,14 +16,15 @@ import { v4 as uuid } from 'uuid';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import { LocalStorage } from "localStorage/localStorage";
 import { AuthContext, DashboardContext } from "../DashboardContext";
+import { GeneralSettingsLoc } from "@Palavyr-Types";
 
 export interface ISideBarMenu {
     areaIdentifiers: Array<string>;
     areaNames: Array<string>;
 }
 
-const createNavLink = (areaIdentifier: string, contentType: string) => {
-    return `/dashboard/${contentType}/${areaIdentifier}`;
+const createNavLink = (areaIdentifier: string) => {
+    return `/dashboard/editor/email/${areaIdentifier}?tab=0`;
 };
 
 const useStyles = makeStyles(theme => ({
@@ -72,7 +73,7 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames}: ISideBarMenu) => {
                 <Collapse in={convosOpen} timeout="auto" unmountOnExit>
                     {areaIdentifiers.map((areaIdentifier, index) => {
                         return (
-                            <NavLink key={areaIdentifier} to={createNavLink(areaIdentifier, 'editor')} className={classes.navlink}>
+                            <NavLink key={areaIdentifier} to={createNavLink(areaIdentifier)} className={classes.navlink}>
                                 <ListItem disabled={!isActive} button key={areaIdentifier}>
                                     <ListItemIcon className={classes.icon}>
                                         <ChatIcon />
@@ -82,14 +83,14 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames}: ISideBarMenu) => {
                             </NavLink>
                         );
                     })}
-                    <ListItem disabled={!isActive} button key={"New Area"} onClick={() => {
+                    <ListItem disabled={!isActive} button key="New Area" onClick={() => {
                         checkAreaCount();
 
                     }}>
                         <ListItemIcon onClick={checkAreaCount}>
                             <AddCircleOutlineIcon className={classes.icon} />
                         </ListItemIcon>
-                        <ListItemText primary={"Add New Area"} primaryTypographyProps={{ className: classes.sidebarText }} />
+                        <ListItemText primary="Add New Area" primaryTypographyProps={{ className: classes.sidebarText }} />
                     </ListItem>
                 </Collapse>
 
@@ -127,7 +128,7 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames}: ISideBarMenu) => {
             <List>
                 <ListItem disabled={!isActive} button onClick={() => {
                     setViewName("General Settings");
-                    history.push('/dashboard/settings/')
+                    history.push(`/dashboard/settings/password?tab=${GeneralSettingsLoc.password}`)
                 }}>
                     <ListItemIcon className={classes.icon}>
                         <SettingsIcon className={classes.icon} key={0} />
@@ -141,7 +142,7 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames}: ISideBarMenu) => {
                     <ListItemIcon>
                         <GetAppIcon className={classes.icon} key={0} />
                     </ListItemIcon>
-                    <ListItemText primary={"Get Widget"} primaryTypographyProps={{ className: classes.sidebarText }} />
+                    <ListItemText primary="Get Widget" primaryTypographyProps={{ className: classes.sidebarText }} />
                 </ListItem>
 
                 <ListItem disabled={!isActive} button onClick={() => {
@@ -152,7 +153,7 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames}: ISideBarMenu) => {
                     <ListItemIcon>
                         <SubscriptionsIcon className={classes.icon} key={0} />
                     </ListItemIcon>
-                    <ListItemText primary={"Subscribe"} primaryTypographyProps={{ className: classes.sidebarText }} />
+                    <ListItemText primary="Subscribe" primaryTypographyProps={{ className: classes.sidebarText }} />
                 </ListItem>
 
                 <ListItem disabled={!isActive} button onClick={() => {
@@ -163,7 +164,7 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames}: ISideBarMenu) => {
                     <ListItemIcon>
                         <HelpOutlineIcon className={classes.icon} key={0} />
                     </ListItemIcon>
-                    <ListItemText primary={"Get Help"} primaryTypographyProps={{ className: classes.sidebarText }} />
+                    <ListItemText primary="Get Help" primaryTypographyProps={{ className: classes.sidebarText }} />
                 </ListItem>
 
                 <ListItem

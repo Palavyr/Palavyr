@@ -1,4 +1,3 @@
-import classes from '*.module.css';
 import { ApiClient } from '@api-client/Client';
 import { PalavyrAlert } from '@common/components/PalavyrAlert';
 import { SinglePurposeButton } from '@common/components/SinglePurposeButton';
@@ -83,11 +82,11 @@ export const ChangeLogoImage = () => {
 }
 
 
-interface IParent {
+interface ChangeLogoImageInner {
     fileUpload: File[];
     setFileUpload: Dispatch<SetStateAction<File[]>>;
 }
-const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: IParent) => {
+const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInner) => {
     var client = new ApiClient();
     const cls = useStyles();
 

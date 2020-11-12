@@ -1,17 +1,12 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { ApiClient } from "@api-client/Client";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { Divider, Grid, makeStyles } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { AlertDetails, AreaTable, EmailVerificationResponse } from "@Palavyr-Types";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
-
-
-interface IAreaSettings {
-    areaIdentifier: string;
-}
 
 type Settings = {
     emailAddress: string;
@@ -36,9 +31,10 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export const AreaSettings = ({ areaIdentifier }: IAreaSettings) => {
+export const AreaSettings = () => {
 
     var client = new ApiClient();
+    const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
     const [loaded, setLoaded] = useState<boolean>(false);
     const [alertState, setAlertState] = useState<boolean>(false);

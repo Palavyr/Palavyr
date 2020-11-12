@@ -10,29 +10,30 @@ import { MissingDynamicNodes } from "./MissingDynamicNodes";
 import "./ConvoTree.css";
 import { makeStyles } from "@material-ui/core";
 import { ConversationHelp } from "dashboard/content/help/ConversationHelp";
+import { useParams } from "react-router-dom";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
-export interface IConvoTree {
-    areaIdentifier: string;
-    treeName: string;
-}
 
 export type RequiredDetails = {
     type: string;
     prettyName: string;
-}
+};
 
 export const makeUniqueTableName = (tableMeta: DynamicTableMeta) => {
-    return [tableMeta.tableType, tableMeta.tableId].join("-")
-}
+    return [tableMeta.tableType, tableMeta.tableId].join("-");
+};
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     conversation: {
         position: "static",
         overflow: "auto",
-    }
-}))
+    },
+}));
 
-export const ConvoTree = ({ areaIdentifier, treeName }: IConvoTree) => {
+export const ConvoTree = () => {
+    const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
+
+    const { areaName: treeName } = React.useContext(DashboardContext);
 
     const [loaded, setLoaded] = useState<boolean>(false);
     const [nodeList, setNodes] = useState<Conversation>([]); // nodeList and state updater for the tree
@@ -52,16 +53,16 @@ export const ConvoTree = ({ areaIdentifier, treeName }: IConvoTree) => {
         var dynamicTableMetas = dynRes.data as DynamicTableMetas;
         var nodes = convoRes.data as Conversation;
 
-        var formattedRequiredNodes = dynamicTableMetas.map(x => {
+        var formattedRequiredNodes = dynamicTableMetas.map((x) => {
             return {
                 type: makeUniqueTableName(x),
-                prettyName: [x.prettyName, x.tableTag].join(" - ")
-            }
-        })
+                prettyName: [x.prettyName, x.tableTag].join(" - "),
+            };
+        });
         if (formattedRequiredNodes.length > 0) {
             setRequiredNodes(formattedRequiredNodes);
         } else {
-            setRequiredNodes([])
+            setRequiredNodes([]);
         }
 
         if (formattedRequiredNodes.length > 0) {
@@ -69,49 +70,41 @@ export const ConvoTree = ({ areaIdentifier, treeName }: IConvoTree) => {
 
             // used in the dropdown select menu in the convotree
             dynamicTableMetas.forEach(async (tableMeta: DynamicTableMeta) => {
+                var dynamicTableRows = (await client.Configuration.Tables.Dynamic.getDynamicTableData(areaIdentifier, tableMeta.tableType, tableMeta.tableId)).data as TableData;
 
-                var dynamicTableRows = (await client
-                    .Configuration
-                    .Tables
-                    .Dynamic
-                    .getDynamicTableData(
-                        areaIdentifier,
-                        tableMeta.tableType,
-                        tableMeta.tableId
-                    )).data as TableData;
-
-                var valueOptions = dynamicTableRows.map(x => x.option);
+                var valueOptions = dynamicTableRows.map((x) => x.option);
 
                 var uniqueTableSpecifier = makeUniqueTableName(tableMeta);
                 var splattable = {
-                    [uniqueTableSpecifier]: { // key must be unique
+                    [uniqueTableSpecifier]: {
+                        // key must be unique
                         value: uniqueTableSpecifier, // selectonOneFlat-hwhio-wjkr-ugiwer
                         pathOptions: tableMeta.valuesAsPaths ? valueOptions : ["Continue"],
                         valueOptions: valueOptions,
-                        text: [tableMeta.prettyName, tableMeta.tableTag].join(" - ")
-                    }
-                }
+                        text: [tableMeta.prettyName, tableMeta.tableTag].join(" - "),
+                    },
+                };
 
                 dynamicNodeTypes = {
                     ...dynamicNodeTypes,
-                    ...splattable
-                }
+                    ...splattable,
+                };
                 setDynamicNodeTypes(dynamicNodeTypes);
-            })
+            });
         }
         // eslint-disable-next-line
         setNodes(cloneDeep(nodes));
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [areaIdentifier])
+    }, [areaIdentifier]);
 
     useEffect(() => {
         setLoaded(true);
         loadNodes();
         return () => {
-            setLoaded(false)
-        }
-    }, [areaIdentifier, loadNodes])
+            setLoaded(false);
+        };
+    }, [areaIdentifier, loadNodes]);
 
     useEffect(() => {
         if (nodeList.length > 0) {
@@ -121,7 +114,7 @@ export const ConvoTree = ({ areaIdentifier, treeName }: IConvoTree) => {
         // Disabling this here because we don't want to rerender on requriedNodes change (thought that seems almost what we want, but actually isn't)
         // We compute this on the nodeList in fact, and the requiredNodes only change when we change areaIdentifier (or update the dynamic tables option on the other tab)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [areaIdentifier, nodeList])
+    }, [areaIdentifier, nodeList]);
 
     return (
         <>
@@ -132,21 +125,19 @@ export const ConvoTree = ({ areaIdentifier, treeName }: IConvoTree) => {
                     <fieldset className="fieldset" id="tree-test">
                         <legend>{treeName}</legend>
                         <div className="main-tree tree-wrap">
-                            {
-                                nodeList.length > 0
-                                    ? <ConversationNode
-                                        key={"tree-start"}
-                                        parentId={rootNode.nodeId}
-                                        node={rootNode}
-                                        nodeList={nodeList}
-                                        setNodes={setNodes}
-                                        addNodes={addNodes}
-                                        parentState={true}
-                                        changeParentState={() => null}
-                                        dynamicNodeTypes={dynamicNodeTypes}
-                                    />
-                                    : null
-                            }
+                            {nodeList.length > 0 ? (
+                                <ConversationNode
+                                    key={"tree-start"}
+                                    parentId={rootNode.nodeId}
+                                    node={rootNode}
+                                    nodeList={nodeList}
+                                    setNodes={setNodes}
+                                    addNodes={addNodes}
+                                    parentState={true}
+                                    changeParentState={() => null}
+                                    dynamicNodeTypes={dynamicNodeTypes}
+                                />
+                            ) : null}
                         </div>
                     </fieldset>
                 </form>

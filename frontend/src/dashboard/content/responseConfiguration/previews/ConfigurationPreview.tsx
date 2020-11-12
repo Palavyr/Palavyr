@@ -2,13 +2,9 @@ import { ApiClient } from "@api-client/Client";
 import React, { useState, useEffect } from "react";
 import { FileLink } from "@Palavyr-Types";
 import { makeStyles, Paper } from "@material-ui/core";
-import { Statement } from "@common/components/Statement";
 import { PreviewHelp } from "dashboard/content/help/PreviewHelp";
+import { useParams } from "react-router-dom";
 
-
-interface IConfigurationPreview {
-    areaIdentifier: string;
-}
 
 const useStyles = makeStyles(theme => ({
     paper: (preview: boolean) => ({
@@ -20,8 +16,9 @@ const useStyles = makeStyles(theme => ({
     })
 }))
 
-export const ConfigurationPreview = ({ areaIdentifier }: IConfigurationPreview) => {
+export const ConfigurationPreview = () => {
     var client = new ApiClient();
+    const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
     const [preview, setPreview] = useState<FileLink>();
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -29,8 +26,8 @@ export const ConfigurationPreview = ({ areaIdentifier }: IConfigurationPreview) 
     const classes = useStyles(preview ? true : false);
 
     const loadPreview = React.useCallback(async () => {
-        var res = await client.Configuration.Preview.fetchPreview(areaIdentifier);
-        setPreview(res.data);
+        var { data } = await client.Configuration.Preview.fetchPreview(areaIdentifier);
+        setPreview(data);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier])
 

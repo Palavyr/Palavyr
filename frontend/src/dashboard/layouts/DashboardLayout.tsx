@@ -91,12 +91,12 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const theme = useTheme();
 
     const loadAreas = useCallback(async () => {
-        var client = new ApiClient();
+        const client = new ApiClient();
 
-        var numAllowedBySubscription = (await client.Settings.Subscriptions.getNumAreas()).data as number;
+        const {data: numAllowedBySubscription} = await client.Settings.Subscriptions.getNumAreas();
         setNumAreasAllowed(numAllowedBySubscription);
 
-        var areas = (await client.Area.GetAreas()).data;
+        const {data: areas} = await client.Area.GetAreas();
         const [areaIdentifiers, areaNames] = fetchSidebarInfo(areas);
         setSidebarNames(areaNames);
         setSidebarIds(areaIdentifiers);
@@ -130,7 +130,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
         setSidebarIds(newIds);
 
-        history.push(`/dashboard/editor/${newArea.areaIdentifier}`);
+        history.push(`/dashboard/editor/${newArea.areaIdentifier}?tab=0`);
     };
 
     const handleDrawerClose: () => void = () => {

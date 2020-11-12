@@ -5,13 +5,8 @@ import { ViewEmailTemplate } from "./ViewTemplate";
 import { EmailEditor } from "./EmailEditor";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { makeStyles } from "@material-ui/core";
-import { Statement } from "@common/components/Statement";
 import { EmailHelp } from "dashboard/content/help/EmailHelp";
-
-
-interface IEmailConfiguration {
-    areaIdentifier: string;
-}
+import { useParams } from "react-router-dom";
 
 const uploadDetails = () => {
     return (
@@ -44,20 +39,19 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export const EmailConfiguration = ({ areaIdentifier }: IEmailConfiguration) => {
+export const EmailConfiguration = () => {
     var client = new ApiClient();
     var classes = useStyles();
     let fileReader = new FileReader();
 
+    const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
+
     const [loaded, setLoaded] = useState<boolean>(false);
-
     const [emailTemplate, setEmailTemplate] = useState("");
-
     const [modalState, setModalState] = useState(false);
     const toggleModal = () => {
         setModalState(!modalState);
     }
-
     const [accordState, setAccordState] = useState(false);
     const toggleAccord = () => {
         setAccordState(!accordState)
@@ -71,8 +65,8 @@ export const EmailConfiguration = ({ areaIdentifier }: IEmailConfiguration) => {
     const handleFileRead = async (e: any) => {
         const content = fileReader.result;
         if (content && typeof content == 'string') {
-            var res = await client.Configuration.Email.SaveEmailTemplate(areaIdentifier, content)
-            setEmailTemplate(res.data);
+            const { data } = await client.Configuration.Email.SaveEmailTemplate(areaIdentifier, content);
+            setEmailTemplate(data);
             setModalState(false);
             setAccordState(false);
         } else {
@@ -93,8 +87,8 @@ export const EmailConfiguration = ({ areaIdentifier }: IEmailConfiguration) => {
     }
 
     const loadEmailTemplate = useCallback(async () => {
-        var res = (await client.Configuration.Email.GetEmailTemplate(areaIdentifier)).data;
-        setEmailTemplate(res);
+        const {data} = (await client.Configuration.Email.GetEmailTemplate(areaIdentifier));
+        setEmailTemplate(data);
         setLoaded(true)
         return () => {
             setLoaded(false);

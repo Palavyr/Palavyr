@@ -345,3 +345,23 @@ export type Price = StripeProduct & {
     unitAmount: number; // cents
     unitAmountDecimal: number; // in cents
 };
+
+
+
+export enum GeneralSettingsLoc {
+    password,
+    email,
+    companyName,
+    phoneNumber,
+    companyLogo,
+    locale
+}
+
+export enum AreaSettingsLoc {
+    email,
+    response,
+    attachments,
+    conversation,
+    settings,
+    preview,
+}
