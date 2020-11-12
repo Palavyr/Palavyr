@@ -64,8 +64,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface IDashboardLayout {
-    children: React.ReactNode;
-    helpComponent: React.ReactNode;
+    children: JSX.Element[] | JSX.Element;
+    helpComponent: JSX.Element[] | JSX.Element;
 }
 
 export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) => {
@@ -87,7 +87,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [numAreasAllowed, setNumAreasAllowed] = useState<number | undefined>();
     const [alertState, setAlertState] = useState<boolean>(false);
 
-    const classes = useStyles(helpOpen);
+    const cls = useStyles(helpOpen);
     const theme = useTheme();
 
     const loadAreas = useCallback(async () => {
@@ -96,14 +96,17 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         var numAllowedBySubscription = (await client.Settings.Subscriptions.getNumAreas()).data as number;
         setNumAreasAllowed(numAllowedBySubscription);
 
-        var res = await client.Area.GetAreas();
-        const [areaIdentifiers, areaNames] = fetchSidebarInfo(res.data);
+        var areas = (await client.Area.GetAreas()).data;
+        const [areaIdentifiers, areaNames] = fetchSidebarInfo(areas);
         setSidebarNames(areaNames);
         setSidebarIds(areaIdentifiers);
 
         if (areaIdentifier) {
-            var currentView = res.data.filter((x: AreaTable) => x.areaIdentifier === areaIdentifier).pop();
-            setViewName(currentView.areaName);
+            var currentView = areas.filter((x: AreaTable) => x.areaIdentifier === areaIdentifier).pop();
+
+            if (currentView) {
+                setViewName(currentView.areaName);
+            }
         }
     }, [areaIdentifier]);
 
@@ -112,7 +115,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         setLoaded(true);
         return () => {
             setLoaded(false);
-            setViewName("");
+            // setViewName("");
         };
     }, [areaIdentifier, loadAreas]);
 
@@ -168,45 +171,38 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     };
 
     return (
-        <DashboardContext.Provider value={{ numAreasAllowed, checkAreaCount, areaName: currentViewName}}>
-            <div className={classes.root}>
+        <DashboardContext.Provider value={{ numAreasAllowed, checkAreaCount, areaName: currentViewName, setViewName: setViewName }}>
+            <div className={cls.root}>
                 <CssBaseline />
                 <DashboardHeader open={open} handleDrawerOpen={handleDrawerOpen} handleHelpDrawerOpen={handleHelpDrawerOpen} helpOpen={helpOpen} title={currentViewName} />
                 <Drawer
-                    className={classNames(classes.menuDrawer, classes.menuBorder)}
+                    className={classNames(cls.menuDrawer, cls.menuBorder)}
                     variant="persistent"
                     anchor="left"
                     open={open}
                     classes={{
-                        paper: classes.menuDrawerPaper,
-                        root: classes.menuBorder,
-                        modal: classes.menuBorder,
+                        paper: cls.menuDrawerPaper,
+                        root: cls.menuBorder,
+                        modal: cls.menuBorder,
                     }}
                 >
-                    <SideBarHeader handleDrawerClose={handleDrawerClose} />
-                    <Divider />
-                    <SideBarMenu setViewName={setViewName} areaIdentifiers={sidebarIds} areaNames={sidebarNames} />
+                    <>
+                        <SideBarHeader handleDrawerClose={handleDrawerClose} />
+                        <Divider />
+                        <SideBarMenu areaIdentifiers={sidebarIds} areaNames={sidebarNames} />
+                    </>
                 </Drawer>
-
-                {/* Any type of content should be loaded here */}
-                <ContentLoader open={open}>
-                    {children}
-                    {/* {loaded === true && (active === false) && <PleaseConfirmYourEmail />}
-                {contentType === "editor" && (active === true) && <AreaContent checkAreaCount={checkAreaCount} setHelpType={setHelpType} active={active} areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} setViewName={setViewName} />}
-                {active && contentType === "settings" && <SettingsContent setHelpType={setHelpType} areaIdentifier={areaIdentifier} areaName={currentViewName} setLoaded={setLoaded} />}
-                {contentType === undefined && active === true && <WelcomeToTheDashboard checkAreaCount={checkAreaCount} />}
-                */}
-                </ContentLoader>
+                <ContentLoader open={open}>{children}</ContentLoader>
                 <Drawer
-                    className={classes.helpDrawer}
+                    className={cls.helpDrawer}
                     variant="persistent"
                     anchor="right"
                     open={helpOpen}
                     classes={{
-                        paper: classes.helpDrawerPaper,
+                        paper: cls.helpDrawerPaper,
                     }}
                 >
-                    <div className={classes.helpDrawerHeader}>
+                    <div className={cls.helpDrawerHeader}>
                         <IconButton onClick={handleHelpDrawerClose}>
                             Close
                             {theme.direction === "rtl" ? <ChevronLeftIcon style={{ color: "white" }} /> : <ChevronRightIcon style={{ color: "white" }} />}
@@ -215,24 +211,24 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                     <Divider />
                     {helpComponent}
                     {/* {helpType === "conversation" && <ConversationHelp defaultOpen />}
-                {helpType === "editor" && <EditorHelp defaultOpen />}
-                {helpType === "email" && <EmailHelp defaultOpen />}
+                    {helpType === "editor" && <EditorHelp defaultOpen />}
+                    {helpType === "email" && <EmailHelp defaultOpen />}
 
-                {helpType === "estimate" && <EstimateHelp defaultOpen />}
-                {helpType === "attachments" && <AttachmentsHelp defaultOpen />}
-                {helpType === "areasettings" && <AreaSettingsHelp defaultOpen />}
-                {helpType === "preview" && <PreviewHelp defaultOpen />} */}
+                    {helpType === "estimate" && <EstimateHelp defaultOpen />}
+                    {helpType === "attachments" && <AttachmentsHelp defaultOpen />}
+                    {helpType === "areasettings" && <AreaSettingsHelp defaultOpen />}
+                    {helpType === "preview" && <PreviewHelp defaultOpen />} */}
 
                     {/* {(helpType === "settings") && <SettingsHelp />}
-                {(helpType === "demo") && <DemoHelp />}
-                {(helpType === "enquiries") && <EnquiryHelp />}
-                {(helpType === "getwidget") && <GetWidgetHelp />}
-                {(helpType === "subscrible") && <SubscribeHelp />}
-                {(helpType === "password") && <PasswordHelp />}
-                {(helpType === "companyname") && <CompanyNameHelp />}
-                {(helpType === "phonenumber") && <PhoneNumberHelp />}
-                {(helpType === "logo") && <LogoHelp />}
-                {(helpType === "locale") && <LocaleHelp />} */}
+                    {(helpType === "demo") && <DemoHelp />}
+                    {(helpType === "enquiries") && <EnquiryHelp />}
+                    {(helpType === "getwidget") && <GetWidgetHelp />}
+                    {(helpType === "subscrible") && <SubscribeHelp />}
+                    {(helpType === "password") && <PasswordHelp />}
+                    {(helpType === "companyname") && <CompanyNameHelp />}
+                    {(helpType === "phonenumber") && <PhoneNumberHelp />}
+                    {(helpType === "logo") && <LogoHelp />}
+                    {(helpType === "locale") && <LocaleHelp />} */}
                 </Drawer>
                 {numAreasAllowed && (sidebarIds.length < numAreasAllowed ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
                 <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />

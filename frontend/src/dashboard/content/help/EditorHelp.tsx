@@ -4,7 +4,7 @@ import * as React from 'react';
 interface Props {
     defaultOpen?: boolean;
 }
-export const EditorHelp = ({defaultOpen = false}: Props) => {
+export const EditorHelp = () => {
 
     return (
         <div>

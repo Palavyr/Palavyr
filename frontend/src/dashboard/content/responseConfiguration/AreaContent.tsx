@@ -95,11 +95,12 @@ export const AreaContentInner = ({ setLoaded }: IAreaContent) => {
 
     const { areaName } = React.useContext(DashboardContext);
     const { isActive } = React.useContext(AuthContext);
-
+    // dashboard/editor/response/
     useEffect(() => {
         setLoaded(true);
         return () => {
             setLoaded(false);
+            // setTab()
         };
     }, [tab, setLoaded]); // probably need to add a tracker for when the table is saved so can reload and update
 

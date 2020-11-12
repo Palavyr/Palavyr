@@ -15,15 +15,14 @@ export interface IResponseConfiguration {
     areaIdentifier: string;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     titleText: {
         textAlign: "center",
-        fontWeight: "bold"
-    }
-}))
+        fontWeight: "bold",
+    },
+}));
 
 export const ResponseConfiguration = ({ areaIdentifier }: IResponseConfiguration) => {
-
     const [, setLoaded] = useState(false);
     const [prologue, setPrologue] = useState<string>("");
     const [staticTables, setStaticTables] = useState<StaticTableMetas>([]);
@@ -34,61 +33,58 @@ export const ResponseConfiguration = ({ areaIdentifier }: IResponseConfiguration
     const prologueModifier = new LogueModifier(setPrologue);
     const epilogueModifier = new LogueModifier(setEpilogue);
 
-
     const savePrologue = async () => {
         await client.Configuration.updatePrologue(areaIdentifier, prologue);
-    }
+    };
 
     const saveEpilogue = async () => {
         await client.Configuration.updateEpilogue(areaIdentifier, epilogue);
-    }
+    };
 
-    const updateEpilogue = (event: { target: { value: string; }; }) => {
+    const updateEpilogue = (event: { target: { value: string } }) => {
         epilogueModifier.simpleUpdateState(event.target.value);
-    }
+    };
 
-
-    const updatePrologue = (event: { target: { value: string; }; }) => {
+    const updatePrologue = (event: { target: { value: string } }) => {
         prologueModifier.simpleUpdateState(event.target.value);
-    }
+    };
 
     const tableSaver = async () => {
-        staticTables.forEach(table => {
+        staticTables.forEach((table) => {
             table.id = null;
-            table.staticTableRows.forEach(row => {
+            table.staticTableRows.forEach((row) => {
                 row.id = null;
                 row.fee.id = null;
-            })
-        })
-        var res = await client.Configuration.Tables.Static.updateStaticTablesMetas(areaIdentifier, staticTables);
-        setStaticTables(res.data);
-    }
+            });
+        });
+        const { data } = await client.Configuration.Tables.Static.updateStaticTablesMetas(areaIdentifier, staticTables);
+        setStaticTables(data);
+    };
 
     const loadEstimateConfiguration = useCallback(async () => {
-        var res = await client.Configuration.getEstimateConfiguration(areaIdentifier);
-        setPrologue(cloneDeep(res.data.prologue));
-        setEpilogue(cloneDeep(res.data.epilogue));
-        setStaticTables(res.data.staticTablesMetas);
+        const { data } = await client.Configuration.getEstimateConfiguration(areaIdentifier);
+        const {prologue, epilogue, staticTablesMetas} = data;
+        setPrologue(cloneDeep(prologue));
+        setEpilogue(cloneDeep(epilogue));
+        setStaticTables(staticTablesMetas);
         setLoaded(true);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [areaIdentifier])
+    }, [areaIdentifier]);
 
     useEffect(() => {
         loadEstimateConfiguration();
         return () => {
-            setLoaded(false)
-        }
-    }, [areaIdentifier, loadEstimateConfiguration])
+            setLoaded(false);
+        };
+    }, [areaIdentifier, loadEstimateConfiguration]);
 
     const classes = useStyles();
     return (
         <>
             <EstimateHelp />
-            <ExpandableTextBox title={"Introductory statement"} updatableValue={prologue} onChange={updatePrologue} onSave={savePrologue}>
-                <Statement
-                    title={"Intro Statement"}
-                >
+            <ExpandableTextBox title="Introductory statement" updatableValue={prologue} onChange={updatePrologue} onSave={savePrologue}>
+                <Statement title="Intro Statement">
                     <>
                         <span>Use this section to create an introduction statement for your estimate.</span>
                         <span>You can make it clear that fees are estimate only, or provide context for your client to understand their estimate.</span>
@@ -96,20 +92,11 @@ export const ResponseConfiguration = ({ areaIdentifier }: IResponseConfiguration
                 </Statement>
             </ExpandableTextBox>
 
-            <DynamicTableConfiguration
-                title="Customized Fees"
-                areaIdentifier={areaIdentifier}
-            />
+            <DynamicTableConfiguration title="Customized Fees" areaIdentifier={areaIdentifier} />
 
-            <StaticTableConfiguration
-                areaIdentifier={areaIdentifier}
-                title="Static Fees"
-                staticTables={staticTables}
-                tableSaver={tableSaver}
-                modifier={staticTablesModifier}
-            />
+            <StaticTableConfiguration areaIdentifier={areaIdentifier} title="Static Fees" staticTables={staticTables} tableSaver={tableSaver} modifier={staticTablesModifier} />
 
-            <ExpandableTextBox title={"Outro statement"} updatableValue={epilogue} onChange={updateEpilogue} onSave={saveEpilogue}>
+            <ExpandableTextBox title="Outro statement" updatableValue={epilogue} onChange={updateEpilogue} onSave={saveEpilogue}>
                 <Statement title="Epilogue Statement">
                     <>
                         <span>Use this section to create an outro statement for your estimate.</span>
@@ -118,5 +105,5 @@ export const ResponseConfiguration = ({ areaIdentifier }: IResponseConfiguration
                 </Statement>
             </ExpandableTextBox>
         </>
-    )
+    );
 };

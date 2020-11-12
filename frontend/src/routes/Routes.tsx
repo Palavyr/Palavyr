@@ -34,42 +34,48 @@ import { PleaseConfirmYourEmailHelp } from "dashboard/content/help/PleaseConfirm
 import { AuthContext, DashboardContext } from "dashboard/layouts/DashboardContext";
 import Auth from "auth/Auth";
 
-function withLayout<P>(ContentComponent: React.ComponentType<P>, helpComponent: React.ReactNode) {
-
-
-    const ComponentWithHelp = (props: P) => {
+function withLayout(ContentComponent: JSX.Element[] | JSX.Element, helpComponent: JSX.Element[] | JSX.Element) {
+    const ComponentWithHelp = () => {
         return (
-            <AuthContext.Provider value={{ isActive: Auth.accountIsActive, isAuthenticated: Auth.accountIsAuthenticated}}>
-                <DashboardLayout helpComponent={helpComponent}>
-                    <ContentComponent {...props} />
-                </DashboardLayout>
+            <AuthContext.Provider value={{ isActive: Auth.accountIsActive, isAuthenticated: Auth.accountIsAuthenticated }}>
+                <DashboardLayout helpComponent={helpComponent}>{ContentComponent}</DashboardLayout>
             </AuthContext.Provider>
         );
     };
     return ComponentWithHelp;
 }
 
-
 export const Routes = () => {
     return (
         <Router>
             <Route exact path="/" component={LandingPage} />
-            <ProtectedRoute exact path="/dashboard/" component={withLayout(WelcomeToTheDashboard, WelcomeToTheDashboardHelp)} />
-            <ProtectedRoute exact path="/dashboard/welcome" component={withLayout(WelcomeToTheDashboard, WelcomeToTheDashboardHelp)} />
+            <ProtectedRoute exact path="/dashboard/" component={withLayout(<WelcomeToTheDashboard />, <WelcomeToTheDashboardHelp />)} />
+            <ProtectedRoute exact path="/dashboard/welcome" component={withLayout(<WelcomeToTheDashboard />, <WelcomeToTheDashboardHelp />)} />
 
-            <ProtectedRoute exact path="/dashboard/editor/:areaIdentifier" component={withLayout(AreaContent, EditorHelp)} />
+            <ProtectedRoute exact path="/dashboard/editor/:areaIdentifier" component={withLayout(<AreaContent />, <EditorHelp />)} />
 
-            <ProtectedRoute exact path="/dashboard/settings/" component={withLayout(SettingsContent, SubscribeHelp)} />
-            <ProtectedRoute exact path="/dashboard/demo/" component={withLayout(ChatDemo, ChatDemoHelp)} />
-            <ProtectedRoute exact path="/dashboard/getWidget/" component={withLayout(GetWidget, GetWidgetHelp)} />
-            <ProtectedRoute exact path="/dashboard/enquiries/" component={withLayout(Enquires, EnquiriesHelp)} />
+            <ProtectedRoute exact path="/dashboard/editor/email/:areaIdentifier" component={withLayout(<AreaContent />, <EditorHelp />)} />
+            <ProtectedRoute exact path="/dashboard/editor/response/:areaIdentifier" component={withLayout(<AreaContent />, <EditorHelp />)} />
+            <ProtectedRoute exact path="/dashboard/editor/attachments/:areaIdentifier" component={withLayout(<AreaContent />, <EditorHelp />)} />
+            <ProtectedRoute exact path="/dashboard/editor/conversation/:areaIdentifier" component={withLayout(<AreaContent />, <EditorHelp />)} />
+            <ProtectedRoute exact path="/dashboard/editor/settings/:areaIdentifier" component={withLayout(<AreaContent />, <EditorHelp />)} />
+            <ProtectedRoute exact path="/dashboard/editor/preview/:areaIdentifier" component={withLayout(<AreaContent />, <EditorHelp />)} />
 
-            <ProtectedRoute exact path="/dashboard/subscribe" component={withLayout(Subscribe, SubscribeHelp)} />
-            <ProtectedRoute exact path="/dashboard/subscribe/purchase/" component={withLayout(Purchase, PurchaseHelp)} />
-            <ProtectedRoute exact path="/dashboard/subscribe/success" component={withLayout(Success, SuccessHelp)} />
-            <ProtectedRoute exact path="/dashboard/subscribe/cancel" component={withLayout(Cancel, CancelHelp)} />
 
-            <ProtectedRoute exact path="/dashboard/confirm" component={withLayout(PleaseConfirmYourEmail, PleaseConfirmYourEmailHelp)} />
+
+            <ProtectedRoute exact path="/dashboard/settings/" component={withLayout(<SettingsContent />, <SubscribeHelp />)} />
+            <ProtectedRoute exact path="/dashboard/demo/" component={withLayout(<ChatDemo />, <ChatDemoHelp />)} />
+            <ProtectedRoute exact path="/dashboard/getWidget/" component={withLayout(<GetWidget />, <GetWidgetHelp />)} />
+            <ProtectedRoute exact path="/dashboard/enquiries/" component={withLayout(<Enquires />, <EnquiriesHelp />)} />
+
+            <ProtectedRoute exact path="/dashboard/subscribe" component={withLayout(<Subscribe />, <SubscribeHelp />)} />
+            <ProtectedRoute exact path="/dashboard/subscribe/purchase/" component={withLayout(<Purchase />, <PurchaseHelp />)} />
+            <ProtectedRoute exact path="/dashboard/subscribe/success" component={withLayout(<Success />, <SuccessHelp />)} />
+            <ProtectedRoute exact path="/dashboard/subscribe/cancel" component={withLayout(<Cancel />, <CancelHelp />)} />
+
+
+
+            <ProtectedRoute exact path="/dashboard/confirm" component={withLayout(<PleaseConfirmYourEmail />, <PleaseConfirmYourEmailHelp />)} />
         </Router>
     );
 };

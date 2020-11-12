@@ -1,9 +1,10 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
 interface IDashboardContext {
     numAreasAllowed?: number;
     checkAreaCount(): void;
     areaName: string;
+    setViewName: Dispatch<SetStateAction<string>>;
 }
 
 interface IAuthContext {

@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosInstance } from "axios";
 import { TableData } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/tableComponents/SelectOneFlat/SelectOneFlatTypes";
 import { serverUrl, getSessionIdFromLocalStorage, SPECIAL_HEADERS, getJwtTokenFromLocalStorage } from "./clientUtils";
-import { DynamicTableMetas, DynamicTableMeta, StaticTableMetas, staticTableMetaTemplate, Conversation, ConvoTableRow } from "@Palavyr-Types";
+import { DynamicTableMetas, DynamicTableMeta, StaticTableMetas, staticTableMetaTemplate, Conversation, ConvoTableRow, Areas, Prices } from "@Palavyr-Types";
 import { WidgetPreferences } from "dashboard/content/demo/ChatDemo";
 
 export class ApiClient {
@@ -24,13 +24,13 @@ export class ApiClient {
     public Purchase = {
         // submitToken: async (token: Token): Promise<AxiosResponse> => this.client.post(`purchase/submit`, { Token: token.id }),
         Subscription: {
-            CancelSubscription: async (): Promise<AxiosResponse> => this.client.post(`products/cancel-subscription`),
+            CancelSubscription: async (): Promise<AxiosResponse<string>> => this.client.post(`products/cancel-subscription`),
         },
         Products: {
             GetAll: async ():  Promise<AxiosResponse> => this.client.get(`products/get-products`),
         },
         Prices: {
-            GetPrices: async (productId: string): Promise<AxiosResponse> => this.client.get(`products/prices/get-prices/${productId}`)
+            GetPrices: async (productId: string): Promise<AxiosResponse<Prices>> => this.client.get(`products/prices/get-prices/${productId}`),
         },
         Checkout: {
             CreateCheckoutSession: async (priceId: string, cancelUrl: string, successUrl: string): Promise<AxiosResponse> => this.client.post(`checkout/create-checkout-session`, {
@@ -44,7 +44,10 @@ export class ApiClient {
     };
 
     public Area = {
-        GetAreas: async (): Promise<AxiosResponse> => this.client.get("areas"),
+
+        // GetAreasReactQuery: async (): Promise<AxiosResponse<Areas>> => this.client.get("areas"),
+
+        GetAreas: async (): Promise<AxiosResponse<Areas>> => this.client.get("areas"),
         GetArea: async (areaIdentifier: string): Promise<AxiosResponse> => this.client.get(`areas/${areaIdentifier}`),
         createArea: (areaName: string): Promise<AxiosResponse> => this.client.post(`areas/create/`, { areaName: areaName }), // get creates and gets new area
         updateArea: (areaIdentifier: string, areaName: string | null = null, areaDisplayTitle: string | null = null): Promise<AxiosResponse> =>

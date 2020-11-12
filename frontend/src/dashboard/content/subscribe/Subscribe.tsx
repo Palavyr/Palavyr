@@ -70,7 +70,14 @@ export const Subscribe = () => {
     const history = useHistory();
 
     const goToPurchase = (productType: PurchaseTypes, productId: string | null) => {
-        history.push(`/dashboard/subscribe/purchase?productType=${productType}&productId=${productId}`);
+        let purchaseRoute = "/dashboard/subscribe/purchase";
+        if (productType !== null){
+            purchaseRoute += `?productType=${productType}`
+        }
+        if (productId !== null){
+            purchaseRoute += `&productId=${productId}`
+        }
+        history.push(purchaseRoute);
     };
 
     const OrderedProductOptions: ProductOptions = [

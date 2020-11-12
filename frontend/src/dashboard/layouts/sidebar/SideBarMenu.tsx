@@ -20,7 +20,6 @@ import { AuthContext, DashboardContext } from "../DashboardContext";
 export interface ISideBarMenu {
     areaIdentifiers: Array<string>;
     areaNames: Array<string>;
-    setViewName: any;
 }
 
 const createNavLink = (areaIdentifier: string, contentType: string) => {
@@ -47,14 +46,14 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export const SideBarMenu = ({ setViewName, areaIdentifiers, areaNames}: ISideBarMenu) => {
+export const SideBarMenu = ({ areaIdentifiers, areaNames}: ISideBarMenu) => {
 
     const classes = useStyles();
 
     const [convosOpen, setConvosOpen] = useState(true);
     const history = useHistory();
     const { isActive } = React.useContext(AuthContext);
-    const { checkAreaCount } = React.useContext(DashboardContext);
+    const { checkAreaCount, setViewName } = React.useContext(DashboardContext);
 
     return (
         <div className={classes.SideBarList}>
@@ -146,6 +145,7 @@ export const SideBarMenu = ({ setViewName, areaIdentifiers, areaNames}: ISideBar
                 </ListItem>
 
                 <ListItem disabled={!isActive} button onClick={() => {
+                    console.log("Setting Header!")
                     setViewName("Subscriptions")
                     history.push('/dashboard/subscribe/')
                 }}>
@@ -156,7 +156,8 @@ export const SideBarMenu = ({ setViewName, areaIdentifiers, areaNames}: ISideBar
                 </ListItem>
 
                 <ListItem disabled={!isActive} button onClick={() => {
-                    setViewName("Subscriptions")
+                    console.log("Setting Header!")
+                    setViewName("Welcome!")
                     history.push('/dashboard/welcome')
                 }}>
                     <ListItemIcon>

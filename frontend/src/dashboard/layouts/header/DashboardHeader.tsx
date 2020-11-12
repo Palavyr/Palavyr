@@ -64,7 +64,7 @@ const useStyles = makeStyles(theme => ({
 export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
 
     const classes = useStyles();
-    const themr = useTheme();
+    const theme = useTheme();
     return (
         <AppBar
             position="absolute"

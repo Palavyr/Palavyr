@@ -31,8 +31,13 @@ class Auth {
     }
 
     async register(email: string, password: string, callback: () => any, errorCallback: (response) => any) {
-        const authenticationResponse = (await this.loginClient.Account.registerNewAccount(email, password)).data as Credentials; // TODO: Check that res is successfull before logging in
-        return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
+        try {
+            const authenticationResponse = (await this.loginClient.Account.registerNewAccount(email, password)).data as Credentials; // TODO: Check that res is successfull before logging in
+            return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
+        } catch {
+            console.log("Error trying to reach the server.")
+        }
+
     }
 
     async registerWithGoogle(oneTimeCode: string, accessToken: string, tokenId: string, callback: () => void, errorCallback: (response) => void) {
@@ -64,13 +69,22 @@ class Auth {
 
     async login(email: string | null, password: string | null, callback: () => any, errorCallback: (response) => any) {
         if (email === null || password === null) return false;
-        const authenticationResponse = (await this.loginClient.Login.RequestLogin(email, password)).data as Credentials;
-        return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
+        try {
+            const authenticationResponse = (await this.loginClient.Login.RequestLogin(email, password)).data as Credentials;
+            return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
+        } catch {
+            console.log("Error attempting to reach the server.")
+        }
     }
 
     async loginWithGoogle(oneTimeCode: string, accessToken: string, tokenId: string, callback: () => void, errorCallback: (response) => void) {
-        const authenticationResponse = (await this.loginClient.Login.RequestLoginWithGoogleToken(oneTimeCode, accessToken, tokenId)).data as Credentials;
-        return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
+
+        try {
+            const authenticationResponse = (await this.loginClient.Login.RequestLoginWithGoogleToken(oneTimeCode, accessToken, tokenId)).data as Credentials;
+            return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
+        } catch {
+            console.log("Error attempting to reach the server.")
+        }
     }
 
     async loginFromMemory(callback: any) {
