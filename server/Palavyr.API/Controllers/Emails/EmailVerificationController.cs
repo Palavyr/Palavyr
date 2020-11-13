@@ -106,7 +106,7 @@ namespace Palavyr.API.Controllers.Emails
                 }
             }
 
-            // unseen email address - start fresh.
+            // unseen email address - start fresh..
             result = await Verifier.VerifyEmailAddress(emailRequest.EmailAddress);
             if (!result) return EmailVerificationResponse.CreateNew(
                 Failed, 
