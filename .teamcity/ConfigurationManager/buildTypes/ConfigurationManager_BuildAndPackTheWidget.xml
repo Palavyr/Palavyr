@@ -31,7 +31,7 @@
           <param name="octopus_packageformat" value="Zip" />
           <param name="octopus_packageid" value="palavyr.widget" />
           <param name="octopus_packageoutputpath" value="widget\pack" />
-          <param name="octopus_packagesourcepath" value="widget\build" />
+          <param name="octopus_packagesourcepath" value="widget\dist" />
           <param name="octopus_packageversion" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
           <param name="octopus_publishartifacts" value="true" />
           <param name="teamcity.step.mode" value="default" />
