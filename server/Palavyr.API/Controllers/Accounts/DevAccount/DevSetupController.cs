@@ -37,7 +37,7 @@ namespace Palavyr.API.controllers.accounts.devAccount
         [HttpPut("{devKey}")]
         public void RefreshData(string devKey)
         {
-            var options = new CustomerListOptions { };
+            var options = new CustomerListOptions {};
             var service = new CustomerService(_stripeClient);
             StripeList<Customer> customers = service.List(options);
             foreach (var customer in customers)
