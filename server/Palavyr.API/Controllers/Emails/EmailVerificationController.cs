@@ -96,7 +96,7 @@ namespace Palavyr.API.Controllers.Emails
                     case (Success):
                         area.AreaSpecificEmail = emailRequest.EmailAddress;
                         area.EmailIsVerified = true;
-                        DashContext.SaveChangesAsync();
+                        await DashContext.SaveChangesAsync();
                         return EmailVerificationResponse.CreateNew(
                             Success, 
                             "This email has already been verified.",
@@ -116,7 +116,7 @@ namespace Palavyr.API.Controllers.Emails
             
             area.AreaSpecificEmail = emailRequest.EmailAddress;
             area.EmailIsVerified = false;
-            DashContext.SaveChangesAsync();
+            await DashContext.SaveChangesAsync();
             return EmailVerificationResponse.CreateNew(
                 Pending, 
                 "To complete email verification, go to your inbox and look for an email with the subject line 'Amazon Web Services – Email Address Verification Request' and click the verification link. This link will expire in 24 hours.", 

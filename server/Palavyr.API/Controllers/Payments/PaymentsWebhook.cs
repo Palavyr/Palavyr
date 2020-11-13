@@ -57,7 +57,7 @@ namespace Palavyr.API.Controllers.Payments
             }
             catch (Exception e)
             {
-                _logger.LogDebug("Webhook Failed");
+                _logger.LogDebug($"Webhook Failed: {e.Message}");
                 return BadRequest();
             }
 
@@ -135,7 +135,7 @@ namespace Palavyr.API.Controllers.Payments
                     account.PlanType = planEnum;
                     account.HasUpgraded = true;
                     account.PaymentInterval = paymentIntervalEnum;
-                    AccountContext.SaveChangesAsync();
+                    await AccountContext.SaveChangesAsync();
                     break;
 
                 
@@ -155,10 +155,9 @@ namespace Palavyr.API.Controllers.Payments
                     
                     // TODO: Request that the user update their payment information
                     // TODO: Let them know how long until service is shut off.
-                    
-                    return BadRequest(
-                        "TODO: Response that the invoice payment failed and they need to update their payment information.");
+
                     break;
+                    
                 
                 default:
                     _logger.LogDebug($"Event Type not recognized: {stripeEvent.Type}");

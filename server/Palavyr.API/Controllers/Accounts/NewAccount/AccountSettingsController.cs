@@ -147,7 +147,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
                     case (Success):
                         account.EmailAddress = emailRequest.EmailAddress;
                         account.DefaultEmailIsVerified = true;
-                        AccountContext.SaveChangesAsync();
+                        await AccountContext.SaveChangesAsync();
                         return EmailVerificationResponse.CreateNew(
                             Success,
                             "This email has already been verified.",
@@ -169,7 +169,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             account.EmailAddress = emailRequest.EmailAddress;
             account.DefaultEmailIsVerified = false;
 
-            AccountContext.SaveChangesAsync();
+            await AccountContext.SaveChangesAsync();
             return EmailVerificationResponse.CreateNew(
                 Pending,
                 "To complete email verification, go to your inbox and look for an email with the subject line 'Amazon Web Services – Email Address Verification Request' and click the verification link. This link will expire in 24 hours.",
@@ -245,7 +245,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             await FileIO.SaveFile(filepath, file);
             var account = await AccountContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
             account.AccountLogoUri = filepath;
-            AccountContext.SaveChangesAsync();
+            await AccountContext.SaveChangesAsync();
 
             var link = await UriUtils.CreateLogoImageLinkAsURI(
                 _logger,
