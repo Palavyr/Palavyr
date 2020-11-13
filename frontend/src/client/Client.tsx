@@ -135,7 +135,7 @@ export class ApiClient {
         },
 
         Account: {
-            getApiKey: async (): Promise<AxiosResponse> => this.client.get(`account/settings/apikey`),
+            getApiKey: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/apikey`),
             confirmEmailAddress: async (authToken: string): Promise<AxiosResponse> => this.client.post(`account/confirmation/${authToken}/action/setup`),
             checkIsActive: async (): Promise<AxiosResponse> => this.client.get(`account/isActive`),
 

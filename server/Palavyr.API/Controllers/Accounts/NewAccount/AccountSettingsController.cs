@@ -392,7 +392,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
         public string GetApiKey([FromHeader] string accountId)
         {
             var account = AccountContext.Accounts.Single(row => row.AccountId == accountId);
-            return account.ApiKey ?? "";
+            return account.ApiKey ?? "No Api Key Found";
         }
     }
 }

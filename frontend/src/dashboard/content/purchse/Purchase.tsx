@@ -206,8 +206,9 @@ const PurchaseInner = () => {
                                             color="primary"
                                             buttonText="Proceed to Stripe Checkout"
                                             onClick={async () => {
-                                                var sessionId = (await client.Purchase.Checkout.CreateCheckoutSession(priceId, cancelUrl, successUrl)).data.sessionId as string;
-                                                stripe!.redirectToCheckout({ sessionId: sessionId }).then(handleResult);
+                                                const { data } = (await client.Purchase.Checkout.CreateCheckoutSession(priceId, cancelUrl, successUrl));
+                                                const sessionId = data.sessionId as string;
+                                                if (stripe) stripe.redirectToCheckout({ sessionId: sessionId }).then(handleResult);
                                             }}
                                         />
                                     </div>

@@ -115,10 +115,25 @@ class Auth {
             window.gapi.auth2.init({ client_id: googleOAuthClientId, fetch_basic_profile: true });
             window.gapi.auth2.getAuthInstance().then((auth2) => {
                 auth2.signOut().then(async () => {
-                    await this.logout(callback);
+                    auth2.disconnect().then(
+                        await this.logout(callback)
+                    )
                 });
             });
         });
+
+        // window.gapi.load("auth2", () => {
+        //     window.gapi.auth2.init({ client_id: googleOAuthClientId, fetch_basic_profile: true });
+        //     window.gapi.auth2.getAuthInstance().then((auth2) => {
+        //         auth2.signOut().then(() => {
+        //             // auth2.disconnect().then(
+        //                 error(response));
+        //         // });
+        //     });
+        // });
+
+
+
     }
 
     isAuthenticated() {
