@@ -56,15 +56,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
     };
 
     const googleError = (response) => {
-        window.gapi.load("auth2", () => {
-            window.gapi.auth2.init({ client_id: googleOAuthClientId, fetch_basic_profile: true });
-            window.gapi.auth2.getAuthInstance().then((auth2) => {
-                auth2.signOut().then(() => {
-                    auth2.disconnect().then(
-                        error(response));
-                });
-            });
-        });
+        Auth.googleLogout(() => console.log(response));
     };
 
     const login = async () => {
@@ -102,6 +94,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
         }
     };
     const responseGoogle = async (res: GoogleAuthResponse) => {
+        console.log(`GoogleAuthResponse: ${res}`)
         if (res) {
             const response: GoogleResponse = {
                 tokenId: res.wc.id_token,
