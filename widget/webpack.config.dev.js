@@ -42,7 +42,6 @@ module.exports = (ENV) => {
       new HtmlWebpackPlugin(htmlOptions),
       new ForkTsCheckerWebpackPlugin(),
 
-
       new webpack.ProvidePlugin({
         'React': 'react'
       })

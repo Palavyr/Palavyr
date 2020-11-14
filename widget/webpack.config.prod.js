@@ -1,4 +1,3 @@
-'use strict'
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -20,6 +19,7 @@ module.exports = (ENV) => {
 
   return merge(common(ENV), {
     mode: 'production',
+    devtool: 'eval-source-map',
     plugins: [
       new CleanWebpackPlugin(),
       new MiniCssExtractPlugin({
@@ -32,18 +32,18 @@ module.exports = (ENV) => {
       new ForkTsCheckerWebpackPlugin(),
 
     ],
-    externals: {
-      react: {
-        commonjs: 'React',
-        commonjs2: 'react',
-        amd: 'react'
-      },
-      'react-dom': {
-        commonjs: 'ReactDOM',
-        commonjs2: 'react-dom',
-        amd: 'react-dom'
-      }
-    },
+    // externals: {
+    //   react: {
+    //     commonjs: 'React',
+    //     commonjs2: 'react',
+    //     amd: 'react'
+    //   },
+    //   'react-dom': {
+    //     commonjs: 'ReactDOM',
+    //     commonjs2: 'react-dom',
+    //     amd: 'react-dom'
+    //   }
+    // },
     optimization: {
       minimizer: [
         new UglifyJsPlugin({

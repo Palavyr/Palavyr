@@ -2,7 +2,6 @@ const path = require('path');
 const { createRules } = require('./webpack/rules')
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
-const webpack = require('webpack');
 
 module.exports = (ENV) => {
 
@@ -11,7 +10,7 @@ module.exports = (ENV) => {
 
     return {
         entry: {
-            "palavyr-build": './src/index.tsx',
+            "palavyr-widget-build": './src/index.tsx',
         },
         output: {
             filename: '[name].bundle.js',

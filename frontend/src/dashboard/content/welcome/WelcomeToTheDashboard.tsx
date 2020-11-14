@@ -77,7 +77,7 @@ export const WelcomeToTheDashboard = () => {
                     Palavyr is simple to configure, and even more simple to use.
                 </Typography>
                 <Typography style={{ padding: "2rem", fontSize: "16pt" }}>
-                    Follow these three <i>simple</i> steps to get started:
+                    Follow these three simple steps to get started:
                 </Typography>
                 <Divider />
                 <div className={classes.sectionDiv}>
