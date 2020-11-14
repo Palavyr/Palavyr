@@ -61,11 +61,16 @@ namespace PDFService
             var firstTable = companyTable.Select(el => new Dictionary<string, string>() {["th"] = el}).ToList();
             firstTable.Add(new Dictionary<string, string>() {["th"] = DateTime.Today.ToString()});
 
-            builder.Append(@"<section id='HEADER' style='display: inline-block'>");
-            builder.Append(@"<div style='height: 100%; float: left; text-align: center; margin-right: 10mm'>");
-            builder.Append(
-                $@"<img src='{imageUri}' style='width: 250px; height: 250px; vertical-align: middle; margin-left: 10mm'>");
-            builder.Append($@"</div>");
+            builder.Append(@"<section id='HEADER' style='display: inline-block; padding-left: .5in; padding-right: .5in;'>");
+
+            if (!string.IsNullOrWhiteSpace(imageUri))
+            {
+                builder.Append(@"<div style='height: 100%; float: left; text-align: center; margin-right: 10mm'>");
+                builder.Append(
+                    $@"<img src='{imageUri}' style='width: 250px; height: 250px; vertical-align: middle; margin-left: 10mm'>");
+                builder.Append($@"</div>");
+            }
+
             builder.Append($@"<div style='max-height: 100%; float: right;'>");
             builder.Append(SingleColTableGenerator(firstTable));
             builder.Append(TwoColTableGenerator(criticalTable));
@@ -78,8 +83,12 @@ namespace PDFService
         public static string GetHeader(UserAccount userAccount, CriticalResponses response)
         {
             var imageLocation = userAccount.AccountLogoUri ?? "";
-            var uri = new Uri(imageLocation);
-            var logoUri = uri.AbsoluteUri;
+            string logoUri = "";
+            if (!string.IsNullOrWhiteSpace(imageLocation))
+            {
+                var uri = new Uri(imageLocation);
+                logoUri = uri.AbsoluteUri;
+            }
             
             var companyDetails = new List<string>()
             {

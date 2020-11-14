@@ -1,6 +1,5 @@
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core";
 
-
 // colors
 const primary = "#97c6a3";
 const secondary = "#c6a397";
@@ -25,9 +24,52 @@ const xs = 0;
 // spacing
 const spacing = 8;
 
-const theme = createMuiTheme({});
+const theme = createMuiTheme({
+    overrides: {
+        MuiCssBaseline: {
+            "@global": {
+                "*": {
+                    "scrollbar-width": "thin",
+                },
+                "*::-webkit-scrollbar": {
+                    width: "4px",
+                    height: "4px",
+                },
+            },
+        },
+    },
+});
+
+// createMuiTheme({
+//     overrides: {
+//       MuiCssBaseline: {
+//         '@global': {
+//           '*': {
+//             'scrollbar-width': 'thin',
+//           },
+//           '*::-webkit-scrollbar': {
+//             width: '4px',
+//             height: '4px',
+//           }
+//         }
+//       }
+//     }
+//   })
 
 const Backuptheme = createMuiTheme({
+    // overrides: {
+    //     MuiCssBaseline: {
+    //         "@global": {
+    //             "*": {
+    //                 "scrollbar-width": "thin",
+    //             },
+    //             "*::-webkit-scrollbar": {
+    //                 width: "4px",
+    //                 height: "4px",
+    //             },
+    //         },
+    //     },
+    // },
     palette: {
         primary: { main: primary },
         secondary: { main: secondary },
@@ -38,7 +80,7 @@ const Backuptheme = createMuiTheme({
         warning: {
             light: warningLight,
             main: warningMain,
-            dark: warningDark
+            dark: warningDark,
         },
         // Used to shift a color's luminance by approximately
         // two indexes within its tonal palette.
@@ -47,7 +89,7 @@ const Backuptheme = createMuiTheme({
         background: {
             paper: "#54585A",
             // paper: "#E8E8E8",
-            default: background
+            default: background,
         },
         // spacing
     },
@@ -62,8 +104,8 @@ const Backuptheme = createMuiTheme({
             lg,
             md,
             sm,
-            xs
-        }
+            xs,
+        },
     },
     overrides: {
         // border: {
@@ -72,8 +114,8 @@ const Backuptheme = createMuiTheme({
         // },
         MuiExpansionPanel: {
             root: {
-                position: "static"
-            }
+                position: "static",
+            },
         },
         MuiTableCell: {
             root: {
@@ -82,15 +124,15 @@ const Backuptheme = createMuiTheme({
                 borderBottom: `${borderWidth}px solid ${borderColor}`,
                 [`@media (max-width:  ${sm}px)`]: {
                     paddingLeft: spacing,
-                    paddingRight: spacing
-                }
-            }
+                    paddingRight: spacing,
+                },
+            },
         },
         MuiDivider: {
             root: {
                 backgroundColor: borderColor,
-                height: borderWidth
-            }
+                height: borderWidth,
+            },
         },
         // MuiPrivateNotchedOutline: {
         //     root: {
@@ -99,36 +141,36 @@ const Backuptheme = createMuiTheme({
         // },
         MuiListItem: {
             divider: {
-                borderBottom: `${borderWidth}px solid ${borderColor}`
-            }
+                borderBottom: `${borderWidth}px solid ${borderColor}`,
+            },
         },
         MuiDialog: {
             paper: {
                 width: "100%",
                 maxWidth: 430,
                 marginLeft: spacing,
-                marginRight: spacing
-            }
+                marginRight: spacing,
+            },
         },
         MuiTooltip: {
             tooltip: {
-                backgroundColor: darkBlack
-            }
+                backgroundColor: darkBlack,
+            },
         },
         MuiExpansionPanelDetails: {
             root: {
                 [`@media (max-width:  ${sm}px)`]: {
                     paddingLeft: spacing,
-                    paddingRight: spacing
-                }
-            }
-        }
+                    paddingRight: spacing,
+                },
+            },
+        },
     },
     typography: {
         fontFamily: "'Quicksand', sans-serif",
         // fontFamily: "'Varela Round', sans-serif",
         // useNextVariants: true
-    }
+    },
 });
 
 export default responsiveFontSizes(theme);
