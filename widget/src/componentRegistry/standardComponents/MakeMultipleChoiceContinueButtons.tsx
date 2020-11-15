@@ -1,11 +1,18 @@
 import * as React from 'react';
 import { addResponseMessage, toggleInputDisabled } from 'src/widgetCore/store/dispatcher';
 import { getChildNodes } from '../utils';
-import { Table, TableRow, TableCell } from '@material-ui/core';
+import { Table, TableRow, TableCell, makeStyles } from '@material-ui/core';
 import { responseAction, IProgressTheChat, ConvoContextProperties } from '..';
 import { uuid } from 'uuidv4';
 import { MessageWrapper } from '../common';
 import { ResponseButton } from '../../common/ResponseButton';
+
+
+const useStyles = makeStyles(theme => ({
+    table: {
+        borderBottom: "none",
+    }
+}))
 
 
 export const makeMultipleChoiceContinueButtons = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
@@ -17,7 +24,8 @@ export const makeMultipleChoiceContinueButtons = ({ node, nodeList, client, conv
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0]; // only one should exist
     const valueOptions = node.valueOptions.split(",");
     const Component: React.ElementType<{}> = () => {
-        const noBorder = {borderBottom: "none"}
+        const cls = useStyles();
+
         return (
 
             <MessageWrapper>
@@ -26,7 +34,7 @@ export const makeMultipleChoiceContinueButtons = ({ node, nodeList, client, conv
                         {
                             valueOptions.map((valueOption: string) => {
                                 return (
-                                    <TableCell style={noBorder}>
+                                    <TableCell className={cls.table}>
                                         <ResponseButton
                                             key={valueOption + "-" + uuid()}
                                             text={valueOption}

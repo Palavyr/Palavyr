@@ -6,8 +6,10 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: "#f4f7f9",
         borderRadius: "10px",
         padding: "15px",
-        maxWidth: "215px",
+        // maxWidth: "215px",
+        maxWidth: "70%",
         textAlign: "left",
+        overflowX: "scroll"
     }
 }))
 

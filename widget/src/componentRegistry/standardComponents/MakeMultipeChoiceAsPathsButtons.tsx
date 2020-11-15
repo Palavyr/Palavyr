@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ConvoTableRow } from '../../types';
 import { addResponseMessage, toggleInputDisabled } from 'src/widgetCore/store/dispatcher';
 import { getChildNodes } from '../utils';
-import { TableRow, TableCell, Table } from '@material-ui/core';
+import { TableRow, TableCell, Table, makeStyles } from '@material-ui/core';
 import { responseAction, IProgressTheChat } from '..';
 import { ResponseButton } from '../../common/ResponseButton';
 import { MessageWrapper } from '../common';
@@ -28,6 +28,11 @@ const sortChildrenByOptions = (children: ConvoTableRow[]) => {
       });
 }
 
+const useStyles = makeStyles(theme => ({
+    table: {
+        borderBottom: "none",
+    }
+}))
 
 
 export const makeMultipleChoiceAsPathButtons = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
@@ -39,7 +44,7 @@ export const makeMultipleChoiceAsPathButtons = ({ node, nodeList, client, convoI
     const sortedChildren = sortChildrenByOptions(children);
 
     const Component: React.ElementType<{}> = () => {
-        const noBorder = {borderBottom: "none"}
+        const cls = useStyles();
         return (
             <MessageWrapper>
                 <Table>
@@ -47,7 +52,7 @@ export const makeMultipleChoiceAsPathButtons = ({ node, nodeList, client, convoI
                         {
                             sortedChildren.map((child: ConvoTableRow) => {
                                 return (
-                                    <TableCell style={noBorder}>
+                                    <TableCell className={cls.table}>
                                         <ResponseButton
                                             key={child.id}
                                             text={child.optionPath}

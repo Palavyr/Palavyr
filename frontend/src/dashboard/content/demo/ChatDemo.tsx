@@ -238,7 +238,6 @@ export const ChatDemo = () => {
 
                 <Grid className={classNames(classes.grid)} container>
                     <Paper className={classes.formroot}>
-                        {/* <Typography variant="h4" className={classes.customizetext}>Customize your widget</Typography> */}
                         <div className={classes.editorContainer}>
                             <HeaderEditor setEditorState={setHeader} initialData={initialHeader} label="Header" />
                         </div>
@@ -282,21 +281,6 @@ export const ChatDemo = () => {
                                 value={placeholder}
                                 onChange={(e) => setPlaceholder(e.target.value)}
                             />
-
-                            <TextField
-                                disabled
-                                id="standard-full-width-optionslistcolor"
-                                style={{ margin: 3, marginBottom: "1.6rem", alignSelf: "flex-start" }}
-                                placeholder=""
-                                helperText="Options List Color"
-                                fullWidth
-                                margin="normal"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                value={selectListColor}
-                                onChange={(e) => setListColor(e.target.value)}
-                            />
                             <TextField
                                 disabled
                                 id="standard-full-width-header-color"
@@ -310,6 +294,20 @@ export const ChatDemo = () => {
                                 }}
                                 value={headerColor}
                                 onChange={(e) => setHeaderColor(e.target.value)}
+                            />
+                            <TextField
+                                disabled
+                                id="standard-full-width-optionslistcolor"
+                                style={{ margin: 3, marginBottom: "1.6rem", alignSelf: "flex-start" }}
+                                placeholder=""
+                                helperText="Options List Color"
+                                fullWidth
+                                margin="normal"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                value={selectListColor}
+                                onChange={(e) => setListColor(e.target.value)}
                             />
                             <CustomSelect
                                 option={fontFamily}

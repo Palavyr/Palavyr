@@ -45,6 +45,6 @@ export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, incompleteAreas }: 
         }
     }, [iframeRefreshed])
 
-    return <iframe id="chatDemoIframe" title="demo" className={classes.frame} src={url} allowTransparency={true} style={{background: "#FFFFFF"}}></iframe>
+    return <iframe id="chatDemoIframe" title="demo" className={classes.frame} src={url} style={{background: "#FFFFFF"}}></iframe>
 
 }
