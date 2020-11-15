@@ -2,7 +2,7 @@ import axios, { AxiosResponse, AxiosInstance } from "axios";
 import { TableData } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/tableComponents/SelectOneFlat/SelectOneFlatTypes";
 import { serverUrl, getSessionIdFromLocalStorage, SPECIAL_HEADERS, getJwtTokenFromLocalStorage } from "./clientUtils";
 import { DynamicTableMetas, DynamicTableMeta, StaticTableMetas, staticTableMetaTemplate, Conversation, ConvoTableRow, Areas, Prices } from "@Palavyr-Types";
-import { WidgetPreferences } from "dashboard/content/demo/ChatDemo";
+import { PreCheckResult, WidgetPreferences } from "dashboard/content/demo/ChatDemo";
 
 export class ApiClient {
     private client: AxiosInstance;
@@ -124,8 +124,8 @@ export class ApiClient {
     };
 
     public WidgetDemo = {
-        RunConversationPrecheck: async (): Promise<AxiosResponse> => this.client.get(`widgetconfig/demo/precheck`),
-        GetWidetPreferences: async (): Promise<AxiosResponse> => this.client.get(`widgetconfig/preferences`),
+        RunConversationPrecheck: async (): Promise<AxiosResponse<PreCheckResult>> => this.client.get(`widgetconfig/demo/precheck`),
+        GetWidetPreferences: async (): Promise<AxiosResponse<WidgetPreferences>> => this.client.get(`widgetconfig/preferences`),
         SaveWidgetPreferences: async (prefs: WidgetPreferences): Promise<AxiosResponse> => this.client.put(`widgetconfig/preferences`, prefs),
     };
 

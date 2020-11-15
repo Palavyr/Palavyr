@@ -115,7 +115,6 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-interface IChatDemo extends IGetHelp {}
 
 export const ChatDemo = () => {
     var client = new ApiClient();
@@ -138,7 +137,7 @@ export const ChatDemo = () => {
     const classes = useStyles(incompleteAreas.length > 0);
 
     const loadMissingNodes = useCallback(async () => {
-        var PreCheckResult = (await client.WidgetDemo.RunConversationPrecheck()).data as PreCheckResult;
+        var {data: PreCheckResult} = await client.WidgetDemo.RunConversationPrecheck();
         if (!PreCheckResult.isReady) {
             var areas = PreCheckResult.incompleteAreas.map((x: AreaTable) => {
                 return {
@@ -169,27 +168,34 @@ export const ChatDemo = () => {
         loadMissingNodes();
     }, [loadMissingNodes])
 
-    const loadApiKey = useCallback(async () => {
-        var res = await client.Settings.Account.getApiKey();
-        var apiKey = res.data as string;
-        setApiKey(apiKey);
-    }, [])
+    // const loadApiKey = useCallback(async () => {
+    //     var res = await client.Settings.Account.getApiKey();
+    //     var apiKey = res.data as string;
+    //     setApiKey(apiKey);
+    // }, [])
 
     const loadPrefs = useCallback(async () => {
-        var prefs = (await client.WidgetDemo.GetWidetPreferences()).data as WidgetPreferences;
-        setInitialHeader(prefs.header);
-        setListColor(prefs.selectListColor);
-        setHeaderColor(prefs.headerColor);
-        setFontFamily(prefs.fontFamily);
-        setTitle(prefs.title);
-        setSubTitle(prefs.subtitle);
-        setPlaceholder(prefs.placeholder);
+        var {data: key} = await client.Settings.Account.getApiKey();
+        // var apiKey = res.data as string;
+        setApiKey(key);
+
+        var {data: prefs} = await client.WidgetDemo.GetWidetPreferences();
+        const {header, selectListColor, headerColor, fontFamily, title, subtitle, placeholder} = prefs;
+        setInitialHeader(header);
+        setListColor(selectListColor);
+        setHeaderColor(headerColor);
+        setFontFamily(fontFamily);
+        setTitle(title);
+        setSubTitle(subtitle);
+        setPlaceholder(placeholder);
     }, [])
 
     useEffect(() => {
-        loadApiKey();
+        // loadApiKey();
         loadPrefs();
-    }, [loadApiKey, loadPrefs])
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <>
