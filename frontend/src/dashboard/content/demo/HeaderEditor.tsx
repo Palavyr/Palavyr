@@ -22,7 +22,7 @@ interface IEditor {
 export const HeaderEditor = ({ setEditorState, initialData, label }: IEditor) => {
 
     const classes = useStyles();
-    const initData = cloneDeep(initialData);
+    const initData = cloneDeep(initialData ?? "");
 
     return (
         <>
