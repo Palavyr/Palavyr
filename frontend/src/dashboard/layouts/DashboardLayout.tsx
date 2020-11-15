@@ -130,7 +130,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
         setSidebarIds(newIds);
 
-        history.push(`/dashboard/editor/${newArea.areaIdentifier}?tab=0`);
+        history.push(`/dashboard/editor/email/${newArea.areaIdentifier}?tab=0`);
     };
 
     const handleDrawerClose: () => void = () => {

@@ -85,7 +85,6 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames}: ISideBarMenu) => {
                     })}
                     <ListItem disabled={!isActive} button key="New Area" onClick={() => {
                         checkAreaCount();
-
                     }}>
                         <ListItemIcon onClick={checkAreaCount}>
                             <AddCircleOutlineIcon className={classes.icon} />
