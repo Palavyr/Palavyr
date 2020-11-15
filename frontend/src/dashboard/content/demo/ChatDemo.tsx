@@ -6,19 +6,19 @@ import { widgetUrl } from "@api-client/clientUtils";
 import classNames from "classnames";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { HeaderEditor } from "./HeaderEditor";
-import { ChromePicker } from 'react-color';
+import { ChromePicker } from "react-color";
 import { IFrame } from "./IFrame";
-
+import { CustomSelect } from "../responseConfiguration/response/tables/dynamicTable/CustomSelect";
 
 export type PreCheckResult = {
     isReady: boolean;
-    incompleteAreas: Array<AreaTable>
-}
+    incompleteAreas: Array<AreaTable>;
+};
 
 export type IncompleteAreas = {
     areaDisplayTitle: string;
     areaName: string;
-}
+};
 export type WidgetPreferences = {
     selectListColor: string;
     headerColor: string;
@@ -27,16 +27,16 @@ export type WidgetPreferences = {
     title: string;
     subtitle: string;
     placeholder: string;
-}
+};
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     formroot: {
-        display: 'flex',
-        flexWrap: 'wrap',
+        display: "flex",
+        flexWrap: "wrap",
         width: "100%",
         paddingLeft: "1.4rem",
         paddingRight: "2.3rem",
-        justifyContent: "center"
+        justifyContent: "center",
     },
     paper: {
         alignItems: "center",
@@ -47,10 +47,10 @@ const useStyles = makeStyles(theme => ({
     grid: {
         border: "0px solid black",
         display: "flex",
-        justifyContent: "center"
+        justifyContent: "center",
     },
     container: {
-        height: "100%"
+        height: "100%",
     },
     widgetcell: {
         display: "flex",
@@ -80,29 +80,28 @@ const useStyles = makeStyles(theme => ({
         justifyContent: "flex-start",
     },
     editorContainer: {
-        width: "100%"
+        width: "100%",
     },
     customizetext: {
         paddingTop: "1.8rem",
-        paddingBottom: "1.8rem"
+        paddingBottom: "1.8rem",
     },
     tablegrid: {
         paddingRight: "20%",
-        paddingLeft: "20%"
+        paddingLeft: "20%",
     },
     cell: {
-        borderBottom: "1px solid lightgray"
+        borderBottom: "1px solid lightgray",
     },
     centerText: {
         textAlign: "center",
         justifyContent: "flex-end",
         alignSelf: "center",
-        alignItems: "center"
+        alignItems: "center",
     },
     div: {
         display: "flex",
         flexDirection: "column",
-
     },
     colorpicker: {
         paddingBottom: "1rem",
@@ -111,10 +110,9 @@ const useStyles = makeStyles(theme => ({
         borderLeft: "1px solid black",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center"
-    }
-}))
-
+        alignItems: "center",
+    },
+}));
 
 export const ChatDemo = () => {
     var client = new ApiClient();
@@ -137,17 +135,17 @@ export const ChatDemo = () => {
     const classes = useStyles(incompleteAreas.length > 0);
 
     const loadMissingNodes = useCallback(async () => {
-        var {data: PreCheckResult} = await client.WidgetDemo.RunConversationPrecheck();
+        const { data: PreCheckResult } = await client.WidgetDemo.RunConversationPrecheck();
         if (!PreCheckResult.isReady) {
-            var areas = PreCheckResult.incompleteAreas.map((x: AreaTable) => {
+            const areas = PreCheckResult.incompleteAreas.map((x: AreaTable) => {
                 return {
                     areaDisplayTitle: x.areaDisplayTitle,
-                    areaName: x.areaName
-                }
-            })
-            setIncompleteAreas(areas)
+                    areaName: x.areaName,
+                };
+            });
+            setIncompleteAreas(areas);
         }
-    }, [])
+    }, []);
 
     const savePrefs = async () => {
         const prefs: WidgetPreferences = {
@@ -157,24 +155,22 @@ export const ChatDemo = () => {
             header: header,
             title: title,
             subtitle: subTitle,
-            placeholder: placeholder
-        }
-        var res = await client.WidgetDemo.SaveWidgetPreferences(prefs);
+            placeholder: placeholder,
+        };
+        const res = await client.WidgetDemo.SaveWidgetPreferences(prefs);
         reloadIframe(!iframeRefreshed);
-
-    }
+    };
 
     useEffect(() => {
         loadMissingNodes();
-    }, [loadMissingNodes])
-
+    }, [loadMissingNodes]);
 
     const loadDemoWidget = useCallback(async () => {
-        var {data: key} = await client.Settings.Account.getApiKey();
+        const { data: key } = await client.Settings.Account.getApiKey();
         setApiKey(key);
 
-        var {data: prefs} = await client.WidgetDemo.GetWidetPreferences();
-        const {header, selectListColor, headerColor, fontFamily, title, subtitle, placeholder} = prefs;
+        const { data: prefs } = await client.WidgetDemo.GetWidetPreferences();
+        const { header, selectListColor, headerColor, fontFamily, title, subtitle, placeholder } = prefs;
         setInitialHeader(header);
         setListColor(selectListColor);
         setHeaderColor(headerColor);
@@ -182,60 +178,67 @@ export const ChatDemo = () => {
         setTitle(title);
         setSubTitle(subtitle);
         setPlaceholder(placeholder);
-    }, [])
+    }, []);
 
     useEffect(() => {
         loadDemoWidget();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, []);
+
+    const supporteFonts = ["Architects Daughter"];
 
     return (
         <>
-            {
-                incompleteAreas.length > 0 &&
-                <Grid className={classes.uppercell} >
+            {incompleteAreas.length > 0 && (
+                <Grid className={classes.uppercell}>
                     <Grid className={classes.tablegrid}>
-                        <Typography style={{ paddingBottom: "1rem" }} align="center" variant="h6" >Areas in need of attention:</Typography>
+                        <Typography style={{ paddingBottom: "1rem" }} align="center" variant="h6">
+                            Areas in need of attention:
+                        </Typography>
                         <Table className={classes.table}>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell className={classes.cell} width="50%" align="center"><Typography variant="h6">Area Name</Typography></TableCell>
-                                    <TableCell className={classes.cell} width="50%" align="center"><Typography variant="h6">Area Title</Typography></TableCell>
+                                    <TableCell className={classes.cell} width="50%" align="center">
+                                        <Typography variant="h6">Area Name</Typography>
+                                    </TableCell>
+                                    <TableCell className={classes.cell} width="50%" align="center">
+                                        <Typography variant="h6">Area Title</Typography>
+                                    </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {
-                                    incompleteAreas.map((area, index) => {
-                                        return (
-                                            <TableRow>
-                                                <TableCell key={area.areaName} className={classes.cell} width="50%" align="center"><Typography>{area.areaName}</Typography></TableCell>
-                                                <TableCell key={index} className={classes.cell} width="50%" align="center"><Typography>{area.areaDisplayTitle}</Typography></TableCell>
-                                            </TableRow>
-                                        )
-
-                                    })
-                                }
+                                {incompleteAreas.map((area, index) => {
+                                    return (
+                                        <TableRow>
+                                            <TableCell key={area.areaName} className={classes.cell} width="50%" align="center">
+                                                <Typography>{area.areaName}</Typography>
+                                            </TableCell>
+                                            <TableCell key={index} className={classes.cell} width="50%" align="center">
+                                                <Typography>{area.areaDisplayTitle}</Typography>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
                             </TableBody>
                         </Table>
                     </Grid>
                 </Grid>
-            }
+            )}
+            <Typography align="center" variant="h4" className={classes.customizetext}>
+                Customize your widget
+            </Typography>
+            <Divider />
             <Grid className={classNames(classes.grid, classes.container, classes.lowercell)} container>
                 <Grid className={classNames(classes.grid, classes.widgetcell)} item xs={6}>
-                    <Paper className={classes.paper} >
-                        {
-                            incompleteAreas.length > 0
-                            && <Typography style={{ paddingTop: "2rem", paddingBottom: "2rem", color: "white" }}>The Demo will load once you've fully assembled each of your areas!</Typography>
-                        }
-                        <div>
-                            {apiKey && <IFrame widgetUrl={widgetUrl} apiKey={apiKey} iframeRefreshed={iframeRefreshed} incompleteAreas={incompleteAreas} />}
-                        </div>
+                    <Paper className={classes.paper}>
+                        {incompleteAreas.length > 0 && <Typography style={{ paddingTop: "2rem", paddingBottom: "2rem", color: "white" }}>The Demo will load once you've fully assembled each of your areas!</Typography>}
+                        <div>{apiKey && <IFrame widgetUrl={widgetUrl} apiKey={apiKey} iframeRefreshed={iframeRefreshed} incompleteAreas={incompleteAreas} />}</div>
                     </Paper>
                 </Grid>
 
                 <Grid className={classNames(classes.grid)} container>
                     <Paper className={classes.formroot}>
-                        <Typography variant="h4" className={classes.customizetext}>Customize your widget</Typography>
+                        {/* <Typography variant="h4" className={classes.customizetext}>Customize your widget</Typography> */}
                         <div className={classes.editorContainer}>
                             <HeaderEditor setEditorState={setHeader} initialData={initialHeader} label="Header" />
                         </div>
@@ -281,6 +284,7 @@ export const ChatDemo = () => {
                             />
 
                             <TextField
+                                disabled
                                 id="standard-full-width-optionslistcolor"
                                 style={{ margin: 3, marginBottom: "1.6rem", alignSelf: "flex-start" }}
                                 placeholder=""
@@ -294,6 +298,7 @@ export const ChatDemo = () => {
                                 onChange={(e) => setListColor(e.target.value)}
                             />
                             <TextField
+                                disabled
                                 id="standard-full-width-header-color"
                                 style={{ margin: 3, marginBottom: "1.6rem" }}
                                 placeholder=""
@@ -306,24 +311,19 @@ export const ChatDemo = () => {
                                 value={headerColor}
                                 onChange={(e) => setHeaderColor(e.target.value)}
                             />
-                            <TextField
-                                id="standard-full-width-fontfamily"
-                                style={{ margin: 3, marginBottom: "1.6rem" }}
-                                placeholder=""
+                            <CustomSelect
+                                option={fontFamily}
+                                options={supporteFonts}
                                 helperText="Font Family"
-                                fullWidth
-                                margin="normal"
-                                InputLabelProps={{
-                                    shrink: true,
+                                width="50%"
+                                align="left"
+                                onChange={(event) => {
+                                    const newFont = event.target.value as string;
+                                    setFontFamily(newFont);
                                 }}
-                                value={fontFamily}
-                                onChange={(e) => setFontFamily(e.target.value)}
                             />
                             <div className={classes.actions}>
-                                <SaveOrCancel
-                                    size="large"
-                                    onSave={() => savePrefs()}
-                                />
+                                <SaveOrCancel size="large" onSave={() => savePrefs()} />
                             </div>
                         </Grid>
                         <Grid item xs={6} className={classes.centerText}>
@@ -338,10 +338,9 @@ export const ChatDemo = () => {
                                 </div>
                             </div>
                         </Grid>
-
                     </Paper>
                 </Grid>
             </Grid>
         </>
-    )
-}
+    );
+};

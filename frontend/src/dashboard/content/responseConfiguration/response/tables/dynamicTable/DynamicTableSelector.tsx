@@ -25,6 +25,6 @@ export const DynamicTableSelector = ({selection, setSelection, handleChange, cur
 
     return (
         <div style={selectStyle}>
-            <CustomSelect onChange={handleChange} option={selection} options={tableOptions} />
+            <CustomSelect onChange={handleChange} option={selection} options={tableOptions} minWidth={120} helperText="Select table type"/>
         </div>);
 };

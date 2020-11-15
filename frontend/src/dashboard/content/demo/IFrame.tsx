@@ -22,10 +22,10 @@ interface IIframe {
     incompleteAreas: Array<IncompleteAreas>;
 }
 
-function useForceUpdate() {
-    const [value, setValue] = useState(0); // integer state
-    return () => setValue(value => ++value); // update the state to force render
-}
+// function useForceUpdate() {
+//     const [value, setValue] = useState(0); // integer state
+//     return () => setValue(value => ++value); // update the state to force render
+// }
 
 type Iframe = HTMLElement & {
     src: string;
@@ -45,6 +45,6 @@ export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, incompleteAreas }: 
         }
     }, [iframeRefreshed])
 
-    return <iframe id="chatDemoIframe" title="demo" className={classes.frame} src={url}></iframe>
+    return <iframe id="chatDemoIframe" title="demo" className={classes.frame} src={url} allowTransparency={true} style={{background: "#FFFFFF"}}></iframe>
 
 }
