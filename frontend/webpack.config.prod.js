@@ -5,6 +5,6 @@ module.exports = (ENV) => {
 
     return merge(common(ENV), {
         mode: "production",
-        // devtool: 'source-map' // Don't really need this source map
+        devtool: 'source-map' // Don't really need this source map
     })
 }

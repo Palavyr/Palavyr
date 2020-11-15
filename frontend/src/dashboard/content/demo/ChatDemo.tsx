@@ -235,7 +235,7 @@ export const ChatDemo = () => {
                     </Paper>
                 </Grid>
 
-                <Grid className={classNames(classes.grid)} container xs={6}>
+                <Grid className={classNames(classes.grid)} container>
                     <Paper className={classes.formroot}>
                         <Typography variant="h4" className={classes.customizetext}>Customize your widget</Typography>
                         <div className={classes.editorContainer}>
@@ -243,7 +243,7 @@ export const ChatDemo = () => {
                         </div>
                         <Grid item xs={6}>
                             <TextField
-                                id="standard-full-width"
+                                id="standard-full-width-title"
                                 style={{ margin: 3, marginBottom: "1.6rem", marginTop: "1rem" }}
                                 placeholder=""
                                 helperText="Title"
@@ -256,7 +256,7 @@ export const ChatDemo = () => {
                                 onChange={(e) => setTitle(e.target.value)}
                             />
                             <TextField
-                                id="standard-full-width"
+                                id="standard-full-width-subtitle"
                                 style={{ margin: 3, marginBottom: "1.6rem" }}
                                 placeholder=""
                                 helperText="Subtitle"
@@ -269,7 +269,7 @@ export const ChatDemo = () => {
                                 onChange={(e) => setSubTitle(e.target.value)}
                             />
                             <TextField
-                                id="standard-full-width"
+                                id="standard-full-width-placeholder"
                                 style={{ margin: 3, marginBottom: "1.6rem" }}
                                 placeholder=""
                                 helperText="Placeholder"
@@ -283,7 +283,7 @@ export const ChatDemo = () => {
                             />
 
                             <TextField
-                                id="standard-full-width"
+                                id="standard-full-width-optionslistcolor"
                                 style={{ margin: 3, marginBottom: "1.6rem", alignSelf: "flex-start" }}
                                 placeholder=""
                                 helperText="Options List Color"
@@ -296,7 +296,7 @@ export const ChatDemo = () => {
                                 onChange={(e) => setListColor(e.target.value)}
                             />
                             <TextField
-                                id="standard-full-width"
+                                id="standard-full-width-header-color"
                                 style={{ margin: 3, marginBottom: "1.6rem" }}
                                 placeholder=""
                                 helperText="Header Color"
@@ -309,7 +309,7 @@ export const ChatDemo = () => {
                                 onChange={(e) => setHeaderColor(e.target.value)}
                             />
                             <TextField
-                                id="standard-full-width"
+                                id="standard-full-width-fontfamily"
                                 style={{ margin: 3, marginBottom: "1.6rem" }}
                                 placeholder=""
                                 helperText="Font Family"

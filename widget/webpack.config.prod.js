@@ -19,7 +19,7 @@ module.exports = (ENV) => {
 
   return merge(common(ENV), {
     mode: 'production',
-    devtool: 'eval-source-map',
+    devtool: 'source-map', // Don't really need this source map
     plugins: [
       new CleanWebpackPlugin(),
       new MiniCssExtractPlugin({
