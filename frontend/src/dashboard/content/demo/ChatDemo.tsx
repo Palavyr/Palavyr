@@ -137,7 +137,7 @@ export const ChatDemo = () => {
     const classes = useStyles(incompleteAreas.length > 0);
 
     const loadMissingNodes = useCallback(async () => {
-        var {data: PreCheckResult} = await client.WidgetDemo.RunConversationPrecheck();
+        var {data: PreCheckResult} = (await client.WidgetDemo.RunConversationPrecheck();
         if (!PreCheckResult.isReady) {
             var areas = PreCheckResult.incompleteAreas.map((x: AreaTable) => {
                 return {
@@ -168,15 +168,9 @@ export const ChatDemo = () => {
         loadMissingNodes();
     }, [loadMissingNodes])
 
-    // const loadApiKey = useCallback(async () => {
-    //     var res = await client.Settings.Account.getApiKey();
-    //     var apiKey = res.data as string;
-    //     setApiKey(apiKey);
-    // }, [])
 
-    const loadPrefs = useCallback(async () => {
+    const loadDemoWidget = useCallback(async () => {
         var {data: key} = await client.Settings.Account.getApiKey();
-        // var apiKey = res.data as string;
         setApiKey(key);
 
         var {data: prefs} = await client.WidgetDemo.GetWidetPreferences();
@@ -191,9 +185,7 @@ export const ChatDemo = () => {
     }, [])
 
     useEffect(() => {
-        // loadApiKey();
-        loadPrefs();
-
+        loadDemoWidget();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -337,12 +329,12 @@ export const ChatDemo = () => {
                         <Grid item xs={6} className={classes.centerText}>
                             <div className={classes.colorpicker}>
                                 <div className={classes.div}>
-                                    <Typography variant="h6">Options Menu Color</Typography>
-                                    <ChromePicker disableAlpha color={selectListColor} onChangeComplete={(color) => setListColor(color.hex)} />
+                                    <Typography variant="h6">Chat Header Color</Typography>
+                                    {headerColor && <ChromePicker disableAlpha color={headerColor} onChangeComplete={(color) => setHeaderColor(color.hex)} />}
                                 </div>
                                 <div className={classes.div} style={{ paddingTop: "1rem" }}>
-                                    <Typography variant="h6">Chat Header Color</Typography>
-                                    <ChromePicker disableAlpha color={headerColor} onChangeComplete={(color) => setHeaderColor(color.hex)} />
+                                    <Typography variant="h6">Options Menu Color</Typography>
+                                    {selectListColor && <ChromePicker disableAlpha color={selectListColor} onChangeComplete={(color) => setListColor(color.hex)} />}
                                 </div>
                             </div>
                         </Grid>
