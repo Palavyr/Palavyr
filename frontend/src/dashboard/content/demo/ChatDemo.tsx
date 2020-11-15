@@ -137,7 +137,7 @@ export const ChatDemo = () => {
     const classes = useStyles(incompleteAreas.length > 0);
 
     const loadMissingNodes = useCallback(async () => {
-        var {data: PreCheckResult} = (await client.WidgetDemo.RunConversationPrecheck();
+        var {data: PreCheckResult} = await client.WidgetDemo.RunConversationPrecheck();
         if (!PreCheckResult.isReady) {
             var areas = PreCheckResult.incompleteAreas.map((x: AreaTable) => {
                 return {
