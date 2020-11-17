@@ -66,7 +66,7 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
 
     const defaultSuccess = () => {
         setTimeout(() => {
-            history.push("/dashboard/editor");
+            history.push("/dashboard/confirm");
         }, 150);
     }
 
@@ -177,9 +177,8 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
     }, [])
 
     const responseGoogleFailure = () => {
-        alert("Google rego failed.")
+        Auth.googleLogout(() => null);
     }
-
 
     return (
         <FormDialog

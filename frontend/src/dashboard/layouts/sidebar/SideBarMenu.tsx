@@ -170,15 +170,16 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames}: ISideBarMenu) => {
                     button
                     key={1003}
                     onClick={() => {
+                        Auth.PerformLogout(() => history.push("/"))
 
-                        const loginType = LocalStorage.getLoginType();
+                        // const loginType = LocalStorage.getLoginType();
 
-                        if (loginType === LocalStorage.GoogleLoginType) {
-                            Auth.googleLogout(() => history.push("/"));
-                        } else {
-                            console.log("Logging Out");
-                            Auth.logout(() => history.push("/"));
-                        }
+                        // if (loginType === LocalStorage.GoogleLoginType) {
+                        //     Auth.googleLogout(() => history.push("/"));
+                        // } else {
+                        //     console.log("Logging Out");
+                        //     Auth.logout(() => history.push("/"));
+                        // }
                     }}
 
                 >

@@ -9,6 +9,7 @@ import { makeStyles } from "@material-ui/core";
 import { GoogleAuthResponse } from "@Palavyr-Types";
 import { LocalStorage } from "localStorage/localStorage";
 import { googleOAuthClientId } from "@api-client/clientUtils";
+import { GoogleLoginResponseOffline } from "react-google-login";
 
 export type GoogleResponse = {
     tokenId: string;
@@ -83,6 +84,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
     };
 
     const googleLogin = async (response: GoogleResponse) => {
+        Auth.ClearAuthentication();
         setIsLoading(true);
         setStatus(null);
         var successfulResponse = await Auth.loginWithGoogle(response.tokenId, response.accessToken, response.googleId, success, googleError);
@@ -94,13 +96,24 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
         }
     };
     const responseGoogle = async (res: GoogleAuthResponse) => {
-        console.log(`GoogleAuthResponse: ${res}`)
-        if (res) {
-            const response: GoogleResponse = {
-                tokenId: res.wc.id_token,
-                accessToken: res.wc.access_token,
-                googleId: res.tt.CT,
-            };
+        Auth.ClearAuthentication();
+        console.log(`GoogleAuthResponse: ${res}`);
+        if (res !== null) {
+            let response: GoogleResponse;
+            if (res.wc === undefined) {
+                response = {
+                    tokenId: res.xc.id_token,
+                    accessToken: res.xc.access_token,
+                    googleId: ""
+                };
+            } else {
+                response = {
+                    tokenId: res.wc.id_token,
+                    accessToken: res.wc.access_token,
+                    googleId: res.tt.CT,
+                };
+            }
+
             LocalStorage.setGoogleImage(res.tt.OJ);
             LocalStorage.setGoogleLoginType();
             await googleLogin(response);

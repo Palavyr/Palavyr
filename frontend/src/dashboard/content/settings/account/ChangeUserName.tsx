@@ -3,19 +3,20 @@ import React, { useCallback, useEffect } from "react";
 import { Grid } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
+import { useState } from "react";
 
 
 export const ChangeUserName = () => {
     var client = new ApiClient();
 
-    const [, setLoaded] = React.useState<boolean>(false);
-    const [UserName, setUserName] = React.useState<string>("");
+    const [, setLoaded] = useState<boolean>(false);
+    const [UserName, setUserName] = useState<string>("");
 
-    const [alertState, setAlert] = React.useState<boolean>(false);
+    const [alertState, setAlert] = useState<boolean>(false);
 
     const loadUserName = useCallback(async () => {
-        var res = await client.Settings.Account.getUserName();
-        setUserName(res.data);
+        var {data: username} = await client.Settings.Account.getUserName();
+        setUserName(username);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

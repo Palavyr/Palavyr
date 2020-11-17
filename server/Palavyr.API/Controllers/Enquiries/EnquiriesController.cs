@@ -50,12 +50,12 @@ namespace Palavyr.API.Controllers
         }
         
         [HttpPut("update/{conversationId}")]
-        public StatusCodeResult UpdateCompletedConversation(string conversationId)
+        public IActionResult UpdateCompletedConversation(string conversationId)
         {
             var convo = ConvoContext.CompletedConversations.Single(row => row.ConversationId == conversationId);
             convo.Seen = !convo.Seen;
             ConvoContext.SaveChanges();
-            return new OkResult();
+            return Ok();
         }
     
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -35,16 +36,15 @@ namespace Palavyr.API.controllers.accounts.devAccount
 
         [AllowAnonymous]
         [HttpPut("{devKey}")]
-        public void RefreshData(string devKey)
+        public async Task RefreshData(string devKey)
         {
             var options = new CustomerListOptions {};
             var service = new CustomerService(_stripeClient);
-            StripeList<Customer> customers = service.List(options);
+            var customers = await service.ListAsync(options);
             foreach (var customer in customers)
             {
-                service.Delete(customer.Id);
+                await service.DeleteAsync(customer.Id);
             }
-
 
             if (devKey != "secretTobyface")
                 _logger.LogDebug("This is an attempt to Refresh database data.");
@@ -77,7 +77,7 @@ namespace Palavyr.API.controllers.accounts.devAccount
                 _logger.LogDebug("Trying to Deleting All Data currently in the database!");
                 Console.WriteLine("Trying to Deleting All Data currently in the database!");
 
-                DeleteAllData();
+                await DeleteAllData();
             }
             catch (Exception ex)
             {
@@ -88,7 +88,7 @@ namespace Palavyr.API.controllers.accounts.devAccount
             try
             {
                 _logger.LogDebug("-----Attempting to populate with dev data...");
-                PopulateDBs(devData);
+                await PopulateDBs(devData);
             }
             catch (Exception ex)
             {
@@ -98,7 +98,7 @@ namespace Palavyr.API.controllers.accounts.devAccount
             try
             {
                 _logger.LogDebug("-----Attempting to populate with demo data...");
-                PopulateDBs(demoData);
+                await PopulateDBs(demoData);
             }
             catch (Exception ex)
             {
@@ -106,35 +106,45 @@ namespace Palavyr.API.controllers.accounts.devAccount
             }
         }
 
-        public void PopulateDBs(DevDataHolder dh)
+        public async Task PopulateDBs(DevDataHolder dh)
         {
             var devAccount = UserAccount.CreateAccount(dh.UserName, dh.Email, dh.HashedPassword, dh.AccountId,
                 dh.ApiKey, dh.CompanyName, dh.PhoneNumber, dh.Active, dh.Locale, AccountType.Default);
             var subscription = Subscription.CreateNew(dh.AccountId, dh.ApiKey, SubscriptionConstants.DefaultNumAreas);
             var data = new DevSeedData(dh.AccountId, dh.Email);
-
+            
+            var createOptions = new CustomerCreateOptions
+            {
+                Description = "Customer automatically added for testing.",
+                Email = dh.Email,
+            };
+            
+            var service = new CustomerService();
+            var customer = await service.CreateAsync(createOptions);
+            devAccount.StripeCustomerId = customer.Id;
+            
             AccountContext.Subscriptions.Add(subscription);
             AccountContext.Accounts.Add(devAccount);
-            AccountContext.SaveChanges();
+            AccountContext.SaveChangesAsync();
 
             DashContext.Areas.AddRange(data.Areas);
             DashContext.Groups.AddRange(data.Groups);
             DashContext.WidgetPreferences.Add(data.WidgetPreference);
             DashContext.SelectOneFlats.AddRange(data.DefaultDynamicTables);
             DashContext.DynamicTableMetas.AddRange(data.DefaultDynamicTableMetas);
-            DashContext.SaveChanges();
+            DashContext.SaveChangesAsync();
 
             ConvoContext.CompletedConversations.AddRange(data.CompleteConversations);
-            ConvoContext.SaveChanges();
+            ConvoContext.SaveChangesAsync();
         }
 
-        public void DeleteAllData()
+        public async Task DeleteAllData()
         {
             AccountContext.Accounts.RemoveRange(AccountContext.Accounts);
             AccountContext.Sessions.RemoveRange(AccountContext.Sessions);
             AccountContext.Subscriptions.RemoveRange(AccountContext.Subscriptions);
             AccountContext.EmailVerifications.RemoveRange(AccountContext.EmailVerifications);
-            AccountContext.SaveChanges();
+            AccountContext.SaveChangesAsync();
 
             DashContext.Areas.RemoveRange(DashContext.Areas);
             DashContext.WidgetPreferences.RemoveRange(DashContext.WidgetPreferences);
@@ -146,11 +156,11 @@ namespace Palavyr.API.controllers.accounts.devAccount
             DashContext.Groups.RemoveRange(DashContext.Groups);
             DashContext.SelectOneFlats.RemoveRange(DashContext.SelectOneFlats);
             DashContext.DynamicTableMetas.RemoveRange(DashContext.DynamicTableMetas);
-            DashContext.SaveChanges();
+            DashContext.SaveChangesAsync();
 
             ConvoContext.Conversations.RemoveRange(ConvoContext.Conversations);
             ConvoContext.CompletedConversations.RemoveRange(ConvoContext.CompletedConversations);
-            ConvoContext.SaveChanges();
+            ConvoContext.SaveChangesAsync();
         }
     }
 }

@@ -159,7 +159,8 @@ export class ApiClient {
             getPhoneNumber: async (): Promise<AxiosResponse> => this.client.get(`account/settings/phonenumber`),
             getLocale: async (): Promise<AxiosResponse> => this.client.get(`account/settings/locale`),
             getCompanyLogo: async (): Promise<AxiosResponse> => this.client.get(`account/settings/logo`),
-            getCurrentPlan: async (): Promise<AxiosResponse> => this.client.get(`account/settings/current-plan`)
+            getCurrentPlan: async (): Promise<AxiosResponse> => this.client.get(`account/settings/current-plan`),
+            DeleteAccount: async (): Promise<AxiosResponse> => this.client.post(`account/delete-account`)
         },
         Groups: {
             GetGroups: async (): Promise<AxiosResponse> => this.client.get(`group/`),

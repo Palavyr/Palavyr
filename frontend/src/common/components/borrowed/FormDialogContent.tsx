@@ -7,7 +7,6 @@ import { DividerWithText } from '../DividerWithText';
 import { GoogleLogin } from 'auth/googlebutton/GoogleLogin';
 import { GoogleResponse } from '@landing/login/LoginDialog';
 import { GoogleAuthResponse } from '@Palavyr-Types';
-// import { googleOAuthClientId } from '@api-client/clientUtils';
 
 export type FormStatusTypes = "invalidEmail" | "invalidPassword" | "verificationEmailSend" | null;
 

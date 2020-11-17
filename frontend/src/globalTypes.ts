@@ -267,7 +267,6 @@ export type GoogleTT = {
     jT: LastName;
 }
 
-export type GoogleWC = GoogleTokenObj;
 export type GoogleProfileObj = {
     email: EmailAddress;
     familyName: LastName;
@@ -279,9 +278,11 @@ export type GoogleProfileObj = {
 
 export type GoogleAuthResponse = {
     Ca: string;
-    wc: GoogleWC;
+    wc: GoogleTokenObj;
     // nt: GoogleNT;
     tt: GoogleTT;
+    xc: GoogleTokenObj;
+    wt: GoogleProfileObj;
     // googleId: string;
     // tokenObj: GoogleTokenObj;
     // tokenId: number;
@@ -354,7 +355,8 @@ export enum GeneralSettingsLoc {
     companyName,
     phoneNumber,
     companyLogo,
-    locale
+    locale,
+    deleteaccount
 }
 
 export enum AreaSettingsLoc {

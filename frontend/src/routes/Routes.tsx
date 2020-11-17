@@ -49,8 +49,10 @@ import { ChangePasswordHelp } from "dashboard/content/help/ChangePasswordHelp";
 import { ChangePhoneNumberHelp } from "dashboard/content/help/ChangePhoneNumberHelp";
 import { ChangeImageLogoHelp } from "dashboard/content/help/ChangeImageLogoHelp";
 import { SettingsContent } from "dashboard/content/settings/SettingsContent";
+import { DeleteAccount } from "dashboard/content/settings/account/DeleteAccount";
+import { DeleteAccountHelp } from "dashboard/content/help/DeleteAccountHelp";
 
-const withLayout = (ContentComponent: (() => JSX.Element), helpComponent: JSX.Element[] | JSX.Element) => {
+const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
         return (
             <AuthContext.Provider value={{ isActive: Auth.accountIsActive, isAuthenticated: Auth.accountIsAuthenticated }}>
@@ -61,11 +63,10 @@ const withLayout = (ContentComponent: (() => JSX.Element), helpComponent: JSX.El
         );
     };
     return ComponentWithHelp;
-}
+};
 
-const withAreaTabs = (ContentComponent: JSX.Element[] | JSX.Element): () => JSX.Element => () => <AreaContent>{ContentComponent}</AreaContent>;
-const withSettingsTabs = (ContentComponent: JSX.Element[] | JSX.Element): () => JSX.Element => () => <SettingsContent>{ContentComponent}</SettingsContent>;
-
+const withAreaTabs = (ContentComponent: JSX.Element[] | JSX.Element): (() => JSX.Element) => () => <AreaContent>{ContentComponent}</AreaContent>;
+const withSettingsTabs = (ContentComponent: JSX.Element[] | JSX.Element): (() => JSX.Element) => () => <SettingsContent>{ContentComponent}</SettingsContent>;
 
 export const Routes = () => {
     return (
@@ -73,7 +74,6 @@ export const Routes = () => {
             <Route exact path="/" component={LandingPage} />
             <ProtectedRoute exact path="/dashboard/" component={withLayout(WelcomeToTheDashboard, <WelcomeToTheDashboardHelp />)} />
             <ProtectedRoute exact path="/dashboard/welcome" component={withLayout(WelcomeToTheDashboard, <WelcomeToTheDashboardHelp />)} />
-
             <ProtectedRoute exact path="/dashboard/editor/email/:areaIdentifier" component={withLayout(withAreaTabs(<EmailConfiguration />), <EmailHelp />)} />
             <ProtectedRoute exact path="/dashboard/editor/response/:areaIdentifier" component={withLayout(withAreaTabs(<ResponseConfiguration />), <EstimateHelp />)} />
             <ProtectedRoute exact path="/dashboard/editor/attachments/:areaIdentifier" component={withLayout(withAreaTabs(<AttachmentConfiguration />), <AttachmentsHelp />)} />
@@ -87,16 +87,15 @@ export const Routes = () => {
             <ProtectedRoute exact path="/dashboard/settings/phoneNumber" component={withLayout(withSettingsTabs(<ChangePhoneNumber />), <ChangePhoneNumberHelp />)} />
             <ProtectedRoute exact path="/dashboard/settings/companyLogo" component={withLayout(withSettingsTabs(<ChangeLogoImage />), <ChangeImageLogoHelp />)} />
             <ProtectedRoute exact path="/dashboard/settings/locale" component={withLayout(withSettingsTabs(<ChangeLocale />), <ChangeLocaleHelp />)} />
+            <ProtectedRoute exact path="/dashboard/settings/deleteaccount" component={withLayout(withSettingsTabs(<DeleteAccount />), <DeleteAccountHelp />)} />
 
             <ProtectedRoute exact path="/dashboard/demo/" component={withLayout(ChatDemo, <ChatDemoHelp />)} />
             <ProtectedRoute exact path="/dashboard/getWidget/" component={withLayout(GetWidget, <GetWidgetHelp />)} />
             <ProtectedRoute exact path="/dashboard/enquiries/" component={withLayout(Enquires, <EnquiriesHelp />)} />
-
             <ProtectedRoute exact path="/dashboard/subscribe" component={withLayout(Subscribe, <SubscribeHelp />)} />
             <ProtectedRoute exact path="/dashboard/subscribe/purchase/" component={withLayout(Purchase, <PurchaseHelp />)} />
             <ProtectedRoute exact path="/dashboard/subscribe/success" component={withLayout(Success, <SuccessHelp />)} />
             <ProtectedRoute exact path="/dashboard/subscribe/cancel" component={withLayout(Cancel, <CancelHelp />)} />
-
             <ProtectedRoute exact path="/dashboard/confirm" component={withLayout(PleaseConfirmYourEmail, <PleaseConfirmYourEmailHelp />)} />
         </Router>
     );

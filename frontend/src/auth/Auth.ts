@@ -126,6 +126,26 @@ class Auth {
     isAuthenticated() {
         return this.authenticated;
     }
+
+    PerformLogout(logoutCallback: any) {
+        const loginType = LocalStorage.getLoginType();
+
+        if (loginType === LocalStorage.GoogleLoginType) {
+            this.googleLogout(logoutCallback);
+        } else {
+            console.log("Logging Out");
+            this.logout(logoutCallback);
+        }
+    }
+
+    ClearAuthentication() {
+        LocalStorage.unsetAuthorization();
+    }
+
+    SetIsActive() {
+        LocalStorage.setIsActive(true);
+    }
+
 }
 
 const AuthObject = new Auth();

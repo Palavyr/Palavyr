@@ -6,6 +6,8 @@ import { Card, Typography, FormControl, InputLabel, OutlinedInput, makeStyles } 
 import { ColoredButton } from '@common/components/borrowed/ColoredButton';
 import { ButtonCircularProgress } from '@common/components/borrowed/ButtonCircularProgress';
 import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import auth from "auth/Auth";
 
 
 const useStyles = makeStyles(theme => ({
@@ -50,13 +52,17 @@ export const PleaseConfirmYourEmail = () => {
 
     const classes = useStyles()
 
+    const history = useHistory();
+
     const confirmAccount = async () => {
         setIsLoading(true);
         if (authToken === "") return false;
-        var res = await client.Settings.Account.confirmEmailAddress(authToken)
-        if (res.data === true) {
+        const {data: res} = await client.Settings.Account.confirmEmailAddress(authToken);
+        if (res === true) {
             setIsLoading(false)
+            auth.SetIsActive();
             window.location.reload()
+
         } else {
             setIsLoading(false);
             setAuthStatus("CodeNotVerified");

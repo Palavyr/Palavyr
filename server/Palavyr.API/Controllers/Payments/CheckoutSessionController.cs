@@ -24,7 +24,6 @@ namespace Palavyr.API.Controllers.Payments
         ) : base(accountContext, convoContext, dashContext, env)
         {
             _logger = logger;
-
         }
 
         [HttpGet("checkout-session")]

@@ -65,6 +65,7 @@ class LocalStorageAccess {
     }
 
     unsetAuthorization() {
+        this._setItem(this.EmailString, "")
         this._setItem(this.AuthString, false);
         this._setItem(this.SessionString, "");
         this._setItem(this.JwtTokenString, "");

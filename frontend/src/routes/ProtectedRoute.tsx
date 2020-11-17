@@ -5,16 +5,36 @@ import auth from "../auth/Auth";
 export const ProtectedRoute = ({ component: Component, ...rest }) => {
 
     const location = useLocation();
+    // const history = useHistory();
+
+    const confirmationLoc = "/dashboard/confirm";
+    const unauthLoc = "/";
+    const welcome = "/dashboard/welcome";
 
     return (
         <Route
             {...rest}
             render={(props) => {
-                if (auth.isAuthenticated()) {
+
+                if (auth.accountIsAuthenticated && auth.accountIsActive) {
+                    if (location.pathname == confirmationLoc){
+                        return <Redirect to={welcome} />
+                    }
                     return <Component {...props} />;
-                } else {
-                    return <Redirect to="/" from={location.pathname} />;
                 }
+
+                if (auth.accountIsAuthenticated && !auth.accountIsActive) {
+                    if (location.pathname == confirmationLoc){
+                        return <Component {...props} />;
+                    } else {
+                        return <Redirect to={confirmationLoc} />;
+                    }
+                }
+
+                if (!auth.accountIsAuthenticated) {
+                    return <Redirect to={unauthLoc} from={location.pathname} />;
+                }
+                return <Redirect to={unauthLoc} from={location.pathname} />;
             }}
         />
     );

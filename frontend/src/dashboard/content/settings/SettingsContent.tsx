@@ -13,6 +13,8 @@ import PublicIcon from '@material-ui/icons/Public';
 import { AlignCenter } from "dashboard/layouts/positioning/AlignCenter";
 import { useHistory } from "react-router-dom";
 import { GeneralSettingsLoc } from "@Palavyr-Types";
+import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -76,6 +78,7 @@ const SettingsContentInner = ({ setLoaded, children}: ISettingsContentInner ) =>
                     <Tab onClick={() => sendTo(GeneralSettingsLoc.phoneNumber)} className={classes.tabtext} icon={<PhoneIcon className={classes.icon} />} label="Phone Number" {...areaTabProps(3)} />
                     <Tab onClick={() => sendTo(GeneralSettingsLoc.companyLogo)} className={classes.tabtext} icon={<BrandingWatermarkIcon className={classes.icon} />} label="Company Logo" {...areaTabProps(4)} />
                     <Tab onClick={() => sendTo(GeneralSettingsLoc.locale)} className={classes.tabtext} icon={<PublicIcon className={classes.icon} />} label="Locale" {...areaTabProps(5)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.deleteaccount)} className={classes.tabtext} icon={<DeleteSweepIcon className={classes.icon} />} label="Delete" {...areaTabProps(6)} />
                 </Tabs>
             </AppBar>
             <AlignCenter>
