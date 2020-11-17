@@ -100,19 +100,19 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
         console.log(`GoogleAuthResponse: ${res}`);
         if (res !== null) {
             let response: GoogleResponse;
-            if (res.wc === undefined) {
-                response = {
-                    tokenId: res.xc.id_token,
-                    accessToken: res.xc.access_token,
-                    googleId: ""
-                };
-            } else {
-                response = {
-                    tokenId: res.wc.id_token,
-                    accessToken: res.wc.access_token,
-                    googleId: res.tt.CT,
-                };
-            }
+            // if (res.wc === undefined) {
+            //     response = {
+            //         tokenId: res.xc.id_token,
+            //         accessToken: res.xc.access_token,
+            //         googleId: ""
+            //     };
+            // } else {
+            response = {
+                tokenId: res.wc.id_token,
+                accessToken: res.wc.access_token,
+                googleId: res.tt.CT,
+            };
+            // }
 
             LocalStorage.setGoogleImage(res.tt.OJ);
             LocalStorage.setGoogleLoginType();
