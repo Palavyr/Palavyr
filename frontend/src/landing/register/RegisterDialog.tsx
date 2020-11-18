@@ -168,9 +168,8 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
         }
         if (response) {
             var oneTimeCode = response.tokenId;
-            var accessToken = response.accessToken;
             var other = response.googleId;
-            var res = await Auth.registerWithGoogle(oneTimeCode, accessToken, other, registerGoogleSuccess, registerGoogleError);
+            var res = await Auth.registerWithGoogle(oneTimeCode, other, registerGoogleSuccess, registerGoogleError);
         } else {
             alert("Account not recognized")
         }

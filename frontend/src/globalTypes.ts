@@ -222,20 +222,6 @@ export type HelpTypes =
     | "locale"
 
 
-
-export type GoogleTokenObj = {
-    access_token: string;
-    expires_at: number;
-    expires_in: string;
-    first_issued_at: string;
-    id_token: string;
-    idpId: string;
-    login_hint: string;
-    scope: string;
-    session_state: SessionState;
-    token_type: string; // Bearer
-}
-
 export type ExtraQueryParams = {
     authuser: string;
 }
@@ -244,56 +230,33 @@ export type SessionState = {
     extraQueryParams: ExtraQueryParams;
 }
 
-export type FirstName = string;
-export type LastName = string;
-export type FullName = string;
-export type EmailAddress = string;
-export type GoogleNT = {
-    Ad: FullName;
-    JJ: string;
-    Wt: EmailAddress;
-    dV: FirstName;
-    fT: LastName;
-    yT: string;
-}
-export type GoogleAccountId = string;
-
-export type GoogleTT = {
-    $t: EmailAddress;
-    Ad: FullName;
-    CT: GoogleAccountId;
-    OJ: string;
-    gV: FirstName;
-    jT: LastName;
+export type GoogleAuthObject = {
+    expires_at: number;
+    expires_in: number;
+    first_issued_at: number;
+    id_token: string;
+    idpId: string;
+    login_hint: string;
+    session_state: SessionState;
+    token_type: string; // Bearer
 }
 
 export type GoogleProfileObj = {
-    email: EmailAddress;
-    familyName: LastName;
-    givenName: FirstName;
-    googleId: string;
-    imageUrl: string;
-    name: FullName;
+    getEmail(): string;
+    getFamilyName(): string;
+    getGivenName(): string;
+    getImageUrl(): string;
+    getName(): string;
 }
 
 export type GoogleAuthResponse = {
-    Ca: string;
-    wc: GoogleTokenObj;
-    // nt: GoogleNT;
-    tt: GoogleTT;
-    xc: GoogleTokenObj;
-    wt: GoogleProfileObj;
-    // googleId: string;
-    // tokenObj: GoogleTokenObj;
-    // tokenId: number;
-    // accessToken: string;
-    // profileObj: GoogleProfileObj
-
+    getBasicProfile(): GoogleProfileObj;
+    getAuthResponse(): GoogleAuthObject;
+    getId(): string;
 }
 
 
 export type Images = Array<string>;
-
 export type StripeProduct = {
     id: string;
     object: string;

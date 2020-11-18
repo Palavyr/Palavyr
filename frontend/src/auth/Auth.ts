@@ -40,8 +40,8 @@ class Auth {
 
     }
 
-    async registerWithGoogle(oneTimeCode: string, accessToken: string, tokenId: string, callback: () => void, errorCallback: (response) => void) {
-        const authenticationResponse = (await this.loginClient.Account.registerNewAccountWithGoogle(oneTimeCode, accessToken, tokenId)).data as Credentials;
+    async registerWithGoogle(oneTimeCode: string, tokenId: string, callback: () => void, errorCallback: (response) => void) {
+        const authenticationResponse = (await this.loginClient.Account.registerNewAccountWithGoogle(oneTimeCode, tokenId)).data as Credentials;
         return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
     }
 
@@ -77,10 +77,10 @@ class Auth {
         }
     }
 
-    async loginWithGoogle(oneTimeCode: string, accessToken: string, tokenId: string, callback: () => void, errorCallback: (response) => void) {
+    async loginWithGoogle(oneTimeCode: string, tokenId: string, callback: () => void, errorCallback: (response) => void) {
 
         try {
-            const authenticationResponse = (await this.loginClient.Login.RequestLoginWithGoogleToken(oneTimeCode, accessToken, tokenId)).data as Credentials;
+            const authenticationResponse = (await this.loginClient.Login.RequestLoginWithGoogleToken(oneTimeCode, tokenId)).data as Credentials;
             return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
         } catch {
             console.log("Error attempting to reach the server.")

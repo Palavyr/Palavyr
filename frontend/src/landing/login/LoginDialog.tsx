@@ -13,7 +13,6 @@ import { GoogleLoginResponseOffline } from "react-google-login";
 
 export type GoogleResponse = {
     tokenId: string;
-    accessToken: string;
     googleId: string;
 };
 
@@ -84,10 +83,9 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
     };
 
     const googleLogin = async (response: GoogleResponse) => {
-        Auth.ClearAuthentication();
         setIsLoading(true);
         setStatus(null);
-        var successfulResponse = await Auth.loginWithGoogle(response.tokenId, response.accessToken, response.googleId, success, googleError);
+        var successfulResponse = await Auth.loginWithGoogle(response.tokenId, response.googleId, success, googleError);
         if (!successfulResponse) {
             setTimeout(() => {
                 setStatus("invalidEmail");
@@ -95,26 +93,19 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
             }, 1500);
         }
     };
-    const responseGoogle = async (res: GoogleAuthResponse) => {
+    const responseGoogle = async (authResponse: GoogleAuthResponse) => {
         Auth.ClearAuthentication();
-        console.log(`GoogleAuthResponse: ${res}`);
-        if (res !== null) {
-            let response: GoogleResponse;
-            // if (res.wc === undefined) {
-            //     response = {
-            //         tokenId: res.xc.id_token,
-            //         accessToken: res.xc.access_token,
-            //         googleId: ""
-            //     };
-            // } else {
-            response = {
-                tokenId: res.wc.id_token,
-                accessToken: res.wc.access_token,
-                googleId: res.tt.CT,
-            };
-            // }
 
-            LocalStorage.setGoogleImage(res.tt.OJ);
+        const { id_token } = authResponse.getAuthResponse();
+        const imageURL = authResponse.getBasicProfile().getImageUrl();
+        const googleID = authResponse.getId();
+
+        if (authResponse !== null) {
+            const response = {
+                tokenId: id_token,
+                googleId: googleID,
+            };
+            LocalStorage.setGoogleImage(imageURL);
             LocalStorage.setGoogleLoginType();
             await googleLogin(response);
         }

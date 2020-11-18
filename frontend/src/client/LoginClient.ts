@@ -24,9 +24,8 @@ export class LoginClient {
             Password: password
         }),
 
-        RequestLoginWithGoogleToken: async (oneTimeCode: string, accessToken: string, tokenId: string): Promise<AxiosResponse> => this.client.post("authentication/login", {
+        RequestLoginWithGoogleToken: async (oneTimeCode: string, tokenId: string): Promise<AxiosResponse> => this.client.post("authentication/login", {
             OneTimeCode: oneTimeCode,
-            AccessToken: accessToken,
             TokenId: tokenId
         })
     }
@@ -37,8 +36,8 @@ export class LoginClient {
 
     public Account = {
         registerNewAccount: async (EmailAddress: string, Password: string): Promise<AxiosResponse> => this.client.post(`account/create`, { EmailAddress, Password }),
-        registerNewAccountWithGoogle: async (oneTimeCode: string, accessToken: string, tokenId: string): Promise<AxiosResponse> => this.client.post("account/create/google", {
-            OneTimeCode: oneTimeCode, AccessToken: accessToken, TokenId: tokenId
+        registerNewAccountWithGoogle: async (oneTimeCode: string, tokenId: string): Promise<AxiosResponse> => this.client.post("account/create/google", {
+            OneTimeCode: oneTimeCode, TokenId: tokenId
         })
     }
 }

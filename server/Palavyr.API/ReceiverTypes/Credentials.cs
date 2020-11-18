@@ -14,7 +14,6 @@
         
         //Google
         public string OneTimeCode { get; set; }
-        public string AccessToken { get; set; }
         public string TokenId { get; set; }
     }
 

@@ -169,19 +169,7 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames}: ISideBarMenu) => {
                 <ListItem
                     button
                     key={1003}
-                    onClick={() => {
-                        Auth.PerformLogout(() => history.push("/"))
-
-                        // const loginType = LocalStorage.getLoginType();
-
-                        // if (loginType === LocalStorage.GoogleLoginType) {
-                        //     Auth.googleLogout(() => history.push("/"));
-                        // } else {
-                        //     console.log("Logging Out");
-                        //     Auth.logout(() => history.push("/"));
-                        // }
-                    }}
-
+                    onClick={() => Auth.PerformLogout(() => history.push("/"))}
                 >
                     <ListItemIcon>
                         <ExitToAppIcon className={classes.icon} />

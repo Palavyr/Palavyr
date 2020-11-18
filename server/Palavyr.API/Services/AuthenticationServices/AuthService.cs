@@ -103,7 +103,8 @@ namespace Palavyr.API.Controllers
             try
             {
                 _logger.LogDebug("Inside the try block -- attempting to validation One Time Code");
-                return await GoogleJsonWebSignature.ValidateAsync(oneTimeCode, new GoogleJsonWebSignature.ValidationSettings());
+                var result = await GoogleJsonWebSignature.ValidateAsync(oneTimeCode, new GoogleJsonWebSignature.ValidationSettings());
+                return result;
             }
             catch (InvalidJwtException)
             {
@@ -193,7 +194,7 @@ namespace Palavyr.API.Controllers
         
         private static LoginType DetermineLoginType(LoginCredentials loginCredentials)
         {
-            if (!string.IsNullOrWhiteSpace(loginCredentials.AccessToken) && !string.IsNullOrWhiteSpace(loginCredentials.OneTimeCode) && !string.IsNullOrWhiteSpace(loginCredentials.TokenId))
+            if (!string.IsNullOrWhiteSpace(loginCredentials.OneTimeCode) && !string.IsNullOrWhiteSpace(loginCredentials.TokenId))
                 return LoginType.Google;
             if (!string.IsNullOrWhiteSpace(loginCredentials.EmailAddress) && !string.IsNullOrWhiteSpace(loginCredentials.Password))
                 return LoginType.Default;
