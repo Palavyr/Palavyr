@@ -87,13 +87,16 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
         setStatus(null);
         var successfulResponse = await Auth.loginWithGoogle(response.tokenId, response.googleId, success, googleError);
         if (!successfulResponse) {
-            setTimeout(() => {
-                setStatus("invalidEmail");
-                setIsLoading(false);
-            }, 1500);
+            Auth.ClearAuthentication();
+            Auth.googleLogout(() =>
+                setTimeout(() => {
+                    setStatus("invalidEmail");
+                    setIsLoading(false);
+                }, 1500)
+            );
         }
     };
-    const responseGoogle = async (authResponse: GoogleAuthResponse) => {
+    const responseGoogleSuccess = async (authResponse: GoogleAuthResponse) => {
         Auth.ClearAuthentication();
 
         const { id_token } = authResponse.getAuthResponse();
@@ -111,6 +114,11 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
         }
     };
 
+    const responseGoogleFailure = async (authResponse: GoogleAuthResponse) => {
+        Auth.ClearAuthentication();
+        setIsLoading(false);
+    };
+
     return (
         <FormDialog
             open
@@ -122,7 +130,8 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
             content={
                 <FormDialogContent
                     status={status}
-                    responseGoogle={responseGoogle}
+                    responseGoogleSuccess={responseGoogleSuccess}
+                    responseGoogleFailure={responseGoogleFailure}
                     isPasswordVisible={isPasswordVisible}
                     setIsPasswordVisible={setIsPasswordVisible}
                     loginEmail={loginEmail}

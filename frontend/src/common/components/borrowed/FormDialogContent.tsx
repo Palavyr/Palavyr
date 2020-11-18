@@ -21,7 +21,8 @@ export interface IFormDialogContent {
     isPasswordVisible: boolean;
     setIsPasswordVisible: any
     status: FormStatusTypes;
-    responseGoogle(res: GoogleAuthResponse): void;
+    responseGoogleSuccess(res: GoogleAuthResponse): void;
+    responseGoogleFailure(res: GoogleAuthResponse): void;
 }
 
 const useStyles = makeStyles(({
@@ -37,13 +38,13 @@ const useStyles = makeStyles(({
 }))
 
 
-export const FormDialogContent = ({ loginEmail, setLoginEmail, loginPassword, setLoginPassword, isPasswordVisible, setIsPasswordVisible, responseGoogle, setStatus, status }: IFormDialogContent) => {
+export const FormDialogContent = ({ loginEmail, setLoginEmail, loginPassword, setLoginPassword, isPasswordVisible, setIsPasswordVisible, responseGoogleSuccess, responseGoogleFailure, setStatus, status }: IFormDialogContent) => {
 
     const classes = useStyles();
     return (
         <>
             <div className={classes.googlebutton} >
-                <GoogleLogin onSuccess={responseGoogle} onFailure={responseGoogle} />
+                <GoogleLogin onSuccess={responseGoogleSuccess} onFailure={responseGoogleFailure} />
             </div>
             <br></br>
             <DividerWithText text={"OR"} />
