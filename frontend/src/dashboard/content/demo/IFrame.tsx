@@ -37,6 +37,7 @@ export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, incompleteAreas }: 
     const classes = useStyles(incompleteAreas.length > 0);
 
     const url = `${widgetUrl}/widget?key=${apiKey}`
+    console.log(`URL from IFRAME: ${url}`);
 
     useEffect(() => {
         if (iframeRefreshed != state) {
