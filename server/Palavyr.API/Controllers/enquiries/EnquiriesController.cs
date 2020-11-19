@@ -33,12 +33,16 @@ namespace Palavyr.API.Controllers
         
         
         [HttpGet]
-        public async Task<List<Enquiry>> GetCompletedConversations([FromHeader] string accountId)
+        public async Task<IActionResult> GetCompletedConversations([FromHeader] string accountId)
         {
-            _logger.LogDebug("----------------------Attempting to collect enquiries");
-            var completedConvos = ConvoContext.CompletedConversations.ToList();
-            _logger.LogDebug($"Found --{completedConvos.Count}-- convos.");
             var Enquiries = new List<Enquiry>();
+            
+            var completedConvos = ConvoContext.CompletedConversations.ToList();
+            if (completedConvos.Count() == 0)
+            {
+                return Ok(Enquiries);
+            }
+            
             foreach (var completedConvo in completedConvos)
             {
                 var mapped = await Enquiry.MapEnquiryToResponse(_logger, completedConvo, accountId, S3Client);
@@ -46,7 +50,7 @@ namespace Palavyr.API.Controllers
             }
 
             _logger.LogDebug("Returning completed conversations...");
-            return Enquiries;
+            return Ok(Enquiries);
         }
         
         [HttpPut("update/{conversationId}")]
