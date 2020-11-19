@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Hosting;
 using System.Collections.Generic;
@@ -45,8 +46,16 @@ namespace Palavyr.API.Controllers
             
             foreach (var completedConvo in completedConvos)
             {
-                var mapped = await Enquiry.MapEnquiryToResponse(_logger, completedConvo, accountId, S3Client);
-                Enquiries.Add(mapped);
+                try
+                {
+                    var completeEnquiry =
+                        await Enquiry.MapEnquiryToResponse(_logger, completedConvo, accountId, S3Client);
+                    Enquiries.Add(completeEnquiry);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogDebug($"Couldn't find the file: {completedConvo.ResponsePdfId}");
+                }
             }
 
             _logger.LogDebug("Returning completed conversations...");
