@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DashboardServer.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.ResponseTypes;
 using Server.Domain.Configuration.constants;
@@ -8,13 +10,23 @@ using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.Controllers
 {
-
-    /// <summary>
-    /// Main method
-    /// </summary>
-    public static class PreCheckUtils
+    public static class WidgetStatusUtils
     {
-        public static PreCheckResult RunConversationsPreCheck(List<Area> areas, ILogger _logger)
+        public static PreCheckResult ExecuteWidgetStatusCheck(string accountId, DashContext dashContext, ILogger logger)
+        {
+            logger.LogDebug("Collecting areas for DEMO pre-check...");
+            var areas = dashContext
+                .Areas
+                .Where(row => row.AccountId == accountId)
+                .Include(row => row.ConversationNodes)
+                .Include(row => row.DynamicTableMetas)
+                .ToList();
+
+            logger.LogDebug("Collected areas.... running DEMO pre-check");
+            var result = WidgetStatusUtils.RunConversationsPreCheck(areas, logger);
+            return result;
+        }
+        private static PreCheckResult RunConversationsPreCheck(List<Area> areas, ILogger _logger)
         {
             var incompleteAreas = new List<Area>();
             _logger.LogDebug("Attempting RunConversationsPreCheck...");

@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Palavyr.API.controllers.accounts.newAccount
 {
-    [Authorize]
     [Route("api")]
     [ApiController]
     public class GetAccountActiveStatusController : ControllerBase

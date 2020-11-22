@@ -2,7 +2,6 @@ using System.Linq;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.ResponseTypes;
 
@@ -25,7 +24,7 @@ namespace Palavyr.API.Controllers
             this.dashContext = dashContext;
         }
         
-        [HttpGet("widget/precheck")]
+        [HttpGet("widget/pre-check")]
         public IActionResult Get([FromHeader] string accountId)
         {
             logger.LogDebug("Running live widget pre-check...");
@@ -34,19 +33,10 @@ namespace Palavyr.API.Controllers
             {
                 return Ok(PreCheckResult.CreateApiKeyResult(false));
             }
-
-            logger.LogDebug($"Using AccountId: {accountId}");
-            var areas = dashContext
-                .Areas
-                .Where(row => row.AccountId == accountId)
-                .Include(row => row.ConversationNodes)
-                .Include(row => row.DynamicTableMetas)
-                .ToList();
-
-            logger.LogDebug("Running live widget conversations pre-check...");
-            var result = PreCheckUtils.RunConversationsPreCheck(areas, logger);
-            logger.LogDebug(
-                $"Pre-check run successful. Result: Isready:{result.IsReady} and incomplete areas: {result.IncompleteAreas.ToList()}");
+            var result = WidgetStatusUtils.ExecuteWidgetStatusCheck(accountId, dashContext, logger);
+            logger.LogDebug($"Pre-check run successful.");
+            logger.LogDebug($"Ready result:{result.IsReady}");
+            logger.LogDebug($"Incomplete areas: {result.IncompleteAreas.ToList()} ");
             return Ok(result);
         }
     }

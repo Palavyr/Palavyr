@@ -1,14 +1,9 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { CustomWidget } from "./widget/CustomWidget";
 import { OptionSelector } from "./options/Options";
-import { SelectedOption, AreaTable, WidgetPreferences } from "./types";
+import { SelectedOption, WidgetPreferences } from "./types";
 import { useLocation } from "react-router-dom";
 import CreateClient, { IClient } from "./client/Client";
-
-type PreCheckResult = {
-  isReady: boolean;
-  incompleteAreas: Array<AreaTable>;
-};
 
 export const App = () => {
   const [selectedOption, setSelectedOption] = useState<SelectedOption | null>(
@@ -23,8 +18,8 @@ export const App = () => {
   if (secretKey) client = CreateClient(secretKey);
 
   const runAppPrecheck = useCallback(async () => {
-    var preCheckResult = (await client.Widget.Access.runPreCheck())
-      .data as PreCheckResult;
+    var { data: preCheckResult } = await client.Widget.Access.runPreCheck();
+
     setIsReady(preCheckResult.isReady);
     if (preCheckResult.isReady) {
       var prefs = (await client.Widget.Access.fetchPreferences())

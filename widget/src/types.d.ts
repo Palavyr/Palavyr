@@ -62,3 +62,8 @@ export type CompleteConverationDetails = {
      Email: string;
      PhoneNumber: string;
 }
+
+export type PreCheckResult = {
+    isReady: boolean;
+    incompleteAreas: Array<AreaTable>;
+  };

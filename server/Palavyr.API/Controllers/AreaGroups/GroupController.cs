@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using DashboardServer.Data;
 using System.Linq;
-using System.Web.Http.Cors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.API.ReceiverTypes;
-using Server.Domain;
 using Server.Domain.Configuration.schema;
 
 
