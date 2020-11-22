@@ -16,11 +16,11 @@ using Subscription = Server.Domain.Accounts.Subscription;
 
 namespace Palavyr.API.controllers.accounts.devAccount
 {
-    [Route("api/setup")]
+    [Route("api")]
     [ApiController]
     public class DefaultDataController : BaseController
     {
-        private static ILogger<DefaultDataController> _logger;
+        private ILogger<DefaultDataController> logger;
         private readonly IStripeClient _stripeClient = new StripeClient(StripeConfiguration.ApiKey);
 
         public DefaultDataController(
@@ -31,11 +31,11 @@ namespace Palavyr.API.controllers.accounts.devAccount
             IWebHostEnvironment env)
             : base(accountContext, convoContext, dashContext, env)
         {
-            _logger = logger;
+            this.logger = logger;
         }
 
         [AllowAnonymous]
-        [HttpPut("{devKey}")]
+        [HttpPut("setup/{devKey}")]
         public async Task RefreshData(string devKey)
         {
             var options = new CustomerListOptions {};
@@ -47,7 +47,7 @@ namespace Palavyr.API.controllers.accounts.devAccount
             }
 
             if (devKey != "secretTobyface")
-                _logger.LogDebug("This is an attempt to Refresh database data.");
+                logger.LogDebug("This is an attempt to Refresh database data.");
             var devData = new DevDataHolder(
                 "qwerty",
                 "devdashboard",
@@ -74,35 +74,35 @@ namespace Palavyr.API.controllers.accounts.devAccount
 
             try
             {
-                _logger.LogDebug("Trying to Deleting All Data currently in the database!");
+                logger.LogDebug("Trying to Deleting All Data currently in the database!");
                 Console.WriteLine("Trying to Deleting All Data currently in the database!");
 
                 await DeleteAllData();
             }
             catch (Exception ex)
             {
-                _logger.LogDebug($"Error deleting all data... {ex.Message}");
+                logger.LogDebug($"Error deleting all data... {ex.Message}");
                 Console.WriteLine($"Error deleting all data... {ex.Message}");
             }
 
             try
             {
-                _logger.LogDebug("-----Attempting to populate with dev data...");
+                logger.LogDebug("-----Attempting to populate with dev data...");
                 await PopulateDBs(devData);
             }
             catch (Exception ex)
             {
-                _logger.LogDebug($"Error loading dev data: {ex.Message}");
+                logger.LogDebug($"Error loading dev data: {ex.Message}");
             }
 
             try
             {
-                _logger.LogDebug("-----Attempting to populate with demo data...");
+                logger.LogDebug("-----Attempting to populate with demo data...");
                 await PopulateDBs(demoData);
             }
             catch (Exception ex)
             {
-                _logger.LogDebug($"----Error populating Demo Data: {ex.Message}");
+                logger.LogDebug($"----Error populating Demo Data: {ex.Message}");
             }
         }
 
@@ -123,19 +123,19 @@ namespace Palavyr.API.controllers.accounts.devAccount
             var customer = await service.CreateAsync(createOptions);
             devAccount.StripeCustomerId = customer.Id;
             
-            AccountContext.Subscriptions.Add(subscription);
-            AccountContext.Accounts.Add(devAccount);
-            AccountContext.SaveChangesAsync();
+            await AccountContext.Subscriptions.AddAsync(subscription);
+            await AccountContext.Accounts.AddAsync(devAccount);
+            await AccountContext.SaveChangesAsync();
 
-            DashContext.Areas.AddRange(data.Areas);
-            DashContext.Groups.AddRange(data.Groups);
-            DashContext.WidgetPreferences.Add(data.WidgetPreference);
-            DashContext.SelectOneFlats.AddRange(data.DefaultDynamicTables);
-            DashContext.DynamicTableMetas.AddRange(data.DefaultDynamicTableMetas);
-            DashContext.SaveChangesAsync();
+            await DashContext.Areas.AddRangeAsync(data.Areas);
+            await DashContext.Groups.AddRangeAsync(data.Groups);
+            await DashContext.WidgetPreferences.AddAsync(data.WidgetPreference);
+            await DashContext.SelectOneFlats.AddRangeAsync(data.DefaultDynamicTables);
+            await DashContext.DynamicTableMetas.AddRangeAsync(data.DefaultDynamicTableMetas);
+            await DashContext.SaveChangesAsync();
 
-            ConvoContext.CompletedConversations.AddRange(data.CompleteConversations);
-            ConvoContext.SaveChangesAsync();
+            await ConvoContext.CompletedConversations.AddRangeAsync(data.CompleteConversations);
+            await ConvoContext.SaveChangesAsync();
         }
 
         public async Task DeleteAllData()
@@ -144,7 +144,7 @@ namespace Palavyr.API.controllers.accounts.devAccount
             AccountContext.Sessions.RemoveRange(AccountContext.Sessions);
             AccountContext.Subscriptions.RemoveRange(AccountContext.Subscriptions);
             AccountContext.EmailVerifications.RemoveRange(AccountContext.EmailVerifications);
-            AccountContext.SaveChangesAsync();
+            await AccountContext.SaveChangesAsync();
 
             DashContext.Areas.RemoveRange(DashContext.Areas);
             DashContext.WidgetPreferences.RemoveRange(DashContext.WidgetPreferences);
@@ -156,11 +156,11 @@ namespace Palavyr.API.controllers.accounts.devAccount
             DashContext.Groups.RemoveRange(DashContext.Groups);
             DashContext.SelectOneFlats.RemoveRange(DashContext.SelectOneFlats);
             DashContext.DynamicTableMetas.RemoveRange(DashContext.DynamicTableMetas);
-            DashContext.SaveChangesAsync();
+            await DashContext.SaveChangesAsync();
 
             ConvoContext.Conversations.RemoveRange(ConvoContext.Conversations);
             ConvoContext.CompletedConversations.RemoveRange(ConvoContext.CompletedConversations);
-            ConvoContext.SaveChangesAsync();
+            await ConvoContext.SaveChangesAsync();
         }
     }
 }

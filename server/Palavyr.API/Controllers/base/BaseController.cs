@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Palavyr.API.Controllers
 {
+    
     public abstract class BaseController : ControllerBase
     {
         protected readonly AccountsContext AccountContext;

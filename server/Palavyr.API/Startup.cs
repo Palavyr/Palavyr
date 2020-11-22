@@ -27,6 +27,15 @@ namespace Palavyr.API
 {
     public class Startup
     {
+
+        private const string _configurationDbStringKey = "DashContextPostgres";
+        private const string _accountDbStringKey = "AccountsContextPostgres";
+        private const string _convoDbStringKey = "ConvoContextPostgres";
+        private const string _accessKeySection = "AWS:AccessKey";
+        private const string _secretKeySection = "AWS:SecretKey";
+        private const string _StripeKeySection = "Stripe:SecretKey";
+        private const string _webhookKeySection = "Stripe:WebhookKey";
+
         public Startup(IWebHostEnvironment Env, IConfiguration configuration)
         {
             env = Env;
@@ -36,14 +45,6 @@ namespace Palavyr.API
         private IConfiguration Configuration { get; set; }
         private ILogger<Startup> _logger { get; set; }
         private IWebHostEnvironment env { get; set; }
-
-        private const string _configurationDbStringKey = "DashContextPostgres";
-        private const string _accountDbStringKey = "AccountsContextPostgres";
-        private const string _convoDbStringKey = "ConvoContextPostgres";
-        private const string _accessKeySection = "AWS:AccessKey";
-        private const string _secretKeySection = "AWS:SecretKey";
-        private const string _StripeKeySection = "Stripe:SecretKey";
-        private const string _webhookKeySection = "Stripe:WebhookKey";
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -101,19 +102,7 @@ namespace Palavyr.API
 
                         if (env.IsDevelopment())
                         {
-                            builder.WithOrigins("*"
-                                // "http://localhost/",
-                                // "https://localhost/",
-                                // "http://localhost",
-                                // "https://localhost",
-                                // "http://localhost:5000/",
-                                // "https://localhost:5001/",
-                                // "http://localhost:5000",
-                                // "https://localhost:5001",
-                                // "http://localhost:3600",
-                                // "https://localhost:3500",
-                                // "https://stripe.com"
-                            );
+                            builder.WithOrigins("*");
                         }
                         else
                         {
@@ -145,14 +134,13 @@ namespace Palavyr.API
             services.AddDbContext<DashContext>(opt =>
                 opt.UseNpgsql(Configuration.GetConnectionString(_configurationDbStringKey)));
 
+            // Stripe
+            StripeConfiguration.ApiKey = Configuration.GetSection(_StripeKeySection).Value;
+            
             // AWS Services
             var accessKey = Configuration.GetSection(_accessKeySection).Value;
             var secretKey = Configuration.GetSection(_secretKeySection).Value;
             var awsOptions = Configuration.GetAWSOptions();
-            StripeConfiguration.ApiKey = "sk_test_51HOtDQAnPqY603aZg1LhzHge6qQ7AEYcGPQhhCqMc5gXwfyr6XTEJJvJisBtzhFChIeOnytjCkhHK2ZmEgIuWyup00loOlq4W1";
-            // StripeConfiguration.ApiKey = Configuration.GetSection(_StripeKeySection).Value);
-            
-            
             awsOptions.Credentials = new BasicAWSCredentials(accessKey, secretKey);
             services.AddDefaultAWSOptions(awsOptions);
             services.AddAWSService<IAmazonSimpleEmailService>();
@@ -182,6 +170,8 @@ namespace Palavyr.API
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IEmailVerificationService, EmailVerificationService>();
         }
+        
+        
 
         public void Configure(
             IApplicationBuilder app,
@@ -192,7 +182,6 @@ namespace Palavyr.API
         )
         {
             _logger = loggerFactory.CreateLogger<Startup>();
-            _logger.LogDebug("Starting Configure method in startup.cs");
             var appDataPath = resolveAppDataPath();
             if (string.IsNullOrEmpty(Configuration["WebRootPath"]))
                 Configuration["WebRootPath"] = Environment.CurrentDirectory;
@@ -249,7 +238,7 @@ namespace Palavyr.API
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogCritical("ERROR OMGOMGOMG WHY?: " + ex.Message);
+                    _logger.LogCritical("ERROR " + ex.Message);
                 }
             }
         }
@@ -260,13 +249,11 @@ namespace Palavyr.API
             var osVersion = Environment.OSVersion;
             if (osVersion.Platform != PlatformID.Unix)
             {
-                _logger.LogDebug("STARTUP-6: We are running on windows.");
                 appDataPath = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), MagicPathStrings.DataFolder);
             }
             else
             {
                 var home = Environment.GetEnvironmentVariable("HOME");
-                _logger.LogDebug($"STARTUP-8: HOME env variable = {home}");
                 if (home == null)
                 {
                     _logger.LogDebug($"STARTUP-9: HOME VARIABLE NOT SET");
@@ -274,11 +261,8 @@ namespace Palavyr.API
 
                 appDataPath = Path.Combine(home, MagicPathStrings.DataFolder);
             }
-
-            _logger.LogDebug($"STARTUP-10: APPDATAPATH: {appDataPath}");
-
+            
             DiskUtils.CreateDir(appDataPath);
-
             return appDataPath;
         }
     }

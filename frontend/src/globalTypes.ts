@@ -330,3 +330,12 @@ export enum AreaSettingsLoc {
     settings,
     preview,
 }
+
+export type Credentials = {
+    jwtToken: string;
+    apiKey: string;
+    sessionId: string;
+    emailAddress: string;
+    authenticated: boolean;
+    message: string;
+};

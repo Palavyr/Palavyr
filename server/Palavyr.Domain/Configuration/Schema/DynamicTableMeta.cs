@@ -8,7 +8,7 @@ namespace Server.Domain.Configuration.schema
     public class DynamicTableMeta
     {
         [Key] 
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string TableTag { get; set; }
         public string PrettyName { get; set; }
         public string TableType { get; set; }

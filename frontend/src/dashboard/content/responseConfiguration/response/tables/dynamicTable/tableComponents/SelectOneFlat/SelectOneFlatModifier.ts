@@ -20,8 +20,8 @@ export class SelectOneFlatModifier {
     }
 
     async addOption(tableData: TableData, client: ApiClient, areaIdentifier: string, tableId: string) {
-
-        const newTableTemplate = (await client.Configuration.Tables.Dynamic.getDynamicTableDataTempate(areaIdentifier, this.tableType, tableId)).data as SelectOneFlatData;
+        // this is a difficult situation - we need to allow for an array of objects of various types (dynamic table types)
+        const {data: newTableTemplate} = await client.Configuration.Tables.Dynamic.getDynamicTableDataTempate(areaIdentifier, this.tableType, tableId);
         tableData.push(newTableTemplate);
         this.setTables(tableData);
     }

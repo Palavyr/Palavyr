@@ -1,8 +1,12 @@
 ﻿namespace Palavyr.API.ReceiverTypes
 {
-    public class Logue
+    public class Prologue
     {
-        public string Prologue { get; set; }
-        public string Epilogue { get; set; }
+        public string Prologue_ { get; set; }
+    }
+
+    public class Epilogue
+    {
+        public string Epilogue_ { get; set; }
     }
 }

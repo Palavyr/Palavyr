@@ -8,8 +8,6 @@ import { SelectOneFlatHeader } from "./SelectOneFlatHeader";
 import { SelectOneFlatBody } from "./SelectOneFlatBody";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { DynamicTableTypes } from "../../DynamicTableTypes";
-import { relative } from "path";
-
 
 export interface ISelectOneFlat {
     tableData: Array<SelectOneFlatData>;
@@ -19,7 +17,7 @@ export interface ISelectOneFlat {
     tableTag: string;
     tableMeta: DynamicTableMeta;
     setTableMeta: any;
-    deleteAction: any;
+    deleteAction(): void;
 }
 
 const useStyles = makeStyles({
@@ -27,94 +25,72 @@ const useStyles = makeStyles({
         width: "100%",
         padding: ".3rem",
         backgroundColor: "transparent",
-        borderTop: "1px solid gray"
+        borderTop: "1px solid gray",
     },
     alignLeft: {
         position: "relative",
         top: "50%",
         float: "left",
-        paddingLeft: "0.3rem"
+        paddingLeft: "0.3rem",
     },
     alignRight: {
         position: "relative",
         top: "50%",
-        transform: 'translateY(25%)',
+        transform: "translateY(25%)",
         float: "right",
         paddingRight: "0.3rem",
-        height: "100%"
+        height: "100%",
     },
     trayWrapper: {
         width: "100%",
     },
     add: {
-        marginRight: "0.4rem"
-    }
-})
+        marginRight: "0.4rem",
+    },
+});
 
 export const SelectOneFlatTable = ({ tableMeta, setTableMeta, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: ISelectOneFlat) => {
-
     const client = new ApiClient();
     const classes = useStyles();
 
     const modifier = new SelectOneFlatModifier(setTableData);
 
+    const useOptionsAsPathsOnChange = async (event: { target: { checked: boolean } }) => {
+        tableMeta.valuesAsPaths = event.target.checked;
+        const { data: newTableMeta } = await client.Configuration.Tables.Dynamic.modifyDynamicTableMeta(tableMeta);
+        setTableMeta(newTableMeta);
+    };
+
+    const onSave = async () => {
+        const { data } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.SelectOneFlat, tableData, tableId, tableTag);
+        setTableData(tableData);
+    };
+
+    const addOptionOnClick = () => {
+        modifier.addOption(tableData, client, areaIdentifier, tableId);
+    };
+
     return (
         <>
-            <TableContainer className={classes.tableStyles} component={Paper} >
+            <TableContainer className={classes.tableStyles} component={Paper}>
                 <Table>
                     <SelectOneFlatHeader />
                     <SelectOneFlatBody tableData={tableData} modifier={modifier} />
                 </Table>
             </TableContainer>
-            <AccordionActions >
+            <AccordionActions>
                 <div className={classes.trayWrapper}>
                     <div className={classes.alignLeft}>
-                        <Button
-                            className={classes.add}
-                            onClick={() => {
-                                modifier.addOption(tableData, client, areaIdentifier, tableId)
-                            }}
-                            color="primary"
-                            variant="contained"
-                        >
+                        <Button className={classes.add} onClick={addOptionOnClick} color="primary" variant="contained">
                             Add Option
-                    </Button>
-                        <FormControlLabel
-                            label="Use Options as Paths"
-                            control={
-                                <Checkbox
-                                    checked={tableMeta.valuesAsPaths}
-                                    value={"WTF"}
-                                    name={"WTF2"}
-                                    onChange={async (event) => {
-                                        var checked = event.target.checked;
-                                        tableMeta.valuesAsPaths = checked;
-                                        var res = await client.Configuration.Tables.Dynamic.updateDynamicTableMeta(tableMeta);
-                                        var newTableMeta = res.data as DynamicTableMeta;
-                                        setTableMeta(newTableMeta);
-                                    }}
-                                />
-                            }
-                        />
+                        </Button>
+                        <FormControlLabel label="Use Options as Paths" control={<Checkbox checked={tableMeta.valuesAsPaths} onChange={useOptionsAsPathsOnChange} />} />
                     </div>
                     <div className={classes.alignRight}>
-                        <SaveOrCancel
-                            onDelete={() => {
-                                deleteAction()
-                            }}
-                            onSave={() => {
-                                client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.SelectOneFlat, tableData, tableId, tableTag);
-                                setTableData(tableData);
-                                console.log("Saving...");
-                            }}
-                            onCancel={() => {
-                                window.location.reload();
-                                console.log("Canceling...");
-                            }}
-                        />
+                        <SaveOrCancel onDelete={deleteAction} onSave={onSave} onCancel={() => window.location.reload()} />
                     </div>
                 </div>
-            </AccordionActions >
+            </AccordionActions>
         </>
-    )
-}
+    );
+};

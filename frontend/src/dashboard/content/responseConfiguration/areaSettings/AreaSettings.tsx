@@ -14,25 +14,24 @@ type Settings = {
     awaitingVerification: boolean;
     areaName: string;
     areaTitle: string;
-}
+};
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     titleText: {
         fontWeight: "bold",
     },
     alert: {
-        border: "2px solid black"
+        border: "2px solid black",
     },
     alertTitle: {
         display: "flex",
         color: "white",
         justifyContent: "center",
-        textAlign: "left"
-    }
-}))
+        textAlign: "left",
+    },
+}));
 
 export const AreaSettings = () => {
-
     var client = new ApiClient();
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
@@ -43,62 +42,61 @@ export const AreaSettings = () => {
         isVerified: false,
         awaitingVerification: false,
         areaName: "",
-        areaTitle: ""
+        areaTitle: "",
     });
-    const [alertDetails, setAlertDetails] = useState<AlertDetails>({ title: "", message: "" })
+    const [alertDetails, setAlertDetails] = useState<AlertDetails>({ title: "", message: "" });
     const classes = useStyles();
     const history = useHistory();
 
     const loadSettings = useCallback(async () => {
-
-        var areaData = (await client.Area.GetArea(areaIdentifier)).data as AreaTable;
+        var { data: areaData } = await client.Area.GetArea(areaIdentifier);
         setSettings({
             emailAddress: areaData.areaSpecificEmail,
             isVerified: areaData.emailIsVerified,
             awaitingVerification: areaData.awaitingVerification,
             areaName: areaData.areaName,
-            areaTitle: areaData.areaDisplayTitle
+            areaTitle: areaData.areaDisplayTitle,
         });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [areaIdentifier])
+    }, [areaIdentifier]);
 
     useEffect(() => {
         if (!loaded) loadSettings();
 
         setLoaded(true);
         return () => {
-            setLoaded(false)
-        }
-    }, [])
+            setLoaded(false);
+        };
+    }, []);
 
     const handleAreaNameChange = async (newAreaName: string) => {
         if (newAreaName === settings.areaName) return;
-        var res = await client.Area.updateArea(areaIdentifier, newAreaName, null);
+        var { data } = await client.Area.updateArea(areaIdentifier, newAreaName, null);
         setSettings({ ...settings, areaName: newAreaName });
         window.location.reload(); // reloads the sidebar...
-    }
+    };
 
     const handleAreaDisplayTitleChange = async (newAreaDisplayTitle: any) => {
         if (newAreaDisplayTitle === settings.areaTitle) return;
-        var res = await client.Area.updateArea(areaIdentifier, null, newAreaDisplayTitle);
+        var { data } = await client.Area.updateArea(areaIdentifier, null, newAreaDisplayTitle);
         window.location.reload();
-        setSettings({ ...settings, areaTitle: newAreaDisplayTitle })
-    }
+        setSettings({ ...settings, areaTitle: newAreaDisplayTitle });
+    };
 
     const handleAreaDelete = async () => {
         await client.Area.deleteArea(areaIdentifier);
         history.push("/dashboard");
         window.location.reload();
-    }
+    };
 
     const verifyEmailAddress = async (newEmailAddress: string) => {
-        if (newEmailAddress === settings.emailAddress) return
-        const res = (await client.Settings.EmailVerification.RequestEmailVerification(newEmailAddress, areaIdentifier)).data as EmailVerificationResponse;
-        setAlertDetails({ title: res.title, message: res.message })
+        if (newEmailAddress === settings.emailAddress) return;
+        const { data: emailVerification } = await client.Settings.EmailVerification.RequestEmailVerification(newEmailAddress, areaIdentifier);
+        setAlertDetails({ title: emailVerification.title, message: emailVerification.message });
         setAlertState(true);
-        if (!(res.status === "Failed")) setSettings({ ...settings, emailAddress: newEmailAddress })
-    }
+        if (!(emailVerification.status === "Failed")) setSettings({ ...settings, emailAddress: newEmailAddress });
+    };
 
     const emailSeverity = (): "success" | "warning" | "error" | "info" | undefined => {
         let severityLevel: "success" | "warning" | "error" | "info" | undefined;
@@ -109,136 +107,116 @@ export const AreaSettings = () => {
             if (settings.awaitingVerification) {
                 severityLevel = "warning";
             } else {
-                severityLevel = "error"
+                severityLevel = "error";
             }
         }
         return severityLevel;
-    }
+    };
 
-
-    return (
-        loaded ?
-            <>
-                <Grid container spacing={3}>
-                    {/* <Grid item xs={3}></Grid> */}
-                    <Grid item xs={12} >
-                        <Alert className={classNames(classes.alert, classes.alertTitle)} variant="filled" severity="info">
-                            <AlertTitle className={classes.titleText}>Important Settings</AlertTitle>
-                            These options affect the appearance and behavior of the widget.
-                        </Alert>
-                    </Grid>
-                    {/* <Grid item xs={3}></Grid> */}
-                    <Grid item xs={5}>
-                        <SettingsGridRowText
-                            fullWidth
-                            alertNode={
-                                <Alert
-                                    className={classes.alert}
-                                    severity={
-                                        (settings.areaTitle === "Change this in the area Settings." || settings.areaTitle === "")
-                                            ? "error"
-                                            : "success"
-                                    }
-                                >
-                                    <AlertTitle className={classes.titleText}>Update Widget Display Name</AlertTitle>
-                            Set the name of this area as used in the widget.
-                        </Alert>
-                            }
-                            title=""
-                            name=""
-                            details="Update the area title used in the widget."
-                            placeholder="New Area Name"
-                            currentValue={settings.areaTitle}
-                            onClick={handleAreaDisplayTitleChange}
-                            clearVal={false}
-                        />
-                    </Grid>
-
-                    <Grid item xs={5}>
-                        <SettingsGridRowText
-                            fullWidth
-                            inputType="email"
-                            alertNode={
-                                <Alert className={classes.alert} severity={emailSeverity()}>
-                                    <AlertTitle className={classes.titleText}>
-                                        {
-                                            settings.isVerified
-                                                ? "Email Verified"
-                                                : "Verify the email used to send responses for this area"
-                                        }
-                                    </AlertTitle>
-                                    Submit a new email to be used for responses.
-                                    </Alert>
-                            }
-                            title=""
-                            name=""
-                            details=""
-                            buttonText="Update and Verify"
-                            placeholder="New Email Address"
-                            currentValue={settings.emailAddress}
-                            onClick={verifyEmailAddress}
-                            clearVal={false}
-                        />
-                    </Grid>
+    return loaded ? (
+        <>
+            <Grid container spacing={3}>
+                <Grid item xs={12}>
+                    <Alert className={classNames(classes.alert, classes.alertTitle)} variant="filled" severity="info">
+                        <AlertTitle className={classes.titleText}>Important Settings</AlertTitle>
+                        These options affect the appearance and behavior of the widget.
+                    </Alert>
                 </Grid>
-                <Divider />
-                <br></br>
+                <Grid item xs={5}>
+                    <SettingsGridRowText
+                        fullWidth
+                        alertNode={
+                            <Alert className={classes.alert} severity={settings.areaTitle === "Change this in the area Settings." || settings.areaTitle === "" ? "error" : "success"}>
+                                <AlertTitle className={classes.titleText}>Update Widget Display Name</AlertTitle>
+                                Set the name of this area as used in the widget.
+                            </Alert>
+                        }
+                        title=""
+                        name=""
+                        details="Update the area title used in the widget."
+                        placeholder="New Area Name"
+                        currentValue={settings.areaTitle}
+                        onClick={handleAreaDisplayTitleChange}
+                        clearVal={false}
+                    />
+                </Grid>
 
-                <Grid container spacing={3}>
-                    <Grid item xs={12} >
-                        <Alert className={classNames(classes.alert, classes.alertTitle)} variant="filled" severity="warning">
-                            <AlertTitle className={classes.titleText}>Dashboard Specific Options</AlertTitle>
-                            These options only affect what you see in the dashboard.
-                        </Alert>
-                    </Grid>
-                    <Grid item xs={5}>
-                        <SettingsGridRowText
-                            alertNode={
-                                <Alert className={classes.alert} severity={settings.areaName ? "success" : "warning"}>
-                                    <AlertTitle className={classes.titleText}>Update Dashboard Display Name</AlertTitle>
-                                    Set the name of area used for your reference on this dashboard.
-                                </Alert>
-                            }
-                            title="Update Area Name"
-                            name="Update Area Name"
-                            details=" Update the name of this area for dashboard."
-                            placeholder="New Area Name"
-                            currentValue={settings.areaName}
-                            onClick={handleAreaNameChange}
-                            clearVal={false}
-                        />
-                    </Grid>
+                <Grid item xs={5}>
+                    <SettingsGridRowText
+                        fullWidth
+                        inputType="email"
+                        alertNode={
+                            <Alert className={classes.alert} severity={emailSeverity()}>
+                                <AlertTitle className={classes.titleText}>{settings.isVerified ? "Email Verified" : "Verify the email used to send responses for this area"}</AlertTitle>
+                                Submit a new email to be used for responses.
+                            </Alert>
+                        }
+                        title=""
+                        name=""
+                        details=""
+                        buttonText="Update and Verify"
+                        placeholder="New Email Address"
+                        currentValue={settings.emailAddress}
+                        onClick={verifyEmailAddress}
+                        clearVal={false}
+                    />
                 </Grid>
-                <Divider />
-                <br></br>
-                <Grid container spacing={3}>
-                    <Grid item xs={12} >
-                        <Alert className={classNames(classes.alert, classes.alertTitle)} severity="error" variant="filled">
-                            <AlertTitle className={classes.titleText}>DANGER ZONE</AlertTitle>
-                            WAIT! These options are permanent.
-                        </Alert>
-                    </Grid>
-                    <Grid item xs={5}>
-                        <SettingsGridRowText
-                            alertNode={
-                                <Alert className={classes.alert} severity="error">
-                                    <AlertTitle className={classes.titleText}>Permanently DELETE</AlertTitle>
-                            CAREFUL! Use this option to delete this area (and all associated data) forever.
-                        </Alert>
-                            }
-                            title="Permanently Delete Area"
-                            name="Delete Area"
-                            details="Permanently delete this area."
-                            onClick={handleAreaDelete}
-                            clearVal={false}
-                            buttonText="Permanently Delete"
-                        />
-                    </Grid>
+            </Grid>
+            <Divider />
+            <br></br>
+
+            <Grid container spacing={3}>
+                <Grid item xs={12}>
+                    <Alert className={classNames(classes.alert, classes.alertTitle)} variant="filled" severity="warning">
+                        <AlertTitle className={classes.titleText}>Dashboard Specific Options</AlertTitle>
+                        These options only affect what you see in the dashboard.
+                    </Alert>
                 </Grid>
-                {
-                    alertState && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
-                }
-            </>
-            : null
-    )
-}
+                <Grid item xs={5}>
+                    <SettingsGridRowText
+                        alertNode={
+                            <Alert className={classes.alert} severity={settings.areaName ? "success" : "warning"}>
+                                <AlertTitle className={classes.titleText}>Update Dashboard Display Name</AlertTitle>
+                                Set the name of area used for your reference on this dashboard.
+                            </Alert>
+                        }
+                        title="Update Area Name"
+                        name="Update Area Name"
+                        details=" Update the name of this area for dashboard."
+                        placeholder="New Area Name"
+                        currentValue={settings.areaName}
+                        onClick={handleAreaNameChange}
+                        clearVal={false}
+                    />
+                </Grid>
+            </Grid>
+            <Divider />
+            <br></br>
+            <Grid container spacing={3}>
+                <Grid item xs={12}>
+                    <Alert className={classNames(classes.alert, classes.alertTitle)} severity="error" variant="filled">
+                        <AlertTitle className={classes.titleText}>DANGER ZONE</AlertTitle>
+                        WAIT! These options are permanent.
+                    </Alert>
+                </Grid>
+                <Grid item xs={5}>
+                    <SettingsGridRowText
+                        alertNode={
+                            <Alert className={classes.alert} severity="error">
+                                <AlertTitle className={classes.titleText}>Permanently DELETE</AlertTitle>
+                                CAREFUL! Use this option to delete this area (and all associated data) forever.
+                            </Alert>
+                        }
+                        title="Permanently Delete Area"
+                        name="Delete Area"
+                        details="Permanently delete this area."
+                        onClick={handleAreaDelete}
+                        clearVal={false}
+                        buttonText="Permanently Delete"
+                    />
+                </Grid>
+            </Grid>
+            {alertState && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />}
+        </>
+    ) : null;
+};

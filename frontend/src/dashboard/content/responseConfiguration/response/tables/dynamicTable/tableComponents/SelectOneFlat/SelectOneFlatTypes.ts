@@ -9,4 +9,4 @@ export type SelectOneFlatData = {
     range: boolean;
 }
 
-export type TableData = Array<SelectOneFlatData>; // | SelectOneThresholdData etc
+export type TableData = Array<SelectOneFlatData> | any;; // | SelectOneThresholdData etc

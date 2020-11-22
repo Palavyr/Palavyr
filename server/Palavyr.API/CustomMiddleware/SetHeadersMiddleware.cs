@@ -13,13 +13,13 @@ namespace Palavyr.API.CustomMiddleware
     public class SetHeaders
     {
 
-        private readonly RequestDelegate _next;
-        private static ILogger<SetHeaders> _logger;
+        private readonly RequestDelegate next;
+        private ILogger<SetHeaders> logger;
 
         public SetHeaders(RequestDelegate next, ILogger<SetHeaders> logger)
         {
-            _next = next;
-            _logger = logger;
+            this.next = next;
+            this.logger = logger;
         }
         
         public async Task InvokeAsync(HttpContext context, IWebHostEnvironment env, AccountsContext accountContext)
@@ -40,7 +40,7 @@ namespace Palavyr.API.CustomMiddleware
                 }
             }
 
-            await _next(context);
+            await next(context);
         }
     }
 }

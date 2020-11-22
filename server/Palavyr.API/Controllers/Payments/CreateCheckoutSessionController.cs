@@ -126,10 +126,7 @@ namespace Palavyr.API.Controllers.Payments
             await AccountContext.Sessions.AddAsync(newSession);
             await AccountContext.SaveChangesAsync();
 
-            return Ok(new CreateCheckoutSessionResponse()
-            {
-                SessionId = session.Id,
-            });
+            return Ok(session.Id);
         }
     }
 }

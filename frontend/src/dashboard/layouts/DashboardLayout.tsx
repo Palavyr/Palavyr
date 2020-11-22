@@ -91,8 +91,8 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const theme = useTheme();
 
     const loadAreas = useCallback(async () => {
-        const client = new ApiClient();
 
+        const client = new ApiClient();
         const {data: numAllowedBySubscription} = await client.Settings.Subscriptions.getNumAreas();
         setNumAreasAllowed(numAllowedBySubscription);
 
@@ -115,7 +115,6 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         setLoaded(true);
         return () => {
             setLoaded(false);
-            // setViewName("");
         };
     }, [areaIdentifier, loadAreas]);
 
@@ -210,25 +209,6 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                     </div>
                     <Divider />
                     {helpComponent}
-                    {/* {helpType === "conversation" && <ConversationHelp defaultOpen />}
-                    {helpType === "editor" && <EditorHelp defaultOpen />}
-                    {helpType === "email" && <EmailHelp defaultOpen />}
-
-                    {helpType === "estimate" && <EstimateHelp defaultOpen />}
-                    {helpType === "attachments" && <AttachmentsHelp defaultOpen />}
-                    {helpType === "areasettings" && <AreaSettingsHelp defaultOpen />}
-                    {helpType === "preview" && <PreviewHelp defaultOpen />} */}
-
-                    {/* {(helpType === "settings") && <SettingsHelp />}
-                    {(helpType === "demo") && <DemoHelp />}
-                    {(helpType === "enquiries") && <EnquiryHelp />}
-                    {(helpType === "getwidget") && <GetWidgetHelp />}
-                    {(helpType === "subscrible") && <SubscribeHelp />}
-                    {(helpType === "password") && <PasswordHelp />}
-                    {(helpType === "companyname") && <CompanyNameHelp />}
-                    {(helpType === "phonenumber") && <PhoneNumberHelp />}
-                    {(helpType === "logo") && <LogoHelp />}
-                    {(helpType === "locale") && <LocaleHelp />} */}
                 </Drawer>
                 {numAreasAllowed && (sidebarIds.length < numAreasAllowed ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
                 <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />

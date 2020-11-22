@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
         padding: ".2rem",
         textAlign: "center",
     },
+    freeInformationDiv: { width: "100%", display: "flex", justifyContent: "center", flexDirection: "column" },
 }));
 
 export enum Interval {
@@ -66,6 +67,16 @@ export enum Interval {
 
 type PriceMap = {
     [key: string]: string;
+};
+
+const stripePromise = loadStripe(stripeKey);
+
+export const Purchase = () => {
+    return (
+        <Elements stripe={stripePromise}>
+            <PurchaseInner />
+        </Elements>
+    );
 };
 
 const PurchaseInner = () => {
@@ -81,7 +92,6 @@ const PurchaseInner = () => {
     const searchParams = new URLSearchParams(location.search);
     const productType = searchParams.get("productType") as string;
     const productId = searchParams.get("productId") as string | null;
-
 
     var successUrl = `${webUrl}/dashboard/subscribe/success?session_id={CHECKOUT_SESSION_ID}`;
     var cancelUrl = `${webUrl}/dashboard/subscribe/canceled`;
@@ -112,24 +122,19 @@ const PurchaseInner = () => {
         }
     };
 
+    const cancelSubscriptionOnClick = async () => {
+        const { data: result } = await client.Purchase.Subscription.CancelSubscription();
+    };
+
     const displayFreeInformation = () => {
         return (
-            <>
-                <div style={{ width: "100%", display: "flex", justifyContent: "center", flexDirection: "column" }}>
-                    <Typography align="center" variant="h4">
-                        We're sad to see you go :( But if go you must...
-                    </Typography>
-                    <Divider />
-                    <SinglePurposeButton
-                        variant="outlined"
-                        color="primary"
-                        buttonText="Cancel your subscription"
-                        onClick={async () => {
-                            const {data: result} = await client.Purchase.Subscription.CancelSubscription();
-                        }}
-                    />
-                </div>
-            </>
+            <div className={cls.freeInformationDiv}>
+                <Typography align="center" variant="h4">
+                    We're sad to see you go :( But if go you must...
+                </Typography>
+                <Divider />
+                <SinglePurposeButton variant="outlined" color="primary" buttonText="Cancel your subscription" onClick={cancelSubscriptionOnClick} />
+            </div>
         );
     };
 
@@ -138,6 +143,11 @@ const PurchaseInner = () => {
     }, []);
 
     const capitalize = (word: string) => word[0].toUpperCase() + word.slice(1);
+
+    const singlePurposeButtonOnClick = async () => {
+        const { data: sessionId } = await client.Purchase.Checkout.CreateCheckoutSession(priceId, cancelUrl, successUrl);
+        if (stripe) stripe.redirectToCheckout({ sessionId: sessionId }).then(handleResult);
+    };
 
     return (
         <>
@@ -201,16 +211,7 @@ const PurchaseInner = () => {
                                     </Grid>
                                     <Divider />
                                     <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
-                                        <SinglePurposeButton
-                                            variant="outlined"
-                                            color="primary"
-                                            buttonText="Proceed to Stripe Checkout"
-                                            onClick={async () => {
-                                                const { data } = (await client.Purchase.Checkout.CreateCheckoutSession(priceId, cancelUrl, successUrl));
-                                                const sessionId = data.sessionId as string;
-                                                if (stripe) stripe.redirectToCheckout({ sessionId: sessionId }).then(handleResult);
-                                            }}
-                                        />
+                                        <SinglePurposeButton variant="outlined" color="primary" buttonText="Proceed to Stripe Checkout" onClick={singlePurposeButtonOnClick} />
                                     </div>
                                 </>
                             )}
@@ -219,15 +220,5 @@ const PurchaseInner = () => {
                 </Grid>
             </Grid>
         </>
-    );
-};
-
-const stripePromise = loadStripe(stripeKey);
-
-export const Purchase = () => {
-    return (
-        <Elements stripe={stripePromise}>
-            <PurchaseInner />
-        </Elements>
     );
 };

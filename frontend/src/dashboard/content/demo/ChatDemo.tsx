@@ -157,7 +157,7 @@ export const ChatDemo = () => {
             subtitle: subTitle,
             placeholder: placeholder,
         };
-        const res = await client.WidgetDemo.SaveWidgetPreferences(prefs);
+        const { data } = await client.WidgetDemo.SaveWidgetPreferences(prefs);
         reloadIframe(!iframeRefreshed);
     };
 

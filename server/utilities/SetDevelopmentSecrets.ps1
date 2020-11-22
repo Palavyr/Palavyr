@@ -53,5 +53,8 @@ dotnet user-secrets set AWS:Region "ap-southeast-2" --project $api
 # dotnet user-secrets set JwtToken:SecretKey "tobySuperSecretKey" --project $api
 dotnet user-secrets set JWTSecretKey "SomeSecretKey345345345345ThatIsITagkhjasdhjsf" --project $api
 
+### STRIPE
+$stripeKey = Get-Item -Path Env:PalavyrStipeSecretKey
+dotnet user-secrets set Stripe:SecretKey $stripeKey --project $api
 
 # Clear-Host
