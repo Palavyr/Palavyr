@@ -24,25 +24,25 @@ namespace Palavyr.API.response
 {
     public class PdfResponseGenerator
     {
-        private DashContext DashContext { get; set; }
-        private ConvoContext DynamicTablesContext { get; set; }
-        private AccountsContext AccountContext { get; set; }
-        private string AccountId { get; set; }
+        private readonly DashContext dashContext;
+        private readonly ConvoContext convoContext;
+        private readonly AccountsContext accountsContext;
+        private readonly string AccountId;
         private string AreaId { get; set; }
         private static readonly HttpClient client = new HttpClient();
         private HttpRequest Request { get; set; }
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
 
-        public PdfResponseGenerator(DashContext dashContext, AccountsContext accountContext,
-            ConvoContext dynamicTableContext, string accountId, string areaId, HttpRequest request, ILogger logger)
+        public PdfResponseGenerator(DashContext dashContext, AccountsContext accountsContext,
+            ConvoContext convoContext, string accountId, string areaId, HttpRequest request, ILogger logger)
         {
-            DashContext = dashContext;
-            AccountContext = accountContext;
-            DynamicTablesContext = dynamicTableContext;
+            this.dashContext = dashContext;
+            this.accountsContext = accountsContext;
+            this.convoContext = convoContext;
             AccountId = accountId;
             AreaId = areaId;
             Request = request;
-            _logger = logger;
+            this.logger = logger;
         }
 
         public async Task<FileLink> CreatePdfResponsePreviewAsync(CultureInfo culture)
@@ -50,25 +50,25 @@ namespace Palavyr.API.response
             var areaData = GetDeepAreaData(); // This was fucking stupid. Impossible to test.
             var userAccount = GetUserAccount();
             var accountId = userAccount.AccountId;
-            _logger.LogDebug("-------------CreatePdfResponsePreviewAsync-------------------");
+            logger.LogDebug("-------------CreatePdfResponsePreviewAsync-------------------");
             var criticalResponses = new CriticalResponses(new List<Dictionary<string, string>>()
             {
                 new Dictionary<string, string>() {{"Very important info", "Crucial response"}},
                 new Dictionary<string, string>() {{"An Important Question", "An insightful response"}},
             });
 
-            _logger.LogDebug("Attempting to collect table data....");
+            logger.LogDebug("Attempting to collect table data....");
             var staticTables = CollectStaticTables(areaData, culture);
             var dynamicTables = CollectPreviewDynamicTables(areaData, AccountId, culture);
 
-            _logger.LogDebug($"Generating PDF Html string to send to express server...");
+            logger.LogDebug($"Generating PDF Html string to send to express server...");
             var html = PdfGenerator.GenerateNewPDF(userAccount, areaData, criticalResponses, staticTables, dynamicTables);
 
             var randomFileName = Guid.NewGuid().ToString();
             var localWriteToPath_PDFPreview =
                 FormFilePath.FormResponsePreviewLocalFilePath(accountId, randomFileName, "pdf");
 
-            _logger.LogDebug(
+            logger.LogDebug(
                 $"Local path used to save the pdf from express (being sent to the express server: {localWriteToPath_PDFPreview}");
 
             string fileId;
@@ -79,9 +79,9 @@ namespace Palavyr.API.response
             }
             catch (Exception ex)
             {
-                _logger.LogCritical($"Failed to convert and write the HTML to PDF using the express server.");
-                _logger.LogCritical($"Attempted to use url: {LocalServices.PdfServiceUrl}");
-                _logger.LogCritical($"Encountered Error: {ex.Message}");
+                logger.LogCritical($"Failed to convert and write the HTML to PDF using the express server.");
+                logger.LogCritical($"Attempted to use url: {LocalServices.PdfServiceUrl}");
+                logger.LogCritical($"Encountered Error: {ex.Message}");
                 throw new Exception();
             }
 
@@ -97,7 +97,7 @@ namespace Palavyr.API.response
         /// <returns></returns>
         public async Task<FileLink> CreatePdfResponsePreviewAsync(IAmazonS3 s3Client, CultureInfo culture)
         {
-            _logger.LogDebug("-------------CreatePdfResponsePreviewAsync-------------------");
+            logger.LogDebug("-------------CreatePdfResponsePreviewAsync-------------------");
 
             var areaData = GetDeepAreaData(); // This was fucking stupid. Impossible to test.
             var userAccount = GetUserAccount();
@@ -109,11 +109,11 @@ namespace Palavyr.API.response
                 new Dictionary<string, string>() {{"Selected to Include", "An insightful response"}},
             });
 
-            _logger.LogDebug("Attempting to collect table data....");
+            logger.LogDebug("Attempting to collect table data....");
             var staticTables = CollectStaticTables(areaData, culture);
             var dynamicTables = CollectPreviewDynamicTables(areaData, AccountId, culture);
 
-            _logger.LogDebug($"Generating PDF Html string to send to express server...");
+            logger.LogDebug($"Generating PDF Html string to send to express server...");
             var html = PdfGenerator.GenerateNewPDF(
                 userAccount,
                 areaData,
@@ -124,19 +124,19 @@ namespace Palavyr.API.response
             var safeFileNameStem = Guid.NewGuid().ToString();
             var safeFileNamePath = FormFilePath.FormResponsePreviewLocalFilePath(accountId, safeFileNameStem);
 
-            _logger.LogDebug(
+            logger.LogDebug(
                 $"Attempting to create pdf file from html at {safeFileNamePath} using URL {LocalServices.PdfServiceUrl}");
 
             try
             {
                 await GeneratePdfFromHtml(html, LocalServices.PdfServiceUrl, safeFileNamePath, safeFileNameStem);
-                _logger.LogDebug($"Successfully wrote the pdf file to disk at {safeFileNamePath}!");
+                logger.LogDebug($"Successfully wrote the pdf file to disk at {safeFileNamePath}!");
             }
             catch (Exception ex)
             {
-                _logger.LogCritical($"Failed to convert and write the HTML to PDF using the express server.");
-                _logger.LogCritical($"Attempted to use url: {LocalServices.PdfServiceUrl}");
-                _logger.LogCritical($"Encountered Error: {ex.Message}");
+                logger.LogCritical($"Failed to convert and write the HTML to PDF using the express server.");
+                logger.LogCritical($"Attempted to use url: {LocalServices.PdfServiceUrl}");
+                logger.LogCritical($"Encountered Error: {ex.Message}");
                 throw new Exception();
                 
             }
@@ -144,14 +144,14 @@ namespace Palavyr.API.response
             string link;
             try
             {
-                link = await UriUtils.CreatePreSignedPreviewUrlLink(_logger, AccountId, safeFileNameStem,
+                link = await UriUtils.CreatePreSignedPreviewUrlLink(logger, AccountId, safeFileNameStem,
                     safeFileNamePath, s3Client);
-                _logger.LogDebug("Successfully created a presigned link to the pdf!");
+                logger.LogDebug("Successfully created a presigned link to the pdf!");
             }
             catch (Exception ex)
             {
-                _logger.LogCritical($"Failed to create presigned preview Url Link from S3.");
-                _logger.LogCritical($"Encountered Error: {ex.Message}");
+                logger.LogCritical($"Failed to create presigned preview Url Link from S3.");
+                logger.LogCritical($"Encountered Error: {ex.Message}");
                 throw new Exception();
             }
 
@@ -161,7 +161,7 @@ namespace Palavyr.API.response
             {
                 File.SetAttributes(safeFileNamePath, FileAttributes.Normal);
                 File.Delete(safeFileNamePath);
-                _logger.LogDebug($"Deleted local path (currently on S3). Path {safeFileNamePath}");
+                logger.LogDebug($"Deleted local path (currently on S3). Path {safeFileNamePath}");
             }
 
             return fileLink;
@@ -192,10 +192,10 @@ namespace Palavyr.API.response
             // Substitute Variables
             var nameElement = emailRequest.KeyValues.SingleOrDefault(dict => dict.ContainsKey("Name"));
             nameElement.TryGetValue("Name", out var clientName);
-            var companyName = AccountContext.Accounts.SingleOrDefault(row => row.AccountId == AccountId).CompanyName;
-            var logoUri = AccountContext.Accounts.SingleOrDefault(row => row.AccountId == AccountId).AccountLogoUri;
+            var companyName = accountsContext.Accounts.SingleOrDefault(row => row.AccountId == AccountId).CompanyName;
+            var logoUri = accountsContext.Accounts.SingleOrDefault(row => row.AccountId == AccountId).AccountLogoUri;
 
-            html = SupportedSubstitutions.MakeVariableSubstitutions(html, companyName, clientName, logoUri);
+            html = ResponseVariableSubstitution.MakeVariableSubstitutions(html, companyName, clientName, logoUri);
             
             var fileName = await GeneratePdfFromHtml(html, LocalServices.PdfServiceUrl, localWriteToPath, identifier);
             return fileName;
@@ -220,7 +220,7 @@ namespace Palavyr.API.response
         private string CreatePreviewUrlLink(string accountId, string fileId)
         {
             // var host = Request.Host.Value; //TODO:  Get this from config (request.host)
-            _logger.LogDebug("Attempting to create new file URI for preview.");
+            logger.LogDebug("Attempting to create new file URI for preview.");
             var builder =
                 new UriBuilder()
                 {
@@ -228,13 +228,13 @@ namespace Palavyr.API.response
                     Scheme = "https", Host = "localhost", Port = 5001,
                     Path = Path.Combine(accountId, MagicPathStrings.PreviewPDF, fileId)
                 };
-            _logger.LogDebug($"URI used for the preview: {builder.Uri.ToString()}");
+            logger.LogDebug($"URI used for the preview: {builder.Uri.ToString()}");
             return builder.Uri.ToString();
         }
 
         private Area GetDeepAreaData()
         {
-            var areaData = DashContext.Areas
+            var areaData = dashContext.Areas
                 .Where(row => row.AccountId == AccountId)
                 .Include(row => row.ConversationNodes)
                 .Include(row => row.DynamicTableMetas)
@@ -247,7 +247,7 @@ namespace Palavyr.API.response
 
         private UserAccount GetUserAccount()
         {
-            var userAccount = AccountContext.Accounts.Single(row => row.AccountId == AccountId);
+            var userAccount = accountsContext.Accounts.Single(row => row.AccountId == AccountId);
             return userAccount;
         }
 
@@ -295,7 +295,7 @@ namespace Palavyr.API.response
                 switch (tableMeta.TableType)
                 {
                     case DynamicTableTypes.SelectOneFlat:
-                        var tableRows = DashContext.SelectOneFlats
+                        var tableRows = dashContext.SelectOneFlats
                             .Where(row => row.AccountId == accountId && row.AreaIdentifier == data.AreaIdentifier)
                             .ToList();
                         var randomTableRow = tableRows[0]; // TODO: allow this to be specified via frontend
@@ -336,7 +336,7 @@ namespace Palavyr.API.response
                 switch (dynamicTable.TableType)
                 {
                     case DynamicTableTypes.SelectOneFlat:
-                        var dbRow = DashContext
+                        var dbRow = dashContext
                             .SelectOneFlats
                             .Where(row => row.AccountId == accountId && row.AreaIdentifier == data.AreaIdentifier)
                             .Single(row =>

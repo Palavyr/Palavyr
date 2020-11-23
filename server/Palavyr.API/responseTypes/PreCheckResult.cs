@@ -22,12 +22,12 @@ namespace Palavyr.API.ResponseTypes
 
         public static PreCheckResult CreateConvoResult(List<Area> incompleteAreas, bool isReady)
         {
-            return new PreCheckResult(isReady: isReady, incompleteAreas: incompleteAreas);
+            return new PreCheckResult(isReady, incompleteAreas);
         }
 
         public static PreCheckResult CreateApiKeyResult(bool apiKeyExists)
         {
-            return new PreCheckResult(apiKeyExists: apiKeyExists);
+            return new PreCheckResult(apiKeyExists);
         }
     }
     

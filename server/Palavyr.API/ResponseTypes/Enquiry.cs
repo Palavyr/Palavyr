@@ -1,11 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Amazon.S3;
-using Microsoft.Extensions.Logging;
-using Palavyr.Common.FileSystem.FormPaths;
-using Palavyr.API.ResponseTypes;
-using Palavyr.Common.uniqueIdentifiers;
-using Server.Domain.conversations;
+﻿using Palavyr.API.ResponseTypes;
 
 namespace Palavyr.API.responseTypes
 {
@@ -22,40 +15,6 @@ namespace Palavyr.API.responseTypes
         public string Name { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-
-
-
-        private static Enquiry BindToEnquiry(CompletedConversation conversation, FileLink fileLink)
-        {
-            return new Enquiry()
-            {
-                Id = conversation.Id,
-                ConversationId = conversation.ConversationId,
-                ResponsePdfLink = fileLink,
-                TimeStamp = conversation.TimeStamp.ToString(TimeUtils.DateTimeFormat),
-                AccountId = conversation.AccountId,
-                AreaName = conversation.AreaName,
-                EmailTemplateUsed = conversation.EmailTemplateUsed,
-                Seen = conversation.Seen,
-                Name = conversation.Name,
-                Email = conversation.Email,
-                PhoneNumber = conversation.PhoneNumber
-            };
-        }
-        
-        public static async Task<Enquiry> MapEnquiryToResponse(ILogger _logger, CompletedConversation conversation, string accountId, IAmazonS3 s3Client)
-        {
-            var fileId = conversation.ResponsePdfId;
-            _logger.LogInformation("----------------------------------");
-            _logger.LogInformation("1. File ID: " + fileId);
-            var preSignedUrl = await UriUtils.CreatePresignedUrlResponseLink(_logger, accountId, fileId, s3Client);
-
-            _logger.LogInformation("5. Got Presigned URL");
-            var fileLink = FileLink.CreateLink("Response PDF", preSignedUrl, fileId + ".pdf");
-            _logger.LogInformation("6. FileLink: " + fileLink);
-            var enquiry = BindToEnquiry(conversation, fileLink);
-            return enquiry;
-        }
     }
 }
 

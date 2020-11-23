@@ -12,6 +12,7 @@ namespace Palavyr.API.Controllers
 {
     public abstract class AttachmentsBase : ControllerBase
     {
+        [NonAction] 
         public async Task<FileLink[]> GetFileLinks(string accountId, string areaId, DashContext dashContext, ILogger logger, IAmazonS3 s3Client)
         {
             var files = AttachmentPaths.GetAttachmentFileList(accountId, areaId);

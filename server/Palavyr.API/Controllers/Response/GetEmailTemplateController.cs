@@ -44,7 +44,7 @@ namespace Palavyr.API.Controllers
                     .Accounts
                     .SingleOrDefaultAsync(row => row.AccountId == accountId)
             ).AccountLogoUri;
-            emailTemplate = SupportedSubstitutions.MakeVariableSubstitutions(emailTemplate, companyName, clientName, logoUri);
+            emailTemplate = ResponseVariableSubstitution.MakeVariableSubstitutions(emailTemplate, companyName, clientName, logoUri);
             return Ok(emailTemplate);
         }
         

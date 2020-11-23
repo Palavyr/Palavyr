@@ -14,7 +14,7 @@ namespace Palavyr.API.Controllers
     {
         public static PreCheckResult ExecuteWidgetStatusCheck(string accountId, DashContext dashContext, ILogger logger)
         {
-            logger.LogDebug("Collecting areas for DEMO pre-check...");
+            logger.LogDebug("Collecting areas...");
             var areas = dashContext
                 .Areas
                 .Where(row => row.AccountId == accountId)
@@ -22,11 +22,11 @@ namespace Palavyr.API.Controllers
                 .Include(row => row.DynamicTableMetas)
                 .ToList();
 
-            logger.LogDebug("Collected areas.... running DEMO pre-check");
-            var result = WidgetStatusUtils.RunConversationsPreCheck(areas, logger);
+            logger.LogDebug("Collected areas.... running pre-check");
+            var result = StatusCheck(areas, logger);
             return result;
         }
-        private static PreCheckResult RunConversationsPreCheck(List<Area> areas, ILogger _logger)
+        private static PreCheckResult StatusCheck(List<Area> areas, ILogger _logger)
         {
             var incompleteAreas = new List<Area>();
             _logger.LogDebug("Attempting RunConversationsPreCheck...");

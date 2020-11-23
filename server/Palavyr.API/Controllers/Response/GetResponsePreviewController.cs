@@ -6,6 +6,7 @@ using Amazon.S3;
 using Microsoft.AspNetCore.Mvc;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.response;
 using Palavyr.API.ResponseTypes;
@@ -43,7 +44,7 @@ namespace Palavyr.API.Controllers
         public async Task<IActionResult> GetConfigurationPreview([FromHeader] string accountId, string areaId)
         {
             logger.LogDebug("Attempting to generate a new preview");
-            var account = accountsContext.Accounts.Single(row => row.AccountId == accountId);
+            var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
             var locale = account.Locale;
             var culture = new CultureInfo(locale);
             

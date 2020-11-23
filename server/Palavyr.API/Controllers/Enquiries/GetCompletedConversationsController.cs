@@ -45,7 +45,7 @@ namespace Palavyr.API.Controllers
                 try
                 {
                     var completeEnquiry =
-                        await Enquiry.MapEnquiryToResponse(logger, completedConvo, accountId, s3Client);
+                        await EnquiryUtils.MapEnquiryToResponse(completedConvo, accountId, s3Client, logger);
                     Enquiries.Add(completeEnquiry);
                 }
                 catch (Exception ex)

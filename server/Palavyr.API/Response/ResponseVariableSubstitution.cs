@@ -1,6 +1,6 @@
 namespace Palavyr.API.response
 {
-    public static class SupportedSubstitutions
+    public static class ResponseVariableSubstitution
     {
         private const string CompanyVariable = "{%Company%}";
         private const string NameVariable = "{%Name%}";

@@ -30,7 +30,7 @@ namespace Palavyr.API.Controllers
         }
             
         [HttpDelete("attachments/{areaId}/file-link")]
-        public async Task<IActionResult> Delete(string areaId, [FromHeader] string accountId, Text text)
+        public async Task<IActionResult> Delete([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] Text text)
         {
             var filePath = FormFilePath.FormAttachmentFilePath(accountId, areaId, text.FileId);
             if (DiskUtils.ValidatePathExists(filePath))
