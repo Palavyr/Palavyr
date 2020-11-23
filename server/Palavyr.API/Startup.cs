@@ -19,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using Palavyr.API.Controllers;
 using Palavyr.API.controllers.accounts.newAccount;
 using Palavyr.API.CustomMiddleware;
+using Palavyr.API.Services.StripeEventService;
 using Palavyr.Background;
 using Palavyr.Common.FileSystem.FormPaths;
 using Stripe;
@@ -27,7 +28,6 @@ namespace Palavyr.API
 {
     public class Startup
     {
-
         private const string _configurationDbStringKey = "DashContextPostgres";
         private const string _accountDbStringKey = "AccountsContextPostgres";
         private const string _convoDbStringKey = "ConvoContextPostgres";
@@ -43,7 +43,7 @@ namespace Palavyr.API
         }
 
         private IConfiguration Configuration { get; set; }
-        private ILogger<Startup> _logger { get; set; }
+        private ILogger<Startup> logger { get; set; }
         private IWebHostEnvironment env { get; set; }
 
         public void ConfigureServices(IServiceCollection services)
@@ -169,6 +169,9 @@ namespace Palavyr.API
             services.AddTransient<IAccountSetupService, AccountSetupService>();
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IEmailVerificationService, EmailVerificationService>();
+            services.AddTransient<IStripeWebhookAuthService, StripeWebhookAuthService>();
+            services.AddTransient<IStripeEventWebhookService, StripeEventWebhookService>();
+            services.AddTransient<IStripeCustomerService, StripeCustomerService>();
         }
         
         
@@ -181,7 +184,7 @@ namespace Palavyr.API
             ILoggerFactory loggerFactory
         )
         {
-            _logger = loggerFactory.CreateLogger<Startup>();
+            logger = loggerFactory.CreateLogger<Startup>();
             var appDataPath = resolveAppDataPath();
             if (string.IsNullOrEmpty(Configuration["WebRootPath"]))
                 Configuration["WebRootPath"] = Environment.CurrentDirectory;
@@ -202,7 +205,7 @@ namespace Palavyr.API
                 var option = new BackgroundJobServerOptions {WorkerCount = 1};
                 app.UseHangfireServer(option);
                 app.UseHangfireDashboard();
-                _logger.LogInformation("Preparing to archive teh project");
+                logger.LogInformation("Preparing to archive teh project");
                 try
                 {
                     // recurringJobManager
@@ -238,7 +241,7 @@ namespace Palavyr.API
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogCritical("ERROR " + ex.Message);
+                    logger.LogCritical("ERROR " + ex.Message);
                 }
             }
         }
@@ -256,7 +259,7 @@ namespace Palavyr.API
                 var home = Environment.GetEnvironmentVariable("HOME");
                 if (home == null)
                 {
-                    _logger.LogDebug($"STARTUP-9: HOME VARIABLE NOT SET");
+                    logger.LogDebug($"STARTUP-9: HOME VARIABLE NOT SET");
                 }
 
                 appDataPath = Path.Combine(home, MagicPathStrings.DataFolder);

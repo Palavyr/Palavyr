@@ -1,19 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Amazon.SimpleEmail;
-using Amazon.SimpleEmail.Model;
 using DashboardServer.Data;
-using EmailService.verification;
-using Google.Apis.Util;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.receiverTypes;
-using Palavyr.API.response;
 using Newtonsoft.Json;
 using Stripe;
 using Stripe.Checkout;
@@ -22,7 +13,8 @@ namespace Palavyr.API.Controllers.Payments
 {
     public class CreateCheckoutSessionRequest
     {
-        [JsonProperty("priceId")] public string PriceId { get; set; }
+        [JsonProperty("priceId")] 
+        public string PriceId { get; set; }
         public string SuccessUrl { get; set; }
         public string CancelUrl { get; set; }
     }
@@ -42,36 +34,40 @@ namespace Palavyr.API.Controllers.Payments
         public string Message { get; set; }
     }
 
-    [Route("api/checkout")]
+    [Route("api")]
     [ApiController]
-    public class CreateCheckoutSessionController : BaseController
+    public class CreateCheckoutSessionController : ControllerBase
     {
-        private static ILogger<CreateCheckoutSessionController> _logger;
-        private readonly IStripeClient _stripeClient = new StripeClient(StripeConfiguration.ApiKey);
+        private ILogger<CreateCheckoutSessionController> logger;
+        private readonly IStripeClient stripeClient;
+        private AccountsContext accountsContext;
 
         public CreateCheckoutSessionController(
             ILogger<CreateCheckoutSessionController> logger,
-            AccountsContext accountContext,
-            ConvoContext convoContext,
-            DashContext dashContext,
-            IWebHostEnvironment env
-        ) : base(accountContext, convoContext, dashContext, env)
+            AccountsContext accountsContext
+        )
         {
-            _logger = logger;
+            this.stripeClient = new StripeClient(StripeConfiguration.ApiKey);
+            this.accountsContext = accountsContext;
+            this.logger = logger;
         }
 
-        [HttpPost("create-checkout-session")]
+        [HttpPost("checkout/create-checkout-session")]
         public async Task<IActionResult> CreateSession(
             [FromHeader] string accountId,
             [FromBody] CreateCheckoutSessionRequest request)
         {
-            var account = AccountContext.Accounts.SingleOrDefault(row => row.AccountId == accountId);
-            if (account == null) throw new Exception("Account Not FOUND!");
-
-            var successUrl =
-                request.SuccessUrl; // "http://localhost:8080/dashboard/subscribe/payment/success?session_id={CHECKOUT_SESSION_ID}";
-            var cancelUrl = request.CancelUrl; // "http://localhost:8080/dashboard/subscribe/payment/canceled";
-
+            
+            
+            var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
+            logger.LogDebug($"Account: {account}");
+            if (account == null || account.StripeCustomerId == null)
+            {
+                throw new Exception("Account and Stripe customer Id must be set");
+            }
+            
+            
+            
             var options = new SessionCreateOptions
             {
                 // See https://stripe.com/docs/api/checkout/sessions/create
@@ -79,14 +75,13 @@ namespace Palavyr.API.Controllers.Payments
                 // {CHECKOUT_SESSION_ID} is a string literal; do not change it!
                 // the actual Session ID is returned in the query parameter when your customer
                 // is redirected to the success page.
-                SuccessUrl = successUrl,
-                CancelUrl = cancelUrl,
+                SuccessUrl = request.SuccessUrl,
+                CancelUrl = request.CancelUrl,
                 
-                // we use the custoemr ID here so they can provide any eail they like.
+                // we use the customer ID here so they can provide any eail they like.
                 // Any time we contact the customer about payments, we should use the stripe customer email. This is very important.
                 // Otherwise We will be creating a new customer ID with the same email over an over again. 
-                Customer = account.StripeCustomerId, 
-                
+                Customer = account.StripeCustomerId,
                 PaymentMethodTypes = new List<string>
                 {
                     "card"
@@ -102,15 +97,15 @@ namespace Palavyr.API.Controllers.Payments
                 },
             };
 
-            var service = new SessionService(_stripeClient);
+            var sessionService = new SessionService(stripeClient);
             Session session;
             try
             {
-                session = await service.CreateAsync(options);
+                session = await sessionService.CreateAsync(options);
             }
             catch (StripeException ex)
             {
-                _logger.LogDebug($"Payment Error: {ex.StripeError.Message}");
+                logger.LogDebug($"Payment Error: {ex.StripeError.Message}");
                 var response = new ErrorResponse();
                 response.ErrorMessage = new ErrorMessage
                 {
@@ -120,11 +115,10 @@ namespace Palavyr.API.Controllers.Payments
             }
 
             // Create a new session using the session.Id and save it to the session db with the account Details.
-            // when the transaction is successfull, then use the returned ID to 
-
+            // when the transaction is successful, then use the returned ID to 
             var newSession = Server.Domain.Accounts.Session.CreateNew(session.Id, accountId, account.ApiKey);
-            await AccountContext.Sessions.AddAsync(newSession);
-            await AccountContext.SaveChangesAsync();
+            await accountsContext.Sessions.AddAsync(newSession);
+            await accountsContext.SaveChangesAsync();
 
             return Ok(session.Id);
         }

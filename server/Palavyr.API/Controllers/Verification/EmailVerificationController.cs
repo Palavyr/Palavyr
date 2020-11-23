@@ -79,7 +79,7 @@ namespace Palavyr.API.Controllers.Verification
                         );
 
                     case (Failed):
-                        result = await Verifier.VerifyEmailAddress(emailRequest.EmailAddress);
+                        result = await Verifier.VerifyEmailAddressAsync(emailRequest.EmailAddress);
                         area.AreaSpecificEmail = emailRequest.EmailAddress;
                         area.EmailIsVerified = false;
                         await dashContext.SaveChangesAsync();
@@ -103,7 +103,7 @@ namespace Palavyr.API.Controllers.Verification
             }
 
             // unseen email address - start fresh..
-            result = await Verifier.VerifyEmailAddress(emailRequest.EmailAddress);
+            result = await Verifier.VerifyEmailAddressAsync(emailRequest.EmailAddress);
             if (!result)
                 return EmailVerificationResponse.CreateNew(
                     Failed,

@@ -165,9 +165,10 @@ export class ApiClient {
         Groups: {
             GetGroups: async (): Promise<AxiosResponse> => this.client.get(`group/`),
             AddGroup: async (parentId: string | null, groupName: string): Promise<AxiosResponse> => this.client.post(`group/`, { groupName: groupName, parentId: parentId }),
-            RemoveGroup: async (groupId: string): Promise<AxiosResponse> => this.client.delete(`group/${groupId}`),
             UpdateGroupName: async (groupName: string, groupId: string): Promise<AxiosResponse> => this.client.put(`group/${groupId}`, { groupName: groupName }),
             UpdateAreaGroup: async (areaIdentifier: string, groupId: string | null): Promise<AxiosResponse> => this.client.put(`group/area/${areaIdentifier}/${groupId}`),
+
+            RemoveGroup: async (groupId: string): Promise<AxiosResponse> => this.client.delete(`group/${groupId}`),
             DeleteAreaGroup: async (areaIdentifier: string): Promise<AxiosResponse> => this.client.delete(`group/area/${areaIdentifier}`),
         },
         EmailVerification: {

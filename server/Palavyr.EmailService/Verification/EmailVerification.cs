@@ -9,34 +9,34 @@ namespace EmailService.verification
 {
     public class SenderVerification
     {
-        private ILogger _logger { get; set; }
-        private IAmazonSimpleEmailService EmailClient { get;}
+        private ILogger logger;
+        private IAmazonSimpleEmailService sesClient;
 
-        public SenderVerification(ILogger logger, IAmazonSimpleEmailService client)
+        public SenderVerification(ILogger logger, IAmazonSimpleEmailService sesClient)
         {
-            _logger = logger;
-            EmailClient = client;
+            this.logger = logger;
+            this.sesClient = sesClient;
         }
 
-        public async Task<bool> VerifyEmailAddress(string emailAddress)
+        public async Task<bool> VerifyEmailAddressAsync(string emailAddress)
         {
             var request = new VerifyEmailAddressRequest()
             {
                 EmailAddress = emailAddress
             };
-            _logger.LogDebug("Attempting to verify email address.");
+            logger.LogDebug("Attempting to verify email address.");
 
             bool result;
             try
             {
-                var response = await EmailClient.VerifyEmailAddressAsync(request);
+                var response = await sesClient.VerifyEmailAddressAsync(request);
                 result = response.HttpStatusCode == HttpStatusCode.OK;
             }
             catch (Exception ex)
             {
                 result = false;
             }
-            _logger.LogDebug($"Email verification sent: {result.ToString()}");
+            logger.LogDebug($"Email verification sent: {result.ToString()}");
             return result;
         }
     }

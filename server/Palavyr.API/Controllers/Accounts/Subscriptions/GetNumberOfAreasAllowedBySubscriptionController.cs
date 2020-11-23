@@ -17,13 +17,13 @@ namespace Palavyr.API.controllers.accounts.newAccount
         }
 
         [HttpGet("subscriptions/count")]
-        public async Task<IActionResult> Get([FromHeader] string accountId)
+        public async Task<int> Get([FromHeader] string accountId)
         {
             var numAreasAllowed = (await accountsContext
                 .Subscriptions
                 .SingleOrDefaultAsync(row => row.AccountId == accountId))
                 .NumAreas;
-            return Ok(numAreasAllowed);
+            return numAreasAllowed;
         }
     }
 }

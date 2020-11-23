@@ -10,12 +10,12 @@ namespace Palavyr.API.Controllers
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.WidgetScheme)]
     [Route("api")]
     [ApiController]
-    public class GetAreaGroupsController : ControllerBase
+    public class GetAreaGroupsForWidgetController : ControllerBase
     {
         private DashContext dashContext;
-        private ILogger<GetAreaGroupsController> logger;
+        private ILogger<GetAreaGroupsForWidgetController> logger;
 
-        public GetAreaGroupsController(DashContext dashContext, ILogger<GetAreaGroupsController> logger)
+        public GetAreaGroupsForWidgetController(DashContext dashContext, ILogger<GetAreaGroupsForWidgetController> logger)
         {
             this.dashContext = dashContext;
             this.logger = logger;

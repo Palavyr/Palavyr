@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.receiverTypes;
 using Palavyr.API.response;
+using Palavyr.API.Services.StripeEventService;
 using Stripe;
 
 namespace Palavyr.API.controllers.accounts.newAccount
@@ -19,10 +20,10 @@ namespace Palavyr.API.controllers.accounts.newAccount
     public class ModifyDefaultEmailAddressController : ControllerBase
     {
         private ILogger<ModifyDefaultEmailAddressController> logger;
-        private readonly IStripeClient stripeClient = new StripeClient();
         private AccountsContext accountsContext;
         private readonly SenderVerification verifier;
-        private IAmazonSimpleEmailService client;
+        private IAmazonSimpleEmailService sesClient;
+        private IStripeCustomerService stripeCustomerService;
 
         private const string Pending = "Pending";
         private const string Success = "Success";
@@ -30,24 +31,15 @@ namespace Palavyr.API.controllers.accounts.newAccount
         public ModifyDefaultEmailAddressController(
             AccountsContext accountsContext, 
             ILogger<ModifyDefaultEmailAddressController> logger,
-            IAmazonSimpleEmailService client
+            IAmazonSimpleEmailService sesClient,
+            IStripeCustomerService stripeCustomerService
         )
         {
             this.logger = logger;
-            this.client = client;
+            this.sesClient = sesClient;
             this.accountsContext = accountsContext;
-            verifier = new SenderVerification(logger, client);
-        }
-
-        private async Task<Customer> UpdateStripeCustomerEmail(string emailAddress, string customerId)
-        {
-            var options = new CustomerUpdateOptions
-            {
-                Email = emailAddress
-            };
-            var service = new CustomerService(stripeClient);
-            var customer = await service.UpdateAsync(customerId, options);
-            return customer;
+            this.stripeCustomerService = stripeCustomerService;
+            verifier = new SenderVerification(logger, sesClient);
         }
         
         [HttpPut("account/settings/update/email")]
@@ -69,7 +61,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             GetIdentityVerificationAttributesResponse response;
             try
             {
-                response = await client.GetIdentityVerificationAttributesAsync(identityRequest);
+                response = await sesClient.GetIdentityVerificationAttributesAsync(identityRequest);
             }
             catch (Exception ex)
             {
@@ -83,7 +75,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             // customer can't use the palavyr. If they change to another email, then stripe will be updated the same
             // and they can try to verify that email. Either way, we should update the stripe email to the current
             // palavyr (verified or unverified email).
-            var stripeCustomer = await UpdateStripeCustomerEmail(emailRequest.EmailAddress, account.StripeCustomerId);
+            var stripeCustomer = await stripeCustomerService.UpdateStripeCustomerEmail(emailRequest.EmailAddress, account.StripeCustomerId);
             if (stripeCustomer == null)
             {
                 return BadRequest();
@@ -107,7 +99,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
                         break;
 
                     case (Failed):
-                        result = await verifier.VerifyEmailAddress(emailRequest.EmailAddress);
+                        result = await verifier.VerifyEmailAddressAsync(emailRequest.EmailAddress);
                         account.EmailAddress = emailRequest.EmailAddress;
                         account.DefaultEmailIsVerified = false;
                         await accountsContext.SaveChangesAsync();
@@ -134,7 +126,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             }
 
             // unseen email address - start fresh.
-            result = await verifier.VerifyEmailAddress(emailRequest.EmailAddress);
+            result = await verifier.VerifyEmailAddressAsync(emailRequest.EmailAddress);
             if (!result)
             {
                 verificationResponse = EmailVerificationResponse.CreateNew(

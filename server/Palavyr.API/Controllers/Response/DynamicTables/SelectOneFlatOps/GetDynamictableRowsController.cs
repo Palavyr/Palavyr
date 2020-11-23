@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.Controllers
@@ -15,10 +16,10 @@ namespace Palavyr.API.Controllers
             [FromRoute] string areaId, 
             [FromRoute] string tableId)
         {
-            var oneFlats = dashContext.SelectOneFlats.Where(
+            var oneFlats = await dashContext.SelectOneFlats.Where(
                 row => row.AccountId == accountId
                        && row.AreaIdentifier == areaId
-                       && row.TableId == tableId).ToList();
+                       && row.TableId == tableId).ToListAsync();
             return Ok(oneFlats);
         }
     }

@@ -29,7 +29,7 @@ export const GroupNodeEditorModal = ({ groupId, modalState, text, setText, setMo
                     value={text}
                     multiline rows={1}
                     onChange={(event) => { setText(event.target.value) }}
-                    id="gruopName"
+                    id="groupName"
                     label="Group Name"
                     type="text"
                     fullWidth
