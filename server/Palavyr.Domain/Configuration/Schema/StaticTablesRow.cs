@@ -7,7 +7,7 @@ namespace Server.Domain.Configuration.schema
     public class StaticTableRow
     {
         [Key]
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public int RowOrder { get; set; }
         public string Description { get; set; }
         public StaticFee Fee { get; set; }

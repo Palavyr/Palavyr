@@ -6,7 +6,7 @@ namespace Server.Domain.Configuration.schema
     public class StaticFee
     {
         [Key]
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public double Min { get; set; }
         public double Max { get; set; }
         public string FeeId { get; set; }

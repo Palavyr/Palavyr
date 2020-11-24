@@ -127,7 +127,10 @@ namespace Palavyr.API
                     });
             });
 
-            services.AddControllers();
+            services
+                .AddControllers()
+                .AddNewtonsoftJson();
+            
             var value = Configuration.GetConnectionString(_accountDbStringKey);
             services.AddDbContext<AccountsContext>(opt =>
                 opt.UseNpgsql(Configuration.GetConnectionString(_accountDbStringKey)));

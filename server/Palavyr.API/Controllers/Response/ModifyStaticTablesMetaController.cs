@@ -52,7 +52,7 @@ namespace Palavyr.API.Controllers
                 dashContext.StaticTablesMetas.Remove(dashContext.StaticTablesMetas.Find(meta.Id));
             }
 
-            await dashContext.SaveChangesAsync();
+            // await dashContext.SaveChangesAsync();
 
             var clearedMetas = StaticTablesMeta.BindTemplateList(staticTableMetas, accountId);
             var currentArea = await dashContext.Areas.Where(row => row.AccountId == accountId)
