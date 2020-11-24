@@ -4,34 +4,38 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.Controllers
 {
-    [Route("api/test/")]
+    [Route("api")]
     [ApiController]
-    public class TestController : BaseController
+    public class TestController : ControllerBase
     {
-        
-        public TestController(AccountsContext accountContext, ConvoContext convoContext, DashContext dashContext, IWebHostEnvironment env) : base(accountContext, convoContext, dashContext, env) { }
+        private DashContext dashContext;
+
+        public TestController(
+            DashContext dashContext)
+        {
+            this.dashContext = dashContext;
+        }
 
 
-        [HttpPost]
+        [HttpPost("test")]
         public void GetTestData([FromBody] List<ConversationNode> node)
         {
-                 
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpGet("test")]
         public string GetTest()
         {
-            var rows = DashContext.Areas.ToList();
+            var rows = dashContext.Areas.ToList();
             foreach (var row in rows)
             {
                 Console.WriteLine(row.ToString());
             }
+
             return "This is a test";
         }
 

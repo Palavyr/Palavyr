@@ -20,6 +20,8 @@ using Palavyr.API.Controllers;
 using Palavyr.API.controllers.accounts.newAccount;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.API.Services.StripeEventService;
+using Palavyr.API.Services.StripeServices;
+using Palavyr.API.Services.StripeServices.StripeWebhookHandlers;
 using Palavyr.Background;
 using Palavyr.Common.FileSystem.FormPaths;
 using Stripe;
@@ -35,7 +37,7 @@ namespace Palavyr.API
         private const string _secretKeySection = "AWS:SecretKey";
         private const string _StripeKeySection = "Stripe:SecretKey";
         private const string _webhookKeySection = "Stripe:WebhookKey";
-
+        private int stripeRetriesCount = 3;
         public Startup(IWebHostEnvironment Env, IConfiguration configuration)
         {
             env = Env;
@@ -136,6 +138,7 @@ namespace Palavyr.API
 
             // Stripe
             StripeConfiguration.ApiKey = Configuration.GetSection(_StripeKeySection).Value;
+            StripeConfiguration.MaxNetworkRetries = stripeRetriesCount;
             
             // AWS Services
             var accessKey = Configuration.GetSection(_accessKeySection).Value;
@@ -172,9 +175,10 @@ namespace Palavyr.API
             services.AddTransient<IStripeWebhookAuthService, StripeWebhookAuthService>();
             services.AddTransient<IStripeEventWebhookService, StripeEventWebhookService>();
             services.AddTransient<IStripeCustomerService, StripeCustomerService>();
+            services.AddTransient<IStripeSubscriptionService, StripeSubscriptionService>();
+            services.AddTransient<IStripeProductService, StripeProductService>();
+            services.AddTransient<IProcessStripeCheckoutSessionCompletedHandler, ProcessStripeCheckoutSessionCompletedHandler>();
         }
-        
-        
 
         public void Configure(
             IApplicationBuilder app,
