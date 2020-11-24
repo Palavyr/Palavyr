@@ -7,7 +7,8 @@ namespace Server.Domain.Configuration.schema
 {
     public class StaticTablesMeta
     {
-        [Key] public int Id { get; set; }
+        [Key] 
+        public int Id { get; set; }
         public int TableOrder { get; set; }
         public string Description { get; set; }
         public string AreaIdentifier { get; set; }
@@ -15,7 +16,6 @@ namespace Server.Domain.Configuration.schema
         public string AccountId { get; set; }
 
         [NotMapped] private static string DefaultDescription { get; set; } = "Default Description";
-
         
         public static List<StaticTablesMeta> CreateDefaultMetas(string areaId, string accountId)
         {

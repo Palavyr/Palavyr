@@ -79,8 +79,8 @@ export class ApiClient {
             },
             Static: {
                 updateStaticTablesMetas: async (areaIdentifier: string, staticTablesMetas: StaticTableMetas): Promise<AxiosResponse<StaticTableMetas>> =>
-                    this.client.put(`estimate/configuration/${areaIdentifier}/static/tables/save`, staticTablesMetas),
-                getStaticTablesMetaTemplate: async (areaIdentifier: string): Promise<AxiosResponse<staticTableMetaTemplate>> => this.client.get(`estimate/configuration/${areaIdentifier}/static/tables/template`),
+                    this.client.put(`response/configuration/${areaIdentifier}/static/tables/save`, staticTablesMetas),
+                getStaticTablesMetaTemplate: async (areaIdentifier: string): Promise<AxiosResponse<staticTableMetaTemplate>> => this.client.get(`response/configuration/${areaIdentifier}/static/tables/template`),
             },
         },
 

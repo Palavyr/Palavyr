@@ -129,6 +129,7 @@ export const EmailConfiguration = () => {
                     <SaveOrCancel
                         onSave={() => saveEditorData()}
                         onCancel={() => loadEmailTemplate()}
+                        useModal={true}
                     />
                 </div>
             </EmailEditor>

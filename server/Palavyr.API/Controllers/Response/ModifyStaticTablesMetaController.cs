@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DashboardServer.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -9,6 +10,7 @@ using Server.Domain.Configuration.schema;
 
 namespace Palavyr.API.Controllers
 {
+    [Authorize]
     [Route("api")]
     [ApiController]
     public class ModifyStaticTablesMetaController : ControllerBase
@@ -23,14 +25,14 @@ namespace Palavyr.API.Controllers
         {
             this.dashContext = dashContext;
             this.logger = logger;
-            
         }
         
         [HttpPut("response/configuration/{areaId}/static/tables/save")]
         public async Task<IActionResult> Modify(
-            [FromRoute] string areaId,
+            string areaId,
             [FromHeader] string accountId,
-            [FromBody] List<StaticTablesMeta> staticTableMetas)
+            [FromBody] List<StaticTablesMeta> staticTableMetas
+        )
         {
             var metasToDelete = dashContext
                 .StaticTablesMetas
