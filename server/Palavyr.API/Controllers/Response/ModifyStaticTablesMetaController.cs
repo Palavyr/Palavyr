@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Server.Domain.Configuration.schema;
+using Server.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Response
 {
     [Authorize]
     [Route("api")]
@@ -26,7 +26,7 @@ namespace Palavyr.API.Controllers
             this.dashContext = dashContext;
             this.logger = logger;
         }
-        
+
         [HttpPut("response/configuration/{areaId}/static/tables/save")]
         public async Task<IActionResult> Modify(
             string areaId,
@@ -34,25 +34,25 @@ namespace Palavyr.API.Controllers
             [FromBody] List<StaticTablesMeta> staticTableMetas
         )
         {
-            var metasToDelete = dashContext
+            var metasToDelete = await dashContext
                 .StaticTablesMetas
                 .Where(row => row.AccountId == accountId)
                 .Where(row => row.AreaIdentifier == areaId)
                 .Include(x => x.StaticTableRows)
-                .ThenInclude(x => x.Fee);
-
+                .ThenInclude(x => x.Fee)
+                .ToListAsync();
+    
             foreach (var meta in metasToDelete)
             {
                 foreach (var row in meta.StaticTableRows)
                 {
-                    dashContext.StaticFees.Remove(dashContext.StaticFees.Find(row.Fee.Id));
-                    dashContext.StaticTablesRows.Remove(dashContext.StaticTablesRows.Find(row.Id));
+                    dashContext.StaticFees.Remove(await dashContext.StaticFees.FindAsync(row.Fee.Id));
+                    dashContext.StaticTablesRows.Remove(await dashContext.StaticTablesRows.FindAsync(row.Id));
                 }
 
-                dashContext.StaticTablesMetas.Remove(dashContext.StaticTablesMetas.Find(meta.Id));
+                dashContext.StaticTablesMetas.Remove(await dashContext.StaticTablesMetas.FindAsync(meta.Id));
             }
 
-            // await dashContext.SaveChangesAsync();
 
             var clearedMetas = StaticTablesMeta.BindTemplateList(staticTableMetas, accountId);
             var currentArea = await dashContext.Areas.Where(row => row.AccountId == accountId)
@@ -60,11 +60,11 @@ namespace Palavyr.API.Controllers
             currentArea.StaticTablesMetas = clearedMetas;
             await dashContext.SaveChangesAsync();
 
-            var tables = dashContext
+            var tables = await dashContext
                 .StaticTablesMetas
                 .Where(row => row.AccountId == accountId)
                 .Where(row => row.AreaIdentifier == areaId)
-                .ToList();
+                .ToListAsync();
             return Ok(tables);
         }
     }

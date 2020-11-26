@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Areas
 {
     [Authorize]
     [Route("api")]

@@ -1,14 +1,15 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using DashboardServer.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Amazon.S3;
+using DashboardServer.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.responseTypes;
+using Palavyr.API.Utils;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Enquiries
 {
     [Route("api")]
     [ApiController]
@@ -16,13 +17,13 @@ namespace Palavyr.API.Controllers
     {
         private ILogger<GetCompletedConversationsController> logger;
         private ConvoContext convoContext;
-        private AmazonS3Client s3Client;
+        private IAmazonS3 s3Client;
 
         public GetCompletedConversationsController(
             ILogger<GetCompletedConversationsController> logger,
             ConvoContext convoContext,
-            AmazonS3Client s3Client
-            )
+            IAmazonS3 s3Client
+        )
         {
             this.logger = logger;
             this.convoContext = convoContext;
@@ -30,14 +31,18 @@ namespace Palavyr.API.Controllers
         }
 
         [HttpGet("enquiries")]
-        public async Task<IActionResult> Get([FromHeader] string accountId)
+        public async Task<Enquiry[]> Get([FromHeader] string accountId)
         {
-            var Enquiries = new List<Enquiry>();
+            var enquiries = new List<Enquiry>();
 
-            var completedConvos = convoContext.CompletedConversations.Where(row => row.AccountId == accountId).ToList();
+            var completedConvos = convoContext
+                .CompletedConversations
+                .Where(row => row.AccountId == accountId)
+                .ToArray();
+
             if (completedConvos.Count() == 0)
             {
-                return Ok(Enquiries);
+                return enquiries.ToArray();
             }
 
             foreach (var completedConvo in completedConvos)
@@ -46,7 +51,7 @@ namespace Palavyr.API.Controllers
                 {
                     var completeEnquiry =
                         await EnquiryUtils.MapEnquiryToResponse(completedConvo, accountId, s3Client, logger);
-                    Enquiries.Add(completeEnquiry);
+                    enquiries.Add(completeEnquiry);
                 }
                 catch (Exception ex)
                 {
@@ -56,7 +61,7 @@ namespace Palavyr.API.Controllers
             }
 
             logger.LogDebug("Returning completed conversations...");
-            return Ok(Enquiries);
+            return enquiries.ToArray();
         }
     }
 }

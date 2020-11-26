@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Server.Domain.Accounts;
 
-namespace Palavyr.API.controllers.accounts.newAccount
+namespace Palavyr.API.Controllers.Accounts.Settings
 {
     [Route("api")]
     [ApiController]

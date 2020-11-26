@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
-using Server.Domain.Configuration.schema;
+using Microsoft.AspNetCore.Mvc;
+using Server.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Accounts.Develop
 {
     [Route("api")]
     [ApiController]

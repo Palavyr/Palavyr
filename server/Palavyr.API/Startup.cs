@@ -16,13 +16,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Palavyr.API.Controllers;
-using Palavyr.API.controllers.accounts.newAccount;
 using Palavyr.API.CustomMiddleware;
-using Palavyr.API.Services.StripeEventService;
+using Palavyr.API.Services.AccountServices;
+using Palavyr.API.Services.AuthenticationServices;
 using Palavyr.API.Services.StripeServices;
 using Palavyr.API.Services.StripeServices.StripeWebhookHandlers;
 using Palavyr.Background;
+using Palavyr.Common.FileSystem;
 using Palavyr.Common.FileSystem.FormPaths;
 using Stripe;
 
@@ -128,8 +128,8 @@ namespace Palavyr.API
             });
 
             services
-                .AddControllers()
-                .AddNewtonsoftJson();
+                .AddControllers();
+                // .AddNewtonsoftJson();
             
             var value = Configuration.GetConnectionString(_accountDbStringKey);
             services.AddDbContext<AccountsContext>(opt =>

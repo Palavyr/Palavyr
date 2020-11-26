@@ -5,7 +5,7 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.Services.StripeEventService;
+using Palavyr.API.Services.StripeServices;
 
 namespace Palavyr.API.Controllers.Accounts
 {

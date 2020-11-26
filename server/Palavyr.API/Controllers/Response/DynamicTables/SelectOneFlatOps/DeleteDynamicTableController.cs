@@ -2,8 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Server.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Response.DynamicTables.SelectOneFlatOps
 {
     public partial class SelectOneFlatController
     {
@@ -18,15 +19,14 @@ namespace Palavyr.API.Controllers
             dashContext
                 .DynamicTableMetas
                 .Remove(
-                    await dashContext
-                        .DynamicTableMetas
-                        .SingleOrDefaultAsync(row =>
+                    await EntityFrameworkQueryableExtensions.SingleOrDefaultAsync<DynamicTableMeta>(dashContext
+                            .DynamicTableMetas, row =>
                             row.AccountId == accountId && row.AreaIdentifier == areaId && row.TableId == tableId));
 
             dashContext
                 .SelectOneFlats
                 .RemoveRange(
-                    dashContext.SelectOneFlats.Where(row =>
+                    Queryable.Where<SelectOneFlat>(dashContext.SelectOneFlats, row =>
                         row.AccountId == accountId && row.AreaIdentifier == areaId && row.TableId == tableId));
 
             await dashContext.SaveChangesAsync();

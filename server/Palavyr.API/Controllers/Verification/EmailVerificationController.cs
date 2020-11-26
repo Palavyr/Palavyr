@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
 using DashboardServer.Data;
-using EmailService.verification;
+using EmailService.VerificationRequest;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.receiverTypes;
-using Palavyr.API.response;
+using Palavyr.API.RequestTypes;
+using Palavyr.API.Response;
 
 namespace Palavyr.API.Controllers.Verification
 {

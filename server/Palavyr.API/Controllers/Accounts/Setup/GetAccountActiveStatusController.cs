@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
 using DashboardServer.Data;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Palavyr.API.controllers.accounts.newAccount
+namespace Palavyr.API.Controllers.Accounts.Setup
 {
     [Route("api")]
     [ApiController]

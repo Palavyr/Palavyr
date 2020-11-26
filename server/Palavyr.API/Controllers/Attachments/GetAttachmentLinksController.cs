@@ -5,7 +5,7 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Attachments
 {
     [Route("api")]
     [ApiController]

@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Palavyr.API.ReceiverTypes;
+using Palavyr.API.RequestTypes;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Response
 {
     [Route("api")]
     [ApiController]
@@ -23,7 +23,7 @@ namespace Palavyr.API.Controllers
         (
             [FromHeader] string accountId,
             [FromRoute] string areaId,
-            [FromBody] Epilogue epilogue
+            [FromBody] EpilogueReceiver epilogueReceiver
         )
         {
             var areaRow = await dashContext
@@ -36,9 +36,9 @@ namespace Palavyr.API.Controllers
                 return BadRequest();
             }
 
-            areaRow.Epilogue = epilogue.Epilogue_;
+            areaRow.Epilogue = epilogueReceiver.Epilogue;
             await dashContext.SaveChangesAsync();
-            return Ok(epilogue.Epilogue_);
+            return Ok(epilogueReceiver.Epilogue);
         }
     }
 }

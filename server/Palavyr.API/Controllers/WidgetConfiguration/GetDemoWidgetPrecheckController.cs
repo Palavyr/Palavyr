@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.Controllers;
+using Palavyr.API.Utils;
 
-namespace Palavyr.API.controllers.widget
+namespace Palavyr.API.Controllers.WidgetConfiguration
 {
 
     [Route("api")]
@@ -27,7 +27,7 @@ namespace Palavyr.API.controllers.widget
         [HttpGet("widget-config/demo/pre-check")]
         public async Task<IActionResult> Get([FromHeader] string accountId)
         {
-            var result = WidgetStatusUtils.ExecuteWidgetStatusCheck(accountId, dashContext, logger);
+            var result = await WidgetStatusUtils.ExecuteWidgetStatusCheck(accountId, dashContext, logger);
             logger.LogDebug($"Pre-check run successful.");
             logger.LogDebug($"Ready result:{result.IsReady}");
             logger.LogDebug($"Incomplete areas: {result.IncompleteAreas.ToList()} ");

@@ -4,12 +4,11 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.controllers.accounts.seedData;
-using Palavyr.API.devControllers;
-using Palavyr.API.Services.StripeEventService;
+using Palavyr.API.Controllers.Accounts.Setup.SeedData;
+using Palavyr.API.Services.StripeServices;
 using Palavyr.Common.Constants;
 using Server.Domain.Accounts;
-using AccountType = Palavyr.Common.uniqueIdentifiers.AccountType;
+using AccountType = Palavyr.FileSystem.UniqueIdentifiers.AccountType;
 using Subscription = Server.Domain.Accounts.Subscription;
 
 namespace Palavyr.API.Controllers.Accounts.Develop
@@ -56,7 +55,8 @@ namespace Palavyr.API.Controllers.Accounts.Develop
                 "Pauls Dev Company",
                 "+61-04-4970-2364",
                 true,
-                "en-AU"
+                "en-AU",
+                AccountType.Google
             );
 
             var demoData = new DevDataHolder(
@@ -68,7 +68,8 @@ namespace Palavyr.API.Controllers.Accounts.Develop
                 "Demo Dev Company",
                 "+61-01-2345-6789",
                 true,
-                "en-AU"
+                "en-AU",
+                AccountType.Default
             );
 
             try
@@ -108,9 +109,9 @@ namespace Palavyr.API.Controllers.Accounts.Develop
         public async Task PopulateDBs(DevDataHolder dh)
         {
             var devAccount = UserAccount.CreateAccount(dh.UserName, dh.Email, dh.HashedPassword, dh.AccountId,
-                dh.ApiKey, dh.CompanyName, dh.PhoneNumber, dh.Active, dh.Locale, AccountType.Default);
+                dh.ApiKey, dh.CompanyName, dh.PhoneNumber, dh.Active, dh.Locale, dh.AccountType);
             var subscription = Subscription.CreateNew(dh.AccountId, dh.ApiKey, SubscriptionConstants.DefaultNumAreas);
-            var data = new DevSeedData(dh.AccountId, dh.Email);
+            var data = new DevSeedData(dh.AccountId, dh.Email);    
 
             var customer = await stripeCustomerService.CreateNewStripeCustomer(dh.Email);
 

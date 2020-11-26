@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.Services.StripeEventService;
+using Palavyr.API.Services.StripeServices;
 using Stripe;
 
-namespace Palavyr.API.Controllers.Payments
+namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
     [AllowAnonymous]
     [Route("api")]

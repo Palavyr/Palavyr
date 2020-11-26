@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
 using DashboardServer.Data;
-using Microsoft.AspNetCore.Mvc;
-using Server.Domain.conversations;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Palavyr.API.Services.AuthenticationServices;
+using Server.Domain.Conversation;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.WidgetLive
 {
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.WidgetScheme)]
     [Route("api")]

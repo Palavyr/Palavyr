@@ -1,4 +1,4 @@
-namespace Palavyr.Common.uniqueIdentifiers
+namespace Palavyr.FileSystem.UniqueIdentifiers
 {
     public enum AccountType
     {

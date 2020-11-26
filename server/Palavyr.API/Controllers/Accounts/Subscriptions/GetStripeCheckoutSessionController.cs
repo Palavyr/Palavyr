@@ -1,12 +1,10 @@
 using System.Threading.Tasks;
-using DashboardServer.Data;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Stripe;
 using Stripe.Checkout;
 
-namespace Palavyr.API.Controllers.Payments
+namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
     [Route("api")]
     [ApiController]

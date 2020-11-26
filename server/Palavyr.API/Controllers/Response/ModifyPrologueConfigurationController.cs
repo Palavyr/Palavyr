@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Palavyr.API.ReceiverTypes;
+using Palavyr.API.RequestTypes;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Response
 {
     [Route("api")]
     [ApiController]
@@ -22,7 +22,7 @@ namespace Palavyr.API.Controllers
         public async Task<IActionResult> UpdatePrologue(
             [FromHeader] string accountId, 
             [FromRoute] string areaId, 
-            [FromBody] Prologue prologue)
+            [FromBody] PrologueReceiver prologueReceiver)
         {
             var areaRow = await dashContext
                 .Areas
@@ -33,9 +33,9 @@ namespace Palavyr.API.Controllers
                 return BadRequest();
             }
             
-            areaRow.Prologue = prologue.Prologue_;
+            areaRow.Prologue = prologueReceiver.Prologue;
             await dashContext.SaveChangesAsync();
-            return Ok(prologue.Prologue_);
+            return Ok(prologueReceiver.Prologue);
         }
     }
 }

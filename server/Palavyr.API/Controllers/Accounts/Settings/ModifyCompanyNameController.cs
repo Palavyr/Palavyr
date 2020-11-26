@@ -3,9 +3,9 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.ReceiverTypes;
+using Palavyr.API.RequestTypes;
 
-namespace Palavyr.API.controllers.accounts.newAccount
+namespace Palavyr.API.Controllers.Accounts.Settings
 {
     [Route("api")]
     [ApiController]
@@ -20,7 +20,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             this.accountsContext = accountsContext;
         }
         
-        [HttpPut("account/settings/update/company-name")]
+        [HttpPut("account/settings/company-name")]
         public async Task<IActionResult> UpdateCompanyName([FromHeader] string accountId, LoginCredentials login)
         {
             var account = await accountsContext

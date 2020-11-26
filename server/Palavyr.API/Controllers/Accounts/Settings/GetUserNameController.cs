@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Palavyr.API.controllers.accounts.newAccount
+namespace Palavyr.API.Controllers.Accounts.Settings
 {
     [Route("api")]
     [ApiController]
@@ -18,7 +18,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             this.accountsContext = accountsContext;
         }
         
-        [HttpGet("account/settings/username")]
+        [HttpGet("account/settings/user-name")]
         public async Task<IActionResult> Get([FromHeader] string accountId)
         {
             var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);

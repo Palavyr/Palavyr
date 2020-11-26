@@ -2,16 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DashboardServer.Data;
-using Amazon.Runtime.Internal.Util;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Server.Domain.Configuration.schema;
+using Server.Domain.Configuration.Schemas;
 
-
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.AreaGroups
 {
     [Route("api")]
     [ApiController]

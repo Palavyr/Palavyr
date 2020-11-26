@@ -3,9 +3,9 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Server.Domain.AccountDB;
+using Palavyr.API.RequestTypes.Registration;
 
-namespace Palavyr.API.controllers.accounts.newAccount
+namespace Palavyr.API.Controllers.Accounts.Settings
 {
     [Route("api")]
     [ApiController]
@@ -19,8 +19,8 @@ namespace Palavyr.API.controllers.accounts.newAccount
             this.logger = logger;
             this.accountsContext = accountsContext;
         }
-        
-        [HttpPut("account/settings/update/locale")]
+
+        [HttpPut("account/settings/locale")]
         public async Task<IActionResult> Modify([FromHeader] string accountId, AccountDetails accountDetails)
         {
             var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);

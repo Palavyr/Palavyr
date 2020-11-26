@@ -1,9 +1,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Server.Domain.AccountDB;
+using Palavyr.API.RequestTypes.Registration;
+using Palavyr.API.Services.AccountServices;
 
-namespace Palavyr.API.controllers.accounts.newAccount
+namespace Palavyr.API.Controllers.Accounts.Setup
 { 
     [Route("api")]
     [ApiController]

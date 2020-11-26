@@ -1,13 +1,11 @@
-﻿using DashboardServer.Data;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.ReceiverTypes;
+using Palavyr.API.RequestTypes;
 
-
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Response
 {
     [Route("api")]
     [ApiController]

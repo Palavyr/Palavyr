@@ -4,18 +4,21 @@ using System.Threading.Tasks;
 using Amazon.SimpleEmail;
 using DashboardServer.Data;
 using EmailService;
-using EmailService.verification;
+using EmailService.VerificationRequest;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Controllers;
-using Palavyr.API.controllers.accounts.seedData;
-using Palavyr.API.ReceiverTypes;
+using Palavyr.API.Controllers.Accounts.Setup.SeedData;
+using Palavyr.API.Controllers.Accounts.Setup.WelcomeEmail;
+using Palavyr.API.RequestTypes;
+using Palavyr.API.RequestTypes.Registration;
 using Palavyr.API.ResponseTypes;
+using Palavyr.API.Services.AuthenticationServices;
 using Palavyr.Common.Constants;
-using Palavyr.Common.uniqueIdentifiers;
-using Server.Domain.AccountDB;
+using Palavyr.FileSystem.UniqueIdentifiers;
 using Server.Domain.Accounts;
+using SESEmail = EmailService.ResponseEmail.SESEmail;
 
-namespace Palavyr.API.controllers.accounts.newAccount
+namespace Palavyr.API.Services.AccountServices
 {
 
     public interface IAccountSetupService

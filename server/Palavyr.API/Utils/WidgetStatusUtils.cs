@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.ResponseTypes;
-using Server.Domain.Configuration.constants;
-using Server.Domain.Configuration.schema;
+using Server.Domain.Configuration.Constant;
+using Server.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Utils
 {
     public static class WidgetStatusUtils
     {
-        public static PreCheckResult ExecuteWidgetStatusCheck(string accountId, DashContext dashContext, ILogger logger)
+        public static async Task<PreCheckResult> ExecuteWidgetStatusCheck(string accountId, DashContext dashContext, ILogger logger)
         {
             logger.LogDebug("Collecting areas...");
-            var areas = dashContext
+            var areas = await dashContext
                 .Areas
                 .Where(row => row.AccountId == accountId)
                 .Include(row => row.ConversationNodes)
                 .Include(row => row.DynamicTableMetas)
-                .ToList();
+                .ToListAsync();
 
             logger.LogDebug("Collected areas.... running pre-check");
             var result = StatusCheck(areas, logger);

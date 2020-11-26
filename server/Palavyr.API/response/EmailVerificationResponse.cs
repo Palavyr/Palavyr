@@ -1,4 +1,4 @@
-namespace Palavyr.API.response
+namespace Palavyr.API.Response
 {
     public class EmailVerificationResponse
     {

@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Stripe;
 
-namespace Palavyr.API.Services.StripeEventService
+namespace Palavyr.API.Services.StripeServices
 {
     public interface IStripeCustomerService
     {
@@ -41,7 +41,7 @@ namespace Palavyr.API.Services.StripeEventService
         
         public async Task DeleteStripeTestCustomers()
         {
-            if (IsTest)
+            if (!IsTest)
             {
                 throw new Exception("You may only delete test customers!");
             }

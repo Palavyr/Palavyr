@@ -1,18 +1,16 @@
-using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using System.Web;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Palavyr.Common.requests;
+using Palavyr.FileSystem.Requests;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.CustomMiddleware
 {
     public class ApiKeyRequirement : IAuthorizationRequirement
     {

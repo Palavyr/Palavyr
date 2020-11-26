@@ -3,9 +3,9 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.ReceiverTypes;
+using Palavyr.API.RequestTypes;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Areas
 {
     [Authorize]
     [Route("api")]

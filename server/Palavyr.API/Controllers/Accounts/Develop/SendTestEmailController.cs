@@ -1,4 +1,4 @@
-﻿namespace Palavyr.API.Controllers.Emails
+﻿namespace Palavyr.API.Controllers.Accounts.Develop
 {
     public class SendTestEmailController
     {

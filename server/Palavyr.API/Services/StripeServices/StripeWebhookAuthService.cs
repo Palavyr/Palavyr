@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Stripe;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Services.StripeServices
 {
     public interface IStripeWebhookAuthService
     {

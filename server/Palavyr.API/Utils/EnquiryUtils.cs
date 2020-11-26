@@ -4,10 +4,11 @@ using Microsoft.Extensions.Logging;
 using Palavyr.API.responseTypes;
 using Palavyr.API.ResponseTypes;
 using Palavyr.Common.FileSystem.FormPaths;
-using Palavyr.Common.uniqueIdentifiers;
-using Server.Domain.conversations;
+using Palavyr.FileSystem.Aws;
+using Palavyr.FileSystem.UniqueIdentifiers;
+using Server.Domain.Conversation;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Utils
 {
     public class EnquiryUtils
     {

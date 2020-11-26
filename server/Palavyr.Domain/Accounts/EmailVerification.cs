@@ -6,7 +6,7 @@ namespace Server.Domain.Accounts
     {
         
         [Key]
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string AuthenticationToken { get; set; }
         public string EmailAddress { get; set; }
         public string AccountId { get; set; }

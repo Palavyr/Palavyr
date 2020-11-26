@@ -1,6 +1,6 @@
-﻿using Palavyr.Common.uniqueIdentifiers;
+﻿using Palavyr.FileSystem.UniqueIdentifiers;
 
-namespace Palavyr.API.controllers.accounts.newAccount
+namespace Palavyr.API.Services.AccountServices
 {
     public static class NewAccountUtils
     {

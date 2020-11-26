@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Common.FileSystem.FormPaths;
-using Palavyr.Common.FileSystem.FormPaths.IO;
+using Palavyr.Common.FileSystem.ListPaths;
+using Palavyr.FileSystem.Aws;
+using Palavyr.FileSystem.FileSystem.IO;
 
-namespace Palavyr.API.controllers.accounts.newAccount
+namespace Palavyr.API.Controllers.Accounts.Settings
 {
     [Route("api")]
     [ApiController]
@@ -31,7 +33,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             this.s3Client = s3Client;
         }
         
-        [HttpPut("account/settings/update/logo")]
+        [HttpPut("account/settings/logo")]
         [ActionName("Decode")]
         public async Task<IActionResult> Modify(
             [FromHeader] string accountId,

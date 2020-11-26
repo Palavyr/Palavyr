@@ -6,12 +6,13 @@ using DashboardServer.Data;
 using Google.Apis.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.ReceiverTypes;
+using Palavyr.API.Controllers;
+using Palavyr.API.RequestTypes;
 using Palavyr.API.ResponseTypes;
-using Palavyr.Common.uniqueIdentifiers;
+using Palavyr.FileSystem.UniqueIdentifiers;
 using Server.Domain.Accounts;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Services.AuthenticationServices
 {
     public interface IAuthService
     {

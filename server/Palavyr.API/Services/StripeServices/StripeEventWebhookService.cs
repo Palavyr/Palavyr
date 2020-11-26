@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.API.Services.StripeServices.StripeWebhookHandlers;
 using Stripe;
 
-namespace Palavyr.API.Services.StripeEventService
+namespace Palavyr.API.Services.StripeServices
 {
     public interface IStripeEventWebhookService
     {

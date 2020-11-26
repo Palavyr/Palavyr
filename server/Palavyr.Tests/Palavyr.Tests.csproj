@@ -18,6 +18,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Palavyr.Common\Palavyr.Common.csproj" />
+      <ProjectReference Include="..\Palavyr.Domain\Palavyr.Domain.csproj" />
     </ItemGroup>
 
 </Project>

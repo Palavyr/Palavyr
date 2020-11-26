@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using Server.Domain;
-using Server.Domain.Configuration.constants;
-using Server.Domain.Configuration.schema;
+using Server.Domain.Configuration.Constant;
+using Server.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
 {
     public static class CreateDefaultDynamicTable
     {

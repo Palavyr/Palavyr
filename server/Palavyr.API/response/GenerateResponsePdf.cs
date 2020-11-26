@@ -6,21 +6,23 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Amazon.S3;
-using DashboardServer.API.chatUtils;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.receiverTypes;
+using Palavyr.API.RequestTypes;
 using Palavyr.API.ResponseTypes;
+using Palavyr.Common.FileSystem;
 using Palavyr.Common.FileSystem.FormPaths;
-using Palavyr.Common.FileSystem.FormPaths.LocalServices;
+using Palavyr.Common.FileSystem.LocalServices;
+using Palavyr.FileSystem.Aws;
 using PDFService;
+using PDFService.Sections.Util;
 using Server.Domain.Accounts;
-using Server.Domain.Configuration.constants;
-using Server.Domain.Configuration.schema;
+using Server.Domain.Configuration.Constant;
+using Server.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.response
+namespace Palavyr.API.Response
 {
     public class PdfResponseGenerator
     {

@@ -1,11 +1,8 @@
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-
-
-namespace Palavyr.Common.FileSystem.FormPaths.IO
+namespace Palavyr.FileSystem.FileSystem.IO
 {
     public static class FileIO
     {

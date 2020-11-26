@@ -5,9 +5,9 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Server.Domain.Configuration.schema;
+using Server.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.AreaGroups
 {
     [Route("api")]
     [ApiController]
@@ -25,7 +25,7 @@ namespace Palavyr.API.Controllers
         public async Task<List<GroupMap>> Delete([FromHeader] string accountId, string groupId)
         {
             dashContext.Groups.Remove(dashContext.Groups.Where(row => row.AccountId == accountId).Single(row => row.GroupId == groupId));
-            var areas = dashContext.Areas.Where(row => row.AccountId == accountId && row.GroupId == groupId);
+            var areas = dashContext.Areas.Where(row => row.AccountId == accountId && row.GroupId == groupId).ToArray();
             foreach (var area in areas)
             {
                 area.GroupId = null;

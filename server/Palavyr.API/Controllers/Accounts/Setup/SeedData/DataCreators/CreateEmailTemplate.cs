@@ -1,4 +1,4 @@
-﻿namespace Palavyr.API.controllers.accounts.seedData.dataCreators
+﻿namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
 {
     public static class CreateEmailTemplate
     {

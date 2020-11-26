@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Palavyr.API.Controllers;
-using Server.Domain.conversations;
+﻿using System.Collections.Generic;
+using Server.Domain.Conversation;
 
-namespace Palavyr.API.controllers.accounts.seedData
+namespace Palavyr.API.Controllers.Accounts.Setup.SeedData
 {
     public class DevSeedData : BaseSeedData
     {

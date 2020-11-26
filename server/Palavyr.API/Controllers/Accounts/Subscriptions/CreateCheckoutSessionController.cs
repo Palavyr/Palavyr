@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using Stripe;
 using Stripe.Checkout;
 
-namespace Palavyr.API.Controllers.Payments
+namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
     public class CreateCheckoutSessionRequest
     {
@@ -65,8 +65,6 @@ namespace Palavyr.API.Controllers.Payments
             {
                 throw new Exception("Account and Stripe customer Id must be set");
             }
-            
-            
             
             var options = new SessionCreateOptions
             {

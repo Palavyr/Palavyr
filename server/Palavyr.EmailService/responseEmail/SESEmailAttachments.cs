@@ -6,8 +6,7 @@ using Amazon.SimpleEmail.Model;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 
-
-namespace EmailService
+namespace EmailService.ResponseEmail
 {
     public partial class SESEmail
     {
@@ -78,17 +77,17 @@ namespace EmailService
                 RawMessage = new RawMessage(GetMessageStream(message)),
             };
             
-            _logger.LogDebug("Trying to send email...");
+            LoggerExtensions.LogDebug(_logger, "Trying to send email...");
             try
             {
                 await EmailClient.SendRawEmailAsync(rawSendRequest);
-                _logger.LogDebug("Email Sent Successfully");
+                LoggerExtensions.LogDebug(_logger, "Email Sent Successfully");
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogDebug("Email (with attachments) was not sent. ");
-                _logger.LogDebug("Error: " + ex.Message);
+                LoggerExtensions.LogDebug(_logger, "Email (with attachments) was not sent. ");
+                LoggerExtensions.LogDebug(_logger, "Error: " + ex.Message);
                 return false;
             }
         }

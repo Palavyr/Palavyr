@@ -2,9 +2,9 @@ using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Palavyr.API.ReceiverTypes;
+using Palavyr.API.RequestTypes;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Authentication
 {
     [Route("api")]
     [ApiController]

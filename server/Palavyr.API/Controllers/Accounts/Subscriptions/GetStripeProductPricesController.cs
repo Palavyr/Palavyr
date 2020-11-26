@@ -1,12 +1,10 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Stripe;
 
-
-namespace Palavyr.API.Controllers.Payments.Products
+namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
     [AllowAnonymous]
     [Route("api")]

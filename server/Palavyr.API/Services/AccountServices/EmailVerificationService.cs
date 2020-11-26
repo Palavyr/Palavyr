@@ -1,14 +1,12 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Amazon.SimpleEmail;
 using DashboardServer.Data;
-using EmailService.verification;
+using EmailService.VerificationRequest;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.Services.StripeEventService;
-using Stripe;
+using Palavyr.API.Services.StripeServices;
 
-namespace Palavyr.API.controllers.accounts.newAccount
+namespace Palavyr.API.Services.AccountServices
 {
     public interface IEmailVerificationService
     {

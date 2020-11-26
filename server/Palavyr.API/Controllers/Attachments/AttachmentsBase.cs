@@ -6,9 +6,10 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.ResponseTypes;
-using Palavyr.Common.FileSystem.FormPaths;
+using Palavyr.Common.FileSystem.ListPaths;
+using Palavyr.FileSystem.Aws;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Attachments
 {
     public abstract class AttachmentsBase : ControllerBase
     {

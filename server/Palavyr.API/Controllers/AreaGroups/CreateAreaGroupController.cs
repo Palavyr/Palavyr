@@ -6,10 +6,10 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.ReceiverTypes;
-using Server.Domain.Configuration.schema;
+using Palavyr.API.RequestTypes;
+using Server.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.AreaGroups
 {
     [Route("api")]
     [ApiController]

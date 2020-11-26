@@ -1,7 +1,4 @@
-﻿
-
-
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 using Amazon.S3;
@@ -10,9 +7,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Common.FileSystem.FormPaths;
-using Server.Domain.Configuration.schema;
+using Server.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Attachments
 {
     [Route("api")]
     [ApiController]

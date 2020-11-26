@@ -56,8 +56,8 @@ export class ApiClient {
 
     public Configuration = {
         getEstimateConfiguration: async (areaIdentifier: string): Promise<AxiosResponse> => this.client.get(`response/configuration/${areaIdentifier}`),
-        updatePrologue: async (areaIdentifier: string, prologue: string): Promise<AxiosResponse> => this.client.put(`response/configuration/${areaIdentifier}/prologue`, { prologue: prologue }),
-        updateEpilogue: async (areaIdentifier: string, epilogue: string): Promise<AxiosResponse> => this.client.put(`response/configuration/${areaIdentifier}/epilogue`, { epilogue: epilogue }),
+        updatePrologue: async (areaIdentifier: string, prologue: string): Promise<AxiosResponse<string>> => this.client.put(`response/configuration/${areaIdentifier}/prologue`, { prologue: prologue }),
+        updateEpilogue: async (areaIdentifier: string, epilogue: string): Promise<AxiosResponse<string>> => this.client.put(`response/configuration/${areaIdentifier}/epilogue`, { epilogue: epilogue }),
 
         Tables: {
             Dynamic: {
@@ -135,18 +135,18 @@ export class ApiClient {
         },
 
         Account: {
-            getApiKey: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/apikey`),
+            getApiKey: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/api-key`),
             confirmEmailAddress: async (authToken: string): Promise<AxiosResponse<boolean>> => this.client.post(`account/confirmation/${authToken}/action/setup`),
             checkIsActive: async (): Promise<AxiosResponse<boolean>> => this.client.get(`account/is-active`),
 
-            UpdatePassword: async (oldPassword: string, newPassword: string): Promise<AxiosResponse> => this.client.put(`account/settings/update/password`, { OldPassword: oldPassword, Password: newPassword }),
-            updateCompanyName: async (companyName: string): Promise<AxiosResponse> => this.client.put(`account/settings/update/company-name`, { CompanyName: companyName }),
-            updateEmail: async (newEmail: string): Promise<AxiosResponse> => this.client.put(`account/settings/update/email`, { EmailAddress: newEmail }),
-            updateUserName: async (newUserName: string): Promise<AxiosResponse> => this.client.put(`account/settings/update/username/`, { UserName: newUserName }),
-            updatePhoneNumber: async (newPhoneNumber: string): Promise<AxiosResponse> => this.client.put(`account/settings/update/phone-number`, { PhoneNumber: newPhoneNumber }),
-            updateLocale: async (newLocale: string): Promise<AxiosResponse> => this.client.put(`account/settings/update/locale`, { Locale: newLocale }),
+            UpdatePassword: async (oldPassword: string, newPassword: string): Promise<AxiosResponse> => this.client.put(`account/settings/password`, { OldPassword: oldPassword, Password: newPassword }),
+            updateCompanyName: async (companyName: string): Promise<AxiosResponse> => this.client.put(`account/settings/company-name`, { CompanyName: companyName }),
+            updateEmail: async (newEmail: string): Promise<AxiosResponse> => this.client.put(`account/settings/email`, { EmailAddress: newEmail }),
+            updateUserName: async (newUserName: string): Promise<AxiosResponse> => this.client.put(`account/settings/user-name/`, { UserName: newUserName }),
+            updatePhoneNumber: async (newPhoneNumber: string): Promise<AxiosResponse> => this.client.put(`account/settings/phone-number`, { PhoneNumber: newPhoneNumber }),
+            updateLocale: async (newLocale: string): Promise<AxiosResponse> => this.client.put(`account/settings/locale`, { Locale: newLocale }),
             updateCompanyLogo: async (formData: FormData): Promise<AxiosResponse> =>
-                this.client.put(`account/settings/update/logo`, formData, {
+                this.client.put(`account/settings/logo`, formData, {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "multipart/form-data",
@@ -155,11 +155,12 @@ export class ApiClient {
 
             getCompanyName: async (): Promise<AxiosResponse> => this.client.get(`account/settings/company-name`),
             getEmail: async (): Promise<AxiosResponse> => this.client.get(`account/settings/email`),
-            getUserName: async (): Promise<AxiosResponse> => this.client.get(`account/settings/username`),
+            getUserName: async (): Promise<AxiosResponse> => this.client.get(`account/settings/user-name`),
             getPhoneNumber: async (): Promise<AxiosResponse> => this.client.get(`account/settings/phone-number`),
             getLocale: async (): Promise<AxiosResponse> => this.client.get(`account/settings/locale`),
             getCompanyLogo: async (): Promise<AxiosResponse> => this.client.get(`account/settings/logo`),
             getCurrentPlan: async (): Promise<AxiosResponse> => this.client.get(`account/settings/current-plan`),
+
             DeleteAccount: async (): Promise<AxiosResponse> => this.client.post(`account/delete-account`),
         },
         Groups: {

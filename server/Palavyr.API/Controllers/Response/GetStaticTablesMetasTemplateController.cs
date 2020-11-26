@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Server.Domain.Configuration.schema;
+using Server.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr1.API.Controllers.Response
 {
     [Authorize]
     [Route("api")]
@@ -22,7 +22,7 @@ namespace Palavyr.API.Controllers
         /// </summary>
         /// <param name="areaId"></param>
         /// <returns></returns>
-        [HttpGet("{areaId}/static/tables/template")]
+        [HttpGet("response/configuration/{areaId}/static/tables/template")]
         public StaticTablesMeta CreateNewStaticTablesMeta([FromHeader] string accountId, string areaId)
         {
             return StaticTablesMeta.CreateNewMetaTemplate(areaId, accountId);

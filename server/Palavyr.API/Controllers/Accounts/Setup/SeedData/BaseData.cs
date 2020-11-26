@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Palavyr.API.controllers.accounts.seedData.dataCreators;
-using Server.Domain.Configuration.schema;
+using Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators;
+using Server.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Accounts.Setup.SeedData
 {
     public abstract class BaseSeedData
     {

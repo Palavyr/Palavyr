@@ -4,7 +4,7 @@ namespace Palavyr.API.responseTypes
 {
     public class Enquiry
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string ConversationId { get; set; }
         public FileLink ResponsePdfLink { get; set; }
         public string TimeStamp { get; set; }

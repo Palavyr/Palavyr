@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Server.Domain.Configuration.constants;
+using Server.Domain.Configuration.Constant;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Response.DynamicTables
 {
     [Route("api")]
     [ApiController]

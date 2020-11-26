@@ -1,11 +1,11 @@
-﻿using Palavyr.Common.uniqueIdentifiers;
+﻿using Palavyr.FileSystem.UniqueIdentifiers;
 
-namespace Palavyr.API.devControllers
+namespace Palavyr.API.Controllers.Accounts.Develop
 {
     public class DevDataHolder
     {
         public DevDataHolder(string rawPassword, string accountId, string apiKey, string email, string userName,
-            string companyName, string phoneNumber, bool active, string locale)
+            string companyName, string phoneNumber, bool active, string locale, AccountType accountType)
         {
             RawPassword = rawPassword;
             HashedPassword = PasswordHashing.CreateHashedPassword(rawPassword);
@@ -17,6 +17,7 @@ namespace Palavyr.API.devControllers
             PhoneNumber = phoneNumber;
             Active = active;
             Locale = locale;
+            AccountType = accountType;
         }
 
         public string Locale { get; }
@@ -38,5 +39,7 @@ namespace Palavyr.API.devControllers
         public string HashedPassword { get; }
 
         private string RawPassword { get; }
+        
+        public AccountType AccountType { get; }
     }
 }

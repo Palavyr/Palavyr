@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using DashboardServer.API.chatUtils;
+using PDFService.Sections.Util;
 using Server.Domain.Accounts;
 
-namespace PDFService
+namespace PDFService.Sections
 {
     public static class HeaderSection
     {

@@ -1,6 +1,5 @@
 ﻿ using Microsoft.EntityFrameworkCore;
-using Server.Domain;
- using Server.Domain.Configuration.schema;
+ using Server.Domain.Configuration.Schemas;
 
  namespace DashboardServer.Data
 {

@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.API.receiverTypes;
+using Palavyr.API.RequestTypes;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Response.DynamicTables
 {
     public interface IDynamicTableController
     {

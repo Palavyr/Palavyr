@@ -1,6 +1,4 @@
-﻿using Palavyr.API.Controllers;
-
-namespace Palavyr.API.controllers.accounts.seedData
+﻿namespace Palavyr.API.Controllers.Accounts.Setup.SeedData
 {
     public class SeedData : BaseSeedData
     {

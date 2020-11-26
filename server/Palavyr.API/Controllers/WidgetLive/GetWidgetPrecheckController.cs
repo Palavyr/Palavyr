@@ -1,11 +1,14 @@
 using System.Linq;
+using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.ResponseTypes;
+using Palavyr.API.Services.AuthenticationServices;
+using Palavyr.API.Utils;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.WidgetLive
 {
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.WidgetScheme)]
     [Route("api")]
@@ -25,19 +28,19 @@ namespace Palavyr.API.Controllers
         }
         
         [HttpGet("widget/pre-check")]
-        public IActionResult Get([FromHeader] string accountId)
+        public async Task<PreCheckResult> Get([FromHeader] string accountId)
         {
             logger.LogDebug("Running live widget pre-check...");
             logger.LogDebug("Checking if account ID exists...");
             if (accountId == null)
             {
-                return Ok(PreCheckResult.CreateApiKeyResult(false));
+                return PreCheckResult.CreateApiKeyResult(false);
             }
-            var result = WidgetStatusUtils.ExecuteWidgetStatusCheck(accountId, dashContext, logger);
+            var result = await WidgetStatusUtils.ExecuteWidgetStatusCheck(accountId, dashContext, logger);
             logger.LogDebug($"Pre-check run successful.");
             logger.LogDebug($"Ready result:{result.IsReady}");
             logger.LogDebug($"Incomplete areas: {result.IncompleteAreas.ToList()} ");
-            return Ok(result);
+            return result;
         }
     }
 }

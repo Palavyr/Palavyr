@@ -5,10 +5,10 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.ReceiverTypes;
+using Palavyr.API.RequestTypes;
 using Palavyr.Common.FileSystem.FormPaths;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Attachments
 {
     [Route("api")]
     [ApiController]

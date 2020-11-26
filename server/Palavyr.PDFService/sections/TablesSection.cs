@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using PDFService.Sections.Util;
 
-namespace PDFService
+namespace PDFService.Sections
 {
     public static class TablesSection
     {

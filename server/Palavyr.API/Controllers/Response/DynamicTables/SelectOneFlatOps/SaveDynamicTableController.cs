@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Palavyr.API.receiverTypes;
-using Server.Domain.Configuration.schema;
+using Palavyr.API.RequestTypes;
+using Server.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Response.DynamicTables.SelectOneFlatOps
 {
     public partial class SelectOneFlatController
     {
@@ -17,9 +17,8 @@ namespace Palavyr.API.Controllers
             [FromHeader] string accountId,
             [FromBody] DynamicTable dynamicTable)
         {
-            dashContext.SelectOneFlats.RemoveRange(dashContext
-                .SelectOneFlats
-                .Where(row => row.AccountId == accountId && row.AreaIdentifier == areaId && row.TableId == tableId));
+            dashContext.SelectOneFlats.RemoveRange(Queryable.Where<SelectOneFlat>(dashContext
+                    .SelectOneFlats, row => row.AccountId == accountId && row.AreaIdentifier == areaId && row.TableId == tableId));
 
             var mappedTableRows = new List<SelectOneFlat>();
             foreach (var row in dynamicTable.SelectOneFlat)
@@ -39,13 +38,12 @@ namespace Palavyr.API.Controllers
 
             await dashContext.SelectOneFlats.AddRangeAsync(mappedTableRows);
             
-            var meta = await dashContext.DynamicTableMetas.SingleOrDefaultAsync(row => row.TableId == tableId);
+            var meta = await EntityFrameworkQueryableExtensions.SingleOrDefaultAsync<DynamicTableMeta>(dashContext.DynamicTableMetas, row => row.TableId == tableId);
             meta.TableTag = dynamicTable.TableTag;
 
             await dashContext.SaveChangesAsync();
 
-            var tables = dashContext.SelectOneFlats
-                .Where(row => row.AccountId == accountId && row.AreaIdentifier == areaId && row.TableId == tableId)
+            var tables = Queryable.Where<SelectOneFlat>(dashContext.SelectOneFlats, row => row.AccountId == accountId && row.AreaIdentifier == areaId && row.TableId == tableId)
                 .ToList();
             return Ok(tables);
         }

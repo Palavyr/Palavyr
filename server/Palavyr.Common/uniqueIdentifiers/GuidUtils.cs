@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Palavyr.Common.uniqueIdentifiers
+namespace Palavyr.FileSystem.UniqueIdentifiers
 {
     public static class GuidUtils
     {

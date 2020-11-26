@@ -2,21 +2,22 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Amazon.SimpleEmail;
-using DashboardServer.API.chatUtils;
 using DashboardServer.Data;
-using EmailService;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.API.receiverTypes;
-using Palavyr.API.response;
-using Palavyr.Common.FileSystem.FormPaths;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Palavyr.API.RequestTypes;
+using Palavyr.API.Response;
+using Palavyr.API.Services.AuthenticationServices;
+using Palavyr.Common.FileSystem.FormPaths;
+using Palavyr.Common.FileSystem.ListPaths;
+using PDFService.Sections.Util;
+using SESEmail = EmailService.ResponseEmail.SESEmail;
 
-
-namespace Palavyr.API.Controllers.Emails
+namespace Palavyr.API.Controllers.WidgetLive
 {
     [Route("api")]
     [ApiController]

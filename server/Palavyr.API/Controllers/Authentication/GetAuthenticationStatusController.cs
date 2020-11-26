@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Palavyr.API.Services.AuthenticationServices;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Authentication
 {
     [Route("api")]
     [ApiController]

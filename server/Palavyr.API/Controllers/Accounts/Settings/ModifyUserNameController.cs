@@ -4,9 +4,9 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.ReceiverTypes;
+using Palavyr.API.RequestTypes;
 
-namespace Palavyr.API.controllers.accounts.newAccount
+namespace Palavyr.API.Controllers.Accounts.Settings
 {
     [Route("api")]
     [ApiController]
@@ -21,7 +21,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             this.accountsContext = accountsContext;
         }
         
-        [HttpPut("account/settings/update/username")]
+        [HttpPut("account/settings/username")]
         public async Task<IActionResult> UpdateUserName([FromHeader] string accountId, LoginCredentials login)
         {
             var allUserNames = accountsContext.Accounts.ToList().Select(x => x.UserName);

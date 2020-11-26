@@ -4,16 +4,15 @@ using System.Threading.Tasks;
 using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
 using DashboardServer.Data;
-using EmailService.verification;
+using EmailService.VerificationRequest;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.receiverTypes;
-using Palavyr.API.response;
-using Palavyr.API.Services.StripeEventService;
-using Stripe;
+using Palavyr.API.RequestTypes;
+using Palavyr.API.Response;
+using Palavyr.API.Services.StripeServices;
 
-namespace Palavyr.API.controllers.accounts.newAccount
+namespace Palavyr.API.Controllers.Accounts.Settings
 {
     [Route("api")]
     [ApiController]
@@ -42,7 +41,7 @@ namespace Palavyr.API.controllers.accounts.newAccount
             verifier = new SenderVerification(logger, sesClient);
         }
         
-        [HttpPut("account/settings/update/email")]
+        [HttpPut("account/settings/email")]
         public async Task<IActionResult> Modify(
             [FromHeader] string accountId,
             [FromBody] EmailVerificationRequest emailRequest

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Server.Domain.Configuration.schema;
+using Server.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.ResponseTypes
 {
@@ -9,12 +9,13 @@ namespace Palavyr.API.ResponseTypes
         public List<Area> IncompleteAreas { get; set; }
         public bool ApiKeyExists { get; set; }
 
-        PreCheckResult(bool isReady, List<Area> incompleteAreas)
+        private PreCheckResult(bool isReady, List<Area> incompleteAreas)
         {
             IsReady = isReady;
             IncompleteAreas = incompleteAreas;            
         }
-        PreCheckResult(bool apiKeyExists)
+
+        private PreCheckResult(bool apiKeyExists)
         {
 
             ApiKeyExists = apiKeyExists;

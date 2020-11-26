@@ -5,11 +5,11 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.uniqueIdentifiers;
-using Server.Domain.Configuration.constants;
-using Server.Domain.Configuration.schema;
+using Palavyr.FileSystem.UniqueIdentifiers;
+using Server.Domain.Configuration.Constant;
+using Server.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Response.DynamicTables
 {
     [Route("api")]
     [ApiController]

@@ -1,12 +1,14 @@
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Amazon.S3;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.FileSystem.FormPaths;
+using Palavyr.Common.FileSystem.ListPaths;
+using Palavyr.FileSystem.Aws;
 
-namespace Palavyr.API.controllers.accounts.newAccount
+namespace Palavyr.API.Controllers.Accounts.Settings
 {
     [Route("api")]
     [ApiController]
@@ -29,7 +31,11 @@ namespace Palavyr.API.controllers.accounts.newAccount
             /// Do I upload an image file, or allow them to use a link?
             /// Only use an actual file for now
             var files = LogoPaths.ListLogoPathsAsDiskPaths(accountId);
-            var logoFile = files[0]; // we only allow one logo file. If it changes, we delete it.
+            var logoFile = files.FirstOrDefault(); // we only allow one logo file. If it changes, we delete it.
+            if (logoFile == null)// if no logo uploaded
+            {
+                return Ok(null);
+            }
             var link = await UriUtils.CreateLogoImageLinkAsURI(
                 logger,
                 accountId,
@@ -39,7 +45,5 @@ namespace Palavyr.API.controllers.accounts.newAccount
             );
             return Ok(link);
         }
-
-        
     }
 }

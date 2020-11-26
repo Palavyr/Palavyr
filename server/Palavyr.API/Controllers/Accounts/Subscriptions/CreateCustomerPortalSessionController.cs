@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Stripe;
 using Stripe.Checkout;
 
-namespace Palavyr.API.Controllers.Payments
+namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
     public class CustomerPortalRequest
     {

@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Common.FileSystem.FormPaths;
-using Server.Domain.Configuration.schema;
+using Server.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Attachments
 {
     [Route("api")]
     [ApiController]
@@ -59,4 +59,5 @@ namespace Palavyr.API.Controllers
             return Ok(fileLinks);
         }
     }
+    
 }

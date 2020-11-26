@@ -1,12 +1,12 @@
 ﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+using Amazon.SimpleEmail;
 using DashboardServer.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Common.FileSystem.FormPaths;
-using Amazon.SimpleEmail;
-using Microsoft.AspNetCore.Authorization;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Controllers.Areas
 {
     [Authorize]
     [Route("api")]
