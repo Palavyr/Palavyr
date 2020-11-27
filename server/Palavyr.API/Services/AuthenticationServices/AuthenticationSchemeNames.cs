@@ -1,4 +1,4 @@
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Services.AuthenticationServices
 {
     public static class AuthenticationSchemeNames
     {

@@ -104,7 +104,7 @@ export const Subscribe = () => {
         },
     ];
     const getCurrentPlan = useCallback(async () => {
-        var plan = (await client.Settings.Account.getCurrentPlan()).data as string;
+        var {data: plan} = await client.Settings.Account.getCurrentPlan();
         setCurrentPlan(plan);
     }, []);
 

@@ -9,7 +9,6 @@ import { cloneDeep } from "lodash";
 import { updateNodeList } from "./conversationNodeUtils";
 import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
 
-
 export interface IConversationNodeInterface {
     node: ConvoNode;
     nodeList: Array<ConvoNode>;
@@ -133,7 +132,7 @@ export const ConversationNodeInterface = ({ dynamicNodeTypes, node, nodeList, op
                                 async (event) => {
                                     var newNode = cloneDeep(node);
                                     newNode.isCritical = event.target.checked;
-                                    await client.Conversations.PutConversationNode(node.nodeId, newNode);
+                                    await client.Conversations.ModifyConversationNode(node.nodeId, newNode);
                                     var newNodeList = updateNodeList(nodeList, newNode);
                                     setNodes(newNodeList);
                                 }

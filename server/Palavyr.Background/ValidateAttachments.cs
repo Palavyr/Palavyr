@@ -4,7 +4,7 @@ using System.Linq;
 using DashboardServer.Data;
 using Microsoft.Extensions.Logging;
 using Palavyr.Common.FileSystem.FormPaths;
-using Server.Domain.Configuration.schema;
+using Server.Domain.Configuration.Schemas;
 
 namespace Palavyr.Background
 {

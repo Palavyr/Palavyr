@@ -5,6 +5,7 @@ import { makeStyles, Paper } from "@material-ui/core";
 import { PreviewHelp } from "dashboard/content/help/PreviewHelp";
 import { useParams } from "react-router-dom";
 
+const MediaType = "application/pdf";
 
 const useStyles = makeStyles(theme => ({
     paper: (preview: boolean) => ({
@@ -26,8 +27,8 @@ export const ConfigurationPreview = () => {
     const classes = useStyles(preview ? true : false);
 
     const loadPreview = React.useCallback(async () => {
-        var { data } = await client.Configuration.Preview.fetchPreview(areaIdentifier);
-        setPreview(data);
+        var { data: fileLink } = await client.Configuration.Preview.fetchPreview(areaIdentifier);
+        setPreview(fileLink);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier])
 
@@ -48,10 +49,10 @@ export const ConfigurationPreview = () => {
                     <object
                         id="output-fram-id"
                         data={preview.link}
-                        type="application/pdf"
+                        type={MediaType}
                         width="100%"
                         height="100%"
-                        aria-label={"preview"}
+                        aria-label="preview"
                     >
                     </object>
                 }

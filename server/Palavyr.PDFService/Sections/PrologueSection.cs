@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace PDFService
+namespace PDFService.Sections
 {
     public static class PrologueSection
     {

@@ -24,7 +24,6 @@ export const CheckoutForm = ({ stripeTokenHandler }: ICheckoutForm) => {
         }
 
         const card = elements.getElement(CardElement) as StripeCardElement;
-        console.log(card);
         const result = await stripe.createToken(card);
 
         if (result.error) {

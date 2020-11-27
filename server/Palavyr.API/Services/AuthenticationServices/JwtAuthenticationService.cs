@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Palavyr.API.Controllers
+namespace Palavyr.API.Services.AuthenticationServices
 {
     public interface IJwtAuthenticationService
     {

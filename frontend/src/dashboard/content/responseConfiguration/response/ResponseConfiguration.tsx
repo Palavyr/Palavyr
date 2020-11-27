@@ -12,7 +12,6 @@ import { makeStyles } from "@material-ui/core";
 import { EstimateHelp } from "dashboard/content/help/EstimateHelp";
 import { useParams } from "react-router-dom";
 
-
 const useStyles = makeStyles((theme) => ({
     titleText: {
         textAlign: "center",
@@ -21,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ResponseConfiguration = () => {
-
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
     const [, setLoaded] = useState(false);
@@ -35,11 +33,13 @@ export const ResponseConfiguration = () => {
     const epilogueModifier = new LogueModifier(setEpilogue);
 
     const savePrologue = async () => {
-        await client.Configuration.updatePrologue(areaIdentifier, prologue);
+        const { data: _prologue_ } = await client.Configuration.updatePrologue(areaIdentifier, prologue);
+        setPrologue(_prologue_);
     };
 
     const saveEpilogue = async () => {
-        await client.Configuration.updateEpilogue(areaIdentifier, epilogue);
+        const { data: _epilogue_ } = await client.Configuration.updateEpilogue(areaIdentifier, epilogue);
+        setEpilogue(_epilogue_);
     };
 
     const updateEpilogue = (event: { target: { value: string } }) => {
@@ -64,7 +64,7 @@ export const ResponseConfiguration = () => {
 
     const loadEstimateConfiguration = useCallback(async () => {
         const { data } = await client.Configuration.getEstimateConfiguration(areaIdentifier);
-        const {prologue, epilogue, staticTablesMetas} = data;
+        const { prologue, epilogue, staticTablesMetas } = data;
         setPrologue(cloneDeep(prologue));
         setEpilogue(cloneDeep(epilogue));
         setStaticTables(staticTablesMetas);

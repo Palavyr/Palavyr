@@ -47,11 +47,8 @@ export const ConvoTree = () => {
 
     const loadNodes = useCallback(async () => {
         var client = new ApiClient();
-        var convoRes = await client.Conversations.GetConversation(areaIdentifier);
-        var dynRes = await client.Configuration.Tables.Dynamic.getDynamicTableMetas(areaIdentifier);
-
-        var dynamicTableMetas = dynRes.data as DynamicTableMetas;
-        var nodes = convoRes.data as Conversation;
+        var {data: nodes} = await client.Conversations.GetConversation(areaIdentifier);
+        var {data: dynamicTableMetas} = await client.Configuration.Tables.Dynamic.getDynamicTableMetas(areaIdentifier);
 
         var formattedRequiredNodes = dynamicTableMetas.map((x) => {
             return {
@@ -70,8 +67,8 @@ export const ConvoTree = () => {
 
             // used in the dropdown select menu in the convotree
             dynamicTableMetas.forEach(async (tableMeta: DynamicTableMeta) => {
-                var dynamicTableRows = (await client.Configuration.Tables.Dynamic.getDynamicTableData(areaIdentifier, tableMeta.tableType, tableMeta.tableId)).data as TableData;
 
+                var {data: dynamicTableRows} = await client.Configuration.Tables.Dynamic.getDynamicTableData(areaIdentifier, tableMeta.tableType, tableMeta.tableId);
                 var valueOptions = dynamicTableRows.map((x) => x.option);
 
                 var uniqueTableSpecifier = makeUniqueTableName(tableMeta);

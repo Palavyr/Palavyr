@@ -158,6 +158,8 @@ export type EnquiryRow = {
     phoneNumber: string;
 }
 
+export type Enquiries = Array<EnquiryRow>;
+
 export type DynamicTableMeta = {
     id: number;
     tableTag: string;
@@ -329,4 +331,27 @@ export enum AreaSettingsLoc {
     conversation,
     settings,
     preview,
+}
+
+export type Credentials = {
+    jwtToken: string;
+    apiKey: string;
+    sessionId: string;
+    emailAddress: string;
+    authenticated: boolean;
+    message: string;
+};
+
+
+
+export type ResponseConfigurationType = {
+    prologue: string;
+    epilogue: string;
+    staticTablesMetas: StaticTableMetas;
+}
+
+export type AccountEmailSettingsResponse = {
+    emailAddress: string;
+    isVerified: boolean;
+    awaitingVerification: boolean;
 }

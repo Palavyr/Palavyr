@@ -5,7 +5,7 @@ using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
 using Microsoft.Extensions.Logging;
 
-namespace EmailService
+namespace EmailService.ResponseEmail
 {
     public partial class SESEmail
     {

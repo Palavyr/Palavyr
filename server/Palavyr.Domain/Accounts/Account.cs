@@ -1,13 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Palavyr.Common.uniqueIdentifiers;
+using Palavyr.FileSystem.UniqueIdentifiers;
 
 namespace Server.Domain.Accounts
 {
     public class UserAccount
     {
-        [Key] public int Id { get; set; }
+        [Key] public int? Id { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
         public string EmailAddress { get; set; }

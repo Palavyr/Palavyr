@@ -125,7 +125,7 @@ export const addNodes = async (parentNode: ConvoNode, nodeList: Conversation, ne
 
     var client = new ApiClient();
 
-    await client.Conversations.PostConversation(transactions, areaIdentifier, idsToDelete);
+    const { data } = await client.Conversations.ModifyConversation(transactions, areaIdentifier, idsToDelete);
     setNodes([...cloneDeep(nodeList)]);
 };
 

@@ -16,10 +16,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Palavyr.API.Controllers;
-using Palavyr.API.controllers.accounts.newAccount;
 using Palavyr.API.CustomMiddleware;
+using Palavyr.API.Services.AccountServices;
+using Palavyr.API.Services.AuthenticationServices;
+using Palavyr.API.Services.StripeServices;
+using Palavyr.API.Services.StripeServices.StripeWebhookHandlers;
 using Palavyr.Background;
+using Palavyr.Common.FileSystem;
 using Palavyr.Common.FileSystem.FormPaths;
 using Stripe;
 
@@ -27,16 +30,6 @@ namespace Palavyr.API
 {
     public class Startup
     {
-        public Startup(IWebHostEnvironment Env, IConfiguration configuration)
-        {
-            env = Env;
-            Configuration = configuration;
-        }
-
-        private IConfiguration Configuration { get; set; }
-        private ILogger<Startup> _logger { get; set; }
-        private IWebHostEnvironment env { get; set; }
-
         private const string _configurationDbStringKey = "DashContextPostgres";
         private const string _accountDbStringKey = "AccountsContextPostgres";
         private const string _convoDbStringKey = "ConvoContextPostgres";
@@ -44,6 +37,16 @@ namespace Palavyr.API
         private const string _secretKeySection = "AWS:SecretKey";
         private const string _StripeKeySection = "Stripe:SecretKey";
         private const string _webhookKeySection = "Stripe:WebhookKey";
+        private int stripeRetriesCount = 3;
+        public Startup(IWebHostEnvironment Env, IConfiguration configuration)
+        {
+            env = Env;
+            Configuration = configuration;
+        }
+
+        private IConfiguration Configuration { get; set; }
+        private ILogger<Startup> logger { get; set; }
+        private IWebHostEnvironment env { get; set; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -101,19 +104,7 @@ namespace Palavyr.API
 
                         if (env.IsDevelopment())
                         {
-                            builder.WithOrigins("*"
-                                // "http://localhost/",
-                                // "https://localhost/",
-                                // "http://localhost",
-                                // "https://localhost",
-                                // "http://localhost:5000/",
-                                // "https://localhost:5001/",
-                                // "http://localhost:5000",
-                                // "https://localhost:5001",
-                                // "http://localhost:3600",
-                                // "https://localhost:3500",
-                                // "https://stripe.com"
-                            );
+                            builder.WithOrigins("*");
                         }
                         else
                         {
@@ -136,7 +127,10 @@ namespace Palavyr.API
                     });
             });
 
-            services.AddControllers();
+            services
+                .AddControllers();
+                // .AddNewtonsoftJson();
+            
             var value = Configuration.GetConnectionString(_accountDbStringKey);
             services.AddDbContext<AccountsContext>(opt =>
                 opt.UseNpgsql(Configuration.GetConnectionString(_accountDbStringKey)));
@@ -145,14 +139,14 @@ namespace Palavyr.API
             services.AddDbContext<DashContext>(opt =>
                 opt.UseNpgsql(Configuration.GetConnectionString(_configurationDbStringKey)));
 
+            // Stripe
+            StripeConfiguration.ApiKey = Configuration.GetSection(_StripeKeySection).Value;
+            StripeConfiguration.MaxNetworkRetries = stripeRetriesCount;
+            
             // AWS Services
             var accessKey = Configuration.GetSection(_accessKeySection).Value;
             var secretKey = Configuration.GetSection(_secretKeySection).Value;
             var awsOptions = Configuration.GetAWSOptions();
-            StripeConfiguration.ApiKey = "sk_test_51HOtDQAnPqY603aZg1LhzHge6qQ7AEYcGPQhhCqMc5gXwfyr6XTEJJvJisBtzhFChIeOnytjCkhHK2ZmEgIuWyup00loOlq4W1";
-            // StripeConfiguration.ApiKey = Configuration.GetSection(_StripeKeySection).Value);
-            
-            
             awsOptions.Credentials = new BasicAWSCredentials(accessKey, secretKey);
             services.AddDefaultAWSOptions(awsOptions);
             services.AddAWSService<IAmazonSimpleEmailService>();
@@ -181,6 +175,12 @@ namespace Palavyr.API
             services.AddTransient<IAccountSetupService, AccountSetupService>();
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IEmailVerificationService, EmailVerificationService>();
+            services.AddTransient<IStripeWebhookAuthService, StripeWebhookAuthService>();
+            services.AddTransient<IStripeEventWebhookService, StripeEventWebhookService>();
+            services.AddTransient<IStripeCustomerService, StripeCustomerService>();
+            services.AddTransient<IStripeSubscriptionService, StripeSubscriptionService>();
+            services.AddTransient<IStripeProductService, StripeProductService>();
+            services.AddTransient<IProcessStripeCheckoutSessionCompletedHandler, ProcessStripeCheckoutSessionCompletedHandler>();
         }
 
         public void Configure(
@@ -191,8 +191,7 @@ namespace Palavyr.API
             ILoggerFactory loggerFactory
         )
         {
-            _logger = loggerFactory.CreateLogger<Startup>();
-            _logger.LogDebug("Starting Configure method in startup.cs");
+            logger = loggerFactory.CreateLogger<Startup>();
             var appDataPath = resolveAppDataPath();
             if (string.IsNullOrEmpty(Configuration["WebRootPath"]))
                 Configuration["WebRootPath"] = Environment.CurrentDirectory;
@@ -213,7 +212,7 @@ namespace Palavyr.API
                 var option = new BackgroundJobServerOptions {WorkerCount = 1};
                 app.UseHangfireServer(option);
                 app.UseHangfireDashboard();
-                _logger.LogInformation("Preparing to archive teh project");
+                logger.LogInformation("Preparing to archive teh project");
                 try
                 {
                     // recurringJobManager
@@ -249,7 +248,7 @@ namespace Palavyr.API
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogCritical("ERROR OMGOMGOMG WHY?: " + ex.Message);
+                    logger.LogCritical("ERROR " + ex.Message);
                 }
             }
         }
@@ -260,25 +259,20 @@ namespace Palavyr.API
             var osVersion = Environment.OSVersion;
             if (osVersion.Platform != PlatformID.Unix)
             {
-                _logger.LogDebug("STARTUP-6: We are running on windows.");
                 appDataPath = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), MagicPathStrings.DataFolder);
             }
             else
             {
                 var home = Environment.GetEnvironmentVariable("HOME");
-                _logger.LogDebug($"STARTUP-8: HOME env variable = {home}");
                 if (home == null)
                 {
-                    _logger.LogDebug($"STARTUP-9: HOME VARIABLE NOT SET");
+                    logger.LogDebug($"STARTUP-9: HOME VARIABLE NOT SET");
                 }
 
                 appDataPath = Path.Combine(home, MagicPathStrings.DataFolder);
             }
-
-            _logger.LogDebug($"STARTUP-10: APPDATAPATH: {appDataPath}");
-
+            
             DiskUtils.CreateDir(appDataPath);
-
             return appDataPath;
         }
     }

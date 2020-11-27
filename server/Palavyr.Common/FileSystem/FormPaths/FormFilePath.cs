@@ -3,7 +3,6 @@ using System.IO;
 
 namespace Palavyr.Common.FileSystem.FormPaths
 {
-    
     /// <summary>
     ///  Here we enshrine the directory structure of Palavyr
     /// </summary>
@@ -23,7 +22,7 @@ namespace Palavyr.Common.FileSystem.FormPaths
                 attachmentDir,
                 fileName);
         }
-        
+
         /// <summary>
         ///  E.g. C:\\PalavyrData\\UserData\\${accountId}\\PreviewPDF\\${safeFileName}.pdf
         /// </summary>
@@ -31,7 +30,8 @@ namespace Palavyr.Common.FileSystem.FormPaths
         /// <param name="safeFileNameStem"></param>
         /// <param name="fileType"></param>
         /// <returns></returns>
-        public static string FormResponsePreviewLocalFilePath(string accountId, string safeFileNameStem, string fileType = "pdf")
+        public static string FormResponsePreviewLocalFilePath(string accountId, string safeFileNameStem,
+            string fileType = "pdf")
         {
             return Path.Combine(
                 MagicPathStrings.InstallationRoot,
@@ -65,7 +65,8 @@ namespace Palavyr.Common.FileSystem.FormPaths
         /// <returns></returns>
         public static string FormPreviewPDFFilePath(string accountId, string fileNameWithSuffix)
         {
-            return Path.Combine(MagicPathStrings.InstallationRoot, MagicPathStrings.UserData, accountId, MagicPathStrings.PreviewPDF, fileNameWithSuffix);
+            return Path.Combine(MagicPathStrings.InstallationRoot, MagicPathStrings.UserData, accountId,
+                MagicPathStrings.PreviewPDF, fileNameWithSuffix);
         }
     }
 }

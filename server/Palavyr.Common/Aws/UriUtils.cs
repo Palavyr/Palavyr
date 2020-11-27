@@ -4,11 +4,11 @@ using System.IO;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
-using Palavyr.Common.FileSystem.FormPaths.MagicStrings;
 using Microsoft.Extensions.Logging;
+using Palavyr.Common.FileSystem.FormPaths;
+using Palavyr.Common.FileSystem.FormPaths.MagicStrings;
 
-
-namespace Palavyr.Common.FileSystem.FormPaths
+namespace Palavyr.FileSystem.Aws
 {
     public static class UriUtils
     {

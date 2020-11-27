@@ -18,12 +18,6 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-type AccountEmailSettingsResponse = {
-    emailAddress: string;
-    isVerified: boolean;
-    awaitingVerification;
-}
-
 export const ChangeEmail = () => {
     var client = new ApiClient();
     const classes = useStyles();
@@ -38,11 +32,11 @@ export const ChangeEmail = () => {
     const [alertDetails, setAlertDetails] = useState<AlertDetails>({ title: "", message: "" })
 
     const loadEmail = useCallback(async () => {
-        var settingsResponse = (await client.Settings.Account.getEmail()).data as AccountEmailSettingsResponse;
+        var {data: defaultEmail} = await client.Settings.Account.getEmail();
         setSettings({
-            emailAddress: settingsResponse.emailAddress,
-            isVerified: settingsResponse.isVerified,
-            awaitingVerification: settingsResponse.awaitingVerification
+            emailAddress: defaultEmail.emailAddress,
+            isVerified: defaultEmail.isVerified,
+            awaitingVerification: defaultEmail.awaitingVerification
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -75,7 +69,7 @@ export const ChangeEmail = () => {
 
     const verifyEmailAddress = async (newEmailAddress: string) => {
         if (newEmailAddress === settings.emailAddress) return
-        const res = (await client.Settings.Account.updateEmail(newEmailAddress)).data as EmailVerificationResponse;
+        const {data: res} = await client.Settings.Account.updateEmail(newEmailAddress);
         setAlertDetails({ title: res.title, message: res.message })
         setAlertState(true);
         if (!(res.status === "Failed")) setSettings({ ...settings, emailAddress: newEmailAddress })

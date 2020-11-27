@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Palavyr.Common.FileSystem.FormPaths;
 
-namespace Palavyr.Common.FileSystem.FormPaths
+namespace Palavyr.Common.FileSystem.ListPaths
 {
     public static class AttachmentPaths
     {

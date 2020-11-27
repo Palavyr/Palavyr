@@ -61,7 +61,7 @@ export const ChangePassword = () => {
     const classes = useStyles();
 
     const handlePasswordChange = async (oldPassword: string, newPassword: string) => {
-        var success = await client.Settings.Account.UpdatePassword(oldPassword, newPassword);
+        var {data: success} = await client.Settings.Account.UpdatePassword(oldPassword, newPassword);
         return success;
     }
 

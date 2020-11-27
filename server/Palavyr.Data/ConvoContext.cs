@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Server.Domain;
-using Server.Domain.conversations;
+using Server.Domain.Conversation;
 
 namespace DashboardServer.Data
 {

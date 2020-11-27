@@ -1,4 +1,4 @@
-﻿namespace Palavyr.Common.FileSystem.FormPaths.LocalServices
+﻿namespace Palavyr.Common.FileSystem.LocalServices
 {
     public static class LocalServices
     {

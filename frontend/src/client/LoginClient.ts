@@ -1,3 +1,4 @@
+import { Credentials } from "@Palavyr-Types";
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { serverUrl, SPECIAL_HEADERS } from "./clientUtils";
 
@@ -18,25 +19,25 @@ export class LoginClient {
     }
 
     public Login = {
-        RequestLogin: async ( email: string, password: string): Promise<AxiosResponse> => this.client.post("authentication/login",
+        RequestLogin: async ( email: string, password: string): Promise<AxiosResponse<Credentials>> => this.client.post("authentication/login",
         {
             EmailAddress: email,
             Password: password
         }),
 
-        RequestLoginWithGoogleToken: async (oneTimeCode: string, tokenId: string): Promise<AxiosResponse> => this.client.post("authentication/login", {
+        RequestLoginWithGoogleToken: async (oneTimeCode: string, tokenId: string): Promise<AxiosResponse<Credentials>> => this.client.post("authentication/login", {
             OneTimeCode: oneTimeCode,
             TokenId: tokenId
         })
     }
 
     public Status = {
-        CheckIfLoggedIn: async (): Promise<AxiosResponse> => this.client.get(`authentication/status`)
+        CheckIfLoggedIn: async (): Promise<AxiosResponse<boolean>> => this.client.get(`authentication/status`)
     }
 
     public Account = {
-        registerNewAccount: async (EmailAddress: string, Password: string): Promise<AxiosResponse> => this.client.post(`account/create`, { EmailAddress, Password }),
-        registerNewAccountWithGoogle: async (oneTimeCode: string, tokenId: string): Promise<AxiosResponse> => this.client.post("account/create/google", {
+        registerNewAccount: async (EmailAddress: string, Password: string): Promise<AxiosResponse<Credentials>> => this.client.post(`account/create/default`, { EmailAddress, Password }),
+        registerNewAccountWithGoogle: async (oneTimeCode: string, tokenId: string): Promise<AxiosResponse<Credentials>> => this.client.post("account/create/google", {
             OneTimeCode: oneTimeCode, TokenId: tokenId
         })
     }

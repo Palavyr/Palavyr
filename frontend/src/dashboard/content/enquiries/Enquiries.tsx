@@ -1,6 +1,6 @@
 import { ApiClient } from "@api-client/Client";
 import React, { useState, useCallback, useEffect } from "react";
-import { EnquiryRow, IGetHelp } from "@Palavyr-Types";
+import { Enquiries, EnquiryRow } from "@Palavyr-Types";
 import { Statement } from "@common/components/Statement";
 import { Divider, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody, Table } from "@material-ui/core";
 
@@ -11,11 +11,10 @@ export const Enquires = () => {
     const title = "Check your enquiries";
     const details = "This table lists all of the completed enquires you have received. Enquiries you have not checked will be in bold."
 
-    const [enquiries, setEnquiries] = useState<Array<EnquiryRow>>([]);
+    const [enquiries, setEnquiries] = useState<Enquiries>([]);
 
     const loadEnquiries = useCallback(async () => {
-        var res = await client.Enquiries.getEnquiries();
-        var enqs = res.data as Array<EnquiryRow>;
+        var {data: enqs} = await client.Enquiries.getEnquiries();
         setEnquiries(enqs)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
