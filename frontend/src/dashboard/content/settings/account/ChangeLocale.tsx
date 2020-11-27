@@ -28,10 +28,11 @@ export const ChangeLocale = () => {
 
     const loadLocale = useCallback(async () => {
 
-        var res = (await client.Settings.Account.getLocale()).data;
+        var {data: locale} = await client.Settings.Account.getLocale();
 
-        setLocaleID(res)
-        setLocaleName(supportedLocales[res]);
+        setLocaleID(locale)
+        // TODO: Ensure strong types
+        setLocaleName(supportedLocales[locale]);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

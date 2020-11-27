@@ -87,7 +87,7 @@ interface ChangeLogoImageInner {
     setFileUpload: Dispatch<SetStateAction<File[]>>;
 }
 const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInner) => {
-    var client = new ApiClient();
+    const client = new ApiClient();
     const cls = useStyles();
 
     const [alertState, setAlertState] = useState<boolean>(false);
@@ -99,7 +99,7 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
     }
 
     const loadCompanyLogo = useCallback(async () => {
-        var logoUri = (await client.Settings.Account.getCompanyLogo()).data as string;
+        const {data: logoUri} = await client.Settings.Account.getCompanyLogo();
         setcompanyLogo(logoUri);
     }, [])
 
@@ -114,7 +114,7 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
 
     const handleFileSave = async () => {
         if (fileUpload !== null) {
-            var formData = new FormData();
+            const formData = new FormData();
             formData.append('files', fileUpload[0])
             const dataUrl = (await client.Settings.Account.updateCompanyLogo(formData)).data as string;
             setcompanyLogo(dataUrl);

@@ -85,9 +85,9 @@ export const GroupTree = () => {
     const addGroup = async (parentId: string | null = null) => {
         if (!(nodeList.length >= 6)) {
 
-            var groups = await client.Settings.Groups.AddGroup(parentId, "Default Group Name")
-            var areas = await client.Area.GetAreas();
-            setData(groups.data, areas.data);
+            var {data: groups} = await client.Settings.Groups.AddGroup(parentId, "Default Group Name")
+            var {data: areas} = await client.Area.GetAreas();
+            setData(groups, areas);
         } else {
             // alert("Can only have up to 6 groups.")
             var alertMessage: AlertType = {
@@ -118,9 +118,9 @@ export const GroupTree = () => {
 
     const loadNodes = useCallback(async () => {
 
-        var groups = await client.Settings.Groups.GetGroups();
-        var areas = await client.Area.GetAreas();
-        setData(groups.data, areas.data)
+        var {data: groups} = await client.Settings.Groups.GetGroups();
+        var {data: areas} = await client.Area.GetAreas();
+        setData(groups, areas)
 
     }, [])
 

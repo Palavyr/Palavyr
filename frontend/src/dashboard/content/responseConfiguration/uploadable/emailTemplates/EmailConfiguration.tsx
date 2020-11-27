@@ -12,32 +12,32 @@ const uploadDetails = () => {
     return (
         <div className="alert alert-info">
             <div>
-                Use this dialog to upload a formatted HTML document that will be sent to potential customers enquiring about commercial purchases. This email will be used to send information, attachments, as well as a copy and a temporary
-                link to the estimate (the link expires in 24 hours).
-                        </div><br></br>
+                Use this dialog to upload a formatted HTML document that will be sent to potential customers enquiring about commercial purchases. This email will be used to send information, attachments, as well as a copy and a temporary link to the
+                estimate (the link expires in 24 hours).
+            </div>
+            <br></br>
             <div>
-                When composing the email template, you may choose to include the clients name (supplied during the chat) and a link to the estimate. To do this, simply include the following placeholders for the name and estimate link
-                            respectively (<strong>Note the capitalization</strong>):
-                            <div>
+                When composing the email template, you may choose to include the clients name (supplied during the chat) and a link to the estimate. To do this, simply include the following placeholders for the name and estimate link respectively (
+                <strong>Note the capitalization</strong>):
+                <div>
                     <ul>
                         <li>Name</li>
                         <li>Estimate</li>
                     </ul>
                 </div>
-
             </div>
         </div>
-    )
-}
+    );
+};
 const buttonText = "Add Email Template";
 const summary = "Upload a new Email Response";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     saveOrCancel: {
         marginTop: "2rem",
-        textAlign: "right"
-    }
-}))
+        textAlign: "right",
+    },
+}));
 
 export const EmailConfiguration = () => {
     var client = new ApiClient();
@@ -51,58 +51,58 @@ export const EmailConfiguration = () => {
     const [modalState, setModalState] = useState(false);
     const toggleModal = () => {
         setModalState(!modalState);
-    }
+    };
     const [accordState, setAccordState] = useState(false);
     const toggleAccord = () => {
-        setAccordState(!accordState)
-    }
+        setAccordState(!accordState);
+    };
 
     const [editorAccordstate, setEditorAccordState] = useState(false);
     const toggleEditorAccord = () => {
         setEditorAccordState(!editorAccordstate);
-    }
+    };
 
     const handleFileRead = async (e: any) => {
         const content = fileReader.result;
-        if (content && typeof content == 'string') {
+        if (content && typeof content == "string") {
             const { data } = await client.Configuration.Email.SaveEmailTemplate(areaIdentifier, content);
             setEmailTemplate(data);
             setModalState(false);
             setAccordState(false);
         } else {
-            console.log("Failed to read file contents.")
+            console.log("Failed to read file contents.");
         }
     };
 
     const handleFileSave = (files: File[]) => {
         if (files[0] != null) {
             fileReader.onloadend = handleFileRead;
-            fileReader.readAsText(files[0])
+            fileReader.readAsText(files[0]);
         }
-    }
+    };
 
     const saveEditorData = async () => {
         const data = emailTemplate;
-        var res = await client.Configuration.Email.SaveEmailTemplate(areaIdentifier, data)
-    }
+        var res = await client.Configuration.Email.SaveEmailTemplate(areaIdentifier, data);
+    };
 
     const loadEmailTemplate = useCallback(async () => {
-        const {data} = (await client.Configuration.Email.GetEmailTemplate(areaIdentifier));
+        const { data } = await client.Configuration.Email.GetEmailTemplate(areaIdentifier);
         setEmailTemplate(data);
-        setLoaded(true)
+        setLoaded(true);
         return () => {
             setLoaded(false);
-        }
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [areaIdentifier])
+    }, [areaIdentifier]);
 
     useEffect(() => {
-        loadEmailTemplate()
+        loadEmailTemplate();
         return () => {
-            setLoaded(false)
-        }
+            setLoaded(false);
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [areaIdentifier, loadEmailTemplate])
+    }, [areaIdentifier, loadEmailTemplate]);
 
     return (
         <>
@@ -117,28 +117,14 @@ export const EmailConfiguration = () => {
                 buttonText={buttonText}
                 summary={summary}
                 uploadDetails={uploadDetails}
-                acceptedFiles={['text/html', 'text/plain']}
+                acceptedFiles={["text/html", "text/plain"]}
             />
-            <EmailEditor
-                accordState={editorAccordstate}
-                toggleAccord={toggleEditorAccord}
-                setEmailTemplate={setEmailTemplate}
-                emailTemplate={emailTemplate}
-            >
+            <EmailEditor accordState={editorAccordstate} toggleAccord={toggleEditorAccord} setEmailTemplate={setEmailTemplate} emailTemplate={emailTemplate}>
                 <div className={classes.saveOrCancel}>
-                    <SaveOrCancel
-                        onSave={() => saveEditorData()}
-                        onCancel={() => loadEmailTemplate()}
-                        useModal={true}
-                    />
+                    <SaveOrCancel onSave={() => saveEditorData()} onCancel={() => loadEmailTemplate()} useModal={true} />
                 </div>
             </EmailEditor>
-            {
-                loaded &&
-                <ViewEmailTemplate
-                    emailTemplate={emailTemplate}
-                />
-            }
+            {loaded && <ViewEmailTemplate emailTemplate={emailTemplate} />}
         </>
     );
 };

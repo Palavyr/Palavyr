@@ -21,7 +21,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
         
         [HttpPut("account/settings/password")]
-        public async Task<IActionResult> UpdatePassword([FromHeader] string accountId, AccountDetails accountDetails)
+        public async Task<bool> UpdatePassword([FromHeader] string accountId, AccountDetails accountDetails)
         {
             var account = await accountsContext
                 .Accounts
@@ -30,12 +30,12 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             var oldHashedPassword = accountDetails.OldPassword;
             if (oldHashedPassword != accountDetails.Password)
             {
-                return Ok(false);
+                return false;
             }
 
             account.Password = accountDetails.Password;
             await accountsContext.SaveChangesAsync();
-            return Ok(true);
+            return true;
         }
     }
 }

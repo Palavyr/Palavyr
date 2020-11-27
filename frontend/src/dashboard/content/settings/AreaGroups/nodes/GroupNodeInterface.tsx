@@ -65,8 +65,8 @@ export const GroupInterface = ({ node, text, setNodes}: IGroupNodeInterface) => 
                             color="primary"
                             label={areaMeta.areaName} onDelete={
                                 async () => {
-                                    var res = await client.Settings.Groups.DeleteAreaGroup(areaMeta.areaIdentifier);
-                                    setNodes(res.data);
+                                    var {data: groups} = await client.Settings.Groups.DeleteAreaGroup(areaMeta.areaIdentifier);
+                                    setNodes(groups);
                                     console.log("Deleting")
                                 }
                             } />

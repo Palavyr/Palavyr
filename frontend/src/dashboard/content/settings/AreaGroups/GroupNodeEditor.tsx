@@ -40,8 +40,8 @@ export const GroupNodeEditorModal = ({ groupId, modalState, text, setText, setMo
                     onClick={
                         async (e) => {
                             e.preventDefault();
-                            var res = await client.Settings.Groups.RemoveGroup(groupId);
-                            setNodes(res.data);
+                            var {data: groups} = await client.Settings.Groups.RemoveGroup(groupId);
+                            setNodes(groups);
                             handleCloseModal();
                         }
                     }
@@ -53,8 +53,8 @@ export const GroupNodeEditorModal = ({ groupId, modalState, text, setText, setMo
                     onClick={
                         async (e) => {
                             e.preventDefault();
-                            var res = await client.Settings.Groups.UpdateGroupName(text, groupId)
-                            setNodes(res.data);
+                            var {data: groups} = await client.Settings.Groups.UpdateGroupName(text, groupId)
+                            setNodes(groups);
                             handleCloseModal();
                         }
                     }

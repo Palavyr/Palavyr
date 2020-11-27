@@ -25,7 +25,7 @@ export const AttachmentConfiguration = () => {
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
     const [, setLoaded] = useState<boolean>(false);
-    const [currentPreview, setCurrentPreview] = useState<FileLink>();
+    const [currentPreview, setCurrentPreview] = useState<FileLink | null>();
     const [attachmentList, setAttachmentList] = useState<Array<FileLink>>([]);
 
     const [modalState, setModalState] = useState(false);
@@ -38,13 +38,13 @@ export const AttachmentConfiguration = () => {
         setAccordState(!accordState)
     }
     const removeAttachment = async (fileId: string) => {
-        var res = await client.Configuration.Attachments.removeAttachment(areaIdentifier, fileId)
-        setAttachmentList(res.data);
+        var {data: filelinks} = await client.Configuration.Attachments.removeAttachment(areaIdentifier, fileId)
+        setAttachmentList(filelinks);
     }
 
     const loadAttachments = useCallback(async () => {
-        var res = await client.Configuration.Attachments.fetchAttachmentLinks(areaIdentifier);
-        setAttachmentList(res.data);
+        var {data: fileLinks} = await client.Configuration.Attachments.fetchAttachmentLinks(areaIdentifier);
+        setAttachmentList(fileLinks);
         setLoaded(true);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -61,22 +61,29 @@ export const AttachmentConfiguration = () => {
         }
     }, [areaIdentifier, attachmentList.length, loadAttachments])
 
+
+
     const handleFileSave = async (files: File[]) => {
         var formData = new FormData();
-        let res;
+
         if (files.length === 1) {
             formData.append('files', files[0])
-            res = await client.Configuration.Attachments.saveSingleAttachment(areaIdentifier, formData);
+            const {data: fileLinks} = await client.Configuration.Attachments.saveSingleAttachment(areaIdentifier, formData);
+            setAttachmentList(fileLinks);
+
         } else if (files.length > 1) {
             files.forEach((file: File) => {
                 formData.append('files', file)
             })
-            res = await client.Configuration.Attachments.saveManyAttachments(areaIdentifier, formData);
+            const {data: fileLinks} = await client.Configuration.Attachments.saveManyAttachments(areaIdentifier, formData);
+            setAttachmentList(fileLinks);
+
         } else {
-            res = [];
+            const fileLinks = [];
+            setAttachmentList(fileLinks);
+
         }
-        setAttachmentList(res.data)
-        setCurrentPreview(null!);
+        setCurrentPreview(null);
     }
 
     return (

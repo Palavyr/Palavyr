@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosInstance } from "axios";
 import { SelectOneFlatData, TableData } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/tableComponents/SelectOneFlat/SelectOneFlatTypes";
 import { serverUrl, getSessionIdFromLocalStorage, SPECIAL_HEADERS, getJwtTokenFromLocalStorage } from "./clientUtils";
-import { DynamicTableMetas, DynamicTableMeta, StaticTableMetas, staticTableMetaTemplate, Conversation, ConvoTableRow, Areas, Prices, EmailVerificationResponse, AreaTable, FileLink, ConvoNode } from "@Palavyr-Types";
+import { DynamicTableMetas, DynamicTableMeta, StaticTableMetas, staticTableMetaTemplate, Conversation, ConvoTableRow, Areas, Prices, EmailVerificationResponse, AreaTable, FileLink, ConvoNode, ResponseConfigurationType, AccountEmailSettingsResponse, GroupTable, Groups, Enquiries } from "@Palavyr-Types";
 import { PreCheckResult, WidgetPreferences } from "dashboard/content/demo/ChatDemo";
 
 export class ApiClient {
@@ -55,27 +55,26 @@ export class ApiClient {
     };
 
     public Configuration = {
-        getEstimateConfiguration: async (areaIdentifier: string): Promise<AxiosResponse> => this.client.get(`response/configuration/${areaIdentifier}`),
+        getEstimateConfiguration: async (areaIdentifier: string): Promise<AxiosResponse<ResponseConfigurationType>> => this.client.get(`response/configuration/${areaIdentifier}`),
         updatePrologue: async (areaIdentifier: string, prologue: string): Promise<AxiosResponse<string>> => this.client.put(`response/configuration/${areaIdentifier}/prologue`, { prologue: prologue }),
         updateEpilogue: async (areaIdentifier: string, epilogue: string): Promise<AxiosResponse<string>> => this.client.put(`response/configuration/${areaIdentifier}/epilogue`, { epilogue: epilogue }),
 
         Tables: {
             Dynamic: {
-
                 getDynamicTableMetas: async (areaIdentifier: string): Promise<AxiosResponse<DynamicTableMetas>> => this.client.get(`tables/dynamic/type/${areaIdentifier}`),
-
                 getDynamicTableTypes: async (areaIdentifier: string): Promise<AxiosResponse<string[]>> => this.client.get(`tables/dynamic/type/${areaIdentifier}`),
-                getAvailableTablesPrettyNames: async (): Promise<AxiosResponse<string[]>> => this.client.get(`tables/dynamic/available-tables-pretty-names`),
-                modifyDynamicTableMeta: async (dynamicTableMeta: DynamicTableMeta): Promise<AxiosResponse<DynamicTableMeta>> => this.client.put(`tables/dynamic/modify`, dynamicTableMeta),
-
-
                 getDynamicTableData: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse<TableData>> => this.client.get(`tables/dynamic/${tableType}/tableId/${tableId}/data/${areaIdentifier}/`),
                 getDynamicTableDataTempate: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse<TableData>> => this.client.get(`tables/dynamic/${tableType}/data/template/${areaIdentifier}/${tableId}`),
-                setDynamicTableType: async (areaIdentifier: string, tableType: string): Promise<AxiosResponse> => this.client.put(`tables/dynamic/type/${areaIdentifier}/${tableType}`),
+                getAvailableTablesPrettyNames: async (): Promise<AxiosResponse<string[]>> => this.client.get(`tables/dynamic/available-tables-pretty-names`),
+
+                modifyDynamicTableMeta: async (dynamicTableMeta: DynamicTableMeta): Promise<AxiosResponse<DynamicTableMeta>> => this.client.put(`tables/dynamic/modify`, dynamicTableMeta),
                 saveDynamicTable: async (areaIdentifier: string, tableType: string, tableData: TableData, tableId: string, tableTag: string): Promise<AxiosResponse> =>
                     this.client.put(`tables/dynamic/${tableType}/data/save/tableId/${tableId}/${areaIdentifier}/`, { TableTag: tableTag, [tableType]: tableData }),
+
                 createDynamicTable: async (areaIdentifier: string): Promise<AxiosResponse<DynamicTableMeta>> => this.client.post(`tables/dynamic/${areaIdentifier}`),
                 deleteDynamicTable: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse> => this.client.delete(`tables/dynamic/${tableType}/${areaIdentifier}/tableId/${tableId}`),
+
+                // setDynamicTableType: async (areaIdentifier: string, tableType: string): Promise<AxiosResponse> => this.client.put(`tables/dynamic/type/${areaIdentifier}/${tableType}`),
             },
             Static: {
                 updateStaticTablesMetas: async (areaIdentifier: string, staticTablesMetas: StaticTableMetas): Promise<AxiosResponse<StaticTableMetas>> =>
@@ -89,38 +88,41 @@ export class ApiClient {
         },
 
         Email: {
-            GetEmailTemplate: async (areaIdentifier: string): Promise<AxiosResponse> => this.client.get(`email/${areaIdentifier}/emailtemplate`),
+            GetEmailTemplate: async (areaIdentifier: string): Promise<AxiosResponse<string>> => this.client.get(`email/${areaIdentifier}/emailtemplate`),
             SaveEmailTemplate: async (areaIdentifier: string, content: string): Promise<AxiosResponse<string>> => this.client.put(`email/${areaIdentifier}/emailtemplate`, { emailtemplate: content }),
         },
 
         Attachments: {
-            fetchAttachmentLinks: async (areaIdentifier: string) => this.client.get(`attachments/${areaIdentifier}`),
-            // getAttachmentUrl: async (areaIdentifier: string, fileName: string) => this.client.get(`attachments/${areaIdentifier}/filelink`, { data: { fileName: fileName } }),
-            removeAttachment: async (areaIdentifier: string, fileId: string): Promise<AxiosResponse> => this.client.delete(`attachments/${areaIdentifier}/file-link`, { data: { fileId: fileId } }),
+            fetchAttachmentLinks: async (areaIdentifier: string): Promise<AxiosResponse<FileLink[]>> => this.client.get(`attachments/${areaIdentifier}`),
+            removeAttachment: async (areaIdentifier: string, fileId: string): Promise<AxiosResponse<FileLink[]>> => this.client.delete(`attachments/${areaIdentifier}/file-link`, { data: { fileId: fileId } }),
 
-            saveSingleAttachment: async (areaIdentifier: string, formData: FormData): Promise<AxiosResponse> =>
+            saveSingleAttachment: async (areaIdentifier: string, formData: FormData): Promise<AxiosResponse<FileLink[]>> =>
                 this.client.post(`attachments/${areaIdentifier}/save-one`, formData, {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "multipart/form-data",
                     },
                 }),
-            saveManyAttachments: async (areaIdentifier: string, formData: FormData): Promise<AxiosResponse> =>
+            saveManyAttachments: async (areaIdentifier: string, formData: FormData): Promise<AxiosResponse<FileLink[]>> =>
                 this.client.post(`attachments/${areaIdentifier}/save-many`, formData, {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "multipart/form-data",
                     },
                 }),
+            // getAttachmentUrl: async (areaIdentifier: string, fileName: string) => this.client.get(`attachments/${areaIdentifier}/filelink`, { data: { fileName: fileName } }),
         },
     };
 
     public Conversations = {
         GetConversation: async (areaIdentifier: string): Promise<AxiosResponse<Conversation>> => this.client.get(`configure-conversations/${areaIdentifier}`),
-        ModifyConversation: async (nodelist: Conversation, areaIdentifier: string, idsToDelete: Array<string>): Promise<AxiosResponse> => this.client.put(`configure-conversations/${areaIdentifier}`, { IdsToDelete: idsToDelete, Transactions: nodelist }),
-
         GetConversationNode: async (nodeId: string): Promise<AxiosResponse<ConvoNode>> => this.client.get(`configure-conversations/nodes/${nodeId}`),
-        ModifyConversationNode: async (nodeId: string, updatedNode: ConvoTableRow): Promise<ConvoTableRow> => this.client.put(`configure-conversations/nodes/${nodeId}`, updatedNode),
+
+        //TODO : Return from API
+        ModifyConversation: async (nodelist: Conversation, areaIdentifier: string, idsToDelete: Array<string>): Promise<AxiosResponse> =>
+            this.client.put(`configure-conversations/${areaIdentifier}`, { IdsToDelete: idsToDelete, Transactions: nodelist }),
+        // TODO : return from API
+        ModifyConversationNode: async (nodeId: string, updatedNode: ConvoTableRow): Promise<AxiosResponse<ConvoTableRow>> => this.client.put(`configure-conversations/nodes/${nodeId}`, updatedNode),
     };
 
     public WidgetDemo = {
@@ -139,13 +141,17 @@ export class ApiClient {
             confirmEmailAddress: async (authToken: string): Promise<AxiosResponse<boolean>> => this.client.post(`account/confirmation/${authToken}/action/setup`),
             checkIsActive: async (): Promise<AxiosResponse<boolean>> => this.client.get(`account/is-active`),
 
-            UpdatePassword: async (oldPassword: string, newPassword: string): Promise<AxiosResponse> => this.client.put(`account/settings/password`, { OldPassword: oldPassword, Password: newPassword }),
-            updateCompanyName: async (companyName: string): Promise<AxiosResponse> => this.client.put(`account/settings/company-name`, { CompanyName: companyName }),
-            updateEmail: async (newEmail: string): Promise<AxiosResponse> => this.client.put(`account/settings/email`, { EmailAddress: newEmail }),
-            updateUserName: async (newUserName: string): Promise<AxiosResponse> => this.client.put(`account/settings/user-name/`, { UserName: newUserName }),
-            updatePhoneNumber: async (newPhoneNumber: string): Promise<AxiosResponse> => this.client.put(`account/settings/phone-number`, { PhoneNumber: newPhoneNumber }),
-            updateLocale: async (newLocale: string): Promise<AxiosResponse> => this.client.put(`account/settings/locale`, { Locale: newLocale }),
-            updateCompanyLogo: async (formData: FormData): Promise<AxiosResponse> =>
+            UpdatePassword: async (oldPassword: string, newPassword: string): Promise<AxiosResponse<boolean>> => this.client.put(`account/settings/password`, { OldPassword: oldPassword, Password: newPassword }),
+            updateCompanyName: async (companyName: string): Promise<AxiosResponse<string>> => this.client.put(`account/settings/company-name`, { CompanyName: companyName }),
+            updateEmail: async (newEmail: string): Promise<AxiosResponse<EmailVerificationResponse>> => this.client.put(`account/settings/email`, { EmailAddress: newEmail }),
+            updateUserName: async (newUserName: string): Promise<AxiosResponse<string>> => this.client.put(`account/settings/user-name/`, { UserName: newUserName }),
+            updatePhoneNumber: async (newPhoneNumber: string): Promise<AxiosResponse<string>> => this.client.put(`account/settings/phone-number`, { PhoneNumber: newPhoneNumber }),
+
+            // TODO: Stronger type for locale
+            updateLocale: async (newLocale: string): Promise<AxiosResponse<string>> => this.client.put(`account/settings/locale`, { Locale: newLocale }),
+
+
+            updateCompanyLogo: async (formData: FormData): Promise<AxiosResponse<string>> =>
                 this.client.put(`account/settings/logo`, formData, {
                     headers: {
                         Accept: "application/json",
@@ -153,24 +159,26 @@ export class ApiClient {
                     },
                 }),
 
-            getCompanyName: async (): Promise<AxiosResponse> => this.client.get(`account/settings/company-name`),
-            getEmail: async (): Promise<AxiosResponse> => this.client.get(`account/settings/email`),
-            getUserName: async (): Promise<AxiosResponse> => this.client.get(`account/settings/user-name`),
-            getPhoneNumber: async (): Promise<AxiosResponse> => this.client.get(`account/settings/phone-number`),
-            getLocale: async (): Promise<AxiosResponse> => this.client.get(`account/settings/locale`),
-            getCompanyLogo: async (): Promise<AxiosResponse> => this.client.get(`account/settings/logo`),
-            getCurrentPlan: async (): Promise<AxiosResponse> => this.client.get(`account/settings/current-plan`),
+            getCompanyName: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/company-name`),
+            getEmail: async (): Promise<AxiosResponse<AccountEmailSettingsResponse>> => this.client.get(`account/settings/email`),
+            getUserName: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/user-name`),
+            getPhoneNumber: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/phone-number`),
+
+            // TODO: Stronger typing for locale
+            getLocale: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/locale`),
+            getCompanyLogo: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/logo`),
+            getCurrentPlan: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/current-plan`),
 
             DeleteAccount: async (): Promise<AxiosResponse> => this.client.post(`account/delete-account`),
         },
         Groups: {
-            GetGroups: async (): Promise<AxiosResponse> => this.client.get(`group/`),
-            AddGroup: async (parentId: string | null, groupName: string): Promise<AxiosResponse> => this.client.post(`group/`, { groupName: groupName, parentId: parentId }),
-            UpdateGroupName: async (groupName: string, groupId: string): Promise<AxiosResponse> => this.client.put(`group/${groupId}`, { groupName: groupName }),
-            UpdateAreaGroup: async (areaIdentifier: string, groupId: string | null): Promise<AxiosResponse> => this.client.put(`group/area/${areaIdentifier}/${groupId}`),
+            GetGroups: async (): Promise<AxiosResponse<GroupTable>> => this.client.get(`group/`),
+            AddGroup: async (parentId: string | null, groupName: string): Promise<AxiosResponse<GroupTable>> => this.client.post(`group/`, { groupName: groupName, parentId: parentId }),
+            UpdateGroupName: async (groupName: string, groupId: string): Promise<AxiosResponse<Groups>> => this.client.put(`group/${groupId}`, { groupName: groupName }),
+            UpdateAreaGroup: async (areaIdentifier: string, groupId: string | null): Promise<AxiosResponse<Groups>> => this.client.put(`group/area/${areaIdentifier}/${groupId}`),
 
-            RemoveGroup: async (groupId: string): Promise<AxiosResponse> => this.client.delete(`group/${groupId}`),
-            DeleteAreaGroup: async (areaIdentifier: string): Promise<AxiosResponse> => this.client.delete(`group/area/${areaIdentifier}`),
+            RemoveGroup: async (groupId: string): Promise<AxiosResponse<Groups>> => this.client.delete(`group/${groupId}`),
+            DeleteAreaGroup: async (areaIdentifier: string): Promise<AxiosResponse<Groups>> => this.client.delete(`group/area/${areaIdentifier}`),
         },
         EmailVerification: {
             RequestEmailVerification: async (emailAddress: string, areaIdentifier: string): Promise<AxiosResponse<EmailVerificationResponse>> => this.client.post(`verification/email/${areaIdentifier}`, { EmailAddress: emailAddress }),
@@ -178,7 +186,7 @@ export class ApiClient {
     };
 
     public Enquiries = {
-        getEnquiries: async (): Promise<AxiosResponse> => this.client.get(`enquiries`),
-        updateEnquiry: async (conversationId: string): Promise<AxiosResponse> => this.client.put(`enquiries/update/${conversationId}`),
+        getEnquiries: async (): Promise<AxiosResponse<Enquiries>> => this.client.get(`enquiries`),
+        updateEnquiry: async (conversationId: string): Promise<AxiosResponse<Enquiries>> => this.client.put(`enquiries/update/${conversationId}`),
     };
 }

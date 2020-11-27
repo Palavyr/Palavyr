@@ -33,7 +33,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
             account.UserName = login.Username;
             await accountsContext.SaveChangesAsync();
-            return NoContent();
+            return Ok(account.UserName);
         }
     }
 }

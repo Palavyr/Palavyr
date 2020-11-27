@@ -21,12 +21,12 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
 
         [HttpPut("account/settings/locale")]
-        public async Task<IActionResult> Modify([FromHeader] string accountId, AccountDetails accountDetails)
+        public async Task<string> Modify([FromHeader] string accountId, AccountDetails accountDetails)
         {
             var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
             account.Locale = accountDetails.Locale;
             await accountsContext.SaveChangesAsync();
-            return NoContent();
+            return account.Locale;
         }
     }
 }

@@ -52,9 +52,8 @@ export const SelectGroup = ({ onChange, option, groups, selectedGroupId, areaIde
                 color="primary"
                 variant="outlined"
                 onClick={async () => {
-
-                    var res = await client.Settings.Groups.UpdateAreaGroup(areaIdentifier, selectedGroupId);
-                    setNodes(res.data);
+                    const {data: res} = await client.Settings.Groups.UpdateAreaGroup(areaIdentifier, selectedGroupId);
+                    setNodes(res);
                     setModalState(false);
                 }}
             >

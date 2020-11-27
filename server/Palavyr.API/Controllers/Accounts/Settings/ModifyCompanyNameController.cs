@@ -21,14 +21,14 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
         
         [HttpPut("account/settings/company-name")]
-        public async Task<IActionResult> UpdateCompanyName([FromHeader] string accountId, LoginCredentials login)
+        public async Task<string> Modify([FromHeader] string accountId, LoginCredentials login)
         {
             var account = await accountsContext
                 .Accounts
                 .SingleOrDefaultAsync(row => row.AccountId == accountId);
             account.CompanyName = login.CompanyName;
             await accountsContext.SaveChangesAsync();
-            return NoContent();
+            return account.CompanyName;
         }
     }
 }

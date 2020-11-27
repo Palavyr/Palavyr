@@ -36,8 +36,8 @@ export class LoginClient {
     }
 
     public Account = {
-        registerNewAccount: async (EmailAddress: string, Password: string): Promise<AxiosResponse> => this.client.post(`account/create/default`, { EmailAddress, Password }),
-        registerNewAccountWithGoogle: async (oneTimeCode: string, tokenId: string): Promise<AxiosResponse> => this.client.post("account/create/google", {
+        registerNewAccount: async (EmailAddress: string, Password: string): Promise<AxiosResponse<Credentials>> => this.client.post(`account/create/default`, { EmailAddress, Password }),
+        registerNewAccountWithGoogle: async (oneTimeCode: string, tokenId: string): Promise<AxiosResponse<Credentials>> => this.client.post("account/create/google", {
             OneTimeCode: oneTimeCode, TokenId: tokenId
         })
     }
