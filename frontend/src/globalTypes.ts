@@ -26,14 +26,14 @@ export type GroupRow = {
     groupId: string;
     parentId: string;
     groupName: string;
-}
+};
 export type GroupTable = Array<GroupRow>;
 
 export type AreaMeta = {
     areaIdentifier: string;
     groupId: string;
     areaName: string;
-}
+};
 
 // Client
 export type GroupNodeType = {
@@ -44,11 +44,11 @@ export type GroupNodeType = {
     nodeChildrenString: string;
     isRoot: boolean;
     id?: number;
-    areaMeta: Array<AreaMeta>
+    areaMeta: Array<AreaMeta>;
     groupId: string;
-}
+};
 
-export type Groups = Array<GroupNodeType>;;
+export type Groups = Array<GroupNodeType>;
 
 export type ConvoTableRow = {
     nodeId: string;
@@ -65,7 +65,6 @@ export type ConvoTableRow = {
 export type Response = "Yes" | "No" | "Not Sure" | "Ok" | "Backstop" | "Yes / Not Sure" | "No / Not Sure" | "Continue" | null | any;
 export type Responses = Array<Response>;
 
-
 export const ValueOptionDelimiter = "|peg|";
 
 export type ConvoNode = {
@@ -78,7 +77,7 @@ export type ConvoNode = {
     isRoot: boolean;
     areaIdentifier: string;
     optionPath: Response;
-    valueOptions: string, // an array, but bc of the dtabase we store as a string delimited by |peg|
+    valueOptions: string; // an array, but bc of the dtabase we store as a string delimited by |peg|
     id?: number | undefined;
 };
 
@@ -111,7 +110,7 @@ export type staticTableMetaTemplate = {
     description: string;
     areaIdentifier: string;
     staticTableRows: StaticTableRows;
-}
+};
 
 export type StaticTableMeta = staticTableMetaTemplate & {
     tableOrder: number;
@@ -133,16 +132,15 @@ export type StaticFee = {
     feeId: string;
     min: number;
     max: number;
-}
+};
 
 type HTML = string;
 
-
 export type FileLink = {
-    fileId: string,
-    fileName: string,
-    link: string
-}
+    fileId: string;
+    fileName: string;
+    link: string;
+};
 
 export type EnquiryRow = {
     id: number;
@@ -156,7 +154,7 @@ export type EnquiryRow = {
     name: string;
     email: string;
     phoneNumber: string;
-}
+};
 
 export type Enquiries = Array<EnquiryRow>;
 
@@ -169,29 +167,27 @@ export type DynamicTableMeta = {
     areaId: string;
     valuesAsPaths: boolean;
     prettyName: string;
-}
+};
 
 export type DynamicTableMetas = Array<DynamicTableMeta>;
-
 
 export type AlertType = {
     title: string;
     message: string;
     link?: string;
     linktext?: string;
-}
-
+};
 
 export type EmailVerificationResponse = {
     status: "Success" | "Pending" | "Failed";
     title: string;
     message: string;
-}
+};
 
 export type AlertDetails = {
     title: string;
     message: string;
-}
+};
 
 // Common interfaces
 
@@ -204,7 +200,7 @@ export interface IGetHelp {
 }
 
 export type HelpTypes =
-    "editor"
+    | "editor"
     | "settings"
     | "demo"
     | "enquiries"
@@ -221,16 +217,15 @@ export type HelpTypes =
     | "companyname"
     | "phonenumber"
     | "logo"
-    | "locale"
-
+    | "locale";
 
 export type ExtraQueryParams = {
     authuser: string;
-}
+};
 
 export type SessionState = {
     extraQueryParams: ExtraQueryParams;
-}
+};
 
 export type GoogleAuthObject = {
     expires_at: number;
@@ -241,7 +236,7 @@ export type GoogleAuthObject = {
     login_hint: string;
     session_state: SessionState;
     token_type: string; // Bearer
-}
+};
 
 export type GoogleProfileObj = {
     getEmail(): string;
@@ -249,14 +244,13 @@ export type GoogleProfileObj = {
     getGivenName(): string;
     getImageUrl(): string;
     getName(): string;
-}
+};
 
 export type GoogleAuthResponse = {
     getBasicProfile(): GoogleProfileObj;
     getAuthResponse(): GoogleAuthObject;
     getId(): string;
-}
-
+};
 
 export type Images = Array<string>;
 export type StripeProduct = {
@@ -312,8 +306,6 @@ export type Price = StripeProduct & {
     unitAmountDecimal: number; // in cents
 };
 
-
-
 export enum GeneralSettingsLoc {
     password,
     email,
@@ -321,7 +313,7 @@ export enum GeneralSettingsLoc {
     phoneNumber,
     companyLogo,
     locale,
-    deleteaccount
+    deleteaccount,
 }
 
 export enum AreaSettingsLoc {
@@ -342,21 +334,19 @@ export type Credentials = {
     message: string;
 };
 
-
-
 export type ResponseConfigurationType = {
     prologue: string;
     epilogue: string;
     staticTablesMetas: StaticTableMetas;
-}
+};
 
 export type AccountEmailSettingsResponse = {
     emailAddress: string;
     isVerified: boolean;
     awaitingVerification: boolean;
-}
+};
 
 export type PhoneSettingsResponse = {
     phoneNumber: string;
     locale: string;
-}
+};
