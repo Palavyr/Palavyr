@@ -355,3 +355,8 @@ export type AccountEmailSettingsResponse = {
     isVerified: boolean;
     awaitingVerification: boolean;
 }
+
+export type PhoneSettingsResponse = {
+    phoneNumber: string;
+    locale: string;
+}

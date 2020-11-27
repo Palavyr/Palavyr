@@ -32,11 +32,11 @@ export const ChangeEmail = () => {
     const [alertDetails, setAlertDetails] = useState<AlertDetails>({ title: "", message: "" })
 
     const loadEmail = useCallback(async () => {
-        var {data: defaultEmail} = await client.Settings.Account.getEmail();
+        var {data: {emailAddress, isVerified, awaitingVerification}} = await client.Settings.Account.getEmail();
         setSettings({
-            emailAddress: defaultEmail.emailAddress,
-            isVerified: defaultEmail.isVerified,
-            awaitingVerification: defaultEmail.awaitingVerification
+            emailAddress: emailAddress,
+            isVerified: isVerified,
+            awaitingVerification: awaitingVerification
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

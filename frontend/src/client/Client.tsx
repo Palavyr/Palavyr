@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosInstance } from "axios";
 import { SelectOneFlatData, TableData } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/tableComponents/SelectOneFlat/SelectOneFlatTypes";
 import { serverUrl, getSessionIdFromLocalStorage, SPECIAL_HEADERS, getJwtTokenFromLocalStorage } from "./clientUtils";
-import { DynamicTableMetas, DynamicTableMeta, StaticTableMetas, staticTableMetaTemplate, Conversation, ConvoTableRow, Areas, Prices, EmailVerificationResponse, AreaTable, FileLink, ConvoNode, ResponseConfigurationType, AccountEmailSettingsResponse, GroupTable, Groups, Enquiries } from "@Palavyr-Types";
+import { DynamicTableMetas, DynamicTableMeta, StaticTableMetas, staticTableMetaTemplate, Conversation, ConvoTableRow, Areas, Prices, EmailVerificationResponse, AreaTable, FileLink, ConvoNode, ResponseConfigurationType, AccountEmailSettingsResponse, GroupTable, Groups, Enquiries, PhoneSettingsResponse } from "@Palavyr-Types";
 import { PreCheckResult, WidgetPreferences } from "dashboard/content/demo/ChatDemo";
 
 export class ApiClient {
@@ -162,7 +162,7 @@ export class ApiClient {
             getCompanyName: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/company-name`),
             getEmail: async (): Promise<AxiosResponse<AccountEmailSettingsResponse>> => this.client.get(`account/settings/email`),
             getUserName: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/user-name`),
-            getPhoneNumber: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/phone-number`),
+            getPhoneNumber: async (): Promise<AxiosResponse<PhoneSettingsResponse>> => this.client.get(`account/settings/phone-number`),
 
             // TODO: Stronger typing for locale
             getLocale: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/locale`),
