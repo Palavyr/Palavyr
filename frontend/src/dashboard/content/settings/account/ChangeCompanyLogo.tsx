@@ -1,13 +1,13 @@
-import { ApiClient } from '@api-client/Client';
-import { PalavyrAlert } from '@common/components/PalavyrAlert';
-import { SinglePurposeButton } from '@common/components/SinglePurposeButton';
-import { Divider, makeStyles, Paper, Typography } from '@material-ui/core';
-import { Alert, AlertTitle } from '@material-ui/lab';
-import { DropzoneArea } from 'material-ui-dropzone';
-import * as React from 'react';
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { ApiClient } from "@api-client/Client";
+import { PalavyrAlert } from "@common/components/PalavyrAlert";
+import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
+import { Divider, makeStyles, Paper, Typography } from "@material-ui/core";
+import { Alert, AlertTitle } from "@material-ui/lab";
+import { DropzoneArea } from "material-ui-dropzone";
+import * as React from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     paper: {
         backgroundColor: "#C7ECEE",
         padding: "2rem",
@@ -16,26 +16,26 @@ const useStyles = makeStyles(theme => ({
         display: "inline-block",
         justifyContent: "center",
         textAlign: "center",
-        position: "relative"
+        position: "relative",
     },
     dwrapper: {
         width: "100%",
         display: "flex",
-        justifyContent: "center"
+        justifyContent: "center",
     },
     dropzone: {
         textAlign: "left",
         width: "100%",
     },
     title: {
-        fontSize: "16pt"
+        fontSize: "16pt",
     },
     snackbar: {
         backgroundColor: "#C7ECEE",
     },
     sep: {
         marginTop: "1rem",
-        marginBottom: "1rem"
+        marginBottom: "1rem",
     },
     logoPreview: {
         verticalAlign: "middle",
@@ -43,7 +43,6 @@ const useStyles = makeStyles(theme => ({
         maxWidth: "450px",
         maxHeight: "450px",
         textAlign: "center",
-
     },
     previewChip: {
         minWidth: 130,
@@ -58,10 +57,10 @@ const useStyles = makeStyles(theme => ({
         justifyContent: "space-between",
     },
     deleteIcon: {
-        color: "white"
+        color: "white",
     },
     label: {
-        color: "white"
+        color: "white",
     },
     alert: {},
     img: {
@@ -71,16 +70,14 @@ const useStyles = makeStyles(theme => ({
     paperRoot: {
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center"
-    }
-}))
+        justifyContent: "center",
+    },
+}));
 
 export const ChangeLogoImage = () => {
-
     const [fileUpload, setFileUpload] = useState<File[]>([]);
-    return <ChangeLogoImageInner fileUpload={fileUpload} setFileUpload={setFileUpload} />
-}
-
+    return <ChangeLogoImageInner fileUpload={fileUpload} setFileUpload={setFileUpload} />;
+};
 
 interface ChangeLogoImageInner {
     fileUpload: File[];
@@ -95,32 +92,31 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
 
     const alertMessage = {
         title: "Logo updated.",
-        message: ""
-    }
+        message: "",
+    };
 
     const loadCompanyLogo = useCallback(async () => {
-        const {data: logoUri} = await client.Settings.Account.getCompanyLogo();
+        const { data: logoUri } = await client.Settings.Account.getCompanyLogo();
         setcompanyLogo(logoUri);
-    }, [])
-
+    }, []);
 
     const handleFileChange = (files: File[]) => {
         setFileUpload(files);
-    }
+    };
 
     const handleFileDelete = (file: File) => {
         setFileUpload([file]);
-    }
+    };
 
     const handleFileSave = async () => {
         if (fileUpload !== null) {
             const formData = new FormData();
-            formData.append('files', fileUpload[0])
+            formData.append("files", fileUpload[0]);
             const dataUrl = (await client.Settings.Account.updateCompanyLogo(formData)).data as string;
             setcompanyLogo(dataUrl);
         }
         setFileUpload([]); // shouldn't this clear the chip
-    }
+    };
 
     const getDropRejectMessage = (rejectedFile: File, acceptedFiles: string[], maxFileSize: number) => {
         let message = `File ${rejectedFile.name} was rejected. `;
@@ -138,46 +134,34 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
     useEffect(() => {
         loadCompanyLogo();
         return () => {
-            setFileUpload([])
-        }
-    }, [])
+            setFileUpload([]);
+        };
+    }, []);
 
-    const previewProps = { classes: { root: cls.previewChip, deleteIcon: cls.deleteIcon, label: cls.label } }
+    const previewProps = { classes: { root: cls.previewChip, deleteIcon: cls.deleteIcon, label: cls.label } };
 
     return (
         <div style={{ width: "50%" }}>
             <Paper className={cls.paper}>
-
-                <Alert className={cls.alert} severity={(companyLogo === "") ? "error" : "success"}>
+                <Alert className={cls.alert} severity={companyLogo === "" ? "error" : "success"}>
                     <AlertTitle>
-                        <Typography className={cls.title}>
-                            {
-                                (companyLogo === "")
-                                    ? "Upload your company logo"
-                                    : "Logo uploaded"
-                            }
-                        </Typography>
+                        <Typography className={cls.title}>{companyLogo === "" ? "Upload your company logo" : "Logo uploaded"}</Typography>
                     </AlertTitle>
-                    <p>
-                        Your company logo is placed into the top left area of each response PDF.
-                    </p>
-                    <p>
-                        For the best results, use a square 250px by 250px png or svg image.
-                    </p>
+                    <p>Your company logo is placed into the top left area of each response PDF.</p>
+                    <p>For the best results, use a square 250px by 250px png or svg image.</p>
                 </Alert>
                 <div style={{ textAlign: "center", justifyContent: "center", display: "flex" }}>
                     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", marginTop: "1.4rem" }}>
-                        <Typography variant="h5" style={{ marginBottom: "1rem" }}>Your Current Logo</Typography>
-                        {
-                            (companyLogo === "")
-                                ? "Upload a company logo"
-                                :
-                                (
-                                    <Paper className={cls.logoPreview} classes={{ root: cls.paperRoot }}>
-                                        <img className={cls.img} src={companyLogo} />
-                                    </Paper>
-                                )
-                        }
+                        <Typography variant="h5" style={{ marginBottom: "1rem" }}>
+                            Your Current Logo
+                        </Typography>
+                        {companyLogo === "" ? (
+                            "Upload a company logo"
+                        ) : (
+                            <Paper className={cls.logoPreview} classes={{ root: cls.paperRoot }}>
+                                <img className={cls.img} src={companyLogo} />
+                            </Paper>
+                        )}
                     </div>
                 </div>
                 <Divider className={cls.sep} />
@@ -190,33 +174,26 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
                         useChipsForPreview
                         showPreviewsInDropzone={false}
                         previewChipProps={previewProps}
-                        acceptedFiles={['image/*']}
+                        acceptedFiles={["image/*"]}
                         showPreviews={true}
                         maxFileSize={500000}
-                        previewGridProps={{ item: { alignContent: "flex-start" }, container: { spacing: 2, direction: "row" }, }}
+                        previewGridProps={{ item: { alignContent: "flex-start" }, container: { spacing: 2, direction: "row" } }}
                         filesLimit={1}
                         previewText="Selected Files"
                         alertSnackbarProps={{ className: cls.snackbar }}
                         getDropRejectMessage={getDropRejectMessage}
                     />
-                    <PalavyrAlert
-                        alertState={alertState}
-                        setAlertState={setAlertState}
-                        useAlert
-                        alertMessage={alertMessage}
-                    />
-
+                    <PalavyrAlert alertState={alertState} setAlertState={setAlertState} useAlert alertMessage={alertMessage} />
                 </div>
                 <SinglePurposeButton
                     variant="contained"
                     color="primary"
                     buttonText="Upload and Save"
                     onClick={() => {
-                        handleFileSave()
+                        handleFileSave();
                     }}
                 />
             </Paper>
         </div>
-
-    )
-}
+    );
+};
