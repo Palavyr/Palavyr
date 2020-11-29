@@ -1,27 +1,15 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Conversation, DynamicTableMetas, DynamicTableMeta } from "@Palavyr-Types";
-import { getRootNode, getMissingNodes, addNodes } from "./nodes/conversationNodeUtils";
-import { NodeTypeOptions } from "./nodes/NodeTypeOptions";
+import { Conversation, NodeTypeOptions, RequiredDetails } from "@Palavyr-Types";
+import { getRootNode, addNodes } from "./nodes/conversationNodeUtils";
 import { ApiClient } from "@api-client/Client";
-import { TableData } from "../response/tables/dynamicTable/tableComponents/SelectOneFlat/SelectOneFlatTypes";
 import { cloneDeep } from "lodash";
 import { ConversationNode } from "./nodes/ConversationNode";
 import { MissingDynamicNodes } from "./MissingDynamicNodes";
-import "./ConvoTree.css";
 import { makeStyles } from "@material-ui/core";
 import { ConversationHelp } from "dashboard/content/help/ConversationHelp";
 import { useParams } from "react-router-dom";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
-
-
-export type RequiredDetails = {
-    type: string;
-    prettyName: string;
-};
-
-export const makeUniqueTableName = (tableMeta: DynamicTableMeta) => {
-    return [tableMeta.tableType, tableMeta.tableId].join("-");
-};
+import "./ConvoTree.css";
 
 const useStyles = makeStyles((theme) => ({
     conversation: {
@@ -38,62 +26,31 @@ export const ConvoTree = () => {
     const [loaded, setLoaded] = useState<boolean>(false);
     const [nodeList, setNodes] = useState<Conversation>([]); // nodeList and state updater for the tree
     const rootNode = getRootNode(nodeList);
-    const [dynamicNodeTypes, setDynamicNodeTypes] = useState<NodeTypeOptions>({});
+    const [nodeOptionList, setNodeOptionList] = useState<NodeTypeOptions>([]);
 
-    const [requiredNodes, setRequiredNodes] = useState<Array<RequiredDetails>>([]);
-    const [missingNodeTypes, setMissingNodeTypes] = useState<Array<RequiredDetails>>([]);
+    // const [requiredNodes, setRequiredNodes] = useState<Array<string[]>>([]);
+    const [missingNodeTypes, setMissingNodeTypes] = useState<string[]>([]);
 
     const classes = useStyles();
 
     const loadNodes = useCallback(async () => {
-        var client = new ApiClient();
-        var {data: nodes} = await client.Conversations.GetConversation(areaIdentifier);
-        var {data: dynamicTableMetas} = await client.Configuration.Tables.Dynamic.getDynamicTableMetas(areaIdentifier);
+        const client = new ApiClient();
 
-        var formattedRequiredNodes = dynamicTableMetas.map((x) => {
-            return {
-                type: makeUniqueTableName(x),
-                prettyName: [x.prettyName, x.tableTag].join(" - "),
-            };
-        });
-        if (formattedRequiredNodes.length > 0) {
-            setRequiredNodes(formattedRequiredNodes);
-        } else {
-            setRequiredNodes([]);
-        }
+        const { data: nodes } = await client.Conversations.GetConversation(areaIdentifier);
+        const { data: nodeOptionList } = await client.Conversations.GetNodeOptionsList(areaIdentifier);
 
-        if (formattedRequiredNodes.length > 0) {
-            var dynamicNodeTypes = {};
-
-            // used in the dropdown select menu in the convotree
-            dynamicTableMetas.forEach(async (tableMeta: DynamicTableMeta) => {
-
-                var {data: dynamicTableRows} = await client.Configuration.Tables.Dynamic.getDynamicTableData(areaIdentifier, tableMeta.tableType, tableMeta.tableId);
-                var valueOptions = dynamicTableRows.map((x) => x.option);
-
-                var uniqueTableSpecifier = makeUniqueTableName(tableMeta);
-                var splattable = {
-                    [uniqueTableSpecifier]: {
-                        // key must be unique
-                        value: uniqueTableSpecifier, // selectonOneFlat-hwhio-wjkr-ugiwer
-                        pathOptions: tableMeta.valuesAsPaths ? valueOptions : ["Continue"],
-                        valueOptions: valueOptions,
-                        text: [tableMeta.prettyName, tableMeta.tableTag].join(" - "),
-                    },
-                };
-
-                dynamicNodeTypes = {
-                    ...dynamicNodeTypes,
-                    ...splattable,
-                };
-                setDynamicNodeTypes(dynamicNodeTypes);
-            });
-        }
-        // eslint-disable-next-line
+        // TODO: Rename this. This will take the full node list from the server.
+        setNodeOptionList(nodeOptionList);
         setNodes(cloneDeep(nodes));
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
+
+    const getMissingNodes = useCallback(async () => {
+        const client = new ApiClient();
+        const { data: missingNodes } = await client.Conversations.GetMissingNodes(areaIdentifier);
+        setMissingNodeTypes(missingNodes);
+    }, []);
 
     useEffect(() => {
         setLoaded(true);
@@ -105,13 +62,51 @@ export const ConvoTree = () => {
 
     useEffect(() => {
         if (nodeList.length > 0) {
-            const nodeTypes = getMissingNodes(nodeList, requiredNodes);
-            setMissingNodeTypes(nodeTypes);
+            getMissingNodes();
         }
         // Disabling this here because we don't want to rerender on requriedNodes change (thought that seems almost what we want, but actually isn't)
         // We compute this on the nodeList in fact, and the requiredNodes only change when we change areaIdentifier (or update the dynamic tables option on the other tab)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier, nodeList]);
+
+    // const getEndingSequenceNodes = (nodeList: Conversation) => {
+    //     return nodeList.filter((node) => node.nodeType === NodeTypeOptionsDefinition.EndingSequence.value);
+    // }
+    // const traverseThetreeFromBottom = (node: ConvoNode, nodeList: Conversation, requiredNodes: Array<RequiredDetails>): Array<RequiredDetails> => {
+
+    //     if (node.isRoot) {
+    //         return requiredNodes;
+    //     } else {
+    //         var requiredNodesClone = cloneDeep(requiredNodes);
+
+    //         if (requiredNodesClone.map(x => x.type).includes(node.nodeType)) {
+    //             requiredNodesClone.splice(requiredNodesClone.map(x => x.type).indexOf(node.nodeType), 1);
+    //         }
+
+    //         var nextNode = nodeList.filter(x => {
+    //             return x.nodeChildrenString.split(",").includes(node.nodeId)
+    //         })[0]
+
+    //         return traverseThetreeFromBottom(nextNode, nodeList, requiredNodesClone)
+    //     }
+    // }
+
+    // const getMissingNodes = (nodeList: Conversation, requiredNodes: Array<RequiredDetails>) => {
+    //     const allMissingNodeTypes: Array<RequiredDetails> = [];
+    //     const terminalNodes = getEndingSequenceNodes(nodeList);
+
+    //     // for each terminal node, work your way back through the tree by collecting each parent node, and check if
+    //     // that node if of the required type; if none are the required type, then add that type to the missing nodes.
+    //     // --> If there are N terminal nodes and M dynamic tables, then we can expect at most N x M missing Nodes.
+    //     for (var i = 0; i < terminalNodes.length; i++) {
+    //         var missingNodes = traverseThetreeFromBottom(terminalNodes[i], nodeList, requiredNodes)
+    //         missingNodes.forEach(x => allMissingNodeTypes.push(x))
+    //     }
+    //     return allMissingNodeTypes;
+    // }
+    // const nodeTypes = getMissingNodes(nodeList, requiredNodes);
+
+    // }
 
     return (
         <>
@@ -132,7 +127,7 @@ export const ConvoTree = () => {
                                     addNodes={addNodes}
                                     parentState={true}
                                     changeParentState={() => null}
-                                    dynamicNodeTypes={dynamicNodeTypes}
+                                    nodeOptionList={nodeOptionList}
                                 />
                             ) : null}
                         </div>

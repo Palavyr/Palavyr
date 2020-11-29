@@ -18,6 +18,9 @@ namespace Server.Domain.Configuration.Schemas
         public bool IsCritical { get; set; }
         public string ValueOptions { get; set; } // stored as comma delimited list as string
         public string AccountId { get; set; }
+        public bool IsMultiOptionType { get; set; }
+        public bool IsTerminalType { get; set; }
+        
 
         public string NodeChildrenString { get; set; } // stored as comma delimited list as string
         
@@ -36,12 +39,27 @@ namespace Server.Domain.Configuration.Schemas
                     NodeChildrenString = "",
                     ValueOptions = "",
                     IsCritical = false,
-                    AccountId = accountId
+                    AccountId = accountId,
+                    IsMultiOptionType = false,
+                    IsTerminalType = false
                 }
             };
         }
 
-        public static ConversationNode CreateNew(string nodeId, string nodeType, string text, string areaIdentifier, string nodeChildrenString, string optionPath, string valueOptions, string accountId, bool isRoot = false, bool isCritical = true)
+        public static ConversationNode CreateNew(
+            string nodeId, 
+            string nodeType, 
+            string text, 
+            string areaIdentifier, 
+            string nodeChildrenString, 
+            string optionPath, 
+            string valueOptions, 
+            string accountId, 
+            bool isRoot = false, 
+            bool isCritical = true,
+            bool isMultiOptionType = false,
+            bool isTerminalType = false
+        )
         {
             return new ConversationNode()
             {
@@ -55,7 +73,9 @@ namespace Server.Domain.Configuration.Schemas
                 OptionPath = optionPath,
                 ValueOptions = valueOptions,
                 IsCritical = isCritical,
-                AccountId = accountId
+                AccountId = accountId,
+                IsMultiOptionType = isMultiOptionType,
+                IsTerminalType = isTerminalType
             };
         }
     }

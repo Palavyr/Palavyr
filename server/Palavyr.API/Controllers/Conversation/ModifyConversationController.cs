@@ -27,7 +27,7 @@ namespace Palavyr.API.controllers.Conversation
         }
 
         [HttpPut("configure-conversations/{areaId}")]
-        public async Task<IActionResult> Modify(
+        public async Task<ConversationNode[]> Modify(
             [FromHeader] string accountId, 
             [FromRoute] string areaId, 
             [FromBody] ConversationConfigurationUpdate update)
@@ -57,7 +57,9 @@ namespace Palavyr.API.controllers.Conversation
                     node.ValueOptions,
                     accountId,
                     node.IsRoot,
-                    node.IsCritical
+                    node.IsCritical,
+                    node.IsMultiOptionType,
+                    node.IsTerminalType
                 );
                 mappedTransactions.Add(mappedNode);
             }
@@ -69,8 +71,8 @@ namespace Palavyr.API.controllers.Conversation
                 .ConversationNodes
                 .Where(row => row.AccountId == accountId)
                 .Where(row => row.AreaIdentifier == areaId)
-                .ToList();
-            return Ok(newNodes);
+                .ToArray();
+            return newNodes;
         }
     }
 }

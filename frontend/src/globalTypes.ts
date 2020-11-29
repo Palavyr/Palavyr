@@ -68,6 +68,8 @@ export type Responses = Array<Response>;
 export const ValueOptionDelimiter = "|peg|";
 
 export type ConvoNode = {
+    isTerminalType: boolean;
+    isMultiOptionType: boolean;
     nodeId: string;
     nodeType: string;
     fallback: boolean;
@@ -349,4 +351,19 @@ export type AccountEmailSettingsResponse = {
 export type PhoneSettingsResponse = {
     phoneNumber: string;
     locale: string;
+};
+
+export type NodeOption = {
+    value: string;
+    pathOptions: Array<Response>;
+    valueOptions: Array<string>;
+    text: string;
+};
+
+// export type NodeTypeOptions = {[index: string]: NodeOptions};
+export type NodeTypeOptions = NodeOption[];
+
+export type RequiredDetails = {
+    type: string;
+    prettyName: string;
 };

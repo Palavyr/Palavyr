@@ -1,5 +1,4 @@
-import { Conversation, ConvoNode, Responses } from "@Palavyr-Types";
-import { NodeTypeOptions } from "./NodeTypeOptions";
+import { Conversation, ConvoNode, NodeTypeOptions, Responses } from "@Palavyr-Types";
 import React, { useState, useEffect } from "react";
 import { getChildNodes } from "./conversationNodeUtils";
 import { SteppedLineTo } from "../treeLines/SteppedLineTo";
@@ -15,7 +14,7 @@ export interface IConversationNode {
     setNodes: (nodeList: Conversation) => void;
     parentState: boolean
     changeParentState: (parentState: boolean) => void;
-    dynamicNodeTypes: NodeTypeOptions; // TODO: Rejig the interface prop and make this prop not a thing
+    nodeOptionList: NodeTypeOptions; // TODO: Rejig the interface prop and make this prop not a thing
 }
 
 export type lineStyle = {
@@ -32,7 +31,7 @@ export const connectionStyle: lineStyle = {
     zIndex: 0,
 };
 
-export const ConversationNode = ({ nodeList, node, parentId: parentId, addNodes, setNodes, parentState, changeParentState, dynamicNodeTypes }: IConversationNode) => {
+export const ConversationNode = ({ nodeList, node, parentId: parentId, addNodes, setNodes, parentState, changeParentState, nodeOptionList }: IConversationNode) => {
 
     const [nodeState, changeNodeState] = useState<boolean>(true);
     const [loaded, setLoaded] = useState(false)
@@ -61,7 +60,7 @@ export const ConversationNode = ({ nodeList, node, parentId: parentId, addNodes,
                         parentState={parentState}
                         changeParentState={changeParentState}
                         optionPath={node.optionPath}
-                        dynamicNodeTypes={dynamicNodeTypes}
+                        nodeOptionList={nodeOptionList}
                     />
                 </div>
                 {childNodes.length > 0 && ( // if there are childNodes, then render them.
@@ -77,7 +76,7 @@ export const ConversationNode = ({ nodeList, node, parentId: parentId, addNodes,
                                     setNodes={setNodes}
                                     parentState={nodeState}
                                     changeParentState={changeNodeState}
-                                    dynamicNodeTypes={dynamicNodeTypes}
+                                    nodeOptionList={nodeOptionList}
                                 />
 
                             ))

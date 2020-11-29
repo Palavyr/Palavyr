@@ -2,6 +2,7 @@ using System.Linq;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Server.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.controllers.Conversation
 {
@@ -22,12 +23,12 @@ namespace Palavyr.API.controllers.Conversation
         }
         
         [HttpGet("configure-conversations/nodes/{nodeId}")]
-        public IActionResult Get([FromRoute] string nodeId)
+        public ConversationNode Get([FromRoute] string nodeId)
         {
             // node Ids are globally unique - don't need account Id Filter
             var result = dashContext.ConversationNodes.Single(row => row.NodeId == nodeId);
             logger.LogDebug($"Retrieving Conversation Node {result.NodeId}");
-            return Ok(result);
+            return result;
         }
     }
 }

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ConvoNode, Conversation, ValueOptionDelimiter } from "@Palavyr-Types";
-import { NodeTypeOptionsDefinition } from "../NodeTypeOptions";
+import { ConvoNode, Conversation, ValueOptionDelimiter, NodeTypeOptions } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { cloneDeep } from "lodash";
 import { updateNodeList, createNewChildIDs, addNodes } from "../conversationNodeUtils";
@@ -16,10 +15,6 @@ export interface IConversationNodeEditor {
     nodeList: Conversation;
 }
 
-const isMultiOptionType = (nodeType: string) => {
-    return nodeType === NodeTypeOptionsDefinition.MultipleChoiceAsPath.value || nodeType === NodeTypeOptionsDefinition.MultipleChoiceContinue.value;
-};
-
 export const ConversationNodeEditor = ({ modalState, setModalState, node, nodeList, setNodes }: IConversationNodeEditor) => {
     const client = new ApiClient();
 
@@ -29,7 +24,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, nodeLi
 
     useEffect(() => {
         setText(node.text);
-        if (isMultiOptionType(node.nodeType)) {
+        if (node.isMultiOptionType) {
             setOptions(node.valueOptions.split(ValueOptionDelimiter));
         }
 
@@ -41,23 +36,17 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, nodeLi
     };
 
     const handleUpdateNode = async (value: string, valueOptions: string[]) => {
-        var nodeData = cloneDeep((await client.Conversations.GetConversationNode(node.nodeId)).data as ConvoNode);
+        const { data: nodeData } = cloneDeep(await client.Conversations.GetConversationNode(node.nodeId));
+
         nodeData.text = value;
 
-        if (isMultiOptionType(node.nodeType)) {
-            let optionPaths: string[];
-            let childIds: string[];
-            if (node.nodeType === NodeTypeOptionsDefinition.MultipleChoiceAsPath.value) {
-                optionPaths = valueOptions;
-                const numChildren: number = optionPaths.filter((x) => x !== null && x !== "").length;
-                childIds = createNewChildIDs(numChildren);
-            } else {
-                optionPaths = NodeTypeOptionsDefinition.MultipleChoiceContinue.pathOptions;
-                const numChildren: number = optionPaths.filter((x) => x !== null && x !== "").length;
-                childIds = createNewChildIDs(numChildren);
-            }
+        if (node.isMultiOptionType) {
+            const optionPaths = valueOptions;
+            const numChildren = optionPaths.filter((x) => x !== null && x !== "").length;
+            const childIds = createNewChildIDs(numChildren);
             nodeData.valueOptions = valueOptions.join(ValueOptionDelimiter);
             await addNodes(nodeData, nodeList, childIds, optionPaths, valueOptions, setNodes); // create new nodes and update the Database
+
         } else {
             await client.Conversations.ModifyConversationNode(nodeData.nodeId, nodeData);
             const newNodeList = updateNodeList(nodeList, nodeData);
@@ -82,7 +71,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, nodeLi
                     type="text"
                     fullWidth
                 />
-                {isMultiOptionType(node.nodeType) && (
+                {node.isMultiOptionType && (
                     <>
                         <hr></hr>
                         <MultiChoiceOptions options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} />

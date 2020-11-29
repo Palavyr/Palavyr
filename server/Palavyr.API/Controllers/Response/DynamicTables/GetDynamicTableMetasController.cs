@@ -2,6 +2,7 @@ using System.Linq;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Server.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Response.DynamicTables
 {
@@ -29,15 +30,15 @@ namespace Palavyr.API.Controllers.Response.DynamicTables
         /// <param name="areaId"></param>
         /// <returns></returns>
         [HttpGet("tables/dynamic/type/{areaId}")]
-        public IActionResult Get([FromHeader] string accountId, string areaId)
+        public DynamicTableMeta[] Get([FromHeader] string accountId, string areaId)
         {
             var tableTypes = dashContext
                 .DynamicTableMetas
                 .Where(row => row.AccountId == accountId)
                 .Where(row => row.AreaIdentifier == areaId)
-                .ToList();
+                .ToArray();
             logger.LogDebug("Retrieve Dynamic Table Metas");
-            return Ok(tableTypes);
+            return tableTypes;
         }
     }
 }

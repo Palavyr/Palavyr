@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles, FormControl, InputLabel, Select, MenuItem, FormHelperText } from "@material-ui/core";
-import { NodeOptions, NodeTypeOptions } from "./NodeTypeOptions";
 import { v4 as uuid } from "uuid";
+import { NodeOption, NodeTypeOptions } from "@Palavyr-Types";
 
 
 const useStyles = makeStyles(() => ({
@@ -23,11 +23,11 @@ const useStyles = makeStyles(() => ({
 export interface ISelectNodeType {
     onChange: (event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>) => void;
     option: string;
-    completeNodeTypes: NodeTypeOptions;
+    nodeOptionList: NodeTypeOptions;
 }
 
 // TODO: merge this with the dynamic table select and create a common reusable component
-export const CustomNodeSelect = ({ onChange, option, completeNodeTypes }: ISelectNodeType) => {
+export const CustomNodeSelect = ({ onChange, option, nodeOptionList }: ISelectNodeType) => {
     const classes = useStyles();
 
     return (
@@ -36,8 +36,8 @@ export const CustomNodeSelect = ({ onChange, option, completeNodeTypes }: ISelec
                 <InputLabel id="simple-select-helper-label"></InputLabel>
                 <Select className={classes.selectbox} labelId="simple-select-helper-label" id="simple-select-helper" value={option} onChange={onChange}>
                     {
-                        Object.keys(completeNodeTypes).map(key => {
-                            var nodeObj: NodeOptions = completeNodeTypes[key];
+                        Object.keys(nodeOptionList).map(key => {
+                            let nodeObj: NodeOption = nodeOptionList[key];
                             return <MenuItem key={uuid()} value={nodeObj.value}>{nodeObj.text}</MenuItem>
                         })
                     }

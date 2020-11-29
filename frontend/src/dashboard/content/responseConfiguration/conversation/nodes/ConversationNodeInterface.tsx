@@ -1,5 +1,4 @@
-import { ConvoNode, Conversation, Responses } from "@Palavyr-Types";
-import { NodeTypeOptions } from "./NodeTypeOptions";
+import { ConvoNode, Conversation, Responses, NodeTypeOptions } from "@Palavyr-Types";
 import React, { useState } from "react";
 import { ApiClient } from "@api-client/Client";
 import { makeStyles, Card, CardContent, Typography, Button, FormControlLabel, Checkbox, TextField } from "@material-ui/core";
@@ -17,15 +16,15 @@ export interface IConversationNodeInterface {
     parentState: boolean;
     changeParentState: (parentState: boolean) => void;
     optionPath: string | null;
-    dynamicNodeTypes: NodeTypeOptions;
+    nodeOptionList: NodeTypeOptions;
 }
 
 type StyleProps = {
     nodeText: string;
     nodeType: string;
     checked: boolean;
-}
-const useStyles = makeStyles(theme => ({
+};
+const useStyles = makeStyles((theme) => ({
     root: (props: StyleProps) => ({
         minWidth: "275px",
         maxWidth: "300px",
@@ -33,14 +32,11 @@ const useStyles = makeStyles(theme => ({
         borderWidth: props.nodeType === "" ? "5px" : "2px",
         borderRadius: "3px",
         backgroundColor: "#C7ECEE",
-
-
     }),
     card: {
         display: "flex",
         flexDirection: "column",
-        justifyContent: "area"
-
+        justifyContent: "area",
     },
     bullet: {
         display: "inline-block",
@@ -57,41 +53,47 @@ const useStyles = makeStyles(theme => ({
         border: "1px solid gray",
         padding: "10px",
         textAlign: "center",
-        color: (props.nodeText === "Ask your question!") ? "white" : "black",
-        background: (props.nodeText === "Ask your question!") ? "red" : "white",
-        '&:hover': {
+        color: props.nodeText === "Ask your question!" ? "white" : "black",
+        background: props.nodeText === "Ask your question!" ? "red" : "white",
+        "&:hover": {
             background: "lightgray",
-            color: "black"
-        }
+            color: "black",
+        },
     }),
     text: {
         margin: ".1rem",
-        fontSize: "16px"
+        fontSize: "16px",
     },
     formstyle: {
         fontSize: "12px",
-        alignSelf: "bottom"
+        alignSelf: "bottom",
     },
     editorStyle: {
         fontSize: "12px",
-        color: "lightgray"
+        color: "lightgray",
     },
     formLabelStyle: (props: StyleProps) => ({
         fontSize: "12px",
         color: props.checked ? "black" : "gray",
     }),
     interfaceElement: {
-        paddingBottom: "1rem"
-    }
-}))
+        paddingBottom: "1rem",
+    },
+}));
 
-
-export const ConversationNodeInterface = ({ dynamicNodeTypes, node, nodeList, optionPath, addNodes, setNodes, parentState, changeParentState }: IConversationNodeInterface) => {
-
+export const ConversationNodeInterface = ({ nodeOptionList, node, nodeList, optionPath, addNodes, setNodes, parentState, changeParentState }: IConversationNodeInterface) => {
     const [modalState, setModalState] = useState<boolean>(false);
 
-    var client = new ApiClient();
-    const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text, checked: node.isCritical })
+    const client = new ApiClient();
+    const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text, checked: node.isCritical });
+
+    const showResponseInPdfCheckbox = async (event: { target: { checked: boolean; }; }) => {
+        const newNode = cloneDeep(node);
+        newNode.isCritical = event.target.checked;
+        await client.Conversations.ModifyConversationNode(node.nodeId, newNode);
+        const newNodeList = updateNodeList(nodeList, newNode);
+        setNodes(newNodeList);
+    };
 
     return (
         <Card className={classNames(classes.root, node.nodeId)} variant="outlined">
@@ -100,54 +102,23 @@ export const ConversationNodeInterface = ({ dynamicNodeTypes, node, nodeList, op
                     {node.isRoot ? "Begin" : "If " + optionPath}
                 </Typography>
                 <Card elevation={0} className={classNames(classes.interfaceElement, classes.textCard)} onClick={() => setModalState(true)}>
-                    <Typography className={classes.text} variant="body2" component="span" noWrap={false} >
+                    <Typography className={classes.text} variant="body2" component="span" noWrap={false}>
                         {node.text}
                     </Typography>
                     <Typography align="center" className={classes.editorStyle} onClick={() => setModalState(true)}>
                         Click to Edit
                     </Typography>
                 </Card>
-                <NodeTypeSelector
-                    dynamicNodeTypes={dynamicNodeTypes}
-                    node={node}
-                    nodeList={nodeList}
-                    addNodes={addNodes}
-                    setNodes={setNodes}
-                    parentState={parentState}
-                    changeParentState={changeParentState}
-                />
+                <NodeTypeSelector nodeOptionList={nodeOptionList} node={node} nodeList={nodeList} addNodes={addNodes} setNodes={setNodes} parentState={parentState} changeParentState={changeParentState} />
                 <FormControlLabel
                     className={classes.formstyle}
                     classes={{
-                        label: classes.formLabelStyle
+                        label: classes.formLabelStyle,
                     }}
-                    control={
-                        <Checkbox
-                            className={classes.formstyle}
-                            size="small"
-                            checked={node.isCritical}
-                            value={""}
-                            name={"crit-" + node.nodeId}
-                            onChange={
-                                async (event) => {
-                                    var newNode = cloneDeep(node);
-                                    newNode.isCritical = event.target.checked;
-                                    await client.Conversations.ModifyConversationNode(node.nodeId, newNode);
-                                    var newNodeList = updateNodeList(nodeList, newNode);
-                                    setNodes(newNodeList);
-                                }
-                            }
-                        />
-                    }
+                    control={<Checkbox className={classes.formstyle} size="small" checked={node.isCritical} value="" name={"crit-" + node.nodeId} onChange={showResponseInPdfCheckbox} />}
                     label="Show response in PDF"
                 />
-                <ConversationNodeEditor
-                    setModalState={setModalState}
-                    modalState={modalState}
-                    node={node}
-                    nodeList={nodeList}
-                    setNodes={setNodes}
-                />
+                <ConversationNodeEditor setModalState={setModalState} modalState={modalState} node={node} nodeList={nodeList} setNodes={setNodes} />
             </CardContent>
         </Card>
     );
