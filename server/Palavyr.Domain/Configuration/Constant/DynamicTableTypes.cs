@@ -6,7 +6,7 @@ namespace Server.Domain.Configuration.Constant
     {
         public static DynamicType DefaultTable = new SelectOneFlat();
         public static SelectOneFlat CreateSelectOneFlat() => new SelectOneFlat();
-        
+
         public static List<DynamicType> GetDynamicTableTypes()
         {
             return new List<DynamicType>

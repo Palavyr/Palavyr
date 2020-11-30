@@ -31,7 +31,7 @@ export const connectionStyle: lineStyle = {
     zIndex: 0,
 };
 
-export const ConversationNode = ({ nodeList, node, parentId: parentId, addNodes, setNodes, parentState, changeParentState, nodeOptionList }: IConversationNode) => {
+export const ConversationNode = ({ nodeList, node, parentId, addNodes, setNodes, parentState, changeParentState, nodeOptionList }: IConversationNode) => {
 
     const [nodeState, changeNodeState] = useState<boolean>(true);
     const [loaded, setLoaded] = useState(false)
