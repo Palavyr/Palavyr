@@ -46,12 +46,6 @@ export const ConvoTree = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
 
-    const getMissingNodes = useCallback(async () => {
-        const client = new ApiClient();
-        const { data: missingNodes } = await client.Conversations.GetMissingNodes(areaIdentifier);
-        setMissingNodeTypes(missingNodes);
-    }, []);
-
     useEffect(() => {
         setLoaded(true);
         loadNodes();
@@ -59,6 +53,14 @@ export const ConvoTree = () => {
             setLoaded(false);
         };
     }, [areaIdentifier, loadNodes]);
+
+
+    const getMissingNodes = useCallback(async () => {
+        const client = new ApiClient();
+        const { data: missingNodes } = await client.Conversations.GetMissingNodes(areaIdentifier);
+        setMissingNodeTypes(missingNodes);
+    }, []);
+
 
     useEffect(() => {
         if (nodeList.length > 0) {
@@ -68,45 +70,6 @@ export const ConvoTree = () => {
         // We compute this on the nodeList in fact, and the requiredNodes only change when we change areaIdentifier (or update the dynamic tables option on the other tab)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier, nodeList]);
-
-    // const getEndingSequenceNodes = (nodeList: Conversation) => {
-    //     return nodeList.filter((node) => node.nodeType === NodeTypeOptionsDefinition.EndingSequence.value);
-    // }
-    // const traverseThetreeFromBottom = (node: ConvoNode, nodeList: Conversation, requiredNodes: Array<RequiredDetails>): Array<RequiredDetails> => {
-
-    //     if (node.isRoot) {
-    //         return requiredNodes;
-    //     } else {
-    //         var requiredNodesClone = cloneDeep(requiredNodes);
-
-    //         if (requiredNodesClone.map(x => x.type).includes(node.nodeType)) {
-    //             requiredNodesClone.splice(requiredNodesClone.map(x => x.type).indexOf(node.nodeType), 1);
-    //         }
-
-    //         var nextNode = nodeList.filter(x => {
-    //             return x.nodeChildrenString.split(",").includes(node.nodeId)
-    //         })[0]
-
-    //         return traverseThetreeFromBottom(nextNode, nodeList, requiredNodesClone)
-    //     }
-    // }
-
-    // const getMissingNodes = (nodeList: Conversation, requiredNodes: Array<RequiredDetails>) => {
-    //     const allMissingNodeTypes: Array<RequiredDetails> = [];
-    //     const terminalNodes = getEndingSequenceNodes(nodeList);
-
-    //     // for each terminal node, work your way back through the tree by collecting each parent node, and check if
-    //     // that node if of the required type; if none are the required type, then add that type to the missing nodes.
-    //     // --> If there are N terminal nodes and M dynamic tables, then we can expect at most N x M missing Nodes.
-    //     for (var i = 0; i < terminalNodes.length; i++) {
-    //         var missingNodes = traverseThetreeFromBottom(terminalNodes[i], nodeList, requiredNodes)
-    //         missingNodes.forEach(x => allMissingNodeTypes.push(x))
-    //     }
-    //     return allMissingNodeTypes;
-    // }
-    // const nodeTypes = getMissingNodes(nodeList, requiredNodes);
-
-    // }
 
     return (
         <>

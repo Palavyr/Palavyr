@@ -47,8 +47,8 @@ namespace Palavyr.API.Controllers.Response.DynamicTables
 
             var newTableMeta = DynamicTableMeta.CreateNew(
                 tableTag,
-                DynamicTableTypes.DefaultPrettyName,
-                DynamicTableTypes.DefaultTable,
+                DynamicTableTypes.DefaultTable.PrettyName,
+                DynamicTableTypes.DefaultTable.TableType,
                 tableId,
                 areaId,
                 accountId);

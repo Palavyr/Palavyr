@@ -4,28 +4,32 @@ namespace Server.Domain.Configuration.Constant
 {
     public static class DynamicTableTypes
     {
-        public const string DefaultTable = SelectOneFlat;
-        public const string DefaultPrettyName = SelectOneFlatPretty;
+        public static DynamicType DefaultTable = new SelectOneFlat();
+        public static SelectOneFlat CreateSelectOneFlat() => new SelectOneFlat();
         
-        public const string SelectOneFlat = "SelectOneFlat";
-        public const string SelectOneFlatPretty = "Select One Flat";
-        
-        public const string None = "None";
-        
-        public static List<string> GetAvailableTableTypes()
+        public static List<DynamicType> GetDynamicTableTypes()
         {
-            return new List<string>()
+            return new List<DynamicType>
             {
-                SelectOneFlat
+                new SelectOneFlat()
             };
         }
 
-        public static List<string> GetAvailableTablePrettyNames()
+        public abstract class DynamicType
         {
-            return new List<string>()
-            {
-                SelectOneFlatPretty
-            };
+            public string TableType { get; set; }
+            public string PrettyName { get; set; }
         }
+
+        public class SelectOneFlat : DynamicType
+        {
+            public SelectOneFlat()
+            {
+                PrettyName = "Select One Flat";
+                TableType = nameof(SelectOneFlat);
+            }
+        }
+
+        // We can define new DynamicTypes here
     }
 }

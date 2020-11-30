@@ -96,13 +96,13 @@ export const addNodes = async (parentNode: ConvoNode, nodeList: Conversation, ne
 
     const {data: isTerminalType } = await client.Conversations.CheckIfIsTerminalType(parentNode.nodeType);
     parentNode.isTerminalType = isTerminalType;
+
     // remove old parent node from nodelist
     nodeList = removeNodeByID(parentNode.nodeId, nodeList);
 
     // add updated node to nodelist
     nodeList.push(parentNode);
 
-    // var optionPaths = nodeTypes[parentNode.nodeType].options;
     delete parentNode.id;
 
     // set any value options

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Palavyr.API.Services.DynamicTableService;
+using Microsoft.EntityFrameworkCore.Internal;
 using Server.Domain.Configuration.Constant;
 using Server.Domain.Configuration.Schemas;
 
@@ -27,10 +27,11 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
                     node1Id,
                     "Do you love dogs?",
                     true,
-                    string.Join(",", new[]{node2Id, node3Id}),
+                    new[]{node2Id, node3Id}.Join(Delimiters.NodeChildrenStringDelimiter),
                     DefaultNodeTypeOptions.YesNo.StringName,
                     accountId, 
-                    areaIdentifier
+                    areaIdentifier,
+                    null
                 ),
                 DefaultNodeTypeOptions.CreateTooComplicated().MapNodeTypeOptionToConversationNode(
                     node2Id,
@@ -39,16 +40,18 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
                     "",
                     DefaultNodeTypeOptions.TooComplicated.StringName,
                     accountId, 
-                    areaIdentifier
+                    areaIdentifier,
+                    DefaultNodeTypeOptions.YesNo.No
                 ),
                 DefaultNodeTypeOptions.CreateYesNo().MapNodeTypeOptionToConversationNode(
                     node3Id,
                     "Do you love Cavvies?",
                     false,
-                    string.Join(",", new[]{node4Id, node5Id}),
+                    new[]{node4Id, node5Id}.Join(Delimiters.NodeChildrenStringDelimiter),
                     DefaultNodeTypeOptions.YesNo.StringName,
                     accountId,
-                    areaIdentifier
+                    areaIdentifier,
+                    DefaultNodeTypeOptions.YesNo.Yes
                 ),
                 
                 DefaultNodeTypeOptions.CreateTooComplicated().MapNodeTypeOptionToConversationNode(
@@ -58,7 +61,8 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
                     "",
                     DefaultNodeTypeOptions.TooComplicated.StringName,
                     accountId,
-                    areaIdentifier
+                    areaIdentifier,
+                    DefaultNodeTypeOptions.YesNo.No
                 ),
                 // Dynamic table node doesn't have default creator method
                 new ConversationNode()
@@ -69,8 +73,8 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
                     IsRoot = false,
                     NodeChildrenString = $"{node6Id}",
                     NodeType = $"SelectOneFlat-{dynamicTableId}",
-                    OptionPath = "Yes",
-                    ValueOptions = string.Join("|peg|", new []{"Ruby", "Black and Tan", "Blenheim"}),
+                    OptionPath = DefaultNodeTypeOptions.YesNo.Yes,
+                    ValueOptions = new []{"Ruby", "Black and Tan", "Blenheim"}.Join(Delimiters.PathOptionDelimiter),
                     AccountId = accountId,
                     IsMultiOptionType = true,
                     IsTerminalType = false
@@ -82,7 +86,8 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
                     "",
                     DefaultNodeTypeOptions.EndingSequence.StringName,
                     accountId, 
-                    areaIdentifier
+                    areaIdentifier,
+                    DefaultNodeTypeOptions.YesNo.Yes
                 )
             };
             return conversationNodes;

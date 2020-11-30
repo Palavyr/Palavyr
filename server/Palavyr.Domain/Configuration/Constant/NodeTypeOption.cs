@@ -69,7 +69,8 @@ namespace Server.Domain.Configuration.Constant
             string nodeChildrenString,
             string nodeType,
             string accountId,
-            string areaIdentifier
+            string areaIdentifier,
+            string? optionPath
         )
         {
             return new ConversationNode()
@@ -79,8 +80,8 @@ namespace Server.Domain.Configuration.Constant
                 IsRoot = isRoot,
                 NodeChildrenString = nodeChildrenString, //"node-456,node-789",
                 NodeType = nodeType,
-                OptionPath = string.Join("|peg|", this.PathOptions),
-                ValueOptions = string.Join("|peg|", this.ValueOptions),
+                OptionPath = optionPath,
+                ValueOptions = string.Join(Delimiters.PathOptionDelimiter, this.ValueOptions),
                 AccountId = accountId,
                 AreaIdentifier = areaIdentifier,
                 IsMultiOptionType = this.IsMultiOptionType,

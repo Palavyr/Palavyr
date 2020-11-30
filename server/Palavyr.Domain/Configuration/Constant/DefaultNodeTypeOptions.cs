@@ -42,7 +42,8 @@ namespace Server.Domain.Configuration.Constant
         public class YesNo : NodeTypeOption
         {
             public static string StringName => nameof(YesNo);
-
+            public const string Yes = "Yes";
+            public const string No = "No";
             public YesNo()
             {
                 Value = nameof(YesNo);

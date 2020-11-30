@@ -26,8 +26,8 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
             {
                 DynamicTableMeta.CreateNew(
                     tableTag, 
-                    DynamicTableTypes.DefaultPrettyName, 
-                    DynamicTableTypes.DefaultTable, 
+                    DynamicTableTypes.DefaultTable.PrettyName,
+                    DynamicTableTypes.DefaultTable.TableType, 
                     tableId, 
                     areaIdentifier,
                     accountId),
