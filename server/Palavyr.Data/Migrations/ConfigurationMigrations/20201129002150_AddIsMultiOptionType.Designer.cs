@@ -3,15 +3,17 @@ using System;
 using DashboardServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DashboardServer.Data.Migrations.ConfigurationMigrations
 {
     [DbContext(typeof(DashContext))]
-    partial class DashContextModelSnapshot : ModelSnapshot
+    [Migration("20201129002150_AddIsMultiOptionType")]
+    partial class AddIsMultiOptionType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,9 +92,6 @@ namespace DashboardServer.Data.Migrations.ConfigurationMigrations
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsRoot")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsTerminalType")
                         .HasColumnType("boolean");
 
                     b.Property<string>("NodeChildrenString")

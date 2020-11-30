@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore.Internal;
 using Server.Domain.Configuration.Constant;
 using Server.Domain.Configuration.Schemas;
 
@@ -7,8 +8,11 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
 {
     public static class CreateDefaultConversation
     {
-        public static List<ConversationNode> CreateDefault(string accountId, string areaIdentifier,
-            string dynamicTableId)
+        public static List<ConversationNode> CreateDefault(
+            string accountId, 
+            string areaIdentifier,
+            string dynamicTableId
+            )
         {
             var node1Id = Guid.NewGuid().ToString(); // Do you love dogs?
             var node2Id = Guid.NewGuid().ToString(); // No / Too Complicated
@@ -19,54 +23,48 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
 
             var conversationNodes = new List<ConversationNode>()
             {
-                new ConversationNode()
-                {
-                    NodeId = node1Id,
-                    Text = "Do you love dogs?",
-                    IsRoot = true,
-                    NodeChildrenString = $"{node2Id},{node3Id}", //"node-456,node-789",
-                    NodeType = NodeTypes.YesNo,
-                    OptionPath = null,
-                    ValueOptions = null,
-                    AccountId = accountId,
-                    AreaIdentifier = areaIdentifier,
-                },
-                new ConversationNode()
-                {
-                    NodeId = node2Id,
-                    AreaIdentifier = areaIdentifier,
-                    Text = "Thats too bad! We should talk.",
-                    IsRoot = false,
-                    NodeChildrenString = "",
-                    NodeType = NodeTypes.TooComplicated,
-                    OptionPath = "No",
-                    ValueOptions = null,
-                    AccountId = accountId
-                },
-                new ConversationNode()
-                {
-                    NodeId = node3Id,
-                    AreaIdentifier = areaIdentifier,
-                    Text = "Do you love Cavvies?",
-                    IsRoot = false,
-                    NodeChildrenString = $"{node4Id},{node5Id}",
-                    NodeType = NodeTypes.YesNo,
-                    OptionPath = "Yes",
-                    ValueOptions = null,
-                    AccountId = accountId
-                },
-                new ConversationNode()
-                {
-                    NodeId = node4Id,
-                    AreaIdentifier = areaIdentifier,
-                    Text = "How can you not love cavvies?? We MUST talk!",
-                    IsRoot = false,
-                    NodeChildrenString = "",
-                    NodeType = NodeTypes.TooComplicated,
-                    OptionPath = "No",
-                    ValueOptions = null,
-                    AccountId = accountId
-                },
+                DefaultNodeTypeOptions.CreateYesNo().MapNodeTypeOptionToConversationNode(
+                    node1Id,
+                    "Do you love dogs?",
+                    true,
+                    new[]{node2Id, node3Id}.Join(Delimiters.NodeChildrenStringDelimiter),
+                    DefaultNodeTypeOptions.YesNo.StringName,
+                    accountId, 
+                    areaIdentifier,
+                    null
+                ),
+                DefaultNodeTypeOptions.CreateTooComplicated().MapNodeTypeOptionToConversationNode(
+                    node2Id,
+                    "Thats too bad! We should talk.",
+                    false,
+                    "",
+                    DefaultNodeTypeOptions.TooComplicated.StringName,
+                    accountId, 
+                    areaIdentifier,
+                    DefaultNodeTypeOptions.YesNo.No
+                ),
+                DefaultNodeTypeOptions.CreateYesNo().MapNodeTypeOptionToConversationNode(
+                    node3Id,
+                    "Do you love Cavvies?",
+                    false,
+                    new[]{node4Id, node5Id}.Join(Delimiters.NodeChildrenStringDelimiter),
+                    DefaultNodeTypeOptions.YesNo.StringName,
+                    accountId,
+                    areaIdentifier,
+                    DefaultNodeTypeOptions.YesNo.Yes
+                ),
+                
+                DefaultNodeTypeOptions.CreateTooComplicated().MapNodeTypeOptionToConversationNode(
+                    node4Id,
+                    "How can you not love cavvies?? We MUST talk!",
+                    false,
+                    "",
+                    DefaultNodeTypeOptions.TooComplicated.StringName,
+                    accountId,
+                    areaIdentifier,
+                    DefaultNodeTypeOptions.YesNo.No
+                ),
+                // Dynamic table node doesn't have default creator method
                 new ConversationNode()
                 {
                     NodeId = node5Id,
@@ -75,23 +73,22 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
                     IsRoot = false,
                     NodeChildrenString = $"{node6Id}",
                     NodeType = $"SelectOneFlat-{dynamicTableId}",
-                    OptionPath = "Yes",
-                    ValueOptions = "Ruby|peg|Black and Tan|peg|Blenheim",
-                    AccountId = accountId
+                    OptionPath = DefaultNodeTypeOptions.YesNo.Yes,
+                    ValueOptions = new []{"Ruby", "Black and Tan", "Blenheim"}.Join(Delimiters.PathOptionDelimiter),
+                    AccountId = accountId,
+                    IsMultiOptionType = true,
+                    IsTerminalType = false
                 },
-                
-                new ConversationNode()
-                {
-                    NodeId = node6Id,
-                    AreaIdentifier = areaIdentifier,
-                    Text = "Thank you so much!",
-                    IsRoot = false,
-                    NodeChildrenString = "",
-                    NodeType = NodeTypes.EndingSequence,
-                    OptionPath = "Yes",
-                    ValueOptions = null,
-                    AccountId = accountId
-                },
+                DefaultNodeTypeOptions.CreateEndingSequence().MapNodeTypeOptionToConversationNode(
+                    node6Id,
+                    "Thank you so much!",
+                    false,
+                    "",
+                    DefaultNodeTypeOptions.EndingSequence.StringName,
+                    accountId, 
+                    areaIdentifier,
+                    DefaultNodeTypeOptions.YesNo.Yes
+                )
             };
             return conversationNodes;
         }

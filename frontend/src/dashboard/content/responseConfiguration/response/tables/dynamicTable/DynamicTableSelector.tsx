@@ -5,12 +5,8 @@ import { CustomSelect } from "./CustomSelect";
 
 export interface IDynamicTableSelector {
     selection: string;
-    setSelection: any;
-    currentTableMeta: DynamicTableMeta;
     tableOptions: Array<string>;
-    parentState: boolean;
-    changeParentState: (parentState: boolean) => void;
-    areaIdentifier: string;
+
     handleChange: any;
 }
 
@@ -21,7 +17,7 @@ const selectStyle = {
     marginTop: "0.2rem"
 }
 
-export const DynamicTableSelector = ({selection, setSelection, handleChange, currentTableMeta, tableOptions, parentState, changeParentState, areaIdentifier }: IDynamicTableSelector) => {
+export const DynamicTableSelector = ({selection, handleChange, tableOptions}: IDynamicTableSelector) => {
 
     return (
         <div style={selectStyle}>

@@ -34,7 +34,7 @@ namespace Server.Domain.Configuration.Schemas
         {
             return new List<DynamicTableMeta>()
             {
-                DynamicTableMeta.CreateNew("default", DynamicTableTypes.DefaultPrettyName,DynamicTableTypes.SelectOneFlat, Guid.NewGuid().ToString(), areaId, accountId)
+                DynamicTableMeta.CreateNew("default", DynamicTableTypes.DefaultTable.PrettyName,DynamicTableTypes.DefaultTable.TableType, Guid.NewGuid().ToString(), areaId, accountId)
             };
         }
     }

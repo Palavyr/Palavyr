@@ -1,8 +1,8 @@
 import axios, { AxiosResponse, AxiosInstance } from "axios";
-import { SelectOneFlatData, TableData } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/tableComponents/SelectOneFlat/SelectOneFlatTypes";
 import { serverUrl, getSessionIdFromLocalStorage, SPECIAL_HEADERS, getJwtTokenFromLocalStorage } from "./clientUtils";
-import { DynamicTableMetas, DynamicTableMeta, StaticTableMetas, staticTableMetaTemplate, Conversation, ConvoTableRow, Areas, Prices, EmailVerificationResponse, AreaTable, FileLink, ConvoNode, ResponseConfigurationType, AccountEmailSettingsResponse, GroupTable, Groups, Enquiries, PhoneSettingsResponse } from "@Palavyr-Types";
+import { DynamicTableMetas, DynamicTableMeta, StaticTableMetas, staticTableMetaTemplate, Conversation, ConvoTableRow, Areas, Prices, EmailVerificationResponse, AreaTable, FileLink, ConvoNode, ResponseConfigurationType, AccountEmailSettingsResponse, GroupTable, Groups, Enquiries, PhoneSettingsResponse, NodeTypeOptions, RequiredDetails } from "@Palavyr-Types";
 import { PreCheckResult, WidgetPreferences } from "dashboard/content/demo/ChatDemo";
+import { TableData } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/tableComponents/SelectOneFlat/SelectOneFlatTypes";
 
 export class ApiClient {
     private client: AxiosInstance;
@@ -63,7 +63,9 @@ export class ApiClient {
             Dynamic: {
                 getDynamicTableMetas: async (areaIdentifier: string): Promise<AxiosResponse<DynamicTableMetas>> => this.client.get(`tables/dynamic/type/${areaIdentifier}`),
                 getDynamicTableTypes: async (areaIdentifier: string): Promise<AxiosResponse<string[]>> => this.client.get(`tables/dynamic/type/${areaIdentifier}`),
+
                 getDynamicTableData: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse<TableData>> => this.client.get(`tables/dynamic/${tableType}/tableId/${tableId}/data/${areaIdentifier}/`),
+
                 getDynamicTableDataTempate: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse<TableData>> => this.client.get(`tables/dynamic/${tableType}/data/template/${areaIdentifier}/${tableId}`),
                 getAvailableTablesPrettyNames: async (): Promise<AxiosResponse<string[]>> => this.client.get(`tables/dynamic/available-tables-pretty-names`),
 
@@ -117,6 +119,11 @@ export class ApiClient {
     public Conversations = {
         GetConversation: async (areaIdentifier: string): Promise<AxiosResponse<Conversation>> => this.client.get(`configure-conversations/${areaIdentifier}`),
         GetConversationNode: async (nodeId: string): Promise<AxiosResponse<ConvoNode>> => this.client.get(`configure-conversations/nodes/${nodeId}`),
+        GetNodeOptionsList: async (areaIdentifier: string): Promise<AxiosResponse<NodeTypeOptions>> => this.client.get(`configure-conversations/${areaIdentifier}/node-type-options`),
+        GetMissingNodes: async (areaIdentifier: string): Promise<AxiosResponse<string[]>> => this.client.get(`configure-conversations/${areaIdentifier}/missing-nodes`),
+
+        CheckIfIsMultiOptionType: async (nodeType: string): Promise<AxiosResponse<boolean>> => this.client.get(`configure-conversations/check-multi-option/${nodeType}`),
+        CheckIfIsTerminalType: async (nodeType: string): Promise<AxiosResponse<boolean>> => this.client.get(`configure-conversations/check-terminal/${nodeType}`),
 
         //TODO : Return from API
         ModifyConversation: async (nodelist: Conversation, areaIdentifier: string, idsToDelete: Array<string>): Promise<AxiosResponse> =>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ConvoNode, Conversation, Responses } from "@Palavyr-Types";
-import { NodeTypeOptionsDefinition, NodeTypeOptions } from "./NodeTypeOptions";
+import { ConvoNode, Conversation, Responses, NodeTypeOptions, NodeOption } from "@Palavyr-Types";
 import { createNewChildIDs } from "./conversationNodeUtils";
 import { CustomNodeSelect } from "./CustomNodeSelect";
 
@@ -12,10 +11,10 @@ export interface INodeTypeSelector {
     setNodes: (nodeList: Conversation) => void;
     parentState: boolean;
     changeParentState: (parentState: boolean) => void;
-    dynamicNodeTypes: NodeTypeOptions;
+    nodeOptionList: NodeTypeOptions;
 }
 
-export const NodeTypeSelector = ({ node, nodeList, addNodes, setNodes, parentState, changeParentState, dynamicNodeTypes }: INodeTypeSelector) => {
+export const NodeTypeSelector = ({ node, nodeList, addNodes, setNodes, parentState, changeParentState, nodeOptionList }: INodeTypeSelector) => {
 
     const [option, setSelectedOption] = useState<string>("");
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -35,19 +34,23 @@ export const NodeTypeSelector = ({ node, nodeList, addNodes, setNodes, parentSta
 
     }, [node.nodeType]);
 
-    let completeNodeTypes: NodeTypeOptions;
-    if (loaded) {
-        completeNodeTypes = { ...NodeTypeOptionsDefinition, ...dynamicNodeTypes }
-    } else {
-        completeNodeTypes = {}
-    }
-
     const handleChange = (event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>) => {
 
         const option = event.target.value as string; // unique selection i.e. SelectOneFlat-hlk-lkl-34kjl
 
-        const optionPaths = completeNodeTypes[option].pathOptions;
-        const numChildren: number = optionPaths.filter(x => x !== null).length;
+        // const optionPaths = nodeOptionList[option].pathOptions;
+        const nodeOption = nodeOptionList.filter((nodeOption: NodeOption) => nodeOption.value === option).pop();
+        const pathOptions = nodeOption?.pathOptions;
+        const valueOptions = nodeOption?.valueOptions;
+
+        if (pathOptions === undefined) {
+            throw new Error("Ill defined path options");
+        }
+        if (valueOptions === undefined) {
+            throw new Error("Ill defined value options - cannot be undefined")
+        }
+
+        const numChildren: number = pathOptions.filter(x => x !== null).length;
 
         const childIds = createNewChildIDs(numChildren);
 
@@ -56,14 +59,15 @@ export const NodeTypeSelector = ({ node, nodeList, addNodes, setNodes, parentSta
         // so we can supply properties. ^ The option comes in from the event, which currently passes the value as a string. Can this be an object?
         node.nodeType = option; // SelectOneFlat-sdfs-sdfs-sgs-s
 
-        var valueOptions = completeNodeTypes[option].valueOptions;
+        // var valueOptions = nodeOptionList[option].valueOptions;
+        // const valueOptions = nodeOptionList.filter((nodeOption: NodeOption) => nodeOption.value === option);
 
-        addNodes(node, nodeList, childIds, optionPaths, valueOptions, setNodes); // create new nodes and update the Database
+        addNodes(node, nodeList, childIds, pathOptions, valueOptions, setNodes); // create new nodes and update the Database
         setSelectedOption(option); // change option in curent node
         changeParentState(!parentState); // rerender lines
     };
 
     return (
-        loaded ? <CustomNodeSelect onChange={handleChange} option={option} completeNodeTypes={completeNodeTypes} /> : null
+        nodeOptionList ? <CustomNodeSelect onChange={handleChange} option={option} nodeOptionList={nodeOptionList} /> : null
     );
 };

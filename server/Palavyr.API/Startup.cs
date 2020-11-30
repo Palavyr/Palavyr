@@ -19,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.API.Services.AccountServices;
 using Palavyr.API.Services.AuthenticationServices;
+using Palavyr.API.Services.DynamicTableService;
 using Palavyr.API.Services.StripeServices;
 using Palavyr.API.Services.StripeServices.StripeWebhookHandlers;
 using Palavyr.Background;
@@ -181,6 +182,8 @@ namespace Palavyr.API
             services.AddTransient<IStripeSubscriptionService, StripeSubscriptionService>();
             services.AddTransient<IStripeProductService, StripeProductService>();
             services.AddTransient<IProcessStripeCheckoutSessionCompletedHandler, ProcessStripeCheckoutSessionCompletedHandler>();
+            services.AddTransient<ICompileDynamicTables, CompileDynamicTables>();
+
         }
 
         public void Configure(

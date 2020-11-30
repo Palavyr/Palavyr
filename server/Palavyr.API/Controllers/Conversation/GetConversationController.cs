@@ -2,6 +2,7 @@ using System.Linq;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Server.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.controllers.Conversation
 {
@@ -22,7 +23,7 @@ namespace Palavyr.API.controllers.Conversation
         }
         
         [HttpGet("configure-conversations/{areaId}")]
-        public IActionResult Get(
+        public ConversationNode[] Get(
             [FromHeader] string accountId, 
             [FromRoute] string areaId)
         {
@@ -31,8 +32,7 @@ namespace Palavyr.API.controllers.Conversation
                 .Where(row => row.AccountId == accountId)
                 .Where(row => row.AreaIdentifier == areaId)
                 .ToList();
-            return Ok(conversation);
+            return conversation.ToArray();
         }
-        
     }
 }

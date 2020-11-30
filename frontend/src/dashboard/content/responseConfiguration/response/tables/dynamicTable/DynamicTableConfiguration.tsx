@@ -1,6 +1,6 @@
 import { ApiClient } from "@api-client/Client";
 import React, { useState, useCallback, useEffect, Suspense } from "react";
-import { DynamicTableMetas } from "@Palavyr-Types";
+import { DynamicTableMeta, DynamicTableMetas } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { Accordion, AccordionSummary, Typography, Button, makeStyles } from "@material-ui/core";
 import { SingleDynamicFeeTable } from "./SingleDynamicFeeTable";
@@ -34,10 +34,11 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier }: IDynamicTab
     const [availableTables, setAvailableTables] = useState<Array<string>>([]);
 
     const loadTableData = useCallback(async () => {
-        var { data: dynamicTableMetas } = await client.Configuration.Tables.Dynamic.getDynamicTableMetas(areaIdentifier);
-        var { data: availabletablePrettyNames } = await client.Configuration.Tables.Dynamic.getAvailableTablesPrettyNames();
+        const { data: dynamicTableMetas } = await client.Configuration.Tables.Dynamic.getDynamicTableMetas(areaIdentifier);
+        const availableTablePrettyNames = dynamicTableMetas.map((x: DynamicTableMeta) => x.prettyName);
+        // var { data: availabletablePrettyNames } = await client.Configuration.Tables.Dynamic.getAvailableTablesPrettyNames();
         setTableMetas(cloneDeep(dynamicTableMetas));
-        setAvailableTables(availabletablePrettyNames);
+        setAvailableTables(availableTablePrettyNames);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
 

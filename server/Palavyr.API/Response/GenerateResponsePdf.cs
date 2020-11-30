@@ -35,8 +35,15 @@ namespace Palavyr.API.Response
         private HttpRequest Request { get; set; }
         private readonly ILogger logger;
 
-        public PdfResponseGenerator(DashContext dashContext, AccountsContext accountsContext,
-            ConvoContext convoContext, string accountId, string areaId, HttpRequest request, ILogger logger)
+        public PdfResponseGenerator(
+            DashContext dashContext,
+            AccountsContext accountsContext,
+            ConvoContext convoContext,
+            string accountId,
+            string areaId,
+            HttpRequest request,
+            ILogger logger
+        )
         {
             this.dashContext = dashContext;
             this.accountsContext = accountsContext;
@@ -61,10 +68,11 @@ namespace Palavyr.API.Response
 
             logger.LogDebug("Attempting to collect table data....");
             var staticTables = CollectStaticTables(areaData, culture);
-            var dynamicTables = CollectPreviewDynamicTables(areaData, AccountId, culture);
+            var dynamicTables = await CollectPreviewDynamicTables(areaData, AccountId, culture);
 
             logger.LogDebug($"Generating PDF Html string to send to express server...");
-            var html = PdfGenerator.GenerateNewPDF(userAccount, areaData, criticalResponses, staticTables, dynamicTables);
+            var html = PdfGenerator.GenerateNewPDF(userAccount, areaData, criticalResponses, staticTables,
+                dynamicTables);
 
             var randomFileName = Guid.NewGuid().ToString();
             var localWriteToPath_PDFPreview =
@@ -113,7 +121,7 @@ namespace Palavyr.API.Response
 
             logger.LogDebug("Attempting to collect table data....");
             var staticTables = CollectStaticTables(areaData, culture);
-            var dynamicTables = CollectPreviewDynamicTables(areaData, AccountId, culture);
+            var dynamicTables = await CollectPreviewDynamicTables(areaData, AccountId, culture);
 
             logger.LogDebug($"Generating PDF Html string to send to express server...");
             var html = PdfGenerator.GenerateNewPDF(
@@ -140,7 +148,6 @@ namespace Palavyr.API.Response
                 logger.LogCritical($"Attempted to use url: {LocalServices.PdfServiceUrl}");
                 logger.LogCritical($"Encountered Error: {ex.Message}");
                 throw new Exception();
-                
             }
 
             string link;
@@ -187,10 +194,10 @@ namespace Palavyr.API.Response
 
             var staticTables = CollectStaticTables(areaData, culture);
             var dynamicTables =
-                CollectRealDynamicTables(areaData, AccountId, dynamicResponse, culture); // TODO Support  multiple
+               await CollectRealDynamicTables(areaData, AccountId, dynamicResponse, culture); // TODO Support  multiple
             var html = PdfGenerator.GenerateNewPDF(userAccount, areaData, criticalResponses, staticTables,
                 dynamicTables);
-            
+
             // Substitute Variables
             var nameElement = emailRequest.KeyValues.SingleOrDefault(dict => dict.ContainsKey("Name"));
             nameElement.TryGetValue("Name", out var clientName);
@@ -198,7 +205,7 @@ namespace Palavyr.API.Response
             var logoUri = accountsContext.Accounts.SingleOrDefault(row => row.AccountId == AccountId).AccountLogoUri;
 
             html = ResponseVariableSubstitution.MakeVariableSubstitutions(html, companyName, clientName, logoUri);
-            
+
             var fileName = await GeneratePdfFromHtml(html, LocalServices.PdfServiceUrl, localWriteToPath, identifier);
             return fileName;
         }
@@ -286,7 +293,7 @@ namespace Palavyr.API.Response
         /// <param name="data"></param>
         /// <param name="accountId"></param>
         /// <returns></returns>
-        private List<Table> CollectPreviewDynamicTables(Area data, string accountId, CultureInfo culture)
+        private async Task<List<Table>> CollectPreviewDynamicTables(Area data, string accountId, CultureInfo culture)
         {
             // compute dynamic table. Probably have to get the correct table 
             var dynamicTableMetas = data.DynamicTableMetas;
@@ -294,28 +301,26 @@ namespace Palavyr.API.Response
             var rows = new List<TableRow>();
             foreach (var tableMeta in dynamicTableMetas)
             {
-                switch (tableMeta.TableType)
+                if (tableMeta.TableType == DynamicTableTypes.CreateSelectOneFlat().TableType)
                 {
-                    case DynamicTableTypes.SelectOneFlat:
-                        var tableRows = dashContext.SelectOneFlats
-                            .Where(row => row.AccountId == accountId && row.AreaIdentifier == data.AreaIdentifier)
-                            .ToList();
-                        var randomTableRow = tableRows[0]; // TODO: allow this to be specified via frontend
-                        const bool perPerson = false; // TODO: Allow to specify true
-                        var row = new TableRow(
-                            randomTableRow.Option,
-                            randomTableRow.ValueMin,
-                            randomTableRow.ValueMax,
-                            perPerson,
-                            culture,
-                            randomTableRow.Range);
+                    var tableRows = await dashContext.SelectOneFlats
+                        .Where(row => row.AccountId == accountId && row.AreaIdentifier == data.AreaIdentifier)
+                        .ToListAsync();
+                    var randomTableRow = tableRows[0]; // TODO: allow this to be specified via frontend
+                    const bool perPerson = false; // TODO: Allow to specify true
+                    var row = new TableRow(
+                        randomTableRow.Option,
+                        randomTableRow.ValueMin,
+                        randomTableRow.ValueMax,
+                        perPerson,
+                        culture,
+                        randomTableRow.Range);
 
-                        rows.Add(row);
-
-                        break;
-
-                    default:
-                        continue;
+                    rows.Add(row);
+                }
+                else
+                {
+                    continue;
                 }
             }
 
@@ -323,8 +328,12 @@ namespace Palavyr.API.Response
             return new List<Table>() {table};
         }
 
-        private List<Table> CollectRealDynamicTables(Area data, string accountId,
-            Dictionary<string, string> selectedOption, CultureInfo culture)
+        private async Task<List<Table>> CollectRealDynamicTables(
+            Area data,
+            string accountId,
+            Dictionary<string, string> selectedOption,
+            CultureInfo culture
+        )
         {
             var dynamicTables = data.DynamicTableMetas;
 
@@ -335,31 +344,27 @@ namespace Palavyr.API.Response
 
             foreach (var dynamicTable in dynamicTables)
             {
-                switch (dynamicTable.TableType)
+                if (dynamicTable.TableType == DynamicTableTypes.CreateSelectOneFlat().TableType)
                 {
-                    case DynamicTableTypes.SelectOneFlat:
-                        var dbRow = dashContext
-                            .SelectOneFlats
-                            .Where(row => row.AccountId == accountId && row.AreaIdentifier == data.AreaIdentifier)
-                            .Single(row =>
-                                row.Option ==
-                                selectedOption.Values
-                                    .Single()); // TODO: Pass a result object, bc not all selected options will be strings.
+                    var dbRow = await dashContext
+                        .SelectOneFlats
+                        .Where(row => row.AccountId == accountId && row.AreaIdentifier == data.AreaIdentifier)
+                        .SingleOrDefaultAsync(row =>
+                            row.Option ==
+                            selectedOption.Values
+                                .Single()); // TODO: Pass a result object, bc not all selected options will be strings.
 
-                        var row = new TableRow(
-                            dbRow.Option,
-                            dbRow.ValueMin,
-                            dbRow.ValueMax,
-                            false,
-                            culture,
-                            dbRow.Range);
+                    var row = new TableRow(
+                        dbRow.Option,
+                        dbRow.ValueMin,
+                        dbRow.ValueMax,
+                        false,
+                        culture,
+                        dbRow.Range);
 
-                        rows.Add(row);
-                        break;
-
-                    default:
-                        continue;
+                    rows.Add(row);
                 }
+
             }
 
             var table = new Table("Variable estimates determined by your responses", rows, culture);

@@ -102,16 +102,7 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
                     <TableBody>
                         <TableRow>
                             <TableCell>
-                                <DynamicTableSelector
-                                    selection={selection}
-                                    setSelection={setSelection}
-                                    handleChange={handleChange}
-                                    currentTableMeta={defaultTableMeta}
-                                    tableOptions={availablDynamicTableOptions}
-                                    parentState={parentState}
-                                    changeParentState={changeParentState}
-                                    areaIdentifier={areaIdentifier}
-                                />
+                                <DynamicTableSelector selection={selection} handleChange={handleChange} tableOptions={availablDynamicTableOptions} />
                             </TableCell>
                             <TableCell></TableCell>
                             <TableCell></TableCell>

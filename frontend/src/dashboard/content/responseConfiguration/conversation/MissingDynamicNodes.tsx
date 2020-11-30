@@ -1,9 +1,8 @@
 import React from "react"
 import { Typography, Chip } from "@material-ui/core"
-import { RequiredDetails } from "./ConvoTree"
 
 interface IMissingDynamicNodes {
-    missingNodeTypes: Array<RequiredDetails>;
+    missingNodeTypes: string[];
 }
 
 
@@ -15,7 +14,7 @@ export const MissingDynamicNodes = ({ missingNodeTypes }: IMissingDynamicNodes) 
             {
                 missingNodeTypes.map(
                     (x, index) => {
-                        return <Chip key={index} label={x.prettyName} color="secondary" />
+                        return <Chip key={index} label={x} color="secondary" />
                     }
                 )
             }
