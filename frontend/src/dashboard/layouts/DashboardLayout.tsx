@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
         position: "absolute", // Required - finalized
         display: "flex",
         width: "100%",
-        top: "8px",
+        top: "8px"
     },
     menuDrawer: {
         width: DRAWER_WIDTH,
@@ -91,12 +91,11 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const theme = useTheme();
 
     const loadAreas = useCallback(async () => {
-
         const client = new ApiClient();
-        const {data: numAllowedBySubscription} = await client.Settings.Subscriptions.getNumAreas();
+        const { data: numAllowedBySubscription } = await client.Settings.Subscriptions.getNumAreas();
         setNumAreasAllowed(numAllowedBySubscription);
 
-        const {data: areas} = await client.Area.GetAreas();
+        const { data: areas } = await client.Area.GetAreas();
         const [areaIdentifiers, areaNames] = fetchSidebarInfo(areas);
         setSidebarNames(areaNames);
         setSidebarIds(areaIdentifiers);
@@ -212,6 +211,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                 </Drawer>
                 {numAreasAllowed && (sidebarIds.length < numAreasAllowed ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
                 <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
+
             </div>
         </DashboardContext.Provider>
     );

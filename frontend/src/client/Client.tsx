@@ -2,7 +2,8 @@ import axios, { AxiosResponse, AxiosInstance } from "axios";
 import { serverUrl, getSessionIdFromLocalStorage, SPECIAL_HEADERS, getJwtTokenFromLocalStorage } from "./clientUtils";
 import { DynamicTableMetas, DynamicTableMeta, StaticTableMetas, staticTableMetaTemplate, Conversation, ConvoTableRow, Areas, Prices, EmailVerificationResponse, AreaTable, FileLink, ConvoNode, ResponseConfigurationType, AccountEmailSettingsResponse, GroupTable, Groups, Enquiries, PhoneSettingsResponse, NodeTypeOptions, RequiredDetails } from "@Palavyr-Types";
 import { PreCheckResult, WidgetPreferences } from "dashboard/content/demo/ChatDemo";
-import { TableData } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/tableComponents/SelectOneFlat/SelectOneFlatTypes";
+import { TableData } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableTypes";
+import { TableNameMap } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableConfiguration";
 
 export class ApiClient {
     private client: AxiosInstance;
@@ -62,12 +63,11 @@ export class ApiClient {
         Tables: {
             Dynamic: {
                 getDynamicTableMetas: async (areaIdentifier: string): Promise<AxiosResponse<DynamicTableMetas>> => this.client.get(`tables/dynamic/type/${areaIdentifier}`),
-                getDynamicTableTypes: async (areaIdentifier: string): Promise<AxiosResponse<string[]>> => this.client.get(`tables/dynamic/type/${areaIdentifier}`),
+                getDynamicTableTypes: async (): Promise<AxiosResponse<TableNameMap>> => this.client.get(`tables/dynamic/table-name-map`),
 
                 getDynamicTableData: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse<TableData>> => this.client.get(`tables/dynamic/${tableType}/tableId/${tableId}/data/${areaIdentifier}/`),
 
                 getDynamicTableDataTempate: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse<TableData>> => this.client.get(`tables/dynamic/${tableType}/data/template/${areaIdentifier}/${tableId}`),
-                getAvailableTablesPrettyNames: async (): Promise<AxiosResponse<string[]>> => this.client.get(`tables/dynamic/available-tables-pretty-names`),
 
                 modifyDynamicTableMeta: async (dynamicTableMeta: DynamicTableMeta): Promise<AxiosResponse<DynamicTableMeta>> => this.client.put(`tables/dynamic/modify`, dynamicTableMeta),
                 saveDynamicTable: async (areaIdentifier: string, tableType: string, tableData: TableData, tableId: string, tableTag: string): Promise<AxiosResponse> =>
@@ -76,7 +76,6 @@ export class ApiClient {
                 createDynamicTable: async (areaIdentifier: string): Promise<AxiosResponse<DynamicTableMeta>> => this.client.post(`tables/dynamic/${areaIdentifier}`),
                 deleteDynamicTable: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse> => this.client.delete(`tables/dynamic/${tableType}/${areaIdentifier}/tableId/${tableId}`),
 
-                // setDynamicTableType: async (areaIdentifier: string, tableType: string): Promise<AxiosResponse> => this.client.put(`tables/dynamic/type/${areaIdentifier}/${tableType}`),
             },
             Static: {
                 updateStaticTablesMetas: async (areaIdentifier: string, staticTablesMetas: StaticTableMetas): Promise<AxiosResponse<StaticTableMetas>> =>

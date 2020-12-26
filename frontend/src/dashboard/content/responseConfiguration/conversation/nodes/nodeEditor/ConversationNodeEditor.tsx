@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ConvoNode, Conversation, ValueOptionDelimiter, NodeTypeOptions } from "@Palavyr-Types";
+import { ConvoNode, Conversation, ValueOptionDelimiter } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { cloneDeep } from "lodash";
 import { updateNodeList, createNewChildIDs, addNodes } from "../conversationNodeUtils";

@@ -29,10 +29,10 @@ namespace Palavyr.API.Controllers.Response.DynamicTables
         // further generalization. This can be done later if its worth it. Adding a new controller for each type
         // isn't that big of a deal since we'll only have dozens of types probably. If we make money, then we can switch
         // to a generic pattern. Its just too complex to implement right now.
-        
+
         [HttpPost("tables/dynamic/{areaId}")]
         public async Task<IActionResult> Create(
-            [FromHeader] string accountId, 
+            [FromHeader] string accountId,
             [FromRoute] string areaId)
         {
             var area = await dashContext
@@ -55,6 +55,9 @@ namespace Palavyr.API.Controllers.Response.DynamicTables
 
             dynamicTables.Add(newTableMeta);
             area.DynamicTableMetas = dynamicTables;
+            
+            // the Select one flat is the default table that is loaded when we add a new dynamic table. 
+            // TODO: extract this into a class that abstracts creating the default table
             var defaultTable = SelectOneFlat.CreateTemplate(accountId, areaId, tableId);
             await dashContext.SelectOneFlats.AddAsync(defaultTable);
             await dashContext.SaveChangesAsync();

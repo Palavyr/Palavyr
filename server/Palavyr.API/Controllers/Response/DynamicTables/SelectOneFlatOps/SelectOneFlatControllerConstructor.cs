@@ -8,11 +8,11 @@ namespace Palavyr.API.Controllers.Response.DynamicTables.SelectOneFlatOps
     [ApiController]
     public partial class SelectOneFlatController : ControllerBase, IDynamicTableController
     {
-        private ILogger<Response.DynamicTables.SelectOneFlatOps.SelectOneFlatController> logger;
+        private ILogger<SelectOneFlatController> logger;
         private DashContext dashContext;
         public SelectOneFlatController(
             DashContext dashContext,
-            ILogger<Response.DynamicTables.SelectOneFlatOps.SelectOneFlatController> logger
+            ILogger<SelectOneFlatController> logger
         )
         {
             this.dashContext = dashContext;

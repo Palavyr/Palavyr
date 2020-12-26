@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { TableData, SelectOneFlatData } from "./SelectOneFlatTypes";
-import { DynamicTableTypes } from "../../DynamicTableTypes";
+import { DynamicTableTypes, TableData } from "../../DynamicTableTypes";
 import { cloneDeep } from "lodash";
 import { ApiClient } from "@api-client/Client";
 

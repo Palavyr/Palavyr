@@ -1,9 +1,9 @@
 import React from "react";
-import { TableData, SelectOneFlatData } from "./SelectOneFlatTypes";
 import { SelectOneFlatModifier } from "./SelectOneFlatModifier";
 import { TableRow, TableCell, Button, TextField, makeStyles } from "@material-ui/core";
 import CurrencyTextField from '@unicef/material-ui-currency-textfield'
 import DeleteIcon from '@material-ui/icons/Delete';
+import { SelectOneFlatData, TableData } from "../../DynamicTableTypes";
 
 
 export interface ISelectOneFlatRow {

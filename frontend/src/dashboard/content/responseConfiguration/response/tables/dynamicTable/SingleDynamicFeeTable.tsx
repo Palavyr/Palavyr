@@ -5,13 +5,19 @@ import { TextField, makeStyles, Typography, Table, TableRow, TableCell, TableBod
 import { DynamicTableSelector } from "./DynamicTableSelector";
 import { removeByIndex } from "@common/utils";
 import { cloneDeep } from "lodash";
-import { DynamicTableTypes } from "./DynamicTableTypes";
-import { SelectOneFlatTable } from "./tableComponents/SelectOneFlat/SelectOneFlat";
-import { TableData } from "./tableComponents/SelectOneFlat/SelectOneFlatTypes";
+import { DynamicTableTypes, TableData } from "./DynamicTableTypes";
+import { SelectOneFlat } from "./tableComponents/SelectOneFlat/SelectOneFlat";
+import { TableNameMap } from "./DynamicTableConfiguration";
+import { useState } from "react";
+import { useCallback } from "react";
+import { useEffect } from "react";
+import { ChangeEvent } from "react";
+import { PercentOfThreshold } from "./tableComponents/PercentOfThreshold/PercentOfThreshold";
 
 export interface ISingleDynamicFeeTable {
     defaultTableMeta: DynamicTableMeta;
     availablDynamicTableOptions: Array<string>;
+    tableNameMap: TableNameMap;
     parentState: boolean;
     changeParentState: any;
     areaIdentifier: string;
@@ -46,29 +52,31 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, tableMetas, setTableMetas, defaultTableMeta, availablDynamicTableOptions, parentState, changeParentState, areaIdentifier }: ISingleDynamicFeeTable) => {
+export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, tableMetas, setTableMetas, defaultTableMeta, availablDynamicTableOptions, tableNameMap, parentState, changeParentState, areaIdentifier }: ISingleDynamicFeeTable) => {
     const client = new ApiClient();
     const classes = useStyles();
 
-    const [tableMeta, setTableMeta] = React.useState<DynamicTableMeta | undefined>();
-    const [dynamicTableData, setDynamicTableData] = React.useState<TableData>();
-    const [selection, setSelection] = React.useState<string>(""); // just the node type
-    const [tableTag, setTableTag] = React.useState<string>("");
+    const [tableMeta, setTableMeta] = useState<DynamicTableMeta | undefined>();
+    const [dynamicTableData, setDynamicTableData] = useState<TableData>();
+    const [selection, setSelection] = useState<string>(""); // just the node type
+    const [tableTag, setTableTag] = useState<string>("");
 
-    const loadDynamicData = React.useCallback(async () => {
+    const loadDynamicData = useCallback(async () => {
+
         setTableMeta(defaultTableMeta);
         var { data: tableData } = await client.Configuration.Tables.Dynamic.getDynamicTableData(areaIdentifier, defaultTableMeta.tableType, defaultTableMeta.tableId);
+
         setDynamicTableData(tableData);
         setSelection(defaultTableMeta.prettyName);
         setTableTag(defaultTableMeta.tableTag);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         loadDynamicData();
     }, [loadDynamicData, tableMetas]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         (async () => {
             if (tableMeta !== undefined) {
                 var { data: tableDataResponse } = await client.Configuration.Tables.Dynamic.getDynamicTableData(areaIdentifier, tableMeta.tableType, tableMeta.tableId);
@@ -81,9 +89,13 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier, tableMeta]);
 
-    const handleChange = async (event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>) => {
-        const newTableTypeSelection = event.target.value as string; // will be tableType
-        const { data: tableDataResponse } = await client.Configuration.Tables.Dynamic.getDynamicTableData(areaIdentifier, newTableTypeSelection, tableMeta!.tableId);
+    const handleChange = async (event: ChangeEvent<{ name?: string | undefined; value: unknown }>) => {
+
+        const newTableTypeSelection = event.target.value as string; // will be tableType as shown in the list (Select One Flat)
+        // this needs to map to the form used in the table dataresponse format (e.g. SelectOneFlat)
+        const newTableTypeSelectionFormatted = tableNameMap[newTableTypeSelection]
+
+        const { data: tableDataResponse } = await client.Configuration.Tables.Dynamic.getDynamicTableData(areaIdentifier, newTableTypeSelectionFormatted, tableMeta!.tableId);
         setDynamicTableData(tableDataResponse);
     };
 
@@ -125,7 +137,19 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
             )}
             {tableMeta === undefined && <div>Loading...</div>}
             {tableMeta?.tableType === DynamicTableTypes.SelectOneFlat && dynamicTableData !== undefined && (
-                <SelectOneFlatTable
+                <SelectOneFlat
+                    setTableMeta={setTableMeta}
+                    tableMeta={tableMeta}
+                    tableTag={tableTag}
+                    tableId={tableMeta.tableId}
+                    tableData={dynamicTableData}
+                    setTableData={setDynamicTableData}
+                    areaIdentifier={areaIdentifier}
+                    deleteAction={deleteAction}
+                />
+            )}
+            {tableMeta?.tableType === DynamicTableTypes.PercentOfThresholdData && dynamicTableData !== undefined && (
+                <PercentOfThreshold
                     setTableMeta={setTableMeta}
                     tableMeta={tableMeta}
                     tableTag={tableTag}

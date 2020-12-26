@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.API.RequestTypes;
+using Server.Domain.Configuration.Constant;
 using Server.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Response.DynamicTables.SelectOneFlatOps
 {
     public partial class SelectOneFlatController
     {
-        
         [HttpPut("tables/dynamic/SelectOneFlat/data/save/tableId/{tableId}/{areaId}")]
         public async Task<IActionResult> SaveDynamicTable([FromRoute] string areaId,
             [FromRoute] string tableId,
@@ -30,8 +30,7 @@ namespace Palavyr.API.Controllers.Response.DynamicTables.SelectOneFlatOps
                     row.ValueMin,
                     row.ValueMax,
                     row.Range,
-                    row.TableId,
-                    row.TableTag
+                    row.TableId
                 );
                 mappedTableRows.Add(mappedRow);
             }
@@ -40,11 +39,13 @@ namespace Palavyr.API.Controllers.Response.DynamicTables.SelectOneFlatOps
             
             var meta = await EntityFrameworkQueryableExtensions.SingleOrDefaultAsync<DynamicTableMeta>(dashContext.DynamicTableMetas, row => row.TableId == tableId);
             meta.TableTag = dynamicTable.TableTag;
-
+            meta.TableType = DynamicTableTypes.CreateSelectOneFlat().TableType;
+            
             await dashContext.SaveChangesAsync();
 
-            var tables = Queryable.Where<SelectOneFlat>(dashContext.SelectOneFlats, row => row.AccountId == accountId && row.AreaIdentifier == areaId && row.TableId == tableId)
-                .ToList();
+            var tables = await Queryable
+                .Where<SelectOneFlat>(dashContext.SelectOneFlats, row => row.AccountId == accountId && row.AreaIdentifier == areaId && row.TableId == tableId)
+                .ToListAsync();
             return Ok(tables);
         }
     }
