@@ -29,7 +29,7 @@ export type TableData = SelectOneFlatData[] | PercentOfThresholdData[] | any; //
 //These must be kept in sync
 export const DynamicTableTypes = {
     SelectOneFlat: "SelectOneFlat",
-    PercentOfThresholdData: "PercentOfThresholdData",
+    PercentOfThreshold: "PercentOfThreshold",
 };
 
 export interface IDynamicTableBody {

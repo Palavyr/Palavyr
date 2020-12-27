@@ -3,6 +3,7 @@ import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, Checkbox, FormControlLabel, makeStyles, Paper, Table, TableContainer } from "@material-ui/core";
 import React from "react";
 import { IDynamicTableBody, IDynamicTableProps } from "../../DynamicTableTypes";
+import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -13,10 +14,9 @@ const useStyles = makeStyles((theme) => ({
     alignRight: {},
 }));
 
-export class PercentOfThresholdModifier {}
 
 export const PercentOfThresholdHeader = () => {
-    return <div>TableHeader</div>;
+    return <div>Percent of Threshold TableHeader</div>;
 };
 
 export const PercentOfThresholdBody = ({ tableData, modifier }: IDynamicTableBody) => {
@@ -27,7 +27,9 @@ export const PercentOfThreshold = ({ tableMeta, setTableMeta, tableId, tableTag,
     const client = new ApiClient();
     const classes = useStyles();
 
-    const modifier = new PercentOfThresholdModifier();
+    const onclick = () => {alert("clicked")}
+
+    const modifier = new PercentOfThresholdModifier(onclick);
 
     const addOptionOnClick = () => {
         return null;

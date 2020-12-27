@@ -95,8 +95,18 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
         // this needs to map to the form used in the table dataresponse format (e.g. SelectOneFlat)
         const newTableTypeSelectionFormatted = tableNameMap[newTableTypeSelection]
 
-        const { data: tableDataResponse } = await client.Configuration.Tables.Dynamic.getDynamicTableData(areaIdentifier, newTableTypeSelectionFormatted, tableMeta!.tableId);
-        setDynamicTableData(tableDataResponse);
+        setSelection(newTableTypeSelection);
+
+        if (tableMeta !== undefined) {
+            tableMeta.tableType = newTableTypeSelectionFormatted;
+            tableMeta.prettyName = newTableTypeSelection;
+            const {data: updatedTableMeta} = await client.Configuration.Tables.Dynamic.modifyDynamicTableMeta(tableMeta);
+            setTableMeta(updatedTableMeta);
+
+            const { data: tableDataResponse } = await client.Configuration.Tables.Dynamic.getDynamicTableData(areaIdentifier, newTableTypeSelectionFormatted, tableMeta.tableId);
+            setDynamicTableData(tableDataResponse);
+        }
+
     };
 
     const deleteAction = async () => {
@@ -148,7 +158,7 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
                     deleteAction={deleteAction}
                 />
             )}
-            {tableMeta?.tableType === DynamicTableTypes.PercentOfThresholdData && dynamicTableData !== undefined && (
+            {tableMeta?.tableType === DynamicTableTypes.PercentOfThreshold && dynamicTableData !== undefined && (
                 <PercentOfThreshold
                     setTableMeta={setTableMeta}
                     tableMeta={tableMeta}

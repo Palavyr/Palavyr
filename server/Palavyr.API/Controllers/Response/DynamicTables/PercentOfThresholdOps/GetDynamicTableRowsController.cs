@@ -1,11 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Amazon.Runtime.Internal.Util;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Palavyr.FileSystem.UIDUtils;
 using Server.Domain.Configuration.Schemas;
-using GuidUtils = Palavyr.FileSystem.UIDUtils.GuidUtils;
 
 namespace Palavyr.API.Controllers.Response.DynamicTables.PercentOfThresholdOps
 {
@@ -28,21 +28,25 @@ namespace Palavyr.API.Controllers.Response.DynamicTables.PercentOfThresholdOps
             // is the table that will be queried for the associated tableID. If we delete the table in the UI (with
             // its tableID) then we delete all record with that tableID from all dynamic table tables.
 
-            
-            
+
             var currentTable = await dashContext
                 .PercentOfThresholds
-                .SingleOrDefaultAsync(row => row.AccountId == accountId
-                                             && row.AreaIdentifier == areaId
-                                             && row.TableId == tableId);
-            if (currentTable == null)
+                .Where(row => row.AccountId == accountId
+                              && row.AreaIdentifier == areaId
+                              && row.TableId == tableId)
+                .ToListAsync();
+
+            if (currentTable.Count() == 0)
             {
-                currentTable = PercentOfThreshold.CreateTemplate(
-                    accountId, 
-                    areaId, 
-                    tableId,
-                    Guid.NewGuid().ToString(),
-                    Guid.NewGuid().ToString());
+                currentTable = new List<PercentOfThreshold>()
+                {
+                    PercentOfThreshold.CreateTemplate(
+                        accountId,
+                        areaId,
+                        tableId,
+                        GuidUtils.CreateNewId(),
+                        GuidUtils.CreateNewId())
+                };
             }
 
             return Ok(currentTable);
