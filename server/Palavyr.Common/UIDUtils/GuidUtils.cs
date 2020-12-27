@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Palavyr.FileSystem.UniqueIdentifiers
+namespace Palavyr.FileSystem.UIDUtils
 {
     public static class GuidUtils
     {
@@ -17,6 +17,11 @@ namespace Palavyr.FileSystem.UniqueIdentifiers
             var ids = string.Join("", Guid.NewGuid().ToString().Split('-'));
             var chars = string.Join("", ids.ToCharArray().Take(5));
             return chars;
+        }
+
+        public static string CreateNewId()
+        {
+            return Guid.NewGuid().ToString();
         }
     }
 }

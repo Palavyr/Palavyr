@@ -5,7 +5,7 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.FileSystem.UniqueIdentifiers;
+using Palavyr.FileSystem.UIDUtils;
 using Server.Domain.Configuration.Constant;
 using Server.Domain.Configuration.Schemas;
 
@@ -43,7 +43,7 @@ namespace Palavyr.API.Controllers.Response.DynamicTables
             var dynamicTables = area.DynamicTableMetas.ToList();
 
             var tableId = Guid.NewGuid().ToString();
-            var tableTag = GuidUtils.CreatePseudoRandomString(5);
+            var tableTag = "Default-" + GuidUtils.CreatePseudoRandomString(5);
 
             var newTableMeta = DynamicTableMeta.CreateNew(
                 tableTag,

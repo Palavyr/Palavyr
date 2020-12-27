@@ -8,7 +8,7 @@ using Palavyr.API.Controllers.Accounts.Setup.SeedData;
 using Palavyr.API.Services.StripeServices;
 using Palavyr.Common.Constants;
 using Server.Domain.Accounts;
-using AccountType = Palavyr.FileSystem.UniqueIdentifiers.AccountType;
+using AccountType = Palavyr.FileSystem.UIDUtils.AccountType;
 using Subscription = Server.Domain.Accounts.Subscription;
 
 namespace Palavyr.API.Controllers.Accounts.Develop
