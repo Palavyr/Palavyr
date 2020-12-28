@@ -74,6 +74,36 @@ export const PercentOfThresholdRow = ({ dataIndex, tableData, row, modifier }: I
                 />
 
             </TableCell>
+
+
+            <TableCell align={cellAlignment}>
+                <Button
+                    variant="contained"
+                    style={{ width: "18ch" }}
+                    color={row.posNeg ? "primary" : "secondary"}
+                    onClick={() => {
+                        modifier.setAddOrSubtract(tableData, row.rowId);
+                    }}
+                >
+                    {row.posNeg === true ? "Add" : "Subtract"}
+                </Button>
+            </TableCell>
+            <TableCell align={cellAlignment}>
+                <CurrencyTextField
+                    label="(5% is 0.05)"
+                    variant="standard"
+                    value={row.valueMin}
+                    currencySymbol="%"
+                    minimumValue="0"
+                    outputFormat="string"
+                    decimalCharacter="."
+                    digitGroupSeparator=","
+                    onChange={(value: { floatValue: number | undefined; }) => {
+                        if (value.floatValue !== undefined) { modifier.setPercentToModify(tableData, row.rowId, value.floatValue) }
+                    }}
+                />
+
+            </TableCell>
             <TableCell align={cellAlignment}>
                 <CurrencyTextField
                     label="Amount"
@@ -107,35 +137,6 @@ export const PercentOfThresholdRow = ({ dataIndex, tableData, row, modifier }: I
                     }}
                 />
             </TableCell>
-            <TableCell align={cellAlignment}>
-                <CurrencyTextField
-                    label="(5% is 0.05)"
-                    variant="standard"
-                    value={row.valueMin}
-                    currencySymbol="%"
-                    minimumValue="0"
-                    outputFormat="string"
-                    decimalCharacter="."
-                    digitGroupSeparator=","
-                    onChange={(value: { floatValue: number | undefined; }) => {
-                        if (value.floatValue !== undefined) { modifier.setPercentToModify(tableData, row.rowId, value.floatValue) }
-                    }}
-                />
-
-            </TableCell>
-            <TableCell align={cellAlignment}>
-                <Button
-                    variant="contained"
-                    style={{ width: "18ch" }}
-                    color={row.posNeg ? "primary" : "secondary"}
-                    onClick={() => {
-                        modifier.setAddOrSubtract(tableData, row.rowId);
-                    }}
-                >
-                    {row.posNeg === true ? "Add" : "Subtract"}
-                </Button>
-            </TableCell>
-
             <TableCell align={cellAlignment}>
                 <Button
                     variant="contained"

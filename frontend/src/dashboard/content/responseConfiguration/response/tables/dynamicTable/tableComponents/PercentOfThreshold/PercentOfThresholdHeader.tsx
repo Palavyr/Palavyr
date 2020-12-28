@@ -25,11 +25,11 @@ export const PercentOfThresholdHeader = () => {
         <TableHead>
             <TableRow className={classes.row}>
                 <TableCell align="center" ></TableCell>
-                <TableCell align="center" className={classNames(classes.cell, classes.text)} >Threshold</TableCell>
-                <TableCell align="center" className={classNames(classes.cell, classes.text)} >Amount</TableCell>
-                <TableCell align="center" className={classNames(classes.cell, classes.text)} >Max Amount (if range)</TableCell>
+                <TableCell align="center" className={classNames(classes.cell, classes.text)} > {"If exceeds Threshold"}</TableCell>
+                <TableCell align="center" className={classNames(classes.cell, classes.text)} > Add or subtract</TableCell>
                 <TableCell align="center" className={classNames(classes.cell, classes.text)} > % of Value</TableCell>
-                <TableCell align="center" className={classNames(classes.cell, classes.text, classes.noRight)} > Add or subtract</TableCell>
+                <TableCell align="center" className={classNames(classes.cell, classes.text)} >From base Amount</TableCell>
+                <TableCell align="center" className={classNames(classes.cell, classes.text, classes.noRight)} >Max Amount (if range)</TableCell>
                 <TableCell align="center" ></TableCell>
             </TableRow>
         </TableHead>

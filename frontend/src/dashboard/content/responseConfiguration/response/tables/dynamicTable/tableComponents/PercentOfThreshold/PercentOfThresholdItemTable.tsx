@@ -1,4 +1,4 @@
-import { Button, TableBody, TextField } from "@material-ui/core";
+import { Button, makeStyles, TableBody, TextField } from "@material-ui/core";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -16,26 +16,34 @@ interface IPercentOfThreshold {
     addRowOnClick(): void;
 }
 
+const useStyles = makeStyles((theme) => ({
+    input: {
+        margin: "0.6rem",
+        width: "30ch",
+        paddingLeft: "0.4rem",
+    },
+}));
+
 // table data: to update the database (this is done via the unified table data object)
 // item data: The grouped data that is used to render and control UI
 export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, itemId, modifier, addRowOnClick }: IPercentOfThreshold) => {
-
     const [name, setItemName] = useState<string>("");
 
     const removeItem = (itemId: string) => {
         modifier.removeItem(tableData, itemId);
-    }
+    };
+
+    const cls = useStyles();
 
     useEffect(() => {
         setItemName(itemName);
-    }, [])
+    }, []);
 
     return (
         <>
             <TextField
-                // className={classes.input}
+                className={cls.input}
                 variant="standard"
-                // label="Item Name"
                 type="text"
                 value={itemName}
                 color="primary"
@@ -56,15 +64,20 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
                 })}
             </TableBody>
             <br></br>
-            <Button variant="contained" style={{ width: "18ch" }} color="primary" onClick={addRowOnClick}>
-                Add Row
-            </Button>
-            <Button variant="contained" style={{width: "18ch" }} color="primary" onClick={() => removeItem(itemId)}>
-                Delete Item
-            </Button>
+            <div style={{marginBottom: "1rem"}}>
+                <div style={{float: "left", marginLeft: "1rem"}}>
+                    <Button variant="contained" style={{ width: "25ch" }} color="primary" onClick={addRowOnClick}>
+                        Add Threshold
+                    </Button>
+                </div>
+                <div style={{float: "right", marginRight: "1rem"}}>
+                    <Button variant="contained" style={{ width: "18ch" }} color="primary" onClick={() => removeItem(itemId)}>
+                        Delete Item
+                    </Button>
+                </div>
+            </div>
             <br></br>
             <hr></hr>
-            <br></br>
         </>
     );
 };

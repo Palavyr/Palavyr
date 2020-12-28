@@ -10,11 +10,19 @@ const useStyles = makeStyles((theme) => ({
     root: {
         borderTop: "3px solid red",
     },
-    tableStyles: {},
-    trayWrapper: {},
+    tableStyles: {
+        background: "transparent"
+    },
+    trayWrapper: {
+        width: "100%"
+    },
     add: {},
-    alignLeft: {},
-    alignRight: {},
+    alignLeft: {
+        float: "left",
+    },
+    alignRight: {
+        float: "right"
+    },
 }));
 
 export const PercentOfThreshold = ({ tableMeta, setTableMeta, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: IDynamicTableProps) => {

@@ -16,7 +16,10 @@ const useStyles = makeStyles((theme) => ({
     root: {
         borderTop: "3px solid red",
     },
-    tableStyles: {},
+    tableStyles: {
+        backgroundColor: "transparent",
+        marginBottom: "3rem"
+    },
     trayWrapper: {},
     add: {},
     alignLeft: {},
@@ -33,8 +36,7 @@ export const PercentOfThresholdContainer = ({ tableData, modifier, addRowOnClick
                 const itemData: PercentOfThresholdData[] = tableGroups[itemId];
 
                 return (
-                    <>
-                        <TableRow classes={{ root: cls.root }}></TableRow>
+                    <div className={cls.tableStyles}>
                         <PercentOfThresholdItemTable
                             key={index}
                             tableData={tableData}
@@ -44,8 +46,7 @@ export const PercentOfThresholdContainer = ({ tableData, modifier, addRowOnClick
                             modifier={modifier}
                             addRowOnClick={addRowOnClickFactory(itemId)}
                         />
-                        <TableRow style={{ borderTop: "3px solid red" }}></TableRow>
-                    </>
+                    </div>
                 );
             })}
         </>

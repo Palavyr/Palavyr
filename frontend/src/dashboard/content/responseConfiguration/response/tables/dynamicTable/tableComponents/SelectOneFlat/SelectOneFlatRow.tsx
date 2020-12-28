@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     },
     input: {
         margin: "0.6rem",
-        with: "55ch"
+        width: "30ch"
     },
     maxValInput: (prop: boolean) => {
         if (prop === true) {
