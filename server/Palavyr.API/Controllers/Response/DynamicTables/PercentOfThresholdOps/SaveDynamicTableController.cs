@@ -34,6 +34,7 @@ namespace Palavyr.API.Controllers.Response.DynamicTables.PercentOfThresholdOps
                     row.ItemId,
                     row.ValueMin,
                     row.ValueMax,
+                    row.Range,
                     row.PosNeg
                 );
                 mappedTableRows.Add(mappedRow);
@@ -41,7 +42,7 @@ namespace Palavyr.API.Controllers.Response.DynamicTables.PercentOfThresholdOps
 
             await dashContext.PercentOfThresholds.AddRangeAsync(mappedTableRows);
 
-            var meta = dashContext.DynamicTableMetas.SingleOrDefault(row => row.TableId == tableId);
+            var meta = dashContext.DynamicTableMetas.Single(row => row.TableId == tableId);
             meta.TableTag = dynamicTable.TableTag;
             meta.TableType = DynamicTableTypes.CreatePercentOfThreshold().TableType;
             

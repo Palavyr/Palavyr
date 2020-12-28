@@ -20,12 +20,12 @@ export class SelectOneFlatModifier {
 
     async addOption(tableData: TableData, client: ApiClient, areaIdentifier: string, tableId: string) {
         // this is a difficult situation - we need to allow for an array of objects of various types (dynamic table types)
-        const {data: newTableTemplate} = await client.Configuration.Tables.Dynamic.getDynamicTableDataTempate(areaIdentifier, this.tableType, tableId);
+        const {data: newTableTemplate} = await client.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
         tableData.push(newTableTemplate);
         this.setTables(tableData);
     }
 
-    removeOption(tableData: TableData, dataIndex: number,) {
+    removeOption(tableData: TableData, dataIndex: number) {
         const newRows: TableData = [];
         if (tableData.length > 1) {
             tableData.forEach((row, index) => {
@@ -35,7 +35,7 @@ export class SelectOneFlatModifier {
             })
             this.setTables(newRows);
         } else {
-            alert("Table must have at least 1 Option")
+            alert("Table must have at least one option")
         }
 
     }

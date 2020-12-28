@@ -16,12 +16,17 @@ export type SelectOneFlatData = {
 export type PercentOfThresholdData = {
     id: number;
     accountId: string;
-    areaId: string;
-    option: string;
+    areaIdentifier: string;
+    tableId: string;
+    itemId: string;
+    itemName: string;
+    rowId: string;
+    threshold: number;
     valueMin: number;
     valueMax: number;
-    range: number;
-    threshhold: number;
+    range: boolean;
+    modifier: number;
+    posNeg: boolean;
 };
 
 export type TableData = SelectOneFlatData[] | PercentOfThresholdData[] | any; // | SelectOneThresholdData etc
@@ -38,7 +43,7 @@ export interface IDynamicTableBody {
 }
 
 export type IDynamicTableProps = {
-    tableData: Array<SelectOneFlatData>;
+    tableData: Array<TableData>;
     setTableData: Dispatch<SetStateAction<TableData>>;
     areaIdentifier: string;
     tableId: string;

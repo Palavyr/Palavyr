@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.FileSystem.UIDUtils;
@@ -47,6 +48,8 @@ namespace Palavyr.API.Controllers.Response.DynamicTables.PercentOfThresholdOps
                         GuidUtils.CreateNewId(),
                         GuidUtils.CreateNewId())
                 };
+                await dashContext.PercentOfThresholds.AddRangeAsync(currentTable);
+                await dashContext.SaveChangesAsync();
             }
 
             return Ok(currentTable);

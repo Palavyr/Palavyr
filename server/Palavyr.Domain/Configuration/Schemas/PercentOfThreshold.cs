@@ -2,6 +2,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Server.Domain.Configuration.Schemas
 {
+    /// <summary>
+    /// The table meta provides a tableID, for this dynamic table though, we allow the records to be split into subtables
+    /// so that we can associate multiple different items with the same requested value.
+    /// So 1 value for a house might provide 3 different items, each with a different threshold by which pricing is determined.
+    /// The ItemId/ItemName represents this partition key.
+    /// The itemName unfortunately has to be duplicated along with the itemId.
+    /// </summary>
     public class PercentOfThreshold
     {
         [Key] public int? Id { get; set; }
@@ -9,11 +16,12 @@ namespace Server.Domain.Configuration.Schemas
         public string AreaIdentifier { get; set; }
         public string TableId { get; set; }
         public string ItemId { get; set; }
-        public string ItemName { get; set; }
+        public string ItemName { get; set; } // unfortunate - doesn't fit in meta, and here it will be duplicated - we don't keep a table for the subtables held by this
         public string RowId { get; set; }
         public double Threshold { get; set; }
         public double ValueMin { get; set; }
         public double ValueMax { get; set; }
+        public bool Range { get; set; }
         public double Modifier { get; set; }
         public bool PosNeg { get; set; }
 
@@ -28,6 +36,7 @@ namespace Server.Domain.Configuration.Schemas
             string itemId,
             double valueMin,
             double valueMax,
+            bool range,
             bool posNeg
         )
         {
@@ -43,6 +52,7 @@ namespace Server.Domain.Configuration.Schemas
                 ItemId = itemId,
                 ValueMin = valueMin,
                 ValueMax = valueMax,
+                Range = range,
                 PosNeg = posNeg
             };
         }
@@ -66,6 +76,7 @@ namespace Server.Domain.Configuration.Schemas
                 ItemId = itemId,
                 ValueMin = 0.00,
                 ValueMax = 0.00,
+                Range = false,
                 PosNeg = true
             };
         }

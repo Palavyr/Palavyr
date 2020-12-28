@@ -1,12 +1,16 @@
 import { ApiClient } from "@api-client/Client";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { AccordionActions, Button, Checkbox, FormControlLabel, makeStyles, Paper, Table, TableContainer } from "@material-ui/core";
+import { AccordionActions, Button, Checkbox, FormControlLabel, makeStyles, Paper, Table, TableContainer, TableRow } from "@material-ui/core";
+import { groupBy } from "lodash";
 import React from "react";
-import { IDynamicTableBody, IDynamicTableProps } from "../../DynamicTableTypes";
+import { DynamicTableTypes, IDynamicTableBody, IDynamicTableProps, PercentOfThresholdData } from "../../DynamicTableTypes";
+import { PercentOfThresholdItemTable } from "./PercentOfThresholdItemTable";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 
 const useStyles = makeStyles((theme) => ({
-    root: {},
+    root: {
+        borderTop: "3px solid red",
+    },
     tableStyles: {},
     trayWrapper: {},
     add: {},
@@ -14,29 +18,59 @@ const useStyles = makeStyles((theme) => ({
     alignRight: {},
 }));
 
+interface IPercentOfThresholdContainer extends IDynamicTableBody {
+    addRowOnClickFactory(itemId: string): () => void;
+}
 
-export const PercentOfThresholdHeader = () => {
-    return <div>Percent of Threshold TableHeader</div>;
-};
+type TableGroup = {
+    [itemGroup: string]: PercentOfThresholdData[];
+}
 
-export const PercentOfThresholdBody = ({ tableData, modifier }: IDynamicTableBody) => {
-    return <div>TableBody</div>;
+export const PercentOfThresholdContainer = ({ tableData, modifier, addRowOnClickFactory }: IPercentOfThresholdContainer) => {
+    const tableGroups: TableGroup = groupBy(tableData, (x) => x.itemId);
+    const cls = useStyles();
+
+    return (
+        <>
+            {Object.keys(tableGroups).map((itemId: string, index: number) => {
+                const itemData: PercentOfThresholdData[] = tableGroups[itemId];
+
+                return (
+                    <>
+                        <TableRow classes={{ root: cls.root }}></TableRow>
+                        <PercentOfThresholdItemTable
+                            key={index}
+                            tableData={tableData}
+                            itemData={itemData}
+                            itemName={itemData[0].itemName} // TODO: is there a better way to get this?
+                            modifier={modifier}
+                            addRowOnClick={addRowOnClickFactory(itemId)}
+                        />
+                        <TableRow style={{ borderTop: "3px solid red" }}></TableRow>
+                    </>
+                );
+            })}
+        </>
+    );
 };
 
 export const PercentOfThreshold = ({ tableMeta, setTableMeta, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: IDynamicTableProps) => {
     const client = new ApiClient();
     const classes = useStyles();
 
-    const onclick = () => {alert("clicked")}
+    const modifier = new PercentOfThresholdModifier(setTableData);
 
-    const modifier = new PercentOfThresholdModifier(onclick);
-
-    const addOptionOnClick = () => {
-        return null;
+    const addItemOnClick = () => {
+        modifier.addItem(tableData, client, areaIdentifier, tableId);
     };
 
-    const onSave = () => {
-        return null;
+    const addRowOnClickFactory = (itemId: string) => () => {
+        modifier.addRow(tableData, client, areaIdentifier, tableId, itemId);
+    };
+
+    const onSave = async () => {
+        const { data } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.PercentOfThreshold, tableData, tableId, tableTag);
+        setTableData(tableData);
     };
 
     const useOptionsAsPathsOnChange = () => {
@@ -46,16 +80,13 @@ export const PercentOfThreshold = ({ tableMeta, setTableMeta, tableId, tableTag,
     return (
         <>
             <TableContainer className={classes.tableStyles} component={Paper}>
-                <Table>
-                    <PercentOfThresholdHeader />
-                    <PercentOfThresholdBody tableData={tableData} modifier={modifier} />
-                </Table>
+                <PercentOfThresholdContainer tableData={tableData} modifier={modifier} addRowOnClickFactory={addRowOnClickFactory} />
             </TableContainer>
             <AccordionActions>
                 <div className={classes.trayWrapper}>
                     <div className={classes.alignLeft}>
-                        <Button className={classes.add} onClick={addOptionOnClick} color="primary" variant="contained">
-                            Add Option
+                        <Button className={classes.add} onClick={addItemOnClick} color="primary" variant="contained">
+                            Add Item
                         </Button>
                         <FormControlLabel label="Use Options as Paths" control={<Checkbox checked={tableMeta.valuesAsPaths} onChange={useOptionsAsPathsOnChange} />} />
                     </div>
