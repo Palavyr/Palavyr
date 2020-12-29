@@ -25,9 +25,9 @@ export const CustomWidget = ({ option, preferences }: ICustomWidget) => {
 
     const initializeConvo = useCallback(async () => {
 
-        var newConversation = await client.Widget.Access.createConvo(option.areaId);
-        var nodes = newConversation.data.conversationNodes;
-        var convoId = newConversation.data.conversationId;
+        var {data: newConversation} = await client.Widget.Access.createConvo(option.areaId);
+        var nodes = newConversation.conversationNodes;
+        var convoId = newConversation.conversationId;
         var region = (await fetchIpData).country;
 
         setPrefs(preferences);

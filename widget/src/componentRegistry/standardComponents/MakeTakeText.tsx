@@ -20,8 +20,8 @@ export const makeTakeText = ({ node, nodeList, client, convoId, convoContext }: 
         return (
             <MessageWrapper>
 
-                {node.text}
-                <Divider />
+                {/* {node.text}
+                <Divider /> */}
                 <Table>
                     <TableRow>
                         <TableCell >

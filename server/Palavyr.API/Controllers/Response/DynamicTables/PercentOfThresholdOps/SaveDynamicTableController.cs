@@ -48,7 +48,7 @@ namespace Palavyr.API.Controllers.Response.DynamicTables.PercentOfThresholdOps
             
             await dashContext.SaveChangesAsync();
 
-            var tables = dashContext
+            var tables = await dashContext
                 .PercentOfThresholds
                 .Where(row => row.AccountId == accountId && row.AreaIdentifier == areaId && row.TableId == tableId)
                 .ToListAsync();

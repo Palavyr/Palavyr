@@ -1,6 +1,5 @@
-import Axios from "axios";
 import axios, { AxiosResponse, AxiosInstance } from "axios";
-import { ConversationUpdate, AreaTable, CompleteConverationDetails, PreCheckResult } from "../types";
+import { ConversationUpdate, AreaTable, CompleteConverationDetails, PreCheckResult, WidgetPreferences } from "../types";
 import { serverUrl } from "./clientUtils";
 
 export interface IClient {
@@ -10,7 +9,7 @@ export interface IClient {
             fetchGroups: () => Promise<AxiosResponse>;
             createConvo: (areaId: string) => Promise<AxiosResponse>;
             fetchAreas: () => Promise<AxiosResponse>;
-            fetchPreferences: () => Promise<AxiosResponse>;
+            fetchPreferences: () => Promise<AxiosResponse<WidgetPreferences>>;
             postUpdateAsync: (update: ConversationUpdate) => Promise<AxiosResponse>;
             sendConfirmationEmail: (areaIdentifier: string, emailAddress: string, dynamicResponse: string, keyValues: KeyValues, conviId: string) => Promise<AxiosResponse>;
             postCompleteConversation: (completeConvo: CompleteConverationDetails) => Promise<AxiosResponse>;

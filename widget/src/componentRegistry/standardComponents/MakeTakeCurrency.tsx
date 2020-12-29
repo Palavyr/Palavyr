@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { addResponseMessage, toggleInputDisabled } from 'src/widgetCore/store/dispatcher';
-import { Divider, Table, TableRow, TableCell } from '@material-ui/core';
+import { Table, TableRow, TableCell } from '@material-ui/core';
 import { useState } from 'react';
 import { IProgressTheChat, responseAction, ConvoContextProperties } from '..';
 import { getChildNodes } from '../utils';
@@ -21,22 +21,22 @@ export const makeTakeCurrency = ({ node, nodeList, client, convoId, convoContext
 
         return (
             <MessageWrapper>
-                {node.text}
-                <Divider />
+                {/* {node.text}
+                <Divider /> */}
                 <Table>
                     <TableRow>
                         <TableCell>
                             <CurrencyTextField
                                 label="Amount"
                                 variant="standard"
-                                value={0.00}
+                                value={response}
                                 currencySymbol="$"
                                 minimumValue="0"
                                 outputFormat="string"
                                 decimalCharacter="."
                                 digitGroupSeparator=","
-                                onChange={(value: { floatValue: number | undefined; }) => {
-                                    if (value.floatValue !== undefined) { setResponse(value.floatValue) }
+                                onChange={(event: any, value: number) => {
+                                    if (value !== undefined) { setResponse(value) }
                                 }}
                             />
                         </TableCell>

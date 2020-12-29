@@ -22,8 +22,7 @@ export const App = () => {
 
     setIsReady(preCheckResult.isReady);
     if (preCheckResult.isReady) {
-      var prefs = (await client.Widget.Access.fetchPreferences())
-        .data as WidgetPreferences;
+      const { data: prefs } = await client.Widget.Access.fetchPreferences();
       setWidgetPrefs(prefs);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

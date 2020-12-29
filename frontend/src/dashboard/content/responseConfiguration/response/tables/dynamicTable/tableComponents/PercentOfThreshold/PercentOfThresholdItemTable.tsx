@@ -1,4 +1,4 @@
-import { Button, makeStyles, TableBody, TextField } from "@material-ui/core";
+import { Button, makeStyles, TableBody, TableContainer, TextField, Paper } from "@material-ui/core";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
         margin: "0.6rem",
         width: "30ch",
         paddingLeft: "0.4rem",
+    },
+    tableStyles: {
+        background: "transparent",
     },
 }));
 
@@ -53,24 +56,36 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
                     setItemName(event.target.value);
                 }}
             />
-            <PercentOfThresholdHeader />
-            <TableBody>
-                {itemData.map((data: PercentOfThresholdData, index: number) => {
-                    return (
-                        <>
-                            <PercentOfThresholdRow dataIndex={index} tableData={tableData} row={data} modifier={modifier} />
-                        </>
-                    );
-                })}
-            </TableBody>
+            <TableContainer className={cls.tableStyles} component={Paper}>
+                <PercentOfThresholdHeader />
+                <TableBody>
+                    {itemData.map((data: PercentOfThresholdData, index: number) => {
+                        return <PercentOfThresholdRow key={index} dataIndex={index} tableData={tableData} row={data} modifier={modifier} />;
+                    })}
+                </TableBody>
+            </TableContainer>
+            <PercentOfThresholdItemToolbar addRowOnClick={addRowOnClick} removeItem={removeItem} itemId={itemId} />
+        </>
+    );
+};
+
+interface IPercentOfThresholdToolbar {
+    addRowOnClick(): void;
+    removeItem(itemId: string): void;
+    itemId: string;
+}
+
+export const PercentOfThresholdItemToolbar = ({ addRowOnClick, removeItem, itemId }: IPercentOfThresholdToolbar) => {
+    return (
+        <>
             <br></br>
-            <div style={{marginBottom: "1rem"}}>
-                <div style={{float: "left", marginLeft: "1rem"}}>
+            <div style={{ marginBottom: "1rem" }}>
+                <div style={{ float: "left", marginLeft: "1rem" }}>
                     <Button variant="contained" style={{ width: "25ch" }} color="primary" onClick={addRowOnClick}>
                         Add Threshold
                     </Button>
                 </div>
-                <div style={{float: "right", marginRight: "1rem"}}>
+                <div style={{ float: "right", marginRight: "1rem" }}>
                     <Button variant="contained" style={{ width: "18ch" }} color="primary" onClick={() => removeItem(itemId)}>
                         Delete Item
                     </Button>
@@ -81,3 +96,21 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
         </>
     );
 };
+
+// <>
+// <br></br>
+// <div style={{ marginBottom: "1rem" }}>
+//     <div style={{ float: "left", marginLeft: "1rem" }}>
+//         <Button variant="contained" style={{ width: "25ch" }} color="primary" onClick={addRowOnClick}>
+//             Add Threshold
+//         </Button>
+//     </div>
+//     <div style={{ float: "right", marginRight: "1rem" }}>
+//         <Button variant="contained" style={{ width: "18ch" }} color="primary" onClick={() => removeItem(itemId)}>
+//             Delete Item
+//         </Button>
+//     </div>
+// </div>
+// <br></br>
+// <hr></hr>
+// </>

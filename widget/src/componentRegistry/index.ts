@@ -15,6 +15,7 @@ import { makeTakeText } from "./standardComponents/MakeTakeText";
 import { makeTakeNumber } from "./standardComponents/MakeTakeNumber";
 import { makeMultipleChoiceAsPathButtons } from "./standardComponents/MakeMultipeChoiceAsPathsButtons";
 import { makeMultipleChoiceContinueButtons } from "./standardComponents/MakeMultipleChoiceContinueButtons";
+import { makeTakeCurrency } from "./standardComponents/MakeTakeCurrency";
 
 export interface IProgressTheChat {
     node: ConvoTableRow;
@@ -85,6 +86,7 @@ export enum NodeTypes {
 
     // Dynamic Table Type Nodes
     SelectOneFlat = "SelectOneFlat",
+    PercentOfThreshold = "PercentOfThreshold",
 
     SendEmail = "SendEmail",
     Restart = "Restart"
@@ -112,7 +114,9 @@ export const ComponentRegistry: Registry = {
     [NodeTypes.Phone]: makePhoneNumber,
 
     // Dynamic Types
-    [NodeTypes.SelectOneFlat]: makeSelectOneFlat, // could be replaced with makeMultiple choice continue
+    [NodeTypes.SelectOneFlat]: makeSelectOneFlat, // could be replaced with makeMultiple choice continue,
+    [NodeTypes.PercentOfThreshold]: makeTakeCurrency,
+
     [NodeTypes.SendEmail]: makeSendEmail,
     [NodeTypes.Restart]: makeRestart
 }
