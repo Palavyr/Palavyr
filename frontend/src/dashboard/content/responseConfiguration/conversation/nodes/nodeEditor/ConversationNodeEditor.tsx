@@ -48,7 +48,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, nodeLi
             await addNodes(nodeData, nodeList, childIds, optionPaths, valueOptions, setNodes); // create new nodes and update the Database
 
         } else {
-            await client.Conversations.ModifyConversationNode(nodeData.nodeId, nodeData);
+            await client.Conversations.ModifyConversationNode(nodeData.nodeId, nodeData.areaIdentifier, nodeData);
             const newNodeList = updateNodeList(nodeList, nodeData);
             setNodes(newNodeList);
         }

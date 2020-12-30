@@ -81,7 +81,7 @@ namespace Server.Domain.Configuration.Constant
                 Text = "Yes / Not Sure, No";
                 PathOptions = new List<string>() {"Yes / Not Sure", "No"};
                 ValueOptions = new List<string>() {"Yes / Not Sure", "No"};
-                IsMultiOptionType = true;
+                IsMultiOptionType = false;
                 IsTerminalType = false;
             }
         }
@@ -96,7 +96,7 @@ namespace Server.Domain.Configuration.Constant
                 Value = nameof(NoNotSureCombined);
                 PathOptions = new List<string>() {"Yes", "No / Not Sure"};
                 ValueOptions = new List<string>() {"Yes", "No / Not Sure"};
-                IsMultiOptionType = true;
+                IsMultiOptionType = false;
                 IsTerminalType = false;
             }
         }

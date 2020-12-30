@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Server.Domain.Configuration.Schemas;
+using System.Linq;
+
 
 namespace Palavyr.API.controllers.Conversation
 {
@@ -23,45 +25,48 @@ namespace Palavyr.API.controllers.Conversation
             this.dashContext = dashContext;
             this.logger = logger;
         }
-        
-        [HttpPut("configure-conversations/nodes/{nodeId}")]
+
+        [HttpPut("configure-conversations/{areaId}/nodes/{nodeId}")]
         public async Task<IActionResult> Modify(
-            [FromHeader] string accountId, 
-            [FromRoute] string nodeId, 
+            [FromHeader] string accountId,
+            [FromRoute] string nodeId,
+            [FromRoute] string areaId,
             [FromBody] ConversationNode newNode)
         {
-            logger.LogDebug($"Updating Conversation node: {nodeId}");
-            try
-            {
-                dashContext.ConversationNodes.Remove(
-                    await dashContext
-                        .ConversationNodes
-                        .SingleOrDefaultAsync(row => row.NodeId == nodeId));
+            var toRemove = dashContext.ConversationNodes.Where(row => row.NodeId == nodeId);
+            dashContext.ConversationNodes.RemoveRange(toRemove);
 
-                var mappedNode = ConversationNode.CreateNew(
-                    newNode.NodeId,
-                    newNode.NodeType,
-                    newNode.Text,
-                    newNode.AreaIdentifier,
-                    newNode.NodeChildrenString,
-                    newNode.OptionPath,
-                    newNode.ValueOptions,
-                    accountId,
-                    newNode.IsRoot,
-                    newNode.IsCritical
-                );
+            var area = await dashContext
+                .Areas
+                .Where(row => row.AccountId == accountId)
+                .Where(row => row.AreaIdentifier == areaId)
+                .Include(p => p.ConversationNodes)
+                .SingleOrDefaultAsync();
 
-                dashContext.ConversationNodes.Add(mappedNode);
-                await dashContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                var message = ex.Message;
-                logger.LogDebug("Could not update:" + message);
-                return BadRequest();
-            }
+            var updatedConvo = area
+                .ConversationNodes
+                .Where(row => row.NodeId != nodeId)
+                .ToList();
+            
+            var updatedNode = ConversationNode.CreateNew(
+                newNode.NodeId,
+                newNode.NodeType,
+                newNode.Text,
+                newNode.AreaIdentifier,
+                newNode.NodeChildrenString,
+                newNode.OptionPath,
+                newNode.ValueOptions,
+                accountId,
+                newNode.IsRoot,
+                newNode.IsCritical,
+                newNode.IsMultiOptionType,
+                newNode.IsTerminalType
+            );
+
+            updatedConvo.Add(updatedNode);
+            area.ConversationNodes = updatedConvo;
+            await dashContext.SaveChangesAsync();
             return NoContent();
         }
-        
     }
 }

@@ -128,7 +128,7 @@ export class ApiClient {
         ModifyConversation: async (nodelist: Conversation, areaIdentifier: string, idsToDelete: Array<string>): Promise<AxiosResponse> =>
             this.client.put(`configure-conversations/${areaIdentifier}`, { IdsToDelete: idsToDelete, Transactions: nodelist }),
         // TODO : return from API
-        ModifyConversationNode: async (nodeId: string, updatedNode: ConvoTableRow): Promise<AxiosResponse<ConvoTableRow>> => this.client.put(`configure-conversations/nodes/${nodeId}`, updatedNode),
+        ModifyConversationNode: async (nodeId: string, areaIdentifier: string, updatedNode: ConvoTableRow): Promise<AxiosResponse<ConvoTableRow>> => this.client.put(`configure-conversations/${areaIdentifier}/nodes/${nodeId}`, updatedNode),
     };
 
     public WidgetDemo = {

@@ -79,11 +79,11 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
                     value={row.valueMin}
                     currencySymbol="$"
                     minimumValue="0"
-                    outputFormat="string"
+                    outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(value: { floatValue: number | undefined; }) => {
-                        if (value.floatValue !== undefined) { modifier.setOptionValue(tableData, dataIndex, value.floatValue) }
+                    onChange={(event: any, value: number ) => {
+                        if (value !== undefined) { modifier.setOptionValue(tableData, dataIndex, value) }
                     }}
                 />
 
@@ -97,11 +97,11 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
                     value={row.range ? row.valueMax : 0.00}
                     currencySymbol="$"
                     minimumValue="0"
-                    outputFormat="string"
+                    outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(value: { floatValue: number | undefined; }) => {
-                        if (value.floatValue !== undefined) { modifier.setOptionMaxValue(tableData, dataIndex, value.floatValue) }
+                    onChange={(event: any, value: number ) => {
+                        if (value !== undefined) { modifier.setOptionMaxValue(tableData, dataIndex, value) }
                     }}
                 />
             </TableCell>

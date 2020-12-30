@@ -65,11 +65,11 @@ export const PercentOfThresholdRow = ({ dataIndex, tableData, row, modifier }: I
                     value={row.threshold}
                     currencySymbol="$"
                     minimumValue="0"
-                    outputFormat="string"
+                    outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(value: { floatValue: number | undefined; }) => {
-                        if (value.floatValue !== undefined) { modifier.setThresholdValue(tableData, row.rowId, value.floatValue) }
+                    onChange={(event: any, value: number ) => {
+                        if (value !== undefined) { modifier.setThresholdValue(tableData, row.rowId, value) }
                     }}
                 />
 
@@ -95,11 +95,11 @@ export const PercentOfThresholdRow = ({ dataIndex, tableData, row, modifier }: I
                     value={row.valueMin}
                     currencySymbol="%"
                     minimumValue="0"
-                    outputFormat="string"
+                    outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(value: { floatValue: number | undefined; }) => {
-                        if (value.floatValue !== undefined) { modifier.setPercentToModify(tableData, row.rowId, value.floatValue) }
+                    onChange={(event: any, value: number ) => {
+                        if (value !== undefined) { modifier.setPercentToModify(tableData, row.rowId, value) }
                     }}
                 />
 
@@ -111,11 +111,11 @@ export const PercentOfThresholdRow = ({ dataIndex, tableData, row, modifier }: I
                     value={row.valueMin}
                     currencySymbol="$"
                     minimumValue="0"
-                    outputFormat="string"
+                    outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(value: { floatValue: number | undefined; }) => {
-                        if (value.floatValue !== undefined) { modifier.setValueMin(tableData, row.rowId, value.floatValue) }
+                    onChange={(event: any, value: number ) => {
+                        if (value !== undefined) { modifier.setValueMin(tableData, row.rowId, value) }
                     }}
                 />
 
@@ -129,11 +129,11 @@ export const PercentOfThresholdRow = ({ dataIndex, tableData, row, modifier }: I
                     value={row.range ? row.valueMax : 0.00}
                     currencySymbol="$"
                     minimumValue="0"
-                    outputFormat="string"
+                    outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(value: { floatValue: number | undefined; }) => {
-                        if (value.floatValue !== undefined) { modifier.setValueMax(tableData, row.rowId, value.floatValue) }
+                    onChange={(event: any, value: number ) => {
+                        if (value !== undefined) { modifier.setValueMax(tableData, row.rowId, value) }
                     }}
                 />
             </TableCell>

@@ -90,7 +90,7 @@ export const ConversationNodeInterface = ({ nodeOptionList, node, nodeList, opti
     const showResponseInPdfCheckbox = async (event: { target: { checked: boolean; }; }) => {
         const newNode = cloneDeep(node);
         newNode.isCritical = event.target.checked;
-        await client.Conversations.ModifyConversationNode(node.nodeId, newNode);
+        await client.Conversations.ModifyConversationNode(node.nodeId, node.areaIdentifier, newNode);
         const newNodeList = updateNodeList(nodeList, newNode);
         setNodes(newNodeList);
     };
