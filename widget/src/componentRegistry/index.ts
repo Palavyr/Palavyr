@@ -27,7 +27,7 @@ export interface IProgressTheChat {
 
 export const responseAction = (node: ConvoTableRow, child: ConvoTableRow, nodeList: Array<ConvoTableRow>, client: IClient, convoId: string, response: string, convoContext: any) => {
     if (response) {
-        if (child.optionPath !== null && child.optionPath !== "Continue") {
+        if (child.optionPath !== null && child.optionPath !== "" && child.optionPath !== "Continue") {
             addUserMessage(child.optionPath);
         } else {
             addUserMessage(response)
