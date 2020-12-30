@@ -7,6 +7,7 @@ import { uuid } from "uuidv4";
 import { MessageWrapper } from "../common";
 import { ResponseButton } from "../../common/ResponseButton";
 import { useState } from "react";
+import { SingleRowSingleCell } from "src/common/TableCell";
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -20,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 // All Dynamic results should add response formatted to the dynamic response AND the critical value lst
 export const makeSelectOneFlat = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
     // TODO: lift this widget and add  'isInputDisabled()'
-    addResponseMessage(node.text);
+    // addResponseMessage(node.text);
     toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
@@ -32,6 +33,7 @@ export const makeSelectOneFlat = ({ node, nodeList, client, convoId, convoContex
 
         return (
             <MessageWrapper>
+                <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
                 <Table>
                     {options.map((option: string, index: number) => {
                         return (

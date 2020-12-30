@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useEffect } from "react";
+import * as React from "react";
+import { useState, useCallback, useEffect } from "react";
 import { CustomWidget } from "./widget/CustomWidget";
 import { OptionSelector } from "./options/Options";
 import { SelectedOption, WidgetPreferences } from "./types";

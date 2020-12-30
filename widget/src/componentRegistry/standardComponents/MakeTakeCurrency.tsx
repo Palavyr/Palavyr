@@ -10,8 +10,7 @@ import { MessageWrapper } from "../common";
 import { SingleRowSingleCell } from "src/common/TableCell";
 
 export const makeTakeCurrency = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
-    // TODO: lift this widget and add  'isInputDisabled()'
-    addResponseMessage(node.text);
+    // addResponseMessage(node.text);
     toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
@@ -23,6 +22,8 @@ export const makeTakeCurrency = ({ node, nodeList, client, convoId, convoContext
         return (
             <MessageWrapper>
                 <Table>
+                    <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+
                     <SingleRowSingleCell>
                         <CurrencyTextField
                             label="Amount"

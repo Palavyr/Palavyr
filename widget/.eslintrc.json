@@ -21,6 +21,19 @@
         "react"
     ],
     "rules": {
+        "quotes": ["warn", "single"],
+        "indent": ["warn", "tab", { "ignoreComments": true }],
+        "no-tabs": 0,
+        "padded-blocks": 0,
+        "semi": ["warn", "never"],
+        "no-trailing-spaces": 0,
+        "spaced-comment": 0,
+        "no-multiple-empty-lines": 0,
+        "space-before-function-paren": 0,
+        "camelcase": 0,
+        "prefer-const": "warn",
+        "space-infix-ops": "warn",
+        "no-case-declarations": 0
     }
     // "settings": {
     //     "import/resolver": {

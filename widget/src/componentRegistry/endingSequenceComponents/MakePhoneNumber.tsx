@@ -8,11 +8,12 @@ import NumberFormat from 'react-number-format';
 import { MessageWrapper } from '../common';
 import { ResponseButton } from '../../common/ResponseButton';
 import { IOSSwitch } from '../../common/IOSStyleSwitch';
+import { SingleRowSingleCell } from 'src/common/TableCell';
 
 
 export const makePhoneNumber = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
     // TODO: lift this widget and add  'isInputDisabled()'
-    addResponseMessage(node.text);
+    // addResponseMessage(node.text); // USE THIS if you want to place the message
     toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
@@ -22,22 +23,21 @@ export const makePhoneNumber = ({ node, nodeList, client, convoId, convoContext 
         const region = convoContext.region;
         const [phoneNumberResponse, setResponse] = useState<string>("");
         const [regionSwitch, setRegionSwitch] = useState<boolean>(region === "AU" || region === undefined ? true : false);
+        const [disabled, setDisabled] = useState<boolean>(false);
+
         const noBorder = { borderBottom: "none", padding: "8px"};
 
         return (
             <MessageWrapper>
                 <Table>
-                    <TableRow>
-                        <TableCell>
-                            {node.text}
-                        </TableCell>
-                    </TableRow>
+                <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
                     <TableRow >
                         <TableCell style={noBorder}>
                             {
                                 regionSwitch ? "AU  " : "US  "
                             }
                             <NumberFormat
+                                disabled={disabled}
                                 format={regionSwitch ? "+61 (##) ####-####" : "+1 (###) ###-####"}
                                 mask="_"
                                 type="tel"
@@ -58,6 +58,7 @@ export const makePhoneNumber = ({ node, nodeList, client, convoId, convoContext 
                         </TableCell>
                         <TableCell style={noBorder}>
                             <ResponseButton
+                                disabled={disabled}
                                 onClick={
                                     (e) => {
 
@@ -67,7 +68,8 @@ export const makePhoneNumber = ({ node, nodeList, client, convoId, convoContext 
                                         }
                                         convoContext["PhoneNumber"] = phoneNumberResponse;
                                         responseAction(node, child, nodeList, client, convoId, phoneNumberResponse, convoContext)
-                                        toggleInputDisabled()
+                                        toggleInputDisabled();
+                                        setDisabled(true);
                                     }
                                 }
                             />

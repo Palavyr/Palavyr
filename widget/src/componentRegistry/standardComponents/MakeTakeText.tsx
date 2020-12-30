@@ -1,15 +1,16 @@
 import * as React from "react";
-import { addResponseMessage, toggleInputDisabled } from "src/widgetCore/store/dispatcher";
-import { Button, TextField, Table } from "@material-ui/core";
+import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
+import { TextField, Table } from "@material-ui/core";
 import { useState } from "react";
 import { IProgressTheChat, responseAction, ConvoContextProperties } from "..";
 import { getChildNodes } from "../utils";
 import { MessageWrapper } from "../common";
 import { SingleRowSingleCell } from "src/common/TableCell";
+import { ResponseButton } from "src/common/ResponseButton";
 
 export const makeTakeText = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
     // TODO: lift this widget and add  'isInputDisabled()'
-    addResponseMessage(node.text);
+    // addResponseMessage(node.text);
     toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
@@ -21,8 +22,11 @@ export const makeTakeText = ({ node, nodeList, client, convoId, convoContext }: 
         return (
             <MessageWrapper>
                 <Table>
+                    <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+
                     <SingleRowSingleCell>
                         <TextField
+                            disabled={disabled}
                             label="Write here..."
                             type="text"
                             onChange={event => {
@@ -31,11 +35,9 @@ export const makeTakeText = ({ node, nodeList, client, convoId, convoContext }: 
                         />
                     </SingleRowSingleCell>
                     <SingleRowSingleCell align="right">
-                        <Button
+                        <ResponseButton
                             disabled={disabled}
-                            color="primary"
-                            variant="outlined"
-                            size="small"
+                            text="Submit"
                             onClick={() => {
                                 setResponse(response);
                                 if (node.isCritical) {
@@ -45,9 +47,7 @@ export const makeTakeText = ({ node, nodeList, client, convoId, convoContext }: 
                                 toggleInputDisabled();
                                 setDisabled(true);
                             }}
-                        >
-                            Submit
-                        </Button>
+                        />
                     </SingleRowSingleCell>
                 </Table>
             </MessageWrapper>
