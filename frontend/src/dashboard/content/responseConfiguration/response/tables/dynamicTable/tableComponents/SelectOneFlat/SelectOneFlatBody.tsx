@@ -1,15 +1,10 @@
 import React from "react";
-import { SelectOneFlatData } from "./SelectOneFlatTypes";
 import { TableBody } from "@material-ui/core";
 import { SelectOneFlatRow } from "./SelectOneFlatRow";
-
-export interface ISelectOneFlatBody {
-    tableData: Array<SelectOneFlatData>;
-    modifier: any;
-}
+import { IDynamicTableBody } from "../../DynamicTableTypes";
 
 
-export const SelectOneFlatBody = ({ tableData, modifier }: ISelectOneFlatBody) => {
+export const SelectOneFlatBody = ({ tableData, modifier }: IDynamicTableBody) => {
 
     return (
         <TableBody>

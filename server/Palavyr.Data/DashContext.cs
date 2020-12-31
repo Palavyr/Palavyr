@@ -18,6 +18,6 @@
         
         public DbSet<WidgetPreference> WidgetPreferences { get; set; }
         public DbSet<SelectOneFlat> SelectOneFlats { get; set; }
-        
+        public DbSet<PercentOfThreshold> PercentOfThresholds { get; set; }
     }
 }

@@ -1,4 +1,3 @@
-import { DynamicTableMeta } from "@Palavyr-Types";
 import React from "react";
 import { CustomSelect } from "./CustomSelect";
 
@@ -6,7 +5,6 @@ import { CustomSelect } from "./CustomSelect";
 export interface IDynamicTableSelector {
     selection: string;
     tableOptions: Array<string>;
-
     handleChange: any;
 }
 

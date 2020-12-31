@@ -23,7 +23,7 @@ namespace Palavyr.API.Controllers.Response.DynamicTables
         }
         
         /// <summary>
-        /// originally used to pul a crazy string from the area table, but now should list off
+        /// Originally used to pull a crazy string from the area table, but now should list off
         /// the current metas from the meta table for a given area
         /// </summary>
         /// <param name="accountId"></param>

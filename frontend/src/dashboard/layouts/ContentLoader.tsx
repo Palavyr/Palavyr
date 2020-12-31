@@ -8,7 +8,7 @@ interface IContentLoader {
     children: React.ReactNode;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     content: {
         position: "relative",
         flexGrow: 1,
@@ -26,25 +26,14 @@ const useStyles = makeStyles(theme => ({
         }),
         marginLeft: 0,
     },
-
-}))
-
+}));
 
 export const ContentLoader = ({ open, children }: IContentLoader) => {
     const classes = useStyles();
-    const them = useTheme();
     return (
-        <main
-            className={
-                classNames(
-                    classes.content,
-                    { [classes.contentShift]: open }
-                )
-            }
-        >
-            <div>
-                {children}
-            </div>
+        <main className={classNames(classes.content, { [classes.contentShift]: open })}>
+
+            <div>{children}</div>
         </main>
     );
 };

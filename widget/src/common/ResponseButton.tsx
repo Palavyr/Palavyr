@@ -4,16 +4,17 @@ import { Button, PropTypes } from '@material-ui/core';
 
 export interface IResponseButton {
     onClick: any;
+    disabled?: boolean;
     text?: string;
     color?: PropTypes.Color;
     variant?: "outlined" | "contained";
 }
 
 
-export const ResponseButton = ({onClick, variant = "outlined", text = "Submit", color = "primary"}: IResponseButton) => {
+export const ResponseButton = ({onClick, disabled = false, variant = "outlined", text = "Submit", color = "primary"}: IResponseButton) => {
 
     return (
-        <Button variant={variant} color={color} size="small" onClick={onClick}>
+        <Button disabled={disabled} variant={variant} color={color} size="small" onClick={onClick}>
             {text}
         </Button>
     )

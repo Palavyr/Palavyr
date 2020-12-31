@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ConvoNode, Conversation, ValueOptionDelimiter, NodeTypeOptions } from "@Palavyr-Types";
+import { ConvoNode, Conversation, ValueOptionDelimiter } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { cloneDeep } from "lodash";
 import { updateNodeList, createNewChildIDs, addNodes } from "../conversationNodeUtils";
@@ -48,7 +48,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, nodeLi
             await addNodes(nodeData, nodeList, childIds, optionPaths, valueOptions, setNodes); // create new nodes and update the Database
 
         } else {
-            await client.Conversations.ModifyConversationNode(nodeData.nodeId, nodeData);
+            await client.Conversations.ModifyConversationNode(nodeData.nodeId, nodeData.areaIdentifier, nodeData);
             const newNodeList = updateNodeList(nodeList, nodeData);
             setNodes(newNodeList);
         }

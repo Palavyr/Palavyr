@@ -71,10 +71,10 @@ namespace Palavyr.API.Controllers.WidgetLive
 
             await pdfGenerator.GeneratePdfResponseAsync(criticalResponses, emailRequest, culture, safeFilePath,
                 safeFileNameStem);
-            var fullPDFResponsePath = FormFilePath.FormResponsePDFFilePath(accountId, safeFilePath);
-            if (DiskUtils.ValidatePathExists(fullPDFResponsePath))
+            var fullPdfResponsePath = FormFilePath.FormResponsePDFFilePath(accountId, safeFilePath);
+            if (DiskUtils.ValidatePathExists(fullPdfResponsePath))
             {
-                attachmentFiles.Add(fullPDFResponsePath);
+                attachmentFiles.Add(fullPdfResponsePath);
             }
 
             var fromAddress = accountsContext.Accounts.Single(row => row.AccountId == accountId).EmailAddress;

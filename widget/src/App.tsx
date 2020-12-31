@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useEffect } from "react";
+import * as React from "react";
+import { useState, useCallback, useEffect } from "react";
 import { CustomWidget } from "./widget/CustomWidget";
 import { OptionSelector } from "./options/Options";
 import { SelectedOption, WidgetPreferences } from "./types";
@@ -22,8 +23,7 @@ export const App = () => {
 
     setIsReady(preCheckResult.isReady);
     if (preCheckResult.isReady) {
-      var prefs = (await client.Widget.Access.fetchPreferences())
-        .data as WidgetPreferences;
+      const { data: prefs } = await client.Widget.Access.fetchPreferences();
       setWidgetPrefs(prefs);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

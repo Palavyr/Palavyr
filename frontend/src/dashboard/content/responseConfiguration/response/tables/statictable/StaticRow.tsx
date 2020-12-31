@@ -90,11 +90,11 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
                     value={minFee}
                     currencySymbol="$"
                     minimumValue="0"
-                    outputFormat="string"
+                    outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(value: { floatValue: number | undefined; }) => {
-                        if (value.floatValue !== undefined) { modifier.setFeeMin(staticTableMetas, tableOrder, rowOrder, value.floatValue) }
+                    onChange={(event: any, value: number ) => {
+                        if (value !== undefined) { modifier.setFeeMin(staticTableMetas, tableOrder, rowOrder, value) }
                     }}
                 />
             </TableCell>
@@ -107,11 +107,11 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
                     value={maxFee}
                     currencySymbol="$"
                     minimumValue="0"
-                    outputFormat="string"
+                    outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(value: { floatValue: number | undefined; }) => {
-                        if (value.floatValue !== undefined) { modifier.setFeeMax(staticTableMetas, tableOrder, rowOrder, value.floatValue) }
+                    onChange={(event: any, value: number ) => {
+                        if (value !== undefined) { modifier.setFeeMax(staticTableMetas, tableOrder, rowOrder, value) }
                     }}
                 />
             </TableCell>

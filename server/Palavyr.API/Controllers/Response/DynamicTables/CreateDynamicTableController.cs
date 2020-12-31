@@ -5,7 +5,7 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.FileSystem.UniqueIdentifiers;
+using Palavyr.FileSystem.UIDUtils;
 using Server.Domain.Configuration.Constant;
 using Server.Domain.Configuration.Schemas;
 
@@ -29,10 +29,10 @@ namespace Palavyr.API.Controllers.Response.DynamicTables
         // further generalization. This can be done later if its worth it. Adding a new controller for each type
         // isn't that big of a deal since we'll only have dozens of types probably. If we make money, then we can switch
         // to a generic pattern. Its just too complex to implement right now.
-        
+
         [HttpPost("tables/dynamic/{areaId}")]
         public async Task<IActionResult> Create(
-            [FromHeader] string accountId, 
+            [FromHeader] string accountId,
             [FromRoute] string areaId)
         {
             var area = await dashContext
@@ -43,7 +43,7 @@ namespace Palavyr.API.Controllers.Response.DynamicTables
             var dynamicTables = area.DynamicTableMetas.ToList();
 
             var tableId = Guid.NewGuid().ToString();
-            var tableTag = GuidUtils.CreatePseudoRandomString(5);
+            var tableTag = "Default-" + GuidUtils.CreatePseudoRandomString(5);
 
             var newTableMeta = DynamicTableMeta.CreateNew(
                 tableTag,
@@ -55,6 +55,9 @@ namespace Palavyr.API.Controllers.Response.DynamicTables
 
             dynamicTables.Add(newTableMeta);
             area.DynamicTableMetas = dynamicTables;
+            
+            // the Select one flat is the default table that is loaded when we add a new dynamic table. 
+            // TODO: extract this into a class that abstracts creating the default table
             var defaultTable = SelectOneFlat.CreateTemplate(accountId, areaId, tableId);
             await dashContext.SelectOneFlats.AddAsync(defaultTable);
             await dashContext.SaveChangesAsync();

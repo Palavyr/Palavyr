@@ -23,6 +23,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+
+export type TableNameMap = {
+    [tableName: string]: string
+}
 export const DynamicTableConfiguration = ({ title, areaIdentifier }: IDynamicTable) => {
     const client = new ApiClient();
     const classes = useStyles();
@@ -32,17 +36,25 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier }: IDynamicTab
 
     const [tableMetas, setTableMetas] = useState<DynamicTableMetas>([]);
     const [availableTables, setAvailableTables] = useState<Array<string>>([]);
+    const [tableNameMap, setTableNameMap] = useState<TableNameMap>({})
+
 
     const loadTableData = useCallback(async () => {
         const { data: dynamicTableMetas } = await client.Configuration.Tables.Dynamic.getDynamicTableMetas(areaIdentifier);
-        const availableTablePrettyNames = dynamicTableMetas.map((x: DynamicTableMeta) => x.prettyName);
-        // var { data: availabletablePrettyNames } = await client.Configuration.Tables.Dynamic.getAvailableTablesPrettyNames();
+        const {data: tableNameMap} = await client.Configuration.Tables.Dynamic.getDynamicTableTypes();
+
+        // map that provides e.g. Select One Flat: SelectOneFlat. used to derive the pretty names
+        const availableTablePrettyNames = Object.keys(tableNameMap);
+
         setTableMetas(cloneDeep(dynamicTableMetas));
         setAvailableTables(availableTablePrettyNames);
+        setTableNameMap(tableNameMap);
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
 
     const addDynamicTable = async () => {
+        // We always add the default dynamic table - the Select One Flat table
         var { data: newMeta } = await client.Configuration.Tables.Dynamic.createDynamicTable(areaIdentifier);
         tableMetas.push(newMeta);
         setTableMetas(cloneDeep(tableMetas));
@@ -61,7 +73,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier }: IDynamicTab
 
     return (
         <>
-            <Accordion>
+            <Accordion expanded>
                 <AccordionSummary className={classes.header} expandIcon={<ExpandMoreIcon style={{ color: "white" }} />} aria-controls="panel-content" id="panel-header">
                     <Typography className={classes.title}>{title}</Typography>
                 </AccordionSummary>
@@ -83,6 +95,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier }: IDynamicTab
                                 tableMetaIndex={index}
                                 defaultTableMeta={tableMeta}
                                 availablDynamicTableOptions={availableTables}
+                                tableNameMap={tableNameMap}
                                 parentState={parentState}
                                 changeParentState={changeParentState}
                                 areaIdentifier={areaIdentifier}

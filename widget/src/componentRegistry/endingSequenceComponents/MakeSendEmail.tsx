@@ -37,10 +37,10 @@ export const makeSendEmail = ({ node, nodeList, client, convoId, convoContext }:
         const email = convoContext[ConvoContextProperties.EmailAddress];
         const name = convoContext[ConvoContextProperties.Name];
         const phone = convoContext[ConvoContextProperties.PhoneNumber]
-        const dynamicResponse = convoContext[ConvoContextProperties.DynamicResponse];
+        const dynamicResponses = convoContext[ConvoContextProperties.DynamicResponses];
         const keyvalues = convoContext[ConvoContextProperties.KeyValues];
 
-        var { data } = await client.Widget.Access.sendConfirmationEmail(areaId, email, dynamicResponse, keyvalues, convoId);
+        var { data } = await client.Widget.Access.sendConfirmationEmail(areaId, email, dynamicResponses, keyvalues, convoId);
         if (data) {
             var completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone)
             await client.Widget.Access.postCompleteConversation(completeConvo)

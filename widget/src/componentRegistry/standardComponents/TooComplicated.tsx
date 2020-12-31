@@ -4,24 +4,29 @@ import { IProgressTheChat } from '..';
 import { MessageWrapper } from '../common';
 import { ResponseButton } from '../../common/ResponseButton';
 import { Table, TableRow, TableCell } from '@material-ui/core';
+import { useState } from 'react';
 
 export const makeTooComplicated = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
 
     addResponseMessage("End of the line! This the begining of the closing sequence.")
     toggleInputDisabled();
 
-    const component = () => {
+    const Component: React.ElementType<{}> = () => {
         const noBorder = { borderBottom: "none" };
+        const [disabled, setDisabled] = useState<boolean>(false);
+
         return (
             <MessageWrapper>
                 <Table>
                     <TableRow>
                         <TableCell style={noBorder} align="right">
                             <ResponseButton
+                                disabled={disabled}
                                 text="Click to End"
                                 onClick={
                                     () => {
-                                        alert("Good Job!")
+                                        alert("Good Job!");
+                                        setDisabled(true);
                                     }
                                 }
                             />
@@ -31,5 +36,5 @@ export const makeTooComplicated = ({ node, nodeList, client, convoId, convoConte
             </MessageWrapper>
         )
     }
-    return component
+    return Component
 }

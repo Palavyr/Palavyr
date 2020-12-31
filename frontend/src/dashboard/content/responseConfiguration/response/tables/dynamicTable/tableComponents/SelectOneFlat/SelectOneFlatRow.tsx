@@ -1,9 +1,10 @@
 import React from "react";
-import { TableData, SelectOneFlatData } from "./SelectOneFlatTypes";
 import { SelectOneFlatModifier } from "./SelectOneFlatModifier";
 import { TableRow, TableCell, Button, TextField, makeStyles } from "@material-ui/core";
 import CurrencyTextField from '@unicef/material-ui-currency-textfield'
 import DeleteIcon from '@material-ui/icons/Delete';
+import { SelectOneFlatData, TableData } from "../../DynamicTableTypes";
+import { uuid } from "uuidv4";
 
 
 export interface ISelectOneFlatRow {
@@ -27,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     },
     input: {
         margin: "0.6rem",
-        with: "55ch"
+        width: "30ch"
     },
     maxValInput: (prop: boolean) => {
         if (prop === true) {
@@ -47,7 +48,7 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
     const cellAlignment = "center";
 
     return (
-        <TableRow>
+        <TableRow key={uuid()}>
             <TableCell align={cellAlignment}>
                 <Button
                     size="small"
@@ -63,7 +64,7 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
                     className={classes.input}
                     variant="standard"
                     label="Option"
-                    type={"text"}
+                    type="text"
                     value={row.option}
                     color="primary"
                     onChange={(event) => {
@@ -79,11 +80,11 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
                     value={row.valueMin}
                     currencySymbol="$"
                     minimumValue="0"
-                    outputFormat="string"
+                    outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(value: { floatValue: number | undefined; }) => {
-                        if (value.floatValue !== undefined) { modifier.setOptionValue(tableData, dataIndex, value.floatValue) }
+                    onChange={(event: any, value: number ) => {
+                        if (value !== undefined) { modifier.setOptionValue(tableData, dataIndex, value) }
                     }}
                 />
 
@@ -97,11 +98,11 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
                     value={row.range ? row.valueMax : 0.00}
                     currencySymbol="$"
                     minimumValue="0"
-                    outputFormat="string"
+                    outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(value: { floatValue: number | undefined; }) => {
-                        if (value.floatValue !== undefined) { modifier.setOptionMaxValue(tableData, dataIndex, value.floatValue) }
+                    onChange={(event: any, value: number ) => {
+                        if (value !== undefined) { modifier.setOptionMaxValue(tableData, dataIndex, value) }
                     }}
                 />
             </TableCell>

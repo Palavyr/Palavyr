@@ -23,7 +23,7 @@ namespace Palavyr.API.Services.DynamicTableService
 
     public class CompileDynamicTables : ICompileDynamicTables
     {
-        private object logger;
+        private ILogger<CompileDynamicTables> logger;
         private DashContext dashContext;
 
         public CompileDynamicTables(
@@ -42,35 +42,47 @@ namespace Palavyr.API.Services.DynamicTableService
         )
         {
             var dynamicTableData = new List<NodeTypeOption>() { };
+
             foreach (var dynamicTableMeta in dynamicTableMetas)
             {
-                switch (dynamicTableMeta.TableType)
+                if (dynamicTableMeta.TableType == DynamicTableTypes.CreateSelectOneFlat().TableType)
                 {
-                    case ("SelectOneFlat"):
+                    var selectOneFlatRows = await dashContext.SelectOneFlats
+                        .Where(
+                            row => row.AccountId == accountId
+                                   && row.AreaIdentifier == areaId
+                                   && row.TableId == dynamicTableMeta.TableId)
+                        .ToListAsync();
+                    var valueOptions = selectOneFlatRows.Select(x => x.Option).ToList();
 
-                        var selectOneFlatRows = await dashContext.SelectOneFlats
-                            .Where(
-                                row => row.AccountId == accountId
-                                       && row.AreaIdentifier == areaId
-                                       && row.TableId == dynamicTableMeta.TableId)
-                            .ToListAsync();
-                        var valueOptions = selectOneFlatRows.Select(x => x.Option).ToList();
-
-                        var nodeTypeOption = NodeTypeOption.Create(
-                            dynamicTableMeta.MakeUniqueIdentifier(),
-                            TreeUtils.TransformRequiredNodeTypeToPrettyName(dynamicTableMeta),
-                            dynamicTableMeta.ValuesAsPaths ? valueOptions : new List<string>() {"Continue"},
-                            valueOptions,
-                            true,
-                            false
-                        );
-                        dynamicTableData.AddAdditionalNode(nodeTypeOption);
-                        break;
-                    
-                    default:
-                        throw new Exception("Table logic not yet implemented");
+                    var nodeTypeOption = NodeTypeOption.Create(
+                        dynamicTableMeta.MakeUniqueIdentifier(),
+                        TreeUtils.TransformRequiredNodeTypeToPrettyName(dynamicTableMeta),
+                        dynamicTableMeta.ValuesAsPaths ? valueOptions : new List<string>() {"Continue"},
+                        valueOptions,
+                        true,
+                        false
+                    );
+                    dynamicTableData.AddAdditionalNode(nodeTypeOption);
+                }
+                else if (dynamicTableMeta.TableType == DynamicTableTypes.CreatePercentOfThreshold().TableType)
+                {
+                    var nodeTypeOption = NodeTypeOption.Create(
+                        dynamicTableMeta.MakeUniqueIdentifier(),
+                        TreeUtils.TransformRequiredNodeTypeToPrettyName(dynamicTableMeta),
+                        new List<string>() {"Continue"},
+                        new List<string>() { },
+                        false,
+                        false
+                    );
+                    dynamicTableData.AddAdditionalNode(nodeTypeOption);
+                }
+                else
+                {
+                    throw new Exception("Table logic not yet implemented");
                 }
             }
+
             return dynamicTableData;
         }
     }

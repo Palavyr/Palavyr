@@ -1,4 +1,3 @@
-import { SelectOneFlatData, TableData } from "./SelectOneFlatTypes";
 import React, { Dispatch, SetStateAction } from "react";
 import { DynamicTableMeta } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
@@ -7,7 +6,7 @@ import { TableContainer, Paper, Table, Button, FormControlLabel, Checkbox, Accor
 import { SelectOneFlatHeader } from "./SelectOneFlatHeader";
 import { SelectOneFlatBody } from "./SelectOneFlatBody";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { DynamicTableTypes } from "../../DynamicTableTypes";
+import { DynamicTableTypes, IDynamicTableProps, SelectOneFlatData, TableData } from "../../DynamicTableTypes";
 
 export interface ISelectOneFlat {
     tableData: Array<SelectOneFlatData>;
@@ -49,7 +48,7 @@ const useStyles = makeStyles({
     },
 });
 
-export const SelectOneFlatTable = ({ tableMeta, setTableMeta, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: ISelectOneFlat) => {
+export const SelectOneFlat = ({ tableMeta, setTableMeta, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: IDynamicTableProps) => {
     const client = new ApiClient();
     const classes = useStyles();
 

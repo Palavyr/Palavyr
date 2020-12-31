@@ -50,7 +50,7 @@ namespace Server.Domain.Configuration.Constant
                 Text = "Yes or No";
                 PathOptions = new List<string>() {"No", "Yes"};
                 ValueOptions = new List<string>() {"No", "Yes"};
-                IsMultiOptionType = true;
+                IsMultiOptionType = false; // set to no if we don't want to allow the node value options presented to the user to change. 
                 IsTerminalType = false;
             }
         }
@@ -66,7 +66,7 @@ namespace Server.Domain.Configuration.Constant
                 Text = "Yes, No, Not Sure";
                 PathOptions = new List<string>() {"Yes", "No", "Not Sure"};
                 ValueOptions = new List<string>() {"Yes", "No", "Not Sure"};
-                IsMultiOptionType = true;
+                IsMultiOptionType = false;
                 IsTerminalType = false;
             }
         }
@@ -81,7 +81,7 @@ namespace Server.Domain.Configuration.Constant
                 Text = "Yes / Not Sure, No";
                 PathOptions = new List<string>() {"Yes / Not Sure", "No"};
                 ValueOptions = new List<string>() {"Yes / Not Sure", "No"};
-                IsMultiOptionType = true;
+                IsMultiOptionType = false;
                 IsTerminalType = false;
             }
         }
@@ -96,7 +96,7 @@ namespace Server.Domain.Configuration.Constant
                 Value = nameof(NoNotSureCombined);
                 PathOptions = new List<string>() {"Yes", "No / Not Sure"};
                 ValueOptions = new List<string>() {"Yes", "No / Not Sure"};
-                IsMultiOptionType = true;
+                IsMultiOptionType = false;
                 IsTerminalType = false;
             }
         }

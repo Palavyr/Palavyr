@@ -14,7 +14,7 @@ using Palavyr.API.RequestTypes.Registration;
 using Palavyr.API.ResponseTypes;
 using Palavyr.API.Services.AuthenticationServices;
 using Palavyr.Common.Constants;
-using Palavyr.FileSystem.UniqueIdentifiers;
+using Palavyr.FileSystem.UIDUtils;
 using Server.Domain.Accounts;
 using SESEmail = EmailService.ResponseEmail.SESEmail;
 

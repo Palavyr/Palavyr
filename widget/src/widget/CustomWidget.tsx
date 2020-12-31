@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import { SelectedOption, WidgetPreferences } from '../types';
 import { addResponseMessage, toggleMsgLoader, setQuickButtons } from 'src/widgetCore/store/dispatcher';
 import {Widget, isWidgetOpened, toggleWidget} from "src/widget";
@@ -25,16 +25,16 @@ export const CustomWidget = ({ option, preferences }: ICustomWidget) => {
 
     const initializeConvo = useCallback(async () => {
 
-        var newConversation = await client.Widget.Access.createConvo(option.areaId);
-        var nodes = newConversation.data.conversationNodes;
-        var convoId = newConversation.data.conversationId;
+        var {data: newConversation} = await client.Widget.Access.createConvo(option.areaId);
+        var nodes = newConversation.conversationNodes;
+        var convoId = newConversation.conversationId;
         var region = (await fetchIpData).country;
 
         setPrefs(preferences);
         var rootNode = getRootNode(nodes);
 
         const convoContext: any = {};
-        convoContext[ConvoContextProperties.DynamicResponse] = [];
+        convoContext[ConvoContextProperties.DynamicResponses] = [];
         convoContext[ConvoContextProperties.KeyValues] = [];
         convoContext[ConvoContextProperties.EmailAddress] = "";
         convoContext[ConvoContextProperties.PhoneNumber] = "";

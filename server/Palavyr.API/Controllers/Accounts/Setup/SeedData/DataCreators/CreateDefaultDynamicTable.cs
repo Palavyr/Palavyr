@@ -11,11 +11,11 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
             var selectOneFlatsDefaultData = new List<SelectOneFlat>
             {
                 SelectOneFlat.CreateNew(accountId, areaIdentifier, "Ruby", 750.00, 1200.00,
-                    true, tableId, tableTag),
+                    true, tableId),
                 SelectOneFlat.CreateNew(accountId, areaIdentifier, "Black and Tan", 500.00,
-                    750.00, false, tableId, tableTag),
+                    750.00, false, tableId),
                 SelectOneFlat.CreateNew(accountId, areaIdentifier, "Blenheim", 300.00,
-                450.00, false, tableId, tableTag)
+                450.00, false, tableId)
             };
             return selectOneFlatsDefaultData;
         }

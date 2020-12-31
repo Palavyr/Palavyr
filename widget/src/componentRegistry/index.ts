@@ -15,6 +15,8 @@ import { makeTakeText } from "./standardComponents/MakeTakeText";
 import { makeTakeNumber } from "./standardComponents/MakeTakeNumber";
 import { makeMultipleChoiceAsPathButtons } from "./standardComponents/MakeMultipeChoiceAsPathsButtons";
 import { makeMultipleChoiceContinueButtons } from "./standardComponents/MakeMultipleChoiceContinueButtons";
+import { makeTakeCurrency } from "./standardComponents/MakeTakeCurrency";
+import { makePercentOfThreshold } from "./dynamicTableComponents/MakePercentOfThreshold";
 
 export interface IProgressTheChat {
     node: ConvoTableRow;
@@ -26,7 +28,7 @@ export interface IProgressTheChat {
 
 export const responseAction = (node: ConvoTableRow, child: ConvoTableRow, nodeList: Array<ConvoTableRow>, client: IClient, convoId: string, response: string, convoContext: any) => {
     if (response) {
-        if (child.optionPath !== null && child.optionPath !== "Continue") {
+        if (child.optionPath !== null && child.optionPath !== "" && child.optionPath !== "Continue") {
             addUserMessage(child.optionPath);
         } else {
             addUserMessage(response)
@@ -85,6 +87,7 @@ export enum NodeTypes {
 
     // Dynamic Table Type Nodes
     SelectOneFlat = "SelectOneFlat",
+    PercentOfThreshold = "PercentOfThreshold",
 
     SendEmail = "SendEmail",
     Restart = "Restart"
@@ -112,13 +115,15 @@ export const ComponentRegistry: Registry = {
     [NodeTypes.Phone]: makePhoneNumber,
 
     // Dynamic Types
-    [NodeTypes.SelectOneFlat]: makeSelectOneFlat, // could be replaced with makeMultiple choice continue
+    [NodeTypes.SelectOneFlat]: makeSelectOneFlat, // could be replaced with makeMultiple choice continue,
+    [NodeTypes.PercentOfThreshold]: makePercentOfThreshold,
+
     [NodeTypes.SendEmail]: makeSendEmail,
     [NodeTypes.Restart]: makeRestart
 }
 
 export const ConvoContextProperties = {
-    DynamicResponse: "DynamicResponse",
+    DynamicResponses: "DynamicResponses",
     Name: "Name",
     EmailAddress: "EmailAddress",
     PhoneNumber: "PhoneNumber",

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators;
+using Palavyr.FileSystem.UIDUtils;
 using Server.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Accounts.Setup.SeedData
@@ -21,9 +22,9 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData
         
         protected BaseSeedData(string accountId, string defaultEmail)
         {
-            var areaIdentifier = Guid.NewGuid().ToString();
-            var GroupId = Guid.NewGuid().ToString();
-            var dynamicTableId = Guid.NewGuid().ToString();
+            var areaIdentifier = GuidUtils.CreateNewId();
+            var GroupId = GuidUtils.CreateNewId();
+            var dynamicTableId = GuidUtils.CreateNewId();
 
             DefaultConversationNodes =
                 CreateDefaultConversation.CreateDefault(accountId, areaIdentifier, dynamicTableId);
