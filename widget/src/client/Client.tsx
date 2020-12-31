@@ -11,7 +11,7 @@ export interface IClient {
             fetchAreas: () => Promise<AxiosResponse>;
             fetchPreferences: () => Promise<AxiosResponse<WidgetPreferences>>;
             postUpdateAsync: (update: ConversationUpdate) => Promise<AxiosResponse>;
-            sendConfirmationEmail: (areaIdentifier: string, emailAddress: string, dynamicResponse: string, keyValues: KeyValues, conviId: string) => Promise<AxiosResponse>;
+            sendConfirmationEmail: (areaIdentifier: string, emailAddress: string, dynamicResponses: Array<{[key: string]: string}>, keyValues: KeyValues, conviId: string) => Promise<AxiosResponse>;
             postCompleteConversation: (completeConvo: CompleteConverationDetails) => Promise<AxiosResponse>;
 
         }
@@ -42,10 +42,10 @@ const CreateClient = (secretKey: string): IClient => {
                 createConvo: async (areaId: string): Promise<AxiosResponse> => AxiosClient.get(`widget/${areaId}/create?key=${secretKey}`),
                 fetchPreferences: async (): Promise<AxiosResponse> =>AxiosClient.get(`widget/preferences?key=${secretKey}`),
                 postUpdateAsync: async(update: ConversationUpdate): Promise<AxiosResponse> => AxiosClient.post(`widget/conversation?key=${secretKey}`, update),
-                sendConfirmationEmail: async(areaIdentifier: string, emailAddress: string, dynamicResponse: string, keyValues: KeyValues, convoId: string): Promise<AxiosResponse> => AxiosClient.post(`widget/area/${areaIdentifier}/email/send?key=${secretKey}`, {
+                sendConfirmationEmail: async(areaIdentifier: string, emailAddress: string, dynamicResponses: Array<{[key: string]: string}>, keyValues: KeyValues, convoId: string): Promise<AxiosResponse> => AxiosClient.post(`widget/area/${areaIdentifier}/email/send?key=${secretKey}`, {
                     ConversationId: convoId,
                     EmailAddress: emailAddress,
-                    DynamicResponse: dynamicResponse,
+                    DynamicResponses: dynamicResponses,
                     KeyValues: keyValues
                 }),
                 postCompleteConversation: async(completeConvo: CompleteConverationDetails) => AxiosClient.post(`widget/complete?key=${secretKey}`, completeConvo)

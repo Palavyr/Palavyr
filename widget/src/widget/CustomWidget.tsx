@@ -34,7 +34,7 @@ export const CustomWidget = ({ option, preferences }: ICustomWidget) => {
         var rootNode = getRootNode(nodes);
 
         const convoContext: any = {};
-        convoContext[ConvoContextProperties.DynamicResponse] = [];
+        convoContext[ConvoContextProperties.DynamicResponses] = [];
         convoContext[ConvoContextProperties.KeyValues] = [];
         convoContext[ConvoContextProperties.EmailAddress] = "";
         convoContext[ConvoContextProperties.PhoneNumber] = "";

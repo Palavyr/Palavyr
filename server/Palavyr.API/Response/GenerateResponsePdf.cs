@@ -9,6 +9,7 @@ using Amazon.S3;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.RequestTypes;
 using Palavyr.API.ResponseTypes;
@@ -30,10 +31,10 @@ namespace Palavyr.API.Response
         private readonly ConvoContext convoContext;
         private readonly AccountsContext accountsContext;
         private readonly string AccountId;
-        private string AreaId { get; set; }
         private static readonly HttpClient client = new HttpClient();
-        private HttpRequest Request { get; set; }
         private readonly ILogger logger;
+        private string AreaId { get; set; }
+        private HttpRequest Request { get; set; }
 
         public PdfResponseGenerator(
             DashContext dashContext,
@@ -188,13 +189,14 @@ namespace Palavyr.API.Response
             var userAccount = GetUserAccount();
 
             // TODO: Handle Multiple Dynamic Responses
-            var dynamicResponse = emailRequest.DynamicResponse.Count > 0
-                ? emailRequest.DynamicResponse[0]
-                : new Dictionary<string, string>() { };
+            var dynamicResponses = emailRequest.DynamicResponses.Count > 0
+                ? emailRequest.DynamicResponses
+                : new List<Dictionary<string, string>>() {new Dictionary<string, string>() { }};
 
             var staticTables = CollectStaticTables(areaData, culture);
             var dynamicTables =
-               await CollectRealDynamicTables(areaData, AccountId, dynamicResponse, culture); // TODO Support  multiple
+                await CollectRealDynamicTables(AccountId, dynamicResponses, culture); // TODO Support  multiple
+
             var html = PdfGenerator.GenerateNewPDF(userAccount, areaData, criticalResponses, staticTables,
                 dynamicTables);
 
@@ -329,30 +331,28 @@ namespace Palavyr.API.Response
         }
 
         private async Task<List<Table>> CollectRealDynamicTables(
-            Area data,
             string accountId,
-            Dictionary<string, string> selectedOption,
+            List<Dictionary<string, string>> dynamicResponses,
             CultureInfo culture
         )
         {
-            var dynamicTables = data.DynamicTableMetas;
-
             // if (selectedOption.Keys.Single() != DynamicType) throw new Exception();
             // if (selectedOption.Keys.Single() == null && DynamicType != DynamicTableTypes.None) throw new Exception(); // dangerous (depends on widget sending through selection correctly)
 
             var rows = new List<TableRow>();
 
-            foreach (var dynamicTable in dynamicTables)
+            foreach (var dynamicResponse in dynamicResponses)
             {
-                if (dynamicTable.TableType == DynamicTableTypes.CreateSelectOneFlat().TableType)
+                var dynamicResponseId = dynamicResponse.First().Key;
+                var dynamicResponseValue = dynamicResponse.First().Value;
+
+                if (dynamicResponseId.StartsWith(DynamicTableTypes.CreateSelectOneFlat().TableType))
                 {
                     var dbRow = await dashContext
                         .SelectOneFlats
-                        .Where(row => row.AccountId == accountId && row.AreaIdentifier == data.AreaIdentifier)
-                        .SingleOrDefaultAsync(row =>
-                            row.Option ==
-                            selectedOption.Values
-                                .Single()); // TODO: Pass a result object, bc not all selected options will be strings.
+                        .Where(tableRow =>
+                            tableRow.AccountId == accountId && dynamicResponseId.EndsWith(tableRow.TableId))
+                        .SingleOrDefaultAsync(tableRow => tableRow.Option == dynamicResponseValue);
 
                     var row = new TableRow(
                         dbRow.Option,
@@ -364,7 +364,63 @@ namespace Palavyr.API.Response
 
                     rows.Add(row);
                 }
+                else if (dynamicResponseId.StartsWith(DynamicTableTypes.CreatePercentOfThreshold().TableType))
+                {
+                    // need to collect all rows from percent of threshold, then group them by item, then for each item, 
+                    // get the base given the threshold, add or subtract the % modifier amount, and associate that with
+                    // the item name. So this should potentially add multiple TableRow objects to the rows list.
 
+                    // TODO: extract this into a separate component
+
+                    var responseValueAsDouble = double.Parse(dynamicResponseValue);
+
+                    var allRows =
+                        await dashContext
+                            .PercentOfThresholds
+                            .Where(r => dynamicResponseId.EndsWith(r.TableId))
+                            .ToArrayAsync();
+
+                    var itemIds = allRows.Select(item => item.ItemId).Distinct().ToArray();
+                    foreach (var itemId in itemIds)
+                    {
+                        var itemThresholds = allRows.Where(item => item.ItemId == itemId).ToList();
+                        itemThresholds.Sort();
+                        foreach (var threshold in itemThresholds)
+                        {
+                            if (responseValueAsDouble >= threshold.Threshold)
+                            {
+                                var minBaseAmount = threshold.ValueMin;
+                                var maxBaseAmount = threshold.ValueMax;
+
+                                if (threshold.PosNeg)
+                                {
+                                    minBaseAmount += minBaseAmount * (threshold.Modifier / 100);
+                                    maxBaseAmount += maxBaseAmount * (threshold.Modifier / 100);
+                                }
+                                else
+                                {
+                                    minBaseAmount -= minBaseAmount * (threshold.Modifier / 100);
+                                    maxBaseAmount -= maxBaseAmount * (threshold.Modifier / 100);
+                                }
+
+                                var tableRow = new TableRow(
+                                    threshold.ItemName,
+                                    minBaseAmount,
+                                    maxBaseAmount,
+                                    false,
+                                    culture,
+                                    threshold.Range
+                                );
+                                rows.Add(tableRow);
+                                break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    throw new Exception("Computing dynamic fee type not yet implemented");
+                }
             }
 
             var table = new Table("Variable estimates determined by your responses", rows, culture);

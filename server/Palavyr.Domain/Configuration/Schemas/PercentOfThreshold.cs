@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Server.Domain.Configuration.Schemas
@@ -9,7 +10,7 @@ namespace Server.Domain.Configuration.Schemas
     /// The ItemId/ItemName represents this partition key.
     /// The itemName unfortunately has to be duplicated along with the itemId.
     /// </summary>
-    public class PercentOfThreshold
+    public class PercentOfThreshold : IComparable<PercentOfThreshold>
     {
         [Key] public int? Id { get; set; }
         public string AccountId { get; set; }
@@ -80,5 +81,11 @@ namespace Server.Domain.Configuration.Schemas
                 PosNeg = true
             };
         }
+        
+        public int CompareTo(PercentOfThreshold obj)  
+        {  
+            return obj.Threshold.CompareTo(Threshold);  
+  
+        }  
     }
 }

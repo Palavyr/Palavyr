@@ -9,7 +9,7 @@ import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import { MessageWrapper } from "../common";
 import { SingleRowSingleCell } from "src/common/TableCell";
 
-export const makeTakeCurrency = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
+export const makePercentOfThreshold = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
 
     toggleInputDisabled();
 
@@ -46,9 +46,16 @@ export const makeTakeCurrency = ({ node, nodeList, client, convoId, convoContext
                         <ResponseButton
                             disabled={disabled}
                             onClick={() => {
+
+                                const dynamicResponse = {
+                                    [node.nodeType]: response.toString() // TODO: convert this to a nicely formatted number with commas
+                                }
+
+                                convoContext[ConvoContextProperties.DynamicResponses].push(dynamicResponse);
+
                                 if (node.isCritical) {
                                     convoContext[ConvoContextProperties.KeyValues].push({
-                                        [node.text]: response,
+                                        [node.text]: response.toString(),
                                     });
                                 }
                                 responseAction(node, child, nodeList, client, convoId, response.toString(), convoContext);

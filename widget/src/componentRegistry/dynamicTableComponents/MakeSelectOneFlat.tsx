@@ -20,8 +20,6 @@ const useStyles = makeStyles(theme => ({
 
 // All Dynamic results should add response formatted to the dynamic response AND the critical value lst
 export const makeSelectOneFlat = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
-    // TODO: lift this widget and add  'isInputDisabled()'
-    // addResponseMessage(node.text);
     toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
@@ -45,9 +43,10 @@ export const makeSelectOneFlat = ({ node, nodeList, client, convoId, convoContex
                                         text={option}
                                         onClick={() => {
                                             const dynamicResponse = {
-                                                [NodeTypes.SelectOneFlat]: option,
-                                            };
-                                            convoContext[ConvoContextProperties.DynamicResponse].push(dynamicResponse); // add choic to the dynamic
+                                                [node.nodeType]: option
+                                            }
+
+                                            convoContext[ConvoContextProperties.DynamicResponses].push(dynamicResponse);
 
                                             if (node.isCritical) {
                                                 convoContext[ConvoContextProperties.KeyValues].push(dynamicResponse);

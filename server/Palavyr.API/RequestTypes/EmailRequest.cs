@@ -7,6 +7,6 @@ namespace Palavyr.API.RequestTypes
         public string EmailAddress { get; set; }
         public string ConversationId { get; set; }
         public List<Dictionary<string, string>> KeyValues { get; set; }
-        public List<Dictionary<string, string>> DynamicResponse { get; set; }
+        public List<Dictionary<string, string>> DynamicResponses { get; set; }
     }
 }
