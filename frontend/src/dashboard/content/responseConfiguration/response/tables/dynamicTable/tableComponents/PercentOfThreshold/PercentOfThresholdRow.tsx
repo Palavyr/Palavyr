@@ -4,13 +4,14 @@ import CurrencyTextField from '@unicef/material-ui-currency-textfield'
 import DeleteIcon from '@material-ui/icons/Delete';
 import { PercentOfThresholdData, TableData } from "../../DynamicTableTypes";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
+import { uuid } from "uuidv4";
 
 
 export interface IPercentOfThresholdRow {
-    dataIndex: number;
     tableData: TableData;
     row: PercentOfThresholdData;
     modifier: PercentOfThresholdModifier;
+    baseValue: boolean;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -41,13 +42,13 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-export const PercentOfThresholdRow = ({ dataIndex, tableData, row, modifier }: IPercentOfThresholdRow) => {
+export const PercentOfThresholdRow = ({ tableData, row, modifier, baseValue }: IPercentOfThresholdRow) => {
 
     const classes = useStyles(!row.range);
     const cellAlignment = "center";
 
     return (
-        <TableRow>
+        <TableRow key={uuid()}>
             <TableCell align={cellAlignment}>
                 <Button
                     size="small"
@@ -60,6 +61,7 @@ export const PercentOfThresholdRow = ({ dataIndex, tableData, row, modifier }: I
             </TableCell>
             <TableCell align={cellAlignment}>
                 <CurrencyTextField
+                    disabled={baseValue}
                     label="Threshold"
                     variant="standard"
                     value={row.threshold}
@@ -74,8 +76,6 @@ export const PercentOfThresholdRow = ({ dataIndex, tableData, row, modifier }: I
                 />
 
             </TableCell>
-
-
             <TableCell align={cellAlignment}>
                 <Button
                     variant="contained"
@@ -92,7 +92,7 @@ export const PercentOfThresholdRow = ({ dataIndex, tableData, row, modifier }: I
                 <CurrencyTextField
                     label="(5% is 0.05)"
                     variant="standard"
-                    value={row.valueMin}
+                    value={row.modifier}
                     currencySymbol="%"
                     minimumValue="0"
                     outputFormat="number"

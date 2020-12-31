@@ -59,8 +59,8 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
             <TableContainer className={cls.tableStyles} component={Paper}>
                 <PercentOfThresholdHeader />
                 <TableBody>
-                    {itemData.map((data: PercentOfThresholdData, index: number) => {
-                        return <PercentOfThresholdRow key={index} dataIndex={index} tableData={tableData} row={data} modifier={modifier} />;
+                    {itemData.sort((a, b) => a.threshold - b.threshold).map((data: PercentOfThresholdData, index: number) => {
+                        return <PercentOfThresholdRow key={index} tableData={tableData} row={data} modifier={modifier} baseValue={index === 0 ? true : false} />;
                     })}
                 </TableBody>
             </TableContainer>

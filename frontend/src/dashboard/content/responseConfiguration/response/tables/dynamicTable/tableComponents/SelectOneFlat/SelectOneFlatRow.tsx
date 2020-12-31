@@ -4,6 +4,7 @@ import { TableRow, TableCell, Button, TextField, makeStyles } from "@material-ui
 import CurrencyTextField from '@unicef/material-ui-currency-textfield'
 import DeleteIcon from '@material-ui/icons/Delete';
 import { SelectOneFlatData, TableData } from "../../DynamicTableTypes";
+import { uuid } from "uuidv4";
 
 
 export interface ISelectOneFlatRow {
@@ -47,7 +48,7 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
     const cellAlignment = "center";
 
     return (
-        <TableRow>
+        <TableRow key={uuid()}>
             <TableCell align={cellAlignment}>
                 <Button
                     size="small"
@@ -63,7 +64,7 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
                     className={classes.input}
                     variant="standard"
                     label="Option"
-                    type={"text"}
+                    type="text"
                     value={row.option}
                     color="primary"
                     onChange={(event) => {

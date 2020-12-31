@@ -87,7 +87,7 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
         return () => {};
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [areaIdentifier, tableMeta]);
+    }, [areaIdentifier, tableMeta, selection]);
 
     const handleChange = async (event: ChangeEvent<{ name?: string | undefined; value: unknown }>) => {
 
@@ -95,17 +95,16 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
         // this needs to map to the form used in the table dataresponse format (e.g. SelectOneFlat)
         const newTableTypeSelectionFormatted = tableNameMap[newTableTypeSelection]
 
-        setSelection(newTableTypeSelection);
-
         if (tableMeta !== undefined) {
             tableMeta.tableType = newTableTypeSelectionFormatted;
             tableMeta.prettyName = newTableTypeSelection;
             const {data: updatedTableMeta} = await client.Configuration.Tables.Dynamic.modifyDynamicTableMeta(tableMeta);
             setTableMeta(updatedTableMeta);
 
-            const { data: tableDataResponse } = await client.Configuration.Tables.Dynamic.getDynamicTableData(areaIdentifier, newTableTypeSelectionFormatted, tableMeta.tableId);
-            setDynamicTableData(tableDataResponse);
+            // const { data: tableDataResponse } = await client.Configuration.Tables.Dynamic.getDynamicTableData(areaIdentifier, newTableTypeSelectionFormatted, tableMeta.tableId);
+            // setDynamicTableData(tableDataResponse);
         }
+        setSelection(newTableTypeSelection);
 
     };
 
