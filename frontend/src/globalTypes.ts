@@ -1,3 +1,4 @@
+import { COULD_NOT_FIND_SERVER, GOOGLE_ACCOUNT_NOT_FOUND, INVALID_EMAIL, INVALID_GOOGLE_TOKEN, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, NOT_A_GOOGLE_ACCOUNT, VERIFICATION_EMAIL_SEND } from "@constants";
 // / <reference types="node" />
 // / <reference types="react" />
 // / <reference types="react-dom" />
@@ -367,3 +368,14 @@ export type RequiredDetails = {
     type: string;
     prettyName: string;
 };
+
+export type FormStatusTypes =
+      typeof INVALID_EMAIL
+    | typeof NOT_A_DEFAULT_ACCOUNT
+    | typeof INVALID_PASSWORD
+    | typeof INVALID_GOOGLE_TOKEN
+    | typeof NOT_A_GOOGLE_ACCOUNT
+    | typeof GOOGLE_ACCOUNT_NOT_FOUND
+    | typeof COULD_NOT_FIND_SERVER
+    | typeof VERIFICATION_EMAIL_SEND
+    | null;

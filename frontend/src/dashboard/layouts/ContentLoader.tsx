@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import { makeStyles, useTheme } from "@material-ui/core";
-import { DRAWER_WIDTH } from "@common/constants";
+import { DRAWER_WIDTH } from "@constants";
 
 interface IContentLoader {
     open: boolean;

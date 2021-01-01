@@ -2,14 +2,29 @@ import React from "react";
 import Auth from "auth/Auth";
 import { FormDialog } from "@common/components/borrowed/FormDialog";
 import { LoginActions } from "@landing/login/LoginActions";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { FormDialogContent, FormStatusTypes } from "@common/components/borrowed/FormDialogContent";
 import { makeStyles } from "@material-ui/core";
-import { GoogleAuthResponse } from "@Palavyr-Types";
+import { Credentials, FormStatusTypes, GoogleAuthResponse } from "@Palavyr-Types";
 import { LocalStorage } from "localStorage/localStorage";
-import { googleOAuthClientId } from "@api-client/clientUtils";
-import { GoogleLoginResponseOffline } from "react-google-login";
+import {
+    COULD_NOT_FIND_ACCOUNT,
+    COULD_NOT_FIND_ACCOUNT_WITH_GOOGLE,
+    COULD_NOT_FIND_SERVER,
+    COULD_NOT_VALIDATE_GOOGLE_TOKEN,
+    DASHBOARD_HOME,
+    DEFAULT_EMAIL_USED_WITH_DIFFERENT_ACCOUNT_TYPE,
+    GOOGLE_ACCOUNT_NOT_FOUND,
+    GOOGLE_EMAIL_USED_WITH_DIFFERENT_ACCOUNT_TYPE,
+    INVALID_EMAIL,
+    INVALID_GOOGLE_TOKEN,
+    INVALID_PASSWORD,
+    NOT_A_DEFAULT_ACCOUNT,
+    NOT_A_GOOGLE_ACCOUNT,
+    PASSWORD_DOES_NOT_MATCH,
+} from "@constants";
+import { noop } from "lodash";
+import { FormDialogContent } from "@common/components/borrowed/FormDialogContent";
 
 export type GoogleResponse = {
     tokenId: string;
@@ -42,21 +57,32 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
     const success = () => {
         setTimeout(() => {
             setIsLoading(false);
-            history.push("/dashboard");
+            history.push(DASHBOARD_HOME);
         }, 150);
     };
 
-    const error = (response) => {
-        if (response.message === "Password does not match.") {
-            setStatus("invalidPassword");
-        } else if (response.message === "Could not find user.") {
-            setStatus("invalidEmail");
+    const error = (response: Credentials) => {
+        if (response.message === PASSWORD_DOES_NOT_MATCH) {
+            setStatus(INVALID_PASSWORD);
+        } else if (response.message === COULD_NOT_FIND_ACCOUNT) {
+            setStatus(INVALID_EMAIL);
+        } else if (response.message === DEFAULT_EMAIL_USED_WITH_DIFFERENT_ACCOUNT_TYPE) {
+            setStatus(NOT_A_DEFAULT_ACCOUNT);
         }
         setIsLoading(false);
     };
 
-    const googleError = (response) => {
-        Auth.googleLogout(() => console.log(response));
+    const googleError = (response: Credentials) => {
+        console.log(response.message);
+        if (response.message === COULD_NOT_VALIDATE_GOOGLE_TOKEN) {
+            setStatus(INVALID_GOOGLE_TOKEN);
+        } else if (response.message === GOOGLE_EMAIL_USED_WITH_DIFFERENT_ACCOUNT_TYPE) {
+            setStatus(NOT_A_GOOGLE_ACCOUNT);
+        } else if (response.message === COULD_NOT_FIND_ACCOUNT_WITH_GOOGLE) {
+            setStatus(GOOGLE_ACCOUNT_NOT_FOUND);
+        }
+        Auth.googleLogout(noop);
+        setIsLoading(false);
     };
 
     const login = async () => {
@@ -66,13 +92,9 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
         if (loginEmail && loginPassword) {
             const successfulResponse = await Auth.login(loginEmail, loginPassword, success, error);
             LocalStorage.setDefaultLoginType();
-            if (!successfulResponse) {
-                setTimeout(() => {
-                    setStatus("invalidEmail");
-                    setIsLoading(false);
-                }, 1500);
-            } else {
-                setIsLoading(false);
+            setIsLoading(false);
+            if (successfulResponse === null) {
+                setStatus(COULD_NOT_FIND_SERVER);
             }
         }
     };
@@ -86,15 +108,12 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
         setIsLoading(true);
         setStatus(null);
         var successfulResponse = await Auth.loginWithGoogle(response.tokenId, response.googleId, success, googleError);
-        if (!successfulResponse) {
+        if (successfulResponse === null) {
             Auth.ClearAuthentication();
-            Auth.googleLogout(() =>
-                setTimeout(() => {
-                    setStatus("invalidEmail");
-                    setIsLoading(false);
-                }, 1500)
-            );
+            Auth.googleLogout(noop);
+            setStatus(COULD_NOT_FIND_SERVER);
         }
+        setIsLoading(false);
     };
     const responseGoogleSuccess = async (authResponse: GoogleAuthResponse) => {
         Auth.ClearAuthentication();
