@@ -1,6 +1,6 @@
 import { ApiClient } from "@api-client/Client";
 import React, { useState, useCallback, useEffect, Suspense } from "react";
-import { DynamicTableMeta, DynamicTableMetas } from "@Palavyr-Types";
+import { DynamicTableMetas } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { Accordion, AccordionSummary, Typography, Button, makeStyles } from "@material-ui/core";
 import { SingleDynamicFeeTable } from "./SingleDynamicFeeTable";
@@ -16,10 +16,8 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: "bold",
     },
     header: {
-        // background: "#90caf9",
         background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
-        // borderTopRightRadius: "8px",
-        // borderTopLeftRadius: "8px",
+
     },
 }));
 

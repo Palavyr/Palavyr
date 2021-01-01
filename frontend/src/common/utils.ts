@@ -28,3 +28,5 @@ export const replaceItemByItem = (array: Array<any>, item: any) => {
     newArray[array.indexOf(index)] = item;
     return newArray;
 }
+
+export const noop = () => null;

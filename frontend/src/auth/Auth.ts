@@ -28,6 +28,7 @@ class Auth {
             return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
         } catch {
             console.log("Error trying to reach the server.");
+            return null;
         }
     }
 
@@ -36,7 +37,7 @@ class Auth {
         return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
     }
 
-    private async processAuthenticationResponse(authenticationResponse: Credentials, callback: () => any, errorCallback: (response) => any) {
+    private async processAuthenticationResponse(authenticationResponse: Credentials, callback: () => any, errorCallback: (response: Credentials) => any) {
         if (authenticationResponse.authenticated) {
             this.authenticated = true;
             LocalStorage.setAuthorization(authenticationResponse.sessionId, authenticationResponse.jwtToken);
@@ -58,22 +59,24 @@ class Auth {
         }
     }
 
-    async login(email: string | null, password: string | null, callback: () => any, errorCallback: (response) => any) {
+    async login(email: string | null, password: string | null, callback: () => any, errorCallback: (response: Credentials) => any) {
         if (email === null || password === null) return false;
         try {
             const { data: authenticationResponse } = await this.loginClient.Login.RequestLogin(email, password);
             return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
         } catch {
             console.log("Error attempting to reach the server.");
+            return null;
         }
     }
 
-    async loginWithGoogle(oneTimeCode: string, tokenId: string, callback: () => void, errorCallback: (response) => void) {
+    async loginWithGoogle(oneTimeCode: string, tokenId: string, callback: () => void, errorCallback: (response: Credentials) => void) {
         try {
             const { data: authenticationResponse } = await this.loginClient.Login.RequestLoginWithGoogleToken(oneTimeCode, tokenId);
             return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
         } catch {
             console.log("Error attempting to reach the server.");
+            return null;
         }
     }
 

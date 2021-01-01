@@ -10,7 +10,7 @@ import { Areas, AreaTable, HelpTypes } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { DashboardHeader } from "./header/DashboardHeader";
 import { CssBaseline, IconButton, makeStyles, useTheme } from "@material-ui/core";
-import { DRAWER_WIDTH } from "@common/constants";
+import { DRAWER_WIDTH } from "@constants";
 
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";

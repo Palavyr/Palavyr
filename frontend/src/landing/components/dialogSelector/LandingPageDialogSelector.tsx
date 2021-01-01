@@ -2,19 +2,20 @@ import React, { useState, useCallback, Fragment } from "react";
 
 import { RegisterDialog } from "@landing/register/RegisterDialog";
 import { DialogTypes } from "./dialogTypes";
-import { FormStatusTypes } from "@common/components/borrowed/FormDialogContent";
 import { TermsOfServiceDialog } from "legal/TermsOfService";
 import { LoginDialog } from "@landing/login/LoginDialog";
 import { ChangePasswordDialog } from "@common/components/borrowed/ChangePasswordDialog";
 import { ModalBackdrop } from "@common/components/borrowed/ModalBackdrop";
+import { FormStatusTypes } from "@Palavyr-Types";
+import { CHANGE_PASSWORD, LOGIN, REGISTER, TERMS_OF_SERVICE } from "@constants";
 
 export interface ILandingPageDialogSelector {
     dialogOpen: DialogTypes;
-    openTermsDialog: any;
-    openRegisterDialog: any;
-    openLoginDialog: any;
-    openChangePasswordDialog: any;
-    onClose: any;
+    openTermsDialog(): void;
+    openRegisterDialog(): void;
+    openLoginDialog(): void;
+    openChangePasswordDialog(): void;
+    onClose(): void;
 }
 
 export const LandingPageDialogSelector = ({ dialogOpen, openTermsDialog, openRegisterDialog, openLoginDialog, openChangePasswordDialog, onClose }: ILandingPageDialogSelector) => {
@@ -34,7 +35,7 @@ export const LandingPageDialogSelector = ({ dialogOpen, openTermsDialog, openReg
 
     const printDialog = useCallback(() => {
         switch (dialogOpen) {
-            case "register":
+            case REGISTER:
                 return (
                     <RegisterDialog
                         onClose={_onClose}
@@ -43,9 +44,9 @@ export const LandingPageDialogSelector = ({ dialogOpen, openTermsDialog, openReg
                         setStatus={setRegisterStatus}
                     />
                 );
-            case "termsOfService":
+            case TERMS_OF_SERVICE:
                 return <TermsOfServiceDialog onClose={openRegisterDialog} />;
-            case "login":
+            case LOGIN:
                 return (
                     <LoginDialog
                         onClose={_onClose}
@@ -54,7 +55,7 @@ export const LandingPageDialogSelector = ({ dialogOpen, openTermsDialog, openReg
                         openChangePasswordDialog={openChangePasswordDialog}
                     />
                 );
-            case "changePassword":
+            case CHANGE_PASSWORD:
                 return (
                     <ChangePasswordDialog
                         setLoginStatus={setLoginStatus}

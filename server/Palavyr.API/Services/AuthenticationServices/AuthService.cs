@@ -18,7 +18,7 @@ namespace Palavyr.API.Services.AuthenticationServices
         public Task<Credentials> PerformLoginAction(LoginCredentials loginCredentials);
         public Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenId(string accessToken);
     }
-    
+
     public class AuthService : IAuthService
     {
         private DashContext _dashContext;
@@ -28,9 +28,11 @@ namespace Palavyr.API.Services.AuthenticationServices
         private IConfiguration _configuration;
 
         private const string CouldNotFindAccount = "Could not find Account";
-        private const string CouldNotValidateGoogleAuthToken = "Could not validate the Google Authentication token";
         private const string PasswordsDoNotMatch = "Password does not match.";
-        private const string DifferentAccountType = " (Email is currently used with different account type).";
+        private const string CouldNotFindAccountWithGoogle = "Could not find Account with Google";
+        private const string CouldNotValidateGoogleAuthToken = "Could not validate the Google Authentication token";
+        private const string DifferentAccountType = "Email is currently used with different account type.";
+
         public AuthService(
             DashContext dashContext,
             AccountsContext accountsContext,
@@ -42,7 +44,7 @@ namespace Palavyr.API.Services.AuthenticationServices
             _dashContext = dashContext;
             _accountsContext = accountsContext;
             _logger = logger;
-            
+
             _configuration = configuration;
             _jwtAuthService = jwtService;
         }
@@ -61,7 +63,7 @@ namespace Palavyr.API.Services.AuthenticationServices
                 };
             }
 
-            public void Deconstruct(out UserAccount account, out string message)
+            public void Deconstruct(out UserAccount? account, out string? message)
             {
                 account = Account;
                 message = Message;
@@ -89,21 +91,27 @@ namespace Palavyr.API.Services.AuthenticationServices
 
             var session = CreateNewSession(account);
             var token = CreateNewJwtToken(account);
-            
+
             await _accountsContext.Sessions.AddAsync(session);
             await _accountsContext.SaveChangesAsync();
 
             _logger.LogDebug("Session saved to DB. Returning auth response.");
-            return Credentials.CreateAuthenticatedResponse(session.SessionId, session.ApiKey, token, account.EmailAddress);
+            return Credentials.CreateAuthenticatedResponse(
+                session.SessionId, 
+                session.ApiKey, 
+                token,
+                account.EmailAddress);
         }
-        
+
 
         public async Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenId(string oneTimeCode)
         {
             try
             {
                 _logger.LogDebug("Inside the try block -- attempting to validation One Time Code");
-                var result = await GoogleJsonWebSignature.ValidateAsync(oneTimeCode, new GoogleJsonWebSignature.ValidationSettings());
+                var result =
+                    await GoogleJsonWebSignature.ValidateAsync(oneTimeCode,
+                        new GoogleJsonWebSignature.ValidationSettings());
                 return result;
             }
             catch (InvalidJwtException)
@@ -136,18 +144,22 @@ namespace Palavyr.API.Services.AuthenticationServices
             if (payload == null)
                 return AccountReturn.Return(null, CouldNotValidateGoogleAuthToken);
 
-            var Subject = payload.Subject;
             if (payload.Subject != credential.TokenId)
             {
-                return AccountReturn.Return(null, CouldNotFindAccount);
+                return AccountReturn.Return(null, CouldNotValidateGoogleAuthToken);
             }
-            
+
             // now verify the user exists in the Accounts database
             var account = _accountsContext.Accounts.SingleOrDefault(row => row.EmailAddress == payload.Email);
+            if (account == null)
+            {
+                return AccountReturn.Return(null, CouldNotFindAccountWithGoogle);
+            }
+
             if (account.AccountType != AccountType.Google)
-                return AccountReturn.Return(null, CouldNotFindAccount + DifferentAccountType);
-            var message = (account == null) ? null : CouldNotFindAccount;
-            return AccountReturn.Return(account, message);
+                return AccountReturn.Return(null,  "Google " + DifferentAccountType);
+
+            return AccountReturn.Return(account, null);
         }
 
         private AccountReturn RequestAccountViaDefault(LoginCredentials credentials)
@@ -158,45 +170,46 @@ namespace Palavyr.API.Services.AuthenticationServices
                 _accountsContext.Accounts.SingleOrDefault(row => row.EmailAddress == credentials.EmailAddress);
 
             var userAccount = byUsername ?? byEmail;
-            
-            if (userAccount.AccountType != AccountType.Default)
-                return AccountReturn.Return(null, CouldNotFindAccount + DifferentAccountType);
-            
             if (userAccount == null)
             {
                 return AccountReturn.Return(userAccount, CouldNotFindAccount);
             }
+
+            if (userAccount.AccountType != AccountType.Default)
+                return AccountReturn.Return(null, "Default " + DifferentAccountType);
+
+
             if (!PasswordHashing.ComparePasswords(userAccount.Password, credentials.Password))
             {
                 _logger.LogDebug("The provided password did not match!");
                 return AccountReturn.Return(null, PasswordsDoNotMatch);
             }
-            
+
             return AccountReturn.Return(userAccount, null);
         }
 
         private Session CreateNewSession(UserAccount account)
         {
-
             var sessionId = Guid.NewGuid().ToString();
             _logger.LogDebug("Attempting to create a new Session.");
             var newSession = Session.CreateNew(sessionId, account.AccountId, account.ApiKey);
-            
+
             _logger.LogDebug($"New Session created: {newSession.SessionId}");
             return newSession;
-  
         }
 
         private string CreateNewJwtToken(UserAccount account)
         {
             return _jwtAuthService.GenerateJwtTokenAfterAuthentication(account.EmailAddress);
         }
-        
+
         private static LoginType DetermineLoginType(LoginCredentials loginCredentials)
         {
-            if (!string.IsNullOrWhiteSpace(loginCredentials.OneTimeCode) && !string.IsNullOrWhiteSpace(loginCredentials.TokenId))
+            if (!string.IsNullOrWhiteSpace(loginCredentials.OneTimeCode) &&
+                !string.IsNullOrWhiteSpace(loginCredentials.TokenId))
                 return LoginType.Google;
-            if (!string.IsNullOrWhiteSpace(loginCredentials.EmailAddress) && !string.IsNullOrWhiteSpace(loginCredentials.Password))
+            if (!string.IsNullOrWhiteSpace(loginCredentials.EmailAddress) &&
+                !string.IsNullOrWhiteSpace(loginCredentials.Password))
                 return LoginType.Default;
             return LoginType.Error;
         }

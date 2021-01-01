@@ -100,9 +100,6 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
             tableMeta.prettyName = newTableTypeSelection;
             const {data: updatedTableMeta} = await client.Configuration.Tables.Dynamic.modifyDynamicTableMeta(tableMeta);
             setTableMeta(updatedTableMeta);
-
-            // const { data: tableDataResponse } = await client.Configuration.Tables.Dynamic.getDynamicTableData(areaIdentifier, newTableTypeSelectionFormatted, tableMeta.tableId);
-            // setDynamicTableData(tableDataResponse);
         }
         setSelection(newTableTypeSelection);
 
