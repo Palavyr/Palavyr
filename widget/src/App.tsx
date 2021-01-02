@@ -46,7 +46,9 @@ export const App = () => {
         <CustomWidget option={selectedOption} preferences={widgetPrefs} />
       )}
       {isReady === false && (
-        <span style={{ textAlign: "center", margin: "2rem" }}>Not ready</span>
+        <div style={{textAlign: "center", paddingTop: "3rem"}}>
+          <span>Not ready</span>
+        </div>
       )}
     </>
   );

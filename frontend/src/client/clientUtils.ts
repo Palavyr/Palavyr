@@ -24,9 +24,11 @@ export const stripeKey = process.env.STRIPE_KEY as string;
 if (serverUrl === undefined) {
     console.log("SERVER URL UNDEFINED")
 }
+
 if (webUrl === undefined) {
     console.log("WEB URL UNDEFINED")
 }
+
 if (widgetUrl === undefined) {
     console.log("WIDGET URL UNDEFINED")
 }

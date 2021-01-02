@@ -30,6 +30,7 @@ namespace Palavyr.API.Controllers.WidgetLive
         [HttpGet("widget/pre-check")]
         public async Task<PreCheckResult> Get([FromHeader] string accountId, [FromQuery] bool demo)
         { 
+            logger.LogDebug($"Was the demo query param found? {demo}");
             logger.LogDebug("Running live widget pre-check...");
             logger.LogDebug("Checking if account ID exists...");
             if (accountId == null)

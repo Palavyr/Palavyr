@@ -73,15 +73,19 @@ namespace Palavyr.API.Utils
             logger.LogDebug("Pre-check Complete. Returning result.");
             if (demo)
             {
+                logger.LogDebug("Demo widget activated");
                 return PreCheckResult.CreateConvoResult(incompleteAreas, isReady);
             }
 
+            logger.LogDebug("Live Widget activated");
             if (widgetState)
             {
+                logger.LogDebug("WidgetState is true");
                 return PreCheckResult.CreateConvoResult(incompleteAreas, isReady);
             }
             else
             {
+                logger.LogDebug("WidgetState is false");
                 return PreCheckResult.CreateConvoResult(incompleteAreas, false);
             }
         }
