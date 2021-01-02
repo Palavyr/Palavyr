@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, updateWidgetIsActive}: ISideBarMenu) => {
+export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, updateWidgetIsActive }: ISideBarMenu) => {
     const classes = useStyles();
 
     const [convosOpen, setConvosOpen] = useState(true);
@@ -58,8 +58,14 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, update
     return (
         <div className={classes.SideBarList}>
             <ListItem style={{ backgroundColor: widgetIsActive === undefined ? "gray" : widgetIsActive ? "green" : "red" }} disabled={!isActive}>
-                <ListItemText style={{color: "white", fontSize: "16px", textAlign: "center" }}><strong>Widget</strong></ListItemText>
-                <FormControlLabel control={<IOSSwitch disabled={!isActive || widgetIsActive === undefined} checked={widgetIsActive === undefined ? true : widgetIsActive ? true : false} onChange={updateWidgetIsActive} name="Active" />} style={{color: "white", fontWeight: "bolder"}} label={widgetIsActive === undefined ? "loading..." : widgetIsActive ? "Enabled" : "Disabled"}/>
+                <ListItemText style={{ color: "white", fontSize: "16px", textAlign: "center" }}>
+                    <strong>Widget</strong>
+                </ListItemText>
+                <FormControlLabel
+                    control={<IOSSwitch disabled={!isActive || widgetIsActive === undefined} checked={widgetIsActive === undefined ? true : widgetIsActive ? true : false} onChange={updateWidgetIsActive} name="Active" />}
+                    style={{ color: "white", fontWeight: "bolder" }}
+                    label={widgetIsActive === undefined ? "loading..." : widgetIsActive ? "Enabled" : "Disabled"}
+                />
             </ListItem>
             <List>
                 <ListItem button onClick={() => setConvosOpen(!convosOpen)}>
