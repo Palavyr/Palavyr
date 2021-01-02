@@ -1,7 +1,9 @@
 using System.Linq;
+using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.RequestTypes;
 
@@ -26,13 +28,15 @@ namespace Palavyr.API.Controllers.Areas
         }
 
         [HttpPut("areas/update/{areaId}")]
-        public IActionResult Modify([FromHeader] string accountId, [FromBody] Text text, string areaId)
+        public async Task<NoContentResult> Modify([FromHeader] string accountId, [FromBody] Text text, string areaId)
         {
             var newAreaName = text.AreaName;
             var newAreaDisplayTitle = text.AreaDisplayTitle;
 
-            var curArea = dashContext.Areas.Where(row => row.AccountId == accountId)
-                .Single(row => row.AreaIdentifier == areaId);
+            var curArea = await dashContext
+                .Areas
+                .Where(row => row.AccountId == accountId)
+                .SingleAsync(row => row.AreaIdentifier == areaId);
 
             if (text.AreaName != null)
             {
@@ -44,7 +48,7 @@ namespace Palavyr.API.Controllers.Areas
                 curArea.AreaDisplayTitle = newAreaDisplayTitle;
             }
 
-            dashContext.SaveChanges();
+            await dashContext.SaveChangesAsync();
             return NoContent();
         }
     }

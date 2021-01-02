@@ -14,6 +14,7 @@ type Settings = {
     awaitingVerification: boolean;
     areaName: string;
     areaTitle: string;
+    subject: string;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -43,6 +44,7 @@ export const AreaSettings = () => {
         awaitingVerification: false,
         areaName: "",
         areaTitle: "",
+        subject: ""
     });
     const [alertDetails, setAlertDetails] = useState<AlertDetails>({ title: "", message: "" });
     const classes = useStyles();
@@ -56,6 +58,7 @@ export const AreaSettings = () => {
             awaitingVerification: areaData.awaitingVerification,
             areaName: areaData.areaName,
             areaTitle: areaData.areaDisplayTitle,
+            subject: areaData.subject,
         });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,6 +79,13 @@ export const AreaSettings = () => {
         setSettings({ ...settings, areaName: newAreaName });
         window.location.reload(); // reloads the sidebar...
     };
+
+    const handleSubjectChange = async (newSubject: string) => {
+        if (newSubject === settings.subject) return;
+        const { data } = await client.Area.updateSubject(areaIdentifier, newSubject);
+        setSettings({ ...settings, subject: newSubject});
+        window.location.reload();
+    }
 
     const handleAreaDisplayTitleChange = async (newAreaDisplayTitle: any) => {
         if (newAreaDisplayTitle === settings.areaTitle) return;
@@ -158,6 +168,26 @@ export const AreaSettings = () => {
                         placeholder="New Email Address"
                         currentValue={settings.emailAddress}
                         onClick={verifyEmailAddress}
+                        clearVal={false}
+                    />
+                </Grid>
+                <Grid item xs={8}>
+                    <SettingsGridRowText
+                        fullWidth
+                        inputType="text"
+                        alertNode={
+                            <Alert className={classes.alert} severity="warning">
+                                <AlertTitle className={classes.titleText}>Response Email Subject Line</AlertTitle>
+                                Configure a subject line used with respones emails sent from this area.
+                            </Alert>
+                        }
+                        title=""
+                        name=""
+                        details=""
+                        buttonText="Update"
+                        placeholder="New Response Email Subject"
+                        currentValue={settings.subject}
+                        onClick={handleSubjectChange}
                         clearVal={false}
                     />
                 </Grid>

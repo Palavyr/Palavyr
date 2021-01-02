@@ -7,8 +7,7 @@ namespace Server.Domain.Configuration.Schemas
 {
     public class Area
     {
-        [Key] 
-        public int? Id { get; set; }
+        [Key] public int? Id { get; set; }
         public string AreaIdentifier { get; set; }
         public string AreaName { get; set; }
         public string AreaDisplayTitle { get; set; }
@@ -23,8 +22,10 @@ namespace Server.Domain.Configuration.Schemas
         public List<DynamicTableMeta> DynamicTableMetas { get; set; } = new List<DynamicTableMeta>();
         public string AreaSpecificEmail { get; set; }
         public bool EmailIsVerified { get; set; }
-        
+        public string Subject { get; set; }
+
         [NotMapped] public bool AwaitingVerification { get; set; }
+
         public static Area CreateNewArea(string areaName, string accountId, string emailAddress, bool emailIsVerified)
         {
             var areaId = Guid.NewGuid().ToString();
@@ -35,6 +36,7 @@ namespace Server.Domain.Configuration.Schemas
                 Prologue = "",
                 Epilogue = "",
                 EmailTemplate = "<h2>Upload your custom email template</h2>",
+                Subject = "Thank you for reaching out!",
                 ConversationNodes = ConversationNode.CreateDefaultNode(areaId, accountId),
                 StaticTablesMetas = StaticTablesMeta.CreateDefaultMetas(areaId, accountId),
                 IsComplete = false,

@@ -81,8 +81,10 @@ namespace Palavyr.API.Controllers.WidgetLive
             var toAddress = emailRequest.EmailAddress;
             
             // TODO: Add database entry and frontend component to configure this value per area
-            var subject = "This subject line will be configured by user per area and default to a default address in the account settings.";
-            var htmlBody = dashContext.Areas.Single(row => row.AreaIdentifier == areaId).EmailTemplate;
+            var area = dashContext.Areas.Single(row => row.AreaIdentifier == areaId);
+            var subject = area.Subject;
+            // var subject = "This subject line will be configured by user per area and default to a default address in the account settings.";
+            var htmlBody = area.EmailTemplate;
             var textBody = ""; // This can be another upload. People can decide one or both. Html is prioritized.
 
             bool ok;

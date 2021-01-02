@@ -50,6 +50,7 @@ export class ApiClient {
         createArea: (areaName: string): Promise<AxiosResponse<AreaTable>> => this.client.post(`areas/create/`, { areaName: areaName }), // get creates and gets new area
         updateArea: (areaIdentifier: string, areaName: string | null = null, areaDisplayTitle: string | null = null): Promise<AxiosResponse> =>
             this.client.put(`areas/update/${areaIdentifier}`, { areaName: areaName, areaDisplayTitle: areaDisplayTitle }),
+        updateSubject: (areaIdentifier: string, subject: string): Promise<AxiosResponse<string>> => this.client.put(`areas/update/subject/${areaIdentifier}`, { Subject: subject}),
         deleteArea: (areaIdentifier: string): Promise<AxiosResponse> => this.client.delete(`areas/delete/${areaIdentifier}`),
     };
 

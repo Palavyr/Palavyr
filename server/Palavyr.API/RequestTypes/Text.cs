@@ -11,4 +11,9 @@
         public string AreaName { get; set; }
         public string AreaDisplayTitle { get; set; }
     }
+
+    public class SubjectText
+    {
+        public string Subject { get; set; }
+    }
 }
