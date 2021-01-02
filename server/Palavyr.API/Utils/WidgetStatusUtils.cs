@@ -12,8 +12,13 @@ namespace Palavyr.API.Utils
 {
     public static class WidgetStatusUtils
     {
-        public static async Task<PreCheckResult> ExecuteWidgetStatusCheck(string accountId, DashContext dashContext, ILogger logger)
+        public static async Task<PreCheckResult> ExecuteWidgetStatusCheck(string accountId, DashContext dashContext,
+            bool demo, ILogger logger)
         {
+            logger.LogDebug($"Get Widget State - should only be one widget associated with account ID {accountId}");
+            var prefs = dashContext.WidgetPreferences.Single(row => row.AccountId == accountId);
+            var widgetState = prefs.WidgetState;
+
             logger.LogDebug("Collecting areas...");
             var areas = await dashContext
                 .Areas
@@ -23,14 +28,15 @@ namespace Palavyr.API.Utils
                 .ToListAsync();
 
             logger.LogDebug("Collected areas.... running pre-check");
-            var result = StatusCheck(areas, logger);
+            var result = StatusCheck(areas, widgetState, demo, logger);
             return result;
         }
-        private static PreCheckResult StatusCheck(List<Area> areas, ILogger _logger)
+
+        private static PreCheckResult StatusCheck(List<Area> areas, bool widgetState, bool demo, ILogger logger)
         {
             var incompleteAreas = new List<Area>();
-            _logger.LogDebug("Attempting RunConversationsPreCheck...");
-            
+            logger.LogDebug("Attempting RunConversationsPreCheck...");
+
             var isReady = true;
             foreach (var area in areas)
             {
@@ -40,7 +46,7 @@ namespace Palavyr.API.Utils
                     .Select(TreeUtils.TransformRequiredNodeType)
                     .ToArray();
 
-                _logger.LogDebug($"Required Nodes Found. Number of required nodes: {requiredNodes.Length}");
+                logger.LogDebug($"Required Nodes Found. Number of required nodes: {requiredNodes.Length}");
                 List<bool> checks;
                 try
                 {
@@ -53,28 +59,41 @@ namespace Palavyr.API.Utils
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogDebug($"Node checks failed: {ex.Message}");
+                    logger.LogDebug($"Node checks failed: {ex.Message}");
                     throw;
                 }
 
                 isReady = checks.TrueForAll(x => x == true);
-                _logger.LogDebug($"Checked isReady status: {isReady}");
+                logger.LogDebug($"Checked isReady status: {isReady}");
                 if (isReady) continue;
                 incompleteAreas.Add(area);
-                _logger.LogDebug($"Area not currently ready: {area.AreaName}");
+                logger.LogDebug($"Area not currently ready: {area.AreaName}");
             }
-            _logger.LogDebug("Pre-check Complete. Returning result.");
-            return PreCheckResult.CreateConvoResult(incompleteAreas, isReady);
+
+            logger.LogDebug("Pre-check Complete. Returning result.");
+            if (demo)
+            {
+                return PreCheckResult.CreateConvoResult(incompleteAreas, isReady);
+            }
+
+            if (widgetState)
+            {
+                return PreCheckResult.CreateConvoResult(incompleteAreas, isReady);
+            }
+            else
+            {
+                return PreCheckResult.CreateConvoResult(incompleteAreas, false);
+            }
         }
 
         private static bool AllNodesAreSet(ConversationNode[] nodeList)
         {
-            var EmptyNodeTypes = nodeList.Select(x => string.IsNullOrEmpty(x.NodeType)).ToArray();
-            return EmptyNodeTypes.All(x => x == false);
+            var emptyNodeTypes = nodeList.Select(x => string.IsNullOrEmpty(x.NodeType)).ToArray();
+            return emptyNodeTypes.All(x => x == false);
         }
 
         private static bool AllBranchesTerminate(ConversationNode[] nodeList)
-        { 
+        {
             var rootNode = TreeUtils.GetRootNode(nodeList);
             var numLeaves = TreeUtils.TraverseTheTreeFromTheTop(nodeList, rootNode);
             var numTerminal = TreeUtils.GetNumTerminal(nodeList);

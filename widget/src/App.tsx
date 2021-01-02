@@ -14,12 +14,13 @@ export const App = () => {
   const [widgetPrefs, setWidgetPrefs] = useState<WidgetPreferences>();
 
   var secretKey = new URLSearchParams(useLocation().search).get("key");
+  var isDemo = new URLSearchParams(useLocation().search).get("demo");
 
   let client: IClient;
   if (secretKey) client = CreateClient(secretKey);
 
   const runAppPrecheck = useCallback(async () => {
-    var { data: preCheckResult } = await client.Widget.Access.runPreCheck();
+    var { data: preCheckResult } = await client.Widget.Access.runPreCheck(isDemo === "true" ? true : false);
 
     setIsReady(preCheckResult.isReady);
     if (preCheckResult.isReady) {

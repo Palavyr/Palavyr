@@ -28,16 +28,38 @@ export const GetWidget = () => {
     return (
         <>
             <Card className={classes.outerCard}>
-                <Typography gutterBottom={true} variant="h3">
-                    Add your configured widget to your website
+                <Typography gutterBottom={true} variant="h4">
+                    Add the configured widget to your website
                 </Typography>
 
-                <Typography paragraph>Adding the widget toy our website is so easy! Simply paste the following code into your website's html and apply custom styling:</Typography>
+                <Typography paragraph>To add the widget to your website, simply paste the following code into your website's html and apply custom styling:</Typography>
                 {apikey !== "" && (
                     <Typography component="pre" paragraph>
                         <strong>&lt;iframe src="https://widget.palavyr.com/widget?key={apikey}" /&gt;</strong>
                     </Typography>
                 )}
+                <Typography>
+                    <p>Minimal Style Recommendation</p>
+                    <pre>
+                    height: "500px",
+                    width: "380px",
+                    </pre>
+                </Typography>
+            </Card>
+            <Card className={classes.outerCard}>
+                <Typography gutterBottom={true} variant="h4">
+                    Check if your widget is enabled before loading
+                </Typography>
+                <Typography component="pre" paragraph>
+                <p>To do this, send a request to the following url:</p>
+                    <strong>https://server.palavyr.com/api/widget/widget-active-state?key={apikey}</strong>
+                </Typography>
+                <Typography>
+                    This request must be made with the following custom header:
+                    <p>
+                        <strong>action=widgetAccess</strong>
+                    </p>
+                </Typography>
             </Card>
         </>
     );

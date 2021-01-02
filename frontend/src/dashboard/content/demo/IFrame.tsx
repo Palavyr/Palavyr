@@ -22,11 +22,6 @@ interface IIframe {
     incompleteAreas: Array<IncompleteAreas>;
 }
 
-// function useForceUpdate() {
-//     const [value, setValue] = useState(0); // integer state
-//     return () => setValue(value => ++value); // update the state to force render
-// }
-
 type Iframe = HTMLElement & {
     src: string;
 }
@@ -36,8 +31,8 @@ export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, incompleteAreas }: 
     const [state, setState] = useState<boolean | null>(null);
     const classes = useStyles(incompleteAreas.length > 0);
 
-    const url = `${widgetUrl}/widget?key=${apiKey}`
-    console.log(`URL from IFRAME: ${url}`);
+    const url = `${widgetUrl}/widget?key=${apiKey}&demo=true`
+    // console.log(`URL from IFRAME: ${url}`);
 
     useEffect(() => {
         if (iframeRefreshed != state) {

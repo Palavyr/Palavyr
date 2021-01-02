@@ -5,7 +5,8 @@ import { serverUrl } from "./clientUtils";
 export interface IClient {
     Widget: {
         Access: {
-            runPreCheck: () => Promise<AxiosResponse<PreCheckResult>>;
+            runPreCheck: (isDemo: boolean) => Promise<AxiosResponse<PreCheckResult>>;
+            fetchWidgetState: () => Promise<AxiosResponse<boolean>>;
             fetchGroups: () => Promise<AxiosResponse>;
             createConvo: (areaId: string) => Promise<AxiosResponse>;
             fetchAreas: () => Promise<AxiosResponse>;
@@ -37,7 +38,8 @@ const CreateClient = (secretKey: string): IClient => {
         Widget: {
             Access: {
                 fetchAreas: async (): Promise<AxiosResponse<Array<AreaTable>>> => AxiosClient.get(`widget/areas?key=${secretKey}`),
-                runPreCheck: async (): Promise<AxiosResponse<PreCheckResult>> => AxiosClient.get(`widget/pre-check?key=${secretKey}`),
+                runPreCheck: async (isDemo: boolean): Promise<AxiosResponse<PreCheckResult>> => AxiosClient.get(`widget/pre-check?key=${secretKey}&demo=${isDemo}`),
+                fetchWidgetState: async (): Promise<AxiosResponse<boolean>> => AxiosClient.get(`widget/widget-active-state?key=${secretKey}`),
                 fetchGroups: async (): Promise<AxiosResponse> => AxiosClient.get(`widget/groups?key=${secretKey}`),
                 createConvo: async (areaId: string): Promise<AxiosResponse> => AxiosClient.get(`widget/${areaId}/create?key=${secretKey}`),
                 fetchPreferences: async (): Promise<AxiosResponse> =>AxiosClient.get(`widget/preferences?key=${secretKey}`),

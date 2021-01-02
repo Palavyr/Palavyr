@@ -61,8 +61,8 @@ export const SelectOneFlat = ({ tableMeta, setTableMeta, tableId, tableTag, tabl
     };
 
     const onSave = async () => {
-        const { data } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.SelectOneFlat, tableData, tableId, tableTag);
-        setTableData(tableData);
+        const { data: savedData } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.SelectOneFlat, tableData, tableId, tableTag);
+        setTableData(savedData);
     };
 
     const addOptionOnClick = () => {
