@@ -40,7 +40,7 @@ namespace Server.Domain.Configuration.Constant
          */
         public bool IsTerminalType { get; set; }
 
-        public string StringName => null;
+        public virtual string StringName => null;
 
         public static NodeTypeOption Create(
             string value, 

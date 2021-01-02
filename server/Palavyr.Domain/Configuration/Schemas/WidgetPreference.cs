@@ -4,8 +4,7 @@ namespace Server.Domain.Configuration.Schemas
 {
     public class WidgetPreference
     {
-        [Key] 
-        public int? Id { get; set; }
+        [Key] public int? Id { get; set; }
         public string Title { get; set; }
         public string Subtitle { get; set; }
         public string Placeholder { get; set; }
@@ -17,11 +16,15 @@ namespace Server.Domain.Configuration.Schemas
         public string FontFamily { get; set; }
         public string HeaderFontColor { get; set; }
         public string ListFontColor { get; set; }
-        
-        
-        WidgetPreference() { }
-        
-        WidgetPreference(string headerFontColor, string listFontColor, string selectListColor, string headerColor, string fontFamily, string header, string title, string subtitle, string placeholder, bool shouldGroup, string accountId)
+        public bool WidgetState { get; set; }
+
+        WidgetPreference()
+        {
+        }
+
+        private WidgetPreference(string headerFontColor, string listFontColor, string selectListColor,
+            string headerColor, string fontFamily, string header, string title, string subtitle, string placeholder,
+            bool shouldGroup, string accountId, bool widgetState)
         {
             HeaderFontColor = headerFontColor;
             ListFontColor = listFontColor;
@@ -34,11 +37,15 @@ namespace Server.Domain.Configuration.Schemas
             Placeholder = placeholder;
             ShouldGroup = shouldGroup;
             AccountId = accountId;
+            WidgetState = widgetState;
         }
 
-        public static WidgetPreference CreateNew(string headerFontColor, string listFontColor, string selectListColor, string headerColor, string fontFamily, string header, string title, string subtitle, string placeholder, bool shouldGroup, string accountId)
+        public static WidgetPreference CreateNew(string headerFontColor, string listFontColor, string selectListColor,
+            string headerColor, string fontFamily, string header, string title, string subtitle, string placeholder,
+            bool shouldGroup, string accountId, bool widgetState)
         {
-            return new WidgetPreference(headerFontColor, listFontColor, selectListColor, headerColor, fontFamily, header, title, subtitle, placeholder, shouldGroup, accountId);
+            return new WidgetPreference(headerFontColor, listFontColor, selectListColor, headerColor, fontFamily,
+                header, title, subtitle, placeholder, shouldGroup, accountId, widgetState);
         }
     }
 }

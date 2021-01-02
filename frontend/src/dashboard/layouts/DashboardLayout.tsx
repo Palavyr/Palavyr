@@ -87,6 +87,8 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [numAreasAllowed, setNumAreasAllowed] = useState<number | undefined>();
     const [alertState, setAlertState] = useState<boolean>(false);
 
+    const [widgetState, setWidgetState] = useState<boolean | undefined>();
+
     const cls = useStyles(helpOpen);
     const theme = useTheme();
 
@@ -99,6 +101,9 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         const [areaIdentifiers, areaNames] = fetchSidebarInfo(areas);
         setSidebarNames(areaNames);
         setSidebarIds(areaIdentifiers);
+
+        const {data: currentWidgetState} = await client.Configuration.WidgetState.GetWidgetState();
+        setWidgetState(currentWidgetState);
 
         if (areaIdentifier) {
             var currentView = areas.filter((x: AreaTable) => x.areaIdentifier === areaIdentifier).pop();
@@ -130,6 +135,12 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
         history.push(`/dashboard/editor/email/${newArea.areaIdentifier}?tab=0`);
     };
+
+    const updateWidgetIsActive = async () => {
+        const client = new ApiClient();
+        const {data: updatedWidgetState} = await client.Configuration.WidgetState.SetWidgetState(!widgetState);
+        setWidgetState(updatedWidgetState);
+    }
 
     const handleDrawerClose: () => void = () => {
         setOpen(false);
@@ -187,7 +198,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                     <>
                         <SideBarHeader handleDrawerClose={handleDrawerClose} />
                         <Divider />
-                        <SideBarMenu areaIdentifiers={sidebarIds} areaNames={sidebarNames} />
+                        <SideBarMenu areaIdentifiers={sidebarIds} areaNames={sidebarNames} widgetIsActive={widgetState} updateWidgetIsActive={updateWidgetIsActive}/>
                     </>
                 </Drawer>
                 <ContentLoader open={open}>{children}</ContentLoader>

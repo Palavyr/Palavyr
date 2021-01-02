@@ -81,8 +81,8 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
         } else if (response.message === COULD_NOT_FIND_ACCOUNT_WITH_GOOGLE) {
             setStatus(GOOGLE_ACCOUNT_NOT_FOUND);
         }
-        Auth.googleLogout(noop);
         setIsLoading(false);
+        Auth.googleLogout(noop);
     };
 
     const login = async () => {

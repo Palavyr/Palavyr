@@ -45,8 +45,6 @@ export class ApiClient {
     };
 
     public Area = {
-        // GetAreasReactQuery: async (): Promise<AxiosResponse<Areas>> => this.client.get("areas"),
-
         GetAreas: async (): Promise<AxiosResponse<Areas>> => this.client.get("areas"),
         GetArea: async (areaIdentifier: string): Promise<AxiosResponse<AreaTable>> => this.client.get(`areas/${areaIdentifier}`),
         createArea: (areaName: string): Promise<AxiosResponse<AreaTable>> => this.client.post(`areas/create/`, { areaName: areaName }), // get creates and gets new area
@@ -60,6 +58,10 @@ export class ApiClient {
         updatePrologue: async (areaIdentifier: string, prologue: string): Promise<AxiosResponse<string>> => this.client.put(`response/configuration/${areaIdentifier}/prologue`, { prologue: prologue }),
         updateEpilogue: async (areaIdentifier: string, epilogue: string): Promise<AxiosResponse<string>> => this.client.put(`response/configuration/${areaIdentifier}/epilogue`, { epilogue: epilogue }),
 
+        WidgetState: {
+            GetWidgetState: async (): Promise<AxiosResponse<boolean>> => this.client.get(`widget-config/widget-active-state`),
+            SetWidgetState: async (updatedWidgetState: boolean): Promise<AxiosResponse<boolean>> => this.client.post(`widget-config/widget-active-state?state=${updatedWidgetState}`)
+        },
         Tables: {
             Dynamic: {
                 getDynamicTableMetas: async (areaIdentifier: string): Promise<AxiosResponse<DynamicTableMetas>> => this.client.get(`tables/dynamic/type/${areaIdentifier}`),
@@ -111,7 +113,6 @@ export class ApiClient {
                         "Content-Type": "multipart/form-data",
                     },
                 }),
-            // getAttachmentUrl: async (areaIdentifier: string, fileName: string) => this.client.get(`attachments/${areaIdentifier}/filelink`, { data: { fileName: fileName } }),
         },
     };
 

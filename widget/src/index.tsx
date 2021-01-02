@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { App } from './App';
 import { CssBaseline, MuiThemeProvider } from '@material-ui/core';
 import theme from "./theme";
+import { StatusCheck } from './StatusCheck';
 
 // type ErrorProps = {
 
@@ -47,6 +48,7 @@ ReactDOM.render(
         <CssBaseline />
         <Router>
           <Route exact path="/widget" component={App} />
+          <Route exact path="/widget/status-check" render={StatusCheck} />
         </Router>
       </MuiThemeProvider>
     {/* </ErrorBoundary> */}

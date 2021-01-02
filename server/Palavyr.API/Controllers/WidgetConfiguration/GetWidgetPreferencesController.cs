@@ -18,7 +18,7 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
             this.logger = logger;
             this.dashContext = dashContext;
         }
-        
+
         [HttpGet("widget-config/preferences")]
         public async Task<IActionResult> GetWidgetPreferences([FromHeader] string accountId)
         {

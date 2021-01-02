@@ -43,7 +43,8 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData
                 "Experts in Cavalier King Charles Spaniels",
                 "Write here...", 
                 false, 
-                accountId);
+                accountId,
+                false);
             Groups.Add(GroupMap.CreateGroupMap(GroupId, null, "Group One", accountId));
             Areas = new List<Area>()
             {
