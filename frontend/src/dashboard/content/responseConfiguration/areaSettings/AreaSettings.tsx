@@ -44,7 +44,7 @@ export const AreaSettings = () => {
         awaitingVerification: false,
         areaName: "",
         areaTitle: "",
-        subject: ""
+        subject: "",
     });
     const [alertDetails, setAlertDetails] = useState<AlertDetails>({ title: "", message: "" });
     const classes = useStyles();
@@ -75,23 +75,23 @@ export const AreaSettings = () => {
 
     const handleAreaNameChange = async (newAreaName: string) => {
         if (newAreaName === settings.areaName) return;
-        var { data } = await client.Area.updateArea(areaIdentifier, newAreaName, null);
-        setSettings({ ...settings, areaName: newAreaName });
+        var { data: updatedAreaName } = await client.Area.updateAreaName(areaIdentifier, newAreaName);
+        setSettings({ ...settings, areaName: updatedAreaName });
         window.location.reload(); // reloads the sidebar...
     };
 
     const handleSubjectChange = async (newSubject: string) => {
         if (newSubject === settings.subject) return;
-        const { data } = await client.Area.updateSubject(areaIdentifier, newSubject);
-        setSettings({ ...settings, subject: newSubject});
+        const { data: updatedSubject } = await client.Area.updateSubject(areaIdentifier, newSubject);
+        setSettings({ ...settings, subject: updatedSubject });
         window.location.reload();
-    }
+    };
 
     const handleAreaDisplayTitleChange = async (newAreaDisplayTitle: any) => {
         if (newAreaDisplayTitle === settings.areaTitle) return;
-        var { data } = await client.Area.updateArea(areaIdentifier, null, newAreaDisplayTitle);
+        const { data: updatedDisplayTitle } = await client.Area.updateDisplayTitle(areaIdentifier, newAreaDisplayTitle);
         window.location.reload();
-        setSettings({ ...settings, areaTitle: newAreaDisplayTitle });
+        setSettings({ ...settings, areaTitle: updatedDisplayTitle });
     };
 
     const handleAreaDelete = async () => {
@@ -144,7 +144,7 @@ export const AreaSettings = () => {
                         title=""
                         name=""
                         details="Update the area title used in the widget."
-                        placeholder="New Area Name"
+                        placeholder="New Area Name (Widget)"
                         currentValue={settings.areaTitle}
                         onClick={handleAreaDisplayTitleChange}
                         clearVal={false}
@@ -202,23 +202,26 @@ export const AreaSettings = () => {
                         These options only affect what you see in the dashboard.
                     </Alert>
                 </Grid>
+
                 <Grid item xs={5}>
                     <SettingsGridRowText
+                        fullWidth
                         alertNode={
                             <Alert className={classes.alert} severity={settings.areaName ? "success" : "warning"}>
                                 <AlertTitle className={classes.titleText}>Update Dashboard Display Name</AlertTitle>
                                 Set the name of area used for your reference on this dashboard.
                             </Alert>
                         }
-                        title="Update Area Name"
-                        name="Update Area Name"
+                        title=""
+                        name=""
                         details=" Update the name of this area for dashboard."
-                        placeholder="New Area Name"
+                        placeholder="New Area Name (Dashboard)"
                         currentValue={settings.areaName}
                         onClick={handleAreaNameChange}
                         clearVal={false}
                     />
                 </Grid>
+
             </Grid>
             <Divider />
             <br></br>

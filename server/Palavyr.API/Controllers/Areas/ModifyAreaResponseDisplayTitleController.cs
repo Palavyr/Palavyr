@@ -12,44 +12,39 @@ namespace Palavyr.API.Controllers.Areas
     [Authorize]
     [Route("api")]
     [ApiController]
-    public class ModifyAreaById : ControllerBase
+    public class ModifyAreaResponseDisplayTitleController : ControllerBase
     {
         private DashContext dashContext;
-        private ILogger<ModifyAreaById> logger;
+        private ILogger<ModifyAreaResponseDisplayTitleController> logger;
 
-        public ModifyAreaById(
-            AccountsContext accountContext,
+        public ModifyAreaResponseDisplayTitleController(
             DashContext dashContext,
-            ILogger<ModifyAreaById> logger
+            ILogger<ModifyAreaResponseDisplayTitleController> logger
         )
         {
             this.dashContext = dashContext;
             this.logger = logger;
         }
 
-        [HttpPut("areas/update/{areaId}")]
-        public async Task<NoContentResult> Modify([FromHeader] string accountId, [FromBody] Text text, string areaId)
+        [HttpPut("areas/update/display-title/{areaId}")]
+        public async Task<string> Modify(
+            [FromHeader] string accountId,
+            [FromBody] AreaDisplayTitleText areaDisplayTitleText,
+            string areaId
+        )
         {
-            var newAreaName = text.AreaName;
-            var newAreaDisplayTitle = text.AreaDisplayTitle;
-
             var curArea = await dashContext
                 .Areas
                 .Where(row => row.AccountId == accountId)
                 .SingleAsync(row => row.AreaIdentifier == areaId);
 
-            if (text.AreaName != null)
+            if (areaDisplayTitleText.AreaDisplayTitle != null)
             {
-                curArea.AreaName = newAreaName;
+                curArea.AreaDisplayTitle = areaDisplayTitleText.AreaDisplayTitle;
+                await dashContext.SaveChangesAsync();
             }
 
-            if (text.AreaDisplayTitle != null)
-            {
-                curArea.AreaDisplayTitle = newAreaDisplayTitle;
-            }
-
-            await dashContext.SaveChangesAsync();
-            return NoContent();
+            return areaDisplayTitleText.AreaDisplayTitle;
         }
     }
 }

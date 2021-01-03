@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -22,6 +23,8 @@ namespace Server.Domain.Configuration.Schemas
         public List<DynamicTableMeta> DynamicTableMetas { get; set; } = new List<DynamicTableMeta>();
         public string AreaSpecificEmail { get; set; }
         public bool EmailIsVerified { get; set; }
+        
+        [DefaultValue("Thank you for reaching out!")]
         public string Subject { get; set; }
 
         [NotMapped] public bool AwaitingVerification { get; set; }

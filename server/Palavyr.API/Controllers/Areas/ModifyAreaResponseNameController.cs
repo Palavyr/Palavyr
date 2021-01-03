@@ -13,25 +13,25 @@ namespace Palavyr.API.Controllers.Areas
     [Authorize]
     [Route("api")]
     [ApiController]
-    public class ModifyAreaResponseSubjectController : ControllerBase
+    public class ModifyAreaResponseNameController : ControllerBase
     {
 
         private readonly DashContext dashContext;
-        private readonly ILogger<ModifyAreaResponseSubjectController> logger;
+        private readonly ILogger<ModifyAreaResponseNameController> logger;
 
-        public ModifyAreaResponseSubjectController(
+        public ModifyAreaResponseNameController(
             DashContext dashContext,
-            ILogger<ModifyAreaResponseSubjectController> logger
+            ILogger<ModifyAreaResponseNameController> logger
         )
         {
             this.dashContext = dashContext;
             this.logger = logger;
         }
 
-        [HttpPut("areas/update/subject/{areaId}")]
+        [HttpPut("areas/update/name/{areaId}")]
         public async Task<string> Modify(
             [FromHeader] string accountId,
-            [FromBody] SubjectText subjectText,
+            [FromBody] AreaNameText areaNameText,
             string areaId
         )
         {
@@ -40,12 +40,12 @@ namespace Palavyr.API.Controllers.Areas
                 .Where(row => row.AccountId == accountId)
                 .SingleAsync(row => row.AreaIdentifier == areaId);
 
-            if (subjectText.Subject != curArea.Subject)
+            if (areaNameText.AreaName != curArea.AreaName)
             {
-                curArea.Subject = subjectText.Subject;
+                curArea.AreaName = areaNameText.AreaName;
                 await dashContext.SaveChangesAsync();
             }
-            return subjectText.Subject;
+            return areaNameText.AreaName;
         }
     }
 }

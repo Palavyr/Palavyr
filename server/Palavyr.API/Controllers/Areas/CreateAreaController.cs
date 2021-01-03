@@ -29,7 +29,7 @@ namespace Palavyr.API.Controllers.Areas
         }
 
         [HttpPost("areas/create")]
-        public IActionResult Create([FromHeader] string accountId, [FromBody] Text text)
+        public IActionResult Create([FromHeader] string accountId, [FromBody] AreaNameText areaNameText)
         {
             var account = accountContext.Accounts.SingleOrDefault(row => row.AccountId == accountId);
             if (account == null)
@@ -41,7 +41,7 @@ namespace Palavyr.API.Controllers.Areas
             var defaultEmail = account.EmailAddress;
             var isVerified = account.DefaultEmailIsVerified;
 
-            var defaultAreaTemplate = Area.CreateNewArea(text.AreaName, accountId, defaultEmail, isVerified);
+            var defaultAreaTemplate = Area.CreateNewArea(areaNameText.AreaName, accountId, defaultEmail, isVerified);
             var result = dashContext.Areas.Add(defaultAreaTemplate);
             
             dashContext.SaveChanges();
