@@ -47,9 +47,10 @@ export class ApiClient {
     public Area = {
         GetAreas: async (): Promise<AxiosResponse<Areas>> => this.client.get("areas"),
         GetArea: async (areaIdentifier: string): Promise<AxiosResponse<AreaTable>> => this.client.get(`areas/${areaIdentifier}`),
-        createArea: (areaName: string): Promise<AxiosResponse<AreaTable>> => this.client.post(`areas/create/`, { areaName: areaName }), // get creates and gets new area
-        updateArea: (areaIdentifier: string, areaName: string | null = null, areaDisplayTitle: string | null = null): Promise<AxiosResponse> =>
-            this.client.put(`areas/update/${areaIdentifier}`, { areaName: areaName, areaDisplayTitle: areaDisplayTitle }),
+        createArea: (areaName: string): Promise<AxiosResponse<AreaTable>> => this.client.post(`areas/create/`, { AreaName: areaName }), // get creates and gets new area
+        updateAreaName: (areaIdentifier: string, areaName: string): Promise<AxiosResponse<string>> => this.client.put(`areas/update/name/${areaIdentifier}`, { AreaName: areaName}),
+        updateSubject: (areaIdentifier: string, subject: string): Promise<AxiosResponse<string>> => this.client.put(`areas/update/subject/${areaIdentifier}`, { Subject: subject}),
+        updateDisplayTitle: (areaIdentifier: string, displayTitle: string): Promise<AxiosResponse<string>> => this.client.put(`areas/update/display-title/${areaIdentifier}`, { AreaDisplayTitle: displayTitle}),
         deleteArea: (areaIdentifier: string): Promise<AxiosResponse> => this.client.delete(`areas/delete/${areaIdentifier}`),
     };
 
@@ -130,6 +131,9 @@ export class ApiClient {
             this.client.put(`configure-conversations/${areaIdentifier}`, { IdsToDelete: idsToDelete, Transactions: nodelist }),
         // TODO : return from API
         ModifyConversationNode: async (nodeId: string, areaIdentifier: string, updatedNode: ConvoTableRow): Promise<AxiosResponse<ConvoTableRow>> => this.client.put(`configure-conversations/${areaIdentifier}/nodes/${nodeId}`, updatedNode),
+
+        // TODO: Deprecate eventually
+        EnsureDBIsValid: async(): Promise<AxiosResponse> => this.client.post(`configure-conversations/ensure-db-valid`),
     };
 
     public WidgetDemo = {

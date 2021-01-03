@@ -3,10 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Amazon.SimpleEmail;
 using DashboardServer.Data;
-using EmailService;
 using EmailService.VerificationRequest;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.Controllers;
 using Palavyr.API.Controllers.Accounts.Setup.SeedData;
 using Palavyr.API.Controllers.Accounts.Setup.WelcomeEmail;
 using Palavyr.API.RequestTypes;
@@ -37,10 +35,7 @@ namespace Palavyr.API.Services.AccountServices
         private SESEmail Client { get; set; }
         private readonly IJwtAuthenticationService _jwtAuthService;
 
-        private const string CouldNotFindAccount = "Could not find Account";
         private const string CouldNotValidateGoogleAuthToken = "Could not validate the Google Authentication token";
-        private const string PasswordsDoNotMatch = "Password does not match.";
-        private const string DifferentAccountType = " (Email is currently used with different account type).";
         private const string AccountAlreadyExists = "Account already exists";
         private const string EmailAddressNotFound = "Email Address Not Found";
         

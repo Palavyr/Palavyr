@@ -103,6 +103,7 @@ export type AreaTable = {
     areaSpecificEmail: string;
     emailIsVerified: boolean;
     awaitingVerification: boolean;
+    subject: string;
 };
 
 export type StaticTableMetas = Array<StaticTableMeta>;

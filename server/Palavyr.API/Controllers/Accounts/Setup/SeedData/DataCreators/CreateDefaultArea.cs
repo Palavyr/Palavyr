@@ -129,7 +129,8 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
                 DynamicTableMetas = dynamicTableMetas,
                 GroupId = groupId,
                 AreaSpecificEmail = defaultEmail,
-                EmailIsVerified = false
+                EmailIsVerified = false,
+                Subject = "Thanks for contacting us!"
             };
             return area;
         }

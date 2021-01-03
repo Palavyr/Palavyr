@@ -3,15 +3,17 @@ using System;
 using DashboardServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DashboardServer.Data.Migrations.ConfigurationMigrations
 {
     [DbContext(typeof(DashContext))]
-    partial class DashContextModelSnapshot : ModelSnapshot
+    [Migration("20210102141219_AddSubjectColumnToArea")]
+    partial class AddSubjectColumnToArea
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -399,12 +401,6 @@ namespace DashboardServer.Data.Migrations.ConfigurationMigrations
                     b.Property<string>("AccountId")
                         .HasColumnType("text");
 
-                    b.Property<string>("ChatBubbleColor")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ChatFontColor")
-                        .HasColumnType("text");
-
                     b.Property<string>("FontFamily")
                         .HasColumnType("text");
 
@@ -418,12 +414,6 @@ namespace DashboardServer.Data.Migrations.ConfigurationMigrations
                         .HasColumnType("text");
 
                     b.Property<string>("ListFontColor")
-                        .HasColumnType("text");
-
-                    b.Property<string>("OptionsHeaderColor")
-                        .HasColumnType("text");
-
-                    b.Property<string>("OptionsHeaderFontColor")
                         .HasColumnType("text");
 
                     b.Property<string>("Placeholder")
