@@ -6,7 +6,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep } from "lodash";
-import { Areas, AreaTable, HelpTypes } from "@Palavyr-Types";
+import { Areas, AreaTable } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { DashboardHeader } from "./header/DashboardHeader";
 import { CssBaseline, IconButton, makeStyles, useTheme } from "@material-ui/core";
@@ -94,6 +94,10 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
     const loadAreas = useCallback(async () => {
         const client = new ApiClient();
+
+        // todo: Deprecate this call in the future once we are confident
+        await client.Conversations.EnsureDBIsValid();
+
         const { data: numAllowedBySubscription } = await client.Settings.Subscriptions.getNumAreas();
         setNumAreasAllowed(numAllowedBySubscription);
 
