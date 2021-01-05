@@ -2,7 +2,7 @@ import { ApiClient } from "@api-client/Client";
 import React, { useState, useCallback, useEffect } from "react";
 import { Enquiries, EnquiryRow } from "@Palavyr-Types";
 import { Statement } from "@common/components/Statement";
-import { Divider, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody, Table } from "@material-ui/core";
+import { Divider, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody, Table, Checkbox } from "@material-ui/core";
 
 export const Enquires = () => {
 
@@ -40,6 +40,7 @@ export const Enquires = () => {
                             <TableCell>Estimate</TableCell>
                             <TableCell>Area</TableCell>
                             <TableCell>Time</TableCell>
+                            <TableCell>Seen</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -55,6 +56,7 @@ export const Enquires = () => {
                                         <TableCell key={enq.conversationId + "e"}><a href={enq.responsePdfLink.link}>{enq.responsePdfLink.fileName}</a></TableCell>
                                         <TableCell key={enq.conversationId + "f"}>{enq.areaName}</TableCell>
                                         <TableCell key={enq.conversationId + "g"}>{enq.timeStamp}</TableCell>
+                                        <TableCell key={enq.conversationId + "h"}><Checkbox></Checkbox></TableCell>
                                     </TableRow>
                                 )
                             })

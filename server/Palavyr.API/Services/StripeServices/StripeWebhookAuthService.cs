@@ -42,6 +42,19 @@ namespace Palavyr.API.Services.StripeServices
                     webhookSecret
                 );
             }
+            catch (NullReferenceException ex)
+            {
+                if (string.IsNullOrWhiteSpace(requestBody))
+                {
+                    logger.LogDebug("Webhook failed: request body was empty");
+                }
+                else
+                {
+                    logger.LogDebug("Webhook failed: HttpContext ");
+                }
+
+                return null;
+            }
             catch (Exception ex)
             {
                 logger.LogDebug($"Webhook Failed: {ex.Message}");

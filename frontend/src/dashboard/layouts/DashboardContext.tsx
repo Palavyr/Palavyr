@@ -1,3 +1,4 @@
+import { PlanType } from "@Palavyr-Types";
 import React, { Dispatch, SetStateAction } from "react";
 
 interface IDashboardContext {
@@ -5,6 +6,7 @@ interface IDashboardContext {
     checkAreaCount(): void;
     areaName: string;
     setViewName: Dispatch<SetStateAction<string>>;
+    subscription: PlanType | undefined;
 }
 
 interface IAuthContext {

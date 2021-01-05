@@ -6,7 +6,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep } from "lodash";
-import { Areas, AreaTable } from "@Palavyr-Types";
+import { Areas, AreaTable, PlanType } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { DashboardHeader } from "./header/DashboardHeader";
 import { CssBaseline, IconButton, makeStyles, useTheme } from "@material-ui/core";
@@ -88,6 +88,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [alertState, setAlertState] = useState<boolean>(false);
 
     const [widgetState, setWidgetState] = useState<boolean | undefined>();
+    const [planType, setPlanType] = useState<PlanType>()
 
     const cls = useStyles(helpOpen);
     const theme = useTheme();
@@ -99,6 +100,8 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         await client.Conversations.EnsureDBIsValid();
 
         const { data: numAllowedBySubscription } = await client.Settings.Subscriptions.getNumAreas();
+        const { data: currentPlanType} = await client.Settings.Account.getCurrentPlan();
+        setPlanType(currentPlanType);
         setNumAreasAllowed(numAllowedBySubscription);
 
         const { data: areas } = await client.Area.GetAreas();
@@ -184,7 +187,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     };
 
     return (
-        <DashboardContext.Provider value={{ numAreasAllowed, checkAreaCount, areaName: currentViewName, setViewName: setViewName }}>
+        <DashboardContext.Provider value={{ subscription: planType , numAreasAllowed, checkAreaCount, areaName: currentViewName, setViewName: setViewName }}>
             <div className={cls.root}>
                 <CssBaseline />
                 <DashboardHeader open={open} handleDrawerOpen={handleDrawerOpen} handleHelpDrawerOpen={handleHelpDrawerOpen} helpOpen={helpOpen} title={currentViewName} />

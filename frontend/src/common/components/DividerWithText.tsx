@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles, Typography } from '@material-ui/core'
 import classNames from 'classnames';
 import React from 'react'
 
@@ -27,15 +27,16 @@ const useStyles = makeStyles(({
 
 export interface DividerWithTextProps {
     text?: string;
+    variant?: "h1" | "h2" | "h3" | "h4" | "h5"
 }
 
-export const DividerWithText = ({ text }: DividerWithTextProps) => {
+export const DividerWithText = ({ text, variant }: DividerWithTextProps) => {
 
     const classes = useStyles();
     return (
         <div className={classes.separator}>
             <div className={classNames(classes.line, classes.left)} />
-            {text && (<div>{text}</div>)}
+            {text && (<Typography variant={variant}>{text}</Typography>)}
             <div className={classNames(classes.line, classes.right)} />
         </div>
     )

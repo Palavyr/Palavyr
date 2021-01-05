@@ -37,16 +37,23 @@ namespace Palavyr.API.Services.AccountServices
         public async Task<bool> ConfirmEmailAddressAsync(string authToken)
         {
             logger.LogDebug("Attempting to confirm email via auth Token.");
-            var emailVerification =
-                await accountsContext.EmailVerifications.SingleOrDefaultAsync(row => row.AuthenticationToken == authToken.Trim());
+            var emailVerification = await accountsContext
+                .EmailVerifications
+                .SingleOrDefaultAsync(row => row.AuthenticationToken == authToken.Trim());
             if (emailVerification == null)
+            {
                 return false;
+            }
 
             logger.LogDebug("Email Address found.");
             var accountId = emailVerification.AccountId;
-            var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
+            var account = await accountsContext
+                .Accounts
+                .SingleOrDefaultAsync(row => row.AccountId == accountId);
             if (account == null)
+            {
                 return false;
+            }
 
             account.Active = true;
             accountsContext.EmailVerifications.Remove(emailVerification);
