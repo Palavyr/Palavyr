@@ -33,8 +33,6 @@ export const Success = () => {
             <Card className={cls.card}>
                 <h1>Success!</h1>
                 <p>Thank you so much for purchasing a subscription! Let us know right away if you encounter any problems or have any feature requests!</p>
-                {/* <p>Now you can send a post with the success session ID back to the server and use it to update the database.</p>
-                <p>SessionID: {successSessionId}</p> */}
                 <SinglePurposeButton
                     variant="outlined"
                     color="primary"

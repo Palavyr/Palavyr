@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Amazon.SimpleEmail;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,13 +33,12 @@ namespace Palavyr.API.Controllers.WidgetLive
             ILogger<SendWidgetResponseEmailController> logger, 
             AccountsContext accountsContext,
             ConvoContext convoContext, 
-            DashContext dashContext,
-            IWebHostEnvironment env, 
-            IAmazonSimpleEmailService SES, 
+            DashContext dashContext, 
+            SESEmail client,
             IConfiguration config)
         {
             this.config = config;
-            this.client = new SESEmail(logger, SES);
+            this.client = client;
             this.logger = logger;
             this.accountsContext = accountsContext;
             this.dashContext = dashContext;
@@ -83,7 +81,6 @@ namespace Palavyr.API.Controllers.WidgetLive
             // TODO: Add database entry and frontend component to configure this value per area
             var area = dashContext.Areas.Single(row => row.AreaIdentifier == areaId);
             var subject = area.Subject;
-            // var subject = "This subject line will be configured by user per area and default to a default address in the account settings.";
             var htmlBody = area.EmailTemplate;
             var textBody = ""; // This can be another upload. People can decide one or both. Html is prioritized.
 

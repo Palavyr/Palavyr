@@ -5,6 +5,7 @@ using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.SimpleEmail;
 using DashboardServer.Data;
+using EmailService.ResponseEmail;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -182,8 +183,10 @@ namespace Palavyr.API
             services.AddTransient<IStripeSubscriptionService, StripeSubscriptionService>();
             services.AddTransient<IStripeProductService, StripeProductService>();
             services.AddTransient<IProcessStripeCheckoutSessionCompletedHandler, ProcessStripeCheckoutSessionCompletedHandler>();
+            services.AddTransient<IProcessStripeInvoicePaidHandler, ProcessStripeInvoicePaidHandler>();
+            services.AddTransient<IProcessStripeInvoicePaymentFailedHandler, ProcessStripeInvoicePaymentFailedHandler>();
             services.AddTransient<ICompileDynamicTables, CompileDynamicTables>();
-
+            services.AddSingleton<SESEmail>();
         }
 
         public void Configure(

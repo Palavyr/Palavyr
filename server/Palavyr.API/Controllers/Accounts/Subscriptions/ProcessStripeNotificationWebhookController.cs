@@ -56,11 +56,24 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
             var stripeEvent = await stripeWebhookAuthService.AuthenticateWebhookRequest(HttpContext);
             if (stripeEvent == null)
             {
+                logger.LogDebug("Stripe webhook authentication failed. Check that you are using the correct webhook auth key.");
                 throw new AuthenticationException("Stripe webhook request not authenticated.");
             }
-            // this does not return bad requests to stripe. We are either successful, or we log errors and throw
-            await stripeEventWebhookService.ProcessStripeEvent(stripeEvent);
-            return Ok();
+            
+            // this does not return bad requests to stripe. We are either successful, or we log errors and throw.
+            // If stripe does not receive a 200 response, then it will retry.
+            // https://stripe.com/docs/billing/subscriptions/webhooks
+            try
+            {
+                logger.LogDebug($"Trying to process a stripe event: {stripeEvent.Type}");
+                await stripeEventWebhookService.ProcessStripeEvent(stripeEvent);
+                return Ok();
+            }
+            catch (StripeException ex)
+            {
+                logger.LogDebug($"Stripe error: {ex.Message}");
+                return BadRequest();
+            }
         }
     }
 }
