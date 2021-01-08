@@ -380,3 +380,31 @@ export type FormStatusTypes =
     | typeof COULD_NOT_FIND_SERVER
     | typeof VERIFICATION_EMAIL_SEND
     | null;
+
+export type PlanType = "Free" | "Premium" | "Pro";
+
+export enum PurchaseTypes {
+    Free = "Free",
+    Premium = "Premium",
+    Pro = "Pro",
+}
+
+export type ProductOption = {
+    card: React.ReactNode;
+    purchaseType: PurchaseTypes;
+    productId: string | null;
+    productClasses: string;
+    currentplan: boolean;
+};
+
+export type ProductOptions = ProductOption[];
+
+export enum Interval {
+    free = "free",
+    monthly = "month",
+    yearly = "year",
+}
+
+export type PriceMap = {
+    [key: string]: string | number;
+};

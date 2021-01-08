@@ -32,7 +32,7 @@ namespace Palavyr.API.Services.AuthenticationServices
         private const string CouldNotFindAccountWithGoogle = "Could not find Account with Google";
         private const string CouldNotValidateGoogleAuthToken = "Could not validate the Google Authentication token";
         private const string DifferentAccountType = "Email is currently used with different account type.";
-
+        private const int GracePeriod = 5;
         public AuthService(
             DashContext dashContext,
             AccountsContext accountsContext,
@@ -87,22 +87,41 @@ namespace Palavyr.API.Services.AuthenticationServices
         {
             var (account, message) = await RequestAccount(loginCredentials);
             if (account == null)
+            {
                 return Credentials.CreateUnauthenticatedResponse(message);
+            }
 
             var session = CreateNewSession(account);
             var token = CreateNewJwtToken(account);
+            UpdateCurrentAccountState(account);
 
             await _accountsContext.Sessions.AddAsync(session);
+            
             await _accountsContext.SaveChangesAsync();
 
             _logger.LogDebug("Session saved to DB. Returning auth response.");
             return Credentials.CreateAuthenticatedResponse(
-                session.SessionId, 
-                session.ApiKey, 
+                session.SessionId,
+                session.ApiKey,
                 token,
                 account.EmailAddress);
         }
 
+        public async Task UpdateCurrentAccountState(UserAccount account)
+        {
+            // update the current active state
+            // if the current_period_end plus a few days is in the future, then active stays true
+            _logger.LogDebug("Updated current active state given the subscription status.");
+            var periodEndWithBuffer = account.CurrentPeriodEnd.AddDays(GracePeriod); // 5 day grace period if they don't pay.
+            if (DateTime.Now > periodEndWithBuffer && account.PlanType != UserAccount.PlanTypeEnum.Free)
+            {
+                account.Active = false;
+            }
+            else
+            {
+                account.Active = true;
+            }
+        }
 
         public async Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenId(string oneTimeCode)
         {
@@ -110,7 +129,8 @@ namespace Palavyr.API.Services.AuthenticationServices
             {
                 _logger.LogDebug("Inside the try block -- attempting to validation One Time Code");
                 var result =
-                    await GoogleJsonWebSignature.ValidateAsync(oneTimeCode,
+                    await GoogleJsonWebSignature.ValidateAsync(
+                        oneTimeCode,
                         new GoogleJsonWebSignature.ValidationSettings());
                 return result;
             }
@@ -157,7 +177,7 @@ namespace Palavyr.API.Services.AuthenticationServices
             }
 
             if (account.AccountType != AccountType.Google)
-                return AccountReturn.Return(null,  "Google " + DifferentAccountType);
+                return AccountReturn.Return(null, "Google " + DifferentAccountType);
 
             return AccountReturn.Return(account, null);
         }

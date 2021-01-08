@@ -17,42 +17,49 @@ namespace Palavyr.API.Services.AccountServices
     {
         private readonly AccountsContext accountsContext;
         private readonly ILogger<EmailVerificationService> logger;
-        public AccountsContext accountContext { get; set; }
-        private SenderVerification Verifier { get; set; }
+        private readonly AccountsContext accountContext;
+        private readonly ISenderVerification senderVerification;
         private IStripeCustomerService stripeCustomerService;
 
         public EmailVerificationService(
             AccountsContext accountsContext,
             ILogger<EmailVerificationService> logger,
-            IAmazonSimpleEmailService sesClient,
-            IStripeCustomerService stripeCustomerService
+            IStripeCustomerService stripeCustomerService,
+            ISenderVerification senderVerification
         )
         {
             this.stripeCustomerService = stripeCustomerService;
             this.accountsContext = accountsContext;
             this.logger = logger;
-            Verifier = new SenderVerification(logger, sesClient);
+            this.senderVerification = senderVerification;
         }
 
         public async Task<bool> ConfirmEmailAddressAsync(string authToken)
         {
             logger.LogDebug("Attempting to confirm email via auth Token.");
-            var emailVerification =
-                await accountsContext.EmailVerifications.SingleOrDefaultAsync(row => row.AuthenticationToken == authToken.Trim());
+            var emailVerification = await accountsContext
+                .EmailVerifications
+                .SingleOrDefaultAsync(row => row.AuthenticationToken == authToken.Trim());
             if (emailVerification == null)
+            {
                 return false;
+            }
 
             logger.LogDebug("Email Address found.");
             var accountId = emailVerification.AccountId;
-            var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
+            var account = await accountsContext
+                .Accounts
+                .SingleOrDefaultAsync(row => row.AccountId == accountId);
             if (account == null)
+            {
                 return false;
+            }
 
             account.Active = true;
             accountsContext.EmailVerifications.Remove(emailVerification);
 
             logger.LogDebug("Verifying email address. Already verified using an authtoken, so this is okay");
-            var emailVerified = await Verifier.VerifyEmailAddressAsync(emailVerification.EmailAddress);
+            var emailVerified = await senderVerification.VerifyEmailAddressAsync(emailVerification.EmailAddress);
             
             if (emailVerified)
             {

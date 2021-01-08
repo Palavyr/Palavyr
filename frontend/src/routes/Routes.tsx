@@ -51,6 +51,8 @@ import { ChangeImageLogoHelp } from "dashboard/content/help/ChangeImageLogoHelp"
 import { SettingsContent } from "dashboard/content/settings/SettingsContent";
 import { DeleteAccount } from "dashboard/content/settings/account/DeleteAccount";
 import { DeleteAccountHelp } from "dashboard/content/help/DeleteAccountHelp";
+import { TermsOfServiceDialog } from "legal/TermsOfService";
+import { PrivacyPolicy } from "legal/PrivacyPolicy";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -72,6 +74,9 @@ export const Routes = () => {
     return (
         <Router>
             <Route exact path="/" component={LandingPage} />
+            <Route exact path="/privacy-policy" component={PrivacyPolicy} />
+            <Route exact path="/terms-of-service" component={TermsOfServiceDialog} />
+
             <ProtectedRoute exact path="/dashboard/" component={withLayout(WelcomeToTheDashboard, <WelcomeToTheDashboardHelp />)} />
             <ProtectedRoute exact path="/dashboard/welcome" component={withLayout(WelcomeToTheDashboard, <WelcomeToTheDashboardHelp />)} />
             <ProtectedRoute exact path="/dashboard/editor/email/:areaIdentifier" component={withLayout(withAreaTabs(<EmailConfiguration />), <EmailHelp />)} />
@@ -95,7 +100,7 @@ export const Routes = () => {
             <ProtectedRoute exact path="/dashboard/subscribe" component={withLayout(Subscribe, <SubscribeHelp />)} />
             <ProtectedRoute exact path="/dashboard/subscribe/purchase/" component={withLayout(Purchase, <PurchaseHelp />)} />
             <ProtectedRoute exact path="/dashboard/subscribe/success" component={withLayout(Success, <SuccessHelp />)} />
-            <ProtectedRoute exact path="/dashboard/subscribe/cancel" component={withLayout(Cancel, <CancelHelp />)} />
+            <ProtectedRoute exact path="/dashboard/subscribe/canceled" component={withLayout(Cancel, <CancelHelp />)} />
             <ProtectedRoute exact path="/dashboard/confirm" component={withLayout(PleaseConfirmYourEmail, <PleaseConfirmYourEmailHelp />)} />
         </Router>
     );

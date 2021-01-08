@@ -6,11 +6,14 @@ import { useCallback } from "react";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
-import { Prices } from "@Palavyr-Types";
+import { Interval, Price, PriceMap, Prices } from "@Palavyr-Types";
 import { Elements, useStripe } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { stripeKey, webUrl } from "@api-client/clientUtils";
 import { SubscribeStepper } from "./SubscribeStepper";
+import { FrequencyCard } from "./FrequencyCard";
+import { sortByPropertyAlphabetical } from "@common/utils/sorting";
+import { DividerWithText } from "@common/components/DividerWithText";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -59,16 +62,6 @@ const useStyles = makeStyles((theme) => ({
     freeInformationDiv: { width: "100%", display: "flex", justifyContent: "center", flexDirection: "column" },
 }));
 
-export enum Interval {
-    free = "free",
-    monthly = "month",
-    yearly = "year",
-}
-
-type PriceMap = {
-    [key: string]: string;
-};
-
 const stripePromise = loadStripe(stripeKey);
 
 export const Purchase = () => {
@@ -86,7 +79,8 @@ const PurchaseInner = () => {
     const location = useLocation();
     const [interval, setInterval] = useState<Interval>(Interval.yearly);
     const [priceMap, setPriceMap] = useState<PriceMap>({});
-    const [priceId, setSelectedPriceId] = useState<string>("");
+    const [priceId, setSelectedPriceId] = useState<string | number>("");
+    const [currentPrice, setCurrentPrice] = useState<number>(0);
     const stripe = useStripe();
 
     const searchParams = new URLSearchParams(location.search);
@@ -109,8 +103,8 @@ const PurchaseInner = () => {
         setPrices(priceOptions);
 
         const filledPriceMap: PriceMap = {};
-        priceOptions.map((option) => {
-            filledPriceMap[option.recurring.interval] = option.id;
+        priceOptions.map((option: Price) => {
+            filledPriceMap[option.recurring.interval] = option.unitAmountDecimal;
         });
         setPriceMap(filledPriceMap);
         setSelectedPriceId(filledPriceMap[Interval.yearly]);
@@ -144,10 +138,12 @@ const PurchaseInner = () => {
 
     const capitalize = (word: string) => word[0].toUpperCase() + word.slice(1);
 
-    const singlePurposeButtonOnClick = async () => {
+    const singlePurposeButtonOnClick = async (priceId: string) => {
         const { data: sessionId } = await client.Purchase.Checkout.CreateCheckoutSession(priceId, cancelUrl, successUrl);
         if (stripe) stripe.redirectToCheckout({ sessionId: sessionId }).then(handleResult);
     };
+
+    const intervalGetter = (x: Price) => x.recurring.interval;
 
     return (
         <>
@@ -172,48 +168,23 @@ const PurchaseInner = () => {
                             {productId === null || productId === "null" ? (
                                 displayFreeInformation()
                             ) : (
-                                <>
-                                    <Grid container direction="row" justify="center" alignItems="center">
-                                        <Grid item xs={6}>
-                                            <Grid container direction="column" justify="space-between" alignItems="center">
-                                                <Grid item xs={9}>
-                                                    <Typography>Select Billing Frequency</Typography>
-                                                </Grid>
-                                                <Grid item xs={9}>
-                                                    <FormControl className={cls.formControl}>
-                                                        <InputLabel id="demo-simple-select-label-billing">Billing Frequency</InputLabel>
-                                                        <Select className={cls.selectbox} fullWidth labelId="demo-simple-select-label-billing" id="demo-simple-select-billing" value={interval} onChange={handleChange}>
-                                                            {prices.map((price, key) => {
-                                                                return (
-                                                                    <MenuItem key={key} value={price.recurring.interval}>
-                                                                        {capitalize(price.recurring.interval) + "ly"}
-                                                                    </MenuItem>
-                                                                );
-                                                            })}
-                                                        </Select>
-                                                    </FormControl>
-                                                </Grid>
-                                            </Grid>
-                                        </Grid>
-                                        <Grid item xs={6} style={{ display: "flex", justifyContent: "center" }}>
-                                            <Card className={cls.card}>
-                                                <div className={cls.justifyCenter}>
-                                                    <Typography variant="body1">
-                                                        <strong>Selected Plan:</strong> {productType}
-                                                    </Typography>
-                                                    <br />
-                                                    <Typography variant="body1">
-                                                        <strong>Billing Frequency:</strong> {capitalize(interval) + "ly"}
-                                                    </Typography>
-                                                </div>
-                                            </Card>
-                                        </Grid>
+                                <Grid container direction="row" justify="center" alignItems="center">
+                                    <Grid item xs={12}>
+                                        <DividerWithText text={productType} variant="h4" />
                                     </Grid>
-                                    <Divider />
-                                    <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
-                                        <SinglePurposeButton variant="outlined" color="primary" buttonText="Proceed to Stripe Checkout" onClick={singlePurposeButtonOnClick} />
-                                    </div>
-                                </>
+                                    {sortByPropertyAlphabetical(intervalGetter, prices).map((price: Price, key) => {
+                                        return (
+                                            <Grid item xs={6}>
+                                                <FrequencyCard
+                                                    title={capitalize(price.recurring.interval) + "ly"}
+                                                    priceMap={priceMap}
+                                                    interval={price.recurring.interval}
+                                                    onClick={() => singlePurposeButtonOnClick(price.id)}
+                                                />
+                                            </Grid>
+                                        );
+                                    })}
+                                </Grid>
                             )}
                         </Paper>
                     </div>

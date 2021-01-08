@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +23,7 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
         }
 
         [HttpGet("products/prices/get-prices/{productId}")]
-        public async Task<StripeList<Price>> Get(string productId)
+        public async Task<List<Price>> Get(string productId)
         {
             logger.LogDebug("Getting product price by id");
             var options = new PriceListOptions
@@ -30,7 +32,8 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
             };
             var service = new PriceService();
             var prices = await service.ListAsync(options);
-            return prices;
+            var usablePrices = prices.Where(row => row.Active).ToList();
+            return usablePrices;
         }
     }
 }

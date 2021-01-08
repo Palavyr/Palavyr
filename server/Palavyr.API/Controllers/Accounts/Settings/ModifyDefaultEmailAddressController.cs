@@ -20,7 +20,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
     {
         private ILogger<ModifyDefaultEmailAddressController> logger;
         private AccountsContext accountsContext;
-        private readonly SenderVerification verifier;
+        private readonly ISenderVerification senderVerification;
         private IAmazonSimpleEmailService sesClient;
         private IStripeCustomerService stripeCustomerService;
 
@@ -31,14 +31,15 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             AccountsContext accountsContext, 
             ILogger<ModifyDefaultEmailAddressController> logger,
             IAmazonSimpleEmailService sesClient,
-            IStripeCustomerService stripeCustomerService
+            IStripeCustomerService stripeCustomerService,
+            ISenderVerification senderVerification
         )
         {
             this.logger = logger;
             this.sesClient = sesClient;
             this.accountsContext = accountsContext;
             this.stripeCustomerService = stripeCustomerService;
-            verifier = new SenderVerification(logger, sesClient);
+            this.senderVerification = senderVerification;
         }
         
         [HttpPut("account/settings/email")]
@@ -98,7 +99,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
                         break;
 
                     case (Failed):
-                        result = await verifier.VerifyEmailAddressAsync(emailRequest.EmailAddress);
+                        result = await senderVerification.VerifyEmailAddressAsync(emailRequest.EmailAddress);
                         account.EmailAddress = emailRequest.EmailAddress;
                         account.DefaultEmailIsVerified = false;
                         await accountsContext.SaveChangesAsync();
@@ -125,7 +126,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             }
 
             // unseen email address - start fresh.
-            result = await verifier.VerifyEmailAddressAsync(emailRequest.EmailAddress);
+            result = await senderVerification.VerifyEmailAddressAsync(emailRequest.EmailAddress);
             if (!result)
             {
                 verificationResponse = EmailVerificationResponse.CreateNew(

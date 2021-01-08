@@ -64,10 +64,27 @@ namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
             var planEnum = GetPlanEnum(planType);
             var paymentIntervalEnum = GetPaymentIntervalEnum(paymentInterval);
 
+            var newPeriodEnd = GetNewPeriodEnd(paymentIntervalEnum);
+
             account.PlanType = planEnum;
             account.HasUpgraded = true;
             account.PaymentInterval = paymentIntervalEnum;
+            account.CurrentPeriodEnd = newPeriodEnd;
             await accountsContext.SaveChangesAsync();
+        }
+
+        private DateTime GetNewPeriodEnd(UserAccount.PaymentIntervalEnum paymentIntervalEnum)
+        {
+            var currentDate = DateTime.Today;
+            switch (paymentIntervalEnum)
+            {
+                case (UserAccount.PaymentIntervalEnum.Month):
+                    return currentDate.AddMonths(1);
+                case (UserAccount.PaymentIntervalEnum.Year):
+                    return currentDate.AddYears(1);
+                default:
+                    throw new Exception("Payment interval could not be determined");
+            }
         }
 
         private UserAccount.PaymentIntervalEnum GetPaymentIntervalEnum(string paymentInterval)
@@ -76,33 +93,27 @@ namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
             switch (paymentInterval)
             {
                 case (UserAccount.PaymentIntervals.Month):
-                    paymentIntervalEnum = UserAccount.PaymentIntervalEnum.Month;
-                    break;
+                    return UserAccount.PaymentIntervalEnum.Month;
                 case (UserAccount.PaymentIntervals.Year):
-                    paymentIntervalEnum = UserAccount.PaymentIntervalEnum.Year;
-                    break;
+                    return UserAccount.PaymentIntervalEnum.Year;
                 default:
                     throw new Exception("Payment interval could not be determined");
             }
+
             return paymentIntervalEnum;
         }
 
         private UserAccount.PlanTypeEnum GetPlanEnum(string planType)
         {
-            UserAccount.PlanTypeEnum planEnum;
             switch (planType)
             {
                 case (UserAccount.PlanTypes.Premium):
-                    planEnum = UserAccount.PlanTypeEnum.Premium;
-                    break;
+                    return UserAccount.PlanTypeEnum.Premium;
                 case (UserAccount.PlanTypes.Pro):
-                    planEnum = UserAccount.PlanTypeEnum.Pro;
-                    break;
+                    return UserAccount.PlanTypeEnum.Pro;
                 default:
-                    planEnum = UserAccount.PlanTypeEnum.Free;
-                    break;
+                    return UserAccount.PlanTypeEnum.Free;
             }
-            return planEnum;
         }
     }
 }

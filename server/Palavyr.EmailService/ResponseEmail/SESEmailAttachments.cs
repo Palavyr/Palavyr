@@ -8,7 +8,7 @@ using MimeKit;
 
 namespace EmailService.ResponseEmail
 {
-    public partial class SESEmail
+    public partial class SesEmail
     {
         private static BodyBuilder GetMessageBodyWithAttachments(string htmlBody, string textBody, List<string> filePaths)
         {
@@ -77,17 +77,17 @@ namespace EmailService.ResponseEmail
                 RawMessage = new RawMessage(GetMessageStream(message)),
             };
             
-            LoggerExtensions.LogDebug(_logger, "Trying to send email...");
+            LoggerExtensions.LogDebug(logger, "Trying to send email...");
             try
             {
                 await EmailClient.SendRawEmailAsync(rawSendRequest);
-                LoggerExtensions.LogDebug(_logger, "Email Sent Successfully");
+                LoggerExtensions.LogDebug(logger, "Email Sent Successfully");
                 return true;
             }
             catch (Exception ex)
             {
-                LoggerExtensions.LogDebug(_logger, "Email (with attachments) was not sent. ");
-                LoggerExtensions.LogDebug(_logger, "Error: " + ex.Message);
+                LoggerExtensions.LogDebug(logger, "Email (with attachments) was not sent. ");
+                LoggerExtensions.LogDebug(logger, "Error: " + ex.Message);
                 return false;
             }
         }

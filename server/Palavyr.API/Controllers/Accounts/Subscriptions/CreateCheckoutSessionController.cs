@@ -57,8 +57,6 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
             [FromHeader] string accountId,
             [FromBody] CreateCheckoutSessionRequest request)
         {
-            
-            
             var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
             logger.LogDebug($"Account: {account}");
             if (account == null || account.StripeCustomerId == null)

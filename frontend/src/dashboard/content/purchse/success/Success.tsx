@@ -10,6 +10,7 @@ import { Card, makeStyles } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
     center: {
         display: "flex",
+        textAlign: "center",
         justifyContent: "center",
         flexDirection: "column",
     },
@@ -31,8 +32,7 @@ export const Success = () => {
         <div className={cls.center}>
             <Card className={cls.card}>
                 <h1>Success!</h1>
-                <p>Now you can send a post with the success session ID back to the server and use it to update the database.</p>
-                <p>SessionID: {successSessionId}</p>
+                <p>Thank you so much for purchasing a subscription! Let us know right away if you encounter any problems or have any feature requests!</p>
                 <SinglePurposeButton
                     variant="outlined"
                     color="primary"

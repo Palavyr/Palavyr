@@ -26,10 +26,11 @@ namespace Server.Domain.Accounts
         public PaymentIntervalEnum PaymentInterval { get; set; }
         public bool HasUpgraded { get; set; }
         public string StripeCustomerId { get; set; }
+        public DateTime CurrentPeriodEnd { get; set; }
 
         [NotMapped] public readonly string DefaultLocale = "en-AU";
 
-        
+
         public class PlanTypes
         {
             public const string Premium = "Premium";
@@ -95,31 +96,46 @@ namespace Server.Domain.Accounts
         }
 
 
-        public static UserAccount CreateGoogleAccount(string userName, string apikey, string emailAddress,
-            string accountId, string locale)
+        public static UserAccount CreateGoogleAccount(
+            string userName, string apikey, string emailAddress,
+            string accountId, string locale
+        )
         {
-            return new UserAccount(userName, emailAddress, null, accountId, apikey, null, null, false, locale,
+            return new UserAccount(
+                userName, emailAddress, null, accountId, apikey, null, null, false,
+                locale,
                 AccountType.Google, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
         }
 
-        public static UserAccount CreateAccount(string userName, string emailAddress, string password, string accountId,
-            AccountType accountType)
+        public static UserAccount CreateAccount(
+            string userName, string emailAddress, string password, string accountId,
+            AccountType accountType
+        )
         {
-            return new UserAccount(userName, emailAddress, password, accountId, null, null, null, false, "en-AU",
+            return new UserAccount(
+                userName, emailAddress, password, accountId, null, null, null, false,
+                "en-AU",
                 accountType, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
         }
 
-        public static UserAccount CreateAccount(string userName, string emailAddress, string password, string accountId,
-            string apiKey, AccountType accountType)
+        public static UserAccount CreateAccount(
+            string userName, string emailAddress, string password, string accountId,
+            string apiKey, AccountType accountType
+        )
         {
-            return new UserAccount(userName, emailAddress, password, accountId, apiKey, null, null, false, "en-AU",
+            return new UserAccount(
+                userName, emailAddress, password, accountId, apiKey, null, null, false,
+                "en-AU",
                 accountType, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
         }
 
-        public static UserAccount CreateAccount(string userName, string emailAddress, string password, string accountId,
-            string apiKey, string companyName, string phoneNumber, bool active, string locale, AccountType accountType)
+        public static UserAccount CreateAccount(
+            string userName, string emailAddress, string password, string accountId,
+            string apiKey, string companyName, string phoneNumber, bool active, string locale, AccountType accountType
+        )
         {
-            return new UserAccount(userName, emailAddress, password, accountId, apiKey, companyName, phoneNumber,
+            return new UserAccount(
+                userName, emailAddress, password, accountId, apiKey, companyName, phoneNumber,
                 active, locale, accountType, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
         }
     }

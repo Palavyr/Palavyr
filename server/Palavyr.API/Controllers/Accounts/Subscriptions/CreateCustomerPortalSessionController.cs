@@ -2,13 +2,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Stripe;
-using Stripe.Checkout;
+using Stripe.BillingPortal;
+
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
     public class CustomerPortalRequest
     {
-        public string SessionId { get; set; }
+        public string CustomerId { get; set; }
         public string ReturnUrl { get; set; }
     }
     
@@ -30,22 +31,17 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
         }
 
         [HttpPost("payments/customer-portal")]
-        public async Task<IActionResult> Create([FromBody] CustomerPortalRequest request)
+        public async Task<string> Create([FromHeader] string accountId, [FromBody] CustomerPortalRequest request)
         {
-            var checkoutSessionId = request.SessionId;
-            var checkoutService = new SessionService(stripeClient);
-            var checkoutSession = await checkoutService.GetAsync(checkoutSessionId);
-            
-            var options = new Stripe.BillingPortal.SessionCreateOptions()
+            var options = new SessionCreateOptions()
             {
-                Customer = checkoutSession.CustomerId,
-                ReturnUrl = request.ReturnUrl
+                Customer = request.CustomerId,
+                ReturnUrl = request.ReturnUrl,
             };
-
-            var service = new Stripe.BillingPortal.SessionService(stripeClient);
+            var service = new SessionService();
             var session = await service.CreateAsync(options);
 
-            return Ok(session);
+            return session.Url;
         }
     }
 }

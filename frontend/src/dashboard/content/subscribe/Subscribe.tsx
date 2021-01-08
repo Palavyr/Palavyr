@@ -9,6 +9,8 @@ import { useHistory } from "react-router-dom";
 import { ApiClient } from "@api-client/Client";
 import { useCallback, useEffect, useState } from "react";
 import { SubscribeStepper } from "../purchse/SubscribeStepper";
+import { FreeProductId, PremiumProductId, ProProductId } from "./ProductIds";
+import { PurchaseTypes, ProductOptions } from "@Palavyr-Types";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -37,27 +39,6 @@ const useStyles = makeStyles((theme) => ({
         zIndex: 1,
     },
 }));
-
-enum PurchaseTypes {
-    Free = "Free",
-    Premium = "Premium",
-    Pro = "Pro",
-}
-
-const FreeProductId = null;
-const PremiumProductId = "prod_IKkWd0H5pk2ZhN";
-const ProProductId = "prod_IKkbC8VyZdgidd";
-
-export type PlanType = "Free" | "Premium" | "Pro";
-
-type ProductOption = {
-    card: React.ReactNode;
-    purchaseType: PurchaseTypes;
-    productId: string | null;
-    productClasses: string;
-    currentplan: boolean;
-};
-type ProductOptions = ProductOption[];
 
 export const Subscribe = () => {
 
