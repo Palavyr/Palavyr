@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Amazon.SimpleEmail;
 using DashboardServer.Data;
+using EmailService.ResponseEmail;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,6 @@ using Palavyr.API.Services.AuthenticationServices;
 using Palavyr.Common.FileSystem.FormPaths;
 using Palavyr.Common.FileSystem.ListPaths;
 using PDFService.Sections.Util;
-using SESEmail = EmailService.ResponseEmail.SESEmail;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
@@ -23,8 +23,8 @@ namespace Palavyr.API.Controllers.WidgetLive
     public class SendWidgetResponseEmailController : ControllerBase
     {
         private readonly IConfiguration config;
-        private readonly SESEmail client;
-        private ILogger<SendWidgetResponseEmailController> logger;
+        private readonly ISesEmail client;
+        private ILogger logger;
         private AccountsContext accountsContext;
         private ConvoContext convoContext;
         private DashContext dashContext;
@@ -34,7 +34,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             AccountsContext accountsContext,
             ConvoContext convoContext, 
             DashContext dashContext, 
-            SESEmail client,
+            ISesEmail client,
             IConfiguration config)
         {
             this.config = config;

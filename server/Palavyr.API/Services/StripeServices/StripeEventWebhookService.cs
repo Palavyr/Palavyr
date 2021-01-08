@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.Extensions.Logging;
@@ -16,7 +15,6 @@ namespace Palavyr.API.Services.StripeServices
     {
         private AccountsContext accountsContext;
         private ILogger<StripeEventWebhookService> logger;
-        private StripeClient stripeClient;
         private IProcessStripeCheckoutSessionCompletedHandler processCheckoutSessionCompletedHandler;
         private readonly IProcessStripeInvoicePaidHandler processStripeInvoicePaidHandler;
         private readonly IProcessStripeInvoicePaymentFailedHandler processStripeInvoicePaymentFailedHandler;
@@ -32,7 +30,6 @@ namespace Palavyr.API.Services.StripeServices
         {
             this.logger = logger;
             this.accountsContext = accountsContext;
-            this.stripeClient = new StripeClient(StripeConfiguration.ApiKey);
             this.processCheckoutSessionCompletedHandler = processCheckoutSessionCompletedHandler;
             this.processStripeInvoicePaidHandler = processStripeInvoicePaidHandler;
             this.processStripeInvoicePaymentFailedHandler = processStripeInvoicePaymentFailedHandler;

@@ -117,6 +117,10 @@ namespace Palavyr.API.Services.AuthenticationServices
             {
                 account.Active = false;
             }
+            else
+            {
+                account.Active = true;
+            }
         }
 
         public async Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenId(string oneTimeCode)

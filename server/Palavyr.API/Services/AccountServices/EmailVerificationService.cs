@@ -17,21 +17,21 @@ namespace Palavyr.API.Services.AccountServices
     {
         private readonly AccountsContext accountsContext;
         private readonly ILogger<EmailVerificationService> logger;
-        public AccountsContext accountContext { get; set; }
-        private SenderVerification Verifier { get; set; }
+        private readonly AccountsContext accountContext;
+        private readonly ISenderVerification senderVerification;
         private IStripeCustomerService stripeCustomerService;
 
         public EmailVerificationService(
             AccountsContext accountsContext,
             ILogger<EmailVerificationService> logger,
-            IAmazonSimpleEmailService sesClient,
-            IStripeCustomerService stripeCustomerService
+            IStripeCustomerService stripeCustomerService,
+            ISenderVerification senderVerification
         )
         {
             this.stripeCustomerService = stripeCustomerService;
             this.accountsContext = accountsContext;
             this.logger = logger;
-            Verifier = new SenderVerification(logger, sesClient);
+            this.senderVerification = senderVerification;
         }
 
         public async Task<bool> ConfirmEmailAddressAsync(string authToken)
@@ -59,7 +59,7 @@ namespace Palavyr.API.Services.AccountServices
             accountsContext.EmailVerifications.Remove(emailVerification);
 
             logger.LogDebug("Verifying email address. Already verified using an authtoken, so this is okay");
-            var emailVerified = await Verifier.VerifyEmailAddressAsync(emailVerification.EmailAddress);
+            var emailVerified = await senderVerification.VerifyEmailAddressAsync(emailVerification.EmailAddress);
             
             if (emailVerified)
             {

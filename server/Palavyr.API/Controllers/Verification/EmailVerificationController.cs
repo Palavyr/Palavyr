@@ -18,9 +18,9 @@ namespace Palavyr.API.Controllers.Verification
     public class EmailVerificationController : ControllerBase
     {
         private ILogger<EmailVerificationController> logger;
-        private DashContext dashContext;
-        private SenderVerification Verifier { get; set; }
-        private IAmazonSimpleEmailService client { get; set; }
+        private readonly ISenderVerification senderVerification;
+        private readonly DashContext dashContext;
+        private readonly IAmazonSimpleEmailService emailClient;
 
         private const string Pending = "Pending";
         private const string Success = "Success";
@@ -28,12 +28,13 @@ namespace Palavyr.API.Controllers.Verification
 
         public EmailVerificationController(
             ILogger<EmailVerificationController> logger,
-            IAmazonSimpleEmailService client,
+            IAmazonSimpleEmailService emailClient,
+            ISenderVerification senderVerification,
             DashContext dashContext)
         {
             this.logger = logger;
-            Verifier = new SenderVerification(logger, client);
-            this.client = client;
+            this.senderVerification = senderVerification;
+            this.emailClient = emailClient;
             this.dashContext = dashContext;
         }
 
@@ -54,7 +55,7 @@ namespace Palavyr.API.Controllers.Verification
             GetIdentityVerificationAttributesResponse response;
             try
             {
-                response = await client.GetIdentityVerificationAttributesAsync(identityRequest);
+                response = await emailClient.GetIdentityVerificationAttributesAsync(identityRequest);
             }
             catch (Exception ex)
             {
@@ -79,7 +80,7 @@ namespace Palavyr.API.Controllers.Verification
                         );
 
                     case (Failed):
-                        result = await Verifier.VerifyEmailAddressAsync(emailRequest.EmailAddress);
+                        result = await senderVerification.VerifyEmailAddressAsync(emailRequest.EmailAddress);
                         area.AreaSpecificEmail = emailRequest.EmailAddress;
                         area.EmailIsVerified = false;
                         await dashContext.SaveChangesAsync();
@@ -103,7 +104,7 @@ namespace Palavyr.API.Controllers.Verification
             }
 
             // unseen email address - start fresh..
-            result = await Verifier.VerifyEmailAddressAsync(emailRequest.EmailAddress);
+            result = await senderVerification.VerifyEmailAddressAsync(emailRequest.EmailAddress);
             if (!result)
                 return EmailVerificationResponse.CreateNew(
                     Failed,

@@ -7,12 +7,18 @@ using Microsoft.Extensions.Logging;
 
 namespace EmailService.VerificationRequest
 {
-    public class SenderVerification
+    public interface ISenderVerification
     {
-        private ILogger logger;
+        public Task<bool> VerifyEmailAddressAsync(string emailAddress);
+
+    }
+    
+    public class SenderVerification : ISenderVerification
+    {
+        private ILogger<SenderVerification> logger;
         private IAmazonSimpleEmailService sesClient;
 
-        public SenderVerification(ILogger logger, IAmazonSimpleEmailService sesClient)
+        public SenderVerification(ILogger<SenderVerification> logger, IAmazonSimpleEmailService sesClient)
         {
             this.logger = logger;
             this.sesClient = sesClient;
