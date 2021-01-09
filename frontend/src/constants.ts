@@ -28,6 +28,8 @@ export const LOGIN = "login";
 
 // PATHS
 export const DASHBOARD_HOME = "/dashboard";
+export const CONVERSATION_REVIEW = "/dashboard/enquiries/conversation"
+export const CONVERSATION_REVIEW_PARAMNAME = "conversationId"
 
 // Dashboard style
 export const DRAWER_WIDTH: number = 240;

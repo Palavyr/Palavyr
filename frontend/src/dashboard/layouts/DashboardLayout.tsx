@@ -60,6 +60,9 @@ const useStyles = makeStyles((theme) => ({
     },
     helpDrawerPaper: {
         width: DRAWER_WIDTH + 300,
+        paddingLeft: "1rem",
+        paddingRight: "1rem",
+        paddingTop: "1rem"
     },
 }));
 

@@ -25,8 +25,9 @@ namespace Palavyr.API.Controllers.Enquiries
         [HttpPut("enquiries/update/{conversationId}")]
         public async Task<IActionResult> UpdateCompletedConversation(string conversationId)
         {
-            var convo = await convoContext.CompletedConversations.SingleOrDefaultAsync(row =>
-                row.ConversationId == conversationId);
+            var convo = await convoContext
+                .CompletedConversations
+                .SingleOrDefaultAsync(row => row.ConversationId == conversationId);
             convo.Seen = !convo.Seen;
             await convoContext.SaveChangesAsync();
             return NoContent();

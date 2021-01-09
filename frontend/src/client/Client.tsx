@@ -22,6 +22,7 @@ import {
     NodeTypeOptions,
     RequiredDetails,
     PlanType,
+    CompletedConversation,
 } from "@Palavyr-Types";
 import { PreCheckResult, WidgetPreferences } from "dashboard/content/demo/ChatDemo";
 import { TableData } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableTypes";
@@ -218,5 +219,6 @@ export class ApiClient {
     public Enquiries = {
         getEnquiries: async (): Promise<AxiosResponse<Enquiries>> => this.client.get(`enquiries`),
         updateEnquiry: async (conversationId: string): Promise<AxiosResponse<Enquiries>> => this.client.put(`enquiries/update/${conversationId}`),
+        getConversation: async (conversationId: string): Promise<AxiosResponse<CompletedConversation>> => this.client.get(`enquiries/review/${conversationId}`)
     };
 }
