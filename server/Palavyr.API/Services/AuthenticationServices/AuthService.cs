@@ -93,7 +93,7 @@ namespace Palavyr.API.Services.AuthenticationServices
 
             var session = CreateNewSession(account);
             var token = CreateNewJwtToken(account);
-            UpdateCurrentAccountState(account);
+            await UpdateCurrentAccountState(account);
 
             await _accountsContext.Sessions.AddAsync(session);
             

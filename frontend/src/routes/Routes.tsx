@@ -53,6 +53,8 @@ import { DeleteAccount } from "dashboard/content/settings/account/DeleteAccount"
 import { DeleteAccountHelp } from "dashboard/content/help/DeleteAccountHelp";
 import { TermsOfServiceDialog } from "legal/TermsOfService";
 import { PrivacyPolicy } from "legal/PrivacyPolicy";
+import { ConversationReview } from "dashboard/content/enquiries/ConversationReview";
+import { ConversationReviewHelp } from "dashboard/content/help/ConversationReviewHelp";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -97,6 +99,10 @@ export const Routes = () => {
             <ProtectedRoute exact path="/dashboard/demo/" component={withLayout(ChatDemo, <ChatDemoHelp />)} />
             <ProtectedRoute exact path="/dashboard/getWidget/" component={withLayout(GetWidget, <GetWidgetHelp />)} />
             <ProtectedRoute exact path="/dashboard/enquiries/" component={withLayout(Enquires, <EnquiriesHelp />)} />
+            <ProtectedRoute exact path="/dashboard/enquiries/conversation" component={withLayout(ConversationReview, <ConversationReviewHelp />)} />
+
+
+
             <ProtectedRoute exact path="/dashboard/subscribe" component={withLayout(Subscribe, <SubscribeHelp />)} />
             <ProtectedRoute exact path="/dashboard/subscribe/purchase/" component={withLayout(Purchase, <PurchaseHelp />)} />
             <ProtectedRoute exact path="/dashboard/subscribe/success" component={withLayout(Success, <SuccessHelp />)} />

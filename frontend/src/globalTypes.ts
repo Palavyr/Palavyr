@@ -371,7 +371,7 @@ export type RequiredDetails = {
 };
 
 export type FormStatusTypes =
-      typeof INVALID_EMAIL
+    | typeof INVALID_EMAIL
     | typeof NOT_A_DEFAULT_ACCOUNT
     | typeof INVALID_PASSWORD
     | typeof INVALID_GOOGLE_TOKEN
@@ -408,3 +408,18 @@ export enum Interval {
 export type PriceMap = {
     [key: string]: string | number;
 };
+
+export type ConversationUpdate = {
+    id: number;
+    conversationId: string;
+    prompt: string;
+    userResponse: string;
+    nodeId: string;
+    nodeCritical: number;
+    nodeType: string;
+    timeStamp: string;
+    isCompleted: number;
+    account: string;
+};
+
+export type CompletedConversation = ConversationUpdate[];
