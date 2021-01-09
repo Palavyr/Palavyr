@@ -1,5 +1,5 @@
 import { Conversation, ConvoNode, Responses } from "@Palavyr-Types";
-import { cloneDeep } from "lodash";
+import { cloneDeep, intersectionWith } from "lodash";
 import { v4 as uuid } from "uuid";
 import { ApiClient } from "@api-client/Client";
 
@@ -122,14 +122,22 @@ export const addNodes = async (parentNode: ConvoNode, nodeList: Conversation, ne
             optionPath: optionPaths[index],
             valueOptions: "",
             isMultiOptionType: false,
-            isTerminalType: false
+            isTerminalType: false,
+            isFromDynamic: false
         };
         transactions.push(newNode);
         nodeList.push(newNode);
     });
 
+    // const dynamicNodes = nodeList.filter((x: ConvoNode) => x.isFromDynamic);
+    // const intersection = intersectionWith(dynamicNodes, nodeList, (x: ConvoNode, y: ConvoNode) => x.nodeType == y.nodeType);
+    // if (intersection.length > 0) {
+    //     return false;
+    // }
+
     const { data } = await client.Conversations.ModifyConversation(transactions, areaIdentifier, idsToDelete);
     setNodes([...cloneDeep(nodeList)]);
+    // return true;
 };
 
 export const updateNodeList = (nodeList: Conversation, newNode: ConvoNode) => {

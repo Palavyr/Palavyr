@@ -89,6 +89,9 @@ namespace DashboardServer.Data.Migrations.ConfigurationMigrations
                     b.Property<bool>("IsCritical")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsFromDynamic")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsMultiOptionType")
                         .HasColumnType("boolean");
 

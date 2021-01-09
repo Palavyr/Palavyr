@@ -39,7 +39,6 @@ export const ConvoTree = () => {
         const { data: nodes } = await client.Conversations.GetConversation(areaIdentifier);
         const { data: nodeOptionList } = await client.Conversations.GetNodeOptionsList(areaIdentifier);
 
-        // TODO: Rename this. This will take the full node list from the server.
         setNodeOptionList(nodeOptionList);
         setNodes(cloneDeep(nodes));
 
@@ -73,7 +72,7 @@ export const ConvoTree = () => {
 
     return (
         <>
-            <ConversationHelp />
+            {/* <ConversationHelp /> */}
             <div className={classes.conversation}>
                 {missingNodeTypes.length > 0 && <MissingDynamicNodes missingNodeTypes={missingNodeTypes} />}
                 <form onSubmit={() => null}>
@@ -87,7 +86,7 @@ export const ConvoTree = () => {
                                     node={rootNode}
                                     nodeList={nodeList}
                                     setNodes={setNodes}
-                                    addNodes={addNodes}
+                                    // addNodes={addNodes}
                                     parentState={true}
                                     changeParentState={() => null}
                                     nodeOptionList={nodeOptionList}

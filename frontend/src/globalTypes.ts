@@ -78,6 +78,7 @@ export type ConvoNode = {
     nodeChildrenString: string;
     isCritical: boolean;
     isRoot: boolean;
+    isFromDynamic: boolean;
     areaIdentifier: string;
     optionPath: Response;
     valueOptions: string; // an array, but bc of the dtabase we store as a string delimited by |peg|
@@ -360,7 +361,11 @@ export type NodeOption = {
     pathOptions: Array<Response>;
     valueOptions: Array<string>;
     text: string;
+    isMultiOptionType: boolean;
+    isTerminalType: boolean;
+    stringName: string | null;
 };
+
 
 // export type NodeTypeOptions = {[index: string]: NodeOptions};
 export type NodeTypeOptions = NodeOption[];

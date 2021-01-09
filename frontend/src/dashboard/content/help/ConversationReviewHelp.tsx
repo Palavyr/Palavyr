@@ -1,6 +1,7 @@
 import React from "react";
-import { HelpSubtitle } from "./helpTitle/HelpSubtitle";
-import { HelpTitle } from "./helpTitle/HelpTitle";
+import { HelpSubtitle } from "./helpComponents/HelpSubtitle";
+import { HelpTitle } from "./helpComponents/HelpTitle";
+import { MoreInformation } from "./helpComponents/MoreInformation";
 
 export const ConversationReviewHelp = () => {
     const title = "Check your Conversation";
@@ -10,6 +11,7 @@ export const ConversationReviewHelp = () => {
         <>
             <HelpTitle title={title} />
             <HelpSubtitle subtitle={details} />
+            <MoreInformation />
         </>
     );
 };

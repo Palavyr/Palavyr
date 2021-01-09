@@ -11,7 +11,7 @@ import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
 export interface IConversationNodeInterface {
     node: ConvoNode;
     nodeList: Array<ConvoNode>;
-    addNodes: (parentNode: ConvoNode, nodeList: Conversation, newIDs: Array<string>, optionPaths: Responses, valueOptions: Array<string>, setNodes: (nodeList: Conversation) => void) => void;
+    // addNodes: (parentNode: ConvoNode, nodeList: Conversation, newIDs: Array<string>, optionPaths: Responses, valueOptions: Array<string>, setNodes: (nodeList: Conversation) => void) => void;
     setNodes: (nodeList: Conversation) => void;
     parentState: boolean;
     changeParentState: (parentState: boolean) => void;
@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const ConversationNodeInterface = ({ nodeOptionList, node, nodeList, optionPath, addNodes, setNodes, parentState, changeParentState }: IConversationNodeInterface) => {
+export const ConversationNodeInterface = ({ nodeOptionList, node, nodeList, optionPath, /*addNodes,*/ setNodes, parentState, changeParentState }: IConversationNodeInterface) => {
     const [modalState, setModalState] = useState<boolean>(false);
 
     const client = new ApiClient();
@@ -109,7 +109,7 @@ export const ConversationNodeInterface = ({ nodeOptionList, node, nodeList, opti
                         Click to Edit
                     </Typography>
                 </Card>
-                <NodeTypeSelector nodeOptionList={nodeOptionList} node={node} nodeList={nodeList} addNodes={addNodes} setNodes={setNodes} parentState={parentState} changeParentState={changeParentState} />
+                <NodeTypeSelector nodeOptionList={nodeOptionList} node={node} nodeList={nodeList} /*addNodes={addNodes}*/ setNodes={setNodes} parentState={parentState} changeParentState={changeParentState} />
                 <FormControlLabel
                     className={classes.formstyle}
                     classes={{

@@ -43,11 +43,12 @@ namespace Server.Domain.Configuration.Constant
         public virtual string StringName => null;
 
         public static NodeTypeOption Create(
-            string value, 
-            string text, 
+            string value,
+            string text,
             List<string> pathOptions,
-            List<string> valueOptions, 
-            bool isMultiOptionType, 
+            List<string> valueOptions,
+            bool isDynamicType,
+            bool isMultiOptionType,
             bool isTerminalType
         )
         {
@@ -63,7 +64,7 @@ namespace Server.Domain.Configuration.Constant
         }
 
         public ConversationNode MapNodeTypeOptionToConversationNode(
-            string nodeId,    
+            string nodeId,
             string text,
             bool isRoot,
             string nodeChildrenString,

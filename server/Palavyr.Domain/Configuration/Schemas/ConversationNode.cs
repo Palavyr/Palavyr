@@ -6,10 +6,9 @@ namespace Server.Domain.Configuration.Schemas
 {
     public class ConversationNode
     {
-        [Key]
-        public int? Id { get; set; }
+        [Key] public int? Id { get; set; }
         public string NodeId { get; set; }
-        public string NodeType { get; set; }    
+        public string NodeType { get; set; }
         public bool Fallback { get; set; }
         public string Text { get; set; }
         public bool IsRoot { get; set; }
@@ -20,15 +19,15 @@ namespace Server.Domain.Configuration.Schemas
         public string AccountId { get; set; }
         public bool IsMultiOptionType { get; set; }
         public bool IsTerminalType { get; set; }
-        
 
         public string NodeChildrenString { get; set; } // stored as comma delimited list as string
-        
+
         public static List<ConversationNode> CreateDefaultNode(string AreaIdentifier, string accountId)
         {
             return new List<ConversationNode>()
             {
-                new ConversationNode() {
+                new ConversationNode()
+                {
                     NodeId = Guid.NewGuid().ToString(),
                     NodeType = "",
                     Fallback = false,
@@ -41,24 +40,25 @@ namespace Server.Domain.Configuration.Schemas
                     IsCritical = false,
                     AccountId = accountId,
                     IsMultiOptionType = false,
-                    IsTerminalType = false
+                    IsTerminalType = false,
                 }
             };
         }
 
         public static ConversationNode CreateNew(
-            string nodeId, 
-            string nodeType, 
-            string text, 
-            string areaIdentifier, 
-            string nodeChildrenString, 
-            string optionPath, 
-            string valueOptions, 
-            string accountId, 
-            bool isRoot = false, 
+            string nodeId,
+            string nodeType,
+            string text,
+            string areaIdentifier,
+            string nodeChildrenString,
+            string optionPath,
+            string valueOptions,
+            string accountId,
+            bool isRoot = false,
             bool isCritical = true,
             bool isMultiOptionType = false,
             bool isTerminalType = false
+            
         )
         {
             return new ConversationNode()
@@ -75,7 +75,7 @@ namespace Server.Domain.Configuration.Schemas
                 IsCritical = isCritical,
                 AccountId = accountId,
                 IsMultiOptionType = isMultiOptionType,
-                IsTerminalType = isTerminalType
+                IsTerminalType = isTerminalType,
             };
         }
     }
