@@ -127,16 +127,8 @@ export const addNodes = async (parentNode: ConvoNode, nodeList: Conversation, ne
         transactions.push(newNode);
         nodeList.push(newNode);
     });
-
-    // const dynamicNodes = nodeList.filter((x: ConvoNode) => x.isFromDynamic);
-    // const intersection = intersectionWith(dynamicNodes, nodeList, (x: ConvoNode, y: ConvoNode) => x.nodeType == y.nodeType);
-    // if (intersection.length > 0) {
-    //     return false;
-    // }
-
     const { data } = await client.Conversations.ModifyConversation(transactions, areaIdentifier, idsToDelete);
     setNodes([...cloneDeep(nodeList)]);
-    // return true;
 };
 
 export const updateNodeList = (nodeList: Conversation, newNode: ConvoNode) => {

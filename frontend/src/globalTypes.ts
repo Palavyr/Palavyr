@@ -456,9 +456,4 @@ export type WidgetPreferences = {
     optionsHeaderFontColor: string;
     chatFontColor: string;
     chatBubbleColor: string;
-
-    // shouldGroup: number;
-    // widgetState: boolean;
-    // id: int;
-    // accountId: string;
 };
