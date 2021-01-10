@@ -1,11 +1,10 @@
 import * as React from "react";
 import { ConvoTableRow } from "../../types";
-import { addResponseMessage, toggleInputDisabled } from "src/widgetCore/store/dispatcher";
+import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
 import { getChildNodes } from "../utils";
 import { TableRow, TableCell, Table, makeStyles } from "@material-ui/core";
 import { responseAction, IProgressTheChat } from "..";
 import { ResponseButton } from "../../common/ResponseButton";
-import { MessageWrapper } from "../common";
 import { SingleRowSingleCell } from "src/common/TableCell";
 import { useState } from "react";
 
@@ -46,30 +45,28 @@ export const makeMultipleChoiceAsPathButtons = ({ node, nodeList, client, convoI
         const [disabled, setDisabled] = useState<boolean>(false);
 
         return (
-            <MessageWrapper>
-                <Table>
-                    <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
-                    <TableRow>
-                        {sortedChildren.map((child: ConvoTableRow) => {
-                            return (
-                                <TableCell className={cls.table}>
-                                    <ResponseButton
-                                        disabled={disabled}
-                                        key={child.id}
-                                        text={child.optionPath}
-                                        onClick={() => {
-                                            var response = child.optionPath;
-                                            responseAction(node, child, nodeList, client, convoId, response, convoContext);
-                                            toggleInputDisabled();
-                                            setDisabled(true);
-                                        }}
-                                    />
-                                </TableCell>
-                            );
-                        })}
-                    </TableRow>
-                </Table>
-            </MessageWrapper>
+            <Table>
+                <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                <TableRow>
+                    {sortedChildren.map((child: ConvoTableRow) => {
+                        return (
+                            <TableCell className={cls.table}>
+                                <ResponseButton
+                                    disabled={disabled}
+                                    key={child.id}
+                                    text={child.optionPath}
+                                    onClick={() => {
+                                        var response = child.optionPath;
+                                        responseAction(node, child, nodeList, client, convoId, response, convoContext);
+                                        toggleInputDisabled();
+                                        setDisabled(true);
+                                    }}
+                                />
+                            </TableCell>
+                        );
+                    })}
+                </TableRow>
+            </Table>
         );
     };
     return Component;

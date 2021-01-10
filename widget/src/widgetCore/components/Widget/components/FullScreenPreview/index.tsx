@@ -6,6 +6,7 @@ import usePortal from './usePortal';
 import './styles.scss';
 import { GlobalState } from '../../../../store/types';
 import { closeFullscreenPreview } from '../../../../store/actions';
+import { WidgetPreferences } from 'src/types';
 
 const close = require('assets/close.svg') as string;
 const plus = require('assets/plus.svg') as string;
@@ -15,7 +16,8 @@ const zoomOut = require('assets/zoom-out.svg') as string;
 
 type Props = {
   fullScreenMode?: boolean;
-  zoomStep?: number
+  zoomStep?: number;
+  customPreferences: WidgetPreferences;
 }
 
 export default function FullScreenPreview({ fullScreenMode, zoomStep }:Props) {

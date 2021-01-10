@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core'
+import { IncompleteAreas } from '@Palavyr-Types'
 import React, { useEffect, useState } from 'react'
-import { IncompleteAreas } from './ChatDemo';
 
 
 const useStyles = makeStyles(theme => ({
@@ -19,7 +19,7 @@ interface IIframe {
     widgetUrl: string;
     apiKey: string;
     iframeRefreshed: boolean;
-    incompleteAreas: Array<IncompleteAreas>;
+    incompleteAreas: IncompleteAreas;
 }
 
 type Iframe = HTMLElement & {
@@ -32,7 +32,6 @@ export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, incompleteAreas }: 
     const classes = useStyles(incompleteAreas.length > 0);
 
     const url = `${widgetUrl}/widget?key=${apiKey}&demo=true`
-    // console.log(`URL from IFRAME: ${url}`);
 
     useEffect(() => {
         if (iframeRefreshed != state) {

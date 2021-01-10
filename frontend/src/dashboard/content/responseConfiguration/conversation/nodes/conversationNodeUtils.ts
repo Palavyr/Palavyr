@@ -122,8 +122,7 @@ export const addNodes = async (parentNode: ConvoNode, nodeList: Conversation, ne
             optionPath: optionPaths[index],
             valueOptions: "",
             isMultiOptionType: false,
-            isTerminalType: false,
-            isFromDynamic: false
+            isTerminalType: false
         };
         transactions.push(newNode);
         nodeList.push(newNode);

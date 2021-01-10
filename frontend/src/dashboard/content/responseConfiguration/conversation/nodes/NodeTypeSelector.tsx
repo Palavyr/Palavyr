@@ -17,10 +17,9 @@ export const NodeTypeSelector = ({ node, nodeList, setNodes, parentState, change
     const [option, setSelectedOption] = useState<string>("");
     const [loaded, setLoaded] = useState<boolean>(false);
     const [alertState, setAlertState] = useState<boolean>(false);
-    const [alertDetails, setAlertDetails] = useState<AlertType>()
+    const [alertDetails, setAlertDetails] = useState<AlertType>();
 
     useEffect(() => {
-
         setLoaded(true);
 
         if (node.nodeType === null) {
@@ -30,27 +29,32 @@ export const NodeTypeSelector = ({ node, nodeList, setNodes, parentState, change
         }
         return () => {
             setLoaded(false);
-        }
-
+        };
     }, [node.nodeType]);
 
-    const handleChange = (event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>) => {
+    const duplicateDynamicFeeNodeFound = (option: string) => {
+        const dynamicNodeTypeOptions = nodeOptionList.filter((x: NodeOption) => x.isDynamicType);
+        if (dynamicNodeTypeOptions.length > 0) {
+            const dynamicNodeTypes = dynamicNodeTypeOptions.map((x: NodeOption) => x.value);
+            const dynamicNodesPresentInTheCurrentNodeList = nodeList.filter((x: ConvoNode) => dynamicNodeTypes.includes(x.nodeType))
+            const dynamicNodes = dynamicNodesPresentInTheCurrentNodeList.map((x: ConvoNode) => x.nodeType);
+            return dynamicNodes.includes(option) ? true : false;
+        }
+        return false
+    }
 
+    const handleChange = (event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>) => {
         const option = event.target.value as string; // unique selection i.e. SelectOneFlat-hlk-lkl-34kjl
         const nodeOption = nodeOptionList.filter((nodeOption: NodeOption) => nodeOption.value === option).pop();
 
-        const dynamicNodesPresentInTheCurrentNodeList = nodeList.map((x: ConvoNode) => x.nodeType);
-        if (dynamicNodesPresentInTheCurrentNodeList.includes(option)) {
-
+        if (duplicateDynamicFeeNodeFound(option)) {
             setAlertDetails({
                 title: `You've already placed dynamic table ${nodeOption?.text} in this conversation`,
-                message: "You can only place each dynamic table in your conversation once. If you would like to change where you've placed it in the conversation, you need to recreate that portion of the tree by selection a different node."
+                message: "You can only place each dynamic table in your conversation once. If you would like to change where you've placed it in the conversation, you need to recreate that portion of the tree by selection a different node.",
             });
             setAlertState(true);
             return;
         }
-
-
 
         const pathOptions = nodeOption?.pathOptions;
         const valueOptions = nodeOption?.valueOptions;
@@ -59,10 +63,10 @@ export const NodeTypeSelector = ({ node, nodeList, setNodes, parentState, change
             throw new Error("Ill defined path options");
         }
         if (valueOptions === undefined) {
-            throw new Error("Ill defined value options - cannot be undefined")
+            throw new Error("Ill defined value options - cannot be undefined");
         }
 
-        const numChildren: number = pathOptions.filter(x => x !== null).length;
+        const numChildren: number = pathOptions.filter((x) => x !== null).length;
 
         const childIds = createNewChildIDs(numChildren);
 
@@ -80,9 +84,9 @@ export const NodeTypeSelector = ({ node, nodeList, setNodes, parentState, change
     };
 
     return (
-    <>
-        {nodeOptionList ? <CustomNodeSelect onChange={handleChange} option={option} nodeOptionList={nodeOptionList} /> : null}
-        {alertDetails && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />}
-    </>
+        <>
+            {nodeOptionList ? <CustomNodeSelect onChange={handleChange} option={option} nodeOptionList={nodeOptionList} /> : null}
+            {alertDetails && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />}
+        </>
     );
 };

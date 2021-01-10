@@ -78,7 +78,6 @@ export type ConvoNode = {
     nodeChildrenString: string;
     isCritical: boolean;
     isRoot: boolean;
-    isFromDynamic: boolean;
     areaIdentifier: string;
     optionPath: Response;
     valueOptions: string; // an array, but bc of the dtabase we store as a string delimited by |peg|
@@ -361,6 +360,7 @@ export type NodeOption = {
     pathOptions: Array<Response>;
     valueOptions: Array<string>;
     text: string;
+    isDynamicType: boolean;
     isMultiOptionType: boolean;
     isTerminalType: boolean;
     stringName: string | null;
@@ -428,3 +428,37 @@ export type ConversationUpdate = {
 };
 
 export type CompletedConversation = ConversationUpdate[];
+
+
+export type PreCheckResult = {
+    isReady: boolean;
+    incompleteAreas: Array<AreaTable>;
+};
+
+export type IncompleteArea = {
+    areaDisplayTitle: string;
+    areaName: string;
+};
+
+export type IncompleteAreas = IncompleteArea[];
+
+export type WidgetPreferences = {
+    selectListColor: string;
+    headerColor: string;
+    fontFamily: string;
+    header: string;
+    title: string;
+    subtitle: string;
+    placeholder: string;
+    listFontColor: string;
+    headerFontColor: string;
+    optionsHeaderColor: string;
+    optionsHeaderFontColor: string;
+    chatFontColor: string;
+    chatBubbleColor: string;
+
+    // shouldGroup: number;
+    // widgetState: boolean;
+    // id: int;
+    // accountId: string;
+};

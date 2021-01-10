@@ -18,6 +18,7 @@ const useStyles = makeStyles(theme => ({
     },
     mainList: (prefs: WidgetPreferences) => ({
         backgroundColor: prefs.selectListColor,
+        color: prefs.listFontColor,
         maxHeight: "100%",
         height: "100%",
         overflow: 'auto',
@@ -28,7 +29,10 @@ const useStyles = makeStyles(theme => ({
     },
     root: (prefs: WidgetPreferences) => ({
         backgroundColor: prefs.headerColor,
+        color: prefs.headerFontColor,
+        textAlign: "center",
         minWidth: 275,
+        borderRadius: "0px"
     }),
     bullet: {
         display: 'inline-block',

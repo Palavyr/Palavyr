@@ -6,7 +6,6 @@ import { IProgressTheChat, responseAction, ConvoContextProperties } from "..";
 import { getChildNodes } from "../utils";
 import { ResponseButton } from "../../common/ResponseButton";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
-import { MessageWrapper } from "../common";
 import { SingleRowSingleCell } from "src/common/TableCell";
 
 export const makePercentOfThreshold = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
@@ -21,7 +20,6 @@ export const makePercentOfThreshold = ({ node, nodeList, client, convoId, convoC
         const [disabled, setDisabled] = useState<boolean>(false);
 
         return (
-            <MessageWrapper>
                 <Table>
                     <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
                     <SingleRowSingleCell>
@@ -65,7 +63,6 @@ export const makePercentOfThreshold = ({ node, nodeList, client, convoId, convoC
                         />
                     </SingleRowSingleCell>
                 </Table>
-            </MessageWrapper>
         );
     };
     return Component;

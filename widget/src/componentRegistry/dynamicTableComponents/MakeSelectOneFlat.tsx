@@ -1,10 +1,9 @@
 import * as React from "react";
-import { addResponseMessage, toggleInputDisabled } from "src/widgetCore/store/dispatcher";
+import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
 import { getChildNodes } from "../utils";
 import { Table, TableRow, TableCell, makeStyles } from "@material-ui/core";
 import { responseAction, IProgressTheChat, ConvoContextProperties, NodeTypes } from "..";
 import { uuid } from "uuidv4";
-import { MessageWrapper } from "../common";
 import { ResponseButton } from "../../common/ResponseButton";
 import { useState } from "react";
 import { SingleRowSingleCell } from "src/common/TableCell";
@@ -30,9 +29,9 @@ export const makeSelectOneFlat = ({ node, nodeList, client, convoId, convoContex
         const [disabled, setDisabled] = useState<boolean>(false);
 
         return (
-            <MessageWrapper>
-                <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+            <>
                 <Table>
+                    <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
                     {options.map((option: string, index: number) => {
                         return (
                             <TableRow key={index}>
@@ -43,8 +42,8 @@ export const makeSelectOneFlat = ({ node, nodeList, client, convoId, convoContex
                                         text={option}
                                         onClick={() => {
                                             const dynamicResponse = {
-                                                [node.nodeType]: option
-                                            }
+                                                [node.nodeType]: option,
+                                            };
 
                                             convoContext[ConvoContextProperties.DynamicResponses].push(dynamicResponse);
 
@@ -61,7 +60,7 @@ export const makeSelectOneFlat = ({ node, nodeList, client, convoId, convoContex
                         );
                     })}
                 </Table>
-            </MessageWrapper>
+            </>
         );
     };
     return Component;

@@ -1,12 +1,11 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Conversation, NodeTypeOptions, RequiredDetails } from "@Palavyr-Types";
+import { Conversation, NodeTypeOptions } from "@Palavyr-Types";
 import { getRootNode, addNodes } from "./nodes/conversationNodeUtils";
 import { ApiClient } from "@api-client/Client";
 import { cloneDeep } from "lodash";
 import { ConversationNode } from "./nodes/ConversationNode";
 import { MissingDynamicNodes } from "./MissingDynamicNodes";
 import { makeStyles } from "@material-ui/core";
-import { ConversationHelp } from "dashboard/content/help/ConversationHelp";
 import { useParams } from "react-router-dom";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import "./ConvoTree.css";
@@ -72,7 +71,6 @@ export const ConvoTree = () => {
 
     return (
         <>
-            {/* <ConversationHelp /> */}
             <div className={classes.conversation}>
                 {missingNodeTypes.length > 0 && <MissingDynamicNodes missingNodeTypes={missingNodeTypes} />}
                 <form onSubmit={() => null}>
@@ -86,7 +84,6 @@ export const ConvoTree = () => {
                                     node={rootNode}
                                     nodeList={nodeList}
                                     setNodes={setNodes}
-                                    // addNodes={addNodes}
                                     parentState={true}
                                     changeParentState={() => null}
                                     nodeOptionList={nodeOptionList}
