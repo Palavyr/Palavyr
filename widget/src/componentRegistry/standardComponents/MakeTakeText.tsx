@@ -4,7 +4,6 @@ import { TextField, Table } from "@material-ui/core";
 import { useState } from "react";
 import { IProgressTheChat, responseAction, ConvoContextProperties } from "..";
 import { getChildNodes } from "../utils";
-import { MessageWrapper } from "../common";
 import { SingleRowSingleCell } from "src/common/TableCell";
 import { ResponseButton } from "src/common/ResponseButton";
 
@@ -20,37 +19,35 @@ export const makeTakeText = ({ node, nodeList, client, convoId, convoContext }: 
         const [disabled, setDisabled] = useState<boolean>(false);
 
         return (
-            <MessageWrapper>
-                <Table>
-                    <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+            <Table>
+                <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
 
-                    <SingleRowSingleCell>
-                        <TextField
-                            disabled={disabled}
-                            label="Write here..."
-                            type="text"
-                            onChange={event => {
-                                setResponse(event.target.value);
-                            }}
-                        />
-                    </SingleRowSingleCell>
-                    <SingleRowSingleCell align="right">
-                        <ResponseButton
-                            disabled={disabled}
-                            text="Submit"
-                            onClick={() => {
-                                setResponse(response);
-                                if (node.isCritical) {
-                                    convoContext[ConvoContextProperties.KeyValues].push({ [node.text]: response });
-                                }
-                                responseAction(node, child, nodeList, client, convoId, response, convoContext);
-                                toggleInputDisabled();
-                                setDisabled(true);
-                            }}
-                        />
-                    </SingleRowSingleCell>
-                </Table>
-            </MessageWrapper>
+                <SingleRowSingleCell>
+                    <TextField
+                        disabled={disabled}
+                        label="Write here..."
+                        type="text"
+                        onChange={event => {
+                            setResponse(event.target.value);
+                        }}
+                    />
+                </SingleRowSingleCell>
+                <SingleRowSingleCell align="right">
+                    <ResponseButton
+                        disabled={disabled || response === ""}
+                        text="Submit"
+                        onClick={() => {
+                            setResponse(response);
+                            if (node.isCritical) {
+                                convoContext[ConvoContextProperties.KeyValues].push({ [node.text]: response });
+                            }
+                            responseAction(node, child, nodeList, client, convoId, response, convoContext);
+                            toggleInputDisabled();
+                            setDisabled(true);
+                        }}
+                    />
+                </SingleRowSingleCell>
+            </Table>
         );
     };
     return Component;

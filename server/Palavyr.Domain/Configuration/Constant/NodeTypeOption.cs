@@ -39,15 +39,21 @@ namespace Server.Domain.Configuration.Constant
          * Whether or not this type should be used to determine incomplete tree paths when searching for missing node types.
          */
         public bool IsTerminalType { get; set; }
+        
+        /*
+         * Whether or not the node type comes from a dynamic table type.
+         */
+        public bool IsDynamicType { get; set; }
 
         public virtual string StringName => null;
 
         public static NodeTypeOption Create(
-            string value, 
-            string text, 
+            string value,
+            string text,
             List<string> pathOptions,
-            List<string> valueOptions, 
-            bool isMultiOptionType, 
+            List<string> valueOptions,
+            bool isDynamicType,
+            bool isMultiOptionType,
             bool isTerminalType
         )
         {
@@ -58,12 +64,13 @@ namespace Server.Domain.Configuration.Constant
                 PathOptions = pathOptions,
                 ValueOptions = valueOptions,
                 IsMultiOptionType = isMultiOptionType,
-                IsTerminalType = isTerminalType
+                IsTerminalType = isTerminalType,
+                IsDynamicType = isDynamicType
             };
         }
 
         public ConversationNode MapNodeTypeOptionToConversationNode(
-            string nodeId,    
+            string nodeId,
             string text,
             bool isRoot,
             string nodeChildrenString,

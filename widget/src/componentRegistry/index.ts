@@ -69,7 +69,7 @@ export enum NodeTypes {
     YesNotSureCombined = "YesNotSureCombined",
     NoNotSureCombined = "NoNotSureCombined",
     TakeText = "TakeText",
-    Info = "Info",
+    ProvideInfo = "ProvideInfo",
     MultipleChoiceAsPath = "MultipleChoiceAsPath",
     MultipleChoiceContinue = "MultipleChoiceContinue",
 
@@ -103,7 +103,7 @@ export const ComponentRegistry: Registry = {
     [NodeTypes.MultipleChoiceContinue]: makeMultipleChoiceContinueButtons,
 
     [NodeTypes.TakeText]: makeTakeText,
-    [NodeTypes.Info]: makeProvideInfo,
+    [NodeTypes.ProvideInfo]: makeProvideInfo,
     [NodeTypes.HowMany]: makeTakeNumber,
     [NodeTypes.HowMuch]: makeTakeNumber,
 

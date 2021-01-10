@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Services.DynamicTableService;
 using Server.Domain.Configuration.Constant;
+using Server.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Response.DynamicTables
 {
@@ -37,8 +38,11 @@ namespace Palavyr.API.Controllers.Response.DynamicTables
                 .DynamicTableMetas
                 .Where(row => row.AccountId == accountId && row.AreaIdentifier == areaId)
                 .ToArrayAsync();
-            
+
             var dynamicTableData = await compileDynamicTables.CompileTables(dynamicTableMetas, accountId, areaId);
+            
+            // todo : ATTEMPTED to send back options list where used dynamic node was removed, but it will destroy the currently used since it also depends on the list.
+            // Filtering has to be done on the frontend.
 
             var defaultNodeTypeOptions = DefaultNodeTypeOptions.DefaultNodeTypeOptionsList;
             var fullNodeTypeOptionsList = defaultNodeTypeOptions.AddAdditionalNodes(dynamicTableData);

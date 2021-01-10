@@ -23,8 +23,9 @@ import {
     RequiredDetails,
     PlanType,
     CompletedConversation,
+    PreCheckResult,
+    WidgetPreferences,
 } from "@Palavyr-Types";
-import { PreCheckResult, WidgetPreferences } from "dashboard/content/demo/ChatDemo";
 import { TableData } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableTypes";
 import { TableNameMap } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableConfiguration";
 

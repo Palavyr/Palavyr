@@ -9,6 +9,7 @@ import QuickButtons from './components/QuickButtons';
 import { AnyFunction } from '../../../../utils/types';
 
 import './style.scss';
+import { WidgetPreferences } from 'src/types';
 
 type Props = {
   title: string;
@@ -26,6 +27,7 @@ type Props = {
   onTextInputChange?: (event: any) => void;
   sendButtonAlt: string;
   showTimeStamp: boolean;
+  customPreferences: WidgetPreferences;
 };
 
 function Conversation({
@@ -43,7 +45,8 @@ function Conversation({
   onQuickButtonClicked,
   onTextInputChange,
   sendButtonAlt,
-  showTimeStamp
+  showTimeStamp,
+  customPreferences
 }: Props) {
   return (
     <div className={cn('rcw-conversation-container', className)} aria-live="polite">
@@ -53,9 +56,10 @@ function Conversation({
         toggleChat={toggleChat}
         showCloseButton={showCloseButton}
         titleAvatar={titleAvatar}
+        customPreferences={customPreferences}
       />
-      <Messages profileAvatar={profileAvatar} showTimeStamp={showTimeStamp} />
-      <QuickButtons onQuickButtonClicked={onQuickButtonClicked} />
+      <Messages profileAvatar={profileAvatar} showTimeStamp={showTimeStamp} customPreferences={customPreferences}/>
+      {/* <QuickButtons onQuickButtonClicked={onQuickButtonClicked} customPreferences={customPreferences} /> */}
       <Sender
         sendMessage={sendMessage}
         placeholder={senderPlaceHolder}

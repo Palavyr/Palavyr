@@ -1,5 +1,5 @@
 import { Conversation, ConvoNode, Responses } from "@Palavyr-Types";
-import { cloneDeep } from "lodash";
+import { cloneDeep, intersectionWith } from "lodash";
 import { v4 as uuid } from "uuid";
 import { ApiClient } from "@api-client/Client";
 
@@ -127,7 +127,6 @@ export const addNodes = async (parentNode: ConvoNode, nodeList: Conversation, ne
         transactions.push(newNode);
         nodeList.push(newNode);
     });
-
     const { data } = await client.Conversations.ModifyConversation(transactions, areaIdentifier, idsToDelete);
     setNodes([...cloneDeep(nodeList)]);
 };

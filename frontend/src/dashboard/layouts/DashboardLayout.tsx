@@ -6,7 +6,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep } from "lodash";
-import { Areas, AreaTable, PlanType } from "@Palavyr-Types";
+import { AlertType, Areas, AreaTable, PlanType } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { DashboardHeader } from "./header/DashboardHeader";
 import { CssBaseline, IconButton, makeStyles, useTheme } from "@material-ui/core";
@@ -182,7 +182,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         }
     };
 
-    const alertDetails = {
+    const alertDetails: AlertType = {
         title: "Maximum areas reached",
         message: "Thanks for using Palavyr! Please consider purchasing a subscription to increase the number of areas you can provide.",
         link: "/dashboard/subscribe",

@@ -11,6 +11,7 @@ import Launcher from './components/Launcher';
 import FullScreenPreview from './components/FullScreenPreview';
 
 import './style.scss';
+import { WidgetPreferences } from 'src/types';
 
 type Props = {
   title: string;
@@ -33,6 +34,7 @@ type Props = {
   showTimeStamp: boolean;
   imagePreview?: boolean;
   zoomStep?: number;
+  customPreferences: WidgetPreferences;
 }
 
 function WidgetLayout({
@@ -56,6 +58,7 @@ function WidgetLayout({
   showTimeStamp,
   imagePreview,
   zoomStep,
+  customPreferences
 }: Props) {
   const dispatch = useDispatch();
   const { dissableInput, showChat, visible } = useSelector((state: GlobalState) => ({
@@ -131,6 +134,7 @@ function WidgetLayout({
           onTextInputChange={onTextInputChange}
           sendButtonAlt={sendButtonAlt}
           showTimeStamp={showTimeStamp}
+          customPreferences={customPreferences}
         />
       }
       {customLauncher ?
@@ -144,7 +148,7 @@ function WidgetLayout({
         />
       }
       {
-        imagePreview && <FullScreenPreview fullScreenMode={fullScreenMode} zoomStep={zoomStep} />
+        imagePreview && <FullScreenPreview fullScreenMode={fullScreenMode} zoomStep={zoomStep} customPreferences={customPreferences}/>
       }
     </div>
   );

@@ -44,6 +44,13 @@ export type WidgetPreferences = {
     headerColor: string;
     fontFamily: string;
     header: string;
+    listFontColor: string;
+    headerFontColor: string;
+    optionsHeaderColor: string;
+    optionsHeaderFontColor: string;
+    chatFontColor: string;
+    chatBubbleColor: string;
+
 }
 
 export type ConversationUpdate = {

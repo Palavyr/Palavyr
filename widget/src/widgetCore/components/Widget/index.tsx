@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { WidgetPreferences } from 'src/types';
 
 import { toggleChat, addUserMessage } from '../../store/actions';
 import { AnyFunction } from '../../utils/types';
@@ -27,6 +28,7 @@ type Props = {
   imagePreview?: boolean;
   zoomStep?: number;
   handleSubmit?: AnyFunction;
+  customPreferences: WidgetPreferences
 }
 
 function Widget({
@@ -49,7 +51,8 @@ function Widget({
   showTimeStamp,
   imagePreview,
   zoomStep,
-  handleSubmit
+  handleSubmit,
+  customPreferences
 }: Props) {
   const dispatch = useDispatch();
 
@@ -60,9 +63,9 @@ function Widget({
   const handleMessageSubmit = (event) => {
     event.preventDefault();
     const userInput = event.target.message.value;
-    
-    if (!userInput.trim()) {      
-      return;      
+
+    if (!userInput.trim()) {
+      return;
     }
 
     handleSubmit?.(userInput);
@@ -98,6 +101,7 @@ function Widget({
       showTimeStamp={showTimeStamp}
       imagePreview={imagePreview}
       zoomStep={zoomStep}
+      customPreferences={customPreferences}
     />
   );
 }

@@ -1,11 +1,10 @@
 import * as React from "react";
-import { addResponseMessage, toggleInputDisabled } from "src/widgetCore/store/dispatcher";
-import { Divider, TextField, Table, TableRow, TableCell, makeStyles } from "@material-ui/core";
+import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
+import { TextField, Table, TableRow, TableCell, makeStyles } from "@material-ui/core";
 import { useState } from "react";
 import { IProgressTheChat, responseAction, ConvoContextProperties } from "..";
 import { getChildNodes } from "../utils";
 import { ResponseButton } from "../../common/ResponseButton";
-import { MessageWrapper } from "../common";
 import { SingleRowSingleCell } from "src/common/TableCell";
 
 export const makeTakeNumber = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
@@ -28,38 +27,36 @@ export const makeTakeNumber = ({ node, nodeList, client, convoId, convoContext }
         const classes = useStyles();
 
         return (
-            <MessageWrapper>
-                <Table>
-                    <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
-                    <TableRow>
-                        <TableCell className={classes.root}>
-                            <TextField
-                                disabled={disabled}
-                                label=""
-                                type="number"
-                                onChange={event => {
-                                    setResponse(event.target.value);
-                                }}
-                            />
-                        </TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className={classes.root} align="right">
-                            <ResponseButton
-                                disabled={disabled}
-                                onClick={() => {
-                                    if (node.isCritical) {
-                                        convoContext[ConvoContextProperties.KeyValues].push({ [node.text]: response });
-                                    }
-                                    responseAction(node, child, nodeList, client, convoId, response, convoContext);
-                                    toggleInputDisabled();
-                                    setDisabled(true);
-                                }}
-                            />
-                        </TableCell>
-                    </TableRow>
-                </Table>
-            </MessageWrapper>
+            <Table>
+                <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                <TableRow>
+                    <TableCell className={classes.root}>
+                        <TextField
+                            disabled={disabled}
+                            label=""
+                            type="number"
+                            onChange={event => {
+                                setResponse(event.target.value);
+                            }}
+                        />
+                    </TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell className={classes.root} align="right">
+                        <ResponseButton
+                            disabled={disabled}
+                            onClick={() => {
+                                if (node.isCritical) {
+                                    convoContext[ConvoContextProperties.KeyValues].push({ [node.text]: response });
+                                }
+                                responseAction(node, child, nodeList, client, convoId, response, convoContext);
+                                toggleInputDisabled();
+                                setDisabled(true);
+                            }}
+                        />
+                    </TableCell>
+                </TableRow>
+            </Table>
         );
     };
     return Component;

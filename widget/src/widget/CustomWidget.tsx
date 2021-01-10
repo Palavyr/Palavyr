@@ -47,7 +47,6 @@ export const CustomWidget = ({ option, preferences }: ICustomWidget) => {
     }, [preferences])
 
     useEffect(() => {
-        addResponseMessage(`Welcome to this awesome chat! You chose: ${option.areaDisplay}`);
         initializeConvo();
 
         if (!isWidgetOpened()) toggleWidget();
@@ -85,6 +84,7 @@ export const CustomWidget = ({ option, preferences }: ICustomWidget) => {
             handleSubmit={handleSubmit}
             fullScreenMode={true}
             showCloseButton={false}
+            customPreferences={preferences}
         />
     )
 }

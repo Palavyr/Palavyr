@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { ConvoNode, Conversation, Responses, NodeTypeOptions, NodeOption } from "@Palavyr-Types";
-import { createNewChildIDs } from "./conversationNodeUtils";
+import { ConvoNode, Conversation, Responses, NodeTypeOptions, NodeOption, AlertType } from "@Palavyr-Types";
+import { addNodes, createNewChildIDs } from "./conversationNodeUtils";
 import { CustomNodeSelect } from "./CustomNodeSelect";
-
+import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 
 export interface INodeTypeSelector {
     node: ConvoNode;
     nodeList: Array<ConvoNode>;
-    addNodes: (parentNode: ConvoNode, nodeList: Conversation, newIDs: Array<string>, optionPaths: Responses, valueOptions: Array<string>, setNodes: (nodeList: Conversation) => void) => void;
     setNodes: (nodeList: Conversation) => void;
     parentState: boolean;
     changeParentState: (parentState: boolean) => void;
     nodeOptionList: NodeTypeOptions;
 }
 
-export const NodeTypeSelector = ({ node, nodeList, addNodes, setNodes, parentState, changeParentState, nodeOptionList }: INodeTypeSelector) => {
-
+export const NodeTypeSelector = ({ node, nodeList, setNodes, parentState, changeParentState, nodeOptionList }: INodeTypeSelector) => {
     const [option, setSelectedOption] = useState<string>("");
     const [loaded, setLoaded] = useState<boolean>(false);
+    const [alertState, setAlertState] = useState<boolean>(false);
+    const [alertDetails, setAlertDetails] = useState<AlertType>();
 
     useEffect(() => {
-
         setLoaded(true);
 
         if (node.nodeType === null) {
@@ -30,16 +29,33 @@ export const NodeTypeSelector = ({ node, nodeList, addNodes, setNodes, parentSta
         }
         return () => {
             setLoaded(false);
-        }
-
+        };
     }, [node.nodeType]);
 
+    const duplicateDynamicFeeNodeFound = (option: string) => {
+        const dynamicNodeTypeOptions = nodeOptionList.filter((x: NodeOption) => x.isDynamicType);
+        if (dynamicNodeTypeOptions.length > 0) {
+            const dynamicNodeTypes = dynamicNodeTypeOptions.map((x: NodeOption) => x.value);
+            const dynamicNodesPresentInTheCurrentNodeList = nodeList.filter((x: ConvoNode) => dynamicNodeTypes.includes(x.nodeType))
+            const dynamicNodes = dynamicNodesPresentInTheCurrentNodeList.map((x: ConvoNode) => x.nodeType);
+            return dynamicNodes.includes(option) ? true : false;
+        }
+        return false
+    }
+
     const handleChange = (event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>) => {
-
         const option = event.target.value as string; // unique selection i.e. SelectOneFlat-hlk-lkl-34kjl
-
-        // const optionPaths = nodeOptionList[option].pathOptions;
         const nodeOption = nodeOptionList.filter((nodeOption: NodeOption) => nodeOption.value === option).pop();
+
+        if (duplicateDynamicFeeNodeFound(option)) {
+            setAlertDetails({
+                title: `You've already placed dynamic table ${nodeOption?.text} in this conversation`,
+                message: "You can only place each dynamic table in your conversation once. If you would like to change where you've placed it in the conversation, you need to recreate that portion of the tree by selection a different node.",
+            });
+            setAlertState(true);
+            return;
+        }
+
         const pathOptions = nodeOption?.pathOptions;
         const valueOptions = nodeOption?.valueOptions;
 
@@ -47,10 +63,10 @@ export const NodeTypeSelector = ({ node, nodeList, addNodes, setNodes, parentSta
             throw new Error("Ill defined path options");
         }
         if (valueOptions === undefined) {
-            throw new Error("Ill defined value options - cannot be undefined")
+            throw new Error("Ill defined value options - cannot be undefined");
         }
 
-        const numChildren: number = pathOptions.filter(x => x !== null).length;
+        const numChildren: number = pathOptions.filter((x) => x !== null).length;
 
         const childIds = createNewChildIDs(numChildren);
 
@@ -68,6 +84,9 @@ export const NodeTypeSelector = ({ node, nodeList, addNodes, setNodes, parentSta
     };
 
     return (
-        nodeOptionList ? <CustomNodeSelect onChange={handleChange} option={option} nodeOptionList={nodeOptionList} /> : null
+        <>
+            {nodeOptionList ? <CustomNodeSelect onChange={handleChange} option={option} nodeOptionList={nodeOptionList} /> : null}
+            {alertDetails && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />}
+        </>
     );
 };

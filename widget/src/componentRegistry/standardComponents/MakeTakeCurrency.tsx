@@ -6,22 +6,19 @@ import { IProgressTheChat, responseAction, ConvoContextProperties } from "..";
 import { getChildNodes } from "../utils";
 import { ResponseButton } from "../../common/ResponseButton";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
-import { MessageWrapper } from "../common";
 import { SingleRowSingleCell } from "src/common/TableCell";
 
 export const makeTakeCurrency = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
-
     toggleInputDisabled();
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
 
     const Component: React.ElementType<{}> = () => {
-
         const [response, setResponse] = useState<number>(0);
         const [disabled, setDisabled] = useState<boolean>(false);
 
         return (
-            <MessageWrapper>
+            <>
                 <Table>
                     <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
                     <SingleRowSingleCell>
@@ -58,7 +55,7 @@ export const makeTakeCurrency = ({ node, nodeList, client, convoId, convoContext
                         />
                     </SingleRowSingleCell>
                 </Table>
-            </MessageWrapper>
+            </>
         );
     };
     return Component;

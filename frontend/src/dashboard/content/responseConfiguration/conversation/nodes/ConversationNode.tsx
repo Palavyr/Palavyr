@@ -10,11 +10,10 @@ export interface IConversationNode {
     nodeList: Conversation;
     node: ConvoNode;
     parentId: string | undefined;
-    addNodes: (parentNode: ConvoNode, nodeList: Conversation, newIDs: Array<string>, optionPaths: Responses, valueOptions: Array<string>, setNodes: (nodeList: Conversation) => void) => void;
     setNodes: (nodeList: Conversation) => void;
     parentState: boolean
     changeParentState: (parentState: boolean) => void;
-    nodeOptionList: NodeTypeOptions; // TODO: Rejig the interface prop and make this prop not a thing
+    nodeOptionList: NodeTypeOptions;
 }
 
 export type lineStyle = {
@@ -31,7 +30,7 @@ export const connectionStyle: lineStyle = {
     zIndex: 0,
 };
 
-export const ConversationNode = ({ nodeList, node, parentId, addNodes, setNodes, parentState, changeParentState, nodeOptionList }: IConversationNode) => {
+export const ConversationNode = ({ nodeList, node, parentId, setNodes, parentState, changeParentState, nodeOptionList }: IConversationNode) => {
 
     const [nodeState, changeNodeState] = useState<boolean>(true);
     const [loaded, setLoaded] = useState(false)
@@ -55,7 +54,6 @@ export const ConversationNode = ({ nodeList, node, parentId, addNodes, setNodes,
                     <ConversationNodeInterface
                         node={node} // node object
                         nodeList={nodeList} // array of node objects
-                        addNodes={addNodes} // func to add nodes to nodelist
                         setNodes={setNodes}
                         parentState={parentState}
                         changeParentState={changeParentState}
@@ -72,7 +70,6 @@ export const ConversationNode = ({ nodeList, node, parentId, addNodes, setNodes,
                                     node={nextNode}
                                     nodeList={nodeList}
                                     parentId={node.nodeId}
-                                    addNodes={addNodes}
                                     setNodes={setNodes}
                                     parentState={nodeState}
                                     changeParentState={changeNodeState}

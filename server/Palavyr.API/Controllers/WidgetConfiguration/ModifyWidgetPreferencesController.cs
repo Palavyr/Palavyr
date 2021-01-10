@@ -19,12 +19,35 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
             this.logger = logger;
             this.dashContext = dashContext;
         }
-        
+
         [HttpPut("widget-config/preferences")]
-        public async Task<IActionResult> SaveWidgetPreferences([FromHeader] string accountId, [FromBody] WidgetPreference preferences)
+        public async Task<IActionResult> SaveWidgetPreferences(
+            [FromHeader] string accountId,
+            [FromBody] WidgetPreference preferences
+        )
         {
             var prefs = await dashContext.WidgetPreferences.SingleOrDefaultAsync(row => row.AccountId == accountId);
-            if (prefs == null) return BadRequest();
+
+            if (!string.IsNullOrWhiteSpace(preferences.SelectListColor))
+            {
+                prefs.SelectListColor = preferences.SelectListColor;
+            }
+
+            if (!string.IsNullOrWhiteSpace(preferences.HeaderColor))
+            {
+                prefs.HeaderColor = preferences.HeaderColor;
+            }
+
+            if (!string.IsNullOrWhiteSpace(preferences.FontFamily))
+            {
+                prefs.FontFamily = preferences.FontFamily;
+            }
+
+            if (!string.IsNullOrWhiteSpace(preferences.Header))
+            {
+                prefs.Header = preferences.Header;
+            }
+
             if (!string.IsNullOrWhiteSpace(preferences.Title))
             {
                 prefs.Title = preferences.Title;
@@ -40,26 +63,36 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
                 prefs.Placeholder = preferences.Placeholder;
             }
 
-            if (!string.IsNullOrWhiteSpace(preferences.Header))
+            if (!string.IsNullOrWhiteSpace(preferences.ListFontColor))
             {
-                prefs.Header = preferences.Header;
+                prefs.ListFontColor = preferences.ListFontColor;
             }
 
-            if (!string.IsNullOrWhiteSpace(preferences.HeaderColor))
+            if (!string.IsNullOrWhiteSpace(preferences.HeaderFontColor))
             {
-                prefs.HeaderColor = preferences.HeaderColor;
+                prefs.HeaderFontColor = preferences.HeaderFontColor;
             }
 
-            if (!string.IsNullOrWhiteSpace(preferences.SelectListColor))
+            if (!string.IsNullOrWhiteSpace(preferences.OptionsHeaderColor))
             {
-                prefs.SelectListColor = preferences.SelectListColor;
+                prefs.OptionsHeaderColor = preferences.OptionsHeaderColor;
             }
 
-            if (!string.IsNullOrWhiteSpace(preferences.FontFamily))
+            if (!string.IsNullOrWhiteSpace(preferences.OptionsHeaderFontColor))
             {
-                prefs.FontFamily = preferences.FontFamily;
+                prefs.OptionsHeaderFontColor = preferences.OptionsHeaderFontColor;
             }
-            
+
+            if (!string.IsNullOrWhiteSpace(preferences.ChatFontColor))
+            {
+                prefs.ChatFontColor = preferences.ChatFontColor;
+            }
+
+            if (!string.IsNullOrWhiteSpace(preferences.ChatBubbleColor))
+            {
+                prefs.ChatBubbleColor = preferences.ChatBubbleColor;
+            }
+
             await dashContext.SaveChangesAsync();
             return NoContent();
         }

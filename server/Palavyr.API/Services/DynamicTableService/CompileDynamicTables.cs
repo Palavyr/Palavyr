@@ -61,6 +61,7 @@ namespace Palavyr.API.Services.DynamicTableService
                         dynamicTableMeta.ValuesAsPaths ? valueOptions : new List<string>() {"Continue"},
                         valueOptions,
                         true,
+                        true,
                         false
                     );
                     dynamicTableData.AddAdditionalNode(nodeTypeOption);
@@ -72,6 +73,7 @@ namespace Palavyr.API.Services.DynamicTableService
                         TreeUtils.TransformRequiredNodeTypeToPrettyName(dynamicTableMeta),
                         new List<string>() {"Continue"},
                         new List<string>() { },
+                        true,
                         false,
                         false
                     );

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Meta } from '@storybook/react/types-6-0';
-import { ConvoTree, IConvoTree } from './ConvoTree';
+import { ConvoTree } from './ConvoTree';
 import { ConvoNode } from '@Palavyr-Types';
 
 
@@ -9,7 +9,7 @@ export default {
     component: ConvoTree
 } as Meta;
 
-const Template = (args: IConvoTree) => <ConvoTree {...args} />;
+const Template = () => <ConvoTree />;
 export const Primary = Template.bind({});
 Primary.args = {
     areaIdentifier: "abc-123",

@@ -1,17 +1,15 @@
 import * as React from "react";
-import { addResponseMessage, toggleInputDisabled } from "src/widgetCore/store/dispatcher";
+import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
 import { Table, TableRow, TableCell, FormControlLabel } from "@material-ui/core";
 import { useState } from "react";
 import { getChildNodes } from "../utils";
 import { responseAction, IProgressTheChat, ConvoContextProperties } from "..";
 import NumberFormat from "react-number-format";
-import { MessageWrapper } from "../common";
 import { ResponseButton } from "../../common/ResponseButton";
 import { IOSSwitch } from "../../common/IOSStyleSwitch";
 import { SingleRowSingleCell } from "src/common/TableCell";
 
 export const makePhoneNumber = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
-    // addResponseMessage(node.text); // USE THIS if you want to place the message
     toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
@@ -25,7 +23,7 @@ export const makePhoneNumber = ({ node, nodeList, client, convoId, convoContext 
         const noBorder = { borderBottom: "none", padding: "8px" };
 
         return (
-            <MessageWrapper>
+            <>
                 <Table>
                     <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
                     <TableRow>
@@ -65,7 +63,7 @@ export const makePhoneNumber = ({ node, nodeList, client, convoId, convoContext 
                         </TableCell>
                     </TableRow>
                 </Table>
-            </MessageWrapper>
+            </>
         );
     };
     return Component;

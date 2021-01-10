@@ -1,42 +1,36 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React from "react";
+import { useSelector } from "react-redux";
 
-import { GlobalState, QuickButton } from 'src/widgetCore/store/types';
-import { AnyFunction } from 'src/widgetCore/utils/types';
+import { GlobalState, QuickButton } from "src/widgetCore/store/types";
+import { AnyFunction } from "src/widgetCore/utils/types";
 
-import './style.scss';
+import "./style.scss";
 
 type Props = {
-  onQuickButtonClicked?: AnyFunction;
-}
+    onQuickButtonClicked?: AnyFunction;
+};
 
 function QuickButtons({ onQuickButtonClicked }: Props) {
-  const buttons = useSelector((state: GlobalState) => state.quickButtons.quickButtons);
+    const buttons = useSelector((state: GlobalState) => state.quickButtons.quickButtons);
 
-  const getComponentToRender = (button: QuickButton) => {
-    const ComponentToRender = button.component;
+    const getComponentToRender = (button: QuickButton) => {
+        const ComponentToRender = button.component;
+        return <ComponentToRender onQuickButtonClicked={onQuickButtonClicked} button={button} />;
+    };
+
+    if (!buttons.length) return null;
+
     return (
-      <ComponentToRender
-        onQuickButtonClicked={onQuickButtonClicked}
-        button={button}
-      />
+        <div className="quick-buttons-container">
+            <ul className="quick-buttons">
+                {buttons.map((button, index) => (
+                    <li className="quick-list-button" key={`${button.label}-${index}`}>
+                        {getComponentToRender(button)}
+                    </li>
+                ))}
+            </ul>
+        </div>
     );
-  }
-
-  if (!buttons.length) return null;
-
-  return (
-    <div className="quick-buttons-container">
-      <ul className="quick-buttons">
-        {buttons.map((button, index) =>
-          <li className="quick-list-button" key={`${button.label}-${index}`}>
-            {getComponentToRender(button)}
-          </li>
-          )
-        }
-      </ul>
-    </div>
-  );
 }
 
 export default QuickButtons;
