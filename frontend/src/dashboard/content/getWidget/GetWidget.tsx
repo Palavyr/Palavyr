@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { Typography, Card, makeStyles } from "@material-ui/core";
 import { ApiClient } from "@api-client/Client";
+import { serverUrl, widgetUrl } from "@api-client/clientUtils";
 
 const useStyles = makeStyles((theme) => ({
     outerCard: {
@@ -35,7 +36,7 @@ export const GetWidget = () => {
                 <Typography paragraph>To add the widget to your website, simply paste the following code into your website's html and apply custom styling:</Typography>
                 {apikey !== "" && (
                     <Typography component="pre" paragraph>
-                        <strong>&lt;iframe src="https://widget.palavyr.com/widget?key={apikey}" /&gt;</strong>
+                        <strong>&lt;iframe src="{widgetUrl}/widget?key={apikey}" /&gt;</strong>
                     </Typography>
                 )}
                 <Typography>
@@ -52,7 +53,7 @@ export const GetWidget = () => {
                 </Typography>
                 <Typography component="pre" paragraph>
                 <p>To do this, send a request to the following url:</p>
-                    <strong>https://server.palavyr.com/api/widget/widget-active-state?key={apikey}</strong>
+                    <strong>{serverUrl}/api/widget/widget-active-state?key={apikey}</strong>
                 </Typography>
                 <Typography>
                     This request must be made with the following custom header:
