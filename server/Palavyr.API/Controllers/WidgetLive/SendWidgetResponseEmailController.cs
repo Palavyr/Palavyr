@@ -54,7 +54,7 @@ namespace Palavyr.API.Controllers.WidgetLive
         {
             logger.LogDebug("Attempting to send email from widget");
 
-            var pdfGenerator = new PdfResponseGenerator(dashContext, accountsContext, convoContext, accountId, areaId,
+            var pdfGenerator = new PdfResponseGenerator(dashContext, accountsContext, accountId, areaId,
                 Request, logger);
             var criticalResponses = new CriticalResponses(emailRequest.KeyValues);
             var attachmentFiles = AttachmentPaths.ListAttachmentsAsDiskPaths(accountId, areaId);

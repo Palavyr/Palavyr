@@ -21,21 +21,18 @@ namespace Palavyr.API.Controllers.Response
         private ILogger<GetResponsePreviewController> logger;
         private DashContext dashContext;
         private AccountsContext accountsContext;
-        private ConvoContext convoContext;
 
         public GetResponsePreviewController(
             ILogger<GetResponsePreviewController> logger, 
             IAmazonS3 s3Client,
             DashContext dashContext,
-            AccountsContext accountsContext,
-            ConvoContext convoContext
+            AccountsContext accountsContext
         )
         {
             this.s3Client = s3Client;
             this.logger = logger;
             this.dashContext = dashContext;
             this.accountsContext = accountsContext;
-            this.convoContext = convoContext;
         }
 
         [HttpGet("preview/estimate/{areaId}")]
@@ -46,7 +43,7 @@ namespace Palavyr.API.Controllers.Response
             var locale = account.Locale;
             var culture = new CultureInfo(locale);
             
-            var pdfGenerator = new PdfResponseGenerator(dashContext, accountsContext, convoContext, accountId, areaId, Request, logger);
+            var pdfGenerator = new PdfResponseGenerator(dashContext, accountsContext, accountId, areaId, Request, logger);
 
             FileLink fileLink;
             try
