@@ -13,11 +13,9 @@ namespace Palavyr.API.Controllers.Response
     {
         private ILogger<GetEmailTemplateController> logger;
         private DashContext dashContext;
-        private AccountsContext accountsContext;
 
-        public GetEmailTemplateController(AccountsContext accountsContext, DashContext dashContext, ILogger<GetEmailTemplateController> logger)
+        public GetEmailTemplateController(DashContext dashContext, ILogger<GetEmailTemplateController> logger)
         {
-            this.accountsContext = accountsContext;
             this.dashContext = dashContext;
             this.logger = logger;
         }

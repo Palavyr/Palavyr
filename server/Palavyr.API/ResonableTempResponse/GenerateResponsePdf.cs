@@ -201,8 +201,10 @@ namespace Palavyr.API.Response
                 dynamicTables);
 
             // Substitute Variables
+            // TODO: abstract variable resplacement in bot the pdf response AND the SendEmailResponse
             var nameElement = emailRequest.KeyValues.SingleOrDefault(dict => dict.ContainsKey("Name"));
             nameElement.TryGetValue("Name", out var clientName);
+            
             var companyName = accountsContext.Accounts.SingleOrDefault(row => row.AccountId == AccountId).CompanyName;
             var logoUri = accountsContext.Accounts.SingleOrDefault(row => row.AccountId == AccountId).AccountLogoUri;
 
@@ -235,7 +237,7 @@ namespace Palavyr.API.Response
             var builder =
                 new UriBuilder()
                 {
-                    // TODO: take these values from the environment
+                    // TODO: take these values from the configuration
                     Scheme = "https", Host = "localhost", Port = 5001,
                     Path = Path.Combine(accountId, MagicPathStrings.PreviewPDF, fileId)
                 };
@@ -289,12 +291,8 @@ namespace Palavyr.API.Response
             return tables;
         }
 
-        /// <summary>
+
         /// Only use for the preview (will generate a sensible row result given the type of dynamic table logged in the area table
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="accountId"></param>
-        /// <returns></returns>
         private async Task<List<Table>> CollectPreviewDynamicTables(Area data, string accountId, CultureInfo culture)
         {
             // compute dynamic table. Probably have to get the correct table 

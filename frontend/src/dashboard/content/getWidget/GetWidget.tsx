@@ -73,6 +73,7 @@ export const GetWidget = () => {
                         <pre>
                             {`
                     <script>
+                        var iframeId = "id-of-your-iframe-container-element";
                         var url = ${serverUrl}/api/widget/widget-precheck?key=${apikey}}
                         fetch(
                             url,
@@ -83,7 +84,7 @@ export const GetWidget = () => {
                         )
                         .then((response) => response.json())
                         .then((result) => {
-                            if (!result.isReady) document.getElementById(frameId).innerHTML = "";
+                            if (!result.isReady) document.getElementById(iframeId).innerHTML = "";
                         })
                         .catch((error) => console.error("Error:", error);
                     </script>
