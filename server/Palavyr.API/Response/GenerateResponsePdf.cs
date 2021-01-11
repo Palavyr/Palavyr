@@ -9,7 +9,6 @@ using Amazon.S3;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.RequestTypes;
 using Palavyr.API.ResponseTypes;
@@ -28,7 +27,6 @@ namespace Palavyr.API.Response
     public class PdfResponseGenerator
     {
         private readonly DashContext dashContext;
-        private readonly ConvoContext convoContext;
         private readonly AccountsContext accountsContext;
         private readonly string AccountId;
         private static readonly HttpClient client = new HttpClient();
@@ -39,7 +37,6 @@ namespace Palavyr.API.Response
         public PdfResponseGenerator(
             DashContext dashContext,
             AccountsContext accountsContext,
-            ConvoContext convoContext,
             string accountId,
             string areaId,
             HttpRequest request,
@@ -48,7 +45,6 @@ namespace Palavyr.API.Response
         {
             this.dashContext = dashContext;
             this.accountsContext = accountsContext;
-            this.convoContext = convoContext;
             AccountId = accountId;
             AreaId = areaId;
             Request = request;
