@@ -84,6 +84,23 @@ namespace Palavyr.API.Controllers.WidgetLive
             var htmlBody = area.EmailTemplate;
             var textBody = ""; // This can be another upload. People can decide one or both. Html is prioritized.
 
+            // Substitute Variables
+            var name = emailRequest.KeyValues.Where(x => x.ContainsKey("Name")).Single();
+            name.TryGetValue("Name", out var clientName);
+        
+            var companyName = (
+                await accountsContext.
+                    Accounts.
+                    SingleOrDefaultAsync(row => row.AccountId == accountId)
+            ).CompanyName;
+            var logoUri = (
+                await accountsContext
+                    .Accounts
+                    .SingleOrDefaultAsync(row => row.AccountId == accountId)
+            ).AccountLogoUri;
+            htmlBody = ResponseVariableSubstitution.MakeVariableSubstitutions(htmlBody, companyName, clientName, logoUri);
+            textBody = ResponseVariableSubstitution.MakeVariableSubstitutions(textBody, companyName, clientName, logoUri);
+
             bool ok;
             if (attachmentFiles.Count == 0)
                 ok = await client.SendEmail(fromAddress, toAddress, subject, htmlBody, textBody);

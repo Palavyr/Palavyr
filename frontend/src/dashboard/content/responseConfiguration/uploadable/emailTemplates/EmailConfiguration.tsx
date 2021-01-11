@@ -4,31 +4,11 @@ import { Upload } from "../Upload";
 import { ViewEmailTemplate } from "./ViewTemplate";
 import { EmailEditor } from "./EmailEditor";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { makeStyles } from "@material-ui/core";
-import { EmailHelp } from "dashboard/content/help/EmailHelp";
+import { makeStyles, Typography } from "@material-ui/core";
 import { useParams } from "react-router-dom";
+import { VariableDetail } from "@Palavyr-Types";
+import { EditorDetails } from "./EditorDetails";
 
-const uploadDetails = () => {
-    return (
-        <div className="alert alert-info">
-            <div>
-                Use this dialog to upload a formatted HTML document that will be sent to potential customers enquiring about commercial purchases. This email will be used to send information, attachments, as well as a copy and a temporary link to the
-                estimate (the link expires in 24 hours).
-            </div>
-            <br></br>
-            <div>
-                When composing the email template, you may choose to include the clients name (supplied during the chat) and a link to the estimate. To do this, simply include the following placeholders for the name and estimate link respectively (
-                <strong>Note the capitalization</strong>):
-                <div>
-                    <ul>
-                        <li>Name</li>
-                        <li>Estimate</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    );
-};
 const buttonText = "Add Email Template";
 const summary = "Upload a new Email Response";
 
@@ -47,17 +27,18 @@ export const EmailConfiguration = () => {
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
     const [loaded, setLoaded] = useState<boolean>(false);
-    const [emailTemplate, setEmailTemplate] = useState("");
-    const [modalState, setModalState] = useState(false);
+    const [emailTemplate, setEmailTemplate] = useState<string>("");
+    const [variableDetails, setVariableDetails] = useState<VariableDetail[]>([]);
+    const [modalState, setModalState] = useState<boolean>(false);
     const toggleModal = () => {
         setModalState(!modalState);
     };
-    const [accordState, setAccordState] = useState(false);
+    const [accordState, setAccordState] = useState<boolean>(false);
     const toggleAccord = () => {
         setAccordState(!accordState);
     };
 
-    const [editorAccordstate, setEditorAccordState] = useState(false);
+    const [editorAccordstate, setEditorAccordState] = useState<boolean>(false);
     const toggleEditorAccord = () => {
         setEditorAccordState(!editorAccordstate);
     };
@@ -65,8 +46,8 @@ export const EmailConfiguration = () => {
     const handleFileRead = async (e: any) => {
         const content = fileReader.result;
         if (content && typeof content == "string") {
-            const { data } = await client.Configuration.Email.SaveEmailTemplate(areaIdentifier, content);
-            setEmailTemplate(data);
+            const { data: emailTemplate } = await client.Configuration.Email.SaveEmailTemplate(areaIdentifier, content);
+            setEmailTemplate(emailTemplate);
             setModalState(false);
             setAccordState(false);
         } else {
@@ -87,8 +68,11 @@ export const EmailConfiguration = () => {
     };
 
     const loadEmailTemplate = useCallback(async () => {
-        const { data } = await client.Configuration.Email.GetEmailTemplate(areaIdentifier);
-        setEmailTemplate(data);
+        const { data: emailTemplate } = await client.Configuration.Email.GetEmailTemplate(areaIdentifier);
+        const { data: variableDetails } = await client.Configuration.Email.GetVariableDetails();
+
+        setVariableDetails(variableDetails);
+        setEmailTemplate(emailTemplate);
         setLoaded(true);
         return () => {
             setLoaded(false);
@@ -104,9 +88,16 @@ export const EmailConfiguration = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier, loadEmailTemplate]);
 
+    const uploadDetails = () => {
+        return <EditorDetails variableDetails={variableDetails} />;
+    };
+
     return (
         <>
-            <EmailHelp />
+            <Typography style={{marginTop: "1.4rem"}} align="center" variant="h4">
+                Email Response
+            </Typography>
+            <Typography paragraph align="center">Use this editor to create an HTML email template that will be sent as the email response for this area.</Typography>
             <Upload
                 modalState={modalState}
                 toggleModal={toggleModal}
@@ -119,7 +110,7 @@ export const EmailConfiguration = () => {
                 uploadDetails={uploadDetails}
                 acceptedFiles={["text/html", "text/plain"]}
             />
-            <EmailEditor accordState={editorAccordstate} toggleAccord={toggleEditorAccord} setEmailTemplate={setEmailTemplate} emailTemplate={emailTemplate}>
+            <EmailEditor uploadDetails={uploadDetails} accordState={editorAccordstate} toggleAccord={toggleEditorAccord} setEmailTemplate={setEmailTemplate} emailTemplate={emailTemplate}>
                 <div className={classes.saveOrCancel}>
                     <SaveOrCancel onSave={() => saveEditorData()} onCancel={() => loadEmailTemplate()} useModal={true} />
                 </div>

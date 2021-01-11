@@ -457,3 +457,8 @@ export type WidgetPreferences = {
     chatFontColor: string;
     chatBubbleColor: string;
 };
+
+export type VariableDetail = {
+    name: string;
+    details: string;
+};
