@@ -25,6 +25,7 @@ import {
     CompletedConversation,
     PreCheckResult,
     WidgetPreferences,
+    VariableDetail,
 } from "@Palavyr-Types";
 import { TableData } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableTypes";
 import { TableNameMap } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableConfiguration";
@@ -115,6 +116,7 @@ export class ApiClient {
 
         Email: {
             GetEmailTemplate: async (areaIdentifier: string): Promise<AxiosResponse<string>> => this.client.get(`email/${areaIdentifier}/emailtemplate`),
+            GetVariableDetails: async (): Promise<AxiosResponse<VariableDetail[]>> => this.client.get(`email/variables`),
             SaveEmailTemplate: async (areaIdentifier: string, content: string): Promise<AxiosResponse<string>> => this.client.put(`email/${areaIdentifier}/emailtemplate`, { emailtemplate: content }),
         },
 

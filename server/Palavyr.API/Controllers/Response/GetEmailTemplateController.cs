@@ -4,7 +4,6 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.Response;
 
 namespace Palavyr.API.Controllers.Response
 {
@@ -14,38 +13,28 @@ namespace Palavyr.API.Controllers.Response
     {
         private ILogger<GetEmailTemplateController> logger;
         private DashContext dashContext;
-        private AccountsContext accountsContext;
 
-        public GetEmailTemplateController(AccountsContext accountsContext, DashContext dashContext, ILogger<GetEmailTemplateController> logger)
+        public GetEmailTemplateController(DashContext dashContext, ILogger<GetEmailTemplateController> logger)
         {
-            this.accountsContext = accountsContext;
             this.dashContext = dashContext;
             this.logger = logger;
         }
         
+        /// <summary>
+        /// This controller should only be used for getting the template for the editor. I.e. NO variable substitution.
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <param name="areaId"></param>
+        /// <returns></returns>
         [HttpGet("email/{areaId}/emailTemplate")]
-        public async Task<IActionResult> GetEmailTemplate([FromHeader] string accountId, string areaId)
+        public async Task<string> GetEmailTemplate([FromHeader] string accountId, string areaId)
         {
             var record = await dashContext
                 .Areas
                 .Where(row => row.AccountId == accountId)
                 .SingleOrDefaultAsync(row => row.AreaIdentifier == areaId);
             var emailTemplate = record.EmailTemplate;
-            
-            // Substitute Variables
-            const string clientName = "[Insert Name]";
-            var companyName = (
-                await accountsContext.
-                    Accounts.
-                    SingleOrDefaultAsync(row => row.AccountId == accountId)
-            ).CompanyName;
-            var logoUri = (
-                await accountsContext
-                    .Accounts
-                    .SingleOrDefaultAsync(row => row.AccountId == accountId)
-            ).AccountLogoUri;
-            emailTemplate = ResponseVariableSubstitution.MakeVariableSubstitutions(emailTemplate, companyName, clientName, logoUri);
-            return Ok(emailTemplate);
+            return emailTemplate;
         }
         
     }

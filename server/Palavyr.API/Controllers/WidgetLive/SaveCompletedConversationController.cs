@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
@@ -48,6 +49,16 @@ namespace Palavyr.API.Controllers.WidgetLive
             var completedConversation = CompleteConversation.BindReceiverToSchemaType(conversationId, accountId,
                 areaName, emailTemplateUsed, name, email, phone);
 
+            // do a quick check to see if the conversation ID already exists. If it does, delete it -- later  we should throw an exception
+            // TODO: Throw an exception
+            var existingConvo = convoContext.CompletedConversations.SingleOrDefault(row => row.ConversationId == conversationId);
+            if (existingConvo != null)
+            {
+                convoContext.CompletedConversations.Remove(existingConvo);
+                await convoContext.SaveChangesAsync();
+
+            }
+            
             // TODO: Add validation on the phone number and the name perhaps
             await convoContext.CompletedConversations.AddAsync(completedConversation);
             await convoContext.SaveChangesAsync();

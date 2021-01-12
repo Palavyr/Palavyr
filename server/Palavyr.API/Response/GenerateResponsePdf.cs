@@ -7,12 +7,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Amazon.S3;
 using DashboardServer.Data;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.RequestTypes;
 using Palavyr.API.ResponseTypes;
+using Palavyr.API.Services.EntityServices;
 using Palavyr.Common.FileSystem;
 using Palavyr.Common.FileSystem.FormPaths;
 using Palavyr.Common.FileSystem.LocalServices;
@@ -25,41 +24,48 @@ using Server.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Response
 {
-    public class PdfResponseGenerator
+    public interface IPdfResponseGenerator
+    {
+        Task<FileLink> CreatePdfResponsePreviewAsync(CultureInfo culture, string accountId, string areaId);
+        Task<FileLink> CreatePdfResponsePreviewAsync(IAmazonS3 s3Client, CultureInfo culture, string accountId, string areaId);
+        Task<string> GeneratePdfResponseAsync(
+            CriticalResponses criticalResponses,
+            EmailRequest emailRequest,
+            CultureInfo culture,
+            string localWriteToPath,
+            string identifier,
+            string accountId,
+            string areaId
+        );
+    }
+
+    public class PdfResponseGenerator : IPdfResponseGenerator
     {
         private readonly DashContext dashContext;
-        private readonly ConvoContext convoContext;
-        private readonly AccountsContext accountsContext;
-        private readonly string AccountId;
-        private static readonly HttpClient client = new HttpClient();
-        private readonly ILogger logger;
-        private string AreaId { get; set; }
-        private HttpRequest Request { get; set; }
+        private static readonly HttpClient Client = new HttpClient();
+        private readonly ILogger<PdfResponseGenerator> logger;
+        private readonly IAccountDataService accountDataService;
+        private readonly IAreaDataService areaDataService;
 
         public PdfResponseGenerator(
             DashContext dashContext,
             AccountsContext accountsContext,
-            ConvoContext convoContext,
-            string accountId,
-            string areaId,
-            HttpRequest request,
-            ILogger logger
+            ILogger<PdfResponseGenerator> logger,
+            IAccountDataService accountDataService,
+            IAreaDataService areaDataService
         )
         {
             this.dashContext = dashContext;
-            this.accountsContext = accountsContext;
-            this.convoContext = convoContext;
-            AccountId = accountId;
-            AreaId = areaId;
-            Request = request;
             this.logger = logger;
+            this.accountDataService = accountDataService;
+            this.areaDataService = areaDataService;
         }
 
-        public async Task<FileLink> CreatePdfResponsePreviewAsync(CultureInfo culture)
+        public async Task<FileLink> CreatePdfResponsePreviewAsync(CultureInfo culture, string accountId, string areaId)
         {
-            var areaData = GetDeepAreaData(); // This was fucking stupid. Impossible to test.
-            var userAccount = GetUserAccount();
-            var accountId = userAccount.AccountId;
+            var areaData = areaDataService.GetSingleAreaDataRecursive(accountId, areaId);
+            var userAccount = accountDataService.GetUserAccount(accountId);
+
             logger.LogDebug("-------------CreatePdfResponsePreviewAsync-------------------");
             var criticalResponses = new CriticalResponses(new List<Dictionary<string, string>>()
             {
@@ -69,15 +75,14 @@ namespace Palavyr.API.Response
 
             logger.LogDebug("Attempting to collect table data....");
             var staticTables = CollectStaticTables(areaData, culture);
-            var dynamicTables = await CollectPreviewDynamicTables(areaData, AccountId, culture);
+            var dynamicTables = await CollectPreviewDynamicTables(areaData, accountId, culture);
 
             logger.LogDebug($"Generating PDF Html string to send to express server...");
             var html = PdfGenerator.GenerateNewPDF(userAccount, areaData, criticalResponses, staticTables,
                 dynamicTables);
 
             var randomFileName = Guid.NewGuid().ToString();
-            var localWriteToPath_PDFPreview =
-                FormFilePath.FormResponsePreviewLocalFilePath(accountId, randomFileName, "pdf");
+            var localWriteToPath_PDFPreview = FormFilePath.FormResponsePreviewLocalFilePath(accountId, randomFileName, "pdf");
 
             logger.LogDebug(
                 $"Local path used to save the pdf from express (being sent to the express server: {localWriteToPath_PDFPreview}");
@@ -96,7 +101,7 @@ namespace Palavyr.API.Response
                 throw new Exception();
             }
 
-            var link = CreatePreviewUrlLink(AccountId, fileId);
+            var link = CreatePreviewUrlLink(accountId, fileId);
             var fileLink = FileLink.CreateLink("Preview", link, fileId);
             return fileLink;
         }
@@ -105,14 +110,15 @@ namespace Palavyr.API.Response
         /// Overload: Used to create a response pdf and save a temp copy to S3 for creating a presigned URL. Same strat for our pdfs.
         /// </summary>
         /// <param name="s3Client"></param>
+        /// <param name="culture"></param>
+        /// <param name="accountId"></param>
         /// <returns></returns>
-        public async Task<FileLink> CreatePdfResponsePreviewAsync(IAmazonS3 s3Client, CultureInfo culture)
+        public async Task<FileLink> CreatePdfResponsePreviewAsync(IAmazonS3 s3Client, CultureInfo culture, string accountId, string areaId)
         {
             logger.LogDebug("-------------CreatePdfResponsePreviewAsync-------------------");
 
-            var areaData = GetDeepAreaData(); // This was fucking stupid. Impossible to test.
-            var userAccount = GetUserAccount();
-            var accountId = userAccount.AccountId;
+            var areaData = areaDataService.GetSingleAreaDataRecursive(accountId, areaId);
+            var userAccount = accountDataService.GetUserAccount(accountId);
 
             var criticalResponses = new CriticalResponses(new List<Dictionary<string, string>>()
             {
@@ -122,7 +128,7 @@ namespace Palavyr.API.Response
 
             logger.LogDebug("Attempting to collect table data....");
             var staticTables = CollectStaticTables(areaData, culture);
-            var dynamicTables = await CollectPreviewDynamicTables(areaData, AccountId, culture);
+            var dynamicTables = await CollectPreviewDynamicTables(areaData, accountId, culture);
 
             logger.LogDebug($"Generating PDF Html string to send to express server...");
             var html = PdfGenerator.GenerateNewPDF(
@@ -154,7 +160,7 @@ namespace Palavyr.API.Response
             string link;
             try
             {
-                link = await UriUtils.CreatePreSignedPreviewUrlLink(logger, AccountId, safeFileNameStem,
+                link = await UriUtils.CreatePreSignedPreviewUrlLink(logger, accountId, safeFileNameStem,
                     safeFileNamePath, s3Client);
                 logger.LogDebug("Successfully created a presigned link to the pdf!");
             }
@@ -182,11 +188,13 @@ namespace Palavyr.API.Response
             EmailRequest emailRequest,
             CultureInfo culture,
             string localWriteToPath,
-            string identifier
+            string identifier,
+            string accountId,
+            string areaId
         )
         {
-            var areaData = GetDeepAreaData();
-            var userAccount = GetUserAccount();
+            var areaData = areaDataService.GetSingleAreaDataRecursive(accountId, areaId);
+            var userAccount = accountDataService.GetUserAccount(accountId);
 
             // TODO: Handle Multiple Dynamic Responses
             var dynamicResponses = emailRequest.DynamicResponses.Count > 0
@@ -194,26 +202,17 @@ namespace Palavyr.API.Response
                 : new List<Dictionary<string, string>>() {new Dictionary<string, string>() { }};
 
             var staticTables = CollectStaticTables(areaData, culture);
-            var dynamicTables =
-                await CollectRealDynamicTables(AccountId, dynamicResponses, culture); // TODO Support  multiple
+            var dynamicTables = await CollectRealDynamicTables(accountId, dynamicResponses, culture); // TODO Support  multiple
 
-            var html = PdfGenerator.GenerateNewPDF(userAccount, areaData, criticalResponses, staticTables,
-                dynamicTables);
+            var html = PdfGenerator.GenerateNewPDF(userAccount, areaData, criticalResponses, staticTables, dynamicTables);
 
-            // Substitute Variables
-            var nameElement = emailRequest.KeyValues.SingleOrDefault(dict => dict.ContainsKey("Name"));
-            nameElement.TryGetValue("Name", out var clientName);
-            var companyName = accountsContext.Accounts.SingleOrDefault(row => row.AccountId == AccountId).CompanyName;
-            var logoUri = accountsContext.Accounts.SingleOrDefault(row => row.AccountId == AccountId).AccountLogoUri;
-
-            html = ResponseVariableSubstitution.MakeVariableSubstitutions(html, companyName, clientName, logoUri);
-
+            html = ResponseCustomizer.Customize(html, emailRequest, userAccount);
+            
             var fileName = await GeneratePdfFromHtml(html, LocalServices.PdfServiceUrl, localWriteToPath, identifier);
             return fileName;
         }
 
-        private async Task<string> GeneratePdfFromHtml(string htmlString, string serviceUrl, string localWriteToPath,
-            string identifier)
+        private async Task<string> GeneratePdfFromHtml(string htmlString, string serviceUrl, string localWriteToPath, string identifier)
         {
             var values = new Dictionary<string, string>
             {
@@ -223,7 +222,7 @@ namespace Palavyr.API.Response
             };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(serviceUrl, content);
+            var response = await Client.PostAsync(serviceUrl, content);
             var fileName = await response.Content.ReadAsStringAsync();
             return fileName;
         }
@@ -235,31 +234,12 @@ namespace Palavyr.API.Response
             var builder =
                 new UriBuilder()
                 {
-                    // TODO: take these values from the environment
+                    // TODO: take these values from the configuration
                     Scheme = "https", Host = "localhost", Port = 5001,
                     Path = Path.Combine(accountId, MagicPathStrings.PreviewPDF, fileId)
                 };
             logger.LogDebug($"URI used for the preview: {builder.Uri.ToString()}");
             return builder.Uri.ToString();
-        }
-
-        private Area GetDeepAreaData()
-        {
-            var areaData = dashContext.Areas
-                .Where(row => row.AccountId == AccountId)
-                .Include(row => row.ConversationNodes)
-                .Include(row => row.DynamicTableMetas)
-                .Include(row => row.StaticTablesMetas)
-                .ThenInclude(meta => meta.StaticTableRows)
-                .ThenInclude(row => row.Fee)
-                .Single(row => row.AreaIdentifier == AreaId);
-            return areaData;
-        }
-
-        private UserAccount GetUserAccount()
-        {
-            var userAccount = accountsContext.Accounts.Single(row => row.AccountId == AccountId);
-            return userAccount;
         }
 
         private static List<Table> CollectStaticTables(Area areaData, CultureInfo culture)
@@ -289,12 +269,8 @@ namespace Palavyr.API.Response
             return tables;
         }
 
-        /// <summary>
+
         /// Only use for the preview (will generate a sensible row result given the type of dynamic table logged in the area table
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="accountId"></param>
-        /// <returns></returns>
         private async Task<List<Table>> CollectPreviewDynamicTables(Area data, string accountId, CultureInfo culture)
         {
             // compute dynamic table. Probably have to get the correct table 

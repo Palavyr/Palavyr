@@ -24,7 +24,7 @@ namespace Palavyr.API.Controllers.Response
         }
 
         [HttpPut("email/{areaId}/emailTemplate")]
-        public async Task<IActionResult> Modify([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] Text text)
+        public async Task<string> Modify([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] Text text)
         {
             var currentArea = dashContext
                 .Areas
@@ -32,7 +32,7 @@ namespace Palavyr.API.Controllers.Response
                 .Single(row => row.AreaIdentifier == areaId);
             currentArea.EmailTemplate = text.EmailTemplate;
             await dashContext.SaveChangesAsync();
-            return Ok(currentArea.EmailTemplate);
+            return currentArea.EmailTemplate;
         }
     }
 }

@@ -48,7 +48,7 @@ export const ConversationReview = () => {
 
     useEffect(() => {
         loadConversation();
-    });
+    }, []);
     const numberPropertyGetter = (convo: ConversationUpdate) => {
         return convo.id;
     };

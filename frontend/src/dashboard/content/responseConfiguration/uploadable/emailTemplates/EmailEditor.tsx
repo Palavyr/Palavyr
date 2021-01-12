@@ -7,13 +7,15 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { cloneDeep } from 'lodash';
+import { VariableDetail } from '@Palavyr-Types';
 
-interface IEdit {
+export interface IEdit {
     accordState: any;
     toggleAccord: any;
     setEmailTemplate: any;
     emailTemplate: any;
     children: React.ReactNode;
+    uploadDetails: () => React.ReactNode;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -39,30 +41,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-
-const editorDetails = () => {
-
-    return (
-        <div className="alert alert-info">
-            <div>
-                Use this editor to create an HTML email template that will be sent as the email response for this area.
-                </div><br></br>
-            <div>
-                When composing the email template, you may choose to include variables that will be substituted from your account details and from the chat. Currently the supported variables are:
-                        <div>
-                    <ul>
-                        <li>&#123;%Name%&#125; : The name provided by the client in the chat dialog.</li>
-                        <li>&#123;%Company%&#125; : Your company name provided in Settings. </li>
-                        <li>&#123;%Logo%&#125; : The logo you provided in Settings</li>
-                    </ul>
-                </div>
-
-            </div>
-        </div>
-    )
-}
-
-export const EmailEditor = ({ accordState, toggleAccord, emailTemplate, setEmailTemplate, children }: IEdit) => {
+export const EmailEditor = ({ uploadDetails, accordState, toggleAccord, emailTemplate, setEmailTemplate, children }: IEdit) => {
 
     const classes = useStyles();
     const initData = cloneDeep(emailTemplate);
@@ -81,7 +60,7 @@ export const EmailEditor = ({ accordState, toggleAccord, emailTemplate, setEmail
             <AccordionDetails className={classes.accordianBody} >
                 <div className={classes.table}>
                     <div>
-                        {editorDetails()}
+                       {uploadDetails()}
                     </div>
                     <br></br>
                     <div className={classes.editorContainer}>

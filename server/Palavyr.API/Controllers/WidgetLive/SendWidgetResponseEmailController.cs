@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Amazon.SimpleEmail;
 using DashboardServer.Data;
 using EmailService.ResponseEmail;
 using Microsoft.AspNetCore.Authorization;
@@ -23,39 +22,39 @@ namespace Palavyr.API.Controllers.WidgetLive
     public class SendWidgetResponseEmailController : ControllerBase
     {
         private readonly IConfiguration config;
+        private readonly IPdfResponseGenerator pdfResponseGenerator;
         private readonly ISesEmail client;
         private ILogger logger;
         private AccountsContext accountsContext;
-        private ConvoContext convoContext;
         private DashContext dashContext;
 
         public SendWidgetResponseEmailController(
-            ILogger<SendWidgetResponseEmailController> logger, 
+            ILogger<SendWidgetResponseEmailController> logger,
             AccountsContext accountsContext,
-            ConvoContext convoContext, 
-            DashContext dashContext, 
+            DashContext dashContext,
             ISesEmail client,
-            IConfiguration config)
+            IConfiguration config,
+            IPdfResponseGenerator pdfResponseGenerator
+        )
         {
             this.config = config;
+            this.pdfResponseGenerator = pdfResponseGenerator;
             this.client = client;
             this.logger = logger;
             this.accountsContext = accountsContext;
             this.dashContext = dashContext;
-            this.convoContext = convoContext;
         }
 
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.WidgetScheme)]
         [HttpPost("widget/area/{areaId}/email/send")]
         public async Task<IActionResult> SendEmail(
-            [FromHeader] string accountId, 
+            [FromHeader] string accountId,
             [FromRoute] string areaId,
-            [FromBody] EmailRequest emailRequest)
+            [FromBody] EmailRequest emailRequest
+        )
         {
             logger.LogDebug("Attempting to send email from widget");
 
-            var pdfGenerator = new PdfResponseGenerator(dashContext, accountsContext, convoContext, accountId, areaId,
-                Request, logger);
             var criticalResponses = new CriticalResponses(emailRequest.KeyValues);
             var attachmentFiles = AttachmentPaths.ListAttachmentsAsDiskPaths(accountId, areaId);
 
@@ -67,8 +66,16 @@ namespace Palavyr.API.Controllers.WidgetLive
             var safeFileNameStem = emailRequest.ConversationId;
             var safeFilePath = FormFilePath.FormResponsePDFFilePath(accountId, safeFileNameStem);
 
-            await pdfGenerator.GeneratePdfResponseAsync(criticalResponses, emailRequest, culture, safeFilePath,
-                safeFileNameStem);
+            await pdfResponseGenerator.GeneratePdfResponseAsync(
+                criticalResponses, 
+                emailRequest, 
+                culture, 
+                safeFilePath,
+                safeFileNameStem,
+                accountId,
+                areaId
+                
+                );
             var fullPdfResponsePath = FormFilePath.FormResponsePDFFilePath(accountId, safeFilePath);
             if (DiskUtils.ValidatePathExists(fullPdfResponsePath))
             {
@@ -77,18 +84,20 @@ namespace Palavyr.API.Controllers.WidgetLive
 
             var fromAddress = accountsContext.Accounts.Single(row => row.AccountId == accountId).EmailAddress;
             var toAddress = emailRequest.EmailAddress;
-            
-            // TODO: Add database entry and frontend component to configure this value per area
+
             var area = dashContext.Areas.Single(row => row.AreaIdentifier == areaId);
             var subject = area.Subject;
             var htmlBody = area.EmailTemplate;
             var textBody = ""; // This can be another upload. People can decide one or both. Html is prioritized.
 
+            htmlBody = ResponseCustomizer.Customize(htmlBody, emailRequest, account);
+
             bool ok;
             if (attachmentFiles.Count == 0)
                 ok = await client.SendEmail(fromAddress, toAddress, subject, htmlBody, textBody);
             else
-                ok = await client.SendEmailWithAttachments(fromAddress, toAddress, subject, htmlBody, textBody,
+                ok = await client.SendEmailWithAttachments(
+                    fromAddress, toAddress, subject, htmlBody, textBody,
                     attachmentFiles);
 
             return Ok(ok);
