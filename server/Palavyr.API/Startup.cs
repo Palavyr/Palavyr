@@ -19,9 +19,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Palavyr.API.CustomMiddleware;
+using Palavyr.API.Response;
 using Palavyr.API.Services.AccountServices;
 using Palavyr.API.Services.AuthenticationServices;
 using Palavyr.API.Services.DynamicTableService;
+using Palavyr.API.Services.EntityServices;
 using Palavyr.API.Services.StripeServices;
 using Palavyr.API.Services.StripeServices.StripeWebhookHandlers;
 using Palavyr.Background;
@@ -189,6 +191,9 @@ namespace Palavyr.API
             services.AddTransient<ICompileDynamicTables, CompileDynamicTables>();
             services.AddSingleton<ISesEmail, SesEmail>();
             services.AddTransient<ISenderVerification, SenderVerification>();
+            services.AddTransient<IPdfResponseGenerator, PdfResponseGenerator>();
+            services.AddTransient<IAccountDataService, AccountDataService>();
+            services.AddTransient<IAreaDataService, AreaDataService>();
         }
 
         public void Configure(

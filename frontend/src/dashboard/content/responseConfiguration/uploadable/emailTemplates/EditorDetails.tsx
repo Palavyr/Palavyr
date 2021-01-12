@@ -16,7 +16,7 @@ export const EditorDetails = ({ variableDetails }: UploadDetailProps) => {
                         {variableDetails.map((x: VariableDetail) => {
                             return (
                                 <li>
-                                    {x.name}: {x.details}
+                                    {x.pattern}: {x.details}
                                 </li>
                             );
                         })}

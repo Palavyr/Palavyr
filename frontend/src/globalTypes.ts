@@ -460,5 +460,6 @@ export type WidgetPreferences = {
 
 export type VariableDetail = {
     name: string;
+    pattern: string;
     details: string;
 };
