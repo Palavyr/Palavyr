@@ -3,7 +3,7 @@ import classNames from "classnames";
 import React from "react";
 import { WidgetPreferences } from "src/types";
 
-const close = require("assets/clear-button.svg") as string;
+// const close = require("assets/clear-button.svg") as string;
 
 import "./style.scss";
 
@@ -52,12 +52,12 @@ function Header({ title, subtitle, toggleChat, showCloseButton, titleAvatar, cus
     const cls = useStyles({ headerColor: customPreferences.headerColor, headerFontColor: customPreferences.headerFontColor });
     return (
         <div className={classNames(cls.header, cls.flexProperty)}>
-            {showCloseButton && (
+            {/* {showCloseButton && (
                 <button className="rcw-close-button" onClick={toggleChat}>
                     <img src={close} className="rcw-close" alt="close" />
                 </button>
-            )}
-            <h4 className={classNames("rcw-title", cls.header)}>
+            )} */}
+            <h4 className={"rcw-title"}>
                 {titleAvatar && <img src={titleAvatar} className="avatar" alt="profile" />}
                 {title}
             </h4>

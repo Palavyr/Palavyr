@@ -8,6 +8,7 @@ import { FormStatusTypes, GoogleAuthResponse } from "@Palavyr-Types";
 import { COULD_NOT_FIND_SERVER, GOOGLE_ACCOUNT_NOT_FOUND, INVALID_EMAIL, INVALID_GOOGLE_TOKEN, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, NOT_A_GOOGLE_ACCOUNT } from "@constants";
 import { useEffect } from "react";
 import { LocalStorage } from "localStorage/localStorage";
+import { SessionStorage } from "localStorage/sessionStorage";
 // import { SessionStorage } from "sessionStorage/sessionStorage";
 
 export interface IFormDialogContent {
@@ -44,7 +45,7 @@ export const FormDialogContent = ({ rememberMe, setRememberMe, loginEmail, setLo
     const cls = useStyles();
 
     useEffect(() => {
-        const isRemembered = LocalStorage.checkIsRemembered();
+        const isRemembered = SessionStorage.checkIsRemembered();
         setRememberMe(isRemembered);
     }, [])
 
