@@ -7,6 +7,7 @@ import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import { Credentials, FormStatusTypes, GoogleAuthResponse } from "@Palavyr-Types";
 import { LocalStorage } from "localStorage/localStorage";
+import { SessionStorage } from "localStorage/sessionStorage";
 import {
     COULD_NOT_FIND_ACCOUNT,
     COULD_NOT_FIND_ACCOUNT_WITH_GOOGLE,
@@ -25,6 +26,7 @@ import {
 } from "@constants";
 import { noop } from "lodash";
 import { FormDialogContent } from "@common/components/borrowed/FormDialogContent";
+import { useEffect } from "react";
 
 export type GoogleResponse = {
     tokenId: string;
@@ -49,10 +51,20 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [loginEmail, setLoginEmail] = useState<string>("");
     const [loginPassword, setLoginPassword] = useState<string>("");
+    const [rememberMe, setRememberMe] = useState<boolean>(false);
 
     const classes = useStyles();
 
     const history = useHistory();
+
+    useEffect(() => {
+        const remembered = SessionStorage.getRememberMe();
+        if (remembered !== undefined){
+            const {emailAddress: emailAddress, password: password} = remembered;
+            setLoginEmail(emailAddress);
+            setLoginPassword(password);
+        }
+    }, [])
 
     const success = () => {
         setTimeout(() => {
@@ -101,6 +113,13 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
 
     const onFormSubmit = async (e: { preventDefault: () => void }) => {
         e.preventDefault();
+
+        if (rememberMe && loginEmail && loginPassword) {
+            SessionStorage.setRememberMe(loginEmail, loginPassword);
+        } else {
+            SessionStorage.unsetRememberMe();
+        }
+
         await login();
     };
 
@@ -115,6 +134,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
         }
         setIsLoading(false);
     };
+
     const responseGoogleSuccess = async (authResponse: GoogleAuthResponse) => {
         Auth.ClearAuthentication();
 
@@ -148,6 +168,8 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
             headline="Login"
             content={
                 <FormDialogContent
+                    rememberMe={rememberMe}
+                    setRememberMe={setRememberMe}
                     status={status}
                     responseGoogleSuccess={responseGoogleSuccess}
                     responseGoogleFailure={responseGoogleFailure}

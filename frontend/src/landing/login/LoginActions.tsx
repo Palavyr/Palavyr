@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Typography, makeStyles, Divider } from '@material-ui/core';
+import { Button, Typography, makeStyles } from '@material-ui/core';
 import classNames from 'classnames';
 import { ButtonCircularProgress } from '@common/components/borrowed/ButtonCircularProgress';
 
@@ -45,7 +45,6 @@ export const LoginActions = ({ isLoading, openChangePasswordDialog }: ILoginActi
                 type="submit"
                 fullWidth
                 variant="contained"
-                // color="secondary"
                 disabled={isLoading}
                 size="large"
             >

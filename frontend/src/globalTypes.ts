@@ -463,3 +463,8 @@ export type VariableDetail = {
     pattern: string;
     details: string;
 };
+
+export type RememberMe = {
+    emailAddress: string;
+    password: string;
+};

@@ -6,6 +6,9 @@ import { DividerWithText } from "../DividerWithText";
 import { GoogleLogin } from "auth/googlebutton/GoogleLogin";
 import { FormStatusTypes, GoogleAuthResponse } from "@Palavyr-Types";
 import { COULD_NOT_FIND_SERVER, GOOGLE_ACCOUNT_NOT_FOUND, INVALID_EMAIL, INVALID_GOOGLE_TOKEN, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, NOT_A_GOOGLE_ACCOUNT } from "@constants";
+import { useEffect } from "react";
+import { LocalStorage } from "localStorage/localStorage";
+// import { SessionStorage } from "sessionStorage/sessionStorage";
 
 export interface IFormDialogContent {
     loginEmail: string;
@@ -18,6 +21,8 @@ export interface IFormDialogContent {
     status: FormStatusTypes;
     responseGoogleSuccess(res: GoogleAuthResponse): void;
     responseGoogleFailure(res: GoogleAuthResponse): void;
+    rememberMe: boolean;
+    setRememberMe(rememberMe: boolean): void;
 }
 
 const useStyles = makeStyles({
@@ -35,8 +40,14 @@ const useStyles = makeStyles({
     },
 });
 
-export const FormDialogContent = ({ loginEmail, setLoginEmail, loginPassword, setLoginPassword, isPasswordVisible, setIsPasswordVisible, responseGoogleSuccess, responseGoogleFailure, setStatus, status }: IFormDialogContent) => {
+export const FormDialogContent = ({ rememberMe, setRememberMe, loginEmail, setLoginEmail, loginPassword, setLoginPassword, isPasswordVisible, setIsPasswordVisible, responseGoogleSuccess, responseGoogleFailure, setStatus, status }: IFormDialogContent) => {
     const cls = useStyles();
+
+    useEffect(() => {
+        const isRemembered = LocalStorage.checkIsRemembered();
+        setRememberMe(isRemembered);
+    }, [])
+
     return (
         <>
             <div className={cls.centeredItems}>
@@ -99,7 +110,7 @@ export const FormDialogContent = ({ loginEmail, setLoginEmail, loginPassword, se
                 onVisibilityChange={setIsPasswordVisible}
                 isVisible={isPasswordVisible}
             />
-            <FormControlLabel className={cls.formControlLabel} control={<Checkbox color="primary" />} label={<Typography variant="body1">Remember me</Typography>} />
+            <FormControlLabel className={cls.formControlLabel} control={<Checkbox checked={rememberMe} onClick={() => setRememberMe(!rememberMe)} color="primary" />} label={<Typography variant="body1">Remember me</Typography>} />
             {status === "verificationEmailSend" ? <HighlightedInformation>We have sent instructions on how to reset your password to your email address</HighlightedInformation> : null}
         </>
     );
