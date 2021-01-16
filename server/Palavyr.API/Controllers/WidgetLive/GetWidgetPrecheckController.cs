@@ -10,7 +10,7 @@ using Palavyr.API.Utils;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
-    [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.WidgetScheme)]
+    [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
     [Route("api")]
     [ApiController]
     public class GetWidgetPreCheckController : ControllerBase

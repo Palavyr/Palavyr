@@ -10,7 +10,7 @@
         public const string SessionId = "sessionId";
         public const string DevAccess = "secretDevAccess";
         public const string DevAccount = "dashboardDev";
-        public const string WidgetAccess = "widgetAccess";
+        public const string ApiKeyAccess = "apiKeyAccess";
 
     }
 }

@@ -8,7 +8,7 @@ using Palavyr.API.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
-    [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.WidgetScheme)]
+    [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
     [Route("api")]
     [ApiController]
     public class GetLiveWidgetActiveStateController
@@ -16,7 +16,8 @@ namespace Palavyr.API.Controllers.WidgetLive
         private DashContext dashContext;
         private ILogger<GetLiveWidgetActiveStateController> logger;
 
-        public GetLiveWidgetActiveStateController(DashContext dashContext,
+        public GetLiveWidgetActiveStateController(
+            DashContext dashContext,
             ILogger<GetLiveWidgetActiveStateController> logger)
         {
             this.logger = logger;

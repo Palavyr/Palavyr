@@ -29,10 +29,6 @@ export const LandingPageDialogSelector = ({ dialogOpen, openTermsDialog, openReg
         onClose();
     }, [onClose, setLoginStatus, setRegisterStatus]);
 
-    const handleResetPassword = () => {
-        console.log("TODO: Reset Password Email")
-    }
-
     const printDialog = useCallback(() => {
         switch (dialogOpen) {
             case REGISTER:
@@ -60,7 +56,6 @@ export const LandingPageDialogSelector = ({ dialogOpen, openTermsDialog, openReg
                     <ChangePasswordDialog
                         setLoginStatus={setLoginStatus}
                         onClose={openLoginDialog}
-                        handleResetPassword={handleResetPassword}
                     />
                 );
             default:
@@ -80,9 +75,9 @@ export const LandingPageDialogSelector = ({ dialogOpen, openTermsDialog, openReg
     ]);
 
     return (
-        <Fragment>
+        <>
             {dialogOpen && <ModalBackdrop open />}
             {printDialog()}
-        </Fragment>
+        </>
     );
 }

@@ -21,13 +21,14 @@ export const VisibilityPasswordTextField = ({ isVisible, onVisibilityChange, ...
                         <IconButton
                             aria-label="Toggle password visibility"
                             onClick={() => {
-                                onVisibilityChange(!isVisible);
+                                if (onVisibilityChange !== undefined)
+                                    onVisibilityChange(!isVisible);
                             }}
                             onMouseDown={(event) => {
                                 event.preventDefault();
                             }}
                         >
-                            {isVisible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                            {(isVisible ? <VisibilityIcon /> : <VisibilityOffIcon />)}
                         </IconButton>
                     </InputAdornment>
                 ),

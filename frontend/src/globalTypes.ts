@@ -463,3 +463,25 @@ export type VariableDetail = {
     pattern: string;
     details: string;
 };
+
+export type RememberMe = {
+    emailAddress: string;
+    password: string;
+};
+
+export type ResetEmailResponse = {
+    message: string;
+    status: boolean;
+    link: string;
+}
+
+export type ResetPasswordResponse = {
+    message: string;
+    status: boolean;
+}
+
+export type VerificationResponse = {
+    message: string;
+    status: boolean;
+    apiKey: string;
+};

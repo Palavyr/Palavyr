@@ -8,7 +8,7 @@ using Server.Domain.Conversation;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
-    [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.WidgetScheme)]
+    [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
     [Route("api")]
     [ApiController]
     public class UpdateChatHistoryController : ControllerBase

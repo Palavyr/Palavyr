@@ -45,7 +45,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             this.dashContext = dashContext;
         }
 
-        [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.WidgetScheme)]
+        [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
         [HttpPost("widget/area/{areaId}/email/send")]
         public async Task<IActionResult> SendEmail(
             [FromHeader] string accountId,

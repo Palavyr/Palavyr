@@ -18,7 +18,6 @@ using Palavyr.Common.FileSystem.LocalServices;
 using Palavyr.FileSystem.Aws;
 using PDFService;
 using PDFService.Sections.Util;
-using Server.Domain.Accounts;
 using Server.Domain.Configuration.Constant;
 using Server.Domain.Configuration.Schemas;
 
@@ -49,7 +48,6 @@ namespace Palavyr.API.Response
 
         public PdfResponseGenerator(
             DashContext dashContext,
-            AccountsContext accountsContext,
             ILogger<PdfResponseGenerator> logger,
             IAccountDataService accountDataService,
             IAreaDataService areaDataService

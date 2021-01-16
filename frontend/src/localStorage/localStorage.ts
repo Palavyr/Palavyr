@@ -1,6 +1,4 @@
-
 class LocalStorageAccess {
-
     private AuthString: string = "authenticated";
     private SessionString: string = "sessionId";
     private JwtTokenString: string = "Authorization";
@@ -14,11 +12,11 @@ class LocalStorageAccess {
 
     private _setItem(key: string, val: boolean | string) {
         const converted = val.toString();
-        localStorage.setItem(key, converted);
+        sessionStorage.setItem(key, converted);
     }
 
     private _getItem(key: string) {
-        return localStorage.getItem(key);
+        return sessionStorage.getItem(key);
     }
 
     setEmailAddress(emailAddress: string) {
@@ -35,15 +33,15 @@ class LocalStorageAccess {
 
     setAuthorization(sessionId: string, jwtToken: string) {
         this._setItem(this.AuthString, true);
-        this._setItem(this.SessionString, sessionId)
-        this._setItem(this.JwtTokenString, jwtToken)
+        this._setItem(this.SessionString, sessionId);
+        this._setItem(this.JwtTokenString, jwtToken);
     }
 
     setGoogleImage(imageUrl: string) {
         this._setItem(this.googleImage, imageUrl);
     }
 
-    setGoogleLoginType(){
+    setGoogleLoginType() {
         this._setItem(this.loginType, this.GoogleLoginType);
     }
     setDefaultLoginType() {
@@ -51,7 +49,7 @@ class LocalStorageAccess {
     }
 
     setIsActive(val: boolean) {
-        this._setItem(this.active, val)
+        this._setItem(this.active, val);
     }
 
     isActive() {
@@ -60,12 +58,12 @@ class LocalStorageAccess {
     }
 
     isAuthenticated() {
-        var auth = this._getItem(this.AuthString)
+        var auth = this._getItem(this.AuthString);
         return auth === "true" ? true : false;
     }
 
     unsetAuthorization() {
-        this._setItem(this.EmailString, "")
+        this._setItem(this.EmailString, "");
         this._setItem(this.AuthString, false);
         this._setItem(this.SessionString, "");
         this._setItem(this.JwtTokenString, "");
@@ -91,5 +89,5 @@ class LocalStorageAccess {
     }
 }
 
-const LocalStorage = new LocalStorageAccess()
-export { LocalStorage }
+const LocalStorage = new LocalStorageAccess();
+export { LocalStorage };

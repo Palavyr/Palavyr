@@ -55,6 +55,10 @@ import { TermsOfServiceDialog } from "legal/TermsOfService";
 import { PrivacyPolicy } from "legal/PrivacyPolicy";
 import { ConversationReview } from "dashboard/content/enquiries/ConversationReview";
 import { ConversationReviewHelp } from "dashboard/content/help/ConversationReviewHelp";
+import { ConfirmYourResetLink } from "@landing/components/passwordReset/ConfirmYourResetLink";
+import { RESET_PASSWORD_FORM, RESET_PASSWORD_VERIFY, RESET_PASSWORD_SUCCESS } from "@constants";
+import { RenderPasswordDialog } from "@landing/components/passwordReset/SubmitNewPassword";
+import { RenderResetSuccess } from "@landing/components/passwordReset/PasswordResetSuccess";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -78,6 +82,9 @@ export const Routes = () => {
             <Route exact path="/" component={LandingPage} />
             <Route exact path="/privacy-policy" component={PrivacyPolicy} />
             <Route exact path="/terms-of-service" component={TermsOfServiceDialog} />
+            <Route exact path={RESET_PASSWORD_VERIFY} component={ConfirmYourResetLink} />
+            <Route exact path={RESET_PASSWORD_FORM} component={RenderPasswordDialog} />
+            <Route exact path={RESET_PASSWORD_SUCCESS} component={RenderResetSuccess} />
 
             <ProtectedRoute exact path="/dashboard/" component={withLayout(WelcomeToTheDashboard, <WelcomeToTheDashboardHelp />)} />
             <ProtectedRoute exact path="/dashboard/welcome" component={withLayout(WelcomeToTheDashboard, <WelcomeToTheDashboardHelp />)} />
