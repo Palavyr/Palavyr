@@ -59,7 +59,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
 
     useEffect(() => {
         const remembered = SessionStorage.getRememberMe();
-        if (remembered !== undefined){
+        if (remembered !== null){
             const {emailAddress: emailAddress, password: password} = remembered;
             setLoginEmail(emailAddress);
             setLoginPassword(password);

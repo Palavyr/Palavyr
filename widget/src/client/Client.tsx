@@ -28,7 +28,7 @@ const CreateClient = (secretKey: string): IClient => {
     var AxiosClient: AxiosInstance = axios.create(
         {
             headers: {
-                "action": "widgetAccess"
+                "action": "apiKeyAccess"
             }
         }
     )

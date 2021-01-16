@@ -8,7 +8,7 @@ using Palavyr.API.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
-    [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.WidgetScheme)]
+    [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
     [Route("api")]
     [ApiController]
     public class GetWidgetPreferencesController : ControllerBase

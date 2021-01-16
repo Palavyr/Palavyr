@@ -9,6 +9,11 @@ class SessionStorageAccess {
         sessionStorage.setItem(key, converted);
     }
 
+    private _setLocalStorageItem(key: string, val: boolean | string) {
+        const converted = val.toString();
+        localStorage.setItem(key, converted);
+    }
+
     private _getItem(key: string) {
         return sessionStorage.getItem(key);
     }
@@ -16,56 +21,43 @@ class SessionStorageAccess {
     private _isSet(val: string) {
         // only pass the predefined keys from above list
         const value = this._getItem(val);
-        if (this._isNullOrUndefined(val) || val === "") {
-            return false;
-        }
-        return true;
+        return !this._isNullOrUndefinedOrWhiteSpace(val);
     }
 
-    private _isNullOrUndefined(val: any): boolean {
-        if (val === null || val === undefined) {
-            return true;
-        }
-        return false;
+    private _isNullOrUndefinedOrWhiteSpace(val: any): boolean {
+        return (val === null || val === undefined || val === "")
     }
 
     public setRememberMe(emailAddress: string, password: string) {
-        if (!this._isSet(emailAddress) || !this._isSet(password)) {
-            this.unsetRememberMe();
-            return;
-        }
         this._setItem(this.rememberMeEmail, emailAddress);
         this._setItem(this.rememberMePassword, password);
     }
 
-    public getRememberMe(): RememberMe | undefined {
+    public getRememberMe(): RememberMe | null {
         const emailAddress = this._getItem(this.rememberMeEmail);
         const password = this._getItem(this.rememberMePassword);
 
-        const unsetResponse = { emailAddress: "", password: "" };
+        if (this._isNullOrUndefinedOrWhiteSpace(emailAddress)) {
+            this.unsetRememberMe();
+            return null;
+        }
+        if (this._isNullOrUndefinedOrWhiteSpace(password)) {
+            this.unsetRememberMe();
+            return null;
+        }
 
-        if (this._isNullOrUndefined(emailAddress)) {
-            this.unsetRememberMe();
-            return unsetResponse;
-        }
-        if (this._isNullOrUndefined(password)) {
-            this.unsetRememberMe();
-            return unsetResponse;
-        }
         if (emailAddress === null || password === null) {
             // ... type narrowing.
-            return;
+            return null;
         }
 
         return { emailAddress: emailAddress, password: password };
     }
 
     public checkIsRemembered(): boolean {
-        if (!this._isSet(this.rememberMeEmail) || !this._isSet(this.rememberMePassword)) {
-            return false;
-        }
-        return true;
+        return this._isSet(this.rememberMeEmail) && this._isSet(this.rememberMePassword);
     }
+
     public unsetRememberMe(): void {
         this._setItem(this.rememberMePassword, "");
         this._setItem(this.rememberMeEmail, "");
@@ -74,4 +66,3 @@ class SessionStorageAccess {
 
 const SessionStorage = new SessionStorageAccess();
 export { SessionStorage };
-

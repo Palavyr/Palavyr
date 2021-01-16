@@ -83,8 +83,8 @@ namespace Palavyr.API
                         // ValidAudience = Configuration["JwtToken:Issuer"],
                     };
                 })
-                .AddScheme<WidgetAuthSchemeOptions, WidgetAuthenticationHandler>(
-                    AuthenticationSchemeNames.WidgetScheme,
+                .AddScheme<ApiKeyAuthSchemeOptions, ApiKeyAuthenticationHandler>(
+                    AuthenticationSchemeNames.ApiKeyScheme,
                     op => { });
                
             services.AddCors(options =>

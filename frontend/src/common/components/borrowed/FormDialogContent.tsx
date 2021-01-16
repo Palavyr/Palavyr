@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TextField, FormControlLabel, Checkbox, Typography, makeStyles, Divider } from "@material-ui/core";
+import { TextField, FormControlLabel, Checkbox, Typography, makeStyles } from "@material-ui/core";
 import { VisibilityPasswordTextField } from "./VisibilityPasswordTextField";
 import { HighlightedInformation } from "./HighlightedInformation";
 import { DividerWithText } from "../DividerWithText";
@@ -7,9 +7,8 @@ import { GoogleLogin } from "auth/googlebutton/GoogleLogin";
 import { FormStatusTypes, GoogleAuthResponse } from "@Palavyr-Types";
 import { COULD_NOT_FIND_SERVER, GOOGLE_ACCOUNT_NOT_FOUND, INVALID_EMAIL, INVALID_GOOGLE_TOKEN, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, NOT_A_GOOGLE_ACCOUNT } from "@constants";
 import { useEffect } from "react";
-import { LocalStorage } from "localStorage/localStorage";
+// import { LocalStorage } from "localStorage/localStorage";
 import { SessionStorage } from "localStorage/sessionStorage";
-// import { SessionStorage } from "sessionStorage/sessionStorage";
 
 export interface IFormDialogContent {
     loginEmail: string;

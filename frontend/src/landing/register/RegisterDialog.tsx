@@ -9,6 +9,7 @@ import { useHistory } from "react-router-dom";
 import GoogleLogin, { GoogleLoginProps, GoogleLoginResponse } from "react-google-login";
 import { DividerWithText } from "@common/components/DividerWithText";
 import { googleOAuthClientId } from "@api-client/clientUtils";
+import { INVALID_EMAIL, PASSWORDS_DONT_MATCH } from "@constants";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -87,12 +88,12 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
             return;
         }
         if (registerPassword && registerPassword.value !== registerPassword.value) {
-            setStatus("passwordsDontMatch");
+            setStatus(PASSWORDS_DONT_MATCH);
             return;
         }
 
         if (registerEmail && (registerEmail.value === "" || registerEmail.value === null)) {
-            setStatus("invalidEmail")
+            setStatus(INVALID_EMAIL)
             return;
         }
 
