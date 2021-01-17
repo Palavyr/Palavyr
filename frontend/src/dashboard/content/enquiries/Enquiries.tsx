@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     headerCell: {
         fontWeight: "bold",
         fontSize: "16pt",
-        textAlign: "center"
+        textAlign: "center",
     },
     headerRow: {
         borderBottom: "3px solid black",
@@ -20,8 +20,8 @@ const useStyles = makeStyles((theme) => ({
         padding: "1rem",
     },
     tableCell: {
-        textAlign: "center"
-    }
+        textAlign: "center",
+    },
 }));
 
 export const Enquires = () => {
@@ -29,12 +29,15 @@ export const Enquires = () => {
     const cls = useStyles();
 
     const [enquiries, setEnquiries] = useState<Enquiries>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const loadEnquiries = useCallback(async () => {
         var { data: enqs } = await client.Enquiries.getEnquiries();
         setEnquiries(enqs);
+        setLoading(false);
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [setLoading]);
 
     const numberPropertyGetter = (enquiry: EnquiryRow) => {
         return enquiry.id;
@@ -47,14 +50,20 @@ export const Enquires = () => {
     };
 
     const formConversationReviewPath = (conversationId: string) => {
-        const convoPath = webUrl + CONVERSATION_REVIEW + `?${CONVERSATION_REVIEW_PARAMNAME}=${conversationId}`;
-        console.log(convoPath);
-        return convoPath;
+        return webUrl + CONVERSATION_REVIEW + `?${CONVERSATION_REVIEW_PARAMNAME}=${conversationId}`;
     };
 
     useEffect(() => {
         loadEnquiries();
     }, [loadEnquiries]);
+
+    const NoDataAvailable = () => {
+        return (
+            <div style={{paddingTop: "3rem"}}>
+                <Typography align="center" variant="h4">There are no completed enquires yet.</Typography>;
+            </div>
+        );
+    };
 
     return (
         <div>
@@ -80,18 +89,30 @@ export const Enquires = () => {
                         {sortByPropertyNumeric(numberPropertyGetter, enquiries).map((enq: EnquiryRow, index: number) => {
                             return (
                                 <TableRow style={{ backgroundColor: enq.seen ? "white" : "lightgray", fontWeight: enq.seen ? "normal" : "bold" }} key={enq.conversationId}>
-                                    <TableCell className={cls.tableCell} key={enq.conversationId + "a"}>{index + 1}</TableCell>
-                                    <TableCell className={cls.tableCell} key={enq.conversationId + "b"}>{enq.name}</TableCell>
-                                    <TableCell className={cls.tableCell} key={enq.conversationId + "c"}>{enq.email}</TableCell>
-                                    <TableCell className={cls.tableCell} key={enq.conversationId + "d"}>{enq.phoneNumber}</TableCell>
+                                    <TableCell className={cls.tableCell} key={enq.conversationId + "a"}>
+                                        {index + 1}
+                                    </TableCell>
+                                    <TableCell className={cls.tableCell} key={enq.conversationId + "b"}>
+                                        {enq.name}
+                                    </TableCell>
+                                    <TableCell className={cls.tableCell} key={enq.conversationId + "c"}>
+                                        {enq.email}
+                                    </TableCell>
+                                    <TableCell className={cls.tableCell} key={enq.conversationId + "d"}>
+                                        {enq.phoneNumber}
+                                    </TableCell>
                                     <TableCell className={cls.tableCell} key={enq.conversationId + "e"}>
                                         <a href={formConversationReviewPath(enq.conversationId)}>Conversation Details</a>
                                     </TableCell>
                                     <TableCell className={cls.tableCell} key={enq.conversationId + "f"}>
                                         <a href={enq.responsePdfLink.link}>Response PDF</a>
                                     </TableCell>
-                                    <TableCell className={cls.tableCell} key={enq.conversationId + "g"}>{enq.areaName}</TableCell>
-                                    <TableCell className={cls.tableCell} key={enq.conversationId + "h"}>{enq.timeStamp}</TableCell>
+                                    <TableCell className={cls.tableCell} key={enq.conversationId + "g"}>
+                                        {enq.areaName}
+                                    </TableCell>
+                                    <TableCell className={cls.tableCell} key={enq.conversationId + "h"}>
+                                        {enq.timeStamp}
+                                    </TableCell>
                                     <TableCell className={cls.tableCell} key={enq.conversationId + "i"}>
                                         <Checkbox checked={enq.seen} onClick={() => toggleSeenValue(enq.conversationId)}></Checkbox>
                                     </TableCell>
@@ -101,6 +122,7 @@ export const Enquires = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            {!loading && enquiries.length === 0 && <NoDataAvailable />}
         </div>
     );
 };

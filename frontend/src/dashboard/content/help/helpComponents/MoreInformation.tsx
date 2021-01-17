@@ -5,8 +5,8 @@ export const MoreInformation = () => {
     return (
         <>
             <div>For more information, view our youtube tutorial series.</div>
-            {links.map((link: string) => {
-                return <p>{link}</p>;
+            {links.map((link: string, index: number) => {
+                return <p key={index}>{link}</p>;
             })}
         </>
     );

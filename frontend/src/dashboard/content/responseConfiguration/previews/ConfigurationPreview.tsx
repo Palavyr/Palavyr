@@ -4,6 +4,7 @@ import { FileLink } from "@Palavyr-Types";
 import { makeStyles, Paper } from "@material-ui/core";
 import { PreviewHelp } from "dashboard/content/help/PreviewHelp";
 import { useParams } from "react-router-dom";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
 const MediaType = "application/pdf";
 
@@ -42,7 +43,7 @@ export const ConfigurationPreview = () => {
 
     return (
         <>
-            <PreviewHelp />
+            <AreaConfigurationHeader title="Response PDF Preview" subtitle="Preview the response PDF that will be produced for this area." />
             <Paper id="dashpaper" className={classes.paper} >
                 {
                     loaded && preview &&

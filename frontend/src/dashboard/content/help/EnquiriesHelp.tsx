@@ -13,7 +13,7 @@ export const EnquiriesHelp = () => {
             <HelpTitle title={title} />
             <HelpSubtitle subtitle={details} />
             <HelpDetails>
-                <span></span>
+                <span>Some help details</span>
             </HelpDetails>
             <MoreInformation/>
         </>
