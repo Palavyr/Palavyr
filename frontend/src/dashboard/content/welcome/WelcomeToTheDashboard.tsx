@@ -4,7 +4,6 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 import classNames from "classnames";
 import { useHistory } from "react-router-dom";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
-import { OnboardingTodo } from "./OnboardingTodo";
 
 const useStyles = makeStyles((theme) => ({
     background: {
