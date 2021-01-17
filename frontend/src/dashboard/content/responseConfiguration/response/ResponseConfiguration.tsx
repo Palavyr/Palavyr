@@ -8,9 +8,10 @@ import { ExpandableTextBox } from "@common/components/ExpandableTextBox";
 import { Statement } from "@common/components/Statement";
 import { DynamicTableConfiguration } from "./tables/dynamicTable/DynamicTableConfiguration";
 import { StaticTableConfiguration } from "./tables/statictable/StaticFeeTableConfiguration";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, Typography } from "@material-ui/core";
 import { EstimateHelp } from "dashboard/content/help/EstimateHelp";
 import { useParams } from "react-router-dom";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
 const useStyles = makeStyles((theme) => ({
     titleText: {
@@ -83,7 +84,7 @@ export const ResponseConfiguration = () => {
     const classes = useStyles();
     return (
         <>
-            <EstimateHelp />
+            <AreaConfigurationHeader title="Custom and Static Tables" subtitle="Use this editor to configure the fee tables, as well as associated information, that will be sent in the response PDF for this area." />
             <ExpandableTextBox title="Introductory statement" updatableValue={prologue} onChange={updatePrologue} onSave={savePrologue}>
                 <Statement title="Intro Statement">
                     <>

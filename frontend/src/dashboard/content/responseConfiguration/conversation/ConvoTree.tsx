@@ -9,6 +9,7 @@ import { makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import "./ConvoTree.css";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
 const useStyles = makeStyles((theme) => ({
     conversation: {
@@ -52,13 +53,11 @@ export const ConvoTree = () => {
         };
     }, [areaIdentifier, loadNodes]);
 
-
     const getMissingNodes = useCallback(async () => {
         const client = new ApiClient();
         const { data: missingNodes } = await client.Conversations.GetMissingNodes(areaIdentifier);
         setMissingNodeTypes(missingNodes);
     }, []);
-
 
     useEffect(() => {
         if (nodeList.length > 0) {
@@ -71,6 +70,7 @@ export const ConvoTree = () => {
 
     return (
         <>
+            <AreaConfigurationHeader title="Palaver" subtitle="Configure the palaver (conversation) you wish to provide to your potential clients. Consider planning this before implementing." />
             <div className={classes.conversation}>
                 {missingNodeTypes.length > 0 && <MissingDynamicNodes missingNodeTypes={missingNodeTypes} />}
                 <form onSubmit={() => null}>
@@ -78,16 +78,7 @@ export const ConvoTree = () => {
                         <legend>{treeName}</legend>
                         <div className="main-tree tree-wrap">
                             {nodeList.length > 0 ? (
-                                <ConversationNode
-                                    key={"tree-start"}
-                                    parentId={rootNode.nodeId}
-                                    node={rootNode}
-                                    nodeList={nodeList}
-                                    setNodes={setNodes}
-                                    parentState={true}
-                                    changeParentState={() => null}
-                                    nodeOptionList={nodeOptionList}
-                                />
+                                <ConversationNode key={"tree-start"} parentId={rootNode.nodeId} node={rootNode} nodeList={nodeList} setNodes={setNodes} parentState={true} changeParentState={() => null} nodeOptionList={nodeOptionList} />
                             ) : null}
                         </div>
                     </fieldset>

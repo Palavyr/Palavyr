@@ -8,6 +8,7 @@ import { makeStyles, Typography } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { VariableDetail } from "@Palavyr-Types";
 import { EditorDetails } from "./EditorDetails";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
 const buttonText = "Add Email Template";
 const summary = "Upload a new Email Response";
@@ -94,10 +95,7 @@ export const EmailConfiguration = () => {
 
     return (
         <>
-            <Typography style={{marginTop: "1.4rem"}} align="center" variant="h4">
-                Email Response
-            </Typography>
-            <Typography paragraph align="center">Use this editor to create an HTML email template that will be sent as the email response for this area.</Typography>
+            <AreaConfigurationHeader title="Email Response" subtitle="Use this editor to create an HTML email template that will be sent as the email response for this area." />
             <Upload
                 modalState={modalState}
                 toggleModal={toggleModal}

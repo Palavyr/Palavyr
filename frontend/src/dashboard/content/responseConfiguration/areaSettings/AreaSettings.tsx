@@ -7,6 +7,7 @@ import { AlertDetails, AreaTable, EmailVerificationResponse } from "@Palavyr-Typ
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
 type Settings = {
     emailAddress: string;
@@ -125,6 +126,7 @@ export const AreaSettings = () => {
 
     return loaded ? (
         <>
+            <AreaConfigurationHeader title="Area Settings" subtitle={`Modify settings that are specific to this area (${settings.areaName}).`} />
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Alert className={classNames(classes.alert, classes.alertTitle)} variant="filled" severity="info">

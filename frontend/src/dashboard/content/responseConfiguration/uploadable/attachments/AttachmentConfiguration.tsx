@@ -6,6 +6,7 @@ import { AttachmentList } from "./AttachmentList";
 import { AttachmentPreview } from "./AttachmentPreview";
 import { AttachmentsHelp } from "dashboard/content/help/AttachmentsHelp";
 import { useParams } from "react-router-dom";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
 
 const buttonText = "Add PDF Attachment";
@@ -88,7 +89,7 @@ export const AttachmentConfiguration = () => {
 
     return (
         <>
-            <AttachmentsHelp />
+            <AreaConfigurationHeader title="Attachments" subtitle="Upload PDF and word documents you wish to send to your potential clients." />
             <Upload
                 modalState={modalState}
                 toggleModal={toggleModal}
