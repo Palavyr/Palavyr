@@ -35,13 +35,20 @@ namespace Palavyr.API
 {
     public class Startup
     {
-        private const string _configurationDbStringKey = "DashContextPostgres";
-        private const string _accountDbStringKey = "AccountsContextPostgres";
-        private const string _convoDbStringKey = "ConvoContextPostgres";
-        private const string _accessKeySection = "AWS:AccessKey";
-        private const string _secretKeySection = "AWS:SecretKey";
-        private const string _StripeKeySection = "Stripe:SecretKey";
-        private const string _webhookKeySection = "Stripe:WebhookKey";
+        private const string ConfigurationDbStringKey = "DashContextPostgres";
+        private const string AccountDbStringKey = "AccountsContextPostgres";
+        private const string ConvoDbStringKey = "ConvoContextPostgres";
+        private const string AccessKeySection = "AWS:AccessKey";
+        private const string SecretKeySection = "AWS:SecretKey";
+        private const string StripeKeySection = "Stripe:SecretKey";
+        private const string WebhookKeySection = "Stripe:WebhookKey";
+        
+        private const string PostgresHost = "Postgres:host";
+        private const string PostgresPort = "Postgres:port";
+        private const string PostgresPassword = "Postgres:password";
+        
+        
+        
         private int stripeRetriesCount = 3;
         public Startup(IWebHostEnvironment Env, IConfiguration configuration)
         {
@@ -136,21 +143,21 @@ namespace Palavyr.API
                 .AddControllers();
                 // .AddNewtonsoftJson();
             
-            var value = Configuration.GetConnectionString(_accountDbStringKey);
+            var value = Configuration.GetConnectionString(AccountDbStringKey);
             services.AddDbContext<AccountsContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString(_accountDbStringKey)));
+                opt.UseNpgsql(Configuration.GetConnectionString(AccountDbStringKey)));
             services.AddDbContext<ConvoContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString(_convoDbStringKey)));
+                opt.UseNpgsql(Configuration.GetConnectionString(ConvoDbStringKey)));
             services.AddDbContext<DashContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString(_configurationDbStringKey)));
+                opt.UseNpgsql(Configuration.GetConnectionString(ConfigurationDbStringKey)));
 
             // Stripe
-            StripeConfiguration.ApiKey = Configuration.GetSection(_StripeKeySection).Value;
+            StripeConfiguration.ApiKey = Configuration.GetSection(StripeKeySection).Value;
             StripeConfiguration.MaxNetworkRetries = stripeRetriesCount;
             
             // AWS Services
-            var accessKey = Configuration.GetSection(_accessKeySection).Value;
-            var secretKey = Configuration.GetSection(_secretKeySection).Value;
+            var accessKey = Configuration.GetSection(AccessKeySection).Value;
+            var secretKey = Configuration.GetSection(SecretKeySection).Value;
             var awsOptions = Configuration.GetAWSOptions();
             awsOptions.Credentials = new BasicAWSCredentials(accessKey, secretKey);
             services.AddDefaultAWSOptions(awsOptions);
@@ -171,10 +178,10 @@ namespace Palavyr.API
                     .UseSimpleAssemblyNameTypeSerializer()
                     .UseMemoryStorage());
             services.AddHangfireServer();
-            // services.AddScoped<ICreatePalavyrSnapshot, CreatePalavyrSnapshot>();
             services.AddTransient<IRemoveOldS3Archives, RemoveOldS3Archives>();
             services.AddTransient<IRemoveStaleSessions, RemoveStaleSessions>();
             services.AddTransient<IValidateAttachments, ValidateAttachments>();
+            services.AddSingleton<IBackupPalavyr, BackupPalavyr>();
             
             services.AddTransient<IJwtAuthenticationService, JwtAuthenticationService>();
             services.AddTransient<IAccountSetupService, AccountSetupService>();
@@ -205,9 +212,16 @@ namespace Palavyr.API
         )
         {
             logger = loggerFactory.CreateLogger<Startup>();
-            var appDataPath = resolveAppDataPath();
+
+            var host = Configuration.GetSection(PostgresHost).Value;
+            var port = Configuration.GetSection(PostgresPort).Value;
+            var pass = Configuration.GetSection(PostgresPassword).Value;
+            
+            var appDataPath = ResolveAppDataPath();
             if (string.IsNullOrEmpty(Configuration["WebRootPath"]))
+            {
                 Configuration["WebRootPath"] = Environment.CurrentDirectory;
+            }
 
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
@@ -222,10 +236,11 @@ namespace Palavyr.API
 
             if (env.IsProduction())
             {
+                Console.WriteLine("Current think its production Okay?");
                 var option = new BackgroundJobServerOptions {WorkerCount = 1};
                 app.UseHangfireServer(option);
                 app.UseHangfireDashboard();
-                logger.LogInformation("Preparing to archive teh project");
+                logger.LogInformation("Preparing to archive the project");
                 try
                 {
                     // recurringJobManager
@@ -234,6 +249,13 @@ namespace Palavyr.API
                     //         () => serviceProvider.GetService<ICreatePalavyrSnapshot>()
                     //             .CreateDatabaseAndUserDataSnapshot(),
                     //         Cron.Daily);
+                    recurringJobManager
+                        .AddOrUpdate(
+                            "Backup database",
+                            () => serviceProvider.GetService<IBackupPalavyr>()
+                                .GenerateFullBackup(host, port, pass),
+                            Cron.Daily
+                        );
                     recurringJobManager
                         .AddOrUpdate(
                             "Keep only the last 50 snapshots",
@@ -266,7 +288,7 @@ namespace Palavyr.API
             }
         }
 
-        private string resolveAppDataPath()
+        private string ResolveAppDataPath()
         {
             string appDataPath;
             var osVersion = Environment.OSVersion;

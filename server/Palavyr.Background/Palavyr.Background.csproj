@@ -24,6 +24,7 @@
       <ProjectReference Include="..\Palavyr.Common\Palavyr.Common.csproj" />
       <ProjectReference Include="..\Palavyr.Data\Palavyr.Data.csproj" />
       <ProjectReference Include="..\Palavyr.Domain\Palavyr.Domain.csproj" />
+      <ProjectReference Include="..\Palavyr.EmailService\Palavyr.EmailService.csproj" />
     </ItemGroup>
 
 </Project>

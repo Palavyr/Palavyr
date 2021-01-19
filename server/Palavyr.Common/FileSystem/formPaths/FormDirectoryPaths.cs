@@ -40,5 +40,13 @@ namespace Palavyr.Common.FileSystem.FormPaths
             DiskUtils.CreateDir(logoImageDir);
             return logoImageDir;
         }
+
+        public static string FormTempDbBackupDirectory()
+        {
+            var backupDirName = "BackupTempDirectory";
+            var backupDir = Path.Combine(MagicPathStrings.InstallationRoot, backupDirName);
+            DiskUtils.CreateDir(backupDir);
+            return backupDir;
+        }
     }
 }

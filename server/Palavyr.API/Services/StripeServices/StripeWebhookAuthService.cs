@@ -35,7 +35,7 @@ namespace Palavyr.API.Services.StripeServices
 
             try
             {
-                var webhookSecret = configuration.GetSection(webhookKeySection).Value; // a
+                var webhookSecret = configuration.GetSection(webhookKeySection).Value;
                 return EventUtility.ConstructEvent(
                     requestBody,
                     context.Request.Headers[stripeSignature],
