@@ -1,13 +1,10 @@
-﻿namespace Palavyr.Background
+namespace Palavyr.API.Services.AmazonServices
 {
-    public static class Utils
+    public class AmazonConstants
     {
         public const string ArchivesBucket = "palavyr-archives";
         public const string SnapshotsDir = "snapshots";
         public const string Databases = "Databases";
         public const string UserData = "UserData";
-        
-        public const string PalavyrData = "PalavyrData";
-        public const int MinNumArchives = 50;
     }
 }

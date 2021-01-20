@@ -18,15 +18,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Palavyr.Amazon.S3Services;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.API.Response;
 using Palavyr.API.Services.AccountServices;
+using Palavyr.API.Services.AmazonServices;
 using Palavyr.API.Services.AuthenticationServices;
 using Palavyr.API.Services.DynamicTableService;
 using Palavyr.API.Services.EntityServices;
 using Palavyr.API.Services.StripeServices;
 using Palavyr.API.Services.StripeServices.StripeWebhookHandlers;
 using Palavyr.Background;
+using Palavyr.BackupAndRestore.Postgres;
 using Palavyr.Common.FileSystem;
 using Palavyr.Common.FileSystem.FormPaths;
 using Stripe;
@@ -181,7 +184,6 @@ namespace Palavyr.API
             services.AddTransient<IRemoveOldS3Archives, RemoveOldS3Archives>();
             services.AddTransient<IRemoveStaleSessions, RemoveStaleSessions>();
             services.AddTransient<IValidateAttachments, ValidateAttachments>();
-            services.AddSingleton<IBackupPalavyr, BackupPalavyr>();
             
             services.AddTransient<IJwtAuthenticationService, JwtAuthenticationService>();
             services.AddTransient<IAccountSetupService, AccountSetupService>();
@@ -201,6 +203,9 @@ namespace Palavyr.API
             services.AddTransient<IPdfResponseGenerator, PdfResponseGenerator>();
             services.AddTransient<IAccountDataService, AccountDataService>();
             services.AddTransient<IAreaDataService, AreaDataService>();
+            services.AddTransient<IS3Saver, S3Saver>();
+            services.AddTransient<IPostgresBackup, PostgresBackup>();
+
         }
 
         public void Configure(
@@ -243,16 +248,10 @@ namespace Palavyr.API
                 logger.LogInformation("Preparing to archive the project");
                 try
                 {
-                    // recurringJobManager
-                    //     .AddOrUpdate(
-                    //         "Create S3 Snapshot",
-                    //         () => serviceProvider.GetService<ICreatePalavyrSnapshot>()
-                    //             .CreateDatabaseAndUserDataSnapshot(),
-                    //         Cron.Daily);
                     recurringJobManager
                         .AddOrUpdate(
                             "Backup database",
-                            () => serviceProvider.GetService<IBackupPalavyr>()
+                            () => serviceProvider.GetService<IPostgresBackup>()
                                 .GenerateFullBackup(host, port, pass),
                             Cron.Daily
                         );

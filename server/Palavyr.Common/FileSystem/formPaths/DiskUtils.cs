@@ -23,6 +23,11 @@ namespace Palavyr.Common.FileSystem.FormPaths
             DeleteFolder(FormDirectoryPaths.FormTempDbBackupDirectory());
         }
 
+        public static void DeleteTempDirectory(string tempDirectory)
+        {
+            DeleteFolder(tempDirectory);
+        }
+
         /// <summary>
         /// This will recursively delete a directory (and thus with its contents)
         /// If file permissions are restricted on the directory or any of its subdir contents,

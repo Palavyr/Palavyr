@@ -57,6 +57,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Palavyr.Background\Palavyr.Background.csproj" />
+      <ProjectReference Include="..\Palavyr.BackupAndRestore\Palavyr.BackupAndRestore.csproj" />
       <ProjectReference Include="..\Palavyr.Data\Palavyr.Data.csproj" />
       <ProjectReference Include="..\Palavyr.Domain\Palavyr.Domain.csproj" />
       <ProjectReference Include="..\Palavyr.EmailService\Palavyr.EmailService.csproj" />
