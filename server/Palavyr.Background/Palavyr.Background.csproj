@@ -15,13 +15,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="AWSSDK.S3" Version="3.5.1.6" />
+      <PackageReference Include="AWSSDK.S3" Version="3.5.7.8" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
-      <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.8" />
+      <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Palavyr.Amazon\Palavyr.Amazon.csproj" />
+      <ProjectReference Include="..\Palavyr.BackupAndRestore\Palavyr.BackupAndRestore.csproj" />
       <ProjectReference Include="..\Palavyr.Common\Palavyr.Common.csproj" />
       <ProjectReference Include="..\Palavyr.Data\Palavyr.Data.csproj" />
       <ProjectReference Include="..\Palavyr.Domain\Palavyr.Domain.csproj" />

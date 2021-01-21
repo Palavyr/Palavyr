@@ -25,12 +25,24 @@ namespace Palavyr.BackupAndRestore.Postgres
                 var inputFile = Path.Combine(tempDirectory, database + ".sql");
                 await RestoreFromPostgreSqlBackup(inputFile, host, port, database, password);
             }
+        }
+
+        public async Task Cleanup(string tempDirectory, string host, string port, string password)
+        {
+            foreach (var database in DatabaseConstants.Databases)
+            {
+                logger.LogDebug($"Cleaning up database after restore: {database}");
+                var cleanupCommand = $"{GetSetPassword(password)}{Newline}"
+                                     + GetTerminateProcessCommand(host, port, database)
+                                     + GetDropDbCommand(host, port, database);
+                var failMessage = $"Database cleanup failed on {database}. Investigate Now.";
+                await Execute(cleanupCommand, failMessage);
+            }
+
+            logger.LogDebug($"Deleting TempDirection {tempDirectory}");
             DiskUtils.DeleteTempDirectory(tempDirectory);
         }
-        
-        //psql command disconnect database
-        //dropdb and createdb  remove database and create.
-        //pg_restore restore database with file create with pg_dump command
+
         private async Task RestoreFromPostgreSqlBackup(
             string inputFile,
             string host,

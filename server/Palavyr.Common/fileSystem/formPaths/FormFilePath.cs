@@ -52,7 +52,7 @@ namespace Palavyr.Common.FileSystem.FormPaths
         public static string FormResponsePDFFilePath(string accountId, string safeFileNameStem, string fileType = "pdf")
         {
             return Path.Combine(
-                FormDirectoryPaths.FormResponsePDFDirWithCreate(accountId),
+                FormDirectoryPaths.FormResponsePdfDirWithCreate(accountId),
                 safeFileNameStem.EndsWith(".pdf") ? safeFileNameStem : safeFileNameStem + "." + fileType
             );
         }

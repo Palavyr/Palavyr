@@ -23,6 +23,11 @@ namespace Palavyr.Common.FileSystem.FormPaths
             DeleteFolder(FormDirectoryPaths.FormTempDbBackupDirectory());
         }
 
+        public static void DeleteUserDataBackupFolder()
+        {
+            DeleteFolder(FormDirectoryPaths.FormTempUserDataBackupDirectory());
+        }
+
         public static void DeleteTempDirectory(string tempDirectory)
         {
             DeleteFolder(tempDirectory);

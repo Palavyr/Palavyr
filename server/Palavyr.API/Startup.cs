@@ -22,7 +22,6 @@ using Palavyr.Amazon.S3Services;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.API.Response;
 using Palavyr.API.Services.AccountServices;
-using Palavyr.API.Services.AmazonServices;
 using Palavyr.API.Services.AuthenticationServices;
 using Palavyr.API.Services.DynamicTableService;
 using Palavyr.API.Services.EntityServices;
@@ -45,11 +44,6 @@ namespace Palavyr.API
         private const string SecretKeySection = "AWS:SecretKey";
         private const string StripeKeySection = "Stripe:SecretKey";
         private const string WebhookKeySection = "Stripe:WebhookKey";
-        
-        private const string PostgresHost = "Postgres:host";
-        private const string PostgresPort = "Postgres:port";
-        private const string PostgresPassword = "Postgres:password";
-        
         
         
         private int stripeRetriesCount = 3;
@@ -217,10 +211,6 @@ namespace Palavyr.API
         )
         {
             logger = loggerFactory.CreateLogger<Startup>();
-
-            var host = Configuration.GetSection(PostgresHost).Value;
-            var port = Configuration.GetSection(PostgresPort).Value;
-            var pass = Configuration.GetSection(PostgresPassword).Value;
             
             var appDataPath = ResolveAppDataPath();
             if (string.IsNullOrEmpty(Configuration["WebRootPath"]))
@@ -251,8 +241,8 @@ namespace Palavyr.API
                     recurringJobManager
                         .AddOrUpdate(
                             "Backup database",
-                            () => serviceProvider.GetService<IPostgresBackup>()
-                                .GenerateFullBackup(host, port, pass),
+                            () => serviceProvider.GetService<ICreatePalavyrSnapshot>()
+                                .CreateAndTransferCompleteBackup(),
                             Cron.Daily
                         );
                     recurringJobManager

@@ -30,7 +30,6 @@ namespace Palavyr.BackupAndRestore.Postgres
         protected string GetUser() => $"-U{Space}postgres{Space}";
         protected string GetDatabase(string database) => $"-d{Space}{database}{Space}";
         protected string GetSetPassword(string password) => $"{SetEnvVarCommand}{Space}{PGPASSWORD}={password}";
-        protected string UserDataDirectory => Path.Combine(MagicPathStrings.InstallationRoot, MagicPathStrings.UserData);
 
         private static ProcessStartInfo ProcessInfoByOs(string batFilePath)
         {

@@ -19,7 +19,7 @@ namespace Palavyr.Common.FileSystem.FormPaths
             return attachmentDir;
         }
 
-        public static string FormResponsePDFDirWithCreate(string accountId)
+        public static string FormResponsePdfDirWithCreate(string accountId)
         {
             var responseDir = Path.Combine(FormAccountDirWithCreate(accountId), MagicPathStrings.PreviewPDF);
             DiskUtils.CreateDir(responseDir);
@@ -43,7 +43,15 @@ namespace Palavyr.Common.FileSystem.FormPaths
 
         public static string FormTempDbBackupDirectory()
         {
-            var backupDirName = "BackupTempDirectory";
+            var backupDirName = "DbBackupTempDirectory";
+            var backupDir = Path.Combine(MagicPathStrings.InstallationRoot, backupDirName);
+            DiskUtils.CreateDir(backupDir);
+            return backupDir;
+        }
+
+        public static string FormTempUserDataBackupDirectory()
+        {
+            var backupDirName = "UserDataBackupTempDirectory";
             var backupDir = Path.Combine(MagicPathStrings.InstallationRoot, backupDirName);
             DiskUtils.CreateDir(backupDir);
             return backupDir;
