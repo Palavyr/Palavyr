@@ -12,6 +12,7 @@ $server = "127.0.0.1";
 $port = "5432";
 $api = ".\\Palavyr.API";
 $migrator = ".\\Palavyr.Data.Migrator";
+$backupAndRestore = ".\\Palavyr.BackupAndRestore";
 
 function WriteSecrets($projectPath) {
     Write-Host "`r`nSetting Connection Strings for $projectPath...`r`n"
@@ -23,9 +24,11 @@ function WriteSecrets($projectPath) {
 Write-Host "`r`nClearing previous Secrets`r`n"
 dotnet user-secrets clear --project $api;
 dotnet user-secrets clear --project $migrator;
+dotnet user-secrets clear --project $backupAndRestore;
 
 WriteSecrets($api)
 WriteSecrets($migrator)
+WriteSecrets($backupAndRestore)
 
 ##################
 # Write Migrator Environment
