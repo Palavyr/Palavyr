@@ -86,15 +86,18 @@ namespace Palavyr.BackupAndRestore
                 // 6. Delete all alternate databases just created
                 // 7. Delete temp directory
                 await restorer.Cleanup(tempBackupDirectory, host, port, pass);
+            } else if (args[0] == "--restore")
+            {
+                // TODO: if arg[1] == "Restore to new machine type arg" then use the real table names.
+                // for use when we want to move the database to a different VM
+                Console.WriteLine("We must move mountains!!");
             }
-
-            Console.WriteLine("Hello World!");
             // https://severalnines.com/database-blog/running-multiple-postgresql-instances-single-host
         }
 
         public static AccountsContext GetAccountsContext(IConfiguration configuration)
         {
-            var connectionString = configuration.GetSection(AccountDbStringKey).Value;
+            var connectionString = configuration.GetConnectionString(AccountDbStringKey);
             var optionsBuilder = new DbContextOptionsBuilder<AccountsContext>();
             optionsBuilder.UseNpgsql(connectionString);
 

@@ -138,7 +138,6 @@ namespace Palavyr.API
 
             services
                 .AddControllers();
-                // .AddNewtonsoftJson();
             
             var value = Configuration.GetConnectionString(AccountDbStringKey);
             services.AddDbContext<AccountsContext>(opt =>
