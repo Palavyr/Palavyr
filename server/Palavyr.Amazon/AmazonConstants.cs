@@ -1,4 +1,4 @@
-namespace Palavyr.API.Services.AmazonServices
+namespace Palavyr.Amazon
 {
     public class AmazonConstants
     {

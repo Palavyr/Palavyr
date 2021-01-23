@@ -29,6 +29,7 @@ using Palavyr.API.Services.StripeServices;
 using Palavyr.API.Services.StripeServices.StripeWebhookHandlers;
 using Palavyr.Background;
 using Palavyr.BackupAndRestore.Postgres;
+using Palavyr.BackupAndRestore.UserData;
 using Palavyr.Common.FileSystem;
 using Palavyr.Common.FileSystem.FormPaths;
 using Stripe;
@@ -198,7 +199,7 @@ namespace Palavyr.API
             services.AddTransient<IAreaDataService, AreaDataService>();
             services.AddTransient<IS3Saver, S3Saver>();
             services.AddTransient<IPostgresBackup, PostgresBackup>();
-
+            services.AddTransient<IUserDataBackup, UserDataBackup>();
         }
 
         public void Configure(

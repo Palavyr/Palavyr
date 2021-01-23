@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Palavyr.BackupAndRestore.Postgres;
 using Palavyr.BackupAndRestore.UserData;
@@ -26,7 +25,7 @@ namespace Palavyr.Background
 
         public async Task CreateAndTransferCompleteBackup()
         {
-            var snapshotTimeStamp = DateTime.Now.ToString(TimeUtils.DateTimeFormat);
+            var snapshotTimeStamp = TimeUtils.CreateTimeStamp();
             var host = configuration.GetSection(PostgresHost).Value;
             var port = configuration.GetSection(PostgresPort).Value;
             var pass = configuration.GetSection(PostgresPassword).Value;

@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using EmailService.ResponseEmail;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.FileSystem;
 
 namespace Palavyr.BackupAndRestore.Postgres
 {
@@ -48,7 +47,7 @@ namespace Palavyr.BackupAndRestore.Postgres
 
             info.CreateNoWindow = true;
             info.UseShellExecute = false;
-            info.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory ?? ""; // Set a working direcotyr here
+            info.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory ?? ""; // Set a working directory here
             info.RedirectStandardError = true;
             return info;
         }

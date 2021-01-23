@@ -49,6 +49,14 @@ namespace Palavyr.Common.FileSystem.FormPaths
             return backupDir;
         }
 
+        public static string FormZippableDbBackupDirectory()
+        {
+            var zippableDirName = "Palavyr-Db-Backup";
+            var zippableDirectory = Path.Combine(FormTempDbBackupDirectory(), zippableDirName);
+            DiskUtils.CreateDir(zippableDirectory);
+            return zippableDirectory;
+        }
+        
         public static string FormTempUserDataBackupDirectory()
         {
             var backupDirName = "UserDataBackupTempDirectory";

@@ -1,8 +1,11 @@
-namespace DashboardServer.Data
+using System.ComponentModel.DataAnnotations;
+
+namespace Server.Domain.Accounts
 {
     public class Backup
     {
-        public string LatestDbBackup { get; set; }
+        [Key] public int? Id { get; set; }
+        public string LatestFullDbBackup { get; set; }
         public string LatestUserDataBackup { get; set; }
         public Backup()
         {
@@ -12,7 +15,7 @@ namespace DashboardServer.Data
         {
             return new Backup()
             {
-                LatestDbBackup = latestDbBackup,
+                LatestFullDbBackup = latestDbBackup,
                 LatestUserDataBackup = latestUserDataBackup
             };
         }

@@ -9,11 +9,10 @@ namespace Palavyr.Common.FileSystem.FormPaths
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public static string FormDbBackupPath(string fileName)
+        public static string FormZippableDbBackupPath(string fileName)
         {
-            var directoryPath = FormDirectoryPaths.FormTempDbBackupDirectory();
-            var databaseFilePath = Path.Combine(directoryPath, fileName);
-            return databaseFilePath;
+            var zippablePath = FormDirectoryPaths.FormZippableDbBackupDirectory();
+            return Path.Combine(zippablePath, fileName);
         }
     }
 }

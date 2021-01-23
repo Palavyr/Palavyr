@@ -1,16 +1,14 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.Services.AmazonServices;
 
 namespace Palavyr.Amazon.S3Services
 {
     public interface IS3Saver
     {
-        Task<bool> SaveZipToS3(string zipPath, string snapshotTimeStamp, string snapshotName);
+        Task<bool> SaveZipToS3(string bucket, string localFilePath, string fileKey);
     }
 
     public class S3Saver : IS3Saver
@@ -24,21 +22,20 @@ namespace Palavyr.Amazon.S3Services
             this.logger = logger;
         }
 
-        public async Task<bool> SaveZipToS3(string zipPath, string snapshotTimeStamp, string snapshotName)
+        public async Task<bool> SaveZipToS3(string bucket, string localFilePath, string fileKey)
         {
             
-            var fileKey = Path.Combine(AmazonConstants.SnapshotsDir, snapshotTimeStamp, snapshotName).Replace("\\", "/");
             var putRequest = new PutObjectRequest()
             {
-                BucketName = AmazonConstants.ArchivesBucket,
-                FilePath = zipPath,
+                BucketName = bucket,
+                FilePath = localFilePath,
                 Key = fileKey
             };
             try
             {
                 var response = await s3Client.PutObjectAsync(putRequest);
                 logger.LogInformation($"Response: {response}");
-                logger.LogInformation($"Saved {zipPath} to {fileKey} in {AmazonConstants.ArchivesBucket}");
+                logger.LogInformation($"Saved {localFilePath} to {fileKey} in {bucket}");
                 return true;
             }
             catch (Exception ex)
