@@ -28,6 +28,7 @@ using Palavyr.API.Services.EntityServices;
 using Palavyr.API.Services.StripeServices;
 using Palavyr.API.Services.StripeServices.StripeWebhookHandlers;
 using Palavyr.Background;
+using Palavyr.BackupAndRestore;
 using Palavyr.BackupAndRestore.Postgres;
 using Palavyr.BackupAndRestore.UserData;
 using Palavyr.Common.FileSystem;
@@ -198,6 +199,7 @@ namespace Palavyr.API
             services.AddTransient<IS3Saver, S3Saver>();
             services.AddTransient<IPostgresBackup, PostgresBackup>();
             services.AddTransient<IUserDataBackup, UserDataBackup>();
+            services.AddTransient<IUpdateDatabaseLatest, UpdateDatabaseLatest>();
         }
 
         public void Configure(

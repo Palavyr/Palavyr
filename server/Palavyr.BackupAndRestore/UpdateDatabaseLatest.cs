@@ -3,9 +3,16 @@ using DashboardServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Server.Domain.Accounts;
 
-namespace Palavyr.BackupAndRestore.Postgres
+namespace Palavyr.BackupAndRestore
 {
-    public class UpdateDatabaseLatest
+    public interface IUpdateDatabaseLatest
+    {
+        Task UpdateLatestUserDataRecord( string latestUserDataBackup);
+        Task UpdateLatestDatabaseRecord(string latestDatabaseBackup);
+        Task UpdateLatestBackupRecords(string latestDatabaseBackup, string latestUserDataBackup);
+    }
+
+    public class UpdateDatabaseLatest : IUpdateDatabaseLatest
     {
         private readonly AccountsContext accountsContext;
 
