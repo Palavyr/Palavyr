@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Amazon.SimpleEmail;
 using DashboardServer.Data;
 using EmailService.VerificationRequest;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +16,6 @@ namespace Palavyr.API.Services.AccountServices
     {
         private readonly AccountsContext accountsContext;
         private readonly ILogger<EmailVerificationService> logger;
-        private readonly AccountsContext accountContext;
         private readonly ISenderVerification senderVerification;
         private IStripeCustomerService stripeCustomerService;
 

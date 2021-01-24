@@ -46,11 +46,11 @@ namespace Palavyr.API.Services.StripeServices
             {
                 if (string.IsNullOrWhiteSpace(requestBody))
                 {
-                    logger.LogDebug("Webhook failed: request body was empty");
+                    logger.LogDebug($"Webhook failed: request body was empty: {ex.Message}");
                 }
                 else
                 {
-                    logger.LogDebug("Webhook failed: HttpContext ");
+                    logger.LogDebug($"Webhook failed: HttpContext: {ex.Message}");
                 }
 
                 return null;
