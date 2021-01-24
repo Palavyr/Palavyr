@@ -63,6 +63,4 @@
       <ProjectReference Include="..\Palavyr.EmailService\Palavyr.EmailService.csproj" />
       <ProjectReference Include="..\Palavyr.PDFService\Palavyr.PDFService.csproj" />
     </ItemGroup>
-
-
 </Project>
