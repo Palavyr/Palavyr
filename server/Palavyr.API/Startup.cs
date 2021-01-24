@@ -45,11 +45,12 @@ namespace Palavyr.API
         private const string AccessKeySection = "AWS:AccessKey";
         private const string SecretKeySection = "AWS:SecretKey";
         private const string StripeKeySection = "Stripe:SecretKey";
-        
+
         private const string WebhookKeySection = "Stripe:WebhookKey";
-        
-        
+
+
         private int stripeRetriesCount = 3;
+
         public Startup(IWebHostEnvironment Env, IConfiguration configuration)
         {
             env = Env;
@@ -68,89 +69,95 @@ namespace Palavyr.API
             services.AddHttpContextAccessor();
 
             services
-                .AddAuthentication(o =>
-                {
-                    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(opt =>
-                {
-                    opt.RequireHttpsMetadata = true;
-                    opt.SaveToken = true;
-
-                    opt.TokenValidationParameters = new TokenValidationParameters
+                .AddAuthentication(
+                    o =>
                     {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        // ValidateLifetime = false,
-                        // ValidIssuer = Configuration["JwtToken:Issuer"],
-                        // ValidAudience = Configuration["JwtToken:Issuer"],
-                    };
-                })
+                        o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                        o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    })
+                .AddJwtBearer(
+                    opt =>
+                    {
+                        opt.RequireHttpsMetadata = true;
+                        opt.SaveToken = true;
+
+                        opt.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey =
+                                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                            ValidateIssuer = false,
+                            ValidateAudience = false,
+                            // ValidateLifetime = false,
+                            // ValidIssuer = Configuration["JwtToken:Issuer"],
+                            // ValidAudience = Configuration["JwtToken:Issuer"],
+                        };
+                    })
                 .AddScheme<ApiKeyAuthSchemeOptions, ApiKeyAuthenticationHandler>(
                     AuthenticationSchemeNames.ApiKeyScheme,
                     op => { });
-               
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(
-                    builder =>
-                    {
-                        builder
-                            .SetIsOriginAllowed(_ => true)
-                            .WithMethods("DELETE", "POST", "GET", "OPTIONS", "PUT")
-                            .WithHeaders(
-                                "action",
-                                "Server",
-                                "sessionId",
-                                "Content-Type",
-                                "Access-Control-Allow-Origin",
-                                "Access-Control-Allow-Headers",
-                                "Access-Control-Allow-Methods",
-                                "Authorization",
-                                "X-Requested-With"
-                            );
 
-                        if (env.IsDevelopment())
+            services.AddCors(
+                options =>
+                {
+                    options.AddDefaultPolicy(
+                        builder =>
                         {
-                            builder.WithOrigins("*");
-                        }
-                        else
-                        {
-                            builder.WithOrigins(
-                                "http://staging.palavyr.com",
-                                "http://www.staging.palavyr.com",
-                                "http://palavyr.com",
-                                "http://www.palavyr.com",
-                                "http://staging.widget.palavyr.com",
-                                "http://widget.palavyr.com",
-                                "https://staging.palavyr.com",
-                                "https://www.staging.palavyr.com",
-                                "https://palavyr.com",
-                                "https://www.palavyr.com",
-                                "https://staging.widget.palavyr.com",
-                                "https://widget.palavyr.com",
-                                "https://stripe.com"
-                            );
-                        }
-                    });
-            });
+                            builder
+                                .SetIsOriginAllowed(_ => true)
+                                .WithMethods("DELETE", "POST", "GET", "OPTIONS", "PUT")
+                                .WithHeaders(
+                                    "action",
+                                    "Server",
+                                    "sessionId",
+                                    "Content-Type",
+                                    "Access-Control-Allow-Origin",
+                                    "Access-Control-Allow-Headers",
+                                    "Access-Control-Allow-Methods",
+                                    "Authorization",
+                                    "X-Requested-With"
+                                );
+
+                            if (env.IsDevelopment())
+                            {
+                                builder.WithOrigins("*");
+                            }
+                            else
+                            {
+                                builder.WithOrigins(
+                                    "http://staging.palavyr.com",
+                                    "http://www.staging.palavyr.com",
+                                    "http://palavyr.com",
+                                    "http://www.palavyr.com",
+                                    "http://staging.widget.palavyr.com",
+                                    "http://widget.palavyr.com",
+                                    "https://staging.palavyr.com",
+                                    "https://www.staging.palavyr.com",
+                                    "https://palavyr.com",
+                                    "https://www.palavyr.com",
+                                    "https://staging.widget.palavyr.com",
+                                    "https://widget.palavyr.com",
+                                    "https://stripe.com"
+                                );
+                            }
+                        });
+                });
 
             services.AddControllers();
-            services.AddDbContext<AccountsContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString(AccountDbStringKey)));
-            services.AddDbContext<ConvoContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString(ConvoDbStringKey)));
-            services.AddDbContext<DashContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString(ConfigurationDbStringKey)));
+            services.AddDbContext<AccountsContext>(
+                opt =>
+                    opt.UseNpgsql(Configuration.GetConnectionString(AccountDbStringKey)));
+            services.AddDbContext<ConvoContext>(
+                opt =>
+                    opt.UseNpgsql(Configuration.GetConnectionString(ConvoDbStringKey)));
+            services.AddDbContext<DashContext>(
+                opt =>
+                    opt.UseNpgsql(Configuration.GetConnectionString(ConfigurationDbStringKey)));
 
             // Stripe
             StripeConfiguration.ApiKey = Configuration.GetSection(StripeKeySection).Value;
             StripeConfiguration.MaxNetworkRetries = stripeRetriesCount;
-            
+
             // AWS Services
             var accessKey = Configuration.GetSection(AccessKeySection).Value;
             var secretKey = Configuration.GetSection(SecretKeySection).Value;
@@ -167,17 +174,18 @@ namespace Palavyr.API
                     services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
                 }
             }
-            
-            services.AddHangfire(config =>
-                config
-                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                    .UseSimpleAssemblyNameTypeSerializer()
-                    .UseMemoryStorage());
+
+            services.AddHangfire(
+                config =>
+                    config
+                        .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                        .UseSimpleAssemblyNameTypeSerializer()
+                        .UseMemoryStorage());
             services.AddHangfireServer();
             services.AddTransient<IRemoveOldS3Archives, RemoveOldS3Archives>();
             services.AddTransient<IRemoveStaleSessions, RemoveStaleSessions>();
             services.AddTransient<IValidateAttachments, ValidateAttachments>();
-            
+
             services.AddTransient<IJwtAuthenticationService, JwtAuthenticationService>();
             services.AddTransient<IAccountSetupService, AccountSetupService>();
             services.AddTransient<IAuthService, AuthService>();
@@ -211,14 +219,12 @@ namespace Palavyr.API
         )
         {
             logger = loggerFactory.CreateLogger<Startup>();
-            
+
             var appDataPath = ResolveAppDataPath();
             if (string.IsNullOrEmpty(Configuration["WebRootPath"]))
             {
                 Configuration["WebRootPath"] = Environment.CurrentDirectory;
             }
-
-            var bucket = Configuration["Backups"];
 
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -227,7 +233,7 @@ namespace Palavyr.API
             app.UseAuthorization();
             app.UseMiddleware<SetHeaders>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-            
+
             if (env.IsProduction() || env.IsStaging())
             {
                 Console.WriteLine("Current think its production Okay?");
@@ -294,7 +300,7 @@ namespace Palavyr.API
 
                 appDataPath = Path.Combine(home, MagicPathStrings.DataFolder);
             }
-            
+
             DiskUtils.CreateDir(appDataPath);
             return appDataPath;
         }
