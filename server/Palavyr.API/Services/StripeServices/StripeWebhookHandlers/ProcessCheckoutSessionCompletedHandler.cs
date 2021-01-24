@@ -99,8 +99,6 @@ namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
                 default:
                     throw new Exception("Payment interval could not be determined");
             }
-
-            return paymentIntervalEnum;
         }
 
         private UserAccount.PlanTypeEnum GetPlanEnum(string planType)

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Logging;
+using Palavyr.FileSystem.ExtensionMethods.PathExtensions;
 
 namespace Palavyr.Background
 {
@@ -23,16 +24,17 @@ namespace Palavyr.Background
         public async Task RemoveS3Objects()
         {
             var staleObjects = await ListS3Archives();
-            var KeyVersions = new List<KeyVersion>();
+            var keyVersions = new List<KeyVersion>();
             foreach (var staleObject in staleObjects)
             {
                 var keyVersion = new KeyVersion() {Key = staleObject.Key};
-                KeyVersions.Add(keyVersion);
+                keyVersions.Add(keyVersion);
             }
+
             var request = new DeleteObjectsRequest()
             {
                 BucketName = Utils.ArchivesBucket,
-                Objects = KeyVersions
+                Objects = keyVersions
             };
             try
             {
@@ -50,7 +52,7 @@ namespace Palavyr.Background
             var folders = new List<string>();
             foreach (var s3Object in objects)
             {
-                var folderPath = Path.Combine(s3Object.Key.Split("/").Take(2).ToArray()).Replace("\\", "/");
+                var folderPath = Path.Combine(s3Object.Key.Split("/").Take(2).ToArray()).ConvertToUnix(); //.Replace("\\", "/");
                 folders.Add(folderPath + "/");
             }
 
@@ -75,7 +77,9 @@ namespace Palavyr.Background
             var userdataArchives = sortedObjects.Where(x => x.Key.Contains(Utils.UserData)).ToList();
 
             if (databaseArchives.Count != userdataArchives.Count)
+            {
                 _logger.LogCritical("Number of ");
+            }
 
             var dbArchiveDelList = new List<S3Object>();
             var userDataArchiveDelList = new List<S3Object>();

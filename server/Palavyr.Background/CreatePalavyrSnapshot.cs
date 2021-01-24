@@ -1,75 +1,50 @@
-﻿using System;
-using System.IO;
-using System.IO.Compression;
-using System.Threading.Tasks;
-using Amazon.S3;
-using Amazon.S3.Model;
-using Microsoft.Extensions.Logging;
+﻿using System.Threading.Tasks;
+using DashboardServer.Data;
+using Microsoft.Extensions.Configuration;
+using Palavyr.BackupAndRestore;
+using Palavyr.BackupAndRestore.Postgres;
+using Palavyr.BackupAndRestore.UserData;
 using Palavyr.FileSystem.UIDUtils;
 
 namespace Palavyr.Background
 {
     public class CreatePalavyrSnapshot : ICreatePalavyrSnapshot
     {
-        private readonly string DatabaseDirectory = $"C:\\{Utils.PalavyrData}\\AppData";
-        private readonly string UserDataDirectory = $"C:\\{Utils.PalavyrData}\\UserData";
-        private readonly string Archives = $"C:\\{Utils.PalavyrData}\\Archives";
+        private readonly IPostgresBackup postgresBackup;
+        private readonly IUserDataBackup userDataBackup;
+        private readonly IConfiguration configuration;
+        private readonly IUpdateDatabaseLatest updateDatabaseLatest;
 
-        private IAmazonS3 S3Client { get; }
-        private readonly ILogger<CreatePalavyrSnapshot> _logger;        
+        private const string PostgresHost = "Postgres:host";
+        private const string PostgresPort = "Postgres:port";
+        private const string PostgresPassword = "Postgres:password";
+        private const string BackupBucket = "Backups";
 
-        public CreatePalavyrSnapshot(IAmazonS3 s3Client, ILogger<CreatePalavyrSnapshot> logger)
+        public CreatePalavyrSnapshot(
+            IPostgresBackup postgresBackup,
+            IUserDataBackup userDataBackup,
+            IConfiguration configuration,
+            IUpdateDatabaseLatest updateDatabaseLatest
+        )
         {
-            S3Client = s3Client;
-            _logger = logger;
-            if (!Directory.Exists(Archives))
-                Directory.CreateDirectory(Archives);
+            this.postgresBackup = postgresBackup;
+            this.userDataBackup = userDataBackup;
+            this.configuration = configuration;
+            this.updateDatabaseLatest = updateDatabaseLatest;
         }
 
-        public async Task CreateDatabaseAndUserDataSnapshot()
+        public async Task CreateAndTransferCompleteBackup()
         {
-            var snapshotTimeStamp = DateTime.Now.ToString(TimeUtils.DateTimeFormat);
-            await SaveSnapshot(Utils.Databases, snapshotTimeStamp, DatabaseDirectory);
-            await SaveSnapshot(Utils.UserData, snapshotTimeStamp, UserDataDirectory);
-        }
+            var snapshotTimeStamp = TimeUtils.CreateTimeStamp();
+            var host = configuration.GetSection(PostgresHost).Value;
+            var port = configuration.GetSection(PostgresPort).Value;
+            var pass = configuration.GetSection(PostgresPassword).Value;
+            var bucket = configuration.GetSection(BackupBucket).Value;
 
-        private async Task SaveSnapshot(string prefix, string snapshotTimeStamp, string fromDirectory)
-        {
-            var snapshotName = $"{prefix}.{snapshotTimeStamp}.zip";
-            var zipName = $"C:\\{Utils.PalavyrData}\\Archives\\{snapshotName}";
-            ZipFile.CreateFromDirectory(fromDirectory, zipName);
-            await SaveZipToS3(zipName, snapshotTimeStamp, snapshotName);
-        }
+            var latestDatabaseBackup = await postgresBackup.CreateFullDatabaseBackup(host, port, pass, snapshotTimeStamp, bucket);
+            var latestUserDataBackup = await userDataBackup.CreateFullUserDataBackup(snapshotTimeStamp, bucket);
 
-        private static void DeleteLocalTempArchive(string archivePath)
-        {
-            if (File.Exists(archivePath))
-            {
-                File.Delete(archivePath);
-            }
-        }
-
-        private async Task SaveZipToS3(string zipPath, string snapshotTimeStamp, string snapshotName)
-        {
-            
-            var fileKey = Path.Combine(Utils.SnapshotsDir, snapshotTimeStamp, snapshotName).Replace("\\", "/");
-            var putRequest = new PutObjectRequest()
-            {
-                BucketName = Utils.ArchivesBucket,
-                FilePath = zipPath,
-                Key = fileKey
-            };
-            try
-            {
-                var response = await S3Client.PutObjectAsync(putRequest);
-                _logger.LogInformation($"Saved {zipPath} to {fileKey} in {Utils.ArchivesBucket}");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("Failed to write snapshot files: " + ex.Message);
-                Console.WriteLine(ex);
-                DeleteLocalTempArchive(zipPath);
-            }
+            await updateDatabaseLatest.UpdateLatestBackupRecords(latestDatabaseBackup, latestUserDataBackup);
         }
     }
 }

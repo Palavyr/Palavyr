@@ -4,6 +4,6 @@ namespace Palavyr.Background
 {
     public interface ICreatePalavyrSnapshot
     {
-        Task CreateDatabaseAndUserDataSnapshot();
+        Task CreateAndTransferCompleteBackup();
     }
 }

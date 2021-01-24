@@ -19,7 +19,7 @@ namespace Palavyr.Common.FileSystem.FormPaths
             return attachmentDir;
         }
 
-        public static string FormResponsePDFDirWithCreate(string accountId)
+        public static string FormResponsePdfDirWithCreate(string accountId)
         {
             var responseDir = Path.Combine(FormAccountDirWithCreate(accountId), MagicPathStrings.PreviewPDF);
             DiskUtils.CreateDir(responseDir);
@@ -39,6 +39,38 @@ namespace Palavyr.Common.FileSystem.FormPaths
             var logoImageDir = Path.Combine(FormAccountDirWithCreate(accountId), MagicPathStrings.Logo);
             DiskUtils.CreateDir(logoImageDir);
             return logoImageDir;
+        }
+
+        public static string FormTempDbBackupDirectory()
+        {
+            var backupDirName = "DbBackupTempDirectory";
+            var backupDir = Path.Combine(MagicPathStrings.InstallationRoot, backupDirName);
+            DiskUtils.CreateDir(backupDir);
+            return backupDir;
+        }
+
+        public static string FormZippableDbBackupDirectory()
+        {
+            var zippableDirName = "Palavyr-Db-Backup";
+            var zippableDirectory = Path.Combine(FormTempDbBackupDirectory(), zippableDirName);
+            DiskUtils.CreateDir(zippableDirectory);
+            return zippableDirectory;
+        }
+
+        public static string FormTempUserDataBackupDirectory()
+        {
+            var backupDirName = "UserDataBackupTempDirectory";
+            var backupDir = Path.Combine(MagicPathStrings.InstallationRoot, backupDirName);
+            DiskUtils.CreateDir(backupDir);
+            return backupDir;
+        }
+
+        public static string FormLocalRestoreDirectory()
+        {
+            var restoreDirName = "TempRestoreDirectory";
+            var tempRestoreDirectory = Path.Combine(MagicPathStrings.InstallationRoot, restoreDirName);
+            DiskUtils.CreateDir(tempRestoreDirectory);
+            return tempRestoreDirectory;
         }
     }
 }

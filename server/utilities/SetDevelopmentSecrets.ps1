@@ -12,6 +12,7 @@ $server = "127.0.0.1";
 $port = "5432";
 $api = ".\\Palavyr.API";
 $migrator = ".\\Palavyr.Data.Migrator";
+$backupAndRestore = ".\\Palavyr.BackupAndRestore";
 
 function WriteSecrets($projectPath) {
     Write-Host "`r`nSetting Connection Strings for $projectPath...`r`n"
@@ -23,9 +24,11 @@ function WriteSecrets($projectPath) {
 Write-Host "`r`nClearing previous Secrets`r`n"
 dotnet user-secrets clear --project $api;
 dotnet user-secrets clear --project $migrator;
+dotnet user-secrets clear --project $backupAndRestore;
 
 WriteSecrets($api)
 WriteSecrets($migrator)
+WriteSecrets($backupAndRestore)
 
 ##################
 # Write Migrator Environment
@@ -44,7 +47,13 @@ $secretKey = $credentials.SecretKey;
 
 dotnet user-secrets set AWS:AccessKey "$accessKey" --project $api
 dotnet user-secrets set AWS:SecretKey "$secretKey" --project $api
-dotnet user-secrets set AWS:Region "ap-southeast-2" --project $api
+dotnet user-secrets set AWS:Region "us-east-1" --project $backupAndRestore
+# dotnet user-secrets set AWS:Region "ap-southeast-2" --project $api
+
+dotnet user-secrets set AWS:AccessKey "$accessKey" --project $backupAndRestore
+dotnet user-secrets set AWS:SecretKey "$secretKey" --project $backupAndRestore
+dotnet user-secrets set AWS:Region "us-east-1" --project $backupAndRestore
+# dotnet user-secrets set AWS:Region "ap-southeast-2" --project $backupAndRestore
 
 
 ###################

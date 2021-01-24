@@ -19,6 +19,24 @@ namespace DashboardServer.Data.Migrations.AccountsMigrations
                 .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            modelBuilder.Entity("Server.Domain.Accounts.Backup", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("LatestFullDbBackup")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LatestUserDataBackup")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Backups");
+                });
+
             modelBuilder.Entity("Server.Domain.Accounts.EmailVerification", b =>
                 {
                     b.Property<int?>("Id")
