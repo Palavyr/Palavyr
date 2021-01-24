@@ -5,6 +5,7 @@ using EmailService.ResponseEmail;
 using Microsoft.Extensions.Logging;
 using Palavyr.Amazon;
 using Palavyr.Amazon.S3Services;
+using Palavyr.BackupAndRestore.Paths;
 using Palavyr.Common.FileSystem.FormPaths;
 using Palavyr.FileSystem.UIDUtils;
 
@@ -12,7 +13,7 @@ namespace Palavyr.BackupAndRestore.Postgres
 {
     public interface IPostgresBackup
     {
-        Task CreateFullDatabaseBackup(string host, string port, string password, TimeUtils timeStamp);
+        Task<string> CreateFullDatabaseBackup(string host, string port, string password, TimeUtils timeStamp, string bucket);
     }
 
     public class PostgresBackup : PostgresBase, IPostgresBackup
@@ -27,7 +28,7 @@ namespace Palavyr.BackupAndRestore.Postgres
             this.s3Saver = s3Saver;
         }
 
-        public async Task CreateFullDatabaseBackup(string host, string port, string password, TimeUtils timeStamp)
+        public async Task<string> CreateFullDatabaseBackup(string host, string port, string password, TimeUtils timeStamp, string bucket)
         {
             // this double the database size on disk.
             foreach (var databaseName in DatabaseConstants.Databases)
@@ -42,11 +43,12 @@ namespace Palavyr.BackupAndRestore.Postgres
             ZipFile.CreateFromDirectory(directoryToZip, outputZipPath);
 
             // send to S3, and then 
-            var dbSnapshotNameKey = AmazonPathUtils.FormS3DatabaseBackupKey(timeStamp);
-            await s3Saver.SaveZipToS3(AmazonConstants.ArchivesBucket, outputZipPath, dbSnapshotNameKey);
+            var fileKey = AmazonPathUtils.FormS3DatabaseBackupKey(timeStamp);
+            await s3Saver.SaveZipToS3(bucket, outputZipPath, fileKey);
 
             // delete the temp directory if all okay
             DiskUtils.DeleteDbBackupFolder();
+            return fileKey;
         }
 
         private async Task CreatePostgreSqlBackup(string outFile, string host, string port, string database, string password)

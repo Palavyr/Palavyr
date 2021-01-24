@@ -7,40 +7,63 @@ using Palavyr.Common.FileSystem.FormPaths;
 
 namespace Palavyr.BackupAndRestore.Postgres
 {
-    public class PostgresRestore : PostgresBase
+    public class PostgresRestorer : PostgresBase
     {
-        private readonly ILogger<PostgresBackup> logger;
+        private readonly ILogger<PostgresRestorer> logger;
 
         private const string FailMessage = "Database restore check failure. Investigate now.";
 
-        public PostgresRestore(ISesEmail emailClient, ILogger<PostgresBackup> logger) : base(emailClient, logger)
+        public PostgresRestorer(
+            ISesEmail emailClient,
+            ILogger<PostgresRestorer> logger
+        ) : base(emailClient, logger)
         {
             this.logger = logger;
         }
 
-        public async Task GenerateFullRestore(string tempDirectory, string host, string port, string password)
+        public async Task PerformStandardRestore(string host, string port, string password)
         {
+            var tempRestoreDirectory = FormDirectoryPaths.FormLocalRestoreDirectory();
+
             foreach (var database in DatabaseConstants.Databases)
             {
-                var inputFile = Path.Combine(tempDirectory, database + ".sql");
+                logger.LogDebug($"Restoring to database: {database}");
+                var inputFile = Path.Combine(tempRestoreDirectory, database + ".sql");
                 await RestoreFromPostgreSqlBackup(inputFile, host, port, database, password);
             }
         }
 
-        public async Task Cleanup(string tempDirectory, string host, string port, string password)
+        public async Task PerformRestoreCheck(string host, string port, string password)
         {
+            var tempRestoreDirectory = FormDirectoryPaths.FormLocalRestoreDirectory();
             foreach (var database in DatabaseConstants.Databases)
             {
-                logger.LogDebug($"Cleaning up database after restore: {database}");
+                logger.LogDebug($"Restoring to database: {database}");
+                var inputFile = Path.Combine(tempRestoreDirectory, database + ".sql");
+                var altDatabaseName = DatabaseConstants.FormCheckTableName(database);
+                await RestoreFromPostgreSqlBackup(inputFile, host, port, altDatabaseName, password);
+            }
+        }
+
+        public async Task RestoreCheckCleanup(string host, string port, string password)
+        {
+            var tempRestoreDirectory = FormDirectoryPaths.FormLocalRestoreDirectory();
+
+            foreach (var database in DatabaseConstants.Databases)
+            {
+                var altDatabaseName = DatabaseConstants.FormCheckTableName(database);
+
+                logger.LogDebug($"Cleaning up database after restore: {altDatabaseName}");
+                Console.WriteLine($"Cleaning up : {altDatabaseName}");
                 var cleanupCommand = $"{GetSetPassword(password)}{Newline}"
-                                     + GetTerminateProcessCommand(host, port, database)
-                                     + GetDropDbCommand(host, port, database);
-                var failMessage = $"Database cleanup failed on {database}. Investigate Now.";
+                                     + GetTerminateProcessCommand(host, port, altDatabaseName)
+                                     + GetDropDbCommand(host, port, altDatabaseName);
+                var failMessage = $"Database cleanup failed on {altDatabaseName}. Investigate Now.";
                 await Execute(cleanupCommand, failMessage);
             }
 
-            logger.LogDebug($"Deleting TempDirection {tempDirectory}");
-            DiskUtils.DeleteTempDirectory(tempDirectory);
+            logger.LogDebug($"Deleting TempDirection {tempRestoreDirectory}");
+            DiskUtils.DeleteTempDirectory(tempRestoreDirectory);
         }
 
         private async Task RestoreFromPostgreSqlBackup(
@@ -63,7 +86,7 @@ namespace Palavyr.BackupAndRestore.Postgres
 
         private string CreateRestoreCommand(string host, string port, string database)
         {
-            var restoreCommand = "pg_restore";
+            var restoreCommand = $"pg_restore{Space}";
             return $"{restoreCommand}"
                    + GetHost(host)
                    + GetPort(port)
@@ -73,7 +96,7 @@ namespace Palavyr.BackupAndRestore.Postgres
 
         private string CreateDbCommand(string host, string port, string database)
         {
-            var createDbCommand = "createdb ";
+            var createDbCommand = $"createdb{Space}";
             return $"{createDbCommand}"
                    + GetHost(host)
                    + GetPort(port)
@@ -84,14 +107,14 @@ namespace Palavyr.BackupAndRestore.Postgres
 
         private string GetDropDbCommand(string host, string port, string database)
         {
-            var dropCommand = "dropdb ";
+            var dropCommand = $"dropdb{Space}";
             return $"{dropCommand}" + GetHost(host) + GetPort(port) + GetUser() + $" {database}" + $"{Newline}";
         }
 
         private string GetTerminateProcessCommand(string host, string port, string database)
         {
             var psqlCommand = $"psql{Space}";
-            var terminateProcess = $"\"select pg_terminate_backend(pid) from pg_stat_activity where datename = '{database}'\"";
+            var terminateProcess = $"\"select pg_terminate_backend(pid) from pg_stat_activity where datname = '{database}'\"";
             return $"{psqlCommand}"
                    + GetHost(host)
                    + GetPort(port)

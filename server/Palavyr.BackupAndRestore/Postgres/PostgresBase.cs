@@ -12,7 +12,7 @@ namespace Palavyr.BackupAndRestore.Postgres
     public abstract class PostgresBase
     {
         protected readonly ISesEmail EmailClient;
-        protected readonly ILogger Logger;
+        protected readonly ILogger logger;
         protected const string PGPASSWORD = "PGPASSWORD";
         protected const string Newline = "\n";
         protected const string Space = " ";
@@ -20,7 +20,7 @@ namespace Palavyr.BackupAndRestore.Postgres
         public PostgresBase(ISesEmail emailClient, ILogger logger)
         {
             this.EmailClient = emailClient;
-            this.Logger = logger;
+            this.logger = logger;
         }
 
         protected string SetEnvVarCommand => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "set " : "export ";
@@ -54,6 +54,7 @@ namespace Palavyr.BackupAndRestore.Postgres
 
         protected Task Execute(string dumpCommand, string failMessage)
         {
+            logger.LogDebug("Executing postgres command...");
             return Task.Run(
                 () =>
                 {
@@ -79,6 +80,9 @@ namespace Palavyr.BackupAndRestore.Postgres
                     }
                     catch (Exception e)
                     {
+                        Console.WriteLine($"Failed to perform backup or restore command: {dumpCommand}");
+                        logger.LogDebug($"Exception encountered when executing backup and restore. {e.Message} - Sending email.");
+                        logger.LogDebug($"Dump Command: {dumpCommand}");
                         EmailClient.SendEmail(
                             "palavyr@gmail.com",
                             "paul.e.gradie@gmail.com",
@@ -88,6 +92,7 @@ namespace Palavyr.BackupAndRestore.Postgres
                     }
                     finally
                     {
+                        logger.LogDebug("Executing Finally block - deleting batfile.");
                         if (File.Exists(batFilePath))
                         {
                             File.Delete(batFilePath);

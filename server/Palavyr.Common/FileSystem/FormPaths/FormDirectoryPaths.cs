@@ -56,13 +56,21 @@ namespace Palavyr.Common.FileSystem.FormPaths
             DiskUtils.CreateDir(zippableDirectory);
             return zippableDirectory;
         }
-        
+
         public static string FormTempUserDataBackupDirectory()
         {
             var backupDirName = "UserDataBackupTempDirectory";
             var backupDir = Path.Combine(MagicPathStrings.InstallationRoot, backupDirName);
             DiskUtils.CreateDir(backupDir);
             return backupDir;
+        }
+
+        public static string FormLocalRestoreDirectory()
+        {
+            var restoreDirName = "TempRestoreDirectory";
+            var tempRestoreDirectory = Path.Combine(MagicPathStrings.InstallationRoot, restoreDirName);
+            DiskUtils.CreateDir(tempRestoreDirectory);
+            return tempRestoreDirectory;
         }
     }
 }

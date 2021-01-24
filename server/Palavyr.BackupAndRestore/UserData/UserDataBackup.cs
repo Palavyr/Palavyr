@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Amazon;
 using Palavyr.Amazon.S3Services;
+using Palavyr.BackupAndRestore.Paths;
 using Palavyr.Common.FileSystem;
 using Palavyr.Common.FileSystem.FormPaths;
 using Palavyr.FileSystem.UIDUtils;
@@ -12,7 +13,7 @@ namespace Palavyr.BackupAndRestore.UserData
 {
     public interface IUserDataBackup
     {
-        Task CreateFullUserDataBackup(TimeUtils timeStamp);
+        Task<string> CreateFullUserDataBackup(TimeUtils timeStamp, string bucket);
     }
 
     public class UserDataBackup : IUserDataBackup
@@ -27,19 +28,18 @@ namespace Palavyr.BackupAndRestore.UserData
             this.s3Saver = s3Saver;
         }
 
-        public async Task CreateFullUserDataBackup(TimeUtils timeStamp)
+        public async Task<string> CreateFullUserDataBackup(TimeUtils timeStamp, string bucket)
         {
-            var localZipFilePath = LocalPathUtils.FormLocalTempDbZipFilePath(timeStamp);
-            
+            var localZipFilePath = LocalPathUtils.FormLocalTempUserDataZipFilePath(timeStamp);
+
             logger.LogDebug($"User Data Backup: {localZipFilePath}");
             ZipFile.CreateFromDirectory(UserDataDirectory, localZipFilePath);
 
             var fileKey = AmazonPathUtils.FormS3UserDataBackupKey(timeStamp);
-            await s3Saver.SaveZipToS3(AmazonConstants.ArchivesBucket, localZipFilePath, fileKey);
-            
+            await s3Saver.SaveZipToS3(bucket, localZipFilePath, fileKey);
+
             DiskUtils.DeleteUserDataBackupFolder();
+            return fileKey;
         }
-        
-        
     }
 }

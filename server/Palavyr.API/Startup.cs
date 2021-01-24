@@ -44,6 +44,7 @@ namespace Palavyr.API
         private const string AccessKeySection = "AWS:AccessKey";
         private const string SecretKeySection = "AWS:SecretKey";
         private const string StripeKeySection = "Stripe:SecretKey";
+        
         private const string WebhookKeySection = "Stripe:WebhookKey";
         
         
@@ -137,10 +138,7 @@ namespace Palavyr.API
                     });
             });
 
-            services
-                .AddControllers();
-            
-            var value = Configuration.GetConnectionString(AccountDbStringKey);
+            services.AddControllers();
             services.AddDbContext<AccountsContext>(opt =>
                 opt.UseNpgsql(Configuration.GetConnectionString(AccountDbStringKey)));
             services.AddDbContext<ConvoContext>(opt =>
@@ -218,8 +216,7 @@ namespace Palavyr.API
                 Configuration["WebRootPath"] = Environment.CurrentDirectory;
             }
 
-            if (env.IsDevelopment())
-                app.UseDeveloperExceptionPage();
+            var bucket = Configuration["Backups"];
 
             app.UseHttpsRedirection();
             app.UseRouting();
