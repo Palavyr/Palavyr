@@ -1,12 +1,10 @@
 ﻿using System.Threading.Tasks;
 using DashboardServer.Data;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Palavyr.BackupAndRestore;
 using Palavyr.BackupAndRestore.Postgres;
 using Palavyr.BackupAndRestore.UserData;
 using Palavyr.FileSystem.UIDUtils;
-using Server.Domain.Accounts;
 
 namespace Palavyr.Background
 {
@@ -15,7 +13,6 @@ namespace Palavyr.Background
         private readonly IPostgresBackup postgresBackup;
         private readonly IUserDataBackup userDataBackup;
         private readonly IConfiguration configuration;
-        private readonly AccountsContext accountsContext;
         private readonly IUpdateDatabaseLatest updateDatabaseLatest;
 
         private const string PostgresHost = "Postgres:host";
@@ -23,12 +20,16 @@ namespace Palavyr.Background
         private const string PostgresPassword = "Postgres:password";
         private const string BackupBucket = "Backups";
 
-        public CreatePalavyrSnapshot(IPostgresBackup postgresBackup, IUserDataBackup userDataBackup, IConfiguration configuration, AccountsContext accountsContext, IUpdateDatabaseLatest updateDatabaseLatest)
+        public CreatePalavyrSnapshot(
+            IPostgresBackup postgresBackup,
+            IUserDataBackup userDataBackup,
+            IConfiguration configuration,
+            IUpdateDatabaseLatest updateDatabaseLatest
+        )
         {
             this.postgresBackup = postgresBackup;
             this.userDataBackup = userDataBackup;
             this.configuration = configuration;
-            this.accountsContext = accountsContext;
             this.updateDatabaseLatest = updateDatabaseLatest;
         }
 

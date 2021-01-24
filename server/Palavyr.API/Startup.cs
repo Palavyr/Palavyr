@@ -227,8 +227,8 @@ namespace Palavyr.API
             app.UseAuthorization();
             app.UseMiddleware<SetHeaders>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-
-            if (env.IsProduction())
+            
+            if (env.IsProduction() || env.IsStaging())
             {
                 Console.WriteLine("Current think its production Okay?");
                 var option = new BackgroundJobServerOptions {WorkerCount = 1};
@@ -242,7 +242,7 @@ namespace Palavyr.API
                             "Backup database",
                             () => serviceProvider.GetService<ICreatePalavyrSnapshot>()
                                 .CreateAndTransferCompleteBackup(),
-                            Cron.Daily
+                            Cron.Minutely
                         );
                     recurringJobManager
                         .AddOrUpdate(
