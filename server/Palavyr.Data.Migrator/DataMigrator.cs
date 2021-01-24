@@ -39,8 +39,9 @@ namespace Palavyr.Data.Migrator
                 .AddJsonFile("appsettings.migrator.json", true)
                 .AddUserSecrets(assembly, true)
                 .Build();
-            
+            _logger.LogInformation("This is a test of the logging system.");
             var env = configuration.GetValue<string>("Environment");
+            _logger.LogDebug($"This is a debug test to print the env... printing: {env}");
             _logger.LogInformation($"Data Migrations being performed in {env}");
 
             var accountsRes = ApplyMigrations(env, AccountConfigKey, AccountFilterName, configuration);
