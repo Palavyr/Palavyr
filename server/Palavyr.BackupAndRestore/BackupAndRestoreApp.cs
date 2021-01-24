@@ -9,18 +9,15 @@ namespace Palavyr.BackupAndRestore
 {
     public class BackupAndRestoreApp
     {
-        private readonly Executor executor;
+        private readonly Operations operations;
         private readonly PostgresRestorer postgresRestorer;
         private readonly IConfiguration configuration;
         private readonly IPostgresBackup postgresBackup;
         private readonly IUserDataBackup userDataBackup;
         private readonly UpdateDatabaseLatest updateDatabaseLatest;
-        private const string BackupsSection = "Backups";
-        private const string PostgresHost = "Postgres:host";
-        private const string PostgresPort = "Postgres:port";
-        private const string PostgresPassword = "Postgres:password";
+
         public BackupAndRestoreApp(
-            Executor executor, 
+            Operations operations, 
             PostgresRestorer postgresRestorer, 
             IConfiguration configuration,
             IPostgresBackup postgresBackup,
@@ -28,7 +25,7 @@ namespace Palavyr.BackupAndRestore
             UpdateDatabaseLatest updateDatabaseLatest
             )
         {
-            this.executor = executor;
+            this.operations = operations;
             this.postgresRestorer = postgresRestorer;
             this.configuration = configuration;
             this.postgresBackup = postgresBackup;
@@ -38,10 +35,10 @@ namespace Palavyr.BackupAndRestore
 
         public async Task Execute(string[] args)
         {
-            var bucket = configuration.GetSection(BackupsSection).Value;
-            var host = configuration.GetSection(PostgresHost).Value;
-            var port = configuration.GetSection(PostgresPort).Value;
-            var pass = configuration.GetSection(PostgresPassword).Value;
+            var bucket = configuration.GetSection(DatabaseConstants.BackupsSection).Value;
+            var host = configuration.GetSection(DatabaseConstants.PostgresHost).Value;
+            var port = configuration.GetSection(DatabaseConstants.PostgresPort).Value;
+            var pass = configuration.GetSection(DatabaseConstants.PostgresPassword).Value;
 
             if (args.Length == 0 || args.Length > 1)
             {
@@ -51,7 +48,7 @@ namespace Palavyr.BackupAndRestore
             
             if (args[0] == "--check")
             {
-                await executor.RestoreAndCheckAndCleanup(bucket, host, port, pass);
+                await operations.RestoreAndCheckAndCleanup(bucket, host, port, pass);
             }
             else if (args[0] == "--restore")
             {
