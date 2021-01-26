@@ -7,15 +7,13 @@
     <UserSecretsId>48e6608b-8b91-40b9-ad16-a3cae3933cd4</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="dbup-postgresql" Version="4.4.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.8" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.8" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.8" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.8" />
+    <PackageReference Include="dbup-postgresql" Version="4.5.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Scripts\Account\0001-accounts_migration-initialCreate.sql" />
-    <None Remove="Scripts\Config\0001-configuration_migration-initialCreate.sql" />
     <None Update="appsettings.migrator.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
