@@ -1,6 +1,6 @@
 using System.IO;
-using Palavyr.FileSystem.ExtensionMethods.PathExtensions;
-using Palavyr.FileSystem.UIDUtils;
+using Palavyr.Common.ExtensionMethods.PathExtensions;
+using Palavyr.Common.UIDUtils;
 
 namespace Palavyr.Amazon
 {

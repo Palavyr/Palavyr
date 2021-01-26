@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Palavyr.FileSystem.Requests;
+using Palavyr.Common.Requests;
 
 namespace Palavyr.API.CustomMiddleware
 {

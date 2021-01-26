@@ -4,7 +4,7 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.API.Services.AuthenticationServices;
-using Palavyr.FileSystem.UIDUtils;
+using Palavyr.Common.UIDUtils;
 
 
 namespace Palavyr.API.Controllers.Authentication.PasswordReset

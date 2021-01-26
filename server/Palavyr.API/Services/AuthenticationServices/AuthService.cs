@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.RequestTypes;
 using Palavyr.API.ResponseTypes;
-using Palavyr.FileSystem.UIDUtils;
+using Palavyr.Common.UIDUtils;
 using Server.Domain.Accounts;
 
 namespace Palavyr.API.Services.AuthenticationServices

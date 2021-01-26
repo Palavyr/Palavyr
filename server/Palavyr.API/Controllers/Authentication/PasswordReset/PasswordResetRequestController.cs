@@ -4,7 +4,7 @@ using DashboardServer.Data;
 using EmailService.ResponseEmail;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.FileSystem.UIDUtils;
+using Palavyr.Common.UIDUtils;
 using Server.Domain.Accounts;
 
 namespace Palavyr.API.Controllers.Authentication.PasswordReset

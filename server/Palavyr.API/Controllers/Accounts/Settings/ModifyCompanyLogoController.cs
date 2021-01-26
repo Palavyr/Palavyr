@@ -6,11 +6,13 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Palavyr.Common.Aws;
+using Palavyr.Common.Constants;
 using Palavyr.Common.FileSystem.FormPaths;
+using Palavyr.Common.FileSystem.IO;
 using Palavyr.Common.FileSystem.ListPaths;
-using Palavyr.FileSystem.Aws;
-using Palavyr.FileSystem.FileSystem.IO;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
@@ -18,16 +20,19 @@ namespace Palavyr.API.Controllers.Accounts.Settings
     [ApiController]
     public class ModifyCompanyLogoController : ControllerBase
     {
+        private readonly IConfiguration configuration;
         private ILogger<ModifyCompanyLogoController> logger;
         private AccountsContext accountsContext;
         private readonly IAmazonS3 s3Client;
 
         public ModifyCompanyLogoController(
+            IConfiguration configuration,
             IAmazonS3 s3Client,
             AccountsContext accountsContext, 
             ILogger<ModifyCompanyLogoController> logger
         )
         {
+            this.configuration = configuration;
             this.logger = logger;
             this.accountsContext = accountsContext;
             this.s3Client = s3Client;
@@ -39,6 +44,8 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             [FromHeader] string accountId,
             [FromForm(Name = "files")] IFormFile file) // will take form data. Check attachments
         {
+            var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
+
             // Get the directory where we save the logo images
             var extension = Path.GetExtension(file.FileName);
             var logoDirectory = FormDirectoryPaths.FormLogoImageDir(accountId);
@@ -64,7 +71,8 @@ namespace Palavyr.API.Controllers.Accounts.Settings
                 accountId,
                 Path.GetFileName(filepath),
                 filepath,
-                s3Client
+                s3Client,
+                previewBucket
             );
             return Ok(link);
         }

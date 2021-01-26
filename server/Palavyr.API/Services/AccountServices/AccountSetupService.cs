@@ -11,7 +11,7 @@ using Palavyr.API.RequestTypes.Registration;
 using Palavyr.API.ResponseTypes;
 using Palavyr.API.Services.AuthenticationServices;
 using Palavyr.Common.Constants;
-using Palavyr.FileSystem.UIDUtils;
+using Palavyr.Common.UIDUtils;
 using Server.Domain.Accounts;
 
 namespace Palavyr.API.Services.AccountServices

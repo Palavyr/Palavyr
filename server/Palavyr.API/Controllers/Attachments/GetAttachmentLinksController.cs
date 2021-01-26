@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Palavyr.Common.Constants;
 
 namespace Palavyr.API.Controllers.Attachments
 {
@@ -11,16 +13,19 @@ namespace Palavyr.API.Controllers.Attachments
     [ApiController]
     public class GetAttachmentLinksController : AttachmentsBase
     {
+        private readonly IConfiguration configuration;
         private DashContext dashContext;
         private ILogger<GetAttachmentLinksController> logger;
         private IAmazonS3 s3Client;
 
         public GetAttachmentLinksController(
+            IConfiguration configuration,
             DashContext dashContext,
             ILogger<GetAttachmentLinksController> logger,
             IAmazonS3 s3Client
         )
         {
+            this.configuration = configuration;
             this.dashContext = dashContext;
             this.logger = logger;
             this.s3Client = s3Client;
@@ -29,7 +34,8 @@ namespace Palavyr.API.Controllers.Attachments
         [HttpGet("attachments/{areaId}")]
         public async Task<IActionResult> Get([FromHeader] string accountId, string areaId)
         {
-            var fileLinks = await GetFileLinks(accountId, areaId, dashContext, logger, s3Client);
+            var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
+            var fileLinks = await GetFileLinks(accountId, areaId, dashContext, logger, s3Client, previewBucket);
             return Ok(fileLinks.ToArray());
         }
     }

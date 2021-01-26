@@ -1,8 +1,8 @@
-﻿namespace Palavyr.Common.FileSystem.FormPaths.MagicStrings
+﻿namespace Palavyr.Common.Aws
 {
     public class MagicAWSStrings
     {
-        public const string AWSPreviewBucket = "convo-builder-previews";
+        // public const string PreviewSection = "Previews";
 
     }
 }

@@ -5,7 +5,9 @@ using Amazon.S3;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Palavyr.Common.Constants;
 using Palavyr.Common.FileSystem.FormPaths;
 using Server.Domain.Configuration.Schemas;
 
@@ -16,15 +18,18 @@ namespace Palavyr.API.Controllers.Attachments
     public class SaveSingleAttachmentController : AttachmentsBase
     {
         private ILogger<SaveSingleAttachmentController> logger;
+        private readonly IConfiguration configuration;
         private readonly IAmazonS3 s3Client;
         private readonly DashContext dashContext;
 
         public SaveSingleAttachmentController(
+            IConfiguration configuration,
             ILogger<SaveSingleAttachmentController> logger,
             IAmazonS3 s3Client, 
             DashContext dashContext
             )
         {
+            this.configuration = configuration;
             this.s3Client = s3Client;
             this.logger = logger;
             this.dashContext = dashContext;
@@ -37,6 +42,7 @@ namespace Palavyr.API.Controllers.Attachments
             [FromRoute] string areaId, 
             [FromForm(Name = "files")] IFormFile attachmentFile)
         {
+            var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
             var attachmentDir = FormDirectoryPaths.FormAttachmentDirectoryWithCreate(accountId, areaId);
             var safeFileName = Guid.NewGuid() + ".pdf";
             var riskyFileName = attachmentFile.FileName;
@@ -52,7 +58,7 @@ namespace Palavyr.API.Controllers.Attachments
             await attachmentFile.CopyToAsync(fileStream);
             fileStream.Close();
             
-            var fileLinks = await GetFileLinks(accountId, areaId, dashContext, logger, s3Client);
+            var fileLinks = await GetFileLinks(accountId, areaId, dashContext, logger, s3Client, previewBucket);
             return Ok(fileLinks);
         }
     }

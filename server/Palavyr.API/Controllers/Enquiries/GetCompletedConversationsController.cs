@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.responseTypes;
 using Palavyr.API.Utils;
+using Palavyr.Common.Constants;
 
 namespace Palavyr.API.Controllers.Enquiries
 {
@@ -15,16 +17,19 @@ namespace Palavyr.API.Controllers.Enquiries
     [ApiController]
     public class GetCompletedConversationsController : ControllerBase
     {
+        private readonly IConfiguration configuration;
         private ILogger<GetCompletedConversationsController> logger;
         private ConvoContext convoContext;
         private IAmazonS3 s3Client;
 
         public GetCompletedConversationsController(
+            IConfiguration configuration,
             ILogger<GetCompletedConversationsController> logger,
             ConvoContext convoContext,
             IAmazonS3 s3Client
         )
         {
+            this.configuration = configuration;
             this.logger = logger;
             this.convoContext = convoContext;
             this.s3Client = s3Client;
@@ -33,6 +38,8 @@ namespace Palavyr.API.Controllers.Enquiries
         [HttpGet("enquiries")]
         public async Task<Enquiry[]> Get([FromHeader] string accountId)
         {
+            var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
+
             var enquiries = new List<Enquiry>();
 
             var completedConvos = convoContext
@@ -50,7 +57,7 @@ namespace Palavyr.API.Controllers.Enquiries
                 try
                 {
                     var completeEnquiry =
-                        await EnquiryUtils.MapEnquiryToResponse(completedConvo, accountId, s3Client, logger);
+                        await EnquiryUtils.MapEnquiryToResponse(completedConvo, accountId, s3Client, logger, previewBucket);
                     enquiries.Add(completeEnquiry);
                 }
                 catch (Exception ex)

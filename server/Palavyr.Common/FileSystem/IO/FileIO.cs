@@ -2,7 +2,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Palavyr.FileSystem.FileSystem.IO
+namespace Palavyr.Common.FileSystem.IO
 {
     public static class FileIO
     {

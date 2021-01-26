@@ -2,11 +2,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Amazon.S3;
-using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Palavyr.Common.Aws;
+using Palavyr.Common.Constants;
 using Palavyr.Common.FileSystem.ListPaths;
-using Palavyr.FileSystem.Aws;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
@@ -14,20 +15,25 @@ namespace Palavyr.API.Controllers.Accounts.Settings
     [ApiController]
     public class GetCompanyLogoController : ControllerBase
     {
-        private AccountsContext accountsContext;
         private ILogger<GetCompanyLogoController> logger;
         private IAmazonS3 s3Client;
+        private readonly IConfiguration configuration;
 
-        public GetCompanyLogoController(AccountsContext accountsContext, ILogger<GetCompanyLogoController> logger, IAmazonS3 s3Client)
+        public GetCompanyLogoController(
+            ILogger<GetCompanyLogoController> logger, 
+            IAmazonS3 s3Client,
+            IConfiguration configuration)
         {
             this.logger = logger;
-            this.accountsContext = accountsContext;
             this.s3Client = s3Client;
+            this.configuration = configuration;
         }
         
         [HttpGet("account/settings/logo")]
         public async Task<IActionResult> Get([FromHeader] string accountId)
         {
+            var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
+            
             /// Do I upload an image file, or allow them to use a link?
             /// Only use an actual file for now
             var files = LogoPaths.ListLogoPathsAsDiskPaths(accountId);
@@ -41,7 +47,8 @@ namespace Palavyr.API.Controllers.Accounts.Settings
                 accountId,
                 Path.GetFileName(logoFile),
                 logoFile,
-                s3Client
+                s3Client,
+                previewBucket
             );
             return Ok(link);
         }

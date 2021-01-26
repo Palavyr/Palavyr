@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>Palavyr.FileSystem</RootNamespace>
+        <RootNamespace>Palavyr.Common</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

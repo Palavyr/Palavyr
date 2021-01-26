@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace Palavyr.FileSystem.UIDUtils
+namespace Palavyr.Common.UIDUtils
 {
     public class TimeUtils
     {

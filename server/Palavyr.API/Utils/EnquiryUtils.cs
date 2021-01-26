@@ -3,9 +3,8 @@ using Amazon.S3;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.responseTypes;
 using Palavyr.API.ResponseTypes;
-using Palavyr.Common.FileSystem.FormPaths;
-using Palavyr.FileSystem.Aws;
-using Palavyr.FileSystem.UIDUtils;
+using Palavyr.Common.Aws;
+using Palavyr.Common.UIDUtils;
 using Server.Domain.Conversation;
 
 namespace Palavyr.API.Utils
@@ -30,10 +29,10 @@ namespace Palavyr.API.Utils
             };
         }
         
-        public static async Task<Enquiry> MapEnquiryToResponse(CompletedConversation conversation, string accountId, IAmazonS3 s3Client, ILogger logger)
+        public static async Task<Enquiry> MapEnquiryToResponse(CompletedConversation conversation, string accountId, IAmazonS3 s3Client, ILogger logger, string previewBucket)
         {
             var fileId = conversation.ResponsePdfId;
-            var preSignedUrl = await UriUtils.CreatePresignedUrlResponseLink(logger, accountId, fileId, s3Client);
+            var preSignedUrl = await UriUtils.CreatePreSignedUrlResponseLink(logger, accountId, fileId, s3Client, previewBucket);
             logger.LogDebug("1. File ID: " + fileId);
 
             var fileLink = FileLink.CreateLink("Response PDF", preSignedUrl, fileId + ".pdf");

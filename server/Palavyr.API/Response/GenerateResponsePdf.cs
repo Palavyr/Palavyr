@@ -8,14 +8,16 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using DashboardServer.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.RequestTypes;
 using Palavyr.API.ResponseTypes;
 using Palavyr.API.Services.EntityServices;
+using Palavyr.Common.Aws;
+using Palavyr.Common.Constants;
 using Palavyr.Common.FileSystem;
 using Palavyr.Common.FileSystem.FormPaths;
 using Palavyr.Common.FileSystem.LocalServices;
-using Palavyr.FileSystem.Aws;
 using PDFService;
 using PDFService.Sections.Util;
 using Server.Domain.Configuration.Constant;
@@ -40,6 +42,7 @@ namespace Palavyr.API.Response
 
     public class PdfResponseGenerator : IPdfResponseGenerator
     {
+        private readonly IConfiguration configuration;
         private readonly DashContext dashContext;
         private static readonly HttpClient Client = new HttpClient();
         private readonly ILogger<PdfResponseGenerator> logger;
@@ -47,12 +50,14 @@ namespace Palavyr.API.Response
         private readonly IAreaDataService areaDataService;
 
         public PdfResponseGenerator(
+            IConfiguration configuration,
             DashContext dashContext,
             ILogger<PdfResponseGenerator> logger,
             IAccountDataService accountDataService,
             IAreaDataService areaDataService
         )
         {
+            this.configuration = configuration;
             this.dashContext = dashContext;
             this.logger = logger;
             this.accountDataService = accountDataService;
@@ -61,6 +66,8 @@ namespace Palavyr.API.Response
 
         public async Task<FileLink> CreatePdfResponsePreviewAsync(CultureInfo culture, string accountId, string areaId)
         {
+            var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
+
             var areaData = areaDataService.GetSingleAreaDataRecursive(accountId, areaId);
             var userAccount = accountDataService.GetUserAccount(accountId);
 
@@ -114,6 +121,7 @@ namespace Palavyr.API.Response
         public async Task<FileLink> CreatePdfResponsePreviewAsync(IAmazonS3 s3Client, CultureInfo culture, string accountId, string areaId)
         {
             logger.LogDebug("-------------CreatePdfResponsePreviewAsync-------------------");
+            var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
 
             var areaData = areaDataService.GetSingleAreaDataRecursive(accountId, areaId);
             var userAccount = accountDataService.GetUserAccount(accountId);
@@ -159,7 +167,7 @@ namespace Palavyr.API.Response
             try
             {
                 link = await UriUtils.CreatePreSignedPreviewUrlLink(logger, accountId, safeFileNameStem,
-                    safeFileNamePath, s3Client);
+                    safeFileNamePath, s3Client, previewBucket);
                 logger.LogDebug("Successfully created a presigned link to the pdf!");
             }
             catch (Exception ex)

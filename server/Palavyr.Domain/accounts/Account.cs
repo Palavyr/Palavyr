@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Palavyr.FileSystem.UIDUtils;
+using Palavyr.Common.UIDUtils;
 
 namespace Server.Domain.Accounts
 {

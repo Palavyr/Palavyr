@@ -1,4 +1,4 @@
-namespace Palavyr.FileSystem.ExtensionMethods.PathExtensions
+namespace Palavyr.Common.ExtensionMethods.PathExtensions
 {
     public static class PathTypeConversion
     {

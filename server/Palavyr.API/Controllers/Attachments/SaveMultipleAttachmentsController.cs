@@ -6,7 +6,9 @@ using Amazon.S3;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Palavyr.Common.Constants;
 using Palavyr.Common.FileSystem.FormPaths;
 using Server.Domain.Configuration.Schemas;
 
@@ -16,16 +18,19 @@ namespace Palavyr.API.Controllers.Attachments
     [ApiController]
     public class SaveMultipleAttachmentsController : AttachmentsBase
     {
+        private readonly IConfiguration configuration;
         private DashContext dashContext;
         private ILogger<SaveMultipleAttachmentsController> logger;
         private readonly IAmazonS3 s3Client;
 
         public SaveMultipleAttachmentsController(
+            IConfiguration configuration,
             DashContext dashContext,
             IAmazonS3 s3Client,
             ILogger<SaveMultipleAttachmentsController> logger
         )
         {
+            this.configuration = configuration;
             this.dashContext = dashContext;
             this.logger = logger;
             this.s3Client = s3Client;
@@ -38,6 +43,8 @@ namespace Palavyr.API.Controllers.Attachments
             [FromHeader] string accountId,
             [FromForm(Name = "files")] IList<IFormFile> attachmentFiles)
         {
+            var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
+
             // TODO write filename only to the database, then generate GUID to use as filename, then save, then use the db map of guid to filename to get the file.
             var attachmentDir = FormDirectoryPaths.FormAttachmentDirectoryWithCreate(accountId, areaId);
             foreach (var formFile in attachmentFiles)
@@ -55,7 +62,7 @@ namespace Palavyr.API.Controllers.Attachments
             }
 
             await dashContext.SaveChangesAsync();
-            var fileLinks = await GetFileLinks(accountId, areaId, dashContext, logger, s3Client);
+            var fileLinks = await GetFileLinks(accountId, areaId, dashContext, logger, s3Client, previewBucket);
             return Ok(fileLinks);
         }
     }

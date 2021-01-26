@@ -6,15 +6,15 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.ResponseTypes;
+using Palavyr.Common.Aws;
 using Palavyr.Common.FileSystem.ListPaths;
-using Palavyr.FileSystem.Aws;
 
 namespace Palavyr.API.Controllers.Attachments
 {
     public abstract class AttachmentsBase : ControllerBase
     {
         [NonAction] 
-        public async Task<FileLink[]> GetFileLinks(string accountId, string areaId, DashContext dashContext, ILogger logger, IAmazonS3 s3Client)
+        public async Task<FileLink[]> GetFileLinks(string accountId, string areaId, DashContext dashContext, ILogger logger, IAmazonS3 s3Client, string previewBucket)
         {
             var files = AttachmentPaths.GetAttachmentFileList(accountId, areaId);
 
@@ -22,7 +22,7 @@ namespace Palavyr.API.Controllers.Attachments
             foreach (var fi in files)
             {
                 var fileMap = dashContext.FileNameMaps.Single(row => row.SafeName == fi.Name);
-                var link = await UriUtils.CreateAttachmentLinkAsURI(logger, accountId, areaId, fileMap.SafeName, s3Client);
+                var link = await UriUtils.CreateAttachmentLinkAsURI(logger, accountId, areaId, fileMap.SafeName, s3Client, previewBucket);
                 links.Add(FileLink.CreateLink(fileMap.RiskyName, link, fileMap.SafeName));
             }
 

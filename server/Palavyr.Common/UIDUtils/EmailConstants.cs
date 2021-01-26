@@ -1,4 +1,4 @@
-namespace Palavyr.FileSystem.UIDUtils
+namespace Palavyr.Common.UIDUtils
 {
     public static class EmailConstants
     {
