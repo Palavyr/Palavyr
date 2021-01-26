@@ -14,7 +14,7 @@ namespace Palavyr.API
         {
             /// Use with Windows IIS
             CreateHostBuilder(args).Build().Run();
-            
+
             /// use with Ubuntu
             // CreateUbuntuWebHostBuilder(args).Build().Run();
         }
@@ -32,22 +32,23 @@ namespace Palavyr.API
                 .CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
-                .ConfigureLogging((hostingContext, logging) =>
-                {
-                    logging.ClearProviders();
-                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                    logging.SetMinimumLevel(LogLevel.Trace);
-                    logging.AddConsole();
-                    logging.AddDebug();
-                    logging.AddEventSourceLogger();
-                    logging.AddNLog();
-                    logging.AddSeq();
-                })
+                .ConfigureLogging(
+                    (hostingContext, logging) =>
+                    {
+                        logging.ClearProviders();
+                        logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                        logging.SetMinimumLevel(LogLevel.Trace);
+                        logging.AddConsole();
+                        logging.AddDebug();
+                        logging.AddEventSourceLogger();
+                        logging.AddNLog();
+                        logging.AddSeq();
+                    })
                 .UseNLog();
             return host;
         }
-        
-        
+
+
         //
         // public static IHostBuilder CreateWebHostBuilder(string[] args)
         // {

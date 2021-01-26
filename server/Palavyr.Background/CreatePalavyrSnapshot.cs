@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Palavyr.BackupAndRestore;
 using Palavyr.BackupAndRestore.Postgres;
 using Palavyr.BackupAndRestore.UserData;
@@ -10,6 +11,7 @@ namespace Palavyr.Background
 {
     public class CreatePalavyrSnapshot : ICreatePalavyrSnapshot
     {
+        private readonly ILogger<CreatePalavyrSnapshot> logger;
         private readonly IPostgresBackup postgresBackup;
         private readonly IUserDataBackup userDataBackup;
         private readonly IConfiguration configuration;
@@ -21,12 +23,14 @@ namespace Palavyr.Background
         private const string BackupBucket = "Backups";
 
         public CreatePalavyrSnapshot(
+            ILogger<CreatePalavyrSnapshot> logger,
             IPostgresBackup postgresBackup,
             IUserDataBackup userDataBackup,
             IConfiguration configuration,
             IUpdateDatabaseLatest updateDatabaseLatest
         )
         {
+            this.logger = logger;
             this.postgresBackup = postgresBackup;
             this.userDataBackup = userDataBackup;
             this.configuration = configuration;
@@ -41,9 +45,11 @@ namespace Palavyr.Background
             var pass = configuration.GetSection(PostgresPassword).Value;
             var bucket = configuration.GetSection(BackupBucket).Value;
 
+            logger.LogDebug("Creating a new backup of the Palavyr user data and database");
             var latestDatabaseBackup = await postgresBackup.CreateFullDatabaseBackup(host, port, pass, snapshotTimeStamp, bucket);
             var latestUserDataBackup = await userDataBackup.CreateFullUserDataBackup(snapshotTimeStamp, bucket);
-
+            
+            logger.LogDebug("Updating the database records now!");
             await updateDatabaseLatest.UpdateLatestBackupRecords(latestDatabaseBackup, latestUserDataBackup);
         }
     }
