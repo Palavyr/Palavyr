@@ -1,9 +1,11 @@
 using System;
 using System.IO;
 using System.Text;
+using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.SimpleEmail;
+using Autofac;
 using DashboardServer.Data;
 using EmailService.ResponseEmail;
 using EmailService.VerificationRequest;
@@ -20,6 +22,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Palavyr.Amazon.S3Services;
 using Palavyr.API.CustomMiddleware;
+using Palavyr.API.Registration.Modules;
+using Palavyr.API.Registration.Services;
 using Palavyr.API.Response;
 using Palavyr.API.Services.AccountServices;
 using Palavyr.API.Services.AuthenticationServices;
@@ -60,6 +64,12 @@ namespace Palavyr.API
         private IConfiguration Configuration { get; set; }
         private ILogger<Startup> logger { get; set; }
         private IWebHostEnvironment env { get; set; }
+        public ILifetimeScope AutofacContainer { get; private set; }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new AmazonModule(Configuration));
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -158,15 +168,6 @@ namespace Palavyr.API
             StripeConfiguration.ApiKey = Configuration.GetSection(StripeKeySection).Value;
             StripeConfiguration.MaxNetworkRetries = stripeRetriesCount;
 
-            // AWS Services
-            var accessKey = Configuration.GetSection(AccessKeySection).Value;
-            var secretKey = Configuration.GetSection(SecretKeySection).Value;
-            var awsOptions = Configuration.GetAWSOptions();
-            awsOptions.Credentials = new BasicAWSCredentials(accessKey, secretKey);
-            services.AddDefaultAWSOptions(awsOptions);
-            services.AddAWSService<IAmazonSimpleEmailService>();
-            services.AddAWSService<IAmazonS3>();
-
             if (Environment.OSVersion.Platform != PlatformID.Unix)
             {
                 if (!env.IsDevelopment())
@@ -182,9 +183,8 @@ namespace Palavyr.API
                         .UseSimpleAssemblyNameTypeSerializer()
                         .UseMemoryStorage());
             services.AddHangfireServer();
-            services.AddTransient<IRemoveOldS3Archives, RemoveOldS3Archives>();
-            services.AddTransient<IRemoveStaleSessions, RemoveStaleSessions>();
-            services.AddTransient<IValidateAttachments, ValidateAttachments>();
+
+            BackgroundServices.RegisterServices(services);
 
             services.AddTransient<IJwtAuthenticationService, JwtAuthenticationService>();
             services.AddTransient<IAccountSetupService, AccountSetupService>();
@@ -236,11 +236,15 @@ namespace Palavyr.API
 
             if (env.IsProduction() || env.IsStaging())
             {
-                Console.WriteLine("Current think its production Okay?");
+                logger.LogDebug("Current think its production Okay?");
                 var option = new BackgroundJobServerOptions {WorkerCount = 1};
                 app.UseHangfireServer(option);
-                app.UseHangfireDashboard();
-                logger.LogInformation("Preparing to archive the project");
+                if (env.IsStaging())
+                {
+                    logger.LogDebug("Setting up the hangfire dashboard");
+                    app.UseHangfireDashboard();
+                }
+
                 try
                 {
                     recurringJobManager

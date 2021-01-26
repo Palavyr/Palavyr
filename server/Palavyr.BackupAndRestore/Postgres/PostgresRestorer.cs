@@ -5,6 +5,8 @@ using EmailService.ResponseEmail;
 using Microsoft.Extensions.Logging;
 using Palavyr.Common.FileSystem.FormPaths;
 
+//https://docs.aws.amazon.com/sdk-for-net/latest/developer-guide/retries-timeouts.html
+
 namespace Palavyr.BackupAndRestore.Postgres
 {
     public class PostgresRestorer : PostgresBase
