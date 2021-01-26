@@ -1,4 +1,5 @@
 using System;
+using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.SimpleEmail;
@@ -30,7 +31,16 @@ namespace Palavyr.API.Registration.Modules
             {
                 Timeout = TimeSpan.FromSeconds(10),
                 RetryMode = RequestRetryMode.Standard,
-                MaxErrorRetry = 5
+                MaxErrorRetry = 5,
+                RegionEndpoint = RegionEndpoint.USEast1
+            };
+
+            var sesConfig = new AmazonSimpleEmailServiceConfig()
+            {
+                Timeout = TimeSpan.FromSeconds(10),
+                RetryMode = RequestRetryMode.Standard,
+                MaxErrorRetry = 5,
+                RegionEndpoint = RegionEndpoint.USEast1
             };
 
             base.Load(builder);
@@ -40,8 +50,9 @@ namespace Palavyr.API.Registration.Modules
                 .InstancePerLifetimeScope();
 
             builder.Register(
-                context => { return new AmazonSimpleEmailServiceClient(credentials); }
-            ).As<IAmazonSimpleEmailService>().InstancePerLifetimeScope();
+                    context => { return new AmazonSimpleEmailServiceClient(credentials, sesConfig); })
+                .As<IAmazonSimpleEmailService>()
+                .InstancePerLifetimeScope();
         }
     }
 }
