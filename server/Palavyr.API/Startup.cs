@@ -236,7 +236,11 @@ namespace Palavyr.API
 
             if (env.IsProduction() || env.IsStaging())
             {
-                logger.LogDebug("Current think its production Okay?");
+                if (env.IsProduction())
+                    logger.LogDebug("Current think its production Okay?");
+                if (env.IsStaging())
+                    logger.LogDebug("Current think its staging Okay?");
+
                 var option = new BackgroundJobServerOptions {WorkerCount = 1};
                 app.UseHangfireServer(option);
                 if (env.IsStaging())
@@ -286,27 +290,28 @@ namespace Palavyr.API
             }
         }
 
-        private string ResolveAppDataPath()
-        {
-            string appDataPath;
-            var osVersion = Environment.OSVersion;
-            if (osVersion.Platform != PlatformID.Unix)
-            {
-                appDataPath = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), MagicPathStrings.DataFolder);
-            }
-            else
-            {
-                var home = Environment.GetEnvironmentVariable("HOME");
-                if (home == null)
-                {
-                    logger.LogDebug($"STARTUP-9: HOME VARIABLE NOT SET");
-                }
-
-                appDataPath = Path.Combine(home, MagicPathStrings.DataFolder);
-            }
-
-            DiskUtils.CreateDir(appDataPath);
-            return appDataPath;
-        }
+        //
+        // private string ResolveAppDataPath()
+        // {
+        //     string appDataPath;
+        //     var osVersion = Environment.OSVersion;
+        //     if (osVersion.Platform != PlatformID.Unix)
+        //     {
+        //         appDataPath = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), MagicPathStrings.DataFolder);
+        //     }
+        //     else
+        //     {
+        //         var home = Environment.GetEnvironmentVariable("HOME");
+        //         if (home == null)
+        //         {
+        //             logger.LogDebug($"STARTUP-9: HOME VARIABLE NOT SET");
+        //         }
+        //
+        //         appDataPath = Path.Combine(home, MagicPathStrings.DataFolder);
+        //     }
+        //
+        //     DiskUtils.CreateDir(appDataPath);
+        //     return appDataPath;
+        // }
     }
 }
