@@ -220,7 +220,7 @@ namespace Palavyr.API
         {
             logger = loggerFactory.CreateLogger<Startup>();
 
-            // var appDataPath = ResolveAppDataPath();
+            // var appDataPath = ResolveAppDataPath(); // TODO: Setup up for linux
             if (string.IsNullOrEmpty(Configuration["WebRootPath"]))
             {
                 Configuration["WebRootPath"] = Environment.CurrentDirectory;
