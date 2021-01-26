@@ -1,3 +1,5 @@
+using System;
+using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.SimpleEmail;
@@ -5,6 +7,7 @@ using Autofac;
 using EmailService.ResponseEmail;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Amazon.S3Services;
+
 
 //https://stackoverflow.com/questions/59200028/registering-more-amazons3client-with-configurations-on-autofac
 
@@ -26,15 +29,32 @@ namespace Palavyr.BackupAndRestore.Modules
             var accessKey = configuration.GetSection(AccessKeySection).Value;
             var secretKey = configuration.GetSection(SecretKeySection).Value;
             var credentials = new BasicAWSCredentials(accessKey, secretKey);
+            var s3Config = new AmazonS3Config()
+            {
+                Timeout = TimeSpan.FromSeconds(10),
+                RetryMode = RequestRetryMode.Standard,
+                MaxErrorRetry = 5,
+                RegionEndpoint = RegionEndpoint.USEast1
+            };
 
+            var sesConfig = new AmazonSimpleEmailServiceConfig()
+            {
+                Timeout = TimeSpan.FromSeconds(10),
+                RetryMode = RequestRetryMode.Standard,
+                MaxErrorRetry = 5,
+                RegionEndpoint = RegionEndpoint.USEast1
+            };
             base.Load(builder);
             builder.Register(
-                    context => { return new AmazonS3Client(credentials); })
+                    context => { return new AmazonS3Client(credentials, s3Config); })
                 .As<IAmazonS3>()
                 .InstancePerLifetimeScope();
 
             builder.Register(
-                context => { return new AmazonSimpleEmailServiceClient(credentials); }).As<IAmazonSimpleEmailService>();
+                    context => { return new AmazonSimpleEmailServiceClient(credentials, sesConfig); })
+                .As<IAmazonSimpleEmailService>()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<SesEmail>().As<ISesEmail>();
             builder.RegisterType<S3Saver>().As<IS3Saver>();
         }
