@@ -102,7 +102,6 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
             setTableMeta(updatedTableMeta);
         }
         setSelection(newTableTypeSelection);
-
     };
 
     const deleteAction = async () => {
