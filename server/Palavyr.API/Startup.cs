@@ -1,10 +1,5 @@
 using System;
-using System.IO;
 using System.Text;
-using Amazon.Extensions.NETCore.Setup;
-using Amazon.Runtime;
-using Amazon.S3;
-using Amazon.SimpleEmail;
 using Autofac;
 using DashboardServer.Data;
 using EmailService.ResponseEmail;
@@ -35,8 +30,6 @@ using Palavyr.Background;
 using Palavyr.BackupAndRestore;
 using Palavyr.BackupAndRestore.Postgres;
 using Palavyr.BackupAndRestore.UserData;
-using Palavyr.Common.FileSystem;
-using Palavyr.Common.FileSystem.FormPaths;
 using Stripe;
 
 namespace Palavyr.API
@@ -182,7 +175,10 @@ namespace Palavyr.API
                         .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                         .UseSimpleAssemblyNameTypeSerializer()
                         .UseMemoryStorage());
-            services.AddHangfireServer();
+            if (!env.IsDevelopment())
+            {
+                services.AddHangfireServer();
+            }
 
             BackgroundServices.RegisterServices(services);
 
@@ -220,30 +216,32 @@ namespace Palavyr.API
         {
             logger = loggerFactory.CreateLogger<Startup>();
 
-            // var appDataPath = ResolveAppDataPath(); // TODO: Setup up for linux
-            if (string.IsNullOrEmpty(Configuration["WebRootPath"]))
-            {
-                Configuration["WebRootPath"] = Environment.CurrentDirectory;
-            }
-
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<SetHeaders>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(
+                endpoints =>
+                {
+                    endpoints.MapControllers();
+                    endpoints.MapHangfireDashboard();
+                });
 
-            if (env.IsProduction() || env.IsStaging())
+            if (env.IsProduction() || env.IsStaging() || env.IsDevelopment())
             {
                 if (env.IsProduction())
+                {
                     logger.LogDebug("Current think its production Okay?");
+                }
                 if (env.IsStaging())
+                {
                     logger.LogDebug("Current think its staging Okay?");
+                }
 
-                var option = new BackgroundJobServerOptions {WorkerCount = 1};
-                app.UseHangfireServer(option);
-                if (env.IsStaging())
+                // var option = new BackgroundJobServerOptions {WorkerCount = 1};
+                if (!env.IsDevelopment())
                 {
                     logger.LogDebug("Setting up the hangfire dashboard");
                     app.UseHangfireDashboard();
@@ -254,8 +252,7 @@ namespace Palavyr.API
                     recurringJobManager
                         .AddOrUpdate(
                             "Backup database",
-                            () => serviceProvider.GetService<ICreatePalavyrSnapshot>()
-                                .CreateAndTransferCompleteBackup(),
+                            () => serviceProvider.GetService<ICreatePalavyrSnapshot>().CreateAndTransferCompleteBackup(),
                             Cron.Minutely
                         );
                     recurringJobManager
