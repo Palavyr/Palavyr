@@ -177,7 +177,8 @@ namespace Palavyr.API
                         .UseMemoryStorage());
             if (!env.IsDevelopment())
             {
-                services.AddHangfireServer();
+                services.AddHangfireServer(
+                    opt => { opt.WorkerCount = 1; });
             }
 
             BackgroundServices.RegisterServices(services);
@@ -235,80 +236,50 @@ namespace Palavyr.API
                 {
                     logger.LogDebug("Current think its production Okay?");
                 }
+
                 if (env.IsStaging())
                 {
                     logger.LogDebug("Current think its staging Okay?");
                 }
 
-                // var option = new BackgroundJobServerOptions {WorkerCount = 1};
                 if (!env.IsDevelopment())
                 {
                     logger.LogDebug("Setting up the hangfire dashboard");
                     app.UseHangfireDashboard();
                 }
 
-                try
-                {
-                    recurringJobManager
-                        .AddOrUpdate(
-                            "Backup database",
-                            () => serviceProvider.GetService<ICreatePalavyrSnapshot>().CreateAndTransferCompleteBackup(),
-                            Cron.Minutely
-                        );
-                    recurringJobManager
-                        .AddOrUpdate(
-                            "Keep only the last 50 snapshots",
-                            () => serviceProvider.GetService<IRemoveOldS3Archives>().RemoveS3Objects(),
-                            Cron.Daily
-                        );
-                    recurringJobManager
-                        .AddOrUpdate(
-                            "Clean Expired Sessions",
-                            () => serviceProvider.GetService<IRemoveStaleSessions>().CleanSessionDB(),
-                            Cron.Hourly
-                        );
-                    recurringJobManager
-                        .AddOrUpdate(
-                            "Validate All Attachment DB Entries",
-                            () => serviceProvider.GetService<IValidateAttachments>().ValidateAllAttachments(),
-                            Cron.Weekly
-                        );
-                    recurringJobManager
-                        .AddOrUpdate(
-                            "Validate All Files",
-                            () => serviceProvider.GetService<IValidateAttachments>().ValidateAllFiles(),
-                            Cron.Weekly
-                        );
-                }
-                catch (Exception ex)
-                {
-                    logger.LogCritical("ERROR " + ex.Message);
-                }
+
+                recurringJobManager
+                    .AddOrUpdate(
+                        "Backup database",
+                        () => serviceProvider.GetService<ICreatePalavyrSnapshot>().CreateAndTransferCompleteBackup(),
+                        Cron.Daily
+                    );
+                recurringJobManager
+                    .AddOrUpdate(
+                        "Keep only the last 50 snapshots",
+                        () => serviceProvider.GetService<IRemoveOldS3Archives>().RemoveS3Objects(),
+                        Cron.Daily
+                    );
+                recurringJobManager
+                    .AddOrUpdate(
+                        "Clean Expired Sessions",
+                        () => serviceProvider.GetService<IRemoveStaleSessions>().CleanSessionDB(),
+                        Cron.Hourly
+                    );
+                recurringJobManager
+                    .AddOrUpdate(
+                        "Validate All Attachment DB Entries",
+                        () => serviceProvider.GetService<IValidateAttachments>().ValidateAllAttachments(),
+                        Cron.Weekly
+                    );
+                recurringJobManager
+                    .AddOrUpdate(
+                        "Validate All Files",
+                        () => serviceProvider.GetService<IValidateAttachments>().ValidateAllFiles(),
+                        Cron.Weekly
+                    );
             }
         }
-
-        //
-        // private string ResolveAppDataPath()
-        // {
-        //     string appDataPath;
-        //     var osVersion = Environment.OSVersion;
-        //     if (osVersion.Platform != PlatformID.Unix)
-        //     {
-        //         appDataPath = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), MagicPathStrings.DataFolder);
-        //     }
-        //     else
-        //     {
-        //         var home = Environment.GetEnvironmentVariable("HOME");
-        //         if (home == null)
-        //         {
-        //             logger.LogDebug($"STARTUP-9: HOME VARIABLE NOT SET");
-        //         }
-        //
-        //         appDataPath = Path.Combine(home, MagicPathStrings.DataFolder);
-        //     }
-        //
-        //     DiskUtils.CreateDir(appDataPath);
-        //     return appDataPath;
-        // }
     }
 }
