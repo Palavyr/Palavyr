@@ -65,10 +65,7 @@ export const SelectOneFlat = ({ tableMeta, setTableMeta, tableId, tableTag, tabl
         setTableData(savedData);
     };
 
-    const addOptionOnClick = (e) => {
-        e.preventDefault();
-        modifier.addOption(tableData, client, areaIdentifier, tableId);
-    };
+    const addOptionOnClick = () => modifier.addOption(tableData, client, areaIdentifier, tableId);
 
     return (
         <>
