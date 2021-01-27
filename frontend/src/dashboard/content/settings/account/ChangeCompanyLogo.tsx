@@ -123,9 +123,9 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
         if (!acceptedFiles.includes(rejectedFile.type)) {
             message += "File type not supported. ";
         }
-        const maxFileSizeInGb = maxFileSize / 1000000000 + " GB";
+        const maxFileSizeInGb = maxFileSize / 1000000 + " MB";
         if (rejectedFile.size > maxFileSize) {
-            message += "File is too big. Size limit is " + maxFileSizeInGb + ". To upload a larger file we recommend using Octo.exe";
+            message += "File is too big. Size limit is " + maxFileSizeInGb;
         }
 
         return message;

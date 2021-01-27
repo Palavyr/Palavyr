@@ -12,6 +12,7 @@ export interface IPercentOfThresholdRow {
     row: PercentOfThresholdData;
     modifier: PercentOfThresholdModifier;
     baseValue: boolean;
+    dataIndex: number;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -42,13 +43,14 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-export const PercentOfThresholdRow = ({ tableData, row, modifier, baseValue }: IPercentOfThresholdRow) => {
+export const PercentOfThresholdRow = ({ dataIndex, tableData, row, modifier, baseValue }: IPercentOfThresholdRow) => {
 
     const classes = useStyles(!row.range);
     const cellAlignment = "center";
+    const key = dataIndex.toString() + row.tableId.toString();
 
     return (
-        <TableRow key={uuid()}>
+        <TableRow key={key}>
             <TableCell align={cellAlignment}>
                 <Button
                     size="small"

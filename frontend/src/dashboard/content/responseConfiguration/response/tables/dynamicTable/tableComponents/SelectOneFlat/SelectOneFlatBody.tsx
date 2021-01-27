@@ -1,7 +1,7 @@
 import React from "react";
 import { TableBody } from "@material-ui/core";
 import { SelectOneFlatRow } from "./SelectOneFlatRow";
-import { IDynamicTableBody } from "../../DynamicTableTypes";
+import { IDynamicTableBody, SelectOneFlatData } from "../../DynamicTableTypes";
 
 
 export const SelectOneFlatBody = ({ tableData, modifier }: IDynamicTableBody) => {
@@ -9,7 +9,7 @@ export const SelectOneFlatBody = ({ tableData, modifier }: IDynamicTableBody) =>
     return (
         <TableBody>
             {
-                tableData.map((row, index) => {
+                tableData.map((row: SelectOneFlatData, index: number) => {
                     var rowId = row.tableId.toString() + index.toString();
                     return <SelectOneFlatRow key={rowId} dataIndex={index} tableData={tableData} row={row} modifier={modifier} />
                 })

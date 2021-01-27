@@ -46,9 +46,9 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
 
     const classes = useStyles(!row.range);
     const cellAlignment = "center";
-
+    const key = dataIndex.toString() + row.tableId.toString();
     return (
-        <TableRow key={uuid()}>
+        <TableRow key={key}>
             <TableCell align={cellAlignment}>
                 <Button
                     size="small"
