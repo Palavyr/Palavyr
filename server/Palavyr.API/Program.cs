@@ -31,10 +31,7 @@ namespace Palavyr.API
                         logging.AddConfiguration(hostingContext.Configuration.GetSection(ConfigSections.LoggingSection));
                         logging.SetMinimumLevel(LogLevel.Trace);
                         logging.AddConsole();
-                        if (env != "Production")
-                        {
-                            logging.AddDebug();
-                        }
+                        logging.AddDebug();
                         logging.AddEventSourceLogger();
                         logging.AddNLog();
                         logging.AddSeq();
