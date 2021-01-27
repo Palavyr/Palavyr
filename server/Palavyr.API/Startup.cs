@@ -1,221 +1,60 @@
-using System;
-using System.Text;
 using Autofac;
-using DashboardServer.Data;
-using EmailService.ResponseEmail;
-using EmailService.VerificationRequest;
 using Hangfire;
-using Hangfire.MemoryStorage;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using Palavyr.Amazon.S3Services;
 using Palavyr.API.CustomMiddleware;
-using Palavyr.API.Registration.Modules;
-using Palavyr.API.Registration.Services;
-using Palavyr.API.Response;
-using Palavyr.API.Services.AccountServices;
-using Palavyr.API.Services.AuthenticationServices;
-using Palavyr.API.Services.DynamicTableService;
-using Palavyr.API.Services.EntityServices;
-using Palavyr.API.Services.StripeServices;
-using Palavyr.API.Services.StripeServices.StripeWebhookHandlers;
-using Palavyr.Background;
-using Palavyr.BackupAndRestore;
-using Palavyr.BackupAndRestore.Postgres;
-using Palavyr.BackupAndRestore.UserData;
-using Stripe;
+using Palavyr.API.Registration.Application;
+using Palavyr.API.Registration.Autofac;
+using Palavyr.API.Registration.ServiceCollection;
 
 namespace Palavyr.API
 {
     public class Startup
     {
-        private const string ConfigurationDbStringKey = "DashContextPostgres";
-        private const string AccountDbStringKey = "AccountsContextPostgres";
-        private const string ConvoDbStringKey = "ConvoContextPostgres";
-        private const string AccessKeySection = "AWS:AccessKey";
-        private const string SecretKeySection = "AWS:SecretKey";
-        private const string StripeKeySection = "Stripe:SecretKey";
+        private readonly IConfiguration configuration;
+        private readonly IWebHostEnvironment env;
 
-        private const string WebhookKeySection = "Stripe:WebhookKey";
-
-
-        private int stripeRetriesCount = 3;
-
-        public Startup(IWebHostEnvironment Env, IConfiguration configuration)
+        public Startup(IWebHostEnvironment env, IConfiguration configuration)
         {
-            env = Env;
-            Configuration = configuration;
+            this.env = env;
+            this.configuration = configuration;
         }
 
-        private IConfiguration Configuration { get; set; }
-        private ILogger<Startup> logger { get; set; }
-        private IWebHostEnvironment env { get; set; }
         public ILifetimeScope AutofacContainer { get; private set; }
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterModule(new AmazonModule(Configuration));
+            builder.RegisterModule(new AmazonModule(configuration));
+            builder.RegisterModule(new HangfireModule());
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var key = Configuration["JWTSecretKey"] ?? throw new ArgumentNullException("Configuration[\"JWTSecretKey\"]");
-
             services.AddLogging(loggingBuilder => { loggingBuilder.AddSeq(); });
             services.AddHttpContextAccessor();
-
-            services
-                .AddAuthentication(
-                    o =>
-                    {
-                        o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                        o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                    })
-                .AddJwtBearer(
-                    opt =>
-                    {
-                        opt.RequireHttpsMetadata = true;
-                        opt.SaveToken = true;
-
-                        opt.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuerSigningKey = true,
-                            IssuerSigningKey =
-                                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
-                            ValidateIssuer = false,
-                            ValidateAudience = false,
-                            // ValidateLifetime = false,
-                            // ValidIssuer = Configuration["JwtToken:Issuer"],
-                            // ValidAudience = Configuration["JwtToken:Issuer"],
-                        };
-                    })
-                .AddScheme<ApiKeyAuthSchemeOptions, ApiKeyAuthenticationHandler>(
-                    AuthenticationSchemeNames.ApiKeyScheme,
-                    op => { });
-
-            services.AddCors(
-                options =>
-                {
-                    options.AddDefaultPolicy(
-                        builder =>
-                        {
-                            builder
-                                .SetIsOriginAllowed(_ => true)
-                                .WithMethods("DELETE", "POST", "GET", "OPTIONS", "PUT")
-                                .WithHeaders(
-                                    "action",
-                                    "Server",
-                                    "sessionId",
-                                    "Content-Type",
-                                    "Access-Control-Allow-Origin",
-                                    "Access-Control-Allow-Headers",
-                                    "Access-Control-Allow-Methods",
-                                    "Authorization",
-                                    "X-Requested-With"
-                                );
-
-                            if (env.IsDevelopment())
-                            {
-                                builder.WithOrigins("*");
-                            }
-                            else
-                            {
-                                builder.WithOrigins(
-                                    "http://staging.palavyr.com",
-                                    "http://www.staging.palavyr.com",
-                                    "http://palavyr.com",
-                                    "http://www.palavyr.com",
-                                    "http://staging.widget.palavyr.com",
-                                    "http://widget.palavyr.com",
-                                    "https://staging.palavyr.com",
-                                    "https://www.staging.palavyr.com",
-                                    "https://palavyr.com",
-                                    "https://www.palavyr.com",
-                                    "https://staging.widget.palavyr.com",
-                                    "https://widget.palavyr.com",
-                                    "https://stripe.com"
-                                );
-                            }
-                        });
-                });
-
+            
+            AuthenticationConfiguration.AddAuthenticationSchemes(services, configuration);
+            
+            CorsConfiguration.AddCors(services, env);
             services.AddControllers();
-            services.AddDbContext<AccountsContext>(
-                opt =>
-                    opt.UseNpgsql(Configuration.GetConnectionString(AccountDbStringKey)));
-            services.AddDbContext<ConvoContext>(
-                opt =>
-                    opt.UseNpgsql(Configuration.GetConnectionString(ConvoDbStringKey)));
-            services.AddDbContext<DashContext>(
-                opt =>
-                    opt.UseNpgsql(Configuration.GetConnectionString(ConfigurationDbStringKey)));
-
-            // Stripe
-            StripeConfiguration.ApiKey = Configuration.GetSection(StripeKeySection).Value;
-            StripeConfiguration.MaxNetworkRetries = stripeRetriesCount;
-
-            if (Environment.OSVersion.Platform != PlatformID.Unix)
-            {
-                if (!env.IsDevelopment())
-                {
-                    services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
-                }
-            }
-
-            services.AddHangfire(
-                config =>
-                    config
-                        .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                        .UseSimpleAssemblyNameTypeSerializer()
-                        .UseMemoryStorage());
-            if (!env.IsDevelopment())
-            {
-                services.AddHangfireServer(
-                    opt => { opt.WorkerCount = 1; });
-            }
-
-            BackgroundServices.RegisterServices(services);
-
-            services.AddTransient<IJwtAuthenticationService, JwtAuthenticationService>();
-            services.AddTransient<IAccountSetupService, AccountSetupService>();
-            services.AddTransient<IAuthService, AuthService>();
-            services.AddTransient<IEmailVerificationService, EmailVerificationService>();
-            services.AddTransient<IStripeWebhookAuthService, StripeWebhookAuthService>();
-            services.AddTransient<IStripeEventWebhookService, StripeEventWebhookService>();
-            services.AddTransient<IStripeCustomerService, StripeCustomerService>();
-            services.AddTransient<IStripeSubscriptionService, StripeSubscriptionService>();
-            services.AddTransient<IStripeProductService, StripeProductService>();
-            services.AddTransient<IProcessStripeCheckoutSessionCompletedHandler, ProcessStripeCheckoutSessionCompletedHandler>();
-            services.AddTransient<IProcessStripeInvoicePaidHandler, ProcessStripeInvoicePaidHandler>();
-            services.AddTransient<IProcessStripeInvoicePaymentFailedHandler, ProcessStripeInvoicePaymentFailedHandler>();
-            services.AddTransient<ICompileDynamicTables, CompileDynamicTables>();
-            services.AddSingleton<ISesEmail, SesEmail>();
-            services.AddTransient<ISenderVerification, SenderVerification>();
-            services.AddTransient<IPdfResponseGenerator, PdfResponseGenerator>();
-            services.AddTransient<IAccountDataService, AccountDataService>();
-            services.AddTransient<IAreaDataService, AreaDataService>();
-            services.AddTransient<IS3Saver, S3Saver>();
-            services.AddTransient<IPostgresBackup, PostgresBackup>();
-            services.AddTransient<IUserDataBackup, UserDataBackup>();
-            services.AddTransient<IUpdateDatabaseLatest, UpdateDatabaseLatest>();
+            
+            Configurations.ConfigureStripe(configuration);
+            ServiceRegistry.RegisterDatabaseContexts(services, configuration);
+            ServiceRegistry.RegisterBackgroundServices(services);
+            ServiceRegistry.RegisterGeneralServices(services);
+            ServiceRegistry.RegisterHangfire(services, env);
         }
 
         public void Configure(
             IApplicationBuilder app,
-            IWebHostEnvironment env,
-            IRecurringJobManager recurringJobManager,
-            IServiceProvider serviceProvider,
-            ILoggerFactory loggerFactory
-        )
+            ILoggerFactory loggerFactory,
+            HangFireJobs hangFireJobs
+            )
         {
-            logger = loggerFactory.CreateLogger<Startup>();
+            var logger = loggerFactory.CreateLogger<Startup>();
 
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -229,57 +68,7 @@ namespace Palavyr.API
                     endpoints.MapControllers();
                     endpoints.MapHangfireDashboard();
                 });
-
-            if (env.IsProduction() || env.IsStaging() || env.IsDevelopment())
-            {
-                if (env.IsProduction())
-                {
-                    logger.LogDebug("Current think its production Okay?");
-                }
-
-                if (env.IsStaging())
-                {
-                    logger.LogDebug("Current think its staging Okay?");
-                }
-
-                if (!env.IsDevelopment())
-                {
-                    logger.LogDebug("Setting up the hangfire dashboard");
-                    app.UseHangfireDashboard();
-                }
-
-
-                recurringJobManager
-                    .AddOrUpdate(
-                        "Backup database",
-                        () => serviceProvider.GetService<ICreatePalavyrSnapshot>().CreateAndTransferCompleteBackup(),
-                        Cron.Daily
-                    );
-                recurringJobManager
-                    .AddOrUpdate(
-                        "Keep only the last 50 snapshots",
-                        () => serviceProvider.GetService<IRemoveOldS3Archives>().RemoveS3Objects(),
-                        Cron.Daily
-                    );
-                recurringJobManager
-                    .AddOrUpdate(
-                        "Clean Expired Sessions",
-                        () => serviceProvider.GetService<IRemoveStaleSessions>().CleanSessionDB(),
-                        Cron.Hourly
-                    );
-                recurringJobManager
-                    .AddOrUpdate(
-                        "Validate All Attachment DB Entries",
-                        () => serviceProvider.GetService<IValidateAttachments>().ValidateAllAttachments(),
-                        Cron.Weekly
-                    );
-                recurringJobManager
-                    .AddOrUpdate(
-                        "Validate All Files",
-                        () => serviceProvider.GetService<IValidateAttachments>().ValidateAllFiles(),
-                        Cron.Weekly
-                    );
-            }
+            hangFireJobs.AddHangFireJobs(app);
         }
     }
 }
