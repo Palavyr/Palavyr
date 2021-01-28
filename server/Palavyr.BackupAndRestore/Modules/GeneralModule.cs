@@ -1,5 +1,6 @@
 using Autofac;
 using EmailService.Verification;
+using Palavyr.BackupAndRestore.Jobs;
 
 namespace Palavyr.BackupAndRestore.Modules
 {
@@ -9,6 +10,7 @@ namespace Palavyr.BackupAndRestore.Modules
         {
             builder.RegisterType<RequestEmailVerification>().As<IRequestEmailVerification>();
             builder.RegisterType<EmailVerificationStatus>().AsSelf();
+            builder.RegisterType<EmailStatusCheckJob>().AsSelf();
         }
     }
 }
