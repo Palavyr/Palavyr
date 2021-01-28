@@ -1,7 +1,7 @@
 using System;
 using DashboardServer.Data;
 using EmailService.ResponseEmail;
-using EmailService.VerificationRequest;
+using EmailService.Verification;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
@@ -52,7 +52,7 @@ namespace Palavyr.API.Registration.ServiceCollection
             services.AddTransient<IProcessStripeInvoicePaymentFailedHandler, ProcessStripeInvoicePaymentFailedHandler>();
             services.AddTransient<ICompileDynamicTables, CompileDynamicTables>();
             services.AddSingleton<ISesEmail, SesEmail>();
-            services.AddTransient<ISenderVerification, SenderVerification>();
+            services.AddTransient<IRequestEmailVerification, RequestEmailVerification>();
             services.AddTransient<IPdfResponseGenerator, PdfResponseGenerator>();
             services.AddTransient<IAccountDataService, AccountDataService>();
             services.AddTransient<IAreaDataService, AreaDataService>();

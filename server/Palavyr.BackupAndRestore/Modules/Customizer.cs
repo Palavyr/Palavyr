@@ -13,6 +13,7 @@ namespace Palavyr.BackupAndRestore.Modules
             builder.RegisterModule(new AmazonModule(config));
             builder.RegisterModule(new DbContextModule(config));
             builder.RegisterModule(new DatabaseAndUserDataModule());
+            builder.RegisterModule(new GeneralModule());
             return builder;
         }
         

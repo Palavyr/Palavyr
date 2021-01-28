@@ -22,7 +22,6 @@ namespace Palavyr.BackupAndRestore.Modules
             
             builder.RegisterType<LoggerFactory>().As<ILoggerFactory>();//.SingleInstance();
             builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>));//.SingleInstance();
-            // builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>)).WithParameter("loggerFactory", new LoggerFactory());
         }
     }
 }

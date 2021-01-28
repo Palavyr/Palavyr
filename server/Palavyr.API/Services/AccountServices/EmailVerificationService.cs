@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using DashboardServer.Data;
-using EmailService.VerificationRequest;
+using EmailService.Verification;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Services.StripeServices;
@@ -16,20 +16,20 @@ namespace Palavyr.API.Services.AccountServices
     {
         private readonly AccountsContext accountsContext;
         private readonly ILogger<EmailVerificationService> logger;
-        private readonly ISenderVerification senderVerification;
+        private readonly IRequestEmailVerification requestEmailVerification;
         private IStripeCustomerService stripeCustomerService;
 
         public EmailVerificationService(
             AccountsContext accountsContext,
             ILogger<EmailVerificationService> logger,
             IStripeCustomerService stripeCustomerService,
-            ISenderVerification senderVerification
+            IRequestEmailVerification requestEmailVerification
         )
         {
             this.stripeCustomerService = stripeCustomerService;
             this.accountsContext = accountsContext;
             this.logger = logger;
-            this.senderVerification = senderVerification;
+            this.requestEmailVerification = requestEmailVerification;
         }
 
         public async Task<bool> ConfirmEmailAddressAsync(string authToken)
@@ -57,7 +57,7 @@ namespace Palavyr.API.Services.AccountServices
             accountsContext.EmailVerifications.Remove(emailVerification);
 
             logger.LogDebug("Verifying email address. Already verified using an authtoken, so this is okay");
-            var emailVerified = await senderVerification.VerifyEmailAddressAsync(emailVerification.EmailAddress);
+            var emailVerified = await requestEmailVerification.VerifyEmailAddressAsync(emailVerification.EmailAddress);
             
             if (emailVerified)
             {

@@ -11,7 +11,7 @@ namespace Palavyr.BackupAndRestore.Postgres
 {
     public abstract class PostgresBase
     {
-        protected readonly ISesEmail EmailClient;
+        protected readonly ISesEmail emailClient;
         protected readonly ILogger logger;
         protected const string PGPASSWORD = "PGPASSWORD";
         protected const string Newline = "\n";
@@ -19,7 +19,7 @@ namespace Palavyr.BackupAndRestore.Postgres
 
         public PostgresBase(ISesEmail emailClient, ILogger logger)
         {
-            this.EmailClient = emailClient;
+            this.emailClient = emailClient;
             this.logger = logger;
         }
 
@@ -81,9 +81,10 @@ namespace Palavyr.BackupAndRestore.Postgres
                     catch (Exception e)
                     {
                         Console.WriteLine($"Failed to perform backup or restore command: {dumpCommand}");
+                        Console.WriteLine($"Error: {e.Message}");
                         logger.LogDebug($"Exception encountered when executing backup and restore. {e.Message} - Sending email.");
                         logger.LogDebug($"Dump Command: {dumpCommand}");
-                        EmailClient.SendEmail(
+                        emailClient.SendEmail(
                             "palavyr@gmail.com",
                             "paul.e.gradie@gmail.com",
                             "DATABASE RESTORE FAILURE",

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
 using DashboardServer.Data;
-using EmailService.VerificationRequest;
+using EmailService.Verification;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -20,7 +20,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
     {
         private ILogger<ModifyDefaultEmailAddressController> logger;
         private AccountsContext accountsContext;
-        private readonly ISenderVerification senderVerification;
+        private readonly IRequestEmailVerification requestEmailVerification;
         private IAmazonSimpleEmailService sesClient;
         private IStripeCustomerService stripeCustomerService;
 
@@ -32,14 +32,14 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             ILogger<ModifyDefaultEmailAddressController> logger,
             IAmazonSimpleEmailService sesClient,
             IStripeCustomerService stripeCustomerService,
-            ISenderVerification senderVerification
+            IRequestEmailVerification requestEmailVerification
         )
         {
             this.logger = logger;
             this.sesClient = sesClient;
             this.accountsContext = accountsContext;
             this.stripeCustomerService = stripeCustomerService;
-            this.senderVerification = senderVerification;
+            this.requestEmailVerification = requestEmailVerification;
         }
         
         [HttpPut("account/settings/email")]
@@ -99,7 +99,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
                         break;
 
                     case (Failed):
-                        result = await senderVerification.VerifyEmailAddressAsync(emailRequest.EmailAddress);
+                        result = await requestEmailVerification.VerifyEmailAddressAsync(emailRequest.EmailAddress);
                         account.EmailAddress = emailRequest.EmailAddress;
                         account.DefaultEmailIsVerified = false;
                         await accountsContext.SaveChangesAsync();
@@ -126,7 +126,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             }
 
             // unseen email address - start fresh.
-            result = await senderVerification.VerifyEmailAddressAsync(emailRequest.EmailAddress);
+            result = await requestEmailVerification.VerifyEmailAddressAsync(emailRequest.EmailAddress);
             if (!result)
             {
                 verificationResponse = EmailVerificationResponse.CreateNew(

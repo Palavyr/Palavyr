@@ -1,4 +1,5 @@
 using Autofac;
+using EmailService.Verification;
 using Palavyr.Amazon.S3Services;
 using Palavyr.BackupAndRestore.Postgres;
 using Palavyr.BackupAndRestore.UserData;
@@ -15,6 +16,8 @@ namespace Palavyr.BackupAndRestore.Modules
             builder.RegisterType<UpdateDatabaseLatest>().AsSelf();
             builder.RegisterType<UserDataBackup>().As<IUserDataBackup>();
             builder.RegisterType<PostgresBackup>().As<IPostgresBackup>();
+            builder.RegisterType<EmailVerificationStatus>().AsSelf();
+
         }    
 
     }

@@ -5,20 +5,20 @@ using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
 using Microsoft.Extensions.Logging;
 
-namespace EmailService.VerificationRequest
+namespace EmailService.Verification
 {
-    public interface ISenderVerification
+    public interface IRequestEmailVerification
     {
         public Task<bool> VerifyEmailAddressAsync(string emailAddress);
 
     }
     
-    public class SenderVerification : ISenderVerification
+    public class RequestEmailVerification : IRequestEmailVerification
     {
-        private ILogger<SenderVerification> logger;
+        private ILogger<RequestEmailVerification> logger;
         private IAmazonSimpleEmailService sesClient;
 
-        public SenderVerification(ILogger<SenderVerification> logger, IAmazonSimpleEmailService sesClient)
+        public RequestEmailVerification(ILogger<RequestEmailVerification> logger, IAmazonSimpleEmailService sesClient)
         {
             this.logger = logger;
             this.sesClient = sesClient;
@@ -40,6 +40,7 @@ namespace EmailService.VerificationRequest
             }
             catch (Exception ex)
             {
+                logger.LogDebug($"Exception: {ex.Message}");
                 result = false;
             }
             logger.LogDebug($"Email verification sent: {result.ToString()}");
