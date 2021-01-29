@@ -70,12 +70,8 @@ namespace Palavyr.API.Registration.ServiceCollection
                         .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                         .UseSimpleAssemblyNameTypeSerializer()
                         .UseMemoryStorage());
-
-            if (env.IsProduction()) // only use hangfire server live in production
-            {
-                services.AddHangfireServer(
-                    opt => { opt.WorkerCount = 1; });
-            }
+            services.AddHangfireServer(
+                opt => { opt.WorkerCount = 1; });
         }
 
         public static void RegisterIISConfiguration(IServiceCollection services, IWebHostEnvironment env)

@@ -9,8 +9,8 @@ namespace Palavyr.API.Registration.Autofac
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<RecurringJobManager>().As<IRecurringJobManager>();//.InstancePerLifetimeScope();
-            builder.RegisterType<HangFireJobs>().AsSelf(); //.InstancePerLifetimeScope();
+            builder.RegisterType<RecurringJobManager>().As<IRecurringJobManager>().SingleInstance();
+            builder.RegisterType<HangFireJobs>().AsSelf().SingleInstance();
         }
     }
 }
