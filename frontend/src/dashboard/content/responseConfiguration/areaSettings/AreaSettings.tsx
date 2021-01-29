@@ -102,7 +102,11 @@ export const AreaSettings = () => {
     };
 
     const verifyEmailAddress = async (newEmailAddress: string) => {
-        if (newEmailAddress === settings.emailAddress) return;
+        const { data: emailConfirmed } = await client.Settings.EmailVerification.CheckEmailVerificationStatus(newEmailAddress);
+        if (emailConfirmed) {
+            alert("Email address " + newEmailAddress + " has already been confirmed.")
+            return;
+        }
         const { data: emailVerification } = await client.Settings.EmailVerification.RequestEmailVerification(newEmailAddress, areaIdentifier);
         setAlertDetails({ title: emailVerification.title, message: emailVerification.message });
         setAlertState(true);

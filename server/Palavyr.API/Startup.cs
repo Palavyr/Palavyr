@@ -29,6 +29,7 @@ namespace Palavyr.API
         {
             builder.RegisterModule(new AmazonModule(configuration));
             builder.RegisterModule(new HangfireModule());
+            builder.RegisterModule(new GeneralModule());
         }
 
         public void ConfigureServices(IServiceCollection services)

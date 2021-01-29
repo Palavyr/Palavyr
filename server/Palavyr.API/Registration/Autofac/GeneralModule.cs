@@ -7,7 +7,7 @@ namespace Palavyr.API.Registration.Autofac
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<EmailVerificationStatus>().AsSelf();
+            builder.RegisterType<EmailVerificationStatus>().AsSelf().InstancePerLifetimeScope();
         }
     }
 }

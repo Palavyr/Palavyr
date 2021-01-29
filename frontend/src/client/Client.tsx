@@ -216,6 +216,7 @@ export class ApiClient {
         },
         EmailVerification: {
             RequestEmailVerification: async (emailAddress: string, areaIdentifier: string): Promise<AxiosResponse<EmailVerificationResponse>> => this.client.post(`verification/email/${areaIdentifier}`, { EmailAddress: emailAddress }),
+            CheckEmailVerificationStatus: async (emailAddress: string): Promise<AxiosResponse<boolean>> => this.client.post(`verification/email/status`, { EmailAddress: emailAddress})
         },
     };
 

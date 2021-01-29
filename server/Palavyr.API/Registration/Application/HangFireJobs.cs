@@ -41,7 +41,7 @@ namespace Palavyr.API.Registration.Application
                     .AddOrUpdate(
                         "Backup database",
                         () => serviceProvider.GetService<ICreatePalavyrSnapshot>().CreateAndTransferCompleteBackup(),
-                        Cron.Minutely
+                        Cron.Daily
                     );
                 recurringJobManager
                     .AddOrUpdate(
