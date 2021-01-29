@@ -32,7 +32,6 @@ export const ContentLoader = ({ open, children }: IContentLoader) => {
     const classes = useStyles();
     return (
         <main className={classNames(classes.content, { [classes.contentShift]: open })}>
-
             <div>{children}</div>
         </main>
     );
