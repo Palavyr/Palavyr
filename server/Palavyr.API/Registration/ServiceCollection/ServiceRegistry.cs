@@ -71,7 +71,10 @@ namespace Palavyr.API.Registration.ServiceCollection
                         .UseSimpleAssemblyNameTypeSerializer()
                         .UseMemoryStorage());
             services.AddHangfireServer(
-                opt => { opt.WorkerCount = 1; });
+                opt =>
+                {
+                    opt.WorkerCount = 1;
+                });
         }
 
         public static void RegisterIISConfiguration(IServiceCollection services, IWebHostEnvironment env)
