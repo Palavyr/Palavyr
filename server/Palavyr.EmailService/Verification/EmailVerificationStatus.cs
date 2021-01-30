@@ -20,7 +20,7 @@ namespace EmailService.Verification
             this.emailClient = emailClient;
         }
 
-        async Task<(bool, IdentityVerificationAttributes)> RequestEmailVerificationStatus(string emailAddress)
+        public async Task<(bool, IdentityVerificationAttributes)> RequestEmailVerificationStatus(string emailAddress)
         {
             // First check if email is already verified or has attempted to be verified
             var identityRequest = new GetIdentityVerificationAttributesRequest()
@@ -60,39 +60,35 @@ namespace EmailService.Verification
             }
             return false;
         }
-        
-        public async Task<EmailVerificationResponse> GetVerificationResponse(string emailAddress)
+
+        public EmailVerificationResponse HandleFoundEmail(IdentityVerificationAttributes status, string emailAddress)
         {
-            var (found, status) = await RequestEmailVerificationStatus(emailAddress);
-
-            bool result;
-            if (found)
+            switch (status.VerificationStatus.Value)
             {
-                switch (status.VerificationStatus.Value)
-                {
-                    case (EmailVerificationResponse.Pending):
-                        return EmailVerificationResponse.CreatePending(
-                            "This email is currently pending verification. Please check your inbox (don't forget to check spam!) for an email from AWS with the subject line 'Amazon Web Services – Email Address Verification Request'.",
-                            "Email Verification has already been sent"
-                        );
+                case (EmailVerificationResponse.Pending):
+                    return EmailVerificationResponse.CreatePending(
+                        "This email is currently pending verification. Please check your inbox (don't forget to check spam!) for an email from AWS with the subject line 'Amazon Web Services – Email Address Verification Request'.",
+                        "Email Verification has already been sent"
+                    );
 
-                    case (EmailVerificationResponse.Failed):
-                        return EmailVerificationResponse.CreatePending(
-                            $"You have previously submitted this email for verification, however the attempt failed. We've resent the verification email to {emailAddress}. Please check your inbox (don't forget to check spam!) for an email from AWS with the subject line 'Amazon Web Services – Email Address Verification Request'. The link will expire in 24 hours.",
-                            "Email Verification has already been sent"
-                        );
+                case (EmailVerificationResponse.Failed):
+                    return EmailVerificationResponse.CreatePending(
+                        $"You have previously submitted this email for verification, however the attempt failed. We've resent the verification email to {emailAddress}. Please check your inbox (don't forget to check spam!) for an email from AWS with the subject line 'Amazon Web Services – Email Address Verification Request'. The link will expire in 24 hours.",
+                        "Email Verification has already been sent"
+                    );
 
-                    case (EmailVerificationResponse.Success):
-                        return EmailVerificationResponse.CreateIsVerified(
-                            "This email has already been verified.",
-                            $"Email Address {emailAddress} already verified!");
-                    default:
-                        throw new Exception($"Status code undetermined: {status.VerificationStatus.Value}");
-                }
+                case (EmailVerificationResponse.Success):
+                    return EmailVerificationResponse.CreateIsVerified(
+                        "This email has already been verified.",
+                        $"Email Address {emailAddress} already verified!");
+                default:
+                    throw new Exception($"Status code undetermined: {status.VerificationStatus.Value}");
             }
+        }
 
-            // unseen email address - start fresh..
-            result = await requestEmailVerification.VerifyEmailAddressAsync(emailAddress);
+        public async Task<EmailVerificationResponse> HandleNotFoundEmail(IdentityVerificationAttributes status, string emailAddress)
+        {
+            var result = await requestEmailVerification.VerifyEmailAddressAsync(emailAddress);
             if (!result)
                 return EmailVerificationResponse.CreateFailed(
                     "Could not submit email verification request to AWS.",
@@ -102,6 +98,18 @@ namespace EmailService.Verification
             return EmailVerificationResponse.CreatePending(
                 "To complete email verification, go to your inbox and look for an email with the subject line 'Amazon Web Services – Email Address Verification Request' and click the verification link. This link will expire in 24 hours.",
                 "Email Verification Submitted");
+        }
+ 
+        
+        public async Task<EmailVerificationResponse> GetVerificationResponse(string emailAddress)
+        {
+            var (found, status) = await RequestEmailVerificationStatus(emailAddress);
+
+            if (found)
+            {
+                return HandleFoundEmail(status, emailAddress);
+            }
+            return await HandleNotFoundEmail(status, emailAddress);
         }
     }
 }

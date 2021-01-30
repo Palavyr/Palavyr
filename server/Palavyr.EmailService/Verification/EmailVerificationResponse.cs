@@ -52,6 +52,6 @@ namespace EmailService.Verification
 
         public bool IsFailed() => Status == Failed;
         public bool IsPending() => Status == Pending;
-        public bool IsSuccess() => Status == Success;
+        public bool IsVerified() => Status == Success;
     }
 }

@@ -68,11 +68,7 @@ export const ChangeEmail = () => {
     };
 
     const verifyEmailAddress = async (newEmailAddress: string) => {
-        const { data: emailConfirmed } = await client.Settings.EmailVerification.CheckEmailVerificationStatus(newEmailAddress);
-        if (emailConfirmed) {
-            alert("Email address " + newEmailAddress + " has already been confirmed.");
-            return;
-        }
+        // const { data: emailConfirmed } = await client.Settings.EmailVerification.CheckEmailVerificationStatus(newEmailAddress);
         const { data: res } = await client.Settings.Account.updateEmail(newEmailAddress);
         setAlertDetails({ title: res.title, message: res.message });
         setAlertState(true);

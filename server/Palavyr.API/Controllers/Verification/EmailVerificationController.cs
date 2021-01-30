@@ -36,16 +36,10 @@ namespace Palavyr.API.Controllers.Verification
                 row.AccountId == accountId && row.AreaIdentifier == areaId);
 
             var verificationResponse = await emailVerificationStatus.GetVerificationResponse(emailRequest.EmailAddress);
+
+            area.EmailIsVerified = verificationResponse.IsVerified();
+            area.AwaitingVerification = verificationResponse.IsPending();
             
-            if (verificationResponse.IsPending() | verificationResponse.IsFailed())
-            {
-                area.EmailIsVerified = false;
-            }
-            
-            if (verificationResponse.IsSuccess())
-            {
-                area.EmailIsVerified = true;
-            }
             
             if (!verificationResponse.IsFailed())
             {
