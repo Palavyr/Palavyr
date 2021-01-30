@@ -31,7 +31,7 @@ namespace Palavyr.API.Controllers.WidgetLive
         public async Task<List<Area>> Get([FromHeader] string accountId)
         {
             logger.LogDebug("Collecting configured areas for live-widget");
-            var areas = dashContext.Areas.Where(row => row.AccountId == accountId).ToList();
+            var areas = dashContext.Areas.Where(row => row.AccountId == accountId && row.IsComplete).ToList();
             return areas;
         }
     }
