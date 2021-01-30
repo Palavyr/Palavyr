@@ -69,6 +69,7 @@ export class ApiClient {
     };
 
     public Area = {
+        UpdateIsComplete: async (areaToggleStateUpdate: boolean, areaIdentifier: string): Promise<AxiosResponse<boolean>> => this.client.put(`areas/${areaIdentifier}/area-toggle`, {IsComplete: areaToggleStateUpdate}),
         GetAreas: async (): Promise<AxiosResponse<Areas>> => this.client.get("areas"),
         GetArea: async (areaIdentifier: string): Promise<AxiosResponse<AreaTable>> => this.client.get(`areas/${areaIdentifier}`),
         createArea: (areaName: string): Promise<AxiosResponse<AreaTable>> => this.client.post(`areas/create/`, { AreaName: areaName }), // get creates and gets new area

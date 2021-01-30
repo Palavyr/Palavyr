@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Amazon.SimpleEmail;
-using Amazon.SimpleEmail.Model;
 using DashboardServer.Data;
 using EmailService.Verification;
 using Microsoft.AspNetCore.Authorization;
@@ -22,25 +19,18 @@ namespace Palavyr.API.Controllers.Areas
         private readonly AccountsContext accountContext;
         private readonly DashContext dashContext;
         private readonly EmailVerificationStatus emailVerificationStatus;
-        private IAmazonSimpleEmailService client;
         private ILogger<GetAreaByIdController> logger;
-
-        private const string Pending = "Pending";
-        private const string Success = "Success";
-        private const string Failed = "Failed";
 
         public GetAreaByIdController(
             AccountsContext accountContext,
             DashContext dashContext,
             EmailVerificationStatus emailVerificationStatus,
-            IAmazonSimpleEmailService client,
             ILogger<GetAreaByIdController> logger
         )
         {
             this.accountContext = accountContext;
             this.dashContext = dashContext;
             this.emailVerificationStatus = emailVerificationStatus;
-            this.client = client;
             this.logger = logger;
         }
 
@@ -66,7 +56,7 @@ namespace Palavyr.API.Controllers.Areas
             }
 
             var statusResponse = emailVerificationStatus.HandleFoundEmail(status, area.AreaSpecificEmail);
-            
+
             area.EmailIsVerified = statusResponse.IsVerified();
             area.AwaitingVerification = statusResponse.IsPending();
 

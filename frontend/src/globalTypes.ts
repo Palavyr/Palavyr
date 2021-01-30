@@ -1,4 +1,5 @@
 import { COULD_NOT_FIND_SERVER, GOOGLE_ACCOUNT_NOT_FOUND, INVALID_EMAIL, INVALID_GOOGLE_TOKEN, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, NOT_A_GOOGLE_ACCOUNT, VERIFICATION_EMAIL_SEND } from "@constants";
+import { Dispatch, SetStateAction } from "react";
 // / <reference types="node" />
 // / <reference types="react" />
 // / <reference types="react-dom" />
@@ -104,6 +105,7 @@ export type AreaTable = {
     emailIsVerified: boolean;
     awaitingVerification: boolean;
     subject: string;
+    isComplete: boolean;
 };
 
 export type StaticTableMetas = Array<StaticTableMeta>;
@@ -485,3 +487,22 @@ export type VerificationResponse = {
     status: boolean;
     apiKey: string;
 };
+
+
+export type Settings = {
+    emailAddress: string;
+    isVerified: boolean;
+    awaitingVerification: boolean;
+    areaName: string;
+    areaTitle: string;
+    subject: string;
+    isComplete: boolean;
+};
+
+export type AreasEnabled = {
+    areaId: string;
+    isEnabled: boolean;
+    areaName: string;
+};
+
+export type ToggleStateChanger = Dispatch<SetStateAction<boolean | null>>;
