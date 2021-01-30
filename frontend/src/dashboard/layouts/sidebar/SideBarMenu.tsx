@@ -19,6 +19,7 @@ import { IOSSwitch } from "@common/components/IOSSwitch";
 import PaymentIcon from "@material-ui/icons/Payment";
 import { ApiClient } from "@api-client/Client";
 import { webUrl } from "@api-client/clientUtils";
+import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 
 export interface ISideBarMenu {
     areaIdentifiers: Array<string>;
@@ -26,6 +27,9 @@ export interface ISideBarMenu {
     widgetIsActive: boolean | undefined;
     updateWidgetIsActive(): void;
 }
+type StyleProps = {
+    complete: boolean;
+};
 
 const createNavLink = (areaIdentifier: string) => {
     return `/dashboard/editor/email/${areaIdentifier}?tab=0`;
@@ -39,6 +43,9 @@ const useStyles = makeStyles((theme) => ({
     icon: {
         color: "navy",
     },
+    rightIcon: (props: StyleProps) => ({
+        color: props.complete ? "navy" : "red",
+    }),
     navlink: {
         textDecoration: "none",
         color: "#c7ecee",
@@ -51,8 +58,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, updateWidgetIsActive }: ISideBarMenu) => {
-    const classes = useStyles();
-
     const [configureOpen, setConfigureOpen] = useState(true);
     const [reviewOpen, setReviewOpen] = useState(true);
     const [billingOpen, setBillingOpen] = useState(true);
@@ -63,6 +68,8 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, update
     const { checkAreaCount, setViewName, subscription } = React.useContext(DashboardContext);
 
     var returnUrl = `${webUrl}/dashboard/`;
+
+    const classes = useStyles();
 
     const createCustomerPortalSession = async () => {
         const client = new ApiClient();
@@ -120,6 +127,20 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, update
                             <AddCircleOutlineIcon className={classes.icon} />
                         </ListItemIcon>
                         <ListItemText primary="Add New Area" primaryTypographyProps={{ className: classes.sidebarText }} />
+                    </ListItem>
+
+                    <ListItem
+                        disabled={!isActive}
+                        button
+                        onClick={() => {
+                            setViewName("Enable / Disable Areas");
+                            history.push("/dashboard/set-areas");
+                        }}
+                    >
+                        <ListItemIcon>
+                            <PowerSettingsNewIcon className={classes.icon} key={0} />
+                        </ListItemIcon>
+                        <ListItemText primary="Enable / Disable Areas" primaryTypographyProps={{ className: classes.sidebarText }} />
                     </ListItem>
                 </Collapse>
             </List>
@@ -181,20 +202,22 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, update
                     {billingOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 </ListItem>
                 <Collapse in={billingOpen} timeout="auto" unmountOnExit>
-                    {!(subscription === PurchaseTypes.Premium || subscription === PurchaseTypes.Pro) && (<ListItem
-                        disabled={!isActive}
-                        button
-                        onClick={() => {
-                            console.log("Setting Header!");
-                            setViewName("Subscriptions");
-                            history.push("/dashboard/subscribe/");
-                        }}
-                    >
-                        <ListItemIcon>
-                            <SubscriptionsIcon className={classes.icon} key={0} />
-                        </ListItemIcon>
-                        <ListItemText primary="Subscribe" primaryTypographyProps={{ className: classes.sidebarText }} />
-                    </ListItem>)}
+                    {!(subscription === PurchaseTypes.Premium || subscription === PurchaseTypes.Pro) && (
+                        <ListItem
+                            disabled={!isActive}
+                            button
+                            onClick={() => {
+                                console.log("Setting Header!");
+                                setViewName("Subscriptions");
+                                history.push("/dashboard/subscribe/");
+                            }}
+                        >
+                            <ListItemIcon>
+                                <SubscriptionsIcon className={classes.icon} key={0} />
+                            </ListItemIcon>
+                            <ListItemText primary="Subscribe" primaryTypographyProps={{ className: classes.sidebarText }} />
+                        </ListItem>
+                    )}
                     <ListItem disabled={!isActive || !(subscription === PurchaseTypes.Premium || subscription === PurchaseTypes.Pro)} button onClick={createCustomerPortalSession}>
                         <ListItemIcon>
                             <PaymentIcon className={classes.icon} key={0} />

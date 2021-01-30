@@ -24,6 +24,7 @@ namespace Server.Domain.Configuration.Schemas
         public string AreaSpecificEmail { get; set; }
         public bool EmailIsVerified { get; set; }
         
+        
         [DefaultValue("Thank you for reaching out!")]
         public string Subject { get; set; }
 

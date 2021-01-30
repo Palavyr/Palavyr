@@ -5,7 +5,6 @@ import auth from "../auth/Auth";
 export const ProtectedRoute = ({ component: Component, ...rest }) => {
 
     const location = useLocation();
-    // const history = useHistory();
 
     const confirmationLoc = "/dashboard/confirm";
     const unauthLoc = "/";

@@ -59,6 +59,8 @@ import { ConfirmYourResetLink } from "@landing/components/passwordReset/ConfirmY
 import { RESET_PASSWORD_FORM, RESET_PASSWORD_VERIFY, RESET_PASSWORD_SUCCESS } from "@constants";
 import { RenderPasswordDialog } from "@landing/components/passwordReset/SubmitNewPassword";
 import { RenderResetSuccess } from "@landing/components/passwordReset/PasswordResetSuccess";
+import { EnableAreas } from "dashboard/content/responseConfiguration/areaSettings/enableAreas/EnableAreas";
+import { SetAreasHelp } from "dashboard/content/help/SetAreasHelp";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -94,6 +96,8 @@ export const Routes = () => {
             <ProtectedRoute exact path="/dashboard/editor/conversation/:areaIdentifier" component={withLayout(withAreaTabs(<ConvoTree />), <ConversationHelp />)} />
             <ProtectedRoute exact path="/dashboard/editor/settings/:areaIdentifier" component={withLayout(withAreaTabs(<AreaSettings />), <AreaSettingsHelp />)} />
             <ProtectedRoute exact path="/dashboard/editor/preview/:areaIdentifier" component={withLayout(withAreaTabs(<ConfigurationPreview />), <PreviewHelp />)} />
+
+            <ProtectedRoute exact path="/dashboard/set-areas" component={withLayout(EnableAreas, <SetAreasHelp />)} />
 
             <ProtectedRoute exact path="/dashboard/settings/password" component={withLayout(withSettingsTabs(<ChangePassword />), <ChangePasswordHelp />)} />
             <ProtectedRoute exact path="/dashboard/settings/email" component={withLayout(withSettingsTabs(<ChangeEmail />), <ChangeDefaultEmailHelp />)} />

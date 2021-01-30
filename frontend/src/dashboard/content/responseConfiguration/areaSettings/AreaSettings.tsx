@@ -3,22 +3,14 @@ import { ApiClient } from "@api-client/Client";
 import { useHistory, useParams } from "react-router-dom";
 import { Divider, Grid, makeStyles } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
-import { AlertDetails, AreaTable, EmailVerificationResponse } from "@Palavyr-Types";
+import { AlertDetails, Settings } from "@Palavyr-Types";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { AreaToggle } from "./enableAreas/AreaToggle";
 
-type Settings = {
-    emailAddress: string;
-    isVerified: boolean;
-    awaitingVerification: boolean;
-    areaName: string;
-    areaTitle: string;
-    subject: string;
-};
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     titleText: {
         fontWeight: "bold",
     },
@@ -46,8 +38,11 @@ export const AreaSettings = () => {
         areaName: "",
         areaTitle: "",
         subject: "",
+        isComplete: false
     });
     const [alertDetails, setAlertDetails] = useState<AlertDetails>({ title: "", message: "" });
+    const [isCompleteState, setIsCompleteState] = useState<boolean | null>(null);
+
     const classes = useStyles();
     const history = useHistory();
 
@@ -60,8 +55,9 @@ export const AreaSettings = () => {
             areaName: areaData.areaName,
             areaTitle: areaData.areaDisplayTitle,
             subject: areaData.subject,
+            isComplete: areaData.isComplete
         });
-
+        setIsCompleteState(areaData.isComplete);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
 
@@ -123,9 +119,15 @@ export const AreaSettings = () => {
         return severityLevel;
     };
 
+    const onToggleChange = async () => {
+        const {data: updatedIsComplete } = await client.Area.UpdateIsComplete(!isCompleteState, areaIdentifier)
+        setIsCompleteState(updatedIsComplete)
+    }
+
     return loaded ? (
         <>
             <AreaConfigurationHeader title="Area Settings" subtitle={`Modify settings that are specific to this area (${settings.areaName}).`} />
+            {isCompleteState !== null && <AreaToggle isComplete={isCompleteState} onChange={onToggleChange}/>}
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Alert className={classNames(classes.alert, classes.alertTitle)} variant="filled" severity="info">
