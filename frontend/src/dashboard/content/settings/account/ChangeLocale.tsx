@@ -1,89 +1,98 @@
 import { ApiClient } from "@api-client/Client";
 import React, { useCallback, useState, useEffect } from "react";
-import { Grid, makeStyles, MenuItem, Select } from "@material-ui/core";
+import { makeStyles, MenuItem } from "@material-ui/core";
 import { SettingsGridRowList } from "@common/components/SettingsGridRowList";
 import { Alert, AlertTitle } from "@material-ui/lab";
+import { LocaleMapItem, LocalMap } from "@Palavyr-Types";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     titleText: {
-        fontWeight: "bold"
-    }
-}))
+        fontWeight: "bold",
+    },
+    paper: {
+        backgroundColor: "#C7ECEE",
+        padding: "2rem",
+        margin: "1rem",
+        width: "100%",
+        display: "inline-block",
+        justifyContent: "center",
+        textAlign: "center",
+        position: "relative",
+    },
+}));
+
+const LocaleId = "LocaleId";
+const CountryName = "CountryName";
 
 export const ChangeLocale = () => {
     var client = new ApiClient();
 
-    const supportedLocales = {
-        "en-AU": "Australia",
-        "en-US": "United States"
-    }
-
     const [, setLoaded] = useState<boolean>(false);
-    const [localeId, setLocaleID] = useState<string | undefined>();
+    const [, setLocaleID] = useState<string | undefined>();
     const [localeName, setLocaleName] = useState<string | undefined>();
-
-    const [alertState, setAlert] = useState<boolean>(false);
+    const [localeMap, setLocaleMap] = useState<LocalMap>([]);
+    const [currencySymbol, setCurrencySymbol] = useState<string>("")
+    const [, setAlert] = useState<boolean>(false);
 
     const classes = useStyles();
 
     const loadLocale = useCallback(async () => {
+        var { data: locale } = await client.Settings.Account.GetLocale();
 
-        var {data: locale} = await client.Settings.Account.getLocale();
+        setLocaleID(locale.localeId);
+        setLocaleName(locale.localeCountry);
+        setCurrencySymbol(locale.localeCurrencySymbol);
+        setLocaleMap(locale.localeMap);
 
-        setLocaleID(locale)
-        // TODO: Ensure strong types
-        setLocaleName(supportedLocales[locale]);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, []);
 
     useEffect(() => {
-
         loadLocale();
-
         setLoaded(true);
 
         return () => {
-            setLoaded(false)
-        }
-    }, [loadLocale])
-
+            setLoaded(false);
+        };
+    }, [loadLocale]);
 
     const handleLocaleChange = async (event) => {
         const newLocaleId = event.target.value;
 
-        await client.Settings.Account.updateLocale(newLocaleId);
-        setAlert(true);
+        const { data: updatedLocale } = await client.Settings.Account.updateLocale(newLocaleId);
 
-        setLocaleName(supportedLocales[newLocaleId])
-        setLocaleID(newLocaleId);
-    }
+        setLocaleName(updatedLocale.localeCountry);
+        setLocaleID(updatedLocale.localeId);
+        setCurrencySymbol(updatedLocale.localeCurrencySymbol);
+        setAlert(true);
+    };
 
     return (
         <div style={{ width: "50%" }}>
-            <Grid container spacing={3}>
-                <SettingsGridRowList
-                    onChange={handleLocaleChange}
-                    currentValue={localeName}
-                    menuName={"Locale"}
-                    menu={Object.keys(supportedLocales).map(locKey => <MenuItem key={locKey} value={locKey}>{supportedLocales[locKey]}</MenuItem>)}
-                    useModal
-                    modalMessage={
-                        {
-                            title: "",
-                            message: "Locale successfully updated."
-                        }
-                    }
-                    alertNode={
-                        <Alert>
-                            <AlertTitle className={classes.titleText}>
-                                Set your Locale
-                            </AlertTitle>
-                            Set the locale of your company. This will be used to determine the following properties of your estimates:
-                            <ul><li>Currency Symbol</li></ul>
-                        </Alert>
-                    }
-                />
-            </Grid>
+            <SettingsGridRowList
+                onChange={handleLocaleChange}
+                currentValue={localeName + " - " + currencySymbol}
+                menuName="Select your locale"
+                menu={localeMap.map((localeItem: LocaleMapItem, index: number) => (
+                    <MenuItem key={localeItem.localeId + index.toString()} value={localeItem.localeId}>
+                        {localeItem.countryName}
+                    </MenuItem>
+                ))}
+                useModal
+                modalMessage={{
+                    title: "",
+                    message: "Locale successfully updated.",
+                }}
+                alertNode={
+                    <Alert>
+                        <AlertTitle className={classes.titleText}>Set your Locale</AlertTitle>
+                        Set the locale of your company. This will be used to determine the following properties of your estimates:
+                        <ul>
+                            <li>Currency Symbol</li>
+                        </ul>
+                    </Alert>
+                }
+            />
         </div>
-    )
-}
+    );
+};

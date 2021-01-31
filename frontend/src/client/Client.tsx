@@ -26,6 +26,7 @@ import {
     PreCheckResult,
     WidgetPreferences,
     VariableDetail,
+    LocaleDefinition,
 } from "@Palavyr-Types";
 import { TableData } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableTypes";
 import { TableNameMap } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableConfiguration";
@@ -184,7 +185,7 @@ export class ApiClient {
             updatePhoneNumber: async (newPhoneNumber: string): Promise<AxiosResponse<string>> => this.client.put(`account/settings/phone-number`, { PhoneNumber: newPhoneNumber }),
 
             // TODO: Stronger type for locale
-            updateLocale: async (newLocale: string): Promise<AxiosResponse<string>> => this.client.put(`account/settings/locale`, { Locale: newLocale }),
+            updateLocale: async (newLocaleId: string): Promise<AxiosResponse<LocaleDefinition>> => this.client.put(`account/settings/locale`, { LocaleId: newLocaleId }),
 
             updateCompanyLogo: async (formData: FormData): Promise<AxiosResponse<string>> =>
                 this.client.put(`account/settings/logo`, formData, {
@@ -200,7 +201,7 @@ export class ApiClient {
             getPhoneNumber: async (): Promise<AxiosResponse<PhoneSettingsResponse>> => this.client.get(`account/settings/phone-number`),
 
             // TODO: Stronger typing for locale
-            getLocale: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/locale`),
+            GetLocale: async (): Promise<AxiosResponse<LocaleDefinition>> => this.client.get(`account/settings/locale`),
             getCompanyLogo: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/logo`),
             getCurrentPlan: async (): Promise<AxiosResponse<PlanType>> => this.client.get(`account/settings/current-plan`),
 

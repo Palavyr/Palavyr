@@ -112,7 +112,7 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
         if (fileUpload !== null) {
             const formData = new FormData();
             formData.append("files", fileUpload[0]);
-            const dataUrl = (await client.Settings.Account.updateCompanyLogo(formData)).data as string;
+            const {data: dataUrl} = await client.Settings.Account.updateCompanyLogo(formData)
             setcompanyLogo(dataUrl);
         }
         setFileUpload([]); // shouldn't this clear the chip

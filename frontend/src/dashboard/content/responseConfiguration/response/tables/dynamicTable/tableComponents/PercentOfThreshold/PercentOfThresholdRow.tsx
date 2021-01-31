@@ -5,6 +5,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { PercentOfThresholdData, TableData } from "../../DynamicTableTypes";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { uuid } from "uuidv4";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 
 export interface IPercentOfThresholdRow {
@@ -49,6 +50,8 @@ export const PercentOfThresholdRow = ({ dataIndex, tableData, row, modifier, bas
     const cellAlignment = "center";
     const key = dataIndex.toString() + row.tableId.toString();
 
+    const { currencySymbol } = React.useContext(DashboardContext);
+
     return (
         <TableRow key={key}>
             <TableCell align={cellAlignment}>
@@ -67,7 +70,7 @@ export const PercentOfThresholdRow = ({ dataIndex, tableData, row, modifier, bas
                     label="Threshold"
                     variant="standard"
                     value={row.threshold}
-                    currencySymbol="$"
+                    currencySymbol={currencySymbol}
                     minimumValue="0"
                     outputFormat="number"
                     decimalCharacter="."
@@ -111,7 +114,7 @@ export const PercentOfThresholdRow = ({ dataIndex, tableData, row, modifier, bas
                     label="Amount"
                     variant="standard"
                     value={row.valueMin}
-                    currencySymbol="$"
+                    currencySymbol={currencySymbol}
                     minimumValue="0"
                     outputFormat="number"
                     decimalCharacter="."
@@ -129,7 +132,7 @@ export const PercentOfThresholdRow = ({ dataIndex, tableData, row, modifier, bas
                     variant="standard"
                     disabled={!row.range}
                     value={row.range ? row.valueMax : 0.00}
-                    currencySymbol="$"
+                    currencySymbol={currencySymbol}
                     minimumValue="0"
                     outputFormat="number"
                     decimalCharacter="."

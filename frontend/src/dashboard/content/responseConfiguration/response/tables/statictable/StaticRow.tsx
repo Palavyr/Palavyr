@@ -6,6 +6,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield'
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 
 type styleProp = {
@@ -59,6 +60,7 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
 
     const classes = useStyles({ index, rangeState });
     const cellAlignment = "center";
+    const { currencySymbol } = React.useContext(DashboardContext);
 
     return (
         <TableRow>
@@ -88,7 +90,7 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
                     label="Amount"
                     variant="standard"
                     value={minFee}
-                    currencySymbol="$"
+                    currencySymbol={currencySymbol}
                     minimumValue="0"
                     outputFormat="number"
                     decimalCharacter="."
@@ -105,7 +107,7 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
                     variant="standard"
                     disabled={!rangeState}
                     value={maxFee}
-                    currencySymbol="$"
+                    currencySymbol={currencySymbol}
                     minimumValue="0"
                     outputFormat="number"
                     decimalCharacter="."

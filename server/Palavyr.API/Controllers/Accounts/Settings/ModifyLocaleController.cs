@@ -1,9 +1,10 @@
+using System;
 using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.RequestTypes.Registration;
+using Palavyr.API.Services.AccountServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
@@ -12,21 +13,35 @@ namespace Palavyr.API.Controllers.Accounts.Settings
     public class ModifyLocaleController : ControllerBase
     {
         private ILogger<ModifyLocaleController> logger;
+        private readonly LocaleDefinition localeDefinition;
         private AccountsContext accountsContext;
 
-        public ModifyLocaleController(AccountsContext accountsContext, ILogger<ModifyLocaleController> logger)
+        public ModifyLocaleController(AccountsContext accountsContext, ILogger<ModifyLocaleController> logger, LocaleDefinition localeDefinition)
         {
             this.logger = logger;
+            this.localeDefinition = localeDefinition;
             this.accountsContext = accountsContext;
         }
 
         [HttpPut("account/settings/locale")]
-        public async Task<string> Modify([FromHeader] string accountId, AccountDetails accountDetails)
+        public async Task<LocaleDefinition> Modify([FromHeader] string accountId, [FromBody] RequestBody request)
         {
             var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
-            account.Locale = accountDetails.Locale;
+
+            var newLocale = localeDefinition.Parse(request.LocaleId);
+            if (!newLocale.IsValidLocal())
+            {
+                throw new Exception($"Locale {request.LocaleId} is not supported. Supported locales: {string.Join(", ", newLocale.GetSupportedLocales)}");
+            }
+
+            account.Locale = newLocale.LocaleId;
             await accountsContext.SaveChangesAsync();
-            return account.Locale;
+            return newLocale;
+        }
+
+        public class RequestBody
+        {
+            public string LocaleId { get; set; }
         }
     }
 }

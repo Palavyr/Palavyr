@@ -7,11 +7,11 @@ The Palavyr Configuration Manager project includes 4 subprojects:
 3. [Server](./server/README.md)
 4. [Widget](./widget/README.md)
 
-For information on each component follow the links above. 
+For information on each component follow the links above.
 
 # Overview
 
-The Frontend and the Widget are both served as a static websites from an S3 buckets. The frontend is used to configure the chat widget conversations as well as email responses. Each of these sit behind AWS CloudFront which provides SSL certificates DNS is provided by Route53. The frontend and Widget connect to the same API, which uses postgres as a database. Essentially, The frontend is used to configure conversation nodes. These nodes are stored in the database via the API. The widget will then request a node set and execute a conversation. 
+The Frontend and the Widget are both served as a static websites from an S3 buckets. The frontend is used to configure the chat widget conversations as well as email responses. Each of these sit behind AWS CloudFront which provides SSL certificates DNS is provided by Route53. The frontend and Widget connect to the same API, which uses postgres as a database. Essentially, The frontend is used to configure conversation nodes. These nodes are stored in the database via the API. The widget will then request a node set and execute a conversation.
 
 ### Stages
 
@@ -60,7 +60,7 @@ We use Octopus Deploy to deploy to releases to the staging and production server
 Octopus deploy derives the release count from the semantic version baked into the package names that are pushed from Team City.
 
 **Bumping release versions**
-If we want to bump the major or minor version of the application, we need to do this manually in team city. Later we can consider using git versions later, but for now we manually do this in Team City. 
+If we want to bump the major or minor version of the application, we need to do this manually in team city. Later we can consider using git versions later, but for now we manually do this in Team City.
 
 Patch version are incremented automatically by team city.
 
@@ -99,13 +99,13 @@ This application uses Postgres. To manage database migrations, we use DBUP. DBUP
 
     Write-Host "Migrations completed!"
 
-This will bring the postgres database up to speed and apply any new migrations. This is run every time we deploy, so it acts as a kind of history of database structure state. 
+This will bring the postgres database up to speed and apply any new migrations. This is run every time we deploy, so it acts as a kind of history of database structure state.
 
 For details on how to write a code-first migration using EF Core, see the [Server Readme](./server/README.md)
 
 # Development startup
 
-To begin development, run `cleanSetup.ps1` followed by `startServices.ps1`. This will retrieve and install all of the dependencies for development, and then start the necessary services. The API server should be started using a configuration from either Jetbrains Rider or Visual Studio 2019 - however if you intend to only develop on the frontend, you can provide an optional flag to `startServices.ps1 `. 
+To begin development, run `cleanSetup.ps1` followed by `startServices.ps1`. This will retrieve and install all of the dependencies for development, and then start the necessary services. The API server should be started using a configuration from either Jetbrains Rider or Visual Studio 2019 - however if you intend to only develop on the frontend, you can provide an optional flag to `startServices.ps1 `.
 
     ./startService.ps1 -runServer
 
@@ -133,7 +133,7 @@ Microsoft provides a [guide](https://docs.microsoft.com/en-us/aspnet/core/host-a
 
 This is the current 3rd party software being used:
 
-[Win-Acme](https://www.win-acme.com/) (to create certificates on prem) 
+[Win-Acme](https://www.win-acme.com/) (to create certificates on prem)
 
     win-acme.v2.1.10.896.x86.pluggable
 
@@ -172,7 +172,7 @@ The Application data folder sits outside of the application and persists user da
 **IIS Configuration**
 There is some configuration to perform on the Windows server with regard to setting up IIS, but its pretty minimal. The majority of configuration is performed via [this guide from microsoft](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/?view=aspnetcore-3.1).
 
-Once IIS is enabled, various SSL options should be enabled. 
+Once IIS is enabled, various SSL options should be enabled.
 
 **Internet access**
 Open Server Manager, and select the Local Server. In the main window, there is an option IE Enhanced Security Configuration. All this needs to be turned off.
@@ -202,21 +202,21 @@ In order to secure using SSL, install a certificate. (The S3 buckets are secured
 
 
 # Installing Certificates
-Once the website is made, youcan install a certificate using Win-Acme to install certificates on the server. Basically download the software (In one instance I needed to download a slightly older version and use the 32bit x86 version for this to work) and just follow the prompt. 
+Once the website is made, youcan install a certificate using Win-Acme to install certificates on the server. Basically download the software (In one instance I needed to download a slightly older version and use the 32bit x86 version for this to work) and just follow the prompt.
 
 So long as the DNS has been set up correctly and outbound traffic is allowed, it should create and install a certificate.
 
 Once the certificate is install, retrieve the thumbprint and save it as a variable in Octopus Deploy. Deploying to IIS requires bindings (well its optional, but it should be done), and to do that, you can choose and externally managed store (the server) and provide a thumbprint for Octopus to find and verify
 
 #### Retrieve the Certificate thumbprint
-This can be done in powershell. 
+This can be done in powershell.
 
     Get-ChildItem -path cert:\LocalMachine\Root
     # (root, or whichever. Run cert:\LocalMachine to get a list)
 
-You may have to look in a few places. 
+You may have to look in a few places.
 
-Octopus will apply the bindings, you can confirm the bindings in the IIS manager after the first deploy. 
+Octopus will apply the bindings, you can confirm the bindings in the IIS manager after the first deploy.
 
 #### Enable SSL on the box
 
@@ -225,3 +225,7 @@ On the IIS manager, you can select the website and enable ssl and the IP binding
 <img src="./assets/EnableSSL1.PNG" alt="drawing" width="300"/>
 <img src="./assets/EnableSSL2.PNG" alt="drawing" width="300"/>
 <img src="./assets/EnableSSL3.PNG" alt="drawing" width="300"/>
+
+### Making IIS always running for Hangfire. I followed these settings in IIS
+
+https://docs.hangfire.io/en/latest/deployment-to-production/making-aspnet-app-always-running.html

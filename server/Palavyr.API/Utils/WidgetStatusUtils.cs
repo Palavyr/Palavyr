@@ -22,7 +22,7 @@ namespace Palavyr.API.Utils
             logger.LogDebug("Collecting areas...");
             var areas = await dashContext
                 .Areas
-                .Where(row => row.AccountId == accountId)
+                .Where(row => row.AccountId == accountId && row.IsComplete)
                 .Include(row => row.ConversationNodes)
                 .Include(row => row.DynamicTableMetas)
                 .ToListAsync();

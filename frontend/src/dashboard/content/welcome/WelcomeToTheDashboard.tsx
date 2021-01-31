@@ -4,6 +4,7 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 import classNames from "classnames";
 import { useHistory } from "react-router-dom";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { OnboardingTodo } from "./OnboardingTodo/OnboardingTodo";
 
 const useStyles = makeStyles((theme) => ({
     background: {
@@ -13,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
         position: "relative",
         height: "100%",
         textAlign: "center",
+        background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)",
     },
     sectionDiv: {
         width: "100%",
@@ -26,11 +28,11 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "column",
         justifyContent: "center",
     },
-    listItems:{
+    listItems: {
         widgth: "40%",
         margin: "0 auto",
         padding: "1rem",
-        background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)",
+        // background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)",
     },
     alert: {
         border: "1px solid black",
@@ -84,24 +86,40 @@ export const WelcomeToTheDashboard = () => {
                 <div className={cls.headCard}>
                     <div style={{ borderBottom: "2px solid black", width: "50%" }}>
                         <Typography variant="h3" style={{ paddingTop: "2rem", paddingBottom: "2rem" }}>
-                            Welcome to palavyr!
+                            Welcome to the Palavyr Configuration Dashboard!
+                        </Typography>
+                        <Typography style={{ paddingTop: "2rem", paddingBottom: "2rem" }}>
+                            Follow this onboarding page to learn about how Palavyr works and what you should do to get started.
                         </Typography>
                     </div>
                 </div>
-                <Typography style={{ padding: "1rem", paddingTop: "2rem", fontSize: "16pt" }}>How does it work</Typography>
-                <Typography style={{ padding: "1rem" }}>Palavyr is simple to configure, and even more simple to use.</Typography>
-                <div className={cls.sectionHeadDiv} >
+                <Typography style={{ padding: "1rem", paddingTop: "2rem", fontSize: "24pt" }}>What is Palavyr?</Typography>
+                <Typography style={{ padding: "1rem" }}>
+                    Palavyr is a system used to automate the delivery of information about your services and fees to potential customers.
+                    The Palavyr chat widget is embedded into your website and through it, potential customers will provide information that
+                    we use to deliver specific information about your services via email.
+                </Typography>
+                <Divider />
+                <Typography style={{ padding: "1rem", paddingTop: "2rem", fontSize: "24pt" }}>How does it work?</Typography>
+                <div className={cls.sectionHeadDiv}>
                     <div className={cls.listItems}>
-
-                    <Typography gutterBottom align="left">
-                        1. You configure the Palavyr widget by you in this dashboard.
-                    </Typography>
-                    <Typography gutterBottom align="left">
-                        2. You provide the palavyr widget in your business website.
-                    </Typography>
-                    <Typography gutterBottom align="left">3. Your customers use the widget to receive infrmation and service fee estimates via email.</Typography>
+                        <Typography gutterBottom align="left">
+                            Step 1. Configure the Palavyr widget using this dashboard.
+                        </Typography>
+                        <Typography gutterBottom align="left">
+                            Step 2. Provide the Palavyr widget in your business's website.
+                        </Typography>
+                        <Typography gutterBottom align="left">
+                            Step 3. Your customers use the widget to receive service information and fee estimates via email.
+                        </Typography>
                     </div>
                 </div>
+                <Divider />
+                <Typography style={{ padding: "2rem", fontSize: "24pt", fontWeight: "bolder"}}>Quick Start To Do list</Typography>
+                <div>
+                    <OnboardingTodo />
+                </div>
+                <Divider />
                 <Typography style={{ padding: "2rem", fontSize: "16pt" }}>Follow these steps to get started:</Typography>
                 <Divider />
                 <div className={cls.sectionDiv}>
@@ -117,7 +135,6 @@ export const WelcomeToTheDashboard = () => {
                         <Typography align="left" gutterBottom>
                             2. Navigate to your general settigs and set your Company/Buiness name and default contact information.
                         </Typography>
-                        {/* <OnboardingTodo /> */}
                     </Card>
                 </div>
                 <Divider />

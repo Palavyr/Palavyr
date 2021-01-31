@@ -19,7 +19,8 @@ import { IOSSwitch } from "@common/components/IOSSwitch";
 import PaymentIcon from "@material-ui/icons/Payment";
 import { ApiClient } from "@api-client/Client";
 import { webUrl } from "@api-client/clientUtils";
-import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
+import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
 export interface ISideBarMenu {
     areaIdentifiers: Array<string>;
@@ -115,6 +116,7 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, update
                             </NavLink>
                         );
                     })}
+                    <Divider />
                     <ListItem
                         disabled={!isActive}
                         button
@@ -128,7 +130,6 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, update
                         </ListItemIcon>
                         <ListItemText primary="Add New Area" primaryTypographyProps={{ className: classes.sidebarText }} />
                     </ListItem>
-
                     <ListItem
                         disabled={!isActive}
                         button
@@ -244,6 +245,20 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, update
                         disabled={!isActive}
                         button
                         onClick={() => {
+                            console.log("Setting Header!");
+                            setViewName("Welcome!");
+                            history.push("/dashboard/welcome");
+                        }}
+                    >
+                        <ListItemIcon>
+                            <PlayArrowIcon className={classes.icon} key={0} />
+                        </ListItemIcon>
+                        <ListItemText primary="Get Started" primaryTypographyProps={{ className: classes.sidebarText }} />
+                    </ListItem>
+                    <ListItem
+                        disabled={!isActive}
+                        button
+                        onClick={() => {
                             setViewName("General Settings");
                             history.push(`/dashboard/settings/password?tab=${GeneralSettingsLoc.password}`);
                         }}
@@ -266,22 +281,6 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, update
                         </ListItemIcon>
                         <ListItemText primary="Get Widget" primaryTypographyProps={{ className: classes.sidebarText }} />
                     </ListItem>
-
-                    <ListItem
-                        disabled={!isActive}
-                        button
-                        onClick={() => {
-                            console.log("Setting Header!");
-                            setViewName("Welcome!");
-                            history.push("/dashboard/welcome");
-                        }}
-                    >
-                        <ListItemIcon>
-                            <HelpOutlineIcon className={classes.icon} key={0} />
-                        </ListItemIcon>
-                        <ListItemText primary="Get Help" primaryTypographyProps={{ className: classes.sidebarText }} />
-                    </ListItem>
-
                     <ListItem button key={1003} onClick={() => Auth.PerformLogout(() => history.push("/"))}>
                         <ListItemIcon>
                             <ExitToAppIcon className={classes.icon} />

@@ -506,3 +506,17 @@ export type AreasEnabled = {
 };
 
 export type ToggleStateChanger = Dispatch<SetStateAction<boolean | null>>;
+
+export type LocaleDefinition = {
+    localeId: string;
+    localeCountry: string;
+    supportedLocales: string[];
+    localeMap: LocalMap;
+    localeCurrencySymbol: string;
+}
+
+export type LocaleMapItem = {
+    localeId: string;
+    countryName: string;
+}
+export type LocalMap = LocaleMapItem[];

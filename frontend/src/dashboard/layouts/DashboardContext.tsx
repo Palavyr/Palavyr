@@ -7,6 +7,7 @@ interface IDashboardContext {
     areaName: string;
     setViewName: Dispatch<SetStateAction<string>>;
     subscription: PlanType | undefined;
+    currencySymbol: string;
 }
 
 interface IAuthContext {

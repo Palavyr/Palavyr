@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
         position: "absolute", // Required - finalized
         display: "flex",
         width: "100%",
-        top: "8px"
+        top: "8px",
     },
     menuDrawer: {
         width: DRAWER_WIDTH,
@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
         width: DRAWER_WIDTH + 300,
         paddingLeft: "1rem",
         paddingRight: "1rem",
-        paddingTop: "1rem"
+        paddingTop: "1rem",
     },
 }));
 
@@ -91,7 +91,8 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [alertState, setAlertState] = useState<boolean>(false);
 
     const [widgetState, setWidgetState] = useState<boolean | undefined>();
-    const [planType, setPlanType] = useState<PlanType>()
+    const [planType, setPlanType] = useState<PlanType>();
+    const [currencySymbol, setCurrencySymbol] = useState<string>("");
 
     const cls = useStyles(helpOpen);
     const theme = useTheme();
@@ -103,7 +104,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         await client.Conversations.EnsureDBIsValid();
 
         const { data: numAllowedBySubscription } = await client.Settings.Subscriptions.getNumAreas();
-        const { data: currentPlanType} = await client.Settings.Account.getCurrentPlan();
+        const { data: currentPlanType } = await client.Settings.Account.getCurrentPlan();
         setPlanType(currentPlanType);
         setNumAreasAllowed(numAllowedBySubscription);
 
@@ -112,8 +113,11 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         setSidebarNames(areaNames);
         setSidebarIds(areaIdentifiers);
 
-        const {data: currentWidgetState} = await client.Configuration.WidgetState.GetWidgetState();
+        const { data: currentWidgetState } = await client.Configuration.WidgetState.GetWidgetState();
         setWidgetState(currentWidgetState);
+
+        const { data: locale } = await client.Settings.Account.GetLocale();
+        setCurrencySymbol(locale.localeCurrencySymbol);
 
         if (areaIdentifier) {
             var currentView = areas.filter((x: AreaTable) => x.areaIdentifier === areaIdentifier).pop();
@@ -148,9 +152,9 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
     const updateWidgetIsActive = async () => {
         const client = new ApiClient();
-        const {data: updatedWidgetState} = await client.Configuration.WidgetState.SetWidgetState(!widgetState);
+        const { data: updatedWidgetState } = await client.Configuration.WidgetState.SetWidgetState(!widgetState);
         setWidgetState(updatedWidgetState);
-    }
+    };
 
     const handleDrawerClose: () => void = () => {
         setOpen(false);
@@ -190,7 +194,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     };
 
     return (
-        <DashboardContext.Provider value={{ subscription: planType , numAreasAllowed, checkAreaCount, areaName: currentViewName, setViewName: setViewName }}>
+        <DashboardContext.Provider value={{ currencySymbol: currencySymbol, subscription: planType, numAreasAllowed, checkAreaCount, areaName: currentViewName, setViewName: setViewName }}>
             <div className={cls.root}>
                 <CssBaseline />
                 <DashboardHeader open={open} handleDrawerOpen={handleDrawerOpen} handleHelpDrawerOpen={handleHelpDrawerOpen} helpOpen={helpOpen} title={currentViewName} />
@@ -208,7 +212,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                     <>
                         <SideBarHeader handleDrawerClose={handleDrawerClose} />
                         <Divider />
-                        <SideBarMenu areaIdentifiers={sidebarIds} areaNames={sidebarNames} widgetIsActive={widgetState} updateWidgetIsActive={updateWidgetIsActive}/>
+                        <SideBarMenu areaIdentifiers={sidebarIds} areaNames={sidebarNames} widgetIsActive={widgetState} updateWidgetIsActive={updateWidgetIsActive} />
                     </>
                 </Drawer>
                 <ContentLoader open={open}>{children}</ContentLoader>
@@ -232,7 +236,6 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                 </Drawer>
                 {numAreasAllowed && (sidebarIds.length < numAreasAllowed ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
                 <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
-
             </div>
         </DashboardContext.Provider>
     );

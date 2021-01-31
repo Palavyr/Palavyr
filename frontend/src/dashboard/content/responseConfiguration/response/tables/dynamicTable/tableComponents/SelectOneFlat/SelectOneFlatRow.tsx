@@ -5,6 +5,7 @@ import CurrencyTextField from '@unicef/material-ui-currency-textfield'
 import DeleteIcon from '@material-ui/icons/Delete';
 import { SelectOneFlatData, TableData } from "../../DynamicTableTypes";
 import { uuid } from "uuidv4";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 
 export interface ISelectOneFlatRow {
@@ -47,6 +48,9 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
     const classes = useStyles(!row.range);
     const cellAlignment = "center";
     const key = dataIndex.toString() + row.tableId.toString();
+
+    const { currencySymbol } = React.useContext(DashboardContext);
+
     return (
         <TableRow key={key}>
             <TableCell align={cellAlignment}>
@@ -78,7 +82,7 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
                     label="Amount"
                     variant="standard"
                     value={row.valueMin}
-                    currencySymbol="$"
+                    currencySymbol={currencySymbol}
                     minimumValue="0"
                     outputFormat="number"
                     decimalCharacter="."
@@ -96,7 +100,7 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
                     variant="standard"
                     disabled={!row.range}
                     value={row.range ? row.valueMax : 0.00}
-                    currencySymbol="$"
+                    currencySymbol={currencySymbol}
                     minimumValue="0"
                     outputFormat="number"
                     decimalCharacter="."
