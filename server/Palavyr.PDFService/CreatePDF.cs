@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using PDFService.PdfSections;
 using PDFService.Sections;
 using PDFService.Sections.Util;
 using Server.Domain.Accounts;

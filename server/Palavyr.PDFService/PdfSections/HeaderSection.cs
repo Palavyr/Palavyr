@@ -5,7 +5,7 @@ using System.Text;
 using PDFService.Sections.Util;
 using Server.Domain.Accounts;
 
-namespace PDFService.Sections
+namespace PDFService.PdfSections
 {
     public static class HeaderSection
     {
@@ -67,7 +67,7 @@ namespace PDFService.Sections
             {
                 builder.Append(@"<div style='height: 100%; float: left; text-align: center; margin-right: 10mm'>");
                 builder.Append(
-                    $@"<img src='{imageUri}' style='width: 250px; height: 250px; vertical-align: middle; margin-left: 10mm'>");
+                    $@"<img src='{imageUri}' style='width: 200px; height: 200px; vertical-align: middle; margin-left: 5mm'>");
                 builder.Append($@"</div>");
             }
 
