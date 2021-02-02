@@ -106,7 +106,7 @@ namespace Palavyr.API.Controllers.Accounts.Develop
             }
         }
 
-        public async Task PopulateDBs(DevDataHolder dh)
+        private async Task PopulateDBs(DevDataHolder dh)
         {
             var devAccount = UserAccount.CreateAccount(dh.UserName, dh.Email, dh.HashedPassword, dh.AccountId,
                 dh.ApiKey, dh.CompanyName, dh.PhoneNumber, dh.Active, dh.Locale, dh.AccountType);
@@ -132,7 +132,7 @@ namespace Palavyr.API.Controllers.Accounts.Develop
             await convoContext.SaveChangesAsync();
         }
 
-        public async Task DeleteAllData()
+        private async Task DeleteAllData()
         {
             accountsContext.Accounts.RemoveRange(accountsContext.Accounts);
             accountsContext.Sessions.RemoveRange(accountsContext.Sessions);

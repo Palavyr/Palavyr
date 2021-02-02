@@ -30,6 +30,7 @@ namespace Palavyr.API
             builder.RegisterModule(new AmazonModule(configuration));
             builder.RegisterModule(new HangfireModule());
             builder.RegisterModule(new GeneralModule());
+            builder.RegisterModule(new StripeModule(configuration));
         }
 
         public void ConfigureServices(IServiceCollection services)

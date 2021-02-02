@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using DashboardServer.Data;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Services.StripeServices.StripeWebhookHandlers;
 using Stripe;
@@ -13,32 +12,37 @@ namespace Palavyr.API.Services.StripeServices
 
     public class StripeEventWebhookService : IStripeEventWebhookService
     {
-        private AccountsContext accountsContext;
         private ILogger<StripeEventWebhookService> logger;
         private IProcessStripeCheckoutSessionCompletedHandler processCheckoutSessionCompletedHandler;
-        private readonly IProcessStripeInvoicePaidHandler processStripeInvoicePaidHandler;
-        private readonly IProcessStripeInvoicePaymentFailedHandler processStripeInvoicePaymentFailedHandler;
+        private readonly ProcessStripeInvoicePaidHandler processStripeInvoicePaidHandler;
+        private readonly ProcessStripeInvoicePaymentFailedHandler processStripeInvoicePaymentFailedHandler;
+        private readonly ProcessStripeSubscriptionDeletedHandler processStripeSubscriptionDeletedHandler;
 
 
         public StripeEventWebhookService(
             ILogger<StripeEventWebhookService> logger,
-            AccountsContext accountsContext,
-            IProcessStripeCheckoutSessionCompletedHandler processCheckoutSessionCompletedHandler,
-            IProcessStripeInvoicePaidHandler processStripeInvoicePaidHandler,
-            IProcessStripeInvoicePaymentFailedHandler processStripeInvoicePaymentFailedHandler
+            ProcessStripeCheckoutSessionCompletedHandler processCheckoutSessionCompletedHandler,
+            ProcessStripeInvoicePaidHandler processStripeInvoicePaidHandler,
+            ProcessStripeInvoicePaymentFailedHandler processStripeInvoicePaymentFailedHandler,
+            ProcessStripeSubscriptionDeletedHandler processStripeSubscriptionDeletedHandler
         )
         {
             this.logger = logger;
-            this.accountsContext = accountsContext;
             this.processCheckoutSessionCompletedHandler = processCheckoutSessionCompletedHandler;
             this.processStripeInvoicePaidHandler = processStripeInvoicePaidHandler;
             this.processStripeInvoicePaymentFailedHandler = processStripeInvoicePaymentFailedHandler;
+            this.processStripeSubscriptionDeletedHandler = processStripeSubscriptionDeletedHandler;
         }
 
         public async Task ProcessStripeEvent(Event stripeEvent)
         {
             switch (stripeEvent.Type)
             {
+                case Events.CustomerSubscriptionDeleted:
+                    var subscription = (Subscription) stripeEvent.Data.Object;
+                    await processStripeSubscriptionDeletedHandler.ProcessSubscriptionDeleted(subscription);
+                    break;
+
                 case Events.CheckoutSessionCompleted: //"checkout.session.completed":
                     var session = (Stripe.Checkout.Session) stripeEvent.Data.Object;
                     await processCheckoutSessionCompletedHandler.ProcessCheckoutSessionCompleted(session);

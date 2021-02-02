@@ -42,14 +42,6 @@ namespace Palavyr.API.Registration.ServiceCollection
             services.AddTransient<IAccountSetupService, AccountSetupService>();
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IEmailVerificationService, EmailVerificationService>();
-            services.AddTransient<IStripeWebhookAuthService, StripeWebhookAuthService>();
-            services.AddTransient<IStripeEventWebhookService, StripeEventWebhookService>();
-            services.AddTransient<IStripeCustomerService, StripeCustomerService>();
-            services.AddTransient<IStripeSubscriptionService, StripeSubscriptionService>();
-            services.AddTransient<IStripeProductService, StripeProductService>();
-            services.AddTransient<IProcessStripeCheckoutSessionCompletedHandler, ProcessStripeCheckoutSessionCompletedHandler>();
-            services.AddTransient<IProcessStripeInvoicePaidHandler, ProcessStripeInvoicePaidHandler>();
-            services.AddTransient<IProcessStripeInvoicePaymentFailedHandler, ProcessStripeInvoicePaymentFailedHandler>();
             services.AddTransient<ICompileDynamicTables, CompileDynamicTables>();
             services.AddSingleton<ISesEmail, SesEmail>();
             services.AddTransient<IRequestEmailVerification, RequestEmailVerification>();

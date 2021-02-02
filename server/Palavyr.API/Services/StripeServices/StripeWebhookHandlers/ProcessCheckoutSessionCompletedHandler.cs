@@ -4,7 +4,6 @@ using DashboardServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Server.Domain.Accounts;
-using Stripe;
 using Session = Stripe.Checkout.Session;
 
 namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
@@ -17,7 +16,6 @@ namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
     public class ProcessStripeCheckoutSessionCompletedHandler : IProcessStripeCheckoutSessionCompletedHandler
     {
         private AccountsContext accountsContext;
-        private StripeClient stripeClient;
         private ILogger<ProcessStripeCheckoutSessionCompletedHandler> logger;
         private IStripeSubscriptionService stripeSubscriptionService;
         private IStripeProductService stripeProductService;
@@ -32,7 +30,6 @@ namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
             this.accountsContext = accountsContext;
             this.logger = logger;
             this.stripeSubscriptionService = stripeSubscriptionService;
-            this.stripeClient = new StripeClient(StripeConfiguration.ApiKey);
             this.stripeProductService = stripeProductService;
         }
 

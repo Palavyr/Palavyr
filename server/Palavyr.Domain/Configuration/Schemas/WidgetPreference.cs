@@ -52,7 +52,7 @@ namespace Server.Domain.Configuration.Schemas
         
         public bool WidgetState { get; set; }
         
-        WidgetPreference()
+        public WidgetPreference()
         {
         }
 
