@@ -174,13 +174,8 @@ const PurchaseInner = () => {
                                     </Grid>
                                     {sortByPropertyAlphabetical(intervalGetter, prices).map((price: Price, key) => {
                                         return (
-                                            <Grid item xs={6}>
-                                                <FrequencyCard
-                                                    title={capitalize(price.recurring.interval) + "ly"}
-                                                    priceMap={priceMap}
-                                                    interval={price.recurring.interval}
-                                                    onClick={() => singlePurposeButtonOnClick(price.id)}
-                                                />
+                                            <Grid key={price.product + "-" + key.toString()} item xs={6}>
+                                                <FrequencyCard key={price.productId + "-" + key.toString()} title={capitalize(price.recurring.interval) + "ly"} priceMap={priceMap} interval={price.recurring.interval} onClick={() => singlePurposeButtonOnClick(price.id)} />
                                             </Grid>
                                         );
                                     })}

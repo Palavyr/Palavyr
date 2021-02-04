@@ -17,12 +17,12 @@ namespace Palavyr.API.Services.AccountServices
         private readonly AccountsContext accountsContext;
         private readonly ILogger<EmailVerificationService> logger;
         private readonly IRequestEmailVerification requestEmailVerification;
-        private IStripeCustomerService stripeCustomerService;
+        private StripeCustomerService stripeCustomerService;
 
         public EmailVerificationService(
             AccountsContext accountsContext,
             ILogger<EmailVerificationService> logger,
-            IStripeCustomerService stripeCustomerService,
+            StripeCustomerService stripeCustomerService,
             IRequestEmailVerification requestEmailVerification
         )
         {

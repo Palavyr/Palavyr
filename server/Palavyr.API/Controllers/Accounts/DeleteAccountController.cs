@@ -17,14 +17,14 @@ namespace Palavyr.API.Controllers.Accounts
         private DashContext dashContext;
         private ConvoContext convoContext;
         private AccountsContext accountsContext;
-        private IStripeCustomerService stripeCustomerService;
+        private StripeCustomerService stripeCustomerService;
 
         public DeleteAccountController(
             ILogger<DeleteAccountController> logger,
             AccountsContext accountsContext,
             ConvoContext convoContext,
             DashContext dashContext,
-            IStripeCustomerService stripeCustomerService
+            StripeCustomerService stripeCustomerService
         )
         {
             this.logger = logger;

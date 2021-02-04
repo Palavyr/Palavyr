@@ -21,14 +21,14 @@ namespace Palavyr.API.Controllers.Accounts.Develop
         private AccountsContext accountsContext;
         private ConvoContext convoContext;
         private DashContext dashContext;
-        private IStripeCustomerService stripeCustomerService;
+        private StripeCustomerService stripeCustomerService;
 
         public DefaultDataController(
             ILogger<DefaultDataController> logger,
             AccountsContext accountsContext,
             ConvoContext convoContext,
             DashContext dashContext,
-            IStripeCustomerService stripeCustomerService
+            StripeCustomerService stripeCustomerService
         )
         {
             this.logger = logger;

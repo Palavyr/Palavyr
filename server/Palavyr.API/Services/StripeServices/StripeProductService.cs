@@ -5,13 +5,7 @@ using Stripe;
 
 namespace Palavyr.API.Services.StripeServices
 {
-    public interface IStripeProductService
-    {
-        Task<Product> GetProduct(string productId);
-        string GetPlanType(Product product);
-    }
-
-    public class StripeProductService : IStripeProductService
+    public class StripeProductService
     {
         private StripeClient stripeClient;
         private ILogger<StripeProductService> logger;

@@ -8,28 +8,20 @@ using Stripe;
 
 namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
 {
-    public interface IProcessStripeInvoicePaidHandler
-    {
-        Task ProcessInvoicePaid(Invoice invoice);
-    }
-
-    public class ProcessStripeInvoicePaidHandler : IProcessStripeInvoicePaidHandler
+    public class ProcessStripeInvoicePaidHandler
     {
         private readonly ILogger<ProcessStripeInvoicePaidHandler> logger;
         private readonly AccountsContext accountsContext;
-        private readonly IStripeSubscriptionService stripeSubscriptionService;
         private readonly ISesEmail emailClient;
 
         public ProcessStripeInvoicePaidHandler(
             ILogger<ProcessStripeInvoicePaidHandler> processStripeInvoicePaidHandler,
             AccountsContext accountsContext,
-            IStripeSubscriptionService stripeSubscriptionService,
             ISesEmail emailClient
         )
         {
             this.logger = processStripeInvoicePaidHandler;
             this.accountsContext = accountsContext;
-            this.stripeSubscriptionService = stripeSubscriptionService;
             this.emailClient = emailClient;
         }
 

@@ -22,16 +22,16 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         private AccountsContext accountsContext;
         private readonly IRequestEmailVerification requestEmailVerification;
         private IAmazonSimpleEmailService sesClient;
-        private IStripeCustomerService stripeCustomerService;
+        private StripeCustomerService stripeCustomerService;
 
         private const string Pending = "Pending";
         private const string Success = "Success";
         private const string Failed = "Failed";
         public ModifyDefaultEmailAddressController(
             AccountsContext accountsContext, 
+            StripeCustomerService stripeCustomerService,
             ILogger<ModifyDefaultEmailAddressController> logger,
             IAmazonSimpleEmailService sesClient,
-            IStripeCustomerService stripeCustomerService,
             IRequestEmailVerification requestEmailVerification
         )
         {

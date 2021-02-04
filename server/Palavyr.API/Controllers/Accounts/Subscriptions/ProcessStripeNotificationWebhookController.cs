@@ -1,9 +1,7 @@
 using System.Security.Authentication;
 using System.Threading.Tasks;
-using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Services.StripeServices;
 using Stripe;
@@ -15,24 +13,16 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
     public class ProcessStripeNotificationWebhookController : ControllerBase
     {
         private ILogger<ProcessStripeNotificationWebhookController> logger;
-        private readonly IStripeClient stripeClient;
-        private IConfiguration configuration;
-        private AccountsContext accountsContext;
-        private IStripeWebhookAuthService stripeWebhookAuthService;
-        private IStripeEventWebhookService stripeEventWebhookService;
+        private StripeWebhookAuthService stripeWebhookAuthService;
+        private StripeEventWebhookService stripeEventWebhookService;
 
         public ProcessStripeNotificationWebhookController(
-            IConfiguration configuration,
             ILogger<ProcessStripeNotificationWebhookController> logger,
-            AccountsContext accountsContext,
-            IStripeWebhookAuthService stripeWebhookAuthService,
-            IStripeEventWebhookService stripeEventWebhookService
+            StripeWebhookAuthService stripeWebhookAuthService,
+            StripeEventWebhookService stripeEventWebhookService
         )
         {
             this.logger = logger;
-            this.configuration = configuration;
-            this.accountsContext = accountsContext;
-            this.stripeClient = new StripeClient(StripeConfiguration.ApiKey);
             this.stripeWebhookAuthService = stripeWebhookAuthService;
             this.stripeEventWebhookService = stripeEventWebhookService;
         }

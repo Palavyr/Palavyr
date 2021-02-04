@@ -4,15 +4,7 @@ using Stripe;
 
 namespace Palavyr.API.Services.StripeServices
 {
-    public interface IStripeCustomerService
-    {
-        Task<Customer> CreateNewStripeCustomer(string emailAddress);
-        Task DeleteStripeTestCustomers();
-        Task DeleteSingleLiveStripeCustomer(string stripeCustomerId);
-        Task<Customer> UpdateStripeCustomerEmail(string emailAddress, string customerId);
-    }
-
-    public class StripeCustomerService : IStripeCustomerService
+    public class StripeCustomerService
     {
         private bool IsTest => StripeConfiguration.ApiKey.Contains("test");
         

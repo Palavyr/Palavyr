@@ -39,6 +39,7 @@ export const RESET_PASSWORD_VERIFY = `/reset-my-password`
 export const RESET_PASSWORD_LINK = `${webUrl}${RESET_PASSWORD_VERIFY}?id=`;
 export const RESET_PASSWORD_FORM = "/reset-password";
 export const RESET_PASSWORD_SUCCESS = "/reset-success";
+export const PURCHASE_ROUTE = "/dashboard/subscribe/purchase";
 
 
 // Dashboard style

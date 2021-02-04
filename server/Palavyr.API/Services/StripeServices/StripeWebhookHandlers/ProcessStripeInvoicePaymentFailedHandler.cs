@@ -17,19 +17,16 @@ namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
     {
         private readonly ILogger<ProcessStripeInvoicePaidHandler> logger;
         private readonly AccountsContext accountsContext;
-        private readonly IStripeSubscriptionService stripeSubscriptionService;
         private readonly ISesEmail emailClient;
 
         public ProcessStripeInvoicePaymentFailedHandler(
             ILogger<ProcessStripeInvoicePaidHandler> processStripeInvoicePaidHandler,
             AccountsContext accountsContext,
-            IStripeSubscriptionService stripeSubscriptionService,
             ISesEmail emailClient
         )
         {
             this.logger = processStripeInvoicePaidHandler;
             this.accountsContext = accountsContext;
-            this.stripeSubscriptionService = stripeSubscriptionService;
             this.emailClient = emailClient;
         }
 

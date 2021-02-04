@@ -5,42 +5,53 @@ using Stripe;
 
 namespace Palavyr.API.Services.StripeServices
 {
-    public interface IStripeEventWebhookService
-    {
-        Task ProcessStripeEvent(Event stripeEvent);
-    }
 
-    public class StripeEventWebhookService : IStripeEventWebhookService
+    public class StripeEventWebhookService
     {
         private ILogger<StripeEventWebhookService> logger;
+        private readonly ProcessStripeSubscriptionUpdatedHandler processStripeSubscriptionUpdatedHandler;
         private IProcessStripeCheckoutSessionCompletedHandler processCheckoutSessionCompletedHandler;
         private readonly ProcessStripeInvoicePaidHandler processStripeInvoicePaidHandler;
         private readonly ProcessStripeInvoicePaymentFailedHandler processStripeInvoicePaymentFailedHandler;
         private readonly ProcessStripeSubscriptionDeletedHandler processStripeSubscriptionDeletedHandler;
-
+        private readonly ProcessStripeSubscriptionCreatedHandler processStripeSubscriptionCreatedHandler;
 
         public StripeEventWebhookService(
             ILogger<StripeEventWebhookService> logger,
+            ProcessStripeSubscriptionUpdatedHandler processStripeSubscriptionUpdatedHandler,
             ProcessStripeCheckoutSessionCompletedHandler processCheckoutSessionCompletedHandler,
             ProcessStripeInvoicePaidHandler processStripeInvoicePaidHandler,
             ProcessStripeInvoicePaymentFailedHandler processStripeInvoicePaymentFailedHandler,
-            ProcessStripeSubscriptionDeletedHandler processStripeSubscriptionDeletedHandler
+            ProcessStripeSubscriptionDeletedHandler processStripeSubscriptionDeletedHandler,
+            ProcessStripeSubscriptionCreatedHandler processStripeSubscriptionCreatedHandler
         )
         {
             this.logger = logger;
+            this.processStripeSubscriptionUpdatedHandler = processStripeSubscriptionUpdatedHandler;
             this.processCheckoutSessionCompletedHandler = processCheckoutSessionCompletedHandler;
             this.processStripeInvoicePaidHandler = processStripeInvoicePaidHandler;
             this.processStripeInvoicePaymentFailedHandler = processStripeInvoicePaymentFailedHandler;
             this.processStripeSubscriptionDeletedHandler = processStripeSubscriptionDeletedHandler;
+            this.processStripeSubscriptionCreatedHandler = processStripeSubscriptionCreatedHandler;
         }
 
         public async Task ProcessStripeEvent(Event stripeEvent)
         {
             switch (stripeEvent.Type)
             {
+                case Events.CustomerSubscriptionUpdated:
+                    var subscriptionUpdated = (Subscription) stripeEvent.Data.Object;
+                    await processStripeSubscriptionUpdatedHandler.ProcessSubscriptionUpdated(subscriptionUpdated);
+                    break;
+                
+                case Events.CustomerSubscriptionCreated:
+                    var subscriptionCreated = (Subscription) stripeEvent.Data.Object;
+                    await processStripeSubscriptionCreatedHandler.ProcessSubscriptionCreated(subscriptionCreated);
+                    break; 
+                
                 case Events.CustomerSubscriptionDeleted:
-                    var subscription = (Subscription) stripeEvent.Data.Object;
-                    await processStripeSubscriptionDeletedHandler.ProcessSubscriptionDeleted(subscription);
+                    var subscriptionDeleted = (Subscription) stripeEvent.Data.Object;
+                    await processStripeSubscriptionDeletedHandler.ProcessSubscriptionDeleted(subscriptionDeleted);
                     break;
 
                 case Events.CheckoutSessionCompleted: //"checkout.session.completed":
@@ -48,7 +59,7 @@ namespace Palavyr.API.Services.StripeServices
                     await processCheckoutSessionCompletedHandler.ProcessCheckoutSessionCompleted(session);
                     break;
 
-                case Events.InvoicePaid: //"invoice.paid":
+                case Events.InvoicePaid:
                     var invoicePaid = (Invoice) stripeEvent.Data.Object;
                     await processStripeInvoicePaidHandler.ProcessInvoicePaid(invoicePaid);
 
@@ -89,7 +100,7 @@ namespace Palavyr.API.Services.StripeServices
 
                 case Events.InvoiceCreated:
                     var invoice = (Invoice) stripeEvent.Data.Object;
-                    // Sipmly send an email to notify customer there is a new invoice for subscription.
+                    // Simply send an email to notify customer there is a new invoice for subscription.
                     // Can notify the customer that they have a new invoice.
                     break;
 

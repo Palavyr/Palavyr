@@ -9,19 +9,19 @@ namespace Palavyr.API.Controllers.Accounts
 {
     [Route("api")]
     [ApiController]
-    public class EnsureDBIsValidController : ControllerBase
+    public class EnsureDbIsValidController : ControllerBase
     {
         
         private ILogger<DeleteAccountController> logger;
         private DashContext dashContext;
         private AccountsContext accountsContext;
-        private IStripeCustomerService stripeCustomerService;
+        private StripeCustomerService stripeCustomerService;
 
-        public EnsureDBIsValidController(
+        public EnsureDbIsValidController(
             ILogger<DeleteAccountController> logger,
             AccountsContext accountsContext,
             DashContext dashContext,
-            IStripeCustomerService stripeCustomerService
+            StripeCustomerService stripeCustomerService
 
             )
         {

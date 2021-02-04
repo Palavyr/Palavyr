@@ -7,15 +7,7 @@ using Stripe.Checkout;
 
 namespace Palavyr.API.Services.StripeServices
 {
-    public interface IStripeSubscriptionService
-    {
-        Task<Subscription> GetSubscription(Session session);
-        Price GetPriceDetails(Subscription subscription);
-        string GetProductId(Price priceDetails);
-        string GetPaymentInterval(Price priceDetails);
-    }
-
-    public class StripeSubscriptionService : IStripeSubscriptionService
+    public class StripeSubscriptionService
     {
         private StripeClient stripeClient;
         private ILogger<StripeSubscriptionService> logger;

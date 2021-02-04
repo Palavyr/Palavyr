@@ -29,6 +29,7 @@ namespace Palavyr.API.Registration.Autofac
             builder.RegisterType<StripeSubscriptionService>().AsSelf();
             builder.RegisterType<StripeProductService>().AsSelf();
 
+            builder.RegisterType<ProcessStripeSubscriptionUpdatedHandler>().AsSelf();
             builder.RegisterType<ProcessStripeSubscriptionDeletedHandler>().AsSelf();
             builder.RegisterType<ProcessStripeCheckoutSessionCompletedHandler>().AsSelf();
             builder.RegisterType<ProcessStripeInvoicePaidHandler>().AsSelf();

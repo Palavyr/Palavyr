@@ -178,11 +178,11 @@ namespace Palavyr.API.Services.AccountServices
             var confirmationToken = Guid.NewGuid().ToString().Split("-")[0];
             await accountsContext.EmailVerifications.AddAsync(EmailVerification.CreateNew(confirmationToken, emailAddress, accountId));
             
-            logger.LogDebug($"Sending emails from {EmailConstants.PalavyrMain}");
+            logger.LogDebug($"Sending emails from {EmailConstants.PalavyrMainEmailAddress}");
             var htmlBody = EmailConfirmationHTML.GetConfirmationEmailBody(emailAddress, confirmationToken);
             var textBody = EmailConfirmationHTML.GetConfirmationEmailBodyText(emailAddress, confirmationToken);
 
-            var sendEmailOk = await emailClient.SendEmail(EmailConstants.PalavyrMain, emailAddress, EmailConstants.PalavyrSubject, htmlBody, textBody);
+            var sendEmailOk = await emailClient.SendEmail(EmailConstants.PalavyrMainEmailAddress, emailAddress, EmailConstants.PalavyrSubject, htmlBody, textBody);
             return sendEmailOk;
         }
     }

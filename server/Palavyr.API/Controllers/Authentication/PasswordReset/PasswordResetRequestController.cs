@@ -56,7 +56,7 @@ namespace Palavyr.API.Controllers.Authentication.PasswordReset
             var subject = "Reset your Palavyr Password";
             var htmlBody = $"<h2>Click on the following link to reset your password:</h2><p>{link}</p>";
             var textBody = $"Click on the following link to reset your password: {link}";
-            var ok = await client.SendEmail(EmailConstants.PalavyrMain, request.EmailAddress, subject, htmlBody, textBody);
+            var ok = await client.SendEmail(EmailConstants.PalavyrMainEmailAddress, request.EmailAddress, subject, htmlBody, textBody);
             if (!ok)
             {
                 return new ResetEmailResponse("That doesn't seem to be a real email address. Maybe check your spelling?", false);

@@ -33,7 +33,9 @@ namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
                 throw new Exception("ERROR TODO: EMAIL paul.e.gradie@gmail.com to manually set status");
             }
 
+            account.CurrentPeriodEnd = subscription.CurrentPeriodEnd;
             account.PlanType = UserAccount.PlanTypeEnum.Free;
+
             await accountsContext.SaveChangesAsync();
         }
     }

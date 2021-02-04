@@ -10,7 +10,8 @@ import { ApiClient } from "@api-client/Client";
 import { useCallback, useEffect, useState } from "react";
 import { SubscribeStepper } from "../purchse/SubscribeStepper";
 import { FreeProductId, PremiumProductId, ProProductId } from "./ProductIds";
-import { PurchaseTypes, ProductOptions } from "@Palavyr-Types";
+import { PurchaseTypes, ProductOptions, ProductOption } from "@Palavyr-Types";
+import { PURCHASE_ROUTE } from "@constants";
 
 const useStyles = makeStyles((theme) => ({
     root: {},
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
             borderRadius: "20px",
             border: "4px solid #AAFF97",
             marginTop: "1rem",
-            cursor: "pointer"
+            cursor: "pointer",
         },
     },
     disabledCard: {
@@ -41,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Subscribe = () => {
-
     const [currentPlan, setCurrentPlan] = useState<string | null>(null);
 
     const cls = useStyles();
@@ -51,12 +51,12 @@ export const Subscribe = () => {
     const history = useHistory();
 
     const goToPurchase = (productType: PurchaseTypes, productId: string | null) => {
-        let purchaseRoute = "/dashboard/subscribe/purchase";
-        if (productType !== null){
-            purchaseRoute += `?productType=${productType}`
+        let purchaseRoute = PURCHASE_ROUTE;
+        if (productType !== null) {
+            purchaseRoute += `?productType=${productType}`;
         }
-        if (productId !== null){
-            purchaseRoute += `&productId=${productId}`
+        if (productId !== null) {
+            purchaseRoute += `&productId=${productId}`;
         }
         history.push(purchaseRoute);
     };
@@ -85,7 +85,7 @@ export const Subscribe = () => {
         },
     ];
     const getCurrentPlan = useCallback(async () => {
-        var {data: plan} = await client.Settings.Account.getCurrentPlan();
+        var { data: plan } = await client.Settings.Account.getCurrentPlan();
         setCurrentPlan(plan);
     }, []);
 
@@ -110,27 +110,25 @@ export const Subscribe = () => {
 
                         <Grid item xs={12}>
                             <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-                                {OrderedProductOptions.map((product, key) => {
+                                {OrderedProductOptions.map((product: ProductOption, key: number) => {
                                     return (
-                                        <>
-                                            <Paper
-                                                key={key}
-                                                onClick={() => (product.currentplan ? null : goToPurchase(product.purchaseType, product.productId))}
-                                                data-aos="fade-down"
-                                                data-aos-delay="100"
-                                                className={classNames(product.currentplan ? cls.disabledCard : cls.card, containerCls.paperCommon, product.productClasses)}
-                                                variant="outlined"
-                                            >
-                                                {product.currentplan ? (
-                                                    <Card style={{ position: "relative", backgroundColor: "#567C4D", marginTop: "1.5rem", color: "black", zIndex: 2 }}>
-                                                        <Typography variant="h4" align="center">
-                                                            Your current plan
-                                                        </Typography>
-                                                    </Card>
-                                                ) : null}
-                                                {product.card}
-                                            </Paper>
-                                        </>
+                                        <Paper
+                                            key={product.productId + "-" + key.toString()}
+                                            onClick={() => (product.currentplan ? null : goToPurchase(product.purchaseType, product.productId))}
+                                            data-aos="fade-down"
+                                            data-aos-delay="100"
+                                            className={classNames(product.currentplan ? cls.disabledCard : cls.card, containerCls.paperCommon, product.productClasses)}
+                                            variant="outlined"
+                                        >
+                                            {product.currentplan ? (
+                                                <Card key={product.currentplan + "-" + key.toString()} style={{ position: "relative", backgroundColor: "#567C4D", marginTop: "1.5rem", color: "black", zIndex: 2 }}>
+                                                    <Typography variant="h4" align="center">
+                                                        Your current plan
+                                                    </Typography>
+                                                </Card>
+                                            ) : null}
+                                            {product.card}
+                                        </Paper>
                                     );
                                 })}
                             </div>

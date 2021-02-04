@@ -17,14 +17,14 @@ namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
     {
         private AccountsContext accountsContext;
         private ILogger<ProcessStripeCheckoutSessionCompletedHandler> logger;
-        private IStripeSubscriptionService stripeSubscriptionService;
-        private IStripeProductService stripeProductService;
+        private StripeSubscriptionService stripeSubscriptionService;
+        private StripeProductService stripeProductService;
 
         public ProcessStripeCheckoutSessionCompletedHandler(
             AccountsContext accountsContext,
             ILogger<ProcessStripeCheckoutSessionCompletedHandler> logger,
-            IStripeSubscriptionService stripeSubscriptionService,
-            IStripeProductService stripeProductService
+            StripeSubscriptionService stripeSubscriptionService,
+            StripeProductService stripeProductService
         )
         {
             this.accountsContext = accountsContext;
@@ -59,43 +59,15 @@ namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
             var planType = stripeProductService.GetPlanType(product);
 
             var planEnum = GetPlanEnum(planType);
-            var paymentIntervalEnum = GetPaymentIntervalEnum(paymentInterval);
+            var paymentIntervalEnum = paymentInterval.GetPaymentIntervalEnum();
 
-            var newPeriodEnd = GetNewPeriodEnd(paymentIntervalEnum);
+            var bufferedPeriodEnd = paymentIntervalEnum.AddEndTimeBuffer(subscription.CurrentPeriodEnd);
 
             account.PlanType = planEnum;
             account.HasUpgraded = true;
             account.PaymentInterval = paymentIntervalEnum;
-            account.CurrentPeriodEnd = newPeriodEnd;
+            account.CurrentPeriodEnd = bufferedPeriodEnd;
             await accountsContext.SaveChangesAsync();
-        }
-
-        private DateTime GetNewPeriodEnd(UserAccount.PaymentIntervalEnum paymentIntervalEnum)
-        {
-            var currentDate = DateTime.Today;
-            switch (paymentIntervalEnum)
-            {
-                case (UserAccount.PaymentIntervalEnum.Month):
-                    return currentDate.AddMonths(1);
-                case (UserAccount.PaymentIntervalEnum.Year):
-                    return currentDate.AddYears(1);
-                default:
-                    throw new Exception("Payment interval could not be determined");
-            }
-        }
-
-        private UserAccount.PaymentIntervalEnum GetPaymentIntervalEnum(string paymentInterval)
-        {
-            UserAccount.PaymentIntervalEnum paymentIntervalEnum;
-            switch (paymentInterval)
-            {
-                case (UserAccount.PaymentIntervals.Month):
-                    return UserAccount.PaymentIntervalEnum.Month;
-                case (UserAccount.PaymentIntervals.Year):
-                    return UserAccount.PaymentIntervalEnum.Year;
-                default:
-                    throw new Exception("Payment interval could not be determined");
-            }
         }
 
         private UserAccount.PlanTypeEnum GetPlanEnum(string planType)
