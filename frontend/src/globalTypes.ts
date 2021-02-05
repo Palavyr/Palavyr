@@ -390,6 +390,11 @@ export type FormStatusTypes =
 
 export type PlanType = "Free" | "Premium" | "Pro";
 
+export type PlanStatus = {
+    status: PlanType;
+    hasUpgraded: boolean;
+}
+
 export enum PurchaseTypes {
     Free = "Free",
     Premium = "Premium",
@@ -520,3 +525,9 @@ export type LocaleMapItem = {
     countryName: string;
 }
 export type LocalMap = LocaleMapItem[];
+
+export type ProductIds = {
+    freeProductId: string;
+    premiumProductId: string;
+    proProductId: string;
+}

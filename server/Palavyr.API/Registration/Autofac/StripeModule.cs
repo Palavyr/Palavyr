@@ -34,6 +34,7 @@ namespace Palavyr.API.Registration.Autofac
             builder.RegisterType<ProcessStripeCheckoutSessionCompletedHandler>().AsSelf();
             builder.RegisterType<ProcessStripeInvoicePaidHandler>().AsSelf();
             builder.RegisterType<ProcessStripeInvoicePaymentFailedHandler>().AsSelf();
+            builder.RegisterType<ProcessStripeSubscriptionCreatedHandler>().AsSelf();
         }
     }
 }

@@ -23,6 +23,7 @@ namespace Server.Domain.Configuration.Schemas
         public List<DynamicTableMeta> DynamicTableMetas { get; set; } = new List<DynamicTableMeta>();
         public string AreaSpecificEmail { get; set; }
         public bool EmailIsVerified { get; set; }
+        // public bool / disable pdf tables
         
         
         [DefaultValue("Thank you for reaching out!")]

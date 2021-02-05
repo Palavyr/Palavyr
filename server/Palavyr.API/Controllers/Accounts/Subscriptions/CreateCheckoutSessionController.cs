@@ -13,8 +13,7 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
     public class CreateCheckoutSessionRequest
     {
-        [JsonProperty("priceId")] 
-        public string PriceId { get; set; }
+        [JsonProperty("priceId")] public string PriceId { get; set; }
         public string SuccessUrl { get; set; }
         public string CancelUrl { get; set; }
     }
@@ -55,7 +54,8 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
         [HttpPost("checkout/create-checkout-session")]
         public async Task<IActionResult> CreateSession(
             [FromHeader] string accountId,
-            [FromBody] CreateCheckoutSessionRequest request)
+            [FromBody] CreateCheckoutSessionRequest request
+        )
         {
             var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
             logger.LogDebug($"Account: {account}");
@@ -63,7 +63,7 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
             {
                 throw new Exception("Account and Stripe customer Id must be set");
             }
-            
+
             var options = new SessionCreateOptions
             {
                 // See https://stripe.com/docs/api/checkout/sessions/create
@@ -73,7 +73,7 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
                 // is redirected to the success page.
                 SuccessUrl = request.SuccessUrl,
                 CancelUrl = request.CancelUrl,
-                
+
                 // we use the customer ID here so they can provide any eail they like.
                 // Any time we contact the customer about payments, we should use the stripe customer email. This is very important.
                 // Otherwise We will be creating a new customer ID with the same email over an over again. 

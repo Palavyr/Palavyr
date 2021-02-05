@@ -9,22 +9,21 @@ namespace Palavyr.API.Services.StripeServices
     {
         private StripeClient stripeClient;
         private ILogger<StripeProductService> logger;
-        private ProductService produceService;
-        private readonly string planType = "Plantype";
+        private ProductService productService;
 
         public StripeProductService(ILogger<StripeProductService> logger)
         {
             this.stripeClient = new StripeClient(StripeConfiguration.ApiKey);
-            this.produceService = new ProductService(stripeClient);
+            this.productService = new ProductService(stripeClient);
             this.logger = logger;
         }
 
         public async Task<Product> GetProduct(string productId)
         {
-            Product product;
+            Product stripeProduct;
             try
             {
-                product = await produceService.GetAsync(productId);
+                stripeProduct = await productService.GetAsync(productId);
             }
             catch (StripeException ex)
             {
@@ -32,17 +31,8 @@ namespace Palavyr.API.Services.StripeServices
                 throw new Exception("Exception on finding price details");
             }
 
-            return product;
+            return stripeProduct;
         }
 
-        public string GetPlanType(Product product)
-        {
-            var planFound = product.Metadata.TryGetValue(this.planType, out var planIdentifier);
-            if (!planFound)
-            {
-                throw new Exception("Plan Type not found in the subscription data!");
-            }
-            return planIdentifier;
-        }
     }
 }

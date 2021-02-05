@@ -1,7 +1,8 @@
 import React from "react";
-import { makeStyles, FormControl, InputLabel, Select, MenuItem, FormHelperText } from "@material-ui/core";
+import { makeStyles, FormControl, InputLabel, Select, MenuItem, FormHelperText, TextField } from "@material-ui/core";
 import { v4 as uuid } from "uuid";
 import { NodeOption, NodeTypeOptions } from "@Palavyr-Types";
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 
 const useStyles = makeStyles(() => ({
@@ -16,7 +17,8 @@ const useStyles = makeStyles(() => ({
         borderRadius: "0px",
         borderBottomLeftRadius: "3px",
         borderBottomRightRadius: "3px",
-        backgroundColor: "white"
+        backgroundColor: "white",
+        height: "50px"
     }
 }));
 
@@ -34,14 +36,21 @@ export const CustomNodeSelect = ({ onChange, option, nodeOptionList }: ISelectNo
         <div>
             <FormControl className={classes.formControl}>
                 <InputLabel id="simple-select-helper-label"></InputLabel>
-                <Select className={classes.selectbox} labelId="simple-select-helper-label" id="simple-select-helper" value={option} onChange={onChange}>
+                <Autocomplete
+                    className={classes.selectbox}
+                    options={nodeOptionList}
+                    groupBy={(nodeOption) => nodeOption.value}
+                    getOptionLabel={(option) => option.value}
+                    renderInput={(params) => <TextField {...params} label="Select a node type..." variant="outlined" />}
+                />
+                {/* <Select className={classes.selectbox} labelId="simple-select-helper-label" id="simple-select-helper" value={option} onChange={onChange}>
                     {
                         Object.keys(nodeOptionList).map(key => {
                             let nodeObj: NodeOption = nodeOptionList[key];
                             return <MenuItem key={uuid()} value={nodeObj.value}>{nodeObj.text}</MenuItem>
                         })
                     }
-                </Select>
+                </Select> */}
                 <FormHelperText className={classes.formControl}>Select</FormHelperText>
             </FormControl>
         </div>

@@ -105,7 +105,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
         const { data: numAllowedBySubscription } = await client.Settings.Subscriptions.getNumAreas();
         const { data: currentPlanType } = await client.Settings.Account.getCurrentPlan();
-        setPlanType(currentPlanType);
+        setPlanType(currentPlanType.status);
         setNumAreasAllowed(numAllowedBySubscription);
 
         const { data: areas } = await client.Area.GetAreas();

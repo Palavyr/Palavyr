@@ -229,3 +229,11 @@ On the IIS manager, you can select the website and enable ssl and the IP binding
 ### Making IIS always running for Hangfire. I followed these settings in IIS
 
 https://docs.hangfire.io/en/latest/deployment-to-production/making-aspnet-app-always-running.html
+
+
+## Products
+
+Products are stored in stripe. We currently keep the product ID in the frontend. Should put this in the server.
+METADATA: MUST BE SET
+
+Plantype: Premium/Pro

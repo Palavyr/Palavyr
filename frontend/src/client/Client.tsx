@@ -27,6 +27,9 @@ import {
     WidgetPreferences,
     VariableDetail,
     LocaleDefinition,
+    ProductOptions,
+    ProductIds,
+    PlanStatus,
 } from "@Palavyr-Types";
 import { TableData } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableTypes";
 import { TableNameMap } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableConfiguration";
@@ -68,6 +71,10 @@ export class ApiClient {
                 }),
         },
     };
+
+    public Products = {
+        getProducts: async (): Promise<AxiosResponse<ProductIds>> => this.client.get(`products/all`),
+    }
 
     public Area = {
         UpdateIsComplete: async (areaToggleStateUpdate: boolean, areaIdentifier: string): Promise<AxiosResponse<boolean>> => this.client.put(`areas/${areaIdentifier}/area-toggle`, {IsComplete: areaToggleStateUpdate}),
@@ -203,7 +210,7 @@ export class ApiClient {
             // TODO: Stronger typing for locale
             GetLocale: async (): Promise<AxiosResponse<LocaleDefinition>> => this.client.get(`account/settings/locale`),
             getCompanyLogo: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/logo`),
-            getCurrentPlan: async (): Promise<AxiosResponse<PlanType>> => this.client.get(`account/settings/current-plan`),
+            getCurrentPlan: async (): Promise<AxiosResponse<PlanStatus>> => this.client.get(`account/settings/current-plan`),
 
             DeleteAccount: async (): Promise<AxiosResponse> => this.client.post(`account/delete-account`),
         },

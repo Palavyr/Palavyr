@@ -1,13 +1,10 @@
 import React from "react";
 import { ApiClient } from "@api-client/Client";
-import { useEffect } from "react";
-import { useCallback } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { useState } from "react";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { Card, makeStyles } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     center: {
         display: "flex",
         textAlign: "center",
@@ -21,10 +18,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Success = () => {
-    const client = new ApiClient();
     const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
-    const successSessionId = searchParams.get("session_id") as string;
     const cls = useStyles();
     const history = useHistory();
 
@@ -39,7 +33,7 @@ export const Success = () => {
                     buttonText="Return to Dashboard"
                     disabled={false}
                     onClick={() => {
-                        history.push("/dashboard/subscribe");
+                        history.push("/dashboard");
                     }}
                 />
             </Card>

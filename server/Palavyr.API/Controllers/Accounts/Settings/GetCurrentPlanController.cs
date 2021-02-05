@@ -21,7 +21,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
         
         [HttpGet("account/settings/current-plan")]
-        public async Task<IActionResult> GetCurrentPlan([FromHeader] string accountId)
+        public async Task<PlanStatus> GetCurrentPlan([FromHeader] string accountId)
         {
             var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
             string planStatus;
@@ -40,7 +40,18 @@ namespace Palavyr.API.Controllers.Accounts.Settings
                     logger.LogDebug("Plan type was not able to be determined.");
                     throw new Exception("Plan Type not able to be determined.");
             }
-            return Ok(planStatus);
+
+            return new PlanStatus()
+            {
+                HasUpgraded = account.HasUpgraded,
+                Status = planStatus
+            };
+        }
+
+        public class PlanStatus
+        {
+            public string Status { get; set; }
+            public bool HasUpgraded { get; set; }
         }
     }
 }

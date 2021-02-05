@@ -9,8 +9,7 @@ import { useHistory } from "react-router-dom";
 import { ApiClient } from "@api-client/Client";
 import { useCallback, useEffect, useState } from "react";
 import { SubscribeStepper } from "../purchse/SubscribeStepper";
-import { FreeProductId, PremiumProductId, ProProductId } from "./ProductIds";
-import { PurchaseTypes, ProductOptions, ProductOption } from "@Palavyr-Types";
+import { PurchaseTypes, ProductOptions, ProductOption, ProductIds, PlanStatus } from "@Palavyr-Types";
 import { PURCHASE_ROUTE } from "@constants";
 
 const useStyles = makeStyles((theme) => ({
@@ -42,7 +41,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Subscribe = () => {
-    const [currentPlan, setCurrentPlan] = useState<string | null>(null);
+    const [currentPlan, setCurrentPlan] = useState<PlanStatus | null>(null);
+    const [productList, setProductList] = useState<ProductIds>();
 
     const cls = useStyles();
     const containerCls = pricingContainerStyles();
@@ -61,37 +61,45 @@ export const Subscribe = () => {
         history.push(purchaseRoute);
     };
 
-    const OrderedProductOptions: ProductOptions = [
+    const getCurrentPlan = useCallback(async () => {
+        const { data: plan } = await client.Settings.Account.getCurrentPlan();
+        setCurrentPlan(plan);
+    }, []);
+
+    const getProducts = useCallback(async () => {
+        const { data: products } = await client.Products.getProducts();
+        setProductList(products);
+    }, []);
+
+    useEffect(() => {
+        getProducts();
+        getCurrentPlan();
+    }, []);
+
+
+    const orderedProductOptions: ProductOptions = [
         {
             card: <FreeCard />,
             purchaseType: PurchaseTypes.Free,
-            productId: FreeProductId,
+            productId: productList?.freeProductId || null,
             productClasses: containerCls.paperFree,
-            currentplan: currentPlan === PurchaseTypes.Free,
+            currentplan: currentPlan?.status === PurchaseTypes.Free,
         },
         {
             card: <PremiumCard />,
             purchaseType: PurchaseTypes.Premium,
-            productId: PremiumProductId,
+            productId: productList?.premiumProductId || null,
             productClasses: containerCls.paperPremium,
-            currentplan: currentPlan === PurchaseTypes.Premium,
+            currentplan: currentPlan ?.status === PurchaseTypes.Premium,
         },
         {
             card: <ProCard />,
             purchaseType: PurchaseTypes.Pro,
-            productId: ProProductId,
+            productId: productList?.proProductId || null,
             productClasses: containerCls.paperPro,
-            currentplan: currentPlan === PurchaseTypes.Pro,
+            currentplan: currentPlan?.status === PurchaseTypes.Pro,
         },
     ];
-    const getCurrentPlan = useCallback(async () => {
-        var { data: plan } = await client.Settings.Account.getCurrentPlan();
-        setCurrentPlan(plan);
-    }, []);
-
-    useEffect(() => {
-        getCurrentPlan();
-    }, []);
 
     return (
         <>
@@ -110,14 +118,14 @@ export const Subscribe = () => {
 
                         <Grid item xs={12}>
                             <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-                                {OrderedProductOptions.map((product: ProductOption, key: number) => {
+                                {orderedProductOptions.map((product: ProductOption, key: number) => {
                                     return (
                                         <Paper
                                             key={product.productId + "-" + key.toString()}
-                                            onClick={() => (product.currentplan ? null : goToPurchase(product.purchaseType, product.productId))}
+                                            onClick={() => ((product.currentplan || currentPlan.hasUpgraded) ? null : goToPurchase(product.purchaseType, product.productId))}
                                             data-aos="fade-down"
                                             data-aos-delay="100"
-                                            className={classNames(product.currentplan ? cls.disabledCard : cls.card, containerCls.paperCommon, product.productClasses)}
+                                            className={classNames((product.currentplan || currentPlan.hasUpgraded) ? cls.disabledCard : cls.card, containerCls.paperCommon, product.productClasses)}
                                             variant="outlined"
                                         >
                                             {product.currentplan ? (

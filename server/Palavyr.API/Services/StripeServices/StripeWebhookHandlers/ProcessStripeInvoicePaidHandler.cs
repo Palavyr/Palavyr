@@ -4,6 +4,7 @@ using DashboardServer.Data;
 using EmailService.ResponseEmail;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Palavyr.Common.UIDUtils;
 using Stripe;
 
 namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
@@ -42,10 +43,10 @@ namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
                 await accountsContext.SaveChangesAsync();
                 var subject = "Thanks for you recent payment - From your friends at Palavyr.com";
                 var htmlBody = "<h3>Thank you for your recent purchase.";
-                var textbody = "Thank you for your recent purchase";
+                var textBody = "Thank you for your recent purchase";
                 //TODO: Design a nice email for this payment confirmation.
                 
-                var ok = await emailClient.SendEmail("palavyr@gmail.com", account.EmailAddress, subject, htmlBody, textbody);
+                var ok = await emailClient.SendEmail(EmailConstants.PalavyrMainEmailAddress, account.EmailAddress, subject, htmlBody, textBody);
                 if (!ok)
                 {
                     throw new Exception($"This email should be verified: {account.EmailAddress}");

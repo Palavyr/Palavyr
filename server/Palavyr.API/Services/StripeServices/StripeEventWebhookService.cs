@@ -54,7 +54,7 @@ namespace Palavyr.API.Services.StripeServices
                     await processStripeSubscriptionDeletedHandler.ProcessSubscriptionDeleted(subscriptionDeleted);
                     break;
 
-                case Events.CheckoutSessionCompleted: //"checkout.session.completed":
+                case Events.CheckoutSessionCompleted:
                     var session = (Stripe.Checkout.Session) stripeEvent.Data.Object;
                     await processCheckoutSessionCompletedHandler.ProcessCheckoutSessionCompleted(session);
                     break;

@@ -53,34 +53,16 @@ namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
             var subscription = await stripeSubscriptionService.GetSubscription(session);
             var priceDetails = stripeSubscriptionService.GetPriceDetails(subscription);
             var productId = stripeSubscriptionService.GetProductId(priceDetails);
+            var planTypeEnum = ProductRegistry.GetPlanTypeEnum(productId);
             var paymentInterval = stripeSubscriptionService.GetPaymentInterval(priceDetails);
-
-            var product = await stripeProductService.GetProduct(productId);
-            var planType = stripeProductService.GetPlanType(product);
-
-            var planEnum = GetPlanEnum(planType);
             var paymentIntervalEnum = paymentInterval.GetPaymentIntervalEnum();
-
             var bufferedPeriodEnd = paymentIntervalEnum.AddEndTimeBuffer(subscription.CurrentPeriodEnd);
 
-            account.PlanType = planEnum;
+            account.PlanType = planTypeEnum;
             account.HasUpgraded = true;
-            account.PaymentInterval = paymentIntervalEnum;
             account.CurrentPeriodEnd = bufferedPeriodEnd;
             await accountsContext.SaveChangesAsync();
         }
-
-        private UserAccount.PlanTypeEnum GetPlanEnum(string planType)
-        {
-            switch (planType)
-            {
-                case (UserAccount.PlanTypes.Premium):
-                    return UserAccount.PlanTypeEnum.Premium;
-                case (UserAccount.PlanTypes.Pro):
-                    return UserAccount.PlanTypeEnum.Pro;
-                default:
-                    return UserAccount.PlanTypeEnum.Free;
-            }
-        }
+        
     }
 }
