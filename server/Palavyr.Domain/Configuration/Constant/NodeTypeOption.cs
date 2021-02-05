@@ -45,6 +45,11 @@ namespace Server.Domain.Configuration.Constant
          */
         public bool IsDynamicType { get; set; }
 
+        /*
+         * The key by which we group nodes in the selector
+         */
+        public string GroupName { get; set; }
+
         public virtual string StringName => null;
 
         public static NodeTypeOption Create(
