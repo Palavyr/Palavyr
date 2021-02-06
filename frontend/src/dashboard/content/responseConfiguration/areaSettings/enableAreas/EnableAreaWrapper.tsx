@@ -2,7 +2,7 @@ import { ApiClient } from "@api-client/Client";
 import { makeStyles, TableCell, TableRow } from "@material-ui/core";
 import { AreasEnabled } from "@Palavyr-Types";
 import React, { useEffect, useState } from "react";
-import { AreaToggle } from "./AreaToggle";
+import { OsTypeToggle } from "./OsTypeToggle";
 
 const useStyles = makeStyles((theme) => ({
     center: {
@@ -33,7 +33,7 @@ export const EnableAreaWrapper = ({ areasEnabled }: IToggleWrapper) => {
         <TableRow className={cls.center}>
             <TableCell className={cls.center}>{areasEnabled.areaName}</TableCell>
             <TableCell className={cls.center}>
-                <AreaToggle isComplete={isCompleteState === true} onChange={onToggleChange} />
+                <OsTypeToggle controlledState={isCompleteState === true} onChange={onToggleChange} enabledLabel="Area Enabled" disabledLabel="Area Disabled" />
             </TableCell>
         </TableRow>
     );

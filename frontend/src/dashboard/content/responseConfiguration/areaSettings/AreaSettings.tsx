@@ -8,7 +8,7 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
-import { AreaToggle } from "./enableAreas/AreaToggle";
+import { OsTypeToggle } from "./enableAreas/OsTypeToggle";
 
 const useStyles = makeStyles(() => ({
     titleText: {
@@ -31,14 +31,14 @@ export const AreaSettings = () => {
 
     const [loaded, setLoaded] = useState<boolean>(false);
     const [alertState, setAlertState] = useState<boolean>(false);
-    const [settings, setSettings] = useState<Settings>({
+    const [settings, setSettings] = useState<Partial<Settings>>({
         emailAddress: "",
         isVerified: false,
         awaitingVerification: false,
         areaName: "",
         areaTitle: "",
         subject: "",
-        isComplete: false
+        isComplete: false,
     });
     const [alertDetails, setAlertDetails] = useState<AlertDetails>({ title: "", message: "" });
     const [isCompleteState, setIsCompleteState] = useState<boolean | null>(null);
@@ -55,9 +55,10 @@ export const AreaSettings = () => {
             areaName: areaData.areaName,
             areaTitle: areaData.areaDisplayTitle,
             subject: areaData.subject,
-            isComplete: areaData.isComplete
+            isComplete: areaData.isComplete,
         });
         setIsCompleteState(areaData.isComplete);
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
 
@@ -119,15 +120,16 @@ export const AreaSettings = () => {
         return severityLevel;
     };
 
-    const onToggleChange = async () => {
-        const {data: updatedIsComplete } = await client.Area.UpdateIsComplete(!isCompleteState, areaIdentifier)
-        setIsCompleteState(updatedIsComplete)
-    }
+    const onAreaEnabledToggleChange = async () => {
+        const { data: updatedIsComplete } = await client.Area.UpdateIsComplete(!isCompleteState, areaIdentifier);
+        setIsCompleteState(updatedIsComplete);
+    };
 
     return loaded ? (
         <>
             <AreaConfigurationHeader title="Area Settings" subtitle={`Modify settings that are specific to this area (${settings.areaName}).`} />
-            {isCompleteState !== null && <AreaToggle isComplete={isCompleteState} onChange={onToggleChange}/>}
+            {isCompleteState !== null && <OsTypeToggle controlledState={isCompleteState} onChange={onAreaEnabledToggleChange} enabledLabel="Area Enabled" disabledLabel="Area Disabled" />}
+
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Alert className={classNames(classes.alert, classes.alertTitle)} variant="filled" severity="info">
@@ -224,7 +226,6 @@ export const AreaSettings = () => {
                         clearVal={false}
                     />
                 </Grid>
-
             </Grid>
             <Divider />
             <br></br>

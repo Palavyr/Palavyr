@@ -46,7 +46,6 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, nodeLi
             const childIds = createNewChildIDs(numChildren);
             nodeData.valueOptions = valueOptions.join(ValueOptionDelimiter);
             await addNodes(nodeData, nodeList, childIds, optionPaths, valueOptions, setNodes); // create new nodes and update the Database
-
         } else {
             await client.Conversations.ModifyConversationNode(nodeData.nodeId, nodeData.areaIdentifier, nodeData);
             const newNodeList = updateNodeList(nodeList, nodeData);
@@ -73,7 +72,6 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, nodeLi
                 />
                 {node.isMultiOptionType && (
                     <>
-                        <hr></hr>
                         <MultiChoiceOptions options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} />
                     </>
                 )}

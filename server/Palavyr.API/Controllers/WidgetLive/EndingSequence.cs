@@ -1,67 +1,87 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Palavyr.API.Utils;
+using Palavyr.Common.UIDUtils;
 using Server.Domain.Configuration.Constant;
 using Server.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
     /// <summary>
-    /// Temp class to hold the standard ending sequence nodes which are attached automatically when the widget fetches
+    /// Class to hold the response email
     /// </summary>
     public static class EndingSequence
     {
-        public static List<ConversationNode> AttachEndingSequenceToNodeList(List<ConversationNode> nodeList,
-            string areaId, string accountId)
+        public static readonly string EmailSuccessfulNodeId = "EmailSuccessfulNodeId";
+        public static readonly string EmailFailedNodeId = "EmailFailedNodeId";
+
+        public static readonly string FallbackEmailSuccessfulNodeId = "FallbackEmailSuccessfulNodeId";
+        public static readonly string FallbackEmailFailedNodeId = "FallbackEmailFailedNodeId";
+
+        public static List<ConversationNode> AttachEndingSequenceToNodeList(List<ConversationNode> nodeList, string areaId, string accountId)
         {
-            // TODO: replace later with user customized ending sequence nodes;
-            var name = ConversationNode.CreateNew(
-                DefaultNodeTypeOptions.Name.StringName,
-                DefaultNodeTypeOptions.Name.StringName,
-                "Could you please provide your name?",
+            var thanksId = GuidUtils.CreateNewId();
+            var mayWeSendAnEmailId = GuidUtils.CreateNewId();
+            var sendEmailId = GuidUtils.CreateNewId();
+            var dontSendEmailRestartId = GuidUtils.CreateNewId();
+            var retrySendEmailSecondAttemptId = GuidUtils.CreateNewId();
+            var fallbackRetrySendEmailSecondAttemptId = GuidUtils.CreateNewId();
+            var sendTooComplicatedEmailId = GuidUtils.CreateNewId();
+            var mayWeSendAnEmailTooComplicatedId = GuidUtils.CreateNewId();
+
+
+            var thanksVeryMuch = ConversationNode.CreateNew(
+                thanksId,
+                DefaultNodeTypeOptions.ProvideInfo.StringName,
+                "Thanks very much for provided information to us.",
                 areaId,
-                DefaultNodeTypeOptions.Phone.StringName,
+                nodeChildrenString: TreeUtils.CreateNodeChildrenString(mayWeSendAnEmailId),
                 "",
                 "",
                 accountId,
                 false,
-                true,
+                false,
                 false,
                 false
             );
-            var phone = ConversationNode.CreateNew(
-                DefaultNodeTypeOptions.Phone.StringName,
-                DefaultNodeTypeOptions.Phone.StringName,
-                "Could you please provide your phone number? If you would prefer to keep your phone number private, leave this input blank.",
+
+            var mayWeSendAnEmail = ConversationNode.CreateNew(
+                mayWeSendAnEmailId,
+                DefaultNodeTypeOptions.YesNo.StringName,
+                "We'd like to send you an email with some information regarding your enquiry. Would that be okay?",
                 areaId,
-                DefaultNodeTypeOptions.Email.StringName,
+                nodeChildrenString: TreeUtils.CreateNodeChildrenString(sendEmailId, dontSendEmailRestartId), // TODO: Get the nodeIds from the yes and No
                 "",
                 "",
                 accountId,
                 false,
-                true,
-                false,
-                false
-            );
-            var email = ConversationNode.CreateNew(
-                DefaultNodeTypeOptions.Email.StringName,
-                DefaultNodeTypeOptions.Email.StringName,
-                "Please provide an email we can use to contact you.",
-                areaId,
-                DefaultNodeTypeOptions.SendEmail.StringName,
-                "",
-                "",
-                accountId,
                 false,
                 true,
-                false,
                 false
             );
-            var emailInfo = ConversationNode.CreateNew(
-                DefaultNodeTypeOptions.SendEmail.StringName,
+
+            var sendEmail = ConversationNode.CreateNew(
+                sendEmailId,
                 DefaultNodeTypeOptions.SendEmail.StringName,
                 "Wait just a moment while I send you a confirmation email with some information",
                 areaId,
-                DefaultNodeTypeOptions.Restart.StringName,
+                nodeChildrenString: "", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
+                DefaultNodeTypeOptions.YesNo.Yes,
                 "",
+                accountId,
+                false,
+                false,
+                false,
+                false
+            );
+
+            var restartAfterDontSendEmail = ConversationNode.CreateNew(
+                dontSendEmailRestartId,
+                DefaultNodeTypeOptions.Restart.StringName,
+                "Thanks for your time. If you'd like to start again, click the button below.",
+                areaId,
+                "",
+                DefaultNodeTypeOptions.YesNo.No,
                 "",
                 accountId,
                 false,
@@ -69,10 +89,26 @@ namespace Palavyr.API.Controllers.WidgetLive
                 false,
                 true
             );
+
+            var emailSendWasSuccessful = ConversationNode.CreateNew(
+                EmailSuccessfulNodeId,
+                DefaultNodeTypeOptions.ProvideInfo.StringName,
+                "We've sent through an email to the address you provided. Sometimes these emails are picked up as spam, so if you don't see it, be sure to check your spam folder.",
+                areaId,
+                DefaultNodeTypeOptions.Restart.StringName,
+                "",
+                "",
+                accountId,
+                false,
+                false,
+                false,
+                false
+            );
+
             var restart = ConversationNode.CreateNew(
                 DefaultNodeTypeOptions.Restart.StringName,
                 DefaultNodeTypeOptions.Restart.StringName,
-                "Thanks for your time. I'm going to restart this window now.",
+                "Thanks for your time. If you'd like to start again, click the button below.",
                 areaId,
                 "Terminate",
                 "",
@@ -83,17 +119,133 @@ namespace Palavyr.API.Controllers.WidgetLive
                 false,
                 true
             );
+            
+            var emailSendFailedFirstAttempt = ConversationNode.CreateNew(
+                EmailFailedNodeId,
+                "EmailSendFailed-FirstAttempt",
+                "Hmm, we were not able to send an email to the address provided. Could you check that is correct?",
+                areaId,
+                retrySendEmailSecondAttemptId,
+                "",
+                "",
+                accountId,
+                false,
+                false,
+                false,
+                false
+            );
+                       
+            var fallbackEmailSendFailedFirstAttempt = ConversationNode.CreateNew(
+                FallbackEmailFailedNodeId,
+                "EmailSendFailed-FirstAttempt",
+                "Hmm, we were not able to send an email to the address provided. Could you check that is correct?",
+                areaId,
+                fallbackRetrySendEmailSecondAttemptId,
+                "",
+                "",
+                accountId,
+                false,
+                false,
+                false,
+                false
+            );
 
+            var retrySendEmailSecondAttempt = ConversationNode.CreateNew(
+                retrySendEmailSecondAttemptId,
+                DefaultNodeTypeOptions.SendEmail.StringName,
+                "Wait just a moment while I try that again.",
+                areaId,
+                nodeChildrenString: "", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
+                "",
+                "",
+                accountId,
+                false,
+                false,
+                false,
+                false
+            );
+
+            var fallbackRetrySendEmailSecondAttempt = ConversationNode.CreateNew(
+                fallbackRetrySendEmailSecondAttemptId,
+                DefaultNodeTypeOptions.SendEmail.StringName,
+                "Wait just a moment while I try that again.",
+                areaId,
+                nodeChildrenString: "", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
+                "",
+                "",
+                accountId,
+                false,
+                false,
+                false,
+                false
+            );
+
+            var mayWeSendAnInformationalEmail_ForTooComplicated = ConversationNode.CreateNew(
+                mayWeSendAnEmailTooComplicatedId,
+                DefaultNodeTypeOptions.YesNo.StringName,
+                "We'd like to send you a followup email with some general information regarding your enquiry. Would that be okay?",
+                areaId,
+                nodeChildrenString: TreeUtils.CreateNodeChildrenString(sendTooComplicatedEmailId, dontSendEmailRestartId),
+                "",
+                "",
+                accountId,
+                false,
+                false,
+                true,
+                false
+            );
+            
+            var sendFallbackEmail = ConversationNode.CreateNew( // leads to sending an email to the 'too complicated controller'
+                sendTooComplicatedEmailId,
+                DefaultNodeTypeOptions.SendTooComplicatedEmail.StringName,
+                "Wait just a moment while I send an email.",
+                areaId,
+                nodeChildrenString: "", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
+                DefaultNodeTypeOptions.YesNo.Yes,
+                "",
+                accountId,
+                false,
+                false,
+                false,
+                false
+            );
+            
             foreach (var node in nodeList)
             {
-                if (node.NodeType == DefaultNodeTypeOptions.EndingSequence.StringName ||
-                    node.NodeType == DefaultNodeTypeOptions.TooComplicated.StringName)
+                if (node.IsTerminalType)
                 {
-                    node.NodeChildrenString = DefaultNodeTypeOptions.Name.StringName; // First in the ending sequence
+                    if (node.NodeType == DefaultNodeTypeOptions.TooComplicated.StringName)
+                    {
+                        node.NodeChildrenString = mayWeSendAnEmailTooComplicatedId;
+                        continue;
+                    }
+
+                    if (node.NodeType == DefaultNodeTypeOptions.SendResponse.StringName)
+                    {
+                        node.NodeChildrenString = thanksId; // we're deciding that the thanksId node will be the entry point in to the response ending sequence
+                        continue;
+                    }
+
+                    throw new Exception($"Our bad - Node type: {node.NodeType} is not handled (EndingSequence.cs)");
                 }
             }
 
-            nodeList.AddRange(new List<ConversationNode> {name, email, phone, emailInfo, restart});
+            nodeList.AddRange(
+                new List<ConversationNode>
+                {
+                    thanksVeryMuch,
+                    mayWeSendAnEmail,
+                    sendEmail,
+                    restartAfterDontSendEmail,
+                    emailSendWasSuccessful,
+                    restart,
+                    emailSendFailedFirstAttempt,
+                    retrySendEmailSecondAttempt,
+                    fallbackEmailSendFailedFirstAttempt, 
+                    fallbackRetrySendEmailSecondAttempt, 
+                    mayWeSendAnInformationalEmail_ForTooComplicated, 
+                    sendFallbackEmail
+                });
             return nodeList;
         }
     }

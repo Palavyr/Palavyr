@@ -47,7 +47,7 @@ namespace Palavyr.API.Controllers.WidgetLive
 
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
         [HttpPost("widget/area/{areaId}/email/send")]
-        public async Task<IActionResult> SendEmail(
+        public async Task<SendEmailResultResponse> SendEmail(
             [FromHeader] string accountId,
             [FromRoute] string areaId,
             [FromBody] EmailRequest emailRequest
@@ -100,7 +100,7 @@ namespace Palavyr.API.Controllers.WidgetLive
                     fromAddress, toAddress, subject, htmlBody, textBody,
                     attachmentFiles);
 
-            return Ok(ok);
+            return ok ? SendEmailResultResponse.Create(EndingSequence.EmailSuccessfulNodeId, ok) : SendEmailResultResponse.Create(EndingSequence.EmailFailedNodeId, ok);
         }
     }
 }

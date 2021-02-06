@@ -74,10 +74,12 @@ export class ApiClient {
 
     public Products = {
         getProducts: async (): Promise<AxiosResponse<ProductIds>> => this.client.get(`products/all`),
-    }
+    };
 
     public Area = {
-        UpdateIsComplete: async (areaToggleStateUpdate: boolean, areaIdentifier: string): Promise<AxiosResponse<boolean>> => this.client.put(`areas/${areaIdentifier}/area-toggle`, {IsComplete: areaToggleStateUpdate}),
+        UpdateIsComplete: async (areaToggleStateUpdate: boolean, areaIdentifier: string): Promise<AxiosResponse<boolean>> => this.client.put(`areas/${areaIdentifier}/area-toggle`, { IsComplete: areaToggleStateUpdate }),
+        UpdateUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, areaIdentifier: string): Promise<AxiosResponse<boolean>> =>
+            this.client.put(`areas/${areaIdentifier}/use-fallback-email-toggle`, { UseFallback: useAreaFallbackEmailUpdate }),
         GetAreas: async (): Promise<AxiosResponse<Areas>> => this.client.get("areas"),
         GetArea: async (areaIdentifier: string): Promise<AxiosResponse<AreaTable>> => this.client.get(`areas/${areaIdentifier}`),
         createArea: (areaName: string): Promise<AxiosResponse<AreaTable>> => this.client.post(`areas/create/`, { AreaName: areaName }), // get creates and gets new area
@@ -124,9 +126,11 @@ export class ApiClient {
         },
 
         Email: {
-            GetEmailTemplate: async (areaIdentifier: string): Promise<AxiosResponse<string>> => this.client.get(`email/${areaIdentifier}/emailtemplate`),
             GetVariableDetails: async (): Promise<AxiosResponse<VariableDetail[]>> => this.client.get(`email/variables`),
-            SaveEmailTemplate: async (areaIdentifier: string, content: string): Promise<AxiosResponse<string>> => this.client.put(`email/${areaIdentifier}/emailtemplate`, { emailtemplate: content }),
+            GetEmailTemplate: async (areaIdentifier: string): Promise<AxiosResponse<string>> => this.client.get(`email/${areaIdentifier}/emailtemplate`),
+            GetFallbackEmailTemplate: async (areaIdentifier: string): Promise<AxiosResponse<string>> => this.client.get(`email/${areaIdentifier}/fallback-email-template`),
+            SaveEmailTemplate: async (areaIdentifier: string, EmailTemplate: string): Promise<AxiosResponse<string>> => this.client.put(`email/${areaIdentifier}/emailtemplate`, { EmailTemplate }),
+            SaveFallbackEmailTemplate: async (areaIdentifier: string, EmailTemplate: string): Promise<AxiosResponse<string>> => this.client.put(`email/${areaIdentifier}/fallback-email-template`, { EmailTemplate }),
         },
 
         Attachments: {
@@ -225,13 +229,13 @@ export class ApiClient {
         },
         EmailVerification: {
             RequestEmailVerification: async (emailAddress: string, areaIdentifier: string): Promise<AxiosResponse<EmailVerificationResponse>> => this.client.post(`verification/email/${areaIdentifier}`, { EmailAddress: emailAddress }),
-            CheckEmailVerificationStatus: async (emailAddress: string): Promise<AxiosResponse<boolean>> => this.client.post(`verification/email/status`, { EmailAddress: emailAddress})
+            CheckEmailVerificationStatus: async (emailAddress: string): Promise<AxiosResponse<boolean>> => this.client.post(`verification/email/status`, { EmailAddress: emailAddress }),
         },
     };
 
     public Enquiries = {
         getEnquiries: async (): Promise<AxiosResponse<Enquiries>> => this.client.get(`enquiries`),
         updateEnquiry: async (conversationId: string): Promise<AxiosResponse<Enquiries>> => this.client.put(`enquiries/update/${conversationId}`),
-        getConversation: async (conversationId: string): Promise<AxiosResponse<CompletedConversation>> => this.client.get(`enquiries/review/${conversationId}`)
+        getConversation: async (conversationId: string): Promise<AxiosResponse<CompletedConversation>> => this.client.get(`enquiries/review/${conversationId}`),
     };
 }

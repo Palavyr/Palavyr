@@ -60,6 +60,11 @@ namespace Palavyr.API.Controllers.Areas
             area.EmailIsVerified = statusResponse.IsVerified();
             area.AwaitingVerification = statusResponse.IsPending();
 
+            if (area.UseAreaFallbackEmail == null)
+            {
+                area.UseAreaFallbackEmail = false;
+            }
+            
             await dashContext.SaveChangesAsync();
             return area;
         }

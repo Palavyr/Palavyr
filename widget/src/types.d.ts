@@ -74,3 +74,8 @@ export type PreCheckResult = {
     isReady: boolean;
     incompleteAreas: Array<AreaTable>;
   };
+
+  export type SendEmailResultResponse = {
+    nextNodeId: string;
+    result: boolean;
+  }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Internal;
+using Palavyr.API.Controllers.WidgetLive;
+using Palavyr.API.Utils;
 using Server.Domain.Configuration.Constant;
 using Server.Domain.Configuration.Schemas;
 
@@ -27,7 +29,7 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
                     node1Id,
                     "Do you love dogs?",
                     true,
-                    string.Join(Delimiters.NodeChildrenStringDelimiter, new[]{node2Id, node3Id}),
+                    TreeUtils.CreateNodeChildrenString(node2Id, node3Id),
                     DefaultNodeTypeOptions.YesNo.StringName,
                     accountId, 
                     areaIdentifier,
@@ -47,7 +49,7 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
                     node3Id,
                     "Do you love Cavvies?",
                     false,
-                    string.Join(Delimiters.NodeChildrenStringDelimiter, new[]{node4Id, node5Id}),
+                    TreeUtils.CreateNodeChildrenString(node4Id, node5Id),
                     DefaultNodeTypeOptions.YesNo.StringName,
                     accountId,
                     areaIdentifier,
@@ -71,7 +73,7 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
                     AreaIdentifier = areaIdentifier,
                     Text = "Which kind of cavvy do you prefer!",
                     IsRoot = false,
-                    NodeChildrenString = $"{node6Id}",
+                    NodeChildrenString = node6Id,
                     NodeType = $"SelectOneFlat-{dynamicTableId}",
                     OptionPath = DefaultNodeTypeOptions.YesNo.Yes,
                     ValueOptions = string.Join(Delimiters.PathOptionDelimiter, new []{"Ruby", "Black and Tan", "Blenheim"}),
@@ -79,18 +81,19 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
                     IsMultiOptionType = true,
                     IsTerminalType = false
                 },
-                DefaultNodeTypeOptions.CreateEndingSequence().MapNodeTypeOptionToConversationNode(
+                DefaultNodeTypeOptions.CreateSendResponse().MapNodeTypeOptionToConversationNode(
                     node6Id,
                     "Thank you so much!",
                     false,
                     "",
-                    DefaultNodeTypeOptions.EndingSequence.StringName,
+                    DefaultNodeTypeOptions.SendResponse.StringName,
                     accountId, 
                     areaIdentifier,
                     DefaultNodeTypeOptions.YesNo.Yes
                 )
             };
-            return conversationNodes;
+            var allConversationNodes = EndingSequence.AttachEndingSequenceToNodeList(conversationNodes, areaIdentifier, accountId);
+            return allConversationNodes;
         }
     }
 }

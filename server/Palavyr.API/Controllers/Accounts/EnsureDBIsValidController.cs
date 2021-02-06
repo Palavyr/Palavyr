@@ -37,7 +37,6 @@ namespace Palavyr.API.Controllers.Accounts
 
             var preferences = dashContext.WidgetPreferences.Single(row => row.AccountId == accountId);
             var account = accountsContext.Accounts.Single(row => row.AccountId == accountId);
-
             if (string.IsNullOrWhiteSpace(account.StripeCustomerId))
             {
                 var newCustomer = await stripeCustomerService.CreateNewStripeCustomer(account.EmailAddress);

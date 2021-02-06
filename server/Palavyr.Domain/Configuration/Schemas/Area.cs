@@ -23,9 +23,11 @@ namespace Server.Domain.Configuration.Schemas
         public List<DynamicTableMeta> DynamicTableMetas { get; set; } = new List<DynamicTableMeta>();
         public string AreaSpecificEmail { get; set; }
         public bool EmailIsVerified { get; set; }
-        // public bool / disable pdf tables
-        
-        
+
+        public bool UseAreaFallbackEmail { get; set; }
+        public string FallbackSubject { get; set; }
+        public string FallbackEmailTemplate { get; set; }
+
         [DefaultValue("Thank you for reaching out!")]
         public string Subject { get; set; }
 

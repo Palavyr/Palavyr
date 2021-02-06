@@ -106,6 +106,10 @@ export type AreaTable = {
     awaitingVerification: boolean;
     subject: string;
     isComplete: boolean;
+
+    useAreaFallbackEmail: boolean;
+    fallbackSubject: string;
+    fallbackEmailTemplate: string;
 };
 
 export type StaticTableMetas = Array<StaticTableMeta>;
@@ -366,6 +370,7 @@ export type NodeOption = {
     isMultiOptionType: boolean;
     isTerminalType: boolean;
     stringName: string | null;
+    groupName: string;
 };
 
 
@@ -502,6 +507,7 @@ export type Settings = {
     areaTitle: string;
     subject: string;
     isComplete: boolean;
+    useAreaFallbackEmail: boolean;
 };
 
 export type AreasEnabled = {

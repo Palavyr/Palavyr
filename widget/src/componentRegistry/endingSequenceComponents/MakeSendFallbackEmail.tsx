@@ -19,14 +19,12 @@ export const makeSendEmail = ({ node, nodeList, client, convoId, convoContext }:
     toggleInputDisabled(); // can manually toggle in each component when necessary
     const areaId = nodeList[0].areaIdentifier;
 
-    const sendEmail = async () => {
+    const sendFallbackEmail = async () => {
         const email = convoContext[ConvoContextProperties.EmailAddress];
         const name = convoContext[ConvoContextProperties.Name];
         const phone = convoContext[ConvoContextProperties.PhoneNumber];
-        const dynamicResponses = convoContext[ConvoContextProperties.DynamicResponses];
-        const keyvalues = convoContext[ConvoContextProperties.KeyValues];
 
-        const { data: response } = await client.Widget.Access.sendConfirmationEmail(areaId, email, dynamicResponses, keyvalues, convoId);
+        const { data: response } = await client.Widget.Access.sendFallbackEmail(areaId, email, convoId);
         if (response.result) {
             var completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
             await client.Widget.Access.postCompleteConversation(completeConvo);
@@ -46,7 +44,7 @@ export const makeSendEmail = ({ node, nodeList, client, convoId, convoContext }:
                             text="Grant permission to send email"
                             variant="contained"
                             onClick={async () => {
-                                const response = await sendEmail();
+                                const response = await sendFallbackEmail();
                                 const child = nodeList.filter((x: ConvoTableRow) => x.nodeId === response.nextNodeId)[0];
                                 responseAction(node, child, nodeList, client, convoId, null, convoContext);
                                 toggleInputDisabled();

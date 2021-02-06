@@ -1,9 +1,8 @@
 import React from "react";
 import { makeStyles, FormControl, InputLabel, Select, MenuItem, FormHelperText, TextField } from "@material-ui/core";
-import { v4 as uuid } from "uuid";
 import { NodeOption, NodeTypeOptions } from "@Palavyr-Types";
-import Autocomplete from '@material-ui/lab/Autocomplete';
-
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 
 const useStyles = makeStyles(() => ({
     formControl: {
@@ -11,47 +10,56 @@ const useStyles = makeStyles(() => ({
         width: "100%",
         textAlign: "center",
     },
+    autocomplete: {
+        marginTop:"1rem",
+        height: "50px",
+        borderRadius: "0px",
+        borderBottomLeftRadius: "3px",
+        borderBottomRightRadius: "3px",
+        border: "0px dashed green",
+
+    },
     selectbox: {
-        border: "1px solid gray",
-        borderBottom: "0px solid black",
+        color: "black",
+        textAlign: "center",
+        border: "0px solid yellow",
         borderRadius: "0px",
         borderBottomLeftRadius: "3px",
         borderBottomRightRadius: "3px",
         backgroundColor: "white",
-        height: "50px"
-    }
+    },
+
 }));
 
 export interface ISelectNodeType {
-    onChange: (event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>) => void;
-    option: string;
+    onChange: (event: any, nodeOption: NodeOption) => void;
     nodeOptionList: NodeTypeOptions;
+    label: string;
 }
 
 // TODO: merge this with the dynamic table select and create a common reusable component
-export const CustomNodeSelect = ({ onChange, option, nodeOptionList }: ISelectNodeType) => {
-    const classes = useStyles();
+export const CustomNodeSelect = ({ onChange, label, nodeOptionList }: ISelectNodeType) => {
+    const cls = useStyles();
+    const groupGetter = (val: NodeOption) => val.groupName;
 
     return (
         <div>
-            <FormControl className={classes.formControl}>
-                <InputLabel id="simple-select-helper-label"></InputLabel>
-                <Autocomplete
-                    className={classes.selectbox}
-                    options={nodeOptionList}
-                    groupBy={(nodeOption) => nodeOption.value}
-                    getOptionLabel={(option) => option.value}
-                    renderInput={(params) => <TextField {...params} label="Select a node type..." variant="outlined" />}
-                />
-                {/* <Select className={classes.selectbox} labelId="simple-select-helper-label" id="simple-select-helper" value={option} onChange={onChange}>
-                    {
-                        Object.keys(nodeOptionList).map(key => {
-                            let nodeObj: NodeOption = nodeOptionList[key];
-                            return <MenuItem key={uuid()} value={nodeObj.value}>{nodeObj.text}</MenuItem>
-                        })
-                    }
-                </Select> */}
-                <FormHelperText className={classes.formControl}>Select</FormHelperText>
+            <FormControl className={cls.formControl}>
+                <InputLabel id="autodcomplete-label"></InputLabel>
+                {nodeOptionList && (
+                    <Autocomplete
+                        size='small'
+                        disableClearable
+                        clearOnEscape
+                        className={cls.autocomplete}
+                        onChange={onChange}
+                        options={sortByPropertyAlphabetical(groupGetter, nodeOptionList)}
+                        groupBy={(nodeOption) => nodeOption.groupName}
+                        getOptionLabel={(option) => option.text}
+                        renderInput={(params) => <TextField data-lpignore="true" className={cls.selectbox} label={label} {...params} />}
+                    />
+                )}
+                <FormHelperText className={cls.formControl}>Select</FormHelperText>
             </FormControl>
         </div>
     );

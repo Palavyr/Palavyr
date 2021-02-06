@@ -46,7 +46,7 @@
         </section>
         <section id='footer'>
             <p>
-                Thanks once again for inquiring! We look forward to hearing from you!
+                Thanks once again for enquiring! We look forward to hearing from you!
             </p>
             <p>
                 Sincerely,

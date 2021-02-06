@@ -4,24 +4,21 @@ namespace Server.Domain.Configuration.Constant
 {
     public static class DefaultNodeTypeOptions
     {
-        public static List<NodeTypeOption> DefaultNodeTypeOptionsList => new List<NodeTypeOption>()
-        {
-            new YesNo(),
-            new YesNoNotSure(),
-            new YesNotSureCombined(),
-            new NoNotSureCombined(),
-            new TakeText(),
-            new ProvideInfo(),
-            new MultipleChoiceContinue(),
-            new MultipleChoiceAsPath(),
-            new TooComplicated(),
-            new EndingSequence(),
-            new Email(),
-            new SendEmail(),
-            new Phone(),
-            new Name(),
-            new Restart()
-        };
+        public static List<NodeTypeOption> DefaultNodeTypeOptionsList => // These get sent to the UI for user selection
+            new List<NodeTypeOption>()
+            {
+                new YesNo(),
+                new YesNoNotSure(),
+                new YesNotSureCombined(),
+                new NoNotSureCombined(),
+                new TakeText(),
+                new ProvideInfo(),
+                new MultipleChoiceContinue(),
+                new MultipleChoiceAsPath(),
+                new SendResponse(),
+                new TooComplicated(),
+                new Restart()
+            };
 
         public static YesNo CreateYesNo() => new YesNo();
         public static YesNoNotSure CreateYesNoNotSure() => new YesNoNotSure();
@@ -31,43 +28,43 @@ namespace Server.Domain.Configuration.Constant
         public static ProvideInfo CreateProvideInfo() => new ProvideInfo();
         public static MultipleChoiceContinue CreateMultipleChoiceContinue() => new MultipleChoiceContinue();
         public static MultipleChoiceAsPath CreateMultipleChoiceAsPath() => new MultipleChoiceAsPath();
+
         public static TooComplicated CreateTooComplicated() => new TooComplicated();
-        public static EndingSequence CreateEndingSequence() => new EndingSequence();
-        public static Email CreateEmail() => new Email();
-        public static SendEmail CreateSendEmail() => new SendEmail();
-        public static Phone CreatePhone() => new Phone();
-        public static Name CreateName() => new Name();
+        public static SendResponse CreateSendResponse() => new SendResponse();
         public static Restart CreateRestart() => new Restart();
-        
+
         public class YesNo : NodeTypeOption
         {
             public static string StringName => nameof(YesNo);
             public const string Yes = "Yes";
             public const string No = "No";
+
             public YesNo()
             {
-                Value = nameof(YesNo);
+                Value = StringName;
                 Text = "Yes or No";
                 PathOptions = new List<string>() {"No", "Yes"};
                 ValueOptions = new List<string>() {"No", "Yes"};
                 IsMultiOptionType = false; // set to no if we don't want to allow the node value options presented to the user to change. 
                 IsTerminalType = false;
+                GroupName = MultipleChoice;
             }
         }
-        
-        
+
+
         public class YesNoNotSure : NodeTypeOption
         {
             public static string StringName => nameof(YesNoNotSure);
 
             public YesNoNotSure()
             {
-                Value = nameof(YesNoNotSure);
+                Value = StringName;
                 Text = "Yes, No, Not Sure";
                 PathOptions = new List<string>() {"Yes", "No", "Not Sure"};
                 ValueOptions = new List<string>() {"Yes", "No", "Not Sure"};
                 IsMultiOptionType = false;
                 IsTerminalType = false;
+                GroupName = MultipleChoice;
             }
         }
 
@@ -77,12 +74,13 @@ namespace Server.Domain.Configuration.Constant
 
             public YesNotSureCombined()
             {
-                Value = nameof(YesNotSureCombined);
+                Value = StringName;
                 Text = "Yes / Not Sure, No";
                 PathOptions = new List<string>() {"Yes / Not Sure", "No"};
                 ValueOptions = new List<string>() {"Yes / Not Sure", "No"};
                 IsMultiOptionType = false;
                 IsTerminalType = false;
+                GroupName = MultipleChoice;
             }
         }
 
@@ -93,11 +91,12 @@ namespace Server.Domain.Configuration.Constant
             public NoNotSureCombined()
             {
                 Text = "Yes, No / Not Sure";
-                Value = nameof(NoNotSureCombined);
+                Value = StringName;
                 PathOptions = new List<string>() {"Yes", "No / Not Sure"};
                 ValueOptions = new List<string>() {"Yes", "No / Not Sure"};
                 IsMultiOptionType = false;
                 IsTerminalType = false;
+                GroupName = MultipleChoice;
             }
         }
 
@@ -108,11 +107,12 @@ namespace Server.Domain.Configuration.Constant
             public TakeText()
             {
                 Text = "Take Text";
-                Value = nameof(TakeText);
+                Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
                 ValueOptions = new List<string>() { };
                 IsMultiOptionType = false;
                 IsTerminalType = false;
+                GroupName = InfoCollection;
             }
         }
 
@@ -123,11 +123,12 @@ namespace Server.Domain.Configuration.Constant
             public ProvideInfo()
             {
                 Text = "Provide Info";
-                Value = nameof(ProvideInfo);
+                Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
                 ValueOptions = new List<string>() { };
                 IsMultiOptionType = false;
                 IsTerminalType = false;
+                GroupName = InfoProvide;
             }
         }
 
@@ -138,11 +139,12 @@ namespace Server.Domain.Configuration.Constant
             public MultipleChoiceAsPath()
             {
                 Text = "Multiple Choice (as Paths)";
-                Value = nameof(MultipleChoiceAsPath);
+                Value = StringName;
                 PathOptions = new List<string>() { };
                 ValueOptions = new List<string>() { };
                 IsMultiOptionType = true;
                 IsTerminalType = false;
+                GroupName = MultipleChoice;
             }
         }
 
@@ -153,11 +155,12 @@ namespace Server.Domain.Configuration.Constant
             public MultipleChoiceContinue()
             {
                 Text = "Multiple Choice (Continue)";
-                Value = nameof(MultipleChoiceContinue);
+                Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
                 ValueOptions = new List<string>() { };
-                IsMultiOptionType = false;
+                IsMultiOptionType = true;
                 IsTerminalType = false;
+                GroupName = MultipleChoice;
             }
         }
 
@@ -169,71 +172,28 @@ namespace Server.Domain.Configuration.Constant
             public TooComplicated()
             {
                 Text = "Too Complicated";
-                Value = nameof(TooComplicated);
-                PathOptions = new List<string>() { };
-                ValueOptions = new List<string>() { };
-                IsMultiOptionType = false;
-                IsTerminalType = false;
-            }
-        }
-
-        public class EndingSequence : NodeTypeOption
-        {
-            public static string StringName => nameof(EndingSequence);
-
-            public EndingSequence()
-            {
-                Text = "Ending Sequence";
-                Value = nameof(EndingSequence);
+                Value = StringName;
                 PathOptions = new List<string>() { };
                 ValueOptions = new List<string>() { };
                 IsMultiOptionType = false;
                 IsTerminalType = true;
+                GroupName = Terminal;
             }
         }
 
-        public class Name : NodeTypeOption
+        public class SendResponse : NodeTypeOption
         {
-            public static string StringName => nameof(Name);
+            public static string StringName => nameof(SendResponse);
 
-            public Name()
+            public SendResponse()
             {
-                Text = "Collect Name";
-                Value = nameof(Name);
-                PathOptions = new List<string>() {"Continue"};
+                Text = "Send Response";
+                Value = StringName;
+                PathOptions = new List<string>() { };
                 ValueOptions = new List<string>() { };
                 IsMultiOptionType = false;
-                IsTerminalType = false;
-            }
-        }
-
-        public class Email : NodeTypeOption
-        {
-            public static string StringName => nameof(Email);
-
-            public Email()
-            {
-                Text = "Collect Email Address";
-                Value = nameof(Email);
-                PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { };
-                IsMultiOptionType = false;
-                IsTerminalType = false;
-            }
-        }
-
-        public class Phone : NodeTypeOption
-        {
-            public static string StringName => nameof(Phone);
-
-            public Phone()
-            {
-                Text = "Phone Number";
-                Value = nameof(Phone);
-                PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { };
-                IsMultiOptionType = false;
-                IsTerminalType = false;
+                IsTerminalType = true;
+                GroupName = Terminal;
             }
         }
 
@@ -244,11 +204,26 @@ namespace Server.Domain.Configuration.Constant
             public SendEmail()
             {
                 Text = "Send Email";
-                Value = nameof(SendEmail);
+                Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
                 ValueOptions = new List<string>() { };
                 IsMultiOptionType = false;
-                IsTerminalType = true;
+                IsTerminalType = false;
+            }
+        }
+
+        public class SendTooComplicatedEmail : NodeTypeOption
+        {
+            public static string StringName => nameof(SendTooComplicatedEmail);
+
+            public SendTooComplicatedEmail()
+            {
+                Text = "Send Too Complicated Email";
+                Value = StringName;
+                PathOptions = new List<string>() {"Continue"};
+                ValueOptions = new List<string>() { };
+                IsMultiOptionType = false;
+                IsTerminalType = false;
             }
         }
 
@@ -259,10 +234,11 @@ namespace Server.Domain.Configuration.Constant
             public Restart()
             {
                 Text = "Restart the Chat";
-                Value = nameof(Restart);
+                Value = StringName;
                 PathOptions = new List<string>() { };
                 ValueOptions = new List<string>() { };
                 IsMultiOptionType = false;
+                GroupName = Terminal;
             }
         }
     }
