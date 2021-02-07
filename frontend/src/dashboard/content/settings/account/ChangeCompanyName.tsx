@@ -1,8 +1,9 @@
 import { ApiClient } from "@api-client/Client";
 import React, { useState, useCallback, useEffect } from "react";
-import { makeStyles } from "@material-ui/core";
+import { Divider, makeStyles } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { Alert, AlertTitle } from "@material-ui/lab";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
 const useStyles = makeStyles(() => ({
     titleText: {
@@ -20,7 +21,7 @@ export const ChangeCompanyName = () => {
     const [] = useState<boolean>(false);
 
     const loadCompanyName = useCallback(async () => {
-        const {data: name} = await client.Settings.Account.getCompanyName()
+        const { data: name } = await client.Settings.Account.getCompanyName();
         setCompanyName(name);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -39,9 +40,10 @@ export const ChangeCompanyName = () => {
         setCompanyName(newCompanyName);
     };
 
-
     return (
         <div style={{ width: "50%" }}>
+            <AreaConfigurationHeader title="Change your company name" subtitle="Update your company name. This is used in the response email and pdf sent to customers." />
+            <Divider />
             <SettingsGridRowText
                 fullWidth
                 placeholder={"New Company Name"}

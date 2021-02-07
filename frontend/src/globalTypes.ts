@@ -323,7 +323,8 @@ export enum GeneralSettingsLoc {
     phoneNumber,
     companyLogo,
     locale,
-    deleteaccount,
+    default_email_template,
+    deleteaccount
 }
 
 export enum AreaSettingsLoc {

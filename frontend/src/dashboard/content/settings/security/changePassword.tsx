@@ -1,4 +1,4 @@
-import { makeStyles, Theme, createStyles, Grid, FormControl, InputLabel, Input, InputAdornment, Button, IconButton, Paper } from "@material-ui/core";
+import { makeStyles, Theme, createStyles, Grid, FormControl, InputLabel, Input, InputAdornment, Button, IconButton, Paper, Divider } from "@material-ui/core";
 import { ApiClient } from "@api-client/Client";
 import React, { useState } from "react";
 import { Statement } from "@common/components/Statement";
@@ -8,6 +8,7 @@ import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -29,7 +30,6 @@ const useStyles = makeStyles((theme: Theme) =>
             backgroundColor: "#C7ECEE",
             padding: "2rem",
             margin: "2rem",
-            width: "40%",
         },
         rowStyle: {
             padding: "1rem",
@@ -64,97 +64,101 @@ export const ChangePassword = () => {
     };
 
     return (
-        <Paper className={classes.paper}>
-            <Alert>
-                <AlertTitle className={classes.titleText}>Update your password</AlertTitle>
-                Choose a strong password that contains at least:
-                <ul>
-                    <li>6 or more characters</li>
-                    <li>1 non-letter</li>
-                    <li>1 uppercase letter</li>
-                </ul>
-            </Alert>
-            <Grid container spacing={3}>
-                <Grid className={classes.rowStyle} item xs={12}>
-                    <FormControl fullWidth className={classNames(classes.margin, classes.textField)}>
-                        <InputLabel htmlFor="standard-adornment-password-old">Old Password</InputLabel>
-                        <Input
-                            className={classes.input}
-                            id="standard-adornment-password-old"
-                            type={showOldPassword ? "text" : "password"}
-                            value={oldPassword}
-                            onChange={(e) => setOldPassword(e.target.value)}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton aria-label="toggle password visibility" onClick={() => setShowOldPassword(!showOldPassword)} onMouseDown={(e) => e.preventDefault()}>
-                                        {showOldPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
-                        />
-                    </FormControl>
-                </Grid>
-                <Grid className={classes.rowStyle} item xs={12}>
-                    <FormControl fullWidth className={classNames(classes.margin, classes.textField)}>
-                        <InputLabel htmlFor="standard-adornment-password-new">New Password</InputLabel>
-                        <Input
-                            id="standard-adornment-password-new"
-                            type={showNewPassword ? "text" : "password"}
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton aria-label="toggle password visibility" onClick={() => setShowNewPassword(!showNewPassword)} onMouseDown={(e) => e.preventDefault()}>
-                                        {showNewPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
-                        />
-                    </FormControl>
-                </Grid>
-                <Grid className={classes.rowStyle} item xs={12}>
-                    <FormControl fullWidth className={classNames(classes.margin, classes.textField)}>
-                        <InputLabel htmlFor="standard-adornment-password-confirm">Confirm New Password</InputLabel>
-                        <Input
-                            id="standard-adornment-password-confirm"
-                            type={showNewPasswordCopy ? "text" : "password"}
-                            value={newPasswordCopy}
-                            onChange={(e) => setNewPasswordCopy(e.target.value)}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton aria-label="toggle password visibility" onClick={() => setShowNewPasswordCopy(!showNewPassword)} onMouseDown={(e) => e.preventDefault()}>
-                                        {showNewPasswordCopy ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
-                        />
-                    </FormControl>
-                </Grid>
-                <div style={{ display: "flex", width: "100%", justifyContent: "flex-end" }}>
-                    <SaveOrCancel
-                        onSave={async () => {
-                            if (!(newPassword === newPasswordCopy)) {
-                                alert("Passwords don't match");
-                            } else {
-                                const result = await handlePasswordChange(oldPassword, newPassword);
-                                if (result === true) {
-                                    setOldPassword("");
-                                    setNewPassword("");
-                                    setNewPasswordCopy("");
-                                } else {
-                                    alert("Password does not match that on record.");
+        <div style={{ width: "50%" }}>
+            <AreaConfigurationHeader title="Change your password" subtitle="Update the password you use to log in." />
+            <Divider />
+            <Paper className={classes.paper}>
+                <Alert>
+                    <AlertTitle className={classes.titleText}>Update your password</AlertTitle>
+                    Choose a strong password that contains at least:
+                    <ul>
+                        <li>6 or more characters</li>
+                        <li>1 non-letter</li>
+                        <li>1 uppercase letter</li>
+                    </ul>
+                </Alert>
+                <Grid container spacing={3}>
+                    <Grid className={classes.rowStyle} item xs={12}>
+                        <FormControl fullWidth className={classNames(classes.margin, classes.textField)}>
+                            <InputLabel htmlFor="standard-adornment-password-old">Old Password</InputLabel>
+                            <Input
+                                className={classes.input}
+                                id="standard-adornment-password-old"
+                                type={showOldPassword ? "text" : "password"}
+                                value={oldPassword}
+                                onChange={(e) => setOldPassword(e.target.value)}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton aria-label="toggle password visibility" onClick={() => setShowOldPassword(!showOldPassword)} onMouseDown={(e) => e.preventDefault()}>
+                                            {showOldPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                                        </IconButton>
+                                    </InputAdornment>
                                 }
-                            }
-                        }}
-                        useModal
-                        size="large"
-                        customSaveMessage={{
-                            title: "",
-                            message: "Password successfully updated.",
-                        }}
-                    />
-                </div>
-            </Grid>
-        </Paper>
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid className={classes.rowStyle} item xs={12}>
+                        <FormControl fullWidth className={classNames(classes.margin, classes.textField)}>
+                            <InputLabel htmlFor="standard-adornment-password-new">New Password</InputLabel>
+                            <Input
+                                id="standard-adornment-password-new"
+                                type={showNewPassword ? "text" : "password"}
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton aria-label="toggle password visibility" onClick={() => setShowNewPassword(!showNewPassword)} onMouseDown={(e) => e.preventDefault()}>
+                                            {showNewPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid className={classes.rowStyle} item xs={12}>
+                        <FormControl fullWidth className={classNames(classes.margin, classes.textField)}>
+                            <InputLabel htmlFor="standard-adornment-password-confirm">Confirm New Password</InputLabel>
+                            <Input
+                                id="standard-adornment-password-confirm"
+                                type={showNewPasswordCopy ? "text" : "password"}
+                                value={newPasswordCopy}
+                                onChange={(e) => setNewPasswordCopy(e.target.value)}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton aria-label="toggle password visibility" onClick={() => setShowNewPasswordCopy(!showNewPassword)} onMouseDown={(e) => e.preventDefault()}>
+                                            {showNewPasswordCopy ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                        </FormControl>
+                    </Grid>
+                    <div style={{ display: "flex", width: "100%", justifyContent: "flex-end" }}>
+                        <SaveOrCancel
+                            onSave={async () => {
+                                if (!(newPassword === newPasswordCopy)) {
+                                    alert("Passwords don't match");
+                                } else {
+                                    const result = await handlePasswordChange(oldPassword, newPassword);
+                                    if (result === true) {
+                                        setOldPassword("");
+                                        setNewPassword("");
+                                        setNewPasswordCopy("");
+                                    } else {
+                                        alert("Password does not match that on record.");
+                                    }
+                                }
+                            }}
+                            useModal
+                            size="large"
+                            customSaveMessage={{
+                                title: "",
+                                message: "Password successfully updated.",
+                            }}
+                        />
+                    </div>
+                </Grid>
+            </Paper>
+        </div>
     );
 };

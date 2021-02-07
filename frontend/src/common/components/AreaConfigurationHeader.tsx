@@ -8,13 +8,13 @@ interface IAreaConfigurationHeader {
 
 export const AreaConfigurationHeader = ({ title, subtitle }: IAreaConfigurationHeader) => {
     return (
-        <>
+        <div style={{width: "100%"}}>
             <Typography style={{ marginTop: "1.4rem" }} align="center" variant="h4">
                 {title}
             </Typography>
             <Typography paragraph align="center">
                 {subtitle}
             </Typography>
-        </>
+        </div>
     );
 };

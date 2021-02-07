@@ -131,7 +131,9 @@ export class ApiClient {
             GetFallbackEmailTemplate: async (areaIdentifier: string): Promise<AxiosResponse<string>> => this.client.get(`email/${areaIdentifier}/fallback-email-template`),
             SaveEmailTemplate: async (areaIdentifier: string, EmailTemplate: string): Promise<AxiosResponse<string>> => this.client.put(`email/${areaIdentifier}/emailtemplate`, { EmailTemplate }),
             SaveFallbackEmailTemplate: async (areaIdentifier: string, EmailTemplate: string): Promise<AxiosResponse<string>> => this.client.put(`email/${areaIdentifier}/fallback-email-template`, { EmailTemplate }),
-        },
+            SaveDefaultFallbackEmailTemplate: async (EmailTemplate: string): Promise<AxiosResponse<string>> => this.client.put(`email/default-fallback-email-template`, { EmailTemplate }),
+            GetDefaultFallbackEmailTemplate: async (): Promise<AxiosResponse<string>> => this.client.get(`email/default-fallback-email-template`)
+     },
 
         Attachments: {
             fetchAttachmentLinks: async (areaIdentifier: string): Promise<AxiosResponse<FileLink[]>> => this.client.get(`attachments/${areaIdentifier}`),

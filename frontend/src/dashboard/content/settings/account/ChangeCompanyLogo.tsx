@@ -1,4 +1,5 @@
 import { ApiClient } from "@api-client/Client";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { PalavyrAlert } from "@common/components/PalavyrAlert";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { Divider, makeStyles, Paper, Typography } from "@material-ui/core";
@@ -112,7 +113,7 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
         if (fileUpload !== null) {
             const formData = new FormData();
             formData.append("files", fileUpload[0]);
-            const {data: dataUrl} = await client.Settings.Account.updateCompanyLogo(formData)
+            const { data: dataUrl } = await client.Settings.Account.updateCompanyLogo(formData);
             setcompanyLogo(dataUrl);
         }
         setFileUpload([]); // shouldn't this clear the chip
@@ -142,6 +143,8 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
 
     return (
         <div style={{ width: "50%" }}>
+            <AreaConfigurationHeader title="Change your company logo" subtitle="Update your company logo. This is used in the response email and pdf sent to customers." />
+            <Divider />
             <Paper className={cls.paper}>
                 <Alert className={cls.alert} severity={companyLogo === "" ? "error" : "success"}>
                     <AlertTitle>

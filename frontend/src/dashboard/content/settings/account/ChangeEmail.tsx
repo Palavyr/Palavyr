@@ -1,10 +1,11 @@
 import { ApiClient } from "@api-client/Client";
 import React, { useState, useCallback, useEffect } from "react";
-import { makeStyles } from "@material-ui/core";
+import { Divider, makeStyles } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { AlertDetails, EmailVerificationResponse } from "@Palavyr-Types";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
 type GeneralSettings = {
     emailAddress: string;
@@ -78,6 +79,8 @@ export const ChangeEmail = () => {
     return (
         <>
             <div style={{ width: "60%" }}>
+                <AreaConfigurationHeader title="Primary Email" subtitle="Change the primary email address used to send emails to your customers." />
+                <Divider />
                 <SettingsGridRowText
                     fullWidth
                     inputType="email"

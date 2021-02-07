@@ -61,6 +61,8 @@ import { RenderPasswordDialog } from "@landing/components/passwordReset/SubmitNe
 import { RenderResetSuccess } from "@landing/components/passwordReset/PasswordResetSuccess";
 import { EnableAreas } from "dashboard/content/responseConfiguration/areaSettings/enableAreas/EnableAreas";
 import { SetAreasHelp } from "dashboard/content/help/SetAreasHelp";
+import { DefaultEmailTemplate } from "dashboard/content/settings/account/DefaultEmailTemplate";
+import { DefaultEmailTemplateHelp } from "dashboard/content/help/DefaultEmailTemplateHelp";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -105,6 +107,7 @@ export const Routes = () => {
             <ProtectedRoute exact path="/dashboard/settings/phoneNumber" component={withLayout(withSettingsTabs(<ChangePhoneNumber />), <ChangePhoneNumberHelp />)} />
             <ProtectedRoute exact path="/dashboard/settings/companyLogo" component={withLayout(withSettingsTabs(<ChangeLogoImage />), <ChangeImageLogoHelp />)} />
             <ProtectedRoute exact path="/dashboard/settings/locale" component={withLayout(withSettingsTabs(<ChangeLocale />), <ChangeLocaleHelp />)} />
+            <ProtectedRoute exact path="/dashboard/settings/default_email_template" component={withLayout(withSettingsTabs(<DefaultEmailTemplate />), <DefaultEmailTemplateHelp />)} />
             <ProtectedRoute exact path="/dashboard/settings/deleteaccount" component={withLayout(withSettingsTabs(<DeleteAccount />), <DeleteAccountHelp />)} />
 
             <ProtectedRoute exact path="/dashboard/demo/" component={withLayout(ChatDemo, <ChatDemoHelp />)} />

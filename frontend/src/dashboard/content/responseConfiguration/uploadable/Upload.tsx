@@ -6,7 +6,6 @@ import { DropzoneDialog } from 'material-ui-dropzone';
 
 export interface IUploadAttachment {
     uploadDetails: () => React.ReactNode;
-    areaIdentifier: string;
     buttonText: string;
     summary: string;
     handleFileSave: any;
@@ -39,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-export const Upload = ({ accordState, toggleAccord, modalState, toggleModal, handleFileSave, summary, buttonText, areaIdentifier, uploadDetails, acceptedFiles }: IUploadAttachment) => {
+export const Upload = ({ accordState, toggleAccord, modalState, toggleModal, handleFileSave, summary, buttonText, uploadDetails, acceptedFiles }: IUploadAttachment) => {
 
     const classes = useStyles();
     return (

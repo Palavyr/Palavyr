@@ -34,7 +34,6 @@ export const EmailConfiguration = () => {
     const [fallbackEmailTemplate, setFallbackEmailTemplate] = useState<string>("");
 
     const [variableDetails, setVariableDetails] = useState<VariableDetail[]>([]);
-    const [fallbackVariableDetails, setFallbackVariableDetails] = useState<VariableDetail[]>([]);
 
     const [modalState, setModalState] = useState<boolean>(false);
     const [fallbackModalState, setFallbackModalState] = useState<boolean>(false);
@@ -182,7 +181,6 @@ export const EmailConfiguration = () => {
                 accordState={accordState}
                 toggleAccord={toggleAccord}
                 handleFileSave={handleFileSave}
-                areaIdentifier={areaIdentifier}
                 buttonText={buttonText}
                 summary={summary}
                 uploadDetails={() => uploadDetails("SecondDetails")}
@@ -204,7 +202,6 @@ export const EmailConfiguration = () => {
                         accordState={fallbackAccordState}
                         toggleAccord={toggleFallbackAccord}
                         handleFileSave={handleFallbackFileSave}
-                        areaIdentifier={areaIdentifier}
                         buttonText={buttonText}
                         summary={summary}
                         uploadDetails={() => uploadDetails("ThirdDetails")}
