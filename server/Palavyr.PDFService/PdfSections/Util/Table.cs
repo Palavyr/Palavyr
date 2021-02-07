@@ -20,6 +20,8 @@ namespace PDFService.Sections.Util
             TotalsRow = SumTableRows(rows, culture);
         }
 
+        public int Length => Rows.Count; 
+        
         private TableRow SumTableRows(List<TableRow> rows, CultureInfo culture)
         {
             var useRange = rows.Select(row => row.Range).Any();

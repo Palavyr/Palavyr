@@ -1,7 +1,7 @@
 import { ApiClient } from "@api-client/Client";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { makeStyles } from "@material-ui/core";
+import { Divider, makeStyles } from "@material-ui/core";
 import { VariableDetail } from "@Palavyr-Types";
 import { EditorDetails } from "dashboard/content/responseConfiguration/uploadable/emailTemplates/EditorDetails";
 import { EmailEditor } from "dashboard/content/responseConfiguration/uploadable/emailTemplates/EmailEditor";
@@ -10,6 +10,7 @@ import { Upload } from "dashboard/content/responseConfiguration/uploadable/Uploa
 import { AlignCenter } from "dashboard/layouts/positioning/AlignCenter";
 import React, { useCallback, useState } from "react";
 import { useEffect } from "react";
+import { EmailSubject } from "../subject/EmailSubject";
 
 const buttonText = "Add Email Template";
 const summary = "Upload a new Email Response";
@@ -47,6 +48,19 @@ export const DefaultEmailTemplate = () => {
     const [editorAccordstate, setEditorAccordState] = useState<boolean>(false);
     const toggleEditorAccord = () => {
         setEditorAccordState(!editorAccordstate);
+    };
+
+    const [subjectState, setSubjectState] = useState<string>("");
+    const [subjectAccordState, setSubjectAccordState] = useState<boolean>(false);
+    const [subjectModalState, setSubjectModalState] = useState<boolean>(false);
+    const toggleSubjectModal = () => {
+        setSubjectModalState(!subjectModalState);
+    };
+    const toggleSubjectAccord = () => {
+        setSubjectAccordState(!subjectAccordState);
+    };
+    const onSubjectChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setSubjectState(event.target.value);
     };
 
     const handleFileRead = async () => {
@@ -93,8 +107,19 @@ export const DefaultEmailTemplate = () => {
         return <EditorDetails key={key} variableDetails={variableDetails} />;
     };
 
+    const saveDefaultEmailSubject = async () => {
+        const { data: updatedSubject } = await client.Configuration.Email.SaveDefaultFallbackSubject(subjectState);
+        setSubjectState(updatedSubject);
+    };
+
+    const loadDefaultEmailSubject = async () => {
+        const {data: currentSubject} = await client.Configuration.Email.GetDefaultFallbackSubject();
+        setSubjectState(currentSubject);
+    }
+
     useEffect(() => {
         loadEmailTemplate();
+        loadDefaultEmailSubject();
     }, []);
 
     return (
@@ -102,6 +127,11 @@ export const DefaultEmailTemplate = () => {
             <AlignCenter>
                 <AreaConfigurationHeader title="Default Email Response" subtitle="Use this editor to create an HTML email template that will be sent as the email response for this area." />
             </AlignCenter>
+            <EmailSubject subject={subjectState} onChange={onSubjectChange} onSave={saveDefaultEmailSubject} accordState={subjectAccordState} toggleAccord={toggleSubjectAccord} modalState={subjectModalState} toggleModal={toggleSubjectModal}>
+                <div className={cls.saveOrCancel}>
+                    <SaveOrCancel onSave={() => saveDefaultEmailSubject()} onCancel={() => loadDefaultEmailSubject()} useModal={true} />
+                </div>
+            </EmailSubject>
             <Upload
                 modalState={modalState}
                 toggleModal={toggleModal}

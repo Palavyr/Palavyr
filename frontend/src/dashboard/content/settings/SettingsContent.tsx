@@ -73,7 +73,7 @@ const SettingsContentInner = ({ setLoaded, children}: ISettingsContentInner ) =>
             <AppBar position="static" className={cls.appbar}>
                 <Tabs centered value={tab}  aria-label="simple tabs">
                     <Tab onClick={() => sendTo(GeneralSettingsLoc.password)} className={cls.tabtext} icon={<LockOpenIcon className={cls.icon} />} label="Password" {...areaTabProps(0)} />
-                    <Tab onClick={() => sendTo(GeneralSettingsLoc.email)} className={cls.tabtext} icon={<MailOutlineIcon className={cls.icon} />} label="Email" {...areaTabProps(1)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.email)} className={cls.tabtext} icon={<MailOutlineIcon className={cls.icon} />} label="Email Address" {...areaTabProps(1)} />
                     <Tab onClick={() => sendTo(GeneralSettingsLoc.companyName)} className={cls.tabtext} icon={<PermIdentityIcon className={cls.icon} />} label="Company Name" {...areaTabProps(2)} />
                     <Tab onClick={() => sendTo(GeneralSettingsLoc.phoneNumber)} className={cls.tabtext} icon={<PhoneIcon className={cls.icon} />} label="Phone Number" {...areaTabProps(3)} />
                     <Tab onClick={() => sendTo(GeneralSettingsLoc.companyLogo)} className={cls.tabtext} icon={<BrandingWatermarkIcon className={cls.icon} />} label="Company Logo" {...areaTabProps(4)} />

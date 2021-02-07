@@ -4,17 +4,17 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Palavyr.API.Controllers.Response
+namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
 {
     [Route("api")]
     [ApiController]
-    public class ModifyEmailTemplateController : ControllerBase
+    public class ModifyAreaEmailTemplateController : ControllerBase
     {
         private DashContext dashContext;
-        private ILogger<ModifyEmailTemplateController> logger;
+        private ILogger<ModifyAreaEmailTemplateController> logger;
 
-        public ModifyEmailTemplateController(
-            ILogger<ModifyEmailTemplateController> logger,
+        public ModifyAreaEmailTemplateController(
+            ILogger<ModifyAreaEmailTemplateController> logger,
             DashContext dashContext
         )
         {
@@ -22,7 +22,7 @@ namespace Palavyr.API.Controllers.Response
             this.dashContext = dashContext;
         }
 
-        [HttpPut("email/{areaId}/emailTemplate")]
+        [HttpPut("email/{areaId}/email-template")]
         public async Task<string> Modify([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] EmailTemplateRequest request)
         {
             var currentArea = dashContext

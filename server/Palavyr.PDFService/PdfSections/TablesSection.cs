@@ -14,12 +14,14 @@ namespace PDFService.Sections
 
             foreach (var table in dynamicTables)
             {
-                builder.Append(table.GenerateTableHtml());
+                if (table.Length > 0)
+                    builder.Append(table.GenerateTableHtml());
             }
             
             foreach (var table in staticTables)
             {
-                builder.Append(table.GenerateTableHtml());
+                if (table.Length > 0)
+                    builder.Append(table.GenerateTableHtml());
             }
 
             builder.Append($@"</section>");

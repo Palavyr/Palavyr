@@ -10,6 +10,7 @@ import { Settings, VariableDetail } from "@Palavyr-Types";
 import { EditorDetails } from "./EditorDetails";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { OsTypeToggle } from "../../areaSettings/enableAreas/OsTypeToggle";
+import { EmailSubject } from "dashboard/content/settings/subject/EmailSubject";
 
 const buttonText = "Add Email Template";
 const summary = "Upload a new Email Response";
@@ -70,7 +71,7 @@ export const EmailConfiguration = () => {
     const handleFileRead = async () => {
         const content = fileReader.result;
         if (content && typeof content == "string") {
-            const { data: emailTemplate } = await client.Configuration.Email.SaveEmailTemplate(areaIdentifier, content);
+            const { data: emailTemplate } = await client.Configuration.Email.SaveAreaEmailTemplate(areaIdentifier, content);
             setEmailTemplate(emailTemplate);
             setModalState(false);
             setAccordState(false);
@@ -82,7 +83,7 @@ export const EmailConfiguration = () => {
     const handleFallbackFileRead = async () => {
         const content = fallbackFileReader.result;
         if (content && typeof content == "string") {
-            const { data: emailTemplate } = await client.Configuration.Email.SaveFallbackEmailTemplate(areaIdentifier, content);
+            const { data: emailTemplate } = await client.Configuration.Email.SaveAreaFallbackEmailTemplate(areaIdentifier, content);
             setFallbackEmailTemplate(emailTemplate);
             setFallbackModalState(false);
             setFallbackAccordState(false);
@@ -106,31 +107,29 @@ export const EmailConfiguration = () => {
     };
 
     const saveEditorData = async () => {
-        const { data: updatedEmailTemplate } = await client.Configuration.Email.SaveEmailTemplate(areaIdentifier, emailTemplate);
+        const { data: updatedEmailTemplate } = await client.Configuration.Email.SaveAreaEmailTemplate(areaIdentifier, emailTemplate);
         setEmailTemplate(updatedEmailTemplate);
         setModalState(false);
         setAccordState(false);
     };
 
     const saveFallbackEditorData = async () => {
-        const { data: updatedFallbackEmailTemplate } = await client.Configuration.Email.SaveFallbackEmailTemplate(areaIdentifier, fallbackEmailTemplate);
+        const { data: updatedFallbackEmailTemplate } = await client.Configuration.Email.SaveAreaFallbackEmailTemplate(areaIdentifier, fallbackEmailTemplate);
         setFallbackEmailTemplate(updatedFallbackEmailTemplate);
         setFallbackModalState(false);
         setFallbackAccordState(false);
-
-    }
+    };
 
     const loadFallbackTemplate = useCallback(async () => {
-        const { data: fallbackEmailTemplate } = await client.Configuration.Email.GetFallbackEmailTemplate(areaIdentifier);
+        const { data: fallbackEmailTemplate } = await client.Configuration.Email.GetAreaFallbackEmailTemplate(areaIdentifier);
         setFallbackEmailTemplate(fallbackEmailTemplate);
 
         const { data: variableDetails } = await client.Configuration.Email.GetVariableDetails();
         setVariableDetails(variableDetails);
-
-    }, [areaIdentifier])
+    }, [areaIdentifier]);
 
     const loadEmailTemplate = useCallback(async () => {
-        const { data: emailTemplate } = await client.Configuration.Email.GetEmailTemplate(areaIdentifier);
+        const { data: emailTemplate } = await client.Configuration.Email.GetAreaEmailTemplate(areaIdentifier);
         const { data: variableDetails } = await client.Configuration.Email.GetVariableDetails();
 
         setVariableDetails(variableDetails);
@@ -152,15 +151,30 @@ export const EmailConfiguration = () => {
         setUseAreaFallbackEmail(areaData.useAreaFallbackEmail);
     };
 
+    const loadAreaSubject = useCallback(async () => {
+        const { data: emailSubject } = await client.Configuration.Email.GetAreaSubject(areaIdentifier);
+        setAreaSubjectState(emailSubject);
+    }, [areaIdentifier]);
+
+    const loadFallbackAreaSubject = useCallback(
+        async () => {
+            const {data: fallbackSubject} = await client.Configuration.Email.GetAreaFallbackSubject(areaIdentifier);
+            setAreaFallbackSubjectState(fallbackSubject);
+        },
+        [areaIdentifier],
+    )
+
     useEffect(() => {
         loadEmailTemplate();
         loadFallbackTemplate();
         loadSettings();
+        loadAreaSubject();
+        loadFallbackAreaSubject();
         return () => {
             setLoaded(false);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [areaIdentifier, loadEmailTemplate]);
+    }, [areaIdentifier]);
 
     const uploadDetails = (key: string) => {
         return <EditorDetails key={key} variableDetails={variableDetails} />;
@@ -171,10 +185,50 @@ export const EmailConfiguration = () => {
         setUseAreaFallbackEmail(updatedUsAreaFallback);
     };
 
+    const [areaSubjectState, setAreaSubjectState] = useState<string>("");
+    const [subjectAccordState, setSubjectAccordState] = useState<boolean>(false);
+    const [subjectModalState, setSubjectModalState] = useState<boolean>(false);
+    const toggleSubjectModal = () => {
+        setSubjectModalState(!subjectModalState);
+    };
+    const toggleSubjectAccord = () => {
+        setSubjectAccordState(!subjectAccordState);
+    };
+    const onAreaSubjectChange = (event: any) => {
+        setAreaSubjectState(event.target.value);
+    };
+    const onSaveAreaSubject = async () => {
+        const { data: updatedSubject } = await client.Configuration.Email.SaveAreaSubject(areaIdentifier, areaSubjectState);
+        setAreaSubjectState(updatedSubject);
+    };
+
+    const [areaFallbackSubjectState, setAreaFallbackSubjectState] = useState<string>("");
+    const [subjectFallbackAccordState, setSubjectFallbackAccordState] = useState<boolean>(false);
+    const [subjectFallbackModalState, setSubjectFallbackModalState] = useState<boolean>(false);
+    const toggleFallbackSubjectModal = () => {
+        setSubjectFallbackModalState(!subjectFallbackModalState);
+    };
+    const toggleFallbackSubjectAccord = () => {
+        setSubjectFallbackAccordState(!subjectFallbackAccordState);
+    };
+    const onAreaFallbackSubjectChange = (event: any) => {
+        setAreaFallbackSubjectState(event.target.value);
+    };
+    const onSaveFallbackAreaSubject = async () => {
+        const { data: updatedSubject } = await client.Configuration.Email.SaveAreaFallbackSubject(areaIdentifier, areaFallbackSubjectState);
+        setAreaFallbackSubjectState(updatedSubject);
+    };
+
+
     return (
         <>
             <AreaConfigurationHeader title="Email Response" subtitle="Use this editor to create an HTML email template that will be sent as the email response for this area." />
             {useAreaFallbackEmail !== null && <OsTypeToggle controlledState={useAreaFallbackEmail} onChange={onUseAreaFallbackEmailToggle} enabledLabel="Use Area Fallback Email" disabledLabel="Use General Fallback Email" />}
+            <EmailSubject subject={areaSubjectState} onChange={onAreaSubjectChange} onSave={onSaveAreaSubject} accordState={subjectAccordState} toggleAccord={toggleSubjectAccord} modalState={subjectModalState} toggleModal={toggleSubjectModal}>
+                <div className={cls.saveOrCancel}>
+                    <SaveOrCancel onSave={() => onSaveAreaSubject()} onCancel={() => loadAreaSubject()} useModal={true} />
+                </div>
+            </EmailSubject>
             <Upload
                 modalState={modalState}
                 toggleModal={toggleModal}
@@ -193,9 +247,25 @@ export const EmailConfiguration = () => {
             </EmailEditor>
             {loaded && <ViewEmailTemplate emailTemplate={emailTemplate} />}
             <Divider />
-            {useAreaFallbackEmail &&
+            {useAreaFallbackEmail && (
                 <>
-                    <AreaConfigurationHeader title="Fallback Email Response" subtitle="Use this editor to create a fallback email response that is specific to this area." />
+                    <AreaConfigurationHeader
+                        title="Fallback Email Response"
+                        subtitle="Use this editor to create a fallback email response that is specific to this area. For example, this email is sent if a 'Too Complicated' node is encountered during the chat."
+                    />
+                    <EmailSubject
+                        subject={areaFallbackSubjectState}
+                        onChange={onAreaFallbackSubjectChange}
+                        onSave={onSaveFallbackAreaSubject}
+                        accordState={subjectFallbackAccordState}
+                        toggleAccord={toggleFallbackSubjectAccord}
+                        modalState={subjectFallbackModalState}
+                        toggleModal={toggleFallbackSubjectModal}
+                    >
+                        <div className={cls.saveOrCancel}>
+                            <SaveOrCancel onSave={() => onSaveFallbackAreaSubject()} onCancel={() => loadFallbackAreaSubject()} useModal={true} />
+                        </div>
+                    </EmailSubject>
                     <Upload
                         modalState={fallbackModalState}
                         toggleModal={toggleFallbackModal}
@@ -214,7 +284,7 @@ export const EmailConfiguration = () => {
                     </EmailEditor>
                     {loaded && <ViewEmailTemplate emailTemplate={fallbackEmailTemplate} />}
                 </>
-            }
+            )}
         </>
     );
 };

@@ -4,17 +4,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Palavyr.API.Controllers.Response
+namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
     [Route("api")]
     [ApiController]
-    public class GetDefaultFallbackEmailTemplateController : ControllerBase
+    public class GetDefaultFallbackEmailSubjectController : ControllerBase
     {
         private AccountsContext accountsContext;
-        private ILogger<GetDefaultFallbackEmailTemplateController> logger;
+        private ILogger<GetDefaultFallbackEmailSubjectController> logger;
 
-        public GetDefaultFallbackEmailTemplateController(
-            ILogger<GetDefaultFallbackEmailTemplateController> logger,
+        public GetDefaultFallbackEmailSubjectController(
+            ILogger<GetDefaultFallbackEmailSubjectController> logger,
             AccountsContext accountsContext
         )
         {
@@ -22,12 +22,12 @@ namespace Palavyr.API.Controllers.Response
             this.accountsContext = accountsContext;
         }
 
-        [HttpGet("email/default-fallback-email-template")]
+        [HttpGet("email/default-fallback-subject")]
         public async Task<string> Modify([FromHeader] string accountId, [FromRoute] string areaId)
         {
             var account = await accountsContext.Accounts.SingleAsync(row => row.AccountId == accountId);
-            var currentDefaultEmailTemplate = account.GeneralFallbackEmailTemplate;
-            return currentDefaultEmailTemplate;
+            var subject = account.GeneralFallbackSubject;
+            return subject;
         }
     }
 }

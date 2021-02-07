@@ -7,28 +7,28 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.RequestTypes;
 
-namespace Palavyr.API.Controllers.Areas
+namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
     
     [Authorize]
     [Route("api")]
     [ApiController]
-    public class ModifyAreaResponseSubjectController : ControllerBase
+    public class ModifyAreaEmailSubjectController : ControllerBase
     {
 
         private readonly DashContext dashContext;
-        private readonly ILogger<ModifyAreaResponseSubjectController> logger;
+        private readonly ILogger<ModifyAreaEmailSubjectController> logger;
 
-        public ModifyAreaResponseSubjectController(
+        public ModifyAreaEmailSubjectController(
             DashContext dashContext,
-            ILogger<ModifyAreaResponseSubjectController> logger
+            ILogger<ModifyAreaEmailSubjectController> logger
         )
         {
             this.dashContext = dashContext;
             this.logger = logger;
         }
 
-        [HttpPut("areas/update/subject/{areaId}")]
+        [HttpPut("email/subject/{areaId}")]
         public async Task<string> Modify(
             [FromHeader] string accountId,
             [FromBody] SubjectText subjectText,

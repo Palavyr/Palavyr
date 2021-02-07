@@ -5,6 +5,10 @@ import classNames from "classnames";
 import { useHistory } from "react-router-dom";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { OnboardingTodo } from "./OnboardingTodo/OnboardingTodo";
+import { useState } from "react";
+import { ApiClient } from "@api-client/Client";
+import { TodosAsBoolean } from "@Palavyr-Types";
+import { allClear, convertTodos } from "./OnboardingTodo/onboardingUtils";
 
 const useStyles = makeStyles((theme) => ({
     background: {
@@ -77,8 +81,41 @@ const useStyles = makeStyles((theme) => ({
 export const WelcomeToTheDashboard = () => {
     const cls = useStyles();
     const history = useHistory();
+    const client = new ApiClient();
+
     const { checkAreaCount } = React.useContext(DashboardContext);
-    const preventDefault = (event: React.SyntheticEvent) => event.preventDefault();
+
+    const [todos, setTodos] = useState<TodosAsBoolean>();
+    const [loading, setLoading] = useState<boolean>(true);
+
+    const loadTodos = React.useCallback(async () => {
+        const { data: name } = await client.Settings.Account.getCompanyName();
+        const { data: logoUri } = await client.Settings.Account.getCompanyLogo();
+        const {
+            data: { phoneNumber, locale },
+        } = await client.Settings.Account.getPhoneNumber();
+        var {
+            data: { emailAddress, isVerified, awaitingVerification },
+        } = await client.Settings.Account.getEmail();
+
+        const todos = {
+            name,
+            emailAddress,
+            isVerified,
+            awaitingVerification,
+            logoUri,
+            phoneNumber,
+            locale,
+        };
+
+        const todosAsBoolean = convertTodos(todos);
+        setTodos(todosAsBoolean);
+    }, []);
+
+    React.useEffect(() => {
+        loadTodos();
+        setLoading(false);
+    }, []);
 
     return (
         <div className={cls.wrapper}>
@@ -88,19 +125,16 @@ export const WelcomeToTheDashboard = () => {
                         <Typography variant="h3" style={{ paddingTop: "2rem", paddingBottom: "2rem" }}>
                             Welcome to the Palavyr Configuration Dashboard!
                         </Typography>
-                        <Typography style={{ paddingTop: "2rem", paddingBottom: "2rem" }}>
-                            Follow this onboarding page to learn about how Palavyr works and what you should do to get started.
-                        </Typography>
+                        <Typography style={{ paddingTop: "2rem", paddingBottom: "2rem" }}>Follow this onboarding page to learn about how Palavyr works and what you should do to get started.</Typography>
                     </div>
                 </div>
-                <Typography style={{ padding: "1rem", paddingTop: "2rem", fontSize: "24pt" }}>What is Palavyr?</Typography>
+                <Typography style={{ padding: "1rem", paddingTop: "2rem", fontSize: "20pt" }}>What is Palavyr?</Typography>
                 <Typography style={{ padding: "1rem" }}>
-                    Palavyr is a system used to automate the delivery of information about your services and fees to potential customers.
-                    The Palavyr chat widget is embedded into your website and through it, potential customers will provide information that
-                    we use to deliver specific information about your services via email.
+                    Palavyr is a system used to automate the delivery of information about your services and fees to potential customers. The Palavyr chat widget is embedded into your website and through it, potential customers will provide
+                    information that we use to deliver specific information about your services via email.
                 </Typography>
-                <Divider />
-                <Typography style={{ padding: "1rem", paddingTop: "2rem", fontSize: "24pt" }}>How does it work?</Typography>
+                {/* <Divider /> */}
+                <Typography style={{ padding: "1rem", paddingTop: "2rem", fontSize: "20pt" }}>How does it work?</Typography>
                 <div className={cls.sectionHeadDiv}>
                     <div className={cls.listItems}>
                         <Typography gutterBottom align="left">
@@ -115,12 +149,12 @@ export const WelcomeToTheDashboard = () => {
                     </div>
                 </div>
                 <Divider />
-                <Typography style={{ padding: "2rem", fontSize: "24pt", fontWeight: "bolder"}}>Quick Start To Do list</Typography>
-                <div>
-                    <OnboardingTodo />
-                </div>
+                {/* <Typography style={{ padding: "2rem", fontSize: "24pt", fontWeight: "bolder" }}>Quick Start To Do list</Typography> */}
+
+                {allClear(todos) && todos && <OnboardingTodo todos={todos} />}
+
                 <Divider />
-                <Typography style={{ padding: "2rem", fontSize: "16pt" }}>Follow these steps to get started:</Typography>
+                <Typography style={{ padding: "2rem", fontSize: "24pt", fontWeight: "bolder" }}>Follow these steps to get started:</Typography>
                 <Divider />
                 <div className={cls.sectionDiv}>
                     <Alert className={cls.alert} icon={<></>} severity="info">

@@ -3,9 +3,8 @@ using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.RequestTypes;
 
-namespace Palavyr.API.Controllers.Response
+namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
 {
     [Route("api")]
     [ApiController]
@@ -23,7 +22,7 @@ namespace Palavyr.API.Controllers.Response
             this.dashContext = dashContext;
         }
 
-        [HttpPut("email/{areaId}/fallback-email-template")]
+        [HttpPut("email/fallback/{areaId}/email-template")]
         public async Task<string> Modify([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] FallbackEmailTemplateRequest request)
         {
             var currentArea = dashContext

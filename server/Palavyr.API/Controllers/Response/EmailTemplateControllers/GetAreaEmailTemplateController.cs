@@ -5,16 +5,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Palavyr.API.Controllers.Response
+namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
 {
     [Route("api")]
     [ApiController]
-    public class GetEmailTemplateController : ControllerBase
+    public class GetAreaEmailTemplateController : ControllerBase
     {
-        private ILogger<GetEmailTemplateController> logger;
+        private ILogger<GetAreaEmailTemplateController> logger;
         private DashContext dashContext;
 
-        public GetEmailTemplateController(DashContext dashContext, ILogger<GetEmailTemplateController> logger)
+        public GetAreaEmailTemplateController(DashContext dashContext, ILogger<GetAreaEmailTemplateController> logger)
         {
             this.dashContext = dashContext;
             this.logger = logger;
@@ -26,14 +26,14 @@ namespace Palavyr.API.Controllers.Response
         /// <param name="accountId"></param>
         /// <param name="areaId"></param>
         /// <returns></returns>
-        [HttpGet("email/{areaId}/emailTemplate")]
+        [HttpGet("email/{areaId}/email-template")]
         public async Task<string> GetEmailTemplate([FromHeader] string accountId, string areaId)
         {
-            var record = await dashContext
+            var area = await dashContext
                 .Areas
                 .Where(row => row.AccountId == accountId)
                 .SingleOrDefaultAsync(row => row.AreaIdentifier == areaId);
-            var emailTemplate = record.EmailTemplate;
+            var emailTemplate = area.EmailTemplate;
             return emailTemplate;
         }
         

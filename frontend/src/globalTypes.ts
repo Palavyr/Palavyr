@@ -538,3 +538,21 @@ export type ProductIds = {
     premiumProductId: string;
     proProductId: string;
 }
+
+export type Todos = {
+    name: string;
+    emailAddress: string;
+    logoUri: string;
+    isVerified: boolean;
+    awaitingVerification: boolean;
+    phoneNumber: string;
+};
+
+export type TodosAsBoolean = {
+    name: boolean;
+    emailAddress: string;
+    logoUri: boolean;
+    isVerified: boolean;
+    awaitingVerification: boolean;
+    phoneNumber: boolean;
+};

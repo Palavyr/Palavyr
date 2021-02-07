@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Palavyr.API.Controllers.Response
+namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
 {
     [Route("api")]
     [ApiController]
@@ -22,7 +22,7 @@ namespace Palavyr.API.Controllers.Response
             this.accountContext = accountContext;
         }
 
-        [HttpPut("email/default-fallback-email-template")]
+        [HttpPut("email/fallback/default-email-template")]
         public async Task<string> Modify([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] DefaultEmailTemplateRequest request)
         {
             var account = await accountContext.Accounts.SingleAsync(row => row.AccountId == accountId);

@@ -86,8 +86,11 @@ namespace Palavyr.API.Controllers.WidgetLive
             var toAddress = emailRequest.EmailAddress;
 
             var area = dashContext.Areas.Single(row => row.AreaIdentifier == areaId);
-            var subject = area.Subject;
-            var htmlBody = area.EmailTemplate;
+            
+            
+            var subject = area.UseAreaFallbackEmail ? area.Subject : account.GeneralFallbackSubject;
+            var htmlBody = area.UseAreaFallbackEmail ? area.EmailTemplate : account.GeneralFallbackEmailTemplate;
+            
             var textBody = ""; // This can be another upload. People can decide one or both. Html is prioritized.
 
             htmlBody = ResponseCustomizer.Customize(htmlBody, emailRequest, account);

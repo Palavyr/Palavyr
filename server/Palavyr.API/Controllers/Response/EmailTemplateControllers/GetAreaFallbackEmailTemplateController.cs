@@ -5,16 +5,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Palavyr.API.Controllers.Response
+namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
 {
     [Route("api")]
     [ApiController]
-    public class GetAreaFallbackEmailTemplate : ControllerBase
+    public class GetAreaFallbackEmailTemplateController : ControllerBase
     {
-        private ILogger<GetAreaFallbackEmailTemplate> logger;
+        private ILogger<GetAreaFallbackEmailTemplateController> logger;
         private DashContext dashContext;
 
-        public GetAreaFallbackEmailTemplate(DashContext dashContext, ILogger<GetAreaFallbackEmailTemplate> logger)
+        public GetAreaFallbackEmailTemplateController(DashContext dashContext, ILogger<GetAreaFallbackEmailTemplateController> logger)
         {
             this.dashContext = dashContext;
             this.logger = logger;
@@ -26,7 +26,7 @@ namespace Palavyr.API.Controllers.Response
         /// <param name="accountId"></param>
         /// <param name="areaId"></param>
         /// <returns></returns>
-        [HttpGet("email/{areaId}/fallback-email-template")]
+        [HttpGet("email/fallback/{areaId}/email-template")]
         public async Task<string> Get([FromHeader] string accountId, string areaId)
         {
             var area = await dashContext
