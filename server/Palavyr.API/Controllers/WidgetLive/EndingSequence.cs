@@ -20,7 +20,6 @@ namespace Palavyr.API.Controllers.WidgetLive
 
         public static List<ConversationNode> AttachEndingSequenceToNodeList(List<ConversationNode> nodeList, string areaId, string accountId)
         {
-            var thanksId = GuidUtils.CreateNewId();
             var mayWeSendAnEmailId = GuidUtils.CreateNewId();
             var sendEmailId = GuidUtils.CreateNewId();
             var dontSendEmailRestartId = GuidUtils.CreateNewId();
@@ -28,23 +27,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             var fallbackRetrySendEmailSecondAttemptId = GuidUtils.CreateNewId();
             var sendTooComplicatedEmailId = GuidUtils.CreateNewId();
             var mayWeSendAnEmailTooComplicatedId = GuidUtils.CreateNewId();
-
-
-            var thanksVeryMuch = ConversationNode.CreateNew(
-                thanksId,
-                DefaultNodeTypeOptions.ProvideInfo.StringName,
-                "Thanks very much for provided information to us.",
-                areaId,
-                nodeChildrenString: TreeUtils.CreateNodeChildrenString(mayWeSendAnEmailId),
-                "",
-                "",
-                accountId,
-                false,
-                false,
-                false,
-                false
-            );
-
+            
             var mayWeSendAnEmail = ConversationNode.CreateNew(
                 mayWeSendAnEmailId,
                 DefaultNodeTypeOptions.YesNo.StringName,
@@ -52,7 +35,7 @@ namespace Palavyr.API.Controllers.WidgetLive
                 areaId,
                 nodeChildrenString: TreeUtils.CreateNodeChildrenString(sendEmailId, dontSendEmailRestartId), // TODO: Get the nodeIds from the yes and No
                 "",
-                "",
+                TreeUtils.CreateValueOptions(DefaultNodeTypeOptions.YesNo.No, DefaultNodeTypeOptions.YesNo.Yes),
                 accountId,
                 false,
                 false,
@@ -65,7 +48,7 @@ namespace Palavyr.API.Controllers.WidgetLive
                 DefaultNodeTypeOptions.SendEmail.StringName,
                 "Wait just a moment while I send you a confirmation email with some information",
                 areaId,
-                nodeChildrenString: "", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
+                nodeChildrenString: "Placeholder", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
                 DefaultNodeTypeOptions.YesNo.Yes,
                 "",
                 accountId,
@@ -122,7 +105,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             
             var emailSendFailedFirstAttempt = ConversationNode.CreateNew(
                 EmailFailedNodeId,
-                "EmailSendFailed-FirstAttempt",
+                "EmailSendFailedFirstAttempt",
                 "Hmm, we were not able to send an email to the address provided. Could you check that is correct?",
                 areaId,
                 retrySendEmailSecondAttemptId,
@@ -137,7 +120,7 @@ namespace Palavyr.API.Controllers.WidgetLive
                        
             var fallbackEmailSendFailedFirstAttempt = ConversationNode.CreateNew(
                 FallbackEmailFailedNodeId,
-                "EmailSendFailed-FirstAttempt",
+                "EmailSendFailedFirstAttempt",
                 "Hmm, we were not able to send an email to the address provided. Could you check that is correct?",
                 areaId,
                 fallbackRetrySendEmailSecondAttemptId,
@@ -155,7 +138,7 @@ namespace Palavyr.API.Controllers.WidgetLive
                 DefaultNodeTypeOptions.SendEmail.StringName,
                 "Wait just a moment while I try that again.",
                 areaId,
-                nodeChildrenString: "", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
+                nodeChildrenString: "Placeholder", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
                 "",
                 "",
                 accountId,
@@ -170,7 +153,7 @@ namespace Palavyr.API.Controllers.WidgetLive
                 DefaultNodeTypeOptions.SendEmail.StringName,
                 "Wait just a moment while I try that again.",
                 areaId,
-                nodeChildrenString: "", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
+                nodeChildrenString: "Placeohlder", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
                 "",
                 "",
                 accountId,
@@ -187,7 +170,7 @@ namespace Palavyr.API.Controllers.WidgetLive
                 areaId,
                 nodeChildrenString: TreeUtils.CreateNodeChildrenString(sendTooComplicatedEmailId, dontSendEmailRestartId),
                 "",
-                "",
+                TreeUtils.CreateValueOptions(DefaultNodeTypeOptions.YesNo.No, DefaultNodeTypeOptions.YesNo.Yes),
                 accountId,
                 false,
                 false,
@@ -200,7 +183,7 @@ namespace Palavyr.API.Controllers.WidgetLive
                 DefaultNodeTypeOptions.SendTooComplicatedEmail.StringName,
                 "Wait just a moment while I send an email.",
                 areaId,
-                nodeChildrenString: "", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
+                nodeChildrenString: "Placeholder", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
                 DefaultNodeTypeOptions.YesNo.Yes,
                 "",
                 accountId,
@@ -222,7 +205,7 @@ namespace Palavyr.API.Controllers.WidgetLive
 
                     if (node.NodeType == DefaultNodeTypeOptions.SendResponse.StringName)
                     {
-                        node.NodeChildrenString = thanksId; // we're deciding that the thanksId node will be the entry point in to the response ending sequence
+                        node.NodeChildrenString = mayWeSendAnEmailId; // we're deciding that the thanksId node will be the entry point in to the response ending sequence
                         continue;
                     }
 
@@ -233,7 +216,6 @@ namespace Palavyr.API.Controllers.WidgetLive
             nodeList.AddRange(
                 new List<ConversationNode>
                 {
-                    thanksVeryMuch,
                     mayWeSendAnEmail,
                     sendEmail,
                     restartAfterDontSendEmail,

@@ -18,8 +18,8 @@ export const makeProvideInfo = ({ node, nodeList, client, convoId, convoContext 
         return (
             <Table>
                 <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
-                <TableRow>
-                    <TableCell align="right">
+                <SingleRowSingleCell align="right">
+
                         <ResponseButton
                             text="Proceed"
                             onClick={() => {
@@ -28,8 +28,7 @@ export const makeProvideInfo = ({ node, nodeList, client, convoId, convoContext 
                                 setDisabled(true);
                             }}
                         />
-                    </TableCell>
-                </TableRow>
+                    </SingleRowSingleCell>
             </Table>
         );
     };

@@ -28,6 +28,10 @@ const useStyles = makeStyles(() => ({
         borderBottomRightRadius: "3px",
         backgroundColor: "white",
     },
+    otherbox: {
+        paddingLeft: "2rem",
+        paddingRight: "2rem",
+    }
 
 }));
 
@@ -52,11 +56,12 @@ export const CustomNodeSelect = ({ onChange, label, nodeOptionList }: ISelectNod
                         disableClearable
                         clearOnEscape
                         className={cls.autocomplete}
+                        classes={{ root: cls.otherbox }}
                         onChange={onChange}
                         options={sortByPropertyAlphabetical(groupGetter, nodeOptionList)}
                         groupBy={(nodeOption) => nodeOption.groupName}
                         getOptionLabel={(option) => option.text}
-                        renderInput={(params) => <TextField data-lpignore="true" className={cls.selectbox} label={label} {...params} />}
+                        renderInput={(params) => <TextField data-lpignore="true" label={label} {...params} />}
                     />
                 )}
                 <FormHelperText className={cls.formControl}>Select</FormHelperText>

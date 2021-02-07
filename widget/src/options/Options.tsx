@@ -2,9 +2,8 @@ import * as React from 'react';
 import { SelectedOption, AreaTable, WidgetPreferences } from '../types';
 import { useLocation } from 'react-router-dom';
 import CreateClient from '../client/Client';
-import { CaroselOptions } from './optionFormats/CaroselOptions';
 import { useState, useCallback, useEffect } from 'react';
-import GroupedOptions from './optionFormats/GroupedOptions';
+import { DropdownListOptions } from './optionFormats/DropdownOptionsList';
 
 interface IOptionSelector {
     setSelectedOption: (option: SelectedOption) => void;
@@ -16,7 +15,7 @@ export const OptionSelector = ({ setSelectedOption, preferences }: IOptionSelect
     var secretKey = (new URLSearchParams(useLocation().search)).get("key")
     const Client = CreateClient(secretKey);
 
-    const [useGroups, setUseGroups] = useState<boolean>();
+    const [, setUseGroups] = useState<boolean>();
     const [options, setOptions] = useState<Array<SelectedOption>>();
 
     const loadAreas = useCallback(async () => {
@@ -35,5 +34,6 @@ export const OptionSelector = ({ setSelectedOption, preferences }: IOptionSelect
         loadAreas();
     }, [loadAreas])
 
-    return useGroups ? <GroupedOptions /> : <CaroselOptions options={options} setSelectedOption={setSelectedOption} preferences={preferences} />;
+    return <DropdownListOptions options={options} setSelectedOption={setSelectedOption} preferences={preferences} />
+    // return useGroups ? <GroupedOptions /> : <CaroselOptions options={options} setSelectedOption={setSelectedOption} preferences={preferences} />;
 }

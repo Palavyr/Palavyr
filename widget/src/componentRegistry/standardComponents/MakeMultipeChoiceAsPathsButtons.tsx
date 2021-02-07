@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ConvoTableRow } from "../../types";
-import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
+import { toggleInputDisabled, toggleMsgLoader } from "src/widgetCore/store/dispatcher";
 import { getChildNodes } from "../utils";
 import { TableRow, TableCell, Table, makeStyles } from "@material-ui/core";
 import { responseAction, IProgressTheChat } from "..";
@@ -56,6 +56,7 @@ export const makeMultipleChoiceAsPathButtons = ({ node, nodeList, client, convoI
                                     key={child.id}
                                     text={child.optionPath}
                                     onClick={() => {
+
                                         var response = child.optionPath;
                                         responseAction(node, child, nodeList, client, convoId, response, convoContext);
                                         toggleInputDisabled();

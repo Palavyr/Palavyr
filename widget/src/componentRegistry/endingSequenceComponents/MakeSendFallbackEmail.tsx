@@ -15,7 +15,7 @@ const assembleCompletedConvo = (conversationId: string, areaIdentifier: string, 
     };
 };
 
-export const makeSendEmail = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
+export const makeSendFallbackEmail = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
     toggleInputDisabled(); // can manually toggle in each component when necessary
     const areaId = nodeList[0].areaIdentifier;
 

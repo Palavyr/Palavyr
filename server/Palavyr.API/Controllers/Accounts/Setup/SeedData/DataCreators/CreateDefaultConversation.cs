@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Internal;
 using Palavyr.API.Controllers.WidgetLive;
 using Palavyr.API.Utils;
 using Server.Domain.Configuration.Constant;

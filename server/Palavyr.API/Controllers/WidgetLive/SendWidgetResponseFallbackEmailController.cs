@@ -63,7 +63,7 @@ namespace Palavyr.API.Controllers.WidgetLive
                 : account.GeneralFallbackEmailTemplate;
             
             
-            var fallbackTextBody = ""; // This can be another upload. People can decide one or both. Html is prioritized.
+            var fallbackTextBody = area.FallbackEmailTemplate; // This can be another upload. People can decide one or both. Html is prioritized.
 
             fallbackHtmlBody = ResponseCustomizer.Customize(fallbackHtmlBody, emailRequest, account);
 

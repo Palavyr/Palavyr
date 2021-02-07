@@ -1,6 +1,5 @@
 import { Registry, ConvoTableRow, ConversationUpdate } from "../types";
-import { makeTooComplicated } from "./standardComponents/TooComplicated";
-import { renderCustomComponent, addUserMessage } from "src/widgetCore/store/dispatcher";
+import { renderCustomComponent, addUserMessage, toggleMsgLoader } from "src/widgetCore/store/dispatcher";
 import { IClient } from "../client/Client";
 import { makeName } from "./endingSequenceComponents/MakeName";
 import { makeEmail } from "./endingSequenceComponents/MakeEmail";
@@ -17,6 +16,10 @@ import { makeMultipleChoiceAsPathButtons } from "./standardComponents/MakeMultip
 import { makeMultipleChoiceContinueButtons } from "./standardComponents/MakeMultipleChoiceContinueButtons";
 import { makeTakeCurrency } from "./standardComponents/MakeTakeCurrency";
 import { makePercentOfThreshold } from "./dynamicTableComponents/MakePercentOfThreshold";
+import { makeTooComplicated } from "./standardComponents/MakeTooComplicated";
+import { random } from "./random";
+import { makeSendFallbackEmail } from "./endingSequenceComponents/MakeSendFallbackEmail";
+
 
 export interface IProgressTheChat {
     node: ConvoTableRow;
@@ -34,6 +37,7 @@ export const responseAction = (node: ConvoTableRow, child: ConvoTableRow, nodeLi
             addUserMessage(response)
         }
     }
+    toggleMsgLoader()
 
     var updatePayload: ConversationUpdate = {
         ConversationId: convoId,
@@ -45,7 +49,10 @@ export const responseAction = (node: ConvoTableRow, child: ConvoTableRow, nodeLi
     }
 
     client.Widget.Access.postUpdateAsync(updatePayload); // no need to await for this
-    renderNextComponent(child, nodeList, client, convoId, convoContext); // convoId should come from redux store in the future
+    setTimeout(() =>{
+        renderNextComponent(child, nodeList, client, convoId, convoContext); // convoId should come from redux store in the future
+        toggleMsgLoader()
+    }, random(1000, 3000, undefined))
 }
 
 
@@ -90,7 +97,10 @@ export enum NodeTypes {
     PercentOfThreshold = "PercentOfThreshold",
 
     SendEmail = "SendEmail",
-    Restart = "Restart"
+    FirstEmailFailed = "EmailSendFailedFirstAttempt",
+    SendTooComplicatedEmail = "SendTooComplicatedEmail",
+    SendResponse = "SendResponse",
+    Restart = "Restart",
 }
 
 export const ComponentRegistry: Registry = {
@@ -118,7 +128,12 @@ export const ComponentRegistry: Registry = {
     [NodeTypes.SelectOneFlat]: makeSelectOneFlat, // could be replaced with makeMultiple choice continue,
     [NodeTypes.PercentOfThreshold]: makePercentOfThreshold,
 
+    // Ending sequence nodes
+    [NodeTypes.SendResponse]: makeProvideInfo,
     [NodeTypes.SendEmail]: makeSendEmail,
+    [NodeTypes.FirstEmailFailed]: makeProvideInfo,
+    [NodeTypes.SendTooComplicatedEmail]: makeSendFallbackEmail,
+
     [NodeTypes.Restart]: makeRestart
 }
 

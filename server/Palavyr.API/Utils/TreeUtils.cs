@@ -109,5 +109,10 @@ namespace Palavyr.API.Utils
         {
             return string.Join(Delimiters.NodeChildrenStringDelimiter, nodeIds);
         }
+
+        public static string CreateValueOptions(params string[] options)
+        {
+            return string.Join(Delimiters.PathOptionDelimiter, options);
+        }
     }
 }
