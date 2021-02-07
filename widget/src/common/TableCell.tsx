@@ -4,7 +4,8 @@ import React from 'react'
 
 const useStyles = makeStyles(theme => ({
     cell: {
-        border: "0px solid white"
+        border: "0px solid white",
+        width: "100%"
     }
 }))
 
@@ -24,7 +25,7 @@ export const NoBorderTableCell = ({align, children}: IHaveNoBorder) => {
 
 export const SingleRowSingleCell = ({align, children}: IHaveNoBorder) => {
     return (
-        <TableRow>
+        <TableRow style={{width: "100%"}}>
             <NoBorderTableCell align={align}>
                 {children}
             </NoBorderTableCell>

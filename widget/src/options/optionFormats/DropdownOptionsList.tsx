@@ -1,19 +1,23 @@
 import * as React from "react";
 import { SelectedOption, WidgetPreferences } from "../../types";
 import { useHistory, useLocation } from "react-router-dom";
-import { Paper, makeStyles, Card, TextField } from "@material-ui/core";
+import { Paper, makeStyles, Card, TextField, Typography } from "@material-ui/core";
 import { useEffect } from "react";
 import { sortByPropertyAlphabetical } from "src/common/sorting";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import classNames from "classnames";
 
 const useStyles = makeStyles(() => ({
     paper: {
         width: "100%",
         height: "100%",
+        wordWrap: "break-word",
     },
-    mainList: (prefs: WidgetPreferences) => ({
+    selectListColors: (prefs: WidgetPreferences) => ({
         backgroundColor: prefs.selectListColor,
         color: prefs.listFontColor,
+    }),
+    mainList: (prefs: WidgetPreferences) => ({
         maxHeight: "100%",
         height: "100%",
         overflow: "auto",
@@ -27,6 +31,7 @@ const useStyles = makeStyles(() => ({
         color: prefs.headerFontColor,
         textAlign: "center",
         minWidth: 275,
+        wordWrap: "break-word",
         borderRadius: "0px",
     }),
     bullet: {
@@ -47,7 +52,7 @@ const useStyles = makeStyles(() => ({
         wordBreak: "normal",
     },
     autocomplete: {
-        marginTop: "1rem",
+        paddingTop: "1rem",
     },
     selectbox: {
         paddingLeft: "2rem",
@@ -77,21 +82,28 @@ export const DropdownListOptions = ({ setSelectedOption, options, preferences }:
     const sortGetter = (opt: SelectedOption) => opt.areaDisplay;
 
     return (
-        <Paper className={cls.paper}>
-            <Card className={cls.root}>{preferences && <div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: preferences.header }} />}</Card>
-            {options && (
-                <Autocomplete
-                    size="small"
-                    classes={{ root: cls.selectbox }}
-                    disableClearable
-                    clearOnEscape
-                    className={cls.autocomplete}
-                    onChange={onChange}
-                    options={sortByPropertyAlphabetical(sortGetter, options)}
-                    getOptionLabel={(option: SelectedOption) => option.areaDisplay}
-                    renderInput={params => <TextField data-lpignore="true" label="Select an area..." {...params} />}
-                />
-            )}
-        </Paper>
+        // <div style={{height: "100%", backgroundColor: "blue"}}>
+            <Paper className={cls.paper}>
+                <Card className={cls.root}>{preferences && <div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: preferences.header }} />}</Card>
+                <div className={cls.selectListColors}>
+                    {/* <Typography style={{ paddingTop: "1rem" }} variant="h5" align="center">
+                    Select an area you'd like to recieve information about
+                </Typography> */}
+                    {options && (
+                        <Autocomplete
+                            size="small"
+                            classes={{ root: cls.selectbox, paper: cls.selectListColors }}
+                            disableClearable
+                            clearOnEscape
+                            className={classNames(cls.autocomplete, cls.mainList, cls.selectListColors)}
+                            onChange={onChange}
+                            options={sortByPropertyAlphabetical(sortGetter, options)}
+                            getOptionLabel={(option: SelectedOption) => option.areaDisplay}
+                            renderInput={params => <TextField style={{ color: "black" }} className={cls.selectListColors} data-lpignore="true" label="Select an area or start typing..." {...params} />}
+                        />
+                    )}
+                </div>
+            </Paper>
+        // </div>
     );
 };
