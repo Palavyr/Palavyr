@@ -1,30 +1,35 @@
 import React from "react";
 import { SetStateAction } from "react";
 import { Dispatch } from "react";
-import { UserDetails } from "src/widgetCore/store/types";
+import { UserDetails } from "src/types";
 import { FormDialog } from "./FormDialog";
 import { UserDetailsDialogContent } from "./UserDetailsDialogContent";
 
 export interface CollectDetailsFormProps {
+    detailsSet: boolean;
+    setDetailsSet: Dispatch<SetStateAction<boolean>>;
     userDetails: UserDetails;
     setUserDetails: Dispatch<SetStateAction<UserDetails>>;
     userDetailsDialogState: boolean;
     setUserDetailsDialogState: Dispatch<SetStateAction<boolean>>;
 }
 
-export const CollectDetailsForm = ({userDetails, setUserDetails, userDetailsDialogState, setUserDetailsDialogState}: CollectDetailsFormProps) => {
+export const CollectDetailsForm = ({ detailsSet, setDetailsSet, userDetails, setUserDetails, userDetailsDialogState, setUserDetailsDialogState }: CollectDetailsFormProps) => {
+
+
+
     return (
-        <FormDialog
-            open={true}
-            onClose={() => {
-                //check if inputs are all populated
-            }}
-            // onFormSubmit={() => {
-            //     // update dispatch store
-            // }}
-            hideBackdrop
-            headline="Provide your contact details"
-            content={<UserDetailsDialogContent userDetails={userDetails} setUserDetails={setUserDetails} />}
-        />
+        <>
+            <FormDialog
+                detailsSet={detailsSet}
+                open={true}
+                onClose={() => {
+                    setUserDetailsDialogState(false);
+                }}
+                hideBackdrop
+                headline="Provide your contact details"
+                content={<UserDetailsDialogContent setDetailsSet={setDetailsSet} userDetails={userDetails} setUserDetails={setUserDetails} />}
+            />
+        </>
     );
 };

@@ -79,3 +79,9 @@ export type PreCheckResult = {
     nextNodeId: string;
     result: boolean;
   }
+
+export type UserDetails = {
+    userEmail: string;
+    userPhone: string;
+    userName: string;
+  }

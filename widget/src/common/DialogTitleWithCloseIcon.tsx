@@ -1,7 +1,7 @@
 import React from "react";
 import { IconButton, DialogTitle, Typography, Box, useTheme } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
-
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
 export interface IDialogTitleWithCloseIcon {
     onClose: any,
@@ -9,9 +9,10 @@ export interface IDialogTitleWithCloseIcon {
     disablePadding?: boolean
     disabled?: boolean,
     paddingBottom?: number,
+    detailsSet: boolean,
 }
 
-export const DialogTitleWithCloseIcon = ({ paddingBottom, onClose, disabled, title, disablePadding }: IDialogTitleWithCloseIcon) => {
+export const DialogTitleWithCloseIcon = ({ paddingBottom, onClose, disabled, title, disablePadding, detailsSet }: IDialogTitleWithCloseIcon) => {
 
     const theme = useTheme();
 
@@ -41,7 +42,7 @@ export const DialogTitleWithCloseIcon = ({ paddingBottom, onClose, disabled, tit
                     disabled={disabled}
                     aria-label="Close"
                 >
-                    <CloseIcon />
+                    {detailsSet && <CheckCircleOutlineIcon />}
                 </IconButton>
             </Box>
         </DialogTitle>

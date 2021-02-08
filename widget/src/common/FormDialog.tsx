@@ -1,6 +1,7 @@
 import React from "react";
 import { Dialog, DialogContent, Box, makeStyles } from "@material-ui/core";
 import { DialogTitleWithCloseIcon } from "./DialogTitleWithCloseIcon";
+import { useState } from "react";
 
 
 export interface IFormDialog {
@@ -11,7 +12,8 @@ export interface IFormDialog {
     // onFormSubmit: any,
     content: React.ReactElement,
     // actions: React.ReactElement,
-    hideBackdrop: boolean
+    hideBackdrop: boolean,
+    detailsSet: boolean
 }
 
 const useStyles = makeStyles(theme => ({
@@ -36,10 +38,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export const FormDialog = ({ open, onClose, headline, content, hideBackdrop }: IFormDialog) => {
+export const FormDialog = ({ open, onClose, headline, content, hideBackdrop, detailsSet}: IFormDialog) => {
 
     const classes = useStyles();
-
     return (
         <Dialog
             open={open}
@@ -55,6 +56,7 @@ export const FormDialog = ({ open, onClose, headline, content, hideBackdrop }: I
             <DialogTitleWithCloseIcon
                 title={headline}
                 onClose={onClose}
+                detailsSet={detailsSet}
                 // disabled={loading}
             />
             <DialogContent className={classes.dialogContent}>
