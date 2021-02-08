@@ -69,3 +69,9 @@ export interface GlobalState {
   quickButtons: QuickButtonsState;
   preview: FullscreenPreviewState;
 }
+
+export type UserDetails = {
+  userEmail: string;
+  userPhone: string;
+  userName: string;
+}
