@@ -523,15 +523,18 @@ export type LocaleDefinition = {
     localeId: string;
     localeCountry: string;
     supportedLocales: string[];
-    localeMap: LocalMap;
+    localeMap: LocaleMap;
     localeCurrencySymbol: string;
+    localePhonePattern: string;
 }
 
 export type LocaleMapItem = {
     localeId: string;
     countryName: string;
+    phonePattern: string;
+    currencySymbol: string;
 }
-export type LocalMap = LocaleMapItem[];
+export type LocaleMap = LocaleMapItem[];
 
 export type ProductIds = {
     freeProductId: string;

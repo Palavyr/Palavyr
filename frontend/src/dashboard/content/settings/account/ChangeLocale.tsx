@@ -3,7 +3,7 @@ import React, { useCallback, useState, useEffect } from "react";
 import { Divider, makeStyles, MenuItem } from "@material-ui/core";
 import { SettingsGridRowList } from "@common/components/SettingsGridRowList";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { LocaleMapItem, LocalMap } from "@Palavyr-Types";
+import { LocaleMapItem, LocaleMap } from "@Palavyr-Types";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
 const useStyles = makeStyles(() => ({
@@ -31,14 +31,14 @@ export const ChangeLocale = () => {
     const [, setLoaded] = useState<boolean>(false);
     const [, setLocaleID] = useState<string | undefined>();
     const [localeName, setLocaleName] = useState<string | undefined>();
-    const [localeMap, setLocaleMap] = useState<LocalMap>([]);
+    const [localeMap, setLocaleMap] = useState<LocaleMap>([]);
     const [currencySymbol, setCurrencySymbol] = useState<string>("");
     const [, setAlert] = useState<boolean>(false);
 
     const classes = useStyles();
 
     const loadLocale = useCallback(async () => {
-        var { data: locale } = await client.Settings.Account.GetLocale();
+        const { data: locale } = await client.Settings.Account.GetLocale();
 
         setLocaleID(locale.localeId);
         setLocaleName(locale.localeCountry);

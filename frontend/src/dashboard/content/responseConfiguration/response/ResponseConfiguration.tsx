@@ -5,15 +5,13 @@ import { StaticTablesModifier } from "./tables/statictable/staticTableModifier";
 import { LogueModifier } from "./logueModifier";
 import { cloneDeep } from "lodash";
 import { ExpandableTextBox } from "@common/components/ExpandableTextBox";
-import { Statement } from "@common/components/Statement";
 import { DynamicTableConfiguration } from "./tables/dynamicTable/DynamicTableConfiguration";
 import { StaticTableConfiguration } from "./tables/statictable/StaticFeeTableConfiguration";
-import { makeStyles, Typography } from "@material-ui/core";
-import { EstimateHelp } from "dashboard/content/help/EstimateHelp";
+import { makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     titleText: {
         textAlign: "center",
         fontWeight: "bold",
@@ -81,30 +79,27 @@ export const ResponseConfiguration = () => {
         };
     }, [areaIdentifier, loadEstimateConfiguration]);
 
-    const classes = useStyles();
     return (
         <>
             <AreaConfigurationHeader title="Custom and Static Tables" subtitle="Use this editor to configure the fee tables, as well as associated information, that will be sent in the response PDF for this area." />
             <ExpandableTextBox title="Introductory statement" updatableValue={prologue} onChange={updatePrologue} onSave={savePrologue}>
-                <Statement title="Intro Statement">
-                    <>
-                        <span>Use this section to create an introduction statement for your estimate.</span>
-                        <span>You can make it clear that fees are estimate only, or provide context for your client to understand their estimate.</span>
-                    </>
-                </Statement>
+                <AreaConfigurationHeader divider title="Create an introduction for your estimate" subtitle="You can make it clear that fees are estimate only, or provide context for your client to understand their estimate." />
             </ExpandableTextBox>
 
-            <DynamicTableConfiguration title="Customized Fees" areaIdentifier={areaIdentifier} />
+            <DynamicTableConfiguration title="Customized Fees" areaIdentifier={areaIdentifier}>
+                <AreaConfigurationHeader divider title="Configure a custom fee table" subtitle="When you configure a custom fee table, it creates a corresponding palavyr node that must be included in the chat conversation." />
+            </DynamicTableConfiguration>
 
-            <StaticTableConfiguration areaIdentifier={areaIdentifier} title="Static Fees" staticTables={staticTables} tableSaver={tableSaver} modifier={staticTablesModifier} />
+            <StaticTableConfiguration areaIdentifier={areaIdentifier} title="Static Fees" staticTables={staticTables} tableSaver={tableSaver} modifier={staticTablesModifier}>
+                <AreaConfigurationHeader
+                    divider
+                    title="Configure a static fee table"
+                    subtitle="Static fees are those fees that don't depend on your customer's responses. If you set any fee a 'per individual', then a corresponding 'Num individals' node must be included in the chat conversation."
+                />
+            </StaticTableConfiguration>
 
-            <ExpandableTextBox title="Outro statement" updatableValue={epilogue} onChange={updateEpilogue} onSave={saveEpilogue}>
-                <Statement title="Epilogue Statement">
-                    <>
-                        <span>Use this section to create an outro statement for your estimate.</span>
-                        <span>E.g. You can make it clear that fees are estimate only, or provide context for your client to understand their estimate.</span>
-                    </>
-                </Statement>
+            <ExpandableTextBox title="Ending statement" updatableValue={epilogue} onChange={updateEpilogue} onSave={saveEpilogue}>
+                <AreaConfigurationHeader divider title="Create an ending statement for your estimate" subtitle="You can make it clear that fees are estimate only, or provide context for your client to understand their estimate." />
             </ExpandableTextBox>
         </>
     );

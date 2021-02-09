@@ -70,7 +70,7 @@ export const ConvoTree = () => {
 
     return (
         <>
-            <AreaConfigurationHeader title="Palaver" subtitle="Configure the palaver (conversation) you wish to provide to your potential clients. Consider planning this before implementing." />
+            <AreaConfigurationHeader title="Palavyr" subtitle="Configure the palaver (conversation) you wish to provide to your potential clients. Consider planning this before implementing." />
             <div className={classes.conversation}>
                 {missingNodeTypes.length > 0 && <MissingDynamicNodes missingNodeTypes={missingNodeTypes} />}
                 <form onSubmit={() => null}>

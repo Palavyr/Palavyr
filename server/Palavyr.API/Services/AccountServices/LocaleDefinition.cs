@@ -9,6 +9,7 @@ namespace Palavyr.API.Services.AccountServices
         public const string CountryId = "localeId";
         public const string CountryName = "countryName";
         public const string CurrencySymbol = "currencySymbol";
+        public const string PhonePattern = "phonePattern";
 
         public string[] GetSupportedLocales => LocaleMap.Select(dict => dict[CountryId]).ToArray();
 
@@ -19,31 +20,36 @@ namespace Palavyr.API.Services.AccountServices
                 {
                     {CountryId, "en-AU"},
                     {CountryName, "Australia"},
-                    {CurrencySymbol, "$"}
+                    {CurrencySymbol, "$"},
+                    {PhonePattern, "+61 (##) ####-####"}
                 },
                 new Dictionary<string, string>()
                 {
                     {CountryId, "en-US"},
                     {CountryName, "United States"},
-                    {CurrencySymbol, "$"}
+                    {CurrencySymbol, "$"},
+                    {PhonePattern, "+1 (###) ###-####"}
                 },
                 new Dictionary<string, string>()
                 {
                     {CountryId, "en-CA"},
                     {CountryName, "Canada"},
-                    {CurrencySymbol, "$"}
+                    {CurrencySymbol, "$"},
+                    {PhonePattern, "+55 (##) #### ####"}
                 },
                 new Dictionary<string, string>()
                 {
                     {CountryId, "en-GB"},
                     {CountryName, "England"},
-                    {CurrencySymbol, "£"}
+                    {CurrencySymbol, "£"},
+                    {PhonePattern, "+56 (##) #### ####"}
                 },
                 new Dictionary<string, string>()
                 {
                     {CountryId, "en-IE"},
                     {CountryName, "Ireland"},
-                    {CurrencySymbol, "€"}
+                    {CurrencySymbol, "€"},
+                    {PhonePattern, "+57 (###) #### ####"}
                 }
             };
 
@@ -56,11 +62,13 @@ namespace Palavyr.API.Services.AccountServices
             LocaleId = localeId;
             LocaleCountry = GetCountryNameByLocaleId(localeId);
             LocaleCurrencySymbol = GetCurrencySymbol(localeId);
+            LocalePhonePattern = GetPhonePattern(localeId);
         }
 
         public string LocaleId { get; set; }
         public string LocaleCountry { get; set; }
         public string LocaleCurrencySymbol { get; set; }
+        public string LocalePhonePattern { get; set; }
 
         public LocaleDefinition Parse(string localeId)
         {
@@ -97,6 +105,17 @@ namespace Palavyr.API.Services.AccountServices
             }
 
             return localeMeta[CurrencySymbol];
+        }
+
+        public string? GetPhonePattern(string localeId)
+        {
+            var localeMeta = GetLocaleMetaById(localeId);
+            if (localeMeta == null)
+            {
+                return null;
+            }
+
+            return localeMeta[PhonePattern];
         }
 
         public bool IsValidLocal()

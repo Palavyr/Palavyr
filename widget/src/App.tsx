@@ -45,9 +45,9 @@ export const App = () => {
         <>
             {isReady === true && selectedOption === null && !userDetailsDialogState && <OptionSelector setUserDetailsDialogState={setUserDetailsDialogstate} setSelectedOption={setSelectedOption} preferences={widgetPrefs} />}
 
-            {isReady === true && selectedOption !== null && userDetailsDialogState && <CollectDetailsForm detailsSet={detailsSet} setDetailsSet={setDetailsSet} userDetailsDialogState={userDetailsDialogState} setUserDetailsDialogState={setUserDetailsDialogstate} userDetails={userDetails} setUserDetails={setUserDetails}/>}
+            {isReady === true && selectedOption !== null && userDetailsDialogState && <CustomWidget setUserDetailsDialogState={setUserDetailsDialogstate} userDetails={userDetails} option={selectedOption} preferences={widgetPrefs} />}
+            {isReady === true && selectedOption !== null && userDetailsDialogState && <CollectDetailsForm detailsSet={detailsSet} setDetailsSet={setDetailsSet} setUserDetailsDialogState={setUserDetailsDialogstate} userDetails={userDetails} setUserDetails={setUserDetails}/>}
 
-            {isReady === true && selectedOption !== null && !userDetailsDialogState && <CustomWidget userDetails={userDetails} option={selectedOption} preferences={widgetPrefs} />}
 
             {isReady === false && (
                 <div style={{ textAlign: "center", paddingTop: "3rem" }}>

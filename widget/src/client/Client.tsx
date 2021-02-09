@@ -1,10 +1,11 @@
 import axios, { AxiosResponse, AxiosInstance } from "axios";
-import { ConversationUpdate, AreaTable, CompleteConverationDetails, PreCheckResult, WidgetPreferences, SendEmailResultResponse } from "../types";
+import { ConversationUpdate, AreaTable, CompleteConverationDetails, PreCheckResult, WidgetPreferences, SendEmailResultResponse, LocaleDefinition } from "../types";
 import { serverUrl } from "./clientUtils";
 
 export interface IClient {
     Widget: {
         Access: {
+            getLocale: () => Promise<AxiosResponse<LocaleDefinition>>,
             runPreCheck: (isDemo: boolean) => Promise<AxiosResponse<PreCheckResult>>;
             fetchWidgetState: () => Promise<AxiosResponse<boolean>>;
             fetchGroups: () => Promise<AxiosResponse>;
@@ -37,6 +38,7 @@ const CreateClient = (secretKey: string): IClient => {
     let Client = {
         Widget: {
             Access: {
+                getLocale: async (): Promise<AxiosResponse<LocaleDefinition>> => AxiosClient.get(`account/settings/locale/widget?key=${secretKey}`),
                 fetchAreas: async (): Promise<AxiosResponse<Array<AreaTable>>> => AxiosClient.get(`widget/areas?key=${secretKey}`),
                 runPreCheck: async (isDemo: boolean): Promise<AxiosResponse<PreCheckResult>> => AxiosClient.get(`widget/pre-check?key=${secretKey}&demo=${isDemo}`),
                 fetchWidgetState: async (): Promise<AxiosResponse<boolean>> => AxiosClient.get(`widget/widget-active-state?key=${secretKey}`),

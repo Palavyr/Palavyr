@@ -5,10 +5,12 @@ import { cloneDeep } from "lodash";
 import { Accordion, AccordionSummary, Typography, Button, makeStyles } from "@material-ui/core";
 import { SingleDynamicFeeTable } from "./SingleDynamicFeeTable";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import AddBoxIcon from '@material-ui/icons/AddBox';
 
 export interface IDynamicTable {
     title: string;
     areaIdentifier: string;
+    children: React.ReactNode;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -17,15 +19,13 @@ const useStyles = makeStyles((theme) => ({
     },
     header: {
         background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
-
     },
 }));
 
-
 export type TableNameMap = {
-    [tableName: string]: string
-}
-export const DynamicTableConfiguration = ({ title, areaIdentifier }: IDynamicTable) => {
+    [tableName: string]: string;
+};
+export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: IDynamicTable) => {
     const client = new ApiClient();
     const classes = useStyles();
 
@@ -34,12 +34,11 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier }: IDynamicTab
 
     const [tableMetas, setTableMetas] = useState<DynamicTableMetas>([]);
     const [availableTables, setAvailableTables] = useState<Array<string>>([]);
-    const [tableNameMap, setTableNameMap] = useState<TableNameMap>({})
-
+    const [tableNameMap, setTableNameMap] = useState<TableNameMap>({});
 
     const loadTableData = useCallback(async () => {
         const { data: dynamicTableMetas } = await client.Configuration.Tables.Dynamic.getDynamicTableMetas(areaIdentifier);
-        const {data: tableNameMap} = await client.Configuration.Tables.Dynamic.getDynamicTableTypes();
+        const { data: tableNameMap } = await client.Configuration.Tables.Dynamic.getDynamicTableTypes();
 
         // map that provides e.g. Select One Flat: SelectOneFlat. used to derive the pretty names
         const availableTablePrettyNames = Object.keys(tableNameMap);
@@ -75,6 +74,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier }: IDynamicTab
                 <AccordionSummary className={classes.header} expandIcon={<ExpandMoreIcon style={{ color: "white" }} />} aria-controls="panel-content" id="panel-header">
                     <Typography className={classes.title}>{title}</Typography>
                 </AccordionSummary>
+                {children}
                 <Suspense fallback={<h1>Loading Dynamic Tables...</h1>}>
                     {tableMetas.length === 0 && (
                         <Typography color="secondary" style={{ padding: "0.8rem" }} variant="h5">
@@ -100,7 +100,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier }: IDynamicTab
                             />
                         );
                     })}
-                    <Button variant="contained" color="primary" style={{ left: "10px", bottom: "10px" }} onClick={addDynamicTable}>
+                    <Button startIcon={<AddBoxIcon />} variant="contained" color="primary" style={{ marginTop: "1rem", marginBottom: "1rem", left: "15px", bottom: "10px" }} onClick={addDynamicTable}>
                         Add Dynamic Table
                     </Button>
                 </Suspense>

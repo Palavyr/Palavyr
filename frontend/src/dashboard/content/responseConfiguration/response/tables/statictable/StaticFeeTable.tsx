@@ -1,9 +1,8 @@
 import React from "react";
-import { makeStyles, TextField, Divider, Button, TableRow, Table, TableHead, TableBody, TableCell } from "@material-ui/core";
+import { makeStyles, TextField, Button, TableRow, Table, TableHead, TableBody, TableCell } from "@material-ui/core";
 import { StaticTableMetas, StaticTableMeta, StaticTableRow } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./staticTableModifier";
 import { StaticRow } from "./StaticRow";
-import DeleteIcon from '@material-ui/icons/Delete';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
@@ -75,7 +74,7 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                         <TableCell align={cellAlignment} className={classes.headerText} >Amount</TableCell>
                         <TableCell align={cellAlignment} className={classes.headerText} >Max Amount (if range)</TableCell>
                         <TableCell align={cellAlignment} className={classes.headerText} >Range</TableCell>
-                        <TableCell align={cellAlignment} className={classes.headerText} >Per Person</TableCell>
+                        <TableCell align={cellAlignment} className={classes.headerText} >Per Individual</TableCell>
                         <TableCell align={cellAlignment} className={classes.headerText} ></TableCell>
                     </TableRow>
                 </TableHead>

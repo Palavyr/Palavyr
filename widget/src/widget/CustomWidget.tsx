@@ -12,12 +12,13 @@ import { useLocation } from 'react-router-dom';
 
 
 interface ICustomWidget {
+    setUserDetailsDialogState: any;
     userDetails: UserDetails;
     option: SelectedOption;
     preferences: WidgetPreferences;
 }
 
-export const CustomWidget = ({ userDetails, option, preferences }: ICustomWidget) => {
+export const CustomWidget = ({ setUserDetailsDialogState, userDetails, option, preferences }: ICustomWidget) => {
 
     var secretKey = (new URLSearchParams(useLocation().search)).get("key")
     const client = CreateClient(secretKey);
@@ -76,6 +77,7 @@ export const CustomWidget = ({ userDetails, option, preferences }: ICustomWidget
 
     return (
         <Widget
+            openUserDetails={setUserDetailsDialogState}
             title={prefs?.title}
             subtitle={prefs?.subtitle}
             senderPlaceHolder={prefs?.placeholder}

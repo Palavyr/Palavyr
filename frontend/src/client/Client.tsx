@@ -224,7 +224,6 @@ export class ApiClient {
             getUserName: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/user-name`),
             getPhoneNumber: async (): Promise<AxiosResponse<PhoneSettingsResponse>> => this.client.get(`account/settings/phone-number`),
 
-            // TODO: Stronger typing for locale
             GetLocale: async (): Promise<AxiosResponse<LocaleDefinition>> => this.client.get(`account/settings/locale`),
             getCompanyLogo: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/logo`),
             getCurrentPlan: async (): Promise<AxiosResponse<PlanStatus>> => this.client.get(`account/settings/current-plan`),

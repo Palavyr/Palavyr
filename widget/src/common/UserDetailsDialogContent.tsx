@@ -1,15 +1,21 @@
 import * as React from "react";
 import { TextField, makeStyles, fade } from "@material-ui/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
-import { UserDetails } from "src/types";
+import { LocaleMap, UserDetails } from "src/types";
 import NumberFormat from "react-number-format";
+import { checkUserName, checkUserEmail, checkUserPhone, INVALID_NAME, INVALID_EMAIL, INVALID_PHONE } from "./UserDetailsCheck";
+import { useLocation } from "react-router-dom";
+import CreateClient from "src/client/Client";
 
 export interface IFormDialogContent {
+    status: string;
+    setStatus: any;
     userDetails: UserDetails;
     setUserDetails: Dispatch<SetStateAction<UserDetails>>;
     setDetailsSet: Dispatch<SetStateAction<boolean>>;
+    checkUserDetailsAreSet(useDetails: UserDetails): boolean;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -43,45 +49,27 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const INVALID_EMAIL = "invalid_email";
-const INVALID_NAME = "invalid_name";
+export const UserDetailsDialogContent = ({ status, setStatus, setDetailsSet, userDetails, setUserDetails, checkUserDetailsAreSet }: IFormDialogContent) => {
+    const secretKey = new URLSearchParams(useLocation().search).get("key");
+    const client = CreateClient(secretKey);
+    // const [locales, setLocales] = useState<LocaleMap>();
 
-const checkIfEmpty = (val: any) => {
-    if (val === "" || val === null || val === undefined){
-        return false;
-    }
-    return true;
-}
-
-const checkUserName = (name: string) => {
-    const userName = name.trim();
-    return checkIfEmpty(userName);
-}
-
-const checkUserEmail = (email: string) => {
-    const userEmail = email.trim();
-    return checkIfEmpty(userEmail);
-}
-
-const checkUserPhone = (phone: string) => {
-    const userPhone = phone.trim();
-    return checkIfEmpty(userPhone);
-}
-
-export const UserDetailsDialogContent = ({ setDetailsSet, userDetails, setUserDetails }: IFormDialogContent) => {
-    const [status, setStatus] = useState<string>("valid");
+    const [, setLocaleID] = useState<string | undefined>();
+    const [localeName, setLocaleName] = useState<string | undefined>();
+    const [localeMap, setLocaleMap] = useState<LocaleMap>([]);
+    const [phonePattern, setphonePattern] = useState<string>("");
     // const [regionSwitch, setRegionSwitch] = useState<boolean>(region === "AU" || region === undefined ? true : false);
 
-    const userDetailsAreSet = (userDetails: UserDetails) => {
-        const userNameResult = checkUserName(userDetails.userName);
-        const userEmailResult = checkUserEmail(userDetails.userEmail);
-        const userPhoneResult = checkUserPhone(userDetails.userPhone);
+    useEffect(() => {
+        (async () => {
+            const { data: locale } = await client.Widget.Access.getLocale();
 
-        if (!userNameResult || !userEmailResult || !userPhoneResult){
-            return false
-        }
-        return true;
-    }
+            setLocaleID(locale.localeId);
+            setLocaleName(locale.localeCountry);
+            setphonePattern(locale.localePhonePattern);
+            setLocaleMap(locale.localeMap);
+        })();
+    }, []);
 
     const cls = useStyles();
 
@@ -98,12 +86,20 @@ export const UserDetailsDialogContent = ({ setDetailsSet, userDetails, setUserDe
                 autoFocus
                 autoComplete="off"
                 type="text"
+                onError={() => setStatus(INVALID_NAME)}
+                onBlur={() => {
+                    const result = checkUserName(userDetails.userName, setStatus);
+                    if (result === false) setUserDetails({ ...userDetails, userName: "" });
+                    setDetailsSet(checkUserDetailsAreSet(userDetails));
+                    if (status === INVALID_NAME) {
+                        setStatus(null);
+                    }
+                }}
                 onChange={event => {
                     setUserDetails({ ...userDetails, userName: event.target.value });
-                    setDetailsSet(userDetailsAreSet(userDetails));
                 }}
                 helperText={status === INVALID_NAME && "Name is not set"}
-                FormHelperTextProps={{ error: true}}
+                FormHelperTextProps={{ error: true }}
             />
             <TextField
                 variant="outlined"
@@ -113,32 +109,43 @@ export const UserDetailsDialogContent = ({ setDetailsSet, userDetails, setUserDe
                 fullWidth
                 label="Email Address"
                 value={userDetails.userEmail}
-
                 autoComplete="off"
                 type="email"
+                // onError={() => setStatus(INVALID_EMAIL)}
+                onBlur={() => {
+                    const result = checkUserEmail(userDetails.userEmail, setStatus);
+                    if (result === false) setUserDetails({ ...userDetails, userEmail: "" });
+                    setDetailsSet(checkUserDetailsAreSet(userDetails));
+                }}
                 onChange={e => {
                     setUserDetails({ ...userDetails, userEmail: e.target.value });
                     if (status === INVALID_EMAIL) {
                         setStatus(null);
                     }
-                    setDetailsSet(userDetailsAreSet(userDetails));
-
-
                 }}
                 helperText={status === INVALID_EMAIL && "Email is not formatted."}
                 FormHelperTextProps={{ error: true }}
             />
             <NumberFormat
-
+                helpertext={status === INVALID_PHONE ? "funky number!" : ""}
                 placeholder="Phone number (optional)"
                 className={cls.phone}
-                // format={regionSwitch ? "+61 (##) ####-####" : "+1 (###) ###-####"}
+                format={phonePattern} //"+61 (##) ####-####" //{regionSwitch ? "+61 (##) ####-####" : "+1 (###) ###-####"}
                 mask="_"
                 type="tel"
+                onError={() => setStatus(INVALID_PHONE)}
+                onBlur={() => {
+                    const result = checkUserPhone(userDetails.userPhone, setStatus);
+                    if (result === false) setUserDetails({ ...userDetails, userPhone: "" });
+                    setDetailsSet(checkUserDetailsAreSet(userDetails));
+                }}
                 onValueChange={values => {
                     setUserDetails({ ...userDetails, userPhone: values.formattedValue });
-                    setDetailsSet(userDetailsAreSet(userDetails));
+                    if (status === INVALID_PHONE) {
+                        setStatus(null);
+                    }
                 }}
+                value={userDetails.userPhone}
             />
         </>
     );

@@ -11,13 +11,12 @@ const useStyles = makeStyles(() => ({
         textAlign: "center",
     },
     autocomplete: {
-        marginTop:"1rem",
+        marginTop: "1rem",
         height: "50px",
         borderRadius: "0px",
         borderBottomLeftRadius: "3px",
         borderBottomRightRadius: "3px",
         border: "0px dashed green",
-
     },
     selectbox: {
         color: "black",
@@ -29,10 +28,17 @@ const useStyles = makeStyles(() => ({
         backgroundColor: "white",
     },
     otherbox: {
-        paddingLeft: "2rem",
-        paddingRight: "2rem",
-    }
-
+        textAlign: "center",
+        // paddingLeft: "2rem",
+        // paddingRight: "2rem",
+    },
+    inputLabel: {
+        "& .MuiFormLabel-root": {
+            color: "black",
+            fontSize: "12pt",
+            textAlign: "center",
+        },
+    },
 }));
 
 export interface ISelectNodeType {
@@ -52,7 +58,7 @@ export const CustomNodeSelect = ({ onChange, label, nodeOptionList }: ISelectNod
                 <InputLabel id="autodcomplete-label"></InputLabel>
                 {nodeOptionList && (
                     <Autocomplete
-                        size='small'
+                        size="small"
                         disableClearable
                         clearOnEscape
                         className={cls.autocomplete}
@@ -61,7 +67,7 @@ export const CustomNodeSelect = ({ onChange, label, nodeOptionList }: ISelectNod
                         options={sortByPropertyAlphabetical(groupGetter, nodeOptionList)}
                         groupBy={(nodeOption) => nodeOption.groupName}
                         getOptionLabel={(option) => option.text}
-                        renderInput={(params) => <TextField data-lpignore="true" label={label} {...params} />}
+                        renderInput={(params) => <TextField {...params} InputLabelProps={{ className: cls.inputLabel }} className={cls.inputLabel} data-lpignore="true" label={label} />}
                     />
                 )}
                 <FormHelperText className={cls.formControl}>Select</FormHelperText>

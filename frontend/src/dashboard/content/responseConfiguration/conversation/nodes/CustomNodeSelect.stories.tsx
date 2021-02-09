@@ -15,6 +15,5 @@ export const Primary = Template.bind({});
 Primary.args = {
 
     onChange: () => {},
-    option: "An Option",
-    completeNodeTypes: NodeTypeOptionsDefinition
+    option: "An Option"
 }
