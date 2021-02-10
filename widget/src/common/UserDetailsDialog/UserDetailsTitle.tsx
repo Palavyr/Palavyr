@@ -1,18 +1,13 @@
 import React from "react";
-import { IconButton, DialogTitle, Typography, Box, useTheme, makeStyles } from "@material-ui/core";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
+import { DialogTitle, Typography, Box, useTheme } from "@material-ui/core";
 
 export interface IDialogTitleWithCloseIcon {
-    onClose: any;
     title: string;
     disablePadding?: boolean;
     paddingBottom?: number;
-    detailsSet: boolean;
 }
 
-const useStyles = makeStyles(theme => ({}));
-
-export const DialogTitleWithCloseIcon = ({ paddingBottom, onClose, title, disablePadding, detailsSet }: IDialogTitleWithCloseIcon) => {
+export const UserDetailsTitle = ({ paddingBottom, title, disablePadding }: IDialogTitleWithCloseIcon) => {
     const theme = useTheme();
 
     var dialogTitleStyles = {
@@ -34,15 +29,9 @@ export const DialogTitleWithCloseIcon = ({ paddingBottom, onClose, title, disabl
     return (
         <DialogTitle style={dialogTitleStyles} disableTypography>
             <Box >
-                {/* display="flex" justifyContent="space-between" textAlign="center">*/}
                 <Typography align="center" variant="h5">
                     {title}
                 </Typography>
-                {/* {detailsSet && (
-                    <IconButton type="submit" component="button" onClick={onClose} style={{ marginRight: -12, marginTop: -10 }} aria-label="Close">
-                        <CheckCircleOutlineIcon />
-                    </IconButton>
-                )} */}
             </Box>
         </DialogTitle>
     );

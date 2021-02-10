@@ -1,4 +1,5 @@
 export const sortByPropertyAlphabetical = (stringPropertyGetter: (x: object) => string, array: Array<any>) => {
+    if (!array) return [];
     return array.sort((a: any, b: any) => {
         const valA = stringPropertyGetter(a);
         const valB = stringPropertyGetter(b);

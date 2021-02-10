@@ -47,6 +47,11 @@ const useStyles = makeStyles({
         display: "flex",
         padding: "15px 0 25px",
     },
+    settingsIcon: {
+        position: "static",
+        right: "15px",
+        top: "-15px"
+    }
 });
 
 function Header({ title, subtitle, toggleChat, showCloseButton, titleAvatar, customPreferences, openUserDetails }: Props) {
@@ -58,7 +63,7 @@ function Header({ title, subtitle, toggleChat, showCloseButton, titleAvatar, cus
                     <img src={close} className="rcw-close" alt="close" />
                 </button>
             )} */}
-            <SettingsIcon style={{textAlign: "right"}} onClick={openUserDetails} />
+            <SettingsIcon className={cls.settingsIcon} onClick={openUserDetails} />
             <h4 className={"rcw-title"}>
                 {titleAvatar && <img src={titleAvatar} className="avatar" alt="profile" />}
                 {title}

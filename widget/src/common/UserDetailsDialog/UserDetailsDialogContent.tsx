@@ -1,21 +1,15 @@
 import * as React from "react";
 import { TextField, makeStyles, fade } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
-import { LocaleMap, UserDetails } from "src/types";
-import NumberFormat from "react-number-format";
-import { checkUserName, checkUserEmail, checkUserPhone, INVALID_NAME, INVALID_EMAIL, INVALID_PHONE } from "./UserDetailsCheck";
-import { useLocation } from "react-router-dom";
-import CreateClient from "src/client/Client";
+import { LocaleMap, LocaleMapItem, UserDetails } from "src/types";
 
 export interface IFormDialogContent {
     status: string;
     setStatus: any;
     userDetails: UserDetails;
     setUserDetails: Dispatch<SetStateAction<UserDetails>>;
-    setDetailsSet: Dispatch<SetStateAction<boolean>>;
-    checkUserDetailsAreSet(useDetails: UserDetails): boolean;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -49,34 +43,21 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const UserDetailsDialogContent = ({ status, setStatus, setDetailsSet, userDetails, setUserDetails, checkUserDetailsAreSet }: IFormDialogContent) => {
-    const secretKey = new URLSearchParams(useLocation().search).get("key");
-    const client = CreateClient(secretKey);
-    // const [locales, setLocales] = useState<LocaleMap>();
-
+export const UserDetailsDialogContent = ({ status, setStatus, userDetails, setUserDetails }: IFormDialogContent) => {
     const [, setLocaleID] = useState<string | undefined>();
-    const [localeName, setLocaleName] = useState<string | undefined>();
-    const [localeMap, setLocaleMap] = useState<LocaleMap>([]);
+    const [localeMap] = useState<LocaleMap>([]);
     const [phonePattern, setphonePattern] = useState<string>("");
-    // const [regionSwitch, setRegionSwitch] = useState<boolean>(region === "AU" || region === undefined ? true : false);
-
-    useEffect(() => {
-        (async () => {
-            const { data: locale } = await client.Widget.Access.getLocale();
-
-            setLocaleID(locale.localeId);
-            setLocaleName(locale.localeCountry);
-            setphonePattern(locale.localePhonePattern);
-            setLocaleMap(locale.localeMap);
-        })();
-    }, []);
 
     const cls = useStyles();
 
+    const sortGetter = (opt: LocaleMapItem) => opt.countryName;
+    const onChange = (event: any, newOption: LocaleMapItem) => {
+        setLocaleID(newOption.localeId);
+        setphonePattern(newOption.phonePattern);
+    };
     return (
         <>
-            <TextField
-                variant="outlined"
+            {/* <TextField
                 margin="normal"
                 error={status == INVALID_NAME}
                 required
@@ -86,23 +67,20 @@ export const UserDetailsDialogContent = ({ status, setStatus, setDetailsSet, use
                 autoFocus
                 autoComplete="off"
                 type="text"
-                onError={() => setStatus(INVALID_NAME)}
                 onBlur={() => {
                     const result = checkUserName(userDetails.userName, setStatus);
-                    if (result === false) setUserDetails({ ...userDetails, userName: "" });
-                    setDetailsSet(checkUserDetailsAreSet(userDetails));
-                    if (status === INVALID_NAME) {
-                        setStatus(null);
-                    }
+                    if (!result) setStatus(INVALID_NAME);
                 }}
                 onChange={event => {
                     setUserDetails({ ...userDetails, userName: event.target.value });
+                    if (status === INVALID_EMAIL) {
+                        setStatus(null);
+                    }
                 }}
                 helperText={status === INVALID_NAME && "Name is not set"}
                 FormHelperTextProps={{ error: true }}
-            />
-            <TextField
-                variant="outlined"
+            /> */}
+            {/* <TextField
                 margin="normal"
                 error={status === INVALID_EMAIL}
                 required
@@ -111,11 +89,9 @@ export const UserDetailsDialogContent = ({ status, setStatus, setDetailsSet, use
                 value={userDetails.userEmail}
                 autoComplete="off"
                 type="email"
-                // onError={() => setStatus(INVALID_EMAIL)}
                 onBlur={() => {
                     const result = checkUserEmail(userDetails.userEmail, setStatus);
-                    if (result === false) setUserDetails({ ...userDetails, userEmail: "" });
-                    setDetailsSet(checkUserDetailsAreSet(userDetails));
+                    if (!result) setStatus(INVALID_EMAIL);
                 }}
                 onChange={e => {
                     setUserDetails({ ...userDetails, userEmail: e.target.value });
@@ -125,8 +101,8 @@ export const UserDetailsDialogContent = ({ status, setStatus, setDetailsSet, use
                 }}
                 helperText={status === INVALID_EMAIL && "Email is not formatted."}
                 FormHelperTextProps={{ error: true }}
-            />
-            <NumberFormat
+            /> */}
+            {/* <NumberFormat
                 helpertext={status === INVALID_PHONE ? "funky number!" : ""}
                 placeholder="Phone number (optional)"
                 className={cls.phone}
@@ -136,8 +112,7 @@ export const UserDetailsDialogContent = ({ status, setStatus, setDetailsSet, use
                 onError={() => setStatus(INVALID_PHONE)}
                 onBlur={() => {
                     const result = checkUserPhone(userDetails.userPhone, setStatus);
-                    if (result === false) setUserDetails({ ...userDetails, userPhone: "" });
-                    setDetailsSet(checkUserDetailsAreSet(userDetails));
+                    if (!result) setStatus(INVALID_EMAIL);
                 }}
                 onValueChange={values => {
                     setUserDetails({ ...userDetails, userPhone: values.formattedValue });
@@ -146,7 +121,20 @@ export const UserDetailsDialogContent = ({ status, setStatus, setDetailsSet, use
                     }
                 }}
                 value={userDetails.userPhone}
-            />
+            /> */}
+            {/* <div>
+                {localeMap && (
+                    <Autocomplete
+                        size="small"
+                        disableClearable
+                        clearOnEscape
+                        onChange={onChange}
+                        options={sortByPropertyAlphabetical(sortGetter, localeMap)}
+                        getOptionLabel={(option: LocaleMapItem) => option.countryName}
+                        renderInput={(params: AutocompleteRenderInputParams) => <TextField label="Select your locale..." ref={params.InputProps.ref} {...params} />}
+                    />
+                )}
+            </div> */}
         </>
     );
 };

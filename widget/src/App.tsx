@@ -4,7 +4,7 @@ import { OptionSelector } from "./options/Options";
 import { SelectedOption, UserDetails, WidgetPreferences } from "./types";
 import { useLocation } from "react-router-dom";
 import CreateClient, { IClient } from "./client/Client";
-import { CollectDetailsForm } from "./common/CollectDetailsForm";
+import { CollectDetailsForm } from "./common/UserDetailsDialog/CollectDetailsForm";
 import { CustomWidget } from "./widget/CustomWidget";
 
 export const App = () => {
@@ -44,10 +44,17 @@ export const App = () => {
     return (
         <>
             {isReady === true && selectedOption === null && !userDetailsDialogState && <OptionSelector setUserDetailsDialogState={setUserDetailsDialogstate} setSelectedOption={setSelectedOption} preferences={widgetPrefs} />}
-
-            {isReady === true && selectedOption !== null && userDetailsDialogState && <CustomWidget setUserDetailsDialogState={setUserDetailsDialogstate} userDetails={userDetails} option={selectedOption} preferences={widgetPrefs} />}
-            {isReady === true && selectedOption !== null && userDetailsDialogState && <CollectDetailsForm detailsSet={detailsSet} setDetailsSet={setDetailsSet} setUserDetailsDialogState={setUserDetailsDialogstate} userDetails={userDetails} setUserDetails={setUserDetails}/>}
-
+            {isReady === true && selectedOption !== null && userDetailsDialogState && (
+                <CollectDetailsForm
+                    detailsSet={detailsSet}
+                    setDetailsSet={setDetailsSet}
+                    userDetailsDialogState={userDetailsDialogState}
+                    setUserDetailsDialogState={setUserDetailsDialogstate}
+                    userDetails={userDetails}
+                    setUserDetails={setUserDetails}
+                />
+            )}
+            {isReady === true && selectedOption !== null && !userDetailsDialogState && <CustomWidget setUserDetailsDialogState={setUserDetailsDialogstate} userDetails={userDetails} option={selectedOption} preferences={widgetPrefs} />}
 
             {isReady === false && (
                 <div style={{ textAlign: "center", paddingTop: "3rem" }}>

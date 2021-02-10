@@ -1,7 +1,7 @@
 import * as React from "react";
 import { SelectedOption, WidgetPreferences } from "../../types";
 import { useHistory, useLocation } from "react-router-dom";
-import { makeStyles, Card, Box, fade, TextField, OutlinedInputProps, withStyles, InputBase, InputLabel } from "@material-ui/core";
+import { makeStyles, Card, Box, TextField } from "@material-ui/core";
 import { useEffect } from "react";
 import { sortByPropertyAlphabetical } from "src/common/sorting";
 import Autocomplete, { AutocompleteRenderInputParams } from "@material-ui/lab/Autocomplete";
@@ -9,7 +9,13 @@ import classNames from "classnames";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
+    root: {
+        '& .MuiAutocomplete-popper': {
+            backgroundColor: 'black',
+            zIndex: 99999999
+        },
+    },
     container: {
         display: "flex",
         flexDirection: "column",
@@ -53,7 +59,7 @@ const useStyles = makeStyles(theme => ({
     inputLabel: (prefs: WidgetPreferences) => ({
         "& .MuiFormLabel-root": {
             color: prefs.listFontColor,
-            fontSize: "10pt"
+            fontSize: "10pt",
         },
     }),
 }));
@@ -80,7 +86,7 @@ export const DropdownListOptions = ({ setUserDetailsDialogState, setSelectedOpti
         setUserDetailsDialogState(true);
     };
     const sortGetter = (opt: SelectedOption) => opt.areaDisplay;
-
+    const opts = sortByPropertyAlphabetical(sortGetter, options);
     return (
         <Box height="100%">
             <Card className={cls.header}>{preferences && <div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: preferences.header }} />}</Card>
@@ -91,15 +97,20 @@ export const DropdownListOptions = ({ setUserDetailsDialogState, setSelectedOpti
                         classes={{ root: cls.selectbox, paper: classNames(cls.selectListBgColor, cls.selectListFontColor) }}
                         disableClearable
                         clearOnEscape
-                        className={classNames(cls.autocomplete, cls.mainList, cls.selectListBgColor, cls.selectListFontColor)}
+                        className={classNames(cls.root, cls.autocomplete, cls.mainList, cls.selectListBgColor, cls.selectListFontColor)}
                         onChange={onChange}
-                        options={sortByPropertyAlphabetical(sortGetter, options)}
+                        options={opts}
                         getOptionLabel={(option: SelectedOption) => option.areaDisplay}
                         renderInput={(params: AutocompleteRenderInputParams) => (
                             <TextField
+                                {...params}
+                                id="field1"
                                 className={cls.inputLabel}
                                 label="Select an area or start typing..."
-                                {...params}
+                                inputProps={{
+                                    ...params.inputProps,
+                                    autoComplete: "new-password",
+                                }}
                             />
                         )}
                     />
