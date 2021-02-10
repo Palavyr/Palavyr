@@ -18,7 +18,6 @@ export const App = () => {
         userName: "",
     });
     const [userDetailsDialogState, setUserDetailsDialogstate] = useState<boolean>(false);
-    const [detailsSet, setDetailsSet] = useState<boolean>(false);
 
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const isDemo = new URLSearchParams(useLocation().search).get("demo");
@@ -45,16 +44,12 @@ export const App = () => {
         <>
             {isReady === true && selectedOption === null && !userDetailsDialogState && <OptionSelector setUserDetailsDialogState={setUserDetailsDialogstate} setSelectedOption={setSelectedOption} preferences={widgetPrefs} />}
             {isReady === true && selectedOption !== null && userDetailsDialogState && (
-                <CollectDetailsForm
-                    detailsSet={detailsSet}
-                    setDetailsSet={setDetailsSet}
-                    userDetailsDialogState={userDetailsDialogState}
-                    setUserDetailsDialogState={setUserDetailsDialogstate}
-                    userDetails={userDetails}
-                    setUserDetails={setUserDetails}
-                />
+                <>
+                    <CollectDetailsForm userDetails={userDetails} setUserDetails={setUserDetails} userDetailsDialogState={userDetailsDialogState} setUserDetailsDialogState={setUserDetailsDialogstate} />
+                    {/* <CustomWidget setUserDetailsDialogState={setUserDetailsDialogstate} userDetails={userDetails} option={selectedOption} preferences={widgetPrefs} /> */}
+                </>
             )}
-            {isReady === true && selectedOption !== null && !userDetailsDialogState && <CustomWidget setUserDetailsDialogState={setUserDetailsDialogstate} userDetails={userDetails} option={selectedOption} preferences={widgetPrefs} />}
+            {/* {isReady === true && selectedOption !== null && userDetailsDialogState &&} */}
 
             {isReady === false && (
                 <div style={{ textAlign: "center", paddingTop: "3rem" }}>

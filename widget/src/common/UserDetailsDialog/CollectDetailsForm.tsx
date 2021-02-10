@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react";
 import { SetStateAction } from "react";
 import { Dispatch } from "react";
 import { LocaleMap, LocaleMapItem, UserDetails } from "src/types";
-import { checkUserEmail, checkUserName, checkUserPhone } from "./UserDetailsCheck";
+import { checkUserEmail, checkUserName, checkUserPhone, INVALID_PHONE } from "./UserDetailsCheck";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import { useLocation } from "react-router-dom";
 import CreateClient from "src/client/Client";
@@ -15,8 +15,6 @@ import { LocaleSelector } from "./FormInputs/LocaleSelector";
 import { PhoneForm } from "./FormInputs/PhoneForm";
 
 export interface CollectDetailsFormProps {
-    detailsSet: boolean;
-    setDetailsSet: Dispatch<SetStateAction<boolean>>;
     userDetails: UserDetails;
     setUserDetails: Dispatch<SetStateAction<UserDetails>>;
     userDetailsDialogState: boolean;
@@ -25,16 +23,21 @@ export interface CollectDetailsFormProps {
 
 export interface BaseFormProps {
     userDetails: UserDetails;
+    setUserDetails: Dispatch<SetStateAction<UserDetails>>;
     status: string | null;
     setStatus: Dispatch<SetStateAction<string>>;
-    setUserDetails: Dispatch<SetStateAction<UserDetails>>;
 }
 
 const useStyles = makeStyles(theme => ({
+    baseDialog: {
+        zIndex: 9999,
+    },
     dialogBackground: {
+        zIndex: 99999,
         backgroundColor: "white",
     },
     dialogPaper: {
+        zIndex: 99999,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -50,55 +53,45 @@ const useStyles = makeStyles(theme => ({
     },
     button: {
         margin: "0.5rem",
+        textAlign: "center",
+        marginTop: "1.3rem",
     },
 }));
 
-export const CollectDetailsForm = ({ detailsSet, setDetailsSet, userDetails, setUserDetails, userDetailsDialogState, setUserDetailsDialogState }: CollectDetailsFormProps) => {
+export const CollectDetailsForm = ({ userDetails, setUserDetails, userDetailsDialogState, setUserDetailsDialogState }: CollectDetailsFormProps) => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const client = CreateClient(secretKey);
 
-    // const [currentOption, setCurrentOption] = useState<LocaleMapItem | undefined>();
     const [options, setOptions] = useState<LocaleMap>([]);
     const [phonePattern, setphonePattern] = useState<string>("");
-
-    const loadLocales = useCallback(async () => {
-        const { data: locale } = await client.Widget.Access.getLocale();
-        setphonePattern(locale.localePhonePattern);
-        setOptions(locale.localeMap);
-    },[])
+    const [detailsSet, setDetailsSet] = useState<boolean>(false);
 
     useEffect(() => {
-        loadLocales();
-    //     (async () => {
-    //         const { data: locale } = await client.Widget.Access.getLocale();
-    //         setphonePattern(locale.localePhonePattern);
-    //         setOptions(locale.localeMap);
-    //     })();
+        (async () => {
+            const { data: locale } = await client.Widget.Access.getLocale();
+            setphonePattern(locale.localePhonePattern);
+            setOptions(locale.localeMap);
+        })();
     }, []);
 
     const cls = useStyles();
     const [status, setStatus] = useState<string | null>(null);
-    // const [phoneHasErrored, setPhoneHasErrored] = useState<boolean>(false);
-    // const [emailHasErrored, setEmailHasErrored] = useState<boolean>(false);
-    // const [nameHasErrored, setNameHasErrored] = useState<boolean>(false);
 
-    // const checkUserDetailsAreSet = (userDetails: UserDetails) => {
-    //     const userNameResult = checkUserName(userDetails.userName, setStatus);
-    //     const userEmailResult = checkUserEmail(userDetails.userEmail, setStatus);
-    //     const userPhoneResult = checkUserPhone(userDetails.userPhone, setStatus);
+    const checkUserDetailsAreSet = (userDetails: UserDetails) => {
+        const userNameResult = checkUserName(userDetails.userName, setStatus);
+        const userEmailResult = checkUserEmail(userDetails.userEmail, setStatus);
 
-    //     if (phoneHasErrored) {
-    //         setUserDetails({ ...userDetails, userPhone: "" });
-    //     }
+        if (status === INVALID_PHONE) {
+            setUserDetails({ ...userDetails, userPhone: "" });
+        }
 
-    //     if (!userNameResult || !userEmailResult) {
-    //         return false;
-    //     }
-    //     return true;
-    // };
+        if (!userNameResult || !userEmailResult) {
+            return false;
+        }
+        return true;
+    };
 
     const onChange = (event: any, newOption: LocaleMapItem) => {
-        // setCurrentOption(newOption);
         setphonePattern(newOption.phonePattern);
     };
 
@@ -117,6 +110,7 @@ export const CollectDetailsForm = ({ detailsSet, setDetailsSet, userDetails, set
     return (
         <Dialog
             open={userDetailsDialogState}
+            className={cls.baseDialog}
             classes={{
                 root: cls.dialogBackground,
                 paper: cls.dialogPaper,
@@ -130,14 +124,14 @@ export const CollectDetailsForm = ({ detailsSet, setDetailsSet, userDetails, set
             <DialogContent className={cls.dialogContent}>
                 <form onSubmit={onFormSubmit}>
                     <NameForm {...formProps} />
-                    <EmailForm {...formProps} />
+                    <EmailForm {...formProps} setDetailsSet={setDetailsSet} checkUserDetailsAreSet={checkUserDetailsAreSet} />
                     <PhoneForm {...formProps} phonePattern={phonePattern} />
                     <LocaleSelector options={options} onChange={onChange} />
-                    {detailsSet && (
+                    <div style={{ display: "flex", justifyContent: "center" }}>
                         <Button className={cls.button} endIcon={detailsSet && <CheckCircleOutlineIcon />} type="submit">
-                            Begin Chat
+                            Begin
                         </Button>
-                    )}
+                    </div>
                 </form>
             </DialogContent>
         </Dialog>

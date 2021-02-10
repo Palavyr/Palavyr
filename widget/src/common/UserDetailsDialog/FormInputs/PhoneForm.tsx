@@ -1,4 +1,4 @@
-import { fade, makeStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import React from "react";
 import NumberFormat from "react-number-format";
 import { BaseFormProps } from "../CollectDetailsForm";
@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
         border: "none",
         borderBottom: "1px solid gray",
         fontSize: 16,
-        // padding: "10px 12px",
+        padding: "0px 6px 0px 0px",
         transition: theme.transitions.create(["border-color", "box-shadow"]),
         fontFamily: ["-apple-system", "BlinkMacSystemFont", '"Segoe UI"', "Roboto", '"Helvetica Neue"', "Arial", "sans-serif", '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"'].join(","),
         "&:focus": {
@@ -34,8 +34,10 @@ export const PhoneForm = ({ phonePattern, userDetails, status, setStatus, setUse
 
     return (
         <NumberFormat
-            helpertext={status === INVALID_PHONE ? "funky number!" : ""}
+            // helpertext={status === INVALID_PHONE ? "funky number!" : ""}
             placeholder="Phone number (optional)"
+            onError={() => setStatus(INVALID_PHONE)}
+            error={status === INVALID_PHONE ? "WOW" : ""}
             className={cls.phone}
             format={phonePattern}
             mask="_"
