@@ -11,18 +11,20 @@ export interface PhoneFormProps extends BaseFormProps {
 const useStyles = makeStyles(theme => ({
     phone: {
         width: "100%",
-        marginTop: "1rem",
+        marginTop: "2.3rem",
         borderRadius: 4,
         position: "relative",
-        backgroundColor: theme.palette.common.white,
-        border: "1px solid #ced4da",
+        backgroundColor: "transparent",
+        border: "none",
+        borderBottom: "1px solid gray",
         fontSize: 16,
-        padding: "10px 12px",
+        // padding: "10px 12px",
         transition: theme.transitions.create(["border-color", "box-shadow"]),
         fontFamily: ["-apple-system", "BlinkMacSystemFont", '"Segoe UI"', "Roboto", '"Helvetica Neue"', "Arial", "sans-serif", '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"'].join(","),
         "&:focus": {
-            boxShadow: `${fade(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
-            borderColor: theme.palette.primary.main,
+            borderBottom: "1px solid gray",
+            outline: "none"
+
         },
     },
 }));
@@ -38,10 +40,10 @@ export const PhoneForm = ({ phonePattern, userDetails, status, setStatus, setUse
             format={phonePattern}
             mask="_"
             type="tel"
-            onError={() => setStatus(INVALID_PHONE)}
             onBlur={() => {
                 const result = checkUserPhone(userDetails.userPhone, setStatus);
                 if (!result) setStatus(INVALID_PHONE);
+                if (!result) setUserDetails({...userDetails, userPhone: ""})
             }}
             onValueChange={values => {
                 setUserDetails({ ...userDetails, userPhone: values.formattedValue });

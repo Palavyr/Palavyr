@@ -13,6 +13,9 @@ const useStyles = makeStyles(theme => ({
     select: {
         zIndex: 99999,
     },
+    root: {
+        marginTop: "2rem"
+    }
 }));
 
 export const LocaleSelector = ({ options, onChange }: LocaleSelectorProps) => {
@@ -24,6 +27,7 @@ export const LocaleSelector = ({ options, onChange }: LocaleSelectorProps) => {
         options && (
             <Autocomplete
                 size="small"
+                className={cls.root}
                 disableClearable
                 clearOnEscape
                 onChange={onChange}
