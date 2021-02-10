@@ -45,8 +45,13 @@ export const App = () => {
             {isReady === true && selectedOption === null && !userDetailsDialogState && <OptionSelector setUserDetailsDialogState={setUserDetailsDialogstate} setSelectedOption={setSelectedOption} preferences={widgetPrefs} />}
             {isReady === true && selectedOption !== null && userDetailsDialogState && (
                 <>
+                <div style={{zIndex: 111}}>
+
+                    <CustomWidget setUserDetailsDialogState={setUserDetailsDialogstate} userDetails={userDetails} option={selectedOption} preferences={widgetPrefs} />
+                </div>
+                <div style={{zIndex: 9999999}}>
                     <CollectDetailsForm userDetails={userDetails} setUserDetails={setUserDetails} userDetailsDialogState={userDetailsDialogState} setUserDetailsDialogState={setUserDetailsDialogstate} />
-                    {/* <CustomWidget setUserDetailsDialogState={setUserDetailsDialogstate} userDetails={userDetails} option={selectedOption} preferences={widgetPrefs} /> */}
+                </div>
                 </>
             )}
             {/* {isReady === true && selectedOption !== null && userDetailsDialogState &&} */}

@@ -74,7 +74,7 @@ export const CustomWidget = ({ setUserDetailsDialogState, userDetails, option, p
     const handleSubmit = (msgText: string) => {
         return false;
     };
-
+    const tempAvatar = "C:\PalavyrData\UserData\a6d4ad3b-efd8\AccountLogo\a0e31ee9-a120-4aca-8a02-9097f794c8f1.svg";
     return (
         <Widget
             openUserDetails={setUserDetailsDialogState}
@@ -88,6 +88,9 @@ export const CustomWidget = ({ setUserDetailsDialogState, userDetails, option, p
             fullScreenMode={true}
             showCloseButton={false}
             customPreferences={preferences}
+            profileAvatar={tempAvatar}
+            showTimeStamp={true}
+            titleAvatar={tempAvatar}
         />
     )
 }

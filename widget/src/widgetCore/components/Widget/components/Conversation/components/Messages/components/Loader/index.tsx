@@ -1,7 +1,8 @@
-import React from 'react'; 
+import React from 'react';
 import cn from 'classnames';
 
 import './styles.scss';
+import { Box } from '@material-ui/core';
 
 type Props = {
   typing: boolean;
@@ -10,11 +11,11 @@ type Props = {
 function Loader({ typing }: Props) {
   return (
     <div className={cn('loader', { active: typing })}>
-      <div className="loader-container">
+      <Box  boxShadow={1} className="loader-container">
         <span className="loader-dots"></span>
         <span className="loader-dots"></span>
         <span className="loader-dots"></span>
-      </div>
+      </Box>
     </div>
   );
 }
