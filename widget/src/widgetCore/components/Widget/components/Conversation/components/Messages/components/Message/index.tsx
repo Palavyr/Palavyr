@@ -15,7 +15,7 @@ type Props = {
   showTimeStamp: boolean;
 }
 
-function Message({ message, showTimeStamp }: Props) {
+function Message({ message, showTimeStamp = true }: Props) {
   const sanitizedHTML = markdownIt()
     .use(markdownItClass, {
       img: ['rcw-message-img']

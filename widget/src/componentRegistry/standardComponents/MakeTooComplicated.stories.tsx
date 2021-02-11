@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Meta } from '@storybook/react/types-6-0';
 
-import { makeTooComplicated } from "./TooComplicated";
 import { MemoryRouter } from 'react-router';
 import { ConvoNode } from '../../test/dummyData/dummyNodes';
 import CreateClient from '../../client/Client';
+import { makeTooComplicated } from './MakeTooComplicated';
 
 const client = CreateClient("fake")
 

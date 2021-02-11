@@ -17,6 +17,8 @@ namespace Server.Domain.Accounts
         public string PhoneNumber { get; set; }
         public DateTime CreationDate { get; set; }
         public string AccountLogoUri { get; set; }
+        public string GeneralFallbackSubject { get; set; }
+        public string GeneralFallbackEmailTemplate { get; set; }
 
         public string ApiKey { get; set; }
         public bool Active { get; set; }

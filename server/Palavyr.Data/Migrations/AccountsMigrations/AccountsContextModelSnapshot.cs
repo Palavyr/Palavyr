@@ -21,7 +21,7 @@ namespace DashboardServer.Data.Migrations.AccountsMigrations
 
             modelBuilder.Entity("Server.Domain.Accounts.Backup", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -133,6 +133,12 @@ namespace DashboardServer.Data.Migrations.AccountsMigrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("EmailAddress")
+                        .HasColumnType("text");
+
+                    b.Property<string>("GeneralFallbackEmailTemplate")
+                        .HasColumnType("text");
+
+                    b.Property<string>("GeneralFallbackSubject")
                         .HasColumnType("text");
 
                     b.Property<bool>("HasUpgraded")

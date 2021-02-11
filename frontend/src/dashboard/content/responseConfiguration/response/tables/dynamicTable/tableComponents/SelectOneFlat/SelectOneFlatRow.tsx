@@ -4,8 +4,10 @@ import { TableRow, TableCell, Button, TextField, makeStyles } from "@material-ui
 import CurrencyTextField from '@unicef/material-ui-currency-textfield'
 import DeleteIcon from '@material-ui/icons/Delete';
 import { SelectOneFlatData, TableData } from "../../DynamicTableTypes";
-import { uuid } from "uuidv4";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import RemoveIcon from '@material-ui/icons/Remove';
 
 
 export interface ISelectOneFlatRow {
@@ -112,6 +114,8 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
             </TableCell>
             <TableCell align={cellAlignment}>
                 <Button
+                    startIcon={row.range ? <ChevronLeftIcon /> : <RemoveIcon />}
+                    endIcon={ row.range ? <ChevronRightIcon /> : null}
                     variant="contained"
                     style={{ width: "18ch" }}
                     color={row.range ? "primary" : "secondary"}

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
 import { getChildNodes } from "../utils";
-import { Table, TableRow, TableCell } from "@material-ui/core";
+import { Table } from "@material-ui/core";
 import { responseAction, IProgressTheChat } from "..";
 import { ResponseButton } from "../../common/ResponseButton";
 import { SingleRowSingleCell } from "src/common/TableCell";
@@ -13,13 +13,13 @@ export const makeProvideInfo = ({ node, nodeList, client, convoId, convoContext 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
 
     const Component: React.ElementType<{}> = () => {
-        const [disabled, setDisabled] = useState<boolean>(false);
+        const [, setDisabled] = useState<boolean>(false);
 
         return (
-            <Table>
-                <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
-                <TableRow>
-                    <TableCell align="right">
+            <>
+                {node.text}
+                <Table>
+                    <SingleRowSingleCell align="right">
                         <ResponseButton
                             text="Proceed"
                             onClick={() => {
@@ -28,9 +28,9 @@ export const makeProvideInfo = ({ node, nodeList, client, convoId, convoContext 
                                 setDisabled(true);
                             }}
                         />
-                    </TableCell>
-                </TableRow>
-            </Table>
+                    </SingleRowSingleCell>
+                </Table>
+            </>
         );
     };
     return Component;

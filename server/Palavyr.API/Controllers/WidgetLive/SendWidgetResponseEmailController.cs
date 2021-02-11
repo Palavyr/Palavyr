@@ -47,7 +47,7 @@ namespace Palavyr.API.Controllers.WidgetLive
 
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
         [HttpPost("widget/area/{areaId}/email/send")]
-        public async Task<IActionResult> SendEmail(
+        public async Task<SendEmailResultResponse> SendEmail(
             [FromHeader] string accountId,
             [FromRoute] string areaId,
             [FromBody] EmailRequest emailRequest
@@ -86,8 +86,11 @@ namespace Palavyr.API.Controllers.WidgetLive
             var toAddress = emailRequest.EmailAddress;
 
             var area = dashContext.Areas.Single(row => row.AreaIdentifier == areaId);
-            var subject = area.Subject;
-            var htmlBody = area.EmailTemplate;
+            
+            
+            var subject = area.UseAreaFallbackEmail ? area.Subject : account.GeneralFallbackSubject;
+            var htmlBody = area.UseAreaFallbackEmail ? area.EmailTemplate : account.GeneralFallbackEmailTemplate;
+            
             var textBody = ""; // This can be another upload. People can decide one or both. Html is prioritized.
 
             htmlBody = ResponseCustomizer.Customize(htmlBody, emailRequest, account);
@@ -100,7 +103,7 @@ namespace Palavyr.API.Controllers.WidgetLive
                     fromAddress, toAddress, subject, htmlBody, textBody,
                     attachmentFiles);
 
-            return Ok(ok);
+            return ok ? SendEmailResultResponse.Create(EndingSequence.EmailSuccessfulNodeId, ok) : SendEmailResultResponse.Create(EndingSequence.EmailFailedNodeId, ok);
         }
     }
 }

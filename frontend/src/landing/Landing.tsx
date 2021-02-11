@@ -14,6 +14,7 @@ import { rowOne, rowTwo, rowThree } from "./components/landingContent/twoItemRow
 
 import AOS from 'aos';
 import { Sliver } from "./components/sliver/Sliver";
+import { CHANGE_PASSWORD, REGISTER, TERMS_OF_SERVICE } from "@constants";
 AOS.init({
     duration: 1000
 })
@@ -60,7 +61,7 @@ export const LandingPage = () => {
 
 
     const openRegisterDialog = useCallback(() => {
-        setDialogOpen("register");
+        setDialogOpen(REGISTER);
         setIsMobileDrawerOpen(false);
     }, [setDialogOpen, setIsMobileDrawerOpen]);
 
@@ -73,11 +74,11 @@ export const LandingPage = () => {
     }, [setIsMobileDrawerOpen]);
 
     const openChangePasswordDialog = useCallback(() => {
-        setDialogOpen("changePassword");
+        setDialogOpen(CHANGE_PASSWORD);
     }, [setDialogOpen]);
 
     const openTermsDialog = useCallback(() => {
-        setDialogOpen("termsOfService");
+        setDialogOpen(TERMS_OF_SERVICE);
     }, [setDialogOpen]);
 
     const handleCookieRulesDialogOpen = useCallback(() => {
@@ -88,21 +89,21 @@ export const LandingPage = () => {
         setIsCookieRulesDialogOpen(false);
     }, [setIsCookieRulesDialogOpen]);
 
-    const attemptLogin = useCallback(async () => {
-        const success = () => {
-            setTimeout(() => {
-                history.push("/dashboard");
-            }, 150);
-        }
-        await Auth.loginFromMemory(success);
-        return false;
-    }, [])
+    // const attemptLogin = useCallback(async () => {
+    //     const success = () => {
+    //         setTimeout(() => {
+    //             history.push("/dashboard");
+    //         }, 150);
+    //     }
+    //     await Auth.loginFromMemory(success);
+    //     return false;
+    // }, [])
 
-    useEffect(() => {
-        // attemptLogin();
-        return () => {
-        }
-    }, [])
+    // useEffect(() => {
+    //     // attemptLogin();
+    //     return () => {
+    //     }
+    // }, [])
 
     return (
         <div className={classes.wrapper}>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { SelectedOption, WidgetPreferences } from '../types';
+import { SelectedOption, UserDetails, WidgetPreferences } from '../types';
 import { addResponseMessage, toggleMsgLoader, setQuickButtons } from 'src/widgetCore/store/dispatcher';
 import {Widget, isWidgetOpened, toggleWidget} from "src/widget";
 
@@ -12,11 +12,13 @@ import { useLocation } from 'react-router-dom';
 
 
 interface ICustomWidget {
+    setUserDetailsDialogState: any;
+    userDetails: UserDetails;
     option: SelectedOption;
     preferences: WidgetPreferences;
 }
 
-export const CustomWidget = ({ option, preferences }: ICustomWidget) => {
+export const CustomWidget = ({ setUserDetailsDialogState, userDetails, option, preferences }: ICustomWidget) => {
 
     var secretKey = (new URLSearchParams(useLocation().search)).get("key")
     const client = CreateClient(secretKey);
@@ -36,9 +38,9 @@ export const CustomWidget = ({ option, preferences }: ICustomWidget) => {
         const convoContext: any = {};
         convoContext[ConvoContextProperties.DynamicResponses] = [];
         convoContext[ConvoContextProperties.KeyValues] = [];
-        convoContext[ConvoContextProperties.EmailAddress] = "";
-        convoContext[ConvoContextProperties.PhoneNumber] = "";
-        convoContext[ConvoContextProperties.Name] = "";
+        convoContext[ConvoContextProperties.EmailAddress] = userDetails.userEmail;
+        convoContext[ConvoContextProperties.PhoneNumber] = userDetails.userPhone;
+        convoContext[ConvoContextProperties.Name] = userDetails.userName;
         convoContext[ConvoContextProperties.Region] = region;
 
         renderNextComponent(rootNode, nodes, client, convoId, convoContext);
@@ -72,9 +74,10 @@ export const CustomWidget = ({ option, preferences }: ICustomWidget) => {
     const handleSubmit = (msgText: string) => {
         return false;
     };
-
+    const tempAvatar = "C:\PalavyrData\UserData\a6d4ad3b-efd8\AccountLogo\a0e31ee9-a120-4aca-8a02-9097f794c8f1.svg";
     return (
         <Widget
+            openUserDetails={setUserDetailsDialogState}
             title={prefs?.title}
             subtitle={prefs?.subtitle}
             senderPlaceHolder={prefs?.placeholder}
@@ -85,6 +88,9 @@ export const CustomWidget = ({ option, preferences }: ICustomWidget) => {
             fullScreenMode={true}
             showCloseButton={false}
             customPreferences={preferences}
+            // profileAvatar={tempAvatar}
+            showTimeStamp={true}
+            // titleAvatar={tempAvatar}
         />
     )
 }

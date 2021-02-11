@@ -7,6 +7,7 @@ import { SelectOneFlatHeader } from "./SelectOneFlatHeader";
 import { SelectOneFlatBody } from "./SelectOneFlatBody";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { DynamicTableTypes, IDynamicTableProps, SelectOneFlatData, TableData } from "../../DynamicTableTypes";
+import AddBoxIcon from '@material-ui/icons/AddBox';
 
 export interface ISelectOneFlat {
     tableData: Array<SelectOneFlatData>;
@@ -78,7 +79,7 @@ export const SelectOneFlat = ({ tableMeta, setTableMeta, tableId, tableTag, tabl
             <AccordionActions>
                 <div className={classes.trayWrapper}>
                     <div className={classes.alignLeft}>
-                        <Button className={classes.add} onClick={addOptionOnClick} color="primary" variant="contained">
+                        <Button startIcon={<AddBoxIcon />} className={classes.add} onClick={addOptionOnClick} color="primary" variant="contained">
                             Add Option
                         </Button>
                         <FormControlLabel label="Use Options as Paths" control={<Checkbox checked={tableMeta.valuesAsPaths} onChange={useOptionsAsPathsOnChange} />} />

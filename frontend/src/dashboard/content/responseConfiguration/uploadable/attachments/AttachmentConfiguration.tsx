@@ -96,7 +96,6 @@ export const AttachmentConfiguration = () => {
                 accordState={accordState}
                 toggleAccord={toggleAccord}
                 handleFileSave={handleFileSave}
-                areaIdentifier={areaIdentifier}
                 buttonText={buttonText}
                 summary={summary}
                 uploadDetails={uploadDetails}

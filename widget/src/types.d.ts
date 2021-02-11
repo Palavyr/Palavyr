@@ -3,8 +3,7 @@ export type GroupRow = {
     groupId: string;
     parentId: string;
     groupName: string;
-}
-
+};
 
 export type AreaTable = {
     areaIdentifier: string;
@@ -28,11 +27,11 @@ export type ConvoTableRow = {
 export type SelectedOption = {
     areaDisplay: string;
     areaId: string;
-}
+};
 
 export type Registry = {
     [key: string]: any;
-}
+};
 
 export type WidgetPreferences = {
     id: number;
@@ -50,8 +49,7 @@ export type WidgetPreferences = {
     optionsHeaderFontColor: string;
     chatFontColor: string;
     chatBubbleColor: string;
-
-}
+};
 
 export type ConversationUpdate = {
     ConversationId: string;
@@ -60,17 +58,45 @@ export type ConversationUpdate = {
     NodeId: string;
     NodeCritical: boolean;
     NodeType: string;
-}
+};
 
 export type CompleteConverationDetails = {
-     ConversationId: string;
-     AreaIdentifier: string;
-     Name: string;
-     Email: string;
-     PhoneNumber: string;
-}
+    ConversationId: string;
+    AreaIdentifier: string;
+    Name: string;
+    Email: string;
+    PhoneNumber: string;
+};
 
 export type PreCheckResult = {
     isReady: boolean;
     incompleteAreas: Array<AreaTable>;
-  };
+};
+
+export type SendEmailResultResponse = {
+    nextNodeId: string;
+    result: boolean;
+};
+
+export type UserDetails = {
+    userEmail: string;
+    userPhone: string;
+    userName: string;
+};
+
+export type LocaleDefinition = {
+    localeId: string;
+    localeCountry: string;
+    supportedLocales: string[];
+    localeMap: LocalMap;
+    localeCurrencySymbol: string;
+    localePhonePattern: string;
+};
+
+export type LocaleMapItem = {
+    localeId: string;
+    countryName: string;
+    phonePattern: string;
+    currencySymbol: string;
+};
+export type LocaleMap = LocaleMapItem[];

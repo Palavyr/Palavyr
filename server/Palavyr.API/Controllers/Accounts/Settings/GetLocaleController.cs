@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Services.AccountServices;
+using Microsoft.AspNetCore.Authorization;
+using Palavyr.API.Services.AuthenticationServices;
+
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
@@ -21,7 +24,17 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             this.localeDefinition = localeDefinition;
             this.accountsContext = accountsContext;
         }
-        
+
+
+        [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
+        [HttpGet("account/settings/locale/widget")]
+        public async Task<LocaleDefinition> GetForWidget([FromHeader] string accountId)
+        {
+            var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
+            var localeMeta = localeDefinition.Parse(account.Locale);
+            return localeMeta;
+        }
+
         [HttpGet("account/settings/locale")]
         public async Task<LocaleDefinition> Get([FromHeader] string accountId)
         {
@@ -30,6 +43,4 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             return localeMeta;
         }
     }
-
-
 }

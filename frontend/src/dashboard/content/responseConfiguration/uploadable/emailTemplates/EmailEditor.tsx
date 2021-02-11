@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Accordion, AccordionSummary, Typography, AccordionDetails, makeStyles, Divider } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
@@ -7,18 +7,17 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { cloneDeep } from 'lodash';
-import { VariableDetail } from '@Palavyr-Types';
 
 export interface IEdit {
-    accordState: any;
-    toggleAccord: any;
-    setEmailTemplate: any;
-    emailTemplate: any;
+    accordState: boolean;
+    toggleAccord(): void;
+    setEmailTemplate: Dispatch<SetStateAction<string>>;
+    emailTemplate: string;
     children: React.ReactNode;
     uploadDetails: () => React.ReactNode;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     heading: {
         fontWeight: "bold"
     },
@@ -69,7 +68,7 @@ export const EmailEditor = ({ uploadDetails, accordState, toggleAccord, emailTem
                             editor={ClassicEditor}
                             data={initData}
                             config={editorConfig}
-                            onInit={editor => {
+                            onInit={() => {
                                 // You can store the "editor" and use when it is needed.
                                 // console.log('Editor is ready to use!', editor);
                             }}

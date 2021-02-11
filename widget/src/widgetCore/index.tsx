@@ -30,6 +30,7 @@ type Props = {
     zoomStep?: number;
     handleSubmit?: AnyFunction;
     customPreferences: WidgetPreferences;
+    openUserDetails: any;
 } & typeof defaultProps;
 
 function ConnectedWidget({
@@ -53,11 +54,13 @@ function ConnectedWidget({
     imagePreview,
     zoomStep,
     handleSubmit,
-    customPreferences
+    customPreferences,
+    openUserDetails
 }: Props) {
     return (
         <Provider store={store}>
             <Widget
+                openUserDetails={openUserDetails}
                 title={title}
                 titleAvatar={titleAvatar}
                 subtitle={subtitle}

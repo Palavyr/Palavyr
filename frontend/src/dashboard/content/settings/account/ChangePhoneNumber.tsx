@@ -2,10 +2,10 @@ import { ApiClient } from "@api-client/Client";
 import React, { useCallback, useState, useEffect } from "react";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { makeStyles } from "@material-ui/core";
-import NumberFormat from "react-number-format";
+import { Divider, makeStyles } from "@material-ui/core";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     titleText: {
         fontWeight: "bold",
     },
@@ -45,6 +45,8 @@ export const ChangePhoneNumber = () => {
 
     return (
         <div style={{ width: "50%" }}>
+            <AreaConfigurationHeader title="Change your Primary Phone Number" subtitle="Update your primary phone number. This is the primary contact phone number provided in the response email and pdf sent to customers." />
+            <Divider />
             <SettingsGridRowText
                 fullWidth
                 inputType="phone"

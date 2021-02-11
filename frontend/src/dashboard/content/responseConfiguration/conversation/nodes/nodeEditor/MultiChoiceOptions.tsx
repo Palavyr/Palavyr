@@ -15,7 +15,7 @@ export const MultiChoiceOptions = ({ options, setOptions, switchState, setSwitch
 
     return (
         <>
-            <Grid container spacing={1}>
+            <Grid container spacing={1} alignItems="center">
                 {
                     options.map((option, optionIndex) => (
                         <MultiChoiceOption

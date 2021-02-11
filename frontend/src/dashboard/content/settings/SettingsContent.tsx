@@ -14,7 +14,7 @@ import { AlignCenter } from "dashboard/layouts/positioning/AlignCenter";
 import { useHistory } from "react-router-dom";
 import { GeneralSettingsLoc } from "@Palavyr-Types";
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
-
+import SubjectIcon from '@material-ui/icons/Subject';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,7 +50,7 @@ export const SettingsContent = ({children}: ISettingsContent ) => {
 
 const SettingsContentInner = ({ setLoaded, children}: ISettingsContentInner ) => {
 
-    const classes = useStyles();
+    const cls = useStyles();
     const history = useHistory();
 
     const searchParams = new URLSearchParams(location.search);
@@ -69,16 +69,17 @@ const SettingsContentInner = ({ setLoaded, children}: ISettingsContentInner ) =>
     }
 
     return (
-        <div className={classes.root}>
-            <AppBar position="static" className={classes.appbar}>
+        <div className={cls.root}>
+            <AppBar position="static" className={cls.appbar}>
                 <Tabs centered value={tab}  aria-label="simple tabs">
-                    <Tab onClick={() => sendTo(GeneralSettingsLoc.password)} className={classes.tabtext} icon={<LockOpenIcon className={classes.icon} />} label="Password" {...areaTabProps(0)} />
-                    <Tab onClick={() => sendTo(GeneralSettingsLoc.email)} className={classes.tabtext} icon={<MailOutlineIcon className={classes.icon} />} label="Email" {...areaTabProps(1)} />
-                    <Tab onClick={() => sendTo(GeneralSettingsLoc.companyName)} className={classes.tabtext} icon={<PermIdentityIcon className={classes.icon} />} label="Company Name" {...areaTabProps(2)} />
-                    <Tab onClick={() => sendTo(GeneralSettingsLoc.phoneNumber)} className={classes.tabtext} icon={<PhoneIcon className={classes.icon} />} label="Phone Number" {...areaTabProps(3)} />
-                    <Tab onClick={() => sendTo(GeneralSettingsLoc.companyLogo)} className={classes.tabtext} icon={<BrandingWatermarkIcon className={classes.icon} />} label="Company Logo" {...areaTabProps(4)} />
-                    <Tab onClick={() => sendTo(GeneralSettingsLoc.locale)} className={classes.tabtext} icon={<PublicIcon className={classes.icon} />} label="Locale" {...areaTabProps(5)} />
-                    <Tab onClick={() => sendTo(GeneralSettingsLoc.deleteaccount)} className={classes.tabtext} icon={<DeleteSweepIcon className={classes.icon} />} label="Delete" {...areaTabProps(6)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.password)} className={cls.tabtext} icon={<LockOpenIcon className={cls.icon} />} label="Password" {...areaTabProps(0)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.email)} className={cls.tabtext} icon={<MailOutlineIcon className={cls.icon} />} label="Email Address" {...areaTabProps(1)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.companyName)} className={cls.tabtext} icon={<PermIdentityIcon className={cls.icon} />} label="Company Name" {...areaTabProps(2)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.phoneNumber)} className={cls.tabtext} icon={<PhoneIcon className={cls.icon} />} label="Phone Number" {...areaTabProps(3)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.companyLogo)} className={cls.tabtext} icon={<BrandingWatermarkIcon className={cls.icon} />} label="Company Logo" {...areaTabProps(4)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.locale)} className={cls.tabtext} icon={<PublicIcon className={cls.icon} />} label="Locale" {...areaTabProps(5)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.default_email_template)} className={cls.tabtext} icon={<SubjectIcon className={cls.icon} />} label="Fallback Email" {...areaTabProps(6)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.deleteaccount)} className={cls.tabtext} icon={<DeleteSweepIcon className={cls.icon} />} label="Delete" {...areaTabProps(7)} />
                 </Tabs>
             </AppBar>
             <AlignCenter>

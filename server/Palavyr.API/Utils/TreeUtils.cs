@@ -21,9 +21,9 @@ namespace Palavyr.API.Utils
         public static int TraverseTheTreeFromTheTop(ConversationNode[] nodeList, ConversationNode node)
         {
             var count = 0;
-            if (node.NodeType == DefaultNodeTypeOptions.TooComplicated.StringName || node.NodeType == DefaultNodeTypeOptions.EndingSequence.StringName)
+            if (node.IsTerminalType)
             {
-                return count + 1;
+                return 1;
             }
 
             var children = node.NodeChildrenString.Split(",");
@@ -46,7 +46,7 @@ namespace Palavyr.API.Utils
 
         public static int GetNumTerminal(ConversationNode[] nodeList)
         {
-            return nodeList.Count(node => node.NodeType == DefaultNodeTypeOptions.TooComplicated.StringName || node.NodeType == DefaultNodeTypeOptions.EndingSequence.StringName);
+            return nodeList.Count(node => node.IsTerminalType);
         }
 
         public static ConversationNode GetParentNode(ConversationNode[] nodeList, ConversationNode curNode)
@@ -101,8 +101,18 @@ namespace Palavyr.API.Utils
         public static ConversationNode[] GetEndingNodesThatWillRequireDynamicResponseData(ConversationNode[] nodeList)
         {
             return nodeList
-                .Where(node => node.IsTerminalType)
+                .Where(node => node.IsTerminalType && node.NodeType != DefaultNodeTypeOptions.TooComplicated.StringName)
                 .ToArray();
+        }
+
+        public static string CreateNodeChildrenString(params string[] nodeIds)
+        {
+            return string.Join(Delimiters.NodeChildrenStringDelimiter, nodeIds);
+        }
+
+        public static string CreateValueOptions(params string[] options)
+        {
+            return string.Join(Delimiters.PathOptionDelimiter, options);
         }
     }
 }

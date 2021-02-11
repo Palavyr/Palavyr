@@ -18,21 +18,21 @@ export const MultiChoiceOption = ({option, optionIndex, options, setOptions, swi
             <Grid item xs={9} >
                 <TextField
                     style={{margin: "1rem"}}
-                    label={"option"}
+                    label="option"
                     type="text"
-                    variant={"outlined"}
+                    variant="outlined"
                     value={option}
                     color="primary"
                     onChange={(event) => {
                         event.preventDefault();
-                        var val = event.target.value;
+                        const val = event.target.value;
                         options[optionIndex] = val;
                         setOptions(options);
                         setSwitchState(!switchState);
                     }}
                 />
             </Grid>
-            <Grid item xs={3} >
+            <Grid item xs={3} alignContent="center">
                 <Button
                     onClick={() => {
                         options.splice(optionIndex, 1);

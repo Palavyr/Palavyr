@@ -7,7 +7,11 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield'
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
-
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import RemoveIcon from '@material-ui/icons/Remove';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 
 type styleProp = {
     index: number;
@@ -119,6 +123,8 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
             </TableCell>
             <TableCell align={cellAlignment}>
                 <Button
+                    startIcon={rangeState ? <ChevronLeftIcon /> : <RemoveIcon />}
+                    endIcon={ rangeState ? <ChevronRightIcon /> : null}
                     variant="contained"
                     color={rangeState ? "primary" : "secondary"}
                     onClick={
@@ -132,6 +138,8 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
             </TableCell>
             <TableCell align={cellAlignment}>
                 <Button
+
+                    startIcon={perState ? <GroupAddIcon /> : <PeopleAltIcon />}
                     variant="contained"
                     color={perState ? "primary" : "secondary"}
                     onClick={
@@ -140,7 +148,7 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
                         }
                     }
                 >
-                    {perState ? "Per Person" : "Flat Fee"}
+                    {perState ? "Per Individual" : "Static Fee"}
                 </Button>
             </TableCell>
             <TableCell align={cellAlignment}>

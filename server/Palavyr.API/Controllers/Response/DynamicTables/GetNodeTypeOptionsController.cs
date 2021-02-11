@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DashboardServer.Data;
@@ -8,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Services.DynamicTableService;
 using Server.Domain.Configuration.Constant;
-using Server.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Response.DynamicTables
 {

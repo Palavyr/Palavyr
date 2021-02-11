@@ -1,5 +1,5 @@
 import * as React from "react";
-import { makeStyles } from "@material-ui/core";
+import { Box, makeStyles } from "@material-ui/core";
 import { WidgetPreferences } from "src/types";
 import classNames from "classnames";
 
@@ -31,6 +31,7 @@ const useStyles = makeStyles(theme => ({
     layout: {
         textAlign: "left",
         overflowX: "scroll",
+
     },
 }));
 
@@ -41,5 +42,5 @@ export interface IWrapMessages {
 
 export const MessageWrapper = ({ customPreferences, children }: IWrapMessages) => {
     const cls = useStyles({ color: customPreferences.chatFontColor, backgroundColor: customPreferences.chatBubbleColor });
-    return <div className={classNames(cls.messageText, cls.layout)}>{children}</div>;
+    return <Box boxShadow={1} className={classNames(cls.messageText, cls.layout)}>{children}</Box>;
 };

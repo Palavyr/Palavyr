@@ -1,15 +1,7 @@
-import { PanelRange, areaTabProps, TabPanel } from "@common/ContentUtils";
+import { PanelRange, areaTabProps } from "@common/ContentUtils";
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { ConvoTree } from "./conversation/ConvoTree";
-import { ResponseConfiguration } from "./response/ResponseConfiguration";
-import { EmailConfiguration } from "./uploadable/emailTemplates/EmailConfiguration";
-import { AttachmentConfiguration } from "./uploadable/attachments/AttachmentConfiguration";
-import { ConfigurationPreview } from "./previews/ConfigurationPreview";
-import { AreaSettings } from "./areaSettings/AreaSettings";
 import { AppBar, Tabs, Tab, makeStyles } from "@material-ui/core";
-import { PleaseConfirmYourEmail } from "../welcome/PleaseConfirmYourEmail";
-import { WelcomeToTheDashboard } from "../welcome/WelcomeToTheDashboard";
-import { Redirect, useHistory, useLocation, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
 import FilterFramesIcon from "@material-ui/icons/FilterFrames";
 import SubjectIcon from "@material-ui/icons/Subject";
@@ -65,7 +57,6 @@ export const AreaContentInner = ({ setLoaded, children }: IAreaContentInner) => 
     const rawTab = searchParams.get("tab");
     const tab = rawTab ? (parseInt(rawTab) as PanelRange) : 0;
 
-    const { areaName } = React.useContext(DashboardContext);
     const { isActive } = React.useContext(AuthContext);
 
     const sendTo = (dest: AreaSettingsLoc) => {

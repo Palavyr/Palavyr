@@ -50,6 +50,12 @@ namespace DashboardServer.Data.Migrations.ConfigurationMigrations
                     b.Property<string>("Epilogue")
                         .HasColumnType("text");
 
+                    b.Property<string>("FallbackEmailTemplate")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FallbackSubject")
+                        .HasColumnType("text");
+
                     b.Property<string>("GroupId")
                         .HasColumnType("text");
 
@@ -61,6 +67,9 @@ namespace DashboardServer.Data.Migrations.ConfigurationMigrations
 
                     b.Property<string>("Subject")
                         .HasColumnType("text");
+
+                    b.Property<bool>("UseAreaFallbackEmail")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 

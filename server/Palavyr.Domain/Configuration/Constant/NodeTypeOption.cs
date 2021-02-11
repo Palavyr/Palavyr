@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Server.Domain.Configuration.Schemas;
 
@@ -10,6 +9,13 @@ namespace Server.Domain.Configuration.Constant
     /// </summary>
     public class NodeTypeOption
     {
+        // Groups
+        public static readonly string MultipleChoice = "Multiple Choice";
+        public static readonly string InfoCollection = "Info Collection";
+        public static readonly string InfoProvide = "Provide Info";
+        public static readonly string CustomTables = "Custom Tables";
+        public static readonly string Terminal = "Terminal";
+
         /*
          * The string form name of the node type. Derived from either 'nameof(T)' or extension method: dynamicTableMeta.MakeUniqueIdentifier()
          */
@@ -59,7 +65,8 @@ namespace Server.Domain.Configuration.Constant
             List<string> valueOptions,
             bool isDynamicType,
             bool isMultiOptionType,
-            bool isTerminalType
+            bool isTerminalType,
+            string groupName
         )
         {
             return new NodeTypeOption()
@@ -70,7 +77,8 @@ namespace Server.Domain.Configuration.Constant
                 ValueOptions = valueOptions,
                 IsMultiOptionType = isMultiOptionType,
                 IsTerminalType = isTerminalType,
-                IsDynamicType = isDynamicType
+                IsDynamicType = isDynamicType,
+                GroupName = groupName
             };
         }
 

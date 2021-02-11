@@ -62,8 +62,10 @@ namespace Palavyr.API.Services.DynamicTableService
                         valueOptions,
                         true,
                         true,
-                        false
+                        false, 
+                        NodeTypeOption.CustomTables
                     );
+                    
                     dynamicTableData.AddAdditionalNode(nodeTypeOption);
                 }
                 else if (dynamicTableMeta.TableType == DynamicTableTypes.CreatePercentOfThreshold().TableType)
@@ -75,7 +77,8 @@ namespace Palavyr.API.Services.DynamicTableService
                         new List<string>() { },
                         true,
                         false,
-                        false
+                        false,
+                        NodeTypeOption.CustomTables
                     );
                     dynamicTableData.AddAdditionalNode(nodeTypeOption);
                 }

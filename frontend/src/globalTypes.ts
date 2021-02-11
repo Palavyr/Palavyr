@@ -106,6 +106,10 @@ export type AreaTable = {
     awaitingVerification: boolean;
     subject: string;
     isComplete: boolean;
+
+    useAreaFallbackEmail: boolean;
+    fallbackSubject: string;
+    fallbackEmailTemplate: string;
 };
 
 export type StaticTableMetas = Array<StaticTableMeta>;
@@ -319,7 +323,8 @@ export enum GeneralSettingsLoc {
     phoneNumber,
     companyLogo,
     locale,
-    deleteaccount,
+    default_email_template,
+    deleteaccount
 }
 
 export enum AreaSettingsLoc {
@@ -366,6 +371,7 @@ export type NodeOption = {
     isMultiOptionType: boolean;
     isTerminalType: boolean;
     stringName: string | null;
+    groupName: string;
 };
 
 
@@ -502,6 +508,7 @@ export type Settings = {
     areaTitle: string;
     subject: string;
     isComplete: boolean;
+    useAreaFallbackEmail: boolean;
 };
 
 export type AreasEnabled = {
@@ -516,18 +523,39 @@ export type LocaleDefinition = {
     localeId: string;
     localeCountry: string;
     supportedLocales: string[];
-    localeMap: LocalMap;
+    localeMap: LocaleMap;
     localeCurrencySymbol: string;
+    localePhonePattern: string;
 }
 
 export type LocaleMapItem = {
     localeId: string;
     countryName: string;
+    phonePattern: string;
+    currencySymbol: string;
 }
-export type LocalMap = LocaleMapItem[];
+export type LocaleMap = LocaleMapItem[];
 
 export type ProductIds = {
     freeProductId: string;
     premiumProductId: string;
     proProductId: string;
 }
+
+export type Todos = {
+    name: string;
+    emailAddress: string;
+    logoUri: string;
+    isVerified: boolean;
+    awaitingVerification: boolean;
+    phoneNumber: string;
+};
+
+export type TodosAsBoolean = {
+    name: boolean;
+    emailAddress: string;
+    logoUri: boolean;
+    isVerified: boolean;
+    awaitingVerification: boolean;
+    phoneNumber: boolean;
+};
