@@ -31,13 +31,15 @@ export interface BaseFormProps {
 const useStyles = makeStyles(theme => ({
     baseDialog: {
         zIndex: 9999,
+        position: "absolute"
+
     },
     dialogBackground: {
-        zIndex: 99999,
+        zIndex: 9999,
         backgroundColor: "white",
     },
     dialogPaper: {
-        zIndex: 99999,
+        zIndex: 9999,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

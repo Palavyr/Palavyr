@@ -43,19 +43,17 @@ export const App = () => {
     return (
         <>
             {isReady === true && selectedOption === null && !userDetailsDialogState && <OptionSelector setUserDetailsDialogState={setUserDetailsDialogstate} setSelectedOption={setSelectedOption} preferences={widgetPrefs} />}
-            {isReady === true && selectedOption !== null && userDetailsDialogState && (
+            {isReady === true && selectedOption !== null && (
                 <>
-                <div style={{zIndex: 111}}>
-
-                    <CustomWidget setUserDetailsDialogState={setUserDetailsDialogstate} userDetails={userDetails} option={selectedOption} preferences={widgetPrefs} />
-                </div>
-                <div style={{zIndex: 9999999}}>
+                <div style={{display: userDetailsDialogState ? null : "none", zIndex: 9999}}>
                     <CollectDetailsForm userDetails={userDetails} setUserDetails={setUserDetails} userDetailsDialogState={userDetailsDialogState} setUserDetailsDialogState={setUserDetailsDialogstate} />
+                </div>
+
+                <div style={{display: userDetailsDialogState ? "none" : null, zIndex: 9999}}>
+                    <CustomWidget setUserDetailsDialogState={setUserDetailsDialogstate} userDetails={userDetails} option={selectedOption} preferences={widgetPrefs} />
                 </div>
                 </>
             )}
-            {/* {isReady === true && selectedOption !== null && userDetailsDialogState &&} */}
-
             {isReady === false && (
                 <div style={{ textAlign: "center", paddingTop: "3rem" }}>
                     <span>Not ready</span>

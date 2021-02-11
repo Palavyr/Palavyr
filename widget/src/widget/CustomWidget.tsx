@@ -88,9 +88,9 @@ export const CustomWidget = ({ setUserDetailsDialogState, userDetails, option, p
             fullScreenMode={true}
             showCloseButton={false}
             customPreferences={preferences}
-            profileAvatar={tempAvatar}
+            // profileAvatar={tempAvatar}
             showTimeStamp={true}
-            titleAvatar={tempAvatar}
+            // titleAvatar={tempAvatar}
         />
     )
 }
