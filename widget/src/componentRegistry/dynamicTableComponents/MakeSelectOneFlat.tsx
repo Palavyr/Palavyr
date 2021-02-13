@@ -2,12 +2,13 @@ import * as React from "react";
 import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
 import { getChildNodes } from "../utils";
 import { Table, TableRow, TableCell, makeStyles } from "@material-ui/core";
-import { responseAction, IProgressTheChat, ConvoContextProperties, NodeTypes } from "..";
+import { responseAction, IProgressTheChat } from "..";
 import { uuid } from "uuidv4";
 import { ResponseButton } from "../../common/ResponseButton";
 import { useState } from "react";
 import { SingleRowSingleCell } from "src/common/TableCell";
-import { DynamicResponse } from "src/types";
+import { addDynamicResponse } from "src/widgetCore/store/actions";
+import { DynamicResponse } from "src/widgetCore/store/types";
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -45,9 +46,7 @@ export const makeSelectOneFlat = ({ node, nodeList, client, convoId }: IProgress
                                             const dynamicResponse: DynamicResponse = {
                                                 [node.nodeType]: option,
                                             };
-
-                                            contextProperties[ConvoContextProperties.dynamicResponses].push(dynamicResponse);
-                                            setContextProperties(contextProperties => contextProperties);
+                                            addDynamicResponse(dynamicResponse);
                                             responseAction(node, child, nodeList, client, convoId, option);
                                             toggleInputDisabled();
                                             setDisabled(true);

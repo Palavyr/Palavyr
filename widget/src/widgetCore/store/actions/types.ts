@@ -128,7 +128,7 @@ export interface setNameContext {
 
 export interface setPhoneContext {
     type: typeof SET_PHONE_CONTEXT;
-    phone: string;
+    phoneNumber: string;
 }
 
 export interface setEmailAddressContext {
@@ -159,3 +159,7 @@ export type ContextPropertyActions = setContextProperties
 | setRegionContext
 | addKeyValueContext
 | addDynamicResponse;
+
+export type AllActions = ContextPropertyActions | FullscreenPreviewActions | BehaviorActions | MessagesActions | QuickButtonsActions
+
+

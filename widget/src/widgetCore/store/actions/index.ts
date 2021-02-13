@@ -123,10 +123,10 @@ export function setNameContext(name: string): actionsTypes.ContextPropertyAction
     };
 }
 
-export function setPhoneContext(phone: string): actionsTypes.ContextPropertyActions {
+export function setPhoneContext(phoneNumber: string): actionsTypes.ContextPropertyActions {
     return {
         type: actionsTypes.SET_PHONE_CONTEXT,
-        phone,
+        phoneNumber,
     };
 }
 

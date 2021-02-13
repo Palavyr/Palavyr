@@ -43,17 +43,17 @@ export const PhoneForm = ({ phonePattern, status, setStatus }: PhoneFormProps) =
             mask="_"
             type="tel"
             onBlur={() => {
-                const result = checkUserPhone(getPhoneContext(), setStatus);
+                const phonenumber = getPhoneContext();
+                const result = checkUserPhone(phonenumber, setStatus);
                 if (!result) setStatus(INVALID_PHONE);
                 if (!result) setPhoneContext("");
             }}
             onValueChange={values => {
-                setPhoneContext(values.formattedValue);
+                setPhoneContext(values.formattedValue ?? "");
                 if (status === INVALID_PHONE) {
                     setStatus(null);
                 }
             }}
-            value={getPhoneContext()}
         />
     );
 };

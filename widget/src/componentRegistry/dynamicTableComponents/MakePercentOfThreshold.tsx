@@ -1,8 +1,8 @@
 import * as React from "react";
-import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
+import { addDynamicResponse, toggleInputDisabled } from "src/widgetCore/store/dispatcher";
 import { Table } from "@material-ui/core";
 import { useState } from "react";
-import { ConvoContextProperties, IProgressTheChat, responseAction } from "..";
+import { IProgressTheChat, responseAction } from "..";
 import { getChildNodes } from "../utils";
 import { ResponseButton } from "../../common/ResponseButton";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
@@ -45,8 +45,7 @@ export const makePercentOfThreshold = ({ node, nodeList, client, convoId }: IPro
                                 [node.nodeType]: response.toString(), // TODO: convert this to a nicely formatted number with commas
                             };
 
-                            contextProperties[ConvoContextProperties.dynamicResponses].push(dynamicResponse);
-                            setContextProperties(contextProperties);
+                            addDynamicResponse(dynamicResponse);
                             responseAction(node, child, nodeList, client, convoId, response.toString());
                             toggleInputDisabled();
                             setDisabled(true);

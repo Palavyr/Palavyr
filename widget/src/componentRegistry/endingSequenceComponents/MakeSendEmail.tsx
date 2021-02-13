@@ -1,5 +1,5 @@
 import * as React from "react";
-import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
+import { getContextProperties, toggleInputDisabled } from "src/widgetCore/store/dispatcher";
 import { Table, TableRow, TableCell } from "@material-ui/core";
 import { responseAction, IProgressTheChat, ConvoContextProperties } from "..";
 import { ResponseButton } from "../../common/ResponseButton";
@@ -20,6 +20,8 @@ export const makeSendEmail = ({ node, nodeList, client, convoId }: IProgressTheC
     const areaId = nodeList[0].areaIdentifier;
 
     const sendEmail = async () => {
+
+        const contextProperties = getContextProperties();
         const email = contextProperties[ConvoContextProperties.emailAddress];
         const name = contextProperties[ConvoContextProperties.name];
         const phone = contextProperties[ConvoContextProperties.phoneNumber];

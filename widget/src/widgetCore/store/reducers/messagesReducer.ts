@@ -5,6 +5,11 @@ import { createNewMessage, createLinkSnippet, createComponentMessage } from "../
 import { MESSAGE_SENDER } from "../../constants";
 import { MessagesActions, ADD_NEW_USER_MESSAGE, ADD_NEW_RESPONSE_MESSAGE, ADD_NEW_LINK_SNIPPET, ADD_COMPONENT_MESSAGE, DROP_MESSAGES, HIDE_AVATAR, DELETE_MESSAGES, MARK_ALL_READ, SET_BADGE_COUNT } from "../actions/types";
 
+export type MessageState = {
+    messages: Array<React.ReactNode>;
+    badgeCount: number;
+}
+
 const initialState = {
     messages: [],
     badgeCount: 0,
@@ -33,4 +38,4 @@ const messagesReducer = {
     [MARK_ALL_READ]: (state: MessagesState) => ({ ...state, messages: state.messages.map(message => ({ ...message, unread: false })), badgeCount: 0 }),
 };
 
-export default (state = initialState, action: MessagesActions) => createReducer(messagesReducer, state, action);
+export default (state: MessageState = initialState, action: MessagesActions) => createReducer<MessageState, MessagesActions>(messagesReducer, state, action);

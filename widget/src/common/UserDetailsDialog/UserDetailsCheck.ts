@@ -12,6 +12,7 @@ export const isEmpty = (val: any) => {
 }
 
 export const checkUserName = (name: string, setStatus: Dispatch<SetStateAction<string>>) => {
+
     const userName = name.trim();
     if (isEmpty(userName)) {
         return true;

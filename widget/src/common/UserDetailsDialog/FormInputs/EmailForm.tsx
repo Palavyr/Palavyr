@@ -1,18 +1,31 @@
 import { TextField } from "@material-ui/core";
 import React, { Dispatch, SetStateAction } from "react";
-import { setEmailAddressContext } from "src/widgetCore/store/actions";
-import { getContextProperties, getEmailAddressContext } from "src/widgetCore/store/dispatcher";
-import { ContextProperties } from "src/widgetCore/store/types";
+import { getEmailAddressContext, getNameContext, setEmailAddressContext, setPhoneContext } from "src/widgetCore/store/dispatcher";
 import { BaseFormProps } from "../CollectDetailsForm";
-import { INVALID_EMAIL } from "../UserDetailsCheck";
+import { checkUserEmail, checkUserName, INVALID_EMAIL, INVALID_PHONE } from "../UserDetailsCheck";
 
 export interface EmailFormProps extends BaseFormProps {
-    checkUserDetailsAreSet(contextProperties: ContextProperties, setStatus: Dispatch<SetStateAction<string>>): boolean;
-    setDetailsSet: Dispatch<SetStateAction<boolean>>
+    setDetailsSet: Dispatch<SetStateAction<boolean>>;
 }
 
-export const EmailForm = ({ status, setStatus, setDetailsSet, checkUserDetailsAreSet}: EmailFormProps) => {
-    // const [emailState, setEmailState] = useState<string>("");
+export const EmailForm = ({ status, setStatus, setDetailsSet }: EmailFormProps) => {
+    const checkUserDetailsAreSet = () => {
+        const name = getNameContext();
+        const emailAddress = getEmailAddressContext();
+
+        const userNameResult = checkUserName(name, setStatus);
+        const userEmailResult = checkUserEmail(emailAddress, setStatus);
+
+        if (status === INVALID_PHONE) {
+            setPhoneContext("");
+        }
+
+        if (!userNameResult || !userEmailResult) {
+            return false;
+        }
+        return true;
+    };
+
     return (
         <TextField
             margin="normal"
@@ -20,16 +33,13 @@ export const EmailForm = ({ status, setStatus, setDetailsSet, checkUserDetailsAr
             required
             fullWidth
             label="Email Address"
-            value={getEmailAddressContext()}
             autoComplete="off"
             type="email"
             onBlur={() => {
-                setDetailsSet(checkUserDetailsAreSet(getContextProperties(), setStatus));
-
+                setDetailsSet(checkUserDetailsAreSet());
             }}
             onChange={e => {
                 setEmailAddressContext(e.target.value);
-                // setContextProperties({ ...contextProperties, emailAddress: e.target.value });
                 if (status === INVALID_EMAIL) {
                     setStatus(null);
                 }

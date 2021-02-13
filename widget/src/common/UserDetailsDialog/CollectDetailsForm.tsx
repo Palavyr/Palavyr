@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { SetStateAction } from "react";
 import { Dispatch } from "react";
 import { LocaleMap, LocaleMapItem } from "src/types";
-import { checkUserEmail, checkUserName, INVALID_PHONE } from "./UserDetailsCheck";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
@@ -13,7 +12,7 @@ import { EmailForm } from "./FormInputs/EmailForm";
 import { LocaleSelector } from "./FormInputs/LocaleSelector";
 import { PhoneForm } from "./FormInputs/PhoneForm";
 import CreateClient from "src/client/Client";
-import { getContextProperties, getEmailAddressContext, getNameContext, setContextProperties, setPhoneContext, setRegionContext } from "src/widgetCore/store/dispatcher";
+import { setRegionContext } from "src/widgetCore/store/dispatcher";
 
 export interface CollectDetailsFormProps {
     userDetailsDialogState: boolean;
@@ -78,24 +77,6 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, userDetailsDia
     const cls = useStyles();
     const [status, setStatus] = useState<string | null>(null);
 
-    const checkUserDetailsAreSet = () => {
-
-        const name = getNameContext();
-        const emailAddress = getEmailAddressContext();
-
-        const userNameResult = checkUserName(name, setStatus);
-        const userEmailResult = checkUserEmail(emailAddress, setStatus);
-
-        if (status === INVALID_PHONE) {
-            setPhoneContext("");
-        }
-
-        if (!userNameResult || !userEmailResult) {
-            return false;
-        }
-        return true;
-    };
-
     const onChange = (event: any, newOption: LocaleMapItem) => {
         setphonePattern(newOption.phonePattern);
         setRegionContext(newOption.localeId);
@@ -129,7 +110,7 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, userDetailsDia
             <DialogContent className={cls.dialogContent}>
                 <form onSubmit={onFormSubmit}>
                     <NameForm {...formProps} />
-                    <EmailForm {...formProps} setDetailsSet={setDetailsSet} checkUserDetailsAreSet={checkUserDetailsAreSet} />
+                    <EmailForm {...formProps} setDetailsSet={setDetailsSet} />
                     <PhoneForm {...formProps} phonePattern={phonePattern} />
                     <LocaleSelector options={options} onChange={onChange} />
                     <div style={{ display: "flex", justifyContent: "center" }}>

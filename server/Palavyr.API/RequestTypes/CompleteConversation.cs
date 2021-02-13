@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 using Server.Domain.Conversation;
 
 namespace Palavyr.API.RequestTypes
@@ -11,9 +12,10 @@ namespace Palavyr.API.RequestTypes
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
 
-        CompleteConversation() { }
+        [JsonConstructor]
+        public CompleteConversation() { }
         
-        CompleteConversation(
+        private CompleteConversation(
             string conversationId,
             string areaIdentifier,
             string name,

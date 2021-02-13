@@ -8,7 +8,6 @@ import { CustomWidget } from "./widget/CustomWidget";
 import { CollectDetailsForm } from "./common/UserDetailsDialog/CollectDetailsForm";
 import { Provider } from "react-redux";
 import store from "./widgetCore/store";
-import { ContextProperties } from "./widgetCore/store/types";
 
 
 export const App = () => {
@@ -16,7 +15,6 @@ export const App = () => {
     const [isReady, setIsReady] = useState<boolean>(false);
     const [widgetPrefs, setWidgetPrefs] = useState<WidgetPreferences>();
 
-    // const [contextProperties, setContextProperties] = useState<ContextProperties>(defaultContextProperties);
     const [userDetailsDialogState, setUserDetailsDialogstate] = useState<boolean>(false);
     const [chatStarted, setChatStarted] = useState<boolean>(false);
 
@@ -25,11 +23,6 @@ export const App = () => {
 
     let client: IClient;
     if (secretKey) client = CreateClient(secretKey);
-
-    // const getContextProperties = useCallback(() => {
-    //     return [contextProperties, setContextProperties]
-    // }, [contextProperties, setContextProperties])
-
     const runAppPrecheck = useCallback(async () => {
         var { data: preCheckResult } = await client.Widget.Access.runPreCheck(isDemo === "true" ? true : false);
 

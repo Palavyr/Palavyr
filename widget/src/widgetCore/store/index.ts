@@ -4,7 +4,7 @@ import behavior from './reducers/behaviorReducer';
 import messages from './reducers/messagesReducer';
 import quickButtons from './reducers/quickButtonsReducer';
 import preview from './reducers/fullscreenPreviewReducer';
-import context from './reducers/contextReducer'; // TODO This should be lowercase...
+import context from './reducers/contextReducer';
 
 
 declare global {

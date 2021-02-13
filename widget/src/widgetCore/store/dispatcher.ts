@@ -2,7 +2,7 @@ import { ElementType } from 'react';
 
 import store from '.';
 import * as actions from './actions';
-import { LinkParams, ImageState, ContextProperties, DynamicResponse, KeyValue } from './types';
+import { LinkParams, ImageState, ContextProperties, DynamicResponse, KeyValue, KeyValues, DynamicResponses } from './types';
 
 export function addUserMessage(text: string, id?: string) {
   store.dispatch(actions.addUserMessage(text, id));
@@ -64,20 +64,11 @@ export function closeFullscreenPreview() {
   store.dispatch(actions.closeFullscreenPreview());
 }
 
-// Context Property Details
-// name: string;
-// emailAddress: string;
-// phoneNumber: string;
-// region: string;
-// keyValues: KeyValues;
-// dynamicResponses: DynamicResponses;
+
 export function setContextProperties(contextProperties: ContextProperties) {
   store.dispatch(actions.setContextProperties(contextProperties))
 }
 
-export function getContextProperties(): ContextProperties {
-  return store.getState().context
-}
 
 export function setNameContext(name: string) {
   store.dispatch(actions.setNameContext(name))
@@ -87,7 +78,7 @@ export function setPhoneContext(phone: string) {
   store.dispatch(actions.setPhoneContext(phone))
 }
 
-export function setEmaillAddressContext(emailAddress: string) {
+export function setEmailAddressContext(emailAddress: string) {
   store.dispatch(actions.setEmailAddressContext(emailAddress))
 }
 
@@ -103,26 +94,38 @@ export function addDynamicResponse(dynamicResponse: DynamicResponse) {
   store.dispatch(actions.addDynamicResponse(dynamicResponse))
 }
 
-export function getNameContext() {
-  return store.getState().context.name;
+export function getContextProperties(): ContextProperties {
+  const curState = store.getState();
+  const context = curState.context as ContextProperties;
+  return context;
+}
+
+export function getNameContext(): string {
+  const contextProperties = getContextProperties();
+  return contextProperties.name;
 }
 
 export function getPhoneContext() {
-  return store.getState().context.phoneNumber;
+  const contextProperties = getContextProperties();
+  return contextProperties.phoneNumber;
 }
 
-export function getEmailAddressContext() {
-  return store.getState().context.emailAddress;
+export function getEmailAddressContext(): string {
+  const contextProperties = getContextProperties();
+  return contextProperties.emailAddress;
 }
 
-export function getRegionContext() {
-  return store.getState().context.region;
+export function getRegionContext(): string {
+  const contextProperties = getContextProperties();
+  return contextProperties.region;
 }
 
-export function getKeyValueContext() {
-  return store.getState().context.keyValues;
+export function getKeyValueContext(): KeyValues {
+  const contextProperties = getContextProperties();
+  return contextProperties.keyValues;
 }
 
-export function getDynamicResponsesContext() {
-  return store.getState().context.dynamicResponses;
+export function getDynamicResponsesContext(): DynamicResponses {
+  const contextProperties = getContextProperties();
+  return contextProperties.dynamicResponses;
 }

@@ -1,5 +1,5 @@
-import { Registry, ConvoTableRow, ConversationUpdate, ContextProperties, KeyValues } from "../types";
-import { renderCustomComponent, addUserMessage, toggleMsgLoader } from "src/widgetCore/store/dispatcher";
+import { Registry, ConvoTableRow, ConversationUpdate } from "../types";
+import { renderCustomComponent, addUserMessage, toggleMsgLoader, addKeyValue } from "src/widgetCore/store/dispatcher";
 import { IClient } from "../client/Client";
 import { dummyFailComponent } from "./DummyComponentDev";
 import { makeProvideInfo } from "./standardComponents/MakeProvideInfo";
@@ -16,8 +16,6 @@ import { makePercentOfThreshold } from "./dynamicTableComponents/MakePercentOfTh
 import { makeTooComplicated } from "./standardComponents/MakeTooComplicated";
 import { random } from "./random";
 import { makeSendFallbackEmail } from "./endingSequenceComponents/MakeSendFallbackEmail";
-import { Dispatch } from "react";
-import { SetStateAction } from "react";
 
 export interface IProgressTheChat {
     node: ConvoTableRow;
@@ -36,14 +34,7 @@ export const responseAction = (
 ) => {
     if (response) {
         if (node.isCritical) {
-
-            const keyValues: KeyValues = contextProperties[ConvoContextProperties.keyValues];
-            keyValues.push({ [node.text]: response });
-
-            setContextProperties((contextProperties: any) => ({
-                ...contextProperties,
-                [ConvoContextProperties.keyValues]: keyValues
-            }));
+            addKeyValue({ [node.text]: response })
         }
 
         if (child.optionPath !== null && child.optionPath !== "" && child.optionPath !== "Continue") {
