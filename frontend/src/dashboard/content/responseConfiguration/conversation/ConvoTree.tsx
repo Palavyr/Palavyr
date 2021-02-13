@@ -5,7 +5,7 @@ import { ApiClient } from "@api-client/Client";
 import { cloneDeep } from "lodash";
 import { ConversationNode } from "./nodes/ConversationNode";
 import { MissingDynamicNodes } from "./MissingDynamicNodes";
-import { makeStyles } from "@material-ui/core";
+import { Button, makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import "./ConvoTree.css";
@@ -70,12 +70,12 @@ export const ConvoTree = () => {
 
     return (
         <>
-            <AreaConfigurationHeader title="Palavyr" subtitle="Configure the palaver (conversation) you wish to provide to your potential clients. Consider planning this before implementing." />
+            <AreaConfigurationHeader title="Palavyr" subtitle="Your palavyr is the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing. Please be careful - all changes to your palavyr are immediately saved and we have not yet implemented a 'back' or 'undo' feature." />
             <div className={classes.conversation}>
                 {missingNodeTypes.length > 0 && <MissingDynamicNodes missingNodeTypes={missingNodeTypes} />}
                 <form onSubmit={() => null}>
                     <fieldset className="fieldset" id="tree-test">
-                        <legend>{treeName}</legend>
+                        {/* <legend>{treeName}</legend> */}
                         <div className="main-tree tree-wrap">
                             {nodeList.length > 0 ? (
                                 <ConversationNode key={"tree-start"} parentId={rootNode.nodeId} node={rootNode} nodeList={nodeList} setNodes={setNodes} parentState={true} changeParentState={() => null} nodeOptionList={nodeOptionList} />
