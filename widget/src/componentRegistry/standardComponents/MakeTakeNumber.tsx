@@ -2,19 +2,17 @@ import * as React from "react";
 import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
 import { TextField, Table, TableRow, TableCell, makeStyles } from "@material-ui/core";
 import { useState } from "react";
-import { IProgressTheChat, responseAction, ConvoContextProperties } from "..";
+import { IProgressTheChat, responseAction } from "..";
 import { getChildNodes } from "../utils";
 import { ResponseButton } from "../../common/ResponseButton";
 import { SingleRowSingleCell } from "src/common/TableCell";
 
-export const makeTakeNumber = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
-    // TODO: lift this widget and add  'isInputDisabled()'
-    // addResponseMessage(node.text); // Use if you want to have the message display as a separate message block
+export const makeTakeNumber = ({ node, nodeList, client, convoId, contextProperties, setContextProperties }: IProgressTheChat) => {
     toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
 
-    const useStyles = makeStyles(theme => ({
+    const useStyles = makeStyles(() => ({
         root: {
             borderBottom: "0px solid white",
         },
@@ -46,10 +44,7 @@ export const makeTakeNumber = ({ node, nodeList, client, convoId, convoContext }
                         <ResponseButton
                             disabled={disabled}
                             onClick={() => {
-                                if (node.isCritical) {
-                                    convoContext[ConvoContextProperties.KeyValues].push({ [node.text]: response });
-                                }
-                                responseAction(node, child, nodeList, client, convoId, response, convoContext);
+                                responseAction(node, child, nodeList, client, convoId, response, contextProperties, setContextProperties);
                                 toggleInputDisabled();
                                 setDisabled(true);
                             }}

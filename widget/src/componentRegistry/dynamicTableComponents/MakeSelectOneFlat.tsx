@@ -7,6 +7,7 @@ import { uuid } from "uuidv4";
 import { ResponseButton } from "../../common/ResponseButton";
 import { useState } from "react";
 import { SingleRowSingleCell } from "src/common/TableCell";
+import { DynamicResponse } from "src/types";
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -18,7 +19,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // All Dynamic results should add response formatted to the dynamic response AND the critical value lst
-export const makeSelectOneFlat = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
+export const makeSelectOneFlat = ({ node, nodeList, client, convoId, contextProperties, setContextProperties }: IProgressTheChat) => {
     toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
@@ -41,16 +42,13 @@ export const makeSelectOneFlat = ({ node, nodeList, client, convoId, convoContex
                                         key={option + uuid()}
                                         text={option}
                                         onClick={() => {
-                                            const dynamicResponse = {
+                                            const dynamicResponse: DynamicResponse= {
                                                 [node.nodeType]: option,
                                             };
 
-                                            convoContext[ConvoContextProperties.DynamicResponses].push(dynamicResponse);
-
-                                            if (node.isCritical) {
-                                                convoContext[ConvoContextProperties.KeyValues].push(dynamicResponse);
-                                            }
-                                            responseAction(node, child, nodeList, client, convoId, option, convoContext);
+                                            contextProperties[ConvoContextProperties.dynamicResponses].push(dynamicResponse);
+                                            setContextProperties(contextProperties);
+                                            responseAction(node, child, nodeList, client, convoId, option, contextProperties, setContextProperties);
                                             toggleInputDisabled();
                                             setDisabled(true);
                                         }}

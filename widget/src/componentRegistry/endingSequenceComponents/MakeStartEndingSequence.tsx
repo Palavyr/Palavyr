@@ -7,7 +7,7 @@ import { ResponseButton } from "../../common/ResponseButton";
 import { useState } from "react";
 import { SingleRowSingleCell } from "src/common/TableCell";
 
-export const makeStartEndingSequence = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
+export const makeStartEndingSequence = ({ node, nodeList, client, convoId, contextProperties, setContextProperties }: IProgressTheChat) => {
     toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
@@ -25,7 +25,7 @@ export const makeStartEndingSequence = ({ node, nodeList, client, convoId, convo
                             disabled={disabled}
                             text="Proceed"
                             onClick={() => {
-                                responseAction(node, child, nodeList, client, convoId, null, convoContext);
+                                responseAction(node, child, nodeList, client, convoId, null, contextProperties, setContextProperties);
                                 toggleInputDisabled();
                                 setDisabled(true);
                             }}

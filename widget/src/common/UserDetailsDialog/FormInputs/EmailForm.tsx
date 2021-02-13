@@ -7,9 +7,9 @@ import { INVALID_EMAIL } from "../UserDetailsCheck";
 export interface EmailFormProps extends BaseFormProps {
     checkUserDetailsAreSet(userDetails: UserDetails, setStatus: Dispatch<SetStateAction<string>>): boolean;
     setDetailsSet: Dispatch<SetStateAction<boolean>>
-}``
+}
 
-export const EmailForm = ({userDetails, setUserDetails, status, setStatus, setDetailsSet, checkUserDetailsAreSet}: EmailFormProps) => {
+export const EmailForm = ({ userDetails, setUserDetails, status, setStatus, setDetailsSet, checkUserDetailsAreSet}: EmailFormProps) => {
     return (
         <TextField
             margin="normal"
@@ -17,17 +17,15 @@ export const EmailForm = ({userDetails, setUserDetails, status, setStatus, setDe
             required
             fullWidth
             label="Email Address"
-            value={userDetails.userEmail}
+            value={userDetails.emailAddress}
             autoComplete="off"
             type="email"
             onBlur={() => {
-                // const result = checkUserEmail(userDetails.userEmail, setStatus);
-                // if (!result) setStatus(INVALID_EMAIL);
                 setDetailsSet(checkUserDetailsAreSet(userDetails, setStatus));
 
             }}
             onChange={e => {
-                setUserDetails({ ...userDetails, userEmail: e.target.value });
+                setUserDetails({ ...userDetails, emailAddress: e.target.value });
                 if (status === INVALID_EMAIL) {
                     setStatus(null);
                 }

@@ -15,14 +15,14 @@ const assembleCompletedConvo = (conversationId: string, areaIdentifier: string, 
     };
 };
 
-export const makeSendFallbackEmail = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
+export const makeSendFallbackEmail = ({ node, nodeList, client, convoId, contextProperties, setContextProperties }: IProgressTheChat) => {
     toggleInputDisabled(); // can manually toggle in each component when necessary
     const areaId = nodeList[0].areaIdentifier;
 
     const sendFallbackEmail = async () => {
-        const email = convoContext[ConvoContextProperties.EmailAddress];
-        const name = convoContext[ConvoContextProperties.Name];
-        const phone = convoContext[ConvoContextProperties.PhoneNumber];
+        const email = contextProperties[ConvoContextProperties.emailAddress];
+        const name = contextProperties[ConvoContextProperties.name];
+        const phone = contextProperties[ConvoContextProperties.phoneNumber];
 
         const { data: response } = await client.Widget.Access.sendFallbackEmail(areaId, email, convoId);
         if (response.result) {
@@ -46,7 +46,7 @@ export const makeSendFallbackEmail = ({ node, nodeList, client, convoId, convoCo
                             onClick={async () => {
                                 const response = await sendFallbackEmail();
                                 const child = nodeList.filter((x: ConvoTableRow) => x.nodeId === response.nextNodeId)[0];
-                                responseAction(node, child, nodeList, client, convoId, null, convoContext);
+                                responseAction(node, child, nodeList, client, convoId, null, contextProperties, setContextProperties);
                                 toggleInputDisabled();
                             }}
                         />

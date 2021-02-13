@@ -1,4 +1,5 @@
 import { ElementType } from 'react';
+import { ContextProperties } from 'src/types';
 
 import store from '.';
 import * as actions from './actions';
@@ -62,4 +63,8 @@ export function openFullscreenPreview(payload: ImageState) {
 
 export function closeFullscreenPreview() {
   store.dispatch(actions.closeFullscreenPreview());
+}
+
+export function setContextProperties(contextProperties: ContextProperties) {
+  store.dispatch(actions.setContextProperties(contextProperties))
 }

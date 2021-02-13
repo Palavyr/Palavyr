@@ -7,9 +7,9 @@ import { ResponseButton } from "../../common/ResponseButton";
 import { SingleRowSingleCell } from "src/common/TableCell";
 import { useState } from "react";
 
-export const makeProvideInfo = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
+export const makeProvideInfo = ({ node, nodeList, client, convoId, contextProperties, setContextProperties }: IProgressTheChat) => {
     toggleInputDisabled(); // can manually toggle in each component when necessary
-
+    console.log(contextProperties.name + " From makeProviceInfo tops"   )
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
 
     const Component: React.ElementType<{}> = () => {
@@ -23,7 +23,9 @@ export const makeProvideInfo = ({ node, nodeList, client, convoId, convoContext 
                         <ResponseButton
                             text="Proceed"
                             onClick={() => {
-                                responseAction(node, child, nodeList, client, convoId, null, convoContext);
+                                console.log(contextProperties.name + " From Make Profice Info")
+
+                                responseAction(node, child, nodeList, client, convoId, null, contextProperties, setContextProperties);
                                 toggleInputDisabled();
                                 setDisabled(true);
                             }}

@@ -1,9 +1,6 @@
-import { Registry, ConvoTableRow, ConversationUpdate } from "../types";
+import { Registry, ConvoTableRow, ConversationUpdate, ContextProperties, KeyValues } from "../types";
 import { renderCustomComponent, addUserMessage, toggleMsgLoader } from "src/widgetCore/store/dispatcher";
 import { IClient } from "../client/Client";
-import { makeName } from "./endingSequenceComponents/MakeName";
-import { makeEmail } from "./endingSequenceComponents/MakeEmail";
-import { makePhoneNumber } from "./endingSequenceComponents/MakePhoneNumber";
 import { dummyFailComponent } from "./DummyComponentDev";
 import { makeProvideInfo } from "./standardComponents/MakeProvideInfo";
 import { makeStartEndingSequence } from "./endingSequenceComponents/MakeStartEndingSequence";
@@ -19,25 +16,47 @@ import { makePercentOfThreshold } from "./dynamicTableComponents/MakePercentOfTh
 import { makeTooComplicated } from "./standardComponents/MakeTooComplicated";
 import { random } from "./random";
 import { makeSendFallbackEmail } from "./endingSequenceComponents/MakeSendFallbackEmail";
-
+import { Dispatch } from "react";
+import { SetStateAction } from "react";
+import { cloneDeep } from "lodash";
 
 export interface IProgressTheChat {
     node: ConvoTableRow;
     nodeList: Array<ConvoTableRow>;
     client: IClient;
     convoId: string;
-    convoContext: any;
+    contextProperties: ContextProperties;
+    setContextProperties: Dispatch<SetStateAction<ContextProperties>>;
 }
 
-export const responseAction = (node: ConvoTableRow, child: ConvoTableRow, nodeList: Array<ConvoTableRow>, client: IClient, convoId: string, response: string, convoContext: any) => {
+export const responseAction = (
+    node: ConvoTableRow,
+    child: ConvoTableRow,
+    nodeList: Array<ConvoTableRow>,
+    client: IClient,
+    convoId: string,
+    response: string,
+    contextProperties: ContextProperties,
+    setContextProperties: Dispatch<SetStateAction<ContextProperties>>
+) => {
     if (response) {
+        if (node.isCritical) {
+            const keyValues: KeyValues = contextProperties[ConvoContextProperties.keyValues];
+            keyValues.push({ [node.text]: response });
+
+            setContextProperties((contextDetails) => ({
+                ...contextDetails,
+                [ConvoContextProperties.keyValues]: keyValues
+            }));
+        }
+
         if (child.optionPath !== null && child.optionPath !== "" && child.optionPath !== "Continue") {
             addUserMessage(child.optionPath);
         } else {
-            addUserMessage(response)
+            addUserMessage(response);
         }
     }
-    toggleMsgLoader()
+    toggleMsgLoader();
 
     var updatePayload: ConversationUpdate = {
         ConversationId: convoId,
@@ -46,27 +65,32 @@ export const responseAction = (node: ConvoTableRow, child: ConvoTableRow, nodeLi
         NodeId: node.nodeId,
         NodeCritical: node.isCritical,
         NodeType: node.nodeType,
-    }
+    };
 
     client.Widget.Access.postUpdateAsync(updatePayload); // no need to await for this
-    setTimeout(() =>{
-        renderNextComponent(child, nodeList, client, convoId, convoContext); // convoId should come from redux store in the future
-        toggleMsgLoader()
-    }, random(1000, 3000, undefined))
-}
+    setTimeout(() => {
+        renderNextComponent(child, nodeList, client, convoId, contextProperties, setContextProperties); // convoId should come from redux store in the future
+        toggleMsgLoader();
+    }, random(1000, 3000, undefined));
+};
 
-
-export const renderNextComponent = (node: ConvoTableRow, nodeList: Array<ConvoTableRow>, client: IClient, convoId: string, convoContext: any) => {
-
+export const renderNextComponent = (
+    node: ConvoTableRow,
+    nodeList: Array<ConvoTableRow>,
+    client: IClient,
+    convoId: string,
+    contextProperties: ContextProperties,
+    setContextProperties: Dispatch<SetStateAction<ContextProperties>>
+) => {
     //TODO: make this impossible by geting the configuration right
     if (node.nodeType === "" || node.nodeType === null || node.nodeChildrenString === "" || node.nodeChildrenString === null) {
-        return renderCustomComponent(dummyFailComponent, {}, false)
+        return renderCustomComponent(dummyFailComponent, {}, false);
     }
     var makeNextComponent = ComponentRegistry[node.nodeType.split("-")[0]]; // This is a bit fragile
 
-    var nextComponent = makeNextComponent({node, nodeList, client, convoId, convoContext});
+    var nextComponent = makeNextComponent({ node, nodeList, client, convoId, contextProperties, setContextProperties });
     return renderCustomComponent(nextComponent, {}, false);
-}
+};
 
 export enum NodeTypes {
     // standard types
@@ -83,11 +107,6 @@ export enum NodeTypes {
     // under consideration
     HowMany = "HowMany",
     HowMuch = "HowMuch",
-
-    // HIDDEN types frmo dashboard (currently) closing sequence
-    Name = "Name",
-    Email = "Email",
-    Phone = "Phone",
 
     // we currently only support one ending sequence (see above)
     EndingSequence = "EndingSequence",
@@ -115,14 +134,11 @@ export const ComponentRegistry: Registry = {
     [NodeTypes.TakeText]: makeTakeText,
     [NodeTypes.ProvideInfo]: makeProvideInfo,
     [NodeTypes.HowMany]: makeTakeNumber,
-    [NodeTypes.HowMuch]: makeTakeNumber,
+    [NodeTypes.HowMuch]: makeTakeCurrency,
 
     [NodeTypes.TooComplicated]: makeTooComplicated,
 
     [NodeTypes.EndingSequence]: makeStartEndingSequence,
-    [NodeTypes.Name]: makeName,
-    [NodeTypes.Email]: makeEmail,
-    [NodeTypes.Phone]: makePhoneNumber,
 
     // Dynamic Types
     [NodeTypes.SelectOneFlat]: makeSelectOneFlat, // could be replaced with makeMultiple choice continue,
@@ -134,14 +150,14 @@ export const ComponentRegistry: Registry = {
     [NodeTypes.FirstEmailFailed]: makeProvideInfo,
     [NodeTypes.SendTooComplicatedEmail]: makeSendFallbackEmail,
 
-    [NodeTypes.Restart]: makeRestart
-}
+    [NodeTypes.Restart]: makeRestart,
+};
 
 export const ConvoContextProperties = {
-    DynamicResponses: "DynamicResponses",
-    Name: "Name",
-    EmailAddress: "EmailAddress",
-    PhoneNumber: "PhoneNumber",
-    KeyValues: "KeyValues", // values reported at head of PDF response
-    Region: "Region"
-}
+    dynamicResponses: "dynamicResponses", // dynamic table responses
+    name: "name",
+    emailAddress: "emailAddress",
+    phoneNumber: "phoneNumber",
+    keyValues: "keyValues", // values reported at head of PDF response
+    region: "region",
+};

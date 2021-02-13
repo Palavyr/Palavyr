@@ -2,7 +2,7 @@ import * as React from "react";
 import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
 import { getChildNodes } from "../utils";
 import { Table, TableRow, TableCell, makeStyles } from "@material-ui/core";
-import { responseAction, IProgressTheChat, ConvoContextProperties } from "..";
+import { responseAction, IProgressTheChat } from "..";
 import { uuid } from "uuidv4";
 import { ResponseButton } from "../../common/ResponseButton";
 import { SingleRowSingleCell } from "src/common/TableCell";
@@ -14,9 +14,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const makeMultipleChoiceContinueButtons = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
-    // TODO: lift this widget and add  'isInputDisabled()'
-    // addResponseMessage(node.text);
+export const makeMultipleChoiceContinueButtons = ({ node, nodeList, client, convoId, contextProperties, setContextProperties }: IProgressTheChat) => {
     toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0]; // only one should exist
@@ -38,10 +36,7 @@ export const makeMultipleChoiceContinueButtons = ({ node, nodeList, client, conv
                                     text={valueOption}
                                     onClick={() => {
                                         const response = valueOption;
-                                        if (node.isCritical) {
-                                            convoContext[ConvoContextProperties.KeyValues].push({ [node.text]: response });
-                                        }
-                                        responseAction(node, child, nodeList, client, convoId, response, convoContext);
+                                        responseAction(node, child, nodeList, client, convoId, response, contextProperties, setContextProperties);
                                         toggleInputDisabled();
                                         setDisabled(true);
                                     }}

@@ -2,6 +2,7 @@ import { ElementType } from 'react';
 
 import * as actionsTypes from './types';
 import { LinkParams, ImageState } from '../types';
+import { ContextProperties } from 'src/types';
 
 export function toggleChat(): actionsTypes.ToggleChat {
   return {
@@ -111,5 +112,12 @@ export function openFullscreenPreview(payload: ImageState): actionsTypes.Fullscr
 export function closeFullscreenPreview(): actionsTypes.FullscreenPreviewActions {
   return {
     type: actionsTypes.CLOSE_FULLSCREEN_PREVIEW
+  };
+}
+
+export function setContextProperties(contextProperties: ContextProperties): actionsTypes.ContextPropertyActions {
+  return {
+    type: actionsTypes.SET_CONTEXT_PROPERTIES,
+    contextProperties
   };
 }

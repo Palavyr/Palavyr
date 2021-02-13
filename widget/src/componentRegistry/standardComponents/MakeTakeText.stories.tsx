@@ -4,7 +4,10 @@ import { MemoryRouter } from 'react-router';
 import { ConvoNode } from '../../test/dummyData/dummyNodes';
 import CreateClient from '../../client/Client';
 import { makeTakeText } from './MakeTakeText';
-
+import { defaultContextProperties } from 'src/App';
+import { Dispatch } from 'react';
+import { SetStateAction } from 'react';
+import { ContextProperties } from 'src/types';
 const client = CreateClient("fake")
 
 const args = {
@@ -12,7 +15,8 @@ const args = {
     nodeList: [ConvoNode],
     client: client,
     convoId: "abc",
-    convoContext: {}
+    contextProperties: defaultContextProperties,
+    setContextProperties: () => null as Dispatch<SetStateAction<ContextProperties>>
 }
 
 const TakeText = makeTakeText(args);

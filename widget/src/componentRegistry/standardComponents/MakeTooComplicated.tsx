@@ -6,14 +6,14 @@ import { IProgressTheChat, responseAction } from "..";
 import { SingleRowSingleCell } from "src/common/TableCell";
 import { useEffect } from "react";
 
-export const makeTooComplicated = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
-    toggleInputDisabled();
+export const makeTooComplicated = ({ node, nodeList, client, convoId, contextProperties, setContextProperties }: IProgressTheChat) => {
 
+    toggleInputDisabled();
     const Component: React.ElementType<{}> = () => {
         const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
         useEffect(() => {
             setTimeout(() => {
-                responseAction(node, child, nodeList, client, convoId, null, convoContext);
+                responseAction(node, child, nodeList, client, convoId, null, contextProperties, setContextProperties);
             }, 1500);
         }, [])
 

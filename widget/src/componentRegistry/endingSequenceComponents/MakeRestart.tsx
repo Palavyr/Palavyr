@@ -3,7 +3,7 @@ import { IProgressTheChat } from "..";
 import { TableCell, Table, TableRow } from "@material-ui/core";
 import { ResponseButton } from "../../common/ResponseButton";
 
-export const makeRestart = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
+export const makeRestart = ({ node, nodeList, client, convoId, contextProperties, setContextProperties }: IProgressTheChat) => {
     const Component: React.ElementType<{}> = () => {
         const noBorder = { borderBottom: "none" };
         return (

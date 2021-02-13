@@ -5,15 +5,22 @@ import { MemoryRouter } from 'react-router';
 import { ConvoNode } from '../../test/dummyData/dummyNodes';
 import CreateClient from '../../client/Client';
 import { makeTooComplicated } from './MakeTooComplicated';
+import { defaultContextProperties } from 'src/App';
+import { Dispatch } from 'react';
+import { SetStateAction } from 'react';
+import { ContextProperties } from 'src/types';
+import { IProgressTheChat } from '..';
+
 
 const client = CreateClient("fake")
 
-const args = {
+const args: IProgressTheChat = {
     node: ConvoNode,
     nodeList: [ConvoNode],
     client: client,
     convoId: "abc",
-    convoContext: {}
+    contextProperties: defaultContextProperties,
+    setContextProperties: () => null as Dispatch<SetStateAction<ContextProperties>>
 }
 
 const TooComplicated = makeTooComplicated(args);

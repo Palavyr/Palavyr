@@ -7,9 +7,7 @@ import { getChildNodes } from "../utils";
 import { SingleRowSingleCell } from "src/common/TableCell";
 import { ResponseButton } from "src/common/ResponseButton";
 
-export const makeTakeText = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
-    // TODO: lift this widget and add  'isInputDisabled()'
-    // addResponseMessage(node.text);
+export const makeTakeText = ({ node, nodeList, client, convoId, contextProperties, setContextProperties }: IProgressTheChat) => {
     toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
@@ -38,10 +36,7 @@ export const makeTakeText = ({ node, nodeList, client, convoId, convoContext }: 
                         text="Submit"
                         onClick={() => {
                             setResponse(response);
-                            if (node.isCritical) {
-                                convoContext[ConvoContextProperties.KeyValues].push({ [node.text]: response });
-                            }
-                            responseAction(node, child, nodeList, client, convoId, response, convoContext);
+                            responseAction(node, child, nodeList, client, convoId, response, contextProperties, setContextProperties);
                             toggleInputDisabled();
                             setDisabled(true);
                         }}

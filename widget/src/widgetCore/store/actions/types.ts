@@ -1,4 +1,5 @@
 import { ElementType } from 'react';
+import { ContextProperties } from 'src/types';
 
 import { LinkParams, FullscreenPreviewState } from '../types';
 
@@ -17,6 +18,7 @@ export const MARK_ALL_READ = 'MESSAGES/MARK_ALL_READ';
 export const SET_QUICK_BUTTONS = 'SET_QUICK_BUTTONS';
 export const OPEN_FULLSCREEN_PREVIEW = 'FULLSCREEN/OPEN_PREVIEW';
 export const CLOSE_FULLSCREEN_PREVIEW = 'FULLSCREEN/CLOSE_PREVIEW';
+export const SET_CONTEXT_PROPERTIES = 'CONTEXT_PROPERTIES';
 
 export interface ToggleChat {
   type: typeof TOGGLE_CHAT;
@@ -102,3 +104,11 @@ export interface closeFullscreenPreview {
 }
 
 export type FullscreenPreviewActions = openFullscreenPreview | closeFullscreenPreview;
+
+
+export interface setContextProperties {
+  type: typeof SET_CONTEXT_PROPERTIES,
+  contextProperties: ContextProperties;
+}
+
+export type ContextPropertyActions = setContextProperties;

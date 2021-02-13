@@ -15,20 +15,20 @@ const assembleCompletedConvo = (conversationId: string, areaIdentifier: string, 
     };
 };
 
-export const makeSendEmail = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
+export const makeSendEmail = ({ node, nodeList, client, convoId, contextProperties, setContextProperties }: IProgressTheChat) => {
     toggleInputDisabled(); // can manually toggle in each component when necessary
     const areaId = nodeList[0].areaIdentifier;
 
     const sendEmail = async () => {
-        const email = convoContext[ConvoContextProperties.EmailAddress];
-        const name = convoContext[ConvoContextProperties.Name];
-        const phone = convoContext[ConvoContextProperties.PhoneNumber];
-        const dynamicResponses = convoContext[ConvoContextProperties.DynamicResponses];
-        const keyvalues = convoContext[ConvoContextProperties.KeyValues];
+        const email = contextProperties[ConvoContextProperties.emailAddress];
+        const name = contextProperties[ConvoContextProperties.name];
+        const phone = contextProperties[ConvoContextProperties.phoneNumber];
+        const dynamicResponses = contextProperties[ConvoContextProperties.dynamicResponses];
+        const keyvalues = contextProperties[ConvoContextProperties.keyValues];
 
         const { data: response } = await client.Widget.Access.sendConfirmationEmail(areaId, email, dynamicResponses, keyvalues, convoId);
         if (response.result) {
-            var completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
+            const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
             await client.Widget.Access.postCompleteConversation(completeConvo);
         }
         return response;
@@ -48,7 +48,7 @@ export const makeSendEmail = ({ node, nodeList, client, convoId, convoContext }:
                             onClick={async () => {
                                 const response = await sendEmail();
                                 const child = nodeList.filter((x: ConvoTableRow) => x.nodeId === response.nextNodeId)[0];
-                                responseAction(node, child, nodeList, client, convoId, null, convoContext);
+                                responseAction(node, child, nodeList, client, convoId, null, contextProperties, setContextProperties);
                                 toggleInputDisabled();
                             }}
                         />
