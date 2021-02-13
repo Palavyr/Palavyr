@@ -6,8 +6,7 @@ import { useLocation } from "react-router-dom";
 import CreateClient, { IClient } from "./client/Client";
 import { CustomWidget } from "./widget/CustomWidget";
 import { CollectDetailsForm } from "./common/UserDetailsDialog/CollectDetailsForm";
-// import { Provider } from "react-redux";
-// import store from "./widgetCore/store";
+
 
 export const defaultContextProperties: ContextProperties = {
     dynamicResponses: [],
@@ -25,7 +24,7 @@ export const App = () => {
 
     const [contextProperties, setContextProperties] = useState<ContextProperties>(defaultContextProperties);
     const [userDetailsDialogState, setUserDetailsDialogstate] = useState<boolean>(false);
-    const [initialDialogState, setInitialDialogState] = useState<boolean>(false);
+    const [chatStarted, setChatStarted] = useState<boolean>(false);
 
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const isDemo = new URLSearchParams(useLocation().search).get("demo");
@@ -49,17 +48,16 @@ export const App = () => {
     }, [runAppPrecheck]);
 
     return (
-        // <Provider store={store}>
         <>
             {isReady === true && selectedOption === null && !userDetailsDialogState && <OptionSelector setUserDetailsDialogState={setUserDetailsDialogstate} setSelectedOption={setSelectedOption} preferences={widgetPrefs} />}
             {isReady === true && selectedOption !== null && (
                 <>
                     <div style={{ display: userDetailsDialogState ? null : "none", zIndex: 9999 }}>
-                        <CollectDetailsForm initialDialogState={initialDialogState} setInitialDialogState={setInitialDialogState} contextProperties={contextProperties} setContextProperties={setContextProperties} userDetailsDialogState={userDetailsDialogState} setUserDetailsDialogState={setUserDetailsDialogstate} />
+                        <CollectDetailsForm chatStarted={chatStarted} setChatStarted={setChatStarted} contextProperties={contextProperties} setContextProperties={setContextProperties} userDetailsDialogState={userDetailsDialogState} setUserDetailsDialogState={setUserDetailsDialogstate} />
                     </div>
 
                     <div style={{ display: userDetailsDialogState ? "none" : null, zIndex: 9999 }}>
-                        <CustomWidget initialDialogState={initialDialogState} setUserDetailsDialogState={setUserDetailsDialogstate} contextProperties={contextProperties} setContextProperties={setContextProperties} option={selectedOption} preferences={widgetPrefs} />
+                        <CustomWidget setUserDetailsDialogState={setUserDetailsDialogstate} contextProperties={contextProperties} setContextProperties={setContextProperties} option={selectedOption} preferences={widgetPrefs} />
                     </div>
                 </>
             )}
@@ -68,7 +66,6 @@ export const App = () => {
                     <span>Not ready</span>
                 </div>
             )}
-            {/* </Provider> */}
         </>
     );
 };

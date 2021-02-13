@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const PhoneForm = ({ phonePattern,  userDetails, setUserDetails, status, setStatus }: PhoneFormProps) => {
+export const PhoneForm = ({ phonePattern, contextProperties, setContextProperties, status, setStatus }: PhoneFormProps) => {
     const cls = useStyles();
 
     return (
@@ -43,17 +43,17 @@ export const PhoneForm = ({ phonePattern,  userDetails, setUserDetails, status, 
             mask="_"
             type="tel"
             onBlur={() => {
-                const result = checkUserPhone(userDetails.phoneNumber, setStatus);
+                const result = checkUserPhone(contextProperties.phoneNumber, setStatus);
                 if (!result) setStatus(INVALID_PHONE);
-                if (!result) setUserDetails({...userDetails, phoneNumber: ""})
+                if (!result) setContextProperties({...contextProperties, phoneNumber: ""})
             }}
             onValueChange={values => {
-                setUserDetails({ ...userDetails, phoneNumber: values.formattedValue });
+                setContextProperties({ ...contextProperties, phoneNumber: values.formattedValue });
                 if (status === INVALID_PHONE) {
                     setStatus(null);
                 }
             }}
-            value={userDetails.phoneNumber}
+            value={contextProperties.phoneNumber}
         />
     );
 };

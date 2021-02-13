@@ -5,7 +5,7 @@ import { checkUserName, INVALID_NAME } from "../UserDetailsCheck";
 
 export interface NameFormProps extends BaseFormProps {}
 
-export const NameForm = ({ userDetails, setUserDetails, status, setStatus }: NameFormProps) => {
+export const NameForm = ({ contextProperties, setContextProperties, status, setStatus }: NameFormProps) => {
     return (
         <TextField
             margin="normal"
@@ -13,20 +13,20 @@ export const NameForm = ({ userDetails, setUserDetails, status, setStatus }: Nam
             required
             fullWidth
             label="Name"
-            value={userDetails.name}
+            value={contextProperties.name}
             autoFocus
             autoComplete="off"
             type="text"
             onBlur={() => {
-                const result = checkUserName(userDetails.name, setStatus);
+                const result = checkUserName(contextProperties.name, setStatus);
                 if (!result) setStatus(INVALID_NAME);
             }}
             onChange={event => {
-                setUserDetails({ ...userDetails, name: event.target.value });
+                setContextProperties({ ...contextProperties, name: event.target.value });
                 if (status === INVALID_NAME) {
                     setStatus(null);
                 }
-                console.log(userDetails.name + " From NameForm")
+                console.log(contextProperties.name + " From NameForm")
             }}
             helperText={status === INVALID_NAME && "Name is not set"}
             FormHelperTextProps={{ error: true }}

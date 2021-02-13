@@ -23,14 +23,16 @@ export interface ContextProps {
 export interface CollectDetailsFormProps extends ContextProps {
     userDetailsDialogState: boolean;
     setUserDetailsDialogState: Dispatch<SetStateAction<boolean>>;
+    chatStarted: boolean;
+    setChatStarted: Dispatch<SetStateAction<boolean>>;
 }
 
-export interface BaseFormProps {
-    userDetails: UserDetails;
-    setUserDetails:  Dispatch<SetStateAction<UserDetails>>;
+export interface BaseFormProps extends ContextProps {
+    // userDetails: UserDetails;
+    // setUserDetails:  Dispatch<SetStateAction<UserDetails>>;
+
     status: string | null;
     setStatus: Dispatch<SetStateAction<string>>;
-
 }
 
 const useStyles = makeStyles(theme => ({
@@ -65,7 +67,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const CollectDetailsForm = ({ contextProperties, setContextProperties, userDetailsDialogState, setUserDetailsDialogState }: CollectDetailsFormProps) => {
+export const CollectDetailsForm = ({ chatStarted, setChatStarted, contextProperties, setContextProperties, userDetailsDialogState, setUserDetailsDialogState }: CollectDetailsFormProps) => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const client = CreateClient(secretKey);
 
@@ -73,31 +75,31 @@ export const CollectDetailsForm = ({ contextProperties, setContextProperties, us
     const [phonePattern, setphonePattern] = useState<string>("");
     const [detailsSet, setDetailsSet] = useState<boolean>(false);
 
-    const [userDetails, setUserDetails] = useState<UserDetails>({
-        emailAddress: "",
-        name: "",
-        phoneNumber: "",
-        region: ""
-    })
+    // const [userDetails, setUserDetails] = useState<UserDetails>({
+    //     emailAddress: "",
+    //     name: "",
+    //     phoneNumber: "",
+    //     region: ""
+    // })
 
     useEffect(() => {
         (async () => {
             const { data: locale } = await client.Widget.Access.getLocale();
             setphonePattern(locale.localePhonePattern);
             setOptions(locale.localeMap);
-            setUserDetails({ ...userDetails, region: locale.localeId})
+            setContextProperties(contextProperties => ({ ...contextProperties, region: locale.localeId}))
         })();
     }, []);
 
     const cls = useStyles();
     const [status, setStatus] = useState<string | null>(null);
 
-    const checkUserDetailsAreSet = (userDetails: UserDetails) => {
-        const userNameResult = checkUserName(userDetails.name, setStatus);
-        const userEmailResult = checkUserEmail(userDetails.emailAddress, setStatus);
+    const checkUserDetailsAreSet = (contextProperties: ContextProperties) => {
+        const userNameResult = checkUserName(contextProperties.name, setStatus);
+        const userEmailResult = checkUserEmail(contextProperties.emailAddress, setStatus);
 
         if (status === INVALID_PHONE) {
-            setUserDetails({ ...userDetails, phoneNumber: "" });
+            setContextProperties(contextProperties => ({ ...contextProperties, phoneNumber: "" }));
         }
 
         if (!userNameResult || !userEmailResult) {
@@ -108,18 +110,21 @@ export const CollectDetailsForm = ({ contextProperties, setContextProperties, us
 
     const onChange = (event: any, newOption: LocaleMapItem) => {
         setphonePattern(newOption.phonePattern);
-        setUserDetails({ ...userDetails, region: newOption.localeId})
+        setContextProperties(contextProperties => ({ ...contextProperties, region: newOption.localeId}))
     };
 
     const onFormSubmit = (e: { preventDefault: () => void }) => {
         e.preventDefault();
         setUserDetailsDialogState(false);
-        setContextProperties(cloneDeep({ ...contextProperties, ...userDetails }))
+        setChatStarted(true);
+        // setContextProperties(contextProperties => ({ ...contextProperties }))
     };
 
     const formProps = {
-        userDetails,
-        setUserDetails,
+        contextProperties,
+        setContextProperties,
+        // userDetails,
+        // setUserDetails,
         status,
         setStatus
     }
@@ -146,7 +151,7 @@ export const CollectDetailsForm = ({ contextProperties, setContextProperties, us
                     <LocaleSelector options={options} onChange={onChange} />
                     <div style={{ display: "flex", justifyContent: "center" }}>
                         <Button className={cls.button} endIcon={detailsSet && <CheckCircleOutlineIcon />} type="submit">
-                            Begin
+                            {chatStarted ? "Continue" : "Begin"}
                         </Button>
                     </div>
                 </form>

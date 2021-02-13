@@ -9,7 +9,7 @@ export interface EmailFormProps extends BaseFormProps {
     setDetailsSet: Dispatch<SetStateAction<boolean>>
 }
 
-export const EmailForm = ({ userDetails, setUserDetails, status, setStatus, setDetailsSet, checkUserDetailsAreSet}: EmailFormProps) => {
+export const EmailForm = ({ contextProperties, setContextProperties, status, setStatus, setDetailsSet, checkUserDetailsAreSet}: EmailFormProps) => {
     return (
         <TextField
             margin="normal"
@@ -17,15 +17,15 @@ export const EmailForm = ({ userDetails, setUserDetails, status, setStatus, setD
             required
             fullWidth
             label="Email Address"
-            value={userDetails.emailAddress}
+            value={contextProperties.emailAddress}
             autoComplete="off"
             type="email"
             onBlur={() => {
-                setDetailsSet(checkUserDetailsAreSet(userDetails, setStatus));
+                setDetailsSet(checkUserDetailsAreSet(contextProperties, setStatus));
 
             }}
             onChange={e => {
-                setUserDetails({ ...userDetails, emailAddress: e.target.value });
+                setContextProperties({ ...contextProperties, emailAddress: e.target.value });
                 if (status === INVALID_EMAIL) {
                     setStatus(null);
                 }

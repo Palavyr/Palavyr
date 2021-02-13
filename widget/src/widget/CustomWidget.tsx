@@ -17,10 +17,9 @@ interface ICustomWidget {
     setContextProperties: Dispatch<SetStateAction<ContextProperties>>;
     option: SelectedOption;
     preferences: WidgetPreferences;
-    initialDialogState: boolean;
 };
 
-export const CustomWidget = ({ initialDialogState, setUserDetailsDialogState, contextProperties, setContextProperties, option, preferences }: ICustomWidget) => {
+export const CustomWidget = ({ setUserDetailsDialogState, contextProperties, setContextProperties, option, preferences }: ICustomWidget) => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const client = CreateClient(secretKey);
     const [prefs, setPrefs] = useState<WidgetPreferences>();
