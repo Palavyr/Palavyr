@@ -13,6 +13,7 @@ import { LocaleSelector } from "./FormInputs/LocaleSelector";
 import { PhoneForm } from "./FormInputs/PhoneForm";
 import CreateClient from "src/client/Client";
 import { setRegionContext } from "src/widgetCore/store/dispatcher";
+import { INVALID_EMAIL, INVALID_NAME, INVALID_PHONE } from "./UserDetailsCheck";
 
 export interface CollectDetailsFormProps {
     userDetailsDialogState: boolean;
@@ -114,7 +115,7 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, userDetailsDia
                     <PhoneForm {...formProps} phonePattern={phonePattern} />
                     <LocaleSelector options={options} onChange={onChange} />
                     <div style={{ display: "flex", justifyContent: "center" }}>
-                        <Button className={cls.button} endIcon={detailsSet && <CheckCircleOutlineIcon />} type="submit">
+                        <Button disabled={status === INVALID_PHONE || status === INVALID_EMAIL || status === INVALID_NAME} className={cls.button} endIcon={detailsSet && <CheckCircleOutlineIcon />} type="submit">
                             {chatStarted ? "Continue" : "Begin"}
                         </Button>
                     </div>

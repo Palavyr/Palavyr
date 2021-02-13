@@ -1,5 +1,7 @@
 import { TextField } from "@material-ui/core";
 import React, { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
+import { useEffect } from "react";
 import { getEmailAddressContext, getNameContext, setEmailAddressContext, setPhoneContext } from "src/widgetCore/store/dispatcher";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserEmail, checkUserName, INVALID_EMAIL, INVALID_PHONE } from "../UserDetailsCheck";
@@ -9,6 +11,7 @@ export interface EmailFormProps extends BaseFormProps {
 }
 
 export const EmailForm = ({ status, setStatus, setDetailsSet }: EmailFormProps) => {
+
     const checkUserDetailsAreSet = () => {
         const name = getNameContext();
         const emailAddress = getEmailAddressContext();
@@ -26,12 +29,18 @@ export const EmailForm = ({ status, setStatus, setDetailsSet }: EmailFormProps) 
         return true;
     };
 
+    const [emailState, setEmailState] = useState<string>("");
+    useEffect(() => {
+        setEmailState(getEmailAddressContext());
+    }, [])
+
     return (
         <TextField
             margin="normal"
             error={status === INVALID_EMAIL}
             required
             fullWidth
+            value={emailState}
             label="Email Address"
             autoComplete="off"
             type="email"
@@ -40,6 +49,7 @@ export const EmailForm = ({ status, setStatus, setDetailsSet }: EmailFormProps) 
             }}
             onChange={e => {
                 setEmailAddressContext(e.target.value);
+                setEmailState(e.target.value);
                 if (status === INVALID_EMAIL) {
                     setStatus(null);
                 }

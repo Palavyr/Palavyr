@@ -13,8 +13,6 @@ export const makeProvideInfo = ({ node, nodeList, client, convoId }: IProgressTh
 
     const Component: React.ElementType<{}> = () => {
         const [, setDisabled] = useState<boolean>(false);
-        // const setPropHook = useGetPropertiesHook();
-
         return (
             <>
                 {node.text}
