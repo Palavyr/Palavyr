@@ -7,7 +7,7 @@ import { getChildNodes } from "../utils";
 import { ResponseButton } from "../../common/ResponseButton";
 import { SingleRowSingleCell } from "src/common/TableCell";
 
-export const makeTakeNumber = ({ node, nodeList, client, convoId, contextProperties, setContextProperties }: IProgressTheChat) => {
+export const makeTakeNumber = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
     toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
@@ -44,7 +44,7 @@ export const makeTakeNumber = ({ node, nodeList, client, convoId, contextPropert
                         <ResponseButton
                             disabled={disabled}
                             onClick={() => {
-                                responseAction(node, child, nodeList, client, convoId, response, contextProperties, setContextProperties);
+                                responseAction(node, child, nodeList, client, convoId, response);
                                 toggleInputDisabled();
                                 setDisabled(true);
                             }}

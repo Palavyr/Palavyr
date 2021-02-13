@@ -1,14 +1,9 @@
 import * as React from 'react';
 import { Meta } from '@storybook/react/types-6-0';
-
 import { MemoryRouter } from 'react-router';
 import { ConvoNode } from '../../test/dummyData/dummyNodes';
 import CreateClient from '../../client/Client';
 import { makeTooComplicated } from './MakeTooComplicated';
-import { defaultContextProperties } from 'src/App';
-import { Dispatch } from 'react';
-import { SetStateAction } from 'react';
-import { ContextProperties } from 'src/types';
 import { IProgressTheChat } from '..';
 
 
@@ -18,9 +13,7 @@ const args: IProgressTheChat = {
     node: ConvoNode,
     nodeList: [ConvoNode],
     client: client,
-    convoId: "abc",
-    contextProperties: defaultContextProperties,
-    setContextProperties: () => null as Dispatch<SetStateAction<ContextProperties>>
+    convoId: "abc"
 }
 
 const TooComplicated = makeTooComplicated(args);

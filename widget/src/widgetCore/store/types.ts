@@ -11,6 +11,26 @@ type BaseMessage = {
   props?: any;
 }
 
+export type DynamicResponse = {
+  [key: string]: string;
+}
+export type DynamicResponses = Array<DynamicResponse>;
+
+export type KeyValue = {
+  [key: string]: string;
+}
+
+export type KeyValues = Array<KeyValue>;
+
+export type ContextProperties = {
+  name: string;
+  emailAddress: string;
+  phoneNumber: string;
+  region: string;
+  keyValues: KeyValues;
+  dynamicResponses: DynamicResponses;
+}
+
 export interface Message extends BaseMessage {
   text: string;
 };
@@ -43,6 +63,10 @@ export interface BehaviorState {
   messageLoader: boolean;
 };
 
+export interface ContextState {
+  context: ContextProperties;
+}
+
 export interface MessagesState {
   messages: (Message | Link | CustomCompMessage)[];
   badgeCount: number;
@@ -68,4 +92,5 @@ export interface GlobalState {
   behavior: BehaviorState;
   quickButtons: QuickButtonsState;
   preview: FullscreenPreviewState;
+  context: ContextProperties
 }

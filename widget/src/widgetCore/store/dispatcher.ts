@@ -1,9 +1,8 @@
 import { ElementType } from 'react';
-import { ContextProperties } from 'src/types';
 
 import store from '.';
 import * as actions from './actions';
-import { LinkParams, ImageState } from './types';
+import { LinkParams, ImageState, ContextProperties, DynamicResponse, KeyValue } from './types';
 
 export function addUserMessage(text: string, id?: string) {
   store.dispatch(actions.addUserMessage(text, id));
@@ -65,6 +64,65 @@ export function closeFullscreenPreview() {
   store.dispatch(actions.closeFullscreenPreview());
 }
 
+// Context Property Details
+// name: string;
+// emailAddress: string;
+// phoneNumber: string;
+// region: string;
+// keyValues: KeyValues;
+// dynamicResponses: DynamicResponses;
 export function setContextProperties(contextProperties: ContextProperties) {
   store.dispatch(actions.setContextProperties(contextProperties))
+}
+
+export function getContextProperties(): ContextProperties {
+  return store.getState().context
+}
+
+export function setNameContext(name: string) {
+  store.dispatch(actions.setNameContext(name))
+}
+
+export function setPhoneContext(phone: string) {
+  store.dispatch(actions.setPhoneContext(phone))
+}
+
+export function setEmaillAddressContext(emailAddress: string) {
+  store.dispatch(actions.setEmailAddressContext(emailAddress))
+}
+
+export function setRegionContext(region: string) {
+  store.dispatch(actions.setRegionContext(region))
+}
+
+export function addKeyValue(newKeyValue: KeyValue) {
+  store.dispatch(actions.addKeyValue(newKeyValue))
+}
+
+export function addDynamicResponse(dynamicResponse: DynamicResponse) {
+  store.dispatch(actions.addDynamicResponse(dynamicResponse))
+}
+
+export function getNameContext() {
+  return store.getState().context.name;
+}
+
+export function getPhoneContext() {
+  return store.getState().context.phoneNumber;
+}
+
+export function getEmailAddressContext() {
+  return store.getState().context.emailAddress;
+}
+
+export function getRegionContext() {
+  return store.getState().context.region;
+}
+
+export function getKeyValueContext() {
+  return store.getState().context.keyValues;
+}
+
+export function getDynamicResponsesContext() {
+  return store.getState().context.dynamicResponses;
 }

@@ -2,7 +2,7 @@ import { Button, Dialog, DialogContent, makeStyles } from "@material-ui/core";
 import React, { useState } from "react";
 import { SetStateAction } from "react";
 import { Dispatch } from "react";
-import {LocaleMap, LocaleMapItem, ContextProperties, UserDetails } from "src/types";
+import { LocaleMap, LocaleMapItem } from "src/types";
 import { checkUserEmail, checkUserName, INVALID_PHONE } from "./UserDetailsCheck";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import { useLocation } from "react-router-dom";
@@ -13,24 +13,16 @@ import { EmailForm } from "./FormInputs/EmailForm";
 import { LocaleSelector } from "./FormInputs/LocaleSelector";
 import { PhoneForm } from "./FormInputs/PhoneForm";
 import CreateClient from "src/client/Client";
-import { cloneDeep } from "lodash";
+import { getContextProperties, getEmailAddressContext, getNameContext, setContextProperties, setPhoneContext, setRegionContext } from "src/widgetCore/store/dispatcher";
 
-export interface ContextProps {
-    contextProperties: ContextProperties;
-    setContextProperties: Dispatch<SetStateAction<ContextProperties>>;
-}
-
-export interface CollectDetailsFormProps extends ContextProps {
+export interface CollectDetailsFormProps {
     userDetailsDialogState: boolean;
     setUserDetailsDialogState: Dispatch<SetStateAction<boolean>>;
     chatStarted: boolean;
     setChatStarted: Dispatch<SetStateAction<boolean>>;
 }
 
-export interface BaseFormProps extends ContextProps {
-    // userDetails: UserDetails;
-    // setUserDetails:  Dispatch<SetStateAction<UserDetails>>;
-
+export interface BaseFormProps {
     status: string | null;
     setStatus: Dispatch<SetStateAction<string>>;
 }
@@ -38,8 +30,7 @@ export interface BaseFormProps extends ContextProps {
 const useStyles = makeStyles(theme => ({
     baseDialog: {
         zIndex: 9999,
-        position: "absolute"
-
+        position: "absolute",
     },
     dialogBackground: {
         zIndex: 9999,
@@ -67,7 +58,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const CollectDetailsForm = ({ chatStarted, setChatStarted, contextProperties, setContextProperties, userDetailsDialogState, setUserDetailsDialogState }: CollectDetailsFormProps) => {
+export const CollectDetailsForm = ({ chatStarted, setChatStarted, userDetailsDialogState, setUserDetailsDialogState }: CollectDetailsFormProps) => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const client = CreateClient(secretKey);
 
@@ -75,31 +66,28 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, contextPropert
     const [phonePattern, setphonePattern] = useState<string>("");
     const [detailsSet, setDetailsSet] = useState<boolean>(false);
 
-    // const [userDetails, setUserDetails] = useState<UserDetails>({
-    //     emailAddress: "",
-    //     name: "",
-    //     phoneNumber: "",
-    //     region: ""
-    // })
-
     useEffect(() => {
         (async () => {
             const { data: locale } = await client.Widget.Access.getLocale();
             setphonePattern(locale.localePhonePattern);
             setOptions(locale.localeMap);
-            setContextProperties(contextProperties => ({ ...contextProperties, region: locale.localeId}))
+            setRegionContext(locale.localeId);
         })();
     }, []);
 
     const cls = useStyles();
     const [status, setStatus] = useState<string | null>(null);
 
-    const checkUserDetailsAreSet = (contextProperties: ContextProperties) => {
-        const userNameResult = checkUserName(contextProperties.name, setStatus);
-        const userEmailResult = checkUserEmail(contextProperties.emailAddress, setStatus);
+    const checkUserDetailsAreSet = () => {
+
+        const name = getNameContext();
+        const emailAddress = getEmailAddressContext();
+
+        const userNameResult = checkUserName(name, setStatus);
+        const userEmailResult = checkUserEmail(emailAddress, setStatus);
 
         if (status === INVALID_PHONE) {
-            setContextProperties(contextProperties => ({ ...contextProperties, phoneNumber: "" }));
+            setPhoneContext("");
         }
 
         if (!userNameResult || !userEmailResult) {
@@ -110,24 +98,19 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, contextPropert
 
     const onChange = (event: any, newOption: LocaleMapItem) => {
         setphonePattern(newOption.phonePattern);
-        setContextProperties(contextProperties => ({ ...contextProperties, region: newOption.localeId}))
+        setRegionContext(newOption.localeId);
     };
 
     const onFormSubmit = (e: { preventDefault: () => void }) => {
         e.preventDefault();
         setUserDetailsDialogState(false);
         setChatStarted(true);
-        // setContextProperties(contextProperties => ({ ...contextProperties }))
     };
 
     const formProps = {
-        contextProperties,
-        setContextProperties,
-        // userDetails,
-        // setUserDetails,
         status,
-        setStatus
-    }
+        setStatus,
+    };
 
     return (
         <Dialog
@@ -145,7 +128,7 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, contextPropert
             <UserDetailsTitle title="Provide your contact details" />
             <DialogContent className={cls.dialogContent}>
                 <form onSubmit={onFormSubmit}>
-                    <NameForm {...formProps}  />
+                    <NameForm {...formProps} />
                     <EmailForm {...formProps} setDetailsSet={setDetailsSet} checkUserDetailsAreSet={checkUserDetailsAreSet} />
                     <PhoneForm {...formProps} phonePattern={phonePattern} />
                     <LocaleSelector options={options} onChange={onChange} />

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ContextProperties, SelectedOption, WidgetPreferences } from "../types";
+import { SelectedOption, WidgetPreferences } from "../types";
 import { addResponseMessage, toggleMsgLoader, setQuickButtons } from "src/widgetCore/store/dispatcher";
 import { Widget, isWidgetOpened, toggleWidget } from "src/widget";
 
@@ -8,18 +8,14 @@ import { renderNextComponent } from "../componentRegistry";
 import { getRootNode } from "../componentRegistry/utils";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Dispatch } from "react";
-import { SetStateAction } from "react";
 
 interface ICustomWidget {
     setUserDetailsDialogState: any;
-    contextProperties: ContextProperties;
-    setContextProperties: Dispatch<SetStateAction<ContextProperties>>;
     option: SelectedOption;
     preferences: WidgetPreferences;
 };
 
-export const CustomWidget = ({ setUserDetailsDialogState, contextProperties, setContextProperties, option, preferences }: ICustomWidget) => {
+export const CustomWidget = ({ setUserDetailsDialogState, option, preferences }: ICustomWidget) => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const client = CreateClient(secretKey);
     const [prefs, setPrefs] = useState<WidgetPreferences>();
@@ -33,7 +29,7 @@ export const CustomWidget = ({ setUserDetailsDialogState, contextProperties, set
         setPrefs(preferences);
         const rootNode = getRootNode(nodes);
 
-        renderNextComponent(rootNode, nodes, client, convoId, contextProperties, setContextProperties);
+        renderNextComponent(rootNode, nodes, client, convoId);
 
     };
 

@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const makeMultipleChoiceAsPathButtons = ({ node, nodeList, client, convoId, contextProperties, setContextProperties }: IProgressTheChat) => {
+export const makeMultipleChoiceAsPathButtons = ({ node, nodeList, client, convoId, }: IProgressTheChat) => {
 
     toggleInputDisabled(); // can manually toggle in each component when necessary
 
@@ -40,7 +40,7 @@ export const makeMultipleChoiceAsPathButtons = ({ node, nodeList, client, convoI
                                         text={child.optionPath}
                                         onClick={() => {
                                             var response = child.optionPath;
-                                            responseAction(node, child, nodeList, client, convoId, response, contextProperties, setContextProperties);
+                                            responseAction(node, child, nodeList, client, convoId, response);
                                             toggleInputDisabled();
                                             setDisabled(true);
                                         }}

@@ -15,7 +15,7 @@ const assembleCompletedConvo = (conversationId: string, areaIdentifier: string, 
     };
 };
 
-export const makeSendEmail = ({ node, nodeList, client, convoId, contextProperties, setContextProperties }: IProgressTheChat) => {
+export const makeSendEmail = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
     toggleInputDisabled(); // can manually toggle in each component when necessary
     const areaId = nodeList[0].areaIdentifier;
 
@@ -48,7 +48,7 @@ export const makeSendEmail = ({ node, nodeList, client, convoId, contextProperti
                             onClick={async () => {
                                 const response = await sendEmail();
                                 const child = nodeList.filter((x: ConvoTableRow) => x.nodeId === response.nextNodeId)[0];
-                                responseAction(node, child, nodeList, client, convoId, null, contextProperties, setContextProperties);
+                                responseAction(node, child, nodeList, client, convoId, null);
                                 toggleInputDisabled();
                             }}
                         />

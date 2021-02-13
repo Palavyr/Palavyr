@@ -97,27 +97,3 @@ export type LocaleMapItem = {
     currencySymbol: string;
 };
 export type LocaleMap = LocaleMapItem[];
-
-export type DynamicResponse = {
-    [key: string]: string;
-}
-export type DynamicResponses = Array<DynamicResponse>;
-
-export type KeyValue = {
-    [key: string]: string;
-}
-export type KeyValues = Array<KeyValue>;
-
-
-export type UserDetails = {
-    name: string;
-    emailAddress: string;
-    phoneNumber: string;
-    region: string;
-};
-
-export type ContextProperties = UserDetails & {
-    keyValues: KeyValues;
-    dynamicResponses: DynamicResponses;
-    region: string;
-}

@@ -1,28 +1,22 @@
 import * as React from "react";
 import { useState, useCallback, useEffect } from "react";
 import { OptionSelector } from "./options/Options";
-import { ContextProperties, SelectedOption, WidgetPreferences } from "./types";
+import { SelectedOption, WidgetPreferences } from "./types";
 import { useLocation } from "react-router-dom";
 import CreateClient, { IClient } from "./client/Client";
 import { CustomWidget } from "./widget/CustomWidget";
 import { CollectDetailsForm } from "./common/UserDetailsDialog/CollectDetailsForm";
+import { Provider } from "react-redux";
+import store from "./widgetCore/store";
+import { ContextProperties } from "./widgetCore/store/types";
 
-
-export const defaultContextProperties: ContextProperties = {
-    dynamicResponses: [],
-    keyValues: [],
-    emailAddress: "",
-    phoneNumber: "",
-    name: "",
-    region: "",
-};
 
 export const App = () => {
     const [selectedOption, setSelectedOption] = useState<SelectedOption | null>(null);
     const [isReady, setIsReady] = useState<boolean>(false);
     const [widgetPrefs, setWidgetPrefs] = useState<WidgetPreferences>();
 
-    const [contextProperties, setContextProperties] = useState<ContextProperties>(defaultContextProperties);
+    // const [contextProperties, setContextProperties] = useState<ContextProperties>(defaultContextProperties);
     const [userDetailsDialogState, setUserDetailsDialogstate] = useState<boolean>(false);
     const [chatStarted, setChatStarted] = useState<boolean>(false);
 
@@ -31,6 +25,10 @@ export const App = () => {
 
     let client: IClient;
     if (secretKey) client = CreateClient(secretKey);
+
+    // const getContextProperties = useCallback(() => {
+    //     return [contextProperties, setContextProperties]
+    // }, [contextProperties, setContextProperties])
 
     const runAppPrecheck = useCallback(async () => {
         var { data: preCheckResult } = await client.Widget.Access.runPreCheck(isDemo === "true" ? true : false);
@@ -48,16 +46,16 @@ export const App = () => {
     }, [runAppPrecheck]);
 
     return (
-        <>
+        <Provider store={store}>
             {isReady === true && selectedOption === null && !userDetailsDialogState && <OptionSelector setUserDetailsDialogState={setUserDetailsDialogstate} setSelectedOption={setSelectedOption} preferences={widgetPrefs} />}
             {isReady === true && selectedOption !== null && (
                 <>
                     <div style={{ display: userDetailsDialogState ? null : "none", zIndex: 9999 }}>
-                        <CollectDetailsForm chatStarted={chatStarted} setChatStarted={setChatStarted} contextProperties={contextProperties} setContextProperties={setContextProperties} userDetailsDialogState={userDetailsDialogState} setUserDetailsDialogState={setUserDetailsDialogstate} />
+                        <CollectDetailsForm chatStarted={chatStarted} setChatStarted={setChatStarted}  userDetailsDialogState={userDetailsDialogState} setUserDetailsDialogState={setUserDetailsDialogstate} />
                     </div>
 
                     <div style={{ display: userDetailsDialogState ? "none" : null, zIndex: 9999 }}>
-                        <CustomWidget setUserDetailsDialogState={setUserDetailsDialogstate} contextProperties={contextProperties} setContextProperties={setContextProperties} option={selectedOption} preferences={widgetPrefs} />
+                        <CustomWidget setUserDetailsDialogState={setUserDetailsDialogstate} option={selectedOption} preferences={widgetPrefs} />
                     </div>
                 </>
             )}
@@ -66,6 +64,6 @@ export const App = () => {
                     <span>Not ready</span>
                 </div>
             )}
-        </>
+        </Provider>
     );
 };

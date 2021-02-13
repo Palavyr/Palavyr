@@ -1,6 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
 import NumberFormat from "react-number-format";
+import { getPhoneContext, setPhoneContext } from "src/widgetCore/store/dispatcher";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserPhone, INVALID_PHONE } from "../UserDetailsCheck";
 
@@ -29,12 +30,11 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const PhoneForm = ({ phonePattern, contextProperties, setContextProperties, status, setStatus }: PhoneFormProps) => {
+export const PhoneForm = ({ phonePattern, status, setStatus }: PhoneFormProps) => {
     const cls = useStyles();
 
     return (
         <NumberFormat
-            // helpertext={status === INVALID_PHONE ? "funky number!" : ""}
             placeholder="Phone number (optional)"
             onError={() => setStatus(INVALID_PHONE)}
             error={status === INVALID_PHONE ? "WOW" : ""}
@@ -43,17 +43,17 @@ export const PhoneForm = ({ phonePattern, contextProperties, setContextPropertie
             mask="_"
             type="tel"
             onBlur={() => {
-                const result = checkUserPhone(contextProperties.phoneNumber, setStatus);
+                const result = checkUserPhone(getPhoneContext(), setStatus);
                 if (!result) setStatus(INVALID_PHONE);
-                if (!result) setContextProperties({...contextProperties, phoneNumber: ""})
+                if (!result) setPhoneContext("");
             }}
             onValueChange={values => {
-                setContextProperties({ ...contextProperties, phoneNumber: values.formattedValue });
+                setPhoneContext(values.formattedValue);
                 if (status === INVALID_PHONE) {
                     setStatus(null);
                 }
             }}
-            value={contextProperties.phoneNumber}
+            value={getPhoneContext()}
         />
     );
 };

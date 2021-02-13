@@ -5,10 +5,7 @@ import { ThreeNodes } from '../../test/dummyData/dummyNodes';
 import CreateClient from '../../client/Client';
 import { makeSelectOneFlat } from './MakeSelectOneFlat';
 import { IProgressTheChat } from '..';
-import { defaultContextProperties } from 'src/App';
-import { Dispatch } from 'react';
-import { SetStateAction } from 'react';
-import { ContextProperties } from 'src/types';
+
 
 
 const client = CreateClient("fake")
@@ -18,8 +15,7 @@ const args: IProgressTheChat = {
     nodeList: ThreeNodes,
     client: client,
     convoId: "abc",
-    contextProperties: defaultContextProperties,
-    setContextProperties: () => null as Dispatch<SetStateAction<ContextProperties>>
+
 }
 
 const SelectOneFlat = makeSelectOneFlat(args);

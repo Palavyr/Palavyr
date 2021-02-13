@@ -18,15 +18,12 @@ import { random } from "./random";
 import { makeSendFallbackEmail } from "./endingSequenceComponents/MakeSendFallbackEmail";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
-import { cloneDeep } from "lodash";
 
 export interface IProgressTheChat {
     node: ConvoTableRow;
     nodeList: Array<ConvoTableRow>;
     client: IClient;
     convoId: string;
-    contextProperties: ContextProperties;
-    setContextProperties: Dispatch<SetStateAction<ContextProperties>>;
 }
 
 export const responseAction = (
@@ -36,16 +33,15 @@ export const responseAction = (
     client: IClient,
     convoId: string,
     response: string,
-    contextProperties: ContextProperties,
-    setContextProperties: Dispatch<SetStateAction<ContextProperties>>
 ) => {
     if (response) {
         if (node.isCritical) {
+
             const keyValues: KeyValues = contextProperties[ConvoContextProperties.keyValues];
             keyValues.push({ [node.text]: response });
 
-            setContextProperties((contextDetails) => ({
-                ...contextDetails,
+            setContextProperties((contextProperties: any) => ({
+                ...contextProperties,
                 [ConvoContextProperties.keyValues]: keyValues
             }));
         }
@@ -69,7 +65,7 @@ export const responseAction = (
 
     client.Widget.Access.postUpdateAsync(updatePayload); // no need to await for this
     setTimeout(() => {
-        renderNextComponent(child, nodeList, client, convoId, contextProperties, setContextProperties); // convoId should come from redux store in the future
+        renderNextComponent(child, nodeList, client, convoId); // convoId should come from redux store in the future
         toggleMsgLoader();
     }, random(1000, 3000, undefined));
 };
@@ -79,8 +75,6 @@ export const renderNextComponent = (
     nodeList: Array<ConvoTableRow>,
     client: IClient,
     convoId: string,
-    contextProperties: ContextProperties,
-    setContextProperties: Dispatch<SetStateAction<ContextProperties>>
 ) => {
     //TODO: make this impossible by geting the configuration right
     if (node.nodeType === "" || node.nodeType === null || node.nodeChildrenString === "" || node.nodeChildrenString === null) {
@@ -88,7 +82,7 @@ export const renderNextComponent = (
     }
     var makeNextComponent = ComponentRegistry[node.nodeType.split("-")[0]]; // This is a bit fragile
 
-    var nextComponent = makeNextComponent({ node, nodeList, client, convoId, contextProperties, setContextProperties });
+    var nextComponent = makeNextComponent({ node, nodeList, client, convoId });
     return renderCustomComponent(nextComponent, {}, false);
 };
 

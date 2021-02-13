@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const makeMultipleChoiceContinueButtons = ({ node, nodeList, client, convoId, contextProperties, setContextProperties }: IProgressTheChat) => {
+export const makeMultipleChoiceContinueButtons = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
     toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0]; // only one should exist
@@ -36,7 +36,7 @@ export const makeMultipleChoiceContinueButtons = ({ node, nodeList, client, conv
                                     text={valueOption}
                                     onClick={() => {
                                         const response = valueOption;
-                                        responseAction(node, child, nodeList, client, convoId, response, contextProperties, setContextProperties);
+                                        responseAction(node, child, nodeList, client, convoId, response);
                                         toggleInputDisabled();
                                         setDisabled(true);
                                     }}

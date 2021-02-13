@@ -8,7 +8,7 @@ import { ResponseButton } from "../../common/ResponseButton";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import { SingleRowSingleCell } from "src/common/TableCell";
 
-export const makeTakeCurrency = ({ node, nodeList, client, convoId, contextProperties, setContextProperties }: IProgressTheChat) => {
+export const makeTakeCurrency = ({ node, nodeList, client, convoId, }: IProgressTheChat) => {
     toggleInputDisabled();
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
@@ -43,7 +43,7 @@ export const makeTakeCurrency = ({ node, nodeList, client, convoId, contextPrope
                         <ResponseButton
                             disabled={disabled}
                             onClick={() => {
-                                responseAction(node, child, nodeList, client, convoId, response.toString(), contextProperties, setContextProperties);
+                                responseAction(node, child, nodeList, client, convoId, response.toString());
                                 toggleInputDisabled();
                                 setDisabled(true);
                             }}
