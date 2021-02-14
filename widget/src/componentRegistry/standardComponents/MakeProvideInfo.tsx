@@ -8,13 +8,14 @@ export const makeProvideInfo = ({ node, nodeList, client, convoId }: IProgressTh
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
 
     const Component: React.ElementType<{}> = () => {
-        const [, setDisabled] = useState<boolean>(false);
+        const [disabled, setDisabled] = useState<boolean>(false);
         return (
             <div>
                 {node.text}
                 <div style={{ marginTop: "1rem", width: "100%", display: "flex", flexDirection: "column", justifyContent: "right" }}>
                     <ResponseButton
                         text="Proceed"
+                        disabled={disabled}
                         onClick={() => {
                             responseAction(node, child, nodeList, client, convoId, null);
                             setDisabled(true);

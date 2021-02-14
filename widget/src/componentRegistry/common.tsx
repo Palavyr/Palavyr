@@ -31,7 +31,6 @@ const useStyles = makeStyles(theme => ({
     layout: {
         textAlign: "left",
         overflowX: "scroll",
-
     },
 }));
 

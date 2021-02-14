@@ -17,7 +17,7 @@ namespace Palavyr.API.Utils
         {
             return string.Join("-", new[] {dynamicTableMeta.PrettyName, dynamicTableMeta.TableTag});
         }
-        
+
         public static int TraverseTheTreeFromTheTop(ConversationNode[] nodeList, ConversationNode node)
         {
             var count = 0;
@@ -60,15 +60,16 @@ namespace Palavyr.API.Utils
                 parent = potentialParent;
                 break;
             }
+
             if (parent == null) throw new Exception();
             return parent;
         }
-        
+
         // TODO: Refactor to return the nodes. We only count the list in the widget status utils.
         public static string[] TraverseTheTreeFromBottom(
-            ConversationNode node, 
+            ConversationNode node,
             ConversationNode[] nodeList,
-            string[] requiredNodes
+            string[] requiredNodes // array of node type names
         )
         {
             if (node.IsRoot)
@@ -81,24 +82,27 @@ namespace Palavyr.API.Utils
             {
                 requiredNodesClone.RemoveAt(requiredNodesClone.FindIndex(x => x == node.NodeType));
             }
+
             var nextNode = GetParentNode(nodeList, node);
             return TraverseTheTreeFromBottom(nextNode, nodeList, requiredNodesClone.ToArray());
         }
-        
+
         public static string[] GetMissingNodes(ConversationNode[] nodeList, string[] requiredNodes)
         {
             var allMissingNodeTypes = new List<string>();
-            var terminalNodes = GetEndingNodesThatWillRequireDynamicResponseData(nodeList);
+            var terminalNodes = GetCompletePathTerminalNodes(nodeList);
 
             foreach (var terminalNode in terminalNodes)
             {
                 var missingNodes = TraverseTheTreeFromBottom(terminalNode, nodeList, requiredNodes);
                 allMissingNodeTypes.AddRange(missingNodes);
             }
+
             return allMissingNodeTypes.ToArray();
         }
 
-        public static ConversationNode[] GetEndingNodesThatWillRequireDynamicResponseData(ConversationNode[] nodeList)
+        // Complete path terminal nodes are those that result in a response being sent. (dynamic and per individual counts)
+        public static ConversationNode[] GetCompletePathTerminalNodes(ConversationNode[] nodeList)
         {
             return nodeList
                 .Where(node => node.IsTerminalType && node.NodeType != DefaultNodeTypeOptions.TooComplicated.StringName)

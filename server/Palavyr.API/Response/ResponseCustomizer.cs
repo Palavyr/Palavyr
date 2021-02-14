@@ -8,20 +8,19 @@ namespace Palavyr.API.Response
     {
         public static string Customize(string html, EmailRequest request, UserAccount account)
         {
-            html = CustomizeName(html, request);
+            html = CustomizeWithClientsName(html, request);
             html = CustomizeCompany(html, account);
             html = CustomizeLogo(html, account);
             return html;
         }
 
-        public static string CustomizeName(string html, EmailRequest request)
+        public static string CustomizeWithClientsName(string html, EmailRequest request)
         {
-            var nameElement = request.KeyValues.SingleOrDefault(dict => dict.ContainsKey(ResponseVariableDefinition.Name));
-
+            var nameElement = request.Name;
             var customName = "";
             if (nameElement != null)
             {
-                customName = nameElement.TryGetValue("Name", out var clientName) ? clientName : "";
+                customName = nameElement;
             }
 
             html = html.Replace(ResponseVariableDefinition.NameVariablePattern, customName);

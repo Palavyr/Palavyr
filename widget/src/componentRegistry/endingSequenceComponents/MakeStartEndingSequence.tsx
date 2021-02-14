@@ -1,5 +1,4 @@
 import * as React from "react";
-import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
 import { getChildNodes } from "../utils";
 import { TableRow, TableCell, Table } from "@material-ui/core";
 import { responseAction, IProgressTheChat } from "..";

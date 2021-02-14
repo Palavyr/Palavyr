@@ -15,6 +15,8 @@ namespace Server.Domain.Configuration.Constant
                 new ProvideInfo(),
                 new MultipleChoiceContinue(),
                 new MultipleChoiceAsPath(),
+                new TakeNumber(),
+                new TakeNumberIndividuals(),
                 new SendResponse(),
                 new TooComplicated(),
                 new Restart()
@@ -29,9 +31,44 @@ namespace Server.Domain.Configuration.Constant
         public static MultipleChoiceContinue CreateMultipleChoiceContinue() => new MultipleChoiceContinue();
         public static MultipleChoiceAsPath CreateMultipleChoiceAsPath() => new MultipleChoiceAsPath();
 
+        public static TakeNumber CreateTakeNumber() => new TakeNumber();
+        public static TakeNumberIndividuals CreateTakeNumberIndividuals() => new TakeNumberIndividuals();
         public static TooComplicated CreateTooComplicated() => new TooComplicated();
         public static SendResponse CreateSendResponse() => new SendResponse();
         public static Restart CreateRestart() => new Restart();
+
+        public class TakeNumberIndividuals : NodeTypeOption
+        {
+            public static string StringName => nameof(TakeNumberIndividuals);
+
+            public TakeNumberIndividuals()
+            {
+                Text = "Take Number Individuals";
+                Value = StringName;
+                PathOptions = new List<string>() {"Continue"};
+                ValueOptions = new List<string>() { };
+                IsMultiOptionType = false;
+                IsTerminalType = false;
+                GroupName = InfoCollection;
+            }
+        }
+        
+        public class TakeNumber : NodeTypeOption
+        {
+            public static string StringName => nameof(TakeNumber);
+
+            public TakeNumber()
+            {
+                Text = "Take Number";
+                Value = StringName;
+                PathOptions = new List<string>() {"Continue"};
+                ValueOptions = new List<string>() { };
+                IsMultiOptionType = false;
+                IsTerminalType = false;
+                GroupName = InfoCollection;
+            }
+        }
+
 
         public class YesNo : NodeTypeOption
         {

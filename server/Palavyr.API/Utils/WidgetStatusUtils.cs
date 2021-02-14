@@ -6,14 +6,19 @@ using DashboardServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.ResponseTypes;
+using Server.Domain.Configuration.Constant;
 using Server.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Utils
 {
     public static class WidgetStatusUtils
     {
-        public static async Task<PreCheckResult> ExecuteWidgetStatusCheck(string accountId, DashContext dashContext,
-            bool demo, ILogger logger)
+        public static async Task<PreCheckResult> ExecuteWidgetStatusCheck(
+            string accountId,
+            DashContext dashContext,
+            bool demo,
+            ILogger logger
+        )
         {
             logger.LogDebug($"Get Widget State - should only be one widget associated with account ID {accountId}");
             var prefs = dashContext.WidgetPreferences.Single(row => row.AccountId == accountId);
@@ -27,12 +32,19 @@ namespace Palavyr.API.Utils
                 .Include(row => row.DynamicTableMetas)
                 .ToListAsync();
 
+            // dynamic tables don't support 'per person' - this must be intrinsic to the question question type.
+            // We just check static tables.
+            var staticTableRows = await dashContext
+                .StaticTablesRows
+                .Where(row => row.AccountId == accountId)
+                .ToListAsync();
+
             logger.LogDebug("Collected areas.... running pre-check");
-            var result = StatusCheck(areas, widgetState, demo, logger);
+            var result = StatusCheck(areas, staticTableRows, widgetState, demo, logger);
             return result;
         }
 
-        private static PreCheckResult StatusCheck(List<Area> areas, bool widgetState, bool demo, ILogger logger)
+        private static PreCheckResult StatusCheck(List<Area> areas, List<StaticTableRow> staticTableRows, bool widgetState, bool demo, ILogger logger)
         {
             var incompleteAreas = new List<Area>();
             logger.LogDebug("Attempting RunConversationsPreCheck...");
@@ -41,12 +53,26 @@ namespace Palavyr.API.Utils
             foreach (var area in areas)
             {
                 var nodeList = area.ConversationNodes.ToArray();
-                var requiredNodes = area
+
+                // dynamic node types are required
+                var requiredDynamicNodes = area
                     .DynamicTableMetas
                     .Select(TreeUtils.TransformRequiredNodeType)
-                    .ToArray();
+                    .ToList();
 
-                logger.LogDebug($"Required Nodes Found. Number of required nodes: {requiredNodes.Length}");
+                // check static tables and dynamic tables to see if even 1 'per individual' is set. If so, then check for this node type.
+                var perIndividualRequired = staticTableRows
+                    .Where(row => row.AreaIdentifier == area.AreaIdentifier)
+                    .Select(x => x.PerPerson)
+                    .Any();
+
+                var allRequiredNodes = new List<string>(requiredDynamicNodes);
+                if (perIndividualRequired)
+                {
+                    allRequiredNodes.Add(DefaultNodeTypeOptions.TakeNumberIndividuals.StringName);
+                }
+
+                logger.LogDebug($"Required Nodes Found. Number of required nodes: {allRequiredNodes.Count}");
                 List<bool> checks;
                 try
                 {
@@ -54,7 +80,7 @@ namespace Palavyr.API.Utils
                     {
                         AllNodesAreSet(nodeList),
                         AllBranchesTerminate(nodeList),
-                        AllRequiredNodesSatisfied(nodeList, requiredNodes),
+                        AllRequiredNodesSatisfied(nodeList, allRequiredNodes.ToArray()),
                     };
                 }
                 catch (Exception ex)
@@ -63,9 +89,13 @@ namespace Palavyr.API.Utils
                     throw;
                 }
 
-                isReady = checks.TrueForAll(x => x == true);
+                isReady = checks.TrueForAll(x => x);
                 logger.LogDebug($"Checked isReady status: {isReady}");
                 if (isReady) continue;
+
+                // var dynamicAreasMissing = TreeUtils.GetMissingNodes(nodeList, requiredDynamicNodes.ToArray());
+                // var perIndividualMissing = TreeUtils.GetMissingNodes(nodeList, new[] {DefaultNodeTypeOptions.TakeNumberIndividuals.StringName});
+
                 incompleteAreas.Add(area);
                 logger.LogDebug($"Area not currently ready: {area.AreaName}");
             }
@@ -89,6 +119,12 @@ namespace Palavyr.API.Utils
                 return PreCheckResult.CreateConvoResult(incompleteAreas, false);
             }
         }
+
+        // private static bool PerIndividualSatisfied(ConversationNode[] nodeList, bool perPersonRequired)
+        // {
+        //     var branchesWithMissingPerIndividual = TreeUtils.GetMissingNodes(nodeList, new[] {DefaultNodeTypeOptions.TakeNumberIndividuals.StringName});
+        //     return perPersonRequired ? branchesWithMissingPerIndividual.Length == 0 : true;
+        // }
 
         private static bool AllNodesAreSet(ConversationNode[] nodeList)
         {
