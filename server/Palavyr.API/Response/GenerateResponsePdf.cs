@@ -202,13 +202,12 @@ namespace Palavyr.API.Response
             var areaData = areaDataService.GetSingleAreaDataRecursive(accountId, areaId);
             var userAccount = accountDataService.GetUserAccount(accountId);
 
-            // TODO: Handle Multiple Dynamic Responses
             var dynamicResponses = emailRequest.DynamicResponses.Count > 0
                 ? emailRequest.DynamicResponses
-                : new List<Dictionary<string, string>>() {new Dictionary<string, string>() { }};
+                : new List<Dictionary<string, string>>() {};
 
             var staticTables = CollectStaticTables(areaData, culture);
-            var dynamicTables = await CollectRealDynamicTables(accountId, dynamicResponses, culture); // TODO Support  multiple
+            var dynamicTables = await CollectRealDynamicTables(accountId, dynamicResponses, culture);
 
             var html = PdfGenerator.GenerateNewPDF(userAccount, areaData, criticalResponses, staticTables, dynamicTables);
 

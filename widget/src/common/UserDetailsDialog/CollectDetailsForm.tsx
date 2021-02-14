@@ -1,29 +1,28 @@
 import { Button, Dialog, DialogContent, makeStyles } from "@material-ui/core";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { SetStateAction } from "react";
 import { Dispatch } from "react";
-import { LocaleMap, LocaleMapItem, UserDetails } from "src/types";
-import { checkUserEmail, checkUserName, checkUserPhone, INVALID_PHONE } from "./UserDetailsCheck";
+import { LocaleMap, LocaleMapItem } from "src/types";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import { useLocation } from "react-router-dom";
-import CreateClient from "src/client/Client";
 import { useEffect } from "react";
 import { UserDetailsTitle } from "./UserDetailsTitle";
 import { NameForm } from "./FormInputs/NameForm";
 import { EmailForm } from "./FormInputs/EmailForm";
 import { LocaleSelector } from "./FormInputs/LocaleSelector";
 import { PhoneForm } from "./FormInputs/PhoneForm";
+import CreateClient from "src/client/Client";
+import { setRegionContext } from "src/widgetCore/store/dispatcher";
+import { INVALID_EMAIL, INVALID_NAME, INVALID_PHONE } from "./UserDetailsCheck";
 
 export interface CollectDetailsFormProps {
-    userDetails: UserDetails;
-    setUserDetails: Dispatch<SetStateAction<UserDetails>>;
     userDetailsDialogState: boolean;
     setUserDetailsDialogState: Dispatch<SetStateAction<boolean>>;
+    chatStarted: boolean;
+    setChatStarted: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface BaseFormProps {
-    userDetails: UserDetails;
-    setUserDetails: Dispatch<SetStateAction<UserDetails>>;
     status: string | null;
     setStatus: Dispatch<SetStateAction<string>>;
 }
@@ -31,8 +30,7 @@ export interface BaseFormProps {
 const useStyles = makeStyles(theme => ({
     baseDialog: {
         zIndex: 9999,
-        position: "absolute"
-
+        position: "absolute",
     },
     dialogBackground: {
         zIndex: 9999,
@@ -60,7 +58,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const CollectDetailsForm = ({ userDetails, setUserDetails, userDetailsDialogState, setUserDetailsDialogState }: CollectDetailsFormProps) => {
+export const CollectDetailsForm = ({ chatStarted, setChatStarted, userDetailsDialogState, setUserDetailsDialogState }: CollectDetailsFormProps) => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const client = CreateClient(secretKey);
 
@@ -73,40 +71,27 @@ export const CollectDetailsForm = ({ userDetails, setUserDetails, userDetailsDia
             const { data: locale } = await client.Widget.Access.getLocale();
             setphonePattern(locale.localePhonePattern);
             setOptions(locale.localeMap);
+            setRegionContext(locale.localeId);
         })();
     }, []);
 
     const cls = useStyles();
     const [status, setStatus] = useState<string | null>(null);
 
-    const checkUserDetailsAreSet = (userDetails: UserDetails) => {
-        const userNameResult = checkUserName(userDetails.userName, setStatus);
-        const userEmailResult = checkUserEmail(userDetails.userEmail, setStatus);
-
-        if (status === INVALID_PHONE) {
-            setUserDetails({ ...userDetails, userPhone: "" });
-        }
-
-        if (!userNameResult || !userEmailResult) {
-            return false;
-        }
-        return true;
-    };
-
     const onChange = (event: any, newOption: LocaleMapItem) => {
         setphonePattern(newOption.phonePattern);
+        setRegionContext(newOption.localeId);
     };
 
-    const onFormSubmit = async (e: { preventDefault: () => void }) => {
+    const onFormSubmit = (e: { preventDefault: () => void }) => {
         e.preventDefault();
         setUserDetailsDialogState(false);
+        setChatStarted(true);
     };
 
     const formProps = {
-        userDetails: userDetails,
-        status: status,
-        setStatus: setStatus,
-        setUserDetails: setUserDetails,
+        status,
+        setStatus,
     };
 
     return (
@@ -126,12 +111,12 @@ export const CollectDetailsForm = ({ userDetails, setUserDetails, userDetailsDia
             <DialogContent className={cls.dialogContent}>
                 <form onSubmit={onFormSubmit}>
                     <NameForm {...formProps} />
-                    <EmailForm {...formProps} setDetailsSet={setDetailsSet} checkUserDetailsAreSet={checkUserDetailsAreSet} />
+                    <EmailForm {...formProps} setDetailsSet={setDetailsSet} />
                     <PhoneForm {...formProps} phonePattern={phonePattern} />
                     <LocaleSelector options={options} onChange={onChange} />
                     <div style={{ display: "flex", justifyContent: "center" }}>
-                        <Button className={cls.button} endIcon={detailsSet && <CheckCircleOutlineIcon />} type="submit">
-                            Begin
+                        <Button disabled={status === INVALID_PHONE || status === INVALID_EMAIL || status === INVALID_NAME} className={cls.button} endIcon={detailsSet && <CheckCircleOutlineIcon />} type="submit">
+                            {chatStarted ? "Continue" : "Begin"}
                         </Button>
                     </div>
                 </form>

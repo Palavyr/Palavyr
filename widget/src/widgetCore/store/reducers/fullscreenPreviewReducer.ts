@@ -24,4 +24,4 @@ const fullscreenPreviewReducer = {
   [CLOSE_FULLSCREEN_PREVIEW]: (state: FullscreenPreviewState) => ({ ...initialState }),
 };
 
-export default (state: FullscreenPreviewState = initialState, action: FullscreenPreviewActions) => createReducer(fullscreenPreviewReducer, state, action);
+export default (state: FullscreenPreviewState = initialState, action: FullscreenPreviewActions) => createReducer<ImageState, FullscreenPreviewActions>(fullscreenPreviewReducer, state, action);

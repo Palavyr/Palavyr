@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export type GroupRow = {
     id: number;
     groupId: string;
@@ -78,11 +80,6 @@ export type SendEmailResultResponse = {
     result: boolean;
 };
 
-export type UserDetails = {
-    userEmail: string;
-    userPhone: string;
-    userName: string;
-};
 
 export type LocaleDefinition = {
     localeId: string;

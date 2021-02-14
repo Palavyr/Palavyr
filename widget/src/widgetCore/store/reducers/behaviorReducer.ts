@@ -22,4 +22,4 @@ const behaviorReducer = {
   [TOGGLE_MESSAGE_LOADER]: (state: BehaviorState) => ({ ...state, messageLoader: !state.messageLoader })
 };
 
-export default (state: BehaviorState = initialState, action: BehaviorActions) => createReducer(behaviorReducer, state, action);
+export default (state: BehaviorState = initialState, action: BehaviorActions) => createReducer<BehaviorState, BehaviorActions>(behaviorReducer, state, action);

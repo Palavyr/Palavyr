@@ -1,8 +1,13 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 import NumberFormat from "react-number-format";
+import { getPhoneContext, setPhoneContext } from "src/widgetCore/store/dispatcher";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserPhone, INVALID_PHONE } from "../UserDetailsCheck";
+
+const MASKCHAR = "_";
 
 export interface PhoneFormProps extends BaseFormProps {
     phonePattern: string;
@@ -18,42 +23,47 @@ const useStyles = makeStyles(theme => ({
         border: "none",
         borderBottom: "1px solid gray",
         fontSize: 16,
-        padding: "0px 6px 0px 0px",
+        padding: "6px 6px 0.3px 0px",
         transition: theme.transitions.create(["border-color", "box-shadow"]),
         fontFamily: ["-apple-system", "BlinkMacSystemFont", '"Segoe UI"', "Roboto", '"Helvetica Neue"', "Arial", "sans-serif", '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"'].join(","),
         "&:focus": {
             borderBottom: "1px solid gray",
-            outline: "none"
-
+            outline: "none",
         },
     },
 }));
 
-export const PhoneForm = ({ phonePattern, userDetails, status, setStatus, setUserDetails }: PhoneFormProps) => {
+export const PhoneForm = ({ phonePattern, status, setStatus }: PhoneFormProps) => {
     const cls = useStyles();
 
+    const [phoneState, setPhoneState] = useState<string>("");
+    useEffect(() => {
+        setPhoneState(getPhoneContext());
+    }, []);
     return (
         <NumberFormat
-            // helpertext={status === INVALID_PHONE ? "funky number!" : ""}
+            style={{border: status === INVALID_PHONE ? "3px solid red" : null}}
             placeholder="Phone number (optional)"
             onError={() => setStatus(INVALID_PHONE)}
             error={status === INVALID_PHONE ? "WOW" : ""}
             className={cls.phone}
             format={phonePattern}
-            mask="_"
+            mask={MASKCHAR}
             type="tel"
+            value={phoneState}
             onBlur={() => {
-                const result = checkUserPhone(userDetails.userPhone, setStatus);
-                if (!result) setStatus(INVALID_PHONE);
-                if (!result) setUserDetails({...userDetails, userPhone: ""})
+                const phonenumber = getPhoneContext();
+                if (!checkUserPhone(phonenumber, setStatus, MASKCHAR)) {
+                    setStatus(INVALID_PHONE);
+                }
             }}
             onValueChange={values => {
-                setUserDetails({ ...userDetails, userPhone: values.formattedValue });
+                setPhoneContext(values.formattedValue);
+                setPhoneState(values.formattedValue);
                 if (status === INVALID_PHONE) {
                     setStatus(null);
                 }
             }}
-            value={userDetails.userPhone}
         />
     );
 };

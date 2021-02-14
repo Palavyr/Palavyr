@@ -4,7 +4,6 @@ import { MemoryRouter } from 'react-router';
 import { ConvoNode } from '../../test/dummyData/dummyNodes';
 import CreateClient from '../../client/Client';
 import { makeTakeText } from './MakeTakeText';
-
 const client = CreateClient("fake")
 
 const args = {
@@ -12,7 +11,6 @@ const args = {
     nodeList: [ConvoNode],
     client: client,
     convoId: "abc",
-    convoContext: {}
 }
 
 const TakeText = makeTakeText(args);

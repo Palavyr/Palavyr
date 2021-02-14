@@ -2,11 +2,13 @@ import * as React from "react";
 import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
 import { getChildNodes } from "../utils";
 import { Table, TableRow, TableCell, makeStyles } from "@material-ui/core";
-import { responseAction, IProgressTheChat, ConvoContextProperties, NodeTypes } from "..";
+import { responseAction, IProgressTheChat } from "..";
 import { uuid } from "uuidv4";
 import { ResponseButton } from "../../common/ResponseButton";
 import { useState } from "react";
 import { SingleRowSingleCell } from "src/common/TableCell";
+import { addDynamicResponse } from "src/widgetCore/store/actions";
+import { DynamicResponse } from "src/widgetCore/store/types";
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -18,7 +20,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // All Dynamic results should add response formatted to the dynamic response AND the critical value lst
-export const makeSelectOneFlat = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
+export const makeSelectOneFlat = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
     toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
@@ -41,16 +43,11 @@ export const makeSelectOneFlat = ({ node, nodeList, client, convoId, convoContex
                                         key={option + uuid()}
                                         text={option}
                                         onClick={() => {
-                                            const dynamicResponse = {
+                                            const dynamicResponse: DynamicResponse = {
                                                 [node.nodeType]: option,
                                             };
-
-                                            convoContext[ConvoContextProperties.DynamicResponses].push(dynamicResponse);
-
-                                            if (node.isCritical) {
-                                                convoContext[ConvoContextProperties.KeyValues].push(dynamicResponse);
-                                            }
-                                            responseAction(node, child, nodeList, client, convoId, option, convoContext);
+                                            addDynamicResponse(dynamicResponse);
+                                            responseAction(node, child, nodeList, client, convoId, option);
                                             toggleInputDisabled();
                                             setDisabled(true);
                                         }}

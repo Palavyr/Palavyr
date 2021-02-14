@@ -4,15 +4,18 @@ import { MemoryRouter } from 'react-router';
 import { ThreeNodes } from '../../test/dummyData/dummyNodes';
 import CreateClient from '../../client/Client';
 import { makeSelectOneFlat } from './MakeSelectOneFlat';
+import { IProgressTheChat } from '..';
+
+
 
 const client = CreateClient("fake")
 
-const args = {
+const args: IProgressTheChat = {
     node: ThreeNodes[0],
     nodeList: ThreeNodes,
     client: client,
     convoId: "abc",
-    convoContext: {}
+
 }
 
 const SelectOneFlat = makeSelectOneFlat(args);

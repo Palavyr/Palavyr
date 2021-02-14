@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TextField } from "@material-ui/core";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserName, INVALID_NAME } from "../UserDetailsCheck";
+import { getNameContext, setNameContext } from "src/widgetCore/store/dispatcher";
 
 export interface NameFormProps extends BaseFormProps {}
 
-export const NameForm = ({ userDetails, status, setStatus, setUserDetails }: NameFormProps) => {
+export const NameForm = ({ status, setStatus }: NameFormProps) => {
+    const [nameState, setNameState] = useState<string>("");
+
+    useEffect(() => {
+        setNameState(getNameContext());
+    },[])
+
     return (
         <TextField
             margin="normal"
@@ -13,16 +20,17 @@ export const NameForm = ({ userDetails, status, setStatus, setUserDetails }: Nam
             required
             fullWidth
             label="Name"
-            value={userDetails.userName}
+            value={nameState}
             autoFocus
             autoComplete="off"
             type="text"
             onBlur={() => {
-                const result = checkUserName(userDetails.userName, setStatus);
-                if (!result) setStatus(INVALID_NAME);
+                const reduxName = getNameContext();
+                if (!checkUserName(reduxName, setStatus)) setStatus(INVALID_NAME);
             }}
             onChange={event => {
-                setUserDetails({ ...userDetails, userName: event.target.value });
+                setNameContext(event.target.value);
+                setNameState(event.target.value)
                 if (status === INVALID_NAME) {
                     setStatus(null);
                 }

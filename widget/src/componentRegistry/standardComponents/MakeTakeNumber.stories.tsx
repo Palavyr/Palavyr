@@ -12,7 +12,7 @@ const args = {
     nodeList: [ConvoNode],
     client: client,
     convoId: "abc",
-    convoContext: {}
+
 }
 
 const TakeNumber = makeTakeNumber(args);

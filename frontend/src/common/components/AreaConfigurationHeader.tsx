@@ -14,7 +14,7 @@ export const AreaConfigurationHeader = ({ title, subtitle, divider = false }: IA
                 <Typography style={{ marginTop: "1.4rem" }} align="center" variant="h4">
                     {title}
                 </Typography>
-                <Typography paragraph align="center">
+                <Typography paragraph align="center" style={{padding: "1rem 3rem 0rem 3rem"}}>
                     {subtitle}
                 </Typography>
             </div>

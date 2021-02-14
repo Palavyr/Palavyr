@@ -12,7 +12,7 @@ const args = {
     nodeList: ThreeNodes,
     client: client,
     convoId: "abc",
-    convoContext: {}
+
 }
 
 const MultipleChoiceContinue = makeMultipleChoiceContinueButtons(args);

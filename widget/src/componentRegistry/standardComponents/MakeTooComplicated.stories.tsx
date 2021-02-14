@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { Meta } from '@storybook/react/types-6-0';
-
 import { MemoryRouter } from 'react-router';
 import { ConvoNode } from '../../test/dummyData/dummyNodes';
 import CreateClient from '../../client/Client';
 import { makeTooComplicated } from './MakeTooComplicated';
+import { IProgressTheChat } from '..';
+
 
 const client = CreateClient("fake")
 
-const args = {
+const args: IProgressTheChat = {
     node: ConvoNode,
     nodeList: [ConvoNode],
     client: client,
-    convoId: "abc",
-    convoContext: {}
+    convoId: "abc"
 }
 
 const TooComplicated = makeTooComplicated(args);

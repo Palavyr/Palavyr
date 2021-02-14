@@ -7,14 +7,12 @@ import { ResponseButton } from "../../common/ResponseButton";
 import { SingleRowSingleCell } from "src/common/TableCell";
 import { useState } from "react";
 
-export const makeProvideInfo = ({ node, nodeList, client, convoId, convoContext }: IProgressTheChat) => {
+export const makeProvideInfo = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
     toggleInputDisabled(); // can manually toggle in each component when necessary
-
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
 
     const Component: React.ElementType<{}> = () => {
         const [, setDisabled] = useState<boolean>(false);
-
         return (
             <>
                 {node.text}
@@ -23,7 +21,7 @@ export const makeProvideInfo = ({ node, nodeList, client, convoId, convoContext 
                         <ResponseButton
                             text="Proceed"
                             onClick={() => {
-                                responseAction(node, child, nodeList, client, convoId, null, convoContext);
+                                responseAction(node, child, nodeList, client, convoId, null);
                                 toggleInputDisabled();
                                 setDisabled(true);
                             }}

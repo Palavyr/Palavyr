@@ -55,35 +55,33 @@ function ConnectedWidget({
     zoomStep,
     handleSubmit,
     customPreferences,
-    openUserDetails
+    openUserDetails,
 }: Props) {
     return (
-        <Provider store={store}>
-            <Widget
-                openUserDetails={openUserDetails}
-                title={title}
-                titleAvatar={titleAvatar}
-                subtitle={subtitle}
-                handleNewUserMessage={handleNewUserMessage}
-                handleQuickButtonClicked={handleQuickButtonClicked}
-                senderPlaceHolder={senderPlaceHolder}
-                profileAvatar={profileAvatar}
-                showCloseButton={showCloseButton}
-                fullScreenMode={fullScreenMode}
-                autofocus={autofocus}
-                customLauncher={launcher}
-                handleTextInputChange={handleTextInputChange}
-                chatId={chatId}
-                launcherOpenLabel={launcherOpenLabel}
-                launcherCloseLabel={launcherCloseLabel}
-                sendButtonAlt={sendButtonAlt}
-                showTimeStamp={showTimeStamp}
-                imagePreview={imagePreview}
-                zoomStep={zoomStep}
-                handleSubmit={handleSubmit}
-                customPreferences={customPreferences}
-            />
-        </Provider>
+        <Widget
+            openUserDetails={openUserDetails}
+            title={title}
+            titleAvatar={titleAvatar}
+            subtitle={subtitle}
+            handleNewUserMessage={handleNewUserMessage}
+            handleQuickButtonClicked={handleQuickButtonClicked}
+            senderPlaceHolder={senderPlaceHolder}
+            profileAvatar={profileAvatar}
+            showCloseButton={showCloseButton}
+            fullScreenMode={fullScreenMode}
+            autofocus={autofocus}
+            customLauncher={launcher}
+            handleTextInputChange={handleTextInputChange}
+            chatId={chatId}
+            launcherOpenLabel={launcherOpenLabel}
+            launcherCloseLabel={launcherCloseLabel}
+            sendButtonAlt={sendButtonAlt}
+            showTimeStamp={showTimeStamp}
+            imagePreview={imagePreview}
+            zoomStep={zoomStep}
+            handleSubmit={handleSubmit}
+            customPreferences={customPreferences}
+        />
     );
 }
 
