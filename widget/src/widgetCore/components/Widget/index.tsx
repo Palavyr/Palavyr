@@ -29,7 +29,6 @@ type Props = {
     zoomStep?: number;
     handleSubmit?: AnyFunction;
     customPreferences: WidgetPreferences;
-    openUserDetails: any;
 };
 
 function Widget({
@@ -54,7 +53,6 @@ function Widget({
     zoomStep,
     handleSubmit,
     customPreferences,
-    openUserDetails
 }: Props) {
     const dispatch = useDispatch();
 
@@ -83,9 +81,8 @@ function Widget({
 
     return (
         <WidgetLayout
-        openUserDetails={openUserDetails}
-          onToggleConversation={toggleConversation}
-              onSendMessage={handleMessageSubmit}
+            onToggleConversation={toggleConversation}
+            onSendMessage={handleMessageSubmit}
             onQuickButtonClicked={onQuickButtonClicked}
             title={title}
             titleAvatar={titleAvatar}

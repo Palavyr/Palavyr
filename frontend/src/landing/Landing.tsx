@@ -89,22 +89,6 @@ export const LandingPage = () => {
         setIsCookieRulesDialogOpen(false);
     }, [setIsCookieRulesDialogOpen]);
 
-    // const attemptLogin = useCallback(async () => {
-    //     const success = () => {
-    //         setTimeout(() => {
-    //             history.push("/dashboard");
-    //         }, 150);
-    //     }
-    //     await Auth.loginFromMemory(success);
-    //     return false;
-    // }, [])
-
-    // useEffect(() => {
-    //     // attemptLogin();
-    //     return () => {
-    //     }
-    // }, [])
-
     return (
         <div className={classes.wrapper}>
             {!isCookieRulesDialogOpen && (

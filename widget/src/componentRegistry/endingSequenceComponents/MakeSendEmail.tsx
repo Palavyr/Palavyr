@@ -16,7 +16,6 @@ const assembleCompletedConvo = (conversationId: string, areaIdentifier: string, 
 };
 
 export const makeSendEmail = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
-    toggleInputDisabled(); // can manually toggle in each component when necessary
     const areaId = nodeList[0].areaIdentifier;
 
     const sendEmail = async () => {
@@ -51,7 +50,6 @@ export const makeSendEmail = ({ node, nodeList, client, convoId }: IProgressTheC
                                 const response = await sendEmail();
                                 const child = nodeList.filter((x: ConvoTableRow) => x.nodeId === response.nextNodeId)[0];
                                 responseAction(node, child, nodeList, client, convoId, null);
-                                toggleInputDisabled();
                             }}
                         />
                     </TableCell>

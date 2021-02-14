@@ -35,7 +35,6 @@ type Props = {
     imagePreview?: boolean;
     zoomStep?: number;
     customPreferences: WidgetPreferences;
-    openUserDetails: any;
 };
 
 function WidgetLayout({
@@ -59,8 +58,7 @@ function WidgetLayout({
     showTimeStamp,
     imagePreview,
     zoomStep,
-    customPreferences,
-    openUserDetails
+    customPreferences
 }: Props) {
     const dispatch = useDispatch();
     const { dissableInput, showChat, visible } = useSelector((state: GlobalState) => ({
@@ -120,7 +118,6 @@ function WidgetLayout({
         >
             {showChat && (
                 <Conversation
-                    openUserDetails={openUserDetails}
                     title={title}
                     subtitle={subtitle}
                     sendMessage={onSendMessage}

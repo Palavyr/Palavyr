@@ -3,6 +3,25 @@ import { ElementType } from "react";
 import * as actionsTypes from "./types";
 import { LinkParams, ImageState, ContextProperties, KeyValue, DynamicResponse } from "../types";
 
+
+export function _openUserDetails(): actionsTypes.OpenUserDetails {
+    return {
+        type: actionsTypes.OPEN_USER_DETAILS
+    }
+}
+
+export function _closeUserDetails(): actionsTypes.CloseUserDetails {
+    return {
+        type: actionsTypes.CLOSE_USER_DETAILS
+    }
+}
+
+export function _toggleUserDetails(): actionsTypes.ToggleUserDetails {
+    return {
+        type: actionsTypes.TOGGLE_USER_DETAILS
+    }
+}
+
 export function toggleChat(): actionsTypes.ToggleChat {
     return {
         type: actionsTypes.TOGGLE_CHAT,
@@ -14,6 +33,19 @@ export function toggleInputDisabled(): actionsTypes.ToggleInputDisabled {
         type: actionsTypes.TOGGLE_INPUT_DISABLED,
     };
 }
+
+export function _disableInput(): actionsTypes.InputDisabled {
+    return {
+        type: actionsTypes.DISABLE_INPUT,
+    };
+}
+
+export function _enableInput(): actionsTypes.InputEnabled {
+    return {
+        type: actionsTypes.ENABLE_INPUT,
+    };
+}
+
 
 export function addUserMessage(text: string, id?: string): actionsTypes.AddUserMessage {
     return {

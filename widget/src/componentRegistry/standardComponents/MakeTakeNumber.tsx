@@ -8,7 +8,6 @@ import { ResponseButton } from "../../common/ResponseButton";
 import { SingleRowSingleCell } from "src/common/TableCell";
 
 export const makeTakeNumber = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
-    toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
 

@@ -9,8 +9,6 @@ import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import { SingleRowSingleCell } from "src/common/TableCell";
 
 export const makePercentOfThreshold = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
-    toggleInputDisabled();
-
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
 
     const Component: React.ElementType<{}> = () => {
@@ -44,10 +42,8 @@ export const makePercentOfThreshold = ({ node, nodeList, client, convoId }: IPro
                             const dynamicResponse = {
                                 [node.nodeType]: response.toString(), // TODO: convert this to a nicely formatted number with commas
                             };
-
                             addDynamicResponse(dynamicResponse);
                             responseAction(node, child, nodeList, client, convoId, response.toString());
-                            toggleInputDisabled();
                             setDisabled(true);
                         }}
                     />

@@ -32,6 +32,31 @@ export function toggleInputDisabled() {
   store.dispatch(actions.toggleInputDisabled());
 }
 
+export function openUserDetails() {
+  store.dispatch(actions._openUserDetails());
+}
+
+export function closeUserDetails() {
+  store.dispatch(actions._closeUserDetails());
+}
+
+export function getUserDetailsState(): boolean {
+  return store.getState().behavior.userDetailsVisible;
+}
+
+
+export function toggleUserDetails() {
+  store.dispatch(actions._toggleUserDetails());
+}
+
+export function disableInput() {
+  store.dispatch(actions._disableInput());
+}
+
+export function enableInput() {
+  store.dispatch(actions._enableInput());
+}
+
 export function dropMessages() {
   store.dispatch(actions.dropMessages());
 }

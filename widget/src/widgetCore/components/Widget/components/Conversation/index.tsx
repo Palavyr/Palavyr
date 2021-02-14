@@ -28,7 +28,6 @@ type Props = {
   sendButtonAlt: string;
   showTimeStamp: boolean;
   customPreferences: WidgetPreferences;
-  openUserDetails: any;
 };
 
 function Conversation({
@@ -48,7 +47,6 @@ function Conversation({
   sendButtonAlt,
   showTimeStamp,
   customPreferences,
-  openUserDetails
 }: Props) {
   return (
     <div className={cn('rcw-conversation-container', className)} aria-live="polite">
@@ -59,18 +57,17 @@ function Conversation({
         showCloseButton={showCloseButton}
         titleAvatar={titleAvatar}
         customPreferences={customPreferences}
-        openUserDetails={openUserDetails}
       />
       <Messages profileAvatar={profileAvatar} showTimeStamp={showTimeStamp} customPreferences={customPreferences}/>
       {/* <QuickButtons onQuickButtonClicked={onQuickButtonClicked} customPreferences={customPreferences} /> */}
-      <Sender
+      {/* <Sender
         sendMessage={sendMessage}
         placeholder={senderPlaceHolder}
         disabledInput={disabledInput}
         autofocus={autofocus}
         onTextInputChange={onTextInputChange}
         buttonAlt={sendButtonAlt}
-      />
+      /> */}
     </div>
   );
 }

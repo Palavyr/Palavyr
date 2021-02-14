@@ -16,7 +16,6 @@ const assembleCompletedConvo = (conversationId: string, areaIdentifier: string, 
 };
 
 export const makeSendFallbackEmail = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
-    toggleInputDisabled(); // can manually toggle in each component when necessary
     const areaId = nodeList[0].areaIdentifier;
 
     const SuccessComponent: React.ElementType<{}> = () => {
@@ -49,7 +48,6 @@ export const makeSendFallbackEmail = ({ node, nodeList, client, convoId }: IProg
                                 const response = await sendFallbackEmail();
                                 const child = nodeList.filter((x: ConvoTableRow) => x.nodeId === response.nextNodeId)[0];
                                 responseAction(node, child, nodeList, client, convoId, null);
-                                toggleInputDisabled();
                             }}
                         />
                     </TableCell>

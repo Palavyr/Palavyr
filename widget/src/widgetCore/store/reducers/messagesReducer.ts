@@ -10,7 +10,7 @@ export type MessageState = {
     badgeCount: number;
 }
 
-const initialState = {
+const initialState: MessageState = {
     messages: [],
     badgeCount: 0,
 };

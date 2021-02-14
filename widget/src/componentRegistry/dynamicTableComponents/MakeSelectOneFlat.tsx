@@ -21,7 +21,6 @@ const useStyles = makeStyles(theme => ({
 
 // All Dynamic results should add response formatted to the dynamic response AND the critical value lst
 export const makeSelectOneFlat = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
-    toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
     const options = node.valueOptions.split("|peg|");
@@ -48,7 +47,6 @@ export const makeSelectOneFlat = ({ node, nodeList, client, convoId }: IProgress
                                             };
                                             addDynamicResponse(dynamicResponse);
                                             responseAction(node, child, nodeList, client, convoId, option);
-                                            toggleInputDisabled();
                                             setDisabled(true);
                                         }}
                                     />

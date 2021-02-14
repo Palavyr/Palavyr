@@ -61,6 +61,7 @@ export interface BehaviorState {
     showChat: boolean;
     disabledInput: boolean;
     messageLoader: boolean;
+    userDetailsVisible: boolean;
 }
 
 export interface ContextState {

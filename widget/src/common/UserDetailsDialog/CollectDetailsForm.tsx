@@ -12,12 +12,12 @@ import { EmailForm } from "./FormInputs/EmailForm";
 import { LocaleSelector } from "./FormInputs/LocaleSelector";
 import { PhoneForm } from "./FormInputs/PhoneForm";
 import CreateClient from "src/client/Client";
-import { setRegionContext } from "src/widgetCore/store/dispatcher";
+import { closeUserDetails, setRegionContext } from "src/widgetCore/store/dispatcher";
 import { INVALID_EMAIL, INVALID_NAME, INVALID_PHONE } from "./UserDetailsCheck";
+import { useSelector } from "react-redux";
+import { GlobalState } from "src/widgetCore/store/types";
 
 export interface CollectDetailsFormProps {
-    userDetailsDialogState: boolean;
-    setUserDetailsDialogState: Dispatch<SetStateAction<boolean>>;
     chatStarted: boolean;
     setChatStarted: Dispatch<SetStateAction<boolean>>;
 }
@@ -58,9 +58,10 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const CollectDetailsForm = ({ chatStarted, setChatStarted, userDetailsDialogState, setUserDetailsDialogState }: CollectDetailsFormProps) => {
+export const CollectDetailsForm = ({ chatStarted, setChatStarted }: CollectDetailsFormProps) => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const client = CreateClient(secretKey);
+    const userDetailsVisible = useSelector((state: GlobalState) => state.behavior.userDetailsVisible);
 
     const [options, setOptions] = useState<LocaleMap>([]);
     const [phonePattern, setphonePattern] = useState<string>("");
@@ -85,8 +86,8 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, userDetailsDia
 
     const onFormSubmit = (e: { preventDefault: () => void }) => {
         e.preventDefault();
-        setUserDetailsDialogState(false);
         setChatStarted(true);
+        closeUserDetails();
     };
 
     const formProps = {
@@ -96,7 +97,7 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, userDetailsDia
 
     return (
         <Dialog
-            open={userDetailsDialogState}
+            open={userDetailsVisible}
             className={cls.baseDialog}
             classes={{
                 root: cls.dialogBackground,
