@@ -5,7 +5,7 @@ import usePreview from './usePreview';
 import usePortal from './usePortal';
 import './styles.scss';
 import { GlobalState } from '../../../../store/types';
-import { closeFullscreenPreview } from '../../../../store/actions';
+import { _closeFullscreenPreview } from '../../../../store/actions';
 import { WidgetPreferences } from 'src/types';
 
 const close = require('assets/close.svg') as string;
@@ -47,7 +47,7 @@ export default function FullScreenPreview({ fullScreenMode, zoomStep }:Props) {
   const pDom = usePortal()
 
   const onClosePreview = () => {
-    dispatch(closeFullscreenPreview())
+    dispatch(_closeFullscreenPreview())
   }
 
   const childNode: ReactNode = (

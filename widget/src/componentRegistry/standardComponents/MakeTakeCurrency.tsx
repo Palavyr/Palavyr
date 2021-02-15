@@ -6,6 +6,7 @@ import { getChildNodes } from "../utils";
 import { ResponseButton } from "../../common/ResponseButton";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import { SingleRowSingleCell } from "src/common/TableCell";
+import { addKeyValue } from "src/widgetCore/store/dispatcher";
 
 export const makeTakeCurrency = ({ node, nodeList, client, convoId, }: IProgressTheChat) => {
 
@@ -42,6 +43,7 @@ export const makeTakeCurrency = ({ node, nodeList, client, convoId, }: IProgress
                             disabled={disabled}
                             onClick={() => {
                                 responseAction(node, child, nodeList, client, convoId, response.toString());
+                                addKeyValue({[node.text]: response});
                                 setDisabled(true);
                             }}
                         />

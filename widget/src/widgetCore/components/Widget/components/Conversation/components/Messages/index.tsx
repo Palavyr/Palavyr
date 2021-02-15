@@ -4,7 +4,7 @@ import format from "date-fns/format";
 
 import { scrollToBottom } from "../../../../../../utils/messages";
 import { Message, Link, CustomCompMessage, GlobalState } from "../../../../../../store/types";
-import { setBadgeCount, markAllMessagesRead } from "src/widgetCore/store/actions";
+import { _setBadgeCount, _markAllMessagesRead } from "src/widgetCore/store/actions";
 
 import Loader from "./components/Loader";
 import "./styles.scss";
@@ -30,8 +30,8 @@ function Messages({ profileAvatar, showTimeStamp, customPreferences }: Props) {
     useEffect(() => {
         // @ts-ignore
         scrollToBottom(messageRef.current);
-        if (showChat && badgeCount) dispatch(markAllMessagesRead());
-        else dispatch(setBadgeCount(messages.filter(message => message.unread).length));
+        if (showChat && badgeCount) dispatch(_markAllMessagesRead());
+        else dispatch(_setBadgeCount(messages.filter(message => message.unread).length));
     }, [messages, badgeCount, showChat]);
 
     const getComponentToRender = (message: Message | Link | CustomCompMessage) => {

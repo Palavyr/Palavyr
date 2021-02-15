@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PDFService.Sections.Util
+namespace PDFService.PdfSections.Util
 {
     public class CriticalResponses
     {

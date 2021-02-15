@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace PDFService.Sections.Util
+namespace PDFService.PdfSections.Util
 {
     public class Table
     {

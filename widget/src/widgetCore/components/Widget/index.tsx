@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { WidgetPreferences } from "src/types";
 
-import { toggleChat, addUserMessage } from "../../store/actions";
+import { _toggleChat, _addUserMessage } from "../../store/actions";
 import { AnyFunction } from "../../utils/types";
 
 import WidgetLayout from "./layout";
@@ -57,7 +57,7 @@ function Widget({
     const dispatch = useDispatch();
 
     const toggleConversation = () => {
-        dispatch(toggleChat());
+        dispatch(_toggleChat());
     };
 
     const handleMessageSubmit = event => {
@@ -69,7 +69,7 @@ function Widget({
         }
 
         handleSubmit?.(userInput);
-        dispatch(addUserMessage(userInput));
+        dispatch(_addUserMessage(userInput));
         handleNewUserMessage(userInput);
         event.target.message.value = "";
     };

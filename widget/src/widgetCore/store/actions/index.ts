@@ -22,13 +22,13 @@ export function _toggleUserDetails(): actionsTypes.ToggleUserDetails {
     }
 }
 
-export function toggleChat(): actionsTypes.ToggleChat {
+export function _toggleChat(): actionsTypes.ToggleChat {
     return {
         type: actionsTypes.TOGGLE_CHAT,
     };
 }
 
-export function toggleInputDisabled(): actionsTypes.ToggleInputDisabled {
+export function _toggleInputDisabled(): actionsTypes.ToggleInputDisabled {
     return {
         type: actionsTypes.TOGGLE_INPUT_DISABLED,
     };
@@ -47,7 +47,7 @@ export function _enableInput(): actionsTypes.InputEnabled {
 }
 
 
-export function addUserMessage(text: string, id?: string): actionsTypes.AddUserMessage {
+export function _addUserMessage(text: string, id?: string): actionsTypes.AddUserMessage {
     return {
         type: actionsTypes.ADD_NEW_USER_MESSAGE,
         text,
@@ -55,7 +55,7 @@ export function addUserMessage(text: string, id?: string): actionsTypes.AddUserM
     };
 }
 
-export function addResponseMessage(text: string, id?: string): actionsTypes.AddResponseMessage {
+export function _addResponseMessage(text: string, id?: string): actionsTypes.AddResponseMessage {
     return {
         type: actionsTypes.ADD_NEW_RESPONSE_MESSAGE,
         text,
@@ -63,13 +63,13 @@ export function addResponseMessage(text: string, id?: string): actionsTypes.AddR
     };
 }
 
-export function toggleMsgLoader(): actionsTypes.ToggleMsgLoader {
+export function _toggleMsgLoader(): actionsTypes.ToggleMsgLoader {
     return {
         type: actionsTypes.TOGGLE_MESSAGE_LOADER,
     };
 }
 
-export function addLinkSnippet(link: LinkParams, id?: string): actionsTypes.AddLinkSnippet {
+export function _addLinkSnippet(link: LinkParams, id?: string): actionsTypes.AddLinkSnippet {
     return {
         type: actionsTypes.ADD_NEW_LINK_SNIPPET,
         link,
@@ -77,7 +77,7 @@ export function addLinkSnippet(link: LinkParams, id?: string): actionsTypes.AddL
     };
 }
 
-export function renderCustomComponent(component: ElementType, props: any, showAvatar: boolean, id?: string): actionsTypes.RenderCustomComponent {
+export function _renderCustomComponent(component: ElementType, props: any, showAvatar: boolean, id?: string): actionsTypes.RenderCustomComponent {
     return {
         type: actionsTypes.ADD_COMPONENT_MESSAGE,
         component,
@@ -87,27 +87,27 @@ export function renderCustomComponent(component: ElementType, props: any, showAv
     };
 }
 
-export function dropMessages(): actionsTypes.DropMessages {
+export function _dropMessages(): actionsTypes.DropMessages {
     return {
         type: actionsTypes.DROP_MESSAGES,
     };
 }
 
-export function hideAvatar(index: number): actionsTypes.HideAvatar {
+export function _hideAvatar(index: number): actionsTypes.HideAvatar {
     return {
         type: actionsTypes.HIDE_AVATAR,
         index,
     };
 }
 
-export function setQuickButtons(buttons: Array<{ label: string; value: string | number }>): actionsTypes.SetQuickButtons {
+export function _setQuickButtons(buttons: Array<{ label: string; value: string | number }>): actionsTypes.SetQuickButtons {
     return {
         type: actionsTypes.SET_QUICK_BUTTONS,
         buttons,
     };
 }
 
-export function deleteMessages(count: number, id?: string): actionsTypes.DeleteMessages {
+export function _deleteMessages(count: number, id?: string): actionsTypes.DeleteMessages {
     return {
         type: actionsTypes.DELETE_MESSAGES,
         count,
@@ -115,75 +115,75 @@ export function deleteMessages(count: number, id?: string): actionsTypes.DeleteM
     };
 }
 
-export function setBadgeCount(count: number): actionsTypes.SetBadgeCount {
+export function _setBadgeCount(count: number): actionsTypes.SetBadgeCount {
     return {
         type: actionsTypes.SET_BADGE_COUNT,
         count,
     };
 }
 
-export function markAllMessagesRead(): actionsTypes.MarkAllMessagesRead {
+export function _markAllMessagesRead(): actionsTypes.MarkAllMessagesRead {
     return {
         type: actionsTypes.MARK_ALL_READ,
     };
 }
 
-export function openFullscreenPreview(payload: ImageState): actionsTypes.FullscreenPreviewActions {
+export function _openFullscreenPreview(payload: ImageState): actionsTypes.FullscreenPreviewActions {
     return {
         type: actionsTypes.OPEN_FULLSCREEN_PREVIEW,
         payload,
     };
 }
 
-export function closeFullscreenPreview(): actionsTypes.FullscreenPreviewActions {
+export function _closeFullscreenPreview(): actionsTypes.FullscreenPreviewActions {
     return {
         type: actionsTypes.CLOSE_FULLSCREEN_PREVIEW,
     };
 }
 
-export function setContextProperties(contextProperties: ContextProperties): actionsTypes.ContextPropertyActions {
+export function _setContextProperties(contextProperties: ContextProperties): actionsTypes.ContextPropertyActions {
     return {
         type: actionsTypes.SET_CONTEXT_PROPERTIES,
         contextProperties,
     };
 }
 
-export function setNameContext(name: string): actionsTypes.ContextPropertyActions {
+export function _setNameContext(name: string): actionsTypes.ContextPropertyActions {
     return {
         type: actionsTypes.SET_NAME_CONTEXT,
         name,
     };
 }
 
-export function setPhoneContext(phoneNumber: string): actionsTypes.ContextPropertyActions {
+export function _setPhoneContext(phoneNumber: string): actionsTypes.ContextPropertyActions {
     return {
         type: actionsTypes.SET_PHONE_CONTEXT,
         phoneNumber,
     };
 }
 
-export function setEmailAddressContext(emailAddress: string): actionsTypes.ContextPropertyActions {
+export function _setEmailAddressContext(emailAddress: string): actionsTypes.ContextPropertyActions {
     return {
         type: actionsTypes.SET_EMAILADDRESS_CONTEXT,
         emailAddress,
     };
 }
 
-export function setRegionContext(region: string): actionsTypes.ContextPropertyActions {
+export function _setRegionContext(region: string): actionsTypes.ContextPropertyActions {
     return {
         type: actionsTypes.SET_REGION_CONTEXT,
         region,
     };
 }
 
-export function addKeyValue(keyValue: KeyValue): actionsTypes.ContextPropertyActions {
+export function _addKeyValue(keyValue: KeyValue): actionsTypes.ContextPropertyActions {
     return {
         type: actionsTypes.SET_KEYVALUE_CONTEXT,
         keyValue,
     };
 }
 
-export function addDynamicResponse(dynamicResponse: DynamicResponse): actionsTypes.ContextPropertyActions {
+export function _addDynamicResponse(dynamicResponse: DynamicResponse): actionsTypes.ContextPropertyActions {
     return {
         type: actionsTypes.SET_DYNAMICRESPONSE_CONTEXT,
         dynamicResponse,

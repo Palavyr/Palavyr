@@ -13,7 +13,7 @@ using Palavyr.API.Response;
 using Palavyr.API.Services.AuthenticationServices;
 using Palavyr.Common.FileSystem.FormPaths;
 using Palavyr.Common.FileSystem.ListPaths;
-using PDFService.Sections.Util;
+using PDFService.PdfSections.Util;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
@@ -74,8 +74,7 @@ namespace Palavyr.API.Controllers.WidgetLive
                 safeFileNameStem,
                 accountId,
                 areaId
-                
-                );
+            );
             var fullPdfResponsePath = FormFilePath.FormResponsePDFFilePath(accountId, safeFilePath);
             if (DiskUtils.ValidatePathExists(fullPdfResponsePath))
             {

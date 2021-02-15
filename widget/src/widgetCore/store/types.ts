@@ -17,7 +17,7 @@ export type DynamicResponse = {
 export type DynamicResponses = Array<DynamicResponse>;
 
 export type KeyValue = {
-    [key: string]: string;
+    [key: string]: string | number;
 };
 
 export type KeyValues = Array<KeyValue>;

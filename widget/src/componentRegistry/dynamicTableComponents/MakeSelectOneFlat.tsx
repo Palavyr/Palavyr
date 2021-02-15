@@ -1,5 +1,4 @@
 import * as React from "react";
-import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
 import { getChildNodes } from "../utils";
 import { Table, TableRow, TableCell, makeStyles } from "@material-ui/core";
 import { responseAction, IProgressTheChat } from "..";
@@ -7,7 +6,7 @@ import { uuid } from "uuidv4";
 import { ResponseButton } from "../../common/ResponseButton";
 import { useState } from "react";
 import { SingleRowSingleCell } from "src/common/TableCell";
-import { addDynamicResponse } from "src/widgetCore/store/actions";
+import { _addDynamicResponse } from "src/widgetCore/store/actions";
 import { DynamicResponse } from "src/widgetCore/store/types";
 
 const useStyles = makeStyles(theme => ({
@@ -45,7 +44,7 @@ export const makeSelectOneFlat = ({ node, nodeList, client, convoId }: IProgress
                                             const dynamicResponse: DynamicResponse = {
                                                 [node.nodeType]: option,
                                             };
-                                            addDynamicResponse(dynamicResponse);
+                                            _addDynamicResponse(dynamicResponse);
                                             responseAction(node, child, nodeList, client, convoId, option);
                                             setDisabled(true);
                                         }}
