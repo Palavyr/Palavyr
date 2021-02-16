@@ -16,8 +16,6 @@ using Palavyr.API.Services.AccountServices;
 using Palavyr.API.Services.AuthenticationServices;
 using Palavyr.API.Services.DynamicTableService;
 using Palavyr.API.Services.EntityServices;
-using Palavyr.API.Services.StripeServices;
-using Palavyr.API.Services.StripeServices.StripeWebhookHandlers;
 using Palavyr.Background;
 using Palavyr.BackupAndRestore;
 using Palavyr.BackupAndRestore.Postgres;

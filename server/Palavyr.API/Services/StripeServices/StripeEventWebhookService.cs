@@ -15,6 +15,10 @@ namespace Palavyr.API.Services.StripeServices
         private readonly ProcessStripeInvoicePaymentFailedHandler processStripeInvoicePaymentFailedHandler;
         private readonly ProcessStripeSubscriptionDeletedHandler processStripeSubscriptionDeletedHandler;
         private readonly ProcessStripeSubscriptionCreatedHandler processStripeSubscriptionCreatedHandler;
+        private readonly ProcessStripePaymentMethodUpdatedHandler processStripePaymentMethodUpdatedHandler;
+        private readonly ProcessStripePlanUpdatedHandler processStripePlanUpdatedHandler;
+        private readonly ProcessStripeInvoiceCreatedHandler processStripeInvoiceCreatedHandler;
+        private readonly ProcessStripePriceUpdatedHandler processStripePriceUpdatedHandler;
 
         public StripeEventWebhookService(
             ILogger<StripeEventWebhookService> logger,
@@ -23,7 +27,11 @@ namespace Palavyr.API.Services.StripeServices
             ProcessStripeInvoicePaidHandler processStripeInvoicePaidHandler,
             ProcessStripeInvoicePaymentFailedHandler processStripeInvoicePaymentFailedHandler,
             ProcessStripeSubscriptionDeletedHandler processStripeSubscriptionDeletedHandler,
-            ProcessStripeSubscriptionCreatedHandler processStripeSubscriptionCreatedHandler
+            ProcessStripeSubscriptionCreatedHandler processStripeSubscriptionCreatedHandler,
+            ProcessStripePaymentMethodUpdatedHandler processStripePaymentMethodUpdatedHandler,
+            ProcessStripePlanUpdatedHandler processStripePlanUpdatedHandler,
+            ProcessStripeInvoiceCreatedHandler processStripeInvoiceCreatedHandler,
+            ProcessStripePriceUpdatedHandler processStripePriceUpdatedHandler
         )
         {
             this.logger = logger;
@@ -33,6 +41,10 @@ namespace Palavyr.API.Services.StripeServices
             this.processStripeInvoicePaymentFailedHandler = processStripeInvoicePaymentFailedHandler;
             this.processStripeSubscriptionDeletedHandler = processStripeSubscriptionDeletedHandler;
             this.processStripeSubscriptionCreatedHandler = processStripeSubscriptionCreatedHandler;
+            this.processStripePaymentMethodUpdatedHandler = processStripePaymentMethodUpdatedHandler;
+            this.processStripePlanUpdatedHandler = processStripePlanUpdatedHandler;
+            this.processStripeInvoiceCreatedHandler = processStripeInvoiceCreatedHandler;
+            this.processStripePriceUpdatedHandler = processStripePriceUpdatedHandler;
         }
 
         public async Task ProcessStripeEvent(Event stripeEvent)
@@ -83,12 +95,13 @@ namespace Palavyr.API.Services.StripeServices
                     break;
 
                 case Events.PaymentMethodUpdated:
-                    // Simply send an email confirming they've updated their payment method.
+                    var methodUpdated = (PaymentMethod) stripeEvent.Data.Object;
+                    await processStripePaymentMethodUpdatedHandler.ProcessPaymentMethodUpdate(methodUpdated);
                     break;
 
                 case Events.PlanUpdated:
                     var plan = (Plan) stripeEvent.Data.Object;
-                    // TODO: await processPlanUpdateHandler.ProcessPlanUpdate(plan);
+                    processStripePlanUpdatedHandler.ProcessStripePlanUpdate(plan);
                     // Modify the plan type used in the DB (plan type information is available is UserAccount
                     break;
 
@@ -99,20 +112,22 @@ namespace Palavyr.API.Services.StripeServices
                     break;
 
                 case Events.InvoiceCreated:
-                    var invoice = (Invoice) stripeEvent.Data.Object;
-                    // Simply send an email to notify customer there is a new invoice for subscription.
-                    // Can notify the customer that they have a new invoice.
+                    // Send an email to the customer with information of their recent invoice
+                    var invoiceCreated = (Invoice) stripeEvent.Data.Object;
+                    await processStripeInvoiceCreatedHandler.ProcessInvoiceCreation(invoiceCreated);
                     break;
 
                 case Events.PlanDeleted:
                     var deletePlan = (Plan) stripeEvent.Data.Object;
+                    // NOT SURE IF THIS IS NEEDED.
                     // TODO: await processPlanUpdateHandler.DeletePlan(plan); // revert to Free tier at end of subscription.
                     // occurs when a customer downgrades to Free again and cancels their plan
                     break;
 
                 case Events.PriceUpdated:
+                    var priceUpdate = (Price) stripeEvent.Data.Object;
+                    await processStripePriceUpdatedHandler.ProcessPriceUpdated(priceUpdate);
                     // use this to update customers that the price for their plan has been updated (hopefully to a lower price? But if we must... to a higher)
-                    // TODO: Send a simple email to communicate that I've changed the price of a current subscription plan. 
                     break;
 
                 default:

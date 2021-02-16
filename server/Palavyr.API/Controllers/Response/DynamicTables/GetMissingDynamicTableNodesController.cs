@@ -77,24 +77,24 @@ namespace Palavyr.API.Controllers.Response.DynamicTables
             allMissingNodeTypes.AddRange(missingDynamicNodeTypes);
 
             // Other node types missing
-            var staticTableRows = await dashContext
-                .StaticTablesRows
-                .Where(row => row.AccountId == accountId)
-                .ToListAsync();
+            // var staticTableRows = await dashContext
+            //     .StaticTablesRows
+            //     .Where(row => row.AccountId == accountId)
+            //     .ToListAsync();
 
             // check static tables and dynamic tables to see if even 1 'per individual' is set. If so, then check for this node type.
-            var perIndividualRequired = staticTableRows
-                .Where(row => row.AreaIdentifier == area.AreaIdentifier)
-                .Select(x => x.PerPerson)
-                .Any();
-
-            if (perIndividualRequired)
-            {
-                var perPersonNodeType = new[] {DefaultNodeTypeOptions.TakeNumberIndividuals.StringName};
-                var missingOtherNodeTypes = TreeUtils.GetMissingNodes(nodelist, perPersonNodeType); //.SelectMany(x => StringUtils.SplitCamelCase(x)).ToArray();
-                var asPretty = string.Join(" ", StringUtils.SplitCamelCase(missingOtherNodeTypes.First()));
-                allMissingNodeTypes.AddRange(new[] {asPretty});
-            }
+            // var perIndividualRequired = staticTableRows
+            //     .Where(row => row.AreaIdentifier == area.AreaIdentifier)
+            //     .Select(x => x.PerPerson)
+            //     .Any();
+            //
+            // if (perIndividualRequired)
+            // {
+            //     var perPersonNodeType = new[] {DefaultNodeTypeOptions.TakeNumberIndividuals.StringName};
+            //     var missingOtherNodeTypes = TreeUtils.GetMissingNodes(nodelist, perPersonNodeType); //.SelectMany(x => StringUtils.SplitCamelCase(x)).ToArray();
+            //     var asPretty = string.Join(" ", StringUtils.SplitCamelCase(missingOtherNodeTypes.First()));
+            //     allMissingNodeTypes.AddRange(new[] {asPretty});
+            // }
 
             return allMissingNodeTypes.ToArray();
         }

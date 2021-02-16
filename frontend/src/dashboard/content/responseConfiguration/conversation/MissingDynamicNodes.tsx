@@ -10,7 +10,8 @@ export const MissingDynamicNodes = ({ missingNodeTypes }: IMissingDynamicNodes) 
 
     return (
         <>
-            {missingNodeTypes.length > 0 && <Typography style={{marginBottom: "1rem"}} variant="h5">These node types are currently missing from your tree:</Typography>}
+            <Typography align="center" style={{marginBottom: "1rem", fontWeight: "bolder"}} variant="h5">These node types are currently missing from your tree:</Typography>
+            <div style={{textAlign: "center"}}>
             {
                 missingNodeTypes.map(
                     (x, index) => {
@@ -18,6 +19,7 @@ export const MissingDynamicNodes = ({ missingNodeTypes }: IMissingDynamicNodes) 
                     }
                 )
             }
+            </div>
         </>
     )
 }

@@ -71,6 +71,7 @@ export const ConvoTree = () => {
     return (
         <>
             <AreaConfigurationHeader
+                divider={missingNodeTypes.length > 0}
                 title="Palavyr"
                 subtitle="Your palavyr is the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing. Please be careful - all changes to your palavyr are immediately saved and we have not yet implemented a 'back' or 'undo' feature."
             />

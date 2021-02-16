@@ -4,6 +4,7 @@ using DashboardServer.Data;
 using EmailService.ResponseEmail;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Palavyr.Common.UIDUtils;
 using Stripe;
 
 namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
@@ -20,12 +21,12 @@ namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
         private readonly ISesEmail emailClient;
 
         public ProcessStripeInvoicePaymentFailedHandler(
-            ILogger<ProcessStripeInvoicePaidHandler> processStripeInvoicePaidHandler,
+            ILogger<ProcessStripeInvoicePaidHandler> logger,
             AccountsContext accountsContext,
             ISesEmail emailClient
         )
         {
-            this.logger = processStripeInvoicePaidHandler;
+            this.logger = logger;
             this.accountsContext = accountsContext;
             this.emailClient = emailClient;
         }
@@ -42,20 +43,20 @@ namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
                 {
                     throw new Exception("ERROR TODO: EMAIL paul.e.gradie@gmail.com to manually set status");
                 }
-                
+
                 // if we don't get payment, we don't update the currentPeriodEnd. We check this at the beginning of each login, so
                 // if we don't udpate, then time moves forward, and eventually the login will set IsActive to false. If isActive is false,
                 // then we freeze their account because they owe us money. From there, they can pay their bill, and then cancel if they prefer
                 // to not use the service.
                 var endDate = account.CurrentPeriodEnd;
                 var subject = "Your recent payment to Palavyr.com failed. :(";
-                var htmlBody = "<h4>Sincere appologies. Youre recent payment to "
+                var htmlBody = "<h4>Sincere apologies</h4> You're recent payment to "
                                + "Palavyr.com failed. Please visit the billing tab in the "
                                + "dashboard to update your payment information."
                                + $" Your subscription will lapse on {endDate}";
                 var textBody = "Apologies, your recent payment failed. Please visit the billing tab in the dashboard to update your payment information.";
                 // TODO create a nice email that uses the information below to update the customer
-                await emailClient.SendEmail("palavyr@gmail.com", account.EmailAddress, subject, htmlBody, textBody);
+                await emailClient.SendEmail(EmailConstants.PalavyrMainEmailAddress, account.EmailAddress, subject, htmlBody, textBody);
             }
 
             // var emailAddress = account.EmailAddress;
