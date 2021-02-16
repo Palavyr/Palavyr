@@ -19,7 +19,7 @@ using Palavyr.Common.FileSystem;
 using Palavyr.Common.FileSystem.FormPaths;
 using Palavyr.Common.FileSystem.LocalServices;
 using PDFService;
-using PDFService.Sections.Util;
+using PDFService.PdfSections.Util;
 using Server.Domain.Configuration.Constant;
 using Server.Domain.Configuration.Schemas;
 
@@ -83,7 +83,7 @@ namespace Palavyr.API.Response
             var dynamicTables = await CollectPreviewDynamicTables(areaData, accountId, culture);
 
             logger.LogDebug($"Generating PDF Html string to send to express server...");
-            var html = PdfGenerator.GenerateNewPDF(userAccount, areaData, criticalResponses, staticTables,
+            var html = PdfGenerator.GenerateNewPdf(userAccount, areaData, criticalResponses, staticTables,
                 dynamicTables);
 
             var randomFileName = Guid.NewGuid().ToString();
@@ -137,7 +137,7 @@ namespace Palavyr.API.Response
             var dynamicTables = await CollectPreviewDynamicTables(areaData, accountId, culture);
 
             logger.LogDebug($"Generating PDF Html string to send to express server...");
-            var html = PdfGenerator.GenerateNewPDF(
+            var html = PdfGenerator.GenerateNewPdf(
                 userAccount,
                 areaData,
                 criticalResponses,
@@ -205,11 +205,11 @@ namespace Palavyr.API.Response
             var dynamicResponses = emailRequest.DynamicResponses.Count > 0
                 ? emailRequest.DynamicResponses
                 : new List<Dictionary<string, string>>() {};
-
+            
             var staticTables = CollectStaticTables(areaData, culture);
             var dynamicTables = await CollectRealDynamicTables(accountId, dynamicResponses, culture);
 
-            var html = PdfGenerator.GenerateNewPDF(userAccount, areaData, criticalResponses, staticTables, dynamicTables);
+            var html = PdfGenerator.GenerateNewPdf(userAccount, areaData, criticalResponses, staticTables, dynamicTables);
 
             html = ResponseCustomizer.Customize(html, emailRequest, userAccount);
             
@@ -261,7 +261,7 @@ namespace Palavyr.API.Response
                         dbRow.Description,
                         dbRow.Fee.Min,
                         dbRow.Fee.Max,
-                        dbRow.PerPerson,
+                        dbRow.PerPerson, 
                         culture,
                         dbRow.Range);
                     rows.Add(row);
@@ -317,9 +317,6 @@ namespace Palavyr.API.Response
             CultureInfo culture
         )
         {
-            // if (selectedOption.Keys.Single() != DynamicType) throw new Exception();
-            // if (selectedOption.Keys.Single() == null && DynamicType != DynamicTableTypes.None) throw new Exception(); // dangerous (depends on widget sending through selection correctly)
-
             var rows = new List<TableRow>();
 
             foreach (var dynamicResponse in dynamicResponses)

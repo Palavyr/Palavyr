@@ -4,7 +4,7 @@ import cn from 'classnames';
 
 import Badge from './components/Badge';
 import { GlobalState } from '../../../../store/types';
-import { setBadgeCount } from '../../../../store/actions';
+import { _setBadgeCount } from '../../../../store/actions';
 
 import './style.scss';
 
@@ -27,7 +27,7 @@ function Launcher({ toggle, chatId, openLabel, closeLabel }: Props) {
 
   const toggleChat = () => {
     toggle();
-    if (!showChat) dispatch(setBadgeCount(0));
+    if (!showChat) dispatch(_setBadgeCount(0));
   }
 
   return (

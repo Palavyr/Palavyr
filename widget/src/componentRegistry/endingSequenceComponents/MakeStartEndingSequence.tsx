@@ -1,5 +1,4 @@
 import * as React from "react";
-import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
 import { getChildNodes } from "../utils";
 import { TableRow, TableCell, Table } from "@material-ui/core";
 import { responseAction, IProgressTheChat } from "..";
@@ -8,7 +7,6 @@ import { useState } from "react";
 import { SingleRowSingleCell } from "src/common/TableCell";
 
 export const makeStartEndingSequence = ({ node, nodeList, client, convoId, }: IProgressTheChat) => {
-    toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
 
@@ -26,7 +24,6 @@ export const makeStartEndingSequence = ({ node, nodeList, client, convoId, }: IP
                             text="Proceed"
                             onClick={() => {
                                 responseAction(node, child, nodeList, client, convoId, null);
-                                toggleInputDisabled();
                                 setDisabled(true);
                             }}
                         />

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using PDFService.Sections.Util;
+using PDFService.PdfSections.Util;
 using Server.Domain.Accounts;
 
 namespace PDFService.PdfSections

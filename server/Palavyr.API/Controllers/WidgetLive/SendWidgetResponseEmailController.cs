@@ -13,7 +13,7 @@ using Palavyr.API.Response;
 using Palavyr.API.Services.AuthenticationServices;
 using Palavyr.Common.FileSystem.FormPaths;
 using Palavyr.Common.FileSystem.ListPaths;
-using PDFService.Sections.Util;
+using PDFService.PdfSections.Util;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
@@ -74,8 +74,7 @@ namespace Palavyr.API.Controllers.WidgetLive
                 safeFileNameStem,
                 accountId,
                 areaId
-                
-                );
+            );
             var fullPdfResponsePath = FormFilePath.FormResponsePDFFilePath(accountId, safeFilePath);
             if (DiskUtils.ValidatePathExists(fullPdfResponsePath))
             {
@@ -86,10 +85,9 @@ namespace Palavyr.API.Controllers.WidgetLive
             var toAddress = emailRequest.EmailAddress;
 
             var area = dashContext.Areas.Single(row => row.AreaIdentifier == areaId);
-            
-            
-            var subject = area.UseAreaFallbackEmail ? area.Subject : account.GeneralFallbackSubject;
-            var htmlBody = area.UseAreaFallbackEmail ? area.EmailTemplate : account.GeneralFallbackEmailTemplate;
+
+            var subject = area.UseAreaFallbackEmail ? account.GeneralFallbackSubject : area.Subject;
+            var htmlBody = area.UseAreaFallbackEmail ? account.GeneralFallbackEmailTemplate : area.EmailTemplate;
             
             var textBody = ""; // This can be another upload. People can decide one or both. Html is prioritized.
 
@@ -103,7 +101,7 @@ namespace Palavyr.API.Controllers.WidgetLive
                     fromAddress, toAddress, subject, htmlBody, textBody,
                     attachmentFiles);
 
-            return ok ? SendEmailResultResponse.Create(EndingSequence.EmailSuccessfulNodeId, ok) : SendEmailResultResponse.Create(EndingSequence.EmailFailedNodeId, ok);
+        return ok ? SendEmailResultResponse.Create(EndingSequence.EmailSuccessfulNodeId, ok) : SendEmailResultResponse.Create(EndingSequence.EmailFailedNodeId, ok);
         }
     }
 }

@@ -31,7 +31,9 @@ export const responseAction = (
     client: IClient,
     convoId: string,
     response: string,
+    callback: () => void = null
 ) => {
+
     if (response) {
         if (node.isCritical) {
             addKeyValue({ [node.text]: response })
@@ -56,6 +58,7 @@ export const responseAction = (
 
     client.Widget.Access.postUpdateAsync(updatePayload); // no need to await for this
     setTimeout(() => {
+        if (callback) callback();
         renderNextComponent(child, nodeList, client, convoId); // convoId should come from redux store in the future
         toggleMsgLoader();
     }, random(1000, 3000, undefined));
@@ -85,6 +88,9 @@ export enum NodeTypes {
     YesNotSureCombined = "YesNotSureCombined",
     NoNotSureCombined = "NoNotSureCombined",
     TakeText = "TakeText",
+    TakeNumber = "TakeNumber",
+    TakeCurrency = "TakeCurrency",
+    TakeNumberIndividuals = "TakeNumberIndividuals",
     ProvideInfo = "ProvideInfo",
     MultipleChoiceAsPath = "MultipleChoiceAsPath",
     MultipleChoiceContinue = "MultipleChoiceContinue",
@@ -116,11 +122,13 @@ export const ComponentRegistry: Registry = {
 
     [NodeTypes.MultipleChoiceContinue]: makeMultipleChoiceContinueButtons,
 
+    [NodeTypes.TakeCurrency]: makeTakeCurrency,
     [NodeTypes.TakeText]: makeTakeText,
     [NodeTypes.ProvideInfo]: makeProvideInfo,
     [NodeTypes.HowMany]: makeTakeNumber,
     [NodeTypes.HowMuch]: makeTakeCurrency,
-
+    [NodeTypes.TakeNumber]: makeTakeNumber,
+    [NodeTypes.TakeNumberIndividuals]: makeTakeNumber,
     [NodeTypes.TooComplicated]: makeTooComplicated,
 
     [NodeTypes.EndingSequence]: makeStartEndingSequence,

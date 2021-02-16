@@ -70,9 +70,12 @@ export const ConvoTree = () => {
 
     return (
         <>
-            <AreaConfigurationHeader title="Palavyr" subtitle="Your palavyr is the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing. Please be careful - all changes to your palavyr are immediately saved and we have not yet implemented a 'back' or 'undo' feature." />
+            <AreaConfigurationHeader
+                title="Palavyr"
+                subtitle="Your palavyr is the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing. Please be careful - all changes to your palavyr are immediately saved and we have not yet implemented a 'back' or 'undo' feature."
+            />
             <div className={classes.conversation}>
-                {missingNodeTypes.length > 0 && <MissingDynamicNodes missingNodeTypes={missingNodeTypes} />}
+                <div style={{margin: "0.5rem 0rem 1rem 2rem"}}>{missingNodeTypes.length > 0 && <MissingDynamicNodes missingNodeTypes={missingNodeTypes} />}</div>
                 <form onSubmit={() => null}>
                     <fieldset className="fieldset" id="tree-test">
                         {/* <legend>{treeName}</legend> */}

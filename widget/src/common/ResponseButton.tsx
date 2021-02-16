@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
         borderColor: "black",
         "&:hover": {
             borderColor: "black",
-            backgroundColor: "gray"
+            backgroundColor: "gray",
         },
     },
     buttonFocus: {
@@ -27,8 +27,10 @@ const useStyles = makeStyles(theme => ({
 export const ResponseButton = ({ onClick, disabled = false, variant = "outlined", text = "Submit", color = "primary" }: IResponseButton) => {
     const cls = useStyles();
     return (
-        <Button disableElevation focusVisibleClassName={cls.buttonFocus} className={cls.button} disabled={disabled} variant={variant} color={color} size="small" onClick={onClick}>
-            {text}
-        </Button>
+        // <div style={{ width: "100%", display: "flex", justifyContent: "right" }}>
+            <Button disableElevation focusVisibleClassName={cls.buttonFocus} className={cls.button} disabled={disabled} variant={variant} color={color} size="small" onClick={onClick}>
+                {text}
+            </Button>
+        // </div>
     );
 };

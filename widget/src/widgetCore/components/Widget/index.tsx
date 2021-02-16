@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { WidgetPreferences } from "src/types";
 
-import { toggleChat, addUserMessage } from "../../store/actions";
+import { _toggleChat, _addUserMessage } from "../../store/actions";
 import { AnyFunction } from "../../utils/types";
 
 import WidgetLayout from "./layout";
@@ -29,7 +29,6 @@ type Props = {
     zoomStep?: number;
     handleSubmit?: AnyFunction;
     customPreferences: WidgetPreferences;
-    openUserDetails: any;
 };
 
 function Widget({
@@ -54,12 +53,11 @@ function Widget({
     zoomStep,
     handleSubmit,
     customPreferences,
-    openUserDetails
 }: Props) {
     const dispatch = useDispatch();
 
     const toggleConversation = () => {
-        dispatch(toggleChat());
+        dispatch(_toggleChat());
     };
 
     const handleMessageSubmit = event => {
@@ -71,7 +69,7 @@ function Widget({
         }
 
         handleSubmit?.(userInput);
-        dispatch(addUserMessage(userInput));
+        dispatch(_addUserMessage(userInput));
         handleNewUserMessage(userInput);
         event.target.message.value = "";
     };
@@ -83,9 +81,8 @@ function Widget({
 
     return (
         <WidgetLayout
-        openUserDetails={openUserDetails}
-          onToggleConversation={toggleConversation}
-              onSendMessage={handleMessageSubmit}
+            onToggleConversation={toggleConversation}
+            onSendMessage={handleMessageSubmit}
             onQuickButtonClicked={onQuickButtonClicked}
             title={title}
             titleAvatar={titleAvatar}

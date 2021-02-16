@@ -14,7 +14,7 @@ const makeChatBodyColor = (props: StyleProps) => {
         color: "white",
         borderRadius: "10px",
         padding: "15px",
-        maxWidth: "70%",
+        maxWidth: "85%",
     };
 
     if (props.backgroundColor) {
@@ -31,7 +31,6 @@ const useStyles = makeStyles(theme => ({
     layout: {
         textAlign: "left",
         overflowX: "scroll",
-
     },
 }));
 

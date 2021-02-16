@@ -10,12 +10,11 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 interface ICustomWidget {
-    setUserDetailsDialogState: any;
     option: SelectedOption;
     preferences: WidgetPreferences;
-};
+}
 
-export const CustomWidget = ({ setUserDetailsDialogState, option, preferences }: ICustomWidget) => {
+export const CustomWidget = ({ option, preferences }: ICustomWidget) => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const client = CreateClient(secretKey);
     const [prefs, setPrefs] = useState<WidgetPreferences>();
@@ -30,7 +29,6 @@ export const CustomWidget = ({ setUserDetailsDialogState, option, preferences }:
         const rootNode = getRootNode(nodes);
 
         renderNextComponent(rootNode, nodes, client, convoId);
-
     };
 
     useEffect(() => {
@@ -60,10 +58,8 @@ export const CustomWidget = ({ setUserDetailsDialogState, option, preferences }:
     const handleSubmit = (msgText: string) => {
         return false;
     };
-    // const tempAvatar = "C:PalavyrDataUserDataa6d4ad3b-efd8AccountLogoa0e31ee9-a120-4aca-8a02-9097f794c8f1.svg";
     return (
         <Widget
-            openUserDetails={setUserDetailsDialogState}
             title={prefs?.title}
             subtitle={prefs?.subtitle}
             senderPlaceHolder={prefs?.placeholder}

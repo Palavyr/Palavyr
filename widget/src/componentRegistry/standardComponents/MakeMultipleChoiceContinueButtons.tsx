@@ -1,5 +1,4 @@
 import * as React from "react";
-import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
 import { getChildNodes } from "../utils";
 import { Table, TableRow, TableCell, makeStyles } from "@material-ui/core";
 import { responseAction, IProgressTheChat } from "..";
@@ -15,8 +14,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const makeMultipleChoiceContinueButtons = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
-    toggleInputDisabled(); // can manually toggle in each component when necessary
-
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0]; // only one should exist
     const valueOptions = node.valueOptions.split(",");
     const Component: React.ElementType<{}> = () => {
@@ -37,7 +34,6 @@ export const makeMultipleChoiceContinueButtons = ({ node, nodeList, client, conv
                                     onClick={() => {
                                         const response = valueOption;
                                         responseAction(node, child, nodeList, client, convoId, response);
-                                        toggleInputDisabled();
                                         setDisabled(true);
                                     }}
                                 />

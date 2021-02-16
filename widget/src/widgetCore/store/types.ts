@@ -17,7 +17,7 @@ export type DynamicResponse = {
 export type DynamicResponses = Array<DynamicResponse>;
 
 export type KeyValue = {
-    [key: string]: string;
+    [key: string]: string | number;
 };
 
 export type KeyValues = Array<KeyValue>;
@@ -61,6 +61,7 @@ export interface BehaviorState {
     showChat: boolean;
     disabledInput: boolean;
     messageLoader: boolean;
+    userDetailsVisible: boolean;
 }
 
 export interface ContextState {

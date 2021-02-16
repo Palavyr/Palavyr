@@ -1,5 +1,4 @@
 import * as React from "react";
-import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
 import { TextField, Table } from "@material-ui/core";
 import { useState } from "react";
 import { IProgressTheChat, responseAction } from "..";
@@ -8,7 +7,6 @@ import { SingleRowSingleCell } from "src/common/TableCell";
 import { ResponseButton } from "src/common/ResponseButton";
 
 export const makeTakeText = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
-    toggleInputDisabled(); // can manually toggle in each component when necessary
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
 
@@ -37,8 +35,8 @@ export const makeTakeText = ({ node, nodeList, client, convoId }: IProgressTheCh
                             onClick={() => {
                                 setResponse(response);
                                 responseAction(node, child, nodeList, client, convoId, response);
-                                toggleInputDisabled();
                                 setDisabled(true);
+
                             }}
                         />
                     </SingleRowSingleCell>

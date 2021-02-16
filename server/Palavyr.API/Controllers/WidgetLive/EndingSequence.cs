@@ -33,7 +33,7 @@ namespace Palavyr.API.Controllers.WidgetLive
                 DefaultNodeTypeOptions.YesNo.StringName,
                 "We'd like to send you an email with some information regarding your enquiry. Would that be okay?",
                 areaId,
-                nodeChildrenString: TreeUtils.CreateNodeChildrenString(sendEmailId, dontSendEmailRestartId), // TODO: Get the nodeIds from the yes and No
+                nodeChildrenString: TreeUtils.CreateNodeChildrenString(sendEmailId, dontSendEmailRestartId),
                 "",
                 TreeUtils.CreateValueOptions(DefaultNodeTypeOptions.YesNo.No, DefaultNodeTypeOptions.YesNo.Yes),
                 accountId,
@@ -63,7 +63,7 @@ namespace Palavyr.API.Controllers.WidgetLive
                 DefaultNodeTypeOptions.Restart.StringName,
                 "Thanks for your time. If you'd like to start again, click the button below.",
                 areaId,
-                "",
+                "Placeholder",
                 DefaultNodeTypeOptions.YesNo.No,
                 "",
                 accountId,
@@ -153,7 +153,7 @@ namespace Palavyr.API.Controllers.WidgetLive
                 DefaultNodeTypeOptions.SendEmail.StringName,
                 "Wait just a moment while I try that again.",
                 areaId,
-                nodeChildrenString: "Placeohlder", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
+                nodeChildrenString: "Placeholder", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
                 "",
                 "",
                 accountId,
@@ -166,7 +166,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             var mayWeSendAnInformationalEmail_ForTooComplicated = ConversationNode.CreateNew(
                 mayWeSendAnEmailTooComplicatedId,
                 DefaultNodeTypeOptions.YesNo.StringName,
-                "We'd like to send you a followup email with some general information regarding your enquiry. Would that be okay?",
+                "We'd like to send you a follow-up email with some general information regarding your enquiry. Would that be okay?",
                 areaId,
                 nodeChildrenString: TreeUtils.CreateNodeChildrenString(sendTooComplicatedEmailId, dontSendEmailRestartId),
                 "",

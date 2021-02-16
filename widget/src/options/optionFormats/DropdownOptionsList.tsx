@@ -8,6 +8,7 @@ import Autocomplete, { AutocompleteRenderInputParams } from "@material-ui/lab/Au
 import classNames from "classnames";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
+import { openUserDetails, toggleUserDetails } from "src/widgetCore/store/dispatcher";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -68,10 +69,9 @@ export interface DropdownListProps {
     setSelectedOption: (option: SelectedOption) => void;
     options: Array<SelectedOption>;
     preferences: WidgetPreferences;
-    setUserDetailsDialogState: Dispatch<SetStateAction<boolean>>;
 }
 
-export const DropdownListOptions = ({ setUserDetailsDialogState, setSelectedOption, options, preferences }: DropdownListProps) => {
+export const DropdownListOptions = ({ setSelectedOption, options, preferences }: DropdownListProps) => {
     const history = useHistory();
     var secretKey = new URLSearchParams(useLocation().search).get("key");
     const cls = useStyles(preferences);
@@ -83,7 +83,7 @@ export const DropdownListOptions = ({ setUserDetailsDialogState, setSelectedOpti
     const onChange = (event: any, newOption: SelectedOption) => {
         setSelectedOption(newOption);
         history.push(`/widget?key=${secretKey}`);
-        setUserDetailsDialogState(true);
+        openUserDetails();
     };
     const sortGetter = (opt: SelectedOption) => opt.areaDisplay;
     const opts = sortByPropertyAlphabetical(sortGetter, options);

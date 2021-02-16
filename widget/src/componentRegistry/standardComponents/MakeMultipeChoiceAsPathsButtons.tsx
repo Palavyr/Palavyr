@@ -1,6 +1,5 @@
 import * as React from "react";
 import { ConvoTableRow } from "../../types";
-import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
 import { getChildNodes } from "../utils";
 import { TableRow, TableCell, Table, makeStyles, Typography } from "@material-ui/core";
 import { responseAction, IProgressTheChat } from "..";
@@ -8,17 +7,13 @@ import { ResponseButton } from "../../common/ResponseButton";
 import { useState } from "react";
 import { sortChildrenByOptions } from "src/common/sorting";
 
-
 const useStyles = makeStyles(() => ({
     table: {
         borderBottom: "none",
     },
 }));
 
-export const makeMultipleChoiceAsPathButtons = ({ node, nodeList, client, convoId, }: IProgressTheChat) => {
-
-    toggleInputDisabled(); // can manually toggle in each component when necessary
-
+export const makeMultipleChoiceAsPathButtons = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
     const children = getChildNodes(node.nodeChildrenString, nodeList);
     const sortedChildren = sortChildrenByOptions(children);
 
@@ -41,7 +36,6 @@ export const makeMultipleChoiceAsPathButtons = ({ node, nodeList, client, convoI
                                         onClick={() => {
                                             var response = child.optionPath;
                                             responseAction(node, child, nodeList, client, convoId, response);
-                                            toggleInputDisabled();
                                             setDisabled(true);
                                         }}
                                     />

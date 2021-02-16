@@ -3,9 +3,10 @@ import classNames from "classnames";
 import React from "react";
 import { WidgetPreferences } from "src/types";
 import SettingsIcon from '@material-ui/icons/Settings';
-// const close = require("assets/clear-button.svg") as string;
 
 import "./style.scss";
+import { openUserDetails } from "src/widgetCore/store/dispatcher";
+// import { toggleUserDetails } from "src/widgetCore/store/dispatcher";
 
 type Props = {
     title: string;
@@ -14,7 +15,6 @@ type Props = {
     showCloseButton: boolean;
     titleAvatar?: string;
     customPreferences: WidgetPreferences;
-    openUserDetails: any;
 };
 
 type StyleProps = {
@@ -56,11 +56,11 @@ const useStyles = makeStyles({
     }
 });
 
-function Header({ title, subtitle, toggleChat, showCloseButton, titleAvatar, customPreferences, openUserDetails }: Props) {
+function Header({ title, subtitle, toggleChat, showCloseButton, titleAvatar, customPreferences }: Props) {
     const cls = useStyles({ headerColor: customPreferences.headerColor, headerFontColor: customPreferences.headerFontColor });
     return (
         <div className={classNames(cls.header, cls.flexProperty)}>
-            <SettingsIcon className={cls.settingsIcon} onClick={openUserDetails} />
+            <SettingsIcon className={cls.settingsIcon} onClick={() => openUserDetails()} />
             <h4 className={"rcw-title"}>
                 {titleAvatar && <img src={titleAvatar} className="avatar" alt="profile" />}
                 {title}

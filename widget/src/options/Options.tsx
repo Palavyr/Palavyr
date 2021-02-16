@@ -10,10 +10,9 @@ import { SetStateAction } from "react";
 interface IOptionSelector {
     setSelectedOption: (option: SelectedOption) => void;
     preferences: WidgetPreferences;
-    setUserDetailsDialogState: Dispatch<SetStateAction<boolean>>;
 }
 
-export const OptionSelector = ({ setSelectedOption, preferences, setUserDetailsDialogState}: IOptionSelector) => {
+export const OptionSelector = ({ setSelectedOption, preferences}: IOptionSelector) => {
     var secretKey = new URLSearchParams(useLocation().search).get("key");
     const Client = CreateClient(secretKey);
 
@@ -37,7 +36,7 @@ export const OptionSelector = ({ setSelectedOption, preferences, setUserDetailsD
 
     return (
         <div style={{position: "fixed", display: "flex", flexDirection: "column", width: "100%", height: "100%"}}>
-            <DropdownListOptions setUserDetailsDialogState={setUserDetailsDialogState} options={options} setSelectedOption={setSelectedOption} preferences={preferences} />
+            <DropdownListOptions options={options} setSelectedOption={setSelectedOption} preferences={preferences} />
         </div>
     );
 };

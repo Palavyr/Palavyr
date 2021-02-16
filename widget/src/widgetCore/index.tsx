@@ -1,11 +1,6 @@
 import React from "react";
-import { Provider } from "react-redux";
 import { WidgetPreferences } from "src/types";
-
 import Widget from "./components/Widget";
-
-import store from "./store";
-
 import { AnyFunction } from "./utils/types";
 
 type Props = {
@@ -30,7 +25,6 @@ type Props = {
     zoomStep?: number;
     handleSubmit?: AnyFunction;
     customPreferences: WidgetPreferences;
-    openUserDetails: any;
 } & typeof defaultProps;
 
 function ConnectedWidget({
@@ -55,11 +49,9 @@ function ConnectedWidget({
     zoomStep,
     handleSubmit,
     customPreferences,
-    openUserDetails,
 }: Props) {
     return (
         <Widget
-            openUserDetails={openUserDetails}
             title={title}
             titleAvatar={titleAvatar}
             subtitle={subtitle}

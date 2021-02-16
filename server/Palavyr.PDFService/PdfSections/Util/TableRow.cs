@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace PDFService.Sections.Util
+namespace PDFService.PdfSections.Util
 {
     public class TableRow
     {
@@ -33,7 +33,9 @@ namespace PDFService.Sections.Util
         private string FormatRowValue(double min, double max, bool range)
         {
             if (range)
+            {
                 return ConvertToCurrencyWithCulture(min) + " - " + ConvertToCurrencyWithCulture(max);
+            }
             return ConvertToCurrencyWithCulture(min);
         }
 

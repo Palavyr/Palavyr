@@ -4,7 +4,7 @@ import cn from "classnames";
 
 import { GlobalState } from "../../store/types";
 import { AnyFunction } from "../../utils/types";
-import { openFullscreenPreview } from "../../store/actions";
+import { _openFullscreenPreview } from "../../store/actions";
 
 import Conversation from "./components/Conversation";
 import Launcher from "./components/Launcher";
@@ -35,7 +35,6 @@ type Props = {
     imagePreview?: boolean;
     zoomStep?: number;
     customPreferences: WidgetPreferences;
-    openUserDetails: any;
 };
 
 function WidgetLayout({
@@ -59,8 +58,7 @@ function WidgetLayout({
     showTimeStamp,
     imagePreview,
     zoomStep,
-    customPreferences,
-    openUserDetails
+    customPreferences
 }: Props) {
     const dispatch = useDispatch();
     const { dissableInput, showChat, visible } = useSelector((state: GlobalState) => ({
@@ -89,7 +87,7 @@ function WidgetLayout({
                 width: naturalWidth,
                 height: naturalHeight,
             };
-            dispatch(openFullscreenPreview(obj));
+            dispatch(_openFullscreenPreview(obj));
         }
     };
 
@@ -120,7 +118,6 @@ function WidgetLayout({
         >
             {showChat && (
                 <Conversation
-                    openUserDetails={openUserDetails}
                     title={title}
                     subtitle={subtitle}
                     sendMessage={onSendMessage}

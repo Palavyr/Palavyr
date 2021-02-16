@@ -6,16 +6,16 @@ import { useLocation } from "react-router-dom";
 import CreateClient, { IClient } from "./client/Client";
 import { CustomWidget } from "./widget/CustomWidget";
 import { CollectDetailsForm } from "./common/UserDetailsDialog/CollectDetailsForm";
-import { Provider } from "react-redux";
-import store from "./widgetCore/store";
-
+import { useSelector } from "react-redux";
+import { GlobalState } from "./widgetCore/store/types";
 
 export const App = () => {
+    const userDetailsVisible = useSelector((state: GlobalState) => state.behavior.userDetailsVisible);
+
     const [selectedOption, setSelectedOption] = useState<SelectedOption | null>(null);
     const [isReady, setIsReady] = useState<boolean>(false);
     const [widgetPrefs, setWidgetPrefs] = useState<WidgetPreferences>();
 
-    const [userDetailsDialogState, setUserDetailsDialogstate] = useState<boolean>(false);
     const [chatStarted, setChatStarted] = useState<boolean>(false);
 
     const secretKey = new URLSearchParams(useLocation().search).get("key");
@@ -39,17 +39,12 @@ export const App = () => {
     }, [runAppPrecheck]);
 
     return (
-        <Provider store={store}>
-            {isReady === true && selectedOption === null && !userDetailsDialogState && <OptionSelector setUserDetailsDialogState={setUserDetailsDialogstate} setSelectedOption={setSelectedOption} preferences={widgetPrefs} />}
+        <>
+            {isReady === true && selectedOption === null && !userDetailsVisible && <OptionSelector setSelectedOption={setSelectedOption} preferences={widgetPrefs} />}
             {isReady === true && selectedOption !== null && (
                 <>
-                    <div style={{ display: userDetailsDialogState ? null : "none", zIndex: 9999 }}>
-                        <CollectDetailsForm chatStarted={chatStarted} setChatStarted={setChatStarted}  userDetailsDialogState={userDetailsDialogState} setUserDetailsDialogState={setUserDetailsDialogstate} />
-                    </div>
-
-                    <div style={{ display: userDetailsDialogState ? "none" : null, zIndex: 9999 }}>
-                        <CustomWidget setUserDetailsDialogState={setUserDetailsDialogstate} option={selectedOption} preferences={widgetPrefs} />
-                    </div>
+                    <CollectDetailsForm chatStarted={chatStarted} setChatStarted={setChatStarted} />
+                    <CustomWidget option={selectedOption} preferences={widgetPrefs} />
                 </>
             )}
             {isReady === false && (
@@ -57,6 +52,6 @@ export const App = () => {
                     <span>Not ready</span>
                 </div>
             )}
-        </Provider>
+        </>
     );
 };

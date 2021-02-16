@@ -1,5 +1,4 @@
 import * as React from "react";
-import { toggleInputDisabled } from "src/widgetCore/store/dispatcher";
 import { Table } from "@material-ui/core";
 import { useState } from "react";
 import { IProgressTheChat, responseAction } from "..";
@@ -7,9 +6,9 @@ import { getChildNodes } from "../utils";
 import { ResponseButton } from "../../common/ResponseButton";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import { SingleRowSingleCell } from "src/common/TableCell";
+import { addKeyValue } from "src/widgetCore/store/dispatcher";
 
 export const makeTakeCurrency = ({ node, nodeList, client, convoId, }: IProgressTheChat) => {
-    toggleInputDisabled();
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
 
@@ -44,7 +43,7 @@ export const makeTakeCurrency = ({ node, nodeList, client, convoId, }: IProgress
                             disabled={disabled}
                             onClick={() => {
                                 responseAction(node, child, nodeList, client, convoId, response.toString());
-                                toggleInputDisabled();
+                                addKeyValue({[node.text]: response});
                                 setDisabled(true);
                             }}
                         />
