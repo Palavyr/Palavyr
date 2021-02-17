@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.Extensions.Logging;
+using Server.Domain.Accounts;
 using Subscription = Stripe.Subscription;
 
 namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
@@ -28,6 +29,8 @@ namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
             if (subscription.CancelAtPeriodEnd)
             {
                 account.CurrentPeriodEnd = subscription.CurrentPeriodEnd;
+                // if we are canceling at period end, then we've cancelled the subscription
+                account.PlanType = UserAccount.PlanTypeEnum.Free;
             }
             else
             {
@@ -36,6 +39,11 @@ namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers
                 var paymentIntervalEnum = paymentInterval.GetPaymentIntervalEnum();
                 var bufferedPeriodEnd = paymentIntervalEnum.AddEndTimeBuffer(subscription.CurrentPeriodEnd);
                 account.CurrentPeriodEnd = bufferedPeriodEnd;
+                
+                // check the updated subscription type and apply
+                var productId = stripeSubscriptionService.GetProductId(priceDetails);
+                var planTypeEnum = ProductRegistry.GetPlanTypeEnum(productId);
+                account.PlanType = planTypeEnum;
             }
 
             await accountsContext.SaveChangesAsync();
