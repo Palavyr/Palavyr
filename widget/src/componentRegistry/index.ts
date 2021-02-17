@@ -36,7 +36,7 @@ export const responseAction = (
 
     if (response) {
         if (node.isCritical) {
-            addKeyValue({ [node.text]: response })
+            addKeyValue({ [node.text]: response.toString() })
         }
 
         if (child.optionPath !== null && child.optionPath !== "" && child.optionPath !== "Continue") {

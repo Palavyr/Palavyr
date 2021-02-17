@@ -25,8 +25,15 @@ export const makeSendEmail = ({ node, nodeList, client, convoId }: IProgressTheC
         const email = contextProperties[ConvoContextProperties.emailAddress];
         const name = contextProperties[ConvoContextProperties.name];
         const phone = contextProperties[ConvoContextProperties.phoneNumber];
-        const dynamicResponses = contextProperties[ConvoContextProperties.dynamicResponses];
-        const keyvalues = contextProperties[ConvoContextProperties.keyValues];
+        let dynamicResponses = contextProperties[ConvoContextProperties.dynamicResponses];
+        let keyvalues = contextProperties[ConvoContextProperties.keyValues];
+
+        if (!keyvalues){
+            keyvalues = [];
+        }
+        if (!dynamicResponses){
+            dynamicResponses = [];
+        }
 
         const { data: response } = await client.Widget.Access.sendConfirmationEmail(areaId, email, name, phone, dynamicResponses, keyvalues, convoId);
         if (response.result) {
@@ -41,10 +48,8 @@ export const makeSendEmail = ({ node, nodeList, client, convoId }: IProgressTheC
         const [loading, setLoading] = useState<boolean>(false);
         return (
             <>
+                {node.text}
                 <Table>
-                    <TableRow>
-                        <TableCell>{node.text}</TableCell>
-                    </TableRow>
                     <TableRow>
                         <TableCell>
                             <ResponseButton
@@ -62,7 +67,7 @@ export const makeSendEmail = ({ node, nodeList, client, convoId }: IProgressTheC
                         </TableCell>
                     </TableRow>
                 </Table>
-                <div style={{ width: "100%", display: "flex", justifyContent: "right" }}>{loading && <CircularProgress />}</div>
+                <div style={{ width: "100%", display: "flex", justifyContent: "center", textAlign: "center" }}>{loading && <CircularProgress />}</div>
             </>
         );
     };

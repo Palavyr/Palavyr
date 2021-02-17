@@ -1,17 +1,17 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Conversation, NodeTypeOptions } from "@Palavyr-Types";
-import { getRootNode, addNodes } from "./nodes/conversationNodeUtils";
+import { getRootNode } from "./nodes/conversationNodeUtils";
 import { ApiClient } from "@api-client/Client";
 import { cloneDeep } from "lodash";
 import { ConversationNode } from "./nodes/ConversationNode";
 import { MissingDynamicNodes } from "./MissingDynamicNodes";
-import { Button, makeStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import "./ConvoTree.css";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     conversation: {
         position: "static",
         overflow: "auto",
@@ -21,9 +21,8 @@ const useStyles = makeStyles((theme) => ({
 export const ConvoTree = () => {
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
-    const { areaName: treeName } = React.useContext(DashboardContext);
 
-    const [loaded, setLoaded] = useState<boolean>(false);
+    const [, setLoaded] = useState<boolean>(false);
     const [nodeList, setNodes] = useState<Conversation>([]); // nodeList and state updater for the tree
     const rootNode = getRootNode(nodeList);
     const [nodeOptionList, setNodeOptionList] = useState<NodeTypeOptions>([]);
