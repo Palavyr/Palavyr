@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Palavyr.PDFService", "Palav
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Palavyr.EmailService", "Palavyr.EmailService\Palavyr.EmailService.csproj", "{C5433525-3138-40A9-A5EC-38E08935F509}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Palavyr.Tests", "Palavyr.Tests\Palavyr.Tests.csproj", "{3CCE0B8A-0DA0-4611-A651-E1F6280D8D02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Palavyr.UnitTests", "Palavyr.UnitTests\Palavyr.UnitTests.csproj", "{3CCE0B8A-0DA0-4611-A651-E1F6280D8D02}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Palavyr.Background", "Palavyr.Background\Palavyr.Background.csproj", "{A5D1779C-CF03-48E0-9378-C96B29091C5F}"
 EndProject
@@ -24,6 +24,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.BackupAndRestore", "Palavyr.BackupAndRestore\Palavyr.BackupAndRestore.csproj", "{8167EBA0-D6F6-4EB6-AF16-D7250BEEB0A5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.Amazon", "Palavyr.Amazon\Palavyr.Amazon.csproj", "{3A105D41-5B8A-41ED-BF1B-9AC6897D9479}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Palavyr.Testing", "Palavyr.Testing", "{4205BA0C-DAB4-429E-963B-88A095E9AD29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,5 +83,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6315530F-C240-4BFB-828F-9F535D691703}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3CCE0B8A-0DA0-4611-A651-E1F6280D8D02} = {4205BA0C-DAB4-429E-963B-88A095E9AD29}
 	EndGlobalSection
 EndGlobal

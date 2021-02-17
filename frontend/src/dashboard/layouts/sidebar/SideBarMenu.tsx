@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory, NavLink, Redirect } from "react-router-dom";
+import { useHistory, NavLink } from "react-router-dom";
 import { List, ListItem, ListItemIcon, ListItemText, Collapse, Divider, makeStyles, FormControlLabel } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
@@ -12,21 +12,19 @@ import CompareIcon from "@material-ui/icons/Compare";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import { AuthContext, DashboardContext } from "../DashboardContext";
 import { GeneralSettingsLoc, PurchaseTypes } from "@Palavyr-Types";
 import { IOSSwitch } from "@common/components/IOSSwitch";
 import PaymentIcon from "@material-ui/icons/Payment";
-import { ApiClient } from "@api-client/Client";
-import { webUrl } from "@api-client/clientUtils";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 
 export interface ISideBarMenu {
     areaIdentifiers: Array<string>;
     areaNames: Array<string>;
     widgetIsActive: boolean | undefined;
     updateWidgetIsActive(): void;
+    createCustomerPortalSession(): void;
 }
 type StyleProps = {
     complete: boolean;
@@ -58,7 +56,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, updateWidgetIsActive }: ISideBarMenu) => {
+export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, updateWidgetIsActive, createCustomerPortalSession }: ISideBarMenu) => {
+
     const [configureOpen, setConfigureOpen] = useState(true);
     const [reviewOpen, setReviewOpen] = useState(true);
     const [billingOpen, setBillingOpen] = useState(true);
@@ -68,16 +67,7 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, update
     const { isActive } = React.useContext(AuthContext);
     const { checkAreaCount, setViewName, subscription } = React.useContext(DashboardContext);
 
-    var returnUrl = `${webUrl}/dashboard/`;
-
     const classes = useStyles();
-
-    const createCustomerPortalSession = async () => {
-        const client = new ApiClient();
-        const { data: customerId } = await client.Purchase.Customer.GetCustomerId();
-        const { data: portalUrl } = await client.Purchase.Customer.GetCustomerPortal(customerId, returnUrl);
-        window.location.href = portalUrl;
-    };
 
     return (
         <div className={classes.SideBarList}>
