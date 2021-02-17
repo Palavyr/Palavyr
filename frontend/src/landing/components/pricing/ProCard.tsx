@@ -47,6 +47,14 @@ export const ProCard = ({ border }: ICard) => {
                         </TableRow>
                         <TableRow className={cls.tableRow}>
                             <TableCell classes={{ root: cls.tableRoot }} className={cls.tablecellLeft} align="left">
+                                Areas
+                            </TableCell>
+                            <TableCell classes={{ root: cls.tableRoot }} className={cls.tablecellRight} align="right">
+                                Unlimited
+                            </TableCell>
+                        </TableRow>
+                        <TableRow className={cls.tableRow}>
+                            <TableCell classes={{ root: cls.tableRoot }} className={cls.tablecellLeft} align="left">
                                 Enquiries Dashboard
                             </TableCell>
                             <TableCell classes={{ root: cls.tableRoot }} className={cls.tablecellRight} align="right">

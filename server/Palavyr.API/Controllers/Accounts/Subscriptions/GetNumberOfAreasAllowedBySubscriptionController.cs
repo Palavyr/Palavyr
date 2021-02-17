@@ -21,7 +21,7 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
         {
             var numAreasAllowed = (await accountsContext
                 .Subscriptions
-                .SingleOrDefaultAsync(row => row.AccountId == accountId))
+                .SingleAsync(row => row.AccountId == accountId))
                 .NumAreas;
             return numAreasAllowed;
         }

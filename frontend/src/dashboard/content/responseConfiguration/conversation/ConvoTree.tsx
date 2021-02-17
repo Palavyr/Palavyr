@@ -7,7 +7,6 @@ import { ConversationNode } from "./nodes/ConversationNode";
 import { MissingDynamicNodes } from "./MissingDynamicNodes";
 import { makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import "./ConvoTree.css";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
@@ -19,8 +18,8 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const ConvoTree = () => {
-    const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
+    const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
     const [, setLoaded] = useState<boolean>(false);
     const [nodeList, setNodes] = useState<Conversation>([]); // nodeList and state updater for the tree

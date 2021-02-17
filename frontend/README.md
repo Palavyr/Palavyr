@@ -2,6 +2,7 @@
 
 The Frontend for the configuration manager is where users can configure their conversations, as well as the responses that are sent. Users can configure decision trees, provide detailed or itemized fee estimates, and configure the emails that sent in reponse to a successful convrsation.
 
+Count Lines: https://github.com/AlDanial/cloc/releases/tag/1.88
 # Setup and dev
 
 The frontend requires [node.js](https://nodejs.org/en/) and npm to install. With this, you can run:

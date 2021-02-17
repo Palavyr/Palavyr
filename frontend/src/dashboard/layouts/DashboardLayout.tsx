@@ -19,6 +19,8 @@ import Drawer from "@material-ui/core/Drawer";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
 import { DashboardContext } from "./DashboardContext";
+import { webUrl } from "@api-client/clientUtils";
+
 
 const fetchSidebarInfo = (areaData: Areas) => {
     const areaIdentifiers = areaData.map((x: AreaTable) => x.areaIdentifier);
@@ -186,6 +188,14 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         }
     };
 
+    const createCustomerPortalSession = async () => {
+        const client = new ApiClient();
+        var returnUrl = `${webUrl}/dashboard/`;
+        const { data: customerId } = await client.Purchase.Customer.GetCustomerId();
+        const { data: portalUrl } = await client.Purchase.Customer.GetCustomerPortal(customerId, returnUrl);
+        window.location.href = portalUrl;
+    };
+
     const alertDetails: AlertType = {
         title: "Maximum areas reached",
         message: "Thanks for using Palavyr! Please consider purchasing a subscription to increase the number of areas you can provide.",
@@ -212,7 +222,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                     <>
                         <SideBarHeader handleDrawerClose={handleDrawerClose} />
                         <Divider />
-                        <SideBarMenu areaIdentifiers={sidebarIds} areaNames={sidebarNames} widgetIsActive={widgetState} updateWidgetIsActive={updateWidgetIsActive} />
+                        <SideBarMenu areaIdentifiers={sidebarIds} areaNames={sidebarNames} widgetIsActive={widgetState} updateWidgetIsActive={updateWidgetIsActive} createCustomerPortalSession={createCustomerPortalSession}/>
                     </>
                 </Drawer>
                 <ContentLoader open={open}>{children}</ContentLoader>
