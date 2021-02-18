@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         borderRadius: "10px",
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
-        border: '2px dashed red',
+        border: '2px solid black',
         outlineWidth: "0px",
         zIndex: 99999
     },
@@ -49,6 +49,7 @@ export const CustomAlert = ({ alertState, setAlert, alert }: ICustomAlert) => {
             closeAfterTransition
             BackdropComponent={Backdrop}
             BackdropProps={{
+                style: {zIndex: 999999},
                 timeout: 100,
             }}
         >
