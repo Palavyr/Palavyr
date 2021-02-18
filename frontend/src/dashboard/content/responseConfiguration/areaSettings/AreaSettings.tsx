@@ -9,6 +9,7 @@ import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { OsTypeToggle } from "./enableAreas/OsTypeToggle";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles(() => ({
     titleText: {
@@ -29,6 +30,8 @@ export const AreaSettings = () => {
     var client = new ApiClient();
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
+    const { setIsLoading } = React.useContext(DashboardContext);
+
     const [loaded, setLoaded] = useState<boolean>(false);
     const [alertState, setAlertState] = useState<boolean>(false);
     const [settings, setSettings] = useState<Partial<Settings>>({
@@ -47,6 +50,7 @@ export const AreaSettings = () => {
     const history = useHistory();
 
     const loadSettings = useCallback(async () => {
+        setIsLoading(true);
         var { data: areaData } = await client.Area.GetArea(areaIdentifier);
         setSettings({
             emailAddress: areaData.areaSpecificEmail,
@@ -58,7 +62,7 @@ export const AreaSettings = () => {
             isComplete: areaData.isComplete,
         });
         setIsCompleteState(areaData.isComplete);
-
+        setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
 

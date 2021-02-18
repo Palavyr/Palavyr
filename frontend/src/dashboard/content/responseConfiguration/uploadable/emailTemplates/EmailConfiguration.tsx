@@ -11,6 +11,7 @@ import { EditorDetails } from "./EditorDetails";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { OsTypeToggle } from "../../areaSettings/enableAreas/OsTypeToggle";
 import { EmailSubject } from "dashboard/content/settings/subject/EmailSubject";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const buttonText = "Add Email Template";
 const summary = "Upload a new Email Response";
@@ -38,6 +39,8 @@ export const EmailConfiguration = () => {
 
     const [modalState, setModalState] = useState<boolean>(false);
     const [fallbackModalState, setFallbackModalState] = useState<boolean>(false);
+
+    const { setIsLoading } = React.useContext(DashboardContext);
 
     const toggleModal = () => {
         setModalState(!modalState);
@@ -160,11 +163,13 @@ export const EmailConfiguration = () => {
         async () => {
             const {data: fallbackSubject} = await client.Configuration.Email.GetAreaFallbackSubject(areaIdentifier);
             setAreaFallbackSubjectState(fallbackSubject);
+            setIsLoading(false);
         },
         [areaIdentifier],
     )
 
     useEffect(() => {
+        setIsLoading(true);
         loadEmailTemplate();
         loadFallbackTemplate();
         loadSettings();
@@ -218,7 +223,6 @@ export const EmailConfiguration = () => {
         const { data: updatedSubject } = await client.Configuration.Email.SaveAreaFallbackSubject(areaIdentifier, areaFallbackSubjectState);
         setAreaFallbackSubjectState(updatedSubject);
     };
-
 
     return (
         <>

@@ -10,6 +10,7 @@ import { StaticTableConfiguration } from "./tables/statictable/StaticFeeTableCon
 import { makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles(() => ({
     titleText: {
@@ -30,6 +31,8 @@ export const ResponseConfiguration = () => {
     const staticTablesModifier = new StaticTablesModifier(setStaticTables);
     const prologueModifier = new LogueModifier(setPrologue);
     const epilogueModifier = new LogueModifier(setEpilogue);
+
+    const { setIsLoading } = React.useContext(DashboardContext);
 
     const savePrologue = async () => {
         const { data: _prologue_ } = await client.Configuration.updatePrologue(areaIdentifier, prologue);
@@ -62,13 +65,14 @@ export const ResponseConfiguration = () => {
     };
 
     const loadEstimateConfiguration = useCallback(async () => {
+        setIsLoading(true);
         const { data } = await client.Configuration.getEstimateConfiguration(areaIdentifier);
         const { prologue, epilogue, staticTablesMetas } = data;
         setPrologue(cloneDeep(prologue));
         setEpilogue(cloneDeep(epilogue));
         setStaticTables(staticTablesMetas);
         setLoaded(true);
-
+        setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
 

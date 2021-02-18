@@ -1,16 +1,15 @@
-import React, { useState, useCallback, useEffect, ReactNode } from "react";
-import { Divider, makeStyles, Typography } from "@material-ui/core";
+import React, { useState, useCallback } from "react";
+import { Divider, makeStyles } from "@material-ui/core";
 import { CookieConsent } from "legal/cookies/CookieConsent";
 import { LandingPageDialogSelector } from "@landing/components/dialogSelector/LandingPageDialogSelector";
 import { CookieRules } from "legal/cookies/CookieRules";
 import { Header } from "./components/header/Header";
 import { Footer } from "./components/footer/Footer";
 import { DialogTypes } from "@landing/components/dialogSelector/dialogTypes";
-import Auth from "auth/Auth";
-import { useHistory } from "react-router-dom";
 import { TwoItemRow } from "./components/TwoItemRow/TwoItemRow";
 import { PricingSection } from "./components/pricing/PricingSection";
 import { rowOne, rowTwo, rowThree } from "./components/landingContent/twoItemRowContent";
+
 
 import AOS from 'aos';
 import { Sliver } from "./components/sliver/Sliver";
@@ -47,7 +46,6 @@ export const LandingPage = () => {
     const [dialogOpen, setDialogOpen] = useState<DialogTypes>(null);
     const [isCookieRulesDialogOpen, setIsCookieRulesDialogOpen] = useState<boolean>(false);
 
-    const history = useHistory();
 
     const openLoginDialog = useCallback(() => {
         setDialogOpen("login");

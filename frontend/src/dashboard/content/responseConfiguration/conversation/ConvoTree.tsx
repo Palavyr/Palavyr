@@ -9,6 +9,7 @@ import { makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import "./ConvoTree.css";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles(() => ({
     conversation: {
@@ -25,9 +26,9 @@ export const ConvoTree = () => {
     const [nodeList, setNodes] = useState<Conversation>([]); // nodeList and state updater for the tree
     const rootNode = getRootNode(nodeList);
     const [nodeOptionList, setNodeOptionList] = useState<NodeTypeOptions>([]);
-
-    // const [requiredNodes, setRequiredNodes] = useState<Array<string[]>>([]);
     const [missingNodeTypes, setMissingNodeTypes] = useState<string[]>([]);
+
+    const { setIsLoading } = React.useContext(DashboardContext);
 
     const classes = useStyles();
 
@@ -39,13 +40,16 @@ export const ConvoTree = () => {
 
         setNodeOptionList(nodeOptionList);
         setNodes(cloneDeep(nodes));
+        setIsLoading(false);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
 
     useEffect(() => {
+        setIsLoading(true);
         setLoaded(true);
         loadNodes();
+
         return () => {
             setLoaded(false);
         };

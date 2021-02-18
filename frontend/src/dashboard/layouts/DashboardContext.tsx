@@ -8,6 +8,7 @@ interface IDashboardContext {
     setViewName: Dispatch<SetStateAction<string>>;
     subscription: PlanType | undefined;
     currencySymbol: string;
+    setIsLoading: Dispatch<SetStateAction<boolean>>;
 }
 
 interface IAuthContext {

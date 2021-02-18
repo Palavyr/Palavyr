@@ -2,9 +2,9 @@ import { ApiClient } from "@api-client/Client";
 import React, { useState, useEffect } from "react";
 import { FileLink } from "@Palavyr-Types";
 import { makeStyles, Paper } from "@material-ui/core";
-import { PreviewHelp } from "dashboard/content/help/PreviewHelp";
 import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const MediaType = "application/pdf";
 
@@ -21,6 +21,7 @@ const useStyles = makeStyles(theme => ({
 export const ConfigurationPreview = () => {
     var client = new ApiClient();
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
+    const { setIsLoading } = React.useContext(DashboardContext);
 
     const [preview, setPreview] = useState<FileLink>();
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -30,10 +31,12 @@ export const ConfigurationPreview = () => {
     const loadPreview = React.useCallback(async () => {
         var { data: fileLink } = await client.Configuration.Preview.fetchPreview(areaIdentifier);
         setPreview(fileLink);
+        setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier])
 
     useEffect(() => {
+        setIsLoading(true);
         loadPreview();
         setLoaded(true);
         return () => {

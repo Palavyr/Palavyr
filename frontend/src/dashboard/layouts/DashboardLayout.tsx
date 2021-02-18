@@ -21,7 +21,6 @@ import classNames from "classnames";
 import { DashboardContext } from "./DashboardContext";
 import { webUrl } from "@api-client/clientUtils";
 
-
 const fetchSidebarInfo = (areaData: Areas) => {
     const areaIdentifiers = areaData.map((x: AreaTable) => x.areaIdentifier);
     const areaNames = areaData.map((x: AreaTable) => x.areaName);
@@ -57,7 +56,6 @@ const useStyles = makeStyles((theme) => ({
     },
     menuDrawerPaper: {
         width: DRAWER_WIDTH,
-        // backgroundColor: "#535c68",
         backgroundColor: "#c7ecee",
     },
     helpDrawerPaper: {
@@ -95,6 +93,8 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [widgetState, setWidgetState] = useState<boolean | undefined>();
     const [planType, setPlanType] = useState<PlanType>();
     const [currencySymbol, setCurrencySymbol] = useState<string>("");
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const cls = useStyles(helpOpen);
     const theme = useTheme();
@@ -204,10 +204,11 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     };
 
     return (
-        <DashboardContext.Provider value={{ currencySymbol: currencySymbol, subscription: planType, numAreasAllowed, checkAreaCount, areaName: currentViewName, setViewName: setViewName }}>
+        <DashboardContext.Provider value={{ setIsLoading: setIsLoading, currencySymbol: currencySymbol, subscription: planType, numAreasAllowed, checkAreaCount, areaName: currentViewName, setViewName: setViewName }}>
             <div className={cls.root}>
                 <CssBaseline />
                 <DashboardHeader open={open} handleDrawerOpen={handleDrawerOpen} handleHelpDrawerOpen={handleHelpDrawerOpen} helpOpen={helpOpen} title={currentViewName} />
+
                 <Drawer
                     className={classNames(cls.menuDrawer, cls.menuBorder)}
                     variant="persistent"
@@ -222,10 +223,10 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                     <>
                         <SideBarHeader handleDrawerClose={handleDrawerClose} />
                         <Divider />
-                        <SideBarMenu areaIdentifiers={sidebarIds} areaNames={sidebarNames} widgetIsActive={widgetState} updateWidgetIsActive={updateWidgetIsActive} createCustomerPortalSession={createCustomerPortalSession}/>
+                        <SideBarMenu areaIdentifiers={sidebarIds} areaNames={sidebarNames} widgetIsActive={widgetState} updateWidgetIsActive={updateWidgetIsActive} createCustomerPortalSession={createCustomerPortalSession} />
                     </>
                 </Drawer>
-                <ContentLoader open={open}>{children}</ContentLoader>
+                <ContentLoader isLoading={isLoading} open={open}>{children}</ContentLoader>
                 <Drawer
                     className={cls.helpDrawer}
                     variant="persistent"

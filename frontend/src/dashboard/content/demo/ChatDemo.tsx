@@ -12,7 +12,7 @@ import { CustomSelect } from "../responseConfiguration/response/tables/dynamicTa
 import { AreasInNeedOfAttention } from "./AreasInNeedOfAttention";
 import { DemoTextInput } from "./DemoTextInput";
 import { ChatDemoHeader } from "./ChatDemoHeader";
-import { flatten } from "lodash";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     formroot: {
@@ -125,6 +125,7 @@ export const ChatDemo = () => {
     const [chatBubbleColor, setChatBubbleColor] = useState<string>("");
 
     const cls = useStyles(incompleteAreas.length > 0);
+    const { setIsLoading } = React.useContext(DashboardContext);
 
     const loadMissingNodes = useCallback(async () => {
         const { data: PreCheckResult } = await client.WidgetDemo.RunConversationPrecheck();
@@ -164,6 +165,7 @@ export const ChatDemo = () => {
     }, [loadMissingNodes]);
 
     const loadDemoWidget = useCallback(async () => {
+        setIsLoading(true);
         const { data: key } = await client.Settings.Account.getApiKey();
         setApiKey(key);
 
@@ -183,6 +185,8 @@ export const ChatDemo = () => {
         setOptionsHeaderFontColor(optionsHeaderFontColor);
         setChatFontColor(chatFontColor);
         setChatBubbleColor(chatBubbleColor);
+        setIsLoading(false);
+
     }, []);
 
     useEffect(() => {

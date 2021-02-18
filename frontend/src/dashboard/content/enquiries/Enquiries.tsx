@@ -6,6 +6,7 @@ import { sortByPropertyNumeric } from "@common/utils/sorting";
 import classNames from "classnames";
 import { CONVERSATION_REVIEW, CONVERSATION_REVIEW_PARAMNAME } from "@constants";
 import { webUrl } from "@api-client/clientUtils";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     headerCell: {
@@ -30,12 +31,13 @@ export const Enquires = () => {
 
     const [enquiries, setEnquiries] = useState<Enquiries>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const { setIsLoading } = React.useContext(DashboardContext);
 
     const loadEnquiries = useCallback(async () => {
         var { data: enqs } = await client.Enquiries.getEnquiries();
         setEnquiries(enqs);
         setLoading(false);
-
+        setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [setLoading]);
 
@@ -44,23 +46,35 @@ export const Enquires = () => {
     };
 
     const toggleSeenValue = async (conversationId: string) => {
+        setIsLoading(true);
         await client.Enquiries.updateEnquiry(conversationId);
         var { data: enqs } = await client.Enquiries.getEnquiries();
         setEnquiries(enqs);
+        setIsLoading(false);
     };
 
     const formConversationReviewPath = (conversationId: string) => {
         return webUrl + CONVERSATION_REVIEW + `?${CONVERSATION_REVIEW_PARAMNAME}=${conversationId}`;
     };
 
+    const markAsSeen = async (conversationId: string) => {
+        setIsLoading(true);
+        await client.Enquiries.updateEnquiry(conversationId);
+        setIsLoading(false);
+    };
+
     useEffect(() => {
+        setIsLoading(true);
         loadEnquiries();
     }, [loadEnquiries]);
 
     const NoDataAvailable = () => {
         return (
-            <div style={{paddingTop: "3rem"}}>
-                <Typography align="center" variant="h4">There are no completed enquires yet.</Typography>;
+            <div style={{ paddingTop: "3rem" }}>
+                <Typography align="center" variant="h4">
+                    There are no completed enquires yet.
+                </Typography>
+                ;
             </div>
         );
     };
@@ -102,10 +116,12 @@ export const Enquires = () => {
                                         {enq.phoneNumber}
                                     </TableCell>
                                     <TableCell className={cls.tableCell} key={enq.conversationId + "e"}>
-                                        <a href={formConversationReviewPath(enq.conversationId)}>Conversation Details</a>
+                                        <a onClick={() => markAsSeen(enq.conversationId)} href={formConversationReviewPath(enq.conversationId)}>
+                                            Conversation Details
+                                        </a>
                                     </TableCell>
                                     <TableCell className={cls.tableCell} key={enq.conversationId + "f"}>
-                                        <a href={enq.responsePdfLink.link}>Response PDF</a>
+                                        <a target="_blank" onClick={() => markAsSeen(enq.conversationId)} href={enq.responsePdfLink.link}>Response PDF</a>
                                     </TableCell>
                                     <TableCell className={cls.tableCell} key={enq.conversationId + "g"}>
                                         {enq.areaName}
@@ -114,7 +130,12 @@ export const Enquires = () => {
                                         {enq.timeStamp}
                                     </TableCell>
                                     <TableCell className={cls.tableCell} key={enq.conversationId + "i"}>
-                                        <Checkbox checked={enq.seen} onClick={() => toggleSeenValue(enq.conversationId)}></Checkbox>
+                                        <Checkbox
+                                            checked={enq.seen}
+                                            onClick={() => {
+                                                toggleSeenValue(enq.conversationId);
+                                            }}
+                                        ></Checkbox>
                                     </TableCell>
                                 </TableRow>
                             );
