@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using NLog.Web;
-using Palavyr.Common.Constants;
+using Palavyr.Common.GlobalConstants;
 
 namespace Palavyr.API
 {

@@ -5,7 +5,7 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.Constants;
+using Palavyr.Common.GlobalConstants;
 
 namespace Palavyr.API.Controllers.Attachments
 {

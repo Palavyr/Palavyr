@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Palavyr.API.CommonResponseTypes;
 using Palavyr.API.RequestTypes;
-using Palavyr.API.ResponseTypes;
 using Palavyr.API.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.Authentication

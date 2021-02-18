@@ -20,7 +20,7 @@ using Palavyr.Background;
 using Palavyr.BackupAndRestore;
 using Palavyr.BackupAndRestore.Postgres;
 using Palavyr.BackupAndRestore.UserData;
-using Palavyr.Common.Constants;
+using Palavyr.Common.GlobalConstants;
 
 namespace Palavyr.API.Registration.ServiceCollection
 {

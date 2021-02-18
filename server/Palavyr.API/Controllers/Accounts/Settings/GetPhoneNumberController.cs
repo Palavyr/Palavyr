@@ -3,7 +3,7 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.ResponseTypes;
+using Palavyr.API.CommonResponseTypes;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {

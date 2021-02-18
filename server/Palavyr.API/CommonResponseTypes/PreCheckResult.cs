@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Server.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.ResponseTypes
+namespace Palavyr.API.CommonResponseTypes
 {
     public class PreCheckResult
     {

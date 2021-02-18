@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.Constants;
 using Palavyr.Common.FileSystem.FormPaths;
+using Palavyr.Common.GlobalConstants;
 using Server.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Attachments

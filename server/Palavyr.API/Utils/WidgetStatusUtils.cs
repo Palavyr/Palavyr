@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.ResponseTypes;
+using Palavyr.API.CommonResponseTypes;
 using Server.Domain.Configuration.Constant;
 using Server.Domain.Configuration.Schemas;
 

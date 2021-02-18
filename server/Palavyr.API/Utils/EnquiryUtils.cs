@@ -1,8 +1,7 @@
 using System.Threading.Tasks;
 using Amazon.S3;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.responseTypes;
-using Palavyr.API.ResponseTypes;
+using Palavyr.API.CommonResponseTypes;
 using Palavyr.Common.Aws;
 using Palavyr.Common.UIDUtils;
 using Server.Domain.Conversation;

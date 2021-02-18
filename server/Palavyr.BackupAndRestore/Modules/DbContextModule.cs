@@ -2,7 +2,7 @@ using Autofac;
 using DashboardServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Palavyr.Common.Constants;
+using Palavyr.Common.GlobalConstants;
 
 
 namespace Palavyr.BackupAndRestore.Modules

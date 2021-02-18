@@ -7,9 +7,9 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.responseTypes;
+using Palavyr.API.CommonResponseTypes;
 using Palavyr.API.Utils;
-using Palavyr.Common.Constants;
+using Palavyr.Common.GlobalConstants;
 
 namespace Palavyr.API.Controllers.Enquiries
 {

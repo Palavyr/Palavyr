@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using DashboardServer.Data;
 using EmailService.ResponseEmail;
 using Microsoft.Extensions.Logging;
+using Palavyr.API.CommonResponseTypes;
 using Palavyr.API.Controllers.Accounts.Setup.SeedData;
 using Palavyr.API.Controllers.Accounts.Setup.WelcomeEmail;
 using Palavyr.API.RequestTypes;
 using Palavyr.API.RequestTypes.Registration;
-using Palavyr.API.ResponseTypes;
 using Palavyr.API.Services.AuthenticationServices;
-using Palavyr.Common.Constants;
+using Palavyr.Common.GlobalConstants;
 using Palavyr.Common.UIDUtils;
 using Server.Domain.Accounts;
 

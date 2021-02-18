@@ -2,7 +2,7 @@ using Autofac;
 using Microsoft.Extensions.Configuration;
 using Palavyr.API.Services.StripeServices;
 using Palavyr.API.Services.StripeServices.StripeWebhookHandlers;
-using Palavyr.Common.Constants;
+using Palavyr.Common.GlobalConstants;
 using Stripe;
 
 namespace Palavyr.API.Registration.Autofac
