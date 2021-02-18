@@ -88,18 +88,3 @@ const SettingsContentInner = ({ setLoaded, children}: ISettingsContentInner ) =>
         </div >
     )
 };
-
-
-{/* <TabPanel value={tab} index={5}>
-    <GroupTree
-        areaIdentifier={areaIdentifier}
-        treeName={areaName}
-        NodeInterface={NodeInterface}
-    />
-</TabPanel> */}
-{/* <TabPanel value={tab} index={2}>
-    ToDo: Response configuration, such as the email address that shows up when sending a response.
-    <EmailSubject />
-</TabPanel> */}
-
-

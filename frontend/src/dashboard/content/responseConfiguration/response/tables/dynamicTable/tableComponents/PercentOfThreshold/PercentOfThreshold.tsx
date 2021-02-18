@@ -42,6 +42,7 @@ export const PercentOfThreshold = ({ tableMeta, setTableMeta, tableId, tableTag,
     const onSave = async () => {
         const { data } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.PercentOfThreshold, tableData, tableId, tableTag);
         setTableData(tableData);
+        return true;
     };
 
     return (
@@ -55,7 +56,7 @@ export const PercentOfThreshold = ({ tableMeta, setTableMeta, tableId, tableTag,
                         </Button>
                     </div>
                     <div className={classes.alignRight}>
-                        <SaveOrCancel onDelete={deleteAction} onSave={onSave} onCancel={() => window.location.reload()} />
+                        <SaveOrCancel onDelete={deleteAction} onSave={onSave} onCancel={async () => window.location.reload()} />
                     </div>
                 </div>
             </AccordionActions>

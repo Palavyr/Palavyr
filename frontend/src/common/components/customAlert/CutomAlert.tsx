@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
         outlineWidth: "0px",
+        zIndex: 99999
     },
     paper: {
         borderRadius: "10px",
@@ -21,6 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         padding: theme.spacing(2, 4, 3),
         border: '2px dashed red',
         outlineWidth: "0px",
+        zIndex: 99999
     },
     div: {
         height: "100%",

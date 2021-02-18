@@ -4,7 +4,6 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 export interface IUploadAttachment {
     onChange(event: { target: { value: React.SetStateAction<string> } }): void;
-    onSave(): void;
     subject: string;
     accordState: boolean;
     toggleAccord(): void;

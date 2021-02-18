@@ -114,6 +114,7 @@ export const EmailConfiguration = () => {
         setEmailTemplate(updatedEmailTemplate);
         setModalState(false);
         setAccordState(false);
+        return true;
     };
 
     const saveFallbackEditorData = async () => {
@@ -121,6 +122,7 @@ export const EmailConfiguration = () => {
         setFallbackEmailTemplate(updatedFallbackEmailTemplate);
         setFallbackModalState(false);
         setFallbackAccordState(false);
+        return true;
     };
 
     const loadFallbackTemplate = useCallback(async () => {
@@ -205,6 +207,7 @@ export const EmailConfiguration = () => {
     const onSaveAreaSubject = async () => {
         const { data: updatedSubject } = await client.Configuration.Email.SaveAreaSubject(areaIdentifier, areaSubjectState);
         setAreaSubjectState(updatedSubject);
+        return true;
     };
 
     const [areaFallbackSubjectState, setAreaFallbackSubjectState] = useState<string>("");
@@ -222,15 +225,16 @@ export const EmailConfiguration = () => {
     const onSaveFallbackAreaSubject = async () => {
         const { data: updatedSubject } = await client.Configuration.Email.SaveAreaFallbackSubject(areaIdentifier, areaFallbackSubjectState);
         setAreaFallbackSubjectState(updatedSubject);
+        return true;
     };
 
     return (
         <>
             <AreaConfigurationHeader title="Email Response" subtitle="Use this editor to create an HTML email template that will be sent as the email response for this area." />
             {useAreaFallbackEmail !== null && <OsTypeToggle controlledState={useAreaFallbackEmail} onChange={onUseAreaFallbackEmailToggle} enabledLabel="Use Area Fallback Email" disabledLabel="Use General Fallback Email" />}
-            <EmailSubject subject={areaSubjectState} onChange={onAreaSubjectChange} onSave={onSaveAreaSubject} accordState={subjectAccordState} toggleAccord={toggleSubjectAccord} modalState={subjectModalState} toggleModal={toggleSubjectModal}>
+            <EmailSubject subject={areaSubjectState} onChange={onAreaSubjectChange} accordState={subjectAccordState} toggleAccord={toggleSubjectAccord} modalState={subjectModalState} toggleModal={toggleSubjectModal}>
                 <div className={cls.saveOrCancel}>
-                    <SaveOrCancel onSave={() => onSaveAreaSubject()} onCancel={() => loadAreaSubject()} useModal={true} />
+                    <SaveOrCancel onSave={onSaveAreaSubject} onCancel={loadAreaSubject} useModal={true} />
                 </div>
             </EmailSubject>
             <Upload
@@ -246,7 +250,7 @@ export const EmailConfiguration = () => {
             />
             <EmailEditor uploadDetails={() => uploadDetails("firstDetails")} accordState={editorAccordstate} toggleAccord={toggleEditorAccord} setEmailTemplate={setEmailTemplate} emailTemplate={emailTemplate}>
                 <div className={cls.saveOrCancel}>
-                    <SaveOrCancel onSave={() => saveEditorData()} onCancel={() => loadEmailTemplate()} useModal={true} />
+                    <SaveOrCancel onSave={saveEditorData} onCancel={loadEmailTemplate} useModal={true} />
                 </div>
             </EmailEditor>
             {loaded && <ViewEmailTemplate emailTemplate={emailTemplate} />}
@@ -260,14 +264,13 @@ export const EmailConfiguration = () => {
                     <EmailSubject
                         subject={areaFallbackSubjectState}
                         onChange={onAreaFallbackSubjectChange}
-                        onSave={onSaveFallbackAreaSubject}
                         accordState={subjectFallbackAccordState}
                         toggleAccord={toggleFallbackSubjectAccord}
                         modalState={subjectFallbackModalState}
                         toggleModal={toggleFallbackSubjectModal}
                     >
                         <div className={cls.saveOrCancel}>
-                            <SaveOrCancel onSave={() => onSaveFallbackAreaSubject()} onCancel={() => loadFallbackAreaSubject()} useModal={true} />
+                            <SaveOrCancel onSave={onSaveFallbackAreaSubject} onCancel={loadFallbackAreaSubject} useModal={true} />
                         </div>
                     </EmailSubject>
                     <Upload
@@ -283,7 +286,7 @@ export const EmailConfiguration = () => {
                     />
                     <EmailEditor uploadDetails={() => uploadDetails("FinalDetails")} accordState={fallbackEditorAccordstate} toggleAccord={toggleFallbackEditorAccord} setEmailTemplate={setFallbackEmailTemplate} emailTemplate={fallbackEmailTemplate}>
                         <div className={cls.saveOrCancel}>
-                            <SaveOrCancel onSave={() => saveFallbackEditorData()} onCancel={() => loadFallbackTemplate()} useModal={true} />
+                            <SaveOrCancel onSave={saveFallbackEditorData} onCancel={loadFallbackTemplate} useModal={true} />
                         </div>
                     </EmailEditor>
                     {loaded && <ViewEmailTemplate emailTemplate={fallbackEmailTemplate} />}

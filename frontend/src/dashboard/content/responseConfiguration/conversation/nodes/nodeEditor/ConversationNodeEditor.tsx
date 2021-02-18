@@ -3,7 +3,7 @@ import { ConvoNode, Conversation, ValueOptionDelimiter } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { cloneDeep } from "lodash";
 import { updateNodeList, createNewChildIDs, addNodes } from "../conversationNodeUtils";
-import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button } from "@material-ui/core";
+import { Dialog, DialogTitle, DialogContent, TextField, DialogActions } from "@material-ui/core";
 import { MultiChoiceOptions } from "./MultiChoiceOptions";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 
@@ -82,6 +82,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, nodeLi
                         e.preventDefault();
                         await handleUpdateNode(textState, options);
                         handleCloseModal();
+                        return true;
                     }}
                     onCancel={handleCloseModal}
                 />

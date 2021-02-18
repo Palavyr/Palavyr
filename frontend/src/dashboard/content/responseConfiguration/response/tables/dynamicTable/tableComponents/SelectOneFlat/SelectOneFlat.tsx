@@ -9,16 +9,6 @@ import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { DynamicTableTypes, IDynamicTableProps, SelectOneFlatData, TableData } from "../../DynamicTableTypes";
 import AddBoxIcon from '@material-ui/icons/AddBox';
 
-export interface ISelectOneFlat {
-    tableData: Array<SelectOneFlatData>;
-    setTableData: Dispatch<SetStateAction<TableData>>;
-    areaIdentifier: string;
-    tableId: string;
-    tableTag: string;
-    tableMeta: DynamicTableMeta;
-    setTableMeta: any;
-    deleteAction(): void;
-}
 
 const useStyles = makeStyles({
     tableStyles: {
@@ -64,6 +54,7 @@ export const SelectOneFlat = ({ tableMeta, setTableMeta, tableId, tableTag, tabl
     const onSave = async () => {
         const { data: savedData } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.SelectOneFlat, tableData, tableId, tableTag);
         setTableData(savedData);
+        return true;
     };
 
     const addOptionOnClick = () => modifier.addOption(tableData, client, areaIdentifier, tableId);
@@ -85,7 +76,7 @@ export const SelectOneFlat = ({ tableMeta, setTableMeta, tableId, tableTag, tabl
                         <FormControlLabel label="Use Options as Paths" control={<Checkbox checked={tableMeta.valuesAsPaths} onChange={useOptionsAsPathsOnChange} />} />
                     </div>
                     <div className={classes.alignRight}>
-                        <SaveOrCancel onDelete={deleteAction} onSave={onSave} onCancel={() => window.location.reload()} />
+                        <SaveOrCancel onDelete={deleteAction} onSave={onSave} onCancel={async () => window.location.reload()} />
                     </div>
                 </div>
             </AccordionActions>

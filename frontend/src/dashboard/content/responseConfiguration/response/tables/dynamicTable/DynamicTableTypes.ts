@@ -50,5 +50,5 @@ export type IDynamicTableProps = {
     tableTag: string;
     tableMeta: DynamicTableMeta;
     setTableMeta: any;
-    deleteAction(): void;
+    deleteAction(): Promise<any>;
 };

@@ -15,7 +15,8 @@ interface IFeeConfiguration {
     title: string;
     staticTables: StaticTableMetas;
     modifier: StaticTablesModifier;
-    tableSaver: any; // tech debt
+    tableSaver(staticTables: StaticTableMetas): Promise<boolean>;
+    tableCanceler(): Promise<any>;
     areaIdentifier: string;
     children: React.ReactNode;
 }
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const StaticTableConfiguration = ({ title, staticTables, tableSaver, modifier, areaIdentifier, children }: IFeeConfiguration) => {
+export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tableCanceler, modifier, areaIdentifier, children }: IFeeConfiguration) => {
     var client = new ApiClient();
     const classes = useStyles();
 
@@ -59,12 +60,13 @@ export const StaticTableConfiguration = ({ title, staticTables, tableSaver, modi
             <Divider />
             <AccordionActions>
                 <SaveOrCancel
-                    onSave={() => {
-                        console.log("Saving...");
-                        tableSaver(staticTables);
+                    onSave={async () => {
+                        await tableSaver(staticTables);
+                        return true;
                     }}
-                    onCancel={() => {
-                        console.log("Canceling...");
+                    onCancel={async () => {
+                        await tableCanceler();
+                        return true;
                     }}
                 />
             </AccordionActions>

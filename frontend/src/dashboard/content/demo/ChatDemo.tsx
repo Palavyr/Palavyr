@@ -158,6 +158,7 @@ export const ChatDemo = () => {
         };
         const { data } = await client.WidgetDemo.SaveWidgetPreferences(prefs);
         reloadIframe(!iframeRefreshed);
+        return true;
     };
 
     useEffect(() => {
@@ -251,7 +252,7 @@ export const ChatDemo = () => {
                                 }}
                             />
                             <div className={cls.actions}>
-                                <SaveOrCancel size="large" onSave={() => savePrefs()} />
+                                <SaveOrCancel size="large" onSave={savePrefs} />
                             </div>
                         </Grid>
                         <Grid item xs={6} className={cls.centerText}>

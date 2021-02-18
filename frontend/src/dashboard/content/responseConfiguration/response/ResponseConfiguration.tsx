@@ -37,11 +37,13 @@ export const ResponseConfiguration = () => {
     const savePrologue = async () => {
         const { data: _prologue_ } = await client.Configuration.updatePrologue(areaIdentifier, prologue);
         setPrologue(_prologue_);
+        return true;
     };
 
     const saveEpilogue = async () => {
         const { data: _epilogue_ } = await client.Configuration.updateEpilogue(areaIdentifier, epilogue);
         setEpilogue(_epilogue_);
+        return true;
     };
 
     const updateEpilogue = (event: { target: { value: string } }) => {
@@ -62,7 +64,12 @@ export const ResponseConfiguration = () => {
         });
         const { data } = await client.Configuration.Tables.Static.updateStaticTablesMetas(areaIdentifier, staticTables);
         setStaticTables(data);
+        return true;
     };
+
+    const tableCanceler = async () => {
+        loadEstimateConfiguration();
+    }
 
     const loadEstimateConfiguration = useCallback(async () => {
         setIsLoading(true);
@@ -85,7 +92,7 @@ export const ResponseConfiguration = () => {
 
     return (
         <>
-            <AreaConfigurationHeader title="Custom and Static Tables" subtitle="Use this editor to configure the fee tables, as well as associated information, that will be sent in the response PDF for this area." />
+            <AreaConfigurationHeader title="Your Response PDF" subtitle="Use this editor to configure the fee tables, as well as associated information, that will be sent in the response PDF for this area." />
             <ExpandableTextBox title="Introductory statement" updatableValue={prologue} onChange={updatePrologue} onSave={savePrologue}>
                 <AreaConfigurationHeader divider title="Create an introduction for your estimate" subtitle="You can make it clear that fees are estimate only, or provide context for your client to understand their estimate." />
             </ExpandableTextBox>
@@ -94,7 +101,7 @@ export const ResponseConfiguration = () => {
                 <AreaConfigurationHeader divider title="Configure a custom fee table" subtitle="When you configure a custom fee table, it creates a corresponding palavyr node that must be included in the chat conversation." />
             </DynamicTableConfiguration>
 
-            <StaticTableConfiguration areaIdentifier={areaIdentifier} title="Static Fees" staticTables={staticTables} tableSaver={tableSaver} modifier={staticTablesModifier}>
+            <StaticTableConfiguration areaIdentifier={areaIdentifier} title="Static Fees" staticTables={staticTables} tableSaver={tableSaver} tableCanceler={tableCanceler} modifier={staticTablesModifier}>
                 <AreaConfigurationHeader
                     divider
                     title="Configure a static fee table"

@@ -11,7 +11,7 @@ export interface IExpandableTextBox {
     children: React.ReactNode;
     updatableValue: string;
     onChange: AnyVoidFunction;
-    onSave: AnyVoidFunction;
+    onSave(): Promise<boolean>;
 }
 
 const useStyles = makeStyles(theme => ({

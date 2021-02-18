@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Meta } from '@storybook/react/types-6-0';
-import { ResponseConfiguration, IResponseConfiguration } from './ResponseConfiguration';
+import { ResponseConfiguration } from './ResponseConfiguration';
 
 
 export default {
@@ -9,7 +9,7 @@ export default {
 } as Meta;
 
 
-const Template = (args: IResponseConfiguration) => <ResponseConfiguration {...args} />;
+const Template = (args: any) => <ResponseConfiguration {...args} />;
 
 // TODO: Mock api call to get data
 export const Primary = Template.bind({});

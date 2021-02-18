@@ -148,6 +148,7 @@ export const ChangePassword = () => {
                                         alert("Password does not match that on record.");
                                     }
                                 }
+                                return true;
                             }}
                             useModal
                             size="large"
