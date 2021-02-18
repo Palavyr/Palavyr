@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, customCancelMessage, useModal, size = "small" }: ISaveOrCancel) => {
     const classes = useStyles();
-    const [alertState, setAlertState] = useState<boolean>(true);
+    const [alertState, setAlertState] = useState<boolean>(false);
     const [cancelAlertState, setCancelAlertState] = useState<boolean>(false);
 
     return (
