@@ -100,6 +100,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const theme = useTheme();
 
     const loadAreas = useCallback(async () => {
+        setIsLoading(true);
         const client = new ApiClient();
 
         // todo: Deprecate this call in the future once we are confident
@@ -128,6 +129,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                 setViewName(currentView.areaName);
             }
         }
+        setIsLoading(false);
     }, [areaIdentifier]);
 
     useEffect(() => {
