@@ -5,7 +5,7 @@ using Amazon.S3;
 using Amazon.SimpleEmail;
 using Autofac;
 using Microsoft.Extensions.Configuration;
-using Palavyr.Common.Constants;
+using Palavyr.Common.GlobalConstants;
 
 //https://stackoverflow.com/questions/59200028/registering-more-amazons3client-with-configurations-on-autofac
 

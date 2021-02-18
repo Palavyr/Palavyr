@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Controllers.Accounts.Setup.SeedData;
 using Palavyr.API.Services.StripeServices;
-using Palavyr.Common.Constants;
+using Palavyr.Common.GlobalConstants;
 using Server.Domain.Accounts;
 using AccountType = Palavyr.Common.UIDUtils.AccountType;
 using Subscription = Server.Domain.Accounts.Subscription;

@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Common.Aws;
-using Palavyr.Common.Constants;
 using Palavyr.Common.FileSystem.FormPaths;
 using Palavyr.Common.FileSystem.IO;
 using Palavyr.Common.FileSystem.ListPaths;
+using Palavyr.Common.GlobalConstants;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {

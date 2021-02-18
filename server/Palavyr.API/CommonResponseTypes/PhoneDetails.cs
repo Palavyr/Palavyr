@@ -1,4 +1,4 @@
-namespace Palavyr.API.ResponseTypes
+namespace Palavyr.API.CommonResponseTypes
 {
     public class PhoneDetails
     {

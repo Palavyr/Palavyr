@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Palavyr.Common.Constants;
+using Palavyr.Common.GlobalConstants;
 using Server.Domain.Accounts;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions

@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.API.Services.AuthenticationServices;
-using Palavyr.Common.Constants;
+using Palavyr.Common.GlobalConstants;
 
 namespace Palavyr.API.Registration.ServiceCollection
 {

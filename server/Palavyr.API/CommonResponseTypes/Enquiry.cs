@@ -1,6 +1,4 @@
-﻿using Palavyr.API.ResponseTypes;
-
-namespace Palavyr.API.responseTypes
+﻿namespace Palavyr.API.CommonResponseTypes
 {
     public class Enquiry
     {

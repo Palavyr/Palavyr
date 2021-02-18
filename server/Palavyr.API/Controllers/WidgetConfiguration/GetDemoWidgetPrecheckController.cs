@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.ResponseTypes;
+using Palavyr.API.CommonResponseTypes;
 using Palavyr.API.Utils;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration

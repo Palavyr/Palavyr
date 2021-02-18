@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.RequestTypes;
-using Palavyr.Common.Constants;
 using Palavyr.Common.FileSystem.FormPaths;
+using Palavyr.Common.GlobalConstants;
 
 namespace Palavyr.API.Controllers.Attachments
 {

@@ -6,8 +6,8 @@ using DashboardServer.Data;
 using Google.Apis.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Palavyr.API.CommonResponseTypes;
 using Palavyr.API.RequestTypes;
-using Palavyr.API.ResponseTypes;
 using Palavyr.Common.UIDUtils;
 using Server.Domain.Accounts;
 

@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Palavyr.API.CommonResponseTypes;
 using Palavyr.API.Response;
-using Palavyr.API.ResponseTypes;
 
 namespace Palavyr.API.Controllers.Response
 {

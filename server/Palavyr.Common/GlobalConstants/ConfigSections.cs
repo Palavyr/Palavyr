@@ -1,4 +1,4 @@
-namespace Palavyr.Common.Constants
+namespace Palavyr.Common.GlobalConstants
 {
     public class ConfigSections
     {

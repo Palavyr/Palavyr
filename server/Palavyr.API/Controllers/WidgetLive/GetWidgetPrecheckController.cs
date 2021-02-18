@@ -4,7 +4,7 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.ResponseTypes;
+using Palavyr.API.CommonResponseTypes;
 using Palavyr.API.Services.AuthenticationServices;
 using Palavyr.API.Utils;
 
