@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { CustomAlert } from "./customAlert/CutomAlert";
 import SaveIcon from "@material-ui/icons/Save";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 export type AlertMessage = {
     title: string;
@@ -54,9 +55,31 @@ export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, cu
     const classes = useStyles();
     const [alertState, setAlertState] = useState<boolean>(false);
     const [cancelAlertState, setCancelAlertState] = useState<boolean>(false);
+    const [isSaving, setIsSaving] = useState<boolean>(false);
 
     return (
         <>
+            {
+                <Button
+                    startIcon={isSaving ? <CircularProgress size={20} /> : <SaveIcon />}
+                    variant="outlined"
+                    className={classNames(classes.button, classes.saveButton)}
+                    onClick={async (e) => {
+                        setIsSaving(true);
+                        setTimeout(async () => {
+                            var res = await onSave(e);
+                            if (res === true || res === null) {
+                                if (cancelAlertState) setCancelAlertState(false);
+                                setAlertState(true);
+                            }
+                            setIsSaving(false);
+                        }, 3000);
+                    }}
+                    size={size}
+                >
+                    Save
+                </Button>
+            }
             {onDelete && (
                 <Button
                     startIcon={<DeleteOutlineIcon />}
@@ -70,23 +93,6 @@ export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, cu
                     Delete
                 </Button>
             )}
-            {
-                <Button
-                    startIcon={<SaveIcon />}
-                    variant="outlined"
-                    className={classNames(classes.button, classes.saveButton)}
-                    onClick={async (e) => {
-                        var res = await onSave(e);
-                        if (res === true || res === null) {
-                            if (cancelAlertState) setCancelAlertState(false);
-                            setAlertState(true);
-                        }
-                    }}
-                    size={size}
-                >
-                    Save
-                </Button>
-            }
             {onCancel && (
                 <Button
                     variant="outlined"

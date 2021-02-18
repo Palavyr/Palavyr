@@ -11,8 +11,6 @@ interface AttachmentList {
 }
 
 const paperStyle = {
-    // padding: "2.5rem",
-
     paddingTop: "0.5rem",
     paddingBottom: "0.5rem",
     paddingLeft: "2.5rem",

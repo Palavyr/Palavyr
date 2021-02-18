@@ -4,7 +4,6 @@ import { FileLink } from "@Palavyr-Types";
 import { Upload } from "../Upload";
 import { AttachmentList } from "./AttachmentList";
 import { AttachmentPreview } from "./AttachmentPreview";
-import { AttachmentsHelp } from "dashboard/content/help/AttachmentsHelp";
 import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";

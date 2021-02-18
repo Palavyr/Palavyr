@@ -6,14 +6,12 @@
 import { FileLink } from "@Palavyr-Types"
 import React from "react"
 import { Paper, Divider, makeStyles } from "@material-ui/core"
-import { Statement } from "@common/components/Statement"
-import { AttachmentsHelp } from "dashboard/content/help/AttachmentsHelp"
 
 interface IAttachmentPreview {
     preview: FileLink;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     divStyle: (preview: boolean) => ({
         alignContent: "center",
         padding: "2.5rem",
@@ -40,7 +38,6 @@ export const AttachmentPreview = ({ preview }: IAttachmentPreview) => {
 
     return (
         <>
-            <AttachmentsHelp />
             <Paper className={classes.paper}>
                 <h2>Preview</h2>
                 {preview.fileName}

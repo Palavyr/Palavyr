@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
         position: "absolute", // Required - finalized
         display: "flex",
         width: "100%",
-        top: "8px",
+        top: "8px"
     },
     menuDrawer: {
         width: DRAWER_WIDTH,
