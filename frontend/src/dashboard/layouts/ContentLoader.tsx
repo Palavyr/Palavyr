@@ -7,6 +7,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 interface IContentLoader {
     open: boolean;
     isLoading: boolean;
+    dashboardAreasLoading: boolean;
     children: React.ReactNode;
 }
 
@@ -30,12 +31,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const ContentLoader = ({ open, isLoading, children }: IContentLoader) => {
+export const ContentLoader = ({ open, isLoading, dashboardAreasLoading, children }: IContentLoader) => {
     const classes = useStyles();
 
     return (
         <main className={classNames(classes.content, { [classes.contentShift]: open })}>
-            {isLoading && <LinearProgress />}
+            {(isLoading || dashboardAreasLoading) && <LinearProgress />}
             <div>{children}</div>
         </main>
     );

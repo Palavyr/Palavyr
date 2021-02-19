@@ -95,12 +95,13 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [currencySymbol, setCurrencySymbol] = useState<string>("");
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [dashboardAreasLoading, setDashboardAreasLoading] = useState<boolean>(false);
 
     const cls = useStyles(helpOpen);
     const theme = useTheme();
 
     const loadAreas = useCallback(async () => {
-        setIsLoading(true);
+        setDashboardAreasLoading(true);
         const client = new ApiClient();
 
         // todo: Deprecate this call in the future once we are confident
@@ -129,7 +130,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                 setViewName(currentView.areaName);
             }
         }
-        setIsLoading(false);
+        setDashboardAreasLoading(false);
     }, [areaIdentifier]);
 
     useEffect(() => {
@@ -228,7 +229,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                         <SideBarMenu areaIdentifiers={sidebarIds} areaNames={sidebarNames} widgetIsActive={widgetState} updateWidgetIsActive={updateWidgetIsActive} createCustomerPortalSession={createCustomerPortalSession} />
                     </>
                 </Drawer>
-                <ContentLoader isLoading={isLoading} open={open}>{children}</ContentLoader>
+                <ContentLoader isLoading={isLoading} dashboardAreasLoading={dashboardAreasLoading} open={open}>{children}</ContentLoader>
                 <Drawer
                     className={cls.helpDrawer}
                     variant="persistent"
