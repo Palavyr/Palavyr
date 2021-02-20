@@ -82,12 +82,7 @@ namespace DashboardServer.Data.Abstractions
         public bool SignedStripePayloadExists(string signedPayload)
         {
             var previousRecords = accountsContext.StripeWebHookRecords.Where(row => row.PayloadSignature == signedPayload).ToArray();
-            if (previousRecords.Length > 0)
-            {
-                return false;
-            }
-
-            return true;
+            return previousRecords.Length > 0;
         }
     }
 }

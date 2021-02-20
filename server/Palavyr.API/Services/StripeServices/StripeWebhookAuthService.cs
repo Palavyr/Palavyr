@@ -42,7 +42,7 @@ namespace Palavyr.API.Services.StripeServices
                     .Trim()
                     .Split(',')
                     .Select(item => item.Trim().Split(new[] { '=' }, 2))
-                    .ToLookup(item => item[0], item => item[1]);
+                    .ToDictionary(item => item[0], item => item[1]);
 
                 var signedPayload = $"{signatureItems["t"]}.{signatureItems["v1"]}";
                 
