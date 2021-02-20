@@ -133,7 +133,11 @@ namespace Palavyr.API.Services.StripeServices
                 default:
                     logger.LogDebug($"Event Type not recognized: {stripeEvent.Type}");
                     break;
+                
             }
+
+            var stripeEventId = stripeEvent.Id;
+
         }
     }
 }

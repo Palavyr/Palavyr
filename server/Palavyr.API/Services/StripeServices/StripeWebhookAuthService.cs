@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -10,16 +12,19 @@ namespace Palavyr.API.Services.StripeServices
 {
     public class StripeWebhookAuthService
     {
+        private readonly IAccountsConnector accountsConnector;
         private ILogger<StripeWebhookAuthService> logger;
         private IConfiguration configuration;
         private const string stripeSignature = "Stripe-Signature";
         private readonly string webhookKeySection = "Stripe:WebhookKey";
 
         public StripeWebhookAuthService(
+            IAccountsConnector accountsConnector,
             ILogger<StripeWebhookAuthService> logger,
             IConfiguration configuration
             )
         {
+            this.accountsConnector = accountsConnector;
             this.logger = logger;
             this.configuration = configuration;
         }
@@ -31,11 +36,29 @@ namespace Palavyr.API.Services.StripeServices
             try
             {
                 var webhookSecret = configuration.GetSection(webhookKeySection).Value;
-                return EventUtility.ConstructEvent(
+                
+                var signatureItems = context.Request.Headers[stripeSignature]
+                    .ToString()
+                    .Trim()
+                    .Split(',')
+                    .Select(item => item.Trim().Split(new[] { '=' }, 2))
+                    .ToLookup(item => item[0], item => item[1]);
+
+                var signedPayload = $"{signatureItems["t"]}.{signatureItems["v1"]}";
+                
+                var eventPayload = EventUtility.ConstructEvent(
                     requestBody,
                     context.Request.Headers[stripeSignature],
-                    webhookSecret
+                    webhookSecret,
+                    tolerance: 150
                 );
+                
+                if (accountsConnector.SignedStripePayloadExists(signedPayload))
+                {
+                    throw new Exception($"Webhook already processed and recorded in the Webhook Records Table: {eventPayload.Data}");
+                }
+
+                return eventPayload;
             }
             catch (NullReferenceException ex)
             {

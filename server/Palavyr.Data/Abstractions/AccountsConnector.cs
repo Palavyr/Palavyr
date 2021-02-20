@@ -1,3 +1,4 @@
+#nullable enable
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ namespace DashboardServer.Data.Abstractions
         Task<Session> CreateAndAddNewSession(string token, string accountId, string apiKey);
         Task<Session?> GetSessionOrNull(string token);
         Task RemoveSession(string sessionId);
+        bool SignedStripePayloadExists(string signedPayload);
     }
 
     public class AccountsConnector : IAccountsConnector
@@ -75,6 +77,17 @@ namespace DashboardServer.Data.Abstractions
             {
                 accountsContext.Sessions.Remove(session);
             }
+        }
+
+        public bool SignedStripePayloadExists(string signedPayload)
+        {
+            var previousRecords = accountsContext.StripeWebHookRecords.Where(row => row.PayloadSignature == signedPayload).ToArray();
+            if (previousRecords.Length > 0)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
