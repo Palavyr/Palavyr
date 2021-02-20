@@ -36,7 +36,7 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
         /// This will forward requests to the server via the cli tool.
         /// The way this works:
         /// 1. Request is made either via stripe.com (from my dashboard when making a subscription or from the stripe dashboard) or via the CLI
-        /// 2. The request is forwarded to the stripe CLI
+        /// 2. The request is forwarded to the stripe CLI WOOT
         /// 3. The ClI then forwards this to the server
         /// 4. The server is running https, so we need to indicate the above url (https://localhost:5001)
         [AllowAnonymous]
