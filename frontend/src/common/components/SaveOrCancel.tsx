@@ -69,8 +69,10 @@ export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, cu
                         setTimeout(async () => {
                             var res = await onSave(e);
                             if (res === true || res === null) {
-                                if (cancelAlertState) setCancelAlertState(false);
+                                if (cancelAlertState) setCancelAlertState(false); // TODO: these don't show modal for static tables.
                                 setAlertState(true);
+                            } else {
+                                setCancelAlertState(true);
                             }
                             setIsSaving(false);
                         }, 3000);

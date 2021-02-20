@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { StaticTableMetas } from "@Palavyr-Types";
+import { StaticTableMeta, StaticTableMetas, StaticTableRow, StaticTableValidationResult } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { StaticTablesModifier } from "./tables/statictable/staticTableModifier";
 import { LogueModifier } from "./logueModifier";
@@ -18,6 +18,34 @@ const useStyles = makeStyles(() => ({
         fontWeight: "bold",
     },
 }));
+
+
+const getStaticTableValidationResult = (staticTables: StaticTableMetas): StaticTableValidationResult => {
+
+    let validationResult = true;
+    staticTables.map((staticTable: StaticTableMeta) => {
+        staticTable.staticTableRows.map((staticTableRow: StaticTableRow) => {
+            if (staticTableRow.range){
+                if (staticTableRow.fee.max <= staticTableRow.fee.min){
+                    validationResult = false;
+                }
+            }
+        })
+    })
+
+    if (validationResult) {
+        return {
+            result: true,
+            message: ""
+        }
+    } else {
+        return {
+            result: false,
+            message: "A static table fee upper value is less than or equal to the lower value. Please provide a range where the upper value is greater than the lower value."
+        }
+    }
+}
+
 
 export const ResponseConfiguration = () => {
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
@@ -62,6 +90,11 @@ export const ResponseConfiguration = () => {
                 row.fee.id = null;
             });
         });
+
+        const validationResult = getStaticTableValidationResult(staticTables);
+        if (validationResult.result === false) {
+            window.location.reload(); // Temp fix to prevent incorrect values HARDLY. This is not a nice UI experience.
+            return false}; // TODO: the table saver needs to return the validation result and the SaveOrCancel component neesd to require this standard type for the error message.
         const { data } = await client.Configuration.Tables.Static.updateStaticTablesMetas(areaIdentifier, staticTables);
         setStaticTables(data);
         return true;

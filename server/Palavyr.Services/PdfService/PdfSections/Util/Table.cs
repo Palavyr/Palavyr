@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Palavyr.Services.PdfService.PdfSections.Util
 {
@@ -24,7 +25,9 @@ namespace Palavyr.Services.PdfService.PdfSections.Util
         
         private TableRow SumTableRows(List<TableRow> rows, CultureInfo culture)
         {
-            var useRange = rows.Select(row => row.Range).Any();
+            var useRange = rows.Select(row => row.Range).Any(r => r);
+            var usePerPerson = rows.Select(row => row.PerPerson).Any(r => r == "Per Person"); // TODO: This should be a bool, but row holds it as parsed string
+            
             var minTotal = 0.00;
             var maxTotal = 0.00;
             foreach (var row in rows)
@@ -39,7 +42,9 @@ namespace Palavyr.Services.PdfService.PdfSections.Util
                 }
                 minTotal += row.Min;
             }
-            var totalsRow = new TableRow("Total", minTotal, maxTotal, false, culture, useRange);
+
+            var perPersonMessage = usePerPerson ? " (for single individual)" : "";
+            var totalsRow = new TableRow($"Total{perPersonMessage}", minTotal, maxTotal, false, culture, useRange);
             return totalsRow;
         }
 

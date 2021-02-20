@@ -61,8 +61,11 @@ export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tabl
             <AccordionActions>
                 <SaveOrCancel
                     onSave={async () => {
-                        await tableSaver(staticTables);
-                        return true;
+                        const result = await tableSaver(staticTables);
+                        if (result) {
+                            return true;
+                        }
+                        return false;
                     }}
                     onCancel={async () => {
                         await tableCanceler();

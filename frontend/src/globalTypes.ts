@@ -144,6 +144,11 @@ export type StaticFee = {
     max: number;
 };
 
+export type StaticTableValidationResult = {
+    result: boolean;
+    message: string;
+}
+
 type HTML = string;
 
 export type FileLink = {
