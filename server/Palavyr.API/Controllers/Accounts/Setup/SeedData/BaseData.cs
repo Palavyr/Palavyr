@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators;
 using Palavyr.Common.UIDUtils;
-using Server.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Accounts.Setup.SeedData
 {

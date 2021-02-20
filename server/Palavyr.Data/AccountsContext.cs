@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Server.Domain.Accounts;
+using Palavyr.Domain.Accounts.Schemas;
 
 namespace DashboardServer.Data
 {

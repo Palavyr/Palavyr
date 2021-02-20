@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using EmailService.ResponseEmail;
 using Microsoft.Extensions.Logging;
 using Palavyr.Common.FileSystem.FormPaths;
+using Palavyr.Services.EmailService.ResponseEmailTools;
 
 //https://docs.aws.amazon.com/sdk-for-net/latest/developer-guide/retries-timeouts.html
 

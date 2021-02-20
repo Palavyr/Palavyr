@@ -1,9 +1,8 @@
-using System.Linq;
 using System.Threading.Tasks;
 using DashboardServer.Data;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.RequestTypes;
 
@@ -15,14 +14,16 @@ namespace Palavyr.API.Controllers.Areas
     public class ModifyAreaResponseDisplayTitleController : ControllerBase
     {
         private DashContext dashContext;
+        private readonly IDashConnector dashConnector;
         private ILogger<ModifyAreaResponseDisplayTitleController> logger;
 
         public ModifyAreaResponseDisplayTitleController(
-            DashContext dashContext,
+            IDashConnector dashConnector,
             ILogger<ModifyAreaResponseDisplayTitleController> logger
         )
         {
             this.dashContext = dashContext;
+            this.dashConnector = dashConnector;
             this.logger = logger;
         }
 
@@ -33,15 +34,11 @@ namespace Palavyr.API.Controllers.Areas
             string areaId
         )
         {
-            var curArea = await dashContext
-                .Areas
-                .Where(row => row.AccountId == accountId)
-                .SingleAsync(row => row.AreaIdentifier == areaId);
-
+            var area = await dashConnector.GetAreaById(accountId, areaId);
             if (areaDisplayTitleText.AreaDisplayTitle != null)
             {
-                curArea.AreaDisplayTitle = areaDisplayTitleText.AreaDisplayTitle;
-                await dashContext.SaveChangesAsync();
+                area.AreaDisplayTitle = areaDisplayTitleText.AreaDisplayTitle;
+                await dashConnector.CommitChangesAsync();
             }
 
             return areaDisplayTitleText.AreaDisplayTitle;

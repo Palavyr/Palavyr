@@ -4,8 +4,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using EmailService.ResponseEmail;
 using Microsoft.Extensions.Logging;
+using Palavyr.Services.EmailService.ResponseEmailTools;
 
 namespace Palavyr.BackupAndRestore.Postgres
 {

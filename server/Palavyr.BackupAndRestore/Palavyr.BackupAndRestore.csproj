@@ -6,10 +6,9 @@
     <UserSecretsId>5bb3e610-d714-4f70-b98f-1a808ee99773</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Palavyr.Amazon\Palavyr.Amazon.csproj" />
     <ProjectReference Include="..\Palavyr.Common\Palavyr.Common.csproj" />
     <ProjectReference Include="..\Palavyr.Data\Palavyr.Data.csproj" />
-    <ProjectReference Include="..\Palavyr.EmailService\Palavyr.EmailService.csproj" />
+    <ProjectReference Include="..\Palavyr.Services\Palavyr.Services.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.1.0" />

@@ -1,11 +1,8 @@
 ﻿using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
-using DashboardServer.Data;
-using EmailService.ResponseEmail;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.RequestTypes;
@@ -13,7 +10,8 @@ using Palavyr.API.Response;
 using Palavyr.API.Services.AuthenticationServices;
 using Palavyr.Common.FileSystem.FormPaths;
 using Palavyr.Common.FileSystem.ListPaths;
-using PDFService.PdfSections.Util;
+using Palavyr.Services.EmailService.ResponseEmailTools;
+using Palavyr.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
@@ -21,28 +19,30 @@ namespace Palavyr.API.Controllers.WidgetLive
     [ApiController]
     public class SendWidgetResponseEmailController : ControllerBase
     {
+        private readonly IDashConnector dashConnector;
+        private readonly IAccountsConnector accountsConnector;
         private readonly IConfiguration config;
         private readonly IPdfResponseGenerator pdfResponseGenerator;
         private readonly ISesEmail client;
         private ILogger logger;
-        private AccountsContext accountsContext;
-        private DashContext dashContext;
+
 
         public SendWidgetResponseEmailController(
+            IDashConnector dashConnector,
+            IAccountsConnector accountsConnector,
             ILogger<SendWidgetResponseEmailController> logger,
-            AccountsContext accountsContext,
-            DashContext dashContext,
             ISesEmail client,
             IConfiguration config,
             IPdfResponseGenerator pdfResponseGenerator
         )
         {
+            this.dashConnector = dashConnector;
+            this.accountsConnector = accountsConnector;
             this.config = config;
             this.pdfResponseGenerator = pdfResponseGenerator;
             this.client = client;
             this.logger = logger;
-            this.accountsContext = accountsContext;
-            this.dashContext = dashContext;
+
         }
 
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
@@ -58,7 +58,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             var criticalResponses = new CriticalResponses(emailRequest.KeyValues);
             var attachmentFiles = AttachmentPaths.ListAttachmentsAsDiskPaths(accountId, areaId);
 
-            var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
+            var account = await accountsConnector.GetAccount(accountId);
             var locale = account.Locale;
             logger.LogDebug($"Locale being used: {locale}");
             var culture = new CultureInfo(locale);
@@ -81,10 +81,10 @@ namespace Palavyr.API.Controllers.WidgetLive
                 attachmentFiles.Add(fullPdfResponsePath);
             }
 
-            var fromAddress = accountsContext.Accounts.Single(row => row.AccountId == accountId).EmailAddress;
+            var fromAddress = account.EmailAddress;
             var toAddress = emailRequest.EmailAddress;
 
-            var area = dashContext.Areas.Single(row => row.AreaIdentifier == areaId);
+            var area = await dashConnector.GetAreaById(accountId, areaId);               
 
             var subject = area.UseAreaFallbackEmail ? account.GeneralFallbackSubject : area.Subject;
             var htmlBody = area.UseAreaFallbackEmail ? account.GeneralFallbackEmailTemplate : area.EmailTemplate;
@@ -101,7 +101,9 @@ namespace Palavyr.API.Controllers.WidgetLive
                     fromAddress, toAddress, subject, htmlBody, textBody,
                     attachmentFiles);
 
-        return ok ? SendEmailResultResponse.Create(EndingSequence.EmailSuccessfulNodeId, ok) : SendEmailResultResponse.Create(EndingSequence.EmailFailedNodeId, ok);
+            return ok 
+                ? SendEmailResultResponse.Create(EndingSequence.EmailSuccessfulNodeId, true) 
+                : SendEmailResultResponse.Create(EndingSequence.EmailFailedNodeId, false);
         }
     }
 }

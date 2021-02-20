@@ -1,11 +1,9 @@
-using System.Linq;
 using System.Threading.Tasks;
-using DashboardServer.Data;
-using EmailService.ResponseEmail;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Common.UIDUtils;
-using Server.Domain.Accounts;
+using Palavyr.Services.EmailService.ResponseEmailTools;
 
 namespace Palavyr.API.Controllers.Authentication.PasswordReset
 {
@@ -13,16 +11,16 @@ namespace Palavyr.API.Controllers.Authentication.PasswordReset
     [ApiController]
     public class PasswordResetRequestController : ControllerBase
     {
-        private readonly AccountsContext accountsContext;
+        private readonly IAccountsConnector accountsConnector;
         private readonly ISesEmail client;
 
 
         public PasswordResetRequestController(
-            AccountsContext accountsContext,
+            IAccountsConnector accountsConnector,
             ISesEmail client
         )
         {
-            this.accountsContext = accountsContext;
+            this.accountsConnector = accountsConnector;
             this.client = client;
         }
 
@@ -32,7 +30,7 @@ namespace Palavyr.API.Controllers.Authentication.PasswordReset
         {
             var ambiguousMessage = "An email was sent to this address if an account for it exists.";
 
-            var account = accountsContext.Accounts.SingleOrDefault(row => row.EmailAddress == request.EmailAddress);
+            var account = await accountsConnector.GetAccountByEmailAddressOrNull(request.EmailAddress);
             if (account == null)
             {
                 return new ResetEmailResponse(ambiguousMessage, false);
@@ -47,9 +45,7 @@ namespace Palavyr.API.Controllers.Authentication.PasswordReset
             var accountId = account.AccountId;
             var apiKey = account.ApiKey;
 
-            var session = Session.CreateNew(token, accountId, apiKey);
-            await accountsContext.Sessions.AddAsync(session);
-            await accountsContext.SaveChangesAsync();
+            var session = await accountsConnector.CreateAndAddNewSession(token, accountId, apiKey);
 
             var link = request.ResetPasswordLinkTemplate + token;
 

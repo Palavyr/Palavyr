@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using DashboardServer.Data;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -10,14 +11,15 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
     [ApiController]
     public class ModifyWidgetActiveStateController
     {
-        private DashContext dashContext;
+        private readonly IDashConnector dashConnector;
         private ILogger<GetWidgetPreferencesController> logger;
 
-        public ModifyWidgetActiveStateController(DashContext dashContext,
+        public ModifyWidgetActiveStateController(
+            IDashConnector dashConnector, 
             ILogger<GetWidgetPreferencesController> logger)
         {
+            this.dashConnector = dashConnector;
             this.logger = logger;
-            this.dashContext = dashContext;
         }
 
         [HttpPost("widget-config/widget-active-state")]
@@ -27,10 +29,9 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
         )
         {
             logger.LogDebug("Modifying widget preference");
-            var widgetPreferences =
-                await dashContext.WidgetPreferences.SingleOrDefaultAsync(row => row.AccountId == accountId);
-            widgetPreferences.WidgetState = state;
-            await dashContext.SaveChangesAsync();
+            var widgetPrefs = await dashConnector.GetWidgetPreferences(accountId);
+            widgetPrefs.WidgetState = state;
+            await dashConnector.CommitChangesAsync();
             return state;
         }
     }

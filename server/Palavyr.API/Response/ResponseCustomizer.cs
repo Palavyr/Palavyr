@@ -1,6 +1,5 @@
-using System.Linq;
 using Palavyr.API.RequestTypes;
-using Server.Domain.Accounts;
+using Palavyr.Domain.Accounts.Schemas;
 
 namespace Palavyr.API.Response
 {

@@ -1,6 +1,6 @@
 using System.Linq;
 using DashboardServer.Data;
-using Server.Domain.Accounts;
+using Palavyr.Domain.Accounts.Schemas;
 
 namespace Palavyr.API.Services.EntityServices
 {

@@ -1,6 +1,6 @@
 using Autofac;
-using EmailService.Verification;
 using Palavyr.API.Services.AccountServices;
+using Palavyr.Services.EmailService.Verification;
 
 namespace Palavyr.API.Registration.Autofac
 {

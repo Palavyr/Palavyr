@@ -1,4 +1,4 @@
-namespace Server.Domain.Configuration.Constant
+namespace Palavyr.Domain.Configuration.Constant
 {
     public static class Delimiters
     {

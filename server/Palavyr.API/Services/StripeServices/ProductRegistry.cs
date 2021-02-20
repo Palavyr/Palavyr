@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Server.Domain.Accounts;
+using Palavyr.Domain.Accounts.Schemas;
 
 namespace Palavyr.API.Services.StripeServices
 {

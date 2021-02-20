@@ -1,8 +1,7 @@
 using System.Threading.Tasks;
-using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+using DashboardServer.Data.Abstractions;
 
 namespace Palavyr.API.Controllers.Areas
 {
@@ -11,21 +10,19 @@ namespace Palavyr.API.Controllers.Areas
     [ApiController]
     public class PutAreaIsCompleteController : ControllerBase
     {
-        private readonly DashContext dashContext;
+        private readonly IDashConnector dashConnector;
 
-        public PutAreaIsCompleteController(
-            DashContext dashContext 
-        )
+        public PutAreaIsCompleteController(IDashConnector dashConnector)
         {
-            this.dashContext = dashContext;
+            this.dashConnector = dashConnector;
         }
 
         [HttpPut("areas/{areaId}/area-toggle")]
         public async Task<bool> Put([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] PutAreaIsCompleteRequest request)
         {
-            var area = dashContext.Areas.Where(row => row.AccountId == accountId).Single(row => row.AreaIdentifier == areaId);
+            var area = await dashConnector.GetAreaById(accountId, areaId);
             area.IsComplete = request.IsComplete;
-            await dashContext.SaveChangesAsync();
+            await dashConnector.CommitChangesAsync();
             return area.IsComplete;
         }
 

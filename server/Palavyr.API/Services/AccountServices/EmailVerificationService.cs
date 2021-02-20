@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using DashboardServer.Data;
-using EmailService.Verification;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Services.StripeServices;
+using Palavyr.Services.EmailService.Verification;
 
 namespace Palavyr.API.Services.AccountServices
 {

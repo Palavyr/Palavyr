@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
-using DashboardServer.Data;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Server.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {
@@ -11,22 +10,22 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
     [ApiController]
     public class ModifyWidgetPreferencesController : ControllerBase
     {
+        private readonly IDashConnector dashConnector;
         private ILogger<ModifyWidgetPreferencesController> logger;
-        private DashContext dashContext;
 
-        public ModifyWidgetPreferencesController(DashContext dashContext, ILogger<ModifyWidgetPreferencesController> logger)
+        public ModifyWidgetPreferencesController(IDashConnector dashConnector, ILogger<ModifyWidgetPreferencesController> logger)
         {
+            this.dashConnector = dashConnector;
             this.logger = logger;
-            this.dashContext = dashContext;
         }
 
         [HttpPut("widget-config/preferences")]
-        public async Task<IActionResult> SaveWidgetPreferences(
+        public async Task SaveWidgetPreferences(
             [FromHeader] string accountId,
             [FromBody] WidgetPreference preferences
         )
         {
-            var prefs = await dashContext.WidgetPreferences.SingleOrDefaultAsync(row => row.AccountId == accountId);
+            var prefs = await dashConnector.GetWidgetPreferences(accountId);
 
             if (!string.IsNullOrWhiteSpace(preferences.SelectListColor))
             {
@@ -93,8 +92,7 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
                 prefs.ChatBubbleColor = preferences.ChatBubbleColor;
             }
 
-            await dashContext.SaveChangesAsync();
-            return NoContent();
+            await dashConnector.CommitChangesAsync();
         }
     }
 }

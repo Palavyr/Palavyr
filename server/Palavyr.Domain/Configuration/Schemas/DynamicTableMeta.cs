@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Server.Domain.Configuration.Constant;
+using Palavyr.Domain.Configuration.Constant;
 
-namespace Server.Domain.Configuration.Schemas
+namespace Palavyr.Domain.Configuration.Schemas
 {
     public class DynamicTableMeta
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Server.Domain.Configuration.Schemas
+namespace Palavyr.Domain.Configuration.Schemas
 {
     public class ConversationNode
     {
@@ -77,6 +77,32 @@ namespace Server.Domain.Configuration.Schemas
                 IsMultiOptionType = isMultiOptionType,
                 IsTerminalType = isTerminalType,
             };
+        }
+
+        public static List<ConversationNode> MapUpdate(string accountId, List<ConversationNode> nodeUpdates)
+        {
+            
+            var mappedTransactions = new List<ConversationNode>();
+            foreach (var node in nodeUpdates)
+            {
+                var mappedNode = CreateNew(
+                    node.NodeId,
+                    node.NodeType,
+                    node.Text,
+                    node.AreaIdentifier,
+                    node.NodeChildrenString,
+                    node.OptionPath,
+                    node.ValueOptions,
+                    accountId,
+                    node.IsRoot,
+                    node.IsCritical,
+                    node.IsMultiOptionType,
+                    node.IsTerminalType
+                );
+                mappedTransactions.Add(mappedNode);
+            }
+
+            return mappedTransactions;
         }
     }
 }

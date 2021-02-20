@@ -1,15 +1,13 @@
-using System.Linq;
 using System.Threading.Tasks;
-using DashboardServer.Data;
-using EmailService.ResponseEmail;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.RequestTypes;
 using Palavyr.API.Response;
 using Palavyr.API.Services.AuthenticationServices;
 using Palavyr.Common.FileSystem.ListPaths;
+using Palavyr.Services.EmailService.ResponseEmailTools;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
@@ -17,22 +15,22 @@ namespace Palavyr.API.Controllers.WidgetLive
     [ApiController]
     public class SendWidgetResponseFallbackEmailController : ControllerBase
     {
+        private readonly IAccountsConnector accountsConnector;
+        private readonly IDashConnector dashConnector;
         private readonly ISesEmail client;
         private ILogger logger;
-        private AccountsContext accountsContext;
-        private DashContext dashContext;
 
         public SendWidgetResponseFallbackEmailController(
+            IAccountsConnector accountsConnector,
+            IDashConnector dashConnector,
             ILogger<SendWidgetResponseFallbackEmailController> logger,
-            AccountsContext accountsContext,
-            DashContext dashContext,
             ISesEmail client
         )
         {
+            this.accountsConnector = accountsConnector;
+            this.dashConnector = dashConnector;
             this.client = client;
             this.logger = logger;
-            this.accountsContext = accountsContext;
-            this.dashContext = dashContext;
         }
 
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
@@ -46,22 +44,22 @@ namespace Palavyr.API.Controllers.WidgetLive
             logger.LogDebug("Attempting to send email from widget");
 
             var attachmentFiles = AttachmentPaths.ListAttachmentsAsDiskPaths(accountId, areaId);
-            var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
+            var account = await accountsConnector.GetAccount(accountId);
 
-            var fromAddress = accountsContext.Accounts.Single(row => row.AccountId == accountId).EmailAddress;
+            var fromAddress = account.EmailAddress;
             var toAddress = emailRequest.EmailAddress;
 
-            var area = dashContext.Areas.Single(row => row.AreaIdentifier == areaId);
-            
-            var fallbackSubject = area.UseAreaFallbackEmail 
+            var area = await dashConnector.GetAreaById(accountId, areaId);
+
+            var fallbackSubject = area.UseAreaFallbackEmail
                 ? area.FallbackSubject
                 : account.GeneralFallbackSubject;
 
             var fallbackHtmlBody = area.UseAreaFallbackEmail
                 ? area.FallbackEmailTemplate
                 : account.GeneralFallbackEmailTemplate;
-            
-            
+
+
             var fallbackTextBody = area.FallbackEmailTemplate; // This can be another upload. People can decide one or both. Html is prioritized.
 
             fallbackHtmlBody = ResponseCustomizer.Customize(fallbackHtmlBody, emailRequest, account);
@@ -71,16 +69,16 @@ namespace Palavyr.API.Controllers.WidgetLive
                 ok = await client.SendEmail(fromAddress, toAddress, fallbackSubject, fallbackHtmlBody, fallbackTextBody);
             else
                 ok = await client.SendEmailWithAttachments(
-                    fromAddress, 
-                    toAddress, 
-                    fallbackSubject, 
-                    fallbackHtmlBody, 
+                    fromAddress,
+                    toAddress,
+                    fallbackSubject,
+                    fallbackHtmlBody,
                     fallbackTextBody,
                     attachmentFiles);
 
             return ok
-                ? SendEmailResultResponse.Create(EndingSequence.EmailSuccessfulNodeId, ok)
-                : SendEmailResultResponse.Create(EndingSequence.FallbackEmailFailedNodeId, ok);
+                ? SendEmailResultResponse.Create(EndingSequence.EmailSuccessfulNodeId, true)
+                : SendEmailResultResponse.Create(EndingSequence.FallbackEmailFailedNodeId, false);
         }
     }
 }

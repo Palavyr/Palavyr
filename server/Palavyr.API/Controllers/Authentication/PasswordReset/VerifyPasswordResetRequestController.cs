@@ -2,10 +2,9 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DashboardServer.Data;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Server.Domain.Accounts;
-
 
 
 namespace Palavyr.API.Controllers.Authentication.PasswordReset
@@ -15,20 +14,19 @@ namespace Palavyr.API.Controllers.Authentication.PasswordReset
     [ApiController]
     public class VerifyPasswordResetRequestController : ControllerBase
     {
-        private readonly AccountsContext accountsContext;
+        private readonly IAccountsConnector accountsConnector;
 
-        public VerifyPasswordResetRequestController(AccountsContext accountsContext)
+        public VerifyPasswordResetRequestController(IAccountsConnector accountsConnector)
         {
-            this.accountsContext = accountsContext;
+            this.accountsConnector = accountsConnector;
         }
 
         [AllowAnonymous]
         [HttpPost("authentication/verify-password-reset/{token}")]
-        public VerificationResponse Post([FromRoute] string token)
+        public async Task<VerificationResponse> Post([FromRoute] string token)
         {
             // the return from this is presented in the redirect page. 
-            
-            var session = accountsContext.Sessions.SingleOrDefault(row => row.SessionId == token);
+            var session = await accountsConnector.GetSessionOrNull(token);
             if (session == null)
             {
                 return new VerificationResponse("Not Authorized.", false, "");

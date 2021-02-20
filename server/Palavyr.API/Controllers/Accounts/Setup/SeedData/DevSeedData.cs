@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Server.Domain.Conversation;
+using Palavyr.Domain.Conversation.Schemas;
 
 namespace Palavyr.API.Controllers.Accounts.Setup.SeedData
 {

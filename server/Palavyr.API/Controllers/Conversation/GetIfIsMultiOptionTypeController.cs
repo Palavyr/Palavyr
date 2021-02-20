@@ -5,7 +5,7 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Server.Domain.Configuration.Constant;
+using Palavyr.Domain.Configuration.Constant;
 
 namespace Palavyr.API.controllers.Conversation
 {

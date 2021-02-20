@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Server.Domain.Conversation;
+using Palavyr.Domain.Conversation.Schemas;
 
 namespace DashboardServer.Data
 {

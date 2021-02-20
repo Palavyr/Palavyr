@@ -1,9 +1,7 @@
-using System.Linq;
 using System.Threading.Tasks;
-using DashboardServer.Data;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Services.AuthenticationServices;
 
@@ -14,37 +12,32 @@ namespace Palavyr.API.Controllers.WidgetLive
     [ApiController]
     public class CreateNewConversationHistoryController : ControllerBase
     {
-        private DashContext dashContext;
+        private readonly IDashConnector dashConnector;
         private ILogger<CreateNewConversationHistoryController> logger;
 
-        public CreateNewConversationHistoryController(DashContext dashContext,
+        public CreateNewConversationHistoryController(
+            IDashConnector dashConnector,
             ILogger<CreateNewConversationHistoryController> logger)
         {
-            this.dashContext = dashContext;
+            this.dashConnector = dashConnector;
             this.logger = logger;
         }
 
         [HttpGet("widget/{areaId}/create")]
-        public async Task<IActionResult> Create([FromHeader] string accountId, [FromRoute] string areaId)
+        public async Task<NewConversation> Create([FromHeader] string accountId, [FromRoute] string areaId)
         {
             logger.LogDebug("Fetching Preferences...");
-            var widgetPreference =
-                await dashContext.WidgetPreferences.SingleOrDefaultAsync(row => row.AccountId == accountId);
+            var widgetPreference = await dashConnector.GetWidgetPreferences(accountId);
 
             logger.LogDebug("Fetching nodes...");
-            var incompleteNodeList = dashContext
-                .ConversationNodes
-                .Where(row => row.AccountId == accountId)
-                .Where(row => row.AreaIdentifier == areaId)
-                .ToList();
+            var incompleteNodeList = await dashConnector.GetAreaConversationNodes(accountId, areaId);
 
-            // TODO: need to check if ending sequence is specified in the node list - otherwise, we let them specify
             var convoNodes = EndingSequence.AttachEndingSequenceToNodeList(incompleteNodeList, areaId, accountId);
 
             logger.LogDebug("Creating new conversation for user with apikey: {apiKey}");
             var newConvo = NewConversation.CreateNew(widgetPreference, convoNodes);
 
-            return Ok(newConvo);
+            return newConvo;
         }
     }
 }

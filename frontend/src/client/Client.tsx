@@ -179,8 +179,8 @@ export class ApiClient {
         //TODO : Return from API
         ModifyConversation: async (nodelist: Conversation, areaIdentifier: string, idsToDelete: Array<string>): Promise<AxiosResponse> =>
             this.client.put(`configure-conversations/${areaIdentifier}`, { IdsToDelete: idsToDelete, Transactions: nodelist }),
-        // TODO : return from API
-        ModifyConversationNode: async (nodeId: string, areaIdentifier: string, updatedNode: ConvoTableRow): Promise<AxiosResponse<ConvoTableRow>> => this.client.put(`configure-conversations/${areaIdentifier}/nodes/${nodeId}`, updatedNode),
+
+        ModifyConversationNode: async (nodeId: string, areaIdentifier: string, updatedNode: ConvoTableRow): Promise<AxiosResponse<Conversation>> => this.client.put(`configure-conversations/${areaIdentifier}/nodes/${nodeId}`, updatedNode),
 
         // TODO: Deprecate eventually
         EnsureDBIsValid: async (): Promise<AxiosResponse> => this.client.post(`configure-conversations/ensure-db-valid`),

@@ -1,6 +1,6 @@
 using System;
 using Newtonsoft.Json;
-using Server.Domain.Conversation;
+using Palavyr.Domain.Conversation.Schemas;
 
 namespace Palavyr.API.RequestTypes
 {

@@ -112,7 +112,7 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
 
             // Create a new session using the session.Id and save it to the session db with the account Details.
             // when the transaction is successful, then use the returned ID to 
-            var newSession = Server.Domain.Accounts.Session.CreateNew(session.Id, accountId, account.ApiKey);
+            var newSession = Domain.Accounts.Schemas.Session.CreateNew(session.Id, accountId, account.ApiKey);
             await accountsContext.Sessions.AddAsync(newSession);
             await accountsContext.SaveChangesAsync();
 

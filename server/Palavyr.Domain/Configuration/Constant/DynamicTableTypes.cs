@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Server.Domain.Configuration.Constant
+namespace Palavyr.Domain.Configuration.Constant
 {
     public abstract class DynamicType
     {

@@ -5,7 +5,6 @@ import { makeStyles, Card, CardContent, Typography, FormControlLabel, Checkbox }
 import classNames from "classnames";
 import { NodeTypeSelector } from "./NodeTypeSelector";
 import { cloneDeep } from "lodash";
-import { updateNodeList } from "./conversationNodeUtils";
 import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
 
 export interface IConversationNodeInterface {
@@ -89,8 +88,7 @@ export const ConversationNodeInterface = ({ nodeOptionList, node, nodeList, opti
     const showResponseInPdfCheckbox = async (event: { target: { checked: boolean; }; }) => {
         const newNode = cloneDeep(node);
         newNode.isCritical = event.target.checked;
-        await client.Conversations.ModifyConversationNode(node.nodeId, node.areaIdentifier, newNode);
-        const newNodeList = updateNodeList(nodeList, newNode);
+        const {data: newNodeList} = await client.Conversations.ModifyConversationNode(node.nodeId, node.areaIdentifier, newNode);
         setNodes(newNodeList);
     };
 

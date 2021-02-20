@@ -31,6 +31,7 @@ namespace Palavyr.API
             builder.RegisterModule(new HangfireModule());
             builder.RegisterModule(new GeneralModule());
             builder.RegisterModule(new StripeModule(configuration));
+            builder.RegisterModule(new ConnectorsModule());
         }
 
         public void ConfigureServices(IServiceCollection services)

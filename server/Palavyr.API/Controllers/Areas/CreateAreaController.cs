@@ -1,10 +1,12 @@
 using System.Linq;
+using System.Threading.Tasks;
 using DashboardServer.Data;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.RequestTypes;
-using Server.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Areas
 {
@@ -13,39 +15,33 @@ namespace Palavyr.API.Controllers.Areas
     [ApiController]
     public class CreateAreaController : ControllerBase
     {
-        private AccountsContext accountContext;
-        private DashContext dashContext;
+        private readonly IDashConnector dashConnector;
+        private readonly IAccountsConnector accountsConnector;
         private ILogger<CreateAreaController> logger;
 
         public CreateAreaController(
-            AccountsContext accountContext,
-            DashContext dashContext,
+
+            IDashConnector dashConnector,
+            IAccountsConnector accountsConnector,
             ILogger<CreateAreaController> logger
         )
         {
-            this.accountContext = accountContext;
-            this.dashContext = dashContext;
+            this.dashConnector = dashConnector;
+            this.accountsConnector = accountsConnector;
             this.logger = logger;
         }
 
         [HttpPost("areas/create")]
-        public IActionResult Create([FromHeader] string accountId, [FromBody] AreaNameText areaNameText)
+        public async Task<Area> Create([FromHeader] string accountId, [FromBody] AreaNameText areaNameText)
         {
-            var account = accountContext.Accounts.SingleOrDefault(row => row.AccountId == accountId);
-            if (account == null)
-            {
-                logger.LogDebug("Account was null when it should not be");
-                return BadRequest();
-            }
+            var account = await accountsConnector.GetAccount(accountId);
 
             var defaultEmail = account.EmailAddress;
             var isVerified = account.DefaultEmailIsVerified;
 
-            var defaultAreaTemplate = Area.CreateNewArea(areaNameText.AreaName, accountId, defaultEmail, isVerified);
-            var result = dashContext.Areas.Add(defaultAreaTemplate);
-            
-            dashContext.SaveChanges();
-            return Ok(result.Entity);
+            var newArea = await dashConnector.CreateAndAddNewArea(areaNameText.AreaName, accountId, defaultEmail, isVerified);
+            await dashConnector.CommitChangesAsync();
+            return newArea;
         }
     }
 }

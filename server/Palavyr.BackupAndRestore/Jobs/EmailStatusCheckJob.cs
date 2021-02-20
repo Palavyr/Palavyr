@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using DashboardServer.Data;
-using EmailService.Verification;
 using Microsoft.Extensions.Logging;
+using Palavyr.Services.EmailService.Verification;
 
 namespace Palavyr.BackupAndRestore.Jobs
 {

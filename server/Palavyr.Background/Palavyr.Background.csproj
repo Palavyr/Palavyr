@@ -21,12 +21,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Palavyr.Amazon\Palavyr.Amazon.csproj" />
       <ProjectReference Include="..\Palavyr.BackupAndRestore\Palavyr.BackupAndRestore.csproj" />
       <ProjectReference Include="..\Palavyr.Common\Palavyr.Common.csproj" />
       <ProjectReference Include="..\Palavyr.Data\Palavyr.Data.csproj" />
       <ProjectReference Include="..\Palavyr.Domain\Palavyr.Domain.csproj" />
-      <ProjectReference Include="..\Palavyr.EmailService\Palavyr.EmailService.csproj" />
     </ItemGroup>
 
 </Project>

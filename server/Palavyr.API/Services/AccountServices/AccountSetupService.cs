@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DashboardServer.Data;
-using EmailService.ResponseEmail;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CommonResponseTypes;
 using Palavyr.API.Controllers.Accounts.Setup.SeedData;
@@ -12,7 +11,8 @@ using Palavyr.API.RequestTypes.Registration;
 using Palavyr.API.Services.AuthenticationServices;
 using Palavyr.Common.GlobalConstants;
 using Palavyr.Common.UIDUtils;
-using Server.Domain.Accounts;
+using Palavyr.Domain.Accounts.Schemas;
+using Palavyr.Services.EmailService.ResponseEmailTools;
 
 namespace Palavyr.API.Services.AccountServices
 {

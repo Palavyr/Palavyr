@@ -1,9 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using DashboardServer.Data;
-using EmailService.Verification;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Palavyr.BackupAndRestore.Jobs;
 using Palavyr.BackupAndRestore.Postgres;
 using Palavyr.BackupAndRestore.UserData;

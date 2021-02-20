@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.API.CommonResponseTypes;
 using Palavyr.Common.Aws;
 using Palavyr.Common.UIDUtils;
-using Server.Domain.Conversation;
+using Palavyr.Domain.Conversation.Schemas;
 
 namespace Palavyr.API.Utils
 {

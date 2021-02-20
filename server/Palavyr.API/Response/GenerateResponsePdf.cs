@@ -18,10 +18,11 @@ using Palavyr.Common.FileSystem;
 using Palavyr.Common.FileSystem.FormPaths;
 using Palavyr.Common.FileSystem.LocalServices;
 using Palavyr.Common.GlobalConstants;
-using PDFService;
-using PDFService.PdfSections.Util;
-using Server.Domain.Configuration.Constant;
-using Server.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Constant;
+using Palavyr.Domain.Configuration.Schemas;
+using Palavyr.Services.PdfService;
+using Palavyr.Services.PdfService.PdfSections.Util;
+
 
 namespace Palavyr.API.Response
 {

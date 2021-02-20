@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Server.Domain.Configuration.Constant;
-using Server.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Constant;
+using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
 {

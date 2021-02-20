@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Server.Domain.Configuration.Constant;
-using Server.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Constant;
+using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Utils
 {

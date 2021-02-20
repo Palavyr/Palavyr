@@ -4,7 +4,7 @@ using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Common.GlobalConstants;
-using Server.Domain.Accounts;
+using Palavyr.Domain.Accounts.Schemas;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {

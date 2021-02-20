@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Server.Domain.Configuration.Schemas
+namespace Palavyr.Domain.Configuration.Schemas
 {
     public class SelectOneFlat
     {

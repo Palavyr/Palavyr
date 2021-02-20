@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.API.CommonResponseTypes;
 using Palavyr.API.RequestTypes;
 using Palavyr.Common.UIDUtils;
-using Server.Domain.Accounts;
+using Palavyr.Domain.Accounts.Schemas;
 
 namespace Palavyr.API.Services.AuthenticationServices
 {
@@ -21,11 +21,11 @@ namespace Palavyr.API.Services.AuthenticationServices
 
     public class AuthService : IAuthService
     {
-        private DashContext _dashContext;
-        private readonly AccountsContext _accountsContext;
-        private readonly ILogger<AuthService> _logger;
-        private readonly IJwtAuthenticationService _jwtAuthService;
-        private IConfiguration _configuration;
+        private DashContext dashContext;
+        private readonly AccountsContext accountsContext;
+        private readonly ILogger<AuthService> logger;
+        private readonly IJwtAuthenticationService jwtAuthService;
+        private IConfiguration configuration;
 
         private const string CouldNotFindAccount = "Could not find Account";
         private const string PasswordsDoNotMatch = "Password does not match.";
@@ -41,12 +41,12 @@ namespace Palavyr.API.Services.AuthenticationServices
             IConfiguration configuration
         )
         {
-            _dashContext = dashContext;
-            _accountsContext = accountsContext;
-            _logger = logger;
+            this.dashContext = dashContext;
+            this.accountsContext = accountsContext;
+            this.logger = logger;
 
-            _configuration = configuration;
-            _jwtAuthService = jwtService;
+            this.configuration = configuration;
+            jwtAuthService = jwtService;
         }
 
         private class AccountReturn
@@ -95,11 +95,11 @@ namespace Palavyr.API.Services.AuthenticationServices
             var token = CreateNewJwtToken(account);
             await UpdateCurrentAccountState(account);
 
-            await _accountsContext.Sessions.AddAsync(session);
+            await accountsContext.Sessions.AddAsync(session);
             
-            await _accountsContext.SaveChangesAsync();
+            await accountsContext.SaveChangesAsync();
 
-            _logger.LogDebug("Session saved to DB. Returning auth response.");
+            logger.LogDebug("Session saved to DB. Returning auth response.");
             return Credentials.CreateAuthenticatedResponse(
                 session.SessionId,
                 session.ApiKey,
@@ -111,7 +111,7 @@ namespace Palavyr.API.Services.AuthenticationServices
         {
             // update the current active state
             // if the current_period_end plus a few days is in the future, then active stays true
-            _logger.LogDebug("Updated current active state given the subscription status.");
+            logger.LogDebug("Updated current active state given the subscription status.");
             var periodEndWithBuffer = account.CurrentPeriodEnd.AddDays(GracePeriod); // 5 day grace period if they don't pay.
             if (DateTime.Now > periodEndWithBuffer && account.PlanType != UserAccount.PlanTypeEnum.Free)
             {
@@ -127,7 +127,7 @@ namespace Palavyr.API.Services.AuthenticationServices
         {
             try
             {
-                _logger.LogDebug("Inside the try block -- attempting to validation One Time Code");
+                logger.LogDebug("Inside the try block -- attempting to validation One Time Code");
                 var result =
                     await GoogleJsonWebSignature.ValidateAsync(
                         oneTimeCode,
@@ -136,12 +136,12 @@ namespace Palavyr.API.Services.AuthenticationServices
             }
             catch (InvalidJwtException)
             {
-                _logger.LogDebug("EXCEPTION - Invalid JWT Token!");
+                logger.LogDebug("EXCEPTION - Invalid JWT Token!");
                 return null;
             }
             catch (Exception ex)
             {
-                _logger.LogDebug($"UNKNOWN EXCEPTION THROWN: {ex.Message}");
+                logger.LogDebug($"UNKNOWN EXCEPTION THROWN: {ex.Message}");
                 return null;
             }
         }
@@ -170,7 +170,7 @@ namespace Palavyr.API.Services.AuthenticationServices
             }
 
             // now verify the user exists in the Accounts database
-            var account = _accountsContext.Accounts.SingleOrDefault(row => row.EmailAddress == payload.Email);
+            var account = accountsContext.Accounts.SingleOrDefault(row => row.EmailAddress == payload.Email);
             if (account == null)
             {
                 return AccountReturn.Return(null, CouldNotFindAccountWithGoogle);
@@ -184,10 +184,10 @@ namespace Palavyr.API.Services.AuthenticationServices
 
         private AccountReturn RequestAccountViaDefault(LoginCredentials credentials)
         {
-            _logger.LogDebug("Attempting to retrieve credentials.");
-            var byUsername = _accountsContext.Accounts.SingleOrDefault(row => row.UserName == credentials.Username);
+            logger.LogDebug("Attempting to retrieve credentials.");
+            var byUsername = accountsContext.Accounts.SingleOrDefault(row => row.UserName == credentials.Username);
             var byEmail =
-                _accountsContext.Accounts.SingleOrDefault(row => row.EmailAddress == credentials.EmailAddress);
+                accountsContext.Accounts.SingleOrDefault(row => row.EmailAddress == credentials.EmailAddress);
 
             var userAccount = byUsername ?? byEmail;
             if (userAccount == null)
@@ -201,7 +201,7 @@ namespace Palavyr.API.Services.AuthenticationServices
 
             if (!PasswordHashing.ComparePasswords(userAccount.Password, credentials.Password))
             {
-                _logger.LogDebug("The provided password did not match!");
+                logger.LogDebug("The provided password did not match!");
                 return AccountReturn.Return(null, PasswordsDoNotMatch);
             }
 
@@ -211,16 +211,16 @@ namespace Palavyr.API.Services.AuthenticationServices
         private Session CreateNewSession(UserAccount account)
         {
             var sessionId = Guid.NewGuid().ToString();
-            _logger.LogDebug("Attempting to create a new Session.");
+            logger.LogDebug("Attempting to create a new Session.");
             var newSession = Session.CreateNew(sessionId, account.AccountId, account.ApiKey);
 
-            _logger.LogDebug($"New Session created: {newSession.SessionId}");
+            logger.LogDebug($"New Session created: {newSession.SessionId}");
             return newSession;
         }
 
         private string CreateNewJwtToken(UserAccount account)
         {
-            return _jwtAuthService.GenerateJwtTokenAfterAuthentication(account.EmailAddress);
+            return jwtAuthService.GenerateJwtTokenAfterAuthentication(account.EmailAddress);
         }
 
         private static LoginType DetermineLoginType(LoginCredentials loginCredentials)

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.EntityFrameworkCore;
-using Server.Domain.Accounts;
+using Palavyr.Domain.Accounts.Schemas;
 
 namespace Palavyr.BackupAndRestore
 {

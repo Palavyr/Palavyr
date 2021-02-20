@@ -1,7 +1,5 @@
 using System;
 using DashboardServer.Data;
-using EmailService.ResponseEmail;
-using EmailService.Verification;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
@@ -10,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Palavyr.Amazon.S3Services;
 using Palavyr.API.Response;
 using Palavyr.API.Services.AccountServices;
 using Palavyr.API.Services.AuthenticationServices;
@@ -21,6 +18,10 @@ using Palavyr.BackupAndRestore;
 using Palavyr.BackupAndRestore.Postgres;
 using Palavyr.BackupAndRestore.UserData;
 using Palavyr.Common.GlobalConstants;
+using Palavyr.Services.Amazon.S3Service;
+using Palavyr.Services.EmailService.ResponseEmailTools;
+using Palavyr.Services.EmailService.Verification;
+using SesEmail = Palavyr.Services.EmailService.ResponseEmailTools.SesEmail;
 
 namespace Palavyr.API.Registration.ServiceCollection
 {

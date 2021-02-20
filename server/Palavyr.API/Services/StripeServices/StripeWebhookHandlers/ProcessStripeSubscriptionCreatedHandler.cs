@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using DashboardServer.Data;
-using EmailService.ResponseEmail;
 using Microsoft.Extensions.Logging;
 using Palavyr.Common.UIDUtils;
+using Palavyr.Services.EmailService.ResponseEmailTools;
 using Stripe;
 
 namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers

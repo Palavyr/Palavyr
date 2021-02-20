@@ -1,13 +1,13 @@
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
-using EmailService.ResponseEmail;
 using Microsoft.Extensions.Logging;
-using Palavyr.Amazon;
-using Palavyr.Amazon.S3Services;
 using Palavyr.BackupAndRestore.Paths;
 using Palavyr.Common.FileSystem.FormPaths;
 using Palavyr.Common.UIDUtils;
+using Palavyr.Services.Amazon;
+using Palavyr.Services.Amazon.S3Service;
+using Palavyr.Services.EmailService.ResponseEmailTools;
 
 namespace Palavyr.BackupAndRestore.Postgres
 {

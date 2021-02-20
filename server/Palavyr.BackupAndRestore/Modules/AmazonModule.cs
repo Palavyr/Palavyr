@@ -4,9 +4,10 @@ using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.SimpleEmail;
 using Autofac;
-using EmailService.ResponseEmail;
 using Microsoft.Extensions.Configuration;
-using Palavyr.Amazon.S3Services;
+using Palavyr.Services.Amazon.S3Service;
+using Palavyr.Services.EmailService.ResponseEmailTools;
+using SesEmail = Palavyr.Services.EmailService.ResponseEmailTools.SesEmail;
 
 
 //https://stackoverflow.com/questions/59200028/registering-more-amazons3client-with-configurations-on-autofac

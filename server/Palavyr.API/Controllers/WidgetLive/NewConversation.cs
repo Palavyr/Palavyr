@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Server.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {

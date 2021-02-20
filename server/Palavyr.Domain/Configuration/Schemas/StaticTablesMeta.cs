@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace Server.Domain.Configuration.Schemas
+namespace Palavyr.Domain.Configuration.Schemas
 {
     public class StaticTablesMeta
     {

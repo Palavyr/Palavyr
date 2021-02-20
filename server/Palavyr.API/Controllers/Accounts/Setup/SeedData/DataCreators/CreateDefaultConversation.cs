@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using Palavyr.API.Controllers.WidgetLive;
 using Palavyr.API.Utils;
-using Server.Domain.Configuration.Constant;
-using Server.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Constant;
+using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
 {

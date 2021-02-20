@@ -1,13 +1,11 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using DashboardServer.Data;
-using EmailService.Verification;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Server.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Schemas;
+using Palavyr.Services.EmailService.Verification;
 
 namespace Palavyr.API.Controllers.Areas
 {
@@ -16,20 +14,20 @@ namespace Palavyr.API.Controllers.Areas
     [ApiController]
     public class GetAreaByIdController : ControllerBase
     {
-        private readonly AccountsContext accountContext;
-        private readonly DashContext dashContext;
+        private readonly IDashConnector dashConnector;
+        private readonly IAccountsConnector accountsConnector;
         private readonly EmailVerificationStatus emailVerificationStatus;
         private ILogger<GetAreaByIdController> logger;
 
         public GetAreaByIdController(
-            AccountsContext accountContext,
-            DashContext dashContext,
+            IDashConnector dashConnector,
+            IAccountsConnector accountsConnector,
             EmailVerificationStatus emailVerificationStatus,
             ILogger<GetAreaByIdController> logger
         )
         {
-            this.accountContext = accountContext;
-            this.dashContext = dashContext;
+            this.dashConnector = dashConnector;
+            this.accountsConnector = accountsConnector;
             this.emailVerificationStatus = emailVerificationStatus;
             this.logger = logger;
         }
@@ -39,14 +37,12 @@ namespace Palavyr.API.Controllers.Areas
         [HttpGet("areas/{areaId}")]
         public async Task<Area> Get([FromHeader] string accountId, string areaId)
         {
-            var area = dashContext.Areas.Where(row => row.AccountId == accountId).Single(row => row.AreaIdentifier == areaId);
+            var area = await dashConnector.GetAreaById(accountId, areaId);
 
             if (string.IsNullOrWhiteSpace(area.AreaSpecificEmail))
             {
-                var account = await accountContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
-                if (account == null) throw new NullReferenceException("Account doesnt exist: Area Data Controller");
+                var account = await accountsConnector.GetAccount(accountId);
                 area.AreaSpecificEmail = account.EmailAddress;
-                await dashContext.SaveChangesAsync();
             }
 
             var (found, status) = await emailVerificationStatus.RequestEmailVerificationStatus(area.AreaSpecificEmail);
@@ -64,8 +60,8 @@ namespace Palavyr.API.Controllers.Areas
             {
                 area.UseAreaFallbackEmail = false;
             }
-            
-            await dashContext.SaveChangesAsync();
+
+            await dashConnector.CommitChangesAsync();
             return area;
         }
     }

@@ -1,5 +1,5 @@
 using System;
-using Server.Domain.Accounts;
+using Palavyr.Domain.Accounts.Schemas;
 
 namespace Palavyr.API.Services.StripeServices
 {

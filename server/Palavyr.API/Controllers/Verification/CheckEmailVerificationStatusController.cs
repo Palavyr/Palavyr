@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using EmailService.Verification;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.RequestTypes;
+using Palavyr.Services.EmailService.Verification;
 
 namespace Palavyr.API.Controllers.Verification
 {

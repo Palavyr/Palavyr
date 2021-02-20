@@ -1,8 +1,9 @@
-using System.Linq;
-using DashboardServer.Data;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Server.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.controllers.Conversation
 {
@@ -10,29 +11,26 @@ namespace Palavyr.API.controllers.Conversation
     [ApiController]
     public class GetConversationByAreaIdController : ControllerBase
     {
-        private DashContext dashContext;
+        private readonly IDashConnector dashConnector;
         private ILogger<GetConversationByAreaIdController> logger;
 
         public GetConversationByAreaIdController(
-            DashContext dashContext,
+            
+            IDashConnector dashConnector,
             ILogger<GetConversationByAreaIdController> logger
         )
         {
-            this.dashContext = dashContext;
+            this.dashConnector = dashConnector;
             this.logger = logger;
         }
         
         [HttpGet("configure-conversations/{areaId}")]
-        public ConversationNode[] Get(
+        public async Task<List<ConversationNode>> Get(
             [FromHeader] string accountId, 
             [FromRoute] string areaId)
         {
-            var conversation = dashContext
-                .ConversationNodes
-                .Where(row => row.AccountId == accountId)
-                .Where(row => row.AreaIdentifier == areaId)
-                .ToList();
-            return conversation.ToArray();
+            var conversation = await dashConnector.GetAreaConversationNodes(accountId, areaId);
+            return conversation;
         }
     }
 }

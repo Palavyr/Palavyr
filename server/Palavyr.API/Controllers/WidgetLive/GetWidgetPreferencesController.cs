@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
-using DashboardServer.Data;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Services.AuthenticationServices;
+using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
@@ -13,20 +13,19 @@ namespace Palavyr.API.Controllers.WidgetLive
     [ApiController]
     public class GetWidgetPreferencesController : ControllerBase
     {
-        private DashContext dashContext;
+        private readonly IDashConnector dashConnector;
         private ILogger<GetWidgetPreferencesController> logger;
 
-        public GetWidgetPreferencesController(DashContext dashContext, ILogger<GetWidgetPreferencesController> logger)
+        public GetWidgetPreferencesController(IDashConnector dashConnector,  ILogger<GetWidgetPreferencesController> logger)
         {
-            this.dashContext = dashContext;
+            this.dashConnector = dashConnector;
             this.logger = logger;
         }
 
         [HttpGet("widget/preferences")]
-        public async Task<IActionResult> FetchPreferences([FromHeader] string accountId)
+        public async Task<WidgetPreference> FetchPreferences([FromHeader] string accountId)
         {
-            var prefs = await dashContext.WidgetPreferences.SingleOrDefaultAsync(row => row.AccountId == accountId);
-            return Ok(prefs);
+            return await dashConnector.GetWidgetPreferences(accountId);
         }
     }
 }

@@ -1,7 +1,7 @@
 using DashboardServer.Data;
-using Server.Domain.Configuration.Schemas;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Services.EntityServices
 {

@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Server.Domain.Configuration.Schemas
+namespace Palavyr.Domain.Configuration.Schemas
 {
     public class Area
     {

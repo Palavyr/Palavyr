@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
-using DashboardServer.Data;
-using EmailService.Verification;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.RequestTypes;
+using Palavyr.Services.EmailService.Verification;
 
 namespace Palavyr.API.Controllers.Verification
 {
@@ -12,40 +11,40 @@ namespace Palavyr.API.Controllers.Verification
     [ApiController]
     public class EmailVerificationController : ControllerBase
     {
+        private readonly IDashConnector dashConnector;
         private readonly EmailVerificationStatus emailVerificationStatus;
         private ILogger<EmailVerificationController> logger;
-        private readonly DashContext dashContext;
 
         public EmailVerificationController(
+            IDashConnector dashConnector,
             EmailVerificationStatus emailVerificationStatus,
-            ILogger<EmailVerificationController> logger,
-            DashContext dashContext)
+            ILogger<EmailVerificationController> logger
+        )
         {
+            this.dashConnector = dashConnector;
             this.emailVerificationStatus = emailVerificationStatus;
             this.logger = logger;
-            this.dashContext = dashContext;
         }
 
         [HttpPost("verification/email/{areaId}")]
         public async Task<EmailVerificationResponse> RequestNewEmailVerification(
             [FromHeader] string accountId,
             [FromRoute] string areaId,
-            [FromBody] EmailVerificationRequest emailRequest)
+            [FromBody] EmailVerificationRequest emailRequest
+        )
         {
-            var area = await dashContext.Areas.SingleOrDefaultAsync(row =>
-                row.AccountId == accountId && row.AreaIdentifier == areaId);
-
+            var area = await dashConnector.GetAreaById(accountId, areaId);
             var verificationResponse = await emailVerificationStatus.GetVerificationResponse(emailRequest.EmailAddress);
 
             area.EmailIsVerified = verificationResponse.IsVerified();
             area.AwaitingVerification = verificationResponse.IsPending();
-            
-            
+
             if (!verificationResponse.IsFailed())
             {
                 area.AreaSpecificEmail = emailRequest.EmailAddress;
             }
-            await dashContext.SaveChangesAsync();
+
+            await dashConnector.CommitChangesAsync();
             return verificationResponse;
         }
     }

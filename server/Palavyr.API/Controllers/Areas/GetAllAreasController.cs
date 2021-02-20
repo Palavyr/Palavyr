@@ -1,9 +1,10 @@
-using System.Linq;
-using DashboardServer.Data;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Server.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Areas
 {
@@ -12,20 +13,20 @@ namespace Palavyr.API.Controllers.Areas
     [ApiController]
     public class GetAllAreasController : ControllerBase
     {
+        private readonly IDashConnector dashConnector;
         private ILogger<GetAllAreasController> logger;
-        private DashContext dashContext;
 
-        public GetAllAreasController(DashContext dashContext, ILogger<GetAllAreasController> logger)
+        public GetAllAreasController(IDashConnector dashConnector, ILogger<GetAllAreasController> logger)
         {
-            this.dashContext = dashContext;
+            this.dashConnector = dashConnector;
             this.logger = logger;
         }
         
         [HttpGet("areas")]
-        public Area[] Get([FromHeader] string accountId)
+        public async Task<List<Area>> Get([FromHeader] string accountId)
         {
             logger.LogDebug("Return all areas");
-            var areas = dashContext.Areas.Where(row => row.AccountId == accountId).ToArray();
+            var areas = await dashConnector.GetAllAreasShallow(accountId);
             return areas;
         }
     }

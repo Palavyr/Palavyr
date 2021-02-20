@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Controllers.Response.DynamicTables;
 using Palavyr.API.Utils;
-using Server.Domain.Configuration.Constant;
-using Server.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Constant;
+using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Services.DynamicTableService
 {

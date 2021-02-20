@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Server.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Schemas;
 
-namespace Server.Domain.Configuration.Constant
+namespace Palavyr.Domain.Configuration.Constant
 {
     /// <summary>
     /// Node type option represents the object used to configure the tree in the dashboard

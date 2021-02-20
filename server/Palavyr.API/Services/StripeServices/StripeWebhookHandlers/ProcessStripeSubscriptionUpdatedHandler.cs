@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using DashboardServer.Data;
 using Microsoft.Extensions.Logging;
-using Server.Domain.Accounts;
+using Palavyr.Domain.Accounts.Schemas;
 using Subscription = Stripe.Subscription;
 
 namespace Palavyr.API.Services.StripeServices.StripeWebhookHandlers

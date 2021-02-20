@@ -7,9 +7,9 @@ using Microsoft.Extensions.Logging;
 using Palavyr.API.Controllers.Accounts.Setup.SeedData;
 using Palavyr.API.Services.StripeServices;
 using Palavyr.Common.GlobalConstants;
-using Server.Domain.Accounts;
+using Palavyr.Domain.Accounts.Schemas;
 using AccountType = Palavyr.Common.UIDUtils.AccountType;
-using Subscription = Server.Domain.Accounts.Subscription;
+using Subscription = Palavyr.Domain.Accounts.Schemas.Subscription;
 
 namespace Palavyr.API.Controllers.Accounts.Develop
 {

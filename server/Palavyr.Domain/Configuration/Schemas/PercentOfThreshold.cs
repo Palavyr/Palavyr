@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Server.Domain.Configuration.Schemas
+namespace Palavyr.Domain.Configuration.Schemas
 {
     /// <summary>
     /// The table meta provides a tableID, for this dynamic table though, we allow the records to be split into subtables

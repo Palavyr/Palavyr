@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using DashboardServer.Data;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Services.AuthenticationServices;
-using Server.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
@@ -15,24 +14,25 @@ namespace Palavyr.API.Controllers.WidgetLive
     [ApiController]
     public class GetConfiguredAreasController : ControllerBase
     {
+        private readonly IDashConnector dashConnector;
         private ILogger<GetConfiguredAreasController> logger;
-        private DashContext dashContext;
 
         public GetConfiguredAreasController(
-            DashContext dashContext,
+            IDashConnector dashConnector,
             ILogger<GetConfiguredAreasController> logger
         )
         {
+            this.dashConnector = dashConnector;
             this.logger = logger;
-            this.dashContext = dashContext;
         }
 
         [HttpGet("widget/areas")]
         public async Task<List<Area>> Get([FromHeader] string accountId)
         {
             logger.LogDebug("Collecting configured areas for live-widget");
-            var areas = dashContext.Areas.Where(row => row.AccountId == accountId && row.IsComplete).ToList();
-            return areas;
+
+            var activeAreas = await dashConnector.GetActiveAreas(accountId);
+            return activeAreas;
         }
     }
 }
