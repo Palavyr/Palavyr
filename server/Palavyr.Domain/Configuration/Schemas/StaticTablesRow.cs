@@ -16,6 +16,7 @@ namespace Palavyr.Domain.Configuration.Schemas
         public int TableOrder { get; set; }
         public string AreaIdentifier { get; set; }
         public string AccountId { get; set; }
+        public bool PerPersonInputRequired { get; set; }
 
         public static List<StaticTableRow> CreateDefaultStaticTable(int tableId, string areaId, string accountId)
         {
@@ -47,7 +48,8 @@ namespace Palavyr.Domain.Configuration.Schemas
                 PerPerson = row.PerPerson,
                 TableOrder = row.TableOrder,
                 AreaIdentifier = row.AreaIdentifier,
-                AccountId = accountId
+                AccountId = accountId,
+                PerPersonInputRequired = row.PerPersonInputRequired
             }));
             return boundRows;
         }

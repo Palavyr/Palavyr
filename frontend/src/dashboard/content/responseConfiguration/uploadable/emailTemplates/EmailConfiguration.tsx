@@ -4,9 +4,9 @@ import { Upload } from "../Upload";
 import { ViewEmailTemplate } from "./ViewTemplate";
 import { EmailEditor } from "./EmailEditor";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { Divider, makeStyles } from "@material-ui/core";
+import { Divider, makeStyles, Typography } from "@material-ui/core";
 import { useParams } from "react-router-dom";
-import { Settings, VariableDetail } from "@Palavyr-Types";
+import { PurchaseTypes, Settings, VariableDetail } from "@Palavyr-Types";
 import { EditorDetails } from "./EditorDetails";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { OsTypeToggle } from "../../areaSettings/enableAreas/OsTypeToggle";
@@ -40,7 +40,7 @@ export const EmailConfiguration = () => {
     const [modalState, setModalState] = useState<boolean>(false);
     const [fallbackModalState, setFallbackModalState] = useState<boolean>(false);
 
-    const { setIsLoading } = React.useContext(DashboardContext);
+    const { setIsLoading, subscription } = React.useContext(DashboardContext);
 
     const toggleModal = () => {
         setModalState(!modalState);
@@ -161,14 +161,11 @@ export const EmailConfiguration = () => {
         setAreaSubjectState(emailSubject);
     }, [areaIdentifier]);
 
-    const loadFallbackAreaSubject = useCallback(
-        async () => {
-            const {data: fallbackSubject} = await client.Configuration.Email.GetAreaFallbackSubject(areaIdentifier);
-            setAreaFallbackSubjectState(fallbackSubject);
-            setIsLoading(false);
-        },
-        [areaIdentifier],
-    )
+    const loadFallbackAreaSubject = useCallback(async () => {
+        const { data: fallbackSubject } = await client.Configuration.Email.GetAreaFallbackSubject(areaIdentifier);
+        setAreaFallbackSubjectState(fallbackSubject);
+        setIsLoading(false);
+    }, [areaIdentifier]);
 
     useEffect(() => {
         setIsLoading(true);
@@ -195,15 +192,11 @@ export const EmailConfiguration = () => {
     const [areaSubjectState, setAreaSubjectState] = useState<string>("");
     const [subjectAccordState, setSubjectAccordState] = useState<boolean>(false);
     const [subjectModalState, setSubjectModalState] = useState<boolean>(false);
-    const toggleSubjectModal = () => {
-        setSubjectModalState(!subjectModalState);
-    };
-    const toggleSubjectAccord = () => {
-        setSubjectAccordState(!subjectAccordState);
-    };
-    const onAreaSubjectChange = (event: any) => {
-        setAreaSubjectState(event.target.value);
-    };
+
+    const toggleSubjectModal = () => setSubjectModalState(!subjectModalState);
+    const toggleSubjectAccord = () => setSubjectAccordState(!subjectAccordState);
+    const onAreaSubjectChange = (event: any) => setAreaSubjectState(event.target.value);
+
     const onSaveAreaSubject = async () => {
         const { data: updatedSubject } = await client.Configuration.Email.SaveAreaSubject(areaIdentifier, areaSubjectState);
         setAreaSubjectState(updatedSubject);
@@ -213,15 +206,10 @@ export const EmailConfiguration = () => {
     const [areaFallbackSubjectState, setAreaFallbackSubjectState] = useState<string>("");
     const [subjectFallbackAccordState, setSubjectFallbackAccordState] = useState<boolean>(false);
     const [subjectFallbackModalState, setSubjectFallbackModalState] = useState<boolean>(false);
-    const toggleFallbackSubjectModal = () => {
-        setSubjectFallbackModalState(!subjectFallbackModalState);
-    };
-    const toggleFallbackSubjectAccord = () => {
-        setSubjectFallbackAccordState(!subjectFallbackAccordState);
-    };
-    const onAreaFallbackSubjectChange = (event: any) => {
-        setAreaFallbackSubjectState(event.target.value);
-    };
+    const toggleFallbackSubjectModal = () => setSubjectFallbackModalState(!subjectFallbackModalState);
+    const toggleFallbackSubjectAccord = () => setSubjectFallbackAccordState(!subjectFallbackAccordState);
+    const onAreaFallbackSubjectChange = (event: any) => setAreaFallbackSubjectState(event.target.value);
+
     const onSaveFallbackAreaSubject = async () => {
         const { data: updatedSubject } = await client.Configuration.Email.SaveAreaFallbackSubject(areaIdentifier, areaFallbackSubjectState);
         setAreaFallbackSubjectState(updatedSubject);
@@ -248,11 +236,15 @@ export const EmailConfiguration = () => {
                 uploadDetails={() => uploadDetails("SecondDetails")}
                 acceptedFiles={["text/html", "text/plain"]}
             />
-            <EmailEditor uploadDetails={() => uploadDetails("firstDetails")} accordState={editorAccordstate} toggleAccord={toggleEditorAccord} setEmailTemplate={setEmailTemplate} emailTemplate={emailTemplate}>
-                <div className={cls.saveOrCancel}>
-                    <SaveOrCancel onSave={saveEditorData} onCancel={loadEmailTemplate} useModal={true} />
-                </div>
-            </EmailEditor>
+            {subscription === PurchaseTypes.Premium || subscription === PurchaseTypes.Pro ? (
+                <EmailEditor uploadDetails={() => uploadDetails("firstDetails")} accordState={editorAccordstate} toggleAccord={toggleEditorAccord} setEmailTemplate={setEmailTemplate} emailTemplate={emailTemplate}>
+                    <div className={cls.saveOrCancel}>
+                        <SaveOrCancel onSave={saveEditorData} onCancel={loadEmailTemplate} useModal={true} />
+                    </div>
+                </EmailEditor>
+            ) : (
+                <Typography style={{ padding: "0.6rem", fontWeight: "bold" }}> Subscribe to get access to the inline email editor </Typography>
+            )}
             {loaded && <ViewEmailTemplate emailTemplate={emailTemplate} />}
             <Divider />
             {useAreaFallbackEmail && (
@@ -284,11 +276,21 @@ export const EmailConfiguration = () => {
                         uploadDetails={() => uploadDetails("ThirdDetails")}
                         acceptedFiles={["text/html", "text/plain"]}
                     />
-                    <EmailEditor uploadDetails={() => uploadDetails("FinalDetails")} accordState={fallbackEditorAccordstate} toggleAccord={toggleFallbackEditorAccord} setEmailTemplate={setFallbackEmailTemplate} emailTemplate={fallbackEmailTemplate}>
-                        <div className={cls.saveOrCancel}>
-                            <SaveOrCancel onSave={saveFallbackEditorData} onCancel={loadFallbackTemplate} useModal={true} />
-                        </div>
-                    </EmailEditor>
+                    {subscription === PurchaseTypes.Premium || subscription === PurchaseTypes.Pro ? (
+                        <EmailEditor
+                            uploadDetails={() => uploadDetails("FinalDetails")}
+                            accordState={fallbackEditorAccordstate}
+                            toggleAccord={toggleFallbackEditorAccord}
+                            setEmailTemplate={setFallbackEmailTemplate}
+                            emailTemplate={fallbackEmailTemplate}
+                        >
+                            <div className={cls.saveOrCancel}>
+                                <SaveOrCancel onSave={saveFallbackEditorData} onCancel={loadFallbackTemplate} useModal={true} />
+                            </div>
+                        </EmailEditor>
+                    ) : (
+                        <Typography style={{ padding: "0.6rem", fontWeight: "bold" }}> Subscribe to get access to the inline email editor </Typography>
+                    )}
                     {loaded && <ViewEmailTemplate emailTemplate={fallbackEmailTemplate} />}
                 </>
             )}

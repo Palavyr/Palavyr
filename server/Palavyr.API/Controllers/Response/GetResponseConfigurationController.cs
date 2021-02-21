@@ -19,7 +19,7 @@ namespace Palavyr.API.Controllers.Response
         [HttpGet("response/configuration/{areaId}")]
         public async Task<Area> Get([FromHeader] string accountId, [FromRoute] string areaId)
         {
-            var areaWithAllData = await dashConnector.GetAreaDeep(accountId, areaId);
+            var areaWithAllData = await dashConnector.GetAreaComplete(accountId, areaId);
             return areaWithAllData;
         }
     }

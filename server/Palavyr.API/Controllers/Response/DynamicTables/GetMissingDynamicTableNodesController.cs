@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DashboardServer.Data;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Utils;
 using Palavyr.Common.Utils;
+using Palavyr.Domain.Configuration.Constant;
 
 namespace Palavyr.API.Controllers.Response.DynamicTables
 {
@@ -32,13 +32,16 @@ namespace Palavyr.API.Controllers.Response.DynamicTables
     {
         private ILogger<GetMissingDynamicTableNodesController> logger;
         private DashContext dashContext;
+        private readonly IDashConnector dashConnector;
 
         public GetMissingDynamicTableNodesController(
             ILogger<GetMissingDynamicTableNodesController> logger,
-            DashContext dashContext
+            DashContext dashContext,
+            IDashConnector dashConnector
         )
         {
             this.dashContext = dashContext;
+            this.dashConnector = dashConnector;
             this.logger = logger;
         }
 
@@ -46,54 +49,35 @@ namespace Palavyr.API.Controllers.Response.DynamicTables
         public async Task<string[]> Get([FromHeader] string accountId, string areaId)
         {
             var allMissingNodeTypes = new List<string>();
-
-            var nodelist = await dashContext
-                .ConversationNodes
-                .Where(row => row.AreaIdentifier == areaId)
-                .ToArrayAsync();
-
-            var area = await dashContext
-                .Areas
-                .Where(row => row.AreaIdentifier == areaId && row.AccountId == accountId)
-                .Include(row => row.ConversationNodes)
-                .Include(row => row.DynamicTableMetas)
-                .SingleOrDefaultAsync();
-
-            var dynamicNodeTypes = area
+            var area = await dashConnector.GetAreaComplete(accountId, areaId);
+            var requiredDynamicNodeTypes = area
                 .DynamicTableMetas
+                .Select(TreeUtils.TransformRequiredNodeType)
                 .ToArray();
 
-            var requiredDynamicNodeTypes = dynamicNodeTypes
-                .Select(TreeUtils.TransformRequiredNodeType)
-                .ToList();
-
-            var rawMissingDynamicNodeTypes = TreeUtils.GetMissingNodes(nodelist, requiredDynamicNodeTypes.ToArray());
-            var missingDynamicNodeTypes = dynamicNodeTypes
+            var rawMissingDynamicNodeTypes = TreeUtils.GetMissingNodes(area.ConversationNodes.ToArray(), requiredDynamicNodeTypes);
+            var missingDynamicNodeTypes = area
+                .DynamicTableMetas
                 .Where(x => rawMissingDynamicNodeTypes.Contains(TreeUtils.TransformRequiredNodeType(x)))
                 .Select(TreeUtils.TransformRequiredNodeTypeToPrettyName)
                 .ToList();
 
             allMissingNodeTypes.AddRange(missingDynamicNodeTypes);
 
-            // Other node types missing
-            // var staticTableRows = await dashContext
-            //     .StaticTablesRows
-            //     .Where(row => row.AccountId == accountId)
-            //     .ToListAsync();
+            var perIndividualRequiredStaticTables = area
+                .StaticTablesMetas
+                .SelectMany(x => x.StaticTableRows)
+                .Select(x => x.PerPersonInputRequired)
+                .Any(p => p);
 
-            // check static tables and dynamic tables to see if even 1 'per individual' is set. If so, then check for this node type.
-            // var perIndividualRequired = staticTableRows
-            //     .Where(row => row.AreaIdentifier == area.AreaIdentifier)
-            //     .Select(x => x.PerPerson)
-            //     .Any();
-            //
-            // if (perIndividualRequired)
-            // {
-            //     var perPersonNodeType = new[] {DefaultNodeTypeOptions.TakeNumberIndividuals.StringName};
-            //     var missingOtherNodeTypes = TreeUtils.GetMissingNodes(nodelist, perPersonNodeType); //.SelectMany(x => StringUtils.SplitCamelCase(x)).ToArray();
-            //     var asPretty = string.Join(" ", StringUtils.SplitCamelCase(missingOtherNodeTypes.First()));
-            //     allMissingNodeTypes.AddRange(new[] {asPretty});
-            // }
+            if (perIndividualRequiredStaticTables && !allMissingNodeTypes.Contains(DefaultNodeTypeOptions.TakeNumberIndividuals.StringName))
+            {
+                var perPersonNodeType = new[] {DefaultNodeTypeOptions.TakeNumberIndividuals.StringName};
+                var missingOtherNodeTypes = TreeUtils.GetMissingNodes(area.ConversationNodes.ToArray(), perPersonNodeType); //.SelectMany(x => StringUtils.SplitCamelCase(x)).ToArray();
+                var asPretty = string.Join(" ", StringUtils.SplitCamelCaseAsString(missingOtherNodeTypes.First()));
+                allMissingNodeTypes.Add(asPretty);
+            }
+
 
             return allMissingNodeTypes.ToArray();
         }

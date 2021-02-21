@@ -1,24 +1,24 @@
 import React from "react";
-import { makeStyles, TextField, Switch, Button, TableRow, TableCell } from "@material-ui/core";
+import { makeStyles, TextField, Switch, Button, TableRow, TableCell, Checkbox } from "@material-ui/core";
 import { StaticTableMetas } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./staticTableModifier";
-import DeleteIcon from '@material-ui/icons/Delete';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-import CurrencyTextField from '@unicef/material-ui-currency-textfield'
+import DeleteIcon from "@material-ui/icons/Delete";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
+import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import RemoveIcon from '@material-ui/icons/Remove';
-import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import RemoveIcon from "@material-ui/icons/Remove";
+import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
+import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
 type styleProp = {
     index: number;
     rangeState: boolean;
-}
+};
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     tableInputs: {
         margin: "0.6rem",
     },
@@ -31,18 +31,17 @@ const useStyles = makeStyles(theme => ({
         borderRadius: "5px",
     },
     row: (props: styleProp) => ({
-        background: (props.index % 2 == 0) ? "#F5F5F5" : `${theme.palette.background.paper}`,
-        borderRadius: "5px"
+        background: props.index % 2 == 0 ? "#F5F5F5" : `${theme.palette.background.paper}`,
+        borderRadius: "5px",
     }),
     maxValInput: (props: styleProp) => {
         if (props.rangeState) {
-            return {}
+            return {};
         } else {
             return {
                 display: "none",
-            }
+            };
         }
-
     },
 }));
 
@@ -57,11 +56,10 @@ export interface IStaticRow {
     rangeState: boolean;
     perState: boolean;
     description: string;
-
+    perPersonIsRequired: boolean;
 }
 
-export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modifier, minFee, maxFee, rangeState, perState, description }: IStaticRow) => {
-
+export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modifier, minFee, maxFee, rangeState, perState, description,perPersonIsRequired }: IStaticRow) => {
     const classes = useStyles({ index, rangeState });
     const cellAlignment = "center";
     const { currencySymbol } = React.useContext(DashboardContext);
@@ -69,12 +67,7 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
     return (
         <TableRow>
             <TableCell align={cellAlignment}>
-                <Button
-                    size="small"
-                    className={classes.deleteIcon}
-                    startIcon={<DeleteIcon />}
-                    onClick={() => modifier.delRow(staticTableMetas, tableOrder, rowOrder)}
-                >
+                <Button size="small" className={classes.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.delRow(staticTableMetas, tableOrder, rowOrder)}>
                     Delete
                 </Button>
             </TableCell>
@@ -99,8 +92,10 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
                     outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(event: any, value: number ) => {
-                        if (value !== undefined) { modifier.setFeeMin(staticTableMetas, tableOrder, rowOrder, value) }
+                    onChange={(event: any, value: number) => {
+                        if (value !== undefined) {
+                            modifier.setFeeMin(staticTableMetas, tableOrder, rowOrder, value);
+                        }
                     }}
                 />
             </TableCell>
@@ -116,41 +111,48 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
                     outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(event: any, value: number ) => {
-                        if (value !== undefined) { modifier.setFeeMax(staticTableMetas, tableOrder, rowOrder, value) }
+                    onChange={(event: any, value: number) => {
+                        if (value !== undefined) {
+                            modifier.setFeeMax(staticTableMetas, tableOrder, rowOrder, value);
+                        }
                     }}
                 />
             </TableCell>
             <TableCell align={cellAlignment}>
                 <Button
                     startIcon={rangeState ? <ChevronLeftIcon /> : <RemoveIcon />}
-                    endIcon={ rangeState ? <ChevronRightIcon /> : null}
+                    endIcon={rangeState ? <ChevronRightIcon /> : null}
                     variant="contained"
                     color={rangeState ? "primary" : "secondary"}
-                    onClick={
-                        () => {
-                            modifier.changeRange(staticTableMetas, tableOrder, rowOrder)
-                        }
-                    }
+                    onClick={() => {
+                        modifier.changeRange(staticTableMetas, tableOrder, rowOrder);
+                    }}
                 >
                     {rangeState ? "Range" : "Single"}
                 </Button>
             </TableCell>
             <TableCell align={cellAlignment}>
                 <Button
-
                     startIcon={perState ? <GroupAddIcon /> : <PeopleAltIcon />}
                     variant="contained"
                     color={perState ? "primary" : "secondary"}
-                    onClick={
-                        () => {
-                            modifier.changePer(staticTableMetas, tableOrder, rowOrder);
-                        }
-                    }
+                    onClick={() => {
+                        modifier.changePer(staticTableMetas, tableOrder, rowOrder);
+                    }}
                 >
                     {perState ? "Per Individual" : "Static Fee"}
                 </Button>
             </TableCell>
+
+            <TableCell align={cellAlignment}>
+                <Checkbox
+                    checked={perPersonIsRequired}
+                    onClick={() => {
+                        modifier.togglePerPersonRequired(staticTableMetas, tableOrder, rowOrder);
+                    }}
+                ></Checkbox>
+            </TableCell>
+
             <TableCell align={cellAlignment}>
                 {!modifier.isRowFirstPosition(rowOrder) && <ArrowDropUpIcon className={classes.largeicon} onClick={() => modifier.shiftRowUp(staticTableMetas, tableOrder, rowOrder)} />}
                 {!modifier.isRowLastPosition(staticTableMetas, tableOrder, rowOrder) && <ArrowDropDownIcon className={classes.largeicon} onClick={() => modifier.shiftRowDown(staticTableMetas, tableOrder, rowOrder)} />}

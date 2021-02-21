@@ -19,11 +19,14 @@ namespace DashboardServer.Data.Abstractions
         Task RemoveConversationNodeById(string nodeId);
         Task<List<ConversationNode>> UpdateConversationNode(string accountId, string areaId, string nodeId, ConversationNode newNode);
         void RemoveNodeRangeByIds(List<string> nodeIds);
-        Task<Area> GetAreaDeep(string accountId, string areaId);
+        Task<Area> GetAreaComplete(string accountId, string areaId);
         Task<List<StaticTablesMeta>> GetStaticTables(string accountId, string areaId);
         Task<WidgetPreference> GetWidgetPreferences(string accountId);
         Task<List<Area>> GetActiveAreas(string accountId);
         Task SetDefaultDynamicTable(string accountId, string areaId, string tableId);
+        Task RemoveStaticTables(List<StaticTablesMeta> staticTablesMetas);
+        Task<List<Area>> GetActiveAreasWithConvoAndDynamicAndStaticTables(string accountId);
+
     }
 
     public class DashConnector : IDashConnector
@@ -137,17 +140,30 @@ namespace DashboardServer.Data.Abstractions
             dashContext.ConversationNodes.RemoveRange(nodesToDelete);
         }
 
-        public async Task<Area> GetAreaDeep(string accountId, string areaId)
+        public async Task<Area> GetAreaComplete(string accountId, string areaId)
         {
             var areaData = await dashContext
                 .Areas
                 .Where(row => row.AccountId == accountId)
                 .Include(row => row.ConversationNodes)
+                .Include(row => row.DynamicTableMetas)
                 .Include(row => row.StaticTablesMetas)
                 .ThenInclude(meta => meta.StaticTableRows)
                 .ThenInclude(row => row.Fee)
                 .SingleAsync(row => row.AreaIdentifier == areaId);
             return areaData;
+        }
+
+        public async Task<List<Area>> GetActiveAreasWithConvoAndDynamicAndStaticTables(string accountId)
+        {
+            return await dashContext
+                .Areas
+                .Where(row => row.AccountId == accountId && row.IsComplete)
+                .Include(row => row.ConversationNodes)
+                .Include(row => row.DynamicTableMetas)
+                .Include(row => row.StaticTablesMetas)
+                .ThenInclude(row => row.StaticTableRows)
+                .ToListAsync();
         }
 
         public async Task<List<StaticTablesMeta>> GetStaticTables(string accountId, string areaId)
@@ -177,6 +193,21 @@ namespace DashboardServer.Data.Abstractions
         {
             var defaultTable = SelectOneFlat.CreateTemplate(accountId, areaId, tableId);
             await dashContext.SelectOneFlats.AddAsync(defaultTable);
+        }
+
+        public async Task RemoveStaticTables(List<StaticTablesMeta> staticTablesMetas)
+        {
+            foreach (var meta in staticTablesMetas)
+            {
+                foreach (var row in meta.StaticTableRows)
+                {
+                    dashContext.StaticFees.Remove(await dashContext.StaticFees.FindAsync(row.Fee.Id));
+                    dashContext.StaticTablesRows.Remove(await dashContext.StaticTablesRows.FindAsync(row.Id));
+                }
+
+                dashContext.StaticTablesMetas.Remove(await dashContext.StaticTablesMetas.FindAsync(meta.Id));
+            }
+
         }
     }
 }

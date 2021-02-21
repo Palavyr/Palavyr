@@ -65,7 +65,7 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, update
 
     const history = useHistory();
     const { isActive } = React.useContext(AuthContext);
-    const { checkAreaCount, setViewName, subscription } = React.useContext(DashboardContext);
+    const { checkAreaCount, setViewName, subscription, numAreasAllowed } = React.useContext(DashboardContext);
 
     const classes = useStyles();
 
@@ -97,7 +97,7 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, update
                     {areaIdentifiers.map((areaIdentifier, index) => {
                         return (
                             <NavLink key={areaIdentifier} to={createNavLink(areaIdentifier)} className={classes.navlink}>
-                                <ListItem disabled={!isActive} button key={areaIdentifier}>
+                                <ListItem disabled={!isActive || index > numAreasAllowed} button key={areaIdentifier}>
                                     <ListItemIcon className={classes.icon}>
                                         <ChatIcon />
                                     </ListItemIcon>

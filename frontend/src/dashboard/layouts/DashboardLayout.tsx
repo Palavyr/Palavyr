@@ -87,7 +87,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [modalState, setModalState] = useState<boolean>(false);
     const [currentViewName, setViewName] = useState<string>("");
 
-    const [numAreasAllowed, setNumAreasAllowed] = useState<number | undefined>();
+    const [numAreasAllowed, setNumAreasAllowed] = useState<number>(0);
     const [alertState, setAlertState] = useState<boolean>(false);
 
     const [widgetState, setWidgetState] = useState<boolean | undefined>();

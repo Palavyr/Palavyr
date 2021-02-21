@@ -75,6 +75,7 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                         <TableCell align={cellAlignment} className={classes.headerText} >Max Amount (if range)</TableCell>
                         <TableCell align={cellAlignment} className={classes.headerText} >Range</TableCell>
                         <TableCell align={cellAlignment} className={classes.headerText} >Per Individual</TableCell>
+                        <TableCell align={cellAlignment} className={classes.headerText} >Require Num Individuals</TableCell>
                         <TableCell align={cellAlignment} className={classes.headerText} ></TableCell>
                     </TableRow>
                 </TableHead>
@@ -92,6 +93,7 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                             rangeState={row.range}
                             perState={row.perPerson}
                             description={row.description}
+                            perPersonIsRequired={row.perPersonInputRequired}
                         />
                     ))}
                 </TableBody>

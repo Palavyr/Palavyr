@@ -1,12 +1,13 @@
 import { ApiClient } from "@api-client/Client";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { makeStyles } from "@material-ui/core";
-import { VariableDetail } from "@Palavyr-Types";
+import { makeStyles, Typography } from "@material-ui/core";
+import { PurchaseTypes, VariableDetail } from "@Palavyr-Types";
 import { EditorDetails } from "dashboard/content/responseConfiguration/uploadable/emailTemplates/EditorDetails";
 import { EmailEditor } from "dashboard/content/responseConfiguration/uploadable/emailTemplates/EmailEditor";
 import { ViewEmailTemplate } from "dashboard/content/responseConfiguration/uploadable/emailTemplates/ViewTemplate";
 import { Upload } from "dashboard/content/responseConfiguration/uploadable/Upload";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { AlignCenter } from "dashboard/layouts/positioning/AlignCenter";
 import React, { useCallback, useState } from "react";
 import { useEffect } from "react";
@@ -31,6 +32,8 @@ export const DefaultEmailTemplate = () => {
     const client = new ApiClient();
     let fileReader = new FileReader();
 
+    const { subscription } = React.useContext(DashboardContext);
+
     const [loaded, setLoaded] = useState<boolean>(false);
 
     const cls = useStyles();
@@ -38,17 +41,13 @@ export const DefaultEmailTemplate = () => {
     const [emailTemplate, setEmailTemplate] = useState<string>("");
     const [variableDetails, setVariableDetails] = useState<VariableDetail[]>([]);
     const [modalState, setModalState] = useState<boolean>(false);
-    const toggleModal = () => {
-        setModalState(!modalState);
-    };
+    const toggleModal = () => setModalState(!modalState);
+
     const [accordState, setAccordState] = useState<boolean>(false);
-    const toggleAccord = () => {
-        setAccordState(!accordState);
-    };
+    const toggleAccord = () => setAccordState(!accordState);
+
     const [editorAccordstate, setEditorAccordState] = useState<boolean>(false);
-    const toggleEditorAccord = () => {
-        setEditorAccordState(!editorAccordstate);
-    };
+    const toggleEditorAccord = () => setEditorAccordState(!editorAccordstate);
 
     const [subjectState, setSubjectState] = useState<string>("");
     const [subjectAccordState, setSubjectAccordState] = useState<boolean>(false);
@@ -56,7 +55,7 @@ export const DefaultEmailTemplate = () => {
 
     const toggleSubjectModal = () => setSubjectModalState(!subjectModalState);
     const toggleSubjectAccord = () => setSubjectAccordState(!subjectAccordState);
-    const onSubjectChange = (event: { target: { value: React.SetStateAction<string>; }; }) => setSubjectState(event.target.value);
+    const onSubjectChange = (event: { target: { value: React.SetStateAction<string> } }) => setSubjectState(event.target.value);
 
     const handleFileRead = async () => {
         const content = fileReader.result;
@@ -110,10 +109,10 @@ export const DefaultEmailTemplate = () => {
     };
 
     const loadDefaultEmailSubject = async () => {
-        const {data: currentSubject} = await client.Configuration.Email.GetDefaultFallbackSubject();
+        const { data: currentSubject } = await client.Configuration.Email.GetDefaultFallbackSubject();
         setSubjectState(currentSubject);
         return true;
-    }
+    };
 
     useEffect(() => {
         loadEmailTemplate();
@@ -141,11 +140,15 @@ export const DefaultEmailTemplate = () => {
                 uploadDetails={() => uploadDetails("minorDetails")}
                 acceptedFiles={["text/html", "text/plain"]}
             />
-            <EmailEditor uploadDetails={() => uploadDetails("otherDetails")} accordState={editorAccordstate} toggleAccord={toggleEditorAccord} setEmailTemplate={setEmailTemplate} emailTemplate={emailTemplate}>
-                <div className={cls.saveOrCancel}>
-                    <SaveOrCancel onSave={saveEditorData} onCancel={loadEmailTemplate} useModal={true} />
-                </div>
-            </EmailEditor>
+            {subscription === PurchaseTypes.Premium || subscription === PurchaseTypes.Pro ? (
+                <EmailEditor uploadDetails={() => uploadDetails("otherDetails")} accordState={editorAccordstate} toggleAccord={toggleEditorAccord} setEmailTemplate={setEmailTemplate} emailTemplate={emailTemplate}>
+                    <div className={cls.saveOrCancel}>
+                        <SaveOrCancel onSave={saveEditorData} onCancel={loadEmailTemplate} useModal={true} />
+                    </div>
+                </EmailEditor>
+            ) : (
+                <Typography style={{ padding: "0.6rem", fontWeight: "bold"}}> Subscribe to get access to the inline email editor </Typography>
+            )}
             {loaded && <ViewEmailTemplate emailTemplate={emailTemplate} />}
         </div>
     );

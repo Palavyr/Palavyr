@@ -135,6 +135,7 @@ export type StaticTableRow = {
     perPerson: boolean;
     tableOrder: number;
     areaIdentifier: string;
+    perPersonInputRequired: boolean;
 };
 
 export type StaticFee = {

@@ -28,6 +28,7 @@ const MockStaticTableRow: StaticTableRow = {
     perPerson: false,
     tableOrder: 0,
     areaIdentifier: "abc-123",
+    perPersonInputRequired: false
 }
 
 const MockStaticTablesMeta: StaticTableMeta = {

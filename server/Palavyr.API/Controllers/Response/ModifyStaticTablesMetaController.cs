@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using DashboardServer.Data;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Domain.Configuration.Schemas;
 
@@ -16,56 +14,35 @@ namespace Palavyr.API.Controllers.Response
     public class ModifyStaticTablesMetaController : ControllerBase
     {
         private ILogger<ModifyStaticTablesMetaController> logger;
-        private DashContext dashContext;
+        private readonly IDashConnector dashConnector;
 
         public ModifyStaticTablesMetaController(
-            DashContext dashContext,
+            IDashConnector dashConnector,
             ILogger<ModifyStaticTablesMetaController> logger
         )
         {
-            this.dashContext = dashContext;
+            this.dashConnector = dashConnector;
             this.logger = logger;
         }
 
         [HttpPut("response/configuration/{areaId}/static/tables/save")]
-        public async Task<IActionResult> Modify(
+        public async Task<List<StaticTablesMeta>> Modify(
             string areaId,
             [FromHeader] string accountId,
             [FromBody] List<StaticTablesMeta> staticTableMetas
         )
         {
-            var metasToDelete = await dashContext
-                .StaticTablesMetas
-                .Where(row => row.AccountId == accountId)
-                .Where(row => row.AreaIdentifier == areaId)
-                .Include(x => x.StaticTableRows)
-                .ThenInclude(x => x.Fee)
-                .ToListAsync();
-    
-            foreach (var meta in metasToDelete)
-            {
-                foreach (var row in meta.StaticTableRows)
-                {
-                    dashContext.StaticFees.Remove(await dashContext.StaticFees.FindAsync(row.Fee.Id));
-                    dashContext.StaticTablesRows.Remove(await dashContext.StaticTablesRows.FindAsync(row.Id));
-                }
-
-                dashContext.StaticTablesMetas.Remove(await dashContext.StaticTablesMetas.FindAsync(meta.Id));
-            }
-
-
+            var metasToDelete = await dashConnector.GetStaticTables(accountId, areaId);
+            await dashConnector.RemoveStaticTables(metasToDelete);
+            
             var clearedMetas = StaticTablesMeta.BindTemplateList(staticTableMetas, accountId);
-            var currentArea = await dashContext.Areas.Where(row => row.AccountId == accountId)
-                .SingleOrDefaultAsync(row => row.AreaIdentifier == areaId);
-            currentArea.StaticTablesMetas = clearedMetas;
-            await dashContext.SaveChangesAsync();
+            var area = await dashConnector.GetAreaById(accountId, areaId);
+            area.StaticTablesMetas = clearedMetas;
+            
+            await dashConnector.CommitChangesAsync();
 
-            var tables = await dashContext
-                .StaticTablesMetas
-                .Where(row => row.AccountId == accountId)
-                .Where(row => row.AreaIdentifier == areaId)
-                .ToListAsync();
-            return Ok(tables);
+            var tables = await dashConnector.GetStaticTables(accountId, areaId);
+            return tables;
         }
     }
 }

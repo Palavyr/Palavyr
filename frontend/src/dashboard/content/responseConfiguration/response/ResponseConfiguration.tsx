@@ -93,10 +93,12 @@ export const ResponseConfiguration = () => {
 
         const validationResult = getStaticTableValidationResult(staticTables);
         if (validationResult.result === false) {
-            window.location.reload(); // Temp fix to prevent incorrect values HARDLY. This is not a nice UI experience.
-            return false}; // TODO: the table saver needs to return the validation result and the SaveOrCancel component neesd to require this standard type for the error message.
-        const { data } = await client.Configuration.Tables.Static.updateStaticTablesMetas(areaIdentifier, staticTables);
-        setStaticTables(data);
+            alert(validationResult.message); // Temp fix to prevent incorrect values HARDLY. This is not a nice UI experience.
+            return false
+        }; // TODO: the table saver needs to return the validation result and the SaveOrCancel component neesd to require this standard type for the error message.
+
+        const { data: updatedStaticTables } = await client.Configuration.Tables.Static.updateStaticTablesMetas(areaIdentifier, staticTables);
+        setStaticTables(updatedStaticTables);
         return true;
     };
 

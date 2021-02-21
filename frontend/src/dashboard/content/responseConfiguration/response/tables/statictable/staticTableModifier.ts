@@ -124,7 +124,8 @@ export class StaticTablesModifier {
             perPerson: true,
             range: false,
             tableOrder: curtableOrder,
-            areaIdentifier: curareaIdentifier
+            areaIdentifier: curareaIdentifier,
+            perPersonInputRequired: false
         };
 
         staticTableMetas[tableOrder].staticTableRows.push(newRow);
@@ -210,5 +211,11 @@ export class StaticTablesModifier {
         const ids = this._getIDs_(staticTableMetas);
         const lastID = ids[ids.length - 1];
         return tableOrder === lastID;
+    }
+
+    togglePerPersonRequired(staticTableMetas: StaticTableMetas, tableOrder: number, rowOrder: number) {
+        const currentValue = staticTableMetas[tableOrder].staticTableRows[rowOrder].perPersonInputRequired;
+        staticTableMetas[tableOrder].staticTableRows[rowOrder].perPersonInputRequired = !currentValue;
+        this.setTableMetas(staticTableMetas);
     }
 }

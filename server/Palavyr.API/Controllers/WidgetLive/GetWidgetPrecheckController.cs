@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DashboardServer.Data;
+using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,16 +16,16 @@ namespace Palavyr.API.Controllers.WidgetLive
     [ApiController]
     public class GetWidgetPreCheckController : ControllerBase
     {
+        private readonly IDashConnector dashConnector;
         private ILogger<GetWidgetPreCheckController> logger;
-        private DashContext dashContext;
 
         public GetWidgetPreCheckController(
-            DashContext dashContext,
+            IDashConnector dashConnector,
             ILogger<GetWidgetPreCheckController> logger
         )
         {
+            this.dashConnector = dashConnector;
             this.logger = logger;
-            this.dashContext = dashContext;
         }
 
         [HttpGet("widget/pre-check")]
@@ -38,7 +39,7 @@ namespace Palavyr.API.Controllers.WidgetLive
                 return PreCheckResult.CreateApiKeyResult(false);
             }
 
-            var result = await WidgetStatusUtils.ExecuteWidgetStatusCheck(accountId, dashContext, demo, logger);
+            var result = await WidgetStatusUtils.ExecuteWidgetStatusCheck(accountId, dashConnector, demo, logger);
             logger.LogDebug($"Pre-check run successful.");
             logger.LogDebug($"Ready result:{result.IsReady}");
             logger.LogDebug($"Incomplete areas: {result.IncompleteAreas.ToList()} ");

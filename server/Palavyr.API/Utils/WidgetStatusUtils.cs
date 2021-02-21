@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DashboardServer.Data;
-using Microsoft.EntityFrameworkCore;
+using DashboardServer.Data.Abstractions;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CommonResponseTypes;
 using Palavyr.Domain.Configuration.Constant;
@@ -15,36 +15,28 @@ namespace Palavyr.API.Utils
     {
         public static async Task<PreCheckResult> ExecuteWidgetStatusCheck(
             string accountId,
-            DashContext dashContext,
+            IDashConnector dashConnector,
             bool demo,
             ILogger logger
         )
         {
             logger.LogDebug($"Get Widget State - should only be one widget associated with account ID {accountId}");
-            var prefs = dashContext.WidgetPreferences.Single(row => row.AccountId == accountId);
+            var prefs = await dashConnector.GetWidgetPreferences(accountId);
             var widgetState = prefs.WidgetState;
 
             logger.LogDebug("Collecting areas...");
-            var areas = await dashContext
-                .Areas
-                .Where(row => row.AccountId == accountId && row.IsComplete)
-                .Include(row => row.ConversationNodes)
-                .Include(row => row.DynamicTableMetas)
-                .ToListAsync();
+            var areas = await dashConnector.GetActiveAreasWithConvoAndDynamicAndStaticTables(accountId);
 
-            // dynamic tables don't support 'per person' - this must be intrinsic to the question question type.
-            // We just check static tables.
-            var staticTableRows = await dashContext
-                .StaticTablesRows
-                .Where(row => row.AccountId == accountId)
-                .ToListAsync();
+            // dynamic tables might have a 'num individuals' requirement
+            // static tables might have a 'num individuals' requirement
+            // user may simply wish to collect 'num individuals'
 
             logger.LogDebug("Collected areas.... running pre-check");
-            var result = StatusCheck(areas, staticTableRows, widgetState, demo, logger);
+            var result = StatusCheck(areas, widgetState, demo, logger);
             return result;
         }
 
-        private static PreCheckResult StatusCheck(List<Area> areas, List<StaticTableRow> staticTableRows, bool widgetState, bool demo, ILogger logger)
+        private static PreCheckResult StatusCheck(List<Area> areas, bool widgetState, bool demo, ILogger logger)
         {
             var incompleteAreas = new List<Area>();
             logger.LogDebug("Attempting RunConversationsPreCheck...");
@@ -61,13 +53,14 @@ namespace Palavyr.API.Utils
                     .ToList();
 
                 // check static tables and dynamic tables to see if even 1 'per individual' is set. If so, then check for this node type.
-                var perIndividualRequired = staticTableRows
-                    .Where(row => row.AreaIdentifier == area.AreaIdentifier)
-                    .Select(x => x.PerPerson)
-                    .Any();
+                var perIndividualRequiredStaticTables = area
+                    .StaticTablesMetas
+                    .SelectMany(x => x.StaticTableRows)
+                    .Select(x => x.PerPersonInputRequired)
+                    .Any(p => p);
 
                 var allRequiredNodes = new List<string>(requiredDynamicNodes);
-                if (perIndividualRequired)
+                if (perIndividualRequiredStaticTables && !allRequiredNodes.Contains(DefaultNodeTypeOptions.TakeNumberIndividuals.StringName))
                 {
                     allRequiredNodes.Add(DefaultNodeTypeOptions.TakeNumberIndividuals.StringName);
                 }
@@ -119,12 +112,6 @@ namespace Palavyr.API.Utils
                 return PreCheckResult.CreateConvoResult(incompleteAreas, false);
             }
         }
-
-        // private static bool PerIndividualSatisfied(ConversationNode[] nodeList, bool perPersonRequired)
-        // {
-        //     var branchesWithMissingPerIndividual = TreeUtils.GetMissingNodes(nodeList, new[] {DefaultNodeTypeOptions.TakeNumberIndividuals.StringName});
-        //     return perPersonRequired ? branchesWithMissingPerIndividual.Length == 0 : true;
-        // }
 
         private static bool AllNodesAreSet(ConversationNode[] nodeList)
         {
