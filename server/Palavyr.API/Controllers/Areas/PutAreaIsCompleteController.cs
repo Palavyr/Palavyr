@@ -21,14 +21,14 @@ namespace Palavyr.API.Controllers.Areas
         public async Task<bool> Put([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] PutAreaIsCompleteRequest request)
         {
             var area = await dashConnector.GetAreaById(accountId, areaId);
-            area.IsEnabled = request.IsComplete;
+            area.IsEnabled = request.IsEnabled;
             await dashConnector.CommitChangesAsync();
             return area.IsEnabled;
         }
 
         public class PutAreaIsCompleteRequest
         {
-            public bool IsComplete { get; set; }
+            public bool IsEnabled { get; set; }
         }
     }
 }

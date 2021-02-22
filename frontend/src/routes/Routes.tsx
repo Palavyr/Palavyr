@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import { LandingPage } from "@landing/Landing";
 import { ProtectedRoute } from "@protected-routes";
 import { DashboardLayout } from "dashboard/layouts/DashboardLayout";
@@ -12,7 +12,7 @@ import { GetWidget } from "dashboard/content/getWidget/GetWidget";
 import { WelcomeToTheDashboard } from "dashboard/content/welcome/WelcomeToTheDashboard";
 import { ConversationHelp } from "dashboard/content/help/ConversationHelp";
 import { EmailHelp } from "dashboard/content/help/EmailHelp";
-import { EstimateHelp } from "dashboard/content/help/EstimateHelp";
+import { ResponseConfigurationHelp } from "dashboard/content/help/ResponseConfigurationHelp";
 import { AttachmentsHelp } from "dashboard/content/help/AttachmentsHelp";
 import { AreaSettingsHelp } from "dashboard/content/help/AreaSettingsHelp";
 import { PreviewHelp } from "dashboard/content/help/PreviewHelp";
@@ -93,7 +93,7 @@ export const Routes = () => {
             <ProtectedRoute exact path="/dashboard/" component={withLayout(WelcomeToTheDashboard, <WelcomeToTheDashboardHelp />)} />
             <ProtectedRoute exact path="/dashboard/welcome" component={withLayout(WelcomeToTheDashboard, <WelcomeToTheDashboardHelp />)} />
             <ProtectedRoute exact path="/dashboard/editor/email/:areaIdentifier" component={withLayout(withAreaTabs(<EmailConfiguration />), <EmailHelp />)} />
-            <ProtectedRoute exact path="/dashboard/editor/response/:areaIdentifier" component={withLayout(withAreaTabs(<ResponseConfiguration />), <EstimateHelp />)} />
+            <ProtectedRoute exact path="/dashboard/editor/response/:areaIdentifier" component={withLayout(withAreaTabs(<ResponseConfiguration />), <ResponseConfigurationHelp />)} />
             <ProtectedRoute exact path="/dashboard/editor/attachments/:areaIdentifier" component={withLayout(withAreaTabs(<AttachmentConfiguration />), <AttachmentsHelp />)} />
             <ProtectedRoute exact path="/dashboard/editor/conversation/:areaIdentifier" component={withLayout(withAreaTabs(<ConvoTree />), <ConversationHelp />)} />
             <ProtectedRoute exact path="/dashboard/editor/settings/:areaIdentifier" component={withLayout(withAreaTabs(<AreaSettings />), <AreaSettingsHelp />)} />

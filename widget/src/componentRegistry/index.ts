@@ -16,6 +16,7 @@ import { makePercentOfThreshold } from "./dynamicTableComponents/MakePercentOfTh
 import { makeTooComplicated } from "./standardComponents/MakeTooComplicated";
 import { random } from "./random";
 import { makeSendFallbackEmail } from "./endingSequenceComponents/MakeSendFallbackEmail";
+import { makeTakeNumberIndividuals } from "./standardComponents/makeTakeNumberIndividuals";
 
 export interface IProgressTheChat {
     node: ConvoTableRow;
@@ -128,7 +129,7 @@ export const ComponentRegistry: Registry = {
     [NodeTypes.HowMany]: makeTakeNumber,
     [NodeTypes.HowMuch]: makeTakeCurrency,
     [NodeTypes.TakeNumber]: makeTakeNumber,
-    [NodeTypes.TakeNumberIndividuals]: makeTakeNumber,
+    [NodeTypes.TakeNumberIndividuals]: makeTakeNumberIndividuals,
     [NodeTypes.TooComplicated]: makeTooComplicated,
 
     [NodeTypes.EndingSequence]: makeStartEndingSequence,
@@ -153,4 +154,5 @@ export const ConvoContextProperties = {
     phoneNumber: "phoneNumber",
     keyValues: "keyValues", // values reported at head of PDF response
     region: "region",
+    numIndividuals: "numIndividuals"
 };

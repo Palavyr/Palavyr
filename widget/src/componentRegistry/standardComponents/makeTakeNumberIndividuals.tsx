@@ -1,12 +1,14 @@
 import * as React from "react";
+import { setNumIndividualsContext } from "src/widgetCore/store/dispatcher";
 import { TextField, Table, TableRow, TableCell, makeStyles } from "@material-ui/core";
 import { useState } from "react";
-import { IProgressTheChat, NodeTypes, responseAction } from "..";
+import { IProgressTheChat, responseAction } from "..";
 import { getChildNodes } from "../utils";
 import { ResponseButton } from "../../common/ResponseButton";
 import { SingleRowSingleCell } from "src/common/TableCell";
+import { parseInt } from "lodash";
 
-export const makeTakeNumber = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
+export const makeTakeNumberIndividuals = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
 
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
 
@@ -17,7 +19,7 @@ export const makeTakeNumber = ({ node, nodeList, client, convoId }: IProgressThe
     }));
 
     const Component: React.ElementType<{}> = () => {
-        const [response, setResponse] = useState<string>("");
+        const [response, setResponse] = useState<number>(null);
         const [disabled, setDisabled] = useState<boolean>(false);
 
         const classes = useStyles();
@@ -30,12 +32,14 @@ export const makeTakeNumber = ({ node, nodeList, client, convoId }: IProgressThe
                         <TextField
                             disabled={disabled}
                             label=""
+                            value={response}
                             type="number"
                             onChange={event => {
                                 const intValue = parseInt(event.target.value);
                                 if (!intValue) return;
                                 if (intValue < 0) return;
-                                setResponse(intValue.toString());                            }}
+                                setResponse(intValue);
+                            }}
                         />
                     </TableCell>
                 </TableRow>
@@ -44,7 +48,8 @@ export const makeTakeNumber = ({ node, nodeList, client, convoId }: IProgressThe
                         <ResponseButton
                             disabled={disabled}
                             onClick={() => {
-                                responseAction(node, child, nodeList, client, convoId, response);
+                                responseAction(node, child, nodeList, client, convoId, response.toString());
+                                setNumIndividualsContext(response)
                                 setDisabled(true);
                             }}
                         />

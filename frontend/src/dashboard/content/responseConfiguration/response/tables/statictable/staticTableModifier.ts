@@ -4,9 +4,7 @@ import { cloneDeep } from "lodash";
 import { ApiClient } from "@api-client/Client";
 import { v4 as uuid } from "uuid";
 
-
 export class StaticTablesModifier {
-
     onClick: Dispatch<SetStateAction<StaticTableMetas>> | AnyVoidFunction;
 
     constructor(onClick: Dispatch<SetStateAction<StaticTableMetas>> | AnyVoidFunction) {
@@ -33,8 +31,8 @@ export class StaticTablesModifier {
         const rectifiedList: StaticTableMetas = [];
         list.forEach((table, newIdx) => {
             table.tableOrder = newIdx;
-            rectifiedList.push(table)
-        })
+            rectifiedList.push(table);
+        });
         return rectifiedList;
     }
 
@@ -42,8 +40,8 @@ export class StaticTablesModifier {
         const rectifiedList: StaticTableRows = [];
         list.forEach((table, newIdx) => {
             table.rowOrder = newIdx;
-            rectifiedList.push(table)
-        })
+            rectifiedList.push(table);
+        });
         return rectifiedList;
     }
 
@@ -98,8 +96,8 @@ export class StaticTablesModifier {
 
         const newTable = ((): StaticTableMeta => ({
             ...newTableTemplate,
-            tableOrder: newtableOrder
-        }))()
+            tableOrder: newtableOrder,
+        }))();
 
         staticTableMetas.push(newTable);
         this.setTableMetas(staticTableMetas);
@@ -124,7 +122,7 @@ export class StaticTablesModifier {
             perPerson: true,
             range: false,
             tableOrder: curtableOrder,
-            areaIdentifier: curareaIdentifier
+            areaIdentifier: curareaIdentifier,
         };
 
         staticTableMetas[tableOrder].staticTableRows.push(newRow);
@@ -216,5 +214,10 @@ export class StaticTablesModifier {
         const currentValue = staticTableMetas[tableOrder].perPersonInputRequired;
         staticTableMetas[tableOrder].perPersonInputRequired = !currentValue;
         this.setTableMetas(staticTableMetas);
+    }
+
+    setPerPersonRequired(staticTableMetas: StaticTableMetas, tableOrder: number, value: boolean) {
+        staticTableMetas[tableOrder].perPersonInputRequired = value;
+        // this.setTableMetas(staticTableMetas);
     }
 }

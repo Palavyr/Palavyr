@@ -29,6 +29,7 @@ export type ContextProperties = {
     region: string;
     keyValues: KeyValues;
     dynamicResponses: DynamicResponses;
+    numIndividuals: number | null;
 };
 
 export interface Message extends BaseMessage {
@@ -71,6 +72,7 @@ export interface ContextState {
     region: string;
     keyValues: KeyValues;
     dynamicResponses: DynamicResponses;
+    numIndividuals: number | null;
 }
 
 export interface MessagesState {

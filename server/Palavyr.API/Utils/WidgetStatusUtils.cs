@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CommonResponseTypes;
+using Palavyr.API.Controllers.Conversation;
 using Palavyr.Data.Abstractions;
-using Palavyr.Domain.Configuration.Constant;
 using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Utils
@@ -16,8 +16,7 @@ namespace Palavyr.API.Utils
             string accountId,
             IDashConnector dashConnector,
             bool demo,
-            ILogger logger
-        )
+            ILogger logger)
         {
             logger.LogDebug($"Get Widget State - should only be one widget associated with account ID {accountId}");
             var prefs = await dashConnector.GetWidgetPreferences(accountId);
@@ -44,26 +43,9 @@ namespace Palavyr.API.Utils
             foreach (var area in areas)
             {
                 var nodeList = area.ConversationNodes.ToArray();
+                var allRequiredNodes = MissingNodeCalculator.GetRequiredNodes(area);
 
-                // dynamic node types are required
-                var requiredDynamicNodes = area
-                    .DynamicTableMetas
-                    .Select(TreeUtils.TransformRequiredNodeType)
-                    .ToList();
-
-                // check static tables and dynamic tables to see if even 1 'per individual' is set. If so, then check for this node type.
-                var perIndividualRequiredStaticTables = area
-                    .StaticTablesMetas
-                    .Select(x => x.PerPersonInputRequired)
-                    .Any(p => p);
-                
-                var allRequiredNodes = new List<string>(requiredDynamicNodes);
-                if (perIndividualRequiredStaticTables && !allRequiredNodes.Contains(DefaultNodeTypeOptions.TakeNumberIndividuals.StringName))
-                {
-                    allRequiredNodes.Add(DefaultNodeTypeOptions.TakeNumberIndividuals.StringName);
-                }
-
-                logger.LogDebug($"Required Nodes Found. Number of required nodes: {allRequiredNodes.Count}");
+                logger.LogDebug($"Required Nodes Found. Number of required nodes: {allRequiredNodes.Length}");
                 List<bool> checks;
                 try
                 {
@@ -83,9 +65,6 @@ namespace Palavyr.API.Utils
                 isReady = checks.TrueForAll(x => x);
                 logger.LogDebug($"Checked isReady status: {isReady}");
                 if (isReady) continue;
-
-                // var dynamicAreasMissing = TreeUtils.GetMissingNodes(nodeList, requiredDynamicNodes.ToArray());
-                // var perIndividualMissing = TreeUtils.GetMissingNodes(nodeList, new[] {DefaultNodeTypeOptions.TakeNumberIndividuals.StringName});
 
                 incompleteAreas.Add(area);
                 logger.LogDebug($"Area not currently ready: {area.AreaName}");

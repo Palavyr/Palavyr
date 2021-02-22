@@ -26,6 +26,7 @@ export const CLOSE_FULLSCREEN_PREVIEW = "FULLSCREEN/CLOSE_PREVIEW";
 export const SET_CONTEXT_PROPERTIES = "CONTEXT_PROPERTIES/SET";
 export const GET_CONTEXT_PROPERTIES = "CONTEXT_PROPERTIES/GET";
 
+export const SET_NUM_INDIVIDUALS_CONTEXT = "CONTEXT_PROPERTIES/SET_NUM_INDIVIDUALS"
 export const SET_NAME_CONTEXT = "CONTEXT_PROPERTIES/SET_NAME"
 export const SET_PHONE_CONTEXT = "CONTEXT_PROPERTIES/SET_PHONE"
 export const SET_EMAILADDRESS_CONTEXT = "CONTEXT_PROPERTIES/SET_EMAILADDRESS"
@@ -175,6 +176,11 @@ export interface addKeyValueContext {
 export interface addDynamicResponse {
     type: typeof SET_DYNAMICRESPONSE_CONTEXT;
     dynamicResponse: DynamicResponse;
+}
+
+export interface addNumIndividuals {
+    type: typeof SET_NUM_INDIVIDUALS_CONTEXT;
+    numIndividuals: number;
 }
 
 export type ContextPropertyActions = setContextProperties

@@ -176,6 +176,13 @@ export function _setRegionContext(region: string): actionsTypes.ContextPropertyA
     };
 }
 
+export function _setNumIndividualsContext(numIndividuals: number) {
+    return {
+        type: actionsTypes.SET_NUM_INDIVIDUALS_CONTEXT,
+        numIndividuals
+    }
+}
+
 export function _addKeyValue(keyValue: KeyValue): actionsTypes.ContextPropertyActions {
     return {
         type: actionsTypes.SET_KEYVALUE_CONTEXT,

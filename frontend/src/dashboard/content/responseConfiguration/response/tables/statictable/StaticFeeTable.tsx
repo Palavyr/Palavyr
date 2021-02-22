@@ -3,13 +3,12 @@ import { makeStyles, TextField, Button, TableRow, Table, TableHead, TableBody, T
 import { StaticTableMetas, StaticTableMeta, StaticTableRow } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./staticTableModifier";
 import { StaticRow } from "./StaticRow";
-import AddBoxIcon from '@material-ui/icons/AddBox';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import AddBoxIcon from "@material-ui/icons/AddBox";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 
-
-const useStyles = makeStyles((theme => ({
+const useStyles = makeStyles((theme) => ({
     staticFees: {
         margin: "1.2rem",
         // background: "#E8E8E8",
@@ -22,7 +21,7 @@ const useStyles = makeStyles((theme => ({
         marginBottom: "0.3rem",
         paddingBottom: "1.5rem",
         borderRadius: "3px",
-        minWidth: "50%"
+        minWidth: "50%",
     },
     buttonWrapper: {
         marginTop: "1.5rem",
@@ -33,14 +32,13 @@ const useStyles = makeStyles((theme => ({
         marginRight: "0.6rem",
         padding: "0.4rem",
         paddingLeft: "0.6rem",
-        paddingRight: "0.6rem"
+        paddingRight: "0.6rem",
     },
     headerText: {
         fontSize: "16pt",
-        fontWight: "bold"
-    }
-
-})));
+        fontWight: "bold",
+    },
+}));
 
 export interface IStaticFeeTable {
     staticTableMetas: StaticTableMetas;
@@ -52,6 +50,19 @@ export interface IStaticFeeTable {
 export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifier }: IStaticFeeTable) => {
     const classes = useStyles();
     const cellAlignment = "center";
+
+    const anyStaticTableRowsWithPerIndividualSet = (staticTableMeta: StaticTableMeta) => {
+        let result = false;
+        staticTableMeta.staticTableRows.forEach((row: StaticTableRow) => {
+            if (row.perPerson === true) {
+                result = true;
+            }
+        });
+        if (result === false){
+            tableModifier.setPerPersonRequired(staticTableMetas, staticTableMeta.tableOrder, false)
+        }
+        return result;
+    };
 
     return (
         <div className={classes.staticFees}>
@@ -67,17 +78,27 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
             />
             <Table>
                 <TableHead>
-                    <TableRow style={{borderBottom: "1px solid black"}}>
+                    <TableRow style={{ borderBottom: "1px solid black" }}>
                         <TableCell align={cellAlignment} className={classes.headerText}></TableCell>
-                        <TableCell align={cellAlignment} className={classes.headerText} >Description</TableCell>
-                        <TableCell align={cellAlignment} className={classes.headerText} >Amount</TableCell>
-                        <TableCell align={cellAlignment} className={classes.headerText} >Max Amount (if range)</TableCell>
-                        <TableCell align={cellAlignment} className={classes.headerText} >Range</TableCell>
-                        <TableCell align={cellAlignment} className={classes.headerText} >Per Individual</TableCell>
-                        <TableCell align={cellAlignment} className={classes.headerText} ></TableCell>
+                        <TableCell align={cellAlignment} className={classes.headerText}>
+                            Description
+                        </TableCell>
+                        <TableCell align={cellAlignment} className={classes.headerText}>
+                            Amount
+                        </TableCell>
+                        <TableCell align={cellAlignment} className={classes.headerText}>
+                            Max Amount (if range)
+                        </TableCell>
+                        <TableCell align={cellAlignment} className={classes.headerText}>
+                            Range
+                        </TableCell>
+                        <TableCell align={cellAlignment} className={classes.headerText}>
+                            Per Individual
+                        </TableCell>
+                        <TableCell align={cellAlignment} className={classes.headerText}></TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody style={{borderTop: "2px solid black"}}>
+                <TableBody style={{ borderTop: "2px solid black" }}>
                     {staticTableMeta.staticTableRows.map((row: StaticTableRow, index: number) => (
                         <StaticRow
                             key={row.id}
@@ -116,9 +137,12 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                     Remove Table
                 </Button>
 
-                <FormControlLabel label="Require num individuals" control={<Checkbox checked={staticTableMeta.perPersonInputRequired} onChange={() => tableModifier.togglePerPersonRequired(staticTableMetas, staticTableMeta.tableOrder)} />} />
+                {anyStaticTableRowsWithPerIndividualSet(staticTableMeta) && <FormControlLabel
+                    label="Require num individuals"
+                    control={<Checkbox checked={staticTableMeta.perPersonInputRequired}
+                    onChange={() => tableModifier.togglePerPersonRequired(staticTableMetas, staticTableMeta.tableOrder)} />}
+                />}
             </div>
         </div>
     );
 };
-

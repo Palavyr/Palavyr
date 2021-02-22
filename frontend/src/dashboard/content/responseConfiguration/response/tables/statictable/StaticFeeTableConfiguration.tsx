@@ -9,7 +9,7 @@ import { Accordion, AccordionSummary, Divider, Button, AccordionActions, makeSty
 import { StaticFeeTable } from "./StaticFeeTable";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import AddBoxIcon from '@material-ui/icons/AddBox';
+import AddBoxIcon from "@material-ui/icons/AddBox";
 
 interface IFeeConfiguration {
     title: string;
@@ -24,11 +24,10 @@ interface IFeeConfiguration {
 const useStyles = makeStyles((theme) => ({
     title: {
         fontWeight: "bold",
-        // fontSize: "28pt"
     },
     tablebutton: {
         margin: theme.spacing(1),
-        marginBottom: "1rem"
+        marginBottom: "1rem",
     },
     header: {
         background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",

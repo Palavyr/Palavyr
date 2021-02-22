@@ -60,6 +60,7 @@ namespace Palavyr.API.Controllers.WidgetLive
 
             var account = await accountsConnector.GetAccount(accountId);
             var locale = account.Locale;
+
             logger.LogDebug($"Locale being used: {locale}");
             var culture = new CultureInfo(locale);
 

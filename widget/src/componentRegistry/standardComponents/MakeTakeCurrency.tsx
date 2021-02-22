@@ -43,7 +43,7 @@ export const makeTakeCurrency = ({ node, nodeList, client, convoId, }: IProgress
                             disabled={disabled}
                             onClick={() => {
                                 responseAction(node, child, nodeList, client, convoId, response.toString());
-                                addKeyValue({[node.text]: response.toString()});
+                                addKeyValue({[node.text]: response.toString()}); // IS THIS NECESSARY?
                                 setDisabled(true);
                             }}
                         />

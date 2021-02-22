@@ -111,6 +111,11 @@ export function setRegionContext(region: string) {
   store.dispatch(actions._setRegionContext(region))
 }
 
+export function setNumIndividualsContext(numIndividuals: number) {
+  store.dispatch(actions._setNumIndividualsContext(numIndividuals));
+}
+
+
 export function addKeyValue(newKeyValue: KeyValue) {
   store.dispatch(actions._addKeyValue(newKeyValue))
 }

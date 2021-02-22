@@ -25,6 +25,8 @@ export const makeSendEmail = ({ node, nodeList, client, convoId }: IProgressTheC
         const email = contextProperties[ConvoContextProperties.emailAddress];
         const name = contextProperties[ConvoContextProperties.name];
         const phone = contextProperties[ConvoContextProperties.phoneNumber];
+
+        let numIndividuals = contextProperties[ConvoContextProperties.numIndividuals];
         let dynamicResponses = contextProperties[ConvoContextProperties.dynamicResponses];
         let keyvalues = contextProperties[ConvoContextProperties.keyValues];
 
@@ -35,7 +37,11 @@ export const makeSendEmail = ({ node, nodeList, client, convoId }: IProgressTheC
             dynamicResponses = [];
         }
 
-        const { data: response } = await client.Widget.Access.sendConfirmationEmail(areaId, email, name, phone, dynamicResponses, keyvalues, convoId);
+        if (!numIndividuals){
+            numIndividuals = 1;
+        }
+
+        const { data: response } = await client.Widget.Access.sendConfirmationEmail(areaId, email, name, phone, numIndividuals, dynamicResponses, keyvalues, convoId);
         if (response.result) {
             const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
             await client.Widget.Access.postCompleteConversation(completeConvo);
