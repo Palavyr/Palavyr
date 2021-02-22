@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory, NavLink } from "react-router-dom";
+import { useHistory, NavLink, useLocation } from "react-router-dom";
 import { List, ListItem, ListItemIcon, ListItemText, Collapse, Divider, makeStyles, FormControlLabel } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
@@ -31,7 +31,7 @@ type StyleProps = {
 };
 
 const createNavLink = (areaIdentifier: string) => {
-    return `/dashboard/editor/email/${areaIdentifier}?tab=0`;
+    return `/dashboard/editor/email/${areaIdentifier}?tab=${0}`;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -67,6 +67,9 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, update
     const { isActive } = React.useContext(AuthContext);
     const { checkAreaCount, setViewName, subscription, numAreasAllowed } = React.useContext(DashboardContext);
 
+    // const searchParams = new URLSearchParams(location.search); // TODO: can we go to same page when switching areas
+    // const currentTab = searchParams.get("tab") as string;
+    const currentPage =  history.location.pathname + history.location.search;
     const classes = useStyles();
 
     return (
@@ -96,7 +99,7 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, update
                 <Collapse in={configureOpen} timeout="auto" unmountOnExit>
                     {areaIdentifiers.map((areaIdentifier, index) => {
                         return (
-                            <NavLink key={areaIdentifier} to={createNavLink(areaIdentifier)} className={classes.navlink}>
+                            <NavLink key={areaIdentifier} to={(!isActive || index > numAreasAllowed) ? currentPage : createNavLink(areaIdentifier)} className={classes.navlink}>
                                 <ListItem disabled={!isActive || index > numAreasAllowed} button key={areaIdentifier}>
                                     <ListItemIcon className={classes.icon}>
                                         <ChatIcon />
