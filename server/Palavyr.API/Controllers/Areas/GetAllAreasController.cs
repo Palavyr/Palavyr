@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Palavyr.Data.Abstractions;
 using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Areas

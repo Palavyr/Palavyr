@@ -54,9 +54,9 @@ namespace Palavyr.Domain.Configuration.Constant
         /*
          * The key by which we group nodes in the selector
          */
-        public string GroupName { get; set; }
+        public string GroupName { get; set; } = null!;
 
-        public virtual string StringName => null;
+        public virtual string StringName => null!;
 
         public static NodeTypeOption Create(
             string value,
@@ -90,7 +90,7 @@ namespace Palavyr.Domain.Configuration.Constant
             string nodeType,
             string accountId,
             string areaIdentifier,
-            string? optionPath
+            string optionPath
         )
         {
             return new ConversationNode()

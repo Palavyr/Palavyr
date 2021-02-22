@@ -36,7 +36,7 @@ export const EnableAreas = () => {
         const areaIdentifiers = areaData.map((x: AreaTable) => {
             return {
                 areaId: x.areaIdentifier,
-                isEnabled: x.isComplete,
+                isEnabled: x.isEnabled,
                 areaName: x.areaName,
             };
         });

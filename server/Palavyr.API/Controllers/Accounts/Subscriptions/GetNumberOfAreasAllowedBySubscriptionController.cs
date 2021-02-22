@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Common.GlobalConstants;
+using Palavyr.Data;
 using Palavyr.Domain.Accounts.Schemas;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions

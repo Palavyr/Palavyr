@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
-using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.RequestTypes.Registration;
+using Palavyr.Data.Abstractions;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
@@ -11,22 +10,19 @@ namespace Palavyr.API.Controllers.Accounts.Settings
     [ApiController]
     public class ModifyPasswordController : ControllerBase
     {
+        private readonly IAccountsConnector accountsConnector;
         private ILogger<ModifyPasswordController> logger;
-        private AccountsContext accountsContext;
 
-        public ModifyPasswordController(AccountsContext accountsContext, ILogger<ModifyPasswordController> logger)
+        public ModifyPasswordController(IAccountsConnector accountsConnector, ILogger<ModifyPasswordController> logger)
         {
+            this.accountsConnector = accountsConnector;
             this.logger = logger;
-            this.accountsContext = accountsContext;
         }
         
         [HttpPut("account/settings/password")]
         public async Task<bool> UpdatePassword([FromHeader] string accountId, AccountDetails accountDetails)
         {
-            var account = await accountsContext
-                .Accounts
-                .SingleOrDefaultAsync(row => row.AccountId == accountId);
-
+            var account = await accountsConnector.GetAccount(accountId);
             var oldHashedPassword = accountDetails.OldPassword;
             if (oldHashedPassword != accountDetails.Password)
             {
@@ -34,7 +30,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             }
 
             account.Password = accountDetails.Password;
-            await accountsContext.SaveChangesAsync();
+            await accountsConnector.CommitChanges();
             return true;
         }
     }

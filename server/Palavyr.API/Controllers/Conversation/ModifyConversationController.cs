@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using DashboardServer.Data;
-using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.RequestTypes;
+using Palavyr.Data;
+using Palavyr.Data.Abstractions;
 using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.controllers.Conversation

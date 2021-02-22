@@ -1,9 +1,7 @@
 using System.Threading.Tasks;
-using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using DashboardServer.Data.Abstractions;
+using Palavyr.Data.Abstractions;
 
 namespace Palavyr.API.Controllers.Areas
 {

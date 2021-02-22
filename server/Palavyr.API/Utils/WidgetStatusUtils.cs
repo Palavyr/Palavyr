@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DashboardServer.Data;
-using DashboardServer.Data.Abstractions;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CommonResponseTypes;
+using Palavyr.Data.Abstractions;
 using Palavyr.Domain.Configuration.Constant;
 using Palavyr.Domain.Configuration.Schemas;
 
@@ -55,10 +54,9 @@ namespace Palavyr.API.Utils
                 // check static tables and dynamic tables to see if even 1 'per individual' is set. If so, then check for this node type.
                 var perIndividualRequiredStaticTables = area
                     .StaticTablesMetas
-                    .SelectMany(x => x.StaticTableRows)
                     .Select(x => x.PerPersonInputRequired)
                     .Any(p => p);
-
+                
                 var allRequiredNodes = new List<string>(requiredDynamicNodes);
                 if (perIndividualRequiredStaticTables && !allRequiredNodes.Contains(DefaultNodeTypeOptions.TakeNumberIndividuals.StringName))
                 {

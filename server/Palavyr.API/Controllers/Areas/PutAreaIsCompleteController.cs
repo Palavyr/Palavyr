@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using DashboardServer.Data.Abstractions;
+using Palavyr.Data.Abstractions;
 
 namespace Palavyr.API.Controllers.Areas
 {
@@ -21,9 +21,9 @@ namespace Palavyr.API.Controllers.Areas
         public async Task<bool> Put([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] PutAreaIsCompleteRequest request)
         {
             var area = await dashConnector.GetAreaById(accountId, areaId);
-            area.IsComplete = request.IsComplete;
+            area.IsEnabled = request.IsComplete;
             await dashConnector.CommitChangesAsync();
-            return area.IsComplete;
+            return area.IsEnabled;
         }
 
         public class PutAreaIsCompleteRequest

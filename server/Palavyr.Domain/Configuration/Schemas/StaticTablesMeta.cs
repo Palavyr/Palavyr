@@ -14,6 +14,7 @@ namespace Palavyr.Domain.Configuration.Schemas
         public string AreaIdentifier { get; set; }
         public List<StaticTableRow> StaticTableRows { get; set; } = new List<StaticTableRow>();
         public string AccountId { get; set; }
+        public bool PerPersonInputRequired { get; set; }
 
         [NotMapped] private static string DefaultDescription { get; } = "Default Description";
         
@@ -27,7 +28,8 @@ namespace Palavyr.Domain.Configuration.Schemas
                     Description = DefaultDescription,
                     AreaIdentifier = areaId,
                     StaticTableRows = StaticTableRow.CreateDefaultStaticTable(0, areaId, accountId),
-                    AccountId = accountId
+                    AccountId = accountId,
+                    PerPersonInputRequired = false
                 }
             };
         }
@@ -38,7 +40,8 @@ namespace Palavyr.Domain.Configuration.Schemas
             {
                 Description = DefaultDescription,
                 AreaIdentifier = areaId,
-                StaticTableRows = StaticTableRow.CreateDefaultStaticTable(0, areaId, accountId)
+                StaticTableRows = StaticTableRow.CreateDefaultStaticTable(0, areaId, accountId),
+                PerPersonInputRequired = false
             };
         }
 
@@ -51,7 +54,8 @@ namespace Palavyr.Domain.Configuration.Schemas
                 Description = meta.Description,
                 AreaIdentifier = meta.AreaIdentifier,
                 AccountId = accountId,
-                StaticTableRows = StaticTableRow.BindTemplateList(meta.StaticTableRows, accountId)
+                StaticTableRows = StaticTableRow.BindTemplateList(meta.StaticTableRows, accountId),
+                PerPersonInputRequired = meta.PerPersonInputRequired
             }));
             return boundMetas;
         }

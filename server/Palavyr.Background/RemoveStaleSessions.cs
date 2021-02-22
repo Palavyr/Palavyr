@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using DashboardServer.Data;
+using Palavyr.Data;
 
 namespace Palavyr.Background
 {

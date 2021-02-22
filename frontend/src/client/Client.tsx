@@ -77,7 +77,7 @@ export class ApiClient {
     };
 
     public Area = {
-        UpdateIsComplete: async (areaToggleStateUpdate: boolean, areaIdentifier: string): Promise<AxiosResponse<boolean>> => this.client.put(`areas/${areaIdentifier}/area-toggle`, { IsComplete: areaToggleStateUpdate }),
+        UpdateIsEnabled: async (areaToggleStateUpdate: boolean, areaIdentifier: string): Promise<AxiosResponse<boolean>> => this.client.put(`areas/${areaIdentifier}/area-toggle`, { IsEnabled: areaToggleStateUpdate }),
         UpdateUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, areaIdentifier: string): Promise<AxiosResponse<boolean>> =>
             this.client.put(`areas/${areaIdentifier}/use-fallback-email-toggle`, { UseFallback: useAreaFallbackEmailUpdate }),
         GetAreas: async (): Promise<AxiosResponse<Areas>> => this.client.get("areas"),

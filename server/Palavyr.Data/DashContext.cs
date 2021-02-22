@@ -1,7 +1,7 @@
-﻿ using Microsoft.EntityFrameworkCore;
- using Palavyr.Domain.Configuration.Schemas;
+﻿using Microsoft.EntityFrameworkCore;
+using Palavyr.Domain.Configuration.Schemas;
 
- namespace DashboardServer.Data
+namespace Palavyr.Data
 {
     public class DashContext : DbContext
     {

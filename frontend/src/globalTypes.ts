@@ -105,7 +105,7 @@ export type AreaTable = {
     emailIsVerified: boolean;
     awaitingVerification: boolean;
     subject: string;
-    isComplete: boolean;
+    isEnabled: boolean;
 
     useAreaFallbackEmail: boolean;
     fallbackSubject: string;
@@ -120,6 +120,7 @@ export type staticTableMetaTemplate = {
     description: string;
     areaIdentifier: string;
     staticTableRows: StaticTableRows;
+    perPersonInputRequired: boolean;
 };
 
 export type StaticTableMeta = staticTableMetaTemplate & {
@@ -135,7 +136,6 @@ export type StaticTableRow = {
     perPerson: boolean;
     tableOrder: number;
     areaIdentifier: string;
-    perPersonInputRequired: boolean;
 };
 
 export type StaticFee = {
@@ -442,7 +442,7 @@ export type ConversationUpdate = {
     nodeCritical: number;
     nodeType: string;
     timeStamp: string;
-    isCompleted: number;
+    isEnabled: number;
     account: string;
 };
 
@@ -513,7 +513,7 @@ export type Settings = {
     areaName: string;
     areaTitle: string;
     subject: string;
-    isComplete: boolean;
+    isEnabled: boolean;
     useAreaFallbackEmail: boolean;
 };
 

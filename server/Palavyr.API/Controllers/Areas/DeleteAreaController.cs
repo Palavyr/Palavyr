@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using Amazon.SimpleEmail;
-using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Common.FileSystem.FormPaths;
+using Palavyr.Data;
 
 namespace Palavyr.API.Controllers.Areas
 {

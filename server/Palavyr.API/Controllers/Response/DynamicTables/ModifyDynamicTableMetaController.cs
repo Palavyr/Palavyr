@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
+using Palavyr.Data;
 using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Response.DynamicTables

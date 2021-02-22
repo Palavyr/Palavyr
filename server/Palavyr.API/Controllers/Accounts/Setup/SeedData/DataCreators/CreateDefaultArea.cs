@@ -127,7 +127,6 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
                 ConversationNodes = conversationNodes,
                 StaticTablesMetas = areaMetas,
                 DynamicTableMetas = dynamicTableMetas,
-                GroupId = groupId,
                 AreaSpecificEmail = defaultEmail,
                 EmailIsVerified = false,
                 Subject = "Thanks for contacting us!"

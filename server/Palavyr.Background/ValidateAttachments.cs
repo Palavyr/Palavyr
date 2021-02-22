@@ -1,25 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DashboardServer.Data;
 using Microsoft.Extensions.Logging;
 using Palavyr.Common.FileSystem.FormPaths;
+using Palavyr.Data;
 using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.Background
 {
     public class ValidateAttachments : IValidateAttachments
     {
-        private readonly DashContext DashContext;
-        private readonly AccountsContext AccountsContext;
-        private readonly ILogger<ValidateAttachments> _logger;
+        private readonly DashContext dashContext;
+        private readonly AccountsContext accountsContext;
+        private readonly ILogger<ValidateAttachments> logger;
 
         public ValidateAttachments(DashContext dashContext, AccountsContext accountsContext,
             ILogger<ValidateAttachments> logger)
         {
-            DashContext = dashContext;
-            AccountsContext = accountsContext;
-            _logger = logger;
+            this.dashContext = dashContext;
+            this.accountsContext = accountsContext;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace Palavyr.Background
         /// </summary>
         public void ValidateAllAttachments()
         {
-            var attachments = DashContext.FileNameMaps.ToList();
+            var attachments = dashContext.FileNameMaps.ToList();
 
             var staleDbEntries = new List<FileNameMap>();
             foreach (var attachment in attachments)
@@ -40,8 +40,8 @@ namespace Palavyr.Background
                 }
             }
 
-            DashContext.FileNameMaps.RemoveRange(staleDbEntries);
-            DashContext.SaveChanges();
+            dashContext.FileNameMaps.RemoveRange(staleDbEntries);
+            dashContext.SaveChanges();
         }
 
         /// <summary>
@@ -56,11 +56,11 @@ namespace Palavyr.Background
             //4. for each attachment name, trim the suffix and perform a DashContext.FileNameMap lookup on the safeFileName
             //5. if the safe file name exists, check it against the area and accountIds
 
-            var accounts = AccountsContext.Accounts.Select(x => x.AccountId).ToList();
+            var accounts = accountsContext.Accounts.Select(x => x.AccountId).ToList();
             foreach (var account in accounts)
             {
                 // TODO: getting area list from disk? for from db? DB should be the source of truth.
-                var areas = DashContext.Areas.Where(row => row.AccountId == account).Select(x => x.AreaIdentifier)
+                var areas = dashContext.Areas.Where(row => row.AccountId == account).Select(x => x.AreaIdentifier)
                     .ToList();
                 foreach (var areaIdentifier in areas)
                 {
@@ -71,13 +71,13 @@ namespace Palavyr.Background
                     {
                         var fileName = fileInfo.Name;
                         var fileStem = Path.GetFileNameWithoutExtension(fileName);
-                        var record = DashContext.FileNameMaps.SingleOrDefault(row => row.SafeName == fileStem);
+                        var record = dashContext.FileNameMaps.SingleOrDefault(row => row.SafeName == fileStem);
                         if (record == null)
                         {
                             // the file exists on disk, but not in the DB
                             var message =
                                 $"FILE INCONSISTENCY!! Account: {account} -- Area: {areaIdentifier} -- FileStem: {fileInfo.Name}";
-                            _logger.LogCritical(message);
+                            logger.LogCritical(message);
                         }
                     }
                 }

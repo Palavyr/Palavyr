@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DashboardServer.Data;
-using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Utils;
 using Palavyr.Common.Utils;
+using Palavyr.Data.Abstractions;
 using Palavyr.Domain.Configuration.Constant;
 
 namespace Palavyr.API.Controllers.Response.DynamicTables
@@ -28,19 +27,16 @@ namespace Palavyr.API.Controllers.Response.DynamicTables
 
     [Route("api")]
     [ApiController]
-    public class GetMissingDynamicTableNodesController
+    public class GetMissingNodesController
     {
-        private ILogger<GetMissingDynamicTableNodesController> logger;
-        private DashContext dashContext;
+        private ILogger<GetMissingNodesController> logger;
         private readonly IDashConnector dashConnector;
 
-        public GetMissingDynamicTableNodesController(
-            ILogger<GetMissingDynamicTableNodesController> logger,
-            DashContext dashContext,
+        public GetMissingNodesController(
+            ILogger<GetMissingNodesController> logger,
             IDashConnector dashConnector
         )
         {
-            this.dashContext = dashContext;
             this.dashConnector = dashConnector;
             this.logger = logger;
         }
@@ -66,9 +62,8 @@ namespace Palavyr.API.Controllers.Response.DynamicTables
 
             var perIndividualRequiredStaticTables = area
                 .StaticTablesMetas
-                .SelectMany(x => x.StaticTableRows)
-                .Select(x => x.PerPersonInputRequired)
-                .Any(p => p);
+                .Select(p => p.PerPersonInputRequired)
+                .Any(r => r);
 
             if (perIndividualRequiredStaticTables && !allMissingNodeTypes.Contains(DefaultNodeTypeOptions.TakeNumberIndividuals.StringName))
             {

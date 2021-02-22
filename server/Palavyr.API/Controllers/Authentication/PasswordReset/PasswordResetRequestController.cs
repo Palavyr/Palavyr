@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Common.UIDUtils;
+using Palavyr.Data.Abstractions;
 using Palavyr.Services.EmailService.ResponseEmailTools;
 
 namespace Palavyr.API.Controllers.Authentication.PasswordReset
@@ -45,7 +45,7 @@ namespace Palavyr.API.Controllers.Authentication.PasswordReset
             var accountId = account.AccountId;
             var apiKey = account.ApiKey;
 
-            var session = await accountsConnector.CreateAndAddNewSession(token, accountId, apiKey);
+            await accountsConnector.CreateAndAddNewSession(token, accountId, apiKey);
 
             var link = request.ResetPasswordLinkTemplate + token;
 

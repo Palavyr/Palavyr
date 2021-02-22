@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>DashboardServer.Data</RootNamespace>
+        <RootNamespace>Palavyr.Data</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

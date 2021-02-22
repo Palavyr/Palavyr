@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using Amazon.SimpleEmail;
-using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Response;
+using Palavyr.Data;
 using Palavyr.Services.EmailService.Verification;
 
 namespace Palavyr.API.Controllers.Accounts.Settings

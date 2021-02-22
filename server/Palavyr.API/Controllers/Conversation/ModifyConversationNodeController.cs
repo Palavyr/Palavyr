@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using DashboardServer.Data.Abstractions;
+using Palavyr.Data.Abstractions;
 using Palavyr.Domain.Configuration.Schemas;
 
 

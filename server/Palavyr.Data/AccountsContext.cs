@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Palavyr.Domain.Accounts.Schemas;
 
-namespace DashboardServer.Data
+namespace Palavyr.Data
 {
     public class AccountsContext : DbContext
     {

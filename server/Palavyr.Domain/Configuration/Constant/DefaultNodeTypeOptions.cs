@@ -41,7 +41,7 @@ namespace Palavyr.Domain.Configuration.Constant
 
         public class TakeCurrency : NodeTypeOption
         {
-            public static string StringName => nameof(TakeCurrency);
+            public new static string StringName => nameof(TakeCurrency);
 
             public TakeCurrency()
             {
@@ -57,7 +57,7 @@ namespace Palavyr.Domain.Configuration.Constant
         
         public class TakeNumberIndividuals : NodeTypeOption
         {
-            public static string StringName => nameof(TakeNumberIndividuals);
+            public new static string StringName => nameof(TakeNumberIndividuals);
 
             public TakeNumberIndividuals()
             {
@@ -73,7 +73,7 @@ namespace Palavyr.Domain.Configuration.Constant
         
         public class TakeNumber : NodeTypeOption
         {
-            public static string StringName => nameof(TakeNumber);
+            public new static string StringName => nameof(TakeNumber);
 
             public TakeNumber()
             {
@@ -90,7 +90,7 @@ namespace Palavyr.Domain.Configuration.Constant
 
         public class YesNo : NodeTypeOption
         {
-            public static string StringName => nameof(YesNo);
+            public new static string StringName => nameof(YesNo);
             public const string Yes = "Yes";
             public const string No = "No";
 
@@ -109,7 +109,7 @@ namespace Palavyr.Domain.Configuration.Constant
 
         public class YesNoNotSure : NodeTypeOption
         {
-            public static string StringName => nameof(YesNoNotSure);
+            public new static string StringName => nameof(YesNoNotSure);
 
             public YesNoNotSure()
             {
@@ -125,7 +125,7 @@ namespace Palavyr.Domain.Configuration.Constant
 
         public class YesNotSureCombined : NodeTypeOption
         {
-            public static string StringName => nameof(YesNotSureCombined);
+            public new static string StringName => nameof(YesNotSureCombined);
 
             public YesNotSureCombined()
             {
@@ -141,7 +141,7 @@ namespace Palavyr.Domain.Configuration.Constant
 
         public class NoNotSureCombined : NodeTypeOption
         {
-            public static string StringName => nameof(NoNotSureCombined);
+            public new static string StringName => nameof(NoNotSureCombined);
 
             public NoNotSureCombined()
             {
@@ -157,7 +157,7 @@ namespace Palavyr.Domain.Configuration.Constant
 
         public class TakeText : NodeTypeOption
         {
-            public static string StringName => nameof(TakeText);
+            public new static string StringName => nameof(TakeText);
 
             public TakeText()
             {
@@ -173,7 +173,7 @@ namespace Palavyr.Domain.Configuration.Constant
 
         public class ProvideInfo : NodeTypeOption
         {
-            public static string StringName => nameof(ProvideInfo);
+            public new static string StringName => nameof(ProvideInfo);
 
             public ProvideInfo()
             {
@@ -189,7 +189,7 @@ namespace Palavyr.Domain.Configuration.Constant
 
         public class MultipleChoiceAsPath : NodeTypeOption
         {
-            public static string StringName => nameof(MultipleChoiceAsPath);
+            public new static string StringName => nameof(MultipleChoiceAsPath);
 
             public MultipleChoiceAsPath()
             {
@@ -205,7 +205,7 @@ namespace Palavyr.Domain.Configuration.Constant
 
         public class MultipleChoiceContinue : NodeTypeOption
         {
-            public static string StringName => nameof(MultipleChoiceContinue);
+            public new static string StringName => nameof(MultipleChoiceContinue);
 
             public MultipleChoiceContinue()
             {
@@ -222,7 +222,7 @@ namespace Palavyr.Domain.Configuration.Constant
         //Ending Sequences
         public class TooComplicated : NodeTypeOption
         {
-            public static string StringName => nameof(TooComplicated);
+            public new static string StringName => nameof(TooComplicated);
 
             public TooComplicated()
             {
@@ -238,7 +238,7 @@ namespace Palavyr.Domain.Configuration.Constant
 
         public class SendResponse : NodeTypeOption
         {
-            public static string StringName => nameof(SendResponse);
+            public new static string StringName => nameof(SendResponse);
 
             public SendResponse()
             {
@@ -254,7 +254,7 @@ namespace Palavyr.Domain.Configuration.Constant
 
         public class SendEmail : NodeTypeOption
         {
-            public static string StringName => nameof(SendEmail);
+            public new static string StringName => nameof(SendEmail);
 
             public SendEmail()
             {
@@ -269,7 +269,7 @@ namespace Palavyr.Domain.Configuration.Constant
 
         public class SendTooComplicatedEmail : NodeTypeOption
         {
-            public static string StringName => nameof(SendTooComplicatedEmail);
+            public new static string StringName => nameof(SendTooComplicatedEmail);
 
             public SendTooComplicatedEmail()
             {
@@ -284,7 +284,7 @@ namespace Palavyr.Domain.Configuration.Constant
 
         public class Restart : NodeTypeOption
         {
-            public static string StringName => nameof(Restart);
+            public new static string StringName => nameof(Restart);
 
             public Restart()
             {

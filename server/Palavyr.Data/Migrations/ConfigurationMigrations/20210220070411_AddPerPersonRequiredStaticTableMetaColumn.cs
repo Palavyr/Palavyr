@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DashboardServer.Data.Migrations.ConfigurationMigrations
+namespace Palavyr.Data.Migrations.ConfigurationMigrations
 {
     public partial class AddPerPersonRequiredStaticTableMetaColumn : Migration
     {

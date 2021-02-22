@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Palavyr.Services.PdfService.PdfSections.Util
 {

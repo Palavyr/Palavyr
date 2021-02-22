@@ -1,11 +1,9 @@
 using System.Threading.Tasks;
-using DashboardServer.Data;
-using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Palavyr.API.Services.AuthenticationServices;
+using Palavyr.Data.Abstractions;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {

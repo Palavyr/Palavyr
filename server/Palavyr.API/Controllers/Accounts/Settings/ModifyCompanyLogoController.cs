@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Amazon.S3;
-using DashboardServer.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +12,7 @@ using Palavyr.Common.FileSystem.FormPaths;
 using Palavyr.Common.FileSystem.IO;
 using Palavyr.Common.FileSystem.ListPaths;
 using Palavyr.Common.GlobalConstants;
+using Palavyr.Data;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {

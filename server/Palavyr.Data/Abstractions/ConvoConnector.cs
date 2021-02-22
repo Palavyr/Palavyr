@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace DashboardServer.Data.Abstractions
+namespace Palavyr.Data.Abstractions
 {
     public interface IConvoConnector
     {

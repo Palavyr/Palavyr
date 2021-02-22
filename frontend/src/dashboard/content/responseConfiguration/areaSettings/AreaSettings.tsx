@@ -41,10 +41,10 @@ export const AreaSettings = () => {
         areaName: "",
         areaTitle: "",
         subject: "",
-        isComplete: false,
+        isEnabled: false,
     });
     const [alertDetails, setAlertDetails] = useState<AlertDetails>({ title: "", message: "" });
-    const [isCompleteState, setIsCompleteState] = useState<boolean | null>(null);
+    const [isEnabledState, setIsEnabledState] = useState<boolean | null>(null);
 
     const classes = useStyles();
     const history = useHistory();
@@ -59,9 +59,9 @@ export const AreaSettings = () => {
             areaName: areaData.areaName,
             areaTitle: areaData.areaDisplayTitle,
             subject: areaData.subject,
-            isComplete: areaData.isComplete,
+            isEnabled: areaData.isEnabled,
         });
-        setIsCompleteState(areaData.isComplete);
+        setIsEnabledState(areaData.isEnabled);
         setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
@@ -125,14 +125,14 @@ export const AreaSettings = () => {
     };
 
     const onAreaEnabledToggleChange = async () => {
-        const { data: updatedIsComplete } = await client.Area.UpdateIsComplete(!isCompleteState, areaIdentifier);
-        setIsCompleteState(updatedIsComplete);
+        const { data: updatedisEnabled } = await client.Area.UpdateIsEnabled(!isEnabledState, areaIdentifier);
+        setIsEnabledState(updatedisEnabled);
     };
 
     return loaded ? (
         <>
             <AreaConfigurationHeader title="Area Settings" subtitle={`Modify settings that are specific to this area (${settings.areaName}).`} />
-            {isCompleteState !== null && <OsTypeToggle controlledState={isCompleteState} onChange={onAreaEnabledToggleChange} enabledLabel="Area Enabled" disabledLabel="Area Disabled" />}
+            {isEnabledState !== null && <OsTypeToggle controlledState={isEnabledState} onChange={onAreaEnabledToggleChange} enabledLabel="Area Enabled" disabledLabel="Area Disabled" />}
 
             <Grid container spacing={3}>
                 <Grid item xs={12}>

@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using DashboardServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Palavyr.Data;
 using Palavyr.Services.EmailService.ResponseEmailTools;
 using Stripe;
 

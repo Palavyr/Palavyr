@@ -1,10 +1,10 @@
 using System.Linq;
 using System.Threading.Tasks;
-using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.API.Services.AuthenticationServices;
 using Palavyr.Common.UIDUtils;
+using Palavyr.Data;
 
 
 namespace Palavyr.API.Controllers.Authentication.PasswordReset

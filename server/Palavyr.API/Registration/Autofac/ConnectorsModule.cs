@@ -1,5 +1,5 @@
 using Autofac;
-using DashboardServer.Data.Abstractions;
+using Palavyr.Data.Abstractions;
 
 
 namespace Palavyr.API.Registration.Autofac

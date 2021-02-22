@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Palavyr.Domain.Conversation.Schemas;
 
-namespace DashboardServer.Data
+namespace Palavyr.Data
 {
     public class ConvoContext : DbContext
     {

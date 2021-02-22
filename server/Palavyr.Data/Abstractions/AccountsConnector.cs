@@ -3,17 +3,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Palavyr.Common.UIDUtils;
 using Palavyr.Domain.Accounts.Schemas;
 
-namespace DashboardServer.Data.Abstractions
+namespace Palavyr.Data.Abstractions
 {
     public interface IAccountsConnector
     {
         Task CommitChanges();
         Task<UserAccount> GetAccount(string accountId);
-        Task<UserAccount> GetAccountOrNull(string accountId);
-        Task<UserAccount> GetAccountByEmailAddressOrNull(string emailAddress);
+        Task<UserAccount?> GetAccountOrNull(string accountId);
+        Task<UserAccount?> GetAccountByEmailOrNull(string emailAddress);
+        Task<UserAccount?> GetAccountByEmailAddressOrNull(string emailAddress);
         Task<Session> CreateAndAddNewSession(string token, string accountId, string apiKey);
+        Task<Session> CreateAndAddNewSession(UserAccount account);
         Task<Session?> GetSessionOrNull(string token);
         Task RemoveSession(string sessionId);
         bool SignedStripePayloadExists(string signedPayload);
@@ -47,6 +50,12 @@ namespace DashboardServer.Data.Abstractions
             return await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
         }
 
+        public async Task<UserAccount?> GetAccountByEmailOrNull(string emailAddress)
+        {
+            logger.LogInformation($"Retrieving user account: {emailAddress}");
+            return await accountsContext.Accounts.SingleOrDefaultAsync(row => row.EmailAddress == emailAddress);
+        }
+
         public async Task<UserAccount> GetAccountByEmailAddressOrNull(string emailAddress)
         {
             logger.LogInformation($"Retrieving user account by email: {emailAddress}");
@@ -56,6 +65,15 @@ namespace DashboardServer.Data.Abstractions
         public async Task<Session> CreateAndAddNewSession(string token, string accountId, string apiKey)
         {
             var session = Session.CreateNew(token, accountId, apiKey);
+            var newSession = await accountsContext.Sessions.AddAsync(session);
+            await accountsContext.SaveChangesAsync();
+            return newSession.Entity;
+        }
+
+        public async Task<Session> CreateAndAddNewSession(UserAccount account)
+        {
+            var token = GuidUtils.CreateNewId();
+            var session = Session.CreateNew(token, account.AccountId, account.ApiKey);
             var newSession = await accountsContext.Sessions.AddAsync(session);
             await accountsContext.SaveChangesAsync();
             return newSession.Entity;

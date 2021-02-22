@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace DashboardServer.Data.Migrations.ConfigurationMigrations
+namespace Palavyr.Data.Migrations.ConfigurationMigrations
 {
     public partial class initialCreate : Migration
     {

@@ -1,14 +1,13 @@
 #nullable enable
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using DashboardServer.Data;
 using Google.Apis.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CommonResponseTypes;
 using Palavyr.API.RequestTypes;
 using Palavyr.Common.UIDUtils;
+using Palavyr.Data.Abstractions;
 using Palavyr.Domain.Accounts.Schemas;
 
 namespace Palavyr.API.Services.AuthenticationServices
@@ -21,8 +20,7 @@ namespace Palavyr.API.Services.AuthenticationServices
 
     public class AuthService : IAuthService
     {
-        private DashContext dashContext;
-        private readonly AccountsContext accountsContext;
+        private readonly IAccountsConnector accountsConnector;
         private readonly ILogger<AuthService> logger;
         private readonly IJwtAuthenticationService jwtAuthService;
         private IConfiguration configuration;
@@ -34,15 +32,13 @@ namespace Palavyr.API.Services.AuthenticationServices
         private const string DifferentAccountType = "Email is currently used with different account type.";
         private const int GracePeriod = 5;
         public AuthService(
-            DashContext dashContext,
-            AccountsContext accountsContext,
+            IAccountsConnector accountsConnector,
             ILogger<AuthService> logger,
             IJwtAuthenticationService jwtService,
             IConfiguration configuration
         )
         {
-            this.dashContext = dashContext;
-            this.accountsContext = accountsContext;
+            this.accountsConnector = accountsConnector;
             this.logger = logger;
 
             this.configuration = configuration;
@@ -91,13 +87,12 @@ namespace Palavyr.API.Services.AuthenticationServices
                 return Credentials.CreateUnauthenticatedResponse(message);
             }
 
-            var session = CreateNewSession(account);
             var token = CreateNewJwtToken(account);
-            await UpdateCurrentAccountState(account);
+            UpdateCurrentAccountState(account);
 
-            await accountsContext.Sessions.AddAsync(session);
+            var session = await accountsConnector.CreateAndAddNewSession(account);
             
-            await accountsContext.SaveChangesAsync();
+            await accountsConnector.CommitChanges();
 
             logger.LogDebug("Session saved to DB. Returning auth response.");
             return Credentials.CreateAuthenticatedResponse(
@@ -107,7 +102,7 @@ namespace Palavyr.API.Services.AuthenticationServices
                 account.EmailAddress);
         }
 
-        public async Task UpdateCurrentAccountState(UserAccount account)
+        public void UpdateCurrentAccountState(UserAccount account)
         {
             // update the current active state
             // if the current_period_end plus a few days is in the future, then active stays true
@@ -151,7 +146,7 @@ namespace Palavyr.API.Services.AuthenticationServices
             var loginType = DetermineLoginType(loginCredentials);
             return loginType switch
             {
-                (LoginType.Default) => RequestAccountViaDefault(loginCredentials),
+                (LoginType.Default) => await RequestAccountViaDefault(loginCredentials),
                 (LoginType.Google) => await RequestAccountViaGoogle(loginCredentials),
                 LoginType.Error => AccountReturn.Return(null, null),
                 _ => AccountReturn.Return(null, message: null)
@@ -170,7 +165,7 @@ namespace Palavyr.API.Services.AuthenticationServices
             }
 
             // now verify the user exists in the Accounts database
-            var account = accountsContext.Accounts.SingleOrDefault(row => row.EmailAddress == payload.Email);
+            var account = await accountsConnector.GetAccountByEmailOrNull(payload.Email);
             if (account == null)
             {
                 return AccountReturn.Return(null, CouldNotFindAccountWithGoogle);
@@ -182,42 +177,27 @@ namespace Palavyr.API.Services.AuthenticationServices
             return AccountReturn.Return(account, null);
         }
 
-        private AccountReturn RequestAccountViaDefault(LoginCredentials credentials)
+        private async Task<AccountReturn> RequestAccountViaDefault(LoginCredentials credentials)
         {
-            logger.LogDebug("Attempting to retrieve credentials.");
-            var byUsername = accountsContext.Accounts.SingleOrDefault(row => row.UserName == credentials.Username);
-            var byEmail =
-                accountsContext.Accounts.SingleOrDefault(row => row.EmailAddress == credentials.EmailAddress);
-
-            var userAccount = byUsername ?? byEmail;
-            if (userAccount == null)
+            var account = await accountsConnector.GetAccountByEmailOrNull(credentials.EmailAddress);
+            if (account == null)
             {
-                return AccountReturn.Return(userAccount, CouldNotFindAccount);
+                return AccountReturn.Return(account, CouldNotFindAccount);
             }
 
-            if (userAccount.AccountType != AccountType.Default)
+            if (account.AccountType != AccountType.Default)
                 return AccountReturn.Return(null, "Default " + DifferentAccountType);
 
 
-            if (!PasswordHashing.ComparePasswords(userAccount.Password, credentials.Password))
+            if (!PasswordHashing.ComparePasswords(account.Password, credentials.Password))
             {
                 logger.LogDebug("The provided password did not match!");
                 return AccountReturn.Return(null, PasswordsDoNotMatch);
             }
 
-            return AccountReturn.Return(userAccount, null);
+            return AccountReturn.Return(account, null);
         }
-
-        private Session CreateNewSession(UserAccount account)
-        {
-            var sessionId = Guid.NewGuid().ToString();
-            logger.LogDebug("Attempting to create a new Session.");
-            var newSession = Session.CreateNew(sessionId, account.AccountId, account.ApiKey);
-
-            logger.LogDebug($"New Session created: {newSession.SessionId}");
-            return newSession;
-        }
-
+        
         private string CreateNewJwtToken(UserAccount account)
         {
             return jwtAuthService.GenerateJwtTokenAfterAuthentication(account.EmailAddress);

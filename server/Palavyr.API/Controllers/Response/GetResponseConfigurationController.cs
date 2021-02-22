@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Mvc;
+using Palavyr.Data.Abstractions;
 using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Response

@@ -1,11 +1,11 @@
 using System.Linq;
 using System.Threading.Tasks;
-using DashboardServer.Data;
-using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CommonResponseTypes;
 using Palavyr.API.Utils;
+using Palavyr.Data;
+using Palavyr.Data.Abstractions;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {

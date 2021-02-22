@@ -14,7 +14,6 @@ namespace Palavyr.Domain.Accounts.Schemas
 
         public Session()
         {
-            
         }
 
         Session(string sessionId, string accountId, string apiKey)

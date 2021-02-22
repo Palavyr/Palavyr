@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Domain.Configuration.Schemas;
 
-namespace DashboardServer.Data.Abstractions
+namespace Palavyr.Data.Abstractions
 {
     public interface IDashConnector
     {
@@ -158,7 +158,7 @@ namespace DashboardServer.Data.Abstractions
         {
             return await dashContext
                 .Areas
-                .Where(row => row.AccountId == accountId && row.IsComplete)
+                .Where(row => row.AccountId == accountId && row.IsEnabled)
                 .Include(row => row.ConversationNodes)
                 .Include(row => row.DynamicTableMetas)
                 .Include(row => row.StaticTablesMetas)
@@ -186,7 +186,7 @@ namespace DashboardServer.Data.Abstractions
 
         public async Task<List<Area>> GetActiveAreas(string accountId)
         {
-            return await dashContext.Areas.Where(row => row.AccountId == accountId && row.IsComplete).ToListAsync();
+            return await dashContext.Areas.Where(row => row.AccountId == accountId && row.IsEnabled).ToListAsync();
         }
 
         public async Task SetDefaultDynamicTable(string accountId, string areaId, string tableId)

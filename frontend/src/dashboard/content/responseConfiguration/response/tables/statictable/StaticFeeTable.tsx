@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles, TextField, Button, TableRow, Table, TableHead, TableBody, TableCell } from "@material-ui/core";
+import { makeStyles, TextField, Button, TableRow, Table, TableHead, TableBody, TableCell, Checkbox, FormControlLabel } from "@material-ui/core";
 import { StaticTableMetas, StaticTableMeta, StaticTableRow } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./staticTableModifier";
 import { StaticRow } from "./StaticRow";
@@ -7,7 +7,6 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-
 
 
 const useStyles = makeStyles((theme => ({
@@ -75,7 +74,6 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                         <TableCell align={cellAlignment} className={classes.headerText} >Max Amount (if range)</TableCell>
                         <TableCell align={cellAlignment} className={classes.headerText} >Range</TableCell>
                         <TableCell align={cellAlignment} className={classes.headerText} >Per Individual</TableCell>
-                        <TableCell align={cellAlignment} className={classes.headerText} >Require Num Individuals</TableCell>
                         <TableCell align={cellAlignment} className={classes.headerText} ></TableCell>
                     </TableRow>
                 </TableHead>
@@ -93,7 +91,6 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                             rangeState={row.range}
                             perState={row.perPerson}
                             description={row.description}
-                            perPersonIsRequired={row.perPersonInputRequired}
                         />
                     ))}
                 </TableBody>
@@ -118,6 +115,8 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                 <Button startIcon={<DeleteOutlineIcon />} variant="contained" color="secondary" size="small" className={classes.feeTableButton} onClick={() => tableModifier.delTable(staticTableMetas, staticTableMeta.tableOrder)}>
                     Remove Table
                 </Button>
+
+                <FormControlLabel label="Require num individuals" control={<Checkbox checked={staticTableMeta.perPersonInputRequired} onChange={() => tableModifier.togglePerPersonRequired(staticTableMetas, staticTableMeta.tableOrder)} />} />
             </div>
         </div>
     );

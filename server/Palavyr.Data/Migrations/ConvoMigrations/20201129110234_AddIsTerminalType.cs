@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DashboardServer.Data.Migrations.ConvoMigrations
+namespace Palavyr.Data.Migrations.ConvoMigrations
 {
     public partial class AddIsTerminalType : Migration
     {

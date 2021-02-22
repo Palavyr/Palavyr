@@ -1,10 +1,10 @@
 using System.Linq;
 using System.Threading.Tasks;
-using DashboardServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Services.DynamicTableService;
+using Palavyr.Data;
 using Palavyr.Domain.Configuration.Constant;
 
 namespace Palavyr.API.Controllers.Response.DynamicTables

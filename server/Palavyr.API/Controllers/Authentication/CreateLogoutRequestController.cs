@@ -1,9 +1,7 @@
 using System.Threading.Tasks;
-using DashboardServer.Data;
-using DashboardServer.Data.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Palavyr.API.RequestTypes;
+using Palavyr.Data.Abstractions;
 
 namespace Palavyr.API.Controllers.Authentication
 {

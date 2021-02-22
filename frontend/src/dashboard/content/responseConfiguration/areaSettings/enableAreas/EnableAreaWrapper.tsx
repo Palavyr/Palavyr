@@ -18,22 +18,22 @@ export const EnableAreaWrapper = ({ areasEnabled }: IToggleWrapper) => {
     const client = new ApiClient();
     const cls = useStyles();
 
-    const [isCompleteState, setIsCompleteState] = useState<boolean | null>(null);
+    const [isEnabled, setIsEnabled] = useState<boolean | null>(null);
 
     const onToggleChange = async () => {
-        const { data: updatedIsEnabled } = await client.Area.UpdateIsComplete(!isCompleteState, areasEnabled.areaId);
-        setIsCompleteState(updatedIsEnabled);
+        const { data: updatedIsEnabled } = await client.Area.UpdateIsEnabled(!isEnabled, areasEnabled.areaId);
+        setIsEnabled(updatedIsEnabled);
     };
 
     useEffect(() => {
-        setIsCompleteState(areasEnabled.isEnabled);
+        setIsEnabled(areasEnabled.isEnabled);
     }, []);
 
     return (
         <TableRow className={cls.center}>
             <TableCell className={cls.center}>{areasEnabled.areaName}</TableCell>
             <TableCell className={cls.center}>
-                <OsTypeToggle controlledState={isCompleteState === true} onChange={onToggleChange} enabledLabel="Area Enabled" disabledLabel="Area Disabled" />
+                <OsTypeToggle controlledState={isEnabled === true} onChange={onToggleChange} enabledLabel="Area Enabled" disabledLabel="Area Disabled" />
             </TableCell>
         </TableRow>
     );

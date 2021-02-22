@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DashboardServer.Data.Migrations.AccountsMigrations
+namespace Palavyr.Data.Migrations.AccountsMigrations
 {
     public partial class AddCurrentPeriodEndToAccount : Migration
     {

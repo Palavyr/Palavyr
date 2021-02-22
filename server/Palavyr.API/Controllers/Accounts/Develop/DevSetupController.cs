@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DashboardServer.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Controllers.Accounts.Setup.SeedData;
 using Palavyr.API.Services.StripeServices;
 using Palavyr.Common.GlobalConstants;
+using Palavyr.Data;
 using Palavyr.Domain.Accounts.Schemas;
 using AccountType = Palavyr.Common.UIDUtils.AccountType;
 using Subscription = Palavyr.Domain.Accounts.Schemas.Subscription;

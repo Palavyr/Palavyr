@@ -9,15 +9,18 @@ namespace Palavyr.Domain.Configuration.Schemas
         [Key]
         public int? Id { get; set; }
         public int RowOrder { get; set; }
-        public string Description { get; set; }
-        public StaticFee Fee { get; set; }
+        public string Description { get; set; } = null!;
+        public StaticFee Fee { get; set; } = null!;
         public bool Range { get; set; }
         public bool PerPerson { get; set; }
         public int TableOrder { get; set; }
-        public string AreaIdentifier { get; set; }
-        public string AccountId { get; set; }
-        public bool PerPersonInputRequired { get; set; }
+        public string AreaIdentifier { get; set; } = null!;
+        public string AccountId { get; set; } = null!;
 
+        public StaticTableRow()
+        {
+            
+        }
         public static List<StaticTableRow> CreateDefaultStaticTable(int tableId, string areaId, string accountId)
         {
             return new List<StaticTableRow>()
@@ -49,7 +52,6 @@ namespace Palavyr.Domain.Configuration.Schemas
                 TableOrder = row.TableOrder,
                 AreaIdentifier = row.AreaIdentifier,
                 AccountId = accountId,
-                PerPersonInputRequired = row.PerPersonInputRequired
             }));
             return boundRows;
         }

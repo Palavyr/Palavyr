@@ -7,22 +7,26 @@ namespace Palavyr.Domain.Configuration.Schemas
     public class ConversationNode
     {
         [Key] public int? Id { get; set; }
-        public string NodeId { get; set; }
-        public string NodeType { get; set; }
+        public string NodeId { get; set; } = null!;
+        public string NodeType { get; set; } = null!;
         public bool Fallback { get; set; }
-        public string Text { get; set; }
+        public string Text { get; set; } = null!;
         public bool IsRoot { get; set; }
-        public string AreaIdentifier { get; set; }
+        public string AreaIdentifier { get; set; } = null!;
         public string OptionPath { get; set; }
         public bool IsCritical { get; set; }
-        public string ValueOptions { get; set; } // stored as comma delimited list as string
-        public string AccountId { get; set; }
+        public string ValueOptions { get; set; } = null!; // stored as comma delimited list as string
+        public string AccountId { get; set; } = null!;
         public bool IsMultiOptionType { get; set; }
         public bool IsTerminalType { get; set; }
 
-        public string NodeChildrenString { get; set; } // stored as comma delimited list as string
+        public string NodeChildrenString { get; set; } = null!; // stored as comma delimited list as string
 
-        public static List<ConversationNode> CreateDefaultNode(string AreaIdentifier, string accountId)
+        public ConversationNode()
+        {
+        }
+
+        public static List<ConversationNode> CreateDefaultNode(string areaIdentifier, string accountId)
         {
             return new List<ConversationNode>()
             {
@@ -33,7 +37,7 @@ namespace Palavyr.Domain.Configuration.Schemas
                     Fallback = false,
                     Text = "Default Text from server",
                     IsRoot = true,
-                    AreaIdentifier = AreaIdentifier,
+                    AreaIdentifier = areaIdentifier,
                     OptionPath = null,
                     NodeChildrenString = "",
                     ValueOptions = "",
@@ -58,7 +62,6 @@ namespace Palavyr.Domain.Configuration.Schemas
             bool isCritical = true,
             bool isMultiOptionType = false,
             bool isTerminalType = false
-            
         )
         {
             return new ConversationNode()
@@ -81,7 +84,6 @@ namespace Palavyr.Domain.Configuration.Schemas
 
         public static List<ConversationNode> MapUpdate(string accountId, List<ConversationNode> nodeUpdates)
         {
-            
             var mappedTransactions = new List<ConversationNode>();
             foreach (var node in nodeUpdates)
             {

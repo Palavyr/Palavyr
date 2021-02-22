@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles, TextField, Switch, Button, TableRow, TableCell, Checkbox } from "@material-ui/core";
+import { makeStyles, TextField, Switch, Button, TableRow, TableCell } from "@material-ui/core";
 import { StaticTableMetas } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./staticTableModifier";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -56,10 +56,9 @@ export interface IStaticRow {
     rangeState: boolean;
     perState: boolean;
     description: string;
-    perPersonIsRequired: boolean;
 }
 
-export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modifier, minFee, maxFee, rangeState, perState, description,perPersonIsRequired }: IStaticRow) => {
+export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modifier, minFee, maxFee, rangeState, perState, description }: IStaticRow) => {
     const classes = useStyles({ index, rangeState });
     const cellAlignment = "center";
     const { currencySymbol } = React.useContext(DashboardContext);
@@ -142,15 +141,6 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
                 >
                     {perState ? "Per Individual" : "Static Fee"}
                 </Button>
-            </TableCell>
-
-            <TableCell align={cellAlignment}>
-                <Checkbox
-                    checked={perPersonIsRequired}
-                    onClick={() => {
-                        modifier.togglePerPersonRequired(staticTableMetas, tableOrder, rowOrder);
-                    }}
-                ></Checkbox>
             </TableCell>
 
             <TableCell align={cellAlignment}>

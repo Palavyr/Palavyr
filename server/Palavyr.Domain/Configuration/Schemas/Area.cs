@@ -9,30 +9,32 @@ namespace Palavyr.Domain.Configuration.Schemas
     public class Area
     {
         [Key] public int? Id { get; set; }
-        public string AreaIdentifier { get; set; }
-        public string AreaName { get; set; }
-        public string AreaDisplayTitle { get; set; }
-        public string Prologue { get; set; }
-        public string Epilogue { get; set; }
-        public string EmailTemplate { get; set; }
-        public bool IsComplete { get; set; }
+        public string AreaIdentifier { get; set; } = null!;
+        public string AreaName { get; set; } = null!;
+        public string AreaDisplayTitle { get; set; } = null!;
+        public string Prologue { get; set; } = null!;
+        public string Epilogue { get; set; } = null!;
+        public string EmailTemplate { get; set; } = null!;
+        public bool IsEnabled { get; set; }
         public List<StaticTablesMeta> StaticTablesMetas { get; set; } = new List<StaticTablesMeta>();
         public List<ConversationNode> ConversationNodes { get; set; } = new List<ConversationNode>();
-        public string GroupId { get; set; }
-        public string AccountId { get; set; }
+        public string AccountId { get; set; } = null!;
         public List<DynamicTableMeta> DynamicTableMetas { get; set; } = new List<DynamicTableMeta>();
-        public string AreaSpecificEmail { get; set; }
+        public string AreaSpecificEmail { get; set; } = null!;
         public bool EmailIsVerified { get; set; }
 
         public bool UseAreaFallbackEmail { get; set; }
-        public string FallbackSubject { get; set; }
-        public string FallbackEmailTemplate { get; set; }
+        public string FallbackSubject { get; set; } = null!;
+        public string FallbackEmailTemplate { get; set; } = null!;
 
         [DefaultValue("Thank you for reaching out!")]
-        public string Subject { get; set; }
+        public string Subject { get; set; } = null!;
 
         [NotMapped] public bool AwaitingVerification { get; set; }
 
+        public Area()
+        {
+        }
         public static Area CreateNewArea(string areaName, string accountId, string emailAddress, bool emailIsVerified)
         {
             var areaId = Guid.NewGuid().ToString();
@@ -42,11 +44,11 @@ namespace Palavyr.Domain.Configuration.Schemas
                 AreaName = areaName,
                 Prologue = "",
                 Epilogue = "",
-                EmailTemplate = "<h2>Upload your custom email template</h2>",
+                EmailTemplate = "<h2>Upload your custom email template</h2><p>This is a starter paragraph to get you started</p>",
                 Subject = "Thank you for reaching out!",
                 ConversationNodes = ConversationNode.CreateDefaultNode(areaId, accountId),
                 StaticTablesMetas = StaticTablesMeta.CreateDefaultMetas(areaId, accountId),
-                IsComplete = false,
+                IsEnabled = false,
                 AreaDisplayTitle = "Change this in the area Settings.",
                 AccountId = accountId,
                 DynamicTableMetas = null,
