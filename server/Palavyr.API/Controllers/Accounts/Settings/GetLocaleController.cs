@@ -2,10 +2,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.Services.AccountServices;
 using Microsoft.AspNetCore.Authorization;
-using Palavyr.API.Services.AuthenticationServices;
 using Palavyr.Data;
+using Palavyr.Services.AccountServices;
+using Palavyr.Services.AuthenticationServices;
 
 
 namespace Palavyr.API.Controllers.Accounts.Settings

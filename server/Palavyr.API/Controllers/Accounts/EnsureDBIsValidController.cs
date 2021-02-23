@@ -2,8 +2,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.Services.StripeServices;
 using Palavyr.Data;
+using Palavyr.Services.DatabaseService;
+using Palavyr.Services.StripeServices;
 
 namespace Palavyr.API.Controllers.Accounts
 {
@@ -11,13 +12,16 @@ namespace Palavyr.API.Controllers.Accounts
     [ApiController]
     public class EnsureDbIsValidController : ControllerBase
     {
-        
+        private readonly IAccountsConnector accountsConnector;
+        private readonly IDashConnector dashConnector;
         private ILogger<DeleteAccountController> logger;
         private DashContext dashContext;
         private AccountsContext accountsContext;
         private StripeCustomerService stripeCustomerService;
 
         public EnsureDbIsValidController(
+            IAccountsConnector accountsConnector,
+            IDashConnector dashConnector,
             ILogger<DeleteAccountController> logger,
             AccountsContext accountsContext,
             DashContext dashContext,
@@ -25,6 +29,8 @@ namespace Palavyr.API.Controllers.Accounts
 
             )
         {
+            this.accountsConnector = accountsConnector;
+            this.dashConnector = dashConnector;
             this.logger = logger;
             this.dashContext = dashContext;
             this.accountsContext = accountsContext;
@@ -34,9 +40,9 @@ namespace Palavyr.API.Controllers.Accounts
         [HttpPost("configure-conversations/ensure-db-valid")]
         public async Task<NoContentResult> Ensure([FromHeader] string accountId)
         {
-
-            var preferences = dashContext.WidgetPreferences.Single(row => row.AccountId == accountId);
-            var account = accountsContext.Accounts.Single(row => row.AccountId == accountId);
+            var preferences = await dashConnector.GetWidgetPreferences(accountId);
+            var account = await accountsConnector.GetAccount(accountId);
+ 
             if (string.IsNullOrWhiteSpace(account.StripeCustomerId))
             {
                 var newCustomer = await stripeCustomerService.CreateNewStripeCustomer(account.EmailAddress);
@@ -70,9 +76,8 @@ namespace Palavyr.API.Controllers.Accounts
 
             if (string.IsNullOrWhiteSpace(preferences.FontFamily))
                 preferences.FontFamily = "Architects Daughter";
-            
-            await dashContext.SaveChangesAsync();
-            
+
+            await dashConnector.CommitChangesAsync();
             return NoContent();
         }
     }

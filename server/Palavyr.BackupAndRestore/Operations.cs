@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.BackupAndRestore.Postgres;
 using Palavyr.BackupAndRestore.UserData;
-using Palavyr.Common.FileSystem.FormPaths;
+using Palavyr.Common.FileSystemTools.FormPaths;
 using Palavyr.Common.UIDUtils;
 using Palavyr.Data;
-using Palavyr.Services.Amazon.S3Service;
+using Palavyr.Services.AmazonServices.S3Service;
 
 namespace Palavyr.BackupAndRestore
 {

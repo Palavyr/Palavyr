@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.Aws;
-using Palavyr.Common.FileSystem.FormPaths;
-using Palavyr.Common.FileSystem.IO;
-using Palavyr.Common.FileSystem.ListPaths;
+using Palavyr.Common.FileSystemTools.FormPaths;
+using Palavyr.Common.FileSystemTools.IO;
+using Palavyr.Common.FileSystemTools.ListPaths;
 using Palavyr.Common.GlobalConstants;
 using Palavyr.Data;
+using Palavyr.Services.AmazonServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
@@ -61,7 +61,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             }
 
             var filepath = Path.Combine(logoDirectory, Guid.NewGuid().ToString()) + extension;
-            await FileIO.SaveFile(filepath, file);
+            await FileIo.SaveFile(filepath, file);
             var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
             account.AccountLogoUri = filepath;
             await accountsContext.SaveChangesAsync();

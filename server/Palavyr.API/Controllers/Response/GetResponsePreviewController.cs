@@ -5,9 +5,9 @@ using Amazon.S3;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.CommonResponseTypes;
-using Palavyr.API.Response;
-using Palavyr.Data.Abstractions;
+using Palavyr.Domain.Resources.Responses;
+using Palavyr.Services.DatabaseService;
+using Palavyr.Services.PdfService;
 
 namespace Palavyr.API.Controllers.Response
 {

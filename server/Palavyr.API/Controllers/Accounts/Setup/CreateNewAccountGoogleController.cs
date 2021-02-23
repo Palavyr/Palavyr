@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.API.RequestTypes;
-using Palavyr.API.Services.AccountServices;
+using Palavyr.Domain.Resources.Requests;
+using Palavyr.Services.AccountServices;
 
 namespace Palavyr.API.Controllers.Accounts.Setup
 {

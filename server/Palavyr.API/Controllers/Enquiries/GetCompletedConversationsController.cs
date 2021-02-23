@@ -6,10 +6,12 @@ using Amazon.S3;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.CommonResponseTypes;
-using Palavyr.API.Utils;
 using Palavyr.Common.GlobalConstants;
+using Palavyr.Common.Utils;
 using Palavyr.Data;
+using Palavyr.Domain;
+using Palavyr.Domain.Resources.Responses;
+using Palavyr.Services.AmazonServices;
 
 namespace Palavyr.API.Controllers.Enquiries
 {

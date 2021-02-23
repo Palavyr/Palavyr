@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.Services.DynamicTableService;
 using Palavyr.Data;
 using Palavyr.Domain.Configuration.Constant;
+using Palavyr.Services.DynamicTableService;
 
 namespace Palavyr.API.Controllers.Response.DynamicTables
 {

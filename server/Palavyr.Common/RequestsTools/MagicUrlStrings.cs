@@ -1,4 +1,4 @@
-﻿namespace Palavyr.Common.Requests
+﻿namespace Palavyr.Common.RequestsTools
 {
     public static class MagicUrlStrings
     {

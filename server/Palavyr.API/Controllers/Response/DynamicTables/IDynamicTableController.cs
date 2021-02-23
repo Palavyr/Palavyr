@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.API.RequestTypes;
+using Palavyr.Domain.Resources.Requests;
 
 namespace Palavyr.API.Controllers.Response.DynamicTables
 {

@@ -133,7 +133,6 @@ export const WelcomeToTheDashboard = () => {
                     Palavyr is a system used to automate the delivery of information about your services and fees to potential customers. The Palavyr chat widget is embedded into your website and through it, potential customers will provide
                     information that we use to deliver specific information about your services via email.
                 </Typography>
-                {/* <Divider /> */}
                 <Typography style={{ padding: "1rem", paddingTop: "2rem", fontSize: "20pt" }}>How does it work?</Typography>
                 <div className={cls.sectionHeadDiv}>
                     <div className={cls.listItems}>
@@ -149,12 +148,9 @@ export const WelcomeToTheDashboard = () => {
                     </div>
                 </div>
                 <Divider />
-                {/* <Typography style={{ padding: "2rem", fontSize: "24pt", fontWeight: "bolder" }}>Quick Start To Do list</Typography> */}
-
-                {allClear(todos) && todos && <OnboardingTodo todos={todos} />}
-
+                {todos && !allClear(todos) && <OnboardingTodo todos={todos} />}
                 <Divider />
-                <Typography style={{ padding: "2rem", fontSize: "24pt", fontWeight: "bolder" }}>Follow these steps to get started:</Typography>
+                <Typography style={{ padding: "2rem", fontSize: "24pt", fontWeight: "bolder" }}>Detailed Guide:</Typography>
                 <Divider />
                 <div className={cls.sectionDiv}>
                     <Alert className={cls.alert} icon={<></>} severity="info">

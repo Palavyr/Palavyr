@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.RequestTypes;
 using Palavyr.Data;
+using Palavyr.Domain.Resources.Requests;
 
 namespace Palavyr.API.Controllers.Response.SubjectControllers
 {

@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.RequestTypes.Registration;
-using Palavyr.Data.Abstractions;
+using Palavyr.Domain.Resources.Requests.Registration;
+using Palavyr.Services.DatabaseService;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
@@ -30,7 +30,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             }
 
             account.Password = accountDetails.Password;
-            await accountsConnector.CommitChanges();
+            await accountsConnector.CommitChangesAsync();
             return true;
         }
     }

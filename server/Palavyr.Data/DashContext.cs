@@ -11,7 +11,6 @@ namespace Palavyr.Data
         public DbSet<ConversationNode> ConversationNodes { get; set; }
         public DbSet<FileNameMap> FileNameMaps { get; set; }
         public DbSet<StaticFee> StaticFees { get; set; }
-        public DbSet<GroupMap> Groups { get; set; }
         public DbSet<StaticTablesMeta> StaticTablesMetas { get; set; }
         public DbSet<StaticTableRow> StaticTablesRows { get; set; }
         public DbSet<DynamicTableMeta> DynamicTableMetas { get; set; }

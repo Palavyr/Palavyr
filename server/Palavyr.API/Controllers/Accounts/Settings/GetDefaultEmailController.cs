@@ -4,8 +4,8 @@ using Amazon.SimpleEmail;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.Response;
 using Palavyr.Data;
+using Palavyr.Domain.Resources.Responses;
 using Palavyr.Services.EmailService.Verification;
 
 namespace Palavyr.API.Controllers.Accounts.Settings

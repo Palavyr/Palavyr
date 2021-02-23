@@ -2,9 +2,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.RequestTypes;
-using Palavyr.Data;
-using Palavyr.Data.Abstractions;
+using Palavyr.Domain.Resources.Requests;
+using Palavyr.Services.DatabaseService;
 
 namespace Palavyr.API.Controllers.Areas
 {
@@ -13,7 +12,6 @@ namespace Palavyr.API.Controllers.Areas
     [ApiController]
     public class ModifyAreaResponseDisplayTitleController : ControllerBase
     {
-        private DashContext dashContext;
         private readonly IDashConnector dashConnector;
         private ILogger<ModifyAreaResponseDisplayTitleController> logger;
 
@@ -22,7 +20,6 @@ namespace Palavyr.API.Controllers.Areas
             ILogger<ModifyAreaResponseDisplayTitleController> logger
         )
         {
-            this.dashContext = dashContext;
             this.dashConnector = dashConnector;
             this.logger = logger;
         }

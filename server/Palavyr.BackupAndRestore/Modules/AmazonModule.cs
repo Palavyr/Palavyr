@@ -5,7 +5,7 @@ using Amazon.S3;
 using Amazon.SimpleEmail;
 using Autofac;
 using Microsoft.Extensions.Configuration;
-using Palavyr.Services.Amazon.S3Service;
+using Palavyr.Services.AmazonServices.S3Service;
 using Palavyr.Services.EmailService.ResponseEmailTools;
 using SesEmail = Palavyr.Services.EmailService.ResponseEmailTools.SesEmail;
 

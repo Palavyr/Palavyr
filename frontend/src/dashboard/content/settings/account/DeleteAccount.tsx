@@ -29,6 +29,7 @@ export const DeleteAccount = () => {
     const handleAccountDelete = async () => {
         Auth.ClearAuthentication();
         alert("We're sorry to see you go!");
+        await client.Settings.Account.DeleteAccount();
         history.push("/");
     };
     const alertMessage = {

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.API.RequestTypes;
-using Palavyr.Data.Abstractions;
+using Palavyr.Domain.Resources.Requests;
+using Palavyr.Services.DatabaseService;
 
 namespace Palavyr.API.Controllers.Authentication
 {
@@ -20,7 +20,7 @@ namespace Palavyr.API.Controllers.Authentication
         public async Task<bool> RequestLogout([FromBody] LogoutCredentials credentials)
         {
             await accountsConnector.RemoveSession(credentials.SessionId);
-            await accountsConnector.CommitChanges();
+            await accountsConnector.CommitChangesAsync();
             return true;
         }
 

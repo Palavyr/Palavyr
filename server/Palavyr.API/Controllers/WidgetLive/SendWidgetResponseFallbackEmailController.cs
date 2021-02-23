@@ -2,11 +2,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.RequestTypes;
-using Palavyr.API.Response;
-using Palavyr.API.Services.AuthenticationServices;
-using Palavyr.Common.FileSystem.ListPaths;
-using Palavyr.Data.Abstractions;
+using Palavyr.Common.FileSystemTools.ListPaths;
+using Palavyr.Domain;
+using Palavyr.Domain.Resources.Requests;
+using Palavyr.Domain.Resources.Responses;
+using Palavyr.Services.AuthenticationServices;
+using Palavyr.Services.DatabaseService;
 using Palavyr.Services.EmailService.ResponseEmailTools;
 
 namespace Palavyr.API.Controllers.WidgetLive

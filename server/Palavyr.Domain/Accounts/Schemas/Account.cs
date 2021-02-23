@@ -5,10 +5,9 @@ using Palavyr.Common.UIDUtils;
 
 namespace Palavyr.Domain.Accounts.Schemas
 {
-    public class UserAccount
+    public class Account
     {
         [Key] public int? Id { get; set; }
-        public string UserName { get; set; }
         public string Password { get; set; }
         public string EmailAddress { get; set; }
         public bool DefaultEmailIsVerified { get; set; }
@@ -59,12 +58,11 @@ namespace Palavyr.Domain.Accounts.Schemas
             Year = 2
         }
 
-        public UserAccount()
+        public Account()
         {
         }
 
-        private UserAccount(
-            string userName,
+        private Account(
             string emailAddress,
             string password,
             string accountId,
@@ -79,7 +77,6 @@ namespace Palavyr.Domain.Accounts.Schemas
             bool hasUpgraded
         )
         {
-            UserName = userName;
             Password = password;
             EmailAddress = emailAddress;
             DefaultEmailIsVerified = false;
@@ -98,46 +95,46 @@ namespace Palavyr.Domain.Accounts.Schemas
         }
 
 
-        public static UserAccount CreateGoogleAccount(
-            string userName, string apikey, string emailAddress,
+        public static Account CreateGoogleAccount(
+            string apikey, string emailAddress,
             string accountId, string locale
         )
         {
-            return new UserAccount(
-                userName, emailAddress, null, accountId, apikey, null, null, false,
+            return new Account(
+                emailAddress, null, accountId, apikey, null, null, false,
                 locale,
                 AccountType.Google, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
         }
 
-        public static UserAccount CreateAccount(
-            string userName, string emailAddress, string password, string accountId,
+        public static Account CreateAccount(
+            string emailAddress, string password, string accountId,
             AccountType accountType
         )
         {
-            return new UserAccount(
-                userName, emailAddress, password, accountId, null, null, null, false,
+            return new Account(
+                emailAddress, password, accountId, null, null, null, false,
                 "en-AU",
                 accountType, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
         }
 
-        public static UserAccount CreateAccount(
-            string userName, string emailAddress, string password, string accountId,
+        public static Account CreateAccount(
+            string emailAddress, string password, string accountId,
             string apiKey, AccountType accountType
         )
         {
-            return new UserAccount(
-                userName, emailAddress, password, accountId, apiKey, null, null, false,
+            return new Account(
+                emailAddress, password, accountId, apiKey, null, null, false,
                 "en-AU",
                 accountType, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
         }
 
-        public static UserAccount CreateAccount(
+        public static Account CreateAccount(
             string userName, string emailAddress, string password, string accountId,
             string apiKey, string companyName, string phoneNumber, bool active, string locale, AccountType accountType
         )
         {
-            return new UserAccount(
-                userName, emailAddress, password, accountId, apiKey, companyName, phoneNumber,
+            return new Account(
+                emailAddress, password, accountId, apiKey, companyName, phoneNumber,
                 active, locale, accountType, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
         }
     }

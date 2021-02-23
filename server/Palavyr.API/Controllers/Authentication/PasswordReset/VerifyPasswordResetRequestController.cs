@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Data.Abstractions;
+using Palavyr.Services.DatabaseService;
 
 
 namespace Palavyr.API.Controllers.Authentication.PasswordReset

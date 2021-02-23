@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Data.Abstractions;
 using Palavyr.Domain.Configuration.Schemas;
+using Palavyr.Services.DatabaseService;
 using Palavyr.Services.EmailService.Verification;
 
 namespace Palavyr.API.Controllers.Areas
@@ -56,7 +56,7 @@ namespace Palavyr.API.Controllers.Areas
             area.EmailIsVerified = statusResponse.IsVerified();
             area.AwaitingVerification = statusResponse.IsPending();
 
-            if (area.UseAreaFallbackEmail == null)
+            if (area.UseAreaFallbackEmail == null) // code smell
             {
                 area.UseAreaFallbackEmail = false;
             }

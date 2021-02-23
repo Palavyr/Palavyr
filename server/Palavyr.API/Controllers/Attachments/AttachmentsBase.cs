@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.CommonResponseTypes;
-using Palavyr.Common.Aws;
-using Palavyr.Common.FileSystem.ListPaths;
+using Palavyr.Common.FileSystemTools.ListPaths;
 using Palavyr.Data;
+using Palavyr.Domain.Resources.Responses;
+using Palavyr.Services.AmazonServices;
 
 namespace Palavyr.API.Controllers.Attachments
 {

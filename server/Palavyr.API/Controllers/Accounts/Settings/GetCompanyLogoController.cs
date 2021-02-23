@@ -5,9 +5,9 @@ using Amazon.S3;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.Aws;
-using Palavyr.Common.FileSystem.ListPaths;
+using Palavyr.Common.FileSystemTools.ListPaths;
 using Palavyr.Common.GlobalConstants;
+using Palavyr.Services.AmazonServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {

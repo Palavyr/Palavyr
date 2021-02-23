@@ -3,10 +3,10 @@ using System.IO.Compression;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.BackupAndRestore.Paths;
-using Palavyr.Common.FileSystem.FormPaths;
+using Palavyr.Common.FileSystemTools.FormPaths;
 using Palavyr.Common.UIDUtils;
-using Palavyr.Services.Amazon;
-using Palavyr.Services.Amazon.S3Service;
+using Palavyr.Services.AmazonServices;
+using Palavyr.Services.AmazonServices.S3Service;
 using Palavyr.Services.EmailService.ResponseEmailTools;
 
 namespace Palavyr.BackupAndRestore.Postgres
@@ -18,13 +18,11 @@ namespace Palavyr.BackupAndRestore.Postgres
 
     public class PostgresBackup : PostgresBase, IPostgresBackup
     {
-        private readonly ILogger<PostgresBackup> logger;
         private readonly IS3Saver s3Saver;
         private const string FailMessage = "Database backup and restore check failure. Investigate now.";
 
         public PostgresBackup(ISesEmail emailClient, ILogger<PostgresBackup> logger, IS3Saver s3Saver) : base(emailClient, logger)
         {
-            this.logger = logger;
             this.s3Saver = s3Saver;
         }
 

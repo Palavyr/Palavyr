@@ -2,9 +2,9 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Palavyr.Common.FileSystem.IO
+namespace Palavyr.Common.FileSystemTools.IO
 {
-    public static class FileIO
+    public static class FileIo
     {
         public static async Task SaveFile(string filePath, IFormFile file)
         {
@@ -16,7 +16,7 @@ namespace Palavyr.Common.FileSystem.IO
         public static async Task SaveFile(string fileName, string directoryPath, IFormFile file)
         {
             var filePath = Path.Combine(directoryPath, fileName);
-            SaveFile(filePath, file);
+            await SaveFile(filePath, file);
         }
     }
 }

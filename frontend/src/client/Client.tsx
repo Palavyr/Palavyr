@@ -136,8 +136,7 @@ export class ApiClient {
             SaveAreaFallbackEmailTemplate: async (areaIdentifier: string, EmailTemplate: string): Promise<AxiosResponse<string>> => this.client.put(`email/fallback/${areaIdentifier}/email-template`, { EmailTemplate }),
             SaveDefaultFallbackEmailTemplate: async (EmailTemplate: string): Promise<AxiosResponse<string>> => this.client.put(`email/fallback/default-email-template`, { EmailTemplate }),
 
-            // Subjects
-            GetAreaSubject :(areaIdentifier: string): Promise<AxiosResponse<string>> => this.client.get(`email/subject/${areaIdentifier}`),
+            GetAreaSubject: (areaIdentifier: string): Promise<AxiosResponse<string>> => this.client.get(`email/subject/${areaIdentifier}`),
             GetAreaFallbackSubject: (areaIdentifier: string): Promise<AxiosResponse<string>> => this.client.get(`email/fallback/subject/${areaIdentifier}`),
             GetDefaultFallbackSubject: async (): Promise<AxiosResponse<string>> => this.client.get(`email/default-fallback-subject`),
 
@@ -207,10 +206,7 @@ export class ApiClient {
             updateEmail: async (newEmail: string): Promise<AxiosResponse<EmailVerificationResponse>> => this.client.put(`account/settings/email`, { EmailAddress: newEmail }),
             updateUserName: async (newUserName: string): Promise<AxiosResponse<string>> => this.client.put(`account/settings/user-name/`, { UserName: newUserName }),
             updatePhoneNumber: async (newPhoneNumber: string): Promise<AxiosResponse<string>> => this.client.put(`account/settings/phone-number`, { PhoneNumber: newPhoneNumber }),
-
-            // TODO: Stronger type for locale
             updateLocale: async (newLocaleId: string): Promise<AxiosResponse<LocaleDefinition>> => this.client.put(`account/settings/locale`, { LocaleId: newLocaleId }),
-
             updateCompanyLogo: async (formData: FormData): Promise<AxiosResponse<string>> =>
                 this.client.put(`account/settings/logo`, formData, {
                     headers: {
@@ -229,15 +225,6 @@ export class ApiClient {
             getCurrentPlan: async (): Promise<AxiosResponse<PlanStatus>> => this.client.get(`account/settings/current-plan`),
 
             DeleteAccount: async (): Promise<AxiosResponse> => this.client.post(`account/delete-account`),
-        },
-        Groups: {
-            GetGroups: async (): Promise<AxiosResponse<GroupTable>> => this.client.get(`group/`),
-            AddGroup: async (parentId: string | null, groupName: string): Promise<AxiosResponse<GroupTable>> => this.client.post(`group/`, { groupName: groupName, parentId: parentId }),
-            UpdateGroupName: async (groupName: string, groupId: string): Promise<AxiosResponse<Groups>> => this.client.put(`group/${groupId}`, { groupName: groupName }),
-            UpdateAreaGroup: async (areaIdentifier: string, groupId: string | null): Promise<AxiosResponse<Groups>> => this.client.put(`group/area/${areaIdentifier}/${groupId}`),
-
-            RemoveGroup: async (groupId: string): Promise<AxiosResponse<Groups>> => this.client.delete(`group/${groupId}`),
-            DeleteAreaGroup: async (areaIdentifier: string): Promise<AxiosResponse<Groups>> => this.client.delete(`group/area/${areaIdentifier}`),
         },
         EmailVerification: {
             RequestEmailVerification: async (emailAddress: string, areaIdentifier: string): Promise<AxiosResponse<EmailVerificationResponse>> => this.client.post(`verification/email/${areaIdentifier}`, { EmailAddress: emailAddress }),

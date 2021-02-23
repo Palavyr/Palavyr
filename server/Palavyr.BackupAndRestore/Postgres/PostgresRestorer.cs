@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.FileSystem.FormPaths;
+using Palavyr.Common.FileSystemTools.FormPaths;
 using Palavyr.Services.EmailService.ResponseEmailTools;
 
 //https://docs.aws.amazon.com/sdk-for-net/latest/developer-guide/retries-timeouts.html
@@ -11,8 +11,6 @@ namespace Palavyr.BackupAndRestore.Postgres
 {
     public class PostgresRestorer : PostgresBase
     {
-        private readonly ILogger<PostgresRestorer> logger;
-
         private const string FailMessage = "Database restore check failure. Investigate now.";
 
         public PostgresRestorer(
@@ -20,7 +18,6 @@ namespace Palavyr.BackupAndRestore.Postgres
             ILogger<PostgresRestorer> logger
         ) : base(emailClient, logger)
         {
-            this.logger = logger;
         }
 
         public async Task PerformStandardRestore(string host, string port, string password)

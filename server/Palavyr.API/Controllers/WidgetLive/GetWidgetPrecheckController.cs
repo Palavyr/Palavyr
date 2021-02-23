@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.CommonResponseTypes;
-using Palavyr.API.Services.AuthenticationServices;
-using Palavyr.API.Utils;
-using Palavyr.Data.Abstractions;
+using Palavyr.Common.Utils;
+using Palavyr.Domain;
+using Palavyr.Domain.Resources.Responses;
+using Palavyr.Services.AuthenticationServices;
+using Palavyr.Services.DatabaseService;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
@@ -38,7 +39,10 @@ namespace Palavyr.API.Controllers.WidgetLive
                 return PreCheckResult.CreateApiKeyResult(false);
             }
 
-            var result = await WidgetStatusUtils.ExecuteWidgetStatusCheck(accountId, dashConnector, demo, logger);
+            var widgetPrefs = await dashConnector.GetWidgetPreferences(accountId);
+            var areas = await dashConnector.GetActiveAreasWithConvoAndDynamicAndStaticTables(accountId);
+
+            var result = WidgetStatusUtils.ExecuteWidgetStatusCheck(accountId, areas, widgetPrefs, demo, logger);
             logger.LogDebug($"Pre-check run successful.");
             logger.LogDebug($"Ready result:{result.IsReady}");
             logger.LogDebug($"Incomplete areas: {result.IncompleteAreas.ToList()} ");

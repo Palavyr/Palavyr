@@ -9,7 +9,7 @@ namespace Palavyr.Services.PdfService
 {
     public static class PdfGenerator
     {
-        public static string GenerateNewPdf(UserAccount userAccount, Area previewData, CriticalResponses response, List<Table> staticTables, List<Table> dynamicTables)
+        public static string GenerateNewPdf(Account account, Area previewData, CriticalResponses response, List<Table> staticTables, List<Table> dynamicTables)
         {
             var previewBuilder = new StringBuilder();
 
@@ -24,7 +24,7 @@ namespace Palavyr.Services.PdfService
                         <body>
                             <div>");
             
-            previewBuilder.Append(HeaderSection.GetHeader(userAccount, response));
+            previewBuilder.Append(HeaderSection.GetHeader(account, response));
             previewBuilder.Append(AreaTitleSection.GetAreaDisplayTitle(previewData.AreaDisplayTitle));
             previewBuilder.Append(PrologueSection.GetPrologue(previewData.Prologue));
             previewBuilder.Append(TablesSection.GetEstimateTables(staticTables, dynamicTables));

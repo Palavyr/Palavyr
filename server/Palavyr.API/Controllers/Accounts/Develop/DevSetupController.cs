@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Controllers.Accounts.Setup.SeedData;
-using Palavyr.API.Services.StripeServices;
 using Palavyr.Common.GlobalConstants;
 using Palavyr.Data;
+using Palavyr.Data.Setup.SeedData;
 using Palavyr.Domain.Accounts.Schemas;
+using Palavyr.Services.StripeServices;
 using AccountType = Palavyr.Common.UIDUtils.AccountType;
 using Subscription = Palavyr.Domain.Accounts.Schemas.Subscription;
 
@@ -108,7 +109,7 @@ namespace Palavyr.API.Controllers.Accounts.Develop
 
         private async Task PopulateDBs(DevDataHolder dh)
         {
-            var devAccount = UserAccount.CreateAccount(dh.UserName, dh.Email, dh.HashedPassword, dh.AccountId,
+            var devAccount = Account.CreateAccount(dh.UserName, dh.Email, dh.HashedPassword, dh.AccountId,
                 dh.ApiKey, dh.CompanyName, dh.PhoneNumber, dh.Active, dh.Locale, dh.AccountType);
             var subscription = Subscription.CreateNew(dh.AccountId, dh.ApiKey, SubscriptionConstants.DefaultNumAreas);
             var data = new DevSeedData(dh.AccountId, dh.Email);    
@@ -122,7 +123,6 @@ namespace Palavyr.API.Controllers.Accounts.Develop
             await accountsContext.SaveChangesAsync();
 
             await dashContext.Areas.AddRangeAsync(data.Areas);
-            await dashContext.Groups.AddRangeAsync(data.Groups);
             await dashContext.WidgetPreferences.AddAsync(data.WidgetPreference);
             await dashContext.SelectOneFlats.AddRangeAsync(data.DefaultDynamicTables);
             await dashContext.DynamicTableMetas.AddRangeAsync(data.DefaultDynamicTableMetas);
@@ -147,7 +147,6 @@ namespace Palavyr.API.Controllers.Accounts.Develop
             dashContext.StaticTablesRows.RemoveRange(dashContext.StaticTablesRows);
             dashContext.StaticFees.RemoveRange(dashContext.StaticFees);
             dashContext.FileNameMaps.RemoveRange(dashContext.FileNameMaps);
-            dashContext.Groups.RemoveRange(dashContext.Groups);
             dashContext.SelectOneFlats.RemoveRange(dashContext.SelectOneFlats);
             dashContext.DynamicTableMetas.RemoveRange(dashContext.DynamicTableMetas);
             await dashContext.SaveChangesAsync();

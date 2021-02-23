@@ -80,9 +80,9 @@ namespace Palavyr.Services.PdfService.PdfSections
             return builder.ToString();
         }
 
-        public static string GetHeader(UserAccount userAccount, CriticalResponses response)
+        public static string GetHeader(Account account, CriticalResponses response)
         {
-            var imageLocation = userAccount.AccountLogoUri ?? "";
+            var imageLocation = account.AccountLogoUri ?? "";
             string logoUri = "";
             if (!string.IsNullOrWhiteSpace(imageLocation))
             {
@@ -92,7 +92,7 @@ namespace Palavyr.Services.PdfService.PdfSections
             
             var companyDetails = new List<string>()
             {
-                "<h2>" + userAccount.CompanyName + "</h2>", userAccount.PhoneNumber, userAccount.EmailAddress
+                "<h2>" + account.CompanyName + "</h2>", account.PhoneNumber, account.EmailAddress
             };
 
             var header = HeaderSection.CreateHeaderSection(

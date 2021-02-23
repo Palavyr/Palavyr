@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.Services.StripeServices;
+using Palavyr.Services.StripeServices;
 
 namespace Palavyr.API.Controllers.Payments.Products
 {

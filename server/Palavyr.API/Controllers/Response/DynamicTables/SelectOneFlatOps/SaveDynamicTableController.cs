@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Palavyr.API.RequestTypes;
 using Palavyr.Domain.Configuration.Constant;
 using Palavyr.Domain.Configuration.Schemas;
+using Palavyr.Domain.Resources.Requests;
 
 namespace Palavyr.API.Controllers.Response.DynamicTables.SelectOneFlatOps
 {

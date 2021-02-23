@@ -6,9 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware;
-using Palavyr.API.Registration.Application;
-using Palavyr.API.Registration.Autofac;
-using Palavyr.API.Registration.ServiceCollection;
+using Palavyr.API.Registration.BackgroundJobs;
+using Palavyr.API.Registration.Configuration;
+using Palavyr.API.Registration.Container;
 
 namespace Palavyr.API
 {

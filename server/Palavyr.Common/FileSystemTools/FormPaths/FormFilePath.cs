@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace Palavyr.Common.FileSystem.FormPaths
+namespace Palavyr.Common.FileSystemTools.FormPaths
 {
     /// <summary>
     ///  Here we enshrine the directory structure of Palavyr

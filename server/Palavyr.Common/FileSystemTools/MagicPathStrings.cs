@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Palavyr.Common.FileSystem
+namespace Palavyr.Common.FileSystemTools
 {
     public static class MagicPathStrings
     {

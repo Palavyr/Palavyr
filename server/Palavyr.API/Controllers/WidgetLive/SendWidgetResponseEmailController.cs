@@ -4,13 +4,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.RequestTypes;
-using Palavyr.API.Response;
-using Palavyr.API.Services.AuthenticationServices;
-using Palavyr.Common.FileSystem.FormPaths;
-using Palavyr.Common.FileSystem.ListPaths;
-using Palavyr.Data.Abstractions;
+using Palavyr.Common.FileSystemTools.FormPaths;
+using Palavyr.Common.FileSystemTools.ListPaths;
+using Palavyr.Domain;
+using Palavyr.Domain.Resources.Requests;
+using Palavyr.Domain.Resources.Responses;
+using Palavyr.Services.AuthenticationServices;
+using Palavyr.Services.DatabaseService;
 using Palavyr.Services.EmailService.ResponseEmailTools;
+using Palavyr.Services.PdfService;
 using Palavyr.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.API.Controllers.WidgetLive

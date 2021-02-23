@@ -27,14 +27,14 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             string planStatus;
             switch (account.PlanType)
             {
-                case (UserAccount.PlanTypeEnum.Free):
-                    planStatus = UserAccount.PlanTypeEnum.Free.ToString();
+                case (Account.PlanTypeEnum.Free):
+                    planStatus = Account.PlanTypeEnum.Free.ToString();
                     break;
-                case (UserAccount.PlanTypeEnum.Premium):
-                    planStatus = UserAccount.PlanTypeEnum.Premium.ToString();
+                case (Account.PlanTypeEnum.Premium):
+                    planStatus = Account.PlanTypeEnum.Premium.ToString();
                     break;    
-                case (UserAccount.PlanTypeEnum.Pro):
-                    planStatus = UserAccount.PlanTypeEnum.Pro.ToString();
+                case (Account.PlanTypeEnum.Pro):
+                    planStatus = Account.PlanTypeEnum.Pro.ToString();
                     break;
                 default:
                     logger.LogDebug("Plan type was not able to be determined.");

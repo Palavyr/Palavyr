@@ -29,13 +29,13 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
             int numAreasAllowed;
             switch (planType)
             {
-                case UserAccount.PlanTypeEnum.Free:
+                case Account.PlanTypeEnum.Free:
                     numAreasAllowed = SubscriptionConstants.DefaultNumAreas;
                     break;
-                case UserAccount.PlanTypeEnum.Premium:
+                case Account.PlanTypeEnum.Premium:
                     numAreasAllowed = SubscriptionConstants.PremiumNumAreas;
                     break;
-                case UserAccount.PlanTypeEnum.Pro:
+                case Account.PlanTypeEnum.Pro:
                     numAreasAllowed = SubscriptionConstants.ProNumAreas;
                     break;
                 default:

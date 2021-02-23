@@ -3,7 +3,7 @@ using Amazon.SimpleEmail;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.FileSystem.FormPaths;
+using Palavyr.Common.FileSystemTools.FormPaths;
 using Palavyr.Data;
 
 namespace Palavyr.API.Controllers.Areas

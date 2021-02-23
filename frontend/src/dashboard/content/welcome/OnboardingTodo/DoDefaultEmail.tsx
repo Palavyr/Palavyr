@@ -10,7 +10,7 @@ interface IDoDefaultEmail {
 export const DoDefaultEmail = ({ emailAddress, awaitingVerification }: IDoDefaultEmail) => {
     return (
         <TableRow>
-            <TableCell>
+            <TableCell style={{alignContent: "center"}}>
                 <Link to={"/dashboard/settings/email?tab=1"}>
                     Set your default email: {emailAddress} - {awaitingVerification ? "Check your email to verify you address" : "Trigger an email verification in your settings."}
                 </Link>
