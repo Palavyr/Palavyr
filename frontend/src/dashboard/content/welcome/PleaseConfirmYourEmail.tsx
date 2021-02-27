@@ -6,7 +6,6 @@ import { Card, Typography, FormControl, InputLabel, OutlinedInput, makeStyles } 
 import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
 import auth from "auth/Auth";
 
 const useStyles = makeStyles((theme) => ({
@@ -36,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 export const PleaseConfirmYourEmail = () => {
     const client = new ApiClient();
     const [authToken, setAuthToken] = useState<string>("");
-    const [authStatus, setAuthStatus] = useState<string | null>(null);
+    const [, setAuthStatus] = useState<string | null>(null);
     const emailAddress = LocalStorage.getEmailAddress();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 

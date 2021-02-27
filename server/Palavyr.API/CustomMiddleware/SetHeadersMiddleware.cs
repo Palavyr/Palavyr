@@ -8,13 +8,13 @@ using Palavyr.Data;
 
 namespace Palavyr.API.CustomMiddleware
 {
-    public class SetHeaders
+    public class SetHeadersMiddleware
     {
 
         private readonly RequestDelegate next;
-        private ILogger<SetHeaders> logger;
+        private ILogger<SetHeadersMiddleware> logger;
 
-        public SetHeaders(RequestDelegate next, ILogger<SetHeaders> logger)
+        public SetHeadersMiddleware(RequestDelegate next, ILogger<SetHeadersMiddleware> logger)
         {
             this.next = next;
             this.logger = logger;

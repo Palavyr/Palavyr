@@ -51,6 +51,7 @@ namespace Palavyr.API.Registration.Container
             services.AddTransient<IPostgresBackup, PostgresBackup>();
             services.AddTransient<IUserDataBackup, UserDataBackup>();
             services.AddTransient<IUpdateDatabaseLatest, UpdateDatabaseLatest>();
+            services.AddHealthChecks();
         }
 
         public static void RegisterHangfire(IServiceCollection services, IWebHostEnvironment env)

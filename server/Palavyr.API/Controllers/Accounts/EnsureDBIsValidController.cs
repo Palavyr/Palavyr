@@ -1,8 +1,6 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Data;
 using Palavyr.Services.DatabaseService;
 using Palavyr.Services.StripeServices;
 
@@ -15,16 +13,12 @@ namespace Palavyr.API.Controllers.Accounts
         private readonly IAccountsConnector accountsConnector;
         private readonly IDashConnector dashConnector;
         private ILogger<DeleteAccountController> logger;
-        private DashContext dashContext;
-        private AccountsContext accountsContext;
         private StripeCustomerService stripeCustomerService;
 
         public EnsureDbIsValidController(
             IAccountsConnector accountsConnector,
             IDashConnector dashConnector,
             ILogger<DeleteAccountController> logger,
-            AccountsContext accountsContext,
-            DashContext dashContext,
             StripeCustomerService stripeCustomerService
 
             )
@@ -32,8 +26,6 @@ namespace Palavyr.API.Controllers.Accounts
             this.accountsConnector = accountsConnector;
             this.dashConnector = dashConnector;
             this.logger = logger;
-            this.dashContext = dashContext;
-            this.accountsContext = accountsContext;
             this.stripeCustomerService = stripeCustomerService;
         }
 
@@ -47,7 +39,7 @@ namespace Palavyr.API.Controllers.Accounts
             {
                 var newCustomer = await stripeCustomerService.CreateNewStripeCustomer(account.EmailAddress);
                 account.StripeCustomerId = newCustomer.Id;
-                await accountsContext.SaveChangesAsync();
+                await accountsConnector.CommitChangesAsync();
             }
 
             if (string.IsNullOrWhiteSpace(preferences.ChatBubbleColor))

@@ -25,6 +25,7 @@ namespace Palavyr.API.Controllers.Enquiries
             this.convoContext = convoContext;
         }
 
+        [ResponseCache(Duration = 3600)]
         [HttpGet("enquiries/review/{conversationId}")]
         public async Task<ConversationUpdate[]> Get([FromHeader] string accountId, [FromRoute] string conversationId)
         {

@@ -93,8 +93,7 @@ namespace Palavyr.Domain.Accounts.Schemas
             HasUpgraded = hasUpgraded;
             StripeCustomerId = null;
         }
-
-
+        
         public static Account CreateGoogleAccount(
             string apikey, string emailAddress,
             string accountId, string locale

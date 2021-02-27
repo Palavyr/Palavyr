@@ -167,8 +167,8 @@ const Backuptheme = createMuiTheme({
         },
     },
     typography: {
-        fontFamily: "'Quicksand', sans-serif",
-        // fontFamily: "'Varela Round', sans-serif",
+        // fontFamily: "'Quicksand', sans-serif",
+        fontFamily: "'Varela Round', sans-serif",
         // useNextVariants: true
     },
 });
