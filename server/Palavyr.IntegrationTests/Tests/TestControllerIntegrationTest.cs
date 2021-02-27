@@ -1,39 +1,43 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AspNetCore.Testing.Authentication.ClaimInjector;
 using Palavyr.API;
+using Palavyr.IntegrationTests.AppFactory;
 using Xunit;
 
-namespace Palavyr.IntegrationTests.X
+namespace Palavyr.IntegrationTests.Tests
 {
-    public class TestControllerIntegrationTest : IntegrationTestWebAppBase
+    public class TestControllerIntegrationTest : IntegrationAppFactoryBase
     {
+        public HttpClient AuthenticatedClient { get; set; }
         public TestControllerIntegrationTest(ClaimInjectorWebApplicationFactory<Startup> factory) : base(factory)
         {
+            AuthenticatedClient = factory.ConfigureAuthenticatedClientWithInMemContext();
         }
 
         [Fact]
         public async Task RouteExists()
         {
-            var response = await Client.GetAsync("test");
+            var response = await AuthenticatedClient.GetAsync("test");
             response.EnsureSuccessStatusCode();
         }
 
         [Fact]
         public async Task GetMediaTypeTest()
         {
-            var response = await Client.GetAsync("test");
+            var response = await AuthenticatedClient.GetAsync("test");
             Assert.Equal("application/json", response.Content.Headers.ContentType.MediaType);
         }
 
         [Fact]
         public async Task ReturnsContent()
         {
-            var response = await Client.GetAsync("test");
+            var response = await AuthenticatedClient.GetAsync("test");
             Assert.NotNull(response.Content);
             Assert.True(response.Content.Headers.ContentLength > 0);
         }
@@ -42,7 +46,7 @@ namespace Palavyr.IntegrationTests.X
         public async Task ReturnsExpectedJson()
         {
             var expected = "[\"One\",\"Two\",\"Three\"]";
-            var response = await Client.GetStringAsync("test");
+            var response = await AuthenticatedClient.GetStringAsync("test");
             Assert.Equal(expected, response);
         }
 
@@ -50,7 +54,7 @@ namespace Palavyr.IntegrationTests.X
         public async Task ReturnsExpectedObject()
         {
             var expected = new[] {"One", "Two", "Three"};
-            var responseStream = await Client.GetStreamAsync("test");
+            var responseStream = await AuthenticatedClient.GetStreamAsync("test");
             var model = await JsonSerializer.DeserializeAsync<List<string>>(responseStream, new JsonSerializerOptions() {PropertyNameCaseInsensitive = true});
             
             Assert.NotNull(model);
@@ -61,7 +65,7 @@ namespace Palavyr.IntegrationTests.X
         public async Task ReturnsExpectedResponse()
         {
             var expected = new[] {"One", "Two", "Three"};
-            var model = await Client.GetFromJsonAsync<List<string>>("test");
+            var model = await AuthenticatedClient.GetFromJsonAsync<List<string>>("test");
             
             Assert.NotNull(model);
             Assert.Equal(expected.OrderBy(s => s), model.OrderBy(s => s));        
@@ -70,13 +74,12 @@ namespace Palavyr.IntegrationTests.X
         [Fact]
         public async Task SetsExpectedCacheDuration()
         {
-            var response = await Client.GetAsync("test");
+            var response = await AuthenticatedClient.GetAsync("test");
             var headers = response.Headers.CacheControl;
 
             Assert.True(headers.MaxAge.HasValue);
             Assert.Equal(TimeSpan.FromMinutes(5), headers.MaxAge);
             Assert.True(headers.Public);
-
         }
     }
 }

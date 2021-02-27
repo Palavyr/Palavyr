@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Palavyr.Testing", "Palavyr.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.Services", "Palavyr.Services\Palavyr.Services.csproj", "{70003649-ABC7-4113-807F-1F87A6CC47CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.IntegrationTests.X", "Palavyr.IntegrationTests.X\Palavyr.IntegrationTests.X.csproj", "{0C907C87-2A3E-4EE8-B8E0-4E2D13E5462F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.IntegrationTests", "Palavyr.IntegrationTests\Palavyr.IntegrationTests.csproj", "{0C907C87-2A3E-4EE8-B8E0-4E2D13E5462F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

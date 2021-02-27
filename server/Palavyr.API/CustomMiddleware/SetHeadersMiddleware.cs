@@ -25,7 +25,7 @@ namespace Palavyr.API.CustomMiddleware
             var action = context.Request.Headers[MagicUrlStrings.Action].ToString();
             
             if ( action == MagicUrlStrings.SessionAction)
-            {
+            { 
 
                 var sessionId = context.Request.Headers[MagicUrlStrings.SessionId].ToString();
                 if (!string.IsNullOrWhiteSpace(sessionId))
