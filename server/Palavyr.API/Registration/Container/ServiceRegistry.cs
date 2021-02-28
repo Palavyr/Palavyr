@@ -45,7 +45,7 @@ namespace Palavyr.API.Registration.Container
             services.AddSingleton<ISesEmail, SesEmail>();
             services.AddTransient<IRequestEmailVerification, RequestEmailVerification>();
             services.AddTransient<IPdfResponseGenerator, PdfResponseGenerator>();
-            services.AddTransient<IAccountDataService, AccountDataService>();
+            // services.AddTransient<IAccountDataService, AccountDataService>();
             services.AddTransient<IAreaDataService, AreaDataService>();
             services.AddTransient<IS3Saver, S3Saver>();
             services.AddTransient<IPostgresBackup, PostgresBackup>();

@@ -9,7 +9,6 @@ using Amazon.S3;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.FileSystemTools;
 using Palavyr.Common.FileSystemTools.FormPaths;
 using Palavyr.Common.FileSystemTools.LocalServices;
 using Palavyr.Common.GlobalConstants;
@@ -19,6 +18,7 @@ using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.Domain.Resources.Requests;
 using Palavyr.Domain.Resources.Responses;
 using Palavyr.Services.AmazonServices;
+using Palavyr.Services.DatabaseService;
 using Palavyr.Services.EntityServices;
 using Palavyr.Services.PdfService.PdfSections.Util;
 
@@ -40,25 +40,25 @@ namespace Palavyr.Services.PdfService
 
     public class PdfResponseGenerator : IPdfResponseGenerator
     {
+        private readonly IAccountsConnector accountsConnector;
         private readonly IConfiguration configuration;
         private readonly DashContext dashContext;
         private static readonly HttpClient Client = new HttpClient();
         private readonly ILogger<PdfResponseGenerator> logger;
-        private readonly IAccountDataService accountDataService;
         private readonly IAreaDataService areaDataService;
 
         public PdfResponseGenerator(
+            IAccountsConnector accountsConnector,
             IConfiguration configuration,
             DashContext dashContext,
             ILogger<PdfResponseGenerator> logger,
-            IAccountDataService accountDataService,
             IAreaDataService areaDataService
         )
         {
+            this.accountsConnector = accountsConnector;
             this.configuration = configuration;
             this.dashContext = dashContext;
             this.logger = logger;
-            this.accountDataService = accountDataService;
             this.areaDataService = areaDataService;
         }
 
@@ -72,11 +72,10 @@ namespace Palavyr.Services.PdfService
         /// <returns></returns>
         public async Task<FileLink> CreatePdfResponsePreviewAsync(IAmazonS3 s3Client, CultureInfo culture, string accountId, string areaId)
         {
-            logger.LogDebug("-------------CreatePdfResponsePreviewAsync-------------------");
             var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
 
             var areaData = areaDataService.GetSingleAreaDataRecursive(accountId, areaId);
-            var userAccount = accountDataService.GetUserAccount(accountId);
+            var userAccount = await accountsConnector.GetAccount(accountId);
 
             var criticalResponses = new CriticalResponses(
                 new List<Dictionary<string, string>>()
@@ -155,7 +154,7 @@ namespace Palavyr.Services.PdfService
         )
         {
             var areaData = areaDataService.GetSingleAreaDataRecursive(accountId, areaId);
-            var userAccount = accountDataService.GetUserAccount(accountId);
+            var account = await accountsConnector.GetAccount(accountId);
 
             var dynamicResponses = emailRequest.DynamicResponses.Count > 0
                 ? emailRequest.DynamicResponses
@@ -165,9 +164,9 @@ namespace Palavyr.Services.PdfService
             var staticTables = CollectStaticTables(areaData, culture, emailRequest.NumIndividuals); // ui always sends a number - 1 or greater.
             var dynamicTables = await CollectRealDynamicTables(accountId, dynamicResponses, culture);
 
-            var html = PdfGenerator.GenerateNewPdf(userAccount, areaData, criticalResponses, staticTables, dynamicTables);
+            var html = PdfGenerator.GenerateNewPdf(account, areaData, criticalResponses, staticTables, dynamicTables);
 
-            html = ResponseCustomizer.Customize(html, emailRequest, userAccount);
+            html = ResponseCustomizer.Customize(html, emailRequest, account);
 
             var fileName = await GeneratePdfFromHtml(html, LocalServices.PdfServiceUrl, localWriteToPath, identifier);
             return fileName;
@@ -188,20 +187,20 @@ namespace Palavyr.Services.PdfService
             return fileName;
         }
 
-        private string CreatePreviewUrlLink(string accountId, string fileId)
-        {
-            // var host = Request.Host.Value; //TODO:  Get this from config (request.host)
-            logger.LogDebug("Attempting to create new file URI for preview.");
-            var builder =
-                new UriBuilder()
-                {
-                    // TODO: take these values from the configuration
-                    Scheme = "https", Host = "localhost", Port = 5001,
-                    Path = Path.Combine(accountId, MagicPathStrings.PreviewPDF, fileId)
-                };
-            logger.LogDebug($"URI used for the preview: {builder.Uri.ToString()}");
-            return builder.Uri.ToString();
-        }
+        // private string CreatePreviewUrlLink(string accountId, string fileId)
+        // {
+        //     // var host = Request.Host.Value; //TODO:  Get this from config (request.host)
+        //     logger.LogDebug("Attempting to create new file URI for preview.");
+        //     var builder =
+        //         new UriBuilder()
+        //         {
+        //             // TODO: take these values from the configuration
+        //             Scheme = "https", Host = "localhost", Port = 5001,
+        //             Path = Path.Combine(accountId, MagicPathStrings.PreviewPDF, fileId)
+        //         };
+        //     logger.LogDebug($"URI used for the preview: {builder.Uri.ToString()}");
+        //     return builder.Uri.ToString();
+        // }
 
         private static List<Table> CollectStaticTables(Area areaData, CultureInfo culture, int numIndividuals)
         {
