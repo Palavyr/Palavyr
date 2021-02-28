@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Palavyr.Common.UIDUtils;
 using Palavyr.Data;
 
 namespace Palavyr.IntegrationTests.AppFactory
@@ -10,16 +11,23 @@ namespace Palavyr.IntegrationTests.AppFactory
     {
         public static void ConfigureRealPostgresTestDatabases(this IServiceCollection services)
         {
-            services.AddDbContext<AccountsContext>(opt => { opt.UseNpgsql(IntegrationConstants.AccountDbConnString); });
-            services.AddDbContext<DashContext>(opt => { opt.UseNpgsql(IntegrationConstants.DashDbConnString); });
-            services.AddDbContext<ConvoContext>(opt => { opt.UseNpgsql(IntegrationConstants.ConvoDbConnString); });
+            var accountId = GuidUtils.CreateShortenedGuid(5);
+            var dashId = GuidUtils.CreateShortenedGuid(5);
+            var convoId = GuidUtils.CreateShortenedGuid(5);
+            services.AddDbContext<AccountsContext>(opt => { opt.UseNpgsql(IntegrationConstants.AccountDbConnString(accountId)); });
+            services.AddDbContext<DashContext>(opt => { opt.UseNpgsql(IntegrationConstants.DashDbConnString(dashId)); });
+            services.AddDbContext<ConvoContext>(opt => { opt.UseNpgsql(IntegrationConstants.ConvoDbConnString(convoId)); });
         }
 
         public static void ConfigureInMemoryDatabases(this IServiceCollection services, InMemoryDatabaseRoot dbRoot)
         {
-            services.AddDbContext<AccountsContext>(opt => { opt.UseInMemoryDatabase("TestAccountDbInMemory", dbRoot); });
-            services.AddDbContext<DashContext>(opt => { opt.UseInMemoryDatabase("TestDashDbInMemory", dbRoot); });
-            services.AddDbContext<ConvoContext>(opt => { opt.UseInMemoryDatabase("TestConvoDbInMemory", dbRoot); });
+            var accountDbName = "TestAccountDbInMemory-" + GuidUtils.CreateShortenedGuid(5);
+            var dashDbName = "TestDashDbInMemory-" + GuidUtils.CreateShortenedGuid(5);
+            var convoDbName = "TestConvoDbInMemory-" + GuidUtils.CreateShortenedGuid(5);
+            
+            services.AddDbContext<AccountsContext>(opt => { opt.UseInMemoryDatabase(accountDbName, dbRoot); });
+            services.AddDbContext<DashContext>(opt => { opt.UseInMemoryDatabase(dashDbName, dbRoot); });
+            services.AddDbContext<ConvoContext>(opt => { opt.UseInMemoryDatabase(convoDbName, dbRoot); });
         }
 
         public static void ClearDescriptors(this IServiceCollection services)

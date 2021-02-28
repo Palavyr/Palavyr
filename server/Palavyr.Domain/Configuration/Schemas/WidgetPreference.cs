@@ -81,5 +81,11 @@ namespace Palavyr.Domain.Configuration.Schemas
             return new WidgetPreference(headerFontColor, listFontColor, selectListColor, headerColor, fontFamily,
                 header, title, subtitle, placeholder, shouldGroup, accountId, widgetState);
         }
+
+        public static WidgetPreference CreateEmpty(string accountId)
+        {
+            return new WidgetPreference(null, null, null, null, null,
+                null, null, null, null, false, accountId, false);
+        }
     }
 }

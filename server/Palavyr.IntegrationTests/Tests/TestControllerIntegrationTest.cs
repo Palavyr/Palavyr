@@ -5,19 +5,18 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AspNetCore.Testing.Authentication.ClaimInjector;
 using Palavyr.API;
 using Palavyr.IntegrationTests.AppFactory;
 using Xunit;
 
 namespace Palavyr.IntegrationTests.Tests
 {
-    public class TestControllerIntegrationTest : IntegrationAppFactoryBase
+    public class TestControllerIntegrationTest : IClassFixture<InMemoryWebApplicationFactory<Startup>>
     {
         public HttpClient AuthenticatedClient { get; set; }
-        public TestControllerIntegrationTest(ClaimInjectorWebApplicationFactory<Startup> factory) : base(factory)
+        public TestControllerIntegrationTest(InMemoryWebApplicationFactory<Startup> factory)
         {
-            AuthenticatedClient = factory.ConfigureAuthenticatedClientWithInMemContext();
+            AuthenticatedClient = factory.CreateInMemAuthedClient();
         }
 
         [Fact]

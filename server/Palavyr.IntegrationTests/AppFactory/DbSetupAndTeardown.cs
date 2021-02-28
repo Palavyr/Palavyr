@@ -1,4 +1,7 @@
 ﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Palavyr.API;
 using Palavyr.Common.UIDUtils;
 using Palavyr.Data;
 using Palavyr.Domain.Accounts.Schemas;
@@ -9,18 +12,16 @@ namespace Palavyr.IntegrationTests.AppFactory
     {
         public static void SeedTestAccount(this AccountsContext accountContext)
         {
-            var apiKey = IntegrationConstants.ApiKey;
-            var accountId = GuidUtils.CreateNewId();
             var account = Account.CreateAccount(
-                "test@gmail.com",
-                "123456",
-                accountId,
-                apiKey,
+                IntegrationConstants.EmailAddress,
+                IntegrationConstants.Password,
+                IntegrationConstants.AccountId,
+                IntegrationConstants.ApiKey,
                 AccountType.Default
             );
 
             accountContext.Accounts.Add(account);
-            accountContext.SeedSession(accountId, apiKey);
+            accountContext.SeedSession(IntegrationConstants.AccountId, IntegrationConstants.ApiKey);
             accountContext.SaveChanges();
         }
 
@@ -30,22 +31,45 @@ namespace Palavyr.IntegrationTests.AppFactory
             accountsContext.Sessions.Add(session);
         }
 
+        public static void DisposeDbsByReset(this WebApplicationFactory<Startup> factory)
+        {
+            var services = factory.Services;
+            var accountContext = services.GetRequiredService<AccountsContext>();
+            var dashContext = services.GetRequiredService<DashContext>();
+            var convoContext = services.GetRequiredService<ConvoContext>();
+            ResetDbs(accountContext, dashContext, convoContext);
+        }
+
+        public static void DisposeByDelete(this WebApplicationFactory<Startup> factory)
+        {
+            var services = factory.Services;
+            var accountContext = services.GetRequiredService<AccountsContext>();
+            var dashContext = services.GetRequiredService<DashContext>();
+            var convoContext = services.GetRequiredService<ConvoContext>();
+            DeleteDbs(accountContext, dashContext, convoContext);
+        }
+
         public static void ResetDbs(AccountsContext accountContext, DashContext dashContext, ConvoContext convoContext)
         {
             accountContext.ResetAccountDb();
+            accountContext.SaveChanges();
+
             dashContext.ResetDashDb();
+            dashContext.SaveChanges();
+
             convoContext.ResetConvoContext();
+            convoContext.SaveChanges();
         }
 
         public static void ResetConvoContext(this ConvoContext convoContext)
         {
             var convos = convoContext.Conversations.ToArray();
             var completed = convoContext.CompletedConversations.ToArray();
-            
+
             convoContext.Conversations.RemoveRange(convos);
             convoContext.CompletedConversations.RemoveRange(completed);
         }
-        
+
         public static void ResetDashDb(this DashContext dashContext)
         {
             var areas = dashContext.Areas.ToArray();

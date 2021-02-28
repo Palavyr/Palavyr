@@ -8,6 +8,7 @@ using Palavyr.API.CustomMiddleware;
 using Palavyr.Common.GlobalConstants;
 using Palavyr.Services.AuthenticationServices;
 
+//https://adamstorr.azurewebsites.net/blog/integration-testing-with-aspnetcore-3-1-remove-the-boiler-plate
 namespace Palavyr.API.Registration.Configuration
 {
     public static class AuthenticationConfiguration
