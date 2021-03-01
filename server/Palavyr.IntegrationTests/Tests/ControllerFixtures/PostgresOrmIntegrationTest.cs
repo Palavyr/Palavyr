@@ -31,7 +31,7 @@ namespace Palavyr.IntegrationTests.Tests.ControllerFixtures
         [Fact]
         public async Task EnsuresDbIsValid()
         {
-            var response = await client.PostAsync(Route, new StringContent(""));
+            var response = await client.PostAsyncWithoutContent(Route);
             response.EnsureSuccessStatusCode();
         }
 

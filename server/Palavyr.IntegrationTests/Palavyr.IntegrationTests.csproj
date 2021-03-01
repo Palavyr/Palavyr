@@ -30,4 +30,8 @@
       <ProjectReference Include="..\Palavyr.API\Palavyr.API.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Tests\Services" />
+    </ItemGroup>
+
 </Project>
