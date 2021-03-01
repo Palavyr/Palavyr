@@ -21,7 +21,7 @@ namespace Palavyr.Services.StripeServices.StripeWebhookHandlers
         public ProcessStripeCheckoutSessionCompletedHandler(
             AccountsContext accountsContext,
             ILogger<ProcessStripeCheckoutSessionCompletedHandler> logger,
-            StripeSubscriptionService stripeSubscriptionService,
+            StripeSubscriptionService stripeSubscriptionService
         )
         {
             this.accountsContext = accountsContext;

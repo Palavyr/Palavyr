@@ -30,19 +30,7 @@ namespace Palavyr.Data.Setup.SeedData
                 CreateDefaultDynamicTable.CreateDefaultTable(TableTag, accountId, areaIdentifier, dynamicTableId);
             DefaultDynamicTableMetas =
                 CreateDefaultDynamicTable.CreateDefaultMeta(TableTag, accountId, dynamicTableId, areaIdentifier);
-            WidgetPreference = WidgetPreference.CreateNew(
-                "black",
-                "red",
-                "#E1E1E1", 
-                "#35CCE6", 
-                "Architects Daughter", 
-                "Welcome!", 
-                "Tobies Galore", 
-                "Experts in Cavalier King Charles Spaniels",
-                "Write here...", 
-                false, 
-                accountId,
-                false);
+            WidgetPreference = WidgetPreference.CreateDefault(accountId);
             Areas = new List<Area>()
             {
                 CreateDefaultArea.CreateDefault(
