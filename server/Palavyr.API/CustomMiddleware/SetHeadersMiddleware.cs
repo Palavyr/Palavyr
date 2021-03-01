@@ -8,13 +8,13 @@ using Palavyr.Data;
 
 namespace Palavyr.API.CustomMiddleware
 {
-    public class SetHeaders
+    public class SetHeadersMiddleware
     {
 
         private readonly RequestDelegate next;
-        private ILogger<SetHeaders> logger;
+        private ILogger<SetHeadersMiddleware> logger;
 
-        public SetHeaders(RequestDelegate next, ILogger<SetHeaders> logger)
+        public SetHeadersMiddleware(RequestDelegate next, ILogger<SetHeadersMiddleware> logger)
         {
             this.next = next;
             this.logger = logger;
@@ -25,7 +25,7 @@ namespace Palavyr.API.CustomMiddleware
             var action = context.Request.Headers[MagicUrlStrings.Action].ToString();
             
             if ( action == MagicUrlStrings.SessionAction)
-            {
+            { 
 
                 var sessionId = context.Request.Headers[MagicUrlStrings.SessionId].ToString();
                 if (!string.IsNullOrWhiteSpace(sessionId))

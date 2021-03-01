@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.Controllers.Response.DynamicTables;
 using Palavyr.Data;
 using Palavyr.Domain;
 using Palavyr.Domain.Configuration.Constant;

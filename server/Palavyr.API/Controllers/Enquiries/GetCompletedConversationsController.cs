@@ -37,6 +37,7 @@ namespace Palavyr.API.Controllers.Enquiries
             this.s3Client = s3Client;
         }
 
+        [ResponseCache(Duration = 3600)]
         [HttpGet("enquiries")]
         public async Task<Enquiry[]> Get([FromHeader] string accountId)
         {

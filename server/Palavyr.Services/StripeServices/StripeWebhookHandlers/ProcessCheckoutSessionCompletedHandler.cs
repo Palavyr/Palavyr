@@ -17,19 +17,16 @@ namespace Palavyr.Services.StripeServices.StripeWebhookHandlers
         private AccountsContext accountsContext;
         private ILogger<ProcessStripeCheckoutSessionCompletedHandler> logger;
         private StripeSubscriptionService stripeSubscriptionService;
-        private StripeProductService stripeProductService;
 
         public ProcessStripeCheckoutSessionCompletedHandler(
             AccountsContext accountsContext,
             ILogger<ProcessStripeCheckoutSessionCompletedHandler> logger,
-            StripeSubscriptionService stripeSubscriptionService,
-            StripeProductService stripeProductService
+            StripeSubscriptionService stripeSubscriptionService
         )
         {
             this.accountsContext = accountsContext;
             this.logger = logger;
             this.stripeSubscriptionService = stripeSubscriptionService;
-            this.stripeProductService = stripeProductService;
         }
 
         /// <summary>

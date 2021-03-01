@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using Palavyr.Common.Utils;
 using Palavyr.Domain;
 using Palavyr.Domain.Configuration.Constant;
 using Palavyr.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers.Response.DynamicTables
+namespace Palavyr.Services.DynamicTableService
 {
     public static class NodeTypeOptionsExtensions
     {

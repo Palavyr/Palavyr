@@ -64,12 +64,13 @@ namespace Palavyr.API
             app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseMiddleware<SetHeaders>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
+            app.UseMiddleware<SetHeadersMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
             app.UseEndpoints(
                 endpoints =>
                 {
                     endpoints.MapControllers();
                     endpoints.MapHangfireDashboard();
+                    endpoints.MapHealthChecks("/healthcheck");
                 });
             hangFireJobs.AddHangFireJobs(app);
         }

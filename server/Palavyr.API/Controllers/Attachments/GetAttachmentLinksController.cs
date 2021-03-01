@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Common.GlobalConstants;
 using Palavyr.Data;
+using Palavyr.Domain.Resources.Responses;
 
 namespace Palavyr.API.Controllers.Attachments
 {
@@ -32,11 +33,11 @@ namespace Palavyr.API.Controllers.Attachments
         }
         
         [HttpGet("attachments/{areaId}")]
-        public async Task<IActionResult> Get([FromHeader] string accountId, string areaId)
+        public async Task<FileLink[]> Get([FromHeader] string accountId, string areaId)
         {
             var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
             var fileLinks = await GetFileLinks(accountId, areaId, dashContext, logger, s3Client, previewBucket);
-            return Ok(fileLinks.ToArray());
+            return fileLinks.ToArray();
         }
     }
 }

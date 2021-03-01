@@ -28,7 +28,9 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<StripeCustomerService>().AsSelf();
             builder.RegisterType<StripeSubscriptionService>().AsSelf();
             builder.RegisterType<StripeProductService>().AsSelf();
-
+            builder.RegisterType<StripeCheckoutService>().AsSelf();
+            
+            
             builder.RegisterType<ProcessStripeSubscriptionUpdatedHandler>().AsSelf();
             builder.RegisterType<ProcessStripeSubscriptionDeletedHandler>().AsSelf();
             builder.RegisterType<ProcessStripeCheckoutSessionCompletedHandler>().AsSelf();
@@ -39,6 +41,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<ProcessStripePlanUpdatedHandler>().AsSelf();
             builder.RegisterType<ProcessStripeInvoiceCreatedHandler>().AsSelf();
             builder.RegisterType<ProcessStripePriceUpdatedHandler>().AsSelf();
+            
         }
     }
 }
