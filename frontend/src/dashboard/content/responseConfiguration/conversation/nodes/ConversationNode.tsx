@@ -14,6 +14,8 @@ export interface IConversationNode {
     parentState: boolean
     changeParentState: (parentState: boolean) => void;
     nodeOptionList: NodeTypeOptions;
+    setTransactions: (transactions: ConvoNode[]) => void, // array of convoNodes - not quite the same thing as a 'Conversation' type
+    setIdsToDelete: (idsToDelete: string[]) => void
 }
 
 export type lineStyle = {
@@ -30,7 +32,7 @@ export const connectionStyle: lineStyle = {
     zIndex: 0,
 };
 
-export const ConversationNode = ({ nodeList, node, parentId, setNodes, parentState, changeParentState, nodeOptionList }: IConversationNode) => {
+export const ConversationNode = ({ nodeList, node, parentId, setNodes, setTransactions, setIdsToDelete, parentState, changeParentState, nodeOptionList }: IConversationNode) => {
 
     const [nodeState, changeNodeState] = useState<boolean>(true);
     const [loaded, setLoaded] = useState(false)
@@ -59,6 +61,8 @@ export const ConversationNode = ({ nodeList, node, parentId, setNodes, parentSta
                         changeParentState={changeParentState}
                         optionPath={node.optionPath}
                         nodeOptionList={nodeOptionList}
+                        setIdsToDelete={setIdsToDelete}
+                        setTransactions={setTransactions}
                     />
                 </div>
                 {childNodes.length > 0 && ( // if there are childNodes, then render them.
@@ -74,6 +78,8 @@ export const ConversationNode = ({ nodeList, node, parentId, setNodes, parentSta
                                     parentState={nodeState}
                                     changeParentState={changeNodeState}
                                     nodeOptionList={nodeOptionList}
+                                    setIdsToDelete={setIdsToDelete}
+                                    setTransactions={setTransactions}
                                 />
 
                             ))

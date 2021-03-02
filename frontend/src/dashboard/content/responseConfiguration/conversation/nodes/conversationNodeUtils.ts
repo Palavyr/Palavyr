@@ -70,11 +70,22 @@ const getIdsToDeleteRecursively = (nodeList: Conversation, topNode: ConvoNode): 
     return childRefs.join(",");
 };
 
-export const addNodes = async (parentNode: ConvoNode, nodeList: Conversation, newIDs: Array<string>, optionPaths: Responses, valueOptions: Array<string>, setNodes: (nodeList: Conversation) => void) => {
+export const addNodes = async (
+    parentNode: ConvoNode,
+    nodeList: Conversation,
+    newIDs: Array<string>,
+    optionPaths: Responses,
+    valueOptions: Array<string>,
+    setNodes: (nodeList: Conversation) => void,
+    setTransactions: (transactions: ConvoNode[]) => void, // array of convoNodes - not quite the same thing as a 'Conversation' type
+    setIdsToDelete: (idsToDelete: string[]) => void,
+    conversationHistory: Conversation[],
+    setConversationHistory: (newConversation: Conversation) => void
+) => {
     var client = new ApiClient();
 
     // TODO: we should never have fewer than 1 node in the nodeList - but we can assess passing through the area Id or using redux later on
-    var areaIdentifier = nodeList[0].areaIdentifier;
+    // var areaIdentifier = nodeList[0].areaIdentifier;
     var treeIds = getIdsToDeleteRecursively(nodeList, parentNode);
     var childIdsToDelete = treeIds.split(",");
     var idsToDelete = [parentNode.nodeId, ...childIdsToDelete].filter((x) => x !== "");
@@ -127,8 +138,12 @@ export const addNodes = async (parentNode: ConvoNode, nodeList: Conversation, ne
         transactions.push(newNode);
         nodeList.push(newNode);
     });
-    const { data } = await client.Conversations.ModifyConversation(transactions, areaIdentifier, idsToDelete);
-    setNodes([...cloneDeep(nodeList)]);
+    // const { data } = await client.Conversations.ModifyConversation(transactions, areaIdentifier, idsToDelete);
+    var freshNodeList = cloneDeep(nodeList);
+    setNodes([...freshNodeList]);
+    setTransactions([...cloneDeep(transactions)])
+    setIdsToDelete([...cloneDeep(idsToDelete)])
+    setConversationHistory([...freshNodeList])
 };
 
 // export const updateNodeList = (nodeList: Conversation, newNode: ConvoNode) => {
