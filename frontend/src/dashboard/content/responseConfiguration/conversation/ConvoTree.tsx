@@ -16,7 +16,7 @@ import RedoIcon from '@material-ui/icons/Redo';
 
 import "./ConvoTree.css";
 
-const MaxConversationHistory = 3; // the number of times you can hit the back button
+const MaxConversationHistory = 50; // the number of times you can hit the back button
 
 const useStyles = makeStyles(() => ({
     conversation: {
