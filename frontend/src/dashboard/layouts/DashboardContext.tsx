@@ -17,10 +17,6 @@ interface IAuthContext {
 }
 
 interface IConversationTreeContext {
-    setIdsToDelete: Dispatch<SetStateAction<string[]>>;
-    idsToDelete: string[];
-    setTransactions: Dispatch<SetStateAction<ConvoNode[]>>;
-    transactions: ConvoNode[];
     nodeList: Conversation;
     setNodes: (value: React.SetStateAction<Conversation>) => void;
     conversationHistory: Conversation[];
@@ -33,4 +29,3 @@ interface IConversationTreeContext {
 export const AuthContext = React.createContext({isActive: false, isAuthenticated: false} as IAuthContext);
 export const DashboardContext = React.createContext({} as IDashboardContext);
 export const ConversationTreeContext = React.createContext({} as IConversationTreeContext);
-// export const ConversationHistoryQueue = React.createContext({} as IConversationHistoryContext)

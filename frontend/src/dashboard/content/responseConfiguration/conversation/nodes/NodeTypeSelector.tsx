@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ConvoNode, Conversation, Responses, NodeTypeOptions, NodeOption, AlertType } from "@Palavyr-Types";
+import { ConvoNode, NodeTypeOptions, NodeOption, AlertType } from "@Palavyr-Types";
 import { addNodes, createNewChildIDs } from "./conversationNodeUtils";
 import { CustomNodeSelect } from "./CustomNodeSelect";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
@@ -7,13 +7,10 @@ import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 
 export interface INodeTypeSelector {
     node: ConvoNode;
-    // nodeList: Array<ConvoNode>;
-    // setNodes: (nodeList: Conversation) => void;
     parentState: boolean;
     changeParentState: (parentState: boolean) => void;
     nodeOptionList: NodeTypeOptions;
-    // setTransactions: (transactions: ConvoNode[]) => void; // array of convoNodes - not quite the same thing as a 'Conversation' type
-    // setIdsToDelete: (idsToDelete: string[]) => void;
+
 }
 
 export const NodeTypeSelector = ({ node, parentState, changeParentState, nodeOptionList }: INodeTypeSelector) => {
@@ -21,7 +18,7 @@ export const NodeTypeSelector = ({ node, parentState, changeParentState, nodeOpt
     const [alertDetails, setAlertDetails] = useState<AlertType>();
     const [label, setLabel] = useState<string>("");
 
-    const { setTransactions, setIdsToDelete, nodeList, setNodes, conversationHistory, setConversationHistory } = React.useContext(ConversationTreeContext);
+    const {nodeList, setNodes, setConversationHistory } = React.useContext(ConversationTreeContext);
 
     useEffect(() => {
         const currentNodeOption = nodeOptionList.filter((option: NodeOption) => option.value === node.nodeType)[0];
@@ -73,7 +70,7 @@ export const NodeTypeSelector = ({ node, parentState, changeParentState, nodeOpt
         // so we can supply properties. ^ The option comes in from the event, which currently passes the value as a string. Can this be an object?
         node.nodeType = nodeOption.value; // SelectOneFlat-sdfs-sdfs-sgs-s
 
-        addNodes(node, nodeList, childIds, pathOptions, valueOptions, setNodes, setTransactions, setIdsToDelete, conversationHistory, setConversationHistory); // create new nodes and update the Database
+        addNodes(node, nodeList, childIds, pathOptions, valueOptions, setNodes, setConversationHistory); // create new nodes and update the Database
         // setSelectedOption(nodeOption); // change option in curent node
         changeParentState(!parentState); // rerender lines
     };

@@ -31,8 +31,8 @@ export const ConvoTree = () => {
     const [nodeList, setNodes] = useState<Conversation>([]); // nodeList and state updater for the tree
     const [nodeOptionList, setNodeOptionList] = useState<NodeTypeOptions>([]);
     const [missingNodeTypes, setMissingNodeTypes] = useState<string[]>([]);
-    const [transactions, setTransactions] = useState<ConvoNode[]>([]);
-    const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
+    // const [transactions, setTransactions] = useState<ConvoNode[]>([]);
+    // const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
     const [conversationHistory, setConversationHistory] = useState<Conversation[]>([]);
     const [conversationHistoryPosition, setConversationHistoryPosition] = useState<number>(0);
 
@@ -56,16 +56,16 @@ export const ConvoTree = () => {
     }, [areaIdentifier]);
 
     const onSave = async () => {
-        if (transactions.length === 0) {
-            return false;
-        }
-        if (idsToDelete.length === 0) {
-            return false;
-        }
-        const { data: updatedConversation } = await client.Conversations.ModifyConversation(transactions, areaIdentifier, idsToDelete);
+        // if (transactions.length === 0) {
+        //     return false;
+        // }
+        // if (idsToDelete.length === 0) {
+        //     return false;
+        // }
+        const { data: updatedConversation } = await client.Conversations.ModifyConversation(nodeList, areaIdentifier);
         setNodes(updatedConversation);
-        setIdsToDelete([]);
-        setTransactions([]);
+        // setIdsToDelete([]);
+        // setTransactions([]);
         setConversationHistoryPosition(0)
         setConversationHistory([updatedConversation])
         return true;
@@ -140,7 +140,7 @@ export const ConvoTree = () => {
     };
 
     return (
-        <ConversationTreeContext.Provider value={{ setTransactions, setIdsToDelete, transactions, idsToDelete, nodeList, setNodes, conversationHistory, setConversationHistory: addConversationHistoryToQueue }}>
+        <ConversationTreeContext.Provider value={{nodeList, setNodes, conversationHistory, setConversationHistory: addConversationHistoryToQueue }}>
             <AreaConfigurationHeader
                 divider={missingNodeTypes.length > 0}
                 title="Palavyr"
@@ -175,8 +175,6 @@ export const ConvoTree = () => {
                                     node={rootNode}
                                     nodeList={nodeList}
                                     setNodes={setNodes}
-                                    setIdsToDelete={setIdsToDelete}
-                                    setTransactions={setTransactions}
                                     parentState={true}
                                     changeParentState={() => null}
                                     nodeOptionList={nodeOptionList}

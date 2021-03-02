@@ -9,14 +9,11 @@ import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
 
 export interface IConversationNodeInterface {
     node: ConvoNode;
-    nodeList: Array<ConvoNode>;
     setNodes: (nodeList: Conversation) => void;
     parentState: boolean;
     changeParentState: (parentState: boolean) => void;
     optionPath: string | null;
     nodeOptionList: NodeTypeOptions;
-    setTransactions: (transactions: ConvoNode[]) => void; // array of convoNodes - not quite the same thing as a 'Conversation' type
-    setIdsToDelete: (idsToDelete: string[]) => void;
 }
 
 type StyleProps = {
@@ -81,13 +78,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const ConversationNodeInterface = ({ nodeOptionList, node, nodeList, optionPath, setNodes, setIdsToDelete, setTransactions, parentState, changeParentState }: IConversationNodeInterface) => {
+export const ConversationNodeInterface = ({ nodeOptionList, node, optionPath, setNodes, parentState, changeParentState }: IConversationNodeInterface) => {
     const [modalState, setModalState] = useState<boolean>(false);
 
     const client = new ApiClient();
     const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text, checked: node.isCritical });
-
-    // const { setTransactions, setIdsToDelete, transactions, idsToDelete, nodeList, setNodes  } = React.useContext(ConversationTreeContext);
 
     const showResponseInPdfCheckbox = async (event: { target: { checked: boolean } }) => {
         const newNode = cloneDeep(node);

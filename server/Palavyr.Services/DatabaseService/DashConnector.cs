@@ -27,7 +27,7 @@ namespace Palavyr.Services.DatabaseService
         Task SetDefaultDynamicTable(string accountId, string areaId, string tableId);
         Task RemoveStaticTables(List<StaticTablesMeta> staticTablesMetas);
         Task<List<Area>> GetActiveAreasWithConvoAndDynamicAndStaticTables(string accountId);
-
+        void RemoveAreaNodes(string areaId, string accountId);
     }
 
     public class DashConnector : IDashConnector
@@ -141,6 +141,11 @@ namespace Palavyr.Services.DatabaseService
             dashContext.ConversationNodes.RemoveRange(nodesToDelete);
         }
 
+        public void RemoveAreaNodes(string areaId, string accountId)
+        {
+            dashContext.ConversationNodes.RemoveRange(dashContext.ConversationNodes.Where(row => row.AccountId == accountId && row.AreaIdentifier == areaId));
+        }
+        
         public async Task<Area> GetAreaComplete(string accountId, string areaId)
         {
             var areaData = await dashContext

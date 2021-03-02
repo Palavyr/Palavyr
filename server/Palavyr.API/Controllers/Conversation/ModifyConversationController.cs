@@ -31,7 +31,8 @@ namespace Palavyr.API.controllers.Conversation
             [FromBody] ConversationConfigurationUpdate update)
         {
 
-            dashConnector.RemoveNodeRangeByIds(update.IdsToDelete);
+            dashConnector.RemoveAreaNodes(areaId, accountId);
+            // dashConnector.RemoveNodeRangeByIds(update.IdsToDelete);
             var area = await dashConnector.GetAreaWithConversationNodes(accountId, areaId);
             var mappedUpdates = ConversationNode.MapUpdate(accountId, update.Transactions);
             

@@ -77,9 +77,6 @@ export const addNodes = async (
     optionPaths: Responses,
     valueOptions: Array<string>,
     setNodes: (nodeList: Conversation) => void,
-    setTransactions: (transactions: ConvoNode[]) => void, // array of convoNodes - not quite the same thing as a 'Conversation' type
-    setIdsToDelete: (idsToDelete: string[]) => void,
-    conversationHistory: Conversation[],
     setConversationHistory: (newConversation: Conversation) => void
 ) => {
     var client = new ApiClient();
@@ -141,12 +138,5 @@ export const addNodes = async (
     // const { data } = await client.Conversations.ModifyConversation(transactions, areaIdentifier, idsToDelete);
     var freshNodeList = cloneDeep(nodeList);
     setNodes([...freshNodeList]);
-    setTransactions([...cloneDeep(transactions)])
-    setIdsToDelete([...cloneDeep(idsToDelete)])
     setConversationHistory([...freshNodeList])
 };
-
-// export const updateNodeList = (nodeList: Conversation, newNode: ConvoNode) => {
-//     var filteredList = nodeList.filter((x) => x.nodeId !== newNode.nodeId); // does this do anything...? it remove the newNode, and then adds it back in?
-//     return [...filteredList, newNode];
-// };
