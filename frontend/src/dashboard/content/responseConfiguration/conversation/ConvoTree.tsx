@@ -9,11 +9,14 @@ import { Button, makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { ConversationTreeContext, DashboardContext } from "dashboard/layouts/DashboardContext";
-import "./ConvoTree.css";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AlignCenter } from "dashboard/layouts/positioning/AlignCenter";
+import UndoIcon from "@material-ui/icons/Undo";
+import RedoIcon from '@material-ui/icons/Redo';
 
-const MaxConversationHistory = 20; // the number of times you can hit the back button
+import "./ConvoTree.css";
+
+const MaxConversationHistory = 3; // the number of times you can hit the back button
 
 const useStyles = makeStyles(() => ({
     conversation: {
@@ -24,6 +27,7 @@ const useStyles = makeStyles(() => ({
 
 export const ConvoTree = () => {
     var client = new ApiClient();
+    const { setIsLoading } = React.useContext(DashboardContext);
 
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
@@ -31,12 +35,9 @@ export const ConvoTree = () => {
     const [nodeList, setNodes] = useState<Conversation>([]); // nodeList and state updater for the tree
     const [nodeOptionList, setNodeOptionList] = useState<NodeTypeOptions>([]);
     const [missingNodeTypes, setMissingNodeTypes] = useState<string[]>([]);
-    // const [transactions, setTransactions] = useState<ConvoNode[]>([]);
-    // const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
     const [conversationHistory, setConversationHistory] = useState<Conversation[]>([]);
     const [conversationHistoryPosition, setConversationHistoryPosition] = useState<number>(0);
 
-    const { setIsLoading } = React.useContext(DashboardContext);
     const rootNode = getRootNode(nodeList);
 
     const classes = useStyles();
@@ -50,24 +51,16 @@ export const ConvoTree = () => {
         setNodeOptionList(nodeOptionList);
         setNodes(cloneDeep(nodes));
         setIsLoading(false);
-        setConversationHistory([cloneDeep(nodes)])
+        setConversationHistory([cloneDeep(nodes)]);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
 
     const onSave = async () => {
-        // if (transactions.length === 0) {
-        //     return false;
-        // }
-        // if (idsToDelete.length === 0) {
-        //     return false;
-        // }
         const { data: updatedConversation } = await client.Conversations.ModifyConversation(nodeList, areaIdentifier);
         setNodes(updatedConversation);
-        // setIdsToDelete([]);
-        // setTransactions([]);
-        setConversationHistoryPosition(0)
-        setConversationHistory([updatedConversation])
+        setConversationHistoryPosition(0);
+        setConversationHistory([updatedConversation]);
         return true;
     };
 
@@ -96,7 +89,6 @@ export const ConvoTree = () => {
     }, [areaIdentifier, nodeList]);
 
     const addConversationHistoryToQueue = (newConversationRecord: Conversation) => {
-
         const newPos = conversationHistoryPosition + 1;
 
         if (conversationHistory.length < MaxConversationHistory) {
@@ -109,12 +101,11 @@ export const ConvoTree = () => {
             if (newPos < MaxConversationHistory) {
                 setConversationHistory([...conversationHistory.slice(0, newPos), newConversationRecord]);
             } else {
-                setConversationHistory( [...conversationHistory.slice(1), newConversationRecord]);
+                setConversationHistory([...conversationHistory.slice(1), newConversationRecord]);
             }
         }
 
         setConversationHistoryPosition(newPos);
-        console.log(newPos);
     };
 
     const stepConversationBackOneStep = (conversationHistoryPosition: number, conversationHistory: Conversation[]) => {
@@ -140,27 +131,33 @@ export const ConvoTree = () => {
     };
 
     return (
-        <ConversationTreeContext.Provider value={{nodeList, setNodes, conversationHistory, setConversationHistory: addConversationHistoryToQueue }}>
+        <ConversationTreeContext.Provider value={{ nodeList, setNodes, conversationHistory, setConversationHistory: addConversationHistoryToQueue }}>
             <AreaConfigurationHeader
                 divider={missingNodeTypes.length > 0}
                 title="Palavyr"
-                subtitle="Your palavyr is the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing. Please be careful - all changes to your palavyr are immediately saved and we have not yet implemented a 'back' or 'undo' feature."
+                subtitle="Your palavyr is the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
             />
             <AlignCenter>
                 <SaveOrCancel onSave={onSave} useModal />
                 <Button
+                    variant="outlined"
+                    style={{marginLeft: "0.7rem", borderRadius: "10px"}}
+                    startIcon={<UndoIcon />}
                     onClick={() => {
                         stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
                     }}
                 >
-                    Back
+                    Undo
                 </Button>
                 <Button
+                    variant="outlined"
+                    style={{marginLeft: "0.7rem", borderRadius: "10px"}}
+                    endIcon={<RedoIcon />}
                     onClick={() => {
                         stepConversationForwardOneStep(conversationHistoryPosition, conversationHistory);
                     }}
                 >
-                    Forward
+                    Redo
                 </Button>
             </AlignCenter>
             <div className={classes.conversation}>
@@ -168,18 +165,7 @@ export const ConvoTree = () => {
                 <form onSubmit={() => null}>
                     <fieldset className="fieldset" id="tree-test">
                         <div className="main-tree tree-wrap">
-                            {nodeList.length > 0 ? (
-                                <ConversationNode
-                                    key={"tree-start"}
-                                    parentId={rootNode.nodeId}
-                                    node={rootNode}
-                                    nodeList={nodeList}
-                                    setNodes={setNodes}
-                                    parentState={true}
-                                    changeParentState={() => null}
-                                    nodeOptionList={nodeOptionList}
-                                />
-                            ) : null}
+                            {nodeList.length > 0 ? <ConversationNode key="tree-start" parentId={rootNode.nodeId} node={rootNode} parentState={true} changeParentState={() => null} nodeOptionList={nodeOptionList} /> : null}
                         </div>
                     </fieldset>
                 </form>

@@ -1,16 +1,14 @@
-import { Conversation, ConvoNode, NodeTypeOptions, Responses } from "@Palavyr-Types";
-import React, { useState, useEffect } from "react";
+import {  ConvoNode, NodeTypeOptions } from "@Palavyr-Types";
+import React, { useState, useEffect, useContext } from "react";
 import { getChildNodes } from "./conversationNodeUtils";
 import { SteppedLineTo } from "../treeLines/SteppedLineTo";
-import { v4 as uuid } from "uuid";
 import { ConversationNodeInterface } from "./ConversationNodeInterface";
+import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import "./ConversationNode.css";
 
 export interface IConversationNode {
-    nodeList: Conversation;
     node: ConvoNode;
     parentId: string | undefined;
-    setNodes: (nodeList: Conversation) => void;
     parentState: boolean
     changeParentState: (parentState: boolean) => void;
     nodeOptionList: NodeTypeOptions;
@@ -30,7 +28,9 @@ export const connectionStyle: lineStyle = {
     zIndex: 0,
 };
 
-export const ConversationNode = ({ nodeList, node, parentId, setNodes, parentState, changeParentState, nodeOptionList }: IConversationNode) => {
+export const ConversationNode = ({ node, parentId, parentState, changeParentState, nodeOptionList }: IConversationNode) => {
+
+    const { nodeList } = useContext(ConversationTreeContext);
 
     const [nodeState, changeNodeState] = useState<boolean>(true);
     const [loaded, setLoaded] = useState(false)
@@ -52,24 +52,21 @@ export const ConversationNode = ({ nodeList, node, parentId, setNodes, parentSta
             <div className={"tree-item " + nodeWrapper}>
                 <div className="tree-block-wrap">
                     <ConversationNodeInterface
-                        node={node} // node object
-                        setNodes={setNodes}
+                        node={node}
                         parentState={parentState}
                         changeParentState={changeParentState}
                         optionPath={node.optionPath}
                         nodeOptionList={nodeOptionList}
                     />
                 </div>
-                {childNodes.length > 0 && ( // if there are childNodes, then render them.
-                    <div key={uuid()} className="tree-row">
+                {childNodes.length > 0 && (
+                    <div key={node.nodeId} className="tree-row">
                         {
                             childNodes.map((nextNode) => (
                                 <ConversationNode
                                     key={nextNode.nodeId}
                                     node={nextNode}
-                                    nodeList={nodeList}
                                     parentId={node.nodeId}
-                                    setNodes={setNodes}
                                     parentState={nodeState}
                                     changeParentState={changeNodeState}
                                     nodeOptionList={nodeOptionList}
@@ -80,7 +77,7 @@ export const ConversationNode = ({ nodeList, node, parentId, setNodes, parentSta
                     </div>
                 )}
             </div>
-            {loaded && <SteppedLineTo key={node.nodeId} from={node.nodeId} to={parentId ? parentId : ""} fromAnchor="top" toAnchor="bottom" orientation="v" {...connectionStyle} />}
+            {loaded && <SteppedLineTo key={node.nodeId} from={node.nodeId} to={parentId ?? ""} fromAnchor="top" toAnchor="bottom" orientation="v" {...connectionStyle} />}
         </>
     );
 };

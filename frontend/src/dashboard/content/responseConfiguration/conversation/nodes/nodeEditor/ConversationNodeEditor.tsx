@@ -25,7 +25,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node }: ICon
     const [textState, setText] = useState<string>("");
     const [switchState, setSwitchState] = useState<boolean>(true);
 
-    const { nodeList, setNodes, conversationHistory, setConversationHistory } = React.useContext(ConversationTreeContext);
+    const { nodeList, setNodes, setConversationHistory } = React.useContext(ConversationTreeContext);
 
     useEffect(() => {
         setText(node.text);

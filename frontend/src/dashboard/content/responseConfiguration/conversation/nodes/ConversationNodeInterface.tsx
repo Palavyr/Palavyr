@@ -6,10 +6,10 @@ import classNames from "classnames";
 import { NodeTypeSelector } from "./NodeTypeSelector";
 import { cloneDeep } from "lodash";
 import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
+import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 
 export interface IConversationNodeInterface {
     node: ConvoNode;
-    setNodes: (nodeList: Conversation) => void;
     parentState: boolean;
     changeParentState: (parentState: boolean) => void;
     optionPath: string | null;
@@ -78,7 +78,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const ConversationNodeInterface = ({ nodeOptionList, node, optionPath, setNodes, parentState, changeParentState }: IConversationNodeInterface) => {
+export const ConversationNodeInterface = ({ nodeOptionList, node, optionPath, parentState, changeParentState }: IConversationNodeInterface) => {
+
+    const { setNodes } = React.useContext(ConversationTreeContext);
+
     const [modalState, setModalState] = useState<boolean>(false);
 
     const client = new ApiClient();
