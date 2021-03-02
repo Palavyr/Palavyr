@@ -6,11 +6,10 @@ import classNames from "classnames";
 import { NodeTypeSelector } from "./NodeTypeSelector";
 import { cloneDeep } from "lodash";
 import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
+import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 
 export interface IConversationNodeInterface {
     node: ConvoNode;
-    nodeList: Array<ConvoNode>;
-    setNodes: (nodeList: Conversation) => void;
     parentState: boolean;
     changeParentState: (parentState: boolean) => void;
     optionPath: string | null;
@@ -79,16 +78,19 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const ConversationNodeInterface = ({ nodeOptionList, node, nodeList, optionPath, setNodes, parentState, changeParentState }: IConversationNodeInterface) => {
+export const ConversationNodeInterface = ({ nodeOptionList, node, optionPath, parentState, changeParentState }: IConversationNodeInterface) => {
+
+    const { setNodes } = React.useContext(ConversationTreeContext);
+
     const [modalState, setModalState] = useState<boolean>(false);
 
     const client = new ApiClient();
     const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text, checked: node.isCritical });
 
-    const showResponseInPdfCheckbox = async (event: { target: { checked: boolean; }; }) => {
+    const showResponseInPdfCheckbox = async (event: { target: { checked: boolean } }) => {
         const newNode = cloneDeep(node);
         newNode.isCritical = event.target.checked;
-        const {data: newNodeList} = await client.Conversations.ModifyConversationNode(node.nodeId, node.areaIdentifier, newNode);
+        const { data: newNodeList } = await client.Conversations.ModifyConversationNode(node.nodeId, node.areaIdentifier, newNode);
         setNodes(newNodeList);
     };
 
@@ -106,7 +108,7 @@ export const ConversationNodeInterface = ({ nodeOptionList, node, nodeList, opti
                         Click to Edit
                     </Typography>
                 </Card>
-                <NodeTypeSelector nodeOptionList={nodeOptionList} node={node} nodeList={nodeList} setNodes={setNodes} parentState={parentState} changeParentState={changeParentState} />
+                <NodeTypeSelector nodeOptionList={nodeOptionList} node={node} parentState={parentState} changeParentState={changeParentState} />
                 <FormControlLabel
                     className={classes.formstyle}
                     classes={{
@@ -115,7 +117,7 @@ export const ConversationNodeInterface = ({ nodeOptionList, node, nodeList, opti
                     control={<Checkbox className={classes.formstyle} size="small" checked={node.isCritical} value="" name={"crit-" + node.nodeId} onChange={showResponseInPdfCheckbox} />}
                     label="Show response in PDF"
                 />
-                <ConversationNodeEditor setModalState={setModalState} modalState={modalState} node={node} nodeList={nodeList} setNodes={setNodes} />
+                <ConversationNodeEditor setModalState={setModalState} modalState={modalState} node={node} />
             </CardContent>
         </Card>
     );

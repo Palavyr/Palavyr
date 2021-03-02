@@ -1,44 +1,45 @@
 import React, { useState, useEffect } from "react";
-import { ConvoNode, Conversation, Responses, NodeTypeOptions, NodeOption, AlertType } from "@Palavyr-Types";
+import { ConvoNode, NodeTypeOptions, NodeOption, AlertType } from "@Palavyr-Types";
 import { addNodes, createNewChildIDs } from "./conversationNodeUtils";
 import { CustomNodeSelect } from "./CustomNodeSelect";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
+import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 
 export interface INodeTypeSelector {
     node: ConvoNode;
-    nodeList: Array<ConvoNode>;
-    setNodes: (nodeList: Conversation) => void;
     parentState: boolean;
     changeParentState: (parentState: boolean) => void;
     nodeOptionList: NodeTypeOptions;
+
 }
 
-export const NodeTypeSelector = ({ node, nodeList, setNodes, parentState, changeParentState, nodeOptionList }: INodeTypeSelector) => {
+export const NodeTypeSelector = ({ node, parentState, changeParentState, nodeOptionList }: INodeTypeSelector) => {
     const [alertState, setAlertState] = useState<boolean>(false);
     const [alertDetails, setAlertDetails] = useState<AlertType>();
     const [label, setLabel] = useState<string>("");
 
+    const {nodeList, setNodes, setConversationHistory } = React.useContext(ConversationTreeContext);
+
     useEffect(() => {
         const currentNodeOption = nodeOptionList.filter((option: NodeOption) => option.value === node.nodeType)[0];
         if (currentNodeOption) {
-            setLabel(currentNodeOption.text)
+            setLabel(currentNodeOption.text);
         }
-    },[node])
+    }, [node]);
 
     const duplicateDynamicFeeNodeFound = (option: string) => {
         const dynamicNodeTypeOptions = nodeOptionList.filter((x: NodeOption) => x.isDynamicType);
         if (dynamicNodeTypeOptions.length > 0) {
             const dynamicNodeTypes = dynamicNodeTypeOptions.map((x: NodeOption) => x.value);
-            const dynamicNodesPresentInTheCurrentNodeList = nodeList.filter((x: ConvoNode) => dynamicNodeTypes.includes(x.nodeType))
+            const dynamicNodesPresentInTheCurrentNodeList = nodeList.filter((x: ConvoNode) => dynamicNodeTypes.includes(x.nodeType));
             const dynamicNodes = dynamicNodesPresentInTheCurrentNodeList.map((x: ConvoNode) => x.nodeType);
             return dynamicNodes.includes(option) ? true : false;
         }
-        return false
-    }
+        return false;
+    };
 
     const autocompleteOnChange = (event: any, nodeOption: NodeOption) => {
-
-        if (nodeOption === null){
+        if (nodeOption === null) {
             return;
         }
         if (duplicateDynamicFeeNodeFound(nodeOption.value)) {
@@ -69,11 +70,10 @@ export const NodeTypeSelector = ({ node, nodeList, setNodes, parentState, change
         // so we can supply properties. ^ The option comes in from the event, which currently passes the value as a string. Can this be an object?
         node.nodeType = nodeOption.value; // SelectOneFlat-sdfs-sdfs-sgs-s
 
-        addNodes(node, nodeList, childIds, pathOptions, valueOptions, setNodes); // create new nodes and update the Database
+        addNodes(node, nodeList, childIds, pathOptions, valueOptions, setNodes, setConversationHistory); // create new nodes and update the Database
         // setSelectedOption(nodeOption); // change option in curent node
         changeParentState(!parentState); // rerender lines
     };
-
 
     return (
         <>

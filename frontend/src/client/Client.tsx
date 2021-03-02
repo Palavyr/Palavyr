@@ -176,8 +176,8 @@ export class ApiClient {
         CheckIfIsTerminalType: async (nodeType: string): Promise<AxiosResponse<boolean>> => this.client.get(`configure-conversations/check-terminal/${nodeType}`),
 
         //TODO : Return from API
-        ModifyConversation: async (nodelist: Conversation, areaIdentifier: string, idsToDelete: Array<string>): Promise<AxiosResponse> =>
-            this.client.put(`configure-conversations/${areaIdentifier}`, { IdsToDelete: idsToDelete, Transactions: nodelist }),
+        ModifyConversation: async (nodelist: Conversation, areaIdentifier: string): Promise<AxiosResponse> =>
+            this.client.put(`configure-conversations/${areaIdentifier}`, { Transactions: nodelist }),
 
         ModifyConversationNode: async (nodeId: string, areaIdentifier: string, updatedNode: ConvoTableRow): Promise<AxiosResponse<Conversation>> => this.client.put(`configure-conversations/${areaIdentifier}/nodes/${nodeId}`, updatedNode),
 

@@ -1,8 +1,6 @@
 import React from "react";
 import { LineStyles } from "./LineTypes";
 import { defaultBorderColor, defaultBorderStyle, defaultBorderWidth } from "./LineUtils";
-import { v4 as uuid } from "uuid";
-
 
 export type LineProps = {
     x0: number;
@@ -13,10 +11,9 @@ export type LineProps = {
     borderStyle?: LineStyles;
     borderWidth?: number;
     zIndex?: number;
-    className?: string;
 };
 
-type positionStyles = {
+type PositionStyles = {
     position: "absolute";
     top: string;
     left: string;
@@ -26,8 +23,9 @@ type positionStyles = {
     transformOrigin: string;
 };
 
-export const Line = ({ x0, x1, y0, y1, borderColor, borderStyle, borderWidth, zIndex, className }: LineProps): React.ReactElement | null => {
+// https://www.pluralsight.com/guides/re-render-react-component-on-window-resize
 
+export const Line = ({ x0, x1, y0, y1, borderColor, borderStyle, borderWidth, zIndex }: LineProps): React.ReactElement | null => {
     const dy = y1 - y0;
     const dx = x1 - x0;
 
@@ -36,7 +34,7 @@ export const Line = ({ x0, x1, y0, y1, borderColor, borderStyle, borderWidth, zI
 
     const z = zIndex ? Number(zIndex) : 1;
 
-    const positionStyle: positionStyles = {
+    const positionStyle: PositionStyles = {
         position: "absolute",
         top: `${y0}px`,
         left: `${x0}px`,
@@ -52,12 +50,6 @@ export const Line = ({ x0, x1, y0, y1, borderColor, borderStyle, borderWidth, zI
         borderTopWidth: borderWidth ?? defaultBorderWidth,
     };
     return (
-        <div key={uuid()} className="react-lineto-placeholder">
-            <div
-                key={uuid()}
-                className={className ?? ""}
-                style={{ ...defaultStyle, ...positionStyle }}
-            ></div>
-        </div>
-    )
+        <div style={{ ...defaultStyle, ...positionStyle }}></div>
+    );
 };

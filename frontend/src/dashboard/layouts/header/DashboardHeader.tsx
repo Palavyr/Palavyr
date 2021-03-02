@@ -1,8 +1,9 @@
-import React from "react";
-import { AppBar, Toolbar, IconButton, Typography, makeStyles, useTheme } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { AppBar, Toolbar, IconButton, Typography, makeStyles } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu';
 import classNames from "classnames";
 import HelpIcon from '@material-ui/icons/Help';
+import { debounce } from "lodash";
 
 const drawerWidth: number = 240;
 
@@ -16,7 +17,6 @@ interface DashboardHeaderProps {
 
 const useStyles = makeStyles(theme => ({
     topbar: {
-        // backgroundColor: "green",
         background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
         position: "fixed",
     },
@@ -56,7 +56,6 @@ const useStyles = makeStyles(theme => ({
         marginLeft: theme.spacing(5),
         alignSelf: "right",
         textAlign: "right",
-        // marginRight: "1rem"
     },
 }))
 
@@ -64,7 +63,14 @@ const useStyles = makeStyles(theme => ({
 export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
 
     const classes = useStyles();
-    const theme = useTheme();
+    const [sized, setSized] = useState<boolean>(false);
+    const handle = () => setSized(!sized)
+
+    useEffect(() => {
+        window.addEventListener("resize", handle);
+        return () => window.removeEventListener("resize", handle);
+    }, [sized]);
+
     return (
         <AppBar
             position="absolute"

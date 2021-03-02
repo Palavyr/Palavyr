@@ -1,42 +1,46 @@
 import React, { useState, useEffect } from "react";
 import { ConvoNode, Conversation, ValueOptionDelimiter } from "@Palavyr-Types";
-import { ApiClient } from "@api-client/Client";
 import { cloneDeep } from "lodash";
-import { createNewChildIDs, addNodes } from "../conversationNodeUtils";
+import { createNewChildIDs, addNodes, removeNodeByID } from "../conversationNodeUtils";
 import { Dialog, DialogTitle, DialogContent, TextField, DialogActions } from "@material-ui/core";
 import { MultiChoiceOptions } from "./MultiChoiceOptions";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
+import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 
 export interface IConversationNodeEditor {
     modalState: boolean;
     setModalState: (state: boolean) => void;
     node: ConvoNode;
-    setNodes: (nodeList: Conversation) => void;
-    nodeList: Conversation;
 }
 
-export const ConversationNodeEditor = ({ modalState, setModalState, node, nodeList, setNodes }: IConversationNodeEditor) => {
-    const client = new ApiClient();
+const updateNodeWithinNodeList = (nodeData: ConvoNode, nodeList: Conversation) => {
+    // replace the old node with the new node in the list
+    const filteredNodeList = removeNodeByID(nodeData.nodeId, nodeList);
+    filteredNodeList.push(nodeData);
+    return filteredNodeList;
+};
 
+export const ConversationNodeEditor = ({ modalState, setModalState, node }: IConversationNodeEditor) => {
     const [options, setOptions] = useState<Array<string>>([]);
     const [textState, setText] = useState<string>("");
     const [switchState, setSwitchState] = useState<boolean>(true);
+
+    const { nodeList, setNodes, setConversationHistory } = React.useContext(ConversationTreeContext);
 
     useEffect(() => {
         setText(node.text);
         if (node.isMultiOptionType) {
             setOptions(node.valueOptions.split(ValueOptionDelimiter));
         }
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // TODO: LOOK HERE <==================================== I added this in as a test
+    }, []);
 
     const handleCloseModal = () => {
         setModalState(false);
     };
 
     const handleUpdateNode = async (value: string, valueOptions: string[]) => {
-        const { data: nodeData } = cloneDeep(await client.Conversations.GetConversationNode(node.nodeId));
+        const nodeData = cloneDeep(nodeList.filter((nodeListNode: ConvoNode) => nodeListNode.nodeId === node.nodeId)[0]);
 
         nodeData.text = value;
 
@@ -45,10 +49,11 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, nodeLi
             const numChildren = optionPaths.filter((x) => x !== null && x !== "").length;
             const childIds = createNewChildIDs(numChildren);
             nodeData.valueOptions = valueOptions.join(ValueOptionDelimiter);
-            await addNodes(nodeData, nodeList, childIds, optionPaths, valueOptions, setNodes); // create new nodes and update the Database
+            await addNodes(nodeData, nodeList, childIds, optionPaths, valueOptions, setNodes, setConversationHistory); // create new nodes and update the Database
         } else {
-            const {data: newNodeList} = await client.Conversations.ModifyConversationNode(nodeData.nodeId, nodeData.areaIdentifier, nodeData);
-            setNodes(newNodeList);
+            const updatedNodeList = updateNodeWithinNodeList(nodeData, nodeList);
+            setNodes(updatedNodeList);
+            setConversationHistory(updatedNodeList);
         }
     };
 
