@@ -1,28 +1,32 @@
+import React from "react";
 import { TableHead, TableRow, TableCell, makeStyles } from "@material-ui/core";
 import classNames from "classnames";
-import React from "react";
 
 const useStyles = makeStyles((theme) => ({
     cell: {
         borderRight: "1px solid gray",
     },
     text: {
-        fontSize: "16pt"
+        fontSize: "16pt",
+        // fontWeight: "bold"
+    },
+    row: {
+        // borderBottom: "3px solid black"
     },
     noRight: {
         borderRight: "0px solid white",
     },
 }));
 
-export const SelectOneFlatHeader = () => {
+export const ThresholdHeader = () => {
     const cls = useStyles();
 
     return (
         <TableHead>
-            <TableRow>
+            <TableRow className={cls.row}>
                 <TableCell align="center"></TableCell>
                 <TableCell align="center" className={classNames(cls.cell, cls.text)}>
-                    Option Name
+                    Threshold
                 </TableCell>
                 <TableCell align="center" className={classNames(cls.cell, cls.text)}>
                     Amount

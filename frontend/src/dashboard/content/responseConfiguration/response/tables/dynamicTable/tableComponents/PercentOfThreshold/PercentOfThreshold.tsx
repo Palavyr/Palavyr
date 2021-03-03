@@ -25,19 +25,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const PercentOfThreshold = ({ tableMeta, setTableMeta, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: IDynamicTableProps) => {
+export const PercentOfThreshold = ({ tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<IDynamicTableProps, "tableMeta" | "setTableMeta">) => {
     const client = new ApiClient();
     const classes = useStyles();
 
     const modifier = new PercentOfThresholdModifier(setTableData);
 
-    const addItemOnClick = () => {
-        modifier.addItem(tableData, client, areaIdentifier, tableId);
-    };
+    const addItemOnClick = () => modifier.addItem(tableData, client, areaIdentifier, tableId);
+    const addRowOnClickFactory = (itemId: string) => () => modifier.addRow(tableData, client, areaIdentifier, tableId, itemId);
 
-    const addRowOnClickFactory = (itemId: string) => () => {
-        modifier.addRow(tableData, client, areaIdentifier, tableId, itemId);
-    };
 
     const onSave = async () => {
         const { data } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.PercentOfThreshold, tableData, tableId, tableTag);

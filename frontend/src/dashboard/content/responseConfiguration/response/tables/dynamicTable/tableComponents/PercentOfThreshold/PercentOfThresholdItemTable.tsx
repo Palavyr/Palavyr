@@ -96,21 +96,3 @@ export const PercentOfThresholdItemToolbar = ({ addRowOnClick, removeItem, itemI
         </>
     );
 };
-
-// <>
-// <br></br>
-// <div style={{ marginBottom: "1rem" }}>
-//     <div style={{ float: "left", marginLeft: "1rem" }}>
-//         <Button variant="contained" style={{ width: "25ch" }} color="primary" onClick={addRowOnClick}>
-//             Add Threshold
-//         </Button>
-//     </div>
-//     <div style={{ float: "right", marginRight: "1rem" }}>
-//         <Button variant="contained" style={{ width: "18ch" }} color="primary" onClick={() => removeItem(itemId)}>
-//             Delete Item
-//         </Button>
-//     </div>
-// </div>
-// <br></br>
-// <hr></hr>
-// </>

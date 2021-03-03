@@ -28,7 +28,7 @@ export class SelectOneFlatModifier {
     removeOption(tableData: TableData, dataIndex: number) {
         const newRows: TableData = [];
         if (tableData.length > 1) {
-            tableData.forEach((row, index) => {
+            tableData.forEach((row, index: number) => {
                 if (index !== dataIndex) {
                     newRows.push(row);
                 }
@@ -37,7 +37,6 @@ export class SelectOneFlatModifier {
         } else {
             alert("Table must have at least one option")
         }
-
     }
 
     setOptionText(tableData: TableData, index: number, newText: string) {

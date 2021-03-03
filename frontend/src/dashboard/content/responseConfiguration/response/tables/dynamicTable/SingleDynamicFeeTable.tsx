@@ -13,6 +13,7 @@ import { useCallback } from "react";
 import { useEffect } from "react";
 import { ChangeEvent } from "react";
 import { PercentOfThreshold } from "./tableComponents/PercentOfThreshold/PercentOfThreshold";
+import { Threshold } from "./tableComponents/Threshold/Threshold";
 
 export interface ISingleDynamicFeeTable {
     defaultTableMeta: DynamicTableMeta;
@@ -155,8 +156,16 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
             )}
             {tableMeta?.tableType === DynamicTableTypes.PercentOfThreshold && dynamicTableData !== undefined && (
                 <PercentOfThreshold
-                    setTableMeta={setTableMeta}
-                    tableMeta={tableMeta}
+                    tableTag={tableTag}
+                    tableId={tableMeta.tableId}
+                    tableData={dynamicTableData}
+                    setTableData={setDynamicTableData}
+                    areaIdentifier={areaIdentifier}
+                    deleteAction={deleteAction}
+                />
+            )}
+            {tableMeta?.tableType === DynamicTableTypes.Threshold && dynamicTableData !== undefined && (
+                <Threshold
                     tableTag={tableTag}
                     tableId={tableMeta.tableId}
                     tableData={dynamicTableData}

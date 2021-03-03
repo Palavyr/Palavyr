@@ -1,10 +1,9 @@
 import React from "react";
-import { TableRow, TableCell, Button, TextField, makeStyles } from "@material-ui/core";
+import { TableRow, TableCell, Button, makeStyles } from "@material-ui/core";
 import CurrencyTextField from '@unicef/material-ui-currency-textfield'
 import DeleteIcon from '@material-ui/icons/Delete';
 import { PercentOfThresholdData, TableData } from "../../DynamicTableTypes";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
-import { uuid } from "uuidv4";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 
@@ -43,11 +42,11 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
+const cellAlignment = "center";
 
 export const PercentOfThresholdRow = ({ dataIndex, tableData, row, modifier, baseValue }: IPercentOfThresholdRow) => {
 
     const classes = useStyles(!row.range);
-    const cellAlignment = "center";
     const key = dataIndex.toString() + row.tableId.toString();
 
     const { currencySymbol } = React.useContext(DashboardContext);
