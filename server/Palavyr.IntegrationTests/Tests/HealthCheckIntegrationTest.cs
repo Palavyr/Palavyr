@@ -1,8 +1,6 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using AspNetCore.Testing.Authentication.ClaimInjector;
-using Palavyr.API;
 using Palavyr.IntegrationTests.AppFactory;
 using Xunit;
 

@@ -1,5 +1,4 @@
-﻿using AspNetCore.Testing.Authentication.ClaimInjector;
-using Microsoft.AspNetCore.Mvc.Testing;
+﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Palavyr.API;
 
 namespace Palavyr.IntegrationTests.AppFactory
