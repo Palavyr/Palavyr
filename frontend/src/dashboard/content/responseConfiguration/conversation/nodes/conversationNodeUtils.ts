@@ -139,7 +139,7 @@ export const addNodes = async (
         transactions.push(newNode);
         nodeList.push(newNode);
     });
-    // const { data } = await client.Conversations.ModifyConversation(transactions, areaIdentifier, idsToDelete);
+
     var freshNodeList = cloneDeep(nodeList);
     setNodes([...freshNodeList]);
     setConversationHistory([...freshNodeList])
