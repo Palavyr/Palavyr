@@ -19,6 +19,7 @@ export interface ISaveOrCancel {
     customSaveMessage?: AlertMessage;
     customCancelMessage?: AlertMessage;
     useModal?: boolean;
+    timeout?: number;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, customCancelMessage, useModal, size = "small" }: ISaveOrCancel) => {
+export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, customCancelMessage, useModal, size = "small", timeout = 2000}: ISaveOrCancel) => {
     const classes = useStyles();
     const [alertState, setAlertState] = useState<boolean>(false);
     const [cancelAlertState, setCancelAlertState] = useState<boolean>(false);
@@ -75,7 +76,7 @@ export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, cu
                                 setCancelAlertState(true);
                             }
                             setIsSaving(false);
-                        }, 3000);
+                        }, timeout);
                     }}
                     size={size}
                 >

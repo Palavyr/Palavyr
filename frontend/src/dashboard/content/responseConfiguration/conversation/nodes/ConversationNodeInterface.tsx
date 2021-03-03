@@ -7,6 +7,7 @@ import { NodeTypeSelector } from "./NodeTypeSelector";
 import { cloneDeep } from "lodash";
 import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
+import { removeNodeByID } from "./conversationNodeUtils";
 
 export interface IConversationNodeInterface {
     node: ConvoNode;
@@ -79,19 +80,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ConversationNodeInterface = ({ nodeOptionList, node, optionPath, parentState, changeParentState }: IConversationNodeInterface) => {
-
-    const { setNodes } = React.useContext(ConversationTreeContext);
+    const { setNodes, nodeList, setConversationHistory } = React.useContext(ConversationTreeContext);
 
     const [modalState, setModalState] = useState<boolean>(false);
-
-    const client = new ApiClient();
     const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text, checked: node.isCritical });
 
     const showResponseInPdfCheckbox = async (event: { target: { checked: boolean } }) => {
         const newNode = cloneDeep(node);
         newNode.isCritical = event.target.checked;
-        const { data: newNodeList } = await client.Conversations.ModifyConversationNode(node.nodeId, node.areaIdentifier, newNode);
-        setNodes(newNodeList);
+        const filteredNodeList = removeNodeByID(newNode.nodeId, nodeList);
+        filteredNodeList.push(newNode);
+        setNodes(filteredNodeList);
+        setConversationHistory(filteredNodeList);
     };
 
     return (

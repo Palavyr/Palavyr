@@ -1,5 +1,5 @@
 import { Conversation, ConvoNode, Responses } from "@Palavyr-Types";
-import { cloneDeep, intersectionWith } from "lodash";
+import { cloneDeep } from "lodash";
 import { v4 as uuid } from "uuid";
 import { ApiClient } from "@api-client/Client";
 
@@ -30,6 +30,10 @@ export const getChildNodes = (childrenIDs: string, nodeList: Conversation) => {
 export const getRootNode = (nodeList: Conversation) => {
     return nodeList.filter((node) => node.isRoot === true)[0];
 };
+
+export const getNodeByNodeId = (nodeList: Conversation, nodeId: string) => {
+    return nodeList.filter((node) => node.nodeId === nodeId)[0];
+}
 
 export const removeNodes = (nodeList: Conversation, nodeId: string, setNodes: (nodeList: Conversation) => void) => {
     // removes the node by nodeId

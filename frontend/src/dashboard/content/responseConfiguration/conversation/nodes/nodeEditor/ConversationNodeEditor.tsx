@@ -89,6 +89,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node }: ICon
                         return true;
                     }}
                     onCancel={handleCloseModal}
+                    timeout={500}
                 />
             </DialogActions>
         </Dialog>
