@@ -1,6 +1,5 @@
-import { ConvoNode, Conversation, Responses, NodeTypeOptions } from "@Palavyr-Types";
+import { ConvoNode, NodeTypeOptions } from "@Palavyr-Types";
 import React, { useState } from "react";
-import { ApiClient } from "@api-client/Client";
 import { makeStyles, Card, CardContent, Typography, FormControlLabel, Checkbox } from "@material-ui/core";
 import classNames from "classnames";
 import { NodeTypeSelector } from "./NodeTypeSelector";
@@ -22,7 +21,7 @@ type StyleProps = {
     nodeType: string;
     checked: boolean;
 };
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     root: (props: StyleProps) => ({
         minWidth: "275px",
         maxWidth: "300px",
