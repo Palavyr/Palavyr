@@ -6,11 +6,11 @@ using Xunit;
 
 namespace Palavyr.IntegrationTests.Tests
 {
-    public class HealthCheckIntegrationTest : IClassFixture<IntegrationTestFixtureFactory>, IDisposable
+    public class HealthCheckIntegrationTest : IClassFixture<InMemoryWebApplicationFactory>, IDisposable
     {
         private HttpClient AuthenticatedClient { get; set; }        
 
-        public HealthCheckIntegrationTest(IntegrationTestFixtureFactory factory)
+        public HealthCheckIntegrationTest(InMemoryWebApplicationFactory factory)
         {
             AuthenticatedClient = factory.ConfigureUnauthenticatedClientWithInMemContext();
         }

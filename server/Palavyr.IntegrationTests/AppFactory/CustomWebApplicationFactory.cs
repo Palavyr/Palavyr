@@ -4,13 +4,12 @@ using Palavyr.Common.RequestsTools;
 
 namespace Palavyr.IntegrationTests.AppFactory
 {
-    public class InMemoryWebApplicationFactory<TStartup> : CustomWebApplicationFactoryBase<TStartup> where TStartup : class
+    public class InMemoryWebApplicationFactory : CustomWebApplicationFactoryBase<InMemoryTestStartup>
     {
     }
 
-    public class PostgresOrmWebApplicationFactory<TStartup> : CustomWebApplicationFactoryBase<TStartup> where TStartup : class
+    public class PostgresOrmWebApplicationFactory : CustomWebApplicationFactoryBase<OrmTestStartup>
     {
-
     }
 
     public class CustomWebApplicationFactoryBase<TStartup> : WebApplicationFactory<TStartup> where TStartup : class

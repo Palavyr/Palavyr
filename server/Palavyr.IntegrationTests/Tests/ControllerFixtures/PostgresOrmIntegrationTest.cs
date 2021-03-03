@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Palavyr.API;
 using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.IntegrationTests.AppFactory;
 using Xunit;
 
 namespace Palavyr.IntegrationTests.Tests.ControllerFixtures
 {
-    public class PostgresOrmIntegrationTest : IClassFixture<PostgresOrmWebApplicationFactory<Startup>>, IDisposable
+    public class PostgresOrmIntegrationTest : IClassFixture<PostgresOrmWebApplicationFactory>, IDisposable
     {
-        private readonly WebApplicationFactory<Startup> factory;
+        private readonly PostgresOrmWebApplicationFactory factory;
         private HttpClient client;
         private const string Route = "configure-conversations/ensure-db-valid";
 
-        public PostgresOrmIntegrationTest(PostgresOrmWebApplicationFactory<Startup> factory)
+        public PostgresOrmIntegrationTest(PostgresOrmWebApplicationFactory factory)
         {
             var configured = factory.ConfigureAppFactory(
                 DbSetupAndTeardown.SeedTestAccount,
@@ -24,7 +22,7 @@ namespace Palavyr.IntegrationTests.Tests.ControllerFixtures
                     db.WidgetPreferences.Add(WidgetPreference.CreateEmpty(IntegrationConstants.AccountId));
                     db.SaveChanges();
                 });
-            this.client = configured.CreateClient();
+            this.client = configured!.CreateClient();
             this.factory = configured;
         }
 

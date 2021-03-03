@@ -1,9 +1,7 @@
 #nullable enable
 using System;
 using System.Net.Http;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore.Storage;
-using Palavyr.API;
 using Palavyr.Data;
 
 namespace Palavyr.IntegrationTests.AppFactory
@@ -11,7 +9,7 @@ namespace Palavyr.IntegrationTests.AppFactory
     public static class IntegrationAppFactoryWithInMemoryDb
     {
         public static HttpClient CreateInMemAuthedClient(
-            this WebApplicationFactory<Startup> factory,
+            this InMemoryWebApplicationFactory factory,
             Action<AccountsContext>? configureAccounts = null,
             Action<DashContext>? configureDash = null,
             Action<ConvoContext>? configureConvo = null
@@ -28,14 +26,15 @@ namespace Palavyr.IntegrationTests.AppFactory
                             // .UseEnvironment("Test")
                             .ConfigureAuthentication()
                             .ConfigureInMemoryDatabase(dbRoot)
-                            .EnsureAndConfigureDbs(configureAccounts, configureDash, configureConvo);
+                            .EnsureAndConfigureDbs(configureAccounts, configureDash, configureConvo)
+                            .Build();
                     })
                 .CreateClient();
             return client;
         }
 
         public static HttpClient ConfigureUnauthenticatedClientWithInMemContext(
-            this WebApplicationFactory<Startup> factory,
+            this InMemoryWebApplicationFactory factory,
             Action<AccountsContext>? configureAccounts = null,
             Action<DashContext>? configureDash = null,
             Action<ConvoContext>? configureConvo = null

@@ -17,6 +17,10 @@ export class ThresholdModifier {
         this.onClick(cloneDeep(newState));
     }
 
+    removeRow(tableData: TableData, rowId: number) {
+        console.log("Removing Row");
+    }
+
     addThreshold(tableData: TableData) {
         console.log("adding new thershold")
     }

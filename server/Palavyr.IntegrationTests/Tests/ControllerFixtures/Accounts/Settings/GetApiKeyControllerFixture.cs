@@ -1,6 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Palavyr.API;
 using Palavyr.Common.UIDUtils;
 using Palavyr.Domain.Accounts.Schemas;
 using Palavyr.IntegrationTests.AppFactory;
@@ -8,11 +6,11 @@ using Xunit;
 
 namespace Palavyr.IntegrationTests.Tests.ControllerFixtures.Accounts.Settings
 {
-    public class GetApiKeyControllerFixture : IClassFixture<InMemoryWebApplicationFactory<Startup>>
+    public class GetApiKeyControllerFixture : IClassFixture<InMemoryWebApplicationFactory>
     {
-        private readonly WebApplicationFactory<Startup> fixtureFactory;
+        private readonly InMemoryWebApplicationFactory fixtureFactory;
         private const string Route = "account/settings/api-key";
-        public GetApiKeyControllerFixture(InMemoryWebApplicationFactory<Startup> fixtureFactory)
+        public GetApiKeyControllerFixture(InMemoryWebApplicationFactory fixtureFactory)
         {
             this.fixtureFactory = fixtureFactory;
         }
