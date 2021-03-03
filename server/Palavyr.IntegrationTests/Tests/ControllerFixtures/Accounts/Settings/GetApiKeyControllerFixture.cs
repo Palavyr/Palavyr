@@ -52,7 +52,7 @@ namespace Palavyr.IntegrationTests.Tests.ControllerFixtures.Accounts.Settings
                     db.SaveChanges();
                 });
             var response = await client.GetStringAsync(Route);
-            Assert.Equal(response, "No Api Key Found");
+            Assert.Equal("No Api Key Found", response);
         }
     }
 }
