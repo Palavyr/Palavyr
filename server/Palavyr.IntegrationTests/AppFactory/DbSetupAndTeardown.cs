@@ -1,7 +1,5 @@
 ﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Palavyr.API;
 using Palavyr.Common.UIDUtils;
 using Palavyr.Data;
 using Palavyr.Domain.Accounts.Schemas;
@@ -31,7 +29,7 @@ namespace Palavyr.IntegrationTests.AppFactory
             accountsContext.Sessions.Add(session);
         }
 
-        public static void DisposeDbsByReset(this WebApplicationFactory<Startup> factory)
+        public static void DisposeDbsByReset(this PostgresOrmWebApplicationFactory factory)
         {
             var services = factory.Services;
             var accountContext = services.GetRequiredService<AccountsContext>();
@@ -40,7 +38,7 @@ namespace Palavyr.IntegrationTests.AppFactory
             ResetDbs(accountContext, dashContext, convoContext);
         }
 
-        public static void DisposeByDelete(this WebApplicationFactory<Startup> factory)
+        public static void DisposeByDelete(this PostgresOrmWebApplicationFactory factory)
         {
             var services = factory.Services;
             var accountContext = services.GetRequiredService<AccountsContext>();

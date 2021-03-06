@@ -7,7 +7,8 @@ namespace Palavyr.Domain.Resources.Requests
     {
         public List<SelectOneFlat> SelectOneFlat { get; set; }
         public List<PercentOfThreshold> PercentOfThreshold { get; set; }
- 
+        public List<BasicThreshold> BasicThreshold {get; set; }
+        
         // add new Dynamic Table type rows properties
         public string TableTag { get; set; }
     }

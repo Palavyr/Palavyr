@@ -5,16 +5,15 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Palavyr.API;
 using Palavyr.IntegrationTests.AppFactory;
 using Xunit;
 
 namespace Palavyr.IntegrationTests.Tests
 {
-    public class TestControllerIntegrationTest : IClassFixture<InMemoryWebApplicationFactory<Startup>>
+    public class TestControllerIntegrationTest : IClassFixture<InMemoryWebApplicationFactory>
     {
         public HttpClient AuthenticatedClient { get; set; }
-        public TestControllerIntegrationTest(InMemoryWebApplicationFactory<Startup> factory)
+        public TestControllerIntegrationTest(InMemoryWebApplicationFactory factory)
         {
             AuthenticatedClient = factory.CreateInMemAuthedClient();
         }

@@ -1,3 +1,4 @@
+import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { Button, makeStyles, TableBody, TableContainer, TextField, Paper } from "@material-ui/core";
 import React from "react";
 import { useState } from "react";
@@ -26,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
         background: "transparent",
     },
 }));
+
+const getter = (x: PercentOfThresholdData) => x.rowOrder;
+
 
 // table data: to update the database (this is done via the unified table data object)
 // item data: The grouped data that is used to render and control UI
@@ -59,8 +63,8 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
             <TableContainer className={cls.tableStyles} component={Paper}>
                 <PercentOfThresholdHeader />
                 <TableBody>
-                    {itemData.sort((a, b) => a.threshold - b.threshold).map((data: PercentOfThresholdData, index: number) => {
-                        return <PercentOfThresholdRow key={index} dataIndex={index} tableData={tableData} row={data} modifier={modifier} baseValue={index === 0 ? true : false} />;
+                    {sortByPropertyNumeric(getter, itemData).map((row: PercentOfThresholdData, index: number) => {
+                        return <PercentOfThresholdRow key={row.rowId} tableData={tableData} row={row} modifier={modifier} baseValue={index === 0 ? true : false} />;
                     })}
                 </TableBody>
             </TableContainer>
@@ -96,21 +100,3 @@ export const PercentOfThresholdItemToolbar = ({ addRowOnClick, removeItem, itemI
         </>
     );
 };
-
-// <>
-// <br></br>
-// <div style={{ marginBottom: "1rem" }}>
-//     <div style={{ float: "left", marginLeft: "1rem" }}>
-//         <Button variant="contained" style={{ width: "25ch" }} color="primary" onClick={addRowOnClick}>
-//             Add Threshold
-//         </Button>
-//     </div>
-//     <div style={{ float: "right", marginRight: "1rem" }}>
-//         <Button variant="contained" style={{ width: "18ch" }} color="primary" onClick={() => removeItem(itemId)}>
-//             Delete Item
-//         </Button>
-//     </div>
-// </div>
-// <br></br>
-// <hr></hr>
-// </>

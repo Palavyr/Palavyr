@@ -73,6 +73,48 @@ namespace Palavyr.Data.Migrations.ConfigurationMigrations
                     b.ToTable("Areas");
                 });
 
+            modelBuilder.Entity("Palavyr.Domain.Configuration.Schemas.BasicThreshold", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("AccountId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AreaIdentifier")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ItemName")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Range")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("RowId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("RowOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("TableId")
+                        .HasColumnType("text");
+
+                    b.Property<double>("Threshold")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("ValueMax")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("ValueMin")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BasicThresholds");
+                });
+
             modelBuilder.Entity("Palavyr.Domain.Configuration.Schemas.ConversationNode", b =>
                 {
                     b.Property<int?>("Id")
@@ -222,6 +264,9 @@ namespace Palavyr.Data.Migrations.ConfigurationMigrations
                     b.Property<string>("RowId")
                         .HasColumnType("text");
 
+                    b.Property<int>("RowOrder")
+                        .HasColumnType("integer");
+
                     b.Property<string>("TableId")
                         .HasColumnType("text");
 
@@ -257,6 +302,9 @@ namespace Palavyr.Data.Migrations.ConfigurationMigrations
 
                     b.Property<bool>("Range")
                         .HasColumnType("boolean");
+
+                    b.Property<int>("RowOrder")
+                        .HasColumnType("integer");
 
                     b.Property<string>("TableId")
                         .HasColumnType("text");

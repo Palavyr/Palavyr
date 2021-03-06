@@ -11,6 +11,7 @@ export type SelectOneFlatData = {
     valueMin: number;
     valueMax: number;
     range: boolean;
+    rowOrder: number;
 };
 
 export type PercentOfThresholdData = {
@@ -27,14 +28,30 @@ export type PercentOfThresholdData = {
     range: boolean;
     modifier: number;
     posNeg: boolean;
+    rowOrder: number;
 };
 
-export type TableData = SelectOneFlatData[] | PercentOfThresholdData[] | any; // | SelectOneThresholdData etc
+export type BasicThresholdData = {
+    id: number;
+    rowId: number;
+    accountId: string;
+    areaIdentifier: string;
+    tableId: string;
+    itemName: string;
+    threshold: number;
+    valueMin: number;
+    valueMax: number;
+    range: boolean;
+    rowOrder: number;
+};
+
+export type TableData = SelectOneFlatData[] | PercentOfThresholdData[] | BasicThresholdData[] | any; // | SelectOneThresholdData etc
 
 //These must be kept in sync
 export const DynamicTableTypes = {
     SelectOneFlat: "SelectOneFlat",
     PercentOfThreshold: "PercentOfThreshold",
+    BasicThreshold: "BasicThreshold",
 };
 
 export interface IDynamicTableBody {

@@ -7,19 +7,19 @@ namespace Palavyr.Services.PdfService.PdfSections.Util
     {
         public string Description { get; }
         public string RowValue { get; }
-        public string PerPerson { get; }
+        public string PerIndividual { get; }
         public bool Range { get; set; }
         private CultureInfo Culture { get; }
         
         public double Min { get; }
         public double Max { get; }
         
-        public TableRow(string description, double min, double max, bool perPerson, CultureInfo culture, bool range)
+        public TableRow(string description, double min, double max, bool perIndividual, CultureInfo culture, bool range)
         {
             Description = description;
             Min = min;
             Max = max;
-            PerPerson = perPerson ? "Per Person" : "";
+            PerIndividual = perIndividual ? "Per Person" : "";
             Culture = culture;
             Range = range;
             RowValue = FormatRowValue(min, max, range);

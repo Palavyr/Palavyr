@@ -7,7 +7,7 @@ namespace Palavyr.API.Controllers.Response.DynamicTables.PercentOfThresholdOps
 {
     public partial class PercentOfThresholdController
     {
-        [HttpGet("tables/dynamic/SelectOneFlat/data/template/{areaId}/{tableId}")]
+        [HttpGet("tables/dynamic/PercentOfThreshold/data/template/{areaId}/{tableId}")]
         public async Task<IActionResult> GetDynamicRowTemplate(
             [FromHeader] string accountId,
             [FromRoute] string areaId,

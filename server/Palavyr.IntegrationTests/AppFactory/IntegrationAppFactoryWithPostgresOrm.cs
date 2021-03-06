@@ -1,16 +1,14 @@
 ﻿#nullable enable
 using System;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Palavyr.API;
 using Palavyr.Data;
 
 namespace Palavyr.IntegrationTests.AppFactory
 {
     public static class IntegrationAppFactoryWithPostgresOrm
     {
-        public static WebApplicationFactory<Startup> ConfigureAppFactory(
-            this PostgresOrmWebApplicationFactory<Startup> factory,
+        public static PostgresOrmWebApplicationFactory? ConfigureAppFactory(
+            this PostgresOrmWebApplicationFactory factory,
             Action<AccountsContext>? configureAccounts = null,
             Action<DashContext>? configureDash = null,
             Action<ConvoContext>? configureConvo = null,
@@ -38,7 +36,7 @@ namespace Palavyr.IntegrationTests.AppFactory
                             }
                         }
                     }
-                );
+                ) as PostgresOrmWebApplicationFactory;
         }
     }
 }

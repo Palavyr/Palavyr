@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Amazon.S3;
+using Microsoft.AspNetCore.Routing.Tree;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -313,7 +314,7 @@ namespace Palavyr.Services.PdfService
                     var allRows =
                         await dashContext
                             .PercentOfThresholds
-                            .Where(r => dynamicResponseId.EndsWith(r.TableId))
+                            .Where(r => dynamicResponseId.EndsWith(r.TableId) && r.AccountId == accountId)
                             .ToArrayAsync();
 
                     var itemIds = allRows.Select(item => item.ItemId).Distinct().ToArray();
@@ -350,6 +351,37 @@ namespace Palavyr.Services.PdfService
                                 rows.Add(tableRow);
                                 break;
                             }
+                        }
+                    }
+                }
+                else if (dynamicResponseId.StartsWith(DynamicTableTypes.CreateBasicThreshold().TableType))
+                {
+                    var responseValueAsDouble = double.Parse(dynamicResponseValue);
+
+                    var basicThresholds =
+                        await dashContext
+                            .BasicThresholds
+                            .Where(r => dynamicResponseId.EndsWith(r.TableId) && r.AccountId == accountId)
+                            .ToListAsync();
+
+                    basicThresholds.Sort();
+                    foreach (var threshold in basicThresholds)
+                    {
+                        if (responseValueAsDouble >= threshold.Threshold)
+                        {
+                            var minBaseAmount = threshold.ValueMin;
+                            var maxBaseAmount = threshold.ValueMax;
+
+                            var tableRow = new TableRow(
+                                threshold.ItemName,
+                                minBaseAmount,
+                                maxBaseAmount,
+                                false,
+                                culture,
+                                threshold.Range
+                            );
+                            rows.Add(tableRow);
+                            break;
                         }
                     }
                 }

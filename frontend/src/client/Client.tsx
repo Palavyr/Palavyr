@@ -170,7 +170,7 @@ export class ApiClient {
         GetConversation: async (areaIdentifier: string): Promise<AxiosResponse<Conversation>> => this.client.get(`configure-conversations/${areaIdentifier}`),
         GetConversationNode: async (nodeId: string): Promise<AxiosResponse<ConvoNode>> => this.client.get(`configure-conversations/nodes/${nodeId}`),
         GetNodeOptionsList: async (areaIdentifier: string): Promise<AxiosResponse<NodeTypeOptions>> => this.client.get(`configure-conversations/${areaIdentifier}/node-type-options`),
-        GetMissingNodes: async (areaIdentifier: string): Promise<AxiosResponse<string[]>> => this.client.get(`configure-conversations/${areaIdentifier}/missing-nodes`),
+        GetMissingNodes: async (areaIdentifier: string, nodeList: Conversation): Promise<AxiosResponse<string[]>> => this.client.post(`configure-conversations/${areaIdentifier}/missing-nodes`, { Transactions: nodeList }),
 
         CheckIfIsMultiOptionType: async (nodeType: string): Promise<AxiosResponse<boolean>> => this.client.get(`configure-conversations/check-multi-option/${nodeType}`),
         CheckIfIsTerminalType: async (nodeType: string): Promise<AxiosResponse<boolean>> => this.client.get(`configure-conversations/check-terminal/${nodeType}`),

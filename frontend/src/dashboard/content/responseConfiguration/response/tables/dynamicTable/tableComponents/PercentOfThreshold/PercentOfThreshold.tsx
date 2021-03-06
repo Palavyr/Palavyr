@@ -5,6 +5,7 @@ import { AccordionActions, Button, makeStyles } from "@material-ui/core";
 import { DynamicTableTypes, IDynamicTableProps } from "../../DynamicTableTypes";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { PercentOfThresholdContainer } from "./PercentOfThresholdContainer";
+import { reOrderPercentOfThresholdTableData } from "./PercentOfThresholdUtils";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,23 +26,20 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const PercentOfThreshold = ({ tableMeta, setTableMeta, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: IDynamicTableProps) => {
+export const PercentOfThreshold = ({ tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<IDynamicTableProps, "tableMeta" | "setTableMeta">) => {
     const client = new ApiClient();
     const classes = useStyles();
 
     const modifier = new PercentOfThresholdModifier(setTableData);
 
-    const addItemOnClick = () => {
-        modifier.addItem(tableData, client, areaIdentifier, tableId);
-    };
+    const addItemOnClick = () => modifier.addItem(tableData, client, areaIdentifier, tableId);
+    const addRowOnClickFactory = (itemId: string) => () => modifier.addRow(tableData, client, areaIdentifier, tableId, itemId);
 
-    const addRowOnClickFactory = (itemId: string) => () => {
-        modifier.addRow(tableData, client, areaIdentifier, tableId, itemId);
-    };
 
     const onSave = async () => {
-        const { data } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.PercentOfThreshold, tableData, tableId, tableTag);
-        setTableData(tableData);
+        const reorderedData = reOrderPercentOfThresholdTableData(tableData);
+        const { data: savedData } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.PercentOfThreshold, reorderedData, tableId, tableTag);
+        setTableData(savedData);
         return true;
     };
 

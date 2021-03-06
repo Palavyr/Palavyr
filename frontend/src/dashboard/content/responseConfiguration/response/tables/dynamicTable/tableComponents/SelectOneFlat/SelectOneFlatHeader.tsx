@@ -1,36 +1,37 @@
-import { TableHead, TableRow, TableCell, makeStyles } from "@material-ui/core"
+import { TableHead, TableRow, TableCell, makeStyles } from "@material-ui/core";
 import classNames from "classnames";
-import React from "react"
+import React from "react";
 
-
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     cell: {
-        borderRight: "1px solid gray"
+        borderRight: "1px solid gray",
     },
     text: {
-        fontSize: "16pt",
-        // fontWeight: "bold"
-    },
-    row: {
-        // borderBottom: "3px solid black"
+        fontSize: "16pt"
     },
     noRight: {
-        borderRight: "0px solid white"
-    }
-}))
+        borderRight: "0px solid white",
+    },
+}));
 
 export const SelectOneFlatHeader = () => {
-    const classes = useStyles();
+    const cls = useStyles();
 
     return (
         <TableHead>
-            <TableRow className={classes.row}>
-                <TableCell align="center" ></TableCell>
-                <TableCell align="center" className={classNames(classes.cell, classes.text)} >Option Name</TableCell>
-                <TableCell align="center" className={classNames(classes.cell, classes.text)} >Amount</TableCell>
-                <TableCell align="center" className={classNames(classes.cell, classes.text, classes.noRight)}>Max Amount (if range)</TableCell>
-                <TableCell align="center" ></TableCell>
+            <TableRow>
+                <TableCell align="center"></TableCell>
+                <TableCell align="center" className={classNames(cls.cell, cls.text)}>
+                    Option Name
+                </TableCell>
+                <TableCell align="center" className={classNames(cls.cell, cls.text)}>
+                    Amount
+                </TableCell>
+                <TableCell align="center" className={classNames(cls.cell, cls.text, cls.noRight)}>
+                    Max Amount (if range)
+                </TableCell>
+                <TableCell align="center"></TableCell>
             </TableRow>
         </TableHead>
-    )
-}
+    );
+};

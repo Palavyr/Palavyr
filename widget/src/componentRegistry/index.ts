@@ -17,6 +17,7 @@ import { makeTooComplicated } from "./standardComponents/MakeTooComplicated";
 import { random } from "./random";
 import { makeSendFallbackEmail } from "./endingSequenceComponents/MakeSendFallbackEmail";
 import { makeTakeNumberIndividuals } from "./standardComponents/makeTakeNumberIndividuals";
+import { makeBasicThreshold } from "./dynamicTableComponents/MakeBasicThreshold";
 
 export interface IProgressTheChat {
     node: ConvoTableRow;
@@ -106,6 +107,7 @@ export enum NodeTypes {
     // Dynamic Table Type Nodes
     SelectOneFlat = "SelectOneFlat",
     PercentOfThreshold = "PercentOfThreshold",
+    BasicThreshold = "BasicThreshold",
 
     SendEmail = "SendEmail",
     FirstEmailFailed = "EmailSendFailedFirstAttempt",
@@ -137,6 +139,7 @@ export const ComponentRegistry: Registry = {
     // Dynamic Types
     [NodeTypes.SelectOneFlat]: makeSelectOneFlat, // could be replaced with makeMultiple choice continue,
     [NodeTypes.PercentOfThreshold]: makePercentOfThreshold,
+    [NodeTypes.BasicThreshold]: makeBasicThreshold,
 
     // Ending sequence nodes
     [NodeTypes.SendResponse]: makeProvideInfo,

@@ -13,6 +13,7 @@ namespace Palavyr.Domain.Configuration.Schemas
         public double ValueMin { get; set; }
         public double ValueMax { get; set; }
         public bool Range { get; set; }
+        public int RowOrder { get; set; }
 
         public static SelectOneFlat CreateNew(string accountId, string areaIdentifier, string option, double valueMin, double valueMax, bool range, string tableId)
         {

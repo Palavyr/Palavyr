@@ -1,12 +1,11 @@
-import React, { Dispatch, SetStateAction } from "react";
-import { DynamicTableMeta } from "@Palavyr-Types";
+import React from "react";
 import { ApiClient } from "@api-client/Client";
 import { SelectOneFlatModifier } from "./SelectOneFlatModifier";
 import { TableContainer, Paper, Table, Button, FormControlLabel, Checkbox, AccordionActions, makeStyles } from "@material-ui/core";
 import { SelectOneFlatHeader } from "./SelectOneFlatHeader";
 import { SelectOneFlatBody } from "./SelectOneFlatBody";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { DynamicTableTypes, IDynamicTableProps, SelectOneFlatData, TableData } from "../../DynamicTableTypes";
+import { DynamicTableTypes, IDynamicTableProps } from "../../DynamicTableTypes";
 import AddBoxIcon from '@material-ui/icons/AddBox';
 
 
