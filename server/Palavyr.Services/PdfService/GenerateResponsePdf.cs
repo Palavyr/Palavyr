@@ -354,7 +354,7 @@ namespace Palavyr.Services.PdfService
                         }
                     }
                 }
-                else if (dynamicResponseId.StartsWith(DynamicTableTypes.CreatePercentOfThreshold().TableType))
+                else if (dynamicResponseId.StartsWith(DynamicTableTypes.CreateBasicThreshold().TableType))
                 {
                     var responseValueAsDouble = double.Parse(dynamicResponseValue);
 

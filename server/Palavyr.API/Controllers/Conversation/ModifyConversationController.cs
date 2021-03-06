@@ -28,7 +28,7 @@ namespace Palavyr.API.controllers.Conversation
         public async Task<List<ConversationNode>> Modify(
             [FromHeader] string accountId, 
             [FromRoute] string areaId, 
-            [FromBody] ConversationConfigurationUpdate update)
+            [FromBody] ConversationNodeDto update)
         {
 
             dashConnector.RemoveAreaNodes(areaId, accountId);

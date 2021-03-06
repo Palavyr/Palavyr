@@ -8,20 +8,14 @@ namespace Palavyr.Domain
 {
     public static class MissingNodeCalculator
     {
-        public static string[] CalculateMissingNodes(Area area)
+        public static string[] CalculateMissingNodes(string[] requiredDynamicNodeTypes, List<ConversationNode> conversationNodes, List<DynamicTableMeta> dynamicTableMetas, List<StaticTablesMeta> staticTablesMetas)
         {
             var allMissingNodeTypes = new List<string>();
 
-            var requiredDynamicNodeTypes = area
-                .DynamicTableMetas
-                .Select(TreeUtils.TransformRequiredNodeType)
-                .ToArray();
-
             if (requiredDynamicNodeTypes.Length > 0)
             {
-                var rawMissingDynamicNodeTypes = TreeUtils.GetMissingNodes(area.ConversationNodes.ToArray(), requiredDynamicNodeTypes);
-                var missingDynamicNodeTypes = area
-                    .DynamicTableMetas
+                var rawMissingDynamicNodeTypes = TreeUtils.GetMissingNodes(conversationNodes.ToArray(), requiredDynamicNodeTypes);
+                var missingDynamicNodeTypes = dynamicTableMetas
                     .Where(x => rawMissingDynamicNodeTypes.Contains(TreeUtils.TransformRequiredNodeType(x)))
                     .Select(TreeUtils.TransformRequiredNodeTypeToPrettyName)
                     .ToList();
@@ -29,15 +23,14 @@ namespace Palavyr.Domain
                 allMissingNodeTypes.AddRange(missingDynamicNodeTypes);
             }
 
-            var perIndividualRequiredStaticTables = area
-                .StaticTablesMetas
+            var perIndividualRequiredStaticTables = staticTablesMetas
                 .Select(p => p.PerPersonInputRequired)
                 .Any(r => r);
 
             if (perIndividualRequiredStaticTables && !allMissingNodeTypes.Contains(DefaultNodeTypeOptions.TakeNumberIndividuals.StringName))
             {
                 var perPersonNodeType = new[] {DefaultNodeTypeOptions.TakeNumberIndividuals.StringName};
-                var missingOtherNodeTypes = TreeUtils.GetMissingNodes(area.ConversationNodes.ToArray(), perPersonNodeType); //.SelectMany(x => StringUtils.SplitCamelCase(x)).ToArray();
+                var missingOtherNodeTypes = TreeUtils.GetMissingNodes(conversationNodes.ToArray(), perPersonNodeType); //.SelectMany(x => StringUtils.SplitCamelCase(x)).ToArray();
                 if (missingOtherNodeTypes.Length > 0)
                 {
                     var asPretty = string.Join(" ", StringUtils.SplitCamelCaseAsString(missingOtherNodeTypes.First()));

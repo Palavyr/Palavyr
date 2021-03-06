@@ -12,7 +12,7 @@ import { ConversationTreeContext, DashboardContext } from "dashboard/layouts/Das
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AlignCenter } from "dashboard/layouts/positioning/AlignCenter";
 import UndoIcon from "@material-ui/icons/Undo";
-import RedoIcon from '@material-ui/icons/Redo';
+import RedoIcon from "@material-ui/icons/Redo";
 
 import "./ConvoTree.css";
 
@@ -73,15 +73,18 @@ export const ConvoTree = () => {
         };
     }, [areaIdentifier, loadNodes]);
 
-    const getMissingNodes = useCallback(async () => {
-        const client = new ApiClient();
-        const { data: missingNodes } = await client.Conversations.GetMissingNodes(areaIdentifier);
-        setMissingNodeTypes(missingNodes);
-    }, []);
+    // const getMissingNodes = useCallback(async () => {
+    //     const client = new ApiClient();
+    //     const { data: missingNodes } = await client.Conversations.GetMissingNodes(areaIdentifier);
+    //     setMissingNodeTypes(missingNodes);
+    // }, []);
 
     useEffect(() => {
         if (nodeList.length > 0) {
-            getMissingNodes();
+            (async () => {
+                const { data: missingNodes } = await client.Conversations.GetMissingNodes(areaIdentifier, nodeList);
+                setMissingNodeTypes(missingNodes);
+            })();
         }
         // Disabling this here because we don't want to rerender on requriedNodes change (thought that seems almost what we want, but actually isn't)
         // We compute this on the nodeList in fact, and the requiredNodes only change when we change areaIdentifier (or update the dynamic tables option on the other tab)
@@ -141,7 +144,7 @@ export const ConvoTree = () => {
                 <SaveOrCancel onSave={onSave} useModal />
                 <Button
                     variant="outlined"
-                    style={{marginLeft: "0.7rem", borderRadius: "10px"}}
+                    style={{ marginLeft: "0.7rem", borderRadius: "10px" }}
                     startIcon={<UndoIcon />}
                     onClick={() => {
                         stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
@@ -151,7 +154,7 @@ export const ConvoTree = () => {
                 </Button>
                 <Button
                     variant="outlined"
-                    style={{marginLeft: "0.7rem", borderRadius: "10px"}}
+                    style={{ marginLeft: "0.7rem", borderRadius: "10px" }}
                     endIcon={<RedoIcon />}
                     onClick={() => {
                         stepConversationForwardOneStep(conversationHistoryPosition, conversationHistory);

@@ -61,10 +61,10 @@ namespace Palavyr.Services.DynamicTableService
                         valueOptions,
                         true,
                         true,
-                        false, 
+                        false,
                         NodeTypeOption.CustomTables
                     );
-                    
+
                     dynamicTableData.AddAdditionalNode(nodeTypeOption);
                 }
                 else if (dynamicTableMeta.TableType == DynamicTableTypes.CreatePercentOfThreshold().TableType)
@@ -78,6 +78,17 @@ namespace Palavyr.Services.DynamicTableService
                         false,
                         false,
                         NodeTypeOption.CustomTables
+                    );
+                    dynamicTableData.AddAdditionalNode(nodeTypeOption);
+                }
+                else if (dynamicTableMeta.TableType == DynamicTableTypes.CreateBasicThreshold().TableType)
+                {
+                    var nodeTypeOption = NodeTypeOption.Create(
+                        dynamicTableMeta.MakeUniqueIdentifier(),
+                        TreeUtils.TransformRequiredNodeTypeToPrettyName(dynamicTableMeta),
+                        new List<string>() {"Continue"},
+                        new List<string>() { },
+                        true, false, false, NodeTypeOption.CustomTables
                     );
                     dynamicTableData.AddAdditionalNode(nodeTypeOption);
                 }

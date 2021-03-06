@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Domain;
+using Palavyr.Domain.Resources.Requests;
 using Palavyr.Services.DatabaseService;
 
 namespace Palavyr.API.Controllers.Conversation
@@ -38,11 +39,21 @@ namespace Palavyr.API.Controllers.Conversation
             this.logger = logger;
         }
 
-        [HttpGet("configure-conversations/{areaId}/missing-nodes")]
-        public async Task<string[]> Get([FromHeader] string accountId, string areaId)
+        [HttpPost("configure-conversations/{areaId}/missing-nodes")]
+        public async Task<string[]> Get([FromHeader] string accountId, string areaId, [FromBody] ConversationNodeDto currentNodes)
         {
             var area = await dashConnector.GetAreaComplete(accountId, areaId);
-            var allMissingNodeTypes = MissingNodeCalculator.CalculateMissingNodes(area);
+
+            var requiredDynamicNodeTypes = area
+                .DynamicTableMetas
+                .Select(TreeUtils.TransformRequiredNodeType)
+                .ToArray();
+
+            var dynamicTableMetas = area.DynamicTableMetas;
+            var staticTableMetas = area.StaticTablesMetas;
+            
+            
+            var allMissingNodeTypes = MissingNodeCalculator.CalculateMissingNodes(requiredDynamicNodeTypes, currentNodes.Transactions, dynamicTableMetas, staticTableMetas);
             return allMissingNodeTypes.ToArray();
         }
     }

@@ -9,7 +9,7 @@ import { SingleRowSingleCell } from "src/common/TableCell";
 import { _addDynamicResponse } from "src/widgetCore/store/actions";
 import { DynamicResponse } from "src/widgetCore/store/types";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     wrapper: {
         overflowX: "auto",
     },
@@ -20,7 +20,6 @@ const useStyles = makeStyles(theme => ({
 
 // All Dynamic results should add response formatted to the dynamic response AND the critical value lst
 export const makeSelectOneFlat = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
-
     const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
     const options = node.valueOptions.split("|peg|");
 
