@@ -1,8 +1,8 @@
-import { ApiClient } from "@api-client/Client";
 import { cloneDeep, findIndex } from "lodash";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
-import { BasicThresholdData, DynamicTableTypes, TableData } from "../../DynamicTableTypes";
+import { BasicThresholdData, DynamicTableTypes } from "../../DynamicTableTypes";
+import { ApiClient } from "@api-client/Client";
 
 export class BasicThresholdModifier {
     onClick: Dispatch<SetStateAction<BasicThresholdData[]>>;

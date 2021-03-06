@@ -43,7 +43,6 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node }: ICon
         const nodeData = cloneDeep(nodeList.filter((nodeListNode: ConvoNode) => nodeListNode.nodeId === node.nodeId)[0]);
 
         nodeData.text = value;
-
         if (node.isMultiOptionType) {
             const optionPaths = valueOptions;
             const numChildren = optionPaths.filter((x) => x !== null && x !== "").length;

@@ -85,11 +85,8 @@ export const addNodes = async (
 ) => {
     var client = new ApiClient();
 
-    // TODO: we should never have fewer than 1 node in the nodeList - but we can assess passing through the area Id or using redux later on
-    // var areaIdentifier = nodeList[0].areaIdentifier;
     var treeIds = getIdsToDeleteRecursively(nodeList, parentNode);
     var childIdsToDelete = treeIds.split(",");
-    var idsToDelete = [parentNode.nodeId, ...childIdsToDelete].filter((x) => x !== "");
 
     childIdsToDelete.forEach((nodeId) => {
         nodeList = removeNodeByID(nodeId, nodeList);
@@ -98,9 +95,11 @@ export const addNodes = async (
     // reset the parentNode's children
     parentNode.nodeChildrenString = newIDs.join(",");
 
+    // TODO: delete this after substantial testing. I think this is okay to go since
+    // the parent node is the same node that is being passed in, and should have the updated text.
     // map old node text to new node
-    var n = nodeList.filter((x) => x.nodeId === parentNode.nodeId)[0];
-    parentNode.text = n.text;
+    // var n = nodeList.filter((x) => x.nodeId === parentNode.nodeId)[0];
+    // parentNode.text = n.text;
 
     // is the new parent a multiOptionNodeType
     const { data: isMultiOptionType } = await client.Conversations.CheckIfIsMultiOptionType(parentNode.nodeType);
@@ -120,7 +119,7 @@ export const addNodes = async (
     // set any value options
     parentNode.valueOptions = valueOptions.join("|peg|"); // TODO: get this seperator from server
 
-    var transactions: Conversation = [parentNode];
+    // var transactions: Conversation = [parentNode];
     newIDs.forEach((id, index) => {
         let newNode: ConvoNode = {
             nodeId: id, // replace with uuid
@@ -136,7 +135,7 @@ export const addNodes = async (
             isMultiOptionType: false,
             isTerminalType: false
         };
-        transactions.push(newNode);
+        // transactions.push(newNode);
         nodeList.push(newNode);
     });
 
