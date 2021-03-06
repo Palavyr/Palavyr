@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Palavyr.API;
 using Palavyr.Data;
 using Palavyr.IntegrationTests.TestAuthentication;
 
@@ -18,9 +17,9 @@ namespace Palavyr.IntegrationTests.AppFactory
     {
         public static IWebHostBuilder EnsureAndConfigureDbs(
             this IWebHostBuilder builder,
-            Action<AccountsContext>? configureAccounts,
-            Action<DashContext>? configureDash,
-            Action<ConvoContext>? configureConvo
+            Action<AccountsContext>? configureAccounts = null,
+            Action<DashContext>? configureDash = null,
+            Action<ConvoContext>? configureConvo = null
         )
         {
             return builder

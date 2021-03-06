@@ -1,7 +1,5 @@
 ﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Palavyr.API;
 using Palavyr.Common.UIDUtils;
 using Palavyr.Data;
 using Palavyr.Domain.Accounts.Schemas;

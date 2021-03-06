@@ -13,13 +13,14 @@ namespace Palavyr.Domain.Configuration.Constant
         public static DynamicType DefaultTable = new SelectOneFlat();
         public static SelectOneFlat CreateSelectOneFlat() => new SelectOneFlat();
         public static PercentOfThreshold CreatePercentOfThreshold() => new PercentOfThreshold();
-
+        public static BasicThreshold CreateBasicThreshold() => new BasicThreshold();
         public static List<DynamicType> GetDynamicTableTypes()
         {
             return new List<DynamicType>
             {
                 new SelectOneFlat(),
-                new PercentOfThreshold()
+                new PercentOfThreshold(),
+                new BasicThreshold()
             };
         }
 
@@ -41,6 +42,15 @@ namespace Palavyr.Domain.Configuration.Constant
             }
         }
 
+        public class BasicThreshold : DynamicType
+        {
+            public BasicThreshold()
+            {
+                PrettyName = "Basic Threshold";
+                TableType = nameof(BasicThreshold);
+            }
+        }
+        
         // We can define new DynamicTypes here
     }
 }

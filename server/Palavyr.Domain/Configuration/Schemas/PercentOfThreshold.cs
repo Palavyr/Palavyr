@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Palavyr.Domain.Configuration.Schemas
 {
@@ -25,6 +26,7 @@ namespace Palavyr.Domain.Configuration.Schemas
         public bool Range { get; set; }
         public double Modifier { get; set; }
         public bool PosNeg { get; set; }
+        public int RowOrder { get; set; }
 
         public static PercentOfThreshold CreateNew(
             string accountId,
@@ -82,10 +84,9 @@ namespace Palavyr.Domain.Configuration.Schemas
             };
         }
         
-        public int CompareTo(PercentOfThreshold obj)  
-        {  
-            return obj.Threshold.CompareTo(Threshold);  
-  
+        public int CompareTo(PercentOfThreshold other)  
+        {
+            return other.Threshold.CompareTo(Threshold);
         }  
     }
 }

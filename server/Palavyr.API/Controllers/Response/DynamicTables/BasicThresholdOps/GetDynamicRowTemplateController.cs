@@ -3,21 +3,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers.Response.DynamicTables.PercentOfThresholdOps
+namespace Palavyr.API.Controllers.Response.DynamicTables.BasicThresholdOps
 {
-    public partial class PercentOfThresholdController
+    public partial class BasicThresholdController
     {
-        [HttpGet("tables/dynamic/PercentOfThreshold/data/template/{areaId}/{tableId}")]
+        [HttpGet("tables/dynamic/BasicThreshold/data/template/{areaId}/{tableId}")]
         public async Task<IActionResult> GetDynamicRowTemplate(
             [FromHeader] string accountId,
             [FromRoute] string areaId,
             [FromRoute] string tableId)
         {
-            var template = PercentOfThreshold.CreateTemplate(
+            var template = BasicThreshold.CreateTemplate(
                 accountId, 
                 areaId, 
                 tableId, 
-                Guid.NewGuid().ToString(), 
                 Guid.NewGuid().ToString());
             return Ok(template);
         }

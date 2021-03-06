@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const ThresholdHeader = () => {
+export const BasicThresholdHeader = () => {
     const cls = useStyles();
 
     return (

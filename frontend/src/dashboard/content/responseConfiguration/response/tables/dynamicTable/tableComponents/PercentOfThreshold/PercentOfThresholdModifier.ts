@@ -4,15 +4,15 @@ import { cloneDeep, findIndex, uniq } from "lodash";
 import { ApiClient } from "@api-client/Client";
 
 export class PercentOfThresholdModifier {
-    onClick: Dispatch<SetStateAction<TableData>>;
+    onClick: Dispatch<SetStateAction<PercentOfThresholdData[]>>;
     tableType: string;
 
-    constructor(onClick: Dispatch<SetStateAction<TableData>>) {
+    constructor(onClick: Dispatch<SetStateAction<PercentOfThresholdData[]>>) {
         this.onClick = onClick;
-        this.tableType = DynamicTableTypes.SelectOneFlat;
+        this.tableType = DynamicTableTypes.PercentOfThreshold;
     }
 
-    setTables(newState: TableData) {
+    setTables(newState: PercentOfThresholdData[]) {
         this.onClick(cloneDeep(newState));
     }
 
@@ -30,12 +30,10 @@ export class PercentOfThresholdModifier {
     }
 
     async addRow(tableData: PercentOfThresholdData[], client: ApiClient, areaIdentifier: string, tableId: string, itemId: string) {
-        const response = await client.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
 
-        const newRow = response.data as PercentOfThresholdData;
-        newRow.itemId = itemId;
-
-        tableData.push(newRow);
+        const {data: newRowTemplate} = await client.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
+        newRowTemplate.itemId = itemId;
+        tableData.push(newRowTemplate);
         this.setTables(tableData);
     }
 
@@ -102,7 +100,6 @@ export class PercentOfThresholdModifier {
     }
 
     removeItem(tableData: PercentOfThresholdData[], itemId: string){
-        // const items = tableData.filter((x: PercentOfThresholdData) => x.itemId === itemId);
 
         const itemIds: string[] = [];
         tableData.forEach(x => itemIds.push(x.itemId));

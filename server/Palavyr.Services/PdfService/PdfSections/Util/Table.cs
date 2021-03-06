@@ -25,7 +25,7 @@ namespace Palavyr.Services.PdfService.PdfSections.Util
         private TableRow SumTableRows(List<TableRow> rows, CultureInfo culture)
         {
             var useRange = rows.Select(row => row.Range).Any(r => r);
-            var usePerPerson = rows.Select(row => row.PerPerson).Any(r => r == "Per Person"); // TODO: This should be a bool, but row holds it as parsed string
+            var usePerPerson = rows.Select(row => row.PerIndividual).Any(r => r == "Per Person"); // TODO: This should be a bool, but row holds it as parsed string
             
             var minTotal = 0.00;
             var maxTotal = 0.00;
@@ -78,7 +78,7 @@ namespace Palavyr.Services.PdfService.PdfSections.Util
                 var row = rowList[rowIndex];
                 var columns = new List<string>()
                 {
-                    row.Description, row.RowValue, row.PerPerson
+                    row.Description, row.RowValue, row.PerIndividual
                 };
                 
                 foreach (var col in columns)

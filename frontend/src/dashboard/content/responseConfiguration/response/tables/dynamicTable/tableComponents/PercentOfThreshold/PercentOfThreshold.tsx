@@ -5,6 +5,7 @@ import { AccordionActions, Button, makeStyles } from "@material-ui/core";
 import { DynamicTableTypes, IDynamicTableProps } from "../../DynamicTableTypes";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { PercentOfThresholdContainer } from "./PercentOfThresholdContainer";
+import { reOrderPercentOfThresholdTableData } from "./PercentOfThresholdUtils";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,8 +37,9 @@ export const PercentOfThreshold = ({ tableId, tableTag, tableData, setTableData,
 
 
     const onSave = async () => {
-        const { data } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.PercentOfThreshold, tableData, tableId, tableTag);
-        setTableData(tableData);
+        const reorderedData = reOrderPercentOfThresholdTableData(tableData);
+        const { data: savedData } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.PercentOfThreshold, reorderedData, tableId, tableTag);
+        setTableData(savedData);
         return true;
     };
 

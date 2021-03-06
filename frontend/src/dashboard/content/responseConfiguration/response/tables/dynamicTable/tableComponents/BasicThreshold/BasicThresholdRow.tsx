@@ -1,8 +1,8 @@
 import React from "react";
 import { Button, makeStyles, TableCell, TableRow } from "@material-ui/core";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
-import { TableData, ThresholdData } from "../../DynamicTableTypes";
-import { ThresholdModifier } from "./ThresholdModifier";
+import { TableData, BasicThresholdData } from "../../DynamicTableTypes";
+import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import DeleteIcon from "@material-ui/icons/Delete";
 
@@ -33,31 +33,33 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-interface IThresholdRow {
-    dataIndex: number;
+interface IBasicThresholdRow {
+    rowIndex: number;
     tableData: TableData;
-    row: ThresholdData;
-    modifier: ThresholdModifier;
+    row: BasicThresholdData;
+    modifier: BasicThresholdModifier;
 }
 
 const cellAlignment = "center";
 
-export const ThresholdRow = ({ dataIndex, tableData, row, modifier }: IThresholdRow) => {
+export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier }: IBasicThresholdRow) => {
     const cls = useStyles();
 
     const { currencySymbol } = React.useContext(DashboardContext);
-    const key = dataIndex.toString() + row.tableId.toString();
+    const key = rowIndex.toString() + row.tableId.toString();
 
     return (
         <TableRow key={key}>
             <TableCell align={cellAlignment}>
-                <Button size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeRow(tableData, row.rowId)}>
-                    Delete
-                </Button>
+                {rowIndex > 0 && (
+                    <Button size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeRow(tableData, row.rowId)}>
+                        Delete
+                    </Button>
+                )}
             </TableCell>
             <TableCell align={cellAlignment}>
                 <CurrencyTextField
-                    disabled={dataIndex === 0 ? true : false}
+                    disabled={rowIndex === 0 ? true : false}
                     label="Threshold"
                     variant="standard"
                     value={row.threshold}
@@ -66,7 +68,7 @@ export const ThresholdRow = ({ dataIndex, tableData, row, modifier }: IThreshold
                     outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(event: any, value: number) => {
+                    onChange={(_: any, value: number) => {
                         if (value !== undefined) {
                             modifier.setThresholdValue(tableData, row.rowId, value);
                         }
@@ -83,7 +85,7 @@ export const ThresholdRow = ({ dataIndex, tableData, row, modifier }: IThreshold
                     outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(event: any, value: number) => {
+                    onChange={(_: any, value: number) => {
                         if (value !== undefined) {
                             modifier.setValueMin(tableData, row.rowId, value);
                         }
@@ -93,7 +95,7 @@ export const ThresholdRow = ({ dataIndex, tableData, row, modifier }: IThreshold
             <TableCell align={cellAlignment}>
                 <CurrencyTextField
                     className={cls.maxValInput}
-                    label="Amount"
+                    label={row.range ? "Amount" : "Not used"}
                     variant="standard"
                     disabled={!row.range}
                     value={row.range ? row.valueMax : 0.0}
@@ -102,7 +104,7 @@ export const ThresholdRow = ({ dataIndex, tableData, row, modifier }: IThreshold
                     outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(event: any, value: number) => {
+                    onChange={(_: any, value: number) => {
                         if (value !== undefined) {
                             modifier.setValueMax(tableData, row.rowId, value);
                         }

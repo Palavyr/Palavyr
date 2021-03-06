@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Net.Http;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore.Storage;
 using Palavyr.Data;
 
@@ -22,12 +23,9 @@ namespace Palavyr.IntegrationTests.AppFactory
                     builder =>
                     {
                         builder
-                            // .UseStartup<Startup>()
-                            // .UseEnvironment("Test")
-                            .ConfigureAuthentication()
                             .ConfigureInMemoryDatabase(dbRoot)
                             .EnsureAndConfigureDbs(configureAccounts, configureDash, configureConvo)
-                            .Build();
+                            .UseTestServer();
                     })
                 .CreateClient();
             return client;
@@ -48,7 +46,8 @@ namespace Palavyr.IntegrationTests.AppFactory
                     {
                         builder
                             .ConfigureInMemoryDatabase(dbRoot)
-                            .EnsureAndConfigureDbs(configureAccounts, configureDash, configureConvo);
+                            .EnsureAndConfigureDbs(configureAccounts, configureDash, configureConvo)
+                            .UseTestServer();
                     })
                 .CreateClient();
             return client;

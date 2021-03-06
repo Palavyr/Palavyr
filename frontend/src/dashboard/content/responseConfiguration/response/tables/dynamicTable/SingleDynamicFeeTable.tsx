@@ -13,7 +13,7 @@ import { useCallback } from "react";
 import { useEffect } from "react";
 import { ChangeEvent } from "react";
 import { PercentOfThreshold } from "./tableComponents/PercentOfThreshold/PercentOfThreshold";
-import { Threshold } from "./tableComponents/Threshold/Threshold";
+import { BasicThreshold } from "./tableComponents/BasicThreshold/BasicThreshold";
 
 export interface ISingleDynamicFeeTable {
     defaultTableMeta: DynamicTableMeta;
@@ -63,7 +63,6 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
     const [tableTag, setTableTag] = useState<string>("");
 
     const loadDynamicData = useCallback(async () => {
-
         setTableMeta(defaultTableMeta);
         var { data: tableData } = await client.Configuration.Tables.Dynamic.getDynamicTableData(areaIdentifier, defaultTableMeta.tableType, defaultTableMeta.tableId);
 
@@ -91,15 +90,14 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
     }, [areaIdentifier, tableMeta, selection]);
 
     const handleChange = async (event: ChangeEvent<{ name?: string | undefined; value: unknown }>) => {
-
         const newTableTypeSelection = event.target.value as string; // will be tableType as shown in the list (Select One Flat)
         // this needs to map to the form used in the table dataresponse format (e.g. SelectOneFlat)
-        const newTableTypeSelectionFormatted = tableNameMap[newTableTypeSelection]
+        const newTableTypeSelectionFormatted = tableNameMap[newTableTypeSelection];
 
         if (tableMeta !== undefined) {
             tableMeta.tableType = newTableTypeSelectionFormatted;
             tableMeta.prettyName = newTableTypeSelection;
-            const {data: updatedTableMeta} = await client.Configuration.Tables.Dynamic.modifyDynamicTableMeta(tableMeta);
+            const { data: updatedTableMeta } = await client.Configuration.Tables.Dynamic.modifyDynamicTableMeta(tableMeta);
             setTableMeta(updatedTableMeta);
         }
         setSelection(newTableTypeSelection);
@@ -155,24 +153,10 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
                 />
             )}
             {tableMeta?.tableType === DynamicTableTypes.PercentOfThreshold && dynamicTableData !== undefined && (
-                <PercentOfThreshold
-                    tableTag={tableTag}
-                    tableId={tableMeta.tableId}
-                    tableData={dynamicTableData}
-                    setTableData={setDynamicTableData}
-                    areaIdentifier={areaIdentifier}
-                    deleteAction={deleteAction}
-                />
+                <PercentOfThreshold tableTag={tableTag} tableId={tableMeta.tableId} tableData={dynamicTableData} setTableData={setDynamicTableData} areaIdentifier={areaIdentifier} deleteAction={deleteAction} />
             )}
-            {tableMeta?.tableType === DynamicTableTypes.Threshold && dynamicTableData !== undefined && (
-                <Threshold
-                    tableTag={tableTag}
-                    tableId={tableMeta.tableId}
-                    tableData={dynamicTableData}
-                    setTableData={setDynamicTableData}
-                    areaIdentifier={areaIdentifier}
-                    deleteAction={deleteAction}
-                />
+            {tableMeta?.tableType === DynamicTableTypes.BasicThreshold && dynamicTableData !== undefined && (
+                <BasicThreshold tableTag={tableTag} tableId={tableMeta.tableId} tableData={dynamicTableData} setTableData={setDynamicTableData} areaIdentifier={areaIdentifier} deleteAction={deleteAction} />
             )}
         </section>
     );
