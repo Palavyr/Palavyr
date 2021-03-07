@@ -83,6 +83,8 @@ export type ConvoNode = {
     optionPath: Response;
     valueOptions: string; // an array, but bc of the dtabase we store as a string delimited by |peg|
     id?: number | undefined;
+    shouldRenderChildren: boolean;
+    isSplitMergeType: boolean;
 };
 
 export type Conversation = Array<ConvoNode>;
@@ -376,6 +378,7 @@ export type NodeOption = {
     isDynamicType: boolean;
     isMultiOptionType: boolean;
     isTerminalType: boolean;
+    isSplitMergeType: boolean;
     stringName: string | null;
     groupName: string;
 };

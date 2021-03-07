@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { ConvoNode, NodeTypeOptions, NodeOption, AlertType } from "@Palavyr-Types";
-import { addNodes, createNewChildIDs } from "./conversationNodeUtils";
 import { CustomNodeSelect } from "./CustomNodeSelect";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
+import { updateChildOfIsSplitMergeType } from "./nodeUtils/splitMergeUtils";
+import { changeNodeType } from "./nodeUtils/commonNodeUtils";
 
 export interface INodeTypeSelector {
     node: ConvoNode;
+    siblingIndex: number;
+    parentNode: ConvoNode | null;
     parentState: boolean;
     changeParentState: (parentState: boolean) => void;
     nodeOptionList: NodeTypeOptions;
-
 }
 
-export const NodeTypeSelector = ({ node, parentState, changeParentState, nodeOptionList }: INodeTypeSelector) => {
+export const NodeTypeSelector = ({ node, siblingIndex, parentNode, parentState, changeParentState, nodeOptionList }: INodeTypeSelector) => {
     const [alertState, setAlertState] = useState<boolean>(false);
     const [alertDetails, setAlertDetails] = useState<AlertType>();
     const [label, setLabel] = useState<string>("");
 
-    const {nodeList, setNodes, setConversationHistory } = React.useContext(ConversationTreeContext);
+    const { nodeList, setNodes } = React.useContext(ConversationTreeContext);
 
     useEffect(() => {
         const currentNodeOption = nodeOptionList.filter((option: NodeOption) => option.value === node.nodeType)[0];
@@ -38,7 +40,7 @@ export const NodeTypeSelector = ({ node, parentState, changeParentState, nodeOpt
         return false;
     };
 
-    const autocompleteOnChange = (event: any, nodeOption: NodeOption) => {
+    const autocompleteOnChange = async (_: any, nodeOption: NodeOption) => {
         if (nodeOption === null) {
             return;
         }
@@ -61,17 +63,21 @@ export const NodeTypeSelector = ({ node, parentState, changeParentState, nodeOpt
             throw new Error("Ill defined value options - cannot be undefined");
         }
 
-        const numChildren: number = pathOptions.filter((x) => x !== null).length;
-
-        const childIds = createNewChildIDs(numChildren);
-
         // TODO: This is kind of gross and complicates extendability since we later have to be sure not to intro any '-' in to the names. But
         // since we are taking this fromthe option, we have to deal with it as a string until we try a refactor to get it into an object form
         // so we can supply properties. ^ The option comes in from the event, which currently passes the value as a string. Can this be an object?
         node.nodeType = nodeOption.value; // SelectOneFlat-sdfs-sdfs-sgs-s
 
-        addNodes(node, nodeList, childIds, pathOptions, valueOptions, setNodes, setConversationHistory); // create new nodes and update the Database
-        // setSelectedOption(nodeOption); // change option in curent node
+        if (parentNode && parentNode.isSplitMergeType) {
+            if (nodeOption.isMultiOptionType) {
+                throw new Error("MultiOption types are not allowed when parent is split merge type.");
+            } else {
+                updateChildOfIsSplitMergeType(node, parentNode, nodeList, setNodes);
+            }
+        } else {
+            changeNodeType(node, nodeList, pathOptions, valueOptions, setNodes, nodeOption); // create new nodes and update the Database
+        }
+
         changeParentState(!parentState); // rerender lines
     };
 

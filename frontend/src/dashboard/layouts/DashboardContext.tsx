@@ -19,8 +19,8 @@ interface IAuthContext {
 interface IConversationTreeContext {
     nodeList: Conversation;
     setNodes: (value: React.SetStateAction<Conversation>) => void;
-    conversationHistory: Conversation[];
-    setConversationHistory(newConversation: Conversation | ConvoNode[]): void;
+    // conversationHistory: Conversation[];
+    // setConversationHistory(newConversation: Conversation | ConvoNode[]): void;
 }
 
 

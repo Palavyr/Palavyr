@@ -1,31 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { ConvoNode, Conversation, ValueOptionDelimiter } from "@Palavyr-Types";
-import { cloneDeep } from "lodash";
-import { createNewChildIDs, addNodes, removeNodeByID } from "../conversationNodeUtils";
+import { ConvoNode, ValueOptionDelimiter } from "@Palavyr-Types";
 import { Dialog, DialogTitle, DialogContent, TextField, DialogActions } from "@material-ui/core";
 import { MultiChoiceOptions } from "./MultiChoiceOptions";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
+import { updateChildOfIsSplitMergeType } from "../nodeUtils/splitMergeUtils";
+import { updateMultiTypeOption } from "../nodeUtils/mutliOptionUtils";
+import { replaceNodeWithUpdatedNode } from "../nodeUtils/commonNodeUtils";
 
 export interface IConversationNodeEditor {
     modalState: boolean;
     setModalState: (state: boolean) => void;
     node: ConvoNode;
+    parentNode: ConvoNode | null;
+    siblingIndex: number;
 }
 
-const updateNodeWithinNodeList = (nodeData: ConvoNode, nodeList: Conversation) => {
-    // replace the old node with the new node in the list
-    const filteredNodeList = removeNodeByID(nodeData.nodeId, nodeList);
-    filteredNodeList.push(nodeData);
-    return filteredNodeList;
-};
-
-export const ConversationNodeEditor = ({ modalState, setModalState, node }: IConversationNodeEditor) => {
+export const ConversationNodeEditor = ({ modalState, setModalState, node, parentNode, siblingIndex }: IConversationNodeEditor) => {
     const [options, setOptions] = useState<Array<string>>([]);
     const [textState, setText] = useState<string>("");
     const [switchState, setSwitchState] = useState<boolean>(true);
 
-    const { nodeList, setNodes, setConversationHistory } = React.useContext(ConversationTreeContext);
+    const { nodeList, setNodes } = React.useContext(ConversationTreeContext);
 
     useEffect(() => {
         setText(node.text);
@@ -40,19 +36,18 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node }: ICon
     };
 
     const handleUpdateNode = async (value: string, valueOptions: string[]) => {
-        const nodeData = cloneDeep(nodeList.filter((nodeListNode: ConvoNode) => nodeListNode.nodeId === node.nodeId)[0]);
+        // const nodeData = cloneDeep(nodeList.filter((nodeListNode: ConvoNode) => nodeListNode.nodeId === node.nodeId)[0]);
+        const updatedNode = { ...node };
+        updatedNode.text = value;
 
-        nodeData.text = value;
-        if (node.isMultiOptionType) {
-            const optionPaths = valueOptions;
-            const numChildren = optionPaths.filter((x) => x !== null && x !== "").length;
-            const childIds = createNewChildIDs(numChildren);
-            nodeData.valueOptions = valueOptions.join(ValueOptionDelimiter);
-            await addNodes(nodeData, nodeList, childIds, optionPaths, valueOptions, setNodes, setConversationHistory); // create new nodes and update the Database
+        if (node.isMultiOptionType && parentNode && parentNode.isSplitMergeType) {
+            if (valueOptions.length > 0) throw new Error("Children of isSplitMergeTypes should not have multiple value options.");
+            updateChildOfIsSplitMergeType(updatedNode, parentNode, nodeList, setNodes);
+        } else if (node.isMultiOptionType) {
+            updateMultiTypeOption(updatedNode, nodeList, valueOptions, setNodes); // create new nodes and update the Database
         } else {
-            const updatedNodeList = updateNodeWithinNodeList(nodeData, nodeList);
+            const updatedNodeList = replaceNodeWithUpdatedNode(updatedNode, nodeList);
             setNodes(updatedNodeList);
-            setConversationHistory(updatedNodeList);
         }
     };
 
@@ -81,6 +76,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node }: ICon
             </DialogContent>
             <DialogActions>
                 <SaveOrCancel
+                    saveText="Ok"
                     onSave={async (e) => {
                         e.preventDefault();
                         await handleUpdateNode(textState, options);
@@ -88,7 +84,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node }: ICon
                         return true;
                     }}
                     onCancel={handleCloseModal}
-                    timeout={500}
+                    timeout={200}
                 />
             </DialogActions>
         </Dialog>

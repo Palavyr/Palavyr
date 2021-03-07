@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Conversation, NodeTypeOptions } from "@Palavyr-Types";
-import { getRootNode } from "./nodes/conversationNodeUtils";
 import { ApiClient } from "@api-client/Client";
 import { cloneDeep } from "lodash";
 import { ConversationNode } from "./nodes/ConversationNode";
@@ -15,8 +14,10 @@ import UndoIcon from "@material-ui/icons/Undo";
 import RedoIcon from "@material-ui/icons/Redo";
 
 import "./ConvoTree.css";
+import { getRootNode } from "./nodes/nodeUtils/commonNodeUtils";
+import { ConversationHistoryTracker } from "./nodes/ConversationHistoryTracker";
 
-const MaxConversationHistory = 50; // the number of times you can hit the back button
+// const MaxConversationHistory = 50; // the number of times you can hit the back button
 
 const useStyles = makeStyles(() => ({
     conversation: {
@@ -35,12 +36,15 @@ export const ConvoTree = () => {
     const [nodeList, setNodes] = useState<Conversation>([]); // nodeList and state updater for the tree
     const [nodeOptionList, setNodeOptionList] = useState<NodeTypeOptions>([]);
     const [missingNodeTypes, setMissingNodeTypes] = useState<string[]>([]);
+
     const [conversationHistory, setConversationHistory] = useState<Conversation[]>([]);
     const [conversationHistoryPosition, setConversationHistoryPosition] = useState<number>(0);
 
     const rootNode = getRootNode(nodeList);
 
     const classes = useStyles();
+
+    const historyTracker = new ConversationHistoryTracker(setConversationHistory, setConversationHistoryPosition, setNodes);
 
     const loadNodes = useCallback(async () => {
         const client = new ApiClient();
@@ -64,6 +68,12 @@ export const ConvoTree = () => {
         return true;
     };
 
+    const setNodesWithHistory = (updatedNodeList: Conversation) => {
+        var freshNodeList = cloneDeep(updatedNodeList);
+        setNodes(freshNodeList);
+        historyTracker.addConversationHistoryToQueue(freshNodeList, conversationHistoryPosition, conversationHistory);
+    };
+
     useEffect(() => {
         setIsLoading(true);
         setLoaded(true);
@@ -72,12 +82,6 @@ export const ConvoTree = () => {
             setLoaded(false);
         };
     }, [areaIdentifier, loadNodes]);
-
-    // const getMissingNodes = useCallback(async () => {
-    //     const client = new ApiClient();
-    //     const { data: missingNodes } = await client.Conversations.GetMissingNodes(areaIdentifier);
-    //     setMissingNodeTypes(missingNodes);
-    // }, []);
 
     useEffect(() => {
         if (nodeList.length > 0) {
@@ -91,50 +95,50 @@ export const ConvoTree = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier, nodeList]);
 
-    const addConversationHistoryToQueue = (newConversationRecord: Conversation) => {
-        const newPos = conversationHistoryPosition + 1;
+    // const addConversationHistoryToQueue = (newConversationRecord: Conversation, setConversationHistory: Dispatch<SetStateAction<Conversation>>, ) => {
+    //     const newPos = conversationHistoryPosition + 1;
 
-        if (conversationHistory.length < MaxConversationHistory) {
-            if (newPos < conversationHistory.length - 1) {
-                setConversationHistory([...conversationHistory.slice(0, newPos), newConversationRecord]);
-            } else {
-                setConversationHistory([...conversationHistory, newConversationRecord]);
-            }
-        } else {
-            if (newPos < MaxConversationHistory) {
-                setConversationHistory([...conversationHistory.slice(0, newPos), newConversationRecord]);
-            } else {
-                setConversationHistory([...conversationHistory.slice(1), newConversationRecord]);
-            }
-        }
+    //     if (conversationHistory.length < MaxConversationHistory) {
+    //         if (newPos < conversationHistory.length - 1) {
+    //             setConversationHistory([...conversationHistory.slice(0, newPos), newConversationRecord]);
+    //         } else {
+    //             setConversationHistory([...conversationHistory, newConversationRecord]);
+    //         }
+    //     } else {
+    //         if (newPos < MaxConversationHistory) {
+    //             setConversationHistory([...conversationHistory.slice(0, newPos), newConversationRecord]);
+    //         } else {
+    //             setConversationHistory([...conversationHistory.slice(1), newConversationRecord]);
+    //         }
+    //     }
 
-        setConversationHistoryPosition(newPos);
-    };
+    //     setConversationHistoryPosition(newPos);
+    // };
 
-    const stepConversationBackOneStep = (conversationHistoryPosition: number, conversationHistory: Conversation[]) => {
-        if (conversationHistoryPosition === 0) {
-            alert("Currently at the beginning the history.");
-            return;
-        }
-        const newPosition = conversationHistoryPosition - 1;
-        setConversationHistoryPosition(newPosition);
-        setNodes(conversationHistory[newPosition]);
-        console.log(newPosition);
-    };
+    // const stepConversationBackOneStep = (conversationHistoryPosition: number, conversationHistory: Conversation[]) => {
+    //     if (conversationHistoryPosition === 0) {
+    //         alert("Currently at the beginning the history.");
+    //         return;
+    //     }
+    //     const newPosition = conversationHistoryPosition - 1;
+    //     setConversationHistoryPosition(newPosition);
+    //     setNodes(conversationHistory[newPosition]);
+    //     console.log(newPosition);
+    // };
 
-    const stepConversationForwardOneStep = (conversationHistoryPosition: number, conversationHistory: Conversation[]) => {
-        const newPosition = conversationHistoryPosition + 1;
-        if (newPosition <= conversationHistory.length - 1) {
-            setNodes(conversationHistory[newPosition]);
-            setConversationHistoryPosition(newPosition);
-            console.log(newPosition);
-        } else {
-            alert("Currently at the end of the history.");
-        }
-    };
+    // const stepConversationForwardOneStep = (conversationHistoryPosition: number, conversationHistory: Conversation[]) => {
+    //     const newPosition = conversationHistoryPosition + 1;
+    //     if (newPosition <= conversationHistory.length - 1) {
+    //         setNodes(conversationHistory[newPosition]);
+    //         setConversationHistoryPosition(newPosition);
+    //         console.log(newPosition);
+    //     } else {
+    //         alert("Currently at the end of the history.");
+    //     }
+    // };
 
     return (
-        <ConversationTreeContext.Provider value={{ nodeList, setNodes, conversationHistory, setConversationHistory: addConversationHistoryToQueue }}>
+        <ConversationTreeContext.Provider value={{ nodeList, setNodes: setNodesWithHistory }}>
             <AreaConfigurationHeader
                 divider={missingNodeTypes.length > 0}
                 title="Palavyr"
@@ -147,7 +151,7 @@ export const ConvoTree = () => {
                     style={{ marginLeft: "0.7rem", borderRadius: "10px" }}
                     startIcon={<UndoIcon />}
                     onClick={() => {
-                        stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
+                        historyTracker.stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
                     }}
                 >
                     Undo
@@ -157,7 +161,7 @@ export const ConvoTree = () => {
                     style={{ marginLeft: "0.7rem", borderRadius: "10px" }}
                     endIcon={<RedoIcon />}
                     onClick={() => {
-                        stepConversationForwardOneStep(conversationHistoryPosition, conversationHistory);
+                        historyTracker.stepConversationForwardOneStep(conversationHistoryPosition, conversationHistory);
                     }}
                 >
                     Redo
@@ -168,7 +172,7 @@ export const ConvoTree = () => {
                 <form onSubmit={() => null}>
                     <fieldset className="fieldset" id="tree-test">
                         <div className="main-tree tree-wrap">
-                            {nodeList.length > 0 ? <ConversationNode key="tree-start" parentId={rootNode.nodeId} node={rootNode} parentState={true} changeParentState={() => null} nodeOptionList={nodeOptionList} /> : null}
+                            {nodeList.length > 0 ? <ConversationNode key="tree-start" siblingIndex={0} parentNode={rootNode} node={rootNode} parentState={true} changeParentState={() => null} nodeOptionList={nodeOptionList} /> : null}
                         </div>
                     </fieldset>
                 </form>

@@ -1,145 +1,93 @@
-import { Conversation, ConvoNode, Responses } from "@Palavyr-Types";
+import { Conversation, ConvoNode, NodeOption, Responses } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
-import { v4 as uuid } from "uuid";
 import { ApiClient } from "@api-client/Client";
+import { createAndReattachNewNodes, getNewNumChildren } from "./nodeUtils/commonNodeUtils";
+import { _removeNodeByID } from "./nodeUtils/_coreNodeUtils";
 
-export type UUID = string;
+// export const removeNodes = (nodeList: Conversation, nodeId: string, setNodes: (nodeList: Conversation) => void) => {
+//     // removes the node by nodeId
+//     let currentMeta = nodeList.filter((node: ConvoNode) => node.nodeId === nodeId).pop() as ConvoNode;
+//     if (currentMeta.isRoot) {
+//         return false;
+//     } else {
+//         nodeList = nodeList.filter((node) => node.nodeId !== nodeId);
+//         setNodes(cloneDeep(nodeList));
+//     }
+// };
 
-export const getChildNodes = (childrenIDs: string, nodeList: Conversation) => {
-    const ids = childrenIDs.split(",");
-    return nodeList
-        .filter((node) => ids.includes(node.nodeId))
-        .sort(function (a, b) {
-            if (a.optionPath == null || b.optionPath == null) {
-                return 0;
-            }
-            var nameA = a.optionPath.toUpperCase(); // ignore upper and lowercase
-            var nameB = b.optionPath.toUpperCase(); // ignore upper and lowercase
-            if (nameA < nameB) {
-                return -1;
-            }
-            if (nameA > nameB) {
-                return 1;
-            }
+// export const changeNodeType = async (node: ConvoNode, nodeList: Conversation, optionPaths: Responses, valueOptions: Array<string>, setNodes: (nodeList: Conversation) => void, nodeOption: NodeOption) => {
+//     // var client = new ApiClient();
 
-            // names must be equal
-            return 0;
-        });
-};
+//     const newNumChildren = getNewNumChildren(optionPaths);
+//     const { newNodeList, newChildNodeIds, childIdsToCreate } = createAndReattachNewNodes(node, nodeList, newNumChildren);
 
-export const getRootNode = (nodeList: Conversation) => {
-    return nodeList.filter((node) => node.isRoot === true)[0];
-};
+//     // // reset the parentNode's children
+//     // if (parentNode?.isSplitMergeType && siblingIndex > 0) {
+//     //     const primarySibling = getPrimarySibling(parentNode, node);
+//     //     node.nodeChildrenString = primarySibling;
+//     // } else {
+//     //     node.nodeChildrenString = newChildNodeIds.join(",");
+//     // }
 
-export const getNodeByNodeId = (nodeList: Conversation, nodeId: string) => {
-    return nodeList.filter((node) => node.nodeId === nodeId)[0];
-}
+//     // TODO: delete this after substantial testing. I think this is okay to go since
+//     // the parent node is the same node that is being passed in, and should have the updated text.
+//     // map old node text to new node
+//     // var n = nodeList.filter((x) => x.nodeId === parentNode.nodeId)[0];
+//     // parentNode.text = n.text;
 
-export const removeNodes = (nodeList: Conversation, nodeId: string, setNodes: (nodeList: Conversation) => void) => {
-    // removes the node by nodeId
-    let currentMeta = nodeList.filter((node: ConvoNode) => node.nodeId === nodeId).pop() as ConvoNode;
-    if (currentMeta.isRoot) {
-        return false;
-    } else {
-        nodeList = nodeList.filter((node) => node.nodeId !== nodeId);
-        setNodes(cloneDeep(nodeList));
-    }
-};
+//     // is the new parent a multiOptionNodeType
+//     // const { data: isMultiOptionType } = await client.Conversations.CheckIfIsMultiOptionType(node.nodeType);
+//     node.isMultiOptionType = nodeOption.isMultiOptionType;
 
-export const createNewChildIDs = (count: number): Array<UUID> => {
-    let idArray: Array<string> = [];
-    for (var i = 0; i < count; i++) {
-        let newID = uuid();
-        idArray.push(newID);
-    }
-    return idArray;
-};
+//     // const { data: isTerminalType } = await client.Conversations.CheckIfIsTerminalType(node.nodeType);
+//     node.isTerminalType = nodeOption.isTerminalType;
 
-export const removeNodeByID = (Id: string, nodeList: Conversation) => {
-    return nodeList.filter((node: ConvoNode) => node.nodeId !== Id);
-};
+//     // const { data: isSplitMergetype } = await client.Conversations.CheckIfIsSplitMergeType(node.nodeType);
+//     node.isSplitMergeType = nodeOption.isSplitMergeType;
 
-const getIdsToDeleteRecursively = (nodeList: Conversation, topNode: ConvoNode): string => {
-    var childRefs = topNode.nodeChildrenString.split(",");
-    var childNodes = nodeList.filter((node) => childRefs.includes(node.nodeId));
+//     // remove old parent node from nodelist
+//     const updatedNodeList = _removeNodeByID(node.nodeId, newNodeList);
 
-    var nextRefs: Array<string> = [];
-    childNodes.forEach((node) => {
-        if (node.nodeChildrenString.length > 0) {
-            var refs = getIdsToDeleteRecursively(nodeList, node);
-            nextRefs.push(refs);
-        }
-    });
-    childRefs.push(...nextRefs);
-    return childRefs.join(",");
-};
+//     // add updated node to nodelist
+//     nodeList.push(node);
 
-export const addNodes = async (
-    parentNode: ConvoNode,
-    nodeList: Conversation,
-    newIDs: Array<string>,
-    optionPaths: Responses,
-    valueOptions: Array<string>,
-    setNodes: (nodeList: Conversation) => void,
-    setConversationHistory: (newConversation: Conversation) => void
-) => {
-    var client = new ApiClient();
+//     delete node.id;
 
-    var treeIds = getIdsToDeleteRecursively(nodeList, parentNode);
-    var childIdsToDelete = treeIds.split(",");
+//     // set any value options
+//     node.valueOptions = valueOptions.join("|peg|"); // TODO: get this seperator from server
 
-    childIdsToDelete.forEach((nodeId) => {
-        nodeList = removeNodeByID(nodeId, nodeList);
-    });
+//     childIdsToCreate.forEach((id: string, index: number) => {
+//         let newNode: ConvoNode = {
+//             nodeId: id, // replace with uuid
+//             nodeType: "", // default
+//             text: "Ask your question!",
+//             nodeChildrenString: "",
+//             isRoot: false,
+//             fallback: false,
+//             isCritical: false,
+//             areaIdentifier: node.areaIdentifier,
+//             optionPath: optionPaths[index],
+//             valueOptions: "",
+//             isMultiOptionType: false,
+//             isTerminalType: false,
+//             isSplitMergeType: false,
+//             shouldRenderChildren: computeShouldRenderChildren(node, index),
+//         };
 
-    // reset the parentNode's children
-    parentNode.nodeChildrenString = newIDs.join(",");
+//         updatedNodeList.push(newNode);
+//     });
 
-    // TODO: delete this after substantial testing. I think this is okay to go since
-    // the parent node is the same node that is being passed in, and should have the updated text.
-    // map old node text to new node
-    // var n = nodeList.filter((x) => x.nodeId === parentNode.nodeId)[0];
-    // parentNode.text = n.text;
+//     setNodes(updatedNodeList);
+// };
 
-    // is the new parent a multiOptionNodeType
-    const { data: isMultiOptionType } = await client.Conversations.CheckIfIsMultiOptionType(parentNode.nodeType);
-    parentNode.isMultiOptionType = isMultiOptionType;
-
-    const {data: isTerminalType } = await client.Conversations.CheckIfIsTerminalType(parentNode.nodeType);
-    parentNode.isTerminalType = isTerminalType;
-
-    // remove old parent node from nodelist
-    nodeList = removeNodeByID(parentNode.nodeId, nodeList);
-
-    // add updated node to nodelist
-    nodeList.push(parentNode);
-
-    delete parentNode.id;
-
-    // set any value options
-    parentNode.valueOptions = valueOptions.join("|peg|"); // TODO: get this seperator from server
-
-    // var transactions: Conversation = [parentNode];
-    newIDs.forEach((id, index) => {
-        let newNode: ConvoNode = {
-            nodeId: id, // replace with uuid
-            nodeType: "", // default
-            text: "Ask your question!",
-            nodeChildrenString: "",
-            isRoot: false,
-            fallback: false,
-            isCritical: false,
-            areaIdentifier: parentNode.areaIdentifier,
-            optionPath: optionPaths[index],
-            valueOptions: "",
-            isMultiOptionType: false,
-            isTerminalType: false
-        };
-        // transactions.push(newNode);
-        nodeList.push(newNode);
-    });
-
-    var freshNodeList = cloneDeep(nodeList);
-    setNodes([...freshNodeList]);
-    setConversationHistory([...freshNodeList])
-};
+// const computeShouldRenderChildren = (parentNode: ConvoNode, index: number) => {
+//     if (parentNode.isSplitMergeType) {
+//         if (index === 0) {
+//             return true;
+//         } else {
+//             return false;
+//         }
+//     } else {
+//         return true;
+//     }
+// };

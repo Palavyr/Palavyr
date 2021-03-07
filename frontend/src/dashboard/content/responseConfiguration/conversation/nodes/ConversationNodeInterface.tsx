@@ -6,14 +6,16 @@ import { NodeTypeSelector } from "./NodeTypeSelector";
 import { cloneDeep } from "lodash";
 import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
-import { removeNodeByID } from "./conversationNodeUtils";
+import { replaceNodeWithUpdatedNode } from "./nodeUtils/commonNodeUtils";
 
 export interface IConversationNodeInterface {
     node: ConvoNode;
+    parentNode: ConvoNode | null;
     parentState: boolean;
     changeParentState: (parentState: boolean) => void;
     optionPath: string | null;
     nodeOptionList: NodeTypeOptions;
+    siblingIndex: number;
 }
 
 type StyleProps = {
@@ -78,8 +80,8 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const ConversationNodeInterface = ({ nodeOptionList, node, optionPath, parentState, changeParentState }: IConversationNodeInterface) => {
-    const { setNodes, nodeList, setConversationHistory } = React.useContext(ConversationTreeContext);
+export const ConversationNodeInterface = ({ nodeOptionList, node, parentNode, siblingIndex, optionPath, parentState, changeParentState }: IConversationNodeInterface) => {
+    const { setNodes, nodeList } = React.useContext(ConversationTreeContext);
 
     const [modalState, setModalState] = useState<boolean>(false);
     const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text, checked: node.isCritical });
@@ -87,17 +89,18 @@ export const ConversationNodeInterface = ({ nodeOptionList, node, optionPath, pa
     const showResponseInPdfCheckbox = async (event: { target: { checked: boolean } }) => {
         const newNode = cloneDeep(node);
         newNode.isCritical = event.target.checked;
-        const filteredNodeList = removeNodeByID(newNode.nodeId, nodeList);
-        filteredNodeList.push(newNode);
+
+        const filteredNodeList = replaceNodeWithUpdatedNode(newNode, nodeList);
+        // const filteredNodeList = removeNodeByID(newNode.nodeId, nodeList);
+        // filteredNodeList.push(newNode);
         setNodes(filteredNodeList);
-        setConversationHistory(filteredNodeList);
     };
 
     return (
         <Card className={classNames(classes.root, node.nodeId)} variant="outlined">
             <CardContent className={classes.card}>
                 <Typography className={classes.interfaceElement} variant={node.isRoot ? "h5" : "body1"} align="center">
-                    {node.isRoot ? "Begin" : "If " + optionPath}
+                    {node.isRoot ? "Begin" : node.optionPath === "Continue" ? optionPath : "If " + optionPath}
                 </Typography>
                 <Card elevation={0} className={classNames(classes.interfaceElement, classes.textCard)} onClick={() => setModalState(true)}>
                     <Typography className={classes.text} variant="body2" component="span" noWrap={false}>
@@ -107,7 +110,7 @@ export const ConversationNodeInterface = ({ nodeOptionList, node, optionPath, pa
                         Click to Edit
                     </Typography>
                 </Card>
-                <NodeTypeSelector nodeOptionList={nodeOptionList} node={node} parentState={parentState} changeParentState={changeParentState} />
+                <NodeTypeSelector nodeOptionList={nodeOptionList} siblingIndex={siblingIndex} node={node} parentNode={parentNode} parentState={parentState} changeParentState={changeParentState} />
                 <FormControlLabel
                     className={classes.formstyle}
                     classes={{
@@ -116,7 +119,7 @@ export const ConversationNodeInterface = ({ nodeOptionList, node, optionPath, pa
                     control={<Checkbox className={classes.formstyle} size="small" checked={node.isCritical} value="" name={"crit-" + node.nodeId} onChange={showResponseInPdfCheckbox} />}
                     label="Show response in PDF"
                 />
-                <ConversationNodeEditor setModalState={setModalState} modalState={modalState} node={node} />
+                <ConversationNodeEditor setModalState={setModalState} modalState={modalState} node={node} parentNode={parentNode} siblingIndex={siblingIndex}/>
             </CardContent>
         </Card>
     );
