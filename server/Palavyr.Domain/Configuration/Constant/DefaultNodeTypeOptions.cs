@@ -20,6 +20,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 new TakeNumberIndividuals(),
                 new SendResponse(),
                 new TooComplicated(),
+                new SplitMerge()
             };
 
         public static YesNo CreateYesNo() => new YesNo();
@@ -30,7 +31,8 @@ namespace Palavyr.Domain.Configuration.Constant
         public static ProvideInfo CreateProvideInfo() => new ProvideInfo();
         public static MultipleChoiceContinue CreateMultipleChoiceContinue() => new MultipleChoiceContinue();
         public static MultipleChoiceAsPath CreateMultipleChoiceAsPath() => new MultipleChoiceAsPath();
-
+        public static SplitMerge CreateSplitMerge() => new SplitMerge();
+        
         public static TakeCurrency CreateTakeCurrency() => new TakeCurrency();
         public static TakeNumber CreateTakeNumber() => new TakeNumber();
         public static TakeNumberIndividuals CreateTakeNumberIndividuals() => new TakeNumberIndividuals();
@@ -38,6 +40,24 @@ namespace Palavyr.Domain.Configuration.Constant
         public static SendResponse CreateSendResponse() => new SendResponse();
         public static Restart CreateRestart() => new Restart();
 
+        public class SplitMerge : NodeTypeOption
+        {
+            public new static string StringName => nameof(SplitMerge);
+
+            public SplitMerge()
+            {
+                Text = "Split Merge";
+                Value = StringName;
+                PathOptions = new List<string>();
+                ValueOptions = new List<string>();
+                IsMultiOptionType = true;
+                IsTerminalType = false;
+                GroupName = SplitAndMerge;
+                IsSplitMergeType = true;
+                ShouldRenderChildren = true;
+            }
+        }
+        
 
         public class TakeCurrency : NodeTypeOption
         {
@@ -52,6 +72,9 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+
             }
         }
         
@@ -68,6 +91,9 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+
             }
         }
         
@@ -84,6 +110,9 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+
             }
         }
 
@@ -103,6 +132,9 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = false; // set to no if we don't want to allow the node value options presented to the user to change. 
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+
             }
         }
 
@@ -120,6 +152,9 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+
             }
         }
 
@@ -136,6 +171,10 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+ 
+
             }
         }
 
@@ -152,6 +191,9 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+
             }
         }
 
@@ -168,6 +210,9 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+
             }
         }
 
@@ -184,6 +229,9 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoProvide;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+
             }
         }
 
@@ -200,6 +248,9 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+
             }
         }
 
@@ -216,6 +267,9 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+
             }
         }
 
@@ -233,6 +287,9 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = true;
                 GroupName = Terminal;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+
             }
         }
 
@@ -249,6 +306,9 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = true;
                 GroupName = Terminal;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+
             }
         }
 
@@ -264,6 +324,9 @@ namespace Palavyr.Domain.Configuration.Constant
                 ValueOptions = new List<string>() { };
                 IsMultiOptionType = false;
                 IsTerminalType = false;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+
             }
         }
 
@@ -279,6 +342,9 @@ namespace Palavyr.Domain.Configuration.Constant
                 ValueOptions = new List<string>() { };
                 IsMultiOptionType = false;
                 IsTerminalType = false;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+
             }
         }
 
@@ -294,6 +360,9 @@ namespace Palavyr.Domain.Configuration.Constant
                 ValueOptions = new List<string>() { };
                 IsMultiOptionType = false;
                 GroupName = Terminal;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+
             }
         }
     }

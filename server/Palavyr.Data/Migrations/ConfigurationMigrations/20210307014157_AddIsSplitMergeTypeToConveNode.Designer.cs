@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Palavyr.Data;
@@ -9,9 +10,10 @@ using Palavyr.Data;
 namespace Palavyr.Data.Migrations.ConfigurationMigrations
 {
     [DbContext(typeof(DashContext))]
-    partial class DashContextModelSnapshot : ModelSnapshot
+    [Migration("20210307014157_AddIsSplitMergeTypeToConveNode")]
+    partial class AddIsSplitMergeTypeToConveNode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,7 +163,7 @@ namespace Palavyr.Data.Migrations.ConfigurationMigrations
                     b.Property<string>("OptionPath")
                         .HasColumnType("text");
 
-                    b.Property<bool>("ShouldRenderChildren")
+                    b.Property<bool>("ShouldRenderChild")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Text")

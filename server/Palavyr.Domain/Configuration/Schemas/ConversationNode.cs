@@ -7,7 +7,7 @@ namespace Palavyr.Domain.Configuration.Schemas
     public class ConversationNode
     {
         [Key] public int? Id { get; set; }
-        public string NodeId { get; set; } = null!;
+        public string NodeId { get; set; }
         public string NodeType { get; set; } = null!;
         public bool Fallback { get; set; }
         public string Text { get; set; } = null!;
@@ -19,6 +19,8 @@ namespace Palavyr.Domain.Configuration.Schemas
         public string AccountId { get; set; } = null!;
         public bool IsMultiOptionType { get; set; }
         public bool IsTerminalType { get; set; }
+        public bool ShouldRenderChildren { get; set; }
+        public bool IsSplitMergeType { get; set; }
 
         public string NodeChildrenString { get; set; } = null!; // stored as comma delimited list as string
 
@@ -45,6 +47,7 @@ namespace Palavyr.Domain.Configuration.Schemas
                     AccountId = accountId,
                     IsMultiOptionType = false,
                     IsTerminalType = false,
+                    ShouldRenderChildren = true
                 }
             };
         }
@@ -61,7 +64,8 @@ namespace Palavyr.Domain.Configuration.Schemas
             bool isRoot = false,
             bool isCritical = true,
             bool isMultiOptionType = false,
-            bool isTerminalType = false
+            bool isTerminalType = false,
+            bool shouldRenderChild = true
         )
         {
             return new ConversationNode()
@@ -79,6 +83,7 @@ namespace Palavyr.Domain.Configuration.Schemas
                 AccountId = accountId,
                 IsMultiOptionType = isMultiOptionType,
                 IsTerminalType = isTerminalType,
+                ShouldRenderChildren = true
             };
         }
 
@@ -99,7 +104,8 @@ namespace Palavyr.Domain.Configuration.Schemas
                     node.IsRoot,
                     node.IsCritical,
                     node.IsMultiOptionType,
-                    node.IsTerminalType
+                    node.IsTerminalType,
+                    node.ShouldRenderChildren
                 );
                 mappedTransactions.Add(mappedNode);
             }

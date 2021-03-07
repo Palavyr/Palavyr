@@ -15,6 +15,7 @@ namespace Palavyr.Domain.Configuration.Constant
         public static readonly string InfoProvide = "Provide Info";
         public static readonly string CustomTables = "Custom Tables";
         public static readonly string Terminal = "Terminal";
+        public static readonly string SplitAndMerge = "SplitAndMerge";
 
         /*
          * The string form name of the node type. Derived from either 'nameof(T)' or extension method: dynamicTableMeta.MakeUniqueIdentifier()
@@ -45,6 +46,17 @@ namespace Palavyr.Domain.Configuration.Constant
          * Whether or not this type should be used to determine incomplete tree paths when searching for missing node types.
          */
         public bool IsTerminalType { get; set; }
+
+        
+        /*
+         * Whether or not this type should render its children (used with splitmerge - where children will be duplicated'
+         */
+        public bool ShouldRenderChildren { get; set; }
+        
+        /*
+         * Whether or not its children will result in a remerge of the branch after splitting into N children (all children must remerge)
+         */
+        public bool IsSplitMergeType { get; set; } = false;
         
         /*
          * Whether or not the node type comes from a dynamic table type.
