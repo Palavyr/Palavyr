@@ -13,7 +13,7 @@ namespace Palavyr.Domain.Conversation
             var deorphaned = new List<ConversationNode>();
             foreach (var node in conversationNodes)
             {
-                if (IsReferencedByAnotherNode(node, uniqueReferences))
+                if (IsReferencedByAnotherNode(node, uniqueReferences) || node.IsRoot)
                 {
                     deorphaned.Add(node);
                 }

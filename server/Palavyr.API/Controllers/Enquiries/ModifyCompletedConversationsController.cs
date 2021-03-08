@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Data;
 using Palavyr.Domain.Resources.Responses;
 using Palavyr.Services.ConversationServices;
 

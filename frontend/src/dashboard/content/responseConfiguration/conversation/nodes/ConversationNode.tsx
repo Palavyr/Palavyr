@@ -4,7 +4,7 @@ import { SteppedLineTo } from "../treeLines/SteppedLineTo";
 import { ConversationNodeInterface } from "./ConversationNodeInterface";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import "./ConversationNode.css";
-import { checkedNodeOptionList, getChildNodes } from "./nodeUtils/commonNodeUtils";
+import { checkedNodeOptionList, getChildNodesSortedByOptionPath, getUnsortedChildNodes } from "./nodeUtils/commonNodeUtils";
 
 export interface IConversationNode {
     node: ConvoNode;
@@ -35,7 +35,7 @@ export const ConversationNode = ({ node, siblingIndex, parentNode, parentState, 
     const [nodeState, changeNodeState] = useState<boolean>(true);
     const [loaded, setLoaded] = useState(false);
 
-    let childNodes = getChildNodes(node.nodeChildrenString, nodeList);
+    const childNodes = node.isSplitMergeType ? getUnsortedChildNodes(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);
 
     useEffect(() => {
         setLoaded(true);

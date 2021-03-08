@@ -1,3 +1,4 @@
+import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { Conversation, ConvoNode, NodeOption, NodeTypeOptions, ValueOptionDelimiter } from "@Palavyr-Types";
 import { _computeShouldRenderChildren, _createNewChildIDs, _getIdsToDeleteRecursively, _getNodeById, _removeNodeByID, _replaceNodeWithUpdatedNode, _resetOptionPaths, _truncateTheTreeAtSpecificNode } from "./_coreNodeUtils";
 
@@ -18,26 +19,35 @@ export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, parentNod
     }
 };
 
-export const getChildNodes = (childrenIDs: string, nodeList: Conversation) => {
+export const getUnsortedChildNodes = (childrenIDs: string, nodeList: Conversation) => {
     const ids = childrenIDs.split(",");
-    return nodeList
-        .filter((node) => ids.includes(node.nodeId))
-        .sort(function (a, b) {
-            if (a.optionPath == null || b.optionPath == null) {
-                return 0;
-            }
-            var nameA = a.optionPath.toUpperCase(); // ignore upper and lowercase
-            var nameB = b.optionPath.toUpperCase(); // ignore upper and lowercase
-            if (nameA < nameB) {
-                return -1;
-            }
-            if (nameA > nameB) {
-                return 1;
-            }
+    return nodeList.filter((node) => ids.includes(node.nodeId))
+}
 
-            // names must be equal
-            return 0;
-        });
+export const getChildNodesSortedByOptionPath = (childrenIds: string, nodeList: Conversation) => {
+    const unsortedChildNodes = getUnsortedChildNodes(childrenIds, nodeList);
+    const getter = (x: ConvoNode) => x.optionPath.toUpperCase();
+    return sortByPropertyAlphabetical(getter, unsortedChildNodes);
+
+    // const ids = childrenIDs.split(",");
+    // return nodeList
+    //     .filter((node) => ids.includes(node.nodeId))
+    //     .sort(function (a, b) {
+    //         if (a.optionPath == null || b.optionPath == null) {
+    //             return 0;
+    //         }
+    //         var nameA = a.optionPath.toUpperCase(); // ignore upper and lowercase
+    //         var nameB = b.optionPath.toUpperCase(); // ignore upper and lowercase
+    //         if (nameA < nameB) {
+    //             return -1;
+    //         }
+    //         if (nameA > nameB) {
+    //             return 1;
+    //         }
+
+    //         // names must be equal
+    //         return 0;
+    //     });
 };
 
 export const createAndReattachNewNodes = (currentNode: ConvoNode, nodeList: Conversation, newNumChildren: number) => {

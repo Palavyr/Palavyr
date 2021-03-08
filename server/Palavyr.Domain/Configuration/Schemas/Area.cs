@@ -46,6 +46,8 @@ namespace Palavyr.Domain.Configuration.Schemas
                 Epilogue = "",
                 EmailTemplate = "<h2>Upload your custom email template</h2><p>This is a starter paragraph to get you started</p>",
                 Subject = "Thank you for reaching out!",
+                FallbackEmailTemplate = "<h2>Fallback email</h2>",
+                FallbackSubject = "Fallback Subject",
                 ConversationNodes = ConversationNode.CreateDefaultNode(areaId, accountId),
                 StaticTablesMetas = StaticTablesMeta.CreateDefaultMetas(areaId, accountId),
                 IsEnabled = false,
