@@ -6,7 +6,7 @@ import { NodeTypeSelector } from "./NodeTypeSelector";
 import { cloneDeep } from "lodash";
 import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
-import { _replaceNodeWithUpdatedNode } from "./nodeUtils/commonNodeUtils";
+import { _replaceNodeWithUpdatedNode } from "./nodeUtils/_coreNodeUtils";
 
 export interface IConversationNodeInterface {
     node: ConvoNode;

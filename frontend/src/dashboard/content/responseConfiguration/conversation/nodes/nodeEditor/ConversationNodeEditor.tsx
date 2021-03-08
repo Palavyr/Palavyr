@@ -6,7 +6,7 @@ import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import { updateChildOfIsSplitMergeType } from "../nodeUtils/splitMergeUtils";
 import { updateMultiTypeOption } from "../nodeUtils/mutliOptionUtils";
-import { updateSingleOptionType, _replaceNodeWithUpdatedNode } from "../nodeUtils/commonNodeUtils";
+import { updateSingleOptionType } from "../nodeUtils/commonNodeUtils";
 
 export interface IConversationNodeEditor {
     modalState: boolean;

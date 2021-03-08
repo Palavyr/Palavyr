@@ -1,7 +1,7 @@
 import { ConvoNode, Conversation, NodeOption } from "@Palavyr-Types";
 import { findIndex } from "lodash";
-import { createAndReattachNewNodes, _replaceNodeWithUpdatedNode } from "./commonNodeUtils";
-import { _removeNodeByID } from "./_coreNodeUtils";
+import { createAndReattachNewNodes } from "./commonNodeUtils";
+import { _removeNodeByID, _replaceNodeWithUpdatedNode } from "./_coreNodeUtils";
 
 export const updateChildOfIsSplitMergeType = (node: ConvoNode, parentNode: ConvoNode, nodeList: Conversation, setNodes: (updatedNodeList: Conversation) => void) => {
     const primarySiblingId = getPrimarySiblingId(parentNode, node);
