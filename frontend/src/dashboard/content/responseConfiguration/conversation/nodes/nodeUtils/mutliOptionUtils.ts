@@ -12,7 +12,6 @@ export const updateMultiTypeOption = (node: ConvoNode, nodeList: Conversation, v
     node.valueOptions = valueOptions.join(ValueOptionDelimiter); // TODO: get this seperator from server
     node.isMultiOptionType = true;
     node.isTerminalType = false;
-    node.isSplitMergeType = false;
 
     // add updated node to nodelist
     const filteredNodeList = _removeNodeByID(node.nodeId, newNodeList);

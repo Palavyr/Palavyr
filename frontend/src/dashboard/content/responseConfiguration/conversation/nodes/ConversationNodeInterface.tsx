@@ -15,7 +15,6 @@ export interface IConversationNodeInterface {
     changeParentState: (parentState: boolean) => void;
     optionPath: string | null;
     nodeOptionList: NodeTypeOptions;
-    siblingIndex: number;
 }
 
 type StyleProps = {
@@ -80,7 +79,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const ConversationNodeInterface = ({ nodeOptionList, node, parentNode, siblingIndex, optionPath, parentState, changeParentState }: IConversationNodeInterface) => {
+export const ConversationNodeInterface = ({ nodeOptionList, node, parentNode, optionPath, parentState, changeParentState }: IConversationNodeInterface) => {
     const { setNodes, nodeList } = React.useContext(ConversationTreeContext);
 
     const [modalState, setModalState] = useState<boolean>(false);
@@ -91,8 +90,6 @@ export const ConversationNodeInterface = ({ nodeOptionList, node, parentNode, si
         newNode.isCritical = event.target.checked;
 
         const filteredNodeList = replaceNodeWithUpdatedNode(newNode, nodeList);
-        // const filteredNodeList = removeNodeByID(newNode.nodeId, nodeList);
-        // filteredNodeList.push(newNode);
         setNodes(filteredNodeList);
     };
 
@@ -110,7 +107,7 @@ export const ConversationNodeInterface = ({ nodeOptionList, node, parentNode, si
                         Click to Edit
                     </Typography>
                 </Card>
-                <NodeTypeSelector nodeOptionList={nodeOptionList} siblingIndex={siblingIndex} node={node} parentNode={parentNode} parentState={parentState} changeParentState={changeParentState} />
+                <NodeTypeSelector nodeOptionList={nodeOptionList} node={node} parentNode={parentNode} parentState={parentState} changeParentState={changeParentState} />
                 <FormControlLabel
                     className={classes.formstyle}
                     classes={{
@@ -119,7 +116,7 @@ export const ConversationNodeInterface = ({ nodeOptionList, node, parentNode, si
                     control={<Checkbox className={classes.formstyle} size="small" checked={node.isCritical} value="" name={"crit-" + node.nodeId} onChange={showResponseInPdfCheckbox} />}
                     label="Show response in PDF"
                 />
-                <ConversationNodeEditor setModalState={setModalState} modalState={modalState} node={node} parentNode={parentNode} siblingIndex={siblingIndex}/>
+                <ConversationNodeEditor setModalState={setModalState} modalState={modalState} node={node} parentNode={parentNode} />
             </CardContent>
         </Card>
     );

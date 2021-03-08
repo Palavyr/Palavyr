@@ -13,10 +13,9 @@ export interface IConversationNodeEditor {
     setModalState: (state: boolean) => void;
     node: ConvoNode;
     parentNode: ConvoNode | null;
-    siblingIndex: number;
 }
 
-export const ConversationNodeEditor = ({ modalState, setModalState, node, parentNode, siblingIndex }: IConversationNodeEditor) => {
+export const ConversationNodeEditor = ({ modalState, setModalState, node, parentNode }: IConversationNodeEditor) => {
     const [options, setOptions] = useState<Array<string>>([]);
     const [textState, setText] = useState<string>("");
     const [switchState, setSwitchState] = useState<boolean>(true);
@@ -36,14 +35,13 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, parent
     };
 
     const handleUpdateNode = async (value: string, valueOptions: string[]) => {
-        // const nodeData = cloneDeep(nodeList.filter((nodeListNode: ConvoNode) => nodeListNode.nodeId === node.nodeId)[0]);
         const updatedNode = { ...node };
         updatedNode.text = value;
 
         if (node.isMultiOptionType && parentNode && parentNode.isSplitMergeType) {
-            if (valueOptions.length > 0) throw new Error("Children of isSplitMergeTypes should not have multiple value options.");
             updateChildOfIsSplitMergeType(updatedNode, parentNode, nodeList, setNodes);
         } else if (node.isMultiOptionType) {
+            if (parentNode && parentNode.isSplitMergeType && valueOptions.length > 0) throw new Error("Children of isSplitMergeTypes should not have multiple value options.");
             updateMultiTypeOption(updatedNode, nodeList, valueOptions, setNodes); // create new nodes and update the Database
         } else {
             const updatedNodeList = replaceNodeWithUpdatedNode(updatedNode, nodeList);

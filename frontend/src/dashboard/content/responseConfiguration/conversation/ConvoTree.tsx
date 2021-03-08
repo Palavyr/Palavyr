@@ -17,8 +17,6 @@ import "./ConvoTree.css";
 import { getRootNode } from "./nodes/nodeUtils/commonNodeUtils";
 import { ConversationHistoryTracker } from "./nodes/ConversationHistoryTracker";
 
-// const MaxConversationHistory = 50; // the number of times you can hit the back button
-
 const useStyles = makeStyles(() => ({
     conversation: {
         position: "static",
@@ -95,48 +93,6 @@ export const ConvoTree = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier, nodeList]);
 
-    // const addConversationHistoryToQueue = (newConversationRecord: Conversation, setConversationHistory: Dispatch<SetStateAction<Conversation>>, ) => {
-    //     const newPos = conversationHistoryPosition + 1;
-
-    //     if (conversationHistory.length < MaxConversationHistory) {
-    //         if (newPos < conversationHistory.length - 1) {
-    //             setConversationHistory([...conversationHistory.slice(0, newPos), newConversationRecord]);
-    //         } else {
-    //             setConversationHistory([...conversationHistory, newConversationRecord]);
-    //         }
-    //     } else {
-    //         if (newPos < MaxConversationHistory) {
-    //             setConversationHistory([...conversationHistory.slice(0, newPos), newConversationRecord]);
-    //         } else {
-    //             setConversationHistory([...conversationHistory.slice(1), newConversationRecord]);
-    //         }
-    //     }
-
-    //     setConversationHistoryPosition(newPos);
-    // };
-
-    // const stepConversationBackOneStep = (conversationHistoryPosition: number, conversationHistory: Conversation[]) => {
-    //     if (conversationHistoryPosition === 0) {
-    //         alert("Currently at the beginning the history.");
-    //         return;
-    //     }
-    //     const newPosition = conversationHistoryPosition - 1;
-    //     setConversationHistoryPosition(newPosition);
-    //     setNodes(conversationHistory[newPosition]);
-    //     console.log(newPosition);
-    // };
-
-    // const stepConversationForwardOneStep = (conversationHistoryPosition: number, conversationHistory: Conversation[]) => {
-    //     const newPosition = conversationHistoryPosition + 1;
-    //     if (newPosition <= conversationHistory.length - 1) {
-    //         setNodes(conversationHistory[newPosition]);
-    //         setConversationHistoryPosition(newPosition);
-    //         console.log(newPosition);
-    //     } else {
-    //         alert("Currently at the end of the history.");
-    //     }
-    // };
-
     return (
         <ConversationTreeContext.Provider value={{ nodeList, setNodes: setNodesWithHistory }}>
             <AreaConfigurationHeader
@@ -172,7 +128,7 @@ export const ConvoTree = () => {
                 <form onSubmit={() => null}>
                     <fieldset className="fieldset" id="tree-test">
                         <div className="main-tree tree-wrap">
-                            {nodeList.length > 0 ? <ConversationNode key="tree-start" siblingIndex={0} parentNode={rootNode} node={rootNode} parentState={true} changeParentState={() => null} nodeOptionList={nodeOptionList} /> : null}
+                            {nodeList.length > 0 ? <ConversationNode key="tree-start" siblingIndex={0} parentNode={null} node={rootNode} parentState={true} changeParentState={() => null} nodeOptionList={nodeOptionList} /> : null}
                         </div>
                     </fieldset>
                 </form>

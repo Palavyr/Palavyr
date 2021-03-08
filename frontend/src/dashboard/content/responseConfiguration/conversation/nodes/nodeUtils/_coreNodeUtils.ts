@@ -39,3 +39,15 @@ export const _createNewChildIDs = (count: number): UUID[] => {
     }
     return idArray;
 };
+
+export const _computeShouldRenderChildren = (parentNode: ConvoNode, index: number) => {
+    if (parentNode.isSplitMergeType) {
+        if (index === 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return true;
+    }
+};

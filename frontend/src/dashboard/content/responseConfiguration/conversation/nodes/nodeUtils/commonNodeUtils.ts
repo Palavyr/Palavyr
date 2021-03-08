@@ -1,5 +1,5 @@
-import { Conversation, ConvoNode, NodeOption, Responses } from "@Palavyr-Types";
-import { _createNewChildIDs, _getIdsToDeleteRecursively, _removeNodeByID, _truncateTheTreeAtSpecificNode } from "./_coreNodeUtils";
+import { Conversation, ConvoNode, NodeOption, NodeTypeOptions, Responses, ValueOptionDelimiter } from "@Palavyr-Types";
+import { _computeShouldRenderChildren, _createNewChildIDs, _getIdsToDeleteRecursively, _removeNodeByID, _truncateTheTreeAtSpecificNode } from "./_coreNodeUtils";
 
 export const getRootNode = (nodeList: Conversation) => {
     return nodeList.filter((node) => node.isRoot === true)[0];
@@ -17,7 +17,17 @@ export const replaceNodeWithUpdatedNode = (nodeData: ConvoNode, nodeList: Conver
     // replace the old node with the new node in the list
     const filteredNodeList = _removeNodeByID(nodeData.nodeId, nodeList);
     filteredNodeList.push(nodeData);
+    delete nodeData.id;
     return filteredNodeList;
+};
+
+export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, parentNode: ConvoNode | null, siblingIndex: number) => {
+    if (parentNode && parentNode.isSplitMergeType && siblingIndex > 0) {
+        const compatible = nodeOptionList.filter((option: NodeOption) => option.groupName === "Provide Info" || option.groupName === "Info Collection");
+        return compatible;
+    } else {
+        return nodeOptionList;
+    }
 };
 
 export const getChildNodes = (childrenIDs: string, nodeList: Conversation) => {
@@ -73,47 +83,34 @@ export const createAndReattachNewNodes = (currentNode: ConvoNode, nodeList: Conv
     };
 };
 
-export const changeNodeType = async (node: ConvoNode, nodeList: Conversation, optionPaths: Responses, valueOptions: Array<string>, setNodes: (nodeList: Conversation) => void, nodeOption: NodeOption) => {
-    // var client = new ApiClient();
+export const changeNodeType = async (node: ConvoNode, nodeList: Conversation, setNodes: (nodeList: Conversation) => void, nodeOption: NodeOption) => {
+    const pathOptions = nodeOption.pathOptions;
+    const valueOptions = nodeOption.valueOptions;
 
-    const newNumChildren = getNewNumChildren(optionPaths);
+    if (pathOptions === undefined) {
+        throw new Error("Ill defined path options");
+    }
+    if (valueOptions === undefined) {
+        throw new Error("Ill defined value options - cannot be undefined");
+    }
+
+    // TODO: This is kind of gross and complicates extendability since we later have to be sure not to intro any '-' in to the names. But
+    // since we are taking this fromthe option, we have to deal with it as a string until we try a refactor to get it into an object form
+    // so we can supply properties. ^ The option comes in from the event, which currently passes the value as a string. Can this be an object?
+    node.nodeType = nodeOption.value; // SelectOneFlat-sdfs-sdfs-sgs-s
+
+    const newNumChildren = getNewNumChildren(pathOptions);
     const { newNodeList, newChildNodeIds, childIdsToCreate } = createAndReattachNewNodes(node, nodeList, newNumChildren);
 
-    // // reset the parentNode's children
-    // if (parentNode?.isSplitMergeType && siblingIndex > 0) {
-    //     const primarySibling = getPrimarySibling(parentNode, node);
-    //     node.nodeChildrenString = primarySibling;
-    // } else {
-    //     node.nodeChildrenString = newChildNodeIds.join(",");
-    // }
     node.nodeChildrenString = newChildNodeIds.join(",");
-
-    // TODO: delete this after substantial testing. I think this is okay to go since
-    // the parent node is the same node that is being passed in, and should have the updated text.
-    // map old node text to new node
-    // var n = nodeList.filter((x) => x.nodeId === parentNode.nodeId)[0];
-    // parentNode.text = n.text;
-
-    // is the new parent a multiOptionNodeType
-    // const { data: isMultiOptionType } = await client.Conversations.CheckIfIsMultiOptionType(node.nodeType);
     node.isMultiOptionType = nodeOption.isMultiOptionType;
-
-    // const { data: isTerminalType } = await client.Conversations.CheckIfIsTerminalType(node.nodeType);
     node.isTerminalType = nodeOption.isTerminalType;
-
-    // const { data: isSplitMergetype } = await client.Conversations.CheckIfIsSplitMergeType(node.nodeType);
     node.isSplitMergeType = nodeOption.isSplitMergeType;
 
-    // remove old parent node from nodelist
-    const updatedNodeList = _removeNodeByID(node.nodeId, newNodeList);
-
-    // add updated node to nodelist
-    updatedNodeList.push(node);
-
-    delete node.id;
+    const updatedNodeList = replaceNodeWithUpdatedNode(node, newNodeList);
 
     // set any value options
-    node.valueOptions = valueOptions.join("|peg|"); // TODO: get this seperator from server
+    node.valueOptions = valueOptions.join(ValueOptionDelimiter);
 
     childIdsToCreate.forEach((id: string, index: number) => {
         let newNode: ConvoNode = {
@@ -125,28 +122,16 @@ export const changeNodeType = async (node: ConvoNode, nodeList: Conversation, op
             fallback: false,
             isCritical: false,
             areaIdentifier: node.areaIdentifier,
-            optionPath: optionPaths[index],
+            optionPath: pathOptions[index],
             valueOptions: "",
             isMultiOptionType: false,
             isTerminalType: false,
             isSplitMergeType: false,
-            shouldRenderChildren: computeShouldRenderChildren(node, index),
+            shouldRenderChildren: _computeShouldRenderChildren(node, index),
         };
 
         updatedNodeList.push(newNode);
     });
 
     setNodes(updatedNodeList);
-};
-
-const computeShouldRenderChildren = (parentNode: ConvoNode, index: number) => {
-    if (parentNode.isSplitMergeType) {
-        if (index === 0) {
-            return true;
-        } else {
-            return false;
-        }
-    } else {
-        return true;
-    }
 };

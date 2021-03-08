@@ -1,10 +1,10 @@
-import { ConvoNode, NodeOption, NodeTypeOptions } from "@Palavyr-Types";
+import { ConvoNode, NodeTypeOptions } from "@Palavyr-Types";
 import React, { useState, useEffect, useContext } from "react";
 import { SteppedLineTo } from "../treeLines/SteppedLineTo";
 import { ConversationNodeInterface } from "./ConversationNodeInterface";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import "./ConversationNode.css";
-import { getChildNodes } from "./nodeUtils/commonNodeUtils";
+import { checkedNodeOptionList, getChildNodes } from "./nodeUtils/commonNodeUtils";
 
 export interface IConversationNode {
     node: ConvoNode;
@@ -56,8 +56,6 @@ export const ConversationNode = ({ node, siblingIndex, parentNode, parentState, 
             siblingNodeIds.map((id: string) => steppedLineNodes.push(id));
         }
     }
-    console.log("Stepped lines from here to ");
-    console.log(steppedLineNodes);
 
     const nodeWrapper = "tree-item-" + node?.nodeId;
     return (
@@ -69,7 +67,6 @@ export const ConversationNode = ({ node, siblingIndex, parentNode, parentState, 
                         node={node}
                         parentState={parentState}
                         parentNode={parentNode}
-                        siblingIndex={siblingIndex}
                         changeParentState={changeParentState}
                         optionPath={node.optionPath}
                         nodeOptionList={checkedNodeOptionList(nodeOptionList, parentNode, siblingIndex)}
@@ -93,11 +90,3 @@ export const ConversationNode = ({ node, siblingIndex, parentNode, parentState, 
     );
 };
 
-const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, parentNode: ConvoNode | null, siblingIndex: number) => {
-    if (parentNode && parentNode.isSplitMergeType && siblingIndex > 0) {
-        const compatible = nodeOptionList.filter((option: NodeOption) => option.groupName === "Provide Info" || option.groupName === "Info Collection");
-        return compatible;
-    } else {
-        return nodeOptionList;
-    }
-};
