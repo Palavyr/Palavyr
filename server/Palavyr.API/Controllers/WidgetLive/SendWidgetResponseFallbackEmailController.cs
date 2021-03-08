@@ -62,7 +62,15 @@ namespace Palavyr.API.Controllers.WidgetLive
 
 
             var fallbackTextBody = area.FallbackEmailTemplate; // This can be another upload. People can decide one or both. Html is prioritized.
+            if (string.IsNullOrWhiteSpace(fallbackHtmlBody))
+            {
+                fallbackHtmlBody = "";
+            }
 
+            if (string.IsNullOrWhiteSpace(fallbackSubject))
+            {
+                fallbackSubject = "";
+            }
             fallbackHtmlBody = ResponseCustomizer.Customize(fallbackHtmlBody, emailRequest, account);
 
             bool ok;

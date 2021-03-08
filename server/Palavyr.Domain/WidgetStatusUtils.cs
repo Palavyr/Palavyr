@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.Domain.Resources.Responses;
@@ -92,7 +93,9 @@ namespace Palavyr.Domain
         private static bool AllBranchesTerminate(ConversationNode[] nodeList)
         {
             var rootNode = TreeUtils.GetRootNode(nodeList);
-            var numLeaves = TreeUtils.TraverseTheTreeFromTheTop(nodeList, rootNode);
+            var terminalNodes = TreeUtils.TraverseTheTreeFromTheTopAsNodeArray(nodeList, rootNode);
+            var uniqueTerminalNodes = terminalNodes.Distinct().ToList();
+            var numLeaves = uniqueTerminalNodes.Count();
             var numTerminal = TreeUtils.GetNumTerminal(nodeList);
             return (numLeaves == numTerminal);
         }

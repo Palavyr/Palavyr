@@ -3,7 +3,12 @@ import { createAndReattachNewNodes, getNewNumChildren } from "./commonNodeUtils"
 import { _createNewChildIDs, _removeNodeByID, _truncateTheTreeAtSpecificNode } from "./_coreNodeUtils";
 
 export const updateMultiTypeOption = (node: ConvoNode, nodeList: Conversation, valueOptions: string[], setNodes: (updatedNodeList: Conversation) => void) => {
-    const optionPaths = valueOptions;
+    let optionPaths: string[];
+    if (node.nodeType === "MultipleChoiceContinue") {
+        optionPaths = ["Continue"];
+    } else {
+        optionPaths = valueOptions;
+    }
 
     const newNumChildren = getNewNumChildren(optionPaths);
     const { newNodeList, newChildNodeIds, childIdsToCreate } = createAndReattachNewNodes(node, nodeList, newNumChildren);

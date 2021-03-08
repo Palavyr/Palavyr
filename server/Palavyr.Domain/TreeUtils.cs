@@ -29,16 +29,37 @@ namespace Palavyr.Domain
             var children = node.NodeChildrenString.Split(",");
             foreach (var child in children)
             {
-                var childNode = nodeList.Where(row => row.NodeId == child).ToArray();
-                if (childNode.Length > 0)
+                var childNode = nodeList.SingleOrDefault(row => row.NodeId == child);
+                if (childNode != null)
                 {
-                    count += TraverseTheTreeFromTheTop(nodeList, childNode.First());
+                    count += TraverseTheTreeFromTheTop(nodeList, childNode);
                 }
             }
 
             return count;
         }
 
+        public static List<ConversationNode> TraverseTheTreeFromTheTopAsNodeArray(ConversationNode[] nodeList, ConversationNode node)
+        {
+            var foundNodes = new List<ConversationNode>();
+            if (node.IsTerminalType)
+            {
+                return new List<ConversationNode>(){node};
+            }
+
+            var children = node.NodeChildrenString.Split(",");
+            foreach (var child in children)
+            {
+                var childNode = nodeList.SingleOrDefault(row => row.NodeId == child);
+                if (childNode != null)
+                {
+                    foundNodes.AddRange(TraverseTheTreeFromTheTopAsNodeArray(nodeList, childNode));
+                }
+            }
+
+            return foundNodes;
+        }
+        
         public static ConversationNode GetRootNode(ConversationNode[] nodeList)
         {
             return nodeList.Single(row => row.IsRoot == true);

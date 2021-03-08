@@ -96,6 +96,7 @@ export enum NodeTypes {
     ProvideInfo = "ProvideInfo",
     MultipleChoiceAsPath = "MultipleChoiceAsPath",
     MultipleChoiceContinue = "MultipleChoiceContinue",
+    SplitMerge = "SplitMerge",
 
     // under consideration
     HowMany = "HowMany",
@@ -124,6 +125,7 @@ export const ComponentRegistry: Registry = {
     [NodeTypes.MultipleChoiceAsPath]: makeMultipleChoiceAsPathButtons,
 
     [NodeTypes.MultipleChoiceContinue]: makeMultipleChoiceContinueButtons,
+    [NodeTypes.SplitMerge]: makeMultipleChoiceAsPathButtons,
 
     [NodeTypes.TakeCurrency]: makeTakeCurrency,
     [NodeTypes.TakeText]: makeTakeText,
@@ -133,7 +135,6 @@ export const ComponentRegistry: Registry = {
     [NodeTypes.TakeNumber]: makeTakeNumber,
     [NodeTypes.TakeNumberIndividuals]: makeTakeNumberIndividuals,
     [NodeTypes.TooComplicated]: makeTooComplicated,
-
     [NodeTypes.EndingSequence]: makeStartEndingSequence,
 
     // Dynamic Types

@@ -83,8 +83,8 @@ export const ConversationNode = ({ node, siblingIndex, parentNode, parentState, 
                 )}
             </div>
             {loaded &&
-                steppedLineNodes.map((id: string) => {
-                    return id !== "" ? <SteppedLineTo key={node.nodeId + "-" + id + "-" + "stepped-line"} from={node.nodeId} to={id} fromAnchor="top" toAnchor="bottom" orientation="v" {...connectionStyle} /> : null;
+                steppedLineNodes.map((id: string, index: number) => {
+                    return id !== "" && (index === 0 || index === steppedLineNodes.length - 1)  ? <SteppedLineTo key={node.nodeId + "-" + id + "-" + "stepped-line"} from={node.nodeId} to={id} fromAnchor="top" toAnchor="bottom" orientation="v" {...connectionStyle} /> : null;
                 })}
         </>
     );

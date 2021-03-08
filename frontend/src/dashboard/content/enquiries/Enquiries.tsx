@@ -34,7 +34,7 @@ export const Enquires = () => {
     const { setIsLoading } = React.useContext(DashboardContext);
 
     const loadEnquiries = useCallback(async () => {
-        var { data: enqs } = await client.Enquiries.getEnquiries();
+        const { data: enqs } = await client.Enquiries.getEnquiries();
         setEnquiries(enqs);
         setLoading(false);
         setIsLoading(false);
@@ -47,8 +47,7 @@ export const Enquires = () => {
 
     const toggleSeenValue = async (conversationId: string) => {
         setIsLoading(true);
-        await client.Enquiries.updateEnquiry(conversationId);
-        var { data: enqs } = await client.Enquiries.getEnquiries();
+        const {data: enqs} = await client.Enquiries.updateEnquiry(conversationId);
         setEnquiries(enqs);
         setIsLoading(false);
     };

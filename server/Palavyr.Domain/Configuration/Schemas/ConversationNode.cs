@@ -47,7 +47,8 @@ namespace Palavyr.Domain.Configuration.Schemas
                     AccountId = accountId,
                     IsMultiOptionType = false,
                     IsTerminalType = false,
-                    ShouldRenderChildren = true
+                    ShouldRenderChildren = true,
+                    IsSplitMergeType = false
                 }
             };
         }
@@ -65,7 +66,8 @@ namespace Palavyr.Domain.Configuration.Schemas
             bool isCritical = true,
             bool isMultiOptionType = false,
             bool isTerminalType = false,
-            bool shouldRenderChild = true
+            bool shouldRenderChild = true,
+            bool isSplitMergeType = false
         )
         {
             return new ConversationNode()
@@ -83,7 +85,8 @@ namespace Palavyr.Domain.Configuration.Schemas
                 AccountId = accountId,
                 IsMultiOptionType = isMultiOptionType,
                 IsTerminalType = isTerminalType,
-                ShouldRenderChildren = true
+                ShouldRenderChildren = shouldRenderChild,
+                IsSplitMergeType = isSplitMergeType
             };
         }
 
@@ -105,7 +108,8 @@ namespace Palavyr.Domain.Configuration.Schemas
                     node.IsCritical,
                     node.IsMultiOptionType,
                     node.IsTerminalType,
-                    node.ShouldRenderChildren
+                    node.ShouldRenderChildren,
+                    node.IsSplitMergeType
                 );
                 mappedTransactions.Add(mappedNode);
             }
