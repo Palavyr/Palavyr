@@ -6,7 +6,7 @@ import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import { updateChildOfIsSplitMergeType } from "../nodeUtils/splitMergeUtils";
 import { updateMultiTypeOption } from "../nodeUtils/mutliOptionUtils";
-import { replaceNodeWithUpdatedNode } from "../nodeUtils/commonNodeUtils";
+import { updateSingleOptionType, _replaceNodeWithUpdatedNode } from "../nodeUtils/commonNodeUtils";
 
 export interface IConversationNodeEditor {
     modalState: boolean;
@@ -44,8 +44,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, parent
             if (parentNode && parentNode.isSplitMergeType && valueOptions.length > 0) throw new Error("Children of isSplitMergeTypes should not have multiple value options.");
             updateMultiTypeOption(updatedNode, nodeList, valueOptions, setNodes); // create new nodes and update the Database
         } else {
-            const updatedNodeList = replaceNodeWithUpdatedNode(updatedNode, nodeList);
-            setNodes(updatedNodeList);
+            updateSingleOptionType(updatedNode, nodeList, setNodes);
         }
     };
 

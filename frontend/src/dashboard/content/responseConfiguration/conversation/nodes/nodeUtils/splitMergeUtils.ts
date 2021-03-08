@@ -1,6 +1,6 @@
 import { ConvoNode, Conversation, NodeOption } from "@Palavyr-Types";
 import { findIndex } from "lodash";
-import { createAndReattachNewNodes, replaceNodeWithUpdatedNode } from "./commonNodeUtils";
+import { createAndReattachNewNodes, _replaceNodeWithUpdatedNode } from "./commonNodeUtils";
 import { _removeNodeByID } from "./_coreNodeUtils";
 
 export const updateChildOfIsSplitMergeType = (node: ConvoNode, parentNode: ConvoNode, nodeList: Conversation, setNodes: (updatedNodeList: Conversation) => void) => {
@@ -48,7 +48,7 @@ export const changeChildOfSplitMergeType = (node: ConvoNode, nodeList, parentNod
 
         node.nodeChildrenString = newChildNodeIds.join(",");
 
-        const updatedNodeList = replaceNodeWithUpdatedNode(node, newNodeList);
+        const updatedNodeList = _replaceNodeWithUpdatedNode(node, newNodeList);
         childIdsToCreate.forEach((id: string, index: number) => {
             let newNode: ConvoNode = {
                 nodeId: id, // replace with uuid
@@ -76,7 +76,7 @@ export const changeChildOfSplitMergeType = (node: ConvoNode, nodeList, parentNod
         node.isTerminalType = false;
         // node.isSplitMergeType = false; // don't set this when we want to experiment with multiple split merges in a row
 
-        const updatedNodeList = replaceNodeWithUpdatedNode(node, nodeList);
+        const updatedNodeList = _replaceNodeWithUpdatedNode(node, nodeList);
         setNodes(updatedNodeList);
     }
 };

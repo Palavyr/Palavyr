@@ -51,3 +51,28 @@ export const _computeShouldRenderChildren = (parentNode: ConvoNode, index: numbe
         return true;
     }
 };
+
+export const _resetOptionPaths = (newChildNodeIds: string[], nodeList: Conversation, pathOptions: string[]) => {
+
+    let rectifiedNodeList = [...nodeList];
+
+    for (let i: number = 0; i < pathOptions.length; i++) {
+        let nodeId = newChildNodeIds[i];
+        let node = _getNodeById(nodeId, nodeList);
+        node.optionPath = pathOptions[i]
+        rectifiedNodeList = _replaceNodeWithUpdatedNode(node, rectifiedNodeList);
+    }
+    return rectifiedNodeList;
+}
+
+export const _getNodeById = (nodeId: string, nodeList: Conversation) => {
+    return nodeList.filter((node: ConvoNode) => node.nodeId === nodeId)[0];
+};
+
+export const _replaceNodeWithUpdatedNode = (nodeData: ConvoNode, nodeList: Conversation) => {
+    // replace the old node with the new node in the list
+    const filteredNodeList = _removeNodeByID(nodeData.nodeId, nodeList);
+    filteredNodeList.push(nodeData);
+    delete nodeData.id;
+    return filteredNodeList;
+};

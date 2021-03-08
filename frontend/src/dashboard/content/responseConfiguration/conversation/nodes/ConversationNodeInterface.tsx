@@ -6,7 +6,7 @@ import { NodeTypeSelector } from "./NodeTypeSelector";
 import { cloneDeep } from "lodash";
 import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
-import { replaceNodeWithUpdatedNode } from "./nodeUtils/commonNodeUtils";
+import { _replaceNodeWithUpdatedNode } from "./nodeUtils/commonNodeUtils";
 
 export interface IConversationNodeInterface {
     node: ConvoNode;
@@ -89,7 +89,7 @@ export const ConversationNodeInterface = ({ nodeOptionList, node, parentNode, op
         const newNode = cloneDeep(node);
         newNode.isCritical = event.target.checked;
 
-        const filteredNodeList = replaceNodeWithUpdatedNode(newNode, nodeList);
+        const filteredNodeList = _replaceNodeWithUpdatedNode(newNode, nodeList);
         setNodes(filteredNodeList);
     };
 

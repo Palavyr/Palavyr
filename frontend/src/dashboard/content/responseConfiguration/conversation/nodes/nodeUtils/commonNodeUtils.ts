@@ -1,24 +1,12 @@
-import { Conversation, ConvoNode, NodeOption, NodeTypeOptions, Responses, ValueOptionDelimiter } from "@Palavyr-Types";
-import { _computeShouldRenderChildren, _createNewChildIDs, _getIdsToDeleteRecursively, _removeNodeByID, _truncateTheTreeAtSpecificNode } from "./_coreNodeUtils";
+import { Conversation, ConvoNode, NodeOption, NodeTypeOptions, ValueOptionDelimiter } from "@Palavyr-Types";
+import { _computeShouldRenderChildren, _createNewChildIDs, _getIdsToDeleteRecursively, _getNodeById, _removeNodeByID, _replaceNodeWithUpdatedNode, _resetOptionPaths, _truncateTheTreeAtSpecificNode } from "./_coreNodeUtils";
 
 export const getRootNode = (nodeList: Conversation) => {
     return nodeList.filter((node) => node.isRoot === true)[0];
 };
 
-export const getNodeById = (nodeId: string, nodeList: Conversation) => {
-    return nodeList.filter((node: ConvoNode) => node.nodeId === nodeId)[0];
-};
-
 export const getNewNumChildren = (optionPaths: string[]) => {
     return optionPaths.filter((x) => x !== null && x !== "").length;
-};
-
-export const replaceNodeWithUpdatedNode = (nodeData: ConvoNode, nodeList: Conversation) => {
-    // replace the old node with the new node in the list
-    const filteredNodeList = _removeNodeByID(nodeData.nodeId, nodeList);
-    filteredNodeList.push(nodeData);
-    delete nodeData.id;
-    return filteredNodeList;
 };
 
 export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, parentNode: ConvoNode | null, siblingIndex: number) => {
@@ -69,7 +57,7 @@ export const createAndReattachNewNodes = (currentNode: ConvoNode, nodeList: Conv
 
         const nodeIdsToTruncateFrom = [...currentChildNodeIds.splice(newNumChildren)];
         nodeIdsToTruncateFrom.forEach((nodeId: string) => {
-            let nodeToTruncateFrom = getNodeById(nodeId, newNodeList);
+            let nodeToTruncateFrom = _getNodeById(nodeId, newNodeList);
             newNodeList = _truncateTheTreeAtSpecificNode(nodeToTruncateFrom, newNodeList);
         });
     } else {
@@ -107,12 +95,13 @@ export const changeNodeType = async (node: ConvoNode, nodeList: Conversation, se
     node.isTerminalType = nodeOption.isTerminalType;
     node.isSplitMergeType = nodeOption.isSplitMergeType;
 
-    const updatedNodeList = replaceNodeWithUpdatedNode(node, newNodeList);
+    const updatedNodeList = _replaceNodeWithUpdatedNode(node, newNodeList);
 
     // set any value options
     node.valueOptions = valueOptions.join(ValueOptionDelimiter);
 
     childIdsToCreate.forEach((id: string, index: number) => {
+        let shift = newChildNodeIds.length - childIdsToCreate.length;
         let newNode: ConvoNode = {
             nodeId: id, // replace with uuid
             nodeType: "", // default
@@ -122,16 +111,21 @@ export const changeNodeType = async (node: ConvoNode, nodeList: Conversation, se
             fallback: false,
             isCritical: false,
             areaIdentifier: node.areaIdentifier,
-            optionPath: pathOptions[index],
+            optionPath: pathOptions[index + shift],
             valueOptions: "",
             isMultiOptionType: false,
             isTerminalType: false,
             isSplitMergeType: false,
-            shouldRenderChildren: _computeShouldRenderChildren(node, index),
+            shouldRenderChildren: true,
         };
 
         updatedNodeList.push(newNode);
     });
+    const rectifiedNodeList = _resetOptionPaths(newChildNodeIds, updatedNodeList, pathOptions);
+    setNodes(rectifiedNodeList);
+};
 
+export const updateSingleOptionType = (updatedNode: ConvoNode, nodeList: Conversation, setNodes: (nodeList: Conversation) => void) => {
+    const updatedNodeList = _replaceNodeWithUpdatedNode(updatedNode, nodeList);
     setNodes(updatedNodeList);
 };

@@ -1,5 +1,5 @@
 import { ConvoNode, Conversation, ValueOptionDelimiter } from "@Palavyr-Types";
-import { createAndReattachNewNodes, getNewNumChildren, getNodeById } from "./commonNodeUtils";
+import { createAndReattachNewNodes, getNewNumChildren, _getNodeById } from "./commonNodeUtils";
 import { _createNewChildIDs, _removeNodeByID, _truncateTheTreeAtSpecificNode } from "./_coreNodeUtils";
 
 export const updateMultiTypeOption = (node: ConvoNode, nodeList: Conversation, valueOptions: string[], setNodes: (updatedNodeList: Conversation) => void) => {
