@@ -84,25 +84,18 @@ export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversa
         if (nodeOption.pathOptions.length >= 1) {
             pathOptions = nodeOption.pathOptions; // if its a predefined yes or no
         } else {
-            // use the previous node and attach
+            // use the previous node and attach - but if we've set to placeholder, use that instead
             const currentPathOptions = previousNode.valueOptions.split(ValueOptionDelimiter);
-            pathOptions = currentPathOptions;
+            if (currentPathOptions.length >= 1){
+                pathOptions = currentPathOptions;
+            } else {
+                pathOptions = ["Placeholder"] // or perhaps valueoptions from above
+            }
         }
     } else {
         pathOptions = ["Continue"];
     }
 
-    // } else if (nodeOption.isMultiOptionType && nodeOption.pathOptions.length == 0) {
-    //     // if the option is a multichoice or splitmerge with no predefined options. Try to take whats already there
-    //     if (currentPathOptions.length == 1 && isNullOrUndefinedOrWhitespace(currentPathOptions[0])) {
-
-    //         pathOptions = ["Placeholder"];
-    //     } else {
-    //         pathOptions = currentPathOptions;
-    //     }
-    // } else {
-    //     pathOptions = ["Continue"];
-    // }
 
     if (pathOptions === undefined) {
         throw new Error("Ill defined path options");
@@ -134,7 +127,13 @@ export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversa
     if (newChildNodeIds.length > 0) {
         updatedNodeList = _resetOptionPaths(newChildNodeIds, updatedNodeList, pathOptions);
     } else {
-        updatedNodeList = _resetOptionPaths(previousNodeChildrenString.split(","), updatedNodeList, pathOptions);
+        const previousChildren = previousNodeChildrenString.split(",");
+        if (previousChildren.length === 1 && previousChildren[0] === "") {
+            updatedNodeList = updatedNodeList;
+        } else {
+
+            updatedNodeList = _resetOptionPaths(previousChildren, updatedNodeList, pathOptions);
+        }
     }
     setNodes(updatedNodeList);
 };
