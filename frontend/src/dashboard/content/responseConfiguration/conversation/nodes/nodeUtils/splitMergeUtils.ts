@@ -1,7 +1,7 @@
 import { ConvoNode, Conversation, NodeOption, MostRecentSplitMerge } from "@Palavyr-Types";
 import { findIndex } from "lodash";
 import { createAndReattachNewNodes } from "./commonNodeUtils";
-import { _getParentNode, _removeNodeByID, _replaceNodeWithUpdatedNode } from "./_coreNodeUtils";
+import { _createAndAddNewNodes, _getParentNode, _removeNodeByID, _replaceNodeWithUpdatedNode } from "./_coreNodeUtils";
 
 export const updateChildOfIsSplitMergeType = (node: ConvoNode, parentNode: ConvoNode, nodeList: Conversation, setNodes: (updatedNodeList: Conversation) => void) => {
     const primarySiblingId = getPrimarySiblingIdFromParent(parentNode);
@@ -48,7 +48,10 @@ export const changeChildOfSplitMergeType = (node: ConvoNode, nodeList, parentNod
 
         node.nodeChildrenString = newChildNodeIds.join(",");
 
-        const updatedNodeList = _replaceNodeWithUpdatedNode(node, newNodeList);
+        let updatedNodeList = _replaceNodeWithUpdatedNode(node, newNodeList);
+
+        // updatedNodeList = _createAndAddNewNodes(childIdsToCreate, newChildNodeIds, node, pathOpt)
+
         childIdsToCreate.forEach((id: string, index: number) => {
             let newNode: ConvoNode = {
                 nodeId: id, // replace with uuid
@@ -65,6 +68,7 @@ export const changeChildOfSplitMergeType = (node: ConvoNode, nodeList, parentNod
                 isTerminalType: false,
                 isSplitMergeType: false,
                 shouldRenderChildren: true,
+                shouldShowMultiOption: false
             };
             updatedNodeList.push(newNode);
         });

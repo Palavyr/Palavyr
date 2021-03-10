@@ -41,7 +41,7 @@ export const ConversationNode = ({ node, siblingIndex, parentState, changeParent
 
     const { isChildOfSplitMerge, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling } = findMostRecentSplitMerge(node, nodeList);
 
-    const childNodes = parentNode && parentNode.isSplitMergeType ? getUnsortedChildNodes(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);
+    const childNodes = node.isSplitMergeType ? getUnsortedChildNodes(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);
 
     useEffect(() => {
         setLoaded(true);
@@ -75,16 +75,12 @@ export const ConversationNode = ({ node, siblingIndex, parentState, changeParent
                         parentNode={parentNode}
                         changeParentState={changeParentState}
                         optionPath={node.optionPath}
-                        nodeOptionList={checkedNodeOptionList(nodeOptionList, parentNode, siblingIndex)}
-
+                        nodeOptionList={nodeOptionList}
                         isChildOfSplitMerge={isChildOfSplitMerge}
                         decendentLevelFromSplitMerge={decendentLevelFromSplitMerge}
                         splitMergeRootSiblingIndex={splitMergeRootSiblingIndex}
                         nodeIdOfMostRecentSplitMergePrimarySibling={nodeIdOfMostRecentSplitMergePrimarySibling}
                     />
-                    <div>
-                        {isChildOfSplitMerge && splitMergeRootSiblingIndex > 0 && "This is a child of a splitmerge node that should merge back in."}
-                    </div>
                 </div>
                 {childNodes.length > 0 && (
                     <div key={node.nodeId} className="tree-row">

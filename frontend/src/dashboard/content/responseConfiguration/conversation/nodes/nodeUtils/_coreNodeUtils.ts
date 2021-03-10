@@ -94,7 +94,7 @@ export const _getParentNode = (node: ConvoNode, nodeList: Conversation) => {
     return parent[0];
 };
 
-export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeIds: string[], node: ConvoNode, pathOptions: string[], updatedNodeList: Conversation) => {
+export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeIds: string[], node: ConvoNode, pathOptions: string[], updatedNodeList: Conversation, shouldShowMultiOption: boolean) => {
 
     childIdsToCreate.forEach((id: string, index: number) => {
         let shift = newChildNodeIds.length - childIdsToCreate.length;
@@ -113,7 +113,7 @@ export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeId
             isTerminalType: false,
             isSplitMergeType: false,
             shouldRenderChildren: true,
-            shouldShowMultiOption: false
+            shouldShowMultiOption: shouldShowMultiOption
         };
 
         updatedNodeList.push(newNode);

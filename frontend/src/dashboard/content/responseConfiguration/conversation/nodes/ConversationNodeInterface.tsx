@@ -22,13 +22,15 @@ type StyleProps = {
     nodeText: string;
     nodeType: string;
     checked: boolean;
+    isChildOfSplitMerge: boolean;
 };
+
 const useStyles = makeStyles(() => ({
     root: (props: StyleProps) => ({
         minWidth: "275px",
         maxWidth: "300px",
-        borderColor: props.nodeType === "" ? "Red" : "#54585A",
-        borderWidth: props.nodeType === "" ? "5px" : "2px",
+        borderColor: props.nodeType === "" ? "Red" : props.isChildOfSplitMerge ? "purple" : "#54585A",
+        borderWidth: props.nodeType === "" ? "5px" : props.isChildOfSplitMerge ? "8px" : "2px",
         borderRadius: "3px",
         backgroundColor: "#C7ECEE",
     }),
@@ -96,7 +98,7 @@ export const ConversationNodeInterface = ({
 
     const [previousChildren, setPreviousChildren] = useState<string>("");
     const [modalState, setModalState] = useState<boolean>(false);
-    const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text, checked: node.isCritical });
+    const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text, checked: node.isCritical, isChildOfSplitMerge  });
 
     useEffect(() => {
         setPreviousChildren(node.nodeChildrenString);

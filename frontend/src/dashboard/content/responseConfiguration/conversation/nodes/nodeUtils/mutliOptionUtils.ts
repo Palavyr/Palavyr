@@ -22,28 +22,6 @@ export const updateMultiTypeOption = (node: ConvoNode, nodeList: Conversation, v
     let updatedNodeList = _removeNodeByID(node.nodeId, newNodeList);
     delete node.id;
     updatedNodeList.push(node);
-    updatedNodeList =_createAndAddNewNodes(childIdsToCreate, newChildNodeIds, node, optionPaths, updatedNodeList);
-
-    // childIdsToCreate.forEach((id: string, index: number) => {
-    //     let newNode: ConvoNode = {
-    //         nodeId: id, // replace with uuid
-    //         nodeType: "", // default
-    //         text: "Ask your question!",
-    //         nodeChildrenString: "",
-    //         isRoot: false,
-    //         fallback: false,
-    //         isCritical: false,
-    //         areaIdentifier: node.areaIdentifier,
-    //         optionPath: optionPaths[index],
-    //         valueOptions: "",
-    //         isMultiOptionType: false,
-    //         isTerminalType: false,
-    //         isSplitMergeType: false,
-    //         shouldRenderChildren: true,
-    //     };
-
-    //     filteredNodeList.push(newNode);
-    // });
-
+    updatedNodeList =_createAndAddNewNodes(childIdsToCreate, newChildNodeIds, node, optionPaths, updatedNodeList, true);
     setNodes(updatedNodeList);
 };

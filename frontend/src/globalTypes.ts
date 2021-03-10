@@ -380,6 +380,7 @@ export type NodeOption = {
     isMultiOptionType: boolean;
     isTerminalType: boolean;
     isSplitMergeType: boolean;
+    shouldShowMultiOption: boolean;
     stringName: string | null;
     groupName: string;
 };
