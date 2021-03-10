@@ -7,6 +7,7 @@ import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import { updateChildOfIsSplitMergeType } from "../nodeUtils/splitMergeUtils";
 import { updateMultiTypeOption } from "../nodeUtils/mutliOptionUtils";
 import { updateSingleOptionType } from "../nodeUtils/commonNodeUtils";
+import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 
 export interface IConversationNodeEditor {
     modalState: boolean;
@@ -24,11 +25,11 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, parent
 
     useEffect(() => {
         setText(node.text);
-        if (node.isMultiOptionType) {
+        if (node.isMultiOptionType && !isNullOrUndefinedOrWhitespace(node.valueOptions)) {
             setOptions(node.valueOptions.split(ValueOptionDelimiter));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [node]);
 
     const handleCloseModal = () => {
         setModalState(false);
@@ -38,10 +39,11 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, parent
         const updatedNode = { ...node };
         updatedNode.text = value;
 
-        if (node.isMultiOptionType && parentNode && parentNode.isSplitMergeType) {
-            updateChildOfIsSplitMergeType(updatedNode, parentNode, nodeList, setNodes);
-        } else if (node.isMultiOptionType) {
-            if (parentNode && parentNode.isSplitMergeType && valueOptions.length > 0) throw new Error("Children of isSplitMergeTypes should not have multiple value options.");
+        // if (node.isMultiOptionType && parentNode && parentNode.isSplitMergeType) {
+        //     updateChildOfIsSplitMergeType(updatedNode, parentNode, nodeList, setNodes);
+        // } else
+        if (node.isMultiOptionType) {
+            // if (parentNode && parentNode.isSplitMergeType && valueOptions.length > 0) throw new Error("Children of isSplitMergeTypes should not have multiple value options.");
             updateMultiTypeOption(updatedNode, nodeList, valueOptions, setNodes); // create new nodes and update the Database
         } else {
             updateSingleOptionType(updatedNode, nodeList, setNodes);
@@ -65,7 +67,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, parent
                     type="text"
                     fullWidth
                 />
-                {node.isMultiOptionType && (
+                {node.isMultiOptionType && node.shouldShowMultiOption && (
                     <>
                         <MultiChoiceOptions options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} />
                     </>

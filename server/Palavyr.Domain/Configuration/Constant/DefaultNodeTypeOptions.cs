@@ -55,6 +55,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 GroupName = SplitAndMerge;
                 IsSplitMergeType = true;
                 ShouldRenderChildren = true;
+                ShouldShowMultiOption = true;
             }
         }
         
@@ -74,6 +75,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 GroupName = InfoCollection;
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
 
             }
         }
@@ -93,6 +95,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 GroupName = InfoCollection;
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
 
             }
         }
@@ -112,6 +115,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 GroupName = InfoCollection;
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
 
             }
         }
@@ -129,11 +133,12 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Yes or No";
                 PathOptions = new List<string>() {"No", "Yes"};
                 ValueOptions = new List<string>() {"No", "Yes"};
-                IsMultiOptionType = false; // set to no if we don't want to allow the node value options presented to the user to change. 
+                IsMultiOptionType = true; // set to no if we don't want to allow the node value options presented to the user to change. 
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
 
             }
         }
@@ -149,11 +154,12 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Yes, No, Not Sure";
                 PathOptions = new List<string>() {"Yes", "No", "Not Sure"};
                 ValueOptions = new List<string>() {"Yes", "No", "Not Sure"};
-                IsMultiOptionType = false;
+                IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
 
             }
         }
@@ -168,12 +174,12 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Yes / Not Sure, No";
                 PathOptions = new List<string>() {"Yes / Not Sure", "No"};
                 ValueOptions = new List<string>() {"Yes / Not Sure", "No"};
-                IsMultiOptionType = false;
+                IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
- 
+                ShouldShowMultiOption = false;
 
             }
         }
@@ -188,12 +194,12 @@ namespace Palavyr.Domain.Configuration.Constant
                 Value = StringName;
                 PathOptions = new List<string>() {"Yes", "No / Not Sure"};
                 ValueOptions = new List<string>() {"Yes", "No / Not Sure"};
-                IsMultiOptionType = false;
+                IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
-
+                ShouldShowMultiOption = false;
             }
         }
 
@@ -212,7 +218,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 GroupName = InfoCollection;
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
-
+                ShouldShowMultiOption = false;
             }
         }
 
@@ -231,7 +237,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 GroupName = InfoProvide;
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
-
+                ShouldShowMultiOption = false;
             }
         }
 
@@ -250,7 +256,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 GroupName = MultipleChoice;
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
-
+                ShouldShowMultiOption = true;
             }
         }
 
@@ -269,7 +275,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 GroupName = MultipleChoice;
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
-
+                ShouldShowMultiOption = true;
             }
         }
 
@@ -289,7 +295,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 GroupName = Terminal;
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
-
+                ShouldShowMultiOption = false;
             }
         }
 
@@ -308,7 +314,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 GroupName = Terminal;
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
-
+                ShouldShowMultiOption = false;
             }
         }
 
@@ -326,7 +332,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsTerminalType = false;
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
-
+                ShouldShowMultiOption = false;
             }
         }
 
@@ -344,7 +350,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsTerminalType = false;
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
-
+                ShouldShowMultiOption = false;
             }
         }
 
@@ -362,7 +368,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 GroupName = Terminal;
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
-
+                ShouldShowMultiOption = false;
             }
         }
     }

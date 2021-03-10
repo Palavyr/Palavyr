@@ -1,10 +1,10 @@
-import { ConvoNode, Conversation, NodeOption } from "@Palavyr-Types";
+import { ConvoNode, Conversation, NodeOption, MostRecentSplitMerge } from "@Palavyr-Types";
 import { findIndex } from "lodash";
 import { createAndReattachNewNodes } from "./commonNodeUtils";
-import { _removeNodeByID, _replaceNodeWithUpdatedNode } from "./_coreNodeUtils";
+import { _getParentNode, _removeNodeByID, _replaceNodeWithUpdatedNode } from "./_coreNodeUtils";
 
 export const updateChildOfIsSplitMergeType = (node: ConvoNode, parentNode: ConvoNode, nodeList: Conversation, setNodes: (updatedNodeList: Conversation) => void) => {
-    const primarySiblingId = getPrimarySiblingId(parentNode, node);
+    const primarySiblingId = getPrimarySiblingIdFromParent(parentNode);
 
     node.nodeChildrenString = primarySiblingId;
     node.isMultiOptionType = false;
@@ -24,7 +24,7 @@ export const updateChildOfIsSplitMergeType = (node: ConvoNode, parentNode: Convo
     setNodes(nodeList);
 };
 
-export const getPrimarySiblingId = (parentNode: ConvoNode, node: ConvoNode) => {
+export const getPrimarySiblingIdFromParent = (parentNode: ConvoNode) => {
     return parentNode.nodeChildrenString.split(",")[0];
 };
 
@@ -71,7 +71,7 @@ export const changeChildOfSplitMergeType = (node: ConvoNode, nodeList, parentNod
         setNodes(updatedNodeList);
     } else {
         node.shouldRenderChildren = false;
-        node.nodeChildrenString = getPrimarySiblingId(parentNode, node);
+        node.nodeChildrenString = getPrimarySiblingIdFromParent(parentNode);
         node.isMultiOptionType = false;
         node.isTerminalType = false;
         // node.isSplitMergeType = false; // don't set this when we want to experiment with multiple split merges in a row
@@ -80,3 +80,54 @@ export const changeChildOfSplitMergeType = (node: ConvoNode, nodeList, parentNod
         setNodes(updatedNodeList);
     }
 };
+
+export const findMostRecentSplitMerge = (node: ConvoNode, nodeList: Conversation): MostRecentSplitMerge => {
+    // returns either the most recent splitMerge type, or null
+    const SplitMerge = "SplitMerge".toUpperCase();
+
+    if (!nodeListContainsSplitmerge(nodeList)) {// early bail if no splitmerges
+        return { isChildOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: "" }
+    }
+
+    if (node.nodeType.toUpperCase() === SplitMerge) {
+        return { isChildOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: ""};
+    }
+
+    if (node.isRoot) {
+        return { isChildOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: ""};
+    }
+
+    let found = false;
+    let parentNode: ConvoNode;
+    let decendentLevelFromSplitMerge = 0;
+    let tempParentNode: ConvoNode | null = { ...node };
+    let prevChildReference = { ...node };
+    let splitMergeRootSiblingIndex: number;
+    let nodeIdOfMostRecentSplitMergePrimarySibling: string;
+    let result: MostRecentSplitMerge = { isChildOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: ""};
+    do {
+        decendentLevelFromSplitMerge++;
+        prevChildReference = { ...tempParentNode! };
+        tempParentNode = _getParentNode(prevChildReference!, nodeList);
+        if (tempParentNode === null) throw new Error("Orphan node detected.");
+        if (tempParentNode.nodeType.toUpperCase() === SplitMerge) {
+            found = true;
+            parentNode = tempParentNode;
+            splitMergeRootSiblingIndex = getSiblingIndex(parentNode, prevChildReference);
+            nodeIdOfMostRecentSplitMergePrimarySibling = getPrimarySiblingIdFromParent(parentNode);
+            result = { isChildOfSplitMerge: true, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling};
+            break;
+        } else if (tempParentNode.isRoot) {
+            found = true;
+        } else if (decendentLevelFromSplitMerge > 1000) {
+            found = true;
+        }
+    } while (!found);
+
+    return result;
+};
+
+export const nodeListContainsSplitmerge = (nodeList: Conversation) => {
+    const nodeTypes = nodeList.map((node: ConvoNode) => node.nodeType.toUpperCase());
+    return nodeTypes.includes("SplitMerge".toUpperCase());
+}

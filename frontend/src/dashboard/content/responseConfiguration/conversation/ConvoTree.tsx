@@ -128,7 +128,7 @@ export const ConvoTree = () => {
                 <form onSubmit={() => null}>
                     <fieldset className="fieldset" id="tree-test">
                         <div className="main-tree tree-wrap">
-                            {nodeList.length > 0 ? <ConversationNode key="tree-start" siblingIndex={0} parentNode={null} node={rootNode} parentState={true} changeParentState={() => null} nodeOptionList={nodeOptionList} /> : null}
+                            {nodeList.length > 0 ? <ConversationNode key="tree-start" siblingIndex={0} node={rootNode} parentState={true} changeParentState={() => null} nodeOptionList={nodeOptionList} /> : null}
                         </div>
                     </fieldset>
                 </form>

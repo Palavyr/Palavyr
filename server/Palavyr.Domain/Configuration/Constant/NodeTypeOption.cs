@@ -52,6 +52,11 @@ namespace Palavyr.Domain.Configuration.Constant
          * Whether or not this type should render its children (used with splitmerge - where children will be duplicated'
          */
         public bool ShouldRenderChildren { get; set; }
+
+        /*
+         * Whether or not this type should show the multioption selector
+         */
+        public bool ShouldShowMultiOption { get; set; }
         
         /*
          * Whether or not its children will result in a remerge of the branch after splitting into N children (all children must remerge)

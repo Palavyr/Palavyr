@@ -85,6 +85,7 @@ export type ConvoNode = {
     id?: number | undefined;
     shouldRenderChildren: boolean;
     isSplitMergeType: boolean;
+    shouldShowMultiOption: boolean;
 };
 
 export type Conversation = Array<ConvoNode>;
@@ -568,3 +569,11 @@ export type TodosAsBoolean = {
     awaitingVerification: boolean;
     phoneNumber: boolean;
 };
+
+
+export type MostRecentSplitMerge = {
+    isChildOfSplitMerge: boolean;
+    decendentLevelFromSplitMerge: number;
+    splitMergeRootSiblingIndex: number;
+    nodeIdOfMostRecentSplitMergePrimarySibling: string;
+}

@@ -52,16 +52,16 @@ export const NodeTypeSelector = ({ node, parentNode, parentState, changeParentSt
             return;
         }
 
-        if (parentNode && parentNode.isSplitMergeType) {
-            if (nodeOption.isMultiOptionType) {
-                alert("MultiOption types are not allowed when parent is split merge type.")
-                throw new Error("MultiOption types are not allowed when parent is split merge type.");
-            } else {
-                changeChildOfSplitMergeType(node, nodeList, parentNode, setNodes, nodeOption);
-            }
-        } else {
-            changeNodeType(node, nodeList, setNodes, nodeOption);
-        }
+        // if (parentNode && parentNode.isSplitMergeType) {
+        //     if (nodeOption.isMultiOptionType) {
+        //         alert("MultiOption types are not allowed when parent is split merge type.")
+        //         throw new Error("MultiOption types are not allowed when parent is split merge type.");
+        //     } else {
+        //         changeChildOfSplitMergeType(node, nodeList, parentNode, setNodes, nodeOption);
+        //     }
+        // } else {
+        changeNodeType(node, nodeList, setNodes, nodeOption);
+        // }
 
         changeParentState(!parentState); // rerender lines
     };

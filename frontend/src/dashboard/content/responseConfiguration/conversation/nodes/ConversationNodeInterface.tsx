@@ -1,4 +1,4 @@
-import { ConvoNode, NodeTypeOptions } from "@Palavyr-Types";
+import { ConvoNode, MostRecentSplitMerge, NodeTypeOptions } from "@Palavyr-Types";
 import React, { useState } from "react";
 import { makeStyles, Card, CardContent, Typography, FormControlLabel, Checkbox } from "@material-ui/core";
 import classNames from "classnames";
@@ -7,8 +7,9 @@ import { cloneDeep } from "lodash";
 import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import { _replaceNodeWithUpdatedNode } from "./nodeUtils/_coreNodeUtils";
+import { useEffect } from "react";
 
-export interface IConversationNodeInterface {
+export interface IConversationNodeInterface extends MostRecentSplitMerge {
     node: ConvoNode;
     parentNode: ConvoNode | null;
     parentState: boolean;
@@ -79,18 +80,48 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const ConversationNodeInterface = ({ nodeOptionList, node, parentNode, optionPath, parentState, changeParentState }: IConversationNodeInterface) => {
+export const ConversationNodeInterface = ({
+    nodeOptionList,
+    node,
+    parentNode,
+    optionPath,
+    parentState,
+    changeParentState,
+    isChildOfSplitMerge,
+    decendentLevelFromSplitMerge,
+    splitMergeRootSiblingIndex,
+    nodeIdOfMostRecentSplitMergePrimarySibling,
+}: IConversationNodeInterface) => {
     const { setNodes, nodeList } = React.useContext(ConversationTreeContext);
 
+    const [previousChildren, setPreviousChildren] = useState<string>("");
     const [modalState, setModalState] = useState<boolean>(false);
     const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text, checked: node.isCritical });
 
-    const showResponseInPdfCheckbox = async (event: { target: { checked: boolean } }) => {
+    useEffect(() => {
+        setPreviousChildren(node.nodeChildrenString);
+    }, []);
+    const showResponseInPdfCheckbox = (event: { target: { checked: boolean } }) => {
         const newNode = cloneDeep(node);
         newNode.isCritical = event.target.checked;
 
-        const filteredNodeList = _replaceNodeWithUpdatedNode(newNode, nodeList);
-        setNodes(filteredNodeList);
+        const updatedNodeList = _replaceNodeWithUpdatedNode(newNode, nodeList);
+        setNodes(updatedNodeList);
+    };
+
+    const handleMergeBackInOnClick = (event: { target: { checked: boolean } }) => {
+        const newNode = cloneDeep(node);
+
+        newNode.shouldRenderChildren = !event.target.checked;
+        if (splitMergeRootSiblingIndex > 0) {
+            if (event.target.checked) {
+                newNode.nodeChildrenString = nodeIdOfMostRecentSplitMergePrimarySibling;
+            } else {
+                newNode.nodeChildrenString = previousChildren;
+            }
+        }
+        const updatedNodeList = _replaceNodeWithUpdatedNode(newNode, nodeList);
+        setNodes(updatedNodeList);
     };
 
     return (
@@ -116,6 +147,16 @@ export const ConversationNodeInterface = ({ nodeOptionList, node, parentNode, op
                     control={<Checkbox className={classes.formstyle} size="small" checked={node.isCritical} value="" name={"crit-" + node.nodeId} onChange={showResponseInPdfCheckbox} />}
                     label="Show response in PDF"
                 />
+                {isChildOfSplitMerge && splitMergeRootSiblingIndex > 0 && (
+                    <FormControlLabel
+                        className={classes.formstyle}
+                        classes={{
+                            label: classes.formLabelStyle,
+                        }}
+                        control={<Checkbox className={classes.formstyle} size="small" checked={!node.shouldRenderChildren} value="" name={"crit-" + node.nodeId + "-merge"} onChange={handleMergeBackInOnClick} />}
+                        label="Merge with primary sibling branch"
+                    />
+                )}
                 <ConversationNodeEditor setModalState={setModalState} modalState={modalState} node={node} parentNode={parentNode} />
             </CardContent>
         </Card>

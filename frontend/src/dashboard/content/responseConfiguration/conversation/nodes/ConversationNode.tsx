@@ -5,13 +5,15 @@ import { ConversationNodeInterface } from "./ConversationNodeInterface";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import "./ConversationNode.css";
 import { checkedNodeOptionList, getChildNodesSortedByOptionPath, getUnsortedChildNodes } from "./nodeUtils/commonNodeUtils";
+import { findMostRecentSplitMerge, nodeListContainsSplitmerge } from "./nodeUtils/splitMergeUtils";
+import { _getParentNode } from "./nodeUtils/_coreNodeUtils";
 
 export interface IConversationNode {
     node: ConvoNode;
     parentState: boolean;
     changeParentState: (parentState: boolean) => void;
     nodeOptionList: NodeTypeOptions;
-    parentNode: ConvoNode | null;
+    // parentNode: ConvoNode | null;
     siblingIndex: number;
 }
 
@@ -29,13 +31,17 @@ export const connectionStyle: lineStyle = {
     zIndex: 0,
 };
 
-export const ConversationNode = ({ node, siblingIndex, parentNode, parentState, changeParentState, nodeOptionList }: IConversationNode) => {
+export const ConversationNode = ({ node, siblingIndex, parentState, changeParentState, nodeOptionList }: IConversationNode) => {
     const { nodeList } = useContext(ConversationTreeContext);
 
     const [nodeState, changeNodeState] = useState<boolean>(true);
     const [loaded, setLoaded] = useState(false);
 
-    const childNodes = node.isSplitMergeType ? getUnsortedChildNodes(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);
+    const parentNode = _getParentNode(node, nodeList);
+
+    const { isChildOfSplitMerge, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling } = findMostRecentSplitMerge(node, nodeList);
+
+    const childNodes = parentNode && parentNode.isSplitMergeType ? getUnsortedChildNodes(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);
 
     useEffect(() => {
         setLoaded(true);
@@ -70,13 +76,21 @@ export const ConversationNode = ({ node, siblingIndex, parentNode, parentState, 
                         changeParentState={changeParentState}
                         optionPath={node.optionPath}
                         nodeOptionList={checkedNodeOptionList(nodeOptionList, parentNode, siblingIndex)}
+
+                        isChildOfSplitMerge={isChildOfSplitMerge}
+                        decendentLevelFromSplitMerge={decendentLevelFromSplitMerge}
+                        splitMergeRootSiblingIndex={splitMergeRootSiblingIndex}
+                        nodeIdOfMostRecentSplitMergePrimarySibling={nodeIdOfMostRecentSplitMergePrimarySibling}
                     />
+                    <div>
+                        {isChildOfSplitMerge && splitMergeRootSiblingIndex > 0 && "This is a child of a splitmerge node that should merge back in."}
+                    </div>
                 </div>
                 {childNodes.length > 0 && (
                     <div key={node.nodeId} className="tree-row">
                         {node.shouldRenderChildren
                             ? childNodes.map((nextNode, index) => (
-                                  <ConversationNode key={nextNode.nodeId + "-" + index.toString()} siblingIndex={index} node={nextNode} parentNode={node} parentState={nodeState} changeParentState={changeNodeState} nodeOptionList={nodeOptionList} />
+                                  <ConversationNode key={nextNode.nodeId + "-" + index.toString()} siblingIndex={index} node={nextNode} parentState={nodeState} changeParentState={changeNodeState} nodeOptionList={nodeOptionList} />
                               ))
                             : null}
                     </div>
@@ -84,9 +98,10 @@ export const ConversationNode = ({ node, siblingIndex, parentNode, parentState, 
             </div>
             {loaded &&
                 steppedLineNodes.map((id: string, index: number) => {
-                    return id !== "" && (index === 0 || index === steppedLineNodes.length - 1)  ? <SteppedLineTo key={node.nodeId + "-" + id + "-" + "stepped-line"} from={node.nodeId} to={id} fromAnchor="top" toAnchor="bottom" orientation="v" {...connectionStyle} /> : null;
+                    return id !== "" && (index === 0 || index === steppedLineNodes.length - 1) ? (
+                        <SteppedLineTo key={node.nodeId + "-" + id + "-" + "stepped-line"} from={node.nodeId} to={id} fromAnchor="top" toAnchor="bottom" orientation="v" {...connectionStyle} />
+                    ) : null;
                 })}
         </>
     );
 };
-

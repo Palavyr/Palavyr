@@ -1,6 +1,7 @@
+import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { Conversation, ConvoNode, NodeOption, NodeTypeOptions, ValueOptionDelimiter } from "@Palavyr-Types";
-import { _computeShouldRenderChildren, _createNewChildIDs, _getIdsToDeleteRecursively, _getNodeById, _removeNodeByID, _replaceNodeWithUpdatedNode, _resetOptionPaths, _truncateTheTreeAtSpecificNode } from "./_coreNodeUtils";
+import { _computeShouldRenderChildren, _createAndAddNewNodes, _createNewChildIDs, _getIdsToDeleteRecursively, _getNodeById, _removeNodeByID, _replaceNodeWithUpdatedNode, _resetOptionPaths, _truncateTheTreeAtSpecificNode } from "./_coreNodeUtils";
 
 export const getRootNode = (nodeList: Conversation) => {
     return nodeList.filter((node) => node.isRoot === true)[0];
@@ -21,8 +22,8 @@ export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, parentNod
 
 export const getUnsortedChildNodes = (childrenIDs: string, nodeList: Conversation) => {
     const ids = childrenIDs.split(",");
-    return nodeList.filter((node) => ids.includes(node.nodeId))
-}
+    return nodeList.filter((node) => ids.includes(node.nodeId));
+};
 
 export const getChildNodesSortedByOptionPath = (childrenIds: string, nodeList: Conversation) => {
     const unsortedChildNodes = getUnsortedChildNodes(childrenIds, nodeList);
@@ -82,8 +83,31 @@ export const createAndReattachNewNodes = (currentNode: ConvoNode, nodeList: Conv
 };
 
 export const changeNodeType = async (node: ConvoNode, nodeList: Conversation, setNodes: (nodeList: Conversation) => void, nodeOption: NodeOption) => {
-    const pathOptions = nodeOption.pathOptions;
-    const valueOptions = nodeOption.valueOptions;
+    let valueOptions = node.valueOptions; // if valueOptions is "", its because it was from a non-multioptionType
+    if (nodeOption.isMultiOptionType && nodeOption.valueOptions.length > 0) {
+        valueOptions = nodeOption.valueOptions.join(ValueOptionDelimiter);
+    } else if (isNullOrUndefinedOrWhitespace(valueOptions)) {
+        valueOptions = "Placeholder"
+    }
+
+    let pathOptions: string[];
+    if (nodeOption.isMultiOptionType && nodeOption.pathOptions.length > 0) {
+        pathOptions = nodeOption.pathOptions; // if its a predefined yes or no
+    } else if (nodeOption.isMultiOptionType && nodeOption.pathOptions.length == 0) {
+        // if the option is a multichoice with no predefined options. Try to take whats already there
+        const currentPathOptions = node.valueOptions.split(ValueOptionDelimiter);
+        if (currentPathOptions.length > 0) { // pathoptions could be [""]
+            if (currentPathOptions.length == 1 && isNullOrUndefinedOrWhitespace(currentPathOptions[0])) {
+                pathOptions = ["Placeholder"]
+            } else {
+                pathOptions = currentPathOptions;
+            }
+        } else {
+            pathOptions = currentPathOptions;
+        }
+    } else {
+        pathOptions = valueOptions.split(",");
+    }
 
     if (pathOptions === undefined) {
         throw new Error("Ill defined path options");
@@ -100,39 +124,44 @@ export const changeNodeType = async (node: ConvoNode, nodeList: Conversation, se
     const newNumChildren = getNewNumChildren(pathOptions);
     const { newNodeList, newChildNodeIds, childIdsToCreate } = createAndReattachNewNodes(node, nodeList, newNumChildren);
 
+    const previousNodeChildrenString = node.nodeChildrenString;
     node.nodeChildrenString = newChildNodeIds.join(",");
     node.isMultiOptionType = nodeOption.isMultiOptionType;
     node.isTerminalType = nodeOption.isTerminalType;
     node.isSplitMergeType = nodeOption.isSplitMergeType;
 
-    const updatedNodeList = _replaceNodeWithUpdatedNode(node, newNodeList);
-
     // set any value options
-    node.valueOptions = valueOptions.join(ValueOptionDelimiter);
+    node.valueOptions = valueOptions;
+    let updatedNodeList = _replaceNodeWithUpdatedNode(node, newNodeList);
+    updatedNodeList = _createAndAddNewNodes(childIdsToCreate, newChildNodeIds, node, pathOptions, updatedNodeList);
 
-    childIdsToCreate.forEach((id: string, index: number) => {
-        let shift = newChildNodeIds.length - childIdsToCreate.length;
-        let newNode: ConvoNode = {
-            nodeId: id, // replace with uuid
-            nodeType: "", // default
-            text: "Ask your question!",
-            nodeChildrenString: "",
-            isRoot: false,
-            fallback: false,
-            isCritical: false,
-            areaIdentifier: node.areaIdentifier,
-            optionPath: pathOptions[index + shift],
-            valueOptions: "",
-            isMultiOptionType: false,
-            isTerminalType: false,
-            isSplitMergeType: false,
-            shouldRenderChildren: true,
-        };
+    // childIdsToCreate.forEach((id: string, index: number) => {
+    //     let shift = newChildNodeIds.length - childIdsToCreate.length;
+    //     let newNode: ConvoNode = {
+    //         nodeId: id, // replace with uuid
+    //         nodeType: "", // default
+    //         text: "Ask your question!",
+    //         nodeChildrenString: "",
+    //         isRoot: false,
+    //         fallback: false,
+    //         isCritical: false,
+    //         areaIdentifier: node.areaIdentifier,
+    //         optionPath: pathOptions[index + shift],
+    //         valueOptions: "",
+    //         isMultiOptionType: false,
+    //         isTerminalType: false,
+    //         isSplitMergeType: false,
+    //         shouldRenderChildren: true,
+    //     };
 
-        updatedNodeList.push(newNode);
-    });
-    const rectifiedNodeList = _resetOptionPaths(newChildNodeIds, updatedNodeList, pathOptions);
-    setNodes(rectifiedNodeList);
+    //     updatedNodeList.push(newNode);
+    // });
+    if (newChildNodeIds.length > 0) {
+        updatedNodeList = _resetOptionPaths(newChildNodeIds, updatedNodeList, pathOptions);
+    } else {
+        updatedNodeList = _resetOptionPaths(previousNodeChildrenString.split(","), updatedNodeList, pathOptions);
+    }
+    setNodes(updatedNodeList);
 };
 
 export const updateSingleOptionType = (updatedNode: ConvoNode, nodeList: Conversation, setNodes: (nodeList: Conversation) => void) => {
