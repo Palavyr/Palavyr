@@ -23,14 +23,15 @@ type StyleProps = {
     nodeType: string;
     checked: boolean;
     isChildOfSplitMerge: boolean;
+    splitMergeRootSiblingIndex: number;
 };
 
 const useStyles = makeStyles(() => ({
     root: (props: StyleProps) => ({
         minWidth: "275px",
         maxWidth: "300px",
-        borderColor: props.nodeType === "" ? "Red" : props.isChildOfSplitMerge ? "purple" : "#54585A",
-        borderWidth: props.nodeType === "" ? "5px" : props.isChildOfSplitMerge ? "8px" : "2px",
+        borderColor: props.nodeType === "" ? "Red" : props.isChildOfSplitMerge && props.splitMergeRootSiblingIndex > 0 ? "purple" : "#54585A",
+        borderWidth: props.nodeType === "" ? "5px" : props.isChildOfSplitMerge && props.splitMergeRootSiblingIndex > 0 ? "8px" : "2px",
         borderRadius: "3px",
         backgroundColor: "#C7ECEE",
     }),
@@ -98,7 +99,7 @@ export const ConversationNodeInterface = ({
 
     const [previousChildren, setPreviousChildren] = useState<string>("");
     const [modalState, setModalState] = useState<boolean>(false);
-    const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text, checked: node.isCritical, isChildOfSplitMerge  });
+    const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text, checked: node.isCritical, isChildOfSplitMerge, splitMergeRootSiblingIndex });
 
     useEffect(() => {
         setPreviousChildren(node.nodeChildrenString);
@@ -159,6 +160,7 @@ export const ConversationNodeInterface = ({
                         label="Merge with primary sibling branch"
                     />
                 )}
+                {isChildOfSplitMerge && splitMergeRootSiblingIndex === 0 && decendentLevelFromSplitMerge === 1 && <Typography>This is the primary sibling. Branches will merge to this node.</Typography>}
                 <ConversationNodeEditor setModalState={setModalState} modalState={modalState} node={node} parentNode={parentNode} />
             </CardContent>
         </Card>

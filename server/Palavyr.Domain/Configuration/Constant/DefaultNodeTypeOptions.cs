@@ -69,7 +69,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Take Currency";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { };
+                ValueOptions = new List<string>() {"Continue"};
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
@@ -89,7 +89,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Take Number Individuals";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { };
+                ValueOptions = new List<string>() {"Continue"};
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
@@ -109,7 +109,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Take Number";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { };
+                ValueOptions = new List<string>() { "Continue" };
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
@@ -212,7 +212,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Take Text";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { };
+                ValueOptions = new List<string>() { "Continue" };
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
@@ -231,7 +231,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Provide Info";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { };
+                ValueOptions = new List<string>() { "Continue" };
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoProvide;
@@ -327,7 +327,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Send Email";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { };
+                ValueOptions = new List<string>() {"Continue"};
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 IsSplitMergeType = false;
@@ -345,7 +345,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Send Too Complicated Email";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { };
+                ValueOptions = new List<string>() {"Continue"};
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 IsSplitMergeType = false;

@@ -1,6 +1,7 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { Conversation, ConvoNode, NodeOption, NodeTypeOptions, ValueOptionDelimiter } from "@Palavyr-Types";
+import { findIndex } from "lodash";
 import { _computeShouldRenderChildren, _createAndAddNewNodes, _createNewChildIDs, _getIdsToDeleteRecursively, _getNodeById, _removeNodeByID, _replaceNodeWithUpdatedNode, _resetOptionPaths, _truncateTheTreeAtSpecificNode } from "./_coreNodeUtils";
 
 export const getRootNode = (nodeList: Conversation) => {
@@ -22,7 +23,13 @@ export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, parentNod
 
 export const getUnsortedChildNodes = (childrenIDs: string, nodeList: Conversation) => {
     const ids = childrenIDs.split(",");
-    return nodeList.filter((node) => ids.includes(node.nodeId));
+    if (ids.length === 1 && ids[0] === "") return [];
+    const unorderedNodes: Conversation = [];
+    ids.forEach((id: string) => {
+        let index = findIndex(nodeList, (n: ConvoNode) => n.nodeId === id);
+        unorderedNodes.push(nodeList[index]);
+    });
+    return unorderedNodes;
 };
 
 export const getChildNodesSortedByOptionPath = (childrenIds: string, nodeList: Conversation) => {
@@ -62,33 +69,40 @@ export const createAndReattachNewNodes = (currentNode: ConvoNode, nodeList: Conv
     };
 };
 
-export const changeNodeType = async (node: ConvoNode, nodeList: Conversation, setNodes: (nodeList: Conversation) => void, nodeOption: NodeOption) => {
-    let valueOptions = node.valueOptions; // if valueOptions is "", its because it was from a non-multioptionType
+export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversation, setNodes: (nodeList: Conversation) => void, nodeOption: NodeOption) => {
+    let valueOptions = previousNode.valueOptions; // if valueOptions is "", its because it was from a non-multioptionType
     if (nodeOption.isMultiOptionType && nodeOption.valueOptions.length > 0) {
         valueOptions = nodeOption.valueOptions.join(ValueOptionDelimiter);
     } else if (isNullOrUndefinedOrWhitespace(valueOptions)) {
-
-        valueOptions = node.isTerminalType ? "" : "Placeholder"
+        valueOptions = previousNode.isTerminalType ? "" : "Placeholder";
     }
 
     let pathOptions: string[];
-    if (nodeOption.isMultiOptionType && nodeOption.pathOptions.length > 0) {
-        pathOptions = nodeOption.pathOptions; // if its a predefined yes or no
-    } else if (nodeOption.isMultiOptionType && nodeOption.pathOptions.length == 0) {
-        // if the option is a multichoice with no predefined options. Try to take whats already there
-        const currentPathOptions = node.valueOptions.split(ValueOptionDelimiter);
-        if (currentPathOptions.length > 0) { // pathoptions could be [""]
-            if (currentPathOptions.length == 1 && isNullOrUndefinedOrWhitespace(currentPathOptions[0])) {
-                pathOptions = ["Placeholder"]
-            } else {
-                pathOptions = currentPathOptions;
-            }
+    if (nodeOption.isTerminalType) {
+        pathOptions = [""];
+    } else if (nodeOption.isMultiOptionType) {
+        if (nodeOption.pathOptions.length >= 1) {
+            pathOptions = nodeOption.pathOptions; // if its a predefined yes or no
         } else {
+            // use the previous node and attach
+            const currentPathOptions = previousNode.valueOptions.split(ValueOptionDelimiter);
             pathOptions = currentPathOptions;
         }
     } else {
-        pathOptions = valueOptions.split(",");
+        pathOptions = ["Continue"];
     }
+
+    // } else if (nodeOption.isMultiOptionType && nodeOption.pathOptions.length == 0) {
+    //     // if the option is a multichoice or splitmerge with no predefined options. Try to take whats already there
+    //     if (currentPathOptions.length == 1 && isNullOrUndefinedOrWhitespace(currentPathOptions[0])) {
+
+    //         pathOptions = ["Placeholder"];
+    //     } else {
+    //         pathOptions = currentPathOptions;
+    //     }
+    // } else {
+    //     pathOptions = ["Continue"];
+    // }
 
     if (pathOptions === undefined) {
         throw new Error("Ill defined path options");
@@ -100,22 +114,22 @@ export const changeNodeType = async (node: ConvoNode, nodeList: Conversation, se
     // TODO: This is kind of gross and complicates extendability since we later have to be sure not to intro any '-' in to the names. But
     // since we are taking this fromthe option, we have to deal with it as a string until we try a refactor to get it into an object form
     // so we can supply properties. ^ The option comes in from the event, which currently passes the value as a string. Can this be an object?
-    node.nodeType = nodeOption.value; // SelectOneFlat-sdfs-sdfs-sgs-s
+    previousNode.nodeType = nodeOption.value; // SelectOneFlat-sdfs-sdfs-sgs-s
 
     const newNumChildren = getNewNumChildren(pathOptions);
-    const { newNodeList, newChildNodeIds, childIdsToCreate } = createAndReattachNewNodes(node, nodeList, newNumChildren);
+    const { newNodeList, newChildNodeIds, childIdsToCreate } = createAndReattachNewNodes(previousNode, nodeList, newNumChildren);
 
-    const previousNodeChildrenString = node.nodeChildrenString;
-    node.nodeChildrenString = newChildNodeIds.join(",");
-    node.isMultiOptionType = nodeOption.isMultiOptionType;
-    node.isTerminalType = nodeOption.isTerminalType;
-    node.isSplitMergeType = nodeOption.isSplitMergeType;
-    node.shouldShowMultiOption = nodeOption.shouldShowMultiOption;
+    const previousNodeChildrenString = previousNode.nodeChildrenString;
+    previousNode.nodeChildrenString = newChildNodeIds.join(",");
+    previousNode.isMultiOptionType = nodeOption.isMultiOptionType;
+    previousNode.isTerminalType = nodeOption.isTerminalType;
+    previousNode.isSplitMergeType = nodeOption.isSplitMergeType;
+    previousNode.shouldShowMultiOption = nodeOption.shouldShowMultiOption;
 
     // set any value options
-    node.valueOptions = valueOptions;
-    let updatedNodeList = _replaceNodeWithUpdatedNode(node, newNodeList);
-    updatedNodeList = _createAndAddNewNodes(childIdsToCreate, newChildNodeIds, node, pathOptions, updatedNodeList, nodeOption.shouldShowMultiOption);
+    previousNode.valueOptions = valueOptions;
+    let updatedNodeList = _replaceNodeWithUpdatedNode(previousNode, newNodeList);
+    updatedNodeList = _createAndAddNewNodes(childIdsToCreate, newChildNodeIds, previousNode, pathOptions, updatedNodeList, nodeOption.shouldShowMultiOption);
 
     if (newChildNodeIds.length > 0) {
         updatedNodeList = _resetOptionPaths(newChildNodeIds, updatedNodeList, pathOptions);

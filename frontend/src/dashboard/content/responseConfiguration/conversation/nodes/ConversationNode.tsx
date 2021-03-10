@@ -5,7 +5,7 @@ import { ConversationNodeInterface } from "./ConversationNodeInterface";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import "./ConversationNode.css";
 import { checkedNodeOptionList, getChildNodesSortedByOptionPath, getUnsortedChildNodes } from "./nodeUtils/commonNodeUtils";
-import { findMostRecentSplitMerge, nodeListContainsSplitmerge } from "./nodeUtils/splitMergeUtils";
+import { findMostRecentSplitMerge, getorderedChildrenFromParent, nodeListContainsSplitmerge } from "./nodeUtils/splitMergeUtils";
 import { _getParentNode } from "./nodeUtils/_coreNodeUtils";
 
 export interface IConversationNode {
@@ -39,7 +39,7 @@ export const ConversationNode = ({ node, siblingIndex, parentState, changeParent
 
     const parentNode = _getParentNode(node, nodeList);
 
-    const { isChildOfSplitMerge, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling } = findMostRecentSplitMerge(node, nodeList);
+    const { isChildOfSplitMerge, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling, orderedChildren } = findMostRecentSplitMerge(node, nodeList);
 
     const childNodes = node.isSplitMergeType ? getUnsortedChildNodes(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);
 
@@ -76,6 +76,7 @@ export const ConversationNode = ({ node, siblingIndex, parentState, changeParent
                         changeParentState={changeParentState}
                         optionPath={node.optionPath}
                         nodeOptionList={nodeOptionList}
+                        orderedChildren={orderedChildren}
                         isChildOfSplitMerge={isChildOfSplitMerge}
                         decendentLevelFromSplitMerge={decendentLevelFromSplitMerge}
                         splitMergeRootSiblingIndex={splitMergeRootSiblingIndex}

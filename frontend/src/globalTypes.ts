@@ -577,4 +577,5 @@ export type MostRecentSplitMerge = {
     decendentLevelFromSplitMerge: number;
     splitMergeRootSiblingIndex: number;
     nodeIdOfMostRecentSplitMergePrimarySibling: string;
+    orderedChildren: Conversation;
 }
