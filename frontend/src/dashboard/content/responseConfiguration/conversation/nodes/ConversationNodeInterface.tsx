@@ -6,23 +6,16 @@ import { NodeTypeSelector } from "./NodeTypeSelector";
 import { cloneDeep } from "lodash";
 import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
-import { _replaceNodeWithUpdatedNode } from "./nodeUtils/_coreNodeUtils";
+import { _replaceNodeWithUpdatedNode, _truncateTheTreeAtSpecificNode } from "./nodeUtils/_coreNodeUtils";
 import { useEffect } from "react";
-
-export interface IConversationNodeInterface extends MostRecentSplitMerge {
-    node: ConvoNode;
-    parentNode: ConvoNode | null;
-    parentState: boolean;
-    changeParentState: (parentState: boolean) => void;
-    optionPath: string | null;
-    nodeOptionList: NodeTypeOptions;
-}
+import { isNullOrUndefinedOrWhitespace } from "@common/utils";
+import { checkedNodeOptionList } from "./nodeUtils/commonNodeUtils";
 
 type StyleProps = {
     nodeText: string;
     nodeType: string;
     checked: boolean;
-    isChildOfSplitMerge: boolean;
+    isDecendentOfSplitMerge: boolean;
     splitMergeRootSiblingIndex: number;
 };
 
@@ -30,8 +23,8 @@ const useStyles = makeStyles(() => ({
     root: (props: StyleProps) => ({
         minWidth: "275px",
         maxWidth: "300px",
-        borderColor: props.nodeType === "" ? "Red" : props.isChildOfSplitMerge && props.splitMergeRootSiblingIndex > 0 ? "purple" : "#54585A",
-        borderWidth: props.nodeType === "" ? "5px" : props.isChildOfSplitMerge && props.splitMergeRootSiblingIndex > 0 ? "8px" : "2px",
+        borderColor: props.nodeType === "" ? "red" : props.isDecendentOfSplitMerge && props.splitMergeRootSiblingIndex > 0 ? "purple" : "#54585A",
+        borderWidth: props.nodeType === "" ? "5px" : props.isDecendentOfSplitMerge && props.splitMergeRootSiblingIndex > 0 ? "8px" : "2px",
         borderRadius: "3px",
         backgroundColor: "#C7ECEE",
     }),
@@ -83,6 +76,15 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
+export interface IConversationNodeInterface extends MostRecentSplitMerge {
+    node: ConvoNode;
+    parentNode: ConvoNode | null;
+    parentState: boolean;
+    changeParentState: (parentState: boolean) => void;
+    optionPath: string | null;
+    nodeOptionList: NodeTypeOptions;
+}
+
 export const ConversationNodeInterface = ({
     nodeOptionList,
     node,
@@ -90,43 +92,53 @@ export const ConversationNodeInterface = ({
     optionPath,
     parentState,
     changeParentState,
-    isChildOfSplitMerge,
+    isDecendentOfSplitMerge,
     decendentLevelFromSplitMerge,
     splitMergeRootSiblingIndex,
     nodeIdOfMostRecentSplitMergePrimarySibling,
 }: IConversationNodeInterface) => {
-    const { setNodes, nodeList } = React.useContext(ConversationTreeContext);
+    const { setNodes, nodeList, conversationHistory, historyTracker, conversationHistoryPosition } = React.useContext(ConversationTreeContext);
 
     const [previousChildren, setPreviousChildren] = useState<string>("");
     const [modalState, setModalState] = useState<boolean>(false);
-    const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text, checked: node.isCritical, isChildOfSplitMerge, splitMergeRootSiblingIndex });
+    const [mergeBoxChecked, setMergeBoxChecked] = useState<boolean>(false);
+
+    const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text, checked: node.isCritical, isDecendentOfSplitMerge, splitMergeRootSiblingIndex });
 
     useEffect(() => {
-        setPreviousChildren(node.nodeChildrenString);
+        if (isNullOrUndefinedOrWhitespace(previousChildren)) {
+            setPreviousChildren(node.nodeChildrenString);
+        }
     }, []);
-    const showResponseInPdfCheckbox = (event: { target: { checked: boolean } }) => {
-        const newNode = cloneDeep(node);
-        newNode.isCritical = event.target.checked;
 
-        const updatedNodeList = _replaceNodeWithUpdatedNode(newNode, nodeList);
-        setNodes(updatedNodeList);
+    const showResponseInPdfCheckbox = (event: { target: { checked: boolean } }) => {
+        if (event.target.checked){
+            const newNode = cloneDeep(node);
+            newNode.isCritical = event.target.checked;
+            const updatedNodeList = _replaceNodeWithUpdatedNode(newNode, nodeList);
+            setNodes(updatedNodeList);
+        } else {
+            historyTracker.stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
+        }
     };
 
     const handleMergeBackInOnClick = (event: { target: { checked: boolean } }) => {
-        const newNode = cloneDeep(node);
-
-        newNode.shouldRenderChildren = !event.target.checked;
-        if (splitMergeRootSiblingIndex > 0) {
-            if (event.target.checked) {
-                newNode.nodeChildrenString = nodeIdOfMostRecentSplitMergePrimarySibling;
-            } else {
-                newNode.nodeChildrenString = previousChildren;
-            }
+        if (event.target.checked) {
+            const newNode = cloneDeep(node);
+            let updatedNodeList = cloneDeep(nodeList);
+            newNode.shouldRenderChildren = !event.target.checked;
+            updatedNodeList = _truncateTheTreeAtSpecificNode(node, nodeList);
+            newNode.nodeChildrenString = nodeIdOfMostRecentSplitMergePrimarySibling;
+            updatedNodeList = _replaceNodeWithUpdatedNode(newNode, nodeList);
+            setMergeBoxChecked(event.target.checked);
+            setNodes(cloneDeep(updatedNodeList));
+        } else {
+            historyTracker.stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
         }
-        const updatedNodeList = _replaceNodeWithUpdatedNode(newNode, nodeList);
-        setNodes(updatedNodeList);
     };
 
+    // TODO: the NodeTypeSelector uses 'checkedNodeOptionList and re-computes whether or not this is a child of mergesplit, and if its a non-primary-sibling decendant (in which case, it will allow filtering). This is defensive
+    // which is not necessary if this is the only place this is used. Its cheap to perform this check.
     return (
         <Card className={classNames(classes.root, node.nodeId)} variant="outlined">
             <CardContent className={classes.card}>
@@ -141,16 +153,24 @@ export const ConversationNodeInterface = ({
                         Click to Edit
                     </Typography>
                 </Card>
-                <NodeTypeSelector nodeOptionList={nodeOptionList} node={node} parentNode={parentNode} parentState={parentState} changeParentState={changeParentState} />
-                <FormControlLabel
-                    className={classes.formstyle}
-                    classes={{
-                        label: classes.formLabelStyle,
-                    }}
-                    control={<Checkbox className={classes.formstyle} size="small" checked={node.isCritical} value="" name={"crit-" + node.nodeId} onChange={showResponseInPdfCheckbox} />}
-                    label="Show response in PDF"
+                <NodeTypeSelector
+                    nodeOptionList={mergeBoxChecked ? checkedNodeOptionList(nodeOptionList, isDecendentOfSplitMerge, splitMergeRootSiblingIndex) : nodeOptionList}
+                    node={node}
+                    parentNode={parentNode}
+                    parentState={parentState}
+                    changeParentState={changeParentState}
                 />
-                {isChildOfSplitMerge && splitMergeRootSiblingIndex > 0 && (
+                {!node.isTerminalType && (
+                    <FormControlLabel
+                        className={classes.formstyle}
+                        classes={{
+                            label: classes.formLabelStyle,
+                        }}
+                        control={<Checkbox className={classes.formstyle} size="small" checked={node.isCritical} value="" name={"crit-" + node.nodeId} onChange={showResponseInPdfCheckbox} />}
+                        label="Show response in PDF"
+                    />
+                )}
+                {isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0 && node.nodeType !== "" && !node.isTerminalType && !node.isMultiOptionType && (
                     <FormControlLabel
                         className={classes.formstyle}
                         classes={{
@@ -160,7 +180,7 @@ export const ConversationNodeInterface = ({
                         label="Merge with primary sibling branch"
                     />
                 )}
-                {isChildOfSplitMerge && splitMergeRootSiblingIndex === 0 && decendentLevelFromSplitMerge === 1 && <Typography>This is the primary sibling. Branches will merge to this node.</Typography>}
+                {isDecendentOfSplitMerge && splitMergeRootSiblingIndex === 0 && decendentLevelFromSplitMerge === 1 && <Typography>This is the primary sibling. Branches will merge to this node.</Typography>}
                 <ConversationNodeEditor setModalState={setModalState} modalState={modalState} node={node} parentNode={parentNode} />
             </CardContent>
         </Card>

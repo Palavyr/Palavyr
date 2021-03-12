@@ -3,18 +3,16 @@ import React, { useState, useEffect, useContext } from "react";
 import { SteppedLineTo } from "../treeLines/SteppedLineTo";
 import { ConversationNodeInterface } from "./ConversationNodeInterface";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
-import "./ConversationNode.css";
-import { checkedNodeOptionList, getChildNodesSortedByOptionPath, getUnsortedChildNodes } from "./nodeUtils/commonNodeUtils";
-import { findMostRecentSplitMerge, getorderedChildrenFromParent, nodeListContainsSplitmerge } from "./nodeUtils/splitMergeUtils";
+import { getChildNodesSortedByOptionPath, getUnsortedChildNodes } from "./nodeUtils/commonNodeUtils";
+import { findMostRecentSplitMerge } from "./nodeUtils/splitMergeUtils";
 import { _getParentNode } from "./nodeUtils/_coreNodeUtils";
 
+import "./ConversationNode.css";
 export interface IConversationNode {
     node: ConvoNode;
     parentState: boolean;
     changeParentState: (parentState: boolean) => void;
     nodeOptionList: NodeTypeOptions;
-    // parentNode: ConvoNode | null;
-    siblingIndex: number;
 }
 
 export type lineStyle = {
@@ -31,16 +29,15 @@ export const connectionStyle: lineStyle = {
     zIndex: 0,
 };
 
-export const ConversationNode = ({ node, siblingIndex, parentState, changeParentState, nodeOptionList }: IConversationNode) => {
+export const ConversationNode = ({ node, parentState, changeParentState, nodeOptionList }: IConversationNode) => {
     const { nodeList } = useContext(ConversationTreeContext);
 
     const [nodeState, changeNodeState] = useState<boolean>(true);
     const [loaded, setLoaded] = useState(false);
 
-    const parentNode = _getParentNode(node, nodeList);
+    const { isDecendentOfSplitMerge, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling, orderedChildren } = findMostRecentSplitMerge(node, nodeList);
 
-    const { isChildOfSplitMerge, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling, orderedChildren } = findMostRecentSplitMerge(node, nodeList);
-
+    const parentNode = _getParentNode(node, nodeList, isDecendentOfSplitMerge, decendentLevelFromSplitMerge, nodeIdOfMostRecentSplitMergePrimarySibling);
     const childNodes = node.isSplitMergeType ? getUnsortedChildNodes(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);
 
     useEffect(() => {
@@ -77,7 +74,7 @@ export const ConversationNode = ({ node, siblingIndex, parentState, changeParent
                         optionPath={node.optionPath}
                         nodeOptionList={nodeOptionList}
                         orderedChildren={orderedChildren}
-                        isChildOfSplitMerge={isChildOfSplitMerge}
+                        isDecendentOfSplitMerge={isDecendentOfSplitMerge}
                         decendentLevelFromSplitMerge={decendentLevelFromSplitMerge}
                         splitMergeRootSiblingIndex={splitMergeRootSiblingIndex}
                         nodeIdOfMostRecentSplitMergePrimarySibling={nodeIdOfMostRecentSplitMergePrimarySibling}
@@ -86,8 +83,8 @@ export const ConversationNode = ({ node, siblingIndex, parentState, changeParent
                 {childNodes.length > 0 && (
                     <div key={node.nodeId} className="tree-row">
                         {node.shouldRenderChildren
-                            ? childNodes.map((nextNode, index) => (
-                                  <ConversationNode key={nextNode.nodeId + "-" + index.toString()} siblingIndex={index} node={nextNode} parentState={nodeState} changeParentState={changeNodeState} nodeOptionList={nodeOptionList} />
+                            ? childNodes.filter((n: ConvoNode) => n !== undefined).map((nextNode, index) => (
+                                  <ConversationNode key={nextNode.nodeId + "-" + index.toString()} node={nextNode} parentState={nodeState} changeParentState={changeNodeState} nodeOptionList={nodeOptionList} />
                               ))
                             : null}
                     </div>

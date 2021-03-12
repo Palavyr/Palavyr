@@ -12,14 +12,16 @@ export const getNewNumChildren = (optionPaths: string[]) => {
     return optionPaths.filter((x) => x !== null && x !== "").length;
 };
 
-export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, parentNode: ConvoNode | null, siblingIndex: number) => {
-    if (parentNode && parentNode.isSplitMergeType && siblingIndex > 0) {
+export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, isDecendentOfSplitMerge: boolean, splitMergeRootSiblingIndex: number) => {
+    // This next line is a defensive check
+    if (isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0) {
         const compatible = nodeOptionList.filter((option: NodeOption) => option.groupName === "Provide Info" || option.groupName === "Info Collection");
         return compatible;
     } else {
         return nodeOptionList;
     }
 };
+
 
 export const getUnsortedChildNodes = (childrenIDs: string, nodeList: Conversation) => {
     const ids = childrenIDs.split(",");

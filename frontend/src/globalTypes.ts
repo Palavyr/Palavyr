@@ -573,7 +573,7 @@ export type TodosAsBoolean = {
 
 
 export type MostRecentSplitMerge = {
-    isChildOfSplitMerge: boolean;
+    isDecendentOfSplitMerge: boolean;
     decendentLevelFromSplitMerge: number;
     splitMergeRootSiblingIndex: number;
     nodeIdOfMostRecentSplitMergePrimarySibling: string;

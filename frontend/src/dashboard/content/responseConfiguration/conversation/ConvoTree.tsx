@@ -60,9 +60,9 @@ export const ConvoTree = () => {
 
     const onSave = async () => {
         const { data: updatedConversation } = await client.Conversations.ModifyConversation(nodeList, areaIdentifier);
-        setNodes(updatedConversation);
-        setConversationHistoryPosition(0);
         setConversationHistory([updatedConversation]);
+        setConversationHistoryPosition(0);
+        setNodes(updatedConversation);
         return true;
     };
 
@@ -94,7 +94,7 @@ export const ConvoTree = () => {
     }, [areaIdentifier, nodeList]);
 
     return (
-        <ConversationTreeContext.Provider value={{ nodeList, setNodes: setNodesWithHistory }}>
+        <ConversationTreeContext.Provider value={{ nodeList, setNodes: setNodesWithHistory, conversationHistory, historyTracker, conversationHistoryPosition }}>
             <AreaConfigurationHeader
                 divider={missingNodeTypes.length > 0}
                 title="Palavyr"
@@ -128,7 +128,7 @@ export const ConvoTree = () => {
                 <form onSubmit={() => null}>
                     <fieldset className="fieldset" id="tree-test">
                         <div className="main-tree tree-wrap">
-                            {nodeList.length > 0 ? <ConversationNode key="tree-start" siblingIndex={0} node={rootNode} parentState={true} changeParentState={() => null} nodeOptionList={nodeOptionList} /> : null}
+                            {nodeList.length > 0 ? <ConversationNode key="tree-start" node={rootNode} parentState={true} changeParentState={() => null} nodeOptionList={nodeOptionList} /> : null}
                         </div>
                     </fieldset>
                 </form>

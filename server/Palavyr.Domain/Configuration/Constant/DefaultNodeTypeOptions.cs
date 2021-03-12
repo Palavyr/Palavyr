@@ -180,7 +180,6 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
-
             }
         }
 

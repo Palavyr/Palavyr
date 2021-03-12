@@ -3,7 +3,6 @@ import { ConvoNode, NodeTypeOptions, NodeOption, AlertType } from "@Palavyr-Type
 import { CustomNodeSelect } from "./CustomNodeSelect";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
-import { changeChildOfSplitMergeType } from "./nodeUtils/splitMergeUtils";
 import { changeNodeType } from "./nodeUtils/commonNodeUtils";
 
 export interface INodeTypeSelector {
@@ -52,17 +51,7 @@ export const NodeTypeSelector = ({ node, parentNode, parentState, changeParentSt
             return;
         }
 
-        // if (parentNode && parentNode.isSplitMergeType) {
-        //     if (nodeOption.isMultiOptionType) {
-        //         alert("MultiOption types are not allowed when parent is split merge type.")
-        //         throw new Error("MultiOption types are not allowed when parent is split merge type.");
-        //     } else {
-        //         changeChildOfSplitMergeType(node, nodeList, parentNode, setNodes, nodeOption);
-        //     }
-        // } else {
         changeNodeType(node, nodeList, setNodes, nodeOption);
-        // }
-
         changeParentState(!parentState); // rerender lines
     };
 

@@ -1,6 +1,6 @@
-import { ConvoNode, Conversation, NodeOption, MostRecentSplitMerge } from "@Palavyr-Types";
+import { isNullOrUndefinedOrWhitespace } from "@common/utils";
+import { ConvoNode, Conversation, MostRecentSplitMerge } from "@Palavyr-Types";
 import { findIndex } from "lodash";
-import { createAndReattachNewNodes } from "./commonNodeUtils";
 import { _createAndAddNewNodes, _getNodeById, _getParentNode, _removeNodeByID, _replaceNodeWithUpdatedNode } from "./_coreNodeUtils";
 
 export const updateChildOfIsSplitMergeType = (node: ConvoNode, parentNode: ConvoNode, nodeList: Conversation, setNodes: (updatedNodeList: Conversation) => void) => {
@@ -32,73 +32,20 @@ export const getSiblingIndex = (parentNode: ConvoNode, node: ConvoNode) => {
     return findIndex(parentNode.nodeChildrenString.split(","), (id: string) => id === node.nodeId);
 };
 
-export const changeChildOfSplitMergeType = (node: ConvoNode, nodeList, parentNode: ConvoNode, setNodes: (nodeList: Conversation) => void, nodeOption: NodeOption) => {
-    // TODO: This is kind of gross and complicates extendability since we later have to be sure not to intro any '-' in to the names. But
-    // since we are taking this fromthe option, we have to deal with it as a string until we try a refactor to get it into an object form
-    // so we can supply properties. ^ The option comes in from the event, which currently passes the value as a string. Can this be an object?
-    node.nodeType = nodeOption.value; // SelectOneFlat-sdfs-sdfs-sgs-s
-
-    const siblingIndex = getSiblingIndex(parentNode, node);
-    if (siblingIndex === 0) {
-        // if this is the primary sibling
-        node.shouldRenderChildren = true;
-
-        const newNumChildren = nodeOption.pathOptions.length;
-        const { newNodeList, newChildNodeIds, childIdsToCreate } = createAndReattachNewNodes(node, nodeList, newNumChildren);
-
-        node.nodeChildrenString = newChildNodeIds.join(",");
-
-        let updatedNodeList = _replaceNodeWithUpdatedNode(node, newNodeList);
-
-        // updatedNodeList = _createAndAddNewNodes(childIdsToCreate, newChildNodeIds, node, pathOpt)
-
-        childIdsToCreate.forEach((id: string, index: number) => {
-            let newNode: ConvoNode = {
-                nodeId: id, // replace with uuid
-                nodeType: "", // default
-                text: "Ask your question!",
-                nodeChildrenString: "",
-                isRoot: false,
-                fallback: false,
-                isCritical: false,
-                areaIdentifier: node.areaIdentifier,
-                optionPath: nodeOption.pathOptions[index],
-                valueOptions: "",
-                isMultiOptionType: false,
-                isTerminalType: false,
-                isSplitMergeType: false,
-                shouldRenderChildren: true,
-                shouldShowMultiOption: false
-            };
-            updatedNodeList.push(newNode);
-        });
-        setNodes(updatedNodeList);
-    } else {
-        node.shouldRenderChildren = false;
-        node.nodeChildrenString = getPrimarySiblingIdFromParent(parentNode);
-        node.isMultiOptionType = false;
-        node.isTerminalType = false;
-        // node.isSplitMergeType = false; // don't set this when we want to experiment with multiple split merges in a row
-
-        const updatedNodeList = _replaceNodeWithUpdatedNode(node, nodeList);
-        setNodes(updatedNodeList);
-    }
-};
-
 export const findMostRecentSplitMerge = (node: ConvoNode, nodeList: Conversation): MostRecentSplitMerge => {
     // returns either the most recent splitMerge type, or null
     const SplitMerge = "SplitMerge".toUpperCase();
 
     if (!nodeListContainsSplitmerge(nodeList)) {// early bail if no splitmerges
-        return { isChildOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: "", orderedChildren: []}
+        return { isDecendentOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: "", orderedChildren: []}
     }
 
     if (node.nodeType.toUpperCase() === SplitMerge) {
-        return { isChildOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: "", orderedChildren: []};
+        return { isDecendentOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: "", orderedChildren: []};
     }
 
     if (node.isRoot) {
-        return { isChildOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: "", orderedChildren: []};
+        return { isDecendentOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: "", orderedChildren: []};
     }
 
     let found = false;
@@ -109,11 +56,11 @@ export const findMostRecentSplitMerge = (node: ConvoNode, nodeList: Conversation
     let splitMergeRootSiblingIndex: number;
     let nodeIdOfMostRecentSplitMergePrimarySibling: string;
     let orderedChildren: Conversation;
-    let result: MostRecentSplitMerge = { isChildOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: "", orderedChildren: []};
+    let result: MostRecentSplitMerge = { isDecendentOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: "", orderedChildren: []};
     do {
         decendentLevelFromSplitMerge++;
         prevChildReference = { ...tempParentNode! };
-        tempParentNode = _getParentNode(prevChildReference!, nodeList);
+        tempParentNode = _getParentNodeYOLO(prevChildReference!, nodeList);
         if (tempParentNode === null) throw new Error("Orphan node detected.");
         if (tempParentNode.nodeType.toUpperCase() === SplitMerge) {
             found = true;
@@ -121,7 +68,7 @@ export const findMostRecentSplitMerge = (node: ConvoNode, nodeList: Conversation
             splitMergeRootSiblingIndex = getSiblingIndex(parentNode, prevChildReference);
             nodeIdOfMostRecentSplitMergePrimarySibling = getPrimarySiblingIdFromParent(parentNode);
             orderedChildren = getorderedChildrenFromParent(parentNode, nodeList);
-            result = { isChildOfSplitMerge: true, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling, orderedChildren};
+            result = { isDecendentOfSplitMerge: true, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling, orderedChildren};
             break;
         } else if (tempParentNode.isRoot) {
             found = true;
@@ -148,3 +95,19 @@ export const getorderedChildrenFromParent = (parentNode: ConvoNode, nodeList: Co
     })
     return orderedNodes;
 }
+
+export const _getParentNodeYOLO = (node: ConvoNode, nodeList: Conversation) => {
+    // used when trying to find most recent splitmerge.
+    if (node.isRoot) {
+        return null;
+    }
+    const parent = nodeList.filter((n: ConvoNode) => {
+        if (isNullOrUndefinedOrWhitespace(n.nodeChildrenString)) {
+            return false;
+        }
+        let children = n.nodeChildrenString.split(",");
+        return children.includes(node.nodeId);
+    });
+
+    return parent[0];
+};

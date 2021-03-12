@@ -1,4 +1,5 @@
 import { Conversation, ConvoNode, PlanType } from "@Palavyr-Types";
+import { ConversationHistoryTracker } from "dashboard/content/responseConfiguration/conversation/nodes/ConversationHistoryTracker";
 import React, { Dispatch, SetStateAction } from "react";
 
 interface IDashboardContext {
@@ -19,8 +20,9 @@ interface IAuthContext {
 interface IConversationTreeContext {
     nodeList: Conversation;
     setNodes: (value: React.SetStateAction<Conversation>) => void;
-    // conversationHistory: Conversation[];
-    // setConversationHistory(newConversation: Conversation | ConvoNode[]): void;
+    historyTracker: ConversationHistoryTracker;
+    conversationHistory: Conversation[];
+    conversationHistoryPosition: number;
 }
 
 
