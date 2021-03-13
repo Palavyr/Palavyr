@@ -38,12 +38,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, parent
     const handleUpdateNode = async (value: string, valueOptions: string[]) => {
         const updatedNode = { ...node };
         updatedNode.text = value;
-
-        // if (node.isMultiOptionType && parentNode && parentNode.isSplitMergeType) {
-        //     updateChildOfIsSplitMergeType(updatedNode, parentNode, nodeList, setNodes);
-        // } else
         if (node.isMultiOptionType) {
-            // if (parentNode && parentNode.isSplitMergeType && valueOptions.length > 0) throw new Error("Children of isSplitMergeTypes should not have multiple value options.");
             updateMultiTypeOption(updatedNode, nodeList, valueOptions, setNodes); // create new nodes and update the Database
         } else {
             updateSingleOptionType(updatedNode, nodeList, setNodes);
@@ -67,7 +62,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, parent
                     type="text"
                     fullWidth
                 />
-                {node.isMultiOptionType && node.shouldShowMultiOption && (
+                {node.isMultiOptionType && node.shouldShowMultiOption && node.nodeType !== "MultipleChoiceContinue" && (
                     <>
                         <MultiChoiceOptions options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} />
                     </>

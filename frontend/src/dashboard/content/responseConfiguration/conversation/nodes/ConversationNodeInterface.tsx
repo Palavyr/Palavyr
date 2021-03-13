@@ -6,10 +6,11 @@ import { NodeTypeSelector } from "./NodeTypeSelector";
 import { cloneDeep } from "lodash";
 import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
-import { _replaceNodeWithUpdatedNode, _truncateTheTreeAtSpecificNode } from "./nodeUtils/_coreNodeUtils";
+import { _createAndAddNewNodes, _replaceNodeWithUpdatedNode, _truncateTheTreeAtSpecificNode } from "./nodeUtils/_coreNodeUtils";
 import { useEffect } from "react";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
-import { checkedNodeOptionList } from "./nodeUtils/commonNodeUtils";
+import { checkedNodeOptionList, nodeMergesToPrimarySibling, updateSingleOptionType } from "./nodeUtils/commonNodeUtils";
+import { uuid } from "uuidv4";
 
 type StyleProps = {
     nodeText: string;
@@ -97,18 +98,18 @@ export const ConversationNodeInterface = ({
     splitMergeRootSiblingIndex,
     nodeIdOfMostRecentSplitMergePrimarySibling,
 }: IConversationNodeInterface) => {
-    const { setNodes, nodeList, conversationHistory, historyTracker, conversationHistoryPosition } = React.useContext(ConversationTreeContext);
 
-    const [previousChildren, setPreviousChildren] = useState<string>("");
+    const { setNodes, nodeList, conversationHistory, historyTracker, conversationHistoryPosition } = React.useContext(ConversationTreeContext);
     const [modalState, setModalState] = useState<boolean>(false);
     const [mergeBoxChecked, setMergeBoxChecked] = useState<boolean>(false);
-
     const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text, checked: node.isCritical, isDecendentOfSplitMerge, splitMergeRootSiblingIndex });
 
     useEffect(() => {
-        if (isNullOrUndefinedOrWhitespace(previousChildren)) {
-            setPreviousChildren(node.nodeChildrenString);
+
+        if (nodeMergesToPrimarySibling(node, isDecendentOfSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling)) {
+            setMergeBoxChecked(true)
         }
+
     }, []);
 
     const showResponseInPdfCheckbox = (event: { target: { checked: boolean } }) => {
@@ -126,14 +127,24 @@ export const ConversationNodeInterface = ({
         if (event.target.checked) {
             const newNode = cloneDeep(node);
             let updatedNodeList = cloneDeep(nodeList);
-            newNode.shouldRenderChildren = !event.target.checked;
+            newNode.shouldRenderChildren = false;
             updatedNodeList = _truncateTheTreeAtSpecificNode(node, nodeList);
             newNode.nodeChildrenString = nodeIdOfMostRecentSplitMergePrimarySibling;
             updatedNodeList = _replaceNodeWithUpdatedNode(newNode, nodeList);
             setMergeBoxChecked(event.target.checked);
             setNodes(cloneDeep(updatedNodeList));
         } else {
-            historyTracker.stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
+            if (conversationHistoryPosition === 0){
+                const childId = uuid();
+                const newNode = cloneDeep(node);
+                newNode.shouldRenderChildren = true;
+                newNode.nodeChildrenString = childId;
+                let updatedNodeList = _createAndAddNewNodes([childId], [childId], node, ["Continue"], nodeList, false);
+                updateSingleOptionType(newNode, updatedNodeList, setNodes)
+                setMergeBoxChecked(false);
+            } else {
+                historyTracker.stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
+            }
         }
     };
 
@@ -154,7 +165,7 @@ export const ConversationNodeInterface = ({
                     </Typography>
                 </Card>
                 <NodeTypeSelector
-                    nodeOptionList={mergeBoxChecked ? checkedNodeOptionList(nodeOptionList, isDecendentOfSplitMerge, splitMergeRootSiblingIndex) : nodeOptionList}
+                    nodeOptionList={mergeBoxChecked && isDecendentOfSplitMerge ? checkedNodeOptionList(nodeOptionList, isDecendentOfSplitMerge, splitMergeRootSiblingIndex) : nodeOptionList}
                     node={node}
                     parentNode={parentNode}
                     parentState={parentState}

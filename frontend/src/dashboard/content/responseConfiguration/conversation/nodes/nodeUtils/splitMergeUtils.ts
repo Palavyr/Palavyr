@@ -1,7 +1,7 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { ConvoNode, Conversation, MostRecentSplitMerge } from "@Palavyr-Types";
 import { findIndex } from "lodash";
-import { _createAndAddNewNodes, _getNodeById, _getParentNode, _removeNodeByID, _replaceNodeWithUpdatedNode } from "./_coreNodeUtils";
+import { _createAndAddNewNodes, _getNodeById, _getParentNode, _removeNodeByID, _replaceNodeWithUpdatedNode, _splitAndRemoveEmptyNodeChildrenString, _splitNodeChildrenString } from "./_coreNodeUtils";
 
 export const updateChildOfIsSplitMergeType = (node: ConvoNode, parentNode: ConvoNode, nodeList: Conversation, setNodes: (updatedNodeList: Conversation) => void) => {
     const primarySiblingId = getPrimarySiblingIdFromParent(parentNode);
@@ -72,11 +72,14 @@ export const findMostRecentSplitMerge = (node: ConvoNode, nodeList: Conversation
             break;
         } else if (tempParentNode.isRoot) {
             found = true;
-        } else if (decendentLevelFromSplitMerge > 1000) {
-            found = true;
+        } else if (decendentLevelFromSplitMerge > 200) {
+            throw new Error("The tree is too deep. This cannot be allowed.")
         }
     } while (!found);
+    if (decendentLevelFromSplitMerge === 3){
+        console.log("WOW");
 
+    }
     return result;
 };
 
@@ -111,3 +114,16 @@ export const _getParentNodeYOLO = (node: ConvoNode, nodeList: Conversation) => {
 
     return parent[0];
 };
+
+export const childHasAtLeastOneChild = (node: ConvoNode, nodeList: Conversation) => {
+    if (_splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString).length === 0) {
+        return false;
+    }
+    const childrenIds = _splitNodeChildrenString(node.nodeChildrenString);
+
+    for (let i = 0; i < childrenIds.length; i++) {
+        let childnode = _getNodeById(childrenIds[i], nodeList)
+        if (_splitAndRemoveEmptyNodeChildrenString(childnode.nodeChildrenString).length > 0) return true;
+    }
+    return true;
+}

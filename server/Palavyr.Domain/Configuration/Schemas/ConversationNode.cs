@@ -50,7 +50,7 @@ namespace Palavyr.Domain.Configuration.Schemas
                     IsTerminalType = false,
                     ShouldRenderChildren = true,
                     IsSplitMergeType = false,
-                    ShouldShowMultiOption = false
+                    ShouldShowMultiOption = false,
                 }
             };
         }
@@ -90,7 +90,7 @@ namespace Palavyr.Domain.Configuration.Schemas
                 IsTerminalType = isTerminalType,
                 ShouldRenderChildren = shouldRenderChild,
                 IsSplitMergeType = isSplitMergeType,
-                ShouldShowMultiOption = shouldShowMultiOption
+                ShouldShowMultiOption = shouldShowMultiOption,
             };
         }
 

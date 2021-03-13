@@ -60,8 +60,10 @@ export const ConvoTree = () => {
 
     const onSave = async () => {
         const { data: updatedConversation } = await client.Conversations.ModifyConversation(nodeList, areaIdentifier);
-        setConversationHistory([updatedConversation]);
-        setConversationHistoryPosition(0);
+        console.log(updatedConversation);
+        historyTracker.addConversationHistoryToQueue(updatedConversation, conversationHistoryPosition, conversationHistory);
+        // setConversationHistory([updatedConversation]);
+        // setConversationHistoryPosition(0);
         setNodes(updatedConversation);
         return true;
     };
@@ -127,9 +129,7 @@ export const ConvoTree = () => {
                 <div style={{ margin: "0.5rem 0rem 1rem 2rem" }}>{missingNodeTypes.length > 0 && <MissingDynamicNodes missingNodeTypes={missingNodeTypes} />}</div>
                 <form onSubmit={() => null}>
                     <fieldset className="fieldset" id="tree-test">
-                        <div className="main-tree tree-wrap">
-                            {nodeList.length > 0 ? <ConversationNode key="tree-start" node={rootNode} parentState={true} changeParentState={() => null} nodeOptionList={nodeOptionList} /> : null}
-                        </div>
+                        <div className="main-tree tree-wrap">{nodeList.length > 0 ? <ConversationNode key="tree-start" node={rootNode} parentState={true} changeParentState={() => null} nodeOptionList={nodeOptionList} /> : null}</div>
                     </fieldset>
                 </form>
             </div>

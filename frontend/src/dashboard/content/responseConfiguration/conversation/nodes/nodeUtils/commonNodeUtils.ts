@@ -22,7 +22,6 @@ export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, isDecende
     }
 };
 
-
 export const getUnsortedChildNodes = (childrenIDs: string, nodeList: Conversation) => {
     const ids = childrenIDs.split(",");
     if (ids.length === 1 && ids[0] === "") return [];
@@ -88,16 +87,16 @@ export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversa
         } else {
             // use the previous node and attach - but if we've set to placeholder, use that instead
             const currentPathOptions = previousNode.valueOptions.split(ValueOptionDelimiter);
-            if (currentPathOptions.length >= 1){
+            if (currentPathOptions.filter((option: string) => !isNullOrUndefinedOrWhitespace(option)).length >= 1) {
                 pathOptions = currentPathOptions;
             } else {
-                pathOptions = ["Placeholder"] // or perhaps valueoptions from above
+                pathOptions = valueOptions.split(ValueOptionDelimiter);
+                // pathOptions = ["Placeholder"]; // or perhaps valueoptions from above
             }
         }
     } else {
         pathOptions = ["Continue"];
     }
-
 
     if (pathOptions === undefined) {
         throw new Error("Ill defined path options");
@@ -133,7 +132,6 @@ export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversa
         if (previousChildren.length === 1 && previousChildren[0] === "") {
             updatedNodeList = updatedNodeList;
         } else {
-
             updatedNodeList = _resetOptionPaths(previousChildren, updatedNodeList, pathOptions);
         }
     }
@@ -144,3 +142,14 @@ export const updateSingleOptionType = (updatedNode: ConvoNode, nodeList: Convers
     const updatedNodeList = _replaceNodeWithUpdatedNode(updatedNode, nodeList);
     setNodes(updatedNodeList);
 };
+
+export const nodeMergesToPrimarySibling = (node: ConvoNode, isDecendentOfSplitMerge: boolean, splitMergeRootSiblingIndex: number, nodeIdOfMostRecentSplitMergePrimarySibling: string | null) => {
+    if (!isDecendentOfSplitMerge) return false;
+    if (splitMergeRootSiblingIndex === 0) return false;
+
+    const childNodeStrings = node.nodeChildrenString.split(",").filter((childId: string) => !isNullOrUndefinedOrWhitespace(childId));
+    if (childNodeStrings.length !== 1) return false;
+
+    return childNodeStrings[0] === nodeIdOfMostRecentSplitMergePrimarySibling
+
+}

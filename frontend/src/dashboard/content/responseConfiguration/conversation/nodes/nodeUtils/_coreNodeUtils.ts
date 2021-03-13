@@ -58,9 +58,9 @@ export const _resetOptionPaths = (newChildNodeIds: string[], nodeList: Conversat
     // pathOptions can be [""]
     let rectifiedNodeList = [...nodeList];
     const rectifiedPathOptions = pathOptions.map((x: string) => (isNullOrUndefinedOrWhitespace(x) ? "Placeholder" : x));
-    for (let i: number = 0; i < rectifiedPathOptions.length; i++) {
+    for (let i: number = 0; i < newChildNodeIds.length; i++) {
         let nodeId = newChildNodeIds[i];
-        const node = _getNodeById(nodeId, nodeList);
+        let node = _getNodeById(nodeId, nodeList);
         node.optionPath = rectifiedPathOptions[i];
         rectifiedNodeList = _replaceNodeWithUpdatedNode(node, rectifiedNodeList);
     }
@@ -80,7 +80,6 @@ export const _replaceNodeWithUpdatedNode = (nodeData: ConvoNode, nodeList: Conve
 };
 
 
-
 export const _getParentNode = (node: ConvoNode, nodeList: Conversation, isDecendentOfSplitMerge: boolean, decendentLevelFromSplitMerge: number, nodeIdOfMostRecentSplitMergePrimarySibling: string) => {
     if (node.isRoot) {
         return null;
@@ -93,12 +92,13 @@ export const _getParentNode = (node: ConvoNode, nodeList: Conversation, isDecend
         return children.includes(node.nodeId);
     });
 
-    if (isDecendentOfSplitMerge && decendentLevelFromSplitMerge === 1) {
-        // if this is a child of the primary sibling then we accept two parents, and we take the primary sibling as the parent
-        // we only allow merges back in to the
-        return parent[0];
-    } else if (parent.length != 1) {
-        throw new Error("Should we be able to have more than one parent? Sometimes, but not when using this function probably.");
+    if (parent.length != 1) {
+        const splitmergeparent = parent.filter((node: ConvoNode) => node.isSplitMergeType);
+        if (splitmergeparent.length > 1) {
+            throw new Error("Currently we only support multiple parents when the primary parent is a splitmerge type node.");
+        } else {
+            return splitmergeparent[0]
+        }
     }
     return parent[0];
 };
@@ -121,10 +121,19 @@ export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeId
             isTerminalType: false,
             isSplitMergeType: false,
             shouldRenderChildren: true,
-            shouldShowMultiOption: shouldShowMultiOption,
+            shouldShowMultiOption: shouldShowMultiOption
         };
 
         updatedNodeList.push(newNode);
     });
     return updatedNodeList;
+};
+
+export const _splitNodeChildrenString = (nodeChildrenString: string) => {
+    return nodeChildrenString.split(",");
+};
+
+export const _splitAndRemoveEmptyNodeChildrenString = (nodeChildrenString: string) => {
+    const childrenArray = _splitNodeChildrenString(nodeChildrenString);
+    return childrenArray.filter((childstring: string) => !isNullOrUndefinedOrWhitespace(childstring));
 };
