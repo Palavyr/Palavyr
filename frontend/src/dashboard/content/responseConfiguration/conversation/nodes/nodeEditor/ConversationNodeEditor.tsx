@@ -62,7 +62,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, parent
                     type="text"
                     fullWidth
                 />
-                {node.isMultiOptionType && node.shouldShowMultiOption && node.nodeType !== "MultipleChoiceContinue" && (
+                {node.isMultiOptionType && node.shouldShowMultiOption && (
                     <>
                         <MultiChoiceOptions options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} />
                     </>

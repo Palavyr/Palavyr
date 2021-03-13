@@ -36,14 +36,6 @@ export const ConversationNode = ({ node, parentState, changeParentState, nodeOpt
     const [loaded, setLoaded] = useState(false);
 
     const { isDecendentOfSplitMerge, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling, orderedChildren } = findMostRecentSplitMerge(node, nodeList);
-    console.group(node.text);
-    console.log(node);
-    console.log("Is decendant: " + isDecendentOfSplitMerge);
-    console.log("Decendant level: " + decendentLevelFromSplitMerge);
-    console.log("RootSiblingIndex: " + splitMergeRootSiblingIndex);
-    console.log("RootSiblingNodeId: " + nodeIdOfMostRecentSplitMergePrimarySibling);
-    console.log("Ordered Children: " + orderedChildren);
-    console.groupEnd();
     const parentNode = _getParentNode(node, nodeList);
     const childNodes = node.isSplitMergeType ? getUnsortedChildNodes(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);
 

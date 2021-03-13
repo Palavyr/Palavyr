@@ -2,6 +2,7 @@ import React from "react";
 import { AppBar, Toolbar, Typography, Hidden, IconButton, Button, makeStyles, Divider } from "@material-ui/core";
 import { menuItems } from "./NavMenuItems";
 import { Link } from "react-router-dom";
+// import Logo from "../../../common/svgs/palavyrBranding/logo.svg";
 import Logo from "../../../common/svgs/palavyrBranding/logo.svg";
 
 
@@ -84,7 +85,7 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawer
             <Toolbar className={classes.toolbar}>
                 <div className={classes.logowrap}>
                     <div className={classes.logo}>
-                        <Logo height="88px" width="88px" />
+                        <Logo height="125px" width="125px" />
                     </div>
                     <div className={classes.logotypography}>
                         <Typography variant="body2" className={classes.brandText} display="inline">

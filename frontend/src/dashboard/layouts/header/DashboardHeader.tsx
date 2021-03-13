@@ -3,7 +3,6 @@ import { AppBar, Toolbar, IconButton, Typography, makeStyles } from "@material-u
 import MenuIcon from '@material-ui/icons/Menu';
 import classNames from "classnames";
 import HelpIcon from '@material-ui/icons/Help';
-import { debounce } from "lodash";
 
 const drawerWidth: number = 240;
 
@@ -17,7 +16,8 @@ interface DashboardHeaderProps {
 
 const useStyles = makeStyles(theme => ({
     topbar: {
-        background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
+        background: "rgb(1,96,162)",
+        // background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
         position: "fixed",
     },
     appBar: {
