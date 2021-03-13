@@ -80,7 +80,7 @@ export const _replaceNodeWithUpdatedNode = (nodeData: ConvoNode, nodeList: Conve
 };
 
 
-export const _getParentNode = (node: ConvoNode, nodeList: Conversation, isDecendentOfSplitMerge: boolean, decendentLevelFromSplitMerge: number, nodeIdOfMostRecentSplitMergePrimarySibling: string) => {
+export const _getParentNode = (node: ConvoNode, nodeList: Conversation) => {
     if (node.isRoot) {
         return null;
     }

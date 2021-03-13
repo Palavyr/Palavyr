@@ -44,7 +44,7 @@ export const ConversationNode = ({ node, parentState, changeParentState, nodeOpt
     console.log("RootSiblingNodeId: " + nodeIdOfMostRecentSplitMergePrimarySibling);
     console.log("Ordered Children: " + orderedChildren);
     console.groupEnd();
-    const parentNode = _getParentNode(node, nodeList, isDecendentOfSplitMerge, decendentLevelFromSplitMerge, nodeIdOfMostRecentSplitMergePrimarySibling);
+    const parentNode = _getParentNode(node, nodeList);
     const childNodes = node.isSplitMergeType ? getUnsortedChildNodes(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);
 
     useEffect(() => {

@@ -35,6 +35,9 @@ export const getSiblingIndex = (parentNode: ConvoNode, node: ConvoNode) => {
 export const findMostRecentSplitMerge = (node: ConvoNode, nodeList: Conversation): MostRecentSplitMerge => {
     // returns either the most recent splitMerge type, or null
     const SplitMerge = "SplitMerge".toUpperCase();
+    const nodetype = node.nodeType;
+    const optionpath = node.optionPath;
+    const text = node.text;
 
     if (!nodeListContainsSplitmerge(nodeList)) {// early bail if no splitmerges
         return { isDecendentOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: "", orderedChildren: []}
@@ -60,7 +63,7 @@ export const findMostRecentSplitMerge = (node: ConvoNode, nodeList: Conversation
     do {
         decendentLevelFromSplitMerge++;
         prevChildReference = { ...tempParentNode! };
-        tempParentNode = _getParentNodeYOLO(prevChildReference!, nodeList);
+        tempParentNode = _getParentNode(prevChildReference!, nodeList);
         if (tempParentNode === null) throw new Error("Orphan node detected.");
         if (tempParentNode.nodeType.toUpperCase() === SplitMerge) {
             found = true;
