@@ -1,6 +1,6 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { AnabranchMeta, Conversation, ConvoNode } from "@Palavyr-Types";
-import { findIndex } from "lodash";
+import { findIndex, sum } from "lodash";
 import { _getNodeById, _getParentNode, _nodeListContainsNodeType, _splitAndRemoveEmptyNodeChildrenString, _splitNodeChildrenString } from "./_coreNodeUtils";
 
 const Anabranch = "Anabranch".toUpperCase();
@@ -123,29 +123,45 @@ export const recursivelyReferenceCurrentNodeInNonTerminalLeafNodes = (currentNod
     return nodeList;
 };
 
-// TODO: fix this - pretty sure its not implemented correctly
-export const anyMultiChoiceTypesWithUnsetChildren = (nodeId: string, nodeList: Conversation) => {
-    const rootNode = _getNodeById(nodeId, nodeList); // first root node will be anabranch, then will be each node below
-    const childrenIds = _splitAndRemoveEmptyNodeChildrenString(rootNode.nodeChildrenString);
 
-    for (let index = 0; index < childrenIds.length; index++) {
-        const childId = childrenIds[index];
-        const childNode = _getNodeById(childId, nodeList);
-        const childrenUnset = checkChildrenForUnsetChildren(childNode, nodeList);
-        if (childrenUnset) return false;
-        return anyMultiChoiceTypesWithUnsetChildren(childId, nodeList);
+export const anyMultiChoiceTypesWithUnsetChildren = (nodeId: string, nodeList: Conversation, resultArray: boolean[] | null = null): boolean[] => {
+    if (resultArray === null) {
+        resultArray = [];
     }
-};
+
+    const node = _getNodeById(nodeId, nodeList);
+    if (_splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString).length === 0) {
+        resultArray.push(false);
+    }
+    if (node.isAnabranchMergePoint){
+        resultArray.push(false)
+    }
+    else if (node.isMultiOptionType && !node.isAnabranchType) {
+        const multiCheckResult = checkChildrenForUnsetChildren(node, nodeList);
+        resultArray.push(multiCheckResult)
+
+    } else {
+        const childIds = _splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString);
+        for (let childIdIndex = 0; childIdIndex < childIds.length; childIdIndex++) {
+            const childId = childIds[childIdIndex];
+            const results = anyMultiChoiceTypesWithUnsetChildren(childId, nodeList, resultArray);
+            resultArray.push.apply(results);
+        }
+    }
+    return resultArray;
+
+}
 
 const checkChildrenForUnsetChildren = (childNode: ConvoNode, nodeList: Conversation) => {
+    let result = false;
     const granChildren = _splitAndRemoveEmptyNodeChildrenString(childNode.nodeChildrenString);
     if (childNode.isMultiOptionType) {
         granChildren.forEach((granChildId: string) => {
             const grandChildNode = _getNodeById(granChildId, nodeList);
             if (isNullOrUndefinedOrWhitespace(grandChildNode.nodeType)) {
-                return true;
+                result = true;
             }
         });
     }
-    return false;
+    return result;
 };

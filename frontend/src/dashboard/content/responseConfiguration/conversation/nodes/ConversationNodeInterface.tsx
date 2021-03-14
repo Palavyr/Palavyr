@@ -3,14 +3,14 @@ import React, { useState } from "react";
 import { makeStyles, Card, CardContent, Typography, FormControlLabel, Checkbox } from "@material-ui/core";
 import classNames from "classnames";
 import { NodeTypeSelector } from "./NodeTypeSelector";
-import { cloneDeep } from "lodash";
+import { cloneDeep, sum } from "lodash";
 import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import { _createAndAddNewNodes, _replaceNodeWithUpdatedNode, _truncateTheTreeAtSpecificNode } from "./nodeUtils/_coreNodeUtils";
 import { useEffect } from "react";
 import { checkedNodeOptionList, nodeMergesToPrimarySibling, updateSingleOptionType } from "./nodeUtils/commonNodeUtils";
 import { uuid } from "uuidv4";
-import { allOtherSplitMergeTypesAreResolved, AllNonTerminalLeavesReferenceThisNode, otherNodeAlreadySetAsAnabranchMerge, anyMultiChoiceTypesWithUnsetChildren, recursivelyReferenceCurrentNodeInNonTerminalLeafNodes } from "./nodeUtils/AnabranchUtils";
+import { allOtherSplitMergeTypesAreResolved, AllNonTerminalLeavesReferenceThisNode, otherNodeAlreadySetAsAnabranchMerge, recursivelyReferenceCurrentNodeInNonTerminalLeafNodes, anyMultiChoiceTypesWithUnsetChildren } from "./nodeUtils/AnabranchUtils";
 
 type StyleProps = {
     nodeText: string;
@@ -100,7 +100,7 @@ export const ConversationNodeInterface = ({
     isDecendentOfAnabranch,
     decendentLevelFromAnabranch,
     nodeIdOfMostRecentAnabranch,
-    isDirectChildOfAnabranch
+    isDirectChildOfAnabranch,
 }: IConversationNodeInterface) => {
     const { setNodes, nodeList, conversationHistory, historyTracker, conversationHistoryPosition } = React.useContext(ConversationTreeContext);
     const [modalState, setModalState] = useState<boolean>(false);
@@ -158,7 +158,9 @@ export const ConversationNodeInterface = ({
         if (event.target.checked) {
             // if this box is available, then it means that we've passed the checks on whether or not there are unresolved splitandmerge type subtrees
             // need to find most recent Anabranch node, and then find all of the non-terminal leaf nodes. These will be assigned this nodes nodeId as their child node.
-            if (anyMultiChoiceTypesWithUnsetChildren(nodeIdOfMostRecentAnabranch, nodeList)) {
+            const result = anyMultiChoiceTypesWithUnsetChildren(nodeIdOfMostRecentAnabranch, nodeList);
+
+            if (result.length > 0 && sum(result.map(x => x ? 1 : 0)) > 0) {
                 alert("Please set any multioption types that have not been set under the most recent Anabranch node.");
                 return;
             }
