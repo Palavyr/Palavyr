@@ -166,8 +166,10 @@ export const ConversationNodeInterface = ({
             }
             // don't really need to return thse since we're mutating references. But it kinda reads more simply. Though it all confusing hey.
             let updatedNodeList = recursivelyReferenceCurrentNodeInNonTerminalLeafNodes(node.nodeId, nodeList, nodeIdOfMostRecentAnabranch);
+            setMergeBoxChecked(true);
             setNodes(cloneDeep(updatedNodeList));
         } else {
+            setMergeBoxChecked(false);
             if (conversationHistoryPosition === 0) {
             } else {
                 historyTracker.stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
