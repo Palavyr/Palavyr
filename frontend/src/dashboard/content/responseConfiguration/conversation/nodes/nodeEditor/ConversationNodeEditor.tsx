@@ -4,7 +4,6 @@ import { Dialog, DialogTitle, DialogContent, TextField, DialogActions } from "@m
 import { MultiChoiceOptions } from "./MultiChoiceOptions";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
-import { updateChildOfIsSplitMergeType } from "../nodeUtils/splitMergeUtils";
 import { updateMultiTypeOption } from "../nodeUtils/mutliOptionUtils";
 import { updateSingleOptionType } from "../nodeUtils/commonNodeUtils";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";

@@ -3,7 +3,7 @@ import { ConvoNode, NodeTypeOptions, NodeOption, AlertType } from "@Palavyr-Type
 import { CustomNodeSelect } from "./CustomNodeSelect";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
-import { changeNodeType } from "./nodeUtils/commonNodeUtils";
+import { changeNodeType } from "./nodeUtils/changeNodeType";
 
 export interface INodeTypeSelector {
     node: ConvoNode;

@@ -86,6 +86,8 @@ export type ConvoNode = {
     shouldRenderChildren: boolean;
     isSplitMergeType: boolean;
     shouldShowMultiOption: boolean;
+    isAnabranchType: boolean;
+    isAnabranchMergePoint: boolean;
 };
 
 export type Conversation = Array<ConvoNode>;
@@ -380,6 +382,8 @@ export type NodeOption = {
     isMultiOptionType: boolean;
     isTerminalType: boolean;
     isSplitMergeType: boolean;
+    isAnabranchType: boolean;
+    isAnabranchMergePoint: boolean;
     shouldShowMultiOption: boolean;
     stringName: string | null;
     groupName: string;
@@ -572,10 +576,17 @@ export type TodosAsBoolean = {
 };
 
 
-export type MostRecentSplitMerge = {
+export type SplitMergeMeta = {
     isDecendentOfSplitMerge: boolean;
     decendentLevelFromSplitMerge: number;
     splitMergeRootSiblingIndex: number;
     nodeIdOfMostRecentSplitMergePrimarySibling: string;
     orderedChildren: Conversation;
 }
+
+export type AnabranchMeta = {
+    isDecendentOfAnabranch: boolean;
+    decendentLevelFromAnabranch: number;
+    nodeIdOfMostRecentAnabranch: string;
+    isDirectChildOfAnabranch: boolean;
+};

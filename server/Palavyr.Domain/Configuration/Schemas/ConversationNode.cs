@@ -22,6 +22,8 @@ namespace Palavyr.Domain.Configuration.Schemas
         public bool ShouldRenderChildren { get; set; }
         public bool IsSplitMergeType { get; set; }
         public bool ShouldShowMultiOption { get; set; }
+        public bool IsAnabranchType  { get; set; }
+        public bool IsAnabranchMergePoint { get; set; }
 
         public string NodeChildrenString { get; set; } = null!; // stored as comma delimited list as string
 
@@ -51,6 +53,8 @@ namespace Palavyr.Domain.Configuration.Schemas
                     ShouldRenderChildren = true,
                     IsSplitMergeType = false,
                     ShouldShowMultiOption = false,
+                    IsAnabranchType = false,
+                    IsAnabranchMergePoint = false
                 }
             };
         }
@@ -70,7 +74,9 @@ namespace Palavyr.Domain.Configuration.Schemas
             bool isTerminalType = false,
             bool shouldRenderChild = true,
             bool isSplitMergeType = false,
-            bool shouldShowMultiOption = false
+            bool shouldShowMultiOption = false,
+            bool isAnabranchType = false,
+            bool isAnabranchMergePoint = false
         )
         {
             return new ConversationNode()
@@ -90,7 +96,9 @@ namespace Palavyr.Domain.Configuration.Schemas
                 IsTerminalType = isTerminalType,
                 ShouldRenderChildren = shouldRenderChild,
                 IsSplitMergeType = isSplitMergeType,
-                ShouldShowMultiOption = shouldShowMultiOption
+                ShouldShowMultiOption = shouldShowMultiOption,
+                IsAnabranchType = isAnabranchType,
+                IsAnabranchMergePoint = isAnabranchMergePoint
             };
         }
 
@@ -114,7 +122,9 @@ namespace Palavyr.Domain.Configuration.Schemas
                     node.IsTerminalType,
                     node.ShouldRenderChildren,
                     node.IsSplitMergeType,
-                    node.ShouldShowMultiOption
+                    node.ShouldShowMultiOption,
+                    node.IsAnabranchType,
+                    node.IsAnabranchMergePoint
                 );
                 mappedTransactions.Add(mappedNode);
             }

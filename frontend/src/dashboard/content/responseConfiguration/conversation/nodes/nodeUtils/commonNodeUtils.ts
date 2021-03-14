@@ -1,8 +1,7 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
-import { Conversation, ConvoNode, NodeOption, NodeTypeOptions, ValueOptionDelimiter } from "@Palavyr-Types";
+import { Conversation, ConvoNode, NodeOption, NodeTypeOptions } from "@Palavyr-Types";
 import { findIndex } from "lodash";
-import { getPrimarySiblingIdFromChildNodeChildrenString, rectifyMergeTypeChildReferences } from "./splitMergeUtils";
 import {
     _computeShouldRenderChildren,
     _createAndAddNewNodes,
@@ -83,87 +82,6 @@ export const createAndReattachNewNodes = (currentNode: ConvoNode, nodeList: Conv
     };
 };
 
-
-export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversation, setNodes: (nodeList: Conversation) => void, nodeOption: NodeOption) => {
-    let valueOptions = previousNode.valueOptions; // if valueOptions is "", its because it was from a non-multioptionType
-    if (nodeOption.isMultiOptionType && nodeOption.valueOptions.length > 0) {
-        valueOptions = nodeOption.valueOptions.join(ValueOptionDelimiter);
-    } else if (nodeOption.isTerminalType) {
-        valueOptions = "";
-    } else if (isNullOrUndefinedOrWhitespace(valueOptions)) {
-        valueOptions = previousNode.isTerminalType ? "" : "Placeholder";
-    }
-
-    let pathOptions: string[];
-    if (nodeOption.isTerminalType) {
-        pathOptions = [""];
-    } else if (nodeOption.isMultiOptionType) {
-        if (nodeOption.pathOptions.length >= 1) {
-            pathOptions = nodeOption.pathOptions; // if its a predefined yes or no
-        } else {
-            // use the previous node and attach - but if we've set to placeholder, use that instead
-            const currentPathOptions = previousNode.valueOptions.split(ValueOptionDelimiter);
-            if (currentPathOptions.filter((option: string) => !isNullOrUndefinedOrWhitespace(option)).length >= 1) {
-                pathOptions = currentPathOptions;
-            } else {
-                pathOptions = valueOptions.split(ValueOptionDelimiter);
-                // pathOptions = ["Placeholder"]; // or perhaps valueoptions from above
-            }
-        }
-    } else {
-        pathOptions = ["Continue"];
-    }
-
-    if (pathOptions === undefined) {
-        throw new Error("Ill defined path options");
-    }
-    if (valueOptions === undefined) {
-        throw new Error("Ill defined value options - cannot be undefined");
-    }
-
-    if (previousNode.nodeType.toUpperCase() === "SplitMerge".toUpperCase() && nodeOption.stringName?.toUpperCase() !== "SplitMerge".toUpperCase()) {
-        const nonPrimarySiblingNodeChildren = _splitAndRemoveEmptyNodeChildrenString(previousNode.nodeChildrenString).slice(1);
-        const primarySiblingNodeId = getPrimarySiblingIdFromChildNodeChildrenString(previousNode);
-        if (nonPrimarySiblingNodeChildren.length > 0) {
-            nonPrimarySiblingNodeChildren.forEach((id: string) => {
-                const nonPrimaryChildNode = _getNodeById(id, nodeList);
-                rectifyMergeTypeChildReferences(nonPrimaryChildNode, nodeList, primarySiblingNodeId); // walks the tree down the non-primary nodes and removes childNodeString references to primarySiblingNodeId
-            });
-        }
-    }
-
-    // TODO: This is kind of gross and complicates extendability since we later have to be sure not to intro any '-' in to the names. But
-    // since we are taking this fromthe option, we have to deal with it as a string until we try a refactor to get it into an object form
-    // so we can supply properties. ^ The option comes in from the event, which currently passes the value as a string. Can this be an object?
-    previousNode.nodeType = nodeOption.value; // SelectOneFlat-sdfs-sdfs-sgs-s
-
-    const newNumChildren = getNewNumChildren(pathOptions);
-    const { newNodeList, newChildNodeIds, childIdsToCreate } = createAndReattachNewNodes(previousNode, nodeList, newNumChildren);
-
-    const previousNodeChildrenString = previousNode.nodeChildrenString;
-    previousNode.nodeChildrenString = newChildNodeIds.join(",");
-    previousNode.isMultiOptionType = nodeOption.isMultiOptionType;
-    previousNode.isTerminalType = nodeOption.isTerminalType;
-    previousNode.isSplitMergeType = nodeOption.isSplitMergeType;
-    previousNode.shouldShowMultiOption = nodeOption.shouldShowMultiOption;
-
-    // set any value options
-    previousNode.valueOptions = valueOptions;
-    let updatedNodeList = _replaceNodeWithUpdatedNode(previousNode, newNodeList);
-    updatedNodeList = _createAndAddNewNodes(childIdsToCreate, newChildNodeIds, previousNode, pathOptions, updatedNodeList, nodeOption.shouldShowMultiOption);
-
-    if (newChildNodeIds.length > 0) {
-        updatedNodeList = _resetOptionPaths(newChildNodeIds, updatedNodeList, pathOptions);
-    } else {
-        const previousChildren = previousNodeChildrenString.split(",");
-        if (previousChildren.length === 1 && previousChildren[0] === "") {
-            updatedNodeList = updatedNodeList;
-        } else {
-            updatedNodeList = _resetOptionPaths(previousChildren, updatedNodeList, pathOptions);
-        }
-    }
-    setNodes(updatedNodeList);
-};
 
 export const updateSingleOptionType = (updatedNode: ConvoNode, nodeList: Conversation, setNodes: (nodeList: Conversation) => void) => {
     const updatedNodeList = _replaceNodeWithUpdatedNode(updatedNode, nodeList);

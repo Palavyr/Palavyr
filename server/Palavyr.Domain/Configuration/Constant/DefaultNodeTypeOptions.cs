@@ -20,7 +20,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 new TakeNumberIndividuals(),
                 new SendResponse(),
                 new TooComplicated(),
-                new SplitMerge()
+                new SplitMerge(),
+                new Anabranch()
             };
 
         public static YesNo CreateYesNo() => new YesNo();
@@ -32,6 +33,7 @@ namespace Palavyr.Domain.Configuration.Constant
         public static MultipleChoiceContinue CreateMultipleChoiceContinue() => new MultipleChoiceContinue();
         public static MultipleChoiceAsPath CreateMultipleChoiceAsPath() => new MultipleChoiceAsPath();
         public static SplitMerge CreateSplitMerge() => new SplitMerge();
+        public static Anabranch CreateAnabranch() => new Anabranch();
         
         public static TakeCurrency CreateTakeCurrency() => new TakeCurrency();
         public static TakeNumber CreateTakeNumber() => new TakeNumber();
@@ -40,6 +42,28 @@ namespace Palavyr.Domain.Configuration.Constant
         public static SendResponse CreateSendResponse() => new SendResponse();
         public static Restart CreateRestart() => new Restart();
 
+
+        public class Anabranch : NodeTypeOption
+        {
+            public new static string StringName => nameof(Anabranch);
+
+            public Anabranch()
+            {
+                Text = "Anabranch";
+                Value = StringName;
+                PathOptions = new List<string>();
+                ValueOptions = new List<string>();
+                IsMultiOptionType = true;
+                IsTerminalType = false;
+                GroupName = SplitAndMerge;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = true;
+                IsAnabranchType = true;
+                IsAnabranchMergePoint = false;
+            }
+        }
+        
         public class SplitMerge : NodeTypeOption
         {
             public new static string StringName => nameof(SplitMerge);
@@ -56,6 +80,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = true;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = true;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
         
@@ -76,6 +102,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
 
             }
         }
@@ -96,6 +124,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
 
             }
         }
@@ -116,6 +146,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
 
             }
         }
@@ -139,6 +171,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
 
             }
         }
@@ -160,6 +194,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
 
             }
         }
@@ -180,6 +216,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -199,6 +237,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -218,6 +258,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -237,6 +279,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -256,6 +300,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = true;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -275,6 +321,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = true;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -295,6 +343,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -314,6 +364,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -332,6 +384,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -350,6 +404,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -368,6 +424,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
     }

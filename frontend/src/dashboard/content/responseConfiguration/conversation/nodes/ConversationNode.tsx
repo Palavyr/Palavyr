@@ -4,10 +4,12 @@ import { SteppedLineTo } from "../treeLines/SteppedLineTo";
 import { ConversationNodeInterface } from "./ConversationNodeInterface";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import { getChildNodesSortedByOptionPath, getUnsortedChildNodes } from "./nodeUtils/commonNodeUtils";
-import { findMostRecentSplitMerge } from "./nodeUtils/splitMergeUtils";
-import { _getParentNode } from "./nodeUtils/_coreNodeUtils";
+import { collectSplitMergeMeta } from "./nodeUtils/splitMergeUtils";
+import { _getAllParentNodeIds, _getParentNode, _splitNodeChildrenString } from "./nodeUtils/_coreNodeUtils";
 
 import "./ConversationNode.css";
+import { collectAnabranchMeta } from "./nodeUtils/AnabranchUtils";
+
 export interface IConversationNode {
     node: ConvoNode;
     parentState: boolean;
@@ -31,15 +33,18 @@ export const connectionStyle: lineStyle = {
 
 export const ConversationNode = ({ node, parentState, changeParentState, nodeOptionList }: IConversationNode) => {
     const { nodeList } = useContext(ConversationTreeContext);
-    const text = node.text;
+    // const text = node.text;
     const [nodeState, changeNodeState] = useState<boolean>(true);
     const [loaded, setLoaded] = useState(false);
 
-    if (node.text == 'Is the lasting power of attorney to help someone make decisions about health and welfare?') {
-        console.log(node)
+    if (node.text == "Is the lasting power of attorney to help someone make decisions about health and welfare?") {
+        console.log(node);
     }
-    const { isDecendentOfSplitMerge, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling, orderedChildren } = findMostRecentSplitMerge(node, nodeList);
+    const { isDecendentOfSplitMerge, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling, orderedChildren } = collectSplitMergeMeta(node, nodeList);
+    const { isDecendentOfAnabranch, decendentLevelFromAnabranch, nodeIdOfMostRecentAnabranch, isDirectChildOfAnabranch } = collectAnabranchMeta(node, nodeList);
+
     const parentNode = _getParentNode(node, nodeList);
+    const allParentNodes = _getAllParentNodeIds(node, nodeList);
     const childNodes = node.isSplitMergeType ? getUnsortedChildNodes(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);
 
     useEffect(() => {
@@ -51,17 +56,18 @@ export const ConversationNode = ({ node, parentState, changeParentState, nodeOpt
         return null;
     }
 
-    const steppedLineNodes: string[] = [];
+    let steppedLineNodes: string[] = [];
 
-    if (parentNode) {
-        steppedLineNodes.push(parentNode.nodeId);
-        if (parentNode.isSplitMergeType) {
+    if (allParentNodes && allParentNodes.length == 1) {
+        steppedLineNodes.push(allParentNodes[0].nodeId);
+        if (allParentNodes[0].isSplitMergeType) {
             // plan - always check sibling nodes. If any sibling nodes are 'do not render children', then we assume that any siblings need to be merged in.
-            const siblingNodeIds = parentNode.nodeChildrenString.split(",").filter((x: string) => x !== node.nodeId);
+            const siblingNodeIds = _splitNodeChildrenString(allParentNodes[0].nodeChildrenString).filter((x: string) => x !== node.nodeId);
             siblingNodeIds.map((id: string) => steppedLineNodes.push(id));
         }
+    } else if (allParentNodes) {
+        steppedLineNodes = allParentNodes.map(x => x.nodeId);
     }
-
     const nodeWrapper = "tree-item-" + node?.nodeId;
     return (
         <>
@@ -80,14 +86,18 @@ export const ConversationNode = ({ node, parentState, changeParentState, nodeOpt
                         decendentLevelFromSplitMerge={decendentLevelFromSplitMerge}
                         splitMergeRootSiblingIndex={splitMergeRootSiblingIndex}
                         nodeIdOfMostRecentSplitMergePrimarySibling={nodeIdOfMostRecentSplitMergePrimarySibling}
+                        isDecendentOfAnabranch={isDecendentOfAnabranch}
+                        decendentLevelFromAnabranch={decendentLevelFromAnabranch}
+                        nodeIdOfMostRecentAnabranch={nodeIdOfMostRecentAnabranch}
+                        isDirectChildOfAnabranch={isDirectChildOfAnabranch}
                     />
                 </div>
                 {childNodes.length > 0 && (
                     <div key={node.nodeId} className="tree-row">
                         {node.shouldRenderChildren
-                            ? childNodes.filter((n: ConvoNode) => n !== undefined).map((nextNode, index) => (
-                                  <ConversationNode key={nextNode.nodeId + "-" + index.toString()} node={nextNode} parentState={nodeState} changeParentState={changeNodeState} nodeOptionList={nodeOptionList} />
-                              ))
+                            ? childNodes
+                                  .filter((n: ConvoNode) => n !== undefined)
+                                  .map((nextNode, index) => <ConversationNode key={nextNode.nodeId + "-" + index.toString()} node={nextNode} parentState={nodeState} changeParentState={changeNodeState} nodeOptionList={nodeOptionList} />)
                             : null}
                     </div>
                 )}

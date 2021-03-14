@@ -1,4 +1,4 @@
-import { ConvoNode, MostRecentSplitMerge, NodeTypeOptions } from "@Palavyr-Types";
+import { ConvoNode, SplitMergeMeta, NodeTypeOptions, AnabranchMeta } from "@Palavyr-Types";
 import React, { useState } from "react";
 import { makeStyles, Card, CardContent, Typography, FormControlLabel, Checkbox } from "@material-ui/core";
 import classNames from "classnames";
@@ -8,9 +8,9 @@ import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import { _createAndAddNewNodes, _replaceNodeWithUpdatedNode, _truncateTheTreeAtSpecificNode } from "./nodeUtils/_coreNodeUtils";
 import { useEffect } from "react";
-import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { checkedNodeOptionList, nodeMergesToPrimarySibling, updateSingleOptionType } from "./nodeUtils/commonNodeUtils";
 import { uuid } from "uuidv4";
+import { allOtherSplitMergeTypesAreResolved, AllNonTerminalLeavesReferenceThisNode, otherNodeAlreadySetAsAnabranchMerge, anyMultiChoiceTypesWithUnsetChildren, recursivelyReferenceCurrentNodeInNonTerminalLeafNodes } from "./nodeUtils/AnabranchUtils";
 
 type StyleProps = {
     nodeText: string;
@@ -77,7 +77,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export interface IConversationNodeInterface extends MostRecentSplitMerge {
+export interface IConversationNodeInterface extends SplitMergeMeta, AnabranchMeta {
     node: ConvoNode;
     parentNode: ConvoNode | null;
     parentState: boolean;
@@ -97,23 +97,29 @@ export const ConversationNodeInterface = ({
     decendentLevelFromSplitMerge,
     splitMergeRootSiblingIndex,
     nodeIdOfMostRecentSplitMergePrimarySibling,
+    isDecendentOfAnabranch,
+    decendentLevelFromAnabranch,
+    nodeIdOfMostRecentAnabranch,
+    isDirectChildOfAnabranch
 }: IConversationNodeInterface) => {
-
     const { setNodes, nodeList, conversationHistory, historyTracker, conversationHistoryPosition } = React.useContext(ConversationTreeContext);
     const [modalState, setModalState] = useState<boolean>(false);
     const [mergeBoxChecked, setMergeBoxChecked] = useState<boolean>(false);
+    const [anabranchMergeChecked, setAnabranchMergeChecked] = useState<boolean>(false);
+
     const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text, checked: node.isCritical, isDecendentOfSplitMerge, splitMergeRootSiblingIndex });
 
     useEffect(() => {
-
         if (nodeMergesToPrimarySibling(node, isDecendentOfSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling)) {
-            setMergeBoxChecked(true)
+            setMergeBoxChecked(true);
         }
 
+        // when to check the 'mergePoint' box for the anabranch child
+        if (isDecendentOfAnabranch && allOtherSplitMergeTypesAreResolved(node, nodeList) && AllNonTerminalLeavesReferenceThisNode(node, nodeList)) setAnabranchMergeChecked(true);
     }, []);
 
     const showResponseInPdfCheckbox = (event: { target: { checked: boolean } }) => {
-        if (event.target.checked){
+        if (event.target.checked) {
             const newNode = cloneDeep(node);
             newNode.isCritical = event.target.checked;
             const updatedNodeList = _replaceNodeWithUpdatedNode(newNode, nodeList);
@@ -134,14 +140,33 @@ export const ConversationNodeInterface = ({
             setMergeBoxChecked(event.target.checked);
             setNodes(cloneDeep(updatedNodeList));
         } else {
-            if (conversationHistoryPosition === 0){
+            if (conversationHistoryPosition === 0) {
                 const childId = uuid();
                 const newNode = cloneDeep(node);
                 newNode.shouldRenderChildren = true;
                 newNode.nodeChildrenString = childId;
                 let updatedNodeList = _createAndAddNewNodes([childId], [childId], node, ["Continue"], nodeList, false);
-                updateSingleOptionType(newNode, updatedNodeList, setNodes)
+                updateSingleOptionType(newNode, updatedNodeList, setNodes);
                 setMergeBoxChecked(false);
+            } else {
+                historyTracker.stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
+            }
+        }
+    };
+
+    const handleSetAsAnabranchMergePointClick = (event: { target: { checked: boolean } }) => {
+        if (event.target.checked) {
+            // if this box is available, then it means that we've passed the checks on whether or not there are unresolved splitandmerge type subtrees
+            // need to find most recent Anabranch node, and then find all of the non-terminal leaf nodes. These will be assigned this nodes nodeId as their child node.
+            if (anyMultiChoiceTypesWithUnsetChildren(nodeIdOfMostRecentAnabranch, nodeList)) {
+                alert("Please set any multioption types that have not been set under the most recent Anabranch node.");
+                return;
+            }
+            // don't really need to return thse since we're mutating references. But it kinda reads more simply. Though it all confusing hey.
+            let updatedNodeList = recursivelyReferenceCurrentNodeInNonTerminalLeafNodes(node.nodeId, nodeList, nodeIdOfMostRecentAnabranch);
+            setNodes(cloneDeep(updatedNodeList));
+        } else {
+            if (conversationHistoryPosition === 0) {
             } else {
                 historyTracker.stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
             }
@@ -171,7 +196,7 @@ export const ConversationNodeInterface = ({
                     parentState={parentState}
                     changeParentState={changeParentState}
                 />
-                {!node.isTerminalType && (
+                {!node.isTerminalType && !(node.nodeType === "ProvideInfo") && (
                     <FormControlLabel
                         className={classes.formstyle}
                         classes={{
@@ -189,6 +214,16 @@ export const ConversationNodeInterface = ({
                         }}
                         control={<Checkbox className={classes.formstyle} size="small" checked={!node.shouldRenderChildren} value="" name={"crit-" + node.nodeId + "-merge"} onChange={handleMergeBackInOnClick} />}
                         label="Merge with primary sibling branch"
+                    />
+                )}
+                {isDecendentOfAnabranch && node.nodeType !== "" && !node.isTerminalType && !node.isMultiOptionType && !isDirectChildOfAnabranch && !otherNodeAlreadySetAsAnabranchMerge(nodeIdOfMostRecentAnabranch, nodeList) && (
+                    <FormControlLabel
+                        className={classes.formstyle}
+                        classes={{
+                            label: classes.formLabelStyle,
+                        }}
+                        control={<Checkbox className={classes.formstyle} size="small" checked={!node.shouldRenderChildren} value="" name={"crit-" + node.nodeId + "-merge"} onChange={handleSetAsAnabranchMergePointClick} />}
+                        label="Set as Anabranch merge point"
                     />
                 )}
                 {isDecendentOfSplitMerge && splitMergeRootSiblingIndex === 0 && decendentLevelFromSplitMerge === 1 && <Typography>This is the primary sibling. Branches will merge to this node.</Typography>}

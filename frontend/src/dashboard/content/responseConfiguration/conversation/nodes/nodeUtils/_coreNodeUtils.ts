@@ -1,5 +1,5 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
-import { Conversation, ConvoNode, UUID } from "@Palavyr-Types";
+import { Conversation, ConvoNode, UUID, ValueOptionDelimiter } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { uuid } from "uuidv4";
 
@@ -79,7 +79,6 @@ export const _replaceNodeWithUpdatedNode = (nodeData: ConvoNode, nodeList: Conve
     return filteredNodeList;
 };
 
-
 export const _getParentNode = (node: ConvoNode, nodeList: Conversation) => {
     if (node.isRoot) {
         return null;
@@ -88,20 +87,32 @@ export const _getParentNode = (node: ConvoNode, nodeList: Conversation) => {
         if (isNullOrUndefinedOrWhitespace(n.nodeChildrenString)) {
             return false;
         }
-        let children = n.nodeChildrenString.split(",");
+        let children = _splitNodeChildrenString(n.nodeChildrenString);
         return children.includes(node.nodeId);
     });
 
-    if (parent.length != 1) {
-        const splitmergeparent = parent.filter((node: ConvoNode) => node.isSplitMergeType);
-        if (splitmergeparent.length > 1) {
-            throw new Error("Currently we only support multiple parents when the primary parent is a splitmerge type node.");
-        } else {
-            return splitmergeparent[0]
-        }
-    }
+    // if (parent.length != 1) {
+    //     const splitmergeparent = parent.filter((node: ConvoNode) => node.isSplitMergeType);
+    //     if (splitmergeparent.length > 1) {
+    //         throw new Error("Currently we only support multiple parents when the primary parent is a splitmerge type node.");
+    //     } else {
+    //         return splitmergeparent[0];
+    //     }
+    // }
     return parent[0];
 };
+
+export const _getAllParentNodeIds = (node: ConvoNode, nodeList: Conversation) => {
+    if (node.isRoot) return null;
+    const parentNodes = nodeList.filter((n: ConvoNode) => {
+        if (isNullOrUndefinedOrWhitespace(n.nodeChildrenString)) {
+            return false;
+        }
+        let children = _splitNodeChildrenString(n.nodeChildrenString);
+        return children.includes(node.nodeId);
+    })
+    return parentNodes;
+}
 
 export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeIds: string[], node: ConvoNode, pathOptions: string[], updatedNodeList: Conversation, shouldShowMultiOption: boolean) => {
     childIdsToCreate.forEach((id: string, index: number) => {
@@ -121,7 +132,9 @@ export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeId
             isTerminalType: false,
             isSplitMergeType: false,
             shouldRenderChildren: true,
-            shouldShowMultiOption: shouldShowMultiOption
+            shouldShowMultiOption: shouldShowMultiOption,
+            isAnabranchMergePoint: false,
+            isAnabranchType: false,
         };
 
         updatedNodeList.push(newNode);
@@ -134,10 +147,23 @@ export const _splitNodeChildrenString = (nodeChildrenString: string) => {
 };
 
 export const _joinNodeChildrenStringArray = (nodeChildrenStrings: string[]) => {
-    return nodeChildrenStrings.join(",")
-}
+    return nodeChildrenStrings.join(",");
+};
 
 export const _splitAndRemoveEmptyNodeChildrenString = (nodeChildrenString: string) => {
     const childrenArray = _splitNodeChildrenString(nodeChildrenString);
     return childrenArray.filter((childstring: string) => !isNullOrUndefinedOrWhitespace(childstring));
+};
+
+export const _nodeListContainsNodeType = (nodeList: Conversation, nodeType: string) => {
+    const nodeTypes = nodeList.map((node: ConvoNode) => node.nodeType.toUpperCase());
+    return nodeTypes.includes(nodeType.toUpperCase());
+};
+
+export const _joinValueOptionArray = (valueOptionArray: string[]) => {
+    return valueOptionArray.join(ValueOptionDelimiter);
+};
+
+export const _splitValueOptionString = (valueOptionString: string) => {
+    return valueOptionString.split(ValueOptionDelimiter);
 };

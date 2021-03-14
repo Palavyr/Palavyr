@@ -15,7 +15,7 @@ namespace Palavyr.Domain.Configuration.Constant
         public static readonly string InfoProvide = "Provide Info";
         public static readonly string CustomTables = "Custom Tables";
         public static readonly string Terminal = "Terminal";
-        public static readonly string SplitAndMerge = "SplitAndMerge";
+        public static readonly string SplitAndMerge = "Split then Merge";
 
         /*
          * The string form name of the node type. Derived from either 'nameof(T)' or extension method: dynamicTableMeta.MakeUniqueIdentifier()
@@ -63,6 +63,16 @@ namespace Palavyr.Domain.Configuration.Constant
          */
         public bool IsSplitMergeType { get; set; } = false;
         
+        /*
+         * Whether or not the node is an Anabranch type (will split, and then all leaves will either terminate or merge into a single node.
+         */
+        public bool IsAnabranchType { get; set; }
+
+        /*
+         * Whether or not the node is an Anabranch merge node. This is mutually exclusive with the Anabranch Type. (Anabranch node types cannot be Anabranch merge points).
+         */
+        public bool IsAnabranchMergePoint { get; set; }
+
         /*
          * Whether or not the node type comes from a dynamic table type.
          */
