@@ -2,7 +2,20 @@ import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { Conversation, ConvoNode, NodeOption, NodeTypeOptions, ValueOptionDelimiter } from "@Palavyr-Types";
 import { findIndex } from "lodash";
-import { _computeShouldRenderChildren, _createAndAddNewNodes, _createNewChildIDs, _getIdsToDeleteRecursively, _getNodeById, _removeNodeByID, _replaceNodeWithUpdatedNode, _resetOptionPaths, _truncateTheTreeAtSpecificNode } from "./_coreNodeUtils";
+import { getPrimarySiblingIdFromChildNodeChildrenString, rectifyMergeTypeChildReferences } from "./splitMergeUtils";
+import {
+    _computeShouldRenderChildren,
+    _createAndAddNewNodes,
+    _createNewChildIDs,
+    _getIdsToDeleteRecursively,
+    _getNodeById,
+    _removeNodeByID,
+    _replaceNodeWithUpdatedNode,
+    _resetOptionPaths,
+    _splitAndRemoveEmptyNodeChildrenString,
+    _splitNodeChildrenString,
+    _truncateTheTreeAtSpecificNode,
+} from "./_coreNodeUtils";
 
 export const getRootNode = (nodeList: Conversation) => {
     return nodeList.filter((node) => node.isRoot === true)[0];
@@ -70,10 +83,13 @@ export const createAndReattachNewNodes = (currentNode: ConvoNode, nodeList: Conv
     };
 };
 
+
 export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversation, setNodes: (nodeList: Conversation) => void, nodeOption: NodeOption) => {
     let valueOptions = previousNode.valueOptions; // if valueOptions is "", its because it was from a non-multioptionType
     if (nodeOption.isMultiOptionType && nodeOption.valueOptions.length > 0) {
         valueOptions = nodeOption.valueOptions.join(ValueOptionDelimiter);
+    } else if (nodeOption.isTerminalType) {
+        valueOptions = "";
     } else if (isNullOrUndefinedOrWhitespace(valueOptions)) {
         valueOptions = previousNode.isTerminalType ? "" : "Placeholder";
     }
@@ -103,6 +119,17 @@ export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversa
     }
     if (valueOptions === undefined) {
         throw new Error("Ill defined value options - cannot be undefined");
+    }
+
+    if (previousNode.nodeType.toUpperCase() === "SplitMerge".toUpperCase() && nodeOption.stringName?.toUpperCase() !== "SplitMerge".toUpperCase()) {
+        const nonPrimarySiblingNodeChildren = _splitAndRemoveEmptyNodeChildrenString(previousNode.nodeChildrenString).slice(1);
+        const primarySiblingNodeId = getPrimarySiblingIdFromChildNodeChildrenString(previousNode);
+        if (nonPrimarySiblingNodeChildren.length > 0) {
+            nonPrimarySiblingNodeChildren.forEach((id: string) => {
+                const nonPrimaryChildNode = _getNodeById(id, nodeList);
+                rectifyMergeTypeChildReferences(nonPrimaryChildNode, nodeList, primarySiblingNodeId); // walks the tree down the non-primary nodes and removes childNodeString references to primarySiblingNodeId
+            });
+        }
     }
 
     // TODO: This is kind of gross and complicates extendability since we later have to be sure not to intro any '-' in to the names. But
@@ -150,6 +177,5 @@ export const nodeMergesToPrimarySibling = (node: ConvoNode, isDecendentOfSplitMe
     const childNodeStrings = node.nodeChildrenString.split(",").filter((childId: string) => !isNullOrUndefinedOrWhitespace(childId));
     if (childNodeStrings.length !== 1) return false;
 
-    return childNodeStrings[0] === nodeIdOfMostRecentSplitMergePrimarySibling
-
-}
+    return childNodeStrings[0] === nodeIdOfMostRecentSplitMergePrimarySibling;
+};

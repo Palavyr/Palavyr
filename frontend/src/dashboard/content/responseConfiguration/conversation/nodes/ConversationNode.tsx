@@ -31,10 +31,13 @@ export const connectionStyle: lineStyle = {
 
 export const ConversationNode = ({ node, parentState, changeParentState, nodeOptionList }: IConversationNode) => {
     const { nodeList } = useContext(ConversationTreeContext);
-
+    const text = node.text;
     const [nodeState, changeNodeState] = useState<boolean>(true);
     const [loaded, setLoaded] = useState(false);
 
+    if (node.text == 'Is the lasting power of attorney to help someone make decisions about health and welfare?') {
+        console.log(node)
+    }
     const { isDecendentOfSplitMerge, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling, orderedChildren } = findMostRecentSplitMerge(node, nodeList);
     const parentNode = _getParentNode(node, nodeList);
     const childNodes = node.isSplitMergeType ? getUnsortedChildNodes(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);

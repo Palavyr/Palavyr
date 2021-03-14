@@ -133,6 +133,10 @@ export const _splitNodeChildrenString = (nodeChildrenString: string) => {
     return nodeChildrenString.split(",");
 };
 
+export const _joinNodeChildrenStringArray = (nodeChildrenStrings: string[]) => {
+    return nodeChildrenStrings.join(",")
+}
+
 export const _splitAndRemoveEmptyNodeChildrenString = (nodeChildrenString: string) => {
     const childrenArray = _splitNodeChildrenString(nodeChildrenString);
     return childrenArray.filter((childstring: string) => !isNullOrUndefinedOrWhitespace(childstring));
