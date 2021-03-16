@@ -44,6 +44,17 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, parent
         }
     };
 
+    const addMultiChoiceOptionsOnClick = () => {
+     // only allow adding if we aer not anabranch.
+        if (!node.isAnabranchType) {
+            options.push("");
+            setOptions(options);
+            setSwitchState(!switchState);
+        } else {
+            alert("Cannot add more than two branches with an Anabranch node type.")
+        }
+    };
+
     return (
         <Dialog fullWidth open={modalState} onClose={handleCloseModal} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Edit a conversation node</DialogTitle>
@@ -63,7 +74,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, parent
                 />
                 {node.isMultiOptionType && node.shouldShowMultiOption && (
                     <>
-                        <MultiChoiceOptions options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} />
+                        <MultiChoiceOptions options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} addMultiChoiceOptionsOnClick={addMultiChoiceOptionsOnClick} />
                     </>
                 )}
             </DialogContent>

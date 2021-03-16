@@ -45,10 +45,11 @@ export interface ISelectNodeType {
     onChange: (event: any, nodeOption: NodeOption) => void;
     nodeOptionList: NodeTypeOptions;
     label: string;
+    shouldDisabledNodeTypeSelector: boolean;
 }
 
 // TODO: merge this with the dynamic table select and create a common reusable component
-export const CustomNodeSelect = ({ onChange, label, nodeOptionList }: ISelectNodeType) => {
+export const CustomNodeSelect = ({ onChange, label, nodeOptionList, shouldDisabledNodeTypeSelector }: ISelectNodeType) => {
     const cls = useStyles();
     const groupGetter = (val: NodeOption) => val.groupName;
 
@@ -59,6 +60,7 @@ export const CustomNodeSelect = ({ onChange, label, nodeOptionList }: ISelectNod
                 {nodeOptionList && (
                     <Autocomplete
                         size="small"
+                        disabled={shouldDisabledNodeTypeSelector}
                         disableClearable
                         clearOnEscape
                         className={cls.autocomplete}

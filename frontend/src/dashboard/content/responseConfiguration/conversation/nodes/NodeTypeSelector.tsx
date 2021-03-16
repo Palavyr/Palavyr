@@ -7,13 +7,13 @@ import { changeNodeType } from "./nodeUtils/changeNodeType";
 
 export interface INodeTypeSelector {
     node: ConvoNode;
-    parentNode: ConvoNode | null;
     parentState: boolean;
     changeParentState: (parentState: boolean) => void;
     nodeOptionList: NodeTypeOptions;
+    shouldDisabledNodeTypeSelector: boolean;
 }
 
-export const NodeTypeSelector = ({ node, parentNode, parentState, changeParentState, nodeOptionList }: INodeTypeSelector) => {
+export const NodeTypeSelector = ({ node, parentState, changeParentState, nodeOptionList, shouldDisabledNodeTypeSelector }: INodeTypeSelector) => {
     const [alertState, setAlertState] = useState<boolean>(false);
     const [alertDetails, setAlertDetails] = useState<AlertType>();
     const [label, setLabel] = useState<string>("");
@@ -37,7 +37,6 @@ export const NodeTypeSelector = ({ node, parentNode, parentState, changeParentSt
         }
         return false;
     };
-
     const autocompleteOnChange = async (_: any, nodeOption: NodeOption) => {
         if (nodeOption === null) {
             return;
@@ -50,14 +49,13 @@ export const NodeTypeSelector = ({ node, parentNode, parentState, changeParentSt
             setAlertState(true);
             return;
         }
-
         changeNodeType(node, nodeList, setNodes, nodeOption);
         changeParentState(!parentState); // rerender lines
     };
 
     return (
         <>
-            {nodeOptionList && <CustomNodeSelect onChange={autocompleteOnChange} label={label} nodeOptionList={nodeOptionList} />}
+            {nodeOptionList && <CustomNodeSelect onChange={autocompleteOnChange} label={label} nodeOptionList={nodeOptionList} shouldDisabledNodeTypeSelector={shouldDisabledNodeTypeSelector} />}
             {alertDetails && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />}
         </>
     );

@@ -1,12 +1,33 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { AnabranchMeta, Conversation, ConvoNode } from "@Palavyr-Types";
-import { findIndex, sum } from "lodash";
+import { findIndex, sum, uniqBy } from "lodash";
 import { _getNodeById, _getParentNode, _nodeListContainsNodeType, _splitAndRemoveEmptyNodeChildrenString, _splitNodeChildrenString } from "./_coreNodeUtils";
 
 const Anabranch = "Anabranch".toUpperCase();
 
+export const checkIfIsAncestorOfAnabranchMergePoint = (node: ConvoNode, nodeList: Conversation, isAncestor: boolean | null = null): boolean => {
+    if (isAncestor === null) {
+        isAncestor = false;
+    }
+
+    const childrenIds = _splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString);
+    for (let index = 0; index < childrenIds.length; index++) {
+        const childId = childrenIds[index];
+        const childNode = _getNodeById(childId, nodeList);
+        if (childNode.isAnabranchMergePoint) {
+            isAncestor = true;
+        } else {
+            checkIfIsAncestorOfAnabranchMergePoint(childNode, nodeList, isAncestor);
+        }
+    }
+
+    return isAncestor;
+};
+
 export const collectAnabranchMeta = (node: ConvoNode, nodeList: Conversation): AnabranchMeta => {
-    let defaultResult = { isDecendentOfAnabranch: false, decendentLevelFromAnabranch: 0, nodeIdOfMostRecentAnabranch: "", isDirectChildOfAnabranch: false };
+    const isParentOfAnabranchMergePoint = checkIfIsParentOfAnabranchMergePoint(node, nodeList);
+    const isAncestorOfAnabranchMergePoint = checkIfIsAncestorOfAnabranchMergePoint(node, nodeList);
+    let defaultResult = { isDecendentOfAnabranch: false, decendentLevelFromAnabranch: 0, nodeIdOfMostRecentAnabranch: "", isDirectChildOfAnabranch: false, isParentOfAnabranchMergePoint, isAncestorOfAnabranchMergePoint };
 
     if (!_nodeListContainsNodeType(nodeList, Anabranch)) {
         return defaultResult;
@@ -32,13 +53,34 @@ export const collectAnabranchMeta = (node: ConvoNode, nodeList: Conversation): A
         if (tempParentNode === null) throw new Error("Orphan node detected");
 
         if (tempParentNode.nodeType.toUpperCase() === Anabranch) {
-            return { isDecendentOfAnabranch: true, decendentLevelFromAnabranch, nodeIdOfMostRecentAnabranch: tempParentNode.nodeId, isDirectChildOfAnabranch: decendentLevelFromAnabranch == 1 };
+            return {
+                isDecendentOfAnabranch: true,
+                decendentLevelFromAnabranch,
+                nodeIdOfMostRecentAnabranch: tempParentNode.nodeId,
+                isDirectChildOfAnabranch: decendentLevelFromAnabranch == 1,
+                isParentOfAnabranchMergePoint,
+                isAncestorOfAnabranchMergePoint,
+            };
         } else if (tempParentNode.isRoot) {
             return defaultResult;
         } else if (decendentLevelFromAnabranch > 200) {
             throw new Error("The tree is too deep (or the recursion algo is broken... either way, this cannot be allowed.");
         }
     } while (true);
+};
+
+const checkIfIsParentOfAnabranchMergePoint = (node: ConvoNode, nodeList: Conversation) => {
+    const childrenIds = _splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString);
+    if (childrenIds.length === 0) return false;
+    let isParentOfAnabranchMergePoint = false;
+    for (let index = 0; index < childrenIds.length; index++) {
+        const childId = childrenIds[index];
+        const node = _getNodeById(childId, nodeList);
+        if (node.isAnabranchMergePoint) {
+            isParentOfAnabranchMergePoint = true;
+        }
+    }
+    return isParentOfAnabranchMergePoint;
 };
 
 const isChildOfSomeNode = (potentialParentId: string, currentNodeId: string, nodeList: Conversation) => {
@@ -71,20 +113,36 @@ export const allOtherSplitMergeTypesAreResolved = (node: ConvoNode, nodeList: Co
 
 export const AllNonTerminalLeavesReferenceThisNode = (node: ConvoNode, nodeList: Conversation) => {};
 
-export const otherNodeAlreadySetAsAnabranchMerge = (nodeId: string, nodeList: Conversation) => {
+export const otherNodeAlreadySetAsAnabranchMerge = (nodeId: string, nodeList: Conversation, currentNodeId: string) => {
     const rootNode = _getNodeById(nodeId, nodeList);
-    const childrenIds = _splitAndRemoveEmptyNodeChildrenString(rootNode.nodeChildrenString);
-    let anabranchMergeIsSet = false;
-    for (let index = 0; index < childrenIds.length; index++) {
-        const childId = childrenIds[index];
-        const childNode = _getNodeById(childId, nodeList);
-        if (childNode.isAnabranchMergePoint) {
-            anabranchMergeIsSet = true;
-        } else {
-            anabranchMergeIsSet = otherNodeAlreadySetAsAnabranchMerge(childNode.nodeId, nodeList);
-        }
+    console.log(rootNode);
+    const childrenNodes: Conversation = [];
+    const result: Conversation = uniqBy(gatherChildren(rootNode, nodeList, childrenNodes, currentNodeId), (x: ConvoNode) => x.nodeId);
+    const anabranchMerges = result.map((node: ConvoNode) => (node.isAnabranchMergePoint ? 1 : 0));
+    return sum(anabranchMerges) > 0;
+};
+
+const gatherChildren = (node: ConvoNode, nodeList: Conversation, children: Conversation, currentNodeId: string) => {
+    let childrenIds;
+    try {
+        childrenIds = _splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString);
+    } catch {
+        console.log("WOW");
+        childrenIds = [];
     }
-    return anabranchMergeIsSet;
+
+    childrenIds.map((childId: string) => {
+        const child = _getNodeById(childId, nodeList);
+        if (child.nodeId !== currentNodeId) {
+            children.push(child);
+        }
+    });
+    for (let childId = 0; childId < childrenIds.length; childId++) {
+        const nodeId = childrenIds[childId];
+        const child = _getNodeById(nodeId, nodeList);
+        children.push.apply(gatherChildren(child, nodeList, children, currentNodeId));
+    }
+    return children;
 };
 
 const isNonTerminalLeafNode = (node: ConvoNode) => {
@@ -96,33 +154,43 @@ const isNonTerminalLeafNode = (node: ConvoNode) => {
     return true;
 };
 
-export const recursivelyReferenceCurrentNodeInNonTerminalLeafNodes = (currentNodeId: string, nodeList: Conversation, rootNodeId: string) => {
+export const recursivelyReferenceCurrentNodeInNonTerminalLeafNodes = (anabranchMergePointNodeId: string, nodeList: Conversation, rootNodeId: string) => {
     const rootNode = _getNodeById(rootNodeId, nodeList);
     const rootNodeChildIDs = _splitAndRemoveEmptyNodeChildrenString(rootNode.nodeChildrenString);
 
-    if (rootNodeId === currentNodeId) {
+    if (rootNodeId === anabranchMergePointNodeId || rootNode.isTerminalType || rootNode.isSplitMergeType) {
         return nodeList;
     } else if (rootNode.isMultiOptionType) {
         rootNodeChildIDs.forEach((childId: string) => {
             // if multioption type - skip
-            nodeList = recursivelyReferenceCurrentNodeInNonTerminalLeafNodes(currentNodeId, nodeList, childId);
+            nodeList = recursivelyReferenceCurrentNodeInNonTerminalLeafNodes(anabranchMergePointNodeId, nodeList, childId);
         });
     } else {
-        const childIds = _splitNodeChildrenString(rootNode.nodeChildrenString);
-        if (childIds.length !== 1) throw new Error("What other kind of node type is there?: " + rootNode.nodeChildrenString);
-
-        const childNode = _getNodeById(childIds[0], nodeList);
-        if (childNode.nodeId !== currentNodeId && childNode.nodeType === "") {
-            rootNode.nodeChildrenString = currentNodeId;
+        if (rootNode.nodeChildrenString === "") {
+            // no children set, must be an unset leafnode
+            if (rootNode.nodeType === "") {
+                rootNode.nodeType = "Provide Info";
+            }
+            rootNode.nodeChildrenString = anabranchMergePointNodeId;
             rootNode.shouldRenderChildren = false;
-            nodeList = nodeList.filter((x: ConvoNode) => x.nodeId !== childIds[0])
         } else {
-            nodeList = recursivelyReferenceCurrentNodeInNonTerminalLeafNodes(currentNodeId, nodeList, childIds[0]);
+            const childIds = _splitNodeChildrenString(rootNode.nodeChildrenString);
+            if (childIds.length !== 1) throw new Error("What other kind of node type is there?: " + rootNode.nodeChildrenString);
+
+            const childNode = _getNodeById(childIds[0], nodeList);
+            if (childNode.nodeId !== anabranchMergePointNodeId && childNode.nodeType === "") {
+                rootNode.nodeChildrenString = anabranchMergePointNodeId;
+                rootNode.shouldRenderChildren = false;
+                nodeList = nodeList.filter((x: ConvoNode) => x.nodeId !== childIds[0]);
+            } else {
+                nodeList = recursivelyReferenceCurrentNodeInNonTerminalLeafNodes(anabranchMergePointNodeId, nodeList, childIds[0]);
+            }
         }
     }
+
+    // TODO: check that we successfully referenced the anabranch merge node.
     return nodeList;
 };
-
 
 export const anyMultiChoiceTypesWithUnsetChildren = (nodeId: string, nodeList: Conversation, resultArray: boolean[] | null = null): boolean[] => {
     if (resultArray === null) {
@@ -133,13 +201,11 @@ export const anyMultiChoiceTypesWithUnsetChildren = (nodeId: string, nodeList: C
     if (_splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString).length === 0) {
         resultArray.push(false);
     }
-    if (node.isAnabranchMergePoint){
-        resultArray.push(false)
-    }
-    else if (node.isMultiOptionType && !node.isAnabranchType) {
+    if (node.isAnabranchMergePoint) {
+        resultArray.push(false);
+    } else if (node.isMultiOptionType && !node.isAnabranchType) {
         const multiCheckResult = checkChildrenForUnsetChildren(node, nodeList);
-        resultArray.push(multiCheckResult)
-
+        resultArray.push(multiCheckResult);
     } else {
         const childIds = _splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString);
         for (let childIdIndex = 0; childIdIndex < childIds.length; childIdIndex++) {
@@ -149,8 +215,7 @@ export const anyMultiChoiceTypesWithUnsetChildren = (nodeId: string, nodeList: C
         }
     }
     return resultArray;
-
-}
+};
 
 const checkChildrenForUnsetChildren = (childNode: ConvoNode, nodeList: Conversation) => {
     let result = false;

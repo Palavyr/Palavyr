@@ -37,7 +37,7 @@ export const ConversationNode = ({ node, parentState, changeParentState, nodeOpt
     const [loaded, setLoaded] = useState(false);
 
     const { isDecendentOfSplitMerge, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling, orderedChildren } = collectSplitMergeMeta(node, nodeList);
-    const { isDecendentOfAnabranch, decendentLevelFromAnabranch, nodeIdOfMostRecentAnabranch, isDirectChildOfAnabranch } = collectAnabranchMeta(node, nodeList);
+    const { isDecendentOfAnabranch, decendentLevelFromAnabranch, nodeIdOfMostRecentAnabranch, isDirectChildOfAnabranch, isParentOfAnabranchMergePoint, isAncestorOfAnabranchMergePoint } = collectAnabranchMeta(node, nodeList);
 
     const parentNode = _getParentNode(node, nodeList);
     const allParentNodes = _getAllParentNodeIds(node, nodeList);
@@ -86,6 +86,8 @@ export const ConversationNode = ({ node, parentState, changeParentState, nodeOpt
                         decendentLevelFromAnabranch={decendentLevelFromAnabranch}
                         nodeIdOfMostRecentAnabranch={nodeIdOfMostRecentAnabranch}
                         isDirectChildOfAnabranch={isDirectChildOfAnabranch}
+                        isParentOfAnabranchMergePoint={isParentOfAnabranchMergePoint}
+                        isAncestorOfAnabranchMergePoint={isAncestorOfAnabranchMergePoint}
                     />
                 </div>
                 {childNodes.length > 0 && (

@@ -24,9 +24,15 @@ export const getNewNumChildren = (optionPaths: string[]) => {
     return optionPaths.filter((x) => x !== null && x !== "").length;
 };
 
-export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, isDecendentOfSplitMerge: boolean, splitMergeRootSiblingIndex: number) => {
+export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, isDecendentOfSplitMerge: boolean, splitMergeRootSiblingIndex: number, isParentOfAnabranchMergePoint: boolean) => {
     // This next line is a defensive check
+    //TODO: Perhaps these two if statements should be mutually exclusive.
+    if ((isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0) && (isParentOfAnabranchMergePoint)) throw new Error("MUtally Exclusive!")
+
     if (isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0) {
+        const compatible = nodeOptionList.filter((option: NodeOption) => option.groupName === "Provide Info" || option.groupName === "Info Collection");
+        return compatible;
+    } else if (isParentOfAnabranchMergePoint) {
         const compatible = nodeOptionList.filter((option: NodeOption) => option.groupName === "Provide Info" || option.groupName === "Info Collection");
         return compatible;
     } else {

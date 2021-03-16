@@ -589,4 +589,6 @@ export type AnabranchMeta = {
     decendentLevelFromAnabranch: number;
     nodeIdOfMostRecentAnabranch: string;
     isDirectChildOfAnabranch: boolean;
+    isParentOfAnabranchMergePoint: boolean;
+    isAncestorOfAnabranchMergePoint: boolean;
 };
