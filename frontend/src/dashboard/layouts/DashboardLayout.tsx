@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
         position: "absolute", // Required - finalized
         display: "flex",
         width: "100%",
-        top: "8px"
+        top: "8px",
     },
     menuDrawer: {
         width: DRAWER_WIDTH,
@@ -229,7 +229,9 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                         <SideBarMenu areaIdentifiers={sidebarIds} areaNames={sidebarNames} widgetIsActive={widgetState} updateWidgetIsActive={updateWidgetIsActive} createCustomerPortalSession={createCustomerPortalSession} />
                     </>
                 </Drawer>
-                <ContentLoader isLoading={isLoading} dashboardAreasLoading={dashboardAreasLoading} open={open}>{children}</ContentLoader>
+                <ContentLoader isLoading={isLoading} dashboardAreasLoading={dashboardAreasLoading} open={open}>
+                    {children}
+                </ContentLoader>
                 <Drawer
                     className={cls.helpDrawer}
                     variant="persistent"

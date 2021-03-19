@@ -1,7 +1,8 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { Conversation, ConvoNode, NodeOption, NodeTypeOptions } from "@Palavyr-Types";
-import { findIndex } from "lodash";
+import { findIndex, sum } from "lodash";
+import { checkIfNodeIsBoundedByAnabranch } from "./AnabranchUtils";
 import {
     _computeShouldRenderChildren,
     _createAndAddNewNodes,
@@ -40,7 +41,11 @@ export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, isDecende
     }
 };
 
-export const getUnsortedChildNodes = (childrenIDs: string, nodeList: Conversation) => {
+export const getChildNodesToRender = (node: ConvoNode, nodeList: Conversation) => {
+    return node.isSplitMergeType ? getChildeNodesOrderedByChildString(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);
+}
+
+export const getChildeNodesOrderedByChildString = (childrenIDs: string, nodeList: Conversation) => {
     const ids = childrenIDs.split(",");
     if (ids.length === 1 && ids[0] === "") return [];
     const unorderedNodes: Conversation = [];
@@ -52,7 +57,7 @@ export const getUnsortedChildNodes = (childrenIDs: string, nodeList: Conversatio
 };
 
 export const getChildNodesSortedByOptionPath = (childrenIds: string, nodeList: Conversation) => {
-    const unsortedChildNodes = getUnsortedChildNodes(childrenIds, nodeList);
+    const unsortedChildNodes = getChildeNodesOrderedByChildString(childrenIds, nodeList);
     const getter = (x: ConvoNode) => x.optionPath.toUpperCase();
     return sortByPropertyAlphabetical(getter, unsortedChildNodes);
 };
@@ -102,4 +107,21 @@ export const nodeMergesToPrimarySibling = (node: ConvoNode, isDecendentOfSplitMe
     if (childNodeStrings.length !== 1) return false;
 
     return childNodeStrings[0] === nodeIdOfMostRecentSplitMergePrimarySibling;
+};
+
+
+export const determineIfCanUnsetNodeType = (node: ConvoNode, nodeList: Conversation, isDecendentOfAnabranch: boolean, anabranchId: string) => {
+    // cannot  unset nodetype if: bounded AND is Terminal
+
+    const nodeIsBoundedByAnabranch = checkIfNodeIsBoundedByAnabranch(node, nodeList, isDecendentOfAnabranch, anabranchId);
+    if (nodeIsBoundedByAnabranch) {
+        return false;
+    }
+
+    if (node.nodeChildrenString === "") {
+        return true;
+    }
+    const childNodes = _splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString).map((childId: string) => _getNodeById(childId, nodeList));
+    const result = sum(childNodes.map((childNode: ConvoNode) => childNode.nodeType !== "").map((x) => (x ? 1 : 0)));
+    return result === 0;
 };

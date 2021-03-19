@@ -16,6 +16,7 @@ namespace Palavyr.Domain.Configuration.Constant
         public static readonly string CustomTables = "Custom Tables";
         public static readonly string Terminal = "Terminal";
         public static readonly string SplitAndMerge = "Split then Merge";
+        public static readonly string Other = "Other";
 
         /*
          * The string form name of the node type. Derived from either 'nameof(T)' or extension method: dynamicTableMeta.MakeUniqueIdentifier()

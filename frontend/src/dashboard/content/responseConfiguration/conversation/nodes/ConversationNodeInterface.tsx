@@ -1,17 +1,20 @@
-import { ConvoNode, SplitMergeMeta, NodeTypeOptions, AnabranchMeta } from "@Palavyr-Types";
+import { ConvoNode } from "@Palavyr-Types";
 import React, { useState } from "react";
-import { makeStyles, Card, CardContent, Typography, FormControlLabel, Checkbox } from "@material-ui/core";
+import { makeStyles, Card, CardContent, Typography, Divider } from "@material-ui/core";
 import classNames from "classnames";
 import { NodeTypeSelector } from "./NodeTypeSelector";
-import { cloneDeep, sum } from "lodash";
+import { cloneDeep } from "lodash";
 import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
-import { _createAndAddNewNodes, _getNodeById, _replaceNodeWithUpdatedNode, _truncateTheTreeAtSpecificNode } from "./nodeUtils/_coreNodeUtils";
+import { _createAndAddNewNodes, _getNodeById, _getParentNode, _replaceNodeWithUpdatedNode, _splitAndRemoveEmptyNodeChildrenString, _truncateTheTreeAtSpecificNode } from "./nodeUtils/_coreNodeUtils";
 import { useEffect } from "react";
-import { checkedNodeOptionList, nodeMergesToPrimarySibling, updateSingleOptionType } from "./nodeUtils/commonNodeUtils";
+import { checkedNodeOptionList, updateSingleOptionType } from "./nodeUtils/commonNodeUtils";
 import { uuid } from "uuidv4";
-import { allOtherSplitMergeTypesAreResolved, AllNonTerminalLeavesReferenceThisNode, otherNodeAlreadySetAsAnabranchMerge, recursivelyReferenceCurrentNodeInNonTerminalLeafNodes, anyMultiChoiceTypesWithUnsetChildren } from "./nodeUtils/AnabranchUtils";
-import { recursivelyDereferenceNodeIdFromChildren, recursivelyDereferenceNodeIdFromChildrenExcept } from "./nodeUtils/dereferenceUtils";
+import { recursivelyReferenceCurrentNodeInNonTerminalLeafNodes } from "./nodeUtils/AnabranchUtils";
+import { recursivelyDereferenceNodeIdFromChildrenExcept } from "./nodeUtils/dereferenceUtils";
+import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
+import { NodeCheckBox } from "./NodeCheckBox";
+import { getNodeIdentity } from "./nodeUtils/nodeIdentity";
 
 type StyleProps = {
     nodeText: string;
@@ -24,7 +27,7 @@ type StyleProps = {
 const useStyles = makeStyles(() => ({
     root: (props: StyleProps) => ({
         minWidth: "275px",
-        maxWidth: "300px",
+        maxWidth: "600px",
         minHeight: "320px",
         borderColor: props.nodeType === "" ? "red" : props.isDecendentOfSplitMerge && props.splitMergeRootSiblingIndex > 0 ? "purple" : "#54585A",
         borderWidth: props.nodeType === "" ? "5px" : props.isDecendentOfSplitMerge && props.splitMergeRootSiblingIndex > 0 ? "8px" : "2px",
@@ -79,54 +82,41 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export interface IConversationNodeInterface extends SplitMergeMeta, AnabranchMeta {
+export interface IConversationNodeInterface {
     node: ConvoNode;
-    parentNode: ConvoNode | null;
-    parentState: boolean;
-    changeParentState: (parentState: boolean) => void;
-    optionPath: string | null;
-    nodeOptionList: NodeTypeOptions;
+    reRender: () => void;
 }
 
-export const ConversationNodeInterface = ({
-    nodeOptionList,
-    node,
-    parentNode,
-    optionPath,
-    parentState,
-    changeParentState,
-    isDecendentOfSplitMerge,
-    decendentLevelFromSplitMerge,
-    splitMergeRootSiblingIndex,
-    nodeIdOfMostRecentSplitMergePrimarySibling,
-    isDecendentOfAnabranch,
-    decendentLevelFromAnabranch,
-    nodeIdOfMostRecentAnabranch,
-    isDirectChildOfAnabranch,
-    isParentOfAnabranchMergePoint,
-    isAncestorOfAnabranchMergePoint
-}: IConversationNodeInterface) => {
-    const { setNodes, nodeList, conversationHistory, historyTracker, conversationHistoryPosition } = React.useContext(ConversationTreeContext);
+export const ConversationNodeInterface = ({ node, reRender }: IConversationNodeInterface) => {
+    const { setNodes, nodeList, nodeTypeOptions, conversationHistory, historyTracker, conversationHistoryPosition } = React.useContext(ConversationTreeContext);
+    const parentNode = _getParentNode(node, nodeList);
+
     const [modalState, setModalState] = useState<boolean>(false);
     const [mergeBoxChecked, setMergeBoxChecked] = useState<boolean>(false);
     const [anabranchMergeChecked, setAnabranchMergeChecked] = useState<boolean>(false);
 
-    const classes = useStyles({ nodeType: node.nodeType, nodeText: node.text, checked: node.isCritical, isDecendentOfSplitMerge, splitMergeRootSiblingIndex });
+    const identity = getNodeIdentity(node, nodeList);
 
-    const otherNodeAlreadySetAsMergeBranchBool = isDecendentOfAnabranch && otherNodeAlreadySetAsAnabranchMerge(nodeIdOfMostRecentAnabranch, nodeList, node.nodeId);
-    const shouldDisabledNodeTypeSelector = isDecendentOfAnabranch && isAncestorOfAnabranchMergePoint;
+    const classes = useStyles({
+        nodeType: node.nodeType,
+        nodeText: node.text,
+        checked: node.isCritical,
+        isDecendentOfSplitMerge: identity.isDecendentOfSplitMerge,
+        splitMergeRootSiblingIndex: identity.splitMergeRootSiblingIndex,
+    });
 
     useEffect(() => {
-        if (nodeMergesToPrimarySibling(node, isDecendentOfSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling)) {
+        if (identity.shouldCheckSplitMergeBox) {
             setMergeBoxChecked(true);
         }
     }, [node, nodeList]);
 
     useEffect(() => {
-        if (node.isAnabranchMergePoint) {
+        if (identity.isAnabranchMergePoint) {
             setAnabranchMergeChecked(true);
         }
     }, []);
+
     const showResponseInPdfCheckbox = (event: { target: { checked: boolean } }) => {
         if (event.target.checked) {
             const newNode = cloneDeep(node);
@@ -144,7 +134,7 @@ export const ConversationNodeInterface = ({
             let updatedNodeList = cloneDeep(nodeList);
             newNode.shouldRenderChildren = false;
             updatedNodeList = _truncateTheTreeAtSpecificNode(node, nodeList);
-            newNode.nodeChildrenString = nodeIdOfMostRecentSplitMergePrimarySibling;
+            newNode.nodeChildrenString = identity.nodeIdOfMostRecentSplitMergePrimarySibling;
             updatedNodeList = _replaceNodeWithUpdatedNode(newNode, nodeList);
             setMergeBoxChecked(event.target.checked);
             setNodes(cloneDeep(updatedNodeList));
@@ -167,17 +157,21 @@ export const ConversationNodeInterface = ({
         if (event.target.checked) {
             const newNode = cloneDeep(node);
             let updatedNodeList = cloneDeep(nodeList);
-            newNode.isAnabranchMergePoint = true;
-            updatedNodeList = recursivelyReferenceCurrentNodeInNonTerminalLeafNodes(newNode.nodeId, updatedNodeList, nodeIdOfMostRecentAnabranch);
+
+            // TODO this should really be any multichoice with more than primary child unset. We have to keep these anabranch merges facing the center of the tree, otherwise things could get messy. If there are multiple
+            // branch points too potentially. They are few, but the cases where we allow a merge are complex.
+            // -
 
             // if this box is available, then it means that we've passed the checks on whether or not there are unresolved splitandmerge type subtrees
             // need to find most recent Anabranch node, and then find all of the non-terminal leaf nodes. These will be assigned this nodes nodeId as their child node.
-            const result = anyMultiChoiceTypesWithUnsetChildren(nodeIdOfMostRecentAnabranch, updatedNodeList);
-            if (result.length > 0 && sum(result.map((x) => (x ? 1 : 0))) > 0) {
-                alert("Please set any multioption types that have not been set under the most recent Anabranch node.");
-                return;
-            }
+            // const result = anyMultiChoiceTypesWithUnsetChildren(nodeIdOfMostRecentAnabranch, updatedNodeList);
+            // if (result.length > 0 && sum(result.map((x) => (x ? 1 : 0))) > 0) {
+            //     alert("Please set any multioption types that have not been set under the most recent Anabranch node.");
+            //     return;
+            // }
 
+            newNode.isAnabranchMergePoint = true;
+            updatedNodeList = recursivelyReferenceCurrentNodeInNonTerminalLeafNodes(newNode.nodeId, updatedNodeList, identity.nodeIdOfMostRecentAnabranch);
             updatedNodeList = _replaceNodeWithUpdatedNode(newNode, updatedNodeList);
             setAnabranchMergeChecked(true);
             setNodes(cloneDeep(updatedNodeList));
@@ -187,8 +181,8 @@ export const ConversationNodeInterface = ({
             const newNode = cloneDeep(node);
             newNode.isAnabranchMergePoint = false;
             updatedNodeList = _replaceNodeWithUpdatedNode(newNode, updatedNodeList);
-            const anabranchRootNode = _getNodeById(nodeIdOfMostRecentAnabranch, updatedNodeList);
-            recursivelyDereferenceNodeIdFromChildrenExcept(parentNode?.nodeId,  anabranchRootNode, updatedNodeList, newNode.nodeId);
+            const anabranchRootNode = _getNodeById(identity.nodeIdOfMostRecentAnabranch, updatedNodeList);
+            recursivelyDereferenceNodeIdFromChildrenExcept(parentNode?.nodeId, anabranchRootNode, updatedNodeList, newNode.nodeId);
             setNodes(cloneDeep(updatedNodeList));
             setAnabranchMergeChecked(true);
             // } else {
@@ -197,13 +191,68 @@ export const ConversationNodeInterface = ({
         }
     };
 
+    const handleUnsetCurrentNodeType = () => {
+        let updatedNodeList = cloneDeep(nodeList);
+        const newNode = cloneDeep(node);
+        newNode.nodeType = "";
+        newNode.nodeChildrenString = "";
+        newNode.valueOptions = "";
+        updatedNodeList = _replaceNodeWithUpdatedNode(newNode, updatedNodeList);
+        setNodes(cloneDeep([...updatedNodeList]));
+    };
+
+    const dataitems = [
+        { isDecendentOfSplitMerge: identity.isDecendentOfSplitMerge },
+        { decendentLevelFromSplitMerge: identity.decendentLevelFromSplitMerge },
+        { splitMergeRootSiblingIndex: identity.splitMergeRootSiblingIndex },
+        { nodeIdOfMostRecentSplitMergePrimarySibling: identity.nodeIdOfMostRecentSplitMergePrimarySibling },
+        { isDecendentOfAnabranch: identity.isDecendentOfAnabranch },
+        { decendentLevelFromAnabranch: identity.decendentLevelFromAnabranch },
+        { nodeIdOfMostRecentAnabranch: identity.nodeIdOfMostRecentAnabranch },
+        { isDirectChildOfAnabranch: identity.isDirectChildOfAnabranch },
+        { isParentOfAnabranchMergePoint: identity.isParentOfAnabranchMergePoint },
+        { isAncestorOfAnabranchMergePoint: identity.isAncestorOfAnabranchMergePoint },
+        { conversationHistoryPosition: conversationHistoryPosition },
+        { modalState: modalState },
+        { mergeBoxChecked: mergeBoxChecked },
+        { anabranchMergeChecked: anabranchMergeChecked },
+        { otherNodeAlreadySetAsMergeBranchBool: identity.otherNodeAlreadySetAsMergeBranchBool },
+        { shouldDisabledNodeTypeSelector: identity.shouldDisabledNodeTypeSelector },
+        { canUnSetNodeType: identity.canUnSetNodeType },
+        { shouldShowUnsetNodeTypeOption: identity.shouldShowUnsetNodeTypeOption}
+    ];
+
+    const nodeProperties = [
+        { isRoot: node.isRoot },
+        { nodeId: node.nodeId },
+        { nodeType: node.nodeType },
+        { text: node.text },
+        { isCritical: node.isCritical },
+        { nodeChildrenString: node.nodeChildrenString },
+        { isTerminalType: node.isTerminalType },
+        { isMultiOptionType: node.isMultiOptionType },
+        { shouldShowMultiOption: node.shouldShowMultiOption },
+        { optionPath: node.optionPath },
+        { valueOptions: node.valueOptions },
+        { shouldRenderChildren: node.shouldRenderChildren },
+        { isSplitMergeType: node.isSplitMergeType },
+        { isAnabranchType: node.isAnabranchType },
+        { isAnabranchMergePoint: node.isAnabranchMergePoint },
+    ];
+
+    const filteredNodeTypeOptions = () => {
+        const filtered = (mergeBoxChecked && identity.isDecendentOfSplitMerge) || identity.isParentOfAnabranchMergePoint ? checkedNodeOptionList(nodeTypeOptions, identity.isDecendentOfSplitMerge, identity.splitMergeRootSiblingIndex, identity.isParentOfAnabranchMergePoint) : nodeTypeOptions;
+        return filtered; // TODO: fix Filter
+    };
+
     // TODO: the NodeTypeSelector uses 'checkedNodeOptionList and re-computes whether or not this is a child of mergesplit, and if its a non-primary-sibling decendant (in which case, it will allow filtering). This is defensive
     // which is not necessary if this is the only place this is used. Its cheap to perform this check.
     return (
         <Card className={classNames(classes.root, node.nodeId)} variant="outlined">
             <CardContent className={classes.card}>
+                <DataLogging nodeProperties={nodeProperties} nodeChildren={node.nodeChildrenString} nodeId={node.nodeId} data={dataitems} />
                 <Typography className={classes.interfaceElement} variant={node.isRoot ? "h5" : "body1"} align="center">
-                    {node.isRoot ? "Begin" : node.optionPath === "Continue" ? optionPath : "If " + optionPath}
+                    {node.isRoot ? "Begin" : node.optionPath === "Continue" ? node.optionPath : "If " + node.optionPath}
                 </Typography>
                 <Card elevation={0} className={classNames(classes.interfaceElement, classes.textCard)} onClick={() => setModalState(true)}>
                     <Typography className={classes.text} variant="body2" component="span" noWrap={false}>
@@ -213,47 +262,74 @@ export const ConversationNodeInterface = ({
                         Click to Edit
                     </Typography>
                 </Card>
-                <NodeTypeSelector
-                    nodeOptionList={(mergeBoxChecked && isDecendentOfSplitMerge) || (isParentOfAnabranchMergePoint) ? checkedNodeOptionList(nodeOptionList, isDecendentOfSplitMerge, splitMergeRootSiblingIndex, isParentOfAnabranchMergePoint) : nodeOptionList}
-                    node={node}
-                    parentState={parentState}
-                    changeParentState={changeParentState}
-                    shouldDisabledNodeTypeSelector={shouldDisabledNodeTypeSelector}
-                />
-                {!node.isTerminalType && !(node.nodeType === "ProvideInfo") && (
-                    <FormControlLabel
-                        className={classes.formstyle}
-                        classes={{
-                            label: classes.formLabelStyle,
-                        }}
-                        control={<Checkbox className={classes.formstyle} size="small" checked={node.isCritical} value="" name={"crit-" + node.nodeId} onChange={showResponseInPdfCheckbox} />}
-                        label="Show response in PDF"
-                    />
-                )}
-                {isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0 && node.nodeType !== "" && !node.isTerminalType && !node.isMultiOptionType && (
-                    <FormControlLabel
-                        className={classes.formstyle}
-                        classes={{
-                            label: classes.formLabelStyle,
-                        }}
-                        control={<Checkbox className={classes.formstyle} size="small" checked={!node.shouldRenderChildren} value="" name={"crit-" + node.nodeId + "-merge"} onChange={handleMergeBackInOnClick} />}
-                        label="Merge with primary sibling branch"
-                    />
-                )}
-                {isDecendentOfAnabranch && node.nodeType !== "" && !node.isTerminalType && !node.isMultiOptionType && !isDirectChildOfAnabranch && !otherNodeAlreadySetAsMergeBranchBool && (
-                    <FormControlLabel
-                        className={classes.formstyle}
-                        classes={{
-                            label: classes.formLabelStyle,
-                        }}
-                        control={<Checkbox className={classes.formstyle} size="small" checked={anabranchMergeChecked} value="" name={"crit-" + node.nodeId + "-merge"} onChange={handleSetAsAnabranchMergePointClick} />}
-                        label="Set as Anabranch merge point"
-                    />
-                )}
-                {isDecendentOfSplitMerge && splitMergeRootSiblingIndex === 0 && decendentLevelFromSplitMerge === 1 && <Typography>This is the primary sibling. Branches will merge to this node.</Typography>}
+                <NodeTypeSelector nodeTypeOptions={filteredNodeTypeOptions()} node={node} reRender={reRender} shouldDisabledNodeTypeSelector={identity.shouldDisabledNodeTypeSelector} />
                 <ConversationNodeEditor setModalState={setModalState} modalState={modalState} node={node} parentNode={parentNode} />
+
+                {identity.canShowResponseInPdfOption && <NodeCheckBox label="Show response in PDF" checked={node.isCritical} onChange={showResponseInPdfCheckbox} />}
+                {identity.canShowMergeWithPrimarySiblingBranchOption && <NodeCheckBox label="Merge with primary sibling branch" checked={!node.shouldRenderChildren} onChange={handleMergeBackInOnClick} />}
+                {identity.canShowSetAsAnabranchMergePointOption && <NodeCheckBox label="Set as Anabranch merge point" checked={anabranchMergeChecked} onChange={handleSetAsAnabranchMergePointClick} />}
+                {identity.shouldShowUnsetNodeTypeOption && <SinglePurposeButton buttonText="Unset Node" variant="outlined" color="primary" onClick={handleUnsetCurrentNodeType} />}
+                {identity.canShowSplitMergePrimarySiblingLabel && <Typography>This is the primary sibling. Branches will merge to this node.</Typography>}
             </CardContent>
         </Card>
     );
 };
 
+type DataItem = {
+    [key: string]: any;
+};
+
+interface DataProps {
+    data: DataItem[];
+    nodeId: string;
+    nodeChildren: string;
+    nodeProperties: DataItem;
+}
+
+const DataLogging = (props: DataProps) => {
+    return (
+        <div>
+            <Typography align="center">{props.nodeId}</Typography>
+            <ul>
+                {props.data.map((item: DataItem) => {
+                    const key = Object.keys(item)[0];
+                    let val = Object.values(item)[0];
+                    if (typeof val === "boolean") {
+                        val = val.toString().toUpperCase();
+                    }
+                    return (
+                        <>
+                            <li>
+                                <Typography>
+                                    {key}: {val}
+                                </Typography>
+                            </li>
+                        </>
+                    );
+                })}
+            </ul>
+            <Divider />
+            <ul>
+                {props.nodeProperties.map((item: DataItem) => {
+                    const key = Object.keys(item)[0];
+                    let val = Object.values(item)[0];
+                    if (typeof val === "boolean") {
+                        val = val.toString().toUpperCase();
+                    }
+                    return (
+                        <>
+                            <li>
+                                <Typography>
+                                    {key}: {val}
+                                </Typography>
+                            </li>
+                        </>
+                    );
+                })}
+            </ul>
+            <Divider />
+            <Typography align="center">Children</Typography>
+            <Typography>{props.nodeChildren}</Typography>
+        </div>
+    );
+};

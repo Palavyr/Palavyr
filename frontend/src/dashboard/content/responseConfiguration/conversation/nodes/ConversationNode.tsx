@@ -1,47 +1,44 @@
-import { ConvoNode, NodeTypeOptions } from "@Palavyr-Types";
+import { ConvoNode } from "@Palavyr-Types";
 import React, { useState, useEffect, useContext } from "react";
 import { SteppedLineTo } from "../treeLines/SteppedLineTo";
 import { ConversationNodeInterface } from "./ConversationNodeInterface";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
-import { getChildNodesSortedByOptionPath, getUnsortedChildNodes } from "./nodeUtils/commonNodeUtils";
-import { collectSplitMergeMeta } from "./nodeUtils/splitMergeUtils";
+import { getChildNodesToRender } from "./nodeUtils/commonNodeUtils";
 import { _getAllParentNodeIds, _getParentNode, _splitNodeChildrenString } from "./nodeUtils/_coreNodeUtils";
 
 import "./ConversationNode.css";
-import { collectAnabranchMeta } from "./nodeUtils/AnabranchUtils";
 
 export interface IConversationNode {
     node: ConvoNode;
-    parentState: boolean;
-    changeParentState: (parentState: boolean) => void;
-    nodeOptionList: NodeTypeOptions;
+    reRender: () => void;
 }
 
 export type lineStyle = {
-    borderColor: "black" | string;
+    borderColor: "white" | string;
     borderStyle: "solid";
     borderWidth: number;
     zIndex: number;
 };
 
 export const connectionStyle: lineStyle = {
-    borderColor: "#54585A",
+    borderColor: "white",//"#54585A",
     borderStyle: "solid",
     borderWidth: 1,
     zIndex: 0,
 };
 
-export const ConversationNode = ({ node, parentState, changeParentState, nodeOptionList }: IConversationNode) => {
+
+export const ConversationNode = ({ node, reRender }: IConversationNode) => {
     const { nodeList } = useContext(ConversationTreeContext);
     const [nodeState, changeNodeState] = useState<boolean>(true);
     const [loaded, setLoaded] = useState(false);
 
-    const { isDecendentOfSplitMerge, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling, orderedChildren } = collectSplitMergeMeta(node, nodeList);
-    const { isDecendentOfAnabranch, decendentLevelFromAnabranch, nodeIdOfMostRecentAnabranch, isDirectChildOfAnabranch, isParentOfAnabranchMergePoint, isAncestorOfAnabranchMergePoint } = collectAnabranchMeta(node, nodeList);
-
-    const parentNode = _getParentNode(node, nodeList);
     const allParentNodes = _getAllParentNodeIds(node, nodeList);
-    const childNodes = node.isSplitMergeType ? getUnsortedChildNodes(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);
+    const childNodes = getChildNodesToRender(node, nodeList);
+
+    const nextReRender = () => {
+        changeNodeState(!nodeState);
+    }
 
     useEffect(() => {
         setLoaded(true);
@@ -57,7 +54,6 @@ export const ConversationNode = ({ node, parentState, changeParentState, nodeOpt
     if (allParentNodes && allParentNodes.length == 1) {
         steppedLineNodes.push(allParentNodes[0].nodeId);
         if (allParentNodes[0].isSplitMergeType) {
-            // plan - always check sibling nodes. If any sibling nodes are 'do not render children', then we assume that any siblings need to be merged in.
             const siblingNodeIds = _splitNodeChildrenString(allParentNodes[0].nodeChildrenString).filter((x: string) => x !== node.nodeId);
             siblingNodeIds.map((id: string) => steppedLineNodes.push(id));
         }
@@ -72,22 +68,7 @@ export const ConversationNode = ({ node, parentState, changeParentState, nodeOpt
                     <ConversationNodeInterface
                         key={node.nodeId}
                         node={node}
-                        parentState={parentState}
-                        parentNode={parentNode}
-                        changeParentState={changeParentState}
-                        optionPath={node.optionPath}
-                        nodeOptionList={nodeOptionList}
-                        orderedChildren={orderedChildren}
-                        isDecendentOfSplitMerge={isDecendentOfSplitMerge}
-                        decendentLevelFromSplitMerge={decendentLevelFromSplitMerge}
-                        splitMergeRootSiblingIndex={splitMergeRootSiblingIndex}
-                        nodeIdOfMostRecentSplitMergePrimarySibling={nodeIdOfMostRecentSplitMergePrimarySibling}
-                        isDecendentOfAnabranch={isDecendentOfAnabranch}
-                        decendentLevelFromAnabranch={decendentLevelFromAnabranch}
-                        nodeIdOfMostRecentAnabranch={nodeIdOfMostRecentAnabranch}
-                        isDirectChildOfAnabranch={isDirectChildOfAnabranch}
-                        isParentOfAnabranchMergePoint={isParentOfAnabranchMergePoint}
-                        isAncestorOfAnabranchMergePoint={isAncestorOfAnabranchMergePoint}
+                        reRender={reRender}
                     />
                 </div>
                 {childNodes.length > 0 && (
@@ -95,7 +76,7 @@ export const ConversationNode = ({ node, parentState, changeParentState, nodeOpt
                         {node.shouldRenderChildren
                             ? childNodes
                                   .filter((n: ConvoNode) => n !== undefined)
-                                  .map((nextNode, index) => <ConversationNode key={nextNode.nodeId + "-" + index.toString()} node={nextNode} parentState={nodeState} changeParentState={changeNodeState} nodeOptionList={nodeOptionList} />)
+                                  .map((nextNode, index) => <ConversationNode key={nextNode.nodeId + "-" + index.toString()} node={nextNode} reRender={nextReRender} />)
                             : null}
                     </div>
                 )}

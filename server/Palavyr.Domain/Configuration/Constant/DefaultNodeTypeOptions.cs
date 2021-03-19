@@ -21,7 +21,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 new SendResponse(),
                 new TooComplicated(),
                 new SplitMerge(),
-                new Anabranch()
+                new Anabranch(),
             };
 
         public static YesNo CreateYesNo() => new YesNo();
@@ -41,8 +41,7 @@ namespace Palavyr.Domain.Configuration.Constant
         public static TooComplicated CreateTooComplicated() => new TooComplicated();
         public static SendResponse CreateSendResponse() => new SendResponse();
         public static Restart CreateRestart() => new Restart();
-
-
+        
         public class Anabranch : NodeTypeOption
         {
             public new static string StringName => nameof(Anabranch);

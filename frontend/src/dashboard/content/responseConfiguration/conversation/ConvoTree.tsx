@@ -19,6 +19,7 @@ import { ConversationHistoryTracker } from "./nodes/ConversationHistoryTracker";
 
 const useStyles = makeStyles(() => ({
     conversation: {
+        backgroundColor: "#282630",
         position: "static",
         overflow: "auto",
     },
@@ -26,21 +27,18 @@ const useStyles = makeStyles(() => ({
 
 export const ConvoTree = () => {
     var client = new ApiClient();
+    const classes = useStyles();
+
     const { setIsLoading } = React.useContext(DashboardContext);
-
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
-
     const [, setLoaded] = useState<boolean>(false);
     const [nodeList, setNodes] = useState<Conversation>([]); // nodeList and state updater for the tree
-    const [nodeOptionList, setNodeOptionList] = useState<NodeTypeOptions>([]);
+    const [nodeTypeOptions, setNodeTypeOptions] = useState<NodeTypeOptions>([]);
     const [missingNodeTypes, setMissingNodeTypes] = useState<string[]>([]);
-
     const [conversationHistory, setConversationHistory] = useState<Conversation[]>([]);
     const [conversationHistoryPosition, setConversationHistoryPosition] = useState<number>(0);
 
     const rootNode = getRootNode(nodeList);
-
-    const classes = useStyles();
 
     const historyTracker = new ConversationHistoryTracker(setConversationHistory, setConversationHistoryPosition, setNodes);
 
@@ -48,9 +46,9 @@ export const ConvoTree = () => {
         const client = new ApiClient();
 
         const { data: nodes } = await client.Conversations.GetConversation(areaIdentifier);
-        const { data: nodeOptionList } = await client.Conversations.GetNodeOptionsList(areaIdentifier);
+        const { data: nodeTypeOptions } = await client.Conversations.GetNodeOptionsList(areaIdentifier);
 
-        setNodeOptionList(nodeOptionList);
+        setNodeTypeOptions(nodeTypeOptions);
         setNodes(cloneDeep(nodes));
         setIsLoading(false);
         setConversationHistory([cloneDeep(nodes)]);
@@ -62,8 +60,6 @@ export const ConvoTree = () => {
         const { data: updatedConversation } = await client.Conversations.ModifyConversation(nodeList, areaIdentifier);
         console.log(updatedConversation);
         historyTracker.addConversationHistoryToQueue(updatedConversation, conversationHistoryPosition, conversationHistory);
-        // setConversationHistory([updatedConversation]);
-        // setConversationHistoryPosition(0);
         setNodes(updatedConversation);
         return true;
     };
@@ -96,7 +92,7 @@ export const ConvoTree = () => {
     }, [areaIdentifier, nodeList]);
 
     return (
-        <ConversationTreeContext.Provider value={{ nodeList, setNodes: setNodesWithHistory, conversationHistory, historyTracker, conversationHistoryPosition }}>
+        <ConversationTreeContext.Provider value={{ nodeList, nodeTypeOptions, setNodes: setNodesWithHistory, conversationHistory, historyTracker, conversationHistoryPosition }}>
             <AreaConfigurationHeader
                 divider={missingNodeTypes.length > 0}
                 title="Palavyr"
@@ -129,7 +125,7 @@ export const ConvoTree = () => {
                 <div style={{ margin: "0.5rem 0rem 1rem 2rem" }}>{missingNodeTypes.length > 0 && <MissingDynamicNodes missingNodeTypes={missingNodeTypes} />}</div>
                 <form onSubmit={() => null}>
                     <fieldset className="fieldset" id="tree-test">
-                        <div className="main-tree tree-wrap">{nodeList.length > 0 ? <ConversationNode key="tree-start" node={rootNode} parentState={true} changeParentState={() => null} nodeOptionList={nodeOptionList} /> : null}</div>
+                        <div className="main-tree tree-wrap">{nodeList.length > 0 ? <ConversationNode key="tree-start" node={rootNode} reRender={() => null} /> : null}</div>
                     </fieldset>
                 </form>
             </div>

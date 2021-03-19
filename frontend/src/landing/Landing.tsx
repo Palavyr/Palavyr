@@ -14,6 +14,7 @@ import { rowOne, rowTwo, rowThree } from "./components/landingContent/twoItemRow
 import AOS from 'aos';
 import { Sliver } from "./components/sliver/Sliver";
 import { CHANGE_PASSWORD, REGISTER, TERMS_OF_SERVICE } from "@constants";
+import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStrip";
 AOS.init({
     duration: 1000
 })
@@ -106,6 +107,7 @@ export const LandingPage = () => {
                 open={isCookieRulesDialogOpen}
                 onClose={handleCookieRulesDialogClose}
             />
+            <DevStagingStrip />
             <Header
                 openRegisterDialog={openRegisterDialog}
                 openLoginDialog={openLoginDialog}

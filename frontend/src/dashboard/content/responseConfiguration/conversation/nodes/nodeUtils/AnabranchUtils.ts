@@ -5,6 +5,49 @@ import { _getNodeById, _getParentNode, _nodeListContainsNodeType, _splitAndRemov
 
 const Anabranch = "Anabranch".toUpperCase();
 
+export const checkIfNodeIsBoundedByAnabranch = (node: ConvoNode, nodeList: Conversation, isDecendentOfAnabranch: boolean, anabranchId: string) => {
+    // for direct decendants
+    // const decendent = checkIfDecendentOfAnabranch(node, nodeList);
+    if (!isDecendentOfAnabranch) {
+        return false;
+    }
+    const anabranchNode = _getNodeById(anabranchId, nodeList);
+    const anabranchIsRemerged = checkIfIsAncestorOfAnabranchMergePoint(anabranchNode, nodeList);
+
+    // if we have a terminal type that is a decendent, and the anabranch is closed, then this won't return true from that (when it should)
+
+    return isDecendentOfAnabranch && anabranchIsRemerged;
+};
+
+export const checkIfDecendentOfAnabranch = (node: ConvoNode, nodeList: Conversation) => {
+    let tempParentNode: ConvoNode | null = { ...node };
+    let prevChildReference = { ...node };
+    let isDecendent;
+    let count = 0;
+
+    if (node.isRoot) {
+        return false;
+    }
+
+    do {
+        count++;
+        prevChildReference = { ...tempParentNode! };
+        tempParentNode = _getParentNode(prevChildReference, nodeList);
+        if (tempParentNode === null) throw new Error("Orphan node detected");
+        if (tempParentNode.isRoot) {
+            isDecendent = false;
+        } else if (tempParentNode.isAnabranchType) {
+            isDecendent = true;
+
+            // nodeIdOfMostRecentAnabranch: tempParentNode.nodeId,
+        } else if (count > 200) {
+            throw new Error("The tree is too deep (or the recursion algo is broken... either way, this cannot be allowed.");
+        }
+    } while (isDecendent === undefined);
+
+    return isDecendent;
+};
+
 export const checkIfIsAncestorOfAnabranchMergePoint = (node: ConvoNode, nodeList: Conversation, isAncestor: boolean | null = null): boolean => {
     if (isAncestor === null) {
         isAncestor = false;
@@ -17,7 +60,7 @@ export const checkIfIsAncestorOfAnabranchMergePoint = (node: ConvoNode, nodeList
         if (childNode.isAnabranchMergePoint) {
             isAncestor = true;
         } else {
-            checkIfIsAncestorOfAnabranchMergePoint(childNode, nodeList, isAncestor);
+            isAncestor = checkIfIsAncestorOfAnabranchMergePoint(childNode, nodeList, isAncestor);
         }
     }
 
@@ -169,7 +212,7 @@ export const recursivelyReferenceCurrentNodeInNonTerminalLeafNodes = (anabranchM
         if (rootNode.nodeChildrenString === "") {
             // no children set, must be an unset leafnode
             if (rootNode.nodeType === "") {
-                rootNode.nodeType = "Provide Info";
+                rootNode.nodeType = "ProvideInfo";
             }
             rootNode.nodeChildrenString = anabranchMergePointNodeId;
             rootNode.shouldRenderChildren = false;

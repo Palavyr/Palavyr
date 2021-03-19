@@ -4,16 +4,17 @@ import { CustomNodeSelect } from "./CustomNodeSelect";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import { changeNodeType } from "./nodeUtils/changeNodeType";
+import { cloneDeep } from "lodash";
+import { _replaceNodeWithUpdatedNode } from "./nodeUtils/_coreNodeUtils";
 
 export interface INodeTypeSelector {
     node: ConvoNode;
-    parentState: boolean;
-    changeParentState: (parentState: boolean) => void;
-    nodeOptionList: NodeTypeOptions;
+    reRender: () => void;
+    nodeTypeOptions: NodeTypeOptions;
     shouldDisabledNodeTypeSelector: boolean;
 }
 
-export const NodeTypeSelector = ({ node, parentState, changeParentState, nodeOptionList, shouldDisabledNodeTypeSelector }: INodeTypeSelector) => {
+export const NodeTypeSelector = ({ node, reRender, nodeTypeOptions, shouldDisabledNodeTypeSelector }: INodeTypeSelector) => {
     const [alertState, setAlertState] = useState<boolean>(false);
     const [alertDetails, setAlertDetails] = useState<AlertType>();
     const [label, setLabel] = useState<string>("");
@@ -21,14 +22,14 @@ export const NodeTypeSelector = ({ node, parentState, changeParentState, nodeOpt
     const { nodeList, setNodes } = React.useContext(ConversationTreeContext);
 
     useEffect(() => {
-        const currentNodeOption = nodeOptionList.filter((option: NodeOption) => option.value === node.nodeType)[0];
+        const currentNodeOption = nodeTypeOptions.filter((option: NodeOption) => option.value === node.nodeType)[0];
         if (currentNodeOption) {
             setLabel(currentNodeOption.text);
         }
     }, [node]);
 
     const duplicateDynamicFeeNodeFound = (option: string) => {
-        const dynamicNodeTypeOptions = nodeOptionList.filter((x: NodeOption) => x.isDynamicType);
+        const dynamicNodeTypeOptions = nodeTypeOptions.filter((x: NodeOption) => x.isDynamicType);
         if (dynamicNodeTypeOptions.length > 0) {
             const dynamicNodeTypes = dynamicNodeTypeOptions.map((x: NodeOption) => x.value);
             const dynamicNodesPresentInTheCurrentNodeList = nodeList.filter((x: ConvoNode) => dynamicNodeTypes.includes(x.nodeType));
@@ -49,13 +50,24 @@ export const NodeTypeSelector = ({ node, parentState, changeParentState, nodeOpt
             setAlertState(true);
             return;
         }
-        changeNodeType(node, nodeList, setNodes, nodeOption);
-        changeParentState(!parentState); // rerender lines
+
+        if (nodeOption.value === "UnsetAction") {
+            let updatedNodeList = cloneDeep(nodeList);
+            const newNode = cloneDeep(node);
+            newNode.nodeType = "";
+            newNode.nodeChildrenString = "";
+            newNode.valueOptions = "";
+            updatedNodeList = _replaceNodeWithUpdatedNode(newNode, updatedNodeList);
+            setNodes(cloneDeep([...updatedNodeList]));
+        } else {
+            changeNodeType(node, nodeList, setNodes, nodeOption);
+            reRender();
+        }
     };
 
     return (
         <>
-            {nodeOptionList && <CustomNodeSelect onChange={autocompleteOnChange} label={label} nodeOptionList={nodeOptionList} shouldDisabledNodeTypeSelector={shouldDisabledNodeTypeSelector} />}
+            {nodeTypeOptions && <CustomNodeSelect reRender={reRender} onChange={autocompleteOnChange} label={label} nodeTypeOptions={nodeTypeOptions} shouldDisabledNodeTypeSelector={shouldDisabledNodeTypeSelector} />}
             {alertDetails && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />}
         </>
     );

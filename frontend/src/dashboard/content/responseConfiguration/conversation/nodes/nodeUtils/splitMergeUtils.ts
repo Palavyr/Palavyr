@@ -35,15 +35,7 @@ export const getSiblingIndex = (parentNode: ConvoNode, node: ConvoNode) => {
 };
 
 export const collectSplitMergeMeta = (node: ConvoNode, nodeList: Conversation): SplitMergeMeta => {
-    // returns either the most recent splitMerge type, or null
-    // console.group(node.text);
-    // console.log(node);
-    // console.log(node.nodeType);
 
-    // console.groupEnd();
-    // const nodetype = node.nodeType;
-    // const optionpath = node.optionPath;
-    // const text = node.text;
     let defaultResult =  { isDecendentOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: "", orderedChildren: [] }
 
     if (!_nodeListContainsNodeType(nodeList, SplitMerge)) {

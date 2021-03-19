@@ -1,5 +1,5 @@
-import React from "react";
-import { makeStyles, FormControl, InputLabel, Select, MenuItem, FormHelperText, TextField } from "@material-ui/core";
+import React, { useEffect } from "react";
+import { makeStyles, FormControl, InputLabel, FormHelperText, TextField } from "@material-ui/core";
 import { NodeOption, NodeTypeOptions } from "@Palavyr-Types";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
@@ -43,13 +43,20 @@ const useStyles = makeStyles(() => ({
 
 export interface ISelectNodeType {
     onChange: (event: any, nodeOption: NodeOption) => void;
-    nodeOptionList: NodeTypeOptions;
+    nodeTypeOptions: NodeTypeOptions;
     label: string;
     shouldDisabledNodeTypeSelector: boolean;
+    reRender: () => void;
 }
 
-// TODO: merge this with the dynamic table select and create a common reusable component
-export const CustomNodeSelect = ({ onChange, label, nodeOptionList, shouldDisabledNodeTypeSelector }: ISelectNodeType) => {
+//https://github.com/mui-org/material-ui/issues/19173 to help resolve the label not resetting to '' when unsetting the node.
+export const CustomNodeSelect = ({
+    onChange,
+    label,
+    nodeTypeOptions,
+    shouldDisabledNodeTypeSelector,
+    reRender
+}: ISelectNodeType) => {
     const cls = useStyles();
     const groupGetter = (val: NodeOption) => val.groupName;
 
@@ -57,7 +64,7 @@ export const CustomNodeSelect = ({ onChange, label, nodeOptionList, shouldDisabl
         <div>
             <FormControl className={cls.formControl}>
                 <InputLabel id="autodcomplete-label"></InputLabel>
-                {nodeOptionList && (
+                {nodeTypeOptions && (
                     <Autocomplete
                         size="small"
                         disabled={shouldDisabledNodeTypeSelector}
@@ -66,7 +73,7 @@ export const CustomNodeSelect = ({ onChange, label, nodeOptionList, shouldDisabl
                         className={cls.autocomplete}
                         classes={{ root: cls.otherbox }}
                         onChange={onChange}
-                        options={sortByPropertyAlphabetical(groupGetter, nodeOptionList)}
+                        options={sortByPropertyAlphabetical(groupGetter, nodeTypeOptions)}
                         groupBy={(nodeOption) => nodeOption.groupName}
                         getOptionLabel={(option) => option.text}
                         renderInput={(params) => <TextField {...params} InputLabelProps={{ className: cls.inputLabel }} className={cls.inputLabel} data-lpignore="true" label={label} />}

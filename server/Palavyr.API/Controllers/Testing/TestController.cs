@@ -8,8 +8,8 @@ namespace Palavyr.API.Controllers.Testing
     [ApiController]
     public class TestController : ControllerBase
     {
-        private readonly TestDataProvider testDataProvider;
 
+        private readonly TestDataProvider testDataProvider;
         public TestController(TestDataProvider testDataProvider)
         {
             this.testDataProvider = testDataProvider;
