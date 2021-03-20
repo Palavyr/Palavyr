@@ -24,6 +24,7 @@ interface IConversationTreeContext {
     conversationHistory: Conversation[];
     conversationHistoryPosition: number;
     nodeTypeOptions: NodeTypeOptions;
+    showDebugData: boolean;
 }
 
 

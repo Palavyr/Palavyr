@@ -23,7 +23,7 @@ export const updateMultiTypeOption = (node: ConvoNode, nodeList: Conversation, v
     let updatedNodeList = _removeNodeByID(node.nodeId, newNodeList);
     delete node.id;
     updatedNodeList.push(node);
-    updatedNodeList =_createAndAddNewNodes(childIdsToCreate, newChildNodeIds, node, optionPaths, updatedNodeList, true);
+    updatedNodeList =_createAndAddNewNodes(childIdsToCreate, newChildNodeIds, node.areaIdentifier, optionPaths, updatedNodeList, true);
 
     // need to call _resetNodePathOptions I think
     const previousChildren = previousNodeChildrenString.split(",");

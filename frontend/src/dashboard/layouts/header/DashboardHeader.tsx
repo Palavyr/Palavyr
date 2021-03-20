@@ -3,6 +3,7 @@ import { AppBar, Toolbar, IconButton, Typography, makeStyles } from "@material-u
 import MenuIcon from '@material-ui/icons/Menu';
 import classNames from "classnames";
 import HelpIcon from '@material-ui/icons/Help';
+import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStrip";
 
 const drawerWidth: number = 240;
 
@@ -81,6 +82,7 @@ export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawe
                     { [classes.appBarShift]: open })
             }
         >
+            <DevStagingStrip />
             <Toolbar className={classes.toolbar}>
                 <div>
                     <div style={{ float: "left" }}>

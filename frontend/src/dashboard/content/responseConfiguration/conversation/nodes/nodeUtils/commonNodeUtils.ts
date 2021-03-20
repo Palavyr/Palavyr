@@ -5,7 +5,6 @@ import { findIndex, sum } from "lodash";
 import { checkIfNodeIsBoundedByAnabranch } from "./AnabranchUtils";
 import {
     _computeShouldRenderChildren,
-    _createAndAddNewNodes,
     _createNewChildIDs,
     _getIdsToDeleteRecursively,
     _getNodeById,

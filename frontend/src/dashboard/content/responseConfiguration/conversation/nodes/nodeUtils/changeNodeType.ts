@@ -78,7 +78,7 @@ export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversa
     // set any value options
     previousNode.valueOptions = valueOptions;
     let updatedNodeList = _replaceNodeWithUpdatedNode(previousNode, newNodeList);
-    updatedNodeList = _createAndAddNewNodes(childIdsToCreate, newChildNodeIds, previousNode, pathOptions, updatedNodeList, nodeOption.shouldShowMultiOption);
+    updatedNodeList = _createAndAddNewNodes(childIdsToCreate, newChildNodeIds, previousNode.areaIdentifier, pathOptions, updatedNodeList, nodeOption.shouldShowMultiOption);
 
     if (newChildNodeIds.length > 0) {
         updatedNodeList = _resetOptionPaths(newChildNodeIds, updatedNodeList, pathOptions);

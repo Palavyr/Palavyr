@@ -6,15 +6,15 @@ import { NodeTypeSelector } from "./NodeTypeSelector";
 import { cloneDeep } from "lodash";
 import { ConversationNodeEditor } from "./nodeEditor/ConversationNodeEditor";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
-import { _createAndAddNewNodes, _getNodeById, _getParentNode, _replaceNodeWithUpdatedNode, _splitAndRemoveEmptyNodeChildrenString, _truncateTheTreeAtSpecificNode } from "./nodeUtils/_coreNodeUtils";
+import { _createAndAddNewNodes, _getLeftMostParentNode, _getNodeById, _getParentNode, _replaceNodeWithUpdatedNode, _splitAndRemoveEmptyNodeChildrenString, _truncateTheTreeAtSpecificNode } from "./nodeUtils/_coreNodeUtils";
 import { useEffect } from "react";
 import { checkedNodeOptionList, updateSingleOptionType } from "./nodeUtils/commonNodeUtils";
 import { uuid } from "uuidv4";
 import { recursivelyReferenceCurrentNodeInNonTerminalLeafNodes } from "./nodeUtils/AnabranchUtils";
-import { recursivelyDereferenceNodeIdFromChildrenExcept } from "./nodeUtils/dereferenceUtils";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { NodeCheckBox } from "./NodeCheckBox";
 import { getNodeIdentity } from "./nodeUtils/nodeIdentity";
+import { recursivelyDereferenceNodeIdFromChildrenExceptWhen } from "./nodeUtils/dereferenceUtils";
 
 type StyleProps = {
     nodeText: string;
@@ -88,7 +88,7 @@ export interface IConversationNodeInterface {
 }
 
 export const ConversationNodeInterface = ({ node, reRender }: IConversationNodeInterface) => {
-    const { setNodes, nodeList, nodeTypeOptions, conversationHistory, historyTracker, conversationHistoryPosition } = React.useContext(ConversationTreeContext);
+    const { setNodes, nodeList, nodeTypeOptions, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData } = React.useContext(ConversationTreeContext);
     const parentNode = _getParentNode(node, nodeList);
 
     const [modalState, setModalState] = useState<boolean>(false);
@@ -144,7 +144,7 @@ export const ConversationNodeInterface = ({ node, reRender }: IConversationNodeI
                 const newNode = cloneDeep(node);
                 newNode.shouldRenderChildren = true;
                 newNode.nodeChildrenString = childId;
-                let updatedNodeList = _createAndAddNewNodes([childId], [childId], node, ["Continue"], nodeList, false);
+                let updatedNodeList = _createAndAddNewNodes([childId], [childId], node.areaIdentifier, ["Continue"], nodeList, false);
                 updateSingleOptionType(newNode, updatedNodeList, setNodes);
                 setMergeBoxChecked(false);
             } else {
@@ -158,18 +158,6 @@ export const ConversationNodeInterface = ({ node, reRender }: IConversationNodeI
             const newNode = cloneDeep(node);
             let updatedNodeList = cloneDeep(nodeList);
 
-            // TODO this should really be any multichoice with more than primary child unset. We have to keep these anabranch merges facing the center of the tree, otherwise things could get messy. If there are multiple
-            // branch points too potentially. They are few, but the cases where we allow a merge are complex.
-            // -
-
-            // if this box is available, then it means that we've passed the checks on whether or not there are unresolved splitandmerge type subtrees
-            // need to find most recent Anabranch node, and then find all of the non-terminal leaf nodes. These will be assigned this nodes nodeId as their child node.
-            // const result = anyMultiChoiceTypesWithUnsetChildren(nodeIdOfMostRecentAnabranch, updatedNodeList);
-            // if (result.length > 0 && sum(result.map((x) => (x ? 1 : 0))) > 0) {
-            //     alert("Please set any multioption types that have not been set under the most recent Anabranch node.");
-            //     return;
-            // }
-
             newNode.isAnabranchMergePoint = true;
             updatedNodeList = recursivelyReferenceCurrentNodeInNonTerminalLeafNodes(newNode.nodeId, updatedNodeList, identity.nodeIdOfMostRecentAnabranch);
             updatedNodeList = _replaceNodeWithUpdatedNode(newNode, updatedNodeList);
@@ -181,10 +169,15 @@ export const ConversationNodeInterface = ({ node, reRender }: IConversationNodeI
             const newNode = cloneDeep(node);
             newNode.isAnabranchMergePoint = false;
             updatedNodeList = _replaceNodeWithUpdatedNode(newNode, updatedNodeList);
+
             const anabranchRootNode = _getNodeById(identity.nodeIdOfMostRecentAnabranch, updatedNodeList);
-            recursivelyDereferenceNodeIdFromChildrenExcept(parentNode?.nodeId, anabranchRootNode, updatedNodeList, newNode.nodeId);
-            setNodes(cloneDeep(updatedNodeList));
-            setAnabranchMergeChecked(true);
+            // we don't want to dereference the current nodeid from the primary parent of this node
+            const leftmostParentNode = _getLeftMostParentNode(node, nodeList);
+            if (leftmostParentNode){
+                recursivelyDereferenceNodeIdFromChildrenExceptWhen(leftmostParentNode.nodeId, anabranchRootNode, updatedNodeList, newNode.nodeId);
+                setAnabranchMergeChecked(false);
+                setNodes(cloneDeep(updatedNodeList));
+            }
             // } else {
             //     historyTracker.stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
             // }
@@ -250,7 +243,7 @@ export const ConversationNodeInterface = ({ node, reRender }: IConversationNodeI
     return (
         <Card className={classNames(classes.root, node.nodeId)} variant="outlined">
             <CardContent className={classes.card}>
-                <DataLogging nodeProperties={nodeProperties} nodeChildren={node.nodeChildrenString} nodeId={node.nodeId} data={dataitems} />
+                {showDebugData && <DataLogging nodeProperties={nodeProperties} nodeChildren={node.nodeChildrenString} nodeId={node.nodeId} data={dataitems} />}
                 <Typography className={classes.interfaceElement} variant={node.isRoot ? "h5" : "body1"} align="center">
                     {node.isRoot ? "Begin" : node.optionPath === "Continue" ? node.optionPath : "If " + node.optionPath}
                 </Typography>

@@ -1,6 +1,6 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { Conversation, ConvoNode, UUID, ValueOptionDelimiter } from "@Palavyr-Types";
-import { cloneDeep } from "lodash";
+import { cloneDeep, findIndex } from "lodash";
 import { uuid } from "uuidv4";
 
 export const _getIdsToDeleteRecursively = (nodeList: Conversation, topNode: ConvoNode): string => {
@@ -79,27 +79,67 @@ export const _replaceNodeWithUpdatedNode = (nodeData: ConvoNode, nodeList: Conve
     return filteredNodeList;
 };
 
-export const _getParentNode = (node: ConvoNode, nodeList: Conversation) => {
-    if (node.isRoot) {
-        return null;
-    }
-    const parent = nodeList.filter((n: ConvoNode) => {
+export const _getAllParentNodes = (node: ConvoNode, nodeList: Conversation): Conversation => {
+    const parents = nodeList.filter((n: ConvoNode) => {
         if (isNullOrUndefinedOrWhitespace(n.nodeChildrenString)) {
             return false;
         }
         let children = _splitNodeChildrenString(n.nodeChildrenString);
         return children.includes(node.nodeId);
     });
+    return parents;
+};
 
-    // if (parent.length != 1) {
-    //     const splitmergeparent = parent.filter((node: ConvoNode) => node.isSplitMergeType);
-    //     if (splitmergeparent.length > 1) {
-    //         throw new Error("Currently we only support multiple parents when the primary parent is a splitmerge type node.");
-    //     } else {
-    //         return splitmergeparent[0];
-    //     }
-    // }
-    return parent[0];
+export const _recursivelyCheckIfLeftmostChildInBranch = (node: ConvoNode, nodeList: Conversation, previousNode: ConvoNode) => {
+    if (node.isRoot || node.isAnabranchType || node.isSplitMergeType) {
+        const childrenIds = _splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString);
+        const siblingIndex = findIndex(childrenIds, (el) => el === previousNode.nodeId);
+        if (siblingIndex === 0) {
+            // we found the leftmost branch
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        const nextNodeUp = _getParentNode(node, nodeList);
+        if (nextNodeUp) {
+            return _recursivelyCheckIfLeftmostChildInBranch(nextNodeUp, nodeList, node);
+        }
+    }
+};
+
+export const _findLeftmostParentNode = (node: ConvoNode, nodeList: Conversation, parentNodes: Conversation) => {
+
+    for (let index = 0; index < parentNodes.length; index++) {
+        const parentNode = parentNodes[index];
+        const result = _recursivelyCheckIfLeftmostChildInBranch(parentNode, nodeList, node);
+        if (result) {
+            return parentNode;
+        }
+    }
+};
+
+export const _getLeftMostParentNode = (node: ConvoNode, nodeList: Conversation) => {
+
+        // need an algorithm that determines if some parent is the left most parent...
+        // a do while that runs up the tree, and if we encounter isAnabranch, isRoot, or splitMergePrimarySibling
+        // then we will check to see if the current node is in the first position of the parents childNodeString
+
+        const parentNodes = _getAllParentNodes(node, nodeList);
+        const leftmostParent = _findLeftmostParentNode(node, nodeList, parentNodes);
+        return leftmostParent;
+
+}
+
+
+export const _getParentNode = (node: ConvoNode, nodeList: Conversation, leftmost: boolean = false) => {
+    if (node.isRoot) {
+        return null;
+    }
+
+    const parents = _getAllParentNodes(node, nodeList);
+    return parents[0];
+
 };
 
 export const _getAllParentNodeIds = (node: ConvoNode, nodeList: Conversation) => {
@@ -110,11 +150,11 @@ export const _getAllParentNodeIds = (node: ConvoNode, nodeList: Conversation) =>
         }
         let children = _splitNodeChildrenString(n.nodeChildrenString);
         return children.includes(node.nodeId);
-    })
+    });
     return parentNodes;
-}
+};
 
-export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeIds: string[], node: ConvoNode, pathOptions: string[], updatedNodeList: Conversation, shouldShowMultiOption: boolean) => {
+export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeIds: string[], areaIdentifier: string, pathOptions: string[], updatedNodeList: Conversation, shouldShowMultiOption: boolean) => {
     childIdsToCreate.forEach((id: string, index: number) => {
         let shift = newChildNodeIds.length - childIdsToCreate.length;
         let newNode: ConvoNode = {
@@ -125,7 +165,7 @@ export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeId
             isRoot: false,
             fallback: false,
             isCritical: false,
-            areaIdentifier: node.areaIdentifier,
+            areaIdentifier: areaIdentifier,
             optionPath: pathOptions[index + shift],
             valueOptions: "",
             isMultiOptionType: false,

@@ -1,9 +1,8 @@
 import { ConvoNode, Conversation, SplitMergeMeta } from "@Palavyr-Types";
 import { findIndex } from "lodash";
-import { _createAndAddNewNodes, _getNodeById, _getParentNode, _joinNodeChildrenStringArray, _nodeListContainsNodeType, _removeNodeByID, _replaceNodeWithUpdatedNode, _splitAndRemoveEmptyNodeChildrenString, _splitNodeChildrenString } from "./_coreNodeUtils";
+import { _getNodeById, _getParentNode, _joinNodeChildrenStringArray, _nodeListContainsNodeType, _removeNodeByID, _replaceNodeWithUpdatedNode, _splitAndRemoveEmptyNodeChildrenString, _splitNodeChildrenString } from "./_coreNodeUtils";
 
 const SplitMerge = "SplitMerge".toUpperCase();
-
 
 export const updateChildOfIsSplitMergeType = (node: ConvoNode, parentNode: ConvoNode, nodeList: Conversation, setNodes: (updatedNodeList: Conversation) => void) => {
     const primarySiblingId = getPrimarySiblingIdFromChildNodeChildrenString(parentNode);
@@ -35,8 +34,7 @@ export const getSiblingIndex = (parentNode: ConvoNode, node: ConvoNode) => {
 };
 
 export const collectSplitMergeMeta = (node: ConvoNode, nodeList: Conversation): SplitMergeMeta => {
-
-    let defaultResult =  { isDecendentOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: "", orderedChildren: [] }
+    let defaultResult = { isDecendentOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: "", orderedChildren: [] };
 
     if (!_nodeListContainsNodeType(nodeList, SplitMerge)) {
         // early bail if no splitmerges
@@ -109,4 +107,3 @@ export const childHasAtLeastOneChild = (node: ConvoNode, nodeList: Conversation)
     }
     return true;
 };
-

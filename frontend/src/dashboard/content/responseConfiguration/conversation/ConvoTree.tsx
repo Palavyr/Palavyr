@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Conversation, NodeTypeOptions } from "@Palavyr-Types";
+import { Conversation, NodeTypeOptions, PRODUCTION } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { cloneDeep } from "lodash";
 import { ConversationNode } from "./nodes/ConversationNode";
@@ -16,6 +16,7 @@ import RedoIcon from "@material-ui/icons/Redo";
 import "./ConvoTree.css";
 import { getRootNode } from "./nodes/nodeUtils/commonNodeUtils";
 import { ConversationHistoryTracker } from "./nodes/ConversationHistoryTracker";
+import { currentEnvironment } from "@api-client/clientUtils";
 
 const useStyles = makeStyles(() => ({
     conversation: {
@@ -37,10 +38,16 @@ export const ConvoTree = () => {
     const [missingNodeTypes, setMissingNodeTypes] = useState<string[]>([]);
     const [conversationHistory, setConversationHistory] = useState<Conversation[]>([]);
     const [conversationHistoryPosition, setConversationHistoryPosition] = useState<number>(0);
+    const [showDebugData, setShowDebugData] = useState<boolean>(true);
 
     const rootNode = getRootNode(nodeList);
 
     const historyTracker = new ConversationHistoryTracker(setConversationHistory, setConversationHistoryPosition, setNodes);
+
+    const toggleDebugData = () => {
+        setShowDebugData(!showDebugData);
+        setNodes(cloneDeep(nodeList));
+    }
 
     const loadNodes = useCallback(async () => {
         const client = new ApiClient();
@@ -92,7 +99,7 @@ export const ConvoTree = () => {
     }, [areaIdentifier, nodeList]);
 
     return (
-        <ConversationTreeContext.Provider value={{ nodeList, nodeTypeOptions, setNodes: setNodesWithHistory, conversationHistory, historyTracker, conversationHistoryPosition }}>
+        <ConversationTreeContext.Provider value={{ nodeList, nodeTypeOptions, setNodes: setNodesWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
             <AreaConfigurationHeader
                 divider={missingNodeTypes.length > 0}
                 title="Palavyr"
@@ -120,6 +127,15 @@ export const ConvoTree = () => {
                 >
                     Redo
                 </Button>
+                {currentEnvironment !== PRODUCTION && (
+                    <Button
+                        variant="outlined"
+                        style={{ marginLeft: "0.7rem", borderRadius: "10px" }}
+                        onClick={toggleDebugData}
+                    >
+                        Toggle Debug Data
+                    </Button>
+                )}
             </AlignCenter>
             <div className={classes.conversation}>
                 <div style={{ margin: "0.5rem 0rem 1rem 2rem" }}>{missingNodeTypes.length > 0 && <MissingDynamicNodes missingNodeTypes={missingNodeTypes} />}</div>
