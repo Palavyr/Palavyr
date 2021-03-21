@@ -34,7 +34,7 @@ export const getSiblingIndex = (parentNode: ConvoNode, node: ConvoNode) => {
 };
 
 export const collectSplitMergeMeta = (node: ConvoNode, nodeList: Conversation): SplitMergeMeta => {
-    let defaultResult = { isDecendentOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: "", orderedChildren: [] };
+    let defaultResult = { isDecendentOfSplitMerge: false, decendentLevelFromSplitMerge: 0, splitMergeRootSiblingIndex: 0, nodeIdOfMostRecentSplitMergePrimarySibling: ""};
 
     if (!_nodeListContainsNodeType(nodeList, SplitMerge)) {
         // early bail if no splitmerges
@@ -56,7 +56,6 @@ export const collectSplitMergeMeta = (node: ConvoNode, nodeList: Conversation): 
     let prevChildReference = { ...node };
     let splitMergeRootSiblingIndex: number;
     let nodeIdOfMostRecentSplitMergePrimarySibling: string;
-    let orderedChildren: Conversation;
     let result: SplitMergeMeta = defaultResult;
     do {
         decendentLevelFromSplitMerge++;
@@ -68,8 +67,7 @@ export const collectSplitMergeMeta = (node: ConvoNode, nodeList: Conversation): 
             parentNode = tempParentNode;
             splitMergeRootSiblingIndex = getSiblingIndex(parentNode, prevChildReference);
             nodeIdOfMostRecentSplitMergePrimarySibling = getPrimarySiblingIdFromChildNodeChildrenString(parentNode);
-            orderedChildren = getorderedChildrenFromParent(parentNode, nodeList);
-            result = { isDecendentOfSplitMerge: true, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling, orderedChildren };
+            result = { isDecendentOfSplitMerge: true, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling };
             break;
         } else if (tempParentNode.isRoot) {
             found = true;
@@ -83,16 +81,6 @@ export const collectSplitMergeMeta = (node: ConvoNode, nodeList: Conversation): 
 export const nodeListContainsSplitmerge = (nodeList: Conversation) => {
     const nodeTypes = nodeList.map((node: ConvoNode) => node.nodeType.toUpperCase());
     return nodeTypes.includes("SplitMerge".toUpperCase());
-};
-
-export const getorderedChildrenFromParent = (parentNode: ConvoNode, nodeList: Conversation) => {
-    const children = parentNode.nodeChildrenString.split(",");
-    const orderedNodes: Conversation = [];
-    children.forEach((c: string) => {
-        let node = _getNodeById(c, nodeList);
-        orderedNodes.push(node);
-    });
-    return orderedNodes;
 };
 
 export const childHasAtLeastOneChild = (node: ConvoNode, nodeList: Conversation) => {

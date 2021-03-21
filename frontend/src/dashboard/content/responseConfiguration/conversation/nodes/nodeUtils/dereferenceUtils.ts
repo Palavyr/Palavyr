@@ -28,7 +28,7 @@ const dereferenceChildId = (node: ConvoNode, childNodeIdToDereference: string, n
             const newNodeId = uuid();
             newIdsToAdd.push(newNodeId);
         }
-        _createAndAddNewNodes(newIdsToAdd, [], node.areaIdentifier, ["Continue"], nodeList, false);
+        _createAndAddNewNodes(newIdsToAdd, newIdsToAdd, node.areaIdentifier, ["Continue"], nodeList, false);
         node.nodeChildrenString = _joinNodeChildrenStringArray([...filteredChildNodeIds, ...newIdsToAdd]);
         node.shouldRenderChildren = true;
         return filteredChildNodeIds;

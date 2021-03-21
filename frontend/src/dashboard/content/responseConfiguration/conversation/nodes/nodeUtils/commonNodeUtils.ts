@@ -7,6 +7,7 @@ import {
     _computeShouldRenderChildren,
     _createNewChildIDs,
     _getIdsToDeleteRecursively,
+    _getLeftMostParentNode,
     _getNodeById,
     _removeNodeByID,
     _replaceNodeWithUpdatedNode,
@@ -27,7 +28,7 @@ export const getNewNumChildren = (optionPaths: string[]) => {
 export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, isDecendentOfSplitMerge: boolean, splitMergeRootSiblingIndex: number, isParentOfAnabranchMergePoint: boolean) => {
     // This next line is a defensive check
     //TODO: Perhaps these two if statements should be mutually exclusive.
-    if ((isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0) && (isParentOfAnabranchMergePoint)) throw new Error("MUtally Exclusive!")
+    if (isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0 && isParentOfAnabranchMergePoint) throw new Error("MUtally Exclusive!");
 
     if (isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0) {
         const compatible = nodeOptionList.filter((option: NodeOption) => option.groupName === "Provide Info" || option.groupName === "Info Collection");
@@ -42,7 +43,7 @@ export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, isDecende
 
 export const getChildNodesToRender = (node: ConvoNode, nodeList: Conversation) => {
     return node.isSplitMergeType ? getChildeNodesOrderedByChildString(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);
-}
+};
 
 export const getChildeNodesOrderedByChildString = (childrenIDs: string, nodeList: Conversation) => {
     const ids = childrenIDs.split(",");
@@ -92,7 +93,6 @@ export const createAndReattachNewNodes = (currentNode: ConvoNode, nodeList: Conv
     };
 };
 
-
 export const updateSingleOptionType = (updatedNode: ConvoNode, nodeList: Conversation, setNodes: (nodeList: Conversation) => void) => {
     const updatedNodeList = _replaceNodeWithUpdatedNode(updatedNode, nodeList);
     setNodes(updatedNodeList);
@@ -108,7 +108,6 @@ export const nodeMergesToPrimarySibling = (node: ConvoNode, isDecendentOfSplitMe
     return childNodeStrings[0] === nodeIdOfMostRecentSplitMergePrimarySibling;
 };
 
-
 export const determineIfCanUnsetNodeType = (node: ConvoNode, nodeList: Conversation, isDecendentOfAnabranch: boolean, anabranchId: string) => {
     // cannot  unset nodetype if: bounded AND is Terminal
 
@@ -123,4 +122,26 @@ export const determineIfCanUnsetNodeType = (node: ConvoNode, nodeList: Conversat
     const childNodes = _splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString).map((childId: string) => _getNodeById(childId, nodeList));
     const result = sum(childNodes.map((childNode: ConvoNode) => childNode.nodeType !== "").map((x) => (x ? 1 : 0)));
     return result === 0;
+};
+
+export const determineIfIsOnLeftmostBranchGivenAnOriginNode = (targetNodeId: string, nodeList: Conversation, originNodeId: string) => {
+
+    // from this node, grab the leftmost parent, and
+    // const leftmostParentNode = _getLeftMostParentNode(node, nodeList, callbackCriteria);
+    // I can either start from an origin, always grab the first child node, and then return true if we find the current node before the end of the tree. OR
+    // OR we can traverse the tree up and check that we are always the decendent of the left most parent.
+
+    // cant collec ton initial render bc our origin node of choice might not be the root node.
+    // easiest is probs to give it a root nodoe and search all the leftmost childstrings
+
+    const rootNode = _getNodeById(originNodeId, nodeList);
+    const childrenNodeIds = _splitAndRemoveEmptyNodeChildrenString(rootNode.nodeChildrenString);
+    if (childrenNodeIds.length === 0) return false;
+    else {
+        if (childrenNodeIds[0] === targetNodeId) { // FOUND
+            return true;
+        } else {
+            return determineIfIsOnLeftmostBranchGivenAnOriginNode(targetNodeId, nodeList, childrenNodeIds[0])
+        }
+    }
 };

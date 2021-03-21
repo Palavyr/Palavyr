@@ -90,8 +90,8 @@ export const _getAllParentNodes = (node: ConvoNode, nodeList: Conversation): Con
     return parents;
 };
 
-export const _recursivelyCheckIfLeftmostChildInBranch = (node: ConvoNode, nodeList: Conversation, previousNode: ConvoNode) => {
-    if (node.isRoot || node.isAnabranchType || node.isSplitMergeType) {
+export const _recursivelyCheckIfLeftmostChildInBranch = (node: ConvoNode, nodeList: Conversation, previousNode: ConvoNode, criteriaCallback: (node: ConvoNode) => boolean) => {
+    if (criteriaCallback(node)) {
         const childrenIds = _splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString);
         const siblingIndex = findIndex(childrenIds, (el) => el === previousNode.nodeId);
         if (siblingIndex === 0) {
@@ -103,34 +103,26 @@ export const _recursivelyCheckIfLeftmostChildInBranch = (node: ConvoNode, nodeLi
     } else {
         const nextNodeUp = _getParentNode(node, nodeList);
         if (nextNodeUp) {
-            return _recursivelyCheckIfLeftmostChildInBranch(nextNodeUp, nodeList, node);
+            return _recursivelyCheckIfLeftmostChildInBranch(nextNodeUp, nodeList, node, criteriaCallback);
         }
     }
 };
 
-export const _findLeftmostParentNode = (node: ConvoNode, nodeList: Conversation, parentNodes: Conversation) => {
-
+export const _findLeftmostParentNode = (node: ConvoNode, nodeList: Conversation, parentNodes: Conversation, criteriaCallback: (node: ConvoNode) => boolean) => {
     for (let index = 0; index < parentNodes.length; index++) {
         const parentNode = parentNodes[index];
-        const result = _recursivelyCheckIfLeftmostChildInBranch(parentNode, nodeList, node);
+        const result = _recursivelyCheckIfLeftmostChildInBranch(parentNode, nodeList, node, criteriaCallback);
         if (result) {
             return parentNode;
         }
     }
 };
 
-export const _getLeftMostParentNode = (node: ConvoNode, nodeList: Conversation) => {
-
-        // need an algorithm that determines if some parent is the left most parent...
-        // a do while that runs up the tree, and if we encounter isAnabranch, isRoot, or splitMergePrimarySibling
-        // then we will check to see if the current node is in the first position of the parents childNodeString
-
-        const parentNodes = _getAllParentNodes(node, nodeList);
-        const leftmostParent = _findLeftmostParentNode(node, nodeList, parentNodes);
-        return leftmostParent;
-
-}
-
+export const _getLeftMostParentNode = (node: ConvoNode, nodeList: Conversation, criteriaCallback: (node: ConvoNode) => boolean) => {
+    const parentNodes = _getAllParentNodes(node, nodeList);
+    const leftmostParent = _findLeftmostParentNode(node, nodeList, parentNodes, criteriaCallback);
+    return leftmostParent;
+};
 
 export const _getParentNode = (node: ConvoNode, nodeList: Conversation, leftmost: boolean = false) => {
     if (node.isRoot) {
@@ -139,7 +131,6 @@ export const _getParentNode = (node: ConvoNode, nodeList: Conversation, leftmost
 
     const parents = _getAllParentNodes(node, nodeList);
     return parents[0];
-
 };
 
 export const _getAllParentNodeIds = (node: ConvoNode, nodeList: Conversation) => {
@@ -158,8 +149,8 @@ export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeId
     childIdsToCreate.forEach((id: string, index: number) => {
         let shift = newChildNodeIds.length - childIdsToCreate.length;
         let newNode: ConvoNode = {
-            nodeId: id, // replace with uuid
-            nodeType: "", // default
+            nodeId: id,
+            nodeType: "",
             text: "Ask your question!",
             nodeChildrenString: "",
             isRoot: false,

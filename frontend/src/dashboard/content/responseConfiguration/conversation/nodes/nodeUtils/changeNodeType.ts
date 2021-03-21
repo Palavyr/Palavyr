@@ -73,7 +73,7 @@ export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversa
     previousNode.isSplitMergeType = nodeOption.isSplitMergeType;
     previousNode.shouldShowMultiOption = nodeOption.shouldShowMultiOption;
     previousNode.isAnabranchType = nodeOption.isAnabranchType;
-    previousNode.isAnabranchMergePoint = false;
+    previousNode.isAnabranchMergePoint = previousNode.isAnabranchMergePoint; // we may want to enfore false here
 
     // set any value options
     previousNode.valueOptions = valueOptions;

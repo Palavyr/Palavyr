@@ -38,7 +38,7 @@ export const ConvoTree = () => {
     const [missingNodeTypes, setMissingNodeTypes] = useState<string[]>([]);
     const [conversationHistory, setConversationHistory] = useState<Conversation[]>([]);
     const [conversationHistoryPosition, setConversationHistoryPosition] = useState<number>(0);
-    const [showDebugData, setShowDebugData] = useState<boolean>(true);
+    const [showDebugData, setShowDebugData] = useState<boolean>(false);
 
     const rootNode = getRootNode(nodeList);
 

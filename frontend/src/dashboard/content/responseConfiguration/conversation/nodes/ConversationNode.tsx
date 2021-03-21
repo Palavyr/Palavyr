@@ -7,6 +7,7 @@ import { getChildNodesToRender } from "./nodeUtils/commonNodeUtils";
 import { _getAllParentNodeIds, _getParentNode, _splitNodeChildrenString } from "./nodeUtils/_coreNodeUtils";
 
 import "./ConversationNode.css";
+import { getNodeIdentity } from "./nodeUtils/nodeIdentity";
 
 export interface IConversationNode {
     node: ConvoNode;
@@ -21,12 +22,11 @@ export type lineStyle = {
 };
 
 export const connectionStyle: lineStyle = {
-    borderColor: "white",//"#54585A",
+    borderColor: "white", //"#54585A",
     borderStyle: "solid",
     borderWidth: 1,
     zIndex: 0,
 };
-
 
 export const ConversationNode = ({ node, reRender }: IConversationNode) => {
     const { nodeList } = useContext(ConversationTreeContext);
@@ -35,10 +35,11 @@ export const ConversationNode = ({ node, reRender }: IConversationNode) => {
 
     const allParentNodes = _getAllParentNodeIds(node, nodeList);
     const childNodes = getChildNodesToRender(node, nodeList);
+    const identity = getNodeIdentity(node, nodeList);
 
     const nextReRender = () => {
         changeNodeState(!nodeState);
-    }
+    };
 
     useEffect(() => {
         setLoaded(true);
@@ -58,34 +59,32 @@ export const ConversationNode = ({ node, reRender }: IConversationNode) => {
             siblingNodeIds.map((id: string) => steppedLineNodes.push(id));
         }
     } else if (allParentNodes) {
-        steppedLineNodes = allParentNodes.map(x => x.nodeId);
+        steppedLineNodes = allParentNodes.map((x) => x.nodeId);
     }
     const nodeWrapper = "tree-item-" + node?.nodeId;
     return (
         <>
             <div className={"tree-item " + nodeWrapper}>
                 <div className="tree-block-wrap">
-                    <ConversationNodeInterface
-                        key={node.nodeId}
-                        node={node}
-                        reRender={reRender}
-                    />
+                    <ConversationNodeInterface key={node.nodeId} node={node} identity={identity} reRender={reRender} />
                 </div>
                 {childNodes.length > 0 && (
                     <div key={node.nodeId} className="tree-row">
-                        {node.shouldRenderChildren
-                            ? childNodes
-                                  .filter((n: ConvoNode) => n !== undefined)
-                                  .map((nextNode, index) => <ConversationNode key={nextNode.nodeId + "-" + index.toString()} node={nextNode} reRender={nextReRender} />)
-                            : null}
+                        {node.shouldRenderChildren ? childNodes.filter((n: ConvoNode) => n !== undefined).map((nextNode, index) => <ConversationNode key={nextNode.nodeId + "-" + index.toString()} node={nextNode} reRender={nextReRender} />) : null}
                     </div>
                 )}
             </div>
             {loaded &&
                 steppedLineNodes.map((id: string, index: number) => {
-                    return id !== "" && (index === 0 || index === steppedLineNodes.length - 1) ? (
-                        <SteppedLineTo key={node.nodeId + "-" + id + "-" + "stepped-line"} from={node.nodeId} to={id} fromAnchor="top" toAnchor="bottom" orientation="v" {...connectionStyle} />
-                    ) : null;
+                    // if mergeTypeSituation, we want to only render first and last steppedLineNodes.
+                    // else render all.
+                    if (identity.isDecendentOfSplitMerge) {
+                        return id !== "" && (index === 0 || index === steppedLineNodes.length - 1) ? (
+                            <SteppedLineTo key={node.nodeId + "-" + id + "-" + "stepped-line"} from={node.nodeId} to={id} fromAnchor="top" toAnchor="bottom" orientation="v" {...connectionStyle} />
+                        ) : null;
+                    } else {
+                        return <SteppedLineTo key={node.nodeId + "-" + id + "-" + "stepped-line"} from={node.nodeId} to={id} fromAnchor="top" toAnchor="bottom" orientation="v" {...connectionStyle} />;
+                    }
                 })}
         </>
     );

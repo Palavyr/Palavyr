@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { AppBar, Toolbar, IconButton, Typography, makeStyles } from "@material-ui/core";
-import MenuIcon from '@material-ui/icons/Menu';
+import MenuIcon from "@material-ui/icons/Menu";
 import classNames from "classnames";
-import HelpIcon from '@material-ui/icons/Help';
-import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStrip";
+import HelpIcon from "@material-ui/icons/Help";
 
 const drawerWidth: number = 240;
 
@@ -15,7 +14,7 @@ interface DashboardHeaderProps {
     title: string;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     topbar: {
         background: "rgb(1,96,162)",
         // background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
@@ -34,10 +33,9 @@ const useStyles = makeStyles(theme => ({
         justifyContent: "space-between",
     },
 
-
     helpIcon: {
         marginRight: "2rem",
-        paddingRIght: "5rem"
+        paddingRIght: "5rem",
     },
     appBarShift: {
         width: `calc(100% - ${drawerWidth}px)`,
@@ -58,14 +56,12 @@ const useStyles = makeStyles(theme => ({
         alignSelf: "right",
         textAlign: "right",
     },
-}))
-
+}));
 
 export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
-
     const classes = useStyles();
     const [sized, setSized] = useState<boolean>(false);
-    const handle = () => setSized(!sized)
+    const handle = () => setSized(!sized);
 
     useEffect(() => {
         window.addEventListener("resize", handle);
@@ -73,25 +69,16 @@ export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawe
     }, [sized]);
 
     return (
-        <AppBar
-            position="absolute"
-            className={
-                classNames(
-                    classes.topbar,
-                    classes.appBar,
-                    { [classes.appBarShift]: open })
-            }
-        >
-            <DevStagingStrip />
+        <AppBar position="absolute" className={classNames(classes.topbar, classes.appBar, { [classes.appBarShift]: open })}>
             <Toolbar className={classes.toolbar}>
                 <div>
                     <div style={{ float: "left" }}>
                         <IconButton color="inherit" aria-label="open drawer" onClick={() => handleDrawerOpen()} edge="start" className={classNames(classes.menuButton, open && classes.hide)}>
-                            <MenuIcon style={{color: "white"}} />
+                            <MenuIcon style={{ color: "white" }} />
                         </IconButton>
                     </div>
                     <div style={{ float: "right", paddingTop: "5px", verticalAlign: "middle" }}>
-                        <Typography variant="h4" style={{color: "black"}}>
+                        <Typography variant="h4" style={{ color: "black" }}>
                             {title}
                         </Typography>
                     </div>
@@ -102,7 +89,6 @@ export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawe
                     </IconButton>
                 </div>
             </Toolbar>
-        </AppBar >
-
+        </AppBar>
     );
 };

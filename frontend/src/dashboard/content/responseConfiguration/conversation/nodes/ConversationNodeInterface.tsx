@@ -13,7 +13,7 @@ import { uuid } from "uuidv4";
 import { recursivelyReferenceCurrentNodeInNonTerminalLeafNodes } from "./nodeUtils/AnabranchUtils";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { NodeCheckBox } from "./NodeCheckBox";
-import { getNodeIdentity } from "./nodeUtils/nodeIdentity";
+import { NodeIdentity } from "./nodeUtils/nodeIdentity";
 import { recursivelyDereferenceNodeIdFromChildrenExceptWhen } from "./nodeUtils/dereferenceUtils";
 
 type StyleProps = {
@@ -38,6 +38,7 @@ const useStyles = makeStyles(() => ({
         display: "flex",
         flexDirection: "column",
         justifyContent: "area",
+
     },
     bullet: {
         display: "inline-block",
@@ -60,6 +61,7 @@ const useStyles = makeStyles(() => ({
             background: "lightgray",
             color: "black",
         },
+
     }),
     text: {
         margin: ".1rem",
@@ -84,18 +86,17 @@ const useStyles = makeStyles(() => ({
 
 export interface IConversationNodeInterface {
     node: ConvoNode;
+    identity: NodeIdentity;
     reRender: () => void;
 }
 
-export const ConversationNodeInterface = ({ node, reRender }: IConversationNodeInterface) => {
+export const ConversationNodeInterface = ({ node, identity, reRender }: IConversationNodeInterface) => {
     const { setNodes, nodeList, nodeTypeOptions, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData } = React.useContext(ConversationTreeContext);
     const parentNode = _getParentNode(node, nodeList);
 
     const [modalState, setModalState] = useState<boolean>(false);
     const [mergeBoxChecked, setMergeBoxChecked] = useState<boolean>(false);
     const [anabranchMergeChecked, setAnabranchMergeChecked] = useState<boolean>(false);
-
-    const identity = getNodeIdentity(node, nodeList);
 
     const classes = useStyles({
         nodeType: node.nodeType,
@@ -172,7 +173,10 @@ export const ConversationNodeInterface = ({ node, reRender }: IConversationNodeI
 
             const anabranchRootNode = _getNodeById(identity.nodeIdOfMostRecentAnabranch, updatedNodeList);
             // we don't want to dereference the current nodeid from the primary parent of this node
-            const leftmostParentNode = _getLeftMostParentNode(node, nodeList);
+
+            // if (node.isRoot || node.isAnabranchType || node.isSplitMergeType) {
+
+            const leftmostParentNode = _getLeftMostParentNode(node, nodeList, (node: ConvoNode) => node.isAnabranchType);
             if (leftmostParentNode){
                 recursivelyDereferenceNodeIdFromChildrenExceptWhen(leftmostParentNode.nodeId, anabranchRootNode, updatedNodeList, newNode.nodeId);
                 setAnabranchMergeChecked(false);
@@ -212,7 +216,8 @@ export const ConversationNodeInterface = ({ node, reRender }: IConversationNodeI
         { otherNodeAlreadySetAsMergeBranchBool: identity.otherNodeAlreadySetAsMergeBranchBool },
         { shouldDisabledNodeTypeSelector: identity.shouldDisabledNodeTypeSelector },
         { canUnSetNodeType: identity.canUnSetNodeType },
-        { shouldShowUnsetNodeTypeOption: identity.shouldShowUnsetNodeTypeOption}
+        { shouldShowUnsetNodeTypeOption: identity.shouldShowUnsetNodeTypeOption},
+        { isOnLeftmostAnabranchBranch: identity.isOnLeftmostAnabranchBranch }
     ];
 
     const nodeProperties = [
@@ -235,11 +240,9 @@ export const ConversationNodeInterface = ({ node, reRender }: IConversationNodeI
 
     const filteredNodeTypeOptions = () => {
         const filtered = (mergeBoxChecked && identity.isDecendentOfSplitMerge) || identity.isParentOfAnabranchMergePoint ? checkedNodeOptionList(nodeTypeOptions, identity.isDecendentOfSplitMerge, identity.splitMergeRootSiblingIndex, identity.isParentOfAnabranchMergePoint) : nodeTypeOptions;
-        return filtered; // TODO: fix Filter
+        return filtered;
     };
 
-    // TODO: the NodeTypeSelector uses 'checkedNodeOptionList and re-computes whether or not this is a child of mergesplit, and if its a non-primary-sibling decendant (in which case, it will allow filtering). This is defensive
-    // which is not necessary if this is the only place this is used. Its cheap to perform this check.
     return (
         <Card className={classNames(classes.root, node.nodeId)} variant="outlined">
             <CardContent className={classes.card}>
@@ -258,11 +261,11 @@ export const ConversationNodeInterface = ({ node, reRender }: IConversationNodeI
                 <NodeTypeSelector nodeTypeOptions={filteredNodeTypeOptions()} node={node} reRender={reRender} shouldDisabledNodeTypeSelector={identity.shouldDisabledNodeTypeSelector} />
                 <ConversationNodeEditor setModalState={setModalState} modalState={modalState} node={node} parentNode={parentNode} />
 
-                {identity.canShowResponseInPdfOption && <NodeCheckBox label="Show response in PDF" checked={node.isCritical} onChange={showResponseInPdfCheckbox} />}
-                {identity.canShowMergeWithPrimarySiblingBranchOption && <NodeCheckBox label="Merge with primary sibling branch" checked={!node.shouldRenderChildren} onChange={handleMergeBackInOnClick} />}
-                {identity.canShowSetAsAnabranchMergePointOption && <NodeCheckBox label="Set as Anabranch merge point" checked={anabranchMergeChecked} onChange={handleSetAsAnabranchMergePointClick} />}
+                {identity.shouldShowResponseInPdfOption && <NodeCheckBox label="Show response in PDF" checked={node.isCritical} onChange={showResponseInPdfCheckbox} />}
+                {identity.shouldShowMergeWithPrimarySiblingBranchOption && <NodeCheckBox label="Merge with primary sibling branch" checked={!node.shouldRenderChildren} onChange={handleMergeBackInOnClick} />}
+                {identity.shouldShowSetAsAnabranchMergePointOption && <NodeCheckBox label="Set as Anabranch merge point" checked={anabranchMergeChecked} onChange={handleSetAsAnabranchMergePointClick} />}
                 {identity.shouldShowUnsetNodeTypeOption && <SinglePurposeButton buttonText="Unset Node" variant="outlined" color="primary" onClick={handleUnsetCurrentNodeType} />}
-                {identity.canShowSplitMergePrimarySiblingLabel && <Typography>This is the primary sibling. Branches will merge to this node.</Typography>}
+                {identity.shouldShowSplitMergePrimarySiblingLabel && <Typography>This is the primary sibling. Branches will merge to this node.</Typography>}
             </CardContent>
         </Card>
     );

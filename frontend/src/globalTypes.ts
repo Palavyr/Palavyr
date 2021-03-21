@@ -585,7 +585,6 @@ export type SplitMergeMeta = {
     decendentLevelFromSplitMerge: number;
     splitMergeRootSiblingIndex: number;
     nodeIdOfMostRecentSplitMergePrimarySibling: string;
-    orderedChildren: Conversation;
 }
 
 export type AnabranchMeta = {

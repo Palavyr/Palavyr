@@ -1,35 +1,36 @@
 import { Conversation, ConvoNode } from "@Palavyr-Types";
 import { collectAnabranchMeta, otherNodeAlreadySetAsAnabranchMerge } from "./AnabranchUtils";
-import { determineIfCanUnsetNodeType, nodeMergesToPrimarySibling } from "./commonNodeUtils";
+import { determineIfCanUnsetNodeType, determineIfIsOnLeftmostBranchGivenAnOriginNode, nodeMergesToPrimarySibling } from "./commonNodeUtils";
 import { collectSplitMergeMeta } from "./splitMergeUtils";
 
 export type NodeId = string;
 
 export type NodeIdentity = {
     // splitmerge
-    isDecendentOfSplitMerge: boolean;
-    decendentLevelFromSplitMerge: number;
     splitMergeRootSiblingIndex: number;
+    decendentLevelFromSplitMerge: number;
     nodeIdOfMostRecentSplitMergePrimarySibling: NodeId;
-    canShowMergeWithPrimarySiblingBranchOption: boolean;
-    canShowSplitMergePrimarySiblingLabel: boolean;
+    isDecendentOfSplitMerge: boolean;
+    shouldShowMergeWithPrimarySiblingBranchOption: boolean;
+    shouldShowSplitMergePrimarySiblingLabel: boolean;
     shouldCheckSplitMergeBox: boolean;
 
     // anabranch
-    isAnabranchMergePoint: boolean;
-    isDecendentOfAnabranch: boolean;
     decendentLevelFromAnabranch: number;
     nodeIdOfMostRecentAnabranch: NodeId;
+    otherNodeAlreadySetAsMergeBranchBool: boolean;
+    isAnabranchMergePoint: boolean;
+    isDecendentOfAnabranch: boolean;
     isDirectChildOfAnabranch: boolean;
     isParentOfAnabranchMergePoint: boolean;
     isAncestorOfAnabranchMergePoint: boolean;
-    canShowSetAsAnabranchMergePointOption: boolean;
-    otherNodeAlreadySetAsMergeBranchBool: boolean;
+    shouldShowSetAsAnabranchMergePointOption: boolean;
+    isOnLeftmostAnabranchBranch: boolean;
 
-    //
-    shouldDisabledNodeTypeSelector: boolean;
+    // general
     canUnSetNodeType: boolean;
-    canShowResponseInPdfOption: boolean;
+    shouldDisabledNodeTypeSelector: boolean;
+    shouldShowResponseInPdfOption: boolean;
     shouldShowUnsetNodeTypeOption: boolean;
 
 
@@ -40,8 +41,7 @@ export const getNodeIdentity = (node: ConvoNode, nodeList: Conversation): NodeId
         isDecendentOfSplitMerge,
         decendentLevelFromSplitMerge,
         splitMergeRootSiblingIndex,
-        nodeIdOfMostRecentSplitMergePrimarySibling,
-        orderedChildren
+        nodeIdOfMostRecentSplitMergePrimarySibling
     } = collectSplitMergeMeta(node, nodeList);
 
     const {
@@ -63,7 +63,6 @@ export const getNodeIdentity = (node: ConvoNode, nodeList: Conversation): NodeId
     */
     const shouldDisabledNodeTypeSelector = (isDecendentOfAnabranch && isAncestorOfAnabranchMergePoint) || (isAncestorOfAnabranchMergePoint && node.isAnabranchType);
 
-
     /*
     * boolean - for if a node is set and none of its children are set, then the node can be unset. Currently the type selector does not clear bc material UI.
     */
@@ -77,23 +76,28 @@ export const getNodeIdentity = (node: ConvoNode, nodeList: Conversation): NodeId
     /*
     * booelan - for node to show the 'include in pdf response' check box. Yes if this is a node type that elicits a response.
     */
-    const canShowResponseInPdfOption = !node.isTerminalType && !(node.nodeType === "ProvideInfo");
+    const shouldShowResponseInPdfOption = !node.isTerminalType && !(node.nodeType === "ProvideInfo");
 
     /*
     * boolean - Should node be able to set child node as the primary sibling branch - should show merge check box
     */
-    const canShowMergeWithPrimarySiblingBranchOption = isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0 && node.nodeType !== "" && !node.isTerminalType && !node.isMultiOptionType;
+    const shouldShowMergeWithPrimarySiblingBranchOption = isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0 && node.nodeType !== "" && !node.isTerminalType && !node.isMultiOptionType;
+
+    /*
+    * boolean - is the node on the left most branch from an origin node Id
+    */
+    const isOnLeftmostAnabranchBranch = nodeIdOfMostRecentAnabranch && determineIfIsOnLeftmostBranchGivenAnOriginNode(node.nodeId, nodeList, nodeIdOfMostRecentAnabranch);
 
     /*
     * boolean - Should node be able be an anabranch merge point. Node cannot have siblings
     */
-    const canShowSetAsAnabranchMergePointOption = isDecendentOfAnabranch && node.nodeType !== "" && !node.isTerminalType && !node.isMultiOptionType && !isDirectChildOfAnabranch && !otherNodeAlreadySetAsMergeBranchBool;
+    const shouldShowSetAsAnabranchMergePointOption = isDecendentOfAnabranch && node.nodeType !== "" && !node.isTerminalType && !node.isMultiOptionType && !isDirectChildOfAnabranch && !otherNodeAlreadySetAsMergeBranchBool && isOnLeftmostAnabranchBranch;
 
 
     /*
     * boolean - can show the text in the node that says 'im the primary sibling
     */
-    const canShowSplitMergePrimarySiblingLabel = isDecendentOfSplitMerge && splitMergeRootSiblingIndex === 0 && decendentLevelFromSplitMerge === 1;
+    const shouldShowSplitMergePrimarySiblingLabel = isDecendentOfSplitMerge && splitMergeRootSiblingIndex === 0 && decendentLevelFromSplitMerge === 1;
 
     /*
     * boolean - should check the split merge box
@@ -119,12 +123,13 @@ export const getNodeIdentity = (node: ConvoNode, nodeList: Conversation): NodeId
         otherNodeAlreadySetAsMergeBranchBool,
         shouldDisabledNodeTypeSelector,
         canUnSetNodeType,
-        canShowResponseInPdfOption,
-        canShowMergeWithPrimarySiblingBranchOption,
-        canShowSetAsAnabranchMergePointOption,
+        shouldShowResponseInPdfOption,
+        shouldShowMergeWithPrimarySiblingBranchOption,
+        shouldShowSetAsAnabranchMergePointOption,
         shouldShowUnsetNodeTypeOption,
-        canShowSplitMergePrimarySiblingLabel,
+        shouldShowSplitMergePrimarySiblingLabel,
         shouldCheckSplitMergeBox,
-        isAnabranchMergePoint
+        isAnabranchMergePoint,
+        isOnLeftmostAnabranchBranch
     }
 };

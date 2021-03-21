@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { makeStyles, useTheme } from "@material-ui/core";
 import { DRAWER_WIDTH } from "@constants";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStrip";
 
 interface IContentLoader {
     open: boolean;
@@ -37,6 +38,7 @@ export const ContentLoader = ({ open, isLoading, dashboardAreasLoading, children
     return (
         <main className={classNames(classes.content, { [classes.contentShift]: open })}>
             {(isLoading || dashboardAreasLoading) && <LinearProgress />}
+            <DevStagingStrip />
             <div>{children}</div>
         </main>
     );
