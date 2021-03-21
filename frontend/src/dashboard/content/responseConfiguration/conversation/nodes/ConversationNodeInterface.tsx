@@ -1,4 +1,4 @@
-import { ConvoNode, NodeIdentity } from "@Palavyr-Types";
+import { ConvoNode, NodeIdentity, NodeOption, NodeTypeOptions } from "@Palavyr-Types";
 import React, { useState } from "react";
 import { makeStyles, Card, CardContent, Typography, Divider } from "@material-ui/core";
 import classNames from "classnames";
@@ -14,6 +14,7 @@ import { recursivelyReferenceCurrentNodeInNonTerminalLeafNodes } from "./nodeUti
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { NodeCheckBox } from "./NodeCheckBox";
 import { recursivelyDereferenceNodeIdFromChildrenExceptWhen } from "./nodeUtils/dereferenceUtils";
+import { DataLogging } from "./DataLogging";
 
 type StyleProps = {
     nodeText: string;
@@ -37,7 +38,6 @@ const useStyles = makeStyles(() => ({
         display: "flex",
         flexDirection: "column",
         justifyContent: "area",
-
     },
     bullet: {
         display: "inline-block",
@@ -60,7 +60,6 @@ const useStyles = makeStyles(() => ({
             background: "lightgray",
             color: "black",
         },
-
     }),
     text: {
         margin: ".1rem",
@@ -172,7 +171,7 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
 
             const anabranchRootNode = _getNodeById(identity.nodeIdOfMostRecentAnabranch, updatedNodeList);
             const leftmostParentNode = _getLeftMostParentNode(node, nodeList, (node: ConvoNode) => node.isAnabranchType);
-            if (leftmostParentNode){
+            if (leftmostParentNode) {
                 recursivelyDereferenceNodeIdFromChildrenExceptWhen(leftmostParentNode.nodeId, anabranchRootNode, updatedNodeList, newNode.nodeId);
                 setAnabranchMergeChecked(false);
                 setNodes(cloneDeep(updatedNodeList));
@@ -211,8 +210,8 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
         { otherNodeAlreadySetAsMergeBranchBool: identity.otherNodeAlreadySetAsMergeBranchBool },
         { shouldDisabledNodeTypeSelector: identity.shouldDisabledNodeTypeSelector },
         { canUnSetNodeType: identity.canUnSetNodeType },
-        { shouldShowUnsetNodeTypeOption: identity.shouldShowUnsetNodeTypeOption},
-        { isOnLeftmostAnabranchBranch: identity.isOnLeftmostAnabranchBranch }
+        { shouldShowUnsetNodeTypeOption: identity.shouldShowUnsetNodeTypeOption },
+        { isOnLeftmostAnabranchBranch: identity.isOnLeftmostAnabranchBranch },
     ];
 
     const nodeProperties = [
@@ -233,9 +232,24 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
         { isAnabranchMergePoint: node.isAnabranchMergePoint },
     ];
 
-    const filteredNodeTypeOptions = () => {
-        const filtered = (mergeBoxChecked && identity.isDecendentOfSplitMerge) || identity.isParentOfAnabranchMergePoint ? checkedNodeOptionList(nodeTypeOptions, identity.isDecendentOfSplitMerge, identity.splitMergeRootSiblingIndex, identity.isParentOfAnabranchMergePoint) : nodeTypeOptions;
-        return filtered;
+    const filteredNodeTypeOptions = (): NodeTypeOptions => {
+        let prefiltered = [...nodeTypeOptions]; // wow you can spread an array into an object
+
+        if (identity.isInternalToAnabranch || identity.isInternalToSplitMerge) {
+            prefiltered = prefiltered.filter((option: NodeOption) => option.groupName !== "Split then Merge");
+        }
+
+        if (identity.isInternalToAnabranch) {
+            if (identity.isParentOfAnabranchMergePoint) {
+                return prefiltered.filter((option: NodeOption) => option.groupName === "Provide Info" || option.groupName === "Info Collection");
+            } else {
+                return prefiltered.filter((option: NodeOption) => !option.isSplitMergeType);
+            }
+        } else if (identity.isInternalToSplitMerge) {
+            return checkedNodeOptionList(prefiltered, identity.isDecendentOfSplitMerge, identity.splitMergeRootSiblingIndex);
+        } else {
+            return prefiltered;
+        }
     };
 
     return (
@@ -261,66 +275,8 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
                 {identity.shouldShowSetAsAnabranchMergePointOption && <NodeCheckBox label="Set as Anabranch merge point" checked={anabranchMergeChecked} onChange={handleSetAsAnabranchMergePointClick} />}
                 {identity.shouldShowUnsetNodeTypeOption && <SinglePurposeButton buttonText="Unset Node" variant="outlined" color="primary" onClick={handleUnsetCurrentNodeType} />}
                 {identity.shouldShowSplitMergePrimarySiblingLabel && <Typography>This is the primary sibling. Branches will merge to this node.</Typography>}
+                {identity.shouldShowAnabranchMergepointLabel && <Typography style={{ fontWeight: "bolder" }}>This is the Anabranch Merge Node</Typography>}
             </CardContent>
         </Card>
-    );
-};
-
-type DataItem = {
-    [key: string]: any;
-};
-
-interface DataProps {
-    data: DataItem[];
-    nodeId: string;
-    nodeChildren: string;
-    nodeProperties: DataItem;
-}
-
-const DataLogging = (props: DataProps) => {
-    return (
-        <div>
-            <Typography align="center">{props.nodeId}</Typography>
-            <ul>
-                {props.data.map((item: DataItem) => {
-                    const key = Object.keys(item)[0];
-                    let val = Object.values(item)[0];
-                    if (typeof val === "boolean") {
-                        val = val.toString().toUpperCase();
-                    }
-                    return (
-                        <>
-                            <li>
-                                <Typography>
-                                    {key}: {val}
-                                </Typography>
-                            </li>
-                        </>
-                    );
-                })}
-            </ul>
-            <Divider />
-            <ul>
-                {props.nodeProperties.map((item: DataItem) => {
-                    const key = Object.keys(item)[0];
-                    let val = Object.values(item)[0];
-                    if (typeof val === "boolean") {
-                        val = val.toString().toUpperCase();
-                    }
-                    return (
-                        <>
-                            <li>
-                                <Typography>
-                                    {key}: {val}
-                                </Typography>
-                            </li>
-                        </>
-                    );
-                })}
-            </ul>
-            <Divider />
-            <Typography align="center">Children</Typography>
-            <Typography>{props.nodeChildren}</Typography>
-        </div>
     );
 };

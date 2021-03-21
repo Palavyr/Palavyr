@@ -1,7 +1,8 @@
 import { Conversation, ConvoNode, NodeIdentity } from "@Palavyr-Types";
-import { collectAnabranchMeta, otherNodeAlreadySetAsAnabranchMerge } from "./AnabranchUtils";
-import { determineIfCanUnsetNodeType, determineIfIsOnLeftmostBranchGivenAnOriginNode, nodeMergesToPrimarySibling } from "./commonNodeUtils";
+import { checkIfNodeIsBoundedByAnabranch, checkIfSitsWithinOpenAnabranch, collectAnabranchMeta, otherNodeAlreadySetAsAnabranchMerge } from "./AnabranchUtils";
+import { checkChildIsLeaf, determineIfCanUnsetNodeType, determineIfIsOnLeftmostBranchGivenAnOriginNode, nodeMergesToPrimarySibling } from "./commonNodeUtils";
 import { collectSplitMergeMeta } from "./splitMergeUtils";
+import { _getNodeById, _splitAndRemoveEmptyNodeChildrenString } from "./_coreNodeUtils";
 
 
 export const getNodeIdentity = (node: ConvoNode, nodeList: Conversation): NodeIdentity => {
@@ -32,7 +33,7 @@ export const getNodeIdentity = (node: ConvoNode, nodeList: Conversation): NodeId
     /*
      * boolean - Should node be able to set child node as the primary sibling branch - should show merge check box
      */
-    const shouldShowMergeWithPrimarySiblingBranchOption = isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0 && node.nodeType !== "" && !node.isTerminalType && !node.isMultiOptionType;
+    const shouldShowMergeWithPrimarySiblingBranchOption = isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0 && node.nodeType !== "" && !node.isTerminalType && !node.isMultiOptionType && checkChildIsLeaf(node, nodeList);
 
     /*
      * boolean - is the node on the left most branch from an origin node Id
@@ -69,6 +70,21 @@ export const getNodeIdentity = (node: ConvoNode, nodeList: Conversation): NodeId
      */
     const isAnabranchMergePoint = node.isAnabranchMergePoint;
 
+    /*
+    * boolean - whether to show the 'is anabranch merge node' label
+    */
+    const shouldShowAnabranchMergepointLabel = isAnabranchMergePoint;
+
+    /*
+    * boolean - whether the node sits within an anabranh - either a closed anabranch or within an open anabranch.
+    */
+    const isInternalToAnabranch = checkIfNodeIsBoundedByAnabranch(nodeList, isDecendentOfAnabranch, nodeIdOfMostRecentAnabranch) || checkIfSitsWithinOpenAnabranch(nodeList, isDecendentOfAnabranch, nodeIdOfMostRecentAnabranch)
+
+    /*
+    * boolean - whether the node sits within a splitmerge
+    */
+    const isInternalToSplitMerge = isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0;
+
     return {
         isDecendentOfSplitMerge,
         decendentLevelFromSplitMerge,
@@ -91,5 +107,8 @@ export const getNodeIdentity = (node: ConvoNode, nodeList: Conversation): NodeId
         shouldCheckSplitMergeBox,
         isAnabranchMergePoint,
         isOnLeftmostAnabranchBranch,
+        shouldShowAnabranchMergepointLabel,
+        isInternalToAnabranch,
+        isInternalToSplitMerge
     };
 };

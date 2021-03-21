@@ -25,17 +25,9 @@ export const getNewNumChildren = (optionPaths: string[]) => {
     return optionPaths.filter((x) => x !== null && x !== "").length;
 };
 
-export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, isDecendentOfSplitMerge: boolean, splitMergeRootSiblingIndex: number, isParentOfAnabranchMergePoint: boolean) => {
-    // This next line is a defensive check
-    //TODO: Perhaps these two if statements should be mutually exclusive.
-    if (isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0 && isParentOfAnabranchMergePoint) throw new Error("MUtally Exclusive!");
-
+export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, isDecendentOfSplitMerge: boolean, splitMergeRootSiblingIndex: number) => {//, isParentOfAnabranchMergePoint: boolean) => {
     if (isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0) {
-        const compatible = nodeOptionList.filter((option: NodeOption) => option.groupName === "Provide Info" || option.groupName === "Info Collection");
-        return compatible;
-    } else if (isParentOfAnabranchMergePoint) {
-        const compatible = nodeOptionList.filter((option: NodeOption) => option.groupName === "Provide Info" || option.groupName === "Info Collection");
-        return compatible;
+        return nodeOptionList.filter((option: NodeOption) => option.groupName === "Provide Info" || option.groupName === "Info Collection");
     } else {
         return nodeOptionList;
     }
@@ -109,9 +101,7 @@ export const nodeMergesToPrimarySibling = (node: ConvoNode, isDecendentOfSplitMe
 };
 
 export const determineIfCanUnsetNodeType = (node: ConvoNode, nodeList: Conversation, isDecendentOfAnabranch: boolean, anabranchId: string) => {
-    // cannot  unset nodetype if: bounded AND is Terminal
-
-    const nodeIsBoundedByAnabranch = checkIfNodeIsBoundedByAnabranch(node, nodeList, isDecendentOfAnabranch, anabranchId);
+    const nodeIsBoundedByAnabranch = checkIfNodeIsBoundedByAnabranch(nodeList, isDecendentOfAnabranch, anabranchId);
     if (nodeIsBoundedByAnabranch) {
         return false;
     }
@@ -136,3 +126,18 @@ export const determineIfIsOnLeftmostBranchGivenAnOriginNode = (targetNodeId: str
         }
     }
 };
+
+export const checkChildIsLeaf = (node: ConvoNode, nodeList: Conversation) => {
+    const childrenIds = _splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString);
+
+    for (let index = 0; index < childrenIds.length; index++) {
+        const childId = childrenIds[index];
+        const childNode = _getNodeById(childId, nodeList);
+        const granChildrenIds = _splitAndRemoveEmptyNodeChildrenString(childNode.nodeChildrenString);
+        if (granChildrenIds.length !== 0) {
+            return false
+        }
+    }
+    return true;
+
+}

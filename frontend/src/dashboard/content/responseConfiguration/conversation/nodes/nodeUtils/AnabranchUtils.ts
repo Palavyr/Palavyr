@@ -1,13 +1,20 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { AnabranchMeta, Conversation, ConvoNode } from "@Palavyr-Types";
-import { findIndex, sum, uniqBy } from "lodash";
+import { sum, uniqBy } from "lodash";
 import { _getNodeById, _getParentNode, _nodeListContainsNodeType, _splitAndRemoveEmptyNodeChildrenString, _splitNodeChildrenString } from "./_coreNodeUtils";
 
 const Anabranch = "Anabranch".toUpperCase();
 
-export const checkIfNodeIsBoundedByAnabranch = (node: ConvoNode, nodeList: Conversation, isDecendentOfAnabranch: boolean, anabranchId: string) => {
-    // for direct decendants
-    // const decendent = checkIfDecendentOfAnabranch(node, nodeList);
+export const checkIfSitsWithinOpenAnabranch = (nodeList: Conversation, isDecendantOfAnabranch: boolean, nodeIdOfMostRecentAnabranch: string) => {
+    if (!isDecendantOfAnabranch) return false;
+    // if is decendant of anabranch, check if there is a mergepoint down the chain
+    const mostRecentAnabranchNode = _getNodeById(nodeIdOfMostRecentAnabranch, nodeList);
+    // if we are not ancestor of anabranch  merge point, then its an open anabranch.
+    return !checkIfIsAncestorOfAnabranchMergePoint(mostRecentAnabranchNode, nodeList);
+}
+
+export const checkIfNodeIsBoundedByAnabranch = (nodeList: Conversation, isDecendentOfAnabranch: boolean, anabranchId: string) => {
+
     if (!isDecendentOfAnabranch) {
         return false;
     }
@@ -22,7 +29,7 @@ export const checkIfNodeIsBoundedByAnabranch = (node: ConvoNode, nodeList: Conve
 export const checkIfDecendentOfAnabranch = (node: ConvoNode, nodeList: Conversation) => {
     let tempParentNode: ConvoNode | null = { ...node };
     let prevChildReference = { ...node };
-    let isDecendent;
+    let isDecendent: boolean | undefined;
     let count = 0;
 
     if (node.isRoot) {
@@ -38,8 +45,6 @@ export const checkIfDecendentOfAnabranch = (node: ConvoNode, nodeList: Conversat
             isDecendent = false;
         } else if (tempParentNode.isAnabranchType) {
             isDecendent = true;
-
-            // nodeIdOfMostRecentAnabranch: tempParentNode.nodeId,
         } else if (count > 200) {
             throw new Error("The tree is too deep (or the recursion algo is broken... either way, this cannot be allowed.");
         }
@@ -104,6 +109,9 @@ export const collectAnabranchMeta = (node: ConvoNode, nodeList: Conversation): A
                 isParentOfAnabranchMergePoint,
                 isAncestorOfAnabranchMergePoint,
             };
+        }
+        else if (tempParentNode.isAnabranchMergePoint) {
+            return defaultResult;
         } else if (tempParentNode.isRoot) {
             return defaultResult;
         } else if (decendentLevelFromAnabranch > 200) {

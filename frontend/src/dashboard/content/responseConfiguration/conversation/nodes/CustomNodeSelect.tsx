@@ -59,7 +59,7 @@ export const CustomNodeSelect = ({
 }: ISelectNodeType) => {
     const cls = useStyles();
     const groupGetter = (val: NodeOption) => val.groupName;
-
+    const sortedNodeOptions = sortByPropertyAlphabetical(groupGetter, nodeTypeOptions);
     return (
         <div>
             <FormControl className={cls.formControl}>
@@ -73,7 +73,7 @@ export const CustomNodeSelect = ({
                         className={cls.autocomplete}
                         classes={{ root: cls.otherbox }}
                         onChange={onChange}
-                        options={sortByPropertyAlphabetical(groupGetter, nodeTypeOptions)}
+                        options={sortedNodeOptions}
                         groupBy={(nodeOption) => nodeOption.groupName}
                         getOptionLabel={(option) => option.text}
                         renderInput={(params) => <TextField {...params} InputLabelProps={{ className: cls.inputLabel }} className={cls.inputLabel} data-lpignore="true" label={label} />}

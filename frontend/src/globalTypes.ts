@@ -617,8 +617,11 @@ export type NodeIdentity = {
     isDirectChildOfAnabranch: boolean;
     isParentOfAnabranchMergePoint: boolean;
     isAncestorOfAnabranchMergePoint: boolean;
-    shouldShowSetAsAnabranchMergePointOption: boolean;
     isOnLeftmostAnabranchBranch: boolean;
+    shouldShowSetAsAnabranchMergePointOption: boolean;
+    shouldShowAnabranchMergepointLabel: boolean;
+    isInternalToAnabranch: boolean;
+    isInternalToSplitMerge: boolean;
 
     // general
     canUnSetNodeType: boolean;
