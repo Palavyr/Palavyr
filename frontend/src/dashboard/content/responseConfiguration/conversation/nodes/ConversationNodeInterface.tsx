@@ -15,6 +15,7 @@ import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { NodeCheckBox } from "./NodeCheckBox";
 import { recursivelyDereferenceNodeIdFromChildrenExceptWhen } from "./nodeUtils/dereferenceUtils";
 import { DataLogging } from "./DataLogging";
+import { OpacityOutlined } from "@material-ui/icons";
 
 type StyleProps = {
     nodeText: string;
@@ -105,9 +106,10 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
     });
 
     useEffect(() => {
-        if (identity.shouldCheckSplitMergeBox) {
-            setMergeBoxChecked(true);
-        }
+        setMergeBoxChecked(identity.shouldCheckSplitMergeBox);
+        // if (identity.shouldCheckSplitMergeBox) {
+        //     setMergeBoxChecked(true);
+        // }
     }, [node, nodeList]);
 
     useEffect(() => {
@@ -239,14 +241,20 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
             prefiltered = prefiltered.filter((option: NodeOption) => option.groupName !== "Split then Merge");
         }
 
+        const nonBranching = ["Provide Info",  "Info Collection",  "Terminal"]
+
         if (identity.isInternalToAnabranch) {
             if (identity.isParentOfAnabranchMergePoint) {
-                return prefiltered.filter((option: NodeOption) => option.groupName === "Provide Info" || option.groupName === "Info Collection");
+                return prefiltered.filter((option: NodeOption) => nonBranching.includes(option.groupName) || option.value === "MultipleChoiceContinue"); // option.groupName === "Provide Info" || option.groupName === "Info Collection" || option.groupName === "Terminal");
             } else {
                 return prefiltered.filter((option: NodeOption) => !option.isSplitMergeType);
             }
         } else if (identity.isInternalToSplitMerge) {
-            return checkedNodeOptionList(prefiltered, identity.isDecendentOfSplitMerge, identity.splitMergeRootSiblingIndex);
+            if (identity.isDecendentOfSplitMerge && identity.splitMergeRootSiblingIndex > 0) {
+                return prefiltered.filter((option: NodeOption) => nonBranching.includes(option.groupName) || option.value === "MultipleChoiceContinue"); // option.groupName === "Provide Info" || option.groupName === "Info Collection" || option.groupName === "Terminal");
+            } else {
+                return prefiltered;
+            }
         } else {
             return prefiltered;
         }

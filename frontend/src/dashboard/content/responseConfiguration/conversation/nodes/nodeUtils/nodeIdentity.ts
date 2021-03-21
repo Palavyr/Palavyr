@@ -4,7 +4,6 @@ import { checkChildIsLeaf, determineIfCanUnsetNodeType, determineIfIsOnLeftmostB
 import { collectSplitMergeMeta } from "./splitMergeUtils";
 import { _getNodeById, _splitAndRemoveEmptyNodeChildrenString } from "./_coreNodeUtils";
 
-
 export const getNodeIdentity = (node: ConvoNode, nodeList: Conversation): NodeIdentity => {
     const { isDecendentOfSplitMerge, decendentLevelFromSplitMerge, splitMergeRootSiblingIndex, nodeIdOfMostRecentSplitMergePrimarySibling } = collectSplitMergeMeta(node, nodeList);
 
@@ -14,16 +13,6 @@ export const getNodeIdentity = (node: ConvoNode, nodeList: Conversation): NodeId
      * boolean - Is another node already set as the anabranch merge point for this subtree. Searches from most recent anabranch node id down to all leaf nodes
      */
     const otherNodeAlreadySetAsMergeBranchBool = isDecendentOfAnabranch && otherNodeAlreadySetAsAnabranchMerge(nodeIdOfMostRecentAnabranch, nodeList, node.nodeId);
-
-    /*
-     * boolean - for if a node is set and none of its children are set, then the node can be unset. Currently the type selector does not clear bc material UI.
-     */
-    const canUnSetNodeType = determineIfCanUnsetNodeType(node, nodeList, isDecendentOfAnabranch, nodeIdOfMostRecentAnabranch);
-
-    /*
-     * boolean - should node show the button to unset node type.
-     */
-    const shouldShowUnsetNodeTypeOption = canUnSetNodeType && node.nodeType !== "" && !node.isAnabranchType && !node.isAnabranchMergePoint && !node.isSplitMergeType;
 
     /*
      * booelan - for node to show the 'include in pdf response' check box. Yes if this is a node type that elicits a response.
@@ -71,19 +60,29 @@ export const getNodeIdentity = (node: ConvoNode, nodeList: Conversation): NodeId
     const isAnabranchMergePoint = node.isAnabranchMergePoint;
 
     /*
-    * boolean - whether to show the 'is anabranch merge node' label
-    */
+     * boolean - whether to show the 'is anabranch merge node' label
+     */
     const shouldShowAnabranchMergepointLabel = isAnabranchMergePoint;
 
     /*
-    * boolean - whether the node sits within an anabranh - either a closed anabranch or within an open anabranch.
-    */
-    const isInternalToAnabranch = checkIfNodeIsBoundedByAnabranch(nodeList, isDecendentOfAnabranch, nodeIdOfMostRecentAnabranch) || checkIfSitsWithinOpenAnabranch(nodeList, isDecendentOfAnabranch, nodeIdOfMostRecentAnabranch)
+     * boolean - whether the node sits within an anabranh - either a closed anabranch or within an open anabranch.
+     */
+    const isInternalToAnabranch = checkIfNodeIsBoundedByAnabranch(nodeList, isDecendentOfAnabranch, nodeIdOfMostRecentAnabranch) || checkIfSitsWithinOpenAnabranch(nodeList, isDecendentOfAnabranch, nodeIdOfMostRecentAnabranch);
 
     /*
-    * boolean - whether the node sits within a splitmerge
-    */
+     * boolean - whether the node sits within a splitmerge
+     */
     const isInternalToSplitMerge = isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0;
+
+    /*
+     * boolean - for if a node is set and none of its children are set, then the node can be unset. Currently the type selector does not clear bc material UI.
+     */
+    const canUnSetNodeType = determineIfCanUnsetNodeType(node, nodeList, isDecendentOfAnabranch, nodeIdOfMostRecentAnabranch);
+
+    /*
+     * boolean - should node show the button to unset node type.
+     */
+    const shouldShowUnsetNodeTypeOption = canUnSetNodeType && node.nodeType !== "" && !node.isAnabranchType && !node.isAnabranchMergePoint && !node.isSplitMergeType && !shouldCheckSplitMergeBox;
 
     return {
         isDecendentOfSplitMerge,
@@ -109,6 +108,6 @@ export const getNodeIdentity = (node: ConvoNode, nodeList: Conversation): NodeId
         isOnLeftmostAnabranchBranch,
         shouldShowAnabranchMergepointLabel,
         isInternalToAnabranch,
-        isInternalToSplitMerge
+        isInternalToSplitMerge,
     };
 };

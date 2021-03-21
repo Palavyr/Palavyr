@@ -52,14 +52,16 @@ export const ConversationNode = ({ node, reRender }: IConversationNode) => {
 
     let steppedLineNodes: string[] = [];
 
-    if (allParentNodes && allParentNodes.length == 1) {
-        steppedLineNodes.push(allParentNodes[0].nodeId);
-        if (allParentNodes[0].isSplitMergeType) {
-            const siblingNodeIds = _splitNodeChildrenString(allParentNodes[0].nodeChildrenString).filter((x: string) => x !== node.nodeId);
-            siblingNodeIds.map((id: string) => steppedLineNodes.push(id));
+    if (allParentNodes){
+        if (allParentNodes.length == 1) {
+            steppedLineNodes.push(allParentNodes[0].nodeId);
+            if (allParentNodes[0].isSplitMergeType) {
+                const siblingNodeIds = _splitNodeChildrenString(allParentNodes[0].nodeChildrenString).filter((x: string) => x !== node.nodeId);
+                siblingNodeIds.map((id: string) => steppedLineNodes.push(id));
+            }
+        } else {
+            steppedLineNodes = allParentNodes.map((x) => x.nodeId);
         }
-    } else if (allParentNodes) {
-        steppedLineNodes = allParentNodes.map((x) => x.nodeId);
     }
     const nodeWrapper = "tree-item-" + node?.nodeId;
     return (

@@ -27,7 +27,7 @@ export const getNewNumChildren = (optionPaths: string[]) => {
 
 export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, isDecendentOfSplitMerge: boolean, splitMergeRootSiblingIndex: number) => {//, isParentOfAnabranchMergePoint: boolean) => {
     if (isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0) {
-        return nodeOptionList.filter((option: NodeOption) => option.groupName === "Provide Info" || option.groupName === "Info Collection");
+        return nodeOptionList.filter((option: NodeOption) => option.groupName === "Provide Info" || option.groupName === "Info Collection" || option.groupName === "Terminal");
     } else {
         return nodeOptionList;
     }
