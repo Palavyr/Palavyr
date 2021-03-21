@@ -42,7 +42,7 @@ export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, isDecende
 };
 
 export const getChildNodesToRender = (node: ConvoNode, nodeList: Conversation) => {
-    return node.isSplitMergeType ? getChildeNodesOrderedByChildString(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);
+    return node.isSplitMergeType || node.isAnabranchType ? getChildeNodesOrderedByChildString(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);
 };
 
 export const getChildeNodesOrderedByChildString = (childrenIDs: string, nodeList: Conversation) => {
@@ -125,15 +125,6 @@ export const determineIfCanUnsetNodeType = (node: ConvoNode, nodeList: Conversat
 };
 
 export const determineIfIsOnLeftmostBranchGivenAnOriginNode = (targetNodeId: string, nodeList: Conversation, originNodeId: string) => {
-
-    // from this node, grab the leftmost parent, and
-    // const leftmostParentNode = _getLeftMostParentNode(node, nodeList, callbackCriteria);
-    // I can either start from an origin, always grab the first child node, and then return true if we find the current node before the end of the tree. OR
-    // OR we can traverse the tree up and check that we are always the decendent of the left most parent.
-
-    // cant collec ton initial render bc our origin node of choice might not be the root node.
-    // easiest is probs to give it a root nodoe and search all the leftmost childstrings
-
     const rootNode = _getNodeById(originNodeId, nodeList);
     const childrenNodeIds = _splitAndRemoveEmptyNodeChildrenString(rootNode.nodeChildrenString);
     if (childrenNodeIds.length === 0) return false;

@@ -1,4 +1,4 @@
-import { ConvoNode } from "@Palavyr-Types";
+import { ConvoNode, NodeIdentity } from "@Palavyr-Types";
 import React, { useState } from "react";
 import { makeStyles, Card, CardContent, Typography, Divider } from "@material-ui/core";
 import classNames from "classnames";
@@ -13,7 +13,6 @@ import { uuid } from "uuidv4";
 import { recursivelyReferenceCurrentNodeInNonTerminalLeafNodes } from "./nodeUtils/AnabranchUtils";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { NodeCheckBox } from "./NodeCheckBox";
-import { NodeIdentity } from "./nodeUtils/nodeIdentity";
 import { recursivelyDereferenceNodeIdFromChildrenExceptWhen } from "./nodeUtils/dereferenceUtils";
 
 type StyleProps = {
@@ -172,10 +171,6 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
             updatedNodeList = _replaceNodeWithUpdatedNode(newNode, updatedNodeList);
 
             const anabranchRootNode = _getNodeById(identity.nodeIdOfMostRecentAnabranch, updatedNodeList);
-            // we don't want to dereference the current nodeid from the primary parent of this node
-
-            // if (node.isRoot || node.isAnabranchType || node.isSplitMergeType) {
-
             const leftmostParentNode = _getLeftMostParentNode(node, nodeList, (node: ConvoNode) => node.isAnabranchType);
             if (leftmostParentNode){
                 recursivelyDereferenceNodeIdFromChildrenExceptWhen(leftmostParentNode.nodeId, anabranchRootNode, updatedNodeList, newNode.nodeId);

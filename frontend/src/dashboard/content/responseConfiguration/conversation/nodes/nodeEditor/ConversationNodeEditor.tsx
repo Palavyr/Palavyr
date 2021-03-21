@@ -45,14 +45,9 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, parent
     };
 
     const addMultiChoiceOptionsOnClick = () => {
-     // only allow adding if we aer not anabranch.
-        if (!node.isAnabranchType) {
-            options.push("");
-            setOptions(options);
-            setSwitchState(!switchState);
-        } else {
-            alert("Cannot add more than two branches with an Anabranch node type.")
-        }
+        options.push("");
+        setOptions(options);
+        setSwitchState(!switchState);
     };
 
     return (

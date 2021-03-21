@@ -595,3 +595,34 @@ export type AnabranchMeta = {
     isParentOfAnabranchMergePoint: boolean;
     isAncestorOfAnabranchMergePoint: boolean;
 };
+
+export type NodeId = string;
+
+export type NodeIdentity = {
+    // splitmerge
+    splitMergeRootSiblingIndex: number;
+    decendentLevelFromSplitMerge: number;
+    nodeIdOfMostRecentSplitMergePrimarySibling: NodeId;
+    isDecendentOfSplitMerge: boolean;
+    shouldShowMergeWithPrimarySiblingBranchOption: boolean;
+    shouldShowSplitMergePrimarySiblingLabel: boolean;
+    shouldCheckSplitMergeBox: boolean;
+
+    // anabranch
+    decendentLevelFromAnabranch: number;
+    nodeIdOfMostRecentAnabranch: NodeId;
+    otherNodeAlreadySetAsMergeBranchBool: boolean;
+    isAnabranchMergePoint: boolean;
+    isDecendentOfAnabranch: boolean;
+    isDirectChildOfAnabranch: boolean;
+    isParentOfAnabranchMergePoint: boolean;
+    isAncestorOfAnabranchMergePoint: boolean;
+    shouldShowSetAsAnabranchMergePointOption: boolean;
+    isOnLeftmostAnabranchBranch: boolean;
+
+    // general
+    canUnSetNodeType: boolean;
+    shouldDisabledNodeTypeSelector: boolean;
+    shouldShowResponseInPdfOption: boolean;
+    shouldShowUnsetNodeTypeOption: boolean;
+};
