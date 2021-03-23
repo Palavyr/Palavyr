@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
     root: (props: StyleProps) => ({
         minWidth: "275px",
         maxWidth: props.debugOn ? "600px" : "250px",
-        minHeight: "320px",
+        minHeight: "350px",
         borderColor: props.nodeType === "" ? "red" : props.isDecendentOfSplitMerge && props.splitMergeRootSiblingIndex > 0 ? "purple" : "#54585A",
         borderWidth: props.nodeType === "" ? "5px" : props.isDecendentOfSplitMerge && props.splitMergeRootSiblingIndex > 0 ? "8px" : "2px",
         borderRadius: "3px",

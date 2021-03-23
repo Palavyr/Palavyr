@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
         }),
     },
     toolbar: {
-        color: "#c7ecee",
+        color: "#FAFCE8",
         width: "100%",
         display: "flex",
         justifyContent: "space-between",
@@ -78,7 +78,7 @@ export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawe
                         </IconButton>
                     </div>
                     <div style={{ float: "right", paddingTop: "5px", verticalAlign: "middle" }}>
-                        <Typography variant="h4" style={{ color: "black" }}>
+                        <Typography variant="h4" style={{ color: "#FAFCE8" }}>
                             {title}
                         </Typography>
                     </div>
