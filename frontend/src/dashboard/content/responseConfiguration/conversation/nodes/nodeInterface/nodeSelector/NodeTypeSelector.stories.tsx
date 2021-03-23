@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Meta } from '@storybook/react/types-6-0';
 import { NodeTypeSelector, INodeTypeSelector } from './NodeTypeSelector';
-import { NodeTypeOptionsDefinition } from './NodeTypeOptions';
 import { DummyConvo } from 'test/dummyNodeData/dummyNodes';
 
 
@@ -22,5 +21,5 @@ Primary.args = {
     setNodes: () => {},
     parentState: true,
     changeParentState: () => {},
-    dynamicNodeTypes: NodeTypeOptionsDefinition
+    // dynamicNodeTypes: NodeTypeOptionsDefinition
 }

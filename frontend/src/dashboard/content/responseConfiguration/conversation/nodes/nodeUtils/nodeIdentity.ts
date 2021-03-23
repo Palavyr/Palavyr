@@ -32,8 +32,12 @@ export const getNodeIdentity = (node: ConvoNode, nodeList: Conversation): NodeId
     /*
      * boolean - Should node be able be an anabranch merge point. Node cannot have siblings
      */
-    const shouldShowSetAsAnabranchMergePointOption =
-        isDecendentOfAnabranch && node.nodeType !== "" && !node.isTerminalType && !node.isMultiOptionType && !isDirectChildOfAnabranch && !otherNodeAlreadySetAsMergeBranchBool && isOnLeftmostAnabranchBranch && decendentLevelFromAnabranch < 4;
+    const shouldShowSetAsAnabranchMergePointOption = isDecendentOfAnabranch && !node.isTerminalType && !isDirectChildOfAnabranch && (isOnLeftmostAnabranchBranch || node.isAnabranchType) && decendentLevelFromAnabranch < 4;
+
+    /*
+     * boolean - whether the node sits within an anabranh - either a closed anabranch or within an open anabranch.
+     */
+    const isInternalToAnabranch = checkIfNodeIsBoundedByAnabranch(nodeList, isDecendentOfAnabranch, nodeIdOfMostRecentAnabranch) || checkIfSitsWithinOpenAnabranch(nodeList, isDecendentOfAnabranch, nodeIdOfMostRecentAnabranch);
 
     /*
      * boolean - Should node type selector be disabled. Disable selector once anabranch boundaries are set. Also disable if the tree depth goes beyond 3 below an anabranch point or mergetype
@@ -63,11 +67,6 @@ export const getNodeIdentity = (node: ConvoNode, nodeList: Conversation): NodeId
      * boolean - whether to show the 'is anabranch merge node' label
      */
     const shouldShowAnabranchMergepointLabel = isAnabranchMergePoint;
-
-    /*
-     * boolean - whether the node sits within an anabranh - either a closed anabranch or within an open anabranch.
-     */
-    const isInternalToAnabranch = checkIfNodeIsBoundedByAnabranch(nodeList, isDecendentOfAnabranch, nodeIdOfMostRecentAnabranch) || checkIfSitsWithinOpenAnabranch(nodeList, isDecendentOfAnabranch, nodeIdOfMostRecentAnabranch);
 
     /*
      * boolean - whether the node sits within a splitmerge

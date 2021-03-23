@@ -1,13 +1,13 @@
 import { ConvoNode } from "@Palavyr-Types";
 import React, { useState, useEffect, useContext } from "react";
 import { SteppedLineTo } from "../treeLines/SteppedLineTo";
-import { ConversationNodeInterface } from "./ConversationNodeInterface";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import { getChildNodesToRender } from "./nodeUtils/commonNodeUtils";
 import { _getAllParentNodeIds, _getParentNode, _splitNodeChildrenString } from "./nodeUtils/_coreNodeUtils";
 
 import "./ConversationNode.css";
 import { getNodeIdentity } from "./nodeUtils/nodeIdentity";
+import { ConversationNodeInterface } from "./nodeInterface/ConversationNodeInterface";
 
 export interface IConversationNode {
     node: ConvoNode;
@@ -52,7 +52,7 @@ export const ConversationNode = ({ node, reRender }: IConversationNode) => {
 
     let steppedLineNodes: string[] = [];
 
-    if (allParentNodes){
+    if (allParentNodes) {
         if (allParentNodes.length == 1) {
             steppedLineNodes.push(allParentNodes[0].nodeId);
             if (allParentNodes[0].isSplitMergeType) {
@@ -80,7 +80,8 @@ export const ConversationNode = ({ node, reRender }: IConversationNode) => {
                 steppedLineNodes.map((id: string, index: number) => {
                     // if mergeTypeSituation, we want to only render first and last steppedLineNodes.
                     // else render all.
-                    if (identity.isDecendentOfSplitMerge) {
+                    if (false) { // need to figure out if this is legit.
+                        // (identity.isDecendentOfSplitMerge) {
                         return id !== "" && (index === 0 || index === steppedLineNodes.length - 1) ? (
                             <SteppedLineTo key={node.nodeId + "-" + id + "-" + "stepped-line"} from={node.nodeId} to={id} fromAnchor="top" toAnchor="bottom" orientation="v" {...connectionStyle} />
                         ) : null;

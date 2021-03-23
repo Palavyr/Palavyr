@@ -598,6 +598,8 @@ export type AnabranchMeta = {
 
 export type NodeId = string;
 
+export type NodeSetterWithHistory = (value: React.SetStateAction<Conversation>) => void;
+
 export type NodeIdentity = {
     // splitmerge
     splitMergeRootSiblingIndex: number;

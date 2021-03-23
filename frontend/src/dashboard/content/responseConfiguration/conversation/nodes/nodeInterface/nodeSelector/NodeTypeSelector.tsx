@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { ConvoNode, NodeTypeOptions, NodeOption, AlertType } from "@Palavyr-Types";
+import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { ConvoNode, NodeTypeOptions, NodeOption, AlertType, NodeIdentity, Conversation } from "@Palavyr-Types";
 import { CustomNodeSelect } from "./CustomNodeSelect";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
-import { changeNodeType } from "./nodeUtils/changeNodeType";
-import { cloneDeep } from "lodash";
-import { _replaceNodeWithUpdatedNode } from "./nodeUtils/_coreNodeUtils";
+import { changeNodeType } from "../../nodeUtils/changeNodeType";
+import { _replaceNodeWithUpdatedNode } from "../../nodeUtils/_coreNodeUtils";
 
 export interface INodeTypeSelector {
     node: ConvoNode;
+    nodeIdentity: NodeIdentity;
     reRender: () => void;
     nodeTypeOptions: NodeTypeOptions;
     shouldDisabledNodeTypeSelector: boolean;
+    selectionCallback: (node: ConvoNode, nodeList: Conversation, nodeIdOfMostRecentAnabranch: string) => Conversation;
 }
 
-export const NodeTypeSelector = ({ node, reRender, nodeTypeOptions, shouldDisabledNodeTypeSelector }: INodeTypeSelector) => {
+export const NodeTypeSelector = ({ node, nodeIdentity, reRender, nodeTypeOptions, shouldDisabledNodeTypeSelector, selectionCallback }: INodeTypeSelector) => {
     const [alertState, setAlertState] = useState<boolean>(false);
     const [alertDetails, setAlertDetails] = useState<AlertType>();
     const [label, setLabel] = useState<string>("");
@@ -38,10 +39,12 @@ export const NodeTypeSelector = ({ node, reRender, nodeTypeOptions, shouldDisabl
         }
         return false;
     };
+
     const autocompleteOnChange = async (_: any, nodeOption: NodeOption) => {
         if (nodeOption === null) {
             return;
         }
+
         if (duplicateDynamicFeeNodeFound(nodeOption.value)) {
             setAlertDetails({
                 title: `You've already placed dynamic table ${nodeOption.text} in this conversation`,
@@ -51,18 +54,8 @@ export const NodeTypeSelector = ({ node, reRender, nodeTypeOptions, shouldDisabl
             return;
         }
 
-        if (nodeOption.value === "UnsetAction") {
-            let updatedNodeList = cloneDeep(nodeList);
-            const newNode = cloneDeep(node);
-            newNode.nodeType = "";
-            newNode.nodeChildrenString = "";
-            newNode.valueOptions = "";
-            updatedNodeList = _replaceNodeWithUpdatedNode(newNode, updatedNodeList);
-            setNodes(cloneDeep([...updatedNodeList]));
-        } else {
-            changeNodeType(node, nodeList, setNodes, nodeOption);
-            reRender();
-        }
+        changeNodeType(node, nodeList, setNodes, nodeOption, nodeIdentity, selectionCallback);
+        reRender();
     };
 
     return (

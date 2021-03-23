@@ -128,7 +128,6 @@ namespace Palavyr.Domain.Configuration.Schemas
                 );
                 mappedTransactions.Add(mappedNode);
             }
-
             return mappedTransactions;
         }
     }

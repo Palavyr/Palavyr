@@ -1,5 +1,6 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
-import { ConvoNode, Conversation, NodeOption } from "@Palavyr-Types";
+import { ConvoNode, Conversation, NodeOption, NodeIdentity } from "@Palavyr-Types";
+import { Dispatch, SetStateAction } from "react";
 import { getNewNumChildren, createAndReattachNewNodes } from "./commonNodeUtils";
 import { recursivelyDereferenceNodeIdFromChildren } from "./dereferenceUtils";
 import { getPrimarySiblingIdFromChildNodeChildrenString } from "./splitMergeUtils";
@@ -7,7 +8,10 @@ import { _splitAndRemoveEmptyNodeChildrenString, _getNodeById, _replaceNodeWithU
 
 const AnabranchName = "Anabranch"; // TODO: Get this from the server as nodeOption.stringName
 
-export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversation, setNodes: (nodeList: Conversation) => void, nodeOption: NodeOption) => {
+// if we switch to an anavbranch or a splitmerge, and we are inside an anabranch, then we need to set this node AS
+// the anabranch merge point.
+
+export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversation, setNodes: (nodeList: Conversation) => void, nodeOption: NodeOption, identity: NodeIdentity, selectionCallback: (node: ConvoNode, nodeList: Conversation, nodeIdOfMostRecentAnabranch: string) => Conversation) => {
     let valueOptions = previousNode.valueOptions; // if valueOptions is "", its because it was from a non-multioptionType
     if (nodeOption.isMultiOptionType && nodeOption.valueOptions.length > 0) {
         valueOptions = _joinValueOptionArray(nodeOption.valueOptions);
@@ -66,6 +70,8 @@ export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversa
     const newNumChildren = getNewNumChildren(pathOptions);
     const { newNodeList, newChildNodeIds, childIdsToCreate } = createAndReattachNewNodes(previousNode, nodeList, newNumChildren);
 
+    let updatedNodeList = [...newNodeList];
+
     const previousNodeChildrenString = previousNode.nodeChildrenString;
     previousNode.nodeChildrenString = newChildNodeIds.join(",");
     previousNode.isMultiOptionType = nodeOption.isMultiOptionType;
@@ -73,11 +79,17 @@ export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversa
     previousNode.isSplitMergeType = nodeOption.isSplitMergeType;
     previousNode.shouldShowMultiOption = nodeOption.shouldShowMultiOption;
     previousNode.isAnabranchType = nodeOption.isAnabranchType;
-    previousNode.isAnabranchMergePoint = previousNode.isAnabranchMergePoint; // we may want to enfore false here
+
+    if (identity.shouldShowSetAsAnabranchMergePointOption && nodeOption.isAnabranchType){
+        previousNode.isAnabranchMergePoint = true; // needs to set true if inside anabranch and
+        updatedNodeList = selectionCallback(previousNode, updatedNodeList, identity.nodeIdOfMostRecentAnabranch)
+    } else {
+        previousNode.isAnabranchMergePoint = nodeOption.isAnabranchMergePoint
+    }
 
     // set any value options
     previousNode.valueOptions = valueOptions;
-    let updatedNodeList = _replaceNodeWithUpdatedNode(previousNode, newNodeList);
+    updatedNodeList = _replaceNodeWithUpdatedNode(previousNode, updatedNodeList);
     updatedNodeList = _createAndAddNewNodes(childIdsToCreate, newChildNodeIds, previousNode.areaIdentifier, pathOptions, updatedNodeList, nodeOption.shouldShowMultiOption);
 
     if (newChildNodeIds.length > 0) {

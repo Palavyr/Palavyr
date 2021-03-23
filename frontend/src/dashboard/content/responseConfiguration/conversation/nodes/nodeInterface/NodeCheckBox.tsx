@@ -22,9 +22,10 @@ interface NodeCheckBoxProps {
     label: string;
     checked: boolean;
     onChange: (event: { target: { checked: boolean } }) => void;
+    disabled?: boolean;
 }
 
-export const NodeCheckBox = ({ label, checked, onChange }: NodeCheckBoxProps) => {
+export const NodeCheckBox = ({ label, checked, onChange, disabled }: NodeCheckBoxProps) => {
     const cls = useStyles({ checked });
     const uniqueName = uuid();
     return (
@@ -33,7 +34,7 @@ export const NodeCheckBox = ({ label, checked, onChange }: NodeCheckBoxProps) =>
             classes={{
                 label: cls.formLabelStyle,
             }}
-            control={<Checkbox className={cls.formstyle} size="small" checked={checked} value="" name={"crit-" + uniqueName + "-merge"} onChange={onChange} />}
+            control={<Checkbox disabled={disabled} className={cls.formstyle} size="small" checked={checked} value="" name={"crit-" + uniqueName + "-merge"} onChange={onChange} />}
             label={label}
         />
     );

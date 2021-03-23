@@ -11,10 +11,9 @@ export const checkIfSitsWithinOpenAnabranch = (nodeList: Conversation, isDecenda
     const mostRecentAnabranchNode = _getNodeById(nodeIdOfMostRecentAnabranch, nodeList);
     // if we are not ancestor of anabranch  merge point, then its an open anabranch.
     return !checkIfIsAncestorOfAnabranchMergePoint(mostRecentAnabranchNode, nodeList);
-}
+};
 
 export const checkIfNodeIsBoundedByAnabranch = (nodeList: Conversation, isDecendentOfAnabranch: boolean, anabranchId: string) => {
-
     if (!isDecendentOfAnabranch) {
         return false;
     }
@@ -68,7 +67,6 @@ export const checkIfIsAncestorOfAnabranchMergePoint = (node: ConvoNode, nodeList
             isAncestor = checkIfIsAncestorOfAnabranchMergePoint(childNode, nodeList, isAncestor);
         }
     }
-
     return isAncestor;
 };
 
@@ -81,7 +79,7 @@ export const collectAnabranchMeta = (node: ConvoNode, nodeList: Conversation): A
         return defaultResult;
     }
 
-    if (node.nodeType.toUpperCase() === Anabranch) {
+    if (node.nodeType.toUpperCase() === Anabranch && !node.isAnabranchMergePoint) {
         return defaultResult;
     }
 
@@ -109,8 +107,7 @@ export const collectAnabranchMeta = (node: ConvoNode, nodeList: Conversation): A
                 isParentOfAnabranchMergePoint,
                 isAncestorOfAnabranchMergePoint,
             };
-        }
-        else if (tempParentNode.isAnabranchMergePoint) {
+        } else if (tempParentNode.isAnabranchMergePoint) {
             return defaultResult;
         } else if (tempParentNode.isRoot) {
             return defaultResult;
