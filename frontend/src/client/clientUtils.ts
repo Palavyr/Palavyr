@@ -19,7 +19,7 @@ export const widgetUrl = process.env.WIDGET_URL as string;
 export const widgetApiKey = process.env.WIDGET_APIKEY as string;
 export const googleOAuthClientId = process.env.GOOGLE_OAUTH as string;
 export const stripeKey = process.env.STRIPE_KEY as string;
-
+export const currentEnvironment = process.env.CURRENTENV as string;
 
 if (serverUrl === undefined) {
     console.log("SERVER URL UNDEFINED")

@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Data;
+using Palavyr.Domain.Resources.Responses;
+using Palavyr.Services.ConversationServices;
 
 namespace Palavyr.API.Controllers.Enquiries
 {
@@ -10,27 +10,23 @@ namespace Palavyr.API.Controllers.Enquiries
     [ApiController]
     public class ModifyCompletedConversationsController : ControllerBase
     {
-        private ConvoContext convoContext;
+        private readonly CompletedConversationModifier completedConversationModifier;
         private ILogger<ModifyCompletedConversationsController> logger;
 
         public ModifyCompletedConversationsController(
-            ConvoContext convoContext,
+            CompletedConversationModifier completedConversationModifier,
             ILogger<ModifyCompletedConversationsController> logger
         )
         {
-            this.convoContext = convoContext;
+            this.completedConversationModifier = completedConversationModifier;
             this.logger = logger;
         }
 
         [HttpPut("enquiries/update/{conversationId}")]
-        public async Task<IActionResult> UpdateCompletedConversation(string conversationId)
+        public async Task<Enquiry[]> UpdateCompletedConversation([FromHeader] string accountId, string conversationId)
         {
-            var convo = await convoContext
-                .CompletedConversations
-                .SingleOrDefaultAsync(row => row.ConversationId == conversationId);
-            convo.Seen = !convo.Seen;
-            await convoContext.SaveChangesAsync();
-            return NoContent();
+            var modifiedCompletedConversation = await completedConversationModifier.ModifyCompletedConversation(accountId, conversationId);
+            return modifiedCompletedConversation;
         }
     }
 }

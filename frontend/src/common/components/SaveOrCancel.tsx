@@ -20,6 +20,9 @@ export interface ISaveOrCancel {
     customCancelMessage?: AlertMessage;
     useModal?: boolean;
     timeout?: number;
+    saveText?: string;
+    cancelText?: string;
+    deleteText?: string;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -52,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, customCancelMessage, useModal, size = "small", timeout = 2000}: ISaveOrCancel) => {
+export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, customCancelMessage, useModal, size = "small", timeout = 2000, saveText = "Save", cancelText = "Cancel", deleteText = "Delete"}: ISaveOrCancel) => {
     const classes = useStyles();
     const [alertState, setAlertState] = useState<boolean>(false);
     const [cancelAlertState, setCancelAlertState] = useState<boolean>(false);
@@ -80,7 +83,7 @@ export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, cu
                     }}
                     size={size}
                 >
-                    Save
+                    {saveText}
                 </Button>
             }
             {onDelete && (
@@ -93,7 +96,7 @@ export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, cu
                     }}
                     size={size}
                 >
-                    Delete
+                    {deleteText}
                 </Button>
             )}
             {onCancel && (
@@ -107,7 +110,7 @@ export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, cu
                     }}
                     size={size}
                 >
-                    Cancel
+                    {cancelText}
                 </Button>
             )}
             {alertState && useModal && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={customSaveMessage ?? { title: "Save Successful", message: "" }} />}

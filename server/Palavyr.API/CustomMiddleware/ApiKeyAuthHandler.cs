@@ -24,8 +24,8 @@ namespace Palavyr.API.CustomMiddleware
     public class ApiKeyAuthenticationHandler
         : AuthenticationHandler<ApiKeyAuthSchemeOptions>
     {
-        private readonly AccountsContext _accountsContext;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly AccountsContext accountsContext;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         public ApiKeyAuthenticationHandler(
             AccountsContext accountsContext,
@@ -35,15 +35,15 @@ namespace Palavyr.API.CustomMiddleware
             UrlEncoder encoder,
             ISystemClock clock) : base(options, logger, encoder, clock)
         {
-            _accountsContext = accountsContext;
-            _httpContextAccessor = contextAccessor;
+            this.accountsContext = accountsContext;
+            httpContextAccessor = contextAccessor;
         }
         
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             
             // https://widget.palavyr.com/widget?key={apikey} with header  "action": "apiKeyAccess"
-            var httpContext = _httpContextAccessor.HttpContext; // Access context here
+            var httpContext = httpContextAccessor.HttpContext; // Access context here
 
             if (httpContext.Request.Headers[MagicUrlStrings.Action].ToString() != MagicUrlStrings.ApiKeyAccess)
             {
@@ -56,7 +56,7 @@ namespace Palavyr.API.CustomMiddleware
                 return Task.FromResult(AuthenticateResult.Fail("Could not find API Key in url. Check formatting."));
             }
             
-            var account = _accountsContext.Accounts.SingleOrDefault(row => row.ApiKey == apiKey.ToString());
+            var account = accountsContext.Accounts.SingleOrDefault(row => row.ApiKey == apiKey.ToString());
             if (account == null)
             {
                 return Task.FromResult(AuthenticateResult.Fail("Api Key not attached to any accounts."));

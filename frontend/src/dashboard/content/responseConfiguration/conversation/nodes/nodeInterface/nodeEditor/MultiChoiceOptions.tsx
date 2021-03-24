@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { Grid, Button } from "@material-ui/core";
 import { MultiChoiceOption } from "./MultiChoiceOption";
 
@@ -7,12 +7,12 @@ interface IMultiChoiceOptions {
     options: string[];
     setOptions: (options: string[]) => void;
     switchState: boolean;
-    setSwitchState: any;
+    setSwitchState: Dispatch<SetStateAction<boolean>>;
+    addMultiChoiceOptionsOnClick: () => void;
 }
 
 
-export const MultiChoiceOptions = ({ options, setOptions, switchState, setSwitchState }: IMultiChoiceOptions) => {
-
+export const MultiChoiceOptions = ({ options, setOptions, switchState, setSwitchState, addMultiChoiceOptionsOnClick }: IMultiChoiceOptions) => {
     return (
         <>
             <Grid container spacing={1} alignItems="center">
@@ -30,13 +30,7 @@ export const MultiChoiceOptions = ({ options, setOptions, switchState, setSwitch
                     ))
                 }
             </Grid>
-            <Button
-                onClick={() => {
-                    options.push("");
-                    setOptions(options)
-                    setSwitchState(!switchState)
-                }}
-            >
+            <Button onClick={addMultiChoiceOptionsOnClick}>
                 Add option
             </Button>
         </>

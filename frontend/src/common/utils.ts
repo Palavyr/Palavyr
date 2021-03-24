@@ -30,3 +30,7 @@ export const replaceItemByItem = (array: Array<any>, item: any) => {
 }
 
 export const noop = () => null;
+
+export const isNullOrUndefinedOrWhitespace = (val: string) => {
+    return (val === null || val === undefined || val === "")
+}

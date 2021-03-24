@@ -24,6 +24,7 @@ namespace Palavyr.API.Controllers.Authentication
             this.authService = authService;
         }
 
+        // https://codeburst.io/jwt-auth-in-asp-net-core-148fb72bed03
         [AllowAnonymous]
         [HttpPost("authentication/login")]
         public async Task<Credentials> RequestLogin([FromBody] LoginCredentials credentials)

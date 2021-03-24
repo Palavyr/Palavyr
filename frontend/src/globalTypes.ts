@@ -18,6 +18,10 @@ So we need to first make a call when the initial page loads to retieve the area 
 render the area list on sidebar, and then also the first area in the list (a second get request).
 */
 
+export const DEVELOPMENT = "DEVELOPMENT";
+export const PRODUCTION = "PRODUCTION";
+export const STAGING = "STAGING";
+
 export type UUID = string;
 export type AnyFunction = (...args: any[]) => any;
 export type AnyVoidFunction = (...args: any[]) => void;
@@ -83,6 +87,11 @@ export type ConvoNode = {
     optionPath: Response;
     valueOptions: string; // an array, but bc of the dtabase we store as a string delimited by |peg|
     id?: number | undefined;
+    shouldRenderChildren: boolean;
+    isSplitMergeType: boolean;
+    shouldShowMultiOption: boolean;
+    isAnabranchType: boolean;
+    isAnabranchMergePoint: boolean;
 };
 
 export type Conversation = Array<ConvoNode>;
@@ -376,6 +385,10 @@ export type NodeOption = {
     isDynamicType: boolean;
     isMultiOptionType: boolean;
     isTerminalType: boolean;
+    isSplitMergeType: boolean;
+    isAnabranchType: boolean;
+    isAnabranchMergePoint: boolean;
+    shouldShowMultiOption: boolean;
     stringName: string | null;
     groupName: string;
 };
@@ -564,4 +577,57 @@ export type TodosAsBoolean = {
     isVerified: boolean;
     awaitingVerification: boolean;
     phoneNumber: boolean;
+};
+
+
+export type SplitMergeMeta = {
+    isDecendentOfSplitMerge: boolean;
+    decendentLevelFromSplitMerge: number;
+    splitMergeRootSiblingIndex: number;
+    nodeIdOfMostRecentSplitMergePrimarySibling: string;
+}
+
+export type AnabranchMeta = {
+    isDecendentOfAnabranch: boolean;
+    decendentLevelFromAnabranch: number;
+    nodeIdOfMostRecentAnabranch: string;
+    isDirectChildOfAnabranch: boolean;
+    isParentOfAnabranchMergePoint: boolean;
+    isAncestorOfAnabranchMergePoint: boolean;
+};
+
+export type NodeId = string;
+
+export type NodeSetterWithHistory = (value: React.SetStateAction<Conversation>) => void;
+
+export type NodeIdentity = {
+    // splitmerge
+    splitMergeRootSiblingIndex: number;
+    decendentLevelFromSplitMerge: number;
+    nodeIdOfMostRecentSplitMergePrimarySibling: NodeId;
+    isDecendentOfSplitMerge: boolean;
+    shouldShowMergeWithPrimarySiblingBranchOption: boolean;
+    shouldShowSplitMergePrimarySiblingLabel: boolean;
+    shouldCheckSplitMergeBox: boolean;
+
+    // anabranch
+    decendentLevelFromAnabranch: number;
+    nodeIdOfMostRecentAnabranch: NodeId;
+    otherNodeAlreadySetAsMergeBranchBool: boolean;
+    isAnabranchMergePoint: boolean;
+    isDecendentOfAnabranch: boolean;
+    isDirectChildOfAnabranch: boolean;
+    isParentOfAnabranchMergePoint: boolean;
+    isAncestorOfAnabranchMergePoint: boolean;
+    isOnLeftmostAnabranchBranch: boolean;
+    shouldShowSetAsAnabranchMergePointOption: boolean;
+    shouldShowAnabranchMergepointLabel: boolean;
+    isInternalToAnabranch: boolean;
+    isInternalToSplitMerge: boolean;
+
+    // general
+    canUnSetNodeType: boolean;
+    shouldDisabledNodeTypeSelector: boolean;
+    shouldShowResponseInPdfOption: boolean;
+    shouldShowUnsetNodeTypeOption: boolean;
 };

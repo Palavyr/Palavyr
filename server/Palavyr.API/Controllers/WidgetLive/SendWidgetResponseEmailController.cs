@@ -93,7 +93,15 @@ namespace Palavyr.API.Controllers.WidgetLive
             var htmlBody = area.UseAreaFallbackEmail ? account.GeneralFallbackEmailTemplate : area.EmailTemplate;
             
             var textBody = ""; // This can be another upload. People can decide one or both. Html is prioritized.
+            if (string.IsNullOrWhiteSpace(htmlBody))
+            {
+                htmlBody = "";
+            }
 
+            if (string.IsNullOrWhiteSpace(subject))
+            {
+                subject = "";
+            }
             htmlBody = ResponseCustomizer.Customize(htmlBody, emailRequest, account);
 
             bool ok;

@@ -27,10 +27,10 @@ const useStyles = makeStyles((theme) => ({
         width: "100%",
     },
     accordianHead: {
-        background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
+        background: "linear-gradient(354deg, rgb(1,161,214,1) 10%, rgba(0,212,255,1) 70%)",
     },
     accordianBody: {
-        backgroundColor: "#C7ECEE",
+        backgroundColor: "#FAFCE8",
         width: "100%",
     },
 }));

@@ -23,14 +23,12 @@ const useStyles = makeStyles(theme => ({
         '&:hover': {
             background: "white"
         },
-        background: "#C7ECEE",
+        background: "#FAFCE8",
 
     },
     header: {
-        background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
-        // borderTopRightRadius: "8px",
-        // borderTopLeftRadius: "8px",
-    },
+        background: "linear-gradient(354deg, rgb(1,161,214,1) 10%, rgba(0,212,255,1) 70%)",
+        },
     title: {
         fontWeight: "bold"
         // fontSize: "28pt"

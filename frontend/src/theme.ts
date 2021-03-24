@@ -10,6 +10,8 @@ const warningLight = "rgba(253, 200, 69, .3)";
 const warningMain = "rgba(253, 200, 69, .5)";
 const warningDark = "rgba(253, 200, 69, .7)";
 
+// "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)"
+
 // border
 const borderWidth = 2;
 const borderColor = "rgba(0, 0, 0, 0.13)";
@@ -24,7 +26,11 @@ const xs = 0;
 // spacing
 const spacing = 8;
 
+// "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)"
 const theme = createMuiTheme({
+    palette: {
+        // background: { default: "rgb(1,96,162)"},
+    },
     overrides: {
         MuiCssBaseline: {
             "@global": {
@@ -40,42 +46,12 @@ const theme = createMuiTheme({
     },
 });
 
-// createMuiTheme({
-//     overrides: {
-//       MuiCssBaseline: {
-//         '@global': {
-//           '*': {
-//             'scrollbar-width': 'thin',
-//           },
-//           '*::-webkit-scrollbar': {
-//             width: '4px',
-//             height: '4px',
-//           }
-//         }
-//       }
-//     }
-//   })
-
 const Backuptheme = createMuiTheme({
-    // overrides: {
-    //     MuiCssBaseline: {
-    //         "@global": {
-    //             "*": {
-    //                 "scrollbar-width": "thin",
-    //             },
-    //             "*::-webkit-scrollbar": {
-    //                 width: "4px",
-    //                 height: "4px",
-    //             },
-    //         },
-    //     },
-    // },
     palette: {
         primary: { main: primary },
         secondary: { main: secondary },
         common: {
             black,
-            // darkBlack
         },
         warning: {
             light: warningLight,

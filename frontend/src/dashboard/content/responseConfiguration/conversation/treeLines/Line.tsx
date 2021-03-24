@@ -23,8 +23,6 @@ type PositionStyles = {
     transformOrigin: string;
 };
 
-// https://www.pluralsight.com/guides/re-render-react-component-on-window-resize
-
 export const Line = ({ x0, x1, y0, y1, borderColor, borderStyle, borderWidth, zIndex }: LineProps): React.ReactElement | null => {
     const dy = y1 - y0;
     const dx = x1 - x0;

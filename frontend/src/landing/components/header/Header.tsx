@@ -2,7 +2,7 @@ import { Box, Card, Grid, Typography, Button, Divider, makeStyles } from "@mater
 import React from "react";
 import { NavBar } from "../navbar/NavBar";
 
-
+// "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)"
 const useStyles = makeStyles(theme => ({
     container: {
         paddingLeft: "15%",
@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
+        background: "rgb(1,96,162)",
         paddingBottom: "7rem",
         textAlign: "center"
     },

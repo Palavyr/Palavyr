@@ -174,6 +174,7 @@ export class ApiClient {
 
         CheckIfIsMultiOptionType: async (nodeType: string): Promise<AxiosResponse<boolean>> => this.client.get(`configure-conversations/check-multi-option/${nodeType}`),
         CheckIfIsTerminalType: async (nodeType: string): Promise<AxiosResponse<boolean>> => this.client.get(`configure-conversations/check-terminal/${nodeType}`),
+        CheckIfIsSplitMergeType: async (nodeType: string): Promise<AxiosResponse<boolean>> => this.client.get(`configure-conversations/check-is-split-merge/${nodeType}`),
 
         //TODO : Return from API
         ModifyConversation: async (nodelist: Conversation, areaIdentifier: string): Promise<AxiosResponse> =>

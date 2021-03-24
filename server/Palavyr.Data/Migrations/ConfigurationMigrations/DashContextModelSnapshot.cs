@@ -134,6 +134,12 @@ namespace Palavyr.Data.Migrations.ConfigurationMigrations
                     b.Property<bool>("Fallback")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsAnabranchMergePoint")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsAnabranchType")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsCritical")
                         .HasColumnType("boolean");
 
@@ -141,6 +147,9 @@ namespace Palavyr.Data.Migrations.ConfigurationMigrations
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsRoot")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsSplitMergeType")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsTerminalType")
@@ -157,6 +166,12 @@ namespace Palavyr.Data.Migrations.ConfigurationMigrations
 
                     b.Property<string>("OptionPath")
                         .HasColumnType("text");
+
+                    b.Property<bool>("ShouldRenderChildren")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ShouldShowMultiOption")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Text")
                         .HasColumnType("text");

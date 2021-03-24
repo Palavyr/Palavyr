@@ -4,12 +4,12 @@ import { FormDialog } from "@common/components/borrowed/FormDialog";
 import { VisibilityPasswordTextField } from "@common/components/borrowed/VisibilityPasswordTextField";
 import { HighlightedInformation } from "@common/components/borrowed/HighlightedInformation";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
-import Auth from "auth/Auth";
 import { useHistory } from "react-router-dom";
 import GoogleLogin, { GoogleLoginProps, GoogleLoginResponse } from "react-google-login";
 import { DividerWithText } from "@common/components/DividerWithText";
 import { googleOAuthClientId } from "@api-client/clientUtils";
 import { INVALID_EMAIL, PASSWORDS_DONT_MATCH } from "@constants";
+import Auth from "auth/Auth";
 
 
 const useStyles = makeStyles((theme) => ({

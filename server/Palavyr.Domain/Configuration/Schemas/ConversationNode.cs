@@ -7,7 +7,7 @@ namespace Palavyr.Domain.Configuration.Schemas
     public class ConversationNode
     {
         [Key] public int? Id { get; set; }
-        public string NodeId { get; set; } = null!;
+        public string NodeId { get; set; }
         public string NodeType { get; set; } = null!;
         public bool Fallback { get; set; }
         public string Text { get; set; } = null!;
@@ -19,6 +19,11 @@ namespace Palavyr.Domain.Configuration.Schemas
         public string AccountId { get; set; } = null!;
         public bool IsMultiOptionType { get; set; }
         public bool IsTerminalType { get; set; }
+        public bool ShouldRenderChildren { get; set; }
+        public bool IsSplitMergeType { get; set; }
+        public bool ShouldShowMultiOption { get; set; }
+        public bool IsAnabranchType  { get; set; }
+        public bool IsAnabranchMergePoint { get; set; }
 
         public string NodeChildrenString { get; set; } = null!; // stored as comma delimited list as string
 
@@ -45,6 +50,11 @@ namespace Palavyr.Domain.Configuration.Schemas
                     AccountId = accountId,
                     IsMultiOptionType = false,
                     IsTerminalType = false,
+                    ShouldRenderChildren = true,
+                    IsSplitMergeType = false,
+                    ShouldShowMultiOption = false,
+                    IsAnabranchType = false,
+                    IsAnabranchMergePoint = false
                 }
             };
         }
@@ -61,7 +71,12 @@ namespace Palavyr.Domain.Configuration.Schemas
             bool isRoot = false,
             bool isCritical = true,
             bool isMultiOptionType = false,
-            bool isTerminalType = false
+            bool isTerminalType = false,
+            bool shouldRenderChild = true,
+            bool isSplitMergeType = false,
+            bool shouldShowMultiOption = false,
+            bool isAnabranchType = false,
+            bool isAnabranchMergePoint = false
         )
         {
             return new ConversationNode()
@@ -79,6 +94,11 @@ namespace Palavyr.Domain.Configuration.Schemas
                 AccountId = accountId,
                 IsMultiOptionType = isMultiOptionType,
                 IsTerminalType = isTerminalType,
+                ShouldRenderChildren = shouldRenderChild,
+                IsSplitMergeType = isSplitMergeType,
+                ShouldShowMultiOption = shouldShowMultiOption,
+                IsAnabranchType = isAnabranchType,
+                IsAnabranchMergePoint = isAnabranchMergePoint
             };
         }
 
@@ -99,11 +119,15 @@ namespace Palavyr.Domain.Configuration.Schemas
                     node.IsRoot,
                     node.IsCritical,
                     node.IsMultiOptionType,
-                    node.IsTerminalType
+                    node.IsTerminalType,
+                    node.ShouldRenderChildren,
+                    node.IsSplitMergeType,
+                    node.ShouldShowMultiOption,
+                    node.IsAnabranchType,
+                    node.IsAnabranchMergePoint
                 );
                 mappedTransactions.Add(mappedNode);
             }
-
             return mappedTransactions;
         }
     }

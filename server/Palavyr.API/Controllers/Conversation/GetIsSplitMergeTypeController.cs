@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -7,35 +7,33 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Data;
 using Palavyr.Domain.Configuration.Constant;
 
-namespace Palavyr.API.controllers.Conversation
+namespace Palavyr.API.Controllers.Conversation
 {
+    
     [Route("api")]
-    public class GetIfIsMultiOptionTypeController : ControllerBase
+    public class GetIsSplitMergeTypeController : ControllerBase
     {
-        private ILogger<GetIfIsMultiOptionTypeController> logger;
         string GUIDPattern = @"[{(]?\b[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}\b[)}]?";
         private DashContext dashContext;
-
-        public GetIfIsMultiOptionTypeController(
-            ILogger<GetIfIsMultiOptionTypeController> logger,
+        public GetIsSplitMergeTypeController(
+            ILogger<GetIsSplitMergeTypeController> logger,
             DashContext dashContext
-        )
+            )
         {
-            this.logger = logger;
-            this.dashContext = dashContext;
+            
         }
 
-        [HttpGet("configure-conversations/check-multi-option/{nodeType}")]
+        [HttpGet("configure-conversations/check-is-split-merge/{nodeType}")]
         public async Task<bool> Get(string nodeType)
         {
             foreach (var defaultNodeType in DefaultNodeTypeOptions.DefaultNodeTypeOptionsList)
             {
-                if (nodeType.StartsWith(defaultNodeType.Value))
+                if (nodeType == defaultNodeType.Value)
                 {
-                    return defaultNodeType.IsMultiOptionType;
+                    return defaultNodeType.IsSplitMergeType;
                 }
             }
-
+            
             // node is a dynamic table node type
             // Comes in as e.g. SelectOneFlat-234234-324-2342-324
             foreach (var dynamicTableType in DynamicTableTypes.GetDynamicTableTypes())
@@ -48,13 +46,13 @@ namespace Palavyr.API.controllers.Conversation
                         .SingleOrDefaultAsync(row => row.TableId == tableId);
                     if (table != null)
                     {
-                        var isMultiOption = table.ValuesAsPaths;
-                        return isMultiOption;
+                        return false;
                     }
                 }
             }
-
-            throw new Exception("NodeType not found.");
+                
+            throw new Exception("DefaultNodeType not found.");
         }
+        
     }
 }

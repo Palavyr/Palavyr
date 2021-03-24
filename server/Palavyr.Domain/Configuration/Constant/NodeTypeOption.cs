@@ -15,6 +15,8 @@ namespace Palavyr.Domain.Configuration.Constant
         public static readonly string InfoProvide = "Provide Info";
         public static readonly string CustomTables = "Custom Tables";
         public static readonly string Terminal = "Terminal";
+        public static readonly string SplitAndMerge = "Split then Merge";
+        public static readonly string Other = "Other";
 
         /*
          * The string form name of the node type. Derived from either 'nameof(T)' or extension method: dynamicTableMeta.MakeUniqueIdentifier()
@@ -45,7 +47,33 @@ namespace Palavyr.Domain.Configuration.Constant
          * Whether or not this type should be used to determine incomplete tree paths when searching for missing node types.
          */
         public bool IsTerminalType { get; set; }
+
         
+        /*
+         * Whether or not this type should render its children (used with splitmerge - where children will be duplicated'
+         */
+        public bool ShouldRenderChildren { get; set; }
+
+        /*
+         * Whether or not this type should show the multioption selector
+         */
+        public bool ShouldShowMultiOption { get; set; }
+        
+        /*
+         * Whether or not its children will result in a remerge of the branch after splitting into N children (all children must remerge)
+         */
+        public bool IsSplitMergeType { get; set; } = false;
+        
+        /*
+         * Whether or not the node is an Anabranch type (will split, and then all leaves will either terminate or merge into a single node.
+         */
+        public bool IsAnabranchType { get; set; }
+
+        /*
+         * Whether or not the node is an Anabranch merge node. This is mutually exclusive with the Anabranch Type. (Anabranch node types cannot be Anabranch merge points).
+         */
+        public bool IsAnabranchMergePoint { get; set; }
+
         /*
          * Whether or not the node type comes from a dynamic table type.
          */

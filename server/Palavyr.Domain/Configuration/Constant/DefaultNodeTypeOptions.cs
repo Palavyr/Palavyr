@@ -20,6 +20,8 @@ namespace Palavyr.Domain.Configuration.Constant
                 new TakeNumberIndividuals(),
                 new SendResponse(),
                 new TooComplicated(),
+                new SplitMerge(),
+                new Anabranch(),
             };
 
         public static YesNo CreateYesNo() => new YesNo();
@@ -30,14 +32,58 @@ namespace Palavyr.Domain.Configuration.Constant
         public static ProvideInfo CreateProvideInfo() => new ProvideInfo();
         public static MultipleChoiceContinue CreateMultipleChoiceContinue() => new MultipleChoiceContinue();
         public static MultipleChoiceAsPath CreateMultipleChoiceAsPath() => new MultipleChoiceAsPath();
-
+        public static SplitMerge CreateSplitMerge() => new SplitMerge();
+        public static Anabranch CreateAnabranch() => new Anabranch();
+        
         public static TakeCurrency CreateTakeCurrency() => new TakeCurrency();
         public static TakeNumber CreateTakeNumber() => new TakeNumber();
         public static TakeNumberIndividuals CreateTakeNumberIndividuals() => new TakeNumberIndividuals();
         public static TooComplicated CreateTooComplicated() => new TooComplicated();
         public static SendResponse CreateSendResponse() => new SendResponse();
         public static Restart CreateRestart() => new Restart();
+        
+        public class Anabranch : NodeTypeOption
+        {
+            public new static string StringName => nameof(Anabranch);
 
+            public Anabranch()
+            {
+                Text = "Anabranch";
+                Value = StringName;
+                PathOptions = new List<string>();
+                ValueOptions = new List<string>();
+                IsMultiOptionType = true;
+                IsTerminalType = false;
+                GroupName = SplitAndMerge;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = true;
+                IsAnabranchType = true;
+                IsAnabranchMergePoint = false;
+            }
+        }
+        
+        public class SplitMerge : NodeTypeOption
+        {
+            public new static string StringName => nameof(SplitMerge);
+
+            public SplitMerge()
+            {
+                Text = "Split Merge";
+                Value = StringName;
+                PathOptions = new List<string>();
+                ValueOptions = new List<string>();
+                IsMultiOptionType = true;
+                IsTerminalType = false;
+                GroupName = SplitAndMerge;
+                IsSplitMergeType = true;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = true;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+            }
+        }
+        
 
         public class TakeCurrency : NodeTypeOption
         {
@@ -48,10 +94,16 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Take Currency";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { };
+                ValueOptions = new List<string>() {"Continue"};
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+
             }
         }
         
@@ -64,10 +116,16 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Take Number Individuals";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { };
+                ValueOptions = new List<string>() {"Continue"};
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+
             }
         }
         
@@ -80,10 +138,16 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Take Number";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { };
+                ValueOptions = new List<string>() { "Continue" };
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+
             }
         }
 
@@ -100,9 +164,15 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Yes or No";
                 PathOptions = new List<string>() {"No", "Yes"};
                 ValueOptions = new List<string>() {"No", "Yes"};
-                IsMultiOptionType = false; // set to no if we don't want to allow the node value options presented to the user to change. 
+                IsMultiOptionType = true; // set to no if we don't want to allow the node value options presented to the user to change. 
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+
             }
         }
 
@@ -117,9 +187,15 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Yes, No, Not Sure";
                 PathOptions = new List<string>() {"Yes", "No", "Not Sure"};
                 ValueOptions = new List<string>() {"Yes", "No", "Not Sure"};
-                IsMultiOptionType = false;
+                IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+
             }
         }
 
@@ -133,9 +209,14 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Yes / Not Sure, No";
                 PathOptions = new List<string>() {"Yes / Not Sure", "No"};
                 ValueOptions = new List<string>() {"Yes / Not Sure", "No"};
-                IsMultiOptionType = false;
+                IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -149,9 +230,14 @@ namespace Palavyr.Domain.Configuration.Constant
                 Value = StringName;
                 PathOptions = new List<string>() {"Yes", "No / Not Sure"};
                 ValueOptions = new List<string>() {"Yes", "No / Not Sure"};
-                IsMultiOptionType = false;
+                IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -164,10 +250,15 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Take Text";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { };
+                ValueOptions = new List<string>() { "Continue" };
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -180,10 +271,15 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Provide Info";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { };
+                ValueOptions = new List<string>() { "Continue" };
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoProvide;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -200,6 +296,11 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = true;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -216,6 +317,11 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = true;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -233,6 +339,11 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = true;
                 GroupName = Terminal;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -249,6 +360,11 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = true;
                 GroupName = Terminal;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -261,9 +377,14 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Send Email";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { };
+                ValueOptions = new List<string>() {"Continue"};
                 IsMultiOptionType = false;
                 IsTerminalType = false;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -276,9 +397,14 @@ namespace Palavyr.Domain.Configuration.Constant
                 Text = "Send Too Complicated Email";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { };
+                ValueOptions = new List<string>() {"Continue"};
                 IsMultiOptionType = false;
                 IsTerminalType = false;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
 
@@ -294,6 +420,11 @@ namespace Palavyr.Domain.Configuration.Constant
                 ValueOptions = new List<string>() { };
                 IsMultiOptionType = false;
                 GroupName = Terminal;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
             }
         }
     }
