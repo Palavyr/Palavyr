@@ -2,10 +2,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Palavyr.Domain.Contracts;
 
 namespace Palavyr.Domain.Configuration.Schemas
 {
-    public class StaticTablesMeta
+    public class StaticTablesMeta : IStaticTable
     {
         [Key] 
         public int? Id { get; set; }

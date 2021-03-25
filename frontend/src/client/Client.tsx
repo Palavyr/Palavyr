@@ -102,16 +102,19 @@ export class ApiClient {
                 getDynamicTableMetas: async (areaIdentifier: string): Promise<AxiosResponse<DynamicTableMetas>> => this.client.get(`tables/dynamic/type/${areaIdentifier}`),
                 getDynamicTableTypes: async (): Promise<AxiosResponse<TableNameMap>> => this.client.get(`tables/dynamic/table-name-map`),
 
-                getDynamicTableData: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse<TableData>> => this.client.get(`tables/dynamic/${tableType}/tableId/${tableId}/data/${areaIdentifier}/`),
-
-                getDynamicTableDataTemplate: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse<TableData>> => this.client.get(`tables/dynamic/${tableType}/data/template/${areaIdentifier}/${tableId}`),
 
                 modifyDynamicTableMeta: async (dynamicTableMeta: DynamicTableMeta): Promise<AxiosResponse<DynamicTableMeta>> => this.client.put(`tables/dynamic/modify`, dynamicTableMeta),
-                saveDynamicTable: async (areaIdentifier: string, tableType: string, tableData: TableData, tableId: string, tableTag: string): Promise<AxiosResponse> =>
-                    this.client.put(`tables/dynamic/${tableType}/data/save/tableId/${tableId}/${areaIdentifier}/`, { TableTag: tableTag, [tableType]: tableData }),
+                createDynamicTable: async (areaIdentifier: string): Promise<AxiosResponse<DynamicTableMeta>> =>
+                    this.client.post(`tables/dynamic/${areaIdentifier}`),
 
-                createDynamicTable: async (areaIdentifier: string): Promise<AxiosResponse<DynamicTableMeta>> => this.client.post(`tables/dynamic/${areaIdentifier}`),
-                deleteDynamicTable: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse> => this.client.delete(`tables/dynamic/${tableType}/${areaIdentifier}/tableId/${tableId}`),
+                deleteDynamicTable: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse> =>
+                    this.client.delete(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`),
+                getDynamicTableDataTemplate: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse<TableData>> =>
+                    this.client.get(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}/template`),
+                getDynamicTableRows: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse<TableData>> =>
+                    this.client.get(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`),
+                saveDynamicTable: async (areaIdentifier: string, tableType: string, tableData: TableData, tableId: string, tableTag: string): Promise<AxiosResponse> =>
+                    this.client.put(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`, { TableTag: tableTag, [tableType]: tableData }),
             },
             Static: {
                 updateStaticTablesMetas: async (areaIdentifier: string, staticTablesMetas: StaticTableMetas): Promise<AxiosResponse<StaticTableMetas>> =>

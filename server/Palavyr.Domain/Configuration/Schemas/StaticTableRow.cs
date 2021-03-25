@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Palavyr.Domain.Contracts;
 
 namespace Palavyr.Domain.Configuration.Schemas
 {
-    public class StaticTableRow
+    public class StaticTableRow : IStaticTableRow
     {
         [Key]
         public int? Id { get; set; }
@@ -19,8 +20,8 @@ namespace Palavyr.Domain.Configuration.Schemas
 
         public StaticTableRow()
         {
-            
         }
+
         public static List<StaticTableRow> CreateDefaultStaticTable(int tableId, string areaId, string accountId)
         {
             return new List<StaticTableRow>()

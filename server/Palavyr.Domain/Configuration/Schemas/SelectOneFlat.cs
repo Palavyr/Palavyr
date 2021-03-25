@@ -1,8 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Palavyr.Domain.Contracts;
+using Palavyr.Domain.Resources.Requests;
 
 namespace Palavyr.Domain.Configuration.Schemas
 {
-    public class SelectOneFlat
+    public class SelectOneFlat : IOrderedTable, IDynamicTable<SelectOneFlat>
     {
         [Key] 
         public int? Id { get; set; }
@@ -29,7 +32,7 @@ namespace Palavyr.Domain.Configuration.Schemas
             };
         }
 
-        public static SelectOneFlat CreateTemplate(string accountId, string areaIdentifier, string tableId)
+        public SelectOneFlat CreateTemplate(string accountId, string areaIdentifier, string tableId)
         {
             return new SelectOneFlat()
             {
@@ -41,6 +44,26 @@ namespace Palavyr.Domain.Configuration.Schemas
                 Range = true,
                 TableId = tableId,
             };
+        }
+
+        public List<SelectOneFlat> UpdateTable(DynamicTable table)
+        {
+            var mappedTableRows = new List<SelectOneFlat>();
+            foreach (var row in table.SelectOneFlat)
+            {
+                var mappedRow = CreateNew(
+                    row.AccountId,
+                    row.AreaIdentifier,
+                    row.Option,
+                    row.ValueMin,
+                    row.ValueMax,
+                    row.Range,
+                    row.TableId
+                );
+                mappedTableRows.Add(mappedRow);
+            }
+
+            return mappedTableRows;
         }
     }
 }

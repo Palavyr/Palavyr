@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Palavyr.Data;
 using Palavyr.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers.Response.DynamicTables
+namespace Palavyr.API.Controllers.Response.Tables.Dynamic.Meta
 {
     [Route("api")]
     [ApiController]
