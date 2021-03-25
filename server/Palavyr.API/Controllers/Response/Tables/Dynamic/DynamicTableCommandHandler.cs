@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Controllers.Response.Tables.Dynamic.TableTypes;
 using Palavyr.Domain.Configuration.Schemas;
@@ -32,28 +31,40 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 
         public async Task DeleteDynamicTable(DynamicTableRequest request)
         {
+            logger.LogInformation($"Deleting dynamic table: {request.TableId}");
             var (accountId, areaIdentifier, tableId) = request;
             await genericDynamicTablesRepository.DeleteTable(accountId, areaIdentifier, tableId);
         }
 
         public async Task<List<TEntity>> GetDynamicTableRows(DynamicTableRequest request)
         {
+            logger.LogInformation($"Getting dynamic table rows: {request.TableId}");
             var (accountId, areaIdentifier, tableId) = request;
-            var test = await genericDynamicTablesRepository.GetAllRows(accountId, areaIdentifier, tableId);
-            return test;
+            var tableRows = await genericDynamicTablesRepository.GetAllRows(accountId, areaIdentifier, tableId);
+            if (tableRows.Count == 0)
+            {
+                tableRows = new List<TEntity>()
+                {
+                    (new TEntity()).CreateTemplate(accountId, areaIdentifier, tableId)
+                };
+            }
+            await genericDynamicTablesRepository.UpdateRows(accountId, areaIdentifier, tableId, tableRows);
+            return tableRows;
         }
 
         public TEntity GetDynamicRowTemplate(DynamicTableRequest request)
         {
+            logger.LogInformation($"Getting dynamic table row template: {request.TableId}");
             var (accountId, areaIdentifier, tableId) = request;
             return (new TEntity()).CreateTemplate(accountId, areaIdentifier, tableId);
         }
 
         public async Task<List<TEntity>> SaveDynamicTable(DynamicTableRequest request, DynamicTable dynamicTable)
         {
+            logger.LogInformation($"Saving dynamic table: {request.TableId}");
             var (accountId, areaIdentifier, tableId) = request;
             var mappedTableRows = (new TEntity()).UpdateTable(dynamicTable);
-            await genericDynamicTablesRepository.SaveRows(
+            await genericDynamicTablesRepository.SaveTable(
                 accountId,
                 areaIdentifier,
                 tableId,

@@ -7,7 +7,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
     {
         Task<List<TEntity>> GetAllRows(string accountId, string areaIdentifier, string tableId);
 
-        Task SaveRows(
+        Task SaveTable(
             string accountId,
             string areaIdentifier,
             string tableId,
@@ -15,6 +15,13 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
             string tableTag,
             string tableType);
 
+        Task UpdateRows(
+            string accountId,
+            string areaIdentifier,
+            string tableId,
+            List<TEntity> rowUpdates
+        );
+        
         Task DeleteTable(string accountId, string areaIdentifier, string tableId);
     }
 }
