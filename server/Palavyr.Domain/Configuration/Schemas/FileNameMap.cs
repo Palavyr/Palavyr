@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Palavyr.Domain.Contracts;
 
 namespace Palavyr.Domain.Configuration.Schemas
 {
-    public class FileNameMap
+    public class FileNameMap : IRecord
     {
         [Key]
         public int? Id { get; set; }

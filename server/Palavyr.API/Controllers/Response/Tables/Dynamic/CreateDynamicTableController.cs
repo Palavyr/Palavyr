@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +10,7 @@ using Palavyr.Domain.Configuration.Constant;
 using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.Services.DatabaseService;
 
-namespace Palavyr.API.Controllers.Response.DynamicTables
+namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
     [Route("api")]
     [ApiController]

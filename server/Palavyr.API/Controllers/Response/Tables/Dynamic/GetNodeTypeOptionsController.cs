@@ -7,7 +7,7 @@ using Palavyr.Data;
 using Palavyr.Domain.Configuration.Constant;
 using Palavyr.Services.DynamicTableService;
 
-namespace Palavyr.API.Controllers.Response.DynamicTables
+namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
     [Route("api")]
     [ApiController]

@@ -64,7 +64,7 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
 
     const loadDynamicData = useCallback(async () => {
         setTableMeta(defaultTableMeta);
-        var { data: tableData } = await client.Configuration.Tables.Dynamic.getDynamicTableData(areaIdentifier, defaultTableMeta.tableType, defaultTableMeta.tableId);
+        var { data: tableData } = await client.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, defaultTableMeta.tableType, defaultTableMeta.tableId);
 
         setDynamicTableData(tableData);
         setSelection(defaultTableMeta.prettyName);
@@ -79,7 +79,7 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
     useEffect(() => {
         (async () => {
             if (tableMeta !== undefined) {
-                var { data: tableDataResponse } = await client.Configuration.Tables.Dynamic.getDynamicTableData(areaIdentifier, tableMeta.tableType, tableMeta.tableId);
+                var { data: tableDataResponse } = await client.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, tableMeta.tableType, tableMeta.tableId);
                 setDynamicTableData(tableDataResponse);
             }
         })();

@@ -2,9 +2,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Data;
-using Palavyr.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers.Response.DynamicTables
+namespace Palavyr.API.Controllers.Response.Tables.Dynamic.Meta
 {
     [Route("api")]
     [ApiController]
@@ -30,7 +29,7 @@ namespace Palavyr.API.Controllers.Response.DynamicTables
         /// <param name="areaId"></param>
         /// <returns></returns>
         [HttpGet("tables/dynamic/type/{areaId}")]
-        public DynamicTableMeta[] Get([FromHeader] string accountId, string areaId)
+        public Domain.Configuration.Schemas.DynamicTableMeta[] Get([FromHeader] string accountId, string areaId)
         {
             var tableTypes = dashContext
                 .DynamicTableMetas

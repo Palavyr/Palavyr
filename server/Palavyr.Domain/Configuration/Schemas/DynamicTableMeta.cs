@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Palavyr.Domain.Configuration.Constant;
+using Palavyr.Domain.Contracts;
 
 namespace Palavyr.Domain.Configuration.Schemas
 {
-    public class DynamicTableMeta
+    public class DynamicTableMeta : ITable
     {
         [Key] 
         public int? Id { get; set; }
@@ -34,7 +35,7 @@ namespace Palavyr.Domain.Configuration.Schemas
         {
             return new List<DynamicTableMeta>()
             {
-                DynamicTableMeta.CreateNew("default", DynamicTableTypes.DefaultTable.PrettyName,DynamicTableTypes.DefaultTable.TableType, Guid.NewGuid().ToString(), areaId, accountId)
+                CreateNew("default", DynamicTableTypes.DefaultTable.PrettyName,DynamicTableTypes.DefaultTable.TableType, Guid.NewGuid().ToString(), areaId, accountId)
             };
         }
     }

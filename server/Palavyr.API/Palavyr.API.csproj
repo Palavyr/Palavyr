@@ -63,4 +63,8 @@
       <ProjectReference Include="..\Palavyr.Domain\Palavyr.Domain.csproj" />
       <ProjectReference Include="..\Palavyr.Services\Palavyr.Services.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Controllers\Response\Tables" />
+    </ItemGroup>
 </Project>

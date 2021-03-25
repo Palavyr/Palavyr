@@ -1,4 +1,5 @@
 using Autofac;
+using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.API.Controllers.Testing;
 using Palavyr.Domain.Conversation;
 using Palavyr.Services.AccountServices;
@@ -17,6 +18,9 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<OrphanRemover>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<CompletedConversationRetriever>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<CompletedConversationModifier>().AsSelf().InstancePerLifetimeScope();
+
+            builder.RegisterGeneric(typeof(GenericRepository<>)).As(typeof(IGenericDynamicTablesRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(DynamicTableCommandHandler<>)).As(typeof(IDynamicTableCommandHandler<>)).InstancePerLifetimeScope();
         }
     }
 }

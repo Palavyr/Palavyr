@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Palavyr.Domain.Contracts;
 
 namespace Palavyr.Domain.Configuration.Schemas
 {
-    public class ConversationNode
+    public class ConversationNode : IRecord
     {
         [Key] public int? Id { get; set; }
         public string NodeId { get; set; }

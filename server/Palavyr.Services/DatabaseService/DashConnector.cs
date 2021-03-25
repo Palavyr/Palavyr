@@ -197,7 +197,8 @@ namespace Palavyr.Services.DatabaseService
 
         public async Task SetDefaultDynamicTable(string accountId, string areaId, string tableId)
         {
-            var defaultTable = SelectOneFlat.CreateTemplate(accountId, areaId, tableId);
+            var defaultDynamicTable = new SelectOneFlat();
+            var defaultTable = defaultDynamicTable.CreateTemplate(accountId, areaId, tableId);
             await dashContext.SelectOneFlats.AddAsync(defaultTable);
         }
 

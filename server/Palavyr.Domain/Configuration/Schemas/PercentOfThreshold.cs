@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using Palavyr.Common.UIDUtils;
+using Palavyr.Domain.Contracts;
+using Palavyr.Domain.Resources.Requests;
 
 namespace Palavyr.Domain.Configuration.Schemas
 {
@@ -11,7 +14,7 @@ namespace Palavyr.Domain.Configuration.Schemas
     /// The ItemId/ItemName represents this partition key.
     /// The itemName unfortunately has to be duplicated along with the itemId.
     /// </summary>
-    public class PercentOfThreshold : IComparable<PercentOfThreshold>
+    public class PercentOfThreshold : IComparable<PercentOfThreshold>, IOrderedTable, IDynamicTable<PercentOfThreshold>
     {
         [Key] public int? Id { get; set; }
         public string AccountId { get; set; }
@@ -60,33 +63,53 @@ namespace Palavyr.Domain.Configuration.Schemas
             };
         }
 
-        public static PercentOfThreshold CreateTemplate(
-            string accountId,
-            string areaIdentifier,
-            string tableId,
-            string rowId,
-            string itemId)
+        public PercentOfThreshold CreateTemplate(string accountId, string areaIdentifier, string tableId)
         {
             return new PercentOfThreshold()
             {
                 AccountId = accountId,
                 AreaIdentifier = areaIdentifier,
                 TableId = tableId,
-                RowId = rowId,
+                RowId = GuidUtils.CreateNewId(),
                 Threshold = 0.00,
                 Modifier = 0.00,
                 ItemName = "Default Item",
-                ItemId = itemId,
+                ItemId = GuidUtils.CreateNewId(),
                 ValueMin = 0.00,
                 ValueMax = 0.00,
                 Range = false,
                 PosNeg = true
             };
         }
-        
-        public int CompareTo(PercentOfThreshold other)  
+
+        public List<PercentOfThreshold> UpdateTable(DynamicTable table)
+        {
+            var mappedTableRows = new List<PercentOfThreshold>();
+            foreach (var row in table.PercentOfThreshold)
+            {
+                var mappedRow = CreateNew(
+                    row.AccountId,
+                    row.AreaIdentifier,
+                    row.TableId,
+                    row.RowId,
+                    row.Threshold,
+                    row.Modifier,
+                    row.ItemName,
+                    row.ItemId,
+                    row.ValueMin,
+                    row.ValueMax,
+                    row.Range,
+                    row.PosNeg
+                );
+                mappedTableRows.Add(mappedRow);
+            }
+
+            return mappedTableRows;
+        }
+
+        public int CompareTo(PercentOfThreshold other)
         {
             return other.Threshold.CompareTo(Threshold);
-        }  
+        }
     }
 }

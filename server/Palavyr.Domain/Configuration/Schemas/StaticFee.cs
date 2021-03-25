@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Palavyr.Domain.Contracts;
 
 namespace Palavyr.Domain.Configuration.Schemas
 {
-    public class StaticFee
+    public class StaticFee : IRecord
     {
         [Key]
         public int? Id { get; set; }
