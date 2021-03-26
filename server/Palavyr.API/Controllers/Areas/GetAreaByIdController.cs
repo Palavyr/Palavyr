@@ -10,9 +10,8 @@ using Palavyr.Services.EmailService.Verification;
 namespace Palavyr.API.Controllers.Areas
 {
     [Authorize]
-    [Route("api")]
-    [ApiController]
-    public class GetAreaByIdController : ControllerBase
+
+    public class GetAreaByIdController : PalavyrBaseController
     {
         private readonly IDashConnector dashConnector;
         private readonly IAccountsConnector accountsConnector;

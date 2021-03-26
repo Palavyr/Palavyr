@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Palavyr.API.Controllers.Response.Tables.Dynamic
+namespace Palavyr.Services.Repositories
 {
-    public interface IGenericDynamicTablesRepository<TEntity> where TEntity : class
+    public interface IGenericDynamicTableRepository<TEntity> where TEntity : class
     {
         Task<List<TEntity>> GetAllRows(string accountId, string areaIdentifier, string tableId);
 

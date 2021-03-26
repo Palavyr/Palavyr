@@ -10,9 +10,8 @@ using Palavyr.Services.AuthenticationServices;
 namespace Palavyr.API.Controllers.Authentication.PasswordReset
 {
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
-    [Route("api")]
-    [ApiController]
-    public class ResetMyPasswordController
+
+    public class ResetMyPasswordController : PalavyrBaseController
     {
         private readonly AccountsContext accountsContext;
 

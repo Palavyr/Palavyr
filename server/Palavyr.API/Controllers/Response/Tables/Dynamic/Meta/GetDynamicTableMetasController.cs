@@ -5,9 +5,8 @@ using Palavyr.Data;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic.Meta
 {
-    [Route("api")]
-    [ApiController]
-    public class GetDynamicTableMetasController : ControllerBase
+
+    public class GetDynamicTableMetasController : PalavyrBaseController
     {
         private DashContext dashContext;
         private ILogger<GetDynamicTableMetasController> logger;

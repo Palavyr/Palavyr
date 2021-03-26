@@ -6,9 +6,8 @@ using Palavyr.Services.StripeServices;
 
 namespace Palavyr.API.Controllers.Accounts
 {
-    [Route("api")]
-    [ApiController]
-    public class EnsureDbIsValidController : ControllerBase
+
+    public class EnsureDbIsValidController : PalavyrBaseController
     {
         private readonly IAccountsConnector accountsConnector;
         private readonly IDashConnector dashConnector;

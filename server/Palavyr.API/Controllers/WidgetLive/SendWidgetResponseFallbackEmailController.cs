@@ -12,9 +12,8 @@ using Palavyr.Services.EmailService.ResponseEmailTools;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
-    [Route("api")]
-    [ApiController]
-    public class SendWidgetResponseFallbackEmailController : ControllerBase
+
+    public class SendWidgetResponseFallbackEmailController : PalavyrBaseController
     {
         private readonly IAccountsConnector accountsConnector;
         private readonly IDashConnector dashConnector;

@@ -7,9 +7,8 @@ using Palavyr.Services.EmailService.ResponseEmailTools;
 
 namespace Palavyr.API.Controllers.Authentication.PasswordReset
 {
-    [Route("api")]
-    [ApiController]
-    public class PasswordResetRequestController : ControllerBase
+
+    public class PasswordResetRequestController : PalavyrBaseController
     {
         private readonly IAccountsConnector accountsConnector;
         private readonly ISesEmail client;

@@ -14,8 +14,7 @@ using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Attachments
 {
-    [Route("api")]
-    [ApiController]
+
     public class SaveMultipleAttachmentsController : AttachmentsBase
     {
         private readonly IConfiguration configuration;

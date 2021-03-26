@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Palavyr.API.Controllers.Testing
 {
-    [Route("api")]
-    [ApiController]
-    public class TestController : ControllerBase
+
+    public class TestController : PalavyrBaseController
     {
 
         private readonly TestDataProvider testDataProvider;

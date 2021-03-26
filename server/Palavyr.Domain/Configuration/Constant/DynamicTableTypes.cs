@@ -6,6 +6,7 @@ namespace Palavyr.Domain.Configuration.Constant
     {
         public string TableType { get; set; }
         public string PrettyName { get; set; }
+        public string RequiredNodeTypes { get; set; }
     }
 
     public static class DynamicTableTypes
@@ -30,6 +31,7 @@ namespace Palavyr.Domain.Configuration.Constant
             {
                 PrettyName = "Select One Flat";
                 TableType = nameof(SelectOneFlat);
+                RequiredNodeTypes = $"{nameof(SelectOneFlat)}";
             }
         }
 
@@ -39,6 +41,7 @@ namespace Palavyr.Domain.Configuration.Constant
             {
                 PrettyName = "Percent Of Threshold";
                 TableType = nameof(PercentOfThreshold);
+                RequiredNodeTypes = $"{nameof(PercentOfThreshold)}";
             }
         }
 
@@ -48,9 +51,9 @@ namespace Palavyr.Domain.Configuration.Constant
             {
                 PrettyName = "Basic Threshold";
                 TableType = nameof(BasicThreshold);
+                RequiredNodeTypes = $"{nameof(BasicThreshold)}";
             }
         }
-        
         // We can define new DynamicTypes here
     }
 }

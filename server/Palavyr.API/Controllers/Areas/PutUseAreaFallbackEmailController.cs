@@ -6,9 +6,8 @@ using Palavyr.Services.DatabaseService;
 namespace Palavyr.API.Controllers.Areas
 {
     [Authorize]
-    [Route("api")]
-    [ApiController]
-    public class PutUseAreaFallbackEmailController : ControllerBase
+
+    public class PutUseAreaFallbackEmailController : PalavyrBaseController
     {
         private readonly IDashConnector dashConnector;
 

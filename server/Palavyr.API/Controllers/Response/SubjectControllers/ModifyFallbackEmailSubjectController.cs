@@ -7,9 +7,8 @@ using Palavyr.Domain.Resources.Requests;
 
 namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
-    [Route("api")]
-    [ApiController]
-    public class ModifyFallbackEmailSubjectController : ControllerBase
+
+    public class ModifyFallbackEmailSubjectController : PalavyrBaseController
     {
         private AccountsContext accountsContext;
         private ILogger<ModifyFallbackEmailSubjectController> logger;

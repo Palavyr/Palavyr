@@ -8,9 +8,8 @@ using Palavyr.Services.DatabaseService;
 namespace Palavyr.API.Controllers.Authentication.PasswordReset
 {
     
-    [Route("api")]
-    [ApiController]
-    public class VerifyPasswordResetRequestController : ControllerBase
+
+    public class VerifyPasswordResetRequestController : PalavyrBaseController
     {
         private readonly IAccountsConnector accountsConnector;
 

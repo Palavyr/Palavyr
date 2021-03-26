@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +10,7 @@ using Palavyr.Services.DatabaseService;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
-    [Route("api")]
-    [ApiController]
-    public class CreateDynamicTableController : ControllerBase
+    public class CreateDynamicTableController : PalavyrBaseController
     {
         private readonly IDashConnector dashConnector;
         private ILogger<CreateDynamicTableController> logger;
@@ -47,13 +43,14 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
                 tableTag,
                 DynamicTableTypes.DefaultTable.PrettyName,
                 DynamicTableTypes.DefaultTable.TableType,
+                DynamicTableTypes.DefaultTable.RequiredNodeTypes,
                 tableId,
                 areaId,
                 accountId);
 
             dynamicTables.Add(newTableMeta);
             area.DynamicTableMetas = dynamicTables;
-            
+
             await dashConnector.SetDefaultDynamicTable(accountId, areaId, tableId);
             await dashConnector.CommitChangesAsync();
 

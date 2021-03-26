@@ -9,9 +9,8 @@ using Palavyr.Data;
 namespace Palavyr.API.Controllers.Areas
 {
     [Authorize]
-    [Route("api")]
-    [ApiController]
-    public class DeleteAreaController : ControllerBase
+
+    public class DeleteAreaController : PalavyrBaseController
     {
         private ILogger<DeleteAreaController> logger;
         private DashContext dashContext;

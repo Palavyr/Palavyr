@@ -5,9 +5,8 @@ using Palavyr.Services.DatabaseService;
 
 namespace Palavyr.API.Controllers.Authentication
 {
-    [Route("api")]
-    [ApiController]
-    public class CreateLogoutRequestController : ControllerBase
+
+    public class CreateLogoutRequestController : PalavyrBaseController
     {
         private readonly IAccountsConnector accountsConnector;
 

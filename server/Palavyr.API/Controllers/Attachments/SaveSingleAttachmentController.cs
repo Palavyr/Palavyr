@@ -13,8 +13,7 @@ using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Attachments
 {
-    [Route("api")]
-    [ApiController]
+
     public class SaveSingleAttachmentController : AttachmentsBase
     {
         private ILogger<SaveSingleAttachmentController> logger;

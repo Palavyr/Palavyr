@@ -7,9 +7,8 @@ using Palavyr.Services.DatabaseService;
 
 namespace Palavyr.API.Controllers.Response
 {
-    [Route("api")]
-    [ApiController]
-    public class GetStaticTablesMetasController : ControllerBase
+
+    public class GetStaticTablesMetasController : PalavyrBaseController
     {
         private readonly IDashConnector dashConnector;
         private ILogger<GetStaticTablesMetasController> logger;

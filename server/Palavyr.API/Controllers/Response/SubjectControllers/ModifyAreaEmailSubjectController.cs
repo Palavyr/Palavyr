@@ -11,9 +11,8 @@ namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
     
     [Authorize]
-    [Route("api")]
-    [ApiController]
-    public class ModifyAreaEmailSubjectController : ControllerBase
+
+    public class ModifyAreaEmailSubjectController : PalavyrBaseController
     {
 
         private readonly DashContext dashContext;

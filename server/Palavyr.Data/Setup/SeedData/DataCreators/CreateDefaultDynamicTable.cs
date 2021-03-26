@@ -2,7 +2,7 @@
 using Palavyr.Domain.Configuration.Constant;
 using Palavyr.Domain.Configuration.Schemas;
 
-namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
+namespace Palavyr.Data.Setup.SeedData.DataCreators
 {
     public static class CreateDefaultDynamicTable
     {
@@ -28,6 +28,7 @@ namespace Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators
                     tableTag, 
                     DynamicTableTypes.DefaultTable.PrettyName,
                     DynamicTableTypes.DefaultTable.TableType, 
+                    DynamicTableTypes.DefaultTable.RequiredNodeTypes,
                     tableId, 
                     areaIdentifier,
                     accountId),

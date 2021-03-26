@@ -9,9 +9,8 @@ namespace Palavyr.API.Controllers.Areas
 {
     
     [Authorize]
-    [Route("api")]
-    [ApiController]
-    public class ModifyAreaResponseNameController : ControllerBase
+
+    public class ModifyAreaResponseNameController : PalavyrBaseController
     {
 
         private readonly IDashConnector dashConnector;

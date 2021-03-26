@@ -9,9 +9,8 @@ using Stripe;
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
     [AllowAnonymous]
-    [Route("api")]
-    [ApiController]
-    public class GetStripeProductPricesController : ControllerBase
+
+    public class GetStripeProductPricesController : PalavyrBaseController
     {
         private ILogger<GetStripeProductPricesController> logger;
 

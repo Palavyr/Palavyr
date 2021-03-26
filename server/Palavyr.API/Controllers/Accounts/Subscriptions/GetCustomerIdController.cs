@@ -6,9 +6,7 @@ using Palavyr.Data;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
-    [Route("api")]
-    [ApiController]
-    public class GetCustomerIdController
+    public class GetCustomerIdController : PalavyrBaseController
     {
         private readonly ILogger<GetCustomerIdController> logger;
         private readonly AccountsContext accountsContext;

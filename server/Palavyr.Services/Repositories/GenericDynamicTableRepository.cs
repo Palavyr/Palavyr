@@ -5,16 +5,16 @@ using Microsoft.EntityFrameworkCore;
 using Palavyr.Data;
 using Palavyr.Domain.Contracts;
 
-namespace Palavyr.API.Controllers.Response.Tables.Dynamic
+namespace Palavyr.Services.Repositories
 {
-    public class GenericRepository<TEntity> : IGenericDynamicTablesRepository<TEntity> where TEntity : class, ITable
+    public class GenericDynamicTableRepository<TEntity> : IGenericDynamicTableRepository<TEntity> where TEntity : class, ITable
     {
         private readonly DashContext dashContext;
         private readonly IQueryable<TEntity> readonlyQueryExecutor;
         private readonly DbSet<TEntity> queryExecutor;
         private readonly DbSet<Domain.Configuration.Schemas.DynamicTableMeta> metaQueryExecutor;
 
-        public GenericRepository(DashContext dashContext)
+        public GenericDynamicTableRepository(DashContext dashContext)
         {
             this.dashContext = dashContext;
             this.readonlyQueryExecutor = dashContext.Set<TEntity>().AsNoTracking();

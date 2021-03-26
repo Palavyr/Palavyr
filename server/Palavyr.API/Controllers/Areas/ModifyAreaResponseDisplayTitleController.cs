@@ -8,9 +8,8 @@ using Palavyr.Services.DatabaseService;
 namespace Palavyr.API.Controllers.Areas
 {
     [Authorize]
-    [Route("api")]
-    [ApiController]
-    public class ModifyAreaResponseDisplayTitleController : ControllerBase
+
+    public class ModifyAreaResponseDisplayTitleController : PalavyrBaseController
     {
         private readonly IDashConnector dashConnector;
         private ILogger<ModifyAreaResponseDisplayTitleController> logger;

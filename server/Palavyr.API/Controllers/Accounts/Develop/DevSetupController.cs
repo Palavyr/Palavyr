@@ -14,9 +14,8 @@ using Subscription = Palavyr.Domain.Accounts.Schemas.Subscription;
 
 namespace Palavyr.API.Controllers.Accounts.Develop
 {
-    [Route("api")]
-    [ApiController]
-    public class DefaultDataController : ControllerBase
+
+    public class DefaultDataController : PalavyrBaseController
     {
         private ILogger<DefaultDataController> logger;
         private AccountsContext accountsContext;

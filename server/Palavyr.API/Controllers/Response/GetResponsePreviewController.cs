@@ -12,9 +12,7 @@ using Palavyr.Services.PdfService;
 namespace Palavyr.API.Controllers.Response
 {
     [Authorize]
-    [Route("api")]
-    [ApiController]
-    public class GetResponsePreviewController : ControllerBase
+    public class GetResponsePreviewController : PalavyrBaseController
     {
         private readonly IAccountsConnector accountsConnector;
         private IAmazonS3 s3Client;

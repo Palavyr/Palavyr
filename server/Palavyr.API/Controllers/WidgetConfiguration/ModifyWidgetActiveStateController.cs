@@ -5,9 +5,8 @@ using Palavyr.Services.DatabaseService;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {
-    [Route("api")]
-    [ApiController]
-    public class ModifyWidgetActiveStateController
+
+    public class ModifyWidgetActiveStateController : PalavyrBaseController
     {
         private readonly IDashConnector dashConnector;
         private ILogger<GetWidgetPreferencesController> logger;

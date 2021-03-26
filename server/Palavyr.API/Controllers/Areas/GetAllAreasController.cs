@@ -9,9 +9,8 @@ using Palavyr.Services.DatabaseService;
 namespace Palavyr.API.Controllers.Areas
 {
     [Authorize]
-    [Route("api")]
-    [ApiController]
-    public class GetAllAreasController : ControllerBase
+
+    public class GetAllAreasController : PalavyrBaseController
     {
         private readonly IDashConnector dashConnector;
         private ILogger<GetAllAreasController> logger;

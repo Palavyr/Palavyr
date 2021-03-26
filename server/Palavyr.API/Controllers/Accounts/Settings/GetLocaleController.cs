@@ -10,9 +10,8 @@ using Palavyr.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-    [Route("api")]
-    [ApiController]
-    public class GetLocaleController : ControllerBase
+
+    public class GetLocaleController : PalavyrBaseController
     {
         private AccountsContext accountsContext;
         private ILogger<GetLocaleController> logger;

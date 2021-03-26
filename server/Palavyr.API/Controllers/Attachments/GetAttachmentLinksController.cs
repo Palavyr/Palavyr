@@ -10,8 +10,7 @@ using Palavyr.Domain.Resources.Responses;
 
 namespace Palavyr.API.Controllers.Attachments
 {
-    [Route("api")]
-    [ApiController]
+
     public class GetAttachmentLinksController : AttachmentsBase
     {
         private readonly IConfiguration configuration;

@@ -5,6 +5,7 @@ using Palavyr.Domain.Conversation;
 using Palavyr.Services.AccountServices;
 using Palavyr.Services.ConversationServices;
 using Palavyr.Services.EmailService.Verification;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Registration.Container
 {
@@ -19,7 +20,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<CompletedConversationRetriever>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<CompletedConversationModifier>().AsSelf().InstancePerLifetimeScope();
 
-            builder.RegisterGeneric(typeof(GenericRepository<>)).As(typeof(IGenericDynamicTablesRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(GenericDynamicTableRepository<>)).As(typeof(IGenericDynamicTableRepository<>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(DynamicTableCommandHandler<>)).As(typeof(IDynamicTableCommandHandler<>)).InstancePerLifetimeScope();
         }
     }

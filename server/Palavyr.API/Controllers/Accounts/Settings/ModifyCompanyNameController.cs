@@ -7,9 +7,8 @@ using Palavyr.Domain.Resources.Requests;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-    [Route("api")]
-    [ApiController]
-    public class ModifyCompanyNameController : ControllerBase
+
+    public class ModifyCompanyNameController : PalavyrBaseController
     {
         private ILogger<ModifyCompanyNameController> logger;
         private AccountsContext accountsContext;

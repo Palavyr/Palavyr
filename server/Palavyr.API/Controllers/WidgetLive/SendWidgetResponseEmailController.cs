@@ -17,9 +17,8 @@ using Palavyr.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
-    [Route("api")]
-    [ApiController]
-    public class SendWidgetResponseEmailController : ControllerBase
+
+    public class SendWidgetResponseEmailController : PalavyrBaseController
     {
         private readonly IDashConnector dashConnector;
         private readonly IAccountsConnector accountsConnector;

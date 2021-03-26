@@ -4,9 +4,8 @@ using Palavyr.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.Authentication
 {
-    [Route("api")]
-    [ApiController]
-    public class GetAuthenticationStatusController : ControllerBase
+
+    public class GetAuthenticationStatusController : PalavyrBaseController
     {
         private ILogger<GetAuthenticationStatusController> logger;
         

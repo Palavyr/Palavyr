@@ -13,9 +13,8 @@ using Palavyr.Services.StripeServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-    [Route("api")]
-    [ApiController]
-    public class ModifyDefaultEmailAddressController : ControllerBase
+
+    public class ModifyDefaultEmailAddressController : PalavyrBaseController
     {
         private ILogger<ModifyDefaultEmailAddressController> logger;
         private AccountsContext accountsContext;

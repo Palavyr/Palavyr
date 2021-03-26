@@ -8,9 +8,8 @@ using Stripe;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
-    [Route("api")]
-    [ApiController]
-    public class ProcessStripeNotificationWebhookController : ControllerBase
+
+    public class ProcessStripeNotificationWebhookController : PalavyrBaseController
     {
         private ILogger<ProcessStripeNotificationWebhookController> logger;
         private StripeWebhookAuthService stripeWebhookAuthService;

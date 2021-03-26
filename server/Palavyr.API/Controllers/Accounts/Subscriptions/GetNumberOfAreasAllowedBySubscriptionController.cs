@@ -8,9 +8,8 @@ using Palavyr.Domain.Accounts.Schemas;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
-    [Route("api")]
-    [ApiController]
-    public class GetNumberOfAreasAllowedBySubscriptionController : ControllerBase
+
+    public class GetNumberOfAreasAllowedBySubscriptionController : PalavyrBaseController
     {
         private readonly AccountsContext accountsContext;
 

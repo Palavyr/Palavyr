@@ -12,14 +12,12 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
         public string CustomerId { get; set; }
         public string ReturnUrl { get; set; }
     }
-    
+
     // TODO
     /// <summary>
     /// Used to update customer billing information - card numbers, etc
     /// </summary>
-    [Route("api")]
-    [ApiController]
-    public class CreateCustomerPortalSessionController : ControllerBase
+    public class CreateCustomerPortalSessionController : PalavyrBaseController
     {
         private ILogger<CreateCustomerPortalSessionController> logger;
         private readonly IStripeClient stripeClient;

@@ -12,9 +12,8 @@ using Palavyr.Services.DatabaseService;
 namespace Palavyr.API.Controllers.WidgetLive
 {
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
-    [Route("api")]
-    [ApiController]
-    public class GetWidgetPreCheckController : ControllerBase
+
+    public class GetWidgetPreCheckController : PalavyrBaseController
     {
         private readonly IDashConnector dashConnector;
         private ILogger<GetWidgetPreCheckController> logger;

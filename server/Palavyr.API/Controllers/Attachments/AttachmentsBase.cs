@@ -11,10 +11,16 @@ using Palavyr.Services.AmazonServices;
 
 namespace Palavyr.API.Controllers.Attachments
 {
-    public abstract class AttachmentsBase : ControllerBase
+    public abstract class AttachmentsBase : PalavyrBaseController
     {
-        [NonAction] 
-        public async Task<FileLink[]> GetFileLinks(string accountId, string areaId, DashContext dashContext, ILogger logger, IAmazonS3 s3Client, string previewBucket)
+        [NonAction]
+        public async Task<FileLink[]> GetFileLinks(
+            string accountId,
+            string areaId,
+            DashContext dashContext,
+            ILogger logger,
+            IAmazonS3 s3Client,
+            string previewBucket)
         {
             var files = AttachmentPaths.GetAttachmentFileList(accountId, areaId);
 

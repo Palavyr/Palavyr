@@ -6,9 +6,8 @@ using Palavyr.Data;
 
 namespace Palavyr.API.Controllers.Accounts.Setup
 {
-    [Route("api")]
-    [ApiController]
-    public class GetAccountActiveStatusController : ControllerBase
+
+    public class GetAccountActiveStatusController : PalavyrBaseController
     {
         private AccountsContext accountsContext;
         private ILogger<GetAccountActiveStatusController> logger;

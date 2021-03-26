@@ -6,9 +6,8 @@ using Palavyr.Data;
 
 namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
 {
-    [Route("api")]
-    [ApiController]
-    public class ModifyDefaultFallbackEmailTemplateController : ControllerBase
+
+    public class ModifyDefaultFallbackEmailTemplateController : PalavyrBaseController
     {
         private AccountsContext accountContext;
         private ILogger<ModifyDefaultFallbackEmailTemplateController> logger;

@@ -5,9 +5,7 @@ using Palavyr.Services.DatabaseService;
 
 namespace Palavyr.API.Controllers.Response
 {
-    [Route("api")]
-    [ApiController]
-    public class ModifyEpilogueConfigurationController : ControllerBase
+    public class ModifyEpilogueConfigurationController : PalavyrBaseController
     {
         private readonly IDashConnector dashConnector;
 
@@ -17,8 +15,7 @@ namespace Palavyr.API.Controllers.Response
         }
 
         [HttpPut("response/configuration/{areaId}/epilogue")]
-        public async Task<string> Modify
-        (
+        public async Task<string> Modify(
             [FromHeader] string accountId,
             [FromRoute] string areaId,
             [FromBody] EpilogueReceiver epilogueReceiver

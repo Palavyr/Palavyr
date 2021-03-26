@@ -9,9 +9,8 @@ using Palavyr.Services.DynamicTableService;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
-    [Route("api")]
-    [ApiController]
-    public class GetNodeTypeOptionsController : ControllerBase
+
+    public class GetNodeTypeOptionsController : PalavyrBaseController
     {
         private ILogger<GetNodeTypeOptionsController> logger;
         private DashContext dashContext;

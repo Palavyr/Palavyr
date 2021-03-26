@@ -9,9 +9,8 @@ using Palavyr.Domain.Conversation.Schemas;
 
 namespace Palavyr.API.Controllers.Enquiries
 {
-    [Route("api")]
-    [ApiController]
-    public class GetCompleteConversationDetails : ControllerBase
+
+    public class GetCompleteConversationDetails : PalavyrBaseController
     {
         private readonly ILogger<GetCompleteConversationDetails> logger;
         private readonly ConvoContext convoContext;

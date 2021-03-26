@@ -6,9 +6,8 @@ using Palavyr.Data;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-    [Route("api")]
-    [ApiController]
-    public class GetCompanyNameController : ControllerBase
+
+    public class GetCompanyNameController : PalavyrBaseController
     {
         private AccountsContext accountsContext;
         private ILogger<GetCompanyNameController> logger;

@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Palavyr.API.Controllers;
 using Palavyr.Data;
 using Palavyr.Domain.Configuration.Constant;
 
 namespace Palavyr.API.controllers.Conversation
 {
-    [Route("api")]
-    public class GetIsMultiOptionTypeController : ControllerBase
+    public class GetIsMultiOptionTypeController : PalavyrBaseController
     {
         private ILogger<GetIsMultiOptionTypeController> logger;
         string GUIDPattern = @"[{(]?\b[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}\b[)}]?";

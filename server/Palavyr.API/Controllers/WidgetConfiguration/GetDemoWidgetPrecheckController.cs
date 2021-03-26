@@ -9,9 +9,8 @@ using Palavyr.Services.DatabaseService;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {
-    [Route("api")]
-    [ApiController]
-    public class GetDemoWidgetPreCheckController : ControllerBase
+
+    public class GetDemoWidgetPreCheckController : PalavyrBaseController
     {
         private ILogger<GetDemoWidgetPreCheckController> logger;
         private readonly IDashConnector dashConnector;

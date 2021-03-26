@@ -41,7 +41,7 @@ namespace Palavyr.API.Registration.Container
             services.AddTransient<IAccountSetupService, AccountSetupService>();
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IEmailVerificationService, EmailVerificationService>();
-            services.AddTransient<ICompileDynamicTables, CompileDynamicTables>();
+            services.AddTransient<ICompileDynamicTables, CompileDynamicTablesAsConfigurationNodes>();
             services.AddSingleton<ISesEmail, SesEmail>();
             services.AddTransient<IRequestEmailVerification, RequestEmailVerification>();
             services.AddTransient<IPdfResponseGenerator, PdfResponseGenerator>();

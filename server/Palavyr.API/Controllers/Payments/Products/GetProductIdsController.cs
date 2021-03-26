@@ -4,9 +4,7 @@ using Palavyr.Services.StripeServices;
 
 namespace Palavyr.API.Controllers.Payments.Products
 {
-    [Route("api/")]
-    [ApiController]
-    public class GetProductIdsController : ControllerBase
+    public class GetProductIdsController : PalavyrBaseController
     {
         private ILogger<GetProductIdsController> logger;
         public GetProductIdsController(ILogger<GetProductIdsController> logger)

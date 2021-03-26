@@ -4,9 +4,8 @@ using Palavyr.Domain.Configuration.Constant;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
-    [Route("api")]
-    [ApiController]
-    public class GetTableNameMapController : ControllerBase
+
+    public class GetTableNameMapController : PalavyrBaseController
     {
         [HttpGet("tables/dynamic/table-name-map")]
         public Dictionary<string, string> Get()

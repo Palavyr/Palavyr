@@ -6,9 +6,8 @@ using Stripe.Checkout;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
-    [Route("api")]
-    [ApiController]
-    public class GetStripeCheckoutSessionController : ControllerBase
+
+    public class GetStripeCheckoutSessionController : PalavyrBaseController
     {
         private ILogger<GetStripeCheckoutSessionController> logger;
         private readonly IStripeClient client = new StripeClient(StripeConfiguration.ApiKey);

@@ -6,12 +6,10 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.Services.DatabaseService;
 
-namespace Palavyr.API.Controllers.Response
+namespace Palavyr.API.Controllers.Response.Tables.Static
 {
     [Authorize]
-    [Route("api")]
-    [ApiController]
-    public class ModifyStaticTablesMetaController : ControllerBase
+    public class ModifyStaticTablesMetaController : PalavyrBaseController
     {
         private ILogger<ModifyStaticTablesMetaController> logger;
         private readonly IDashConnector dashConnector;
@@ -34,11 +32,11 @@ namespace Palavyr.API.Controllers.Response
         {
             var metasToDelete = await dashConnector.GetStaticTables(accountId, areaId);
             await dashConnector.RemoveStaticTables(metasToDelete);
-            
+
             var clearedMetas = StaticTablesMeta.BindTemplateList(staticTableMetas, accountId);
             var area = await dashConnector.GetAreaById(accountId, areaId);
             area.StaticTablesMetas = clearedMetas;
-            
+
             await dashConnector.CommitChangesAsync();
 
             var tables = await dashConnector.GetStaticTables(accountId, areaId);

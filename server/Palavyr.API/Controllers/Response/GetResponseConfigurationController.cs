@@ -5,9 +5,7 @@ using Palavyr.Services.DatabaseService;
 
 namespace Palavyr.API.Controllers.Response
 {
-    [Route("api")]
-    [ApiController]
-    public class GetResponseConfigurationController : ControllerBase
+    public class GetResponseConfigurationController : PalavyrBaseController
     {
         private readonly IDashConnector dashConnector;
 

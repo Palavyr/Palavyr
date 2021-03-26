@@ -23,9 +23,8 @@ namespace Palavyr.API.Controllers.Conversation
         }
     }
 
-    [Route("api")]
-    [ApiController]
-    public class GetMissingNodesController
+
+    public class GetMissingNodesController : PalavyrBaseController
     {
         private ILogger<GetMissingNodesController> logger;
         private readonly IDashConnector dashConnector;

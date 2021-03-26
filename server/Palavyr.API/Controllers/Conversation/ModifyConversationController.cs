@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Palavyr.API.Controllers;
 using Palavyr.API.Controllers.Conversation;
 using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.Domain.Conversation;
@@ -10,9 +11,8 @@ using Palavyr.Services.DatabaseService;
 
 namespace Palavyr.API.controllers.Conversation
 {
-    [Route("api")]
-    [ApiController]
-    public class ModifyConversationController : ControllerBase
+
+    public class ModifyConversationController : PalavyrBaseController
     {
         private ILogger<ModifyConversationController> logger;
         private readonly IDashConnector dashConnector;

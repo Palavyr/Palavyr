@@ -1,15 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Palavyr.Data;
 using Palavyr.Services.DatabaseService;
 using Palavyr.Services.StripeServices;
-using Stripe;
-using Stripe.Checkout;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
@@ -35,9 +30,8 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
         public string Message { get; set; }
     }
 
-    [Route("api")]
-    [ApiController]
-    public class CreateCheckoutSessionController : ControllerBase
+
+    public class CreateCheckoutSessionController : PalavyrBaseController
     {
         private ILogger<CreateCheckoutSessionController> logger;
         private readonly IAccountsConnector accountsConnector;

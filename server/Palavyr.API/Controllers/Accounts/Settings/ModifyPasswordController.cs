@@ -6,9 +6,8 @@ using Palavyr.Services.DatabaseService;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-    [Route("api")]
-    [ApiController]
-    public class ModifyPasswordController : ControllerBase
+
+    public class ModifyPasswordController : PalavyrBaseController
     {
         private readonly IAccountsConnector accountsConnector;
         private ILogger<ModifyPasswordController> logger;

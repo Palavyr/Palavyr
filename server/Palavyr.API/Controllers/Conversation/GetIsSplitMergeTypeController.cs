@@ -11,7 +11,7 @@ namespace Palavyr.API.Controllers.Conversation
 {
     
     [Route("api")]
-    public class GetIsSplitMergeTypeController : ControllerBase
+    public class GetIsSplitMergeTypeController : PalavyrBaseController
     {
         string GUIDPattern = @"[{(]?\b[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}\b[)}]?";
         private DashContext dashContext;
