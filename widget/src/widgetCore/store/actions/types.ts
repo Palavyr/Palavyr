@@ -1,6 +1,6 @@
 import { ElementType } from "react";
 
-import { LinkParams, FullscreenPreviewState, ContextProperties, KeyValue, DynamicResponse } from "../types";
+import { LinkParams, FullscreenPreviewState, ContextProperties, KeyValue, DynamicResponse, DynamicResponses } from "../types";
 
 
 export const OPEN_USER_DETAILS = "BEHAVIOR/OPEN_USER_DETAILS";
@@ -33,7 +33,7 @@ export const SET_EMAILADDRESS_CONTEXT = "CONTEXT_PROPERTIES/SET_EMAILADDRESS"
 export const SET_REGION_CONTEXT = "CONTEXT_PROPERTIES/SET_REGION"
 export const SET_KEYVALUE_CONTEXT = "CONTEXT_PROPERTIES/SET_KEYVALUE"
 export const SET_DYNAMICRESPONSE_CONTEXT = "CONTEXT_PROPERTIES/SET_DYNAMICRESPONSE"
-
+export const SET_DYNAMICRESPONSES_CONTEXT = "CONTEXT_PROPERTIES/SET_DYNAMICRESPONSES"
 
 export interface OpenUserDetails {
     type: typeof OPEN_USER_DETAILS;
@@ -173,9 +173,9 @@ export interface addKeyValueContext {
     keyValue: KeyValue;
 }
 
-export interface addDynamicResponse {
-    type: typeof SET_DYNAMICRESPONSE_CONTEXT;
-    dynamicResponse: DynamicResponse;
+export interface setDynamiceResponses {
+    type: typeof SET_DYNAMICRESPONSES_CONTEXT;
+    dynamicResponseObject: DynamicResponses
 }
 
 export interface addNumIndividuals {
@@ -190,7 +190,7 @@ export type ContextPropertyActions = setContextProperties
 | setEmailAddressContext
 | setRegionContext
 | addKeyValueContext
-| addDynamicResponse;
+| setDynamiceResponses;
 
 export type AllActions = ContextPropertyActions | FullscreenPreviewActions | BehaviorActions | MessagesActions | QuickButtonsActions
 

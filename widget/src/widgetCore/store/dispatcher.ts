@@ -120,8 +120,8 @@ export function addKeyValue(newKeyValue: KeyValue) {
   store.dispatch(actions._addKeyValue(newKeyValue))
 }
 
-export function addDynamicResponse(dynamicResponse: DynamicResponse) {
-  store.dispatch(actions._addDynamicResponse(dynamicResponse))
+export function setDynamicResponses(dynamicResponseObject: DynamicResponses) {
+  store.dispatch(actions._setDynamicResponses(dynamicResponseObject));
 }
 
 export function getContextProperties(): ContextProperties {
