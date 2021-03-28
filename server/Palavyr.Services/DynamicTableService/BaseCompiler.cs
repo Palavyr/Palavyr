@@ -57,5 +57,19 @@ namespace Palavyr.Services.DynamicTableService
         {
             return dynamicResponseIds[0];
         }
+
+        protected string GetResponseByResponseId(string responseId, DynamicResponse dynamicResponse)
+        {
+            return dynamicResponse.ResponseComponents.Single(x => x.ContainsKey(responseId)).Values.ToList().Single();
+        }
+
+        protected async Task<List<string>> GetResponsesOrderedByResolveOrder(DynamicResponse dynamicResponse)
+        {
+            var responseKeys = dynamicResponse.ResponseComponents.SelectMany(row => row.Keys).ToList();
+            return (await Repository.GetConversationNodeByIds(responseKeys))
+                .OrderBy(x => x.ResolveOrder)
+                .Select(x => x.NodeId)
+                .ToList();
+        }
     }
 }

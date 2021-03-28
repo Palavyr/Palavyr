@@ -1,6 +1,6 @@
 using Autofac;
-using Palavyr.Services.DatabaseService;
-using Palavyr.Services.DatabaseService.Delete;
+using Palavyr.Services.Repositories;
+using Palavyr.Services.Repositories.Delete;
 
 namespace Palavyr.API.Registration.Container
 {
@@ -8,9 +8,9 @@ namespace Palavyr.API.Registration.Container
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<AccountsConnector>().As<IAccountsConnector>().InstancePerLifetimeScope();
-            builder.RegisterType<DashConnector>().As<IDashConnector>().InstancePerLifetimeScope();
-            builder.RegisterType<ConvoConnector>().As<IConvoConnector>().InstancePerLifetimeScope();
+            builder.RegisterType<AccountRepository>().As<IAccountRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<ConfigurationRepository>().As<IConfigurationRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<ConvoHistoryRepository>().As<IConvoHistoryRepository>().InstancePerLifetimeScope();
 
             builder.RegisterType<ConvoDeleter>().As<IConvoDeleter>().InstancePerLifetimeScope();
             builder.RegisterType<DashDeleter>().As<IDashDeleter>().InstancePerLifetimeScope();

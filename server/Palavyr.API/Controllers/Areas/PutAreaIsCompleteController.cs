@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.Areas
 {
@@ -9,19 +9,19 @@ namespace Palavyr.API.Controllers.Areas
 
     public class PutAreaIsCompleteController : PalavyrBaseController
     {
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
 
-        public PutAreaIsCompleteController(IDashConnector dashConnector)
+        public PutAreaIsCompleteController(IConfigurationRepository configurationRepository)
         {
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
         }
 
         [HttpPut("areas/{areaId}/area-toggle")]
         public async Task<bool> Put([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] PutAreaIsCompleteRequest request)
         {
-            var area = await dashConnector.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(accountId, areaId);
             area.IsEnabled = request.IsEnabled;
-            await dashConnector.CommitChangesAsync();
+            await configurationRepository.CommitChangesAsync();
             return area.IsEnabled;
         }
 

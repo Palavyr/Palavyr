@@ -2,24 +2,24 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Common.UIDUtils;
-using Palavyr.Services.DatabaseService;
 using Palavyr.Services.EmailService.ResponseEmailTools;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.Authentication.PasswordReset
 {
 
     public class PasswordResetRequestController : PalavyrBaseController
     {
-        private readonly IAccountsConnector accountsConnector;
+        private readonly IAccountRepository accountRepository;
         private readonly ISesEmail client;
 
 
         public PasswordResetRequestController(
-            IAccountsConnector accountsConnector,
+            IAccountRepository accountRepository,
             ISesEmail client
         )
         {
-            this.accountsConnector = accountsConnector;
+            this.accountRepository = accountRepository;
             this.client = client;
         }
 
@@ -29,7 +29,7 @@ namespace Palavyr.API.Controllers.Authentication.PasswordReset
         {
             var ambiguousMessage = "An email was sent to this address if an account for it exists.";
 
-            var account = await accountsConnector.GetAccountByEmailAddressOrNull(request.EmailAddress);
+            var account = await accountRepository.GetAccountByEmailAddressOrNull(request.EmailAddress);
             if (account == null)
             {
                 return new ResetEmailResponse(ambiguousMessage, false);
@@ -44,7 +44,7 @@ namespace Palavyr.API.Controllers.Authentication.PasswordReset
             var accountId = account.AccountId;
             var apiKey = account.ApiKey;
 
-            await accountsConnector.CreateAndAddNewSession(token, accountId, apiKey);
+            await accountRepository.CreateAndAddNewSession(token, accountId, apiKey);
 
             var link = request.ResetPasswordLinkTemplate + token;
 

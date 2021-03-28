@@ -7,42 +7,14 @@ using Palavyr.Data;
 using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.Domain.Configuration.Schemas.DynamicTables;
 
-namespace Palavyr.Services.DatabaseService
+namespace Palavyr.Services.Repositories
 {
-    public interface IDashConnector
-    {
-        Task CommitChangesAsync();
-        Task<Area> CreateAndAddNewArea(string name, string accountId, string emailAddress, bool isVerified);
-        Task<List<Area>> GetAllAreasShallow(string accountId);
-        Task<Area> GetAreaById(string accountId, string areaId);
-        Task<List<ConversationNode>> GetAreaConversationNodes(string accountId, string areaId);
-        Task<ConversationNode> GetConversationNodeById(string nodeId);
-        Task<List<ConversationNode>> GetConversationNodeByIds(List<string> nodeIds);
-        Task<Area> GetAreaWithConversationNodes(string accountId, string areaId);
-        Task RemoveConversationNodeById(string nodeId);
-        Task<List<ConversationNode>> UpdateConversationNode(string accountId, string areaId, string nodeId, ConversationNode newNode);
-        void RemoveNodeRangeByIds(List<string> nodeIds);
-        Task<Area> GetAreaComplete(string accountId, string areaId);
-        Task<List<StaticTablesMeta>> GetStaticTables(string accountId, string areaId);
-        Task<WidgetPreference> GetWidgetPreferences(string accountId);
-        Task<List<Area>> GetActiveAreas(string accountId);
-        Task SetDefaultDynamicTable(string accountId, string areaId, string tableId);
-        Task RemoveStaticTables(List<StaticTablesMeta> staticTablesMetas);
-        Task<List<Area>> GetActiveAreasWithConvoAndDynamicAndStaticTables(string accountId);
-        void RemoveAreaNodes(string areaId, string accountId);
-        Task<List<DynamicTableMeta>> GetDynamicTableMetas(string accountId, string areaIdentifier);
-
-        // maintenance methods to delete
-        Task<List<DynamicTableMeta>> GetAllDynamicTableMetas();
-        Task<List<ConversationNode>> GetAllConversationNodes();
-    }
-
-    public class DashConnector : IDashConnector
+    public class ConfigurationRepository : IConfigurationRepository
     {
         private readonly DashContext dashContext;
-        private readonly ILogger<DashConnector> logger;
+        private readonly ILogger<ConfigurationRepository> logger;
 
-        public DashConnector(DashContext dashContext, ILogger<DashConnector> logger)
+        public ConfigurationRepository(DashContext dashContext, ILogger<ConfigurationRepository> logger)
         {
             this.dashContext = dashContext;
             this.logger = logger;

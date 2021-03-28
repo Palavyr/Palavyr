@@ -1,30 +1,29 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using Amazon.S3;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Domain.Resources.Responses;
-using Palavyr.Services.DatabaseService;
 using Palavyr.Services.PdfService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.Response
 {
     [Authorize]
     public class GetResponsePreviewController : PalavyrBaseController
     {
-        private readonly IAccountsConnector accountsConnector;
+        private readonly IAccountRepository accountRepository;
         private ILogger<GetResponsePreviewController> logger;
         private readonly IPreviewResponseGenerator previewPdfGenerator;
 
         public GetResponsePreviewController(
-            IAccountsConnector accountsConnector,
+            IAccountRepository accountRepository,
             ILogger<GetResponsePreviewController> logger,
             IPreviewResponseGenerator previewPdfGenerator
         )
         {
-            this.accountsConnector = accountsConnector;
+            this.accountRepository = accountRepository;
             this.logger = logger;
             this.previewPdfGenerator = previewPdfGenerator;
         }
@@ -33,7 +32,7 @@ namespace Palavyr.API.Controllers.Response
         public async Task<FileLink> GetConfigurationPreview([FromHeader] string accountId, string areaId)
         {
             logger.LogDebug("Attempting to generate a new preview");
-            var account = await accountsConnector.GetAccount(accountId);
+            var account = await accountRepository.GetAccount(accountId);
             var locale = account.Locale;
             var culture = new CultureInfo(locale);
 

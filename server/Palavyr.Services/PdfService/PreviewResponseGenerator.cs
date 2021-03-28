@@ -14,7 +14,6 @@ using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.Domain.Configuration.Schemas.DynamicTables;
 using Palavyr.Domain.Resources.Responses;
 using Palavyr.Services.AmazonServices;
-using Palavyr.Services.DatabaseService;
 using Palavyr.Services.PdfService.PdfSections.Util;
 using Palavyr.Services.Repositories;
 
@@ -28,8 +27,8 @@ namespace Palavyr.Services.PdfService
         private readonly IHtmlToPdfClient htmlToPdfClient;
         private readonly IResponseHtmlBuilder responseHtmlBuilder;
         private readonly IStaticTableCompiler staticTableCompiler;
-        private readonly IDashConnector dashConnector;
-        private readonly IAccountsConnector accountsConnector;
+        private readonly IConfigurationRepository configurationRepository;
+        private readonly IAccountRepository accountRepository;
         private readonly IGenericDynamicTableRepository<SelectOneFlat> genericDynamicTableRepository;
 
         public PreviewResponseGenerator(
@@ -39,8 +38,8 @@ namespace Palavyr.Services.PdfService
             IHtmlToPdfClient htmlToPdfClient,
             IResponseHtmlBuilder responseHtmlBuilder,
             IStaticTableCompiler staticTableCompiler,
-            IDashConnector dashConnector,
-            IAccountsConnector accountsConnector,
+            IConfigurationRepository configurationRepository,
+            IAccountRepository accountRepository,
             IGenericDynamicTableRepository<SelectOneFlat> genericDynamicTableRepository
         )
         {
@@ -50,8 +49,8 @@ namespace Palavyr.Services.PdfService
             this.htmlToPdfClient = htmlToPdfClient;
             this.responseHtmlBuilder = responseHtmlBuilder;
             this.staticTableCompiler = staticTableCompiler;
-            this.dashConnector = dashConnector;
-            this.accountsConnector = accountsConnector;
+            this.configurationRepository = configurationRepository;
+            this.accountRepository = accountRepository;
             this.genericDynamicTableRepository = genericDynamicTableRepository;
         }
 
@@ -59,8 +58,8 @@ namespace Palavyr.Services.PdfService
         {
             var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
 
-            var areaData = await dashConnector.GetAreaComplete(accountId, areaId);
-            var userAccount = await accountsConnector.GetAccount(accountId);
+            var areaData = await configurationRepository.GetAreaComplete(accountId, areaId);
+            var userAccount = await accountRepository.GetAccount(accountId);
 
             var criticalResponses = new CriticalResponses(
                 new List<Dictionary<string, string>>()

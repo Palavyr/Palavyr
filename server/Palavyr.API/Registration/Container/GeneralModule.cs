@@ -26,8 +26,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<HtmlToPdfClient>().As<IHtmlToPdfClient>().InstancePerLifetimeScope();
             builder.RegisterType<ResponseCustomizer>().As<IResponseCustomizer>();
             builder.RegisterType<ResponseHtmlBuilder>().As<IResponseHtmlBuilder>();
-            builder.RegisterType<CompileDynamicTablesAsConfigurationNodes>().AsSelf();
-            
+            builder.RegisterType<DynamicTableCompilerOrchestrator>().As<IDynamicTableCompilerOrchestrator>().InstancePerLifetimeScope();
             
             builder.RegisterType<SelectOneFlatCompiler>().AsSelf();
             builder.RegisterType<PercentOfThresholdCompiler>().AsSelf();

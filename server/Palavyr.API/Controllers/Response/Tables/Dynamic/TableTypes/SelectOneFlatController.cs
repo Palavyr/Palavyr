@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.Domain.Configuration.Schemas.DynamicTables;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic.TableTypes

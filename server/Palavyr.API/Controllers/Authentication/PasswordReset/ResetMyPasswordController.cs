@@ -6,7 +6,6 @@ using Palavyr.Common.UIDUtils;
 using Palavyr.Data;
 using Palavyr.Services.AuthenticationServices;
 
-
 namespace Palavyr.API.Controllers.Authentication.PasswordReset
 {
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]

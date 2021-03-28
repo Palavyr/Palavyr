@@ -6,7 +6,6 @@ using Palavyr.Domain.Configuration.Constant;
 using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.Domain.Configuration.Schemas.DynamicTables;
 using Palavyr.Domain.Resources.Requests;
-using Palavyr.Services.DatabaseService;
 using Palavyr.Services.PdfService.PdfSections.Util;
 using Palavyr.Services.Repositories;
 
@@ -15,12 +14,10 @@ namespace Palavyr.Services.DynamicTableService.Compilers
     public class CategorySelectCountCompiler : BaseCompiler<CategorySelectCount>, IDynamicTablesCompiler
     {
         private readonly IGenericDynamicTableRepository<CategorySelectCount> repository;
-        private readonly IDashConnector dashConnector;
 
-        public CategorySelectCountCompiler(IGenericDynamicTableRepository<CategorySelectCount> repository, IDashConnector dashConnector) : base(repository)
+        public CategorySelectCountCompiler(IGenericDynamicTableRepository<CategorySelectCount> repository, IConfigurationRepository configurationRepository) : base(repository)
         {
             this.repository = repository;
-            this.dashConnector = dashConnector;
         }
 
         public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
@@ -82,20 +79,6 @@ namespace Palavyr.Services.DynamicTableService.Compilers
                     result.Range
                 )
             };
-        }
-
-        private string GetResponseByResponseId(string responseId, DynamicResponse dynamicResponse)
-        {
-            return dynamicResponse.ResponseComponents.Single(x => x.ContainsKey(responseId)).Values.ToList().Single();
-        }
-
-        private async Task<List<string>> GetResponsesOrderedByResolveOrder(DynamicResponse dynamicResponse)
-        {
-            var responseKeys = dynamicResponse.ResponseComponents.SelectMany(row => row.Keys).ToList();
-            return (await dashConnector.GetConversationNodeByIds(responseKeys))
-                .OrderBy(row => row.ResolveOrder)
-                .Select(x => x.NodeId)
-                .ToList();
         }
     }
 }

@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Data;
 using Palavyr.Domain.Conversation.Schemas;
 
-
 namespace Palavyr.API.Controllers.Enquiries
 {
 

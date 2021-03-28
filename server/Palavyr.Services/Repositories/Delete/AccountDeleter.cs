@@ -5,18 +5,9 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Data;
 using Palavyr.Services.StripeServices;
 
-namespace Palavyr.Services.DatabaseService.Delete
+namespace Palavyr.Services.Repositories.Delete
 {
-    public interface IAccountDeleter : IAccountsConnector
-    {
-        Task DeleteAccount(string accountId);
-        Task DeleteAccountRecord(string accountId);
-        void DeleteEmailVerifications(string accountId);
-        void DeleteSessionsByAccount(string accountId);
-        void DeleteSubscriptionsByAccount(string accountId);
-    }
-
-    public class AccountDeleter : AccountsConnector, IAccountDeleter
+    public class AccountDeleter : AccountRepository, IAccountDeleter
     {
         private readonly AccountsContext accountsContext;
         private readonly StripeCustomerService stripeCustomerService;

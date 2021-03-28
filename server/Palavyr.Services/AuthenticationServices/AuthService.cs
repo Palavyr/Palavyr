@@ -8,7 +8,7 @@ using Palavyr.Common.UIDUtils;
 using Palavyr.Domain.Accounts.Schemas;
 using Palavyr.Domain.Resources.Requests;
 using Palavyr.Domain.Resources.Responses;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.Services.AuthenticationServices
 {
@@ -20,7 +20,7 @@ namespace Palavyr.Services.AuthenticationServices
 
     public class AuthService : IAuthService
     {
-        private readonly IAccountsConnector accountsConnector;
+        private readonly IAccountRepository accountRepository;
         private readonly ILogger<AuthService> logger;
         private readonly IJwtAuthenticationService jwtAuthService;
         private IConfiguration configuration;
@@ -32,13 +32,13 @@ namespace Palavyr.Services.AuthenticationServices
         private const string DifferentAccountType = "Email is currently used with different account type.";
         private const int GracePeriod = 5;
         public AuthService(
-            IAccountsConnector accountsConnector,
+            IAccountRepository accountRepository,
             ILogger<AuthService> logger,
             IJwtAuthenticationService jwtService,
             IConfiguration configuration
         )
         {
-            this.accountsConnector = accountsConnector;
+            this.accountRepository = accountRepository;
             this.logger = logger;
 
             this.configuration = configuration;
@@ -90,9 +90,9 @@ namespace Palavyr.Services.AuthenticationServices
             var token = CreateNewJwtToken(account);
             UpdateCurrentAccountState(account);
 
-            var session = await accountsConnector.CreateAndAddNewSession(account);
+            var session = await accountRepository.CreateAndAddNewSession(account);
             
-            await accountsConnector.CommitChangesAsync();
+            await accountRepository.CommitChangesAsync();
 
             logger.LogDebug("Session saved to DB. Returning auth response.");
             return Credentials.CreateAuthenticatedResponse(
@@ -165,7 +165,7 @@ namespace Palavyr.Services.AuthenticationServices
             }
 
             // now verify the user exists in the Accounts database
-            var account = await accountsConnector.GetAccountByEmailOrNull(payload.Email);
+            var account = await accountRepository.GetAccountByEmailOrNull(payload.Email);
             if (account == null)
             {
                 return AccountReturn.Return(null, CouldNotFindAccountWithGoogle);
@@ -179,7 +179,7 @@ namespace Palavyr.Services.AuthenticationServices
 
         private async Task<AccountReturn> RequestAccountViaDefault(LoginCredentials credentials)
         {
-            var account = await accountsConnector.GetAccountByEmailOrNull(credentials.EmailAddress);
+            var account = await accountRepository.GetAccountByEmailOrNull(credentials.EmailAddress);
             if (account == null)
             {
                 return AccountReturn.Return(account, CouldNotFindAccount);

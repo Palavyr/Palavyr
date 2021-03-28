@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Data;
+using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.Domain.Contracts;
 
 namespace Palavyr.Services.Repositories
@@ -12,7 +13,7 @@ namespace Palavyr.Services.Repositories
         private readonly DashContext dashContext;
         private readonly IQueryable<TEntity> readonlyQueryExecutor;
         private readonly DbSet<TEntity> queryExecutor;
-        private readonly DbSet<Domain.Configuration.Schemas.DynamicTableMeta> metaQueryExecutor;
+        private readonly DbSet<DynamicTableMeta> metaQueryExecutor;
 
         public GenericDynamicTableRepository(DashContext dashContext)
         {
@@ -88,6 +89,15 @@ namespace Palavyr.Services.Repositories
                 .Where(tableRow => tableRow.AccountId == accountId && dynamicResponseId.EndsWith(tableRow.TableId))
                 .ToListAsync();
             return row;
+        }
+
+        public async Task<List<ConversationNode>> GetConversationNodeByIds(List<string> ids)
+        {
+            return await dashContext
+                .ConversationNodes
+                .Where(row => ids.Contains(row.NodeId))
+                .OrderBy(row => row.ResolveOrder)
+                .ToListAsync();
         }
     }
 }

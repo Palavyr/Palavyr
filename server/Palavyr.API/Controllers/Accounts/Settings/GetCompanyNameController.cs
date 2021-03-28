@@ -18,10 +18,10 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
         
         [HttpGet("account/settings/company-name")]
-        public async Task<IActionResult> Get([FromHeader] string accountId)
+        public async Task<string> Get([FromHeader] string accountId)
         {
             var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
-            return Ok(account.CompanyName ?? "");
+            return account.CompanyName ?? "";
         }
     }
 }

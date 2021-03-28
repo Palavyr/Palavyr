@@ -6,7 +6,6 @@ namespace Palavyr.Domain.Configuration.Constant
     {
         public string TableType { get; set; }
         public string PrettyName { get; set; }
-        public string RequiredNodeTypes { get; set; }
     }
 
     public static class DynamicTableTypes
@@ -15,14 +14,25 @@ namespace Palavyr.Domain.Configuration.Constant
         public static SelectOneFlat CreateSelectOneFlat() => new SelectOneFlat();
         public static PercentOfThreshold CreatePercentOfThreshold() => new PercentOfThreshold();
         public static BasicThreshold CreateBasicThreshold() => new BasicThreshold();
+        public static CategorySelectCount CreateCategorySelectCount() => new CategorySelectCount();
         public static List<DynamicType> GetDynamicTableTypes()
-        {
+        {   
             return new List<DynamicType>
             {
                 new SelectOneFlat(),
                 new PercentOfThreshold(),
-                new BasicThreshold()
+                new BasicThreshold(),
+                new CategorySelectCount()
             };
+        }
+
+        public class CategorySelectCount : DynamicType
+        {
+            public CategorySelectCount()
+            {
+                PrettyName = "Categorical Select Count";
+                TableType = nameof(CategorySelectCount);
+            }
         }
 
         public class SelectOneFlat : DynamicType
@@ -31,7 +41,6 @@ namespace Palavyr.Domain.Configuration.Constant
             {
                 PrettyName = "Select One Flat";
                 TableType = nameof(SelectOneFlat);
-                RequiredNodeTypes = $"{nameof(SelectOneFlat)}";
             }
         }
 
@@ -41,7 +50,6 @@ namespace Palavyr.Domain.Configuration.Constant
             {
                 PrettyName = "Percent Of Threshold";
                 TableType = nameof(PercentOfThreshold);
-                RequiredNodeTypes = $"{nameof(PercentOfThreshold)}";
             }
         }
 
@@ -51,7 +59,6 @@ namespace Palavyr.Domain.Configuration.Constant
             {
                 PrettyName = "Basic Threshold";
                 TableType = nameof(BasicThreshold);
-                RequiredNodeTypes = $"{nameof(BasicThreshold)}";
             }
         }
         // We can define new DynamicTypes here

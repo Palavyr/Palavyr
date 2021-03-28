@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Data;
 using Palavyr.Services.EmailService.Verification;
-using Stripe;
 
 namespace Palavyr.BackupAndRestore.Jobs
 {

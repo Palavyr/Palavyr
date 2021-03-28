@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.Domain.Configuration.Schemas.DynamicTables;
 
 namespace Palavyr.Domain.Resources.Requests

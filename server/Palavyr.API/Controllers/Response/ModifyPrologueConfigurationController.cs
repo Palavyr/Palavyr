@@ -1,17 +1,17 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Domain.Resources.Requests;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.Response
 {
     public class ModifyPrologueConfigurationController : PalavyrBaseController
     {
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
 
-        public ModifyPrologueConfigurationController(IDashConnector dashConnector)
+        public ModifyPrologueConfigurationController(IConfigurationRepository configurationRepository)
         {
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
         }
 
         [HttpPut("response/configuration/{areaId}/prologue")]
@@ -20,9 +20,9 @@ namespace Palavyr.API.Controllers.Response
             [FromRoute] string areaId,
             [FromBody] PrologueReceiver prologueReceiver)
         {
-            var area = await dashConnector.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(accountId, areaId);
             area.Prologue = prologueReceiver.Prologue;
-            await dashConnector.CommitChangesAsync();
+            await configurationRepository.CommitChangesAsync();
             return prologueReceiver.Prologue;
         }
     }

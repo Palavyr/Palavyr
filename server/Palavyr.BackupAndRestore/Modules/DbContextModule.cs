@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Palavyr.Common.GlobalConstants;
 using Palavyr.Data;
 
-
 namespace Palavyr.BackupAndRestore.Modules
 {
     public class DbContextModule : Module

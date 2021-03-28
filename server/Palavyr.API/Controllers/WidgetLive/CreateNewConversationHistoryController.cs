@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Domain;
 using Palavyr.Services.AuthenticationServices;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
@@ -12,14 +12,14 @@ namespace Palavyr.API.Controllers.WidgetLive
 
     public class CreateNewConversationHistoryController : PalavyrBaseController
     {
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
         private ILogger<CreateNewConversationHistoryController> logger;
 
         public CreateNewConversationHistoryController(
-            IDashConnector dashConnector,
+            IConfigurationRepository configurationRepository,
             ILogger<CreateNewConversationHistoryController> logger)
         {
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
             this.logger = logger;
         }
 
@@ -27,10 +27,10 @@ namespace Palavyr.API.Controllers.WidgetLive
         public async Task<NewConversation> Create([FromHeader] string accountId, [FromRoute] string areaId)
         {
             logger.LogDebug("Fetching Preferences...");
-            var widgetPreference = await dashConnector.GetWidgetPreferences(accountId);
+            var widgetPreference = await configurationRepository.GetWidgetPreferences(accountId);
 
             logger.LogDebug("Fetching nodes...");
-            var incompleteNodeList = await dashConnector.GetAreaConversationNodes(accountId, areaId);
+            var incompleteNodeList = await configurationRepository.GetAreaConversationNodes(accountId, areaId);
 
             var convoNodes = EndingSequence.AttachEndingSequenceToNodeList(incompleteNodeList, areaId, accountId);
 

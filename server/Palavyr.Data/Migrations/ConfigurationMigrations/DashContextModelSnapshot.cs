@@ -178,9 +178,6 @@ namespace Palavyr.Data.Migrations.ConfigurationMigrations
                     b.Property<string>("PrettyName")
                         .HasColumnType("text");
 
-                    b.Property<string>("RequiredNodeTypes")
-                        .HasColumnType("text");
-
                     b.Property<string>("TableId")
                         .HasColumnType("text");
 

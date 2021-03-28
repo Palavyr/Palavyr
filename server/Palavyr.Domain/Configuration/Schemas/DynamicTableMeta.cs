@@ -12,7 +12,6 @@ namespace Palavyr.Domain.Configuration.Schemas
         public string TableTag { get; set; }
         public string PrettyName { get; set; }
         public string TableType { get; set; }
-        public string RequiredNodeTypes { get; set; } // a comma-separated list of nodeType names (
         public string TableId { get; set; }
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
@@ -22,7 +21,6 @@ namespace Palavyr.Domain.Configuration.Schemas
             string tableTag,
             string prettyName,
             string tableType,
-            string requiredNodeTypes,
             string tableId,
             string areaId,
             string accountId)
@@ -35,7 +33,6 @@ namespace Palavyr.Domain.Configuration.Schemas
                 AreaIdentifier = areaId,
                 AccountId = accountId,
                 PrettyName = prettyName,
-                RequiredNodeTypes = requiredNodeTypes
             };
         }
 
@@ -47,7 +44,6 @@ namespace Palavyr.Domain.Configuration.Schemas
                     "default",
                     DynamicTableTypes.DefaultTable.PrettyName,
                     DynamicTableTypes.DefaultTable.TableType, 
-                    DynamicTableTypes.DefaultTable.RequiredNodeTypes,
                     Guid.NewGuid().ToString(), 
                     areaId, 
                     accountId)

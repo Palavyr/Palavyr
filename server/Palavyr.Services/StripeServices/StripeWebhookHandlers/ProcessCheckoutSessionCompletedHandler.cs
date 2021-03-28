@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Data;
-using Session = Stripe.Checkout.Session;
+using Stripe.Checkout;
 
 namespace Palavyr.Services.StripeServices.StripeWebhookHandlers
 {

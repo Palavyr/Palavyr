@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Authorization;
 using Palavyr.Services.AuthenticationServices;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
@@ -11,14 +11,14 @@ namespace Palavyr.API.Controllers.WidgetLive
 
     public class GetLiveWidgetActiveStateController : PalavyrBaseController
     {
-        private IDashConnector dashConnector;
+        private IConfigurationRepository configurationRepository;
         private ILogger<GetLiveWidgetActiveStateController> logger;
 
         public GetLiveWidgetActiveStateController(
-            IDashConnector dashConnector,
+            IConfigurationRepository configurationRepository,
             ILogger<GetLiveWidgetActiveStateController> logger)
         {
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
             this.logger = logger;
         }
 
@@ -26,7 +26,7 @@ namespace Palavyr.API.Controllers.WidgetLive
         public async Task<bool> GetWidgetActiveState([FromHeader] string accountId)
         {
             logger.LogDebug("Retrieving widget state.");
-            var widgetPreferences = await dashConnector.GetWidgetPreferences(accountId);
+            var widgetPreferences = await configurationRepository.GetWidgetPreferences(accountId);
             return widgetPreferences.WidgetState;
         }
     }

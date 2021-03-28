@@ -7,28 +7,14 @@ using Palavyr.Common.UIDUtils;
 using Palavyr.Data;
 using Palavyr.Domain.Accounts.Schemas;
 
-namespace Palavyr.Services.DatabaseService
+namespace Palavyr.Services.Repositories
 {
-    public interface IAccountsConnector
-    {
-        Task CommitChangesAsync();
-        Task<Account> GetAccount(string accountId);
-        Task<Account?> GetAccountOrNull(string accountId);
-        Task<Account?> GetAccountByEmailOrNull(string emailAddress);
-        Task<Account?> GetAccountByEmailAddressOrNull(string emailAddress);
-        Task<Session> CreateAndAddNewSession(string token, string accountId, string apiKey);
-        Task<Session> CreateAndAddNewSession(Account account);
-        Task<Session?> GetSessionOrNull(string token);
-        Task RemoveSession(string sessionId);
-        bool SignedStripePayloadExists(string signedPayload);
-    }
-
-    public class AccountsConnector : IAccountsConnector
+    public class AccountRepository : IAccountRepository
     {
         private readonly AccountsContext accountsContext;
-        private readonly ILogger<AccountsConnector> logger;
+        private readonly ILogger<AccountRepository> logger;
 
-        public AccountsConnector(AccountsContext accountsContext, ILogger<AccountsConnector> logger)
+        public AccountRepository(AccountsContext accountsContext, ILogger<AccountRepository> logger)
         {
             this.accountsContext = accountsContext;
             this.logger = logger;

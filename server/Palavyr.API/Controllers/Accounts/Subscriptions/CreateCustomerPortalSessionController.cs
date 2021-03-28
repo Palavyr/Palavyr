@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Stripe;
 using Stripe.BillingPortal;
 
-
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
     public class CustomerPortalRequest

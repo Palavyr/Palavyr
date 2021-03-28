@@ -3,11 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Controllers;
-using Palavyr.API.Controllers.Conversation;
 using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.Domain.Conversation;
 using Palavyr.Domain.Resources.Requests;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.controllers.Conversation
 {
@@ -15,17 +14,17 @@ namespace Palavyr.API.controllers.Conversation
     public class ModifyConversationController : PalavyrBaseController
     {
         private ILogger<ModifyConversationController> logger;
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
         private readonly OrphanRemover orphanRemover;
 
         public ModifyConversationController(
             ILogger<ModifyConversationController> logger,
-            IDashConnector dashConnector,
+            IConfigurationRepository configurationRepository,
             OrphanRemover orphanRemover
         )
         {
             this.logger = logger;
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
             this.orphanRemover = orphanRemover;
         }
 
@@ -36,20 +35,20 @@ namespace Palavyr.API.controllers.Conversation
             [FromBody] ConversationNodeDto update)
         {
             // TODO: This makes 3 calls. Confirm that we only need to make 1 call.
-            dashConnector.RemoveAreaNodes(areaId, accountId);
-            var area = await dashConnector.GetAreaWithConversationNodes(accountId, areaId);
+            configurationRepository.RemoveAreaNodes(areaId, accountId);
+            var area = await configurationRepository.GetAreaWithConversationNodes(accountId, areaId);
             var mappedUpdates = ConversationNode.MapUpdate(accountId, update.Transactions);
 
             area.ConversationNodes.AddRange(mappedUpdates);
 
-            await dashConnector.CommitChangesAsync();
+            await configurationRepository.CommitChangesAsync();
 
-            var updatedArea = await dashConnector.GetAreaWithConversationNodes(accountId, areaId);
+            var updatedArea = await configurationRepository.GetAreaWithConversationNodes(accountId, areaId);
             var deOrphanedAreaConvo = orphanRemover.RemoveOrphanedNodes(updatedArea.ConversationNodes);
             updatedArea.ConversationNodes = deOrphanedAreaConvo;
-            await dashConnector.CommitChangesAsync();
+            await configurationRepository.CommitChangesAsync();
 
-            return await dashConnector.GetAreaConversationNodes(accountId, areaId);
+            return await configurationRepository.GetAreaConversationNodes(accountId, areaId);
         }
     }
 }

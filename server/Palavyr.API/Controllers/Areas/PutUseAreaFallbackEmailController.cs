@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.Areas
 {
@@ -9,19 +9,19 @@ namespace Palavyr.API.Controllers.Areas
 
     public class PutUseAreaFallbackEmailController : PalavyrBaseController
     {
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
 
-        public PutUseAreaFallbackEmailController(IDashConnector dashConnector)
+        public PutUseAreaFallbackEmailController(IConfigurationRepository configurationRepository)
         {
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
         }
 
         [HttpPut("areas/{areaId}/use-fallback-email-toggle")]
         public async Task<bool> Put([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] PutUseAreaFallbackRequest request)
         {
-            var area = await dashConnector.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(accountId, areaId);
             area.UseAreaFallbackEmail = request.UseFallback;
-            await dashConnector.CommitChangesAsync();
+            await configurationRepository.CommitChangesAsync();
             return area.UseAreaFallbackEmail;
         }
 

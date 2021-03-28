@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.Services.Repositories
 {
@@ -26,6 +27,8 @@ namespace Palavyr.Services.Repositories
         Task DeleteTable(string accountId, string areaIdentifier, string tableId);
 
         Task<List<TEntity>> GetAllRowsMatchingDynamicResponseId(string accountId, string dynamicResponseId);
+
+        Task<List<ConversationNode>> GetConversationNodeByIds(List<string> ids);
 
     }
 }

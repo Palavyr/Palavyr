@@ -2,8 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Services.DatabaseService;
-
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.Authentication.PasswordReset
 {
@@ -11,11 +10,11 @@ namespace Palavyr.API.Controllers.Authentication.PasswordReset
 
     public class VerifyPasswordResetRequestController : PalavyrBaseController
     {
-        private readonly IAccountsConnector accountsConnector;
+        private readonly IAccountRepository accountRepository;
 
-        public VerifyPasswordResetRequestController(IAccountsConnector accountsConnector)
+        public VerifyPasswordResetRequestController(IAccountRepository accountRepository)
         {
-            this.accountsConnector = accountsConnector;
+            this.accountRepository = accountRepository;
         }
 
         [AllowAnonymous]
@@ -23,7 +22,7 @@ namespace Palavyr.API.Controllers.Authentication.PasswordReset
         public async Task<VerificationResponse> Post([FromRoute] string token)
         {
             // the return from this is presented in the redirect page. 
-            var session = await accountsConnector.GetSessionOrNull(token);
+            var session = await accountRepository.GetSessionOrNull(token);
             if (session == null)
             {
                 return new VerificationResponse("Not Authorized.", false, "");

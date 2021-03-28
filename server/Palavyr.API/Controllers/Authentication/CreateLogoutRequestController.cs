@@ -1,25 +1,25 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Domain.Resources.Requests;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.Authentication
 {
 
     public class CreateLogoutRequestController : PalavyrBaseController
     {
-        private readonly IAccountsConnector accountsConnector;
+        private readonly IAccountRepository accountRepository;
 
-        public CreateLogoutRequestController(IAccountsConnector accountsConnector)
+        public CreateLogoutRequestController(IAccountRepository accountRepository)
         {
-            this.accountsConnector = accountsConnector;
+            this.accountRepository = accountRepository;
         }
 
         [HttpPost("authentication/logout")]
         public async Task<bool> RequestLogout([FromBody] LogoutCredentials credentials)
         {
-            await accountsConnector.RemoveSession(credentials.SessionId);
-            await accountsConnector.CommitChangesAsync();
+            await accountRepository.RemoveSession(credentials.SessionId);
+            await accountRepository.CommitChangesAsync();
             return true;
         }
 

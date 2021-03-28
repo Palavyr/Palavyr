@@ -3,11 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.Utils;
 using Palavyr.Domain;
 using Palavyr.Domain.Resources.Responses;
 using Palavyr.Services.AuthenticationServices;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
@@ -15,15 +14,15 @@ namespace Palavyr.API.Controllers.WidgetLive
 
     public class GetWidgetPreCheckController : PalavyrBaseController
     {
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
         private ILogger<GetWidgetPreCheckController> logger;
 
         public GetWidgetPreCheckController(
-            IDashConnector dashConnector,
+            IConfigurationRepository configurationRepository,
             ILogger<GetWidgetPreCheckController> logger
         )
         {
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
             this.logger = logger;
         }
 
@@ -38,8 +37,8 @@ namespace Palavyr.API.Controllers.WidgetLive
                 return PreCheckResult.CreateApiKeyResult(false);
             }
 
-            var widgetPrefs = await dashConnector.GetWidgetPreferences(accountId);
-            var areas = await dashConnector.GetActiveAreasWithConvoAndDynamicAndStaticTables(accountId);
+            var widgetPrefs = await configurationRepository.GetWidgetPreferences(accountId);
+            var areas = await configurationRepository.GetActiveAreasWithConvoAndDynamicAndStaticTables(accountId);
 
             var result = WidgetStatusUtils.ExecuteWidgetStatusCheck(accountId, areas, widgetPrefs, demo, logger);
             logger.LogDebug($"Pre-check run successful.");

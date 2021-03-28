@@ -6,7 +6,7 @@ using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.Domain.Resources.Requests;
 using Palavyr.Services.PdfService.PdfSections.Util;
 
-namespace Palavyr.Services.DynamicTableService
+namespace Palavyr.Services.DynamicTableService.Compilers
 {
     public interface IDynamicTablesCompiler
     {

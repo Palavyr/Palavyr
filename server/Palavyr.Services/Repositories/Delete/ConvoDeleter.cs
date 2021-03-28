@@ -2,21 +2,14 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Palavyr.Data;
 
-namespace Palavyr.Services.DatabaseService.Delete
+namespace Palavyr.Services.Repositories.Delete
 {
-    public interface IConvoDeleter : IConvoConnector
-    {
-        void DeleteAccount(string accountId);
-        void DeleteAllConversationRecordsByAccount(string accountId);
-        void DeleteAllCompletedConversationsByAccount(string accountId);
-    }
-
-    public class ConvoDeleter : ConvoConnector, IConvoDeleter
+    public class ConvoDeleter : ConvoHistoryRepository, IConvoDeleter
     {
         private readonly ConvoContext convoContext;
-        private readonly ILogger<ConvoConnector> logger;
+        private readonly ILogger<ConvoHistoryRepository> logger;
 
-        public ConvoDeleter(ConvoContext convoContext, ILogger<ConvoConnector> logger): base(convoContext, logger)
+        public ConvoDeleter(ConvoContext convoContext, ILogger<ConvoHistoryRepository> logger): base(convoContext, logger)
         {
             this.convoContext = convoContext;
             this.logger = logger;

@@ -32,7 +32,6 @@ namespace Palavyr.Data.Setup.SeedData.DataCreators
                     tableTag,
                     DynamicTableTypes.DefaultTable.PrettyName,
                     DynamicTableTypes.DefaultTable.TableType,
-                    DynamicTableTypes.DefaultTable.RequiredNodeTypes,
                     tableId,
                     areaIdentifier,
                     accountId),

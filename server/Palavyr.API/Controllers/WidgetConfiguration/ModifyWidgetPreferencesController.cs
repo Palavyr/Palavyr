@@ -2,19 +2,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Domain.Configuration.Schemas;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {
 
     public class ModifyWidgetPreferencesController : PalavyrBaseController
     {
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
         private ILogger<ModifyWidgetPreferencesController> logger;
 
-        public ModifyWidgetPreferencesController(IDashConnector dashConnector, ILogger<ModifyWidgetPreferencesController> logger)
+        public ModifyWidgetPreferencesController(IConfigurationRepository configurationRepository, ILogger<ModifyWidgetPreferencesController> logger)
         {
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
             this.logger = logger;
         }
 
@@ -24,7 +24,7 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
             [FromBody] WidgetPreference preferences
         )
         {
-            var prefs = await dashConnector.GetWidgetPreferences(accountId);
+            var prefs = await configurationRepository.GetWidgetPreferences(accountId);
 
             if (!string.IsNullOrWhiteSpace(preferences.SelectListColor))
             {
@@ -91,7 +91,7 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
                 prefs.ChatBubbleColor = preferences.ChatBubbleColor;
             }
 
-            await dashConnector.CommitChangesAsync();
+            await configurationRepository.CommitChangesAsync();
         }
     }
 }

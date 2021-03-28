@@ -16,11 +16,9 @@ using Palavyr.Data;
 using Palavyr.Services.AccountServices;
 using Palavyr.Services.AmazonServices.S3Service;
 using Palavyr.Services.AuthenticationServices;
-using Palavyr.Services.DynamicTableService;
 using Palavyr.Services.EmailService.ResponseEmailTools;
 using Palavyr.Services.EmailService.Verification;
 using Palavyr.Services.PdfService;
-using SesEmail = Palavyr.Services.EmailService.ResponseEmailTools.SesEmail;
 
 namespace Palavyr.API.Registration.Container
 {
@@ -40,7 +38,6 @@ namespace Palavyr.API.Registration.Container
             services.AddTransient<IAccountSetupService, AccountSetupService>();
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IEmailVerificationService, EmailVerificationService>();
-            services.AddTransient<ICompileDynamicTables, CompileDynamicTablesAsConfigurationNodes>();
             services.AddSingleton<ISesEmail, SesEmail>();
             services.AddTransient<IRequestEmailVerification, RequestEmailVerification>();
             services.AddTransient<IPdfResponseGenerator, PdfResponseGenerator>();

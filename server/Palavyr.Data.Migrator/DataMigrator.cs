@@ -4,7 +4,6 @@ using DbUp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-
 namespace Palavyr.Data.Migrator
 {
     public class DataMigrator

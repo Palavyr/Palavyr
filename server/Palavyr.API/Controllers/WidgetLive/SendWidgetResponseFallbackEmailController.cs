@@ -7,30 +7,30 @@ using Palavyr.Domain;
 using Palavyr.Domain.Resources.Requests;
 using Palavyr.Domain.Resources.Responses;
 using Palavyr.Services.AuthenticationServices;
-using Palavyr.Services.DatabaseService;
 using Palavyr.Services.EmailService.ResponseEmailTools;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
 
     public class SendWidgetResponseFallbackEmailController : PalavyrBaseController
     {
-        private readonly IAccountsConnector accountsConnector;
-        private readonly IDashConnector dashConnector;
+        private readonly IAccountRepository accountRepository;
+        private readonly IConfigurationRepository configurationRepository;
         private readonly IResponseCustomizer responseCustomizer;
         private readonly ISesEmail client;
         private ILogger logger;
 
         public SendWidgetResponseFallbackEmailController(
-            IAccountsConnector accountsConnector,
-            IDashConnector dashConnector,
+            IAccountRepository accountRepository,
+            IConfigurationRepository configurationRepository,
             IResponseCustomizer responseCustomizer,
             ILogger<SendWidgetResponseFallbackEmailController> logger,
             ISesEmail client
         )
         {
-            this.accountsConnector = accountsConnector;
-            this.dashConnector = dashConnector;
+            this.accountRepository = accountRepository;
+            this.configurationRepository = configurationRepository;
             this.responseCustomizer = responseCustomizer;
             this.client = client;
             this.logger = logger;
@@ -47,12 +47,12 @@ namespace Palavyr.API.Controllers.WidgetLive
             logger.LogDebug("Attempting to send email from widget");
 
             var attachmentFiles = AttachmentPaths.ListAttachmentsAsDiskPaths(accountId, areaId);
-            var account = await accountsConnector.GetAccount(accountId);
+            var account = await accountRepository.GetAccount(accountId);
 
             var fromAddress = account.EmailAddress;
             var toAddress = emailRequest.EmailAddress;
 
-            var area = await dashConnector.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(accountId, areaId);
 
             var fallbackSubject = area.UseAreaFallbackEmail
                 ? area.FallbackSubject

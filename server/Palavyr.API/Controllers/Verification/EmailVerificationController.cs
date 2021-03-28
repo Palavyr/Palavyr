@@ -2,25 +2,25 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Domain.Resources.Requests;
-using Palavyr.Services.DatabaseService;
 using Palavyr.Services.EmailService.Verification;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.Verification
 {
 
     public class EmailVerificationController : PalavyrBaseController
     {
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
         private readonly EmailVerificationStatus emailVerificationStatus;
         private ILogger<EmailVerificationController> logger;
 
         public EmailVerificationController(
-            IDashConnector dashConnector,
+            IConfigurationRepository configurationRepository,
             EmailVerificationStatus emailVerificationStatus,
             ILogger<EmailVerificationController> logger
         )
         {
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
             this.emailVerificationStatus = emailVerificationStatus;
             this.logger = logger;
         }
@@ -32,7 +32,7 @@ namespace Palavyr.API.Controllers.Verification
             [FromBody] EmailVerificationRequest emailRequest
         )
         {
-            var area = await dashConnector.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(accountId, areaId);
             var verificationResponse = await emailVerificationStatus.GetVerificationResponse(emailRequest.EmailAddress);
 
             area.EmailIsVerified = verificationResponse.IsVerified();
@@ -43,7 +43,7 @@ namespace Palavyr.API.Controllers.Verification
                 area.AreaSpecificEmail = emailRequest.EmailAddress;
             }
 
-            await dashConnector.CommitChangesAsync();
+            await configurationRepository.CommitChangesAsync();
             return verificationResponse;
         }
     }

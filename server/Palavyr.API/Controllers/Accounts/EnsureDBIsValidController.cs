@@ -1,32 +1,30 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
-using Palavyr.Data;
 using Palavyr.Domain.Configuration.Constant;
 using Palavyr.Domain.Configuration.Schemas.DynamicTables;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 using Palavyr.Services.StripeServices;
 
 namespace Palavyr.API.Controllers.Accounts
 {
     public class EnsureDbIsValidController : PalavyrBaseController
     {
-        private readonly IAccountsConnector accountsConnector;
-        private readonly IDashConnector dashConnector;
+        private readonly IAccountRepository accountRepository;
+        private readonly IConfigurationRepository configurationRepository;
         private ILogger<DeleteAccountController> logger;
         private StripeCustomerService stripeCustomerService;
 
         public EnsureDbIsValidController(
-            IAccountsConnector accountsConnector,
-            IDashConnector dashConnector,
+            IAccountRepository accountRepository,
+            IConfigurationRepository configurationRepository,
             ILogger<DeleteAccountController> logger,
             StripeCustomerService stripeCustomerService
         )
         {
-            this.accountsConnector = accountsConnector;
-            this.dashConnector = dashConnector;
+            this.accountRepository = accountRepository;
+            this.configurationRepository = configurationRepository;
             this.logger = logger;
             this.stripeCustomerService = stripeCustomerService;
         }
@@ -34,14 +32,14 @@ namespace Palavyr.API.Controllers.Accounts
         [HttpPost("configure-conversations/ensure-db-valid")]
         public async Task<NoContentResult> Ensure([FromHeader] string accountId)
         {
-            var preferences = await dashConnector.GetWidgetPreferences(accountId);
-            var account = await accountsConnector.GetAccount(accountId);
+            var preferences = await configurationRepository.GetWidgetPreferences(accountId);
+            var account = await accountRepository.GetAccount(accountId);
 
             if (string.IsNullOrWhiteSpace(account.StripeCustomerId))
             {
                 var newCustomer = await stripeCustomerService.CreateNewStripeCustomer(account.EmailAddress);
                 account.StripeCustomerId = newCustomer.Id;
-                await accountsConnector.CommitChangesAsync();
+                await accountRepository.CommitChangesAsync();
             }
 
             if (string.IsNullOrWhiteSpace(preferences.ChatBubbleColor))
@@ -71,16 +69,7 @@ namespace Palavyr.API.Controllers.Accounts
             if (string.IsNullOrWhiteSpace(preferences.FontFamily))
                 preferences.FontFamily = "Architects Daughter";
 
-            var dynamicTableMetas = await dashConnector.GetAllDynamicTableMetas();
-            foreach (var meta in dynamicTableMetas)
-            {
-                if (meta.RequiredNodeTypes == null)
-                {
-                    meta.RequiredNodeTypes = meta.TableType; // this change was implemented before multi node table types, so this is safe to do.
-                }
-            }
-
-            var conversationNodes = await dashConnector.GetAllConversationNodes();
+            var conversationNodes = await configurationRepository.GetAllConversationNodes();
             var dynamicNodeTypes = new[] {"SelectOneFlat", "PercentOfThreshold", "BasicThreshold"};
             foreach (var node in conversationNodes)
             {
@@ -121,7 +110,7 @@ namespace Palavyr.API.Controllers.Accounts
                 }
             }
 
-            await dashConnector.CommitChangesAsync();
+            await configurationRepository.CommitChangesAsync();
             return NoContent();
         }
     }
