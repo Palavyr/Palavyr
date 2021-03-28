@@ -31,7 +31,8 @@ namespace Palavyr.Data.Setup.SeedData.DataCreators
                     DefaultNodeTypeOptions.YesNo.StringName,
                     accountId, 
                     areaIdentifier,
-                    null
+                    null,
+                    false
                 ),
                 DefaultNodeTypeOptions.CreateTooComplicated().MapNodeTypeOptionToConversationNode(
                     node2Id,
@@ -41,7 +42,8 @@ namespace Palavyr.Data.Setup.SeedData.DataCreators
                     DefaultNodeTypeOptions.TooComplicated.StringName,
                     accountId, 
                     areaIdentifier,
-                    DefaultNodeTypeOptions.YesNo.No
+                    DefaultNodeTypeOptions.YesNo.No,
+                    false
                 ),
                 DefaultNodeTypeOptions.CreateYesNo().MapNodeTypeOptionToConversationNode(
                     node3Id,
@@ -51,7 +53,8 @@ namespace Palavyr.Data.Setup.SeedData.DataCreators
                     DefaultNodeTypeOptions.YesNo.StringName,
                     accountId,
                     areaIdentifier,
-                    DefaultNodeTypeOptions.YesNo.Yes
+                    DefaultNodeTypeOptions.YesNo.Yes,
+                    false
                 ),
                 
                 DefaultNodeTypeOptions.CreateTooComplicated().MapNodeTypeOptionToConversationNode(
@@ -62,7 +65,8 @@ namespace Palavyr.Data.Setup.SeedData.DataCreators
                     DefaultNodeTypeOptions.TooComplicated.StringName,
                     accountId,
                     areaIdentifier,
-                    DefaultNodeTypeOptions.YesNo.No
+                    DefaultNodeTypeOptions.YesNo.No,
+                    false
                 ),
                 // Dynamic table node doesn't have default creator method
                 new ConversationNode()
@@ -77,7 +81,9 @@ namespace Palavyr.Data.Setup.SeedData.DataCreators
                     ValueOptions = string.Join(Delimiters.PathOptionDelimiter, new []{"Ruby", "Black and Tan", "Blenheim"}),
                     AccountId = accountId,
                     IsMultiOptionType = true,
-                    IsTerminalType = false
+                    IsTerminalType = false,
+                    IsDynamicTableNode = true,
+                    NodeComponentType = DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue
                 },
                 DefaultNodeTypeOptions.CreateSendResponse().MapNodeTypeOptionToConversationNode(
                     node6Id,
@@ -87,7 +93,8 @@ namespace Palavyr.Data.Setup.SeedData.DataCreators
                     DefaultNodeTypeOptions.SendResponse.StringName,
                     accountId, 
                     areaIdentifier,
-                    DefaultNodeTypeOptions.YesNo.Yes
+                    DefaultNodeTypeOptions.YesNo.Yes,
+                    false
                 )
             };
         }

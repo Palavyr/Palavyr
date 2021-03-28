@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Data;
 using Palavyr.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Schemas.DynamicTables;
 
 namespace Palavyr.Services.DatabaseService
 {
@@ -16,6 +17,7 @@ namespace Palavyr.Services.DatabaseService
         Task<Area> GetAreaById(string accountId, string areaId);
         Task<List<ConversationNode>> GetAreaConversationNodes(string accountId, string areaId);
         Task<ConversationNode> GetConversationNodeById(string nodeId);
+        Task<List<ConversationNode>> GetConversationNodeByIds(List<string> nodeIds);
         Task<Area> GetAreaWithConversationNodes(string accountId, string areaId);
         Task RemoveConversationNodeById(string nodeId);
         Task<List<ConversationNode>> UpdateConversationNode(string accountId, string areaId, string nodeId, ConversationNode newNode);
@@ -28,6 +30,11 @@ namespace Palavyr.Services.DatabaseService
         Task RemoveStaticTables(List<StaticTablesMeta> staticTablesMetas);
         Task<List<Area>> GetActiveAreasWithConvoAndDynamicAndStaticTables(string accountId);
         void RemoveAreaNodes(string areaId, string accountId);
+        Task<List<DynamicTableMeta>> GetDynamicTableMetas(string accountId, string areaIdentifier);
+
+        // maintenance methods to delete
+        Task<List<DynamicTableMeta>> GetAllDynamicTableMetas();
+        Task<List<ConversationNode>> GetAllConversationNodes();
     }
 
     public class DashConnector : IDashConnector
@@ -39,6 +46,14 @@ namespace Palavyr.Services.DatabaseService
         {
             this.dashContext = dashContext;
             this.logger = logger;
+        }
+
+        public async Task<List<DynamicTableMeta>> GetDynamicTableMetas(string accountId, string areaIdentifier)
+        {
+            return await dashContext
+                .DynamicTableMetas
+                .Where(row => row.AccountId == accountId && row.AreaIdentifier == areaIdentifier)
+                .ToListAsync();
         }
 
         public async Task CommitChangesAsync()
@@ -86,6 +101,16 @@ namespace Palavyr.Services.DatabaseService
             return result;
         }
 
+        public async Task<List<ConversationNode>> GetConversationNodeByIds(List<string> nodeIds)
+        {
+            logger.LogDebug($"Retrieving Conversation Node {nodeIds}");
+            var result = await dashContext
+                .ConversationNodes
+                .Where(row => nodeIds.Contains(row.NodeId))
+                .ToListAsync();
+            return result;
+        }
+
         public async Task<Area> GetAreaWithConversationNodes(string accountId, string areaId)
         {
             var area = await dashContext
@@ -107,7 +132,7 @@ namespace Palavyr.Services.DatabaseService
         {
             await RemoveConversationNodeById(nodeId);
             var area = await GetAreaWithConversationNodes(accountId, areaId);
-            
+
             var updatedConversation = area
                 .ConversationNodes
                 .Where(row => row.NodeId != nodeId)
@@ -145,7 +170,17 @@ namespace Palavyr.Services.DatabaseService
         {
             dashContext.ConversationNodes.RemoveRange(dashContext.ConversationNodes.Where(row => row.AccountId == accountId && row.AreaIdentifier == areaId));
         }
-        
+
+        public async Task<List<DynamicTableMeta>> GetAllDynamicTableMetas()
+        {
+            return await dashContext.DynamicTableMetas.ToListAsync();
+        }
+
+        public async Task<List<ConversationNode>> GetAllConversationNodes()
+        {
+            return await dashContext.ConversationNodes.ToListAsync();
+        }
+
         public async Task<Area> GetAreaComplete(string accountId, string areaId)
         {
             var areaData = await dashContext
@@ -214,7 +249,6 @@ namespace Palavyr.Services.DatabaseService
 
                 dashContext.StaticTablesMetas.Remove(await dashContext.StaticTablesMetas.FindAsync(meta.Id));
             }
-
         }
     }
 }

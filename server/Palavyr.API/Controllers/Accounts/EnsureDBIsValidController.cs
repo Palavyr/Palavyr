@@ -1,12 +1,16 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
+using Palavyr.Data;
+using Palavyr.Domain.Configuration.Constant;
+using Palavyr.Domain.Configuration.Schemas.DynamicTables;
 using Palavyr.Services.DatabaseService;
 using Palavyr.Services.StripeServices;
 
 namespace Palavyr.API.Controllers.Accounts
 {
-
     public class EnsureDbIsValidController : PalavyrBaseController
     {
         private readonly IAccountsConnector accountsConnector;
@@ -19,8 +23,7 @@ namespace Palavyr.API.Controllers.Accounts
             IDashConnector dashConnector,
             ILogger<DeleteAccountController> logger,
             StripeCustomerService stripeCustomerService
-
-            )
+        )
         {
             this.accountsConnector = accountsConnector;
             this.dashConnector = dashConnector;
@@ -33,7 +36,7 @@ namespace Palavyr.API.Controllers.Accounts
         {
             var preferences = await dashConnector.GetWidgetPreferences(accountId);
             var account = await accountsConnector.GetAccount(accountId);
- 
+
             if (string.IsNullOrWhiteSpace(account.StripeCustomerId))
             {
                 var newCustomer = await stripeCustomerService.CreateNewStripeCustomer(account.EmailAddress);
@@ -67,6 +70,56 @@ namespace Palavyr.API.Controllers.Accounts
 
             if (string.IsNullOrWhiteSpace(preferences.FontFamily))
                 preferences.FontFamily = "Architects Daughter";
+
+            var dynamicTableMetas = await dashConnector.GetAllDynamicTableMetas();
+            foreach (var meta in dynamicTableMetas)
+            {
+                if (meta.RequiredNodeTypes == null)
+                {
+                    meta.RequiredNodeTypes = meta.TableType; // this change was implemented before multi node table types, so this is safe to do.
+                }
+            }
+
+            var conversationNodes = await dashConnector.GetAllConversationNodes();
+            var dynamicNodeTypes = new[] {"SelectOneFlat", "PercentOfThreshold", "BasicThreshold"};
+            foreach (var node in conversationNodes)
+            {
+                if (node.IsDynamicTableNode == null)
+                {
+                    if (dynamicNodeTypes.Contains(node.NodeType.Split("-").First()))
+                    {
+                        node.IsDynamicTableNode = true;
+                    }
+                }
+
+                if (node.ResolveOrder == null)
+                {
+                    node.ResolveOrder = 0;
+                }
+
+                if (node.NodeComponentType == null)
+                {
+                    if (node.NodeType.StartsWith(nameof(SelectOneFlat)))
+                    {
+                        node.NodeComponentType = DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue; // should check meta, I know currently this has never been set as paths. 
+                    }
+
+                    else if (node.NodeType.StartsWith(nameof(PercentOfThreshold)))
+                    {
+                        node.NodeComponentType = DefaultNodeTypeOptions.NodeComponentTypes.TakeCurrency;
+                    }
+
+                    else if (node.NodeType.StartsWith(nameof(BasicThreshold)))
+                    {
+                        node.NodeComponentType = DefaultNodeTypeOptions.NodeComponentTypes.TakeCurrency;
+                    }
+
+                    else
+                    {
+                        node.NodeComponentType = node.NodeType;
+                    }
+                }
+            }
 
             await dashConnector.CommitChangesAsync();
             return NoContent();

@@ -8,16 +8,16 @@ namespace Palavyr.Domain.Configuration.Schemas
     public class ConversationNode : IRecord
     {
         [Key] public int? Id { get; set; }
+        public string AreaIdentifier { get; set; } = null!;
+        public string AccountId { get; set; } = null!;
         public string NodeId { get; set; }
         public string NodeType { get; set; } = null!;
         public bool Fallback { get; set; }
         public string Text { get; set; } = null!;
         public bool IsRoot { get; set; }
-        public string AreaIdentifier { get; set; } = null!;
         public string OptionPath { get; set; }
         public bool IsCritical { get; set; }
         public string ValueOptions { get; set; } = null!; // stored as comma delimited list as string
-        public string AccountId { get; set; } = null!;
         public bool IsMultiOptionType { get; set; }
         public bool IsTerminalType { get; set; }
         public bool ShouldRenderChildren { get; set; }
@@ -25,6 +25,13 @@ namespace Palavyr.Domain.Configuration.Schemas
         public bool ShouldShowMultiOption { get; set; }
         public bool IsAnabranchType  { get; set; }
         public bool IsAnabranchMergePoint { get; set; }
+        public bool IsDynamicTableNode { get; set; }
+        public string NodeComponentType { get; set; }
+        public bool IsMultiOptionEditable { get; set; }
+        public bool IsCurrency { get; set; }
+        public int? ResolveOrder { get; set; }
+        
+        // public string DynamicTableKey { get; set; } // used to group responses for the widget / compiling multinode dynamic tables
 
         public string NodeChildrenString { get; set; } = null!; // stored as comma delimited list as string
 
@@ -55,7 +62,10 @@ namespace Palavyr.Domain.Configuration.Schemas
                     IsSplitMergeType = false,
                     ShouldShowMultiOption = false,
                     IsAnabranchType = false,
-                    IsAnabranchMergePoint = false
+                    IsAnabranchMergePoint = false,
+                    IsDynamicTableNode = false,
+                    IsCurrency = false,
+                    IsMultiOptionEditable = false
                 }
             };
         }
@@ -77,7 +87,11 @@ namespace Palavyr.Domain.Configuration.Schemas
             bool isSplitMergeType = false,
             bool shouldShowMultiOption = false,
             bool isAnabranchType = false,
-            bool isAnabranchMergePoint = false
+            bool isAnabranchMergePoint = false,
+            bool isDynamicTableNode = false,
+            bool isCurrency = false,
+            bool isMultiOptionEditable = false,
+            int? resolveOrder = null
         )
         {
             return new ConversationNode()
@@ -99,7 +113,11 @@ namespace Palavyr.Domain.Configuration.Schemas
                 IsSplitMergeType = isSplitMergeType,
                 ShouldShowMultiOption = shouldShowMultiOption,
                 IsAnabranchType = isAnabranchType,
-                IsAnabranchMergePoint = isAnabranchMergePoint
+                IsAnabranchMergePoint = isAnabranchMergePoint,
+                IsCurrency = isCurrency,
+                IsMultiOptionEditable = isMultiOptionEditable,
+                IsDynamicTableNode = isDynamicTableNode,
+                ResolveOrder = resolveOrder
             };
         }
 
@@ -125,7 +143,11 @@ namespace Palavyr.Domain.Configuration.Schemas
                     node.IsSplitMergeType,
                     node.ShouldShowMultiOption,
                     node.IsAnabranchType,
-                    node.IsAnabranchMergePoint
+                    node.IsAnabranchMergePoint,
+                    node.IsDynamicTableNode,
+                    node.IsCurrency,
+                    node.IsMultiOptionEditable,
+                    node.ResolveOrder
                 );
                 mappedTransactions.Add(mappedNode);
             }

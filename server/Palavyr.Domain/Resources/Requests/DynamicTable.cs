@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Palavyr.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Schemas.DynamicTables;
 
 namespace Palavyr.Domain.Resources.Requests
 {
@@ -8,6 +9,7 @@ namespace Palavyr.Domain.Resources.Requests
         public List<SelectOneFlat> SelectOneFlat { get; set; }
         public List<PercentOfThreshold> PercentOfThreshold { get; set; }
         public List<BasicThreshold> BasicThreshold {get; set; }
+        public List<CategorySelectCount> CategorySelectCount { get; set; }
         
         // add new Dynamic Table type rows properties
         public string TableTag { get; set; }

@@ -17,18 +17,21 @@ namespace Palavyr.API.Controllers.WidgetLive
     {
         private readonly IAccountsConnector accountsConnector;
         private readonly IDashConnector dashConnector;
+        private readonly IResponseCustomizer responseCustomizer;
         private readonly ISesEmail client;
         private ILogger logger;
 
         public SendWidgetResponseFallbackEmailController(
             IAccountsConnector accountsConnector,
             IDashConnector dashConnector,
+            IResponseCustomizer responseCustomizer,
             ILogger<SendWidgetResponseFallbackEmailController> logger,
             ISesEmail client
         )
         {
             this.accountsConnector = accountsConnector;
             this.dashConnector = dashConnector;
+            this.responseCustomizer = responseCustomizer;
             this.client = client;
             this.logger = logger;
         }
@@ -70,7 +73,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             {
                 fallbackSubject = "";
             }
-            fallbackHtmlBody = ResponseCustomizer.Customize(fallbackHtmlBody, emailRequest, account);
+            fallbackHtmlBody = responseCustomizer.Customize(fallbackHtmlBody, emailRequest, account);
 
             bool ok;
             if (attachmentFiles.Count == 0)

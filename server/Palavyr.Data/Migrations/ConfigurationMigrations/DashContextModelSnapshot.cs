@@ -73,7 +73,134 @@ namespace Palavyr.Data.Migrations.ConfigurationMigrations
                     b.ToTable("Areas");
                 });
 
-            modelBuilder.Entity("Palavyr.Domain.Configuration.Schemas.BasicThreshold", b =>
+            modelBuilder.Entity("Palavyr.Domain.Configuration.Schemas.ConversationNode", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("AccountId")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("AreaId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("AreaIdentifier")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Fallback")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsAnabranchMergePoint")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsAnabranchType")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsCritical")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsCurrency")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDynamicTableNode")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsMultiOptionEditable")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsMultiOptionType")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsRoot")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsSplitMergeType")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsTerminalType")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("NodeChildrenString")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NodeComponentType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NodeId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NodeType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OptionPath")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("ResolveOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("ShouldRenderChildren")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ShouldShowMultiOption")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ValueOptions")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AreaId");
+
+                    b.ToTable("ConversationNodes");
+                });
+
+            modelBuilder.Entity("Palavyr.Domain.Configuration.Schemas.DynamicTableMeta", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("AccountId")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("AreaId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("AreaIdentifier")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PrettyName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RequiredNodeTypes")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TableId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TableTag")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TableType")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("ValuesAsPaths")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AreaId");
+
+                    b.ToTable("DynamicTableMetas");
+                });
+
+            modelBuilder.Entity("Palavyr.Domain.Configuration.Schemas.DynamicTables.BasicThreshold", b =>
                 {
                     b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
@@ -115,7 +242,7 @@ namespace Palavyr.Data.Migrations.ConfigurationMigrations
                     b.ToTable("BasicThresholds");
                 });
 
-            modelBuilder.Entity("Palavyr.Domain.Configuration.Schemas.ConversationNode", b =>
+            modelBuilder.Entity("Palavyr.Domain.Configuration.Schemas.DynamicTables.CategorySelectCount", b =>
                 {
                     b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
@@ -125,130 +252,45 @@ namespace Palavyr.Data.Migrations.ConfigurationMigrations
                     b.Property<string>("AccountId")
                         .HasColumnType("text");
 
-                    b.Property<int?>("AreaId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("AreaIdentifier")
                         .HasColumnType("text");
 
-                    b.Property<bool>("Fallback")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsAnabranchMergePoint")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsAnabranchType")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsCritical")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsMultiOptionType")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsRoot")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsSplitMergeType")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsTerminalType")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("NodeChildrenString")
+                    b.Property<string>("Count")
                         .HasColumnType("text");
 
-                    b.Property<string>("NodeId")
+                    b.Property<string>("ItemId")
                         .HasColumnType("text");
 
-                    b.Property<string>("NodeType")
+                    b.Property<string>("ItemName")
                         .HasColumnType("text");
 
-                    b.Property<string>("OptionPath")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("ShouldRenderChildren")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("ShouldShowMultiOption")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ValueOptions")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AreaId");
-
-                    b.ToTable("ConversationNodes");
-                });
-
-            modelBuilder.Entity("Palavyr.Domain.Configuration.Schemas.DynamicTableMeta", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("AccountId")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("AreaId")
+                    b.Property<int>("ItemOrder")
                         .HasColumnType("integer");
 
-                    b.Property<string>("AreaIdentifier")
+                    b.Property<bool>("Range")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("RowId")
                         .HasColumnType("text");
 
-                    b.Property<string>("PrettyName")
-                        .HasColumnType("text");
+                    b.Property<int>("RowOrder")
+                        .HasColumnType("integer");
 
                     b.Property<string>("TableId")
                         .HasColumnType("text");
 
-                    b.Property<string>("TableTag")
-                        .HasColumnType("text");
+                    b.Property<double>("ValueMax")
+                        .HasColumnType("double precision");
 
-                    b.Property<string>("TableType")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("ValuesAsPaths")
-                        .HasColumnType("boolean");
+                    b.Property<double>("ValueMin")
+                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AreaId");
-
-                    b.ToTable("DynamicTableMetas");
+                    b.ToTable("CategorySelectCounts");
                 });
 
-            modelBuilder.Entity("Palavyr.Domain.Configuration.Schemas.FileNameMap", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("AccountId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("AreaIdentifier")
-                        .HasColumnType("text");
-
-                    b.Property<string>("RiskyName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SafeName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FileNameMaps");
-                });
-
-            modelBuilder.Entity("Palavyr.Domain.Configuration.Schemas.PercentOfThreshold", b =>
+            modelBuilder.Entity("Palavyr.Domain.Configuration.Schemas.DynamicTables.PercentOfThreshold", b =>
                 {
                     b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
@@ -299,7 +341,7 @@ namespace Palavyr.Data.Migrations.ConfigurationMigrations
                     b.ToTable("PercentOfThresholds");
                 });
 
-            modelBuilder.Entity("Palavyr.Domain.Configuration.Schemas.SelectOneFlat", b =>
+            modelBuilder.Entity("Palavyr.Domain.Configuration.Schemas.DynamicTables.SelectOneFlat", b =>
                 {
                     b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
@@ -333,6 +375,30 @@ namespace Palavyr.Data.Migrations.ConfigurationMigrations
                     b.HasKey("Id");
 
                     b.ToTable("SelectOneFlats");
+                });
+
+            modelBuilder.Entity("Palavyr.Domain.Configuration.Schemas.FileNameMap", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("AccountId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AreaIdentifier")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RiskyName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SafeName")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FileNameMaps");
                 });
 
             modelBuilder.Entity("Palavyr.Domain.Configuration.Schemas.StaticFee", b =>

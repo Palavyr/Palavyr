@@ -19,7 +19,6 @@ using Palavyr.Services.AuthenticationServices;
 using Palavyr.Services.DynamicTableService;
 using Palavyr.Services.EmailService.ResponseEmailTools;
 using Palavyr.Services.EmailService.Verification;
-using Palavyr.Services.EntityServices;
 using Palavyr.Services.PdfService;
 using SesEmail = Palavyr.Services.EmailService.ResponseEmailTools.SesEmail;
 
@@ -45,8 +44,6 @@ namespace Palavyr.API.Registration.Container
             services.AddSingleton<ISesEmail, SesEmail>();
             services.AddTransient<IRequestEmailVerification, RequestEmailVerification>();
             services.AddTransient<IPdfResponseGenerator, PdfResponseGenerator>();
-            // services.AddTransient<IAccountDataService, AccountDataService>();
-            services.AddTransient<IAreaDataService, AreaDataService>();
             services.AddTransient<IS3Saver, S3Saver>();
             services.AddTransient<IPostgresBackup, PostgresBackup>();
             services.AddTransient<IUserDataBackup, UserDataBackup>();

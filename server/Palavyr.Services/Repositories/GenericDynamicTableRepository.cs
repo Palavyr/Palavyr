@@ -33,6 +33,17 @@ namespace Palavyr.Services.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<TEntity>> GetAllRows(string accountId, string areaIdentifier)
+        {
+            return await readonlyQueryExecutor
+                .Where(
+                    row =>
+                        row.AccountId == accountId
+                        && row.AreaIdentifier == areaIdentifier)
+                .ToListAsync();
+        }
+
+
         public async Task SaveTable(
             string accountId,
             string areaIdentifier,
@@ -69,6 +80,14 @@ namespace Palavyr.Services.Repositories
             metaQueryExecutor.Remove(await metaQueryExecutor.SingleAsync(row => row.TableId == tableId));
             queryExecutor.RemoveRange(await GetAllRows(accountId, areaIdentifier, tableId));
             await dashContext.SaveChangesAsync();
+        }
+
+        public async Task<List<TEntity>> GetAllRowsMatchingDynamicResponseId(string accountId, string dynamicResponseId)
+        {
+            var row = await readonlyQueryExecutor
+                .Where(tableRow => tableRow.AccountId == accountId && dynamicResponseId.EndsWith(tableRow.TableId))
+                .ToListAsync();
+            return row;
         }
     }
 }

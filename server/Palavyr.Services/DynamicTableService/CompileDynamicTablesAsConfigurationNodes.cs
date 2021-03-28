@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Data;
-using Palavyr.Domain;
 using Palavyr.Domain.Configuration.Constant;
 using Palavyr.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Schemas.DynamicTables;
 using Palavyr.Services.DynamicTableService.Compilers;
 
 namespace Palavyr.Services.DynamicTableService
@@ -15,7 +12,7 @@ namespace Palavyr.Services.DynamicTableService
     public interface ICompileDynamicTables
     {
         Task<List<NodeTypeOption>> CompileTables(
-            DynamicTableMeta[] dynamicTableMetas,
+            IEnumerable<DynamicTableMeta> dynamicTableMetas,
             string accountId,
             string areaId
         );
@@ -24,28 +21,28 @@ namespace Palavyr.Services.DynamicTableService
     public class CompileDynamicTablesAsConfigurationNodes : ICompileDynamicTables
     {
         private ILogger<CompileDynamicTablesAsConfigurationNodes> logger;
-        private DashContext dashContext;
         private readonly SelectOneFlatCompiler selectOnFlatCompiler;
         private readonly PercentOfThresholdCompiler percentOfThresholdCompiler;
         private readonly BasicThresholdCompiler basicThresholdCompiler;
+        private readonly CategorySelectCountCompiler categorySelectCountCompiler;
 
         public CompileDynamicTablesAsConfigurationNodes(
             ILogger<CompileDynamicTablesAsConfigurationNodes> logger,
-            DashContext dashContext,
             SelectOneFlatCompiler selectOnFlatCompiler,
             PercentOfThresholdCompiler percentOfThresholdCompiler,
-            BasicThresholdCompiler basicThresholdCompiler
+            BasicThresholdCompiler basicThresholdCompiler,
+            CategorySelectCountCompiler categorySelectCountCompiler
         )
         {
             this.logger = logger;
-            this.dashContext = dashContext;
             this.selectOnFlatCompiler = selectOnFlatCompiler;
             this.percentOfThresholdCompiler = percentOfThresholdCompiler;
             this.basicThresholdCompiler = basicThresholdCompiler;
+            this.categorySelectCountCompiler = categorySelectCountCompiler;
         }
 
         public async Task<List<NodeTypeOption>> CompileTables(
-            DynamicTableMeta[] dynamicTableMetas,
+            IEnumerable<DynamicTableMeta> dynamicTableMetas,
             string accountId,
             string areaId
         )
@@ -53,23 +50,29 @@ namespace Palavyr.Services.DynamicTableService
             var nodes = new List<NodeTypeOption>() { };
             foreach (var dynamicTableMeta in dynamicTableMetas)
             {
-                var tableTypes = dynamicTableMeta.TableType.Split(",");
-                
-                if (dynamicTableMeta.TableType == nameof(SelectOneFlat))
+                var tableTypes = dynamicTableMeta.RequiredNodeTypes.Split(",");
+                foreach (var tableType in tableTypes)
                 {
-                    await selectOnFlatCompiler.CompileToConfigurationNodes(dynamicTableMeta, nodes);
-                }
-                else if (dynamicTableMeta.TableType == DynamicTableTypes.CreatePercentOfThreshold().TableType)
-                {
-                    await percentOfThresholdCompiler.CompileToConfigurationNodes(dynamicTableMeta, nodes);
-                }
-                else if (dynamicTableMeta.TableType == DynamicTableTypes.CreateBasicThreshold().TableType)
-                {
-                    await basicThresholdCompiler.CompileToConfigurationNodes(dynamicTableMeta, nodes);
-                }
-                else
-                {
-                    throw new Exception("Table logic not yet implemented");
+                    switch (tableType)
+                    {
+                        case nameof(SelectOneFlat):
+                            await selectOnFlatCompiler.CompileToConfigurationNodes(dynamicTableMeta, nodes);
+                            break;
+                        case nameof(PercentOfThreshold):
+                            await percentOfThresholdCompiler.CompileToConfigurationNodes(dynamicTableMeta, nodes);
+                            break;
+                        case nameof(BasicThreshold):
+                            await basicThresholdCompiler.CompileToConfigurationNodes(dynamicTableMeta, nodes);
+                            break;
+                        case nameof(CategorySelectCount):
+                            await categorySelectCountCompiler.CompileToConfigurationNodes(dynamicTableMeta, nodes);
+                            break;
+                        
+                        // add new node types here
+
+                        default:
+                            throw new Exception("Table logic not yet implemented");
+                    }
                 }
             }
 

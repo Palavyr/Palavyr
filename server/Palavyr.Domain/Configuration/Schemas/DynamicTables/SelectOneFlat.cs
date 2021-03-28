@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Palavyr.Domain.Contracts;
 using Palavyr.Domain.Resources.Requests;
 
-namespace Palavyr.Domain.Configuration.Schemas
+namespace Palavyr.Domain.Configuration.Schemas.DynamicTables
 {
     public class SelectOneFlat : IOrderedTable, IDynamicTable<SelectOneFlat>
     {
@@ -18,7 +18,7 @@ namespace Palavyr.Domain.Configuration.Schemas
         public bool Range { get; set; }
         public int RowOrder { get; set; }
 
-        public static SelectOneFlat CreateNew(string accountId, string areaIdentifier, string option, double valueMin, double valueMax, bool range, string tableId)
+        public static SelectOneFlat CreateNew(string accountId, string areaIdentifier, string option, double valueMin, double valueMax, bool range, string tableId, int rowOrder)
         {
             return new SelectOneFlat()
             {
@@ -28,7 +28,8 @@ namespace Palavyr.Domain.Configuration.Schemas
                 Option = option,
                 ValueMin = valueMin,
                 ValueMax = valueMax,
-                Range = range
+                Range = range,
+                RowOrder = rowOrder
             };
         }
 
@@ -43,6 +44,7 @@ namespace Palavyr.Domain.Configuration.Schemas
                 ValueMax = 0.00,
                 Range = true,
                 TableId = tableId,
+                
             };
         }
 
@@ -58,7 +60,8 @@ namespace Palavyr.Domain.Configuration.Schemas
                     row.ValueMin,
                     row.ValueMax,
                     row.Range,
-                    row.TableId
+                    row.TableId,
+                    row.RowOrder
                 );
                 mappedTableRows.Add(mappedRow);
             }

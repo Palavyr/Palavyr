@@ -16,15 +16,21 @@ namespace PalavyrServer.Tests.Palavyr.Services.DynamicTableService
         {
             NodeList = new List<NodeTypeOption>()
             {
-                NodeTypeOption.Create("one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice),
-                NodeTypeOption.Create("three", "four", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice)
+                NodeTypeOption.Create(
+                    "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
+                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue),
+                NodeTypeOption.Create(
+                    "three", "four", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
+                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue)
             };
         }
 
         [Test]
         public void AddAdditionalNode_addsNode()
         {
-            var newNode = NodeTypeOption.Create("one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice);
+            var newNode = NodeTypeOption.Create(
+                "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
+                DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue);
             NodeList.AddAdditionalNode(newNode);
             NodeList.Should().Contain(newNode);
             NodeList.Count.Should().Be(3);
@@ -33,8 +39,12 @@ namespace PalavyrServer.Tests.Palavyr.Services.DynamicTableService
         [Test]
         public void AddAdditionalNode_addsNodes()
         {
-            var node1 = NodeTypeOption.Create("one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice);
-            var node2 = NodeTypeOption.Create("one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice);
+            var node1 = NodeTypeOption.Create(
+                "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
+                DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue);
+            var node2 = NodeTypeOption.Create(
+                "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
+                DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue);
 
             var newNodes = new List<NodeTypeOption>()
             {

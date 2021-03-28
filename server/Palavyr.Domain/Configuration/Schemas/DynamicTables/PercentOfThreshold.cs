@@ -5,7 +5,7 @@ using Palavyr.Common.UIDUtils;
 using Palavyr.Domain.Contracts;
 using Palavyr.Domain.Resources.Requests;
 
-namespace Palavyr.Domain.Configuration.Schemas
+namespace Palavyr.Domain.Configuration.Schemas.DynamicTables
 {
     /// <summary>
     /// The table meta provides a tableID, for this dynamic table though, we allow the records to be split into subtables

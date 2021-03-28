@@ -22,6 +22,7 @@ namespace Palavyr.API.Controllers.WidgetLive
     {
         private readonly IDashConnector dashConnector;
         private readonly IAccountsConnector accountsConnector;
+        private readonly IResponseCustomizer responseCustomizer;
         private readonly IConfiguration config;
         private readonly IPdfResponseGenerator pdfResponseGenerator;
         private readonly ISesEmail client;
@@ -31,6 +32,7 @@ namespace Palavyr.API.Controllers.WidgetLive
         public SendWidgetResponseEmailController(
             IDashConnector dashConnector,
             IAccountsConnector accountsConnector,
+            IResponseCustomizer responseCustomizer,
             ILogger<SendWidgetResponseEmailController> logger,
             ISesEmail client,
             IConfiguration config,
@@ -39,6 +41,7 @@ namespace Palavyr.API.Controllers.WidgetLive
         {
             this.dashConnector = dashConnector;
             this.accountsConnector = accountsConnector;
+            this.responseCustomizer = responseCustomizer;
             this.config = config;
             this.pdfResponseGenerator = pdfResponseGenerator;
             this.client = client;
@@ -101,7 +104,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             {
                 subject = "";
             }
-            htmlBody = ResponseCustomizer.Customize(htmlBody, emailRequest, account);
+            htmlBody = responseCustomizer.Customize(htmlBody, emailRequest, account);
 
             bool ok;
             if (attachmentFiles.Count == 0)

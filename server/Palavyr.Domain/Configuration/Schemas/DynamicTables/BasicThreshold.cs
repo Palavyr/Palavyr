@@ -5,9 +5,9 @@ using Palavyr.Common.UIDUtils;
 using Palavyr.Domain.Contracts;
 using Palavyr.Domain.Resources.Requests;
 
-namespace Palavyr.Domain.Configuration.Schemas
+namespace Palavyr.Domain.Configuration.Schemas.DynamicTables
 {
-    public class BasicThreshold : IComparable<BasicThreshold>, IOrderedTable, IDynamicTable<BasicThreshold>
+    public class BasicThreshold : IComparable<BasicThreshold>, IOrderedTable, IDynamicTable<BasicThreshold>, IHaveRange
     {
         [Key] public int? Id { get; set; }
         public string AccountId { get; set; }
@@ -17,9 +17,9 @@ namespace Palavyr.Domain.Configuration.Schemas
         public double Threshold { get; set; }
         public double ValueMin { get; set; }
         public double ValueMax { get; set; }
+        public bool Range { get; set; }
         public string ItemName { get; set; }
         public int RowOrder { get; set; }
-        public bool Range { get; set; }
 
         public BasicThreshold() { }
 
