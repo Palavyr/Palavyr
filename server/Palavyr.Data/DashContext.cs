@@ -22,6 +22,6 @@ namespace Palavyr.Data
         public DbSet<SelectOneFlat> SelectOneFlats { get; set; }
         public DbSet<PercentOfThreshold> PercentOfThresholds { get; set; }
         public DbSet<BasicThreshold> BasicThresholds { get; set; }
-        public DbSet<CategorySelectCount> CategorySelectCounts { get; set; }
+        public DbSet<TwoNestedCategory> TwoNestedCategories { get; set; }
     }
 }

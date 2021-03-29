@@ -11,19 +11,23 @@ using Palavyr.Services.Repositories;
 
 namespace Palavyr.Services.DynamicTableService.Compilers
 {
-    public class CategorySelectCountCompiler : BaseCompiler<CategorySelectCount>, IDynamicTablesCompiler
+    public class CategorySelectCountCompiler : BaseCompiler<TwoNestedCategory>, IDynamicTablesCompiler
     {
-        private readonly IGenericDynamicTableRepository<CategorySelectCount> repository;
+        private readonly IGenericDynamicTableRepository<TwoNestedCategory> repository;
 
-        public CategorySelectCountCompiler(IGenericDynamicTableRepository<CategorySelectCount> repository, IConfigurationRepository configurationRepository) : base(repository)
+        public CategorySelectCountCompiler(IGenericDynamicTableRepository<TwoNestedCategory> repository, IConfigurationRepository configurationRepository) : base(repository)
         {
             this.repository = repository;
         }
 
         public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
         {
+            // interesting node - if we have outer categories as paths, then each inner category has to be a separate node
+            // we would have as many inner nodes as there were outer categories
+            // if we at first allow this as multichoiceContinue, then we extend it *later* to facilitate individual paths
+            
             var rows = (await GetTableRows(dynamicTableMeta)).OrderBy(row => row.RowOrder);
-            var categories = rows.Select(row => row.ItemName).ToList();
+            var categories = rows.Select(row => row.Category).ToList();
 
             // node for multiselect category (Category)
             nodes.AddAdditionalNode(
@@ -40,7 +44,7 @@ namespace Palavyr.Services.DynamicTableService.Compilers
                     resolveOrder: 0
                 ));
 
-            // create node for multi-select (counts)
+            // create node for sub category
             nodes.AddAdditionalNode(
                 NodeTypeOption.Create(
                     dynamicTableMeta.MakeUniqueIdentifier(),
@@ -66,12 +70,12 @@ namespace Palavyr.Services.DynamicTableService.Compilers
             var orderedResponseIds = await GetResponsesOrderedByResolveOrder(dynamicResponse);
             var categoryFilterResponse = GetResponseByResponseId(orderedResponseIds[0], dynamicResponse);
             var countFilterResponse = GetResponseByResponseId(orderedResponseIds[1], dynamicResponse);
-            
-            var result = records.Single(rec => rec.ItemName == categoryFilterResponse && rec.Count == countFilterResponse);
+
+            var result = records.Single(rec => rec.Category == categoryFilterResponse && rec.SubCategory == countFilterResponse);
             return new List<TableRow>()
             {
                 new TableRow(
-                    result.ItemName,
+                    string.Join("&", new[] {result.Category, result.SubCategory}),
                     result.ValueMin,
                     result.ValueMax,
                     false,

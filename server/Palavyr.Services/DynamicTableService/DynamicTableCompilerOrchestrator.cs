@@ -97,7 +97,7 @@ namespace Palavyr.Services.DynamicTableService
                     case nameof(BasicThreshold):
                         await basicThresholdCompiler.CompileToConfigurationNodes(dynamicTableMeta, nodes);
                         break;
-                    case nameof(CategorySelectCount):
+                    case nameof(TwoNestedCategory):
                         await categorySelectCountCompiler.CompileToConfigurationNodes(dynamicTableMeta, nodes);
                         break;
 

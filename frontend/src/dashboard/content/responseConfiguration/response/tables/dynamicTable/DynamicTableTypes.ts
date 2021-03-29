@@ -45,13 +45,31 @@ export type BasicThresholdData = {
     rowOrder: number;
 };
 
-export type TableData = SelectOneFlatData[] | PercentOfThresholdData[] | BasicThresholdData[] | any; // | SelectOneThresholdData etc
+export type TwoNestedCategoryData = {
+    id: number;
+    accountId: string;
+    areaIdentifier: string;
+    tableId: string;
+    valueMin: number;
+    valueMax: number;
+    range: boolean;
+    rowId: string;
+    rowOrder: number;
+    itemId: string;
+    itemOrder: number;
+    category: string;
+    subCategory: string;
+};
+
+
+export type TableData = SelectOneFlatData[] | PercentOfThresholdData[] | BasicThresholdData[] | TwoNestedCategoryData[] | any; // | SelectOneThresholdData etc
 
 //These must be kept in sync
 export const DynamicTableTypes = {
     SelectOneFlat: "SelectOneFlat",
     PercentOfThreshold: "PercentOfThreshold",
     BasicThreshold: "BasicThreshold",
+    TwoNestedCategory: "TwoNestedCategory"
 };
 
 export interface IDynamicTableBody {

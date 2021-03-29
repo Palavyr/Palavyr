@@ -32,9 +32,9 @@ export default (state: ContextProperties = defaultContextProperties, action: Con
 // [
 //     {
 //         "DynamicTableKey?": [
-//             {[node.nodeId]: "Response Value"},
-//             {[node.nodeId]: "Response Value"},
-//             {[node.nodeId]: "Response Value"}
+//             {[node.nodeId]: "Response Value"}, 1
+//             {[node.nodeId]: "Response Value"}, 2
+//             {[node.nodeId]: "Response Value"}  0
 //         ],
 //          "SecondPartPossibly?": [
 //              {"node.nodeId"}
