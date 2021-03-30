@@ -31,6 +31,7 @@ namespace Palavyr.Services.AuthenticationServices
         private const string CouldNotValidateGoogleAuthToken = "Could not validate the Google Authentication token";
         private const string DifferentAccountType = "Email is currently used with different account type.";
         private const int GracePeriod = 5;
+
         public AuthService(
             IAccountRepository accountRepository,
             ILogger<AuthService> logger,
@@ -81,17 +82,24 @@ namespace Palavyr.Services.AuthenticationServices
 
         public async Task<Credentials> PerformLoginAction(LoginCredentials loginCredentials)
         {
+            logger.LogDebug("Requesting account using login credentials...");
             var (account, message) = await RequestAccount(loginCredentials);
             if (account == null)
             {
+                logger.LogDebug("Login failed -- could not find account ");
                 return Credentials.CreateUnauthenticatedResponse(message);
             }
 
+            logger.LogDebug("Successfully authenticated using the login credentials...");
             var token = CreateNewJwtToken(account);
+
+            logger.LogDebug("Updating the current account state (regarding subscriptions)...");
             UpdateCurrentAccountState(account);
 
+            logger.LogDebug("Creating and adding a new session...");
             var session = await accountRepository.CreateAndAddNewSession(account);
-            
+
+            logger.LogDebug("Committing the new session to the DB.");
             await accountRepository.CommitChangesAsync();
 
             logger.LogDebug("Session saved to DB. Returning auth response.");
@@ -122,7 +130,7 @@ namespace Palavyr.Services.AuthenticationServices
         {
             try
             {
-                logger.LogDebug("Inside the try block -- attempting to validation One Time Code");
+                logger.LogDebug("Inside the try block -- attempting to validate Google One Time Code");
                 var result =
                     await GoogleJsonWebSignature.ValidateAsync(
                         oneTimeCode,
@@ -131,7 +139,7 @@ namespace Palavyr.Services.AuthenticationServices
             }
             catch (InvalidJwtException)
             {
-                logger.LogDebug("EXCEPTION - Invalid JWT Token!");
+                logger.LogDebug("Failed to validate the Google One Time Token - Invalid JWT Token!");
                 return null;
             }
             catch (Exception ex)
@@ -143,7 +151,10 @@ namespace Palavyr.Services.AuthenticationServices
 
         private async Task<AccountReturn> RequestAccount(LoginCredentials loginCredentials)
         {
+            logger.LogDebug("Determining login type...");
             var loginType = DetermineLoginType(loginCredentials);
+
+            logger.LogDebug($"Login type found to be: {loginType}");
             return loginType switch
             {
                 (LoginType.Default) => await RequestAccountViaDefault(loginCredentials),
@@ -155,9 +166,12 @@ namespace Palavyr.Services.AuthenticationServices
 
         private async Task<AccountReturn> RequestAccountViaGoogle(LoginCredentials credential)
         {
+            logger.LogDebug("Requesting account via Google...");
             var payload = await ValidateGoogleTokenId(credential.OneTimeCode);
             if (payload == null)
+            {
                 return AccountReturn.Return(null, CouldNotValidateGoogleAuthToken);
+            }
 
             if (payload.Subject != credential.TokenId)
             {
@@ -197,13 +211,14 @@ namespace Palavyr.Services.AuthenticationServices
 
             return AccountReturn.Return(account, null);
         }
-        
+
         private string CreateNewJwtToken(Account account)
         {
+            logger.LogDebug("Calling the Jwt Token Service...");
             return jwtAuthService.GenerateJwtTokenAfterAuthentication(account.EmailAddress);
         }
 
-        private static LoginType DetermineLoginType(LoginCredentials loginCredentials)
+        private LoginType DetermineLoginType(LoginCredentials loginCredentials)
         {
             if (!string.IsNullOrWhiteSpace(loginCredentials.OneTimeCode) &&
                 !string.IsNullOrWhiteSpace(loginCredentials.TokenId))
@@ -211,6 +226,7 @@ namespace Palavyr.Services.AuthenticationServices
             if (!string.IsNullOrWhiteSpace(loginCredentials.EmailAddress) &&
                 !string.IsNullOrWhiteSpace(loginCredentials.Password))
                 return LoginType.Default;
+            logger.LogDebug("Error: Could not determine login type.");
             return LoginType.Error;
         }
     }
