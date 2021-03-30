@@ -22,6 +22,7 @@ namespace Palavyr.API.CustomMiddleware
         {
             try
             {
+                logger.LogDebug("Entering error handling middleware...");
                 await next(context);
             }
             catch (Exception ex)
