@@ -8,7 +8,7 @@ using Palavyr.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.Authentication
 {
-
+    [AllowAnonymous]
     public class CreateLoginRequestController : PalavyrBaseController
     {
         private readonly ILogger<CreateLoginRequestController> logger;

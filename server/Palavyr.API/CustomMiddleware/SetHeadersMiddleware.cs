@@ -10,7 +10,6 @@ namespace Palavyr.API.CustomMiddleware
 {
     public class SetHeadersMiddleware
     {
-
         private readonly RequestDelegate next;
         private ILogger<SetHeadersMiddleware> logger;
 
@@ -19,14 +18,13 @@ namespace Palavyr.API.CustomMiddleware
             this.next = next;
             this.logger = logger;
         }
-        
+
         public async Task InvokeAsync(HttpContext context, IWebHostEnvironment env, AccountsContext accountContext)
         {
             var action = context.Request.Headers[MagicUrlStrings.Action].ToString();
-            
-            if ( action == MagicUrlStrings.SessionAction)
-            { 
 
+            if (action == MagicUrlStrings.SessionAction)
+            {
                 var sessionId = context.Request.Headers[MagicUrlStrings.SessionId].ToString();
                 if (!string.IsNullOrWhiteSpace(sessionId))
                 {

@@ -40,7 +40,7 @@ namespace Palavyr.API
             services.AddHttpContextAccessor();
             
             AuthenticationConfiguration.AddAuthenticationSchemes(services, configuration);
-            
+            services.AddAuthentication();
             CorsConfiguration.AddCors(services, env);
             services.AddControllers();
             
@@ -58,7 +58,7 @@ namespace Palavyr.API
             )
         {
             var logger = loggerFactory.CreateLogger<Startup>();
-
+            app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors();
