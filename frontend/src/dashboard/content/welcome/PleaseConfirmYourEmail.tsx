@@ -1,12 +1,12 @@
 import * as React from "react";
 import { ApiClient } from "@api-client/Client";
-import { LocalStorage } from "localStorage/localStorage";
 import classNames from "classnames";
 import { Card, Typography, FormControl, InputLabel, OutlinedInput, makeStyles } from "@material-ui/core";
 import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
 import { useState } from "react";
 import auth from "auth/Auth";
+import { SessionStorage } from "localStorage/sessionStorage";
 
 const useStyles = makeStyles((theme) => ({
     contentRoot: {
@@ -36,7 +36,7 @@ export const PleaseConfirmYourEmail = () => {
     const client = new ApiClient();
     const [authToken, setAuthToken] = useState<string>("");
     const [, setAuthStatus] = useState<string | null>(null);
-    const emailAddress = LocalStorage.getEmailAddress();
+    const emailAddress = SessionStorage.getEmailAddress();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const cls = useStyles();

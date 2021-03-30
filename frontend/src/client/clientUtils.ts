@@ -1,15 +1,18 @@
-import { LocalStorage } from "localStorage/localStorage";
+import { SessionStorage } from "localStorage/sessionStorage";
 
 /*
 This will retrieve login credental data from localstorage and send it with the requestover to the server for retrieval.
 */
 export const getSessionIdFromLocalStorage = (): string => {
-    var sessionId = LocalStorage.getSessionId()
+    var sessionId = SessionStorage.getSessionId()
     return sessionId || "noIdInStorage";
 }
 
 export const getJwtTokenFromLocalStorage = (): string => {
-    var token = LocalStorage.getJwtToken();
+    var token = SessionStorage.getJwtToken();
+    if (!token){
+        throw new Error("No token in local storage...")
+    }
     return token || "noTokenInStorage";
 }
 

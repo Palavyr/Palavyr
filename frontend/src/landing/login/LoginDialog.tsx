@@ -6,7 +6,6 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import { Credentials, FormStatusTypes, GoogleAuthResponse } from "@Palavyr-Types";
-import { LocalStorage } from "localStorage/localStorage";
 import { SessionStorage } from "localStorage/sessionStorage";
 import {
     COULD_NOT_FIND_ACCOUNT,
@@ -103,7 +102,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
 
         if (loginEmail && loginPassword) {
             const successfulResponse = await Auth.login(loginEmail, loginPassword, success, error);
-            LocalStorage.setDefaultLoginType();
+            SessionStorage.setDefaultLoginType();
             setIsLoading(false);
             if (successfulResponse === null) {
                 setStatus(COULD_NOT_FIND_SERVER);
@@ -147,8 +146,8 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
                 tokenId: id_token,
                 googleId: googleID,
             };
-            LocalStorage.setGoogleImage(imageURL);
-            LocalStorage.setGoogleLoginType();
+            SessionStorage.setGoogleImage(imageURL);
+            SessionStorage.setGoogleLoginType();
             await googleLogin(response);
         }
     };

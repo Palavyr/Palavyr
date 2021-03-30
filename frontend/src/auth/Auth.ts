@@ -1,4 +1,4 @@
-import { LocalStorage } from "localStorage/localStorage";
+import { SessionStorage } from "localStorage/sessionStorage";
 import { LoginClient } from "client/LoginClient";
 import { LogoutClient } from "client/LogoutClient";
 import { ApiClient } from "@api-client/Client";
@@ -18,8 +18,8 @@ class Auth {
     }
 
     constructor() {
-        this.authenticated = LocalStorage.isAuthenticated() === true ? true : false;
-        this.isActive = LocalStorage.isActive() === true ? true : false;
+        this.authenticated = SessionStorage.isAuthenticated() === true ? true : false;
+        this.isActive = SessionStorage.isActive() === true ? true : false;
     }
 
     async register(email: string, password: string, callback: () => any, errorCallback: (response) => any) {
@@ -40,20 +40,20 @@ class Auth {
     private async processAuthenticationResponse(authenticationResponse: Credentials, callback: () => any, errorCallback: (response: Credentials) => any) {
         if (authenticationResponse.authenticated) {
             this.authenticated = true;
-            LocalStorage.setAuthorization(authenticationResponse.sessionId, authenticationResponse.jwtToken);
-            LocalStorage.setEmailAddress(authenticationResponse.emailAddress);
+            SessionStorage.setAuthorization(authenticationResponse.sessionId, authenticationResponse.jwtToken);
+            SessionStorage.setEmailAddress(authenticationResponse.emailAddress);
 
             const _client = new ApiClient(); // needs to be authenticated
 
             const { data: accountIsActive } = await _client.Settings.Account.checkIsActive();
             this.isActive = accountIsActive;
-            LocalStorage.setIsActive(accountIsActive);
+            SessionStorage.setIsActive(accountIsActive);
 
             callback();
             return true;
         } else {
             this.authenticated = false;
-            LocalStorage.unsetAuthorization();
+            SessionStorage.unsetAuthorization();
             errorCallback(authenticationResponse);
             return false;
         }
@@ -81,7 +81,7 @@ class Auth {
     }
 
     async loginFromMemory(callback: any) {
-        const token = LocalStorage.getJwtToken();
+        const token = SessionStorage.getJwtToken();
         if (token) {
             if (await this.loginClient.Status.CheckIfLoggedIn()) {
                 callback();
@@ -90,12 +90,12 @@ class Auth {
     }
 
     async logout(callback: () => any) {
-        const sessionId = LocalStorage.getSessionId();
+        const sessionId = SessionStorage.getSessionId();
         if (sessionId !== null && sessionId !== "") {
             const logoutClient = new LogoutClient(); // needs to be authenticated so we should instantiate this on the call
             await logoutClient.Logout.RequestLogout(sessionId);
-            LocalStorage.unsetAuthorization();
-            LocalStorage.unsetEmailAddress();
+            SessionStorage.unsetAuthorization();
+            SessionStorage.unsetEmailAddress();
         }
         this.authenticated = false;
         callback();
@@ -117,9 +117,9 @@ class Auth {
     }
 
     PerformLogout(logoutCallback: any) {
-        const loginType = LocalStorage.getLoginType();
+        const loginType = SessionStorage.getLoginType();
 
-        if (loginType === LocalStorage.GoogleLoginType) {
+        if (loginType === SessionStorage.GoogleLoginType) {
             this.googleLogout(logoutCallback);
         } else {
             console.log("Logging Out");
@@ -128,11 +128,11 @@ class Auth {
     }
 
     ClearAuthentication() {
-        LocalStorage.unsetAuthorization();
+        SessionStorage.unsetAuthorization();
     }
 
     SetIsActive() {
-        LocalStorage.setIsActive(true);
+        SessionStorage.setIsActive(true);
     }
 }
 

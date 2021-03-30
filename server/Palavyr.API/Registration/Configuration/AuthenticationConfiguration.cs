@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.Common.GlobalConstants;
@@ -16,7 +17,6 @@ namespace Palavyr.API.Registration.Configuration
         public static void AddAuthenticationSchemes(IServiceCollection services, IConfiguration configuration)
         {
             var key = configuration[ConfigSections.JwtSecretKey] ?? throw new ArgumentNullException("Configuration[\"JWTSecretKey\"]");
-
             services
                 .AddAuthentication(
                     o =>

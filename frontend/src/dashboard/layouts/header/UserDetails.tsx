@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { LocalStorage } from 'localStorage/localStorage';
 import { makeStyles } from '@material-ui/core';
+import { SessionStorage } from 'localStorage/sessionStorage';
 
 const useStyles = makeStyles(theme => ({
     loggedin: {
@@ -17,8 +17,8 @@ const useStyles = makeStyles(theme => ({
 
 export const UserDetails = () => {
 
-    const email = LocalStorage.getEmailAddress();
-    const googleImage = LocalStorage.getGoogleImage();
+    const email = SessionStorage.getEmailAddress();
+    const googleImage = SessionStorage.getGoogleImage();
     const classes = useStyles();
 
     return (
