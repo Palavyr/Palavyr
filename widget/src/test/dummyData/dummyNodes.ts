@@ -11,7 +11,9 @@ export const ConvoNode: ConvoTableRow = {
     isRoot: true,
     areaIdentifier: "abc123",
     optionPath: "",
-    valueOptions: "", // needs to be split by ","
+    valueOptions: "", // needs to be split by ",",
+    isDynamicTableNode: false,
+    nodeComponentType: "YesNo"
 };
 
 export const RootOfThree = {
@@ -25,7 +27,9 @@ export const RootOfThree = {
     isRoot: true,
     areaIdentifier: "abc123",
     optionPath: "",
-    valueOptions: "Yes|peg|No", // needs to be split by ","
+    valueOptions: "Yes|peg|No", // needs to be split by ",",
+    isDynamicTableNode: false,
+    nodeComponentType: "YesNo"
 }
 
 export const ThreeNodes = [
@@ -41,7 +45,9 @@ export const ThreeNodes = [
         isRoot: false,
         areaIdentifier: "abc123",
         optionPath: "No",
-        valueOptions: "", // needs to be split by ","
+        valueOptions: "", // needs to be split by ",",
+        isDynamicTableNode: false,
+        nodeComponentType: ""
     },
     {
         id: 2,
@@ -54,6 +60,8 @@ export const ThreeNodes = [
         isRoot: false,
         areaIdentifier: "abc123",
         optionPath: "Yes",
-        valueOptions: "", // needs to be split by ","
+        valueOptions: "", // needs to be split by ",",
+        isDynamicTableNode: false,
+        nodeComponentType: ""
     }
 ]
