@@ -31,7 +31,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<SelectOneFlatCompiler>().AsSelf();
             builder.RegisterType<PercentOfThresholdCompiler>().AsSelf();
             builder.RegisterType<BasicThresholdCompiler>().AsSelf();
-            builder.RegisterType<CategorySelectCountCompiler>().AsSelf();
+            builder.RegisterType<TwoNestedCategoryCompiler>().AsSelf();
 
             
             builder.RegisterType<PreviewResponseGenerator>().As<IPreviewResponseGenerator>();

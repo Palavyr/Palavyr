@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { ChangeEvent } from "react";
 import { PercentOfThreshold } from "./tableComponents/PercentOfThreshold/PercentOfThreshold";
 import { BasicThreshold } from "./tableComponents/BasicThreshold/BasicThreshold";
+import { TwoNestedCategories } from "./tableComponents/TwoNestedCategories/TwoNestedCategories";
 
 export interface ISingleDynamicFeeTable {
     defaultTableMeta: DynamicTableMeta;
@@ -157,6 +158,9 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
             )}
             {tableMeta?.tableType === DynamicTableTypes.BasicThreshold && dynamicTableData !== undefined && (
                 <BasicThreshold tableTag={tableTag} tableId={tableMeta.tableId} tableData={dynamicTableData} setTableData={setDynamicTableData} areaIdentifier={areaIdentifier} deleteAction={deleteAction} />
+            )}
+            {tableMeta?.tableType === DynamicTableTypes.TwoNestedCategory && dynamicTableData !== undefined && (
+                <TwoNestedCategories tableTag={tableTag} tableMeta={tableMeta} tableId={tableMeta.tableId} tableData={dynamicTableData} setTableData={setDynamicTableData} areaIdentifier={areaIdentifier} deleteAction={deleteAction} />
             )}
         </section>
     );

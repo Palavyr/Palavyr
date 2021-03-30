@@ -17,19 +17,19 @@ namespace Palavyr.Services.DynamicTableService
         private readonly SelectOneFlatCompiler selectOneFlatCompiler;
         private readonly PercentOfThresholdCompiler percentOfThresholdCompiler;
         private readonly BasicThresholdCompiler basicThresholdCompiler;
-        private readonly CategorySelectCountCompiler categorySelectCountCompiler;
+        private readonly TwoNestedCategoryCompiler twoNestedCategoryCompiler;
 
         public DynamicTableCompilerOrchestrator(
             SelectOneFlatCompiler selectOneFlatCompiler,
             PercentOfThresholdCompiler percentOfThresholdCompiler,
             BasicThresholdCompiler basicThresholdCompiler,
-            CategorySelectCountCompiler categorySelectCountCompiler
+            TwoNestedCategoryCompiler twoNestedCategoryCompiler
         )
         {
             this.selectOneFlatCompiler = selectOneFlatCompiler;
             this.percentOfThresholdCompiler = percentOfThresholdCompiler;
             this.basicThresholdCompiler = basicThresholdCompiler;
-            this.categorySelectCountCompiler = categorySelectCountCompiler;
+            this.twoNestedCategoryCompiler = twoNestedCategoryCompiler;
         }
 
         public async Task<List<Table>> CompileTablesToPdfRows(
@@ -60,9 +60,9 @@ namespace Palavyr.Services.DynamicTableService
                 {
                     rows = await basicThresholdCompiler.CompileToPdfTableRow(accountId, responses, dynamicTableKeys, culture);
                 }
-                else if (dynamicTableKey.StartsWith(DynamicTableTypes.CreateCategorySelectCount().TableType))
+                else if (dynamicTableKey.StartsWith(DynamicTableTypes.CreateTwoNestedCategory().TableType))
                 {
-                    rows = await categorySelectCountCompiler.CompileToPdfTableRow(accountId, responses, dynamicTableKeys, culture);
+                    rows = await twoNestedCategoryCompiler.CompileToPdfTableRow(accountId, responses, dynamicTableKeys, culture);
                 }
                 else
                 {
@@ -98,7 +98,7 @@ namespace Palavyr.Services.DynamicTableService
                         await basicThresholdCompiler.CompileToConfigurationNodes(dynamicTableMeta, nodes);
                         break;
                     case nameof(TwoNestedCategory):
-                        await categorySelectCountCompiler.CompileToConfigurationNodes(dynamicTableMeta, nodes);
+                        await twoNestedCategoryCompiler.CompileToConfigurationNodes(dynamicTableMeta, nodes);
                         break;
 
                     // add new node types here

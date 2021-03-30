@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const TwoCategoriesNested = ({ tableId, tableTag, tableMeta, tableData, setTableData, areaIdentifier, deleteAction }: Omit<IDynamicTableProps, "setTableMeta">) => {
+export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, setTableData, areaIdentifier, deleteAction }: Omit<IDynamicTableProps, "setTableMeta">) => {
     const client = new ApiClient();
     const classes = useStyles();
 

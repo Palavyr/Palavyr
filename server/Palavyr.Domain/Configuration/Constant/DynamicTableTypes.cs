@@ -14,7 +14,7 @@ namespace Palavyr.Domain.Configuration.Constant
         public static SelectOneFlat CreateSelectOneFlat() => new SelectOneFlat();
         public static PercentOfThreshold CreatePercentOfThreshold() => new PercentOfThreshold();
         public static BasicThreshold CreateBasicThreshold() => new BasicThreshold();
-        public static CategorySelectCount CreateCategorySelectCount() => new CategorySelectCount();
+        public static TwoNestedCategory CreateTwoNestedCategory() => new TwoNestedCategory();
         public static List<DynamicType> GetDynamicTableTypes()
         {   
             return new List<DynamicType>
@@ -22,16 +22,16 @@ namespace Palavyr.Domain.Configuration.Constant
                 new SelectOneFlat(),
                 new PercentOfThreshold(),
                 new BasicThreshold(),
-                new CategorySelectCount()
+                new TwoNestedCategory()
             };
         }
 
-        public class CategorySelectCount : DynamicType
+        public class TwoNestedCategory : DynamicType
         {
-            public CategorySelectCount()
+            public TwoNestedCategory()
             {
                 PrettyName = "Categorical Select Count";
-                TableType = nameof(CategorySelectCount);
+                TableType = nameof(TwoNestedCategory);
             }
         }
 

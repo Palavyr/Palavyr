@@ -66,7 +66,7 @@ namespace Palavyr.Domain.Configuration.Schemas.DynamicTables
         public List<TwoNestedCategory> UpdateTable(DynamicTable table)
         {
             var mappedTableRows = new List<TwoNestedCategory>();
-            foreach (var row in table.CategorySelectCount)
+            foreach (var row in table.TwoNestedCategory)
             {
                 mappedTableRows.Add(
                     CreateNew(

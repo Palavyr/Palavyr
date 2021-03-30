@@ -11,11 +11,11 @@ using Palavyr.Services.Repositories;
 
 namespace Palavyr.Services.DynamicTableService.Compilers
 {
-    public class CategorySelectCountCompiler : BaseCompiler<TwoNestedCategory>, IDynamicTablesCompiler
+    public class TwoNestedCategoryCompiler : BaseCompiler<TwoNestedCategory>, IDynamicTablesCompiler
     {
         private readonly IGenericDynamicTableRepository<TwoNestedCategory> repository;
 
-        public CategorySelectCountCompiler(IGenericDynamicTableRepository<TwoNestedCategory> repository, IConfigurationRepository configurationRepository) : base(repository)
+        public TwoNestedCategoryCompiler(IGenericDynamicTableRepository<TwoNestedCategory> repository, IConfigurationRepository configurationRepository) : base(repository)
         {
             this.repository = repository;
         }
