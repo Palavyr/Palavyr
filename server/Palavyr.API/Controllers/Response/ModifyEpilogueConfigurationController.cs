@@ -1,32 +1,29 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Domain.Resources.Requests;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.Response
 {
-    [Route("api")]
-    [ApiController]
-    public class ModifyEpilogueConfigurationController : ControllerBase
+    public class ModifyEpilogueConfigurationController : PalavyrBaseController
     {
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
 
-        public ModifyEpilogueConfigurationController(IDashConnector dashConnector)
+        public ModifyEpilogueConfigurationController(IConfigurationRepository configurationRepository)
         {
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
         }
 
         [HttpPut("response/configuration/{areaId}/epilogue")]
-        public async Task<string> Modify
-        (
+        public async Task<string> Modify(
             [FromHeader] string accountId,
             [FromRoute] string areaId,
             [FromBody] EpilogueReceiver epilogueReceiver
         )
         {
-            var area = await dashConnector.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(accountId, areaId);
             area.Epilogue = epilogueReceiver.Epilogue;
-            await dashConnector.CommitChangesAsync();
+            await configurationRepository.CommitChangesAsync();
             return epilogueReceiver.Epilogue;
         }
     }

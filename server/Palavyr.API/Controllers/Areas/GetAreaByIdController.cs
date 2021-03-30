@@ -4,30 +4,29 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Domain.Configuration.Schemas;
-using Palavyr.Services.DatabaseService;
 using Palavyr.Services.EmailService.Verification;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.Areas
 {
     [Authorize]
-    [Route("api")]
-    [ApiController]
-    public class GetAreaByIdController : ControllerBase
+
+    public class GetAreaByIdController : PalavyrBaseController
     {
-        private readonly IDashConnector dashConnector;
-        private readonly IAccountsConnector accountsConnector;
+        private readonly IConfigurationRepository configurationRepository;
+        private readonly IAccountRepository accountRepository;
         private readonly EmailVerificationStatus emailVerificationStatus;
         private ILogger<GetAreaByIdController> logger;
 
         public GetAreaByIdController(
-            IDashConnector dashConnector,
-            IAccountsConnector accountsConnector,
+            IConfigurationRepository configurationRepository,
+            IAccountRepository accountRepository,
             EmailVerificationStatus emailVerificationStatus,
             ILogger<GetAreaByIdController> logger
         )
         {
-            this.dashConnector = dashConnector;
-            this.accountsConnector = accountsConnector;
+            this.configurationRepository = configurationRepository;
+            this.accountRepository = accountRepository;
             this.emailVerificationStatus = emailVerificationStatus;
             this.logger = logger;
         }
@@ -37,11 +36,11 @@ namespace Palavyr.API.Controllers.Areas
         [HttpGet("areas/{areaId}")]
         public async Task<Area> Get([FromHeader] string accountId, string areaId)
         {
-            var area = await dashConnector.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(accountId, areaId);
 
             if (string.IsNullOrWhiteSpace(area.AreaSpecificEmail))
             {
-                var account = await accountsConnector.GetAccount(accountId);
+                var account = await accountRepository.GetAccount(accountId);
                 area.AreaSpecificEmail = account.EmailAddress;
             }
 
@@ -61,7 +60,7 @@ namespace Palavyr.API.Controllers.Areas
                 area.UseAreaFallbackEmail = false;
             }
 
-            await dashConnector.CommitChangesAsync();
+            await configurationRepository.CommitChangesAsync();
             return area;
         }
     }

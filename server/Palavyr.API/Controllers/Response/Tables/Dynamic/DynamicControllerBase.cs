@@ -5,10 +5,9 @@ using Palavyr.API.ModelBinding;
 using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.Domain.Resources.Requests;
 
-
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
-    public abstract class DynamicControllerBase<TEntity> : ControllerBase, IDynamicTableController<TEntity> where TEntity : class, IDynamicTable<TEntity>, new()
+    public abstract class DynamicControllerBase<TEntity> : PalavyrBaseController, IDynamicTableController<TEntity> where TEntity : class, IDynamicTable<TEntity>, new()
     {
         private readonly IDynamicTableCommandHandler<TEntity> handler;
 

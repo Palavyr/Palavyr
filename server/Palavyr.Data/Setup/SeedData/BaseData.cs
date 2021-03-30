@@ -3,6 +3,7 @@ using Palavyr.API.Controllers.Accounts.Setup.SeedData.DataCreators;
 using Palavyr.Common.UIDUtils;
 using Palavyr.Data.Setup.SeedData.DataCreators;
 using Palavyr.Domain.Configuration.Schemas;
+using Palavyr.Domain.Configuration.Schemas.DynamicTables;
 
 namespace Palavyr.Data.Setup.SeedData
 {
@@ -15,7 +16,7 @@ namespace Palavyr.Data.Setup.SeedData
         public readonly List<SelectOneFlat> DefaultDynamicTables = new List<SelectOneFlat>();
 
         public const string AreaName = "Buying a Cavvy";
-        const string TableTag = "Cavvy Types";
+        private const string TableTag = "Cavvy Types";
         public string EmailTemplate => CreateEmailTemplate.Create();
         
         

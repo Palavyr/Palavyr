@@ -1,10 +1,8 @@
 import { Registry, ConvoTableRow, ConversationUpdate } from "../types";
-import { renderCustomComponent, addUserMessage, toggleMsgLoader, addKeyValue } from "src/widgetCore/store/dispatcher";
+import { renderCustomComponent, addUserMessage, toggleMsgLoader, addKeyValue, setDynamicResponses, getDynamicResponsesContext } from "src/widgetCore/store/dispatcher";
 import { IClient } from "../client/Client";
 import { dummyFailComponent } from "./DummyComponentDev";
 import { makeProvideInfo } from "./standardComponents/MakeProvideInfo";
-import { makeStartEndingSequence } from "./endingSequenceComponents/MakeStartEndingSequence";
-import { makeSelectOneFlat } from "./dynamicTableComponents/MakeSelectOneFlat";
 import { makeSendEmail } from "./endingSequenceComponents/MakeSendEmail";
 import { makeRestart } from "./endingSequenceComponents/MakeRestart";
 import { makeTakeText } from "./standardComponents/MakeTakeText";
@@ -12,12 +10,10 @@ import { makeTakeNumber } from "./standardComponents/MakeTakeNumber";
 import { makeMultipleChoiceAsPathButtons } from "./standardComponents/MakeMultipeChoiceAsPathsButtons";
 import { makeMultipleChoiceContinueButtons } from "./standardComponents/MakeMultipleChoiceContinueButtons";
 import { makeTakeCurrency } from "./standardComponents/MakeTakeCurrency";
-import { makePercentOfThreshold } from "./dynamicTableComponents/MakePercentOfThreshold";
-import { makeTooComplicated } from "./standardComponents/MakeTooComplicated";
 import { random } from "./random";
 import { makeSendFallbackEmail } from "./endingSequenceComponents/MakeSendFallbackEmail";
 import { makeTakeNumberIndividuals } from "./standardComponents/makeTakeNumberIndividuals";
-import { makeBasicThreshold } from "./dynamicTableComponents/MakeBasicThreshold";
+import { cloneDeep } from "lodash";
 
 export interface IProgressTheChat {
     node: ConvoTableRow;
@@ -39,6 +35,12 @@ export const responseAction = (
     if (response) {
         if (node.isCritical) {
             addKeyValue({ [node.text]: response.toString() })
+        }
+
+        if (node.isDynamicTableNode){
+            if (node.isDynamicTableNode) {
+                setDynamicResponse(node.nodeType, node.nodeId, response.toString());
+            }
         }
 
         if (child.optionPath !== null && child.optionPath !== "" && child.optionPath !== "Continue") {
@@ -76,39 +78,49 @@ export const renderNextComponent = (
     if (node.nodeType === "" || node.nodeType === null || node.nodeChildrenString === "" || node.nodeChildrenString === null) {
         return renderCustomComponent(dummyFailComponent, {}, false);
     }
-    var makeNextComponent = ComponentRegistry[node.nodeType.split("-")[0]]; // This is a bit fragile
+    var makeNextComponent = ComponentRegistry[node.nodeComponentType];
 
     var nextComponent = makeNextComponent({ node, nodeList, client, convoId });
     return renderCustomComponent(nextComponent, {}, false);
 };
 
+export const setDynamicResponse = (nodeType: string, nodeId: string, response: string) => {
+    let dynamicResponseObject = cloneDeep(getDynamicResponsesContext());
+    // search the list for keys that match the nodeType, e.g. CategoricalCount-1231
+    const currentResponseType = dynamicResponseObject.filter(resp => {
+        return Object.keys(resp).includes(nodeType);
+    });
+
+    // maybe we haven't add this response type to the context yet, so this list is empty
+    if (currentResponseType.length == 0) {
+        // we need to add this response type to the context
+        dynamicResponseObject = {
+            ...dynamicResponseObject,
+            [nodeType]: [{ [nodeId]: response }],
+        };
+    } else {
+        // we can push a new response to the nodeType collection
+        dynamicResponseObject[nodeType].push({[nodeId]: response});
+    }
+    setDynamicResponses(dynamicResponseObject);
+};
+
+
 export enum NodeTypes {
     // standard types
     YesNo = "YesNo",
-    TooComplicated = "TooComplicated",
     YesNoNotSure = "YesNoNotSure",
     YesNotSureCombined = "YesNotSureCombined",
     NoNotSureCombined = "NoNotSureCombined",
+
     TakeText = "TakeText",
     TakeNumber = "TakeNumber",
     TakeCurrency = "TakeCurrency",
     TakeNumberIndividuals = "TakeNumberIndividuals",
+
     ProvideInfo = "ProvideInfo",
     MultipleChoiceAsPath = "MultipleChoiceAsPath",
     MultipleChoiceContinue = "MultipleChoiceContinue",
-    SplitMerge = "SplitMerge",
-
-    // under consideration
-    HowMany = "HowMany",
-    HowMuch = "HowMuch",
-
-    // we currently only support one ending sequence (see above)
-    EndingSequence = "EndingSequence",
-
-    // Dynamic Table Type Nodes
-    SelectOneFlat = "SelectOneFlat",
-    PercentOfThreshold = "PercentOfThreshold",
-    BasicThreshold = "BasicThreshold",
 
     SendEmail = "SendEmail",
     FirstEmailFailed = "EmailSendFailedFirstAttempt",
@@ -123,31 +135,19 @@ export const ComponentRegistry: Registry = {
     [NodeTypes.YesNotSureCombined]: makeMultipleChoiceAsPathButtons,
     [NodeTypes.NoNotSureCombined]: makeMultipleChoiceAsPathButtons,
     [NodeTypes.MultipleChoiceAsPath]: makeMultipleChoiceAsPathButtons,
-
     [NodeTypes.MultipleChoiceContinue]: makeMultipleChoiceContinueButtons,
-    [NodeTypes.SplitMerge]: makeMultipleChoiceAsPathButtons,
 
     [NodeTypes.TakeCurrency]: makeTakeCurrency,
     [NodeTypes.TakeText]: makeTakeText,
     [NodeTypes.ProvideInfo]: makeProvideInfo,
-    [NodeTypes.HowMany]: makeTakeNumber,
-    [NodeTypes.HowMuch]: makeTakeCurrency,
     [NodeTypes.TakeNumber]: makeTakeNumber,
     [NodeTypes.TakeNumberIndividuals]: makeTakeNumberIndividuals,
-    [NodeTypes.TooComplicated]: makeTooComplicated,
-    [NodeTypes.EndingSequence]: makeStartEndingSequence,
-
-    // Dynamic Types
-    [NodeTypes.SelectOneFlat]: makeSelectOneFlat, // could be replaced with makeMultiple choice continue,
-    [NodeTypes.PercentOfThreshold]: makePercentOfThreshold,
-    [NodeTypes.BasicThreshold]: makeBasicThreshold,
 
     // Ending sequence nodes
     [NodeTypes.SendResponse]: makeProvideInfo,
     [NodeTypes.SendEmail]: makeSendEmail,
     [NodeTypes.FirstEmailFailed]: makeProvideInfo,
     [NodeTypes.SendTooComplicatedEmail]: makeSendFallbackEmail,
-
     [NodeTypes.Restart]: makeRestart,
 };
 

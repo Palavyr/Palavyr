@@ -3,12 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Domain.Configuration.Schemas;
 
-namespace Palavyr1.API.Controllers.Response
+namespace Palavyr.API.Controllers.Response.Tables.Static
 {
     [Authorize]
-    [Route("api")]
-    [ApiController]
-    public class GetStaticTablesMetasTemplateController : ControllerBase
+    public class GetStaticTablesMetasTemplateController : PalavyrBaseController
     {
         private ILogger<GetStaticTablesMetasTemplateController> logger;
 

@@ -6,9 +6,8 @@ using Palavyr.Services.AccountServices;
 
 namespace Palavyr.API.Controllers.Accounts.Setup
 { 
-    [Route("api")]
-    [ApiController]
-    public class CreateNewAccountDefaultController : ControllerBase
+
+    public class CreateNewAccountDefaultController : PalavyrBaseController
     {
         private readonly IAccountSetupService setupService;
 

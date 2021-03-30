@@ -2,25 +2,24 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Palavyr.API.Controllers;
 using Palavyr.Domain.Configuration.Schemas;
-using Palavyr.Services.DatabaseService;
-
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.controllers.Conversation
 {
-    [Route("api")]
-    [ApiController]
-    public class ModifyConversationNodeController : ControllerBase
+
+    public class ModifyConversationNodeController : PalavyrBaseController
     {
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
         private ILogger<ModifyConversationNodeController> logger;
 
         public ModifyConversationNodeController(
-            IDashConnector dashConnector,
+            IConfigurationRepository configurationRepository,
             ILogger<ModifyConversationNodeController> logger
         )
         {
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
             this.logger = logger;
         }
 
@@ -31,8 +30,8 @@ namespace Palavyr.API.controllers.Conversation
             [FromRoute] string areaId,
             [FromBody] ConversationNode newNode)
         {
-            var updatedConversation = await dashConnector.UpdateConversationNode(accountId, areaId, nodeId, newNode);
-            await dashConnector.CommitChangesAsync();
+            var updatedConversation = await configurationRepository.UpdateConversationNode(accountId, areaId, nodeId, newNode);
+            await configurationRepository.CommitChangesAsync();
             return updatedConversation;
         }
     }

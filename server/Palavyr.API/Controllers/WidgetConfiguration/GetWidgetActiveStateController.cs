@@ -6,9 +6,8 @@ using Palavyr.Data;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {
-    [Route("api")]
-    [ApiController]
-    public class GetWidgetActiveStateController
+
+    public class GetWidgetActiveStateController : PalavyrBaseController
     {
         
         private DashContext dashContext;

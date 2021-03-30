@@ -6,9 +6,8 @@ using Palavyr.Data;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-    [Route("api")]
-    [ApiController]
-    public class GetCompanyNameController : ControllerBase
+
+    public class GetCompanyNameController : PalavyrBaseController
     {
         private AccountsContext accountsContext;
         private ILogger<GetCompanyNameController> logger;
@@ -19,10 +18,10 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
         
         [HttpGet("account/settings/company-name")]
-        public async Task<IActionResult> Get([FromHeader] string accountId)
+        public async Task<string> Get([FromHeader] string accountId)
         {
             var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
-            return Ok(account.CompanyName ?? "");
+            return account.CompanyName ?? "";
         }
     }
 }

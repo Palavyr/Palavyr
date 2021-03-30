@@ -4,9 +4,8 @@ using Palavyr.Domain.Resources.Responses;
 
 namespace Palavyr.API.Controllers.Response
 {
-    [Route("api")]
-    [ApiController]
-    public class GetAvailableSubstitutionVariablesController : ControllerBase
+
+    public class GetAvailableSubstitutionVariablesController : PalavyrBaseController
     {
         public GetAvailableSubstitutionVariablesController()
         {

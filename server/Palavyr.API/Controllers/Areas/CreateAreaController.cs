@@ -4,41 +4,40 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.Domain.Resources.Requests;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.Areas
 {
     [Authorize]
-    [Route("api")]
-    [ApiController]
-    public class CreateAreaController : ControllerBase
+
+    public class CreateAreaController : PalavyrBaseController
     {
-        private readonly IDashConnector dashConnector;
-        private readonly IAccountsConnector accountsConnector;
+        private readonly IConfigurationRepository configurationRepository;
+        private readonly IAccountRepository accountRepository;
         private ILogger<CreateAreaController> logger;
 
         public CreateAreaController(
 
-            IDashConnector dashConnector,
-            IAccountsConnector accountsConnector,
+            IConfigurationRepository configurationRepository,
+            IAccountRepository accountRepository,
             ILogger<CreateAreaController> logger
         )
         {
-            this.dashConnector = dashConnector;
-            this.accountsConnector = accountsConnector;
+            this.configurationRepository = configurationRepository;
+            this.accountRepository = accountRepository;
             this.logger = logger;
         }
 
         [HttpPost("areas/create")]
         public async Task<Area> Create([FromHeader] string accountId, [FromBody] AreaNameText areaNameText)
         {
-            var account = await accountsConnector.GetAccount(accountId);
+            var account = await accountRepository.GetAccount(accountId);
 
             var defaultEmail = account.EmailAddress;
             var isVerified = account.DefaultEmailIsVerified;
 
-            var newArea = await dashConnector.CreateAndAddNewArea(areaNameText.AreaName, accountId, defaultEmail, isVerified);
-            await dashConnector.CommitChangesAsync();
+            var newArea = await configurationRepository.CreateAndAddNewArea(areaNameText.AreaName, accountId, defaultEmail, isVerified);
+            await configurationRepository.CommitChangesAsync();
             return newArea;
         }
     }

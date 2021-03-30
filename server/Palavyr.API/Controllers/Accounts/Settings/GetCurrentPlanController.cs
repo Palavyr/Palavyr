@@ -8,9 +8,8 @@ using Palavyr.Domain.Accounts.Schemas;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-    [Route("api")]
-    [ApiController]
-    public class GetCurrentPlanController : ControllerBase
+
+    public class GetCurrentPlanController : PalavyrBaseController
     {
         private AccountsContext accountsContext;
         private ILogger<GetCurrentPlanController> logger;

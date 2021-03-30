@@ -10,19 +10,19 @@ using Palavyr.Domain;
 using Palavyr.Domain.Resources.Requests;
 using Palavyr.Domain.Resources.Responses;
 using Palavyr.Services.AuthenticationServices;
-using Palavyr.Services.DatabaseService;
 using Palavyr.Services.EmailService.ResponseEmailTools;
 using Palavyr.Services.PdfService;
 using Palavyr.Services.PdfService.PdfSections.Util;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
-    [Route("api")]
-    [ApiController]
-    public class SendWidgetResponseEmailController : ControllerBase
+
+    public class SendWidgetResponseEmailController : PalavyrBaseController
     {
-        private readonly IDashConnector dashConnector;
-        private readonly IAccountsConnector accountsConnector;
+        private readonly IConfigurationRepository configurationRepository;
+        private readonly IAccountRepository accountRepository;
+        private readonly IResponseCustomizer responseCustomizer;
         private readonly IConfiguration config;
         private readonly IPdfResponseGenerator pdfResponseGenerator;
         private readonly ISesEmail client;
@@ -30,16 +30,18 @@ namespace Palavyr.API.Controllers.WidgetLive
 
 
         public SendWidgetResponseEmailController(
-            IDashConnector dashConnector,
-            IAccountsConnector accountsConnector,
+            IConfigurationRepository configurationRepository,
+            IAccountRepository accountRepository,
+            IResponseCustomizer responseCustomizer,
             ILogger<SendWidgetResponseEmailController> logger,
             ISesEmail client,
             IConfiguration config,
             IPdfResponseGenerator pdfResponseGenerator
         )
         {
-            this.dashConnector = dashConnector;
-            this.accountsConnector = accountsConnector;
+            this.configurationRepository = configurationRepository;
+            this.accountRepository = accountRepository;
+            this.responseCustomizer = responseCustomizer;
             this.config = config;
             this.pdfResponseGenerator = pdfResponseGenerator;
             this.client = client;
@@ -60,7 +62,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             var criticalResponses = new CriticalResponses(emailRequest.KeyValues);
             var attachmentFiles = AttachmentPaths.ListAttachmentsAsDiskPaths(accountId, areaId);
 
-            var account = await accountsConnector.GetAccount(accountId);
+            var account = await accountRepository.GetAccount(accountId);
             var locale = account.Locale;
 
             logger.LogDebug($"Locale being used: {locale}");
@@ -87,7 +89,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             var fromAddress = account.EmailAddress;
             var toAddress = emailRequest.EmailAddress;
 
-            var area = await dashConnector.GetAreaById(accountId, areaId);               
+            var area = await configurationRepository.GetAreaById(accountId, areaId);               
 
             var subject = area.UseAreaFallbackEmail ? account.GeneralFallbackSubject : area.Subject;
             var htmlBody = area.UseAreaFallbackEmail ? account.GeneralFallbackEmailTemplate : area.EmailTemplate;
@@ -102,7 +104,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             {
                 subject = "";
             }
-            htmlBody = ResponseCustomizer.Customize(htmlBody, emailRequest, account);
+            htmlBody = responseCustomizer.Customize(htmlBody, emailRequest, account);
 
             bool ok;
             if (attachmentFiles.Count == 0)

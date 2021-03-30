@@ -4,9 +4,8 @@ using Palavyr.Services.AccountServices;
 
 namespace Palavyr.API.Controllers.Accounts.Setup
 {
-    [Route("api")]
-    [ApiController]
-    public class ConfirmEmailAddressController : ControllerBase
+
+    public class ConfirmEmailAddressController : PalavyrBaseController
     {
         private readonly IEmailVerificationService emailVerificationService;
 

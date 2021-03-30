@@ -1,22 +1,21 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {
-    [Route("api")]
-    [ApiController]
-    public class ModifyWidgetActiveStateController
+
+    public class ModifyWidgetActiveStateController : PalavyrBaseController
     {
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
         private ILogger<GetWidgetPreferencesController> logger;
 
         public ModifyWidgetActiveStateController(
-            IDashConnector dashConnector, 
+            IConfigurationRepository configurationRepository, 
             ILogger<GetWidgetPreferencesController> logger)
         {
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
             this.logger = logger;
         }
 
@@ -27,9 +26,9 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
         )
         {
             logger.LogDebug("Modifying widget preference");
-            var widgetPrefs = await dashConnector.GetWidgetPreferences(accountId);
+            var widgetPrefs = await configurationRepository.GetWidgetPreferences(accountId);
             widgetPrefs.WidgetState = state;
-            await dashConnector.CommitChangesAsync();
+            await configurationRepository.CommitChangesAsync();
             return state;
         }
     }

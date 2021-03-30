@@ -1,3 +1,5 @@
+#nullable enable
+using System;
 using System.Collections.Generic;
 using Palavyr.Domain.Configuration.Schemas;
 
@@ -80,10 +82,31 @@ namespace Palavyr.Domain.Configuration.Constant
         public bool IsDynamicType { get; set; }
 
         /*
+         * The string identifier of the node component Type
+         */
+        public string NodeComponent { get; set; }
+        
+        /*
+         * Whether or not the response value is currency
+         */
+        public bool IsCurrency { get; set; }
+        
+        /*
+         * Path options are editable
+         */
+        public bool IsMultiOptionEditable { get; set; }
+        
+        /*
          * The key by which we group nodes in the selector
          */
         public string GroupName { get; set; } = null!;
 
+        /*
+         * Used when the nodeTypeOption is for a dynamic type. The order in which the result should be used to filter the dynamic table configuration.
+         * DO NOT SET on the default node types. Only used for dynamic node types.
+         */
+        public int? ResolveOrder { get; set; }
+        
         public virtual string StringName => null!;
 
         public static NodeTypeOption Create(
@@ -94,7 +117,16 @@ namespace Palavyr.Domain.Configuration.Constant
             bool isDynamicType,
             bool isMultiOptionType,
             bool isTerminalType,
-            string groupName
+            string groupName,
+            string nodeComponent,
+            bool isMultiOptionEditable = true,
+            bool isCurrency = false,
+            bool isAnabranchType = false,
+            bool isAnabranchMergeType = false,
+            bool isSplitMergeType = false,
+            bool shouldRenderChildren = true,
+            bool shouldShowMultiOption = false,
+            int? resolveOrder = null
         )
         {
             return new NodeTypeOption()
@@ -106,7 +138,16 @@ namespace Palavyr.Domain.Configuration.Constant
                 IsMultiOptionType = isMultiOptionType,
                 IsTerminalType = isTerminalType,
                 IsDynamicType = isDynamicType,
-                GroupName = groupName
+                GroupName = groupName,
+                NodeComponent = nodeComponent,
+                IsCurrency = isCurrency,
+                IsMultiOptionEditable = isMultiOptionEditable,
+                IsAnabranchType = isAnabranchType,
+                IsAnabranchMergePoint = isAnabranchMergeType,
+                IsSplitMergeType = isSplitMergeType,
+                ShouldRenderChildren = shouldRenderChildren,
+                ShouldShowMultiOption = shouldShowMultiOption,
+                ResolveOrder = resolveOrder
             };
         }
 
@@ -118,9 +159,22 @@ namespace Palavyr.Domain.Configuration.Constant
             string nodeType,
             string accountId,
             string areaIdentifier,
-            string optionPath
+            string optionPath,
+            bool isDynamic,
+            string? nodeComponent = null,
+            int? resolveOrder = null
         )
         {
+            if (nodeComponent == null && this.NodeComponent == null)
+            {
+                throw new Exception("NodeComponent must be set for dynamic table node types"); // TODO: can I enforce this via the compiler?
+            }
+
+            if (isDynamic && resolveOrder == null)
+            {
+                throw new Exception("Dynamic node types MUST provide a reslove order.");
+            }
+            
             return new ConversationNode()
             {
                 NodeId = nodeId,
@@ -129,11 +183,14 @@ namespace Palavyr.Domain.Configuration.Constant
                 NodeChildrenString = nodeChildrenString, //"node-456,node-789",
                 NodeType = nodeType,
                 OptionPath = optionPath,
-                ValueOptions = string.Join(Delimiters.PathOptionDelimiter, this.ValueOptions),
+                ValueOptions = string.Join(Delimiters.ValueOptionDelimiter, ValueOptions),
                 AccountId = accountId,
                 AreaIdentifier = areaIdentifier,
-                IsMultiOptionType = this.IsMultiOptionType,
-                IsTerminalType = this.IsTerminalType
+                IsMultiOptionType = IsMultiOptionType,
+                IsTerminalType = IsTerminalType,
+                IsDynamicTableNode = isDynamic,
+                NodeComponentType = nodeComponent ?? NodeComponent,
+                ResolveOrder = resolveOrder
             };
         }
     }

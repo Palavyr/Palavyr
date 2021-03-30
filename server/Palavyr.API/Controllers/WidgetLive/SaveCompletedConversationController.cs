@@ -11,9 +11,8 @@ using Palavyr.Services.AuthenticationServices;
 namespace Palavyr.API.Controllers.WidgetLive
 {
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
-    [Route("api")]
-    [ApiController]
-    public class SaveCompletedConversationController : ControllerBase
+
+    public class SaveCompletedConversationController : PalavyrBaseController
     {
         private ILogger<SaveCompletedConversationController> logger;
         private DashContext dashContext;

@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Data;
-using Palavyr.Domain.Accounts.Schemas;
-using Subscription = Stripe.Subscription;
+using Stripe;
+using Account = Palavyr.Domain.Accounts.Schemas.Account;
 
 namespace Palavyr.Services.StripeServices.StripeWebhookHandlers
 {

@@ -12,8 +12,6 @@ using Palavyr.Domain.Resources.Requests;
 
 namespace Palavyr.API.Controllers.Attachments
 {
-    [Route("api")]
-    [ApiController]
     public class DeleteAttachmentLinksController : AttachmentsBase
     {
         private readonly IConfiguration configuration;
@@ -33,7 +31,7 @@ namespace Palavyr.API.Controllers.Attachments
             this.logger = logger;
             this.s3Client = s3Client;
         }
-            
+
         [HttpDelete("attachments/{areaId}/file-link")]
         public async Task<IActionResult> Delete([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] Text text)
         {
@@ -45,13 +43,14 @@ namespace Palavyr.API.Controllers.Attachments
                 logger.LogDebug($"Trying to delete file path: {filePath}");
                 System.IO.File.Delete(filePath);
             }
+
             var entity = await dashContext.FileNameMaps.SingleOrDefaultAsync(row => row.SafeName == text.FileId);
             if (entity != null)
             {
                 dashContext.FileNameMaps.Remove(entity);
                 await dashContext.SaveChangesAsync();
             }
-            
+
             var fileLinks = await GetFileLinks(accountId, areaId, dashContext, logger, s3Client, previewBucket);
             return Ok(fileLinks.ToArray());
         }

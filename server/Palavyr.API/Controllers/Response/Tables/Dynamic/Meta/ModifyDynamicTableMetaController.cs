@@ -5,9 +5,8 @@ using Palavyr.Domain.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic.Meta
 {
-    [Route("api")]
-    [ApiController]
-    public class ModifyDynamicTableMetaController : ControllerBase
+
+    public class ModifyDynamicTableMetaController : PalavyrBaseController
     {
         private DashContext dashContext;
 

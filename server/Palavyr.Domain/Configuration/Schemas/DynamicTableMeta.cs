@@ -8,8 +8,7 @@ namespace Palavyr.Domain.Configuration.Schemas
 {
     public class DynamicTableMeta : ITable
     {
-        [Key] 
-        public int? Id { get; set; }
+        [Key] public int? Id { get; set; }
         public string TableTag { get; set; }
         public string PrettyName { get; set; }
         public string TableType { get; set; }
@@ -17,8 +16,14 @@ namespace Palavyr.Domain.Configuration.Schemas
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
         public bool ValuesAsPaths { get; set; } = false; // for tables that specify various options, whether or not to use each option to create a new tree path.
-        
-        public static DynamicTableMeta CreateNew(string tableTag, string prettyName, string tableType, string tableId, string areaId, string accountId)
+
+        public static DynamicTableMeta CreateNew(
+            string tableTag,
+            string prettyName,
+            string tableType,
+            string tableId,
+            string areaId,
+            string accountId)
         {
             return new DynamicTableMeta()
             {
@@ -27,7 +32,7 @@ namespace Palavyr.Domain.Configuration.Schemas
                 TableTag = tableTag,
                 AreaIdentifier = areaId,
                 AccountId = accountId,
-                PrettyName = prettyName
+                PrettyName = prettyName,
             };
         }
 
@@ -35,8 +40,21 @@ namespace Palavyr.Domain.Configuration.Schemas
         {
             return new List<DynamicTableMeta>()
             {
-                CreateNew("default", DynamicTableTypes.DefaultTable.PrettyName,DynamicTableTypes.DefaultTable.TableType, Guid.NewGuid().ToString(), areaId, accountId)
+                CreateNew(
+                    "default",
+                    DynamicTableTypes.DefaultTable.PrettyName,
+                    DynamicTableTypes.DefaultTable.TableType, 
+                    Guid.NewGuid().ToString(), 
+                    areaId, 
+                    accountId)
             };
+        }
+
+        public void Deconstruct(out string accountId, out string areaId, out string tableId)
+        {
+            accountId = AccountId;
+            areaId = AreaIdentifier;
+            tableId = TableId;
         }
     }
 }

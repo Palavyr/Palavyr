@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -8,20 +6,18 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Common.UIDUtils;
 using Palavyr.Domain.Configuration.Constant;
 using Palavyr.Domain.Configuration.Schemas;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
-    [Route("api")]
-    [ApiController]
-    public class CreateDynamicTableController : ControllerBase
+    public class CreateDynamicTableController : PalavyrBaseController
     {
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
         private ILogger<CreateDynamicTableController> logger;
 
-        public CreateDynamicTableController(IDashConnector dashConnector, ILogger<CreateDynamicTableController> logger)
+        public CreateDynamicTableController(IConfigurationRepository configurationRepository, ILogger<CreateDynamicTableController> logger)
         {
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
             this.logger = logger;
         }
 
@@ -36,7 +32,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
             [FromHeader] string accountId,
             [FromRoute] string areaId)
         {
-            var area = await dashConnector.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(accountId, areaId);
 
             var dynamicTables = area.DynamicTableMetas.ToList();
 
@@ -53,9 +49,9 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 
             dynamicTables.Add(newTableMeta);
             area.DynamicTableMetas = dynamicTables;
-            
-            await dashConnector.SetDefaultDynamicTable(accountId, areaId, tableId);
-            await dashConnector.CommitChangesAsync();
+
+            await configurationRepository.SetDefaultDynamicTable(accountId, areaId, tableId);
+            await configurationRepository.CommitChangesAsync();
 
             return newTableMeta;
         }

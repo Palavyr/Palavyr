@@ -1,24 +1,24 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Palavyr.API.Controllers;
 using Palavyr.Domain.Configuration.Schemas;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.controllers.Conversation
 {
-    [Route("api")]
-    [ApiController]
-    public class GetConversationNodeController : ControllerBase
+
+    public class GetConversationNodeController : PalavyrBaseController
     {
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
         private ILogger<GetConversationNodeController> logger;
 
         public GetConversationNodeController(
-            IDashConnector dashConnector,
+            IConfigurationRepository configurationRepository,
             ILogger<GetConversationNodeController> logger
         )
         {
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
             this.logger = logger;
         }
         
@@ -26,7 +26,7 @@ namespace Palavyr.API.controllers.Conversation
         public async Task<ConversationNode> Get([FromRoute] string nodeId)
         {
             // node Ids are globally unique - don't need account Id Filter
-            var node = await dashConnector.GetConversationNodeById(nodeId);
+            var node = await configurationRepository.GetConversationNodeById(nodeId);
             return node;
         }
     }

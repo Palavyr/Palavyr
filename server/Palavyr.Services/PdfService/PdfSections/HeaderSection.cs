@@ -95,7 +95,7 @@ namespace Palavyr.Services.PdfService.PdfSections
                 "<h2>" + account.CompanyName + "</h2>", account.PhoneNumber, account.EmailAddress
             };
 
-            var header = HeaderSection.CreateHeaderSection(
+            var header = CreateHeaderSection(
                 logoUri, 
                 companyDetails,
                 response.CreateResponse());

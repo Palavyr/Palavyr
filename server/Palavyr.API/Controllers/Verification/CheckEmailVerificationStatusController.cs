@@ -6,9 +6,8 @@ using Palavyr.Services.EmailService.Verification;
 
 namespace Palavyr.API.Controllers.Verification
 {
-    [Route("api")]
-    [ApiController]
-    public class CheckEmailVerificationStatusController : ControllerBase
+
+    public class CheckEmailVerificationStatusController : PalavyrBaseController
     {
         private readonly EmailVerificationStatus emailVerificationStatus;
         private ILogger<CheckEmailVerificationStatusController> logger;

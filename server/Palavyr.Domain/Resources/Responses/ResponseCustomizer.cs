@@ -3,9 +3,16 @@ using Palavyr.Domain.Resources.Requests;
 
 namespace Palavyr.Domain.Resources.Responses
 {
-    public static class ResponseCustomizer
+    public interface IResponseCustomizer
     {
-        public static string Customize(string html, EmailRequest request, Account account)
+        string Customize(string html, EmailRequest request, Account account);
+        string CustomizeWithClientsName(string html, EmailRequest request);
+        string CustomizeCompany(string html, Account account);
+    }
+
+    public class ResponseCustomizer : IResponseCustomizer
+    {
+        public string Customize(string html, EmailRequest request, Account account)
         {
             html = CustomizeWithClientsName(html, request);
             html = CustomizeCompany(html, account);
@@ -13,7 +20,7 @@ namespace Palavyr.Domain.Resources.Responses
             return html;
         }
 
-        public static string CustomizeWithClientsName(string html, EmailRequest request)
+        public string CustomizeWithClientsName(string html, EmailRequest request)
         {
             var nameElement = request.Name;
             var customName = "";
@@ -26,14 +33,14 @@ namespace Palavyr.Domain.Resources.Responses
             return html;
         }
 
-        public static string CustomizeCompany(string html, Account account)
+        public string CustomizeCompany(string html, Account account)
         {
             var companyName = string.IsNullOrWhiteSpace(account.CompanyName) ? "" : account.CompanyName;
             var updatedHtml = html.Replace(ResponseVariableDefinition.CompanyVariablePattern, companyName);
             return updatedHtml;
         }
 
-        private static string CustomizeLogo(string html, Account account)
+        private string CustomizeLogo(string html, Account account)
         {
             var uri = string.IsNullOrWhiteSpace(account.AccountLogoUri) ? "" : account.AccountLogoUri;
             var link = string.IsNullOrWhiteSpace(uri) ? "" : $"<img src=\"{uri}\" alt=\"Logo\" />";

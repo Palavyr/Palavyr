@@ -1,5 +1,6 @@
-import { ContextPropertyActions, SET_CONTEXT_PROPERTIES, SET_DYNAMICRESPONSE_CONTEXT, SET_EMAILADDRESS_CONTEXT, SET_KEYVALUE_CONTEXT, SET_NAME_CONTEXT, SET_NUM_INDIVIDUALS_CONTEXT, SET_PHONE_CONTEXT, SET_REGION_CONTEXT } from "../actions/types";
+import { ContextPropertyActions, SET_CONTEXT_PROPERTIES, SET_DYNAMICRESPONSES_CONTEXT, SET_EMAILADDRESS_CONTEXT, SET_KEYVALUE_CONTEXT, SET_NAME_CONTEXT, SET_NUM_INDIVIDUALS_CONTEXT, SET_PHONE_CONTEXT, SET_REGION_CONTEXT } from "../actions/types";
 import { ContextProperties, ContextState } from "../types";
+
 
 export const defaultContextProperties: ContextProperties = {
     dynamicResponses: [],
@@ -19,9 +20,72 @@ const contextReducer = {
     [SET_EMAILADDRESS_CONTEXT]: (state: ContextState, { emailAddress }): ContextState => ({ ...state, emailAddress: emailAddress }),
     [SET_REGION_CONTEXT]: (state: ContextState, { region }): ContextState => ({ ...state, region: region }),
     [SET_KEYVALUE_CONTEXT]: (state: ContextState, { keyValue }): ContextState => ({ ...state, keyValues: [...state.keyValues, keyValue] }),
-    [SET_DYNAMICRESPONSE_CONTEXT]: (state: ContextState, { dynamicResponse }): ContextState => ({ ...state, dynamicResponses: [...state.dynamicResponses, dynamicResponse] }),
+    [SET_DYNAMICRESPONSES_CONTEXT]: (state: ContextState, { dynamicResponseObject }): ContextState => ({ ...state, dynamicResponses: dynamicResponseObject })
 };
 
 export default (state: ContextProperties = defaultContextProperties, action: ContextPropertyActions) => {
     return contextReducer[action.type] ? contextReducer[action.type](state, action) : state;
 };
+
+// // DELETE multi dynamic table types. First go make one and lets just work through it.
+
+// [
+//     {
+//         "DynamicTableKey?": [
+//             {[node.nodeId]: "Response Value"}, 1
+//             {[node.nodeId]: "Response Value"}, 2
+//             {[node.nodeId]: "Response Value"}  0
+//         ],
+//          "SecondPartPossibly?": [
+//              {"node.nodeId"}
+//         ]
+//     },
+//     {
+//         "SelectOneFlat-1231": [
+//             {"SelectOneFlat-1231": "Ruby"}
+//         ]
+//     }
+// ]
+
+// ------------------------
+
+//         CURRENT
+// [
+//     {
+//         "SelectOneFlat-1231": [
+//             {"SelectOneFlat-1231": "Ruby"}
+//         ]
+//     }
+//     {
+//         "CategoricalCount-1231": [
+//             {"CategoricalCount-1231": "Cows"},
+//             {"CategoricalCount-1231": 3}
+//         ]
+//     },
+//     {
+//         "PercentOfThreshold-1231": [
+//             {"PercentOfThreshold-1231": "Ruby"}
+//         ]
+//     }
+// ]
+
+// -------------------------------
+
+// [
+//     {
+//         "SelectOneFlat-1231": [
+//             {"node.nodeId": "Ruby"}
+//         ]
+//     }
+//     {
+//         "CategoricalCount-1231": [
+//             {"node.nodeId": "Cows"},
+//             {"node.nodeId": 3}
+//         ]
+//     },
+//     {
+//         "PercentOfThreshold-1231": [
+//             {"node.nodeId": "Ruby"}
+//         ]
+//     }
+// ]

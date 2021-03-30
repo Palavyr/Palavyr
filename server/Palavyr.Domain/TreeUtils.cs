@@ -13,11 +13,21 @@ namespace Palavyr.Domain
             return string.Join("-", new[] {dynamicTableMeta.TableType, dynamicTableMeta.TableId});
         }
 
+        public static string TransformRequiredNodeType(string tableType, string tableId)
+        {
+            return string.Join("-", new[] {tableType, tableId});
+        }
+
         public static string TransformRequiredNodeTypeToPrettyName(DynamicTableMeta dynamicTableMeta)
         {
             return string.Join("-", new[] {dynamicTableMeta.PrettyName, dynamicTableMeta.TableTag});
         }
 
+        public static string TransformRequiredNodeTypeToPrettyName(string prettyName, string tableTag)
+        {
+            return string.Join("-", new[] {prettyName, tableTag});
+        }
+        
         public static int TraverseTheTreeFromTheTop(ConversationNode[] nodeList, ConversationNode node)
         {
             var count = 0;

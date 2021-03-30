@@ -1,15 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Palavyr.Data;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 using Palavyr.Services.StripeServices;
-using Stripe;
-using Stripe.Checkout;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
@@ -35,22 +30,21 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
         public string Message { get; set; }
     }
 
-    [Route("api")]
-    [ApiController]
-    public class CreateCheckoutSessionController : ControllerBase
+
+    public class CreateCheckoutSessionController : PalavyrBaseController
     {
         private ILogger<CreateCheckoutSessionController> logger;
-        private readonly IAccountsConnector accountsConnector;
+        private readonly IAccountRepository accountRepository;
         private readonly StripeCheckoutService stripeCheckoutService;
 
         public CreateCheckoutSessionController(
             ILogger<CreateCheckoutSessionController> logger,
-            IAccountsConnector accountsConnector,
+            IAccountRepository accountRepository,
             StripeCheckoutService stripeCheckoutService
         )
         {
             this.logger = logger;
-            this.accountsConnector = accountsConnector;
+            this.accountRepository = accountRepository;
             this.stripeCheckoutService = stripeCheckoutService;
         }
 
@@ -60,15 +54,15 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
             [FromBody] CreateCheckoutSessionRequest request
         )
         {
-            var account = await accountsConnector.GetAccount(accountId);
+            var account = await accountRepository.GetAccount(accountId);
             if (account.StripeCustomerId == null)
             {
                 throw new Exception("Account and Stripe customer Id must be set");
             }
 
             var sessionId = await stripeCheckoutService.CreateCheckoutSessionId(account.StripeCustomerId, request.SuccessUrl, request.CancelUrl, request.PriceId);
-            await accountsConnector.CreateAndAddNewSession(sessionId, accountId, account.ApiKey);
-            await accountsConnector.CommitChangesAsync();
+            await accountRepository.CreateAndAddNewSession(sessionId, accountId, account.ApiKey);
+            await accountRepository.CommitChangesAsync();
             return sessionId;
         }
     }

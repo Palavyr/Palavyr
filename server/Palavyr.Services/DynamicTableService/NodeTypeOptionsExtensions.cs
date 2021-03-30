@@ -25,5 +25,10 @@ namespace Palavyr.Services.DynamicTableService
         {
             return TreeUtils.TransformRequiredNodeType(dynamicTableMeta);
         }
+
+        public static string ConvertToPrettyName(this DynamicTableMeta dynamicTableMeta)
+        {
+            return TreeUtils.TransformRequiredNodeTypeToPrettyName(dynamicTableMeta);
+        }
     }
 }

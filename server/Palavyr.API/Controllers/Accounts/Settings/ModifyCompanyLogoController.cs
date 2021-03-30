@@ -16,9 +16,8 @@ using Palavyr.Services.AmazonServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-    [Route("api")]
-    [ApiController]
-    public class ModifyCompanyLogoController : ControllerBase
+
+    public class ModifyCompanyLogoController : PalavyrBaseController
     {
         private readonly IConfiguration configuration;
         private ILogger<ModifyCompanyLogoController> logger;

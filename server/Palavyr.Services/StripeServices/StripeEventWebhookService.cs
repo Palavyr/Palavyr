@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Services.StripeServices.StripeWebhookHandlers;
 using Stripe;
+using Stripe.Checkout;
 
 namespace Palavyr.Services.StripeServices
 {
@@ -67,7 +68,7 @@ namespace Palavyr.Services.StripeServices
                     break;
 
                 case Events.CheckoutSessionCompleted:
-                    var session = (Stripe.Checkout.Session) stripeEvent.Data.Object;
+                    var session = (Session) stripeEvent.Data.Object;
                     await processCheckoutSessionCompletedHandler.ProcessCheckoutSessionCompleted(session);
                     break;
 

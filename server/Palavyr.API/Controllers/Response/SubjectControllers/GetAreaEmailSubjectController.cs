@@ -6,9 +6,8 @@ using Palavyr.Data;
 
 namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
-    [Route("api")]
-    [ApiController]
-    public class GetAreaEmailSubjectController : ControllerBase
+
+    public class GetAreaEmailSubjectController : PalavyrBaseController
     {
 
         private DashContext dashContext;

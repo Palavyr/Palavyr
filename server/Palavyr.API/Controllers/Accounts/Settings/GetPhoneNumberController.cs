@@ -7,9 +7,8 @@ using Palavyr.Domain.Resources.Responses;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-    [Route("api")]
-    [ApiController]
-    public class GetPhoneNumberController : ControllerBase
+
+    public class GetPhoneNumberController : PalavyrBaseController
     {
         private AccountsContext accountsContext;
         private ILogger<GetPhoneNumberController> logger;

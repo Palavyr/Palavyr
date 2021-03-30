@@ -9,9 +9,8 @@ using Palavyr.Services.AuthenticationServices;
 namespace Palavyr.API.Controllers.WidgetLive
 {
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
-    [Route("api")]
-    [ApiController]
-    public class UpdateChatHistoryController : ControllerBase
+
+    public class UpdateChatHistoryController : PalavyrBaseController
     {
         private ConvoContext convoContext;
 

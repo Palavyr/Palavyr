@@ -1,43 +1,31 @@
-using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Data;
+using Palavyr.Domain.Configuration.Schemas;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic.Meta
 {
-    [Route("api")]
-    [ApiController]
-    public class GetDynamicTableMetasController : ControllerBase
+    public class GetDynamicTableMetasController : PalavyrBaseController
     {
-        private DashContext dashContext;
+        private readonly IConfigurationRepository configurationRepository;
         private ILogger<GetDynamicTableMetasController> logger;
 
         public GetDynamicTableMetasController(
-            DashContext dashContext,
+            IConfigurationRepository configurationRepository,
             ILogger<GetDynamicTableMetasController> logger
         )
         {
-            this.dashContext = dashContext;
+            this.configurationRepository = configurationRepository;
             this.logger = logger;
         }
-        
-        /// <summary>
-        /// Originally used to pull a crazy string from the area table, but now should list off
-        /// the current metas from the meta table for a given area
-        /// </summary>
-        /// <param name="accountId"></param>
-        /// <param name="areaId"></param>
-        /// <returns></returns>
+
         [HttpGet("tables/dynamic/type/{areaId}")]
-        public Domain.Configuration.Schemas.DynamicTableMeta[] Get([FromHeader] string accountId, string areaId)
+        public async Task<DynamicTableMeta[]> Get([FromHeader] string accountId, string areaId)
         {
-            var tableTypes = dashContext
-                .DynamicTableMetas
-                .Where(row => row.AccountId == accountId)
-                .Where(row => row.AreaIdentifier == areaId)
-                .ToArray();
             logger.LogDebug("Retrieve Dynamic Table Metas");
-            return tableTypes;
+            var tableTypes = await configurationRepository.GetDynamicTableMetas(accountId, areaId);
+            return tableTypes.ToArray();
         }
     }
 }

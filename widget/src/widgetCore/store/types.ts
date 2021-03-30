@@ -11,16 +11,21 @@ type BaseMessage = {
     props?: any;
 };
 
+export type DynamicResponses = DynamicResponse[];
 export type DynamicResponse = {
-    [key: string]: string;
+    [UniqueTableKey: string]: Response[];
 };
-export type DynamicResponses = Array<DynamicResponse>;
+export type Response = {
+    [nodeId: string]: string; // node.nodeId: response value;
+};
+
 
 export type KeyValue = {
     [key: string]: string; // MUST BE STRING for server
 };
 
 export type KeyValues = Array<KeyValue>;
+
 
 export type ContextProperties = {
     name: string;

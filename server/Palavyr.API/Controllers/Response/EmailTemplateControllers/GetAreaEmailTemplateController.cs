@@ -7,9 +7,8 @@ using Palavyr.Data;
 
 namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
 {
-    [Route("api")]
-    [ApiController]
-    public class GetAreaEmailTemplateController : ControllerBase
+
+    public class GetAreaEmailTemplateController : PalavyrBaseController
     {
         private ILogger<GetAreaEmailTemplateController> logger;
         private DashContext dashContext;

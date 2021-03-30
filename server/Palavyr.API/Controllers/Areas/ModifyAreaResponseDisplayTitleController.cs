@@ -3,24 +3,23 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Domain.Resources.Requests;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.Areas
 {
     [Authorize]
-    [Route("api")]
-    [ApiController]
-    public class ModifyAreaResponseDisplayTitleController : ControllerBase
+
+    public class ModifyAreaResponseDisplayTitleController : PalavyrBaseController
     {
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
         private ILogger<ModifyAreaResponseDisplayTitleController> logger;
 
         public ModifyAreaResponseDisplayTitleController(
-            IDashConnector dashConnector,
+            IConfigurationRepository configurationRepository,
             ILogger<ModifyAreaResponseDisplayTitleController> logger
         )
         {
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
             this.logger = logger;
         }
 
@@ -31,11 +30,11 @@ namespace Palavyr.API.Controllers.Areas
             string areaId
         )
         {
-            var area = await dashConnector.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(accountId, areaId);
             if (areaDisplayTitleText.AreaDisplayTitle != null)
             {
                 area.AreaDisplayTitle = areaDisplayTitleText.AreaDisplayTitle;
-                await dashConnector.CommitChangesAsync();
+                await configurationRepository.CommitChangesAsync();
             }
 
             return areaDisplayTitleText.AreaDisplayTitle;

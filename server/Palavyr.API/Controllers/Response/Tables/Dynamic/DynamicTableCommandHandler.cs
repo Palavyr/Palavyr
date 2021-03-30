@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.API.Controllers.Response.Tables.Dynamic.TableTypes;
 using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.Domain.Resources.Requests;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
@@ -18,14 +19,14 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
     public class DynamicTableCommandHandler<TEntity> : IDynamicTableCommandHandler<TEntity> where TEntity : class, IDynamicTable<TEntity>, new()
     {
         private ILogger<SelectOneFlatController> logger;
-        private readonly IGenericDynamicTablesRepository<TEntity> genericDynamicTablesRepository;
+        private readonly IGenericDynamicTableRepository<TEntity> genericDynamicTableRepository;
 
         public DynamicTableCommandHandler(
-            IGenericDynamicTablesRepository<TEntity> genericDynamicTablesRepository,
+            IGenericDynamicTableRepository<TEntity> genericDynamicTableRepository,
             ILogger<SelectOneFlatController> logger
         )
         {
-            this.genericDynamicTablesRepository = genericDynamicTablesRepository;
+            this.genericDynamicTableRepository = genericDynamicTableRepository;
             this.logger = logger;
         }
 
@@ -33,14 +34,14 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         {
             logger.LogInformation($"Deleting dynamic table: {request.TableId}");
             var (accountId, areaIdentifier, tableId) = request;
-            await genericDynamicTablesRepository.DeleteTable(accountId, areaIdentifier, tableId);
+            await genericDynamicTableRepository.DeleteTable(accountId, areaIdentifier, tableId);
         }
 
         public async Task<List<TEntity>> GetDynamicTableRows(DynamicTableRequest request)
         {
             logger.LogInformation($"Getting dynamic table rows: {request.TableId}");
             var (accountId, areaIdentifier, tableId) = request;
-            var tableRows = await genericDynamicTablesRepository.GetAllRows(accountId, areaIdentifier, tableId);
+            var tableRows = await genericDynamicTableRepository.GetAllRows(accountId, areaIdentifier, tableId);
             if (tableRows.Count == 0)
             {
                 tableRows = new List<TEntity>()
@@ -48,7 +49,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
                     (new TEntity()).CreateTemplate(accountId, areaIdentifier, tableId)
                 };
             }
-            await genericDynamicTablesRepository.UpdateRows(accountId, areaIdentifier, tableId, tableRows);
+            await genericDynamicTableRepository.UpdateRows(accountId, areaIdentifier, tableId, tableRows);
             return tableRows;
         }
 
@@ -64,14 +65,14 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
             logger.LogInformation($"Saving dynamic table: {request.TableId}");
             var (accountId, areaIdentifier, tableId) = request;
             var mappedTableRows = (new TEntity()).UpdateTable(dynamicTable);
-            await genericDynamicTablesRepository.SaveTable(
+            await genericDynamicTableRepository.SaveTable(
                 accountId,
                 areaIdentifier,
                 tableId,
                 mappedTableRows,
                 dynamicTable.TableTag,
                 typeof(TEntity).Name);
-            return await genericDynamicTablesRepository.GetAllRows(accountId, areaIdentifier, tableId);
+            return await genericDynamicTableRepository.GetAllRows(accountId, areaIdentifier, tableId);
         }
     }
 }

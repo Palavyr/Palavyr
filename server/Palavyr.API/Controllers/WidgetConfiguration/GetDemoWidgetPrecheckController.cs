@@ -2,34 +2,32 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.Utils;
 using Palavyr.Domain;
 using Palavyr.Domain.Resources.Responses;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {
-    [Route("api")]
-    [ApiController]
-    public class GetDemoWidgetPreCheckController : ControllerBase
+
+    public class GetDemoWidgetPreCheckController : PalavyrBaseController
     {
         private ILogger<GetDemoWidgetPreCheckController> logger;
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
 
         public GetDemoWidgetPreCheckController(
             ILogger<GetDemoWidgetPreCheckController> logger,
-            IDashConnector dashConnector
+            IConfigurationRepository configurationRepository
         )
         {
             this.logger = logger;
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
         }
 
         [HttpGet("widget-config/demo/pre-check")]
         public async Task<PreCheckResult> Get([FromHeader] string accountId)
         {
-            var widgetPrefs = await dashConnector.GetWidgetPreferences(accountId);
-            var areas = await dashConnector.GetActiveAreasWithConvoAndDynamicAndStaticTables(accountId);
+            var widgetPrefs = await configurationRepository.GetWidgetPreferences(accountId);
+            var areas = await configurationRepository.GetActiveAreasWithConvoAndDynamicAndStaticTables(accountId);
 
             var result = WidgetStatusUtils.ExecuteWidgetStatusCheck(accountId, areas, widgetPrefs, true, logger);
             logger.LogDebug($"Pre-check run successful.");

@@ -6,9 +6,8 @@ using Palavyr.Services.ConversationServices;
 
 namespace Palavyr.API.Controllers.Enquiries
 {
-    [Route("api")]
-    [ApiController]
-    public class GetCompletedConversationsController : ControllerBase
+
+    public class GetCompletedConversationsController : PalavyrBaseController
     {
         private readonly ILogger<GetCompletedConversationsController> logger;
         private readonly CompletedConversationRetriever completedConversationRetriever;

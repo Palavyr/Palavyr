@@ -10,9 +10,8 @@ using Palavyr.Services.EmailService.Verification;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-    [Route("api")]
-    [ApiController]
-    public class GetDefaultEmailController : ControllerBase
+
+    public class GetDefaultEmailController : PalavyrBaseController
     {
         private const string Pending = "Pending";
         private const string Success = "Success";

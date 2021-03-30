@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Domain;
 using Palavyr.Domain.Resources.Requests;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.Conversation
 {
@@ -23,26 +23,25 @@ namespace Palavyr.API.Controllers.Conversation
         }
     }
 
-    [Route("api")]
-    [ApiController]
-    public class GetMissingNodesController
+
+    public class GetMissingNodesController : PalavyrBaseController
     {
         private ILogger<GetMissingNodesController> logger;
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
 
         public GetMissingNodesController(
             ILogger<GetMissingNodesController> logger,
-            IDashConnector dashConnector
+            IConfigurationRepository configurationRepository
         )
         {
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
             this.logger = logger;
         }
 
         [HttpPost("configure-conversations/{areaId}/missing-nodes")]
         public async Task<string[]> Get([FromHeader] string accountId, string areaId, [FromBody] ConversationNodeDto currentNodes)
         {
-            var area = await dashConnector.GetAreaComplete(accountId, areaId);
+            var area = await configurationRepository.GetAreaComplete(accountId, areaId);
 
             var requiredDynamicNodeTypes = area
                 .DynamicTableMetas

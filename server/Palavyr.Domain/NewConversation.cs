@@ -10,7 +10,7 @@ namespace Palavyr.Domain
         public WidgetPreference WidgetPreference { get; set; }
         public List<ConversationNode> ConversationNodes { get; set; }
 
-        NewConversation(string conversationId, WidgetPreference widgetPreference, List<ConversationNode> conversationNodes)
+        private NewConversation(string conversationId, WidgetPreference widgetPreference, List<ConversationNode> conversationNodes)
         {
             ConversationId = conversationId;
             WidgetPreference = widgetPreference;

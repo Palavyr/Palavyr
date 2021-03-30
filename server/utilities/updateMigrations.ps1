@@ -166,7 +166,7 @@ else {
 }
 
 if ($supressmigration) {
-    Write-Host "`r`nSkipping applying the migrations. Finished."
+    Write-Host "`r`nSkipping applying the migrations. You will need to run ./startMigrator.ps1 manually to apply these migrations. Finished."
 } else {
     Write-Host "`r`nMigrating the local database using DBUP!`r`n"
     & "$PSScriptRoot\\StartMigrator.ps1"

@@ -9,9 +9,8 @@ using Palavyr.Domain.Resources.Requests;
 namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
     [Authorize]
-    [Route("api")]
-    [ApiController]
-    public class ModifyAreaFallbackEmailSubjectController : ControllerBase
+
+    public class ModifyAreaFallbackEmailSubjectController : PalavyrBaseController
     {
         private readonly DashContext dashContext;
         private readonly ILogger<ModifyAreaFallbackEmailSubjectController> logger;

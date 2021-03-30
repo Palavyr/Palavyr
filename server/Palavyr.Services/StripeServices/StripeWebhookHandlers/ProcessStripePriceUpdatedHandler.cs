@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Common.UIDUtils;
 using Palavyr.Data;
-using Palavyr.Domain.Accounts.Schemas;
 using Palavyr.Services.EmailService.ResponseEmailTools;
 using Stripe;
 using Account = Palavyr.Domain.Accounts.Schemas.Account;

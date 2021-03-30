@@ -24,6 +24,8 @@ export type ConvoTableRow = {
     areaIdentifier: string;
     optionPath: string | null;
     valueOptions: string; // needs to be split by ","
+    isDynamicTableNode: boolean;
+    nodeComponentType: string;
 };
 
 export type SelectedOption = {

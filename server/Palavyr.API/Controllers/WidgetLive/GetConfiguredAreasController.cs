@@ -5,24 +5,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Domain.Configuration.Schemas;
 using Palavyr.Services.AuthenticationServices;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
-    [Route("api")]
-    [ApiController]
-    public class GetConfiguredAreasController : ControllerBase
+
+    public class GetConfiguredAreasController : PalavyrBaseController
     {
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
         private ILogger<GetConfiguredAreasController> logger;
 
         public GetConfiguredAreasController(
-            IDashConnector dashConnector,
+            IConfigurationRepository configurationRepository,
             ILogger<GetConfiguredAreasController> logger
         )
         {
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
             this.logger = logger;
         }
 
@@ -31,7 +30,7 @@ namespace Palavyr.API.Controllers.WidgetLive
         {
             logger.LogDebug("Collecting configured areas for live-widget");
 
-            var activeAreas = await dashConnector.GetActiveAreas(accountId);
+            var activeAreas = await configurationRepository.GetActiveAreas(accountId);
             return activeAreas;
         }
     }

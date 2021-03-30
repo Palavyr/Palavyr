@@ -1,51 +1,45 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using Amazon.S3;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Domain.Resources.Responses;
-using Palavyr.Services.DatabaseService;
 using Palavyr.Services.PdfService;
+using Palavyr.Services.Repositories;
 
 namespace Palavyr.API.Controllers.Response
 {
     [Authorize]
-    [Route("api")]
-    [ApiController]
-    public class GetResponsePreviewController : ControllerBase
+    public class GetResponsePreviewController : PalavyrBaseController
     {
-        private readonly IAccountsConnector accountsConnector;
-        private IAmazonS3 s3Client;
+        private readonly IAccountRepository accountRepository;
         private ILogger<GetResponsePreviewController> logger;
-        private readonly IPdfResponseGenerator pdfResponseGenerator;
+        private readonly IPreviewResponseGenerator previewPdfGenerator;
 
         public GetResponsePreviewController(
-            IAccountsConnector accountsConnector,
+            IAccountRepository accountRepository,
             ILogger<GetResponsePreviewController> logger,
-            IAmazonS3 s3Client,
-            IPdfResponseGenerator pdfResponseGenerator
+            IPreviewResponseGenerator previewPdfGenerator
         )
         {
-            this.accountsConnector = accountsConnector;
-            this.s3Client = s3Client;
+            this.accountRepository = accountRepository;
             this.logger = logger;
-            this.pdfResponseGenerator = pdfResponseGenerator;
+            this.previewPdfGenerator = previewPdfGenerator;
         }
 
         [HttpGet("preview/estimate/{areaId}")]
-        public async Task<IActionResult> GetConfigurationPreview([FromHeader] string accountId, string areaId)
+        public async Task<FileLink> GetConfigurationPreview([FromHeader] string accountId, string areaId)
         {
             logger.LogDebug("Attempting to generate a new preview");
-            var account = await accountsConnector.GetAccount(accountId);
+            var account = await accountRepository.GetAccount(accountId);
             var locale = account.Locale;
             var culture = new CultureInfo(locale);
 
             FileLink fileLink;
             try
             {
-                fileLink = await pdfResponseGenerator.CreatePdfResponsePreviewAsync(s3Client, culture, accountId, areaId);
+                fileLink = await previewPdfGenerator.CreatePdfResponsePreviewAsync(accountId, areaId, culture);
                 logger.LogDebug("Successfully created a Response preview!");
                 logger.LogDebug($"File Link: {fileLink.Link}");
                 logger.LogDebug($"File Id: {fileLink.FileId}");
@@ -54,10 +48,10 @@ namespace Palavyr.API.Controllers.Response
             catch (Exception e)
             {
                 logger.LogDebug($"Failed to Create a preview! Error: {e.Message}");
-                return BadRequest();
+                throw new Exception(e.Message);
             }
 
-            return Ok(fileLink);
+            return fileLink;
         }
     }
 }

@@ -4,24 +4,22 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Domain.Configuration.Schemas;
-using Palavyr.Services.DatabaseService;
+using Palavyr.Services.Repositories;
 
-namespace Palavyr.API.Controllers.Response
+namespace Palavyr.API.Controllers.Response.Tables.Static
 {
     [Authorize]
-    [Route("api")]
-    [ApiController]
-    public class ModifyStaticTablesMetaController : ControllerBase
+    public class ModifyStaticTablesMetaController : PalavyrBaseController
     {
         private ILogger<ModifyStaticTablesMetaController> logger;
-        private readonly IDashConnector dashConnector;
+        private readonly IConfigurationRepository configurationRepository;
 
         public ModifyStaticTablesMetaController(
-            IDashConnector dashConnector,
+            IConfigurationRepository configurationRepository,
             ILogger<ModifyStaticTablesMetaController> logger
         )
         {
-            this.dashConnector = dashConnector;
+            this.configurationRepository = configurationRepository;
             this.logger = logger;
         }
 
@@ -32,16 +30,16 @@ namespace Palavyr.API.Controllers.Response
             [FromBody] List<StaticTablesMeta> staticTableMetas
         )
         {
-            var metasToDelete = await dashConnector.GetStaticTables(accountId, areaId);
-            await dashConnector.RemoveStaticTables(metasToDelete);
-            
-            var clearedMetas = StaticTablesMeta.BindTemplateList(staticTableMetas, accountId);
-            var area = await dashConnector.GetAreaById(accountId, areaId);
-            area.StaticTablesMetas = clearedMetas;
-            
-            await dashConnector.CommitChangesAsync();
+            var metasToDelete = await configurationRepository.GetStaticTables(accountId, areaId);
+            await configurationRepository.RemoveStaticTables(metasToDelete);
 
-            var tables = await dashConnector.GetStaticTables(accountId, areaId);
+            var clearedMetas = StaticTablesMeta.BindTemplateList(staticTableMetas, accountId);
+            var area = await configurationRepository.GetAreaById(accountId, areaId);
+            area.StaticTablesMetas = clearedMetas;
+
+            await configurationRepository.CommitChangesAsync();
+
+            var tables = await configurationRepository.GetStaticTables(accountId, areaId);
             return tables;
         }
     }

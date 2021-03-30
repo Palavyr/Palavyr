@@ -1,18 +1,16 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Authorization;
 using Palavyr.Data;
 using Palavyr.Services.AccountServices;
 using Palavyr.Services.AuthenticationServices;
 
-
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-    [Route("api")]
-    [ApiController]
-    public class GetLocaleController : ControllerBase
+
+    public class GetLocaleController : PalavyrBaseController
     {
         private AccountsContext accountsContext;
         private ILogger<GetLocaleController> logger;

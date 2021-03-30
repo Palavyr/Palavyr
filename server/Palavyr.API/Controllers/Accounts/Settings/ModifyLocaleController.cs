@@ -8,9 +8,8 @@ using Palavyr.Services.AccountServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-    [Route("api")]
-    [ApiController]
-    public class ModifyLocaleController : ControllerBase
+
+    public class ModifyLocaleController : PalavyrBaseController
     {
         private ILogger<ModifyLocaleController> logger;
         private readonly LocaleDefinition localeDefinition;

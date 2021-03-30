@@ -11,9 +11,8 @@ using Palavyr.Services.AmazonServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-    [Route("api")]
-    [ApiController]
-    public class GetCompanyLogoController : ControllerBase
+
+    public class GetCompanyLogoController : PalavyrBaseController
     {
         private ILogger<GetCompanyLogoController> logger;
         private IAmazonS3 s3Client;

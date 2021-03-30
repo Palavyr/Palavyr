@@ -1,7 +1,7 @@
 import { ElementType } from "react";
 
 import * as actionsTypes from "./types";
-import { LinkParams, ImageState, ContextProperties, KeyValue, DynamicResponse } from "../types";
+import { LinkParams, ImageState, ContextProperties, KeyValue, DynamicResponse, DynamicResponses } from "../types";
 
 
 export function _openUserDetails(): actionsTypes.OpenUserDetails {
@@ -190,9 +190,9 @@ export function _addKeyValue(keyValue: KeyValue): actionsTypes.ContextPropertyAc
     };
 }
 
-export function _addDynamicResponse(dynamicResponse: DynamicResponse): actionsTypes.ContextPropertyActions {
+export function _setDynamicResponses(dynamicResponseObject: DynamicResponses): actionsTypes.ContextPropertyActions {
     return {
-        type: actionsTypes.SET_DYNAMICRESPONSE_CONTEXT,
-        dynamicResponse,
-    };
+        type: actionsTypes.SET_DYNAMICRESPONSES_CONTEXT,
+        dynamicResponseObject
+    }
 }

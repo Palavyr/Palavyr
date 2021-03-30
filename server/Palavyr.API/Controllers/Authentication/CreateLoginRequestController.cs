@@ -8,9 +8,8 @@ using Palavyr.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.Authentication
 {
-    [Route("api")]
-    [ApiController]
-    public class CreateLoginRequestController : ControllerBase
+
+    public class CreateLoginRequestController : PalavyrBaseController
     {
         private readonly ILogger<CreateLoginRequestController> logger;
         private readonly IAuthService authService;
