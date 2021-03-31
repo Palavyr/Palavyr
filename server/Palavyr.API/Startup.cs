@@ -61,8 +61,8 @@ namespace Palavyr.API
             logger.LogDebug($"IsStaging: {env.IsStaging()}");
             
             app.UseMiddleware<ErrorHandlingMiddleware>();
-            app.UseHttpsRedirection();
             app.UseRequestResponseLogging();
+            app.UseHttpsRedirection();
             app.UseCors();
             app.UseRouting();
             app.UseAuthentication();
