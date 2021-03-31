@@ -29,28 +29,28 @@ namespace Palavyr.API.Registration.Configuration
                                     "X-Requested-With"
                                 );
 
-                            if (env.IsDevelopment())
-                            {
-                                builder.WithOrigins("*");
-                            }
-                            else
-                            {
-                                builder.WithOrigins(
-                                    "http://staging.palavyr.com",
-                                    "http://www.staging.palavyr.com",
-                                    "http://palavyr.com",
-                                    "http://www.palavyr.com",
-                                    "http://staging.widget.palavyr.com",
-                                    "http://widget.palavyr.com",
-                                    "https://staging.palavyr.com",
-                                    "https://www.staging.palavyr.com",
-                                    "https://palavyr.com",
-                                    "https://www.palavyr.com",
-                                    "https://staging.widget.palavyr.com",
-                                    "https://widget.palavyr.com",
-                                    "https://stripe.com"
-                                );
-                            }
+                            // if (env.IsDevelopment())
+                            // {
+                            builder.WithOrigins("*");
+                            // }
+                            // else
+                            // {
+                            //     builder.WithOrigins(
+                            //         "http://staging.palavyr.com",
+                            //         "http://www.staging.palavyr.com",
+                            //         "http://palavyr.com",
+                            //         "http://www.palavyr.com",
+                            //         "http://staging.widget.palavyr.com",
+                            //         "http://widget.palavyr.com",
+                            //         "https://staging.palavyr.com",
+                            //         "https://www.staging.palavyr.com",
+                            //         "https://palavyr.com",
+                            //         "https://www.palavyr.com",
+                            //         "https://staging.widget.palavyr.com",
+                            //         "https://widget.palavyr.com",
+                            //         "https://stripe.com"
+                            //     );
+                            // }
                         });
                 });
         }
