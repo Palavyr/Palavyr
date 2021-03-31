@@ -50,7 +50,6 @@ namespace Palavyr.IntegrationTests.AppFactory
             services.ConfigureRealPostgresTestDatabases();
             
             ServiceRegistry.RegisterDatabaseContexts(services, configuration);
-            ServiceRegistry.RegisterBackgroundServices(services);
             ServiceRegistry.RegisterHealthChecks(services);
             ServiceRegistry.RegisterHangfire(services, env);
         }

@@ -51,7 +51,6 @@ namespace Palavyr.IntegrationTests.AppFactory
             services.ConfigureInMemoryDatabases(dbRoot);
             
             ServiceRegistry.RegisterDatabaseContexts(services, configuration);
-            ServiceRegistry.RegisterBackgroundServices(services);
             ServiceRegistry.RegisterHealthChecks(services);
             ServiceRegistry.RegisterHangfire(services, env);
         }
