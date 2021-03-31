@@ -56,11 +56,11 @@ namespace Palavyr.API
             HangFireJobs hangFireJobs
         )
         {
-            var logger = loggerFactory.CreateLogger<Startup>();
-            logger.LogDebug($"CURRENT ENV: {env.EnvironmentName}");
-            logger.LogDebug($"IsStaging: {env.IsStaging()}");
-            
-            app.UseMiddleware<ErrorHandlingMiddleware>();
+            // var logger = loggerFactory.CreateLogger<Startup>();
+            // logger.LogDebug($"CURRENT ENV: {env.EnvironmentName}");
+            // logger.LogDebug($"IsStaging: {env.IsStaging()}");
+            //
+            // app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseRequestResponseLogging();
             app.UseHttpsRedirection();
             app.UseCors();
