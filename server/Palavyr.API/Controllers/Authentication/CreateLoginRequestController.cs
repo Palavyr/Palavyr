@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +29,16 @@ namespace Palavyr.API.Controllers.Authentication
         public async Task<Credentials> RequestLogin([FromBody] LoginCredentials credentials)
         {
             logger.LogDebug("Login Request Received.");
-            return await authService.PerformLoginAction(credentials);
+            try
+            {
+
+                return await authService.PerformLoginAction(credentials);
+            }
+            catch (Exception ex)
+            {
+                logger.LogDebug("****************************");
+                logger.LogDebug(ex.Message);
+            }
         }
     }
 }

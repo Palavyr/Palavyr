@@ -72,8 +72,8 @@ namespace Palavyr.API
                 endpoints =>
                 {
                     endpoints.MapControllers();
-                    endpoints.MapHangfireDashboard();
-                    endpoints.MapHealthChecks("/healthcheck");
+                    // endpoints.MapHangfireDashboard();
+                    // endpoints.MapHealthChecks("/healthcheck");
                 });
             hangFireJobs.AddHangFireJobs(app);
         }
