@@ -21,16 +21,20 @@ namespace Palavyr.API.CustomMiddleware
 
         public async Task InvokeAsync(HttpContext context, IWebHostEnvironment env, AccountsContext accountContext)
         {
+            logger.LogDebug("Settings magic string headers...");
             var action = context.Request.Headers[MagicUrlStrings.Action].ToString();
 
             if (action == MagicUrlStrings.SessionAction)
             {
+                logger.LogDebug("Session action detected. Searching for the session Id...");
                 var sessionId = context.Request.Headers[MagicUrlStrings.SessionId].ToString();
                 if (!string.IsNullOrWhiteSpace(sessionId))
                 {
+                    logger.LogDebug("Session Id found - performing looking in the persistence store...");
                     var session = accountContext.Sessions.SingleOrDefault(row => row.SessionId == sessionId);
                     if (session != null)
                     {
+                        logger.LogDebug("Session found. Assigning account Id to the Request Header.");
                         context.Request.Headers[MagicUrlStrings.AccountId] = session.AccountId;
                     }
                 }

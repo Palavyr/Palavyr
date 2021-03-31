@@ -36,14 +36,13 @@ namespace Palavyr.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLogging(loggingBuilder => { loggingBuilder.AddSeq(); });
+            // services.AddLogging(loggingBuilder => { loggingBuilder.AddSeq(); });
             services.AddHttpContextAccessor();
-            
+
             AuthenticationConfiguration.AddAuthenticationSchemes(services, configuration);
-            services.AddAuthentication();
             CorsConfiguration.AddCors(services, env);
             services.AddControllers();
-            
+
             Configurations.ConfigureStripe(configuration);
             ServiceRegistry.RegisterDatabaseContexts(services, configuration);
             ServiceRegistry.RegisterBackgroundServices(services);
@@ -55,13 +54,13 @@ namespace Palavyr.API
             IApplicationBuilder app,
             ILoggerFactory loggerFactory,
             HangFireJobs hangFireJobs
-            )
+        )
         {
             var logger = loggerFactory.CreateLogger<Startup>();
+            app.UseCors();
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<SetHeadersMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests

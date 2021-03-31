@@ -10,15 +10,18 @@ namespace Palavyr.Domain.Configuration.Constant
 
     public static class DynamicTableTypes
     {
+        // TODO: Deprecate these. Probs don't need them.
         public static DynamicType DefaultTable = new SelectOneFlat();
         public static SelectOneFlat CreateSelectOneFlat() => new SelectOneFlat();
         public static PercentOfThreshold CreatePercentOfThreshold() => new PercentOfThreshold();
         public static BasicThreshold CreateBasicThreshold() => new BasicThreshold();
         public static TwoNestedCategory CreateTwoNestedCategory() => new TwoNestedCategory();
+
         public static List<DynamicType> GetDynamicTableTypes()
-        {   
+        {
             return new List<DynamicType>
             {
+                // TODO: List these using reflection
                 new SelectOneFlat(),
                 new PercentOfThreshold(),
                 new BasicThreshold(),
@@ -26,11 +29,12 @@ namespace Palavyr.Domain.Configuration.Constant
             };
         }
 
+        // TODO: Define these next to the compilers
         public class TwoNestedCategory : DynamicType
         {
             public TwoNestedCategory()
             {
-                PrettyName = "Categorical Select Count";
+                PrettyName = "Two Nested Categories";
                 TableType = nameof(TwoNestedCategory);
             }
         }
@@ -61,6 +65,7 @@ namespace Palavyr.Domain.Configuration.Constant
                 TableType = nameof(BasicThreshold);
             }
         }
+
         // We can define new DynamicTypes here
     }
 }

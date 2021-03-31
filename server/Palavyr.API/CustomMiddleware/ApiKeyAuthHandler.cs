@@ -21,11 +21,11 @@ namespace Palavyr.API.CustomMiddleware
     }
 
 
-    public class ApiKeyAuthenticationHandler
-        : AuthenticationHandler<ApiKeyAuthSchemeOptions>
+    public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthSchemeOptions>
     {
         private readonly AccountsContext accountsContext;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly ILoggerFactory logger;
 
         public ApiKeyAuthenticationHandler(
             AccountsContext accountsContext,
@@ -37,9 +37,10 @@ namespace Palavyr.API.CustomMiddleware
         {
             this.accountsContext = accountsContext;
             httpContextAccessor = contextAccessor;
+            this.logger = logger;
         }
         
-        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+        protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             
             // https://widget.palavyr.com/widget?key={apikey} with header  "action": "apiKeyAccess"
@@ -47,24 +48,24 @@ namespace Palavyr.API.CustomMiddleware
 
             if (httpContext.Request.Headers[MagicUrlStrings.Action].ToString() != MagicUrlStrings.ApiKeyAccess)
             {
-                return Task.FromResult(AuthenticateResult.Fail("Incorrect action header"));
+                return await Task.FromResult(AuthenticateResult.Fail("Incorrect action header"));
             }
 
             var found = httpContext.Request.Query.TryGetValue("key", out var apiKey);
             if (!found)
             {
-                return Task.FromResult(AuthenticateResult.Fail("Could not find API Key in url. Check formatting."));
+                return await Task.FromResult(AuthenticateResult.Fail("Could not find API Key in url. Check formatting."));
             }
             
             var account = accountsContext.Accounts.SingleOrDefault(row => row.ApiKey == apiKey.ToString());
             if (account == null)
             {
-                return Task.FromResult(AuthenticateResult.Fail("Api Key not attached to any accounts."));
+                return await Task.FromResult(AuthenticateResult.Fail("Api Key not attached to any accounts."));
             }
 
             if (!account.Active)
             {
-                return Task.FromResult(AuthenticateResult.Fail(
+                return await Task.FromResult(AuthenticateResult.Fail(
                     "Account is not activated. Check your email for an activation code to use with the dashboard."));
             }
             
@@ -76,7 +77,7 @@ namespace Palavyr.API.CustomMiddleware
             var claimsIdentity = new ClaimsIdentity(claims, nameof(ApiKeyAuthenticationHandler));
             var ticket = new AuthenticationTicket(new ClaimsPrincipal(claimsIdentity), this.Scheme.Name);
             
-            return Task.FromResult(AuthenticateResult.Success(ticket));
+            return await Task.FromResult(AuthenticateResult.Success(ticket));
         }
     }
 }

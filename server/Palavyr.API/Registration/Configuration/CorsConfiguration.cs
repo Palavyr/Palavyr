@@ -29,7 +29,7 @@ namespace Palavyr.API.Registration.Configuration
                                     "X-Requested-With"
                                 );
 
-                            if (env.IsDevelopment() || env.IsStaging())
+                            if (env.IsDevelopment())
                             {
                                 builder.WithOrigins("*");
                             }
