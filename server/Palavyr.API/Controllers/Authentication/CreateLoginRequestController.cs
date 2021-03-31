@@ -31,13 +31,13 @@ namespace Palavyr.API.Controllers.Authentication
             logger.LogDebug("Login Request Received.");
             try
             {
-
                 return await authService.PerformLoginAction(credentials);
             }
             catch (Exception ex)
             {
                 logger.LogDebug("****************************");
                 logger.LogDebug(ex.Message);
+                throw;
             }
         }
     }
