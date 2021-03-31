@@ -61,7 +61,7 @@ namespace Palavyr.API
             // logger.LogDebug($"IsStaging: {env.IsStaging()}");
             //
             // app.UseMiddleware<ErrorHandlingMiddleware>();
-            app.UseRequestResponseLogging();
+            // app.UseRequestResponseLogging();
             app.UseHttpsRedirection();
             app.UseCors();
             app.UseRouting();
@@ -75,7 +75,7 @@ namespace Palavyr.API
                     // endpoints.MapHangfireDashboard();
                     // endpoints.MapHealthChecks("/healthcheck");
                 });
-            hangFireJobs.AddHangFireJobs(app);
+            // hangFireJobs.AddHangFireJobs(app);
         }
     }
 }

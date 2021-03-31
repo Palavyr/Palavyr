@@ -21,6 +21,7 @@ namespace Palavyr.API.CustomMiddleware
 
         public async Task InvokeAsync(HttpContext context, IWebHostEnvironment env, AccountsContext accountContext)
         {
+            
             logger.LogDebug("Settings magic string headers...");
             var action = context.Request.Headers[MagicUrlStrings.Action].ToString();
 
@@ -41,6 +42,8 @@ namespace Palavyr.API.CustomMiddleware
             }
 
             await next(context);
+            
+            
         }
     }
 }
