@@ -63,8 +63,8 @@ namespace Palavyr.API
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseHttpsRedirection();
             app.UseCors();
-            app.UseRouting();
             app.UseRequestResponseLogging();
+            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<SetHeadersMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
