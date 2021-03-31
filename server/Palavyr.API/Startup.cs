@@ -62,8 +62,8 @@ namespace Palavyr.API
             
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseHttpsRedirection();
-            app.UseCors();
             app.UseRequestResponseLogging();
+            app.UseCors();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
