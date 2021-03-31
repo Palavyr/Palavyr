@@ -24,27 +24,9 @@ namespace Palavyr.API.Registration.Container
 {
     public static class ServiceRegistry
     {
-        public static void RegisterBackgroundServices(IServiceCollection services)
-        {
-            services.AddTransient<ICreatePalavyrSnapshot, CreatePalavyrSnapshot>();
-            services.AddTransient<IRemoveOldS3Archives, RemoveOldS3Archives>();
-            services.AddTransient<IRemoveStaleSessions, RemoveStaleSessions>();
-            services.AddTransient<IValidateAttachments, ValidateAttachments>();
-        }
 
-        public static void RegisterGeneralServices(IServiceCollection services)
+        public static void RegisterHealthChecks(IServiceCollection services)
         {
-            services.AddTransient<IJwtAuthenticationService, JwtAuthenticationService>();
-            services.AddTransient<IAccountSetupService, AccountSetupService>();
-            services.AddTransient<IAuthService, AuthService>();
-            services.AddTransient<IEmailVerificationService, EmailVerificationService>();
-            services.AddSingleton<ISesEmail, SesEmail>();
-            services.AddTransient<IRequestEmailVerification, RequestEmailVerification>();
-            services.AddTransient<IPdfResponseGenerator, PdfResponseGenerator>();
-            services.AddTransient<IS3Saver, S3Saver>();
-            services.AddTransient<IPostgresBackup, PostgresBackup>();
-            services.AddTransient<IUserDataBackup, UserDataBackup>();
-            services.AddTransient<IUpdateDatabaseLatest, UpdateDatabaseLatest>();
             services.AddHealthChecks();
         }
 

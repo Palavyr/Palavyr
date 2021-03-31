@@ -1,8 +1,8 @@
 using System;
+using Autofac;
 using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Palavyr.Background;
@@ -13,20 +13,20 @@ namespace Palavyr.API.Registration.BackgroundJobs
     {
         private readonly IWebHostEnvironment env;
         private readonly ILogger<HangFireJobs> logger;
-        private readonly IServiceProvider serviceProvider;
         private readonly IRecurringJobManager recurringJobManager;
+        private readonly ILifetimeScope container;
 
         public HangFireJobs(
             IWebHostEnvironment env,
             ILogger<HangFireJobs> logger,
-            IServiceProvider serviceProvider,
-            IRecurringJobManager recurringJobManager
+            IRecurringJobManager recurringJobManager,
+            ILifetimeScope container
         )
         {
             this.env = env;
             this.logger = logger;
-            this.serviceProvider = serviceProvider;
             this.recurringJobManager = recurringJobManager;
+            this.container = container;
         }
 
         public void AddHangFireJobs(IApplicationBuilder app)
@@ -40,31 +40,31 @@ namespace Palavyr.API.Registration.BackgroundJobs
                 recurringJobManager
                     .AddOrUpdate(
                         "Backup database",
-                        () => serviceProvider.GetService<ICreatePalavyrSnapshot>().CreateAndTransferCompleteBackup(),
+                        () => container.Resolve<ICreatePalavyrSnapshot>().CreateAndTransferCompleteBackup(),
                         Cron.Daily
                     );
                 recurringJobManager
                     .AddOrUpdate(
                         "Keep only the last 50 snapshots",
-                        () => serviceProvider.GetService<IRemoveOldS3Archives>().RemoveS3Objects(),
+                        () => container.Resolve<IRemoveOldS3Archives>().RemoveS3Objects(),
                         Cron.Daily
                     );
                 recurringJobManager
                     .AddOrUpdate(
                         "Clean Expired Sessions",
-                        () => serviceProvider.GetService<IRemoveStaleSessions>().CleanSessionDB(),
+                        () => container.Resolve<IRemoveStaleSessions>().CleanSessionDB(),
                         Cron.Hourly
                     );
                 recurringJobManager
                     .AddOrUpdate(
                         "Validate All Attachment DB Entries",
-                        () => serviceProvider.GetService<IValidateAttachments>().ValidateAllAttachments(),
+                        () => container.Resolve<IValidateAttachments>().ValidateAllAttachments(),
                         Cron.Weekly
                     );
                 recurringJobManager
                     .AddOrUpdate(
                         "Validate All Files",
-                        () => serviceProvider.GetService<IValidateAttachments>().ValidateAllFiles(),
+                        () => container.Resolve<IValidateAttachments>().ValidateAllFiles(),
                         Cron.Weekly
                     );
             }

@@ -25,15 +25,16 @@ namespace Palavyr.API.CustomMiddleware
     {
         private readonly AccountsContext accountsContext;
         private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly ILoggerFactory logger;
+        private readonly ILogger<ApiKeyAuthenticationHandler> logger;
 
         public ApiKeyAuthenticationHandler(
             AccountsContext accountsContext,
             IHttpContextAccessor contextAccessor,
             IOptionsMonitor<ApiKeyAuthSchemeOptions> options,
-            ILoggerFactory logger,
+            ILoggerFactory loggerFactory,
+            ILogger<ApiKeyAuthenticationHandler> logger,
             UrlEncoder encoder,
-            ISystemClock clock) : base(options, logger, encoder, clock)
+            ISystemClock clock) : base(options, loggerFactory, encoder, clock)
         {
             this.accountsContext = accountsContext;
             httpContextAccessor = contextAccessor;
@@ -42,7 +43,8 @@ namespace Palavyr.API.CustomMiddleware
         
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            
+            logger.LogDebug("Calling Api Authentication handler...");
+
             // https://widget.palavyr.com/widget?key={apikey} with header  "action": "apiKeyAccess"
             var httpContext = httpContextAccessor.HttpContext; // Access context here
 

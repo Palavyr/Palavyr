@@ -6,7 +6,7 @@ namespace Palavyr.API.Registration.Configuration
 {
     public static class CorsConfiguration
     {
-        public static void AddCors(IServiceCollection services, IWebHostEnvironment env)
+        public static void ConfigureCorsService(IServiceCollection services, IWebHostEnvironment env)
         {
             services.AddCors(
                 options =>

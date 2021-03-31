@@ -42,7 +42,7 @@ namespace Palavyr.IntegrationTests.AppFactory
             
             AuthenticationConfiguration.AddAuthenticationSchemes(services, configuration);
             
-            CorsConfiguration.AddCors(services, env);
+            CorsConfiguration.ConfigureCorsService(services, env);
             services.AddControllers();
             
             Configurations.ConfigureStripe(configuration);
@@ -52,7 +52,7 @@ namespace Palavyr.IntegrationTests.AppFactory
             
             ServiceRegistry.RegisterDatabaseContexts(services, configuration);
             ServiceRegistry.RegisterBackgroundServices(services);
-            ServiceRegistry.RegisterGeneralServices(services);
+            ServiceRegistry.RegisterHealthChecks(services);
             ServiceRegistry.RegisterHangfire(services, env);
         }
 

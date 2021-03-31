@@ -40,13 +40,12 @@ namespace Palavyr.API
             services.AddHttpContextAccessor();
 
             AuthenticationConfiguration.AddAuthenticationSchemes(services, configuration);
-            CorsConfiguration.AddCors(services, env);
+            CorsConfiguration.ConfigureCorsService(services, env);
             services.AddControllers();
 
             Configurations.ConfigureStripe(configuration);
             ServiceRegistry.RegisterDatabaseContexts(services, configuration);
-            ServiceRegistry.RegisterBackgroundServices(services);
-            ServiceRegistry.RegisterGeneralServices(services);
+            ServiceRegistry.RegisterHealthChecks(services);
             ServiceRegistry.RegisterHangfire(services, env);
         }
 
