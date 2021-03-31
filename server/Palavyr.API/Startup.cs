@@ -59,6 +59,8 @@ namespace Palavyr.API
             var logger = loggerFactory.CreateLogger<Startup>();
             logger.LogDebug($"CURRENT ENV: {env.EnvironmentName}");
             logger.LogDebug($"IsStaging: {env.IsStaging()}");
+            
+            app.UseRequestResponseLogging();
             app.UseCors();
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseHttpsRedirection();
