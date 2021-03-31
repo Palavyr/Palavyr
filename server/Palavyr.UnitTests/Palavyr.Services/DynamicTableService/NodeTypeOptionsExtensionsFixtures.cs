@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
-using Palavyr.Domain.Configuration.Constant;
-using Palavyr.Services.DynamicTableService;
+using Palavyr.Core.Models.Configuration.Constant;
+using Palavyr.Core.Services.DynamicTableService;
 
 namespace PalavyrServer.Tests.Palavyr.Services.DynamicTableService
 {

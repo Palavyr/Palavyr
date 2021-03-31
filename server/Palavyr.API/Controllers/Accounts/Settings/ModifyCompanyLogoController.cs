@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.FileSystemTools.FormPaths;
-using Palavyr.Common.FileSystemTools.IO;
-using Palavyr.Common.FileSystemTools.ListPaths;
-using Palavyr.Common.GlobalConstants;
-using Palavyr.Data;
-using Palavyr.Services.AmazonServices;
+using Palavyr.Core.Common.FileSystemTools.FormPaths;
+using Palavyr.Core.Common.FileSystemTools.IO;
+using Palavyr.Core.Common.FileSystemTools.ListPaths;
+using Palavyr.Core.Common.GlobalConstants;
+using Palavyr.Core.Data;
+using Palavyr.Core.Services.AmazonServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {

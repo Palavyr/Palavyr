@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Configuration;
-using Palavyr.Common.GlobalConstants;
+using Palavyr.Core.Common.GlobalConstants;
 using Stripe;
 
 namespace Palavyr.API.Registration.Configuration

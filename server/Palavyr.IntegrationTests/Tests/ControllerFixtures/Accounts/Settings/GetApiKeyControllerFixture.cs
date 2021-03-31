@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Palavyr.Common.UIDUtils;
-using Palavyr.Domain.Accounts.Schemas;
+using Palavyr.Core.Common.UIDUtils;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.IntegrationTests.AppFactory;
 using Xunit;
 

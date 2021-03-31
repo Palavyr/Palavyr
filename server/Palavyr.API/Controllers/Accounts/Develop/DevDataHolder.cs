@@ -1,4 +1,4 @@
-﻿using Palavyr.Common.UIDUtils;
+﻿using Palavyr.Core.Common.UIDUtils;
 
 namespace Palavyr.API.Controllers.Accounts.Develop
 {

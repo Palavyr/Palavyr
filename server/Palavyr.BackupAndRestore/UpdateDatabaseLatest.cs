@@ -1,13 +1,13 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Palavyr.Data;
-using Palavyr.Domain.Accounts.Schemas;
+using Palavyr.Core.Data;
+using Palavyr.Core.Models.Accounts.Schemas;
 
 namespace Palavyr.BackupAndRestore
 {
     public interface IUpdateDatabaseLatest
     {
-        Task UpdateLatestUserDataRecord( string latestUserDataBackup);
+        Task UpdateLatestUserDataRecord(string latestUserDataBackup);
         Task UpdateLatestDatabaseRecord(string latestDatabaseBackup);
         Task UpdateLatestBackupRecords(string latestDatabaseBackup, string latestUserDataBackup);
     }
@@ -21,11 +21,11 @@ namespace Palavyr.BackupAndRestore
             this.accountsContext = accountsContext;
         }
 
-        public async Task UpdateLatestUserDataRecord( string latestUserDataBackup)
+        public async Task UpdateLatestUserDataRecord(string latestUserDataBackup)
         {
             await WriteAndSaveRecords("", latestUserDataBackup);
         }
-        
+
         public async Task UpdateLatestDatabaseRecord(string latestDatabaseBackup)
         {
             await WriteAndSaveRecords(latestDatabaseBackup, "");
@@ -49,11 +49,13 @@ namespace Palavyr.BackupAndRestore
                 {
                     currentRecords.LatestFullDbBackup = latestDatabaseBackup;
                 }
+
                 if (!string.IsNullOrWhiteSpace(latestUserDataBackup))
                 {
                     currentRecords.LatestUserDataBackup = latestUserDataBackup;
                 }
             }
+
             await accountsContext.SaveChangesAsync();
         }
     }

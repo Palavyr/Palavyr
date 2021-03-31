@@ -2,10 +2,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Domain.Configuration.Constant;
-using Palavyr.Domain.Configuration.Schemas.DynamicTables;
-using Palavyr.Services.Repositories;
-using Palavyr.Services.StripeServices;
+using Palavyr.Core.Models.Configuration.Constant;
+using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Repositories;
+using Palavyr.Core.Services.StripeServices;
 
 namespace Palavyr.API.Controllers.Accounts
 {

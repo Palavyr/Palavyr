@@ -6,10 +6,10 @@ using Amazon.SimpleEmail.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Data;
-using Palavyr.Domain.Resources.Requests;
-using Palavyr.Services.EmailService.Verification;
-using Palavyr.Services.StripeServices;
+using Palavyr.Core.Data;
+using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Services.EmailService.Verification;
+using Palavyr.Core.Services.StripeServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {

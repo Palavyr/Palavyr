@@ -1,5 +1,5 @@
 ﻿using System.Net.Http;
-using Palavyr.Common.RequestsTools;
+using Palavyr.Core.Common.RequestsTools;
 
 namespace Palavyr.IntegrationTests.AppFactory
 {

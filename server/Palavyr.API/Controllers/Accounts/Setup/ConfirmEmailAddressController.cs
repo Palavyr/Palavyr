@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Services.AccountServices;
+using Palavyr.Core.Services.AccountServices;
 
 namespace Palavyr.API.Controllers.Accounts.Setup
 {

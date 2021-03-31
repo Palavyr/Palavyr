@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Data;
-using Palavyr.Domain.Configuration.Schemas;
+using Palavyr.Core.Data;
+using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic.Meta
 {

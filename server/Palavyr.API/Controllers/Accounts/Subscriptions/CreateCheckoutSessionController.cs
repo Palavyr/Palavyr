@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Palavyr.Services.Repositories;
-using Palavyr.Services.StripeServices;
+using Palavyr.Core.Repositories;
+using Palavyr.Core.Services.StripeServices;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {

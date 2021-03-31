@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Domain.Configuration.Schemas;
-using Palavyr.Services.Repositories;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Response
 {

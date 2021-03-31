@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Services.Repositories;
+using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {

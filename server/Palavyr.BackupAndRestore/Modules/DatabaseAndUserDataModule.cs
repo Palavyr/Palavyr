@@ -1,8 +1,8 @@
 using Autofac;
 using Palavyr.BackupAndRestore.Postgres;
 using Palavyr.BackupAndRestore.UserData;
-using Palavyr.Services.AmazonServices.S3Service;
-using Palavyr.Services.EmailService.Verification;
+using Palavyr.Core.Services.AmazonServices.S3Service;
+using Palavyr.Core.Services.EmailService.Verification;
 
 namespace Palavyr.BackupAndRestore.Modules
 {

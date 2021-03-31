@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using System;
 using Microsoft.AspNetCore.Hosting;
-using Palavyr.Data;
+using Palavyr.Core.Data;
 
 namespace Palavyr.IntegrationTests.AppFactory
 {

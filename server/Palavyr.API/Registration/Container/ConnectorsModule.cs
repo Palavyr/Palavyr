@@ -1,6 +1,6 @@
 using Autofac;
-using Palavyr.Services.Repositories;
-using Palavyr.Services.Repositories.Delete;
+using Palavyr.Core.Repositories;
+using Palavyr.Core.Repositories.Delete;
 
 namespace Palavyr.API.Registration.Container
 {

@@ -1,6 +1,6 @@
 using Autofac;
 using Palavyr.BackupAndRestore.Jobs;
-using Palavyr.Services.EmailService.Verification;
+using Palavyr.Core.Services.EmailService.Verification;
 
 namespace Palavyr.BackupAndRestore.Modules
 {

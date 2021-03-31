@@ -4,9 +4,9 @@ using Amazon.S3;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.GlobalConstants;
-using Palavyr.Data;
-using Palavyr.Domain.Resources.Responses;
+using Palavyr.Core.Common.GlobalConstants;
+using Palavyr.Core.Data;
+using Palavyr.Core.Models.Resources.Responses;
 
 namespace Palavyr.API.Controllers.Attachments
 {

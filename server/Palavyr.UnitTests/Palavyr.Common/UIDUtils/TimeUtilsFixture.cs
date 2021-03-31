@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using Palavyr.Common.UIDUtils;
+using Palavyr.Core.Common.UIDUtils;
 
 namespace PalavyrServer.Tests.Palavyr.Common.UniqueIdentifiers
 {

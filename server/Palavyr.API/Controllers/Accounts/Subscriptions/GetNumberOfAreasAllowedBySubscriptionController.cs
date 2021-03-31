@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Palavyr.Common.GlobalConstants;
-using Palavyr.Data;
-using Palavyr.Domain.Accounts.Schemas;
+using Palavyr.Core.Common.GlobalConstants;
+using Palavyr.Core.Data;
+using Palavyr.Core.Models.Accounts.Schemas;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {

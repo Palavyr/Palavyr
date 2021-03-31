@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.UIDUtils;
-using Palavyr.Domain.Configuration.Constant;
-using Palavyr.Domain.Configuration.Schemas;
-using Palavyr.Services.Repositories;
+using Palavyr.Core.Common.UIDUtils;
+using Palavyr.Core.Models.Configuration.Constant;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {

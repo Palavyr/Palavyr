@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Domain.Resources.Responses;
-using Palavyr.Services.ConversationServices;
+using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Services.ConversationServices;
 
 namespace Palavyr.API.Controllers.Enquiries
 {

@@ -3,11 +3,11 @@ using System.IO.Compression;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.BackupAndRestore.Paths;
-using Palavyr.Common.FileSystemTools;
-using Palavyr.Common.FileSystemTools.FormPaths;
-using Palavyr.Common.UIDUtils;
-using Palavyr.Services.AmazonServices;
-using Palavyr.Services.AmazonServices.S3Service;
+using Palavyr.Core.Common.FileSystemTools;
+using Palavyr.Core.Common.FileSystemTools.FormPaths;
+using Palavyr.Core.Common.UIDUtils;
+using Palavyr.Core.Services.AmazonServices;
+using Palavyr.Core.Services.AmazonServices.S3Service;
 
 namespace Palavyr.BackupAndRestore.UserData
 {

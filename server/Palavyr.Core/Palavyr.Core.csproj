@@ -1,0 +1,76 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>Palavyr.Core</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Palavyr.Data\Palavyr.Data.csproj" />
+        <ProjectReference Include="..\Palavyr.Domain\Palavyr.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="6.1.0" />
+        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
+        <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.101" />
+        <PackageReference Include="AWSSDK.S3" Version="3.5.7.8" />
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.5.0.71" />
+        <PackageReference Include="Hangfire.AspNetCore" Version="1.7.12" />
+        <PackageReference Include="Hangfire.Core" Version="1.7.12" />
+        <PackageReference Include="Hangfire.MemoryStorage" Version="1.7.0" />
+        <PackageReference Include="Hangfire.SQLite.Core" Version="1.0.2" />
+        <PackageReference Include="Konscious.Security.Cryptography.Argon2" Version="1.2.1" />
+        <PackageReference Include="Microsoft.AspNet.WebApi.Cors" Version="5.2.7" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.13" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.13" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.13" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.13">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.13" />
+        <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.0.0" />
+        <PackageReference Include="Microsoft.Owin.Host.SystemWeb" Version="4.1.1" />
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+        <PackageReference Include="NLog.Targets.Seq" Version="1.2.0" />
+        <PackageReference Include="NLog.Web.AspNetCore" Version="4.10.0" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.11" />
+        <PackageReference Include="Seq.Extensions.Logging" Version="4.0.2" />
+        <PackageReference Include="Stripe.net" Version="39.38.0" />
+        <PackageReference Include="AWSSDK.S3" Version="3.5.7.8" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.13" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+        <PackageReference Include="Autofac" Version="6.1.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
+        <PackageReference Include="AWSSDK.S3" Version="3.7.0.5" />
+        <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.13" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.13">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.11" />
+        <PackageReference Include="dbup-postgresql" Version="4.5.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.13" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.13" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.13" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.13" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.13" />
+        <PackageReference Include="Google.Apis.Auth.AspNetCore3" Version="1.51.0" />
+
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.5.0.71" />
+        <PackageReference Include="MimeKit" Version="2.11.0" />
+        <PackageReference Include="NLog.Web.AspNetCore" Version="4.10.0" />
+        <PackageReference Include="Stripe.net" Version="39.38.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Common" />
+      <Folder Include="Services" />
+    </ItemGroup>
+
+</Project>

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Domain.Resources.Requests;
+using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {

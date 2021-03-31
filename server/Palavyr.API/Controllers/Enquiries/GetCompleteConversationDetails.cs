@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Data;
-using Palavyr.Domain.Conversation.Schemas;
+using Palavyr.Core.Data;
+using Palavyr.Core.Models.Conversation.Schemas;
 
 namespace Palavyr.API.Controllers.Enquiries
 {

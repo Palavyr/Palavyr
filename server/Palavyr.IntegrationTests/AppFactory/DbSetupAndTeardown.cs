@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using Palavyr.Common.UIDUtils;
-using Palavyr.Data;
-using Palavyr.Domain.Accounts.Schemas;
+using Palavyr.Core.Common.UIDUtils;
+using Palavyr.Core.Data;
+using Palavyr.Core.Models.Accounts.Schemas;
 
 namespace Palavyr.IntegrationTests.AppFactory
 {

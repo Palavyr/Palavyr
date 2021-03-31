@@ -7,8 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Palavyr.API.CustomMiddleware;
-using Palavyr.Common.GlobalConstants;
-using Palavyr.Services.AuthenticationServices;
+using Palavyr.Core.Common.GlobalConstants;
+using Palavyr.Core.Services.AuthenticationServices;
 
 //https://adamstorr.azurewebsites.net/blog/integration-testing-with-aspnetcore-3-1-remove-the-boiler-plate
 namespace Palavyr.API.Registration.Configuration

@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Data;
-using Palavyr.Domain.Resources.Responses;
+using Palavyr.Core.Data;
+using Palavyr.Core.Models.Resources.Responses;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {

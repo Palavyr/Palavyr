@@ -1,6 +1,6 @@
 using FluentAssertions;
 using NUnit.Framework;
-using Palavyr.Common.Utils;
+using Palavyr.Core.Common.Utils;
 
 namespace PalavyrServer.Tests.Palavyr.Common.Utils
 {

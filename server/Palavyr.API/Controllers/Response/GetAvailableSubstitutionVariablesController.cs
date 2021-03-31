@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Domain.Resources.Responses;
+using Palavyr.Core.Models.Resources.Responses;
 
 namespace Palavyr.API.Controllers.Response
 {

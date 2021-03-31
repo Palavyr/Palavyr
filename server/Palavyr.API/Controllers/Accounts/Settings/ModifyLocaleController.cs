@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Data;
-using Palavyr.Services.AccountServices;
+using Palavyr.Core.Data;
+using Palavyr.Core.Services.AccountServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Hosting;
-using Palavyr.Common.RequestsTools;
+using Palavyr.Core.Common.RequestsTools;
 
 namespace Palavyr.IntegrationTests.AppFactory
 {

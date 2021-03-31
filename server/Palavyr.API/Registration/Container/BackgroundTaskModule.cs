@@ -1,5 +1,6 @@
 ﻿using Autofac;
-using Palavyr.Background;
+using Palavyr.BackupAndRestore;
+using Palavyr.Core.BackgroundJobs;
 
 namespace Palavyr.API.Registration.Container
 {

@@ -1,8 +1,8 @@
 using System.IO;
 using Palavyr.BackupAndRestore.Postgres;
-using Palavyr.Common.FileSystemTools.FormPaths;
-using Palavyr.Common.UIDUtils;
-using Palavyr.Services.AmazonServices;
+using Palavyr.Core.Common.FileSystemTools.FormPaths;
+using Palavyr.Core.Common.UIDUtils;
+using Palavyr.Core.Services.AmazonServices;
 
 namespace Palavyr.BackupAndRestore.Paths
 {

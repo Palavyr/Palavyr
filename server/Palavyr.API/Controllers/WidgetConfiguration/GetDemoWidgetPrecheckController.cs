@@ -2,9 +2,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Domain;
-using Palavyr.Domain.Resources.Responses;
-using Palavyr.Services.Repositories;
+using Palavyr.Core.Models;
+using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {

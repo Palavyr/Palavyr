@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
-using Palavyr.Common.UIDUtils;
-using Palavyr.Data;
+using Palavyr.Core.Common.UIDUtils;
+using Palavyr.Core.Data;
 
 namespace Palavyr.IntegrationTests.AppFactory
 {

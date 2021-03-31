@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Palavyr.Background;
+using Palavyr.BackupAndRestore;
+using Palavyr.Core.BackgroundJobs;
 
 namespace Palavyr.API.Registration.BackgroundJobs
 {

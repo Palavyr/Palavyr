@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Palavyr.Data;
+using Palavyr.Core.Data;
 
 namespace Palavyr.API.CustomMiddleware
 {

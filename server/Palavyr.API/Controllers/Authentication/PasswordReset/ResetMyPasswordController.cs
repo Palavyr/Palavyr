@@ -2,9 +2,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Common.UIDUtils;
-using Palavyr.Data;
-using Palavyr.Services.AuthenticationServices;
+using Palavyr.Core.Common.UIDUtils;
+using Palavyr.Core.Data;
+using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.Authentication.PasswordReset
 {

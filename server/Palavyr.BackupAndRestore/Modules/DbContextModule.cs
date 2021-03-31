@@ -1,8 +1,8 @@
 using Autofac;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Palavyr.Common.GlobalConstants;
-using Palavyr.Data;
+using Palavyr.Core.Common.GlobalConstants;
+using Palavyr.Core.Data;
 
 namespace Palavyr.BackupAndRestore.Modules
 {

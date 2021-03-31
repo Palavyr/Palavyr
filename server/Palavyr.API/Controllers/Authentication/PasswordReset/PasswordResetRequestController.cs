@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Common.UIDUtils;
-using Palavyr.Services.EmailService.ResponseEmailTools;
-using Palavyr.Services.Repositories;
+using Palavyr.Core.Common.UIDUtils;
+using Palavyr.Core.Repositories;
+using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 
 namespace Palavyr.API.Controllers.Authentication.PasswordReset
 {

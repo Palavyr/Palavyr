@@ -3,7 +3,7 @@ using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore.Storage;
-using Palavyr.Data;
+using Palavyr.Core.Data;
 
 namespace Palavyr.IntegrationTests.AppFactory
 {

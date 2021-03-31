@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Domain.Resources.Responses;
-using Palavyr.Services.PdfService;
-using Palavyr.Services.Repositories;
+using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Repositories;
+using Palavyr.Core.Services.PdfService;
 
 namespace Palavyr.API.Controllers.Response
 {

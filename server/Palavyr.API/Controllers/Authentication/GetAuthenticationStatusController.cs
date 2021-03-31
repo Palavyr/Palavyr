@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Services.AuthenticationServices;
+using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.Authentication
 {

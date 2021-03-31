@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Domain.Configuration.Schemas;
+using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Response.Tables.Static
 {

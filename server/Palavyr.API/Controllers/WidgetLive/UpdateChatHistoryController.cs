@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Data;
-using Palavyr.Domain.Conversation.Schemas;
-using Palavyr.Services.AuthenticationServices;
+using Palavyr.Core.Data;
+using Palavyr.Core.Models.Conversation.Schemas;
+using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {

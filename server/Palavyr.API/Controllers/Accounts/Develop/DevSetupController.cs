@@ -3,12 +3,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.GlobalConstants;
-using Palavyr.Common.UIDUtils;
-using Palavyr.Data;
-using Palavyr.Data.Setup.SeedData;
-using Palavyr.Domain.Accounts.Schemas;
-using Palavyr.Services.StripeServices;
+using Palavyr.Core.Common.GlobalConstants;
+using Palavyr.Core.Common.UIDUtils;
+using Palavyr.Core.Data;
+using Palavyr.Core.Data.Setup.SeedData;
+using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Services.StripeServices;
 
 namespace Palavyr.API.Controllers.Accounts.Develop
 {

@@ -12,7 +12,7 @@ export const DevStagingStrip = () => {
         <>
             {currentEnvironment.toUpperCase() !== PRODUCTION.toUpperCase() ? (
                 <div style={{ height: "75px", paddingTop: "10px", backgroundColor: "lightblue", textAlign: "center" }}>
-                    <Typography variant="h3" >{}</Typography>
+                    <Typography variant="h3" >{text}</Typography>
                 </div>
             ) : null}
         </>

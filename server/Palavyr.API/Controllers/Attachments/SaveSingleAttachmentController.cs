@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.FileSystemTools.FormPaths;
-using Palavyr.Common.GlobalConstants;
-using Palavyr.Data;
-using Palavyr.Domain.Configuration.Schemas;
+using Palavyr.Core.Common.FileSystemTools.FormPaths;
+using Palavyr.Core.Common.GlobalConstants;
+using Palavyr.Core.Data;
+using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.API.Controllers.Attachments
 {

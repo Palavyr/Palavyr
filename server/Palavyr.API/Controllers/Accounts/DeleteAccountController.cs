@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Services.Repositories.Delete;
+using Palavyr.Core.Repositories.Delete;
 
 namespace Palavyr.API.Controllers.Accounts
 {

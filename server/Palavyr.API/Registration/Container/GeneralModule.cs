@@ -4,18 +4,18 @@ using Palavyr.API.Controllers.Testing;
 using Palavyr.BackupAndRestore;
 using Palavyr.BackupAndRestore.Postgres;
 using Palavyr.BackupAndRestore.UserData;
-using Palavyr.Domain.Conversation;
-using Palavyr.Domain.Resources.Responses;
-using Palavyr.Services.AccountServices;
-using Palavyr.Services.AmazonServices.S3Service;
-using Palavyr.Services.AuthenticationServices;
-using Palavyr.Services.ConversationServices;
-using Palavyr.Services.DynamicTableService;
-using Palavyr.Services.DynamicTableService.Compilers;
-using Palavyr.Services.EmailService.ResponseEmailTools;
-using Palavyr.Services.EmailService.Verification;
-using Palavyr.Services.PdfService;
-using Palavyr.Services.Repositories;
+using Palavyr.Core.Models.Conversation;
+using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Repositories;
+using Palavyr.Core.Services.AccountServices;
+using Palavyr.Core.Services.AmazonServices.S3Service;
+using Palavyr.Core.Services.AuthenticationServices;
+using Palavyr.Core.Services.ConversationServices;
+using Palavyr.Core.Services.DynamicTableService;
+using Palavyr.Core.Services.DynamicTableService.Compilers;
+using Palavyr.Core.Services.EmailService.ResponseEmailTools;
+using Palavyr.Core.Services.EmailService.Verification;
+using Palavyr.Core.Services.PdfService;
 
 namespace Palavyr.API.Registration.Container
 {

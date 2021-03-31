@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Services.StripeServices;
+using Palavyr.Core.Services.StripeServices;
 using Stripe;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions

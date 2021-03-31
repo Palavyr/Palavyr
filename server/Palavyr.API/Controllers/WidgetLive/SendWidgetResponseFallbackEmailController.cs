@@ -2,13 +2,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Common.FileSystemTools.ListPaths;
-using Palavyr.Domain;
-using Palavyr.Domain.Resources.Requests;
-using Palavyr.Domain.Resources.Responses;
-using Palavyr.Services.AuthenticationServices;
-using Palavyr.Services.EmailService.ResponseEmailTools;
-using Palavyr.Services.Repositories;
+using Palavyr.Core.Common.FileSystemTools.ListPaths;
+using Palavyr.Core.Models;
+using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Repositories;
+using Palavyr.Core.Services.AuthenticationServices;
+using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {

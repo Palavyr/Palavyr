@@ -1,6 +1,6 @@
 using System.Linq;
 using NUnit.Framework;
-using Palavyr.Domain.Configuration.Schemas;
+using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace PalavyrServer.Tests.Palavyr.Domain
 {

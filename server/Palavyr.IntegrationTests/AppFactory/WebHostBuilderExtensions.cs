@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Palavyr.Data;
+using Palavyr.Core.Data;
 using Palavyr.IntegrationTests.TestAuthentication;
 
 // We using 3.1 but...

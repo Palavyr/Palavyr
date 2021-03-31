@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.API.ModelBinding;
-using Palavyr.Domain.Configuration.Schemas;
-using Palavyr.Domain.Resources.Requests;
+using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {

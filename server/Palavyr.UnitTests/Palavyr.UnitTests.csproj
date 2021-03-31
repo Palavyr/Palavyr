@@ -10,16 +10,16 @@
 
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
-        <PackageReference Include="nunit" Version="3.12.0" />
-        <PackageReference Include="NUnit.ConsoleRunner" Version="3.11.1" />
-        <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+        <PackageReference Include="nunit" Version="3.13.1" />
+        <PackageReference Include="NUnit.ConsoleRunner" Version="3.12.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Palavyr.Common\Palavyr.Common.csproj" />
+      <ProjectReference Include="..\Palavyr.Core\Palavyr.Core.csproj" />
       <ProjectReference Include="..\Palavyr.Domain\Palavyr.Domain.csproj" />
-      <ProjectReference Include="..\Palavyr.Services\Palavyr.Services.csproj" />
     </ItemGroup>
 
 </Project>

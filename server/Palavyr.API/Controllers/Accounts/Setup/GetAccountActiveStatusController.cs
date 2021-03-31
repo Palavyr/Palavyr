@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Data;
+using Palavyr.Core.Data;
 
 namespace Palavyr.API.Controllers.Accounts.Setup
 {

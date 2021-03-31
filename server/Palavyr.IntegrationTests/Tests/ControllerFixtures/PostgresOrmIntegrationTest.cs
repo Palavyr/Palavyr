@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Palavyr.Domain.Configuration.Schemas;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.IntegrationTests.AppFactory;
 using Xunit;
 

@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Data;
-using Palavyr.Services.AccountServices;
-using Palavyr.Services.AuthenticationServices;
+using Palavyr.Core.Data;
+using Palavyr.Core.Services.AccountServices;
+using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
