@@ -27,6 +27,7 @@ namespace Palavyr.API.Controllers.Attachments
             var links = new List<FileLink>();
             foreach (var fi in files)
             {
+                logger.LogDebug($"File: {fi}");
                 var fileMap = dashContext.FileNameMaps.Single(row => row.SafeName == fi.Name);
                 var link = await UriUtils.CreateAttachmentLinkAsURI(logger, accountId, areaId, fileMap.SafeName, s3Client, previewBucket);
                 links.Add(FileLink.CreateLink(fileMap.RiskyName, link, fileMap.SafeName));
