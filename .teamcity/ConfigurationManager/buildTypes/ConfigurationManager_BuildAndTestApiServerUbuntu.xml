@@ -9,6 +9,9 @@
       <option name="publishArtifactCondition" value="SUCCESSFUL" />
       <option name="shouldFailBuildOnAnyErrorMessage" value="true" />
     </options>
+    <disabled-settings>
+      <setting-ref ref="RUNNER_8" />
+    </disabled-settings>
     <parameters />
     <build-runners>
       <runner id="RUNNER_9" name="Publish API server" type="dotnet">
