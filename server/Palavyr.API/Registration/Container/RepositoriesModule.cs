@@ -4,7 +4,7 @@ using Palavyr.Core.Repositories.Delete;
 
 namespace Palavyr.API.Registration.Container
 {
-    public class ConnectorsModule : Module
+    public class RepositoriesModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {

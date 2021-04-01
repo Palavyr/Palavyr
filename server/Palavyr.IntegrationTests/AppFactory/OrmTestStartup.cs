@@ -32,7 +32,7 @@ namespace Palavyr.IntegrationTests.AppFactory
             builder.RegisterModule(new HangfireModule());
             builder.RegisterModule(new GeneralModule());
             builder.RegisterModule(new StripeModule(configuration));
-            builder.RegisterModule(new ConnectorsModule());
+            builder.RegisterModule(new RepositoriesModule());
         }
 
         public void ConfigureServices(IServiceCollection services)

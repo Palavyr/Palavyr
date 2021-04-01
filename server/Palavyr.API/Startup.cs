@@ -29,10 +29,10 @@ namespace Palavyr.API
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule(new AmazonModule(configuration));
-            builder.RegisterModule(new HangfireModule());
+            // builder.RegisterModule(new HangfireModule());
             builder.RegisterModule(new GeneralModule());
             builder.RegisterModule(new StripeModule(configuration));
-            builder.RegisterModule(new ConnectorsModule());
+            builder.RegisterModule(new RepositoriesModule());
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -46,14 +46,14 @@ namespace Palavyr.API
 
             Configurations.ConfigureStripe(configuration);
             ServiceRegistry.RegisterDatabaseContexts(services, configuration);
-            ServiceRegistry.RegisterHealthChecks(services);
+            // ServiceRegistry.RegisterHealthChecks(services);
             // ServiceRegistry.RegisterHangfire(services, env);
         }
 
         public void Configure(
             IApplicationBuilder app,
-            ILoggerFactory loggerFactory,
-            HangFireJobs hangFireJobs
+            ILoggerFactory loggerFactory
+            // HangFireJobs hangFireJobs
         )
         {
             // var logger = loggerFactory.CreateLogger<Startup>();
@@ -74,7 +74,7 @@ namespace Palavyr.API
                 {
                     endpoints.MapControllers();
                     // endpoints.MapHangfireDashboard();
-                    endpoints.MapHealthChecks("/healthcheck");
+                    // endpoints.MapHealthChecks("/healthcheck");
                 });
         }
     }
