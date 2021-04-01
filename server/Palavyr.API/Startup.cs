@@ -47,7 +47,7 @@ namespace Palavyr.API
             Configurations.ConfigureStripe(configuration);
             ServiceRegistry.RegisterDatabaseContexts(services, configuration);
             ServiceRegistry.RegisterHealthChecks(services);
-            ServiceRegistry.RegisterHangfire(services, env);
+            // ServiceRegistry.RegisterHangfire(services, env);
         }
 
         public void Configure(
@@ -63,11 +63,12 @@ namespace Palavyr.API
             // app.UseMiddleware<ErrorHandlingMiddleware>();
             // app.UseRequestResponseLogging();
             app.UseHttpsRedirection();
-            app.UseCors();
             app.UseRouting();
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<SetHeadersMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
+            // hangFireJobs.AddHangFireJobs(app);
             app.UseEndpoints(
                 endpoints =>
                 {
@@ -75,7 +76,6 @@ namespace Palavyr.API
                     // endpoints.MapHangfireDashboard();
                     endpoints.MapHealthChecks("/healthcheck");
                 });
-            // hangFireJobs.AddHangFireJobs(app);
         }
     }
 }

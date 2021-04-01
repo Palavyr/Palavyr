@@ -9,7 +9,6 @@ using Stripe;
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
     [AllowAnonymous]
-
     public class GetStripeProductPricesController : PalavyrBaseController
     {
         private ILogger<GetStripeProductPricesController> logger;
