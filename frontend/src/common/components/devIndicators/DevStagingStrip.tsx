@@ -5,14 +5,15 @@ import React from "react";
 
 export const DevStagingStrip = () => {
 
-    const pre = "This is {currentEnvironment}"
+    const pre = `This is ${currentEnvironment}`
     var text = softwareVersion ? pre + `: ${softwareVersion}` : pre;
 
     return (
         <>
             {currentEnvironment.toUpperCase() !== PRODUCTION.toUpperCase() ? (
                 <div style={{ height: "75px", paddingTop: "10px", backgroundColor: "lightblue", textAlign: "center" }}>
-                    <Typography variant="h3" >{text}</Typography>
+                    <Typography variant="h5" >{text}</Typography>
+                    <Typography>This is a test environment.</Typography>
                 </div>
             ) : null}
         </>

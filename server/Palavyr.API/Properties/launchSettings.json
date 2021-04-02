@@ -11,14 +11,14 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchUrl": "api/Areas",
+      "launchUrl": "api/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "DashboardServer.API": {
       "commandName": "Project",
-      "launchUrl": "api/Areas",
+      "launchUrl": "api/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -26,7 +26,7 @@
     },
     "Docker": {
       "commandName": "Docker",
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/api/Areas",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/api/",
       "publishAllPorts": true,
       "useSSL": true
     }

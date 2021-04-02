@@ -23,7 +23,6 @@ namespace Palavyr.API.Controllers.Attachments
             string previewBucket)
         {
             var files = AttachmentPaths.GetAttachmentFileList(accountId, areaId);
-
             var links = new List<FileLink>();
             foreach (var fi in files)
             {
@@ -32,7 +31,6 @@ namespace Palavyr.API.Controllers.Attachments
                 var link = await UriUtils.CreateAttachmentLinkAsURI(logger, accountId, areaId, fileMap.SafeName, s3Client, previewBucket);
                 links.Add(FileLink.CreateLink(fileMap.RiskyName, link, fileMap.SafeName));
             }
-
             return links.ToArray();
         }
     }
