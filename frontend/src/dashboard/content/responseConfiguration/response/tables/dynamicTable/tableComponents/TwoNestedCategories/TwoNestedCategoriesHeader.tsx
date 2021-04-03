@@ -20,11 +20,20 @@ export const TwoNestedCategoriesHeader = () => {
     return (
         <TableHead>
             <TableRow>
+                <TableCell align="center" className={classNames(cls.cell, cls.text)}>
+                    Outer Category
+                </TableCell>
+                <TableCell align="center" className={classNames(cls.cell, cls.text)}>
+                    Inner Category
+                </TableCell>
+                <TableCell align="center" className={classNames(cls.cell, cls.text)}>
+                    Amount
+                </TableCell>
+                <TableCell align="center" className={classNames(cls.cell, cls.text, cls.noRight)}>
+                    Max Amount (if range)
+                </TableCell>
                 <TableCell align="center"></TableCell>
-                <TableCell align="center" className={classNames(cls.cell, cls.text)}>Outer Category</TableCell>
-                <TableCell align="center" className={classNames(cls.cell, cls.text)}>Inner Category</TableCell>
-                <TableCell align="center" className={classNames(cls.cell, cls.text, cls.noRight)}>Max Amount (if range)</TableCell>
-                <TableCell align="center"></TableCell>
+                <TableCell align="center">Delete</TableCell>
                 <TableCell align="center"></TableCell>
             </TableRow>
         </TableHead>

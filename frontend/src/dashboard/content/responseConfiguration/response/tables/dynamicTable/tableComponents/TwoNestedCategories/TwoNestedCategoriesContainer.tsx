@@ -1,33 +1,31 @@
+import { TableGroup } from "@Palavyr-Types";
 import { groupBy } from "lodash";
 import React from "react";
 import { IDynamicTableBody, TwoNestedCategoryData } from "../../DynamicTableTypes";
 import { TwoNestedCategoriesItemTable } from "./TwoNestedCategoriesItemTable";
 
 interface ITwoNestedCategoriesContainer extends IDynamicTableBody {
-    addRowOnClickFactory(itemId: string): () => void;
+    addInnerCategory(): void;
 }
 
-type TableGroup = {
-    [itemGroup: string]: TwoNestedCategoryData[];
-};
-
-export const TwoNestedCategoriesContainer = ({ tableData, modifier, addRowOnClickFactory }: ITwoNestedCategoriesContainer) => {
-    const outerCategoryGroups: TableGroup = groupBy(tableData, (x) => x.itemId);
+export const TwoNestedCategoriesContainer = ({ addInnerCategory, tableData, modifier }: ITwoNestedCategoriesContainer) => {
+    const outerCategoryGroups: TableGroup<TwoNestedCategoryData[]> = groupBy(tableData, (x) => x.itemId); // use this groupby method in the modifier.
 
     return (
         <>
-            {Object.keys(outerCategoryGroups).map((itemId: string, index: number) => {
-                const itemData: TwoNestedCategoryData[] = outerCategoryGroups[itemId];
+            {Object.keys(outerCategoryGroups).map((outerCategoryId: string, outerCategoryIndex: number) => {
+                const itemData: TwoNestedCategoryData[] = outerCategoryGroups[outerCategoryId];
 
                 return (
                     <TwoNestedCategoriesItemTable
-                        key={index}
+                        key={outerCategoryIndex}
+                        outerCategoryIndex={outerCategoryIndex}
                         tableData={tableData}
-                        itemId={itemId}
-                        itemData={itemData}
-                        outerCategory={itemData[0].category} // TODO: is there a better way to get this?
+                        outerCategoryId={outerCategoryId}
+                        outerCategoryData={itemData}
+                        outerCategoryName={itemData[0].category} // TODO: is there a better way to get this?
                         modifier={modifier}
-                        addRowOnClick={addRowOnClickFactory(itemId)}
+                        addInnerCategory={addInnerCategory}
                     />
                 );
             })}

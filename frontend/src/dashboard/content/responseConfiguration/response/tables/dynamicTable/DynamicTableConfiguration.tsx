@@ -70,7 +70,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
 
     return (
         <>
-            <Accordion>
+            <Accordion expanded={true}>
                 <AccordionSummary className={classes.header} expandIcon={<ExpandMoreIcon style={{ color: "white" }} />} aria-controls="panel-content" id="panel-header">
                     <Typography className={classes.title}>{title}</Typography>
                 </AccordionSummary>

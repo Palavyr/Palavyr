@@ -26,6 +26,11 @@ export type UUID = string;
 export type AnyFunction = (...args: any[]) => any;
 export type AnyVoidFunction = (...args: any[]) => void;
 
+export type SetState<T> = Dispatch<SetStateAction<T>>;
+export type TableGroup<T> = {
+    [itemGroup: string]: T;
+};
+
 // Database
 export type GroupRow = {
     id: number;
