@@ -52,29 +52,29 @@ namespace Palavyr.API
 
         public void Configure(
             IApplicationBuilder app,
-            ILoggerFactory loggerFactory
-            // HangFireJobs hangFireJobs
+            ILoggerFactory loggerFactory,
+            HangFireJobs hangFireJobs
         )
         {
             // var logger = loggerFactory.CreateLogger<Startup>();
             // logger.LogDebug($"CURRENT ENV: {env.EnvironmentName}");
             // logger.LogDebug($"IsStaging: {env.IsStaging()}");
             //
-            // app.UseMiddleware<ErrorHandlingMiddleware>();
-            // app.UseRequestResponseLogging();
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseRequestResponseLogging();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<SetHeadersMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
-            // hangFireJobs.AddHangFireJobs(app);
+            hangFireJobs.AddHangFireJobs(app);
             app.UseEndpoints(
                 endpoints =>
                 {
                     endpoints.MapControllers();
-                    // endpoints.MapHangfireDashboard();
-                    // endpoints.MapHealthChecks("/healthcheck");
+                    endpoints.MapHangfireDashboard();
+                    endpoints.MapHealthChecks("/healthcheck");
                 });
         }
     }

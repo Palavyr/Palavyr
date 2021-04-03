@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Palavyr.Core.Common.Utils;
@@ -6,15 +7,15 @@ using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Models
 {
-    public static class MissingNodeCalculator
+    public class MissingNodeCalculator
     {
-        public static string[] CalculateMissingNodes(string[] requiredDynamicNodeTypes, List<ConversationNode> conversationNodes, List<DynamicTableMeta> dynamicTableMetas, List<StaticTablesMeta> staticTablesMetas)
+        public string[] CalculateMissingNodes(string[] requiredDynamicNodeTypes, List<ConversationNode> conversationNodes, List<DynamicTableMeta> dynamicTableMetas, List<StaticTablesMeta> staticTablesMetas)
         {
             var allMissingNodeTypes = new List<string>();
 
             if (requiredDynamicNodeTypes.Length > 0)
             {
-                var rawMissingDynamicNodeTypes = TreeUtils.GetMissingNodes(conversationNodes.ToArray(), requiredDynamicNodeTypes);
+                var rawMissingDynamicNodeTypes = GetMissingNodes(conversationNodes.ToArray(), requiredDynamicNodeTypes);
                 var missingDynamicNodeTypes = dynamicTableMetas
                     .Where(x => rawMissingDynamicNodeTypes.Contains(TreeUtils.TransformRequiredNodeType(x)))
                     .Select(TreeUtils.TransformRequiredNodeTypeToPrettyName)
@@ -30,7 +31,7 @@ namespace Palavyr.Core.Models
             if (perIndividualRequiredStaticTables && !allMissingNodeTypes.Contains(DefaultNodeTypeOptions.TakeNumberIndividuals.StringName))
             {
                 var perPersonNodeType = new[] {DefaultNodeTypeOptions.TakeNumberIndividuals.StringName};
-                var missingOtherNodeTypes = TreeUtils.GetMissingNodes(conversationNodes.ToArray(), perPersonNodeType); //.SelectMany(x => StringUtils.SplitCamelCase(x)).ToArray();
+                var missingOtherNodeTypes = GetMissingNodes(conversationNodes.ToArray(), perPersonNodeType);
                 if (missingOtherNodeTypes.Length > 0)
                 {
                     var asPretty = string.Join(" ", StringUtils.SplitCamelCaseAsString(missingOtherNodeTypes.First()));
@@ -40,27 +41,64 @@ namespace Palavyr.Core.Models
 
             return allMissingNodeTypes.ToArray();
         }
-
-        public static string[] GetRequiredNodes(Area area)
+        
+        public NodeTypeOption[] GetMissingNodes(ConversationNode[] nodeList, NodeTypeOption[] requiredNodes)
         {
-            var allRequiredNodes = new List<string>();
+            var allMissingNodeTypes = new List<NodeTypeOption>();
+            var terminalNodes = GetCompletePathTerminalNodes(nodeList);
 
-            // dynamic node types are required
-            var requiredDynamicNodeTypes = area
-                .DynamicTableMetas
-                .Select(TreeUtils.TransformRequiredNodeType)
-                .ToList();
+            foreach (var terminalNode in terminalNodes)
+            {
+                var missingNodes = SearchTerminalResponseBranchesForMissingRequiredNodes(terminalNode, nodeList, requiredNodes);
+                allMissingNodeTypes.AddRange(missingNodes);
+            }
 
-            // check static tables to see if even 1 'per individual' is set. If so, then check for this node type.
-            var perIndividualRequired = area
-                .StaticTablesMetas
-                .Select(x => x.PerPersonInputRequired)
-                .Any(p => p);
+            return allMissingNodeTypes.ToArray();
+        }
+        
+        ConversationNode[] GetCompletePathTerminalNodes(ConversationNode[] nodeList)
+        {
+            return nodeList
+                .Where(node => node.IsTerminalType && node.NodeType != DefaultNodeTypeOptions.TooComplicated.StringName)
+                .ToArray();
+        }
+        
+        public ConversationNode GetParentNode(ConversationNode[] nodeList, ConversationNode curNode)
+        {
+            var childId = curNode.NodeId;
+            ConversationNode parent = null;
+            foreach (var potentialParent in nodeList)
+            {
+                var childrenIds = potentialParent.NodeChildrenString.Split(",").ToList();
+                if (!childrenIds.Contains(childId)) continue;
+                parent = potentialParent;
+                break;
+            }
 
-            allRequiredNodes.AddRange(requiredDynamicNodeTypes);
-            if (perIndividualRequired && !allRequiredNodes.Contains(DefaultNodeTypeOptions.TakeNumberIndividuals.StringName)) allRequiredNodes.Add(DefaultNodeTypeOptions.TakeNumberIndividuals.StringName);
+            if (parent == null) throw new Exception();
+            return parent;
+        }
 
-            return allRequiredNodes.ToArray();
+        // TODO: Refactor to return the nodes. We only count the list in the widget status utils.
+        public NodeTypeOption[] SearchTerminalResponseBranchesForMissingRequiredNodes(
+            ConversationNode node,
+            ConversationNode[] nodeList,
+            NodeTypeOption[] requiredNodes // array of node type names
+        )
+        {
+            if (node.IsRoot)
+            {
+                return requiredNodes;
+            }
+
+            var requiredNodesClone = new List<NodeTypeOption>(requiredNodes);
+            if (requiredNodesClone.Select(x => x.Value).Contains(node.NodeType))
+            {
+                requiredNodesClone.RemoveAt(requiredNodesClone.Select(x => x.Value).ToList().FindIndex(x => x == node.NodeType));
+            }
+
+            var nextNode = GetParentNode(nodeList, node);
+            return SearchTerminalResponseBranchesForMissingRequiredNodes(nextNode, nodeList, requiredNodesClone.ToArray());
         }
     }
 }

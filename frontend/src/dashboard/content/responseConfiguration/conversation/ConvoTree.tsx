@@ -20,7 +20,7 @@ import { currentEnvironment } from "@api-client/clientUtils";
 
 const useStyles = makeStyles(() => ({
     conversation: {
-        backgroundColor: "#282630",
+        // backgroundColor: "#282630",
         position: "static",
         overflow: "auto",
     },

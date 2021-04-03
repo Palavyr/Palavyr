@@ -13,14 +13,17 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
     {
         private ILogger<GetDemoWidgetPreCheckController> logger;
         private readonly IConfigurationRepository configurationRepository;
+        private readonly WidgetStatusUtils widgetStatusUtils;
 
         public GetDemoWidgetPreCheckController(
             ILogger<GetDemoWidgetPreCheckController> logger,
-            IConfigurationRepository configurationRepository
+            IConfigurationRepository configurationRepository,
+            WidgetStatusUtils widgetStatusUtils
         )
         {
             this.logger = logger;
             this.configurationRepository = configurationRepository;
+            this.widgetStatusUtils = widgetStatusUtils;
         }
 
         [HttpGet("widget-config/demo/pre-check")]
@@ -29,7 +32,7 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
             var widgetPrefs = await configurationRepository.GetWidgetPreferences(accountId);
             var areas = await configurationRepository.GetActiveAreasWithConvoAndDynamicAndStaticTables(accountId);
 
-            var result = WidgetStatusUtils.ExecuteWidgetStatusCheck(accountId, areas, widgetPrefs, true, logger);
+            var result = widgetStatusUtils.ExecuteWidgetStatusCheck(accountId, areas, widgetPrefs, true, logger);
             logger.LogDebug($"Pre-check run successful.");
             logger.LogDebug($"Ready result:{result.IsReady}");
             logger.LogDebug($"Incomplete areas: {result.IncompleteAreas.ToList()}");

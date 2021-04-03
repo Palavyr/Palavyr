@@ -5,7 +5,7 @@ using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Services.DynamicTableService
 {
-    public static class NodeTypeOptionsExtensions
+    public static class NodeTypeOptionsExtensionMethods
     {
         public static List<NodeTypeOption> AddAdditionalNode(this List<NodeTypeOption> nodeTypeOptions,
             NodeTypeOption additionalNode)
@@ -26,9 +26,19 @@ namespace Palavyr.Core.Services.DynamicTableService
             return TreeUtils.TransformRequiredNodeType(dynamicTableMeta);
         }
 
+        public static string MakeUniqueIdentifier(this DynamicTableMeta dynamicTableMeta, string extraName)
+        {
+            return TreeUtils.TransformRequiredNodeType(dynamicTableMeta, extraName);
+        }
+
         public static string ConvertToPrettyName(this DynamicTableMeta dynamicTableMeta)
         {
             return TreeUtils.TransformRequiredNodeTypeToPrettyName(dynamicTableMeta);
+        }
+
+        public static string ConvertToPrettyName(this DynamicTableMeta dynamicTableMeta, string extraName)
+        {
+            return TreeUtils.TransformRequiredNodeTypeToPrettyName(dynamicTableMeta, extraName);
         }
     }
 }

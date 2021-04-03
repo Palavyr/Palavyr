@@ -22,20 +22,20 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
         public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
         {
-            // interesting node - if we have outer categories as paths, then each inner category has to be a separate node
-            // we would have as many inner nodes as there were outer categories
-            // if we at first allow this as multichoiceContinue, then we extend it *later* to facilitate individual paths
-            
+            // This table type does not facilitate multiple branches. I.e. the inner categories are all the same for all of the outer categories.
             var rows = (await GetTableRows(dynamicTableMeta)).OrderBy(row => row.RowOrder);
-            var categories = rows.Select(row => row.Category).ToList();
+            var outerCategories = rows.Select(row => row.Category).ToList();
 
-            // node for multiselect category (Category)
+            var itemId = rows.Select(row => row.ItemId).Distinct().First();
+            var innerCategories = rows.Where(row => row.ItemId == itemId).Select(row => row.SubCategory).ToList();
+
+            // Outer-category
             nodes.AddAdditionalNode(
                 NodeTypeOption.Create(
-                    dynamicTableMeta.MakeUniqueIdentifier(),
-                    dynamicTableMeta.ConvertToPrettyName(),
-                    dynamicTableMeta.ValuesAsPaths ? categories : new List<string>() {"Continue"},
-                    categories,
+                    dynamicTableMeta.MakeUniqueIdentifier("Outer-Categories"),
+                    dynamicTableMeta.ConvertToPrettyName("Outer"),
+                    new List<string>() {"Continue"},
+                    outerCategories,
                     true,
                     true,
                     false,
@@ -44,13 +44,13 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     resolveOrder: 0
                 ));
 
-            // create node for sub category
+            // inner-categories
             nodes.AddAdditionalNode(
                 NodeTypeOption.Create(
-                    dynamicTableMeta.MakeUniqueIdentifier(),
-                    dynamicTableMeta.ConvertToPrettyName(),
+                    dynamicTableMeta.MakeUniqueIdentifier("Inner-Categories"),
+                    dynamicTableMeta.ConvertToPrettyName("Inner"),
                     new List<string>() {"Continue"},
-                    new List<string>() {"Continue"},
+                    innerCategories,
                     true,
                     true,
                     false,
