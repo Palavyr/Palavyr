@@ -69,7 +69,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                 Range = false,
                 RowId = GuidUtils.CreateNewId(),
                 RowOrder = 0,
-                ItemOrder = 1
+                ItemOrder = 0
             };
         }
 
