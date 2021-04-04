@@ -28,13 +28,19 @@ namespace Palavyr.API.Controllers.Conversation
     {
         private ILogger<GetMissingNodesController> logger;
         private readonly IConfigurationRepository configurationRepository;
+        private readonly RequiredNodeCalculator requiredNodeCalculator;
+        private readonly MissingNodeCalculator missingNodeCalculator;
 
         public GetMissingNodesController(
             ILogger<GetMissingNodesController> logger,
-            IConfigurationRepository configurationRepository
+            IConfigurationRepository configurationRepository,
+            RequiredNodeCalculator requiredNodeCalculator,
+            MissingNodeCalculator missingNodeCalculator
         )
         {
             this.configurationRepository = configurationRepository;
+            this.requiredNodeCalculator = requiredNodeCalculator;
+            this.missingNodeCalculator = missingNodeCalculator;
             this.logger = logger;
         }
 
@@ -43,16 +49,17 @@ namespace Palavyr.API.Controllers.Conversation
         {
             var area = await configurationRepository.GetAreaComplete(accountId, areaId);
 
-            var requiredDynamicNodeTypes = area
-                .DynamicTableMetas
-                .Select(TreeUtils.TransformRequiredNodeType)
-                .ToArray();
-
+            // var requiredDynamicNodeTypes = area
+            //     .DynamicTableMetas
+            //     .Select(TreeUtils.TransformRequiredNodeType)
+            //     .ToArray();
+            //
             var dynamicTableMetas = area.DynamicTableMetas;
             var staticTableMetas = area.StaticTablesMetas;
+
+            var requiredDynamicNodeTypes = await requiredNodeCalculator.FindRequiredNodes(area);
             
-            
-            var allMissingNodeTypes = MissingNodeCalculator.CalculateMissingNodes(requiredDynamicNodeTypes, currentNodes.Transactions, dynamicTableMetas, staticTableMetas);
+            var allMissingNodeTypes = missingNodeCalculator.CalculateMissingNodes(requiredDynamicNodeTypes.ToArray(), currentNodes.Transactions, dynamicTableMetas, staticTableMetas);
             return allMissingNodeTypes.ToArray();
         }
     }

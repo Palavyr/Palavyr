@@ -32,7 +32,7 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
             var widgetPrefs = await configurationRepository.GetWidgetPreferences(accountId);
             var areas = await configurationRepository.GetActiveAreasWithConvoAndDynamicAndStaticTables(accountId);
 
-            var result = widgetStatusUtils.ExecuteWidgetStatusCheck(accountId, areas, widgetPrefs, true, logger);
+            var result = await widgetStatusUtils.ExecuteWidgetStatusCheck(accountId, areas, widgetPrefs, true, logger);
             logger.LogDebug($"Pre-check run successful.");
             logger.LogDebug($"Ready result:{result.IsReady}");
             logger.LogDebug($"Incomplete areas: {result.IncompleteAreas.ToList()}");

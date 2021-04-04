@@ -29,7 +29,7 @@ namespace Palavyr.API
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule(new AmazonModule(configuration));
-            // builder.RegisterModule(new HangfireModule());
+            builder.RegisterModule(new HangfireModule());
             builder.RegisterModule(new GeneralModule());
             builder.RegisterModule(new StripeModule(configuration));
             builder.RegisterModule(new RepositoriesModule());
@@ -46,8 +46,8 @@ namespace Palavyr.API
 
             Configurations.ConfigureStripe(configuration);
             ServiceRegistry.RegisterDatabaseContexts(services, configuration);
-            // ServiceRegistry.RegisterHealthChecks(services);
-            // ServiceRegistry.RegisterHangfire(services, env);
+            ServiceRegistry.RegisterHealthChecks(services);
+            ServiceRegistry.RegisterHangfire(services, env);
         }
 
         public void Configure(

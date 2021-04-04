@@ -14,19 +14,25 @@ namespace Palavyr.Core.Models
         private readonly RequiredNodeCalculator requiredNodeCalculator;
         private readonly MissingNodeCalculator missingNodeCalculator;
         private readonly TreeRootFinder treeRootFinder;
+        private readonly TreeWalker treeWalker;
+        private readonly NodeCounter nodeCounter;
 
         public WidgetStatusUtils(
             RequiredNodeCalculator requiredNodeCalculator,
             MissingNodeCalculator missingNodeCalculator,
-            TreeRootFinder treeRootFinder
-            )
+            TreeRootFinder treeRootFinder,
+            TreeWalker treeWalker,
+            NodeCounter nodeCounter
+        )
         {
             this.requiredNodeCalculator = requiredNodeCalculator;
             this.missingNodeCalculator = missingNodeCalculator;
             this.treeRootFinder = treeRootFinder;
+            this.treeWalker = treeWalker;
+            this.nodeCounter = nodeCounter;
         }
 
-        public PreCheckResult ExecuteWidgetStatusCheck(
+        public async Task<PreCheckResult> ExecuteWidgetStatusCheck(
             string accountId,
             List<Area> areas,
             WidgetPreference widgetPreferences,
@@ -39,7 +45,7 @@ namespace Palavyr.Core.Models
             // user may simply wish to collect 'num individuals'
 
             logger.LogDebug("Collected areas.... running pre-check");
-            var result = StatusCheck(areas, widgetState, demo, logger);
+            var result = await StatusCheck(areas, widgetState, demo, logger);
             return result;
         }
 
@@ -52,7 +58,7 @@ namespace Palavyr.Core.Models
             foreach (var area in areas)
             {
                 var nodeList = area.ConversationNodes.ToArray();
-                var allRequiredNodes = (await requiredNodeCalculator.GetRequiredNodes(area)).ToList();
+                var allRequiredNodes = (await requiredNodeCalculator.FindRequiredNodes(area)).ToList();
 
                 logger.LogDebug($"Required Nodes Found. Number of required nodes: {allRequiredNodes.Count}");
                 List<bool> checks;
@@ -107,17 +113,20 @@ namespace Palavyr.Core.Models
 
         private bool AllBranchesTerminate(ConversationNode[] nodeList)
         {
+            var terminalNodes = new List<ConversationNode>();
+
             var rootNode = treeRootFinder.GetRootNode(nodeList);
-            var terminalNodes = TreeUtils.TraverseTheTreeFromTheTopAsNodeArray(nodeList, rootNode);
+            treeWalker.FindAllTerminalNodes(nodeList, rootNode, terminalNodes);
+
             var uniqueTerminalNodes = terminalNodes.Distinct().ToList();
             var numLeaves = uniqueTerminalNodes.Count();
-            var numTerminal = TreeUtils.GetNumTerminal(nodeList);
+            var numTerminal = nodeCounter.CountNumTerminal(nodeList);
             return (numLeaves == numTerminal);
         }
 
         private bool AllRequiredNodesSatisfied(ConversationNode[] nodeList, NodeTypeOption[] requiredNodes)
         {
-            var missingNodes = missingNodeCalculator.GetMissingNodes(nodeList, requiredNodes);
+            var missingNodes = missingNodeCalculator.FindMissingNodes(nodeList, requiredNodes);
             return missingNodes.Length == 0;
         }
     }

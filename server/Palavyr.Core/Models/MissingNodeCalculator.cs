@@ -9,15 +9,15 @@ namespace Palavyr.Core.Models
 {
     public class MissingNodeCalculator
     {
-        public string[] CalculateMissingNodes(string[] requiredDynamicNodeTypes, List<ConversationNode> conversationNodes, List<DynamicTableMeta> dynamicTableMetas, List<StaticTablesMeta> staticTablesMetas)
+        public string[] CalculateMissingNodes(NodeTypeOption[] requiredDynamicNodeTypes, List<ConversationNode> conversationNodes, List<DynamicTableMeta> dynamicTableMetas, List<StaticTablesMeta> staticTablesMetas)
         {
             var allMissingNodeTypes = new List<string>();
 
             if (requiredDynamicNodeTypes.Length > 0)
             {
-                var rawMissingDynamicNodeTypes = GetMissingNodes(conversationNodes.ToArray(), requiredDynamicNodeTypes);
+                var rawMissingDynamicNodeTypes = FindMissingNodes(conversationNodes.ToArray(), requiredDynamicNodeTypes);
                 var missingDynamicNodeTypes = dynamicTableMetas
-                    .Where(x => rawMissingDynamicNodeTypes.Contains(TreeUtils.TransformRequiredNodeType(x)))
+                    .Where(x => rawMissingDynamicNodeTypes.Select(x => x.Value).Contains(TreeUtils.TransformRequiredNodeType(x)))
                     .Select(TreeUtils.TransformRequiredNodeTypeToPrettyName)
                     .ToList();
 
@@ -30,11 +30,11 @@ namespace Palavyr.Core.Models
 
             if (perIndividualRequiredStaticTables && !allMissingNodeTypes.Contains(DefaultNodeTypeOptions.TakeNumberIndividuals.StringName))
             {
-                var perPersonNodeType = new[] {DefaultNodeTypeOptions.TakeNumberIndividuals.StringName};
-                var missingOtherNodeTypes = GetMissingNodes(conversationNodes.ToArray(), perPersonNodeType);
+                var perPersonNodeType = new NodeTypeOption[] {DefaultNodeTypeOptions.CreateTakeNumberIndividuals()};
+                var missingOtherNodeTypes = FindMissingNodes(conversationNodes.ToArray(), perPersonNodeType);
                 if (missingOtherNodeTypes.Length > 0)
                 {
-                    var asPretty = string.Join(" ", StringUtils.SplitCamelCaseAsString(missingOtherNodeTypes.First()));
+                    var asPretty = string.Join(" ", StringUtils.SplitCamelCaseAsString(missingOtherNodeTypes.Select(x => x.Value).Single()));
                     allMissingNodeTypes.Add(asPretty);
                 }
             }
@@ -42,7 +42,7 @@ namespace Palavyr.Core.Models
             return allMissingNodeTypes.ToArray();
         }
         
-        public NodeTypeOption[] GetMissingNodes(ConversationNode[] nodeList, NodeTypeOption[] requiredNodes)
+        public NodeTypeOption[] FindMissingNodes(ConversationNode[] nodeList, NodeTypeOption[] requiredNodes)
         {
             var allMissingNodeTypes = new List<NodeTypeOption>();
             var terminalNodes = GetCompletePathTerminalNodes(nodeList);
@@ -63,7 +63,7 @@ namespace Palavyr.Core.Models
                 .ToArray();
         }
         
-        public ConversationNode GetParentNode(ConversationNode[] nodeList, ConversationNode curNode)
+        ConversationNode GetParentNode(ConversationNode[] nodeList, ConversationNode curNode)
         {
             var childId = curNode.NodeId;
             ConversationNode parent = null;

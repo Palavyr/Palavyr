@@ -16,7 +16,7 @@ namespace Palavyr.Core.Models
             this.dynamicTableCompilerRetriever = dynamicTableCompilerRetriever;
         }
 
-        public bool CheckForPerIndividual(Area area)
+        bool CheckForPerIndividual(Area area)
         {
             return area
                 .StaticTablesMetas
@@ -24,7 +24,7 @@ namespace Palavyr.Core.Models
                 .Any(p => p);
         }
 
-        public async Task<IEnumerable<NodeTypeOption>> GetRequiredNodes(Area area)
+        public async Task<IEnumerable<NodeTypeOption>> FindRequiredNodes(Area area)
         {
             var allRequiredNodes = new List<NodeTypeOption>();
 
