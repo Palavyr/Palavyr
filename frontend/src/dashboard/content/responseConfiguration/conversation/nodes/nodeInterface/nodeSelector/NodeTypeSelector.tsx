@@ -15,6 +15,16 @@ export interface INodeTypeSelector {
     selectionCallback: (node: ConvoNode, nodeList: Conversation, nodeIdOfMostRecentAnabranch: string) => Conversation;
 }
 
+
+const trimLastGuidChunk = (name: string) => {
+    const sep = "-";
+    const parts = name.split(sep);
+
+    if (parts.length === 1) return name;
+    const trimmed = parts.slice(0, parts.length -1).join(sep)
+    return trimmed;
+}
+
 export const NodeTypeSelector = ({ node, nodeIdentity, reRender, nodeTypeOptions, shouldDisabledNodeTypeSelector, selectionCallback }: INodeTypeSelector) => {
     const [alertState, setAlertState] = useState<boolean>(false);
     const [alertDetails, setAlertDetails] = useState<AlertType>();
@@ -23,7 +33,7 @@ export const NodeTypeSelector = ({ node, nodeIdentity, reRender, nodeTypeOptions
     const { nodeList, setNodes } = React.useContext(ConversationTreeContext);
 
     useEffect(() => {
-        const currentNodeOption = nodeTypeOptions.filter((option: NodeOption) => option.value === node.nodeType)[0];
+        const currentNodeOption = nodeTypeOptions.filter((option: NodeOption) => trimLastGuidChunk(option.value) === trimLastGuidChunk(node.nodeType))[0];
         if (currentNodeOption) {
             setLabel(currentNodeOption.text);
         }

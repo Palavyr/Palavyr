@@ -166,6 +166,7 @@ export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeId
             shouldShowMultiOption: shouldShowMultiOption,
             isAnabranchMergePoint: false,
             isAnabranchType: false,
+            nodeComponentType: ""
         };
 
         updatedNodeList.push(newNode);

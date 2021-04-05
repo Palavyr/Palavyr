@@ -12,11 +12,13 @@ const useStyles = makeStyles(() => ({
     },
     autocomplete: {
         marginTop: "1rem",
-        height: "50px",
+        paddingBottom: "0.5rem",
+        // height: "50px",
         borderRadius: "0px",
         borderBottomLeftRadius: "3px",
         borderBottomRightRadius: "3px",
         border: "0px dashed green",
+
     },
     selectbox: {
         color: "black",
@@ -26,6 +28,7 @@ const useStyles = makeStyles(() => ({
         borderBottomLeftRadius: "3px",
         borderBottomRightRadius: "3px",
         backgroundColor: "white",
+        height: "200px"
     },
     otherbox: {
         textAlign: "center",
@@ -33,10 +36,12 @@ const useStyles = makeStyles(() => ({
         // paddingRight: "2rem",
     },
     inputLabel: {
+        // height: "200px",
         "& .MuiFormLabel-root": {
             color: "black",
-            fontSize: "12pt",
+            fontSize: "10pt",
             textAlign: "center",
+            wordWrap: "auto",
         },
     },
 }));
@@ -63,7 +68,7 @@ export const CustomNodeSelect = ({
     return (
         <div>
             <FormControl className={cls.formControl}>
-                <InputLabel id="autodcomplete-label"></InputLabel>
+                <InputLabel id="autocomplete-label"></InputLabel>
                 {nodeTypeOptions && (
                     <Autocomplete
                         size="small"

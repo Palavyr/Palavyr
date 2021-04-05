@@ -97,6 +97,7 @@ export type ConvoNode = {
     shouldShowMultiOption: boolean;
     isAnabranchType: boolean;
     isAnabranchMergePoint: boolean;
+    nodeComponentType: string;
 };
 
 export type Conversation = Array<ConvoNode>;
@@ -396,6 +397,7 @@ export type NodeOption = {
     shouldShowMultiOption: boolean;
     stringName: string | null;
     groupName: string;
+    nodeComponent: string;
 };
 
 

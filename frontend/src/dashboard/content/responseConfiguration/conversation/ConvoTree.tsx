@@ -13,7 +13,7 @@ import { AlignCenter } from "dashboard/layouts/positioning/AlignCenter";
 import UndoIcon from "@material-ui/icons/Undo";
 import RedoIcon from "@material-ui/icons/Redo";
 
-import "./ConvoTree.css";
+import "./stylesConvoTree.css";
 import { getRootNode } from "./nodes/nodeUtils/commonNodeUtils";
 import { ConversationHistoryTracker } from "./nodes/ConversationHistoryTracker";
 import { currentEnvironment } from "@api-client/clientUtils";

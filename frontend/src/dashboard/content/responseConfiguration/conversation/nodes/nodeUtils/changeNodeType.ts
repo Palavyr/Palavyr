@@ -1,6 +1,5 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { ConvoNode, Conversation, NodeOption, NodeIdentity } from "@Palavyr-Types";
-import { Dispatch, SetStateAction } from "react";
 import { getNewNumChildren, createAndReattachNewNodes } from "./commonNodeUtils";
 import { recursivelyDereferenceNodeIdFromChildren } from "./dereferenceUtils";
 import { getPrimarySiblingIdFromChildNodeChildrenString } from "./splitMergeUtils";
@@ -79,6 +78,7 @@ export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversa
     previousNode.isSplitMergeType = nodeOption.isSplitMergeType;
     previousNode.shouldShowMultiOption = nodeOption.shouldShowMultiOption;
     previousNode.isAnabranchType = nodeOption.isAnabranchType;
+    previousNode.nodeComponentType = nodeOption.nodeComponent;
 
     if (identity.shouldShowSetAsAnabranchMergePointOption && nodeOption.isAnabranchType){
         previousNode.isAnabranchMergePoint = true; // needs to set true if inside anabranch and
