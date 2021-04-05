@@ -119,6 +119,7 @@ namespace Palavyr.Core.Repositories
                 newNode.OptionPath,
                 newNode.ValueOptions,
                 accountId,
+                newNode.NodeComponentType,
                 newNode.IsRoot,
                 newNode.IsCritical,
                 newNode.IsMultiOptionType,

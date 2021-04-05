@@ -15,5 +15,6 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             List<NodeTypeOption> nodes);
 
         Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponse dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture);
+        // Task<List<ConversationNode>> CompileToConversationNode(DynamicTableMeta dynamicTableMeta);
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -45,22 +46,16 @@ namespace Palavyr.API.Controllers.Conversation
         }
 
         [HttpPost("configure-conversations/{areaId}/missing-nodes")]
-        public async Task<string[]> Get([FromHeader] string accountId, string areaId, [FromBody] ConversationNodeDto currentNodes)
+        public async Task<IEnumerable<string>> Get([FromHeader] string accountId, string areaId, [FromBody] ConversationNodeDto currentNodes)
         {
             var area = await configurationRepository.GetAreaComplete(accountId, areaId);
-
-            // var requiredDynamicNodeTypes = area
-            //     .DynamicTableMetas
-            //     .Select(TreeUtils.TransformRequiredNodeType)
-            //     .ToArray();
-            //
+            
             var dynamicTableMetas = area.DynamicTableMetas;
             var staticTableMetas = area.StaticTablesMetas;
 
             var requiredDynamicNodeTypes = await requiredNodeCalculator.FindRequiredNodes(area);
-            
-            var allMissingNodeTypes = missingNodeCalculator.CalculateMissingNodes(requiredDynamicNodeTypes.ToArray(), currentNodes.Transactions, dynamicTableMetas, staticTableMetas);
-            return allMissingNodeTypes.ToArray();
+            var allMissingNodeTypeNames = missingNodeCalculator.CalculateMissingNodes(requiredDynamicNodeTypes.ToArray(), currentNodes.Transactions, dynamicTableMetas, staticTableMetas);
+            return allMissingNodeTypeNames;
         }
     }
 }

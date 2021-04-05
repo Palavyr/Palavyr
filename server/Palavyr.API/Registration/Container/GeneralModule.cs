@@ -64,6 +64,7 @@ namespace Palavyr.API.Registration.Container
 
             builder.RegisterType<WidgetStatusUtils>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<MissingNodeCalculator>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<RequiredNodeCalculator>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<TreeRootFinder>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<TreeWalker>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<NodeCounter>().AsSelf().InstancePerLifetimeScope();

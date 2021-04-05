@@ -21,5 +21,11 @@ namespace Palavyr.Core.Services.DynamicTableService
             string accountId,
             string areaId
         );
+
+        // Task<List<ConversationNode>> CompileToConversationNode(
+        //     IEnumerable<DynamicTableMeta> dynamicTableMetas,
+        //     string accountId,
+        //     string areaId
+        // );
     }
 }

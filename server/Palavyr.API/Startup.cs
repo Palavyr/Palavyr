@@ -60,7 +60,7 @@ namespace Palavyr.API
             // logger.LogDebug($"CURRENT ENV: {env.EnvironmentName}");
             // logger.LogDebug($"IsStaging: {env.IsStaging()}");
             //
-            app.UseMiddleware<ErrorHandlingMiddleware>();
+            // app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseRequestResponseLogging();
             app.UseHttpsRedirection();
             app.UseRouting();

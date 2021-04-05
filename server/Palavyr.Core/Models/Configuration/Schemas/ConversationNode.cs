@@ -23,15 +23,14 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public bool ShouldRenderChildren { get; set; }
         public bool IsSplitMergeType { get; set; }
         public bool ShouldShowMultiOption { get; set; }
-        public bool IsAnabranchType  { get; set; }
+        public bool IsAnabranchType { get; set; }
         public bool IsAnabranchMergePoint { get; set; }
         public bool IsDynamicTableNode { get; set; }
         public string NodeComponentType { get; set; }
         public bool IsMultiOptionEditable { get; set; }
         public bool IsCurrency { get; set; }
         public int? ResolveOrder { get; set; }
-        
-        // public string DynamicTableKey { get; set; } // used to group responses for the widget / compiling multinode dynamic tables
+
 
         public string NodeChildrenString { get; set; } = null!; // stored as comma delimited list as string
 
@@ -51,7 +50,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     Text = "Default Text from server",
                     IsRoot = true,
                     AreaIdentifier = areaIdentifier,
-                    OptionPath = null,
+                    OptionPath = "", // Previous had this set to null...
                     NodeChildrenString = "",
                     ValueOptions = "",
                     IsCritical = false,
@@ -70,6 +69,36 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             };
         }
 
+        public static ConversationNode CreateWidgetNode(
+            string nodeId,
+            string nodeType,
+            bool isCritical,
+            string text,
+            string nodeChildrenString,
+            bool isRoot,
+            string areaIdentifier,
+            string optionPath,
+            string valueOptions,
+            bool isDynamicTableNode,
+            string nodeComponentType
+        )
+        {
+            return new ConversationNode
+            {
+                NodeId = nodeId,
+                NodeType = nodeType,
+                IsCritical = isCritical,
+                Text = text,
+                NodeChildrenString = nodeChildrenString,
+                IsRoot = isRoot,
+                AreaIdentifier = areaIdentifier,
+                OptionPath = optionPath!,
+                ValueOptions = valueOptions,
+                IsDynamicTableNode = isDynamicTableNode,
+                NodeComponentType = nodeComponentType
+            };
+        }
+
         public static ConversationNode CreateNew(
             string nodeId,
             string nodeType,
@@ -79,6 +108,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             string optionPath,
             string valueOptions,
             string accountId,
+            string nodeComponentType,
             bool isRoot = false,
             bool isCritical = true,
             bool isMultiOptionType = false,
@@ -117,7 +147,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 IsCurrency = isCurrency,
                 IsMultiOptionEditable = isMultiOptionEditable,
                 IsDynamicTableNode = isDynamicTableNode,
-                ResolveOrder = resolveOrder
+                ResolveOrder = resolveOrder,
+                NodeComponentType = nodeComponentType
             };
         }
 
@@ -135,6 +166,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     node.OptionPath,
                     node.ValueOptions,
                     accountId,
+                    node.NodeComponentType,
                     node.IsRoot,
                     node.IsCritical,
                     node.IsMultiOptionType,
@@ -151,6 +183,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 );
                 mappedTransactions.Add(mappedNode);
             }
+
             return mappedTransactions;
         }
     }

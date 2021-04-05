@@ -7,7 +7,7 @@ namespace Palavyr.Core.Models
     public static class TreeUtils
     {
         public const string Separator = "-";
-        
+
         public static string TransformRequiredNodeType(DynamicTableMeta dynamicTableMeta)
         {
             return string.Join(Separator, new[] {dynamicTableMeta.TableType, dynamicTableMeta.TableId});
@@ -18,9 +18,14 @@ namespace Palavyr.Core.Models
             return string.Join(Separator, new[] {tableType, tableId});
         }
 
-        public static string TransformRequiredNodeType(DynamicTableMeta dynamicTableMeta, string extraName)
+        public static string TransformRequiredNodeType(DynamicTableMeta dynamicTableMeta, string prefix)
         {
-            return string.Join(Separator, new[] {dynamicTableMeta.TableType, extraName, dynamicTableMeta.TableId});
+            return string.Join(Separator, new[] {prefix, dynamicTableMeta.TableType, dynamicTableMeta.TableId});
+        }
+
+        public static string TransformRequiredNodeType(DynamicTableMeta dynamicTableMeta, string prefix, string suffix)
+        {
+            return string.Join(Separator, new[] {prefix, dynamicTableMeta.TableType, dynamicTableMeta.TableId, suffix});
         }
 
         public static string TransformRequiredNodeTypeToPrettyName(DynamicTableMeta dynamicTableMeta)
@@ -37,18 +42,13 @@ namespace Palavyr.Core.Models
         {
             return string.Join(Separator, new[] {dynamicTableMeta.PrettyName, extraName, dynamicTableMeta.TableTag});
         }
-    
-        // public static int GetNumTerminal(ConversationNode[] nodeList)
-        // {
-        //     return nodeList.Count(node => node.IsTerminalType);
-        // }
 
         public static string CreateNodeChildrenString(params string[] nodeIds)
         {
             return string.Join(Delimiters.NodeChildrenStringDelimiter, nodeIds);
         }
 
-        public static string CreateValueOptions(params string[] options)
+        public static string JoinValueOptionsOnDelimiter(params string[] options)
         {
             return string.Join(Delimiters.PathOptionDelimiter, options);
         }

@@ -13,7 +13,6 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 {
     public class SelectOneFlatCompiler : BaseCompiler<SelectOneFlat>, IDynamicTablesCompiler
     {
-
         public SelectOneFlatCompiler(IGenericDynamicTableRepository<SelectOneFlat> repository) : base(repository)
         {
         }
@@ -31,7 +30,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 dynamicTableMeta.ValuesAsPaths ? valueOptions : new List<string>() {"Continue"},
                 valueOptions,
                 true,
-                true,
+                dynamicTableMeta.ValuesAsPaths,
                 false,
                 NodeTypeOption.CustomTables,
                 dynamicTableMeta.ValuesAsPaths ? DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceAsPath : DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue

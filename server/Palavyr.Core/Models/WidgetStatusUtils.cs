@@ -116,7 +116,7 @@ namespace Palavyr.Core.Models
             var terminalNodes = new List<ConversationNode>();
 
             var rootNode = treeRootFinder.GetRootNode(nodeList);
-            treeWalker.FindAllTerminalNodes(nodeList, rootNode, terminalNodes);
+            treeWalker.FindAllTerminalNodes(nodeList, rootNode, terminalNodes); // This is not working correctly. Shouldn't need to distinct on this result... (except maybe for anabranch and split merge
 
             var uniqueTerminalNodes = terminalNodes.Distinct().ToList();
             var numLeaves = uniqueTerminalNodes.Count();
