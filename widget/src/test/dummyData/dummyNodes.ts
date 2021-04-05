@@ -16,7 +16,6 @@ export const ConvoNode: ConvoTableRow = {
     nodeComponentType: "YesNo"
 };
 
-
 export const RootOfThree = {
     id: 0,
     nodeId: "abc1",

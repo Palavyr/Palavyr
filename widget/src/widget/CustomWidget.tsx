@@ -4,10 +4,10 @@ import { addResponseMessage, toggleMsgLoader, setQuickButtons } from "src/widget
 import { Widget, isWidgetOpened, toggleWidget } from "src/widget";
 
 import CreateClient from "../client/Client";
-import { renderNextComponent } from "../componentRegistry";
 import { getRootNode } from "../componentRegistry/utils";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { renderNextComponent } from "src/componentRegistry/renderNextComponent";
 
 interface ICustomWidget {
     option: SelectedOption;

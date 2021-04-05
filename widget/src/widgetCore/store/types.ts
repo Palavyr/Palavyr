@@ -1,4 +1,5 @@
 import { ElementType } from "react";
+import { ConvoTableRow } from "src/types";
 
 type BaseMessage = {
     type: string;

@@ -99,3 +99,11 @@ export type LocaleMapItem = {
     currencySymbol: string;
 };
 export type LocaleMap = LocaleMapItem[];
+
+
+export interface IProgressTheChat {
+    node: ConvoTableRow;
+    nodeList: Array<ConvoTableRow>;
+    client: IClient;
+    convoId: string;
+}
