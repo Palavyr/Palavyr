@@ -31,7 +31,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 false,
                 false,
                 NodeTypeOption.CustomTables,
-                DefaultNodeTypeOptions.NodeComponentTypes.TakeNumber
+                DefaultNodeTypeOptions.NodeComponentTypes.TakeNumber,
+                dynamicType: dynamicTableMeta.MakeUniqueIdentifier()
+
             );
             nodes.AddAdditionalNode(nodeTypeOption);
             return Task.CompletedTask;

@@ -70,15 +70,15 @@ namespace Palavyr.Core.Models
             NodeTypeOption[] requiredNodes // array of node type names
         )
         {
-            if (node.IsRoot)
-            {
-                return requiredNodes;
-            }
-
             var requiredNodesClone = new List<NodeTypeOption>(requiredNodes);
             if (requiredNodesClone.Select(x => x.Value.TrimLastGuidChunk()).Contains(node.NodeType.TrimLastGuidChunk()))
             {
                 requiredNodesClone.RemoveAt(requiredNodesClone.Select(x => x.Value.TrimLastGuidChunk()).ToList().FindIndex(x => x == node.NodeType.TrimLastGuidChunk()));
+            }
+
+            if (node.IsRoot)
+            {
+                return requiredNodesClone.ToArray();
             }
 
             var nextNode = GetParentNode(nodeList, node);

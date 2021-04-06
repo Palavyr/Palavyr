@@ -6,8 +6,8 @@ import { SelectOneFlatHeader } from "./SelectOneFlatHeader";
 import { SelectOneFlatBody } from "./SelectOneFlatBody";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { DynamicTableTypes, IDynamicTableProps } from "../../DynamicTableTypes";
-import AddBoxIcon from '@material-ui/icons/AddBox';
-
+import AddBoxIcon from "@material-ui/icons/AddBox";
+import { DisplayTableData } from "../DisplayTableData";
 
 const useStyles = makeStyles({
     tableStyles: {
@@ -79,6 +79,7 @@ export const SelectOneFlat = ({ tableMeta, setTableMeta, tableId, tableTag, tabl
                     </div>
                 </div>
             </AccordionActions>
+            <DisplayTableData tableData={tableData} />
         </>
     );
 };

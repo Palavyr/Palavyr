@@ -16,6 +16,8 @@ export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversa
         valueOptions = _joinValueOptionArray(nodeOption.valueOptions);
     } else if (nodeOption.isTerminalType) {
         valueOptions = "";
+    } else if (nodeOption.isDynamicType) {
+        valueOptions = _joinValueOptionArray(nodeOption.valueOptions)
     } else if (isNullOrUndefinedOrWhitespace(valueOptions)) {
         if (nodeOption.value === AnabranchName) { //TODO: Why is nodeOption.stringName null?
             valueOptions = _joinValueOptionArray(["Left Branch", "Right Branch"]);
@@ -79,6 +81,9 @@ export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversa
     previousNode.shouldShowMultiOption = nodeOption.shouldShowMultiOption;
     previousNode.isAnabranchType = nodeOption.isAnabranchType;
     previousNode.nodeComponentType = nodeOption.nodeComponent;
+    previousNode.isDynamicTableNode = nodeOption.isDynamicType;
+    previousNode.resolveOrder = nodeOption.resolveOrder;
+    previousNode.dynamicType = nodeOption.dynamicType;
 
     if (identity.shouldShowSetAsAnabranchMergePointOption && nodeOption.isAnabranchType){
         previousNode.isAnabranchMergePoint = true; // needs to set true if inside anabranch and
@@ -90,7 +95,7 @@ export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversa
     // set any value options
     previousNode.valueOptions = valueOptions;
     updatedNodeList = _replaceNodeWithUpdatedNode(previousNode, updatedNodeList);
-    updatedNodeList = _createAndAddNewNodes(childIdsToCreate, newChildNodeIds, previousNode.areaIdentifier, pathOptions, updatedNodeList, nodeOption.shouldShowMultiOption);
+    updatedNodeList = _createAndAddNewNodes(childIdsToCreate, newChildNodeIds, previousNode.areaIdentifier, pathOptions, updatedNodeList, nodeOption.shouldShowMultiOption, nodeOption.isDynamicType);
 
     if (newChildNodeIds.length > 0) {
         updatedNodeList = _resetOptionPaths(newChildNodeIds, updatedNodeList, pathOptions);

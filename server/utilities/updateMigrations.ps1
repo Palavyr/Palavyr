@@ -100,12 +100,12 @@ catch {
 dotnet clean
 dotnet build
 
-$Migrations = "Migrations"
+$Migrations = "Data\\Migrations"
 
 # Execute the migrations on the local space
 try {
     Write-Host "`r`nAdding migration for Accounts"
-    dotnet ef migrations add $name --project .\\Palavyr.Data --startup-project .\\Palavyr.API --output-dir "$Migrations\\AccountsMigrations" --context AccountsContext
+    dotnet ef migrations add $name --project .\\Palavyr.Core --startup-project .\\Palavyr.API --output-dir "$Migrations\\AccountsMigrations" --context AccountsContext
     $AccountsResult = $?;
 }
 catch {
@@ -115,7 +115,7 @@ catch {
 
 try {
     Write-Host "`r`nAdding migration for Configuration at: "
-    dotnet ef migrations add $name --project .\\Palavyr.Data --startup-project .\\Palavyr.API --output-dir "$Migrations\\ConfigurationMigrations" --context DashContext
+    dotnet ef migrations add $name --project .\\Palavyr.Core --startup-project .\\Palavyr.API --output-dir "$Migrations\\ConfigurationMigrations" --context DashContext
     $ConfigResult = $?;
 }
 catch {
@@ -125,7 +125,7 @@ catch {
 
 try {
     Write-Host "`r`nAdding migration for Convos"
-    dotnet ef migrations add $name --project .\\Palavyr.Data --startup-project .\\Palavyr.API --output-dir "$Migrations\\ConvoMigrations" --context ConvoContext
+    dotnet ef migrations add $name --project .\\Palavyr.Core --startup-project .\\Palavyr.API --output-dir "$Migrations\\ConvoMigrations" --context ConvoContext
     $ConvoResult = $?;
 }
 catch {
@@ -140,7 +140,7 @@ Write-Host "`r`nExporting migrations as SQL Scripts..."
 if ($AccountsResult) {
     Write-Host "`r`nExporting Accounts Migrations as SQL Scripts..."
     Write-Host "`r`nExporting To: $accountsOutput\\$version-accounts_migration-$name.sql"
-    dotnet ef migrations script --project .\\Palavyr.Data --startup-project .\\Palavyr.API --context AccountsContext --output "$accountsOutput\\Script$version-accounts_migration-$name.sql" --idempotent
+    dotnet ef migrations script --project .\\Palavyr.Core --startup-project .\\Palavyr.API --context AccountsContext --output "$accountsOutput\\Script$version-accounts_migration-$name.sql" --idempotent
 }
 else {
     Write-Host "`r`nNot creating sql script for Accounts DB - no new migrations.";
@@ -149,7 +149,7 @@ else {
 if ($ConfigResult) {
     Write-Host "`r`nExporting Configuration Migrations as SQL Scripts..."
     Write-Host "`r`nExporting To: $configOutput\\$version-configuration_migration-$name.sql"
-    dotnet ef migrations script --project .\\Palavyr.Data --startup-project .\\Palavyr.API --context DashContext --output "$configOutput\\Script$version-configuration_migration-$name.sql" --idempotent
+    dotnet ef migrations script --project .\\Palavyr.Core --startup-project .\\Palavyr.API --context DashContext --output "$configOutput\\Script$version-configuration_migration-$name.sql" --idempotent
 }
 else {
     Write-Host "`r`nNotCreating sql script for Config DB - no new migrations."
@@ -158,7 +158,7 @@ else {
 if ($ConvoResult) {
     Write-Host "`r`nExporting Conversation Migrations as SQL Scripts..."
     Write-Host "`r`nExporting To: $convoOutput\\$version-convo_migration-$name.sql"
-    dotnet ef migrations script --project .\\Palavyr.Data --startup-project .\\Palavyr.API --context ConvoContext --output "$convoOutput\\Script$version-convo_migration-$name.sql" --idempotent
+    dotnet ef migrations script --project .\\Palavyr.Core --startup-project .\\Palavyr.API --context ConvoContext --output "$convoOutput\\Script$version-convo_migration-$name.sql" --idempotent
 }
 else {
     Write-Host "`r`nNotCreating sql script for Config DB - no new migrations."

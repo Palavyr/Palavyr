@@ -60,11 +60,13 @@ export class TwoNestedCategoriesModifier {
         const newTableData: TwoNestedCategoryData[] = [...tableData];
         const nextRowOrder = Object.values(outerCategoryGroups)[0].length;
         itemIds.forEach((itemId: string) => {
+            const outerCategoryName = outerCategoryGroups[itemId][0].category;
             const newRowId = uuid();
             const templateCopy = cloneDeep(template);
             templateCopy.rowId = newRowId;
             templateCopy.itemId = itemId;
             templateCopy.rowOrder = nextRowOrder;
+            templateCopy.category = outerCategoryName;
 
             newTableData.push(templateCopy);
         });

@@ -67,7 +67,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
         public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
         {
+
             var (innerCategories, outerCategories) = await GetInnerAndOuterCategories(dynamicTableMeta);
+            var widgetResponseKey = dynamicTableMeta.MakeUniqueIdentifier();
 
             // Outer-category
             nodes.AddAdditionalNode(
@@ -75,14 +77,15 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     dynamicTableMeta.MakeUniqueIdentifier("Outer-Categories", GuidUtils.CreateShortenedGuid(1)),
                     dynamicTableMeta.ConvertToPrettyName("Outer"),
                     new List<string>() {"Continue"},
-                    innerCategories,
+                    outerCategories,
                     true,
-                    false,
+                    true,
                     false,
                     NodeTypeOption.CustomTables,
                     DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, //dynamicTableMeta.ValuesAsPaths ? DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceAsPath : DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
                     resolveOrder: 0,
-                    isMultiOptionEditable: false
+                    isMultiOptionEditable: false,
+                    dynamicType: widgetResponseKey
                 ));
 
             // inner-categories
@@ -91,14 +94,15 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     dynamicTableMeta.MakeUniqueIdentifier("Inner-Categories", GuidUtils.CreateShortenedGuid(1)),
                     dynamicTableMeta.ConvertToPrettyName("Inner"),
                     new List<string>() {"Continue"},
-                    outerCategories,
+                    innerCategories,
                     true,
-                    false,
+                    true,
                     false,
                     NodeTypeOption.CustomTables,
                     DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, //dynamicTableMeta.ValuesAsPaths ? DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceAsPath : DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
                     resolveOrder: 1,
-                    isMultiOptionEditable: false
+                    isMultiOptionEditable: false,
+                    dynamicType: widgetResponseKey
                 ));
         }
 

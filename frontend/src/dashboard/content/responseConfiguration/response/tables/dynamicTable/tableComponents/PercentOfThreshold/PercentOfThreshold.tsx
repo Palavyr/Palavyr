@@ -6,23 +6,24 @@ import { DynamicTableTypes, IDynamicTableProps } from "../../DynamicTableTypes";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { PercentOfThresholdContainer } from "./PercentOfThresholdContainer";
 import { reOrderPercentOfThresholdTableData } from "./PercentOfThresholdUtils";
+import { DisplayTableData } from "../DisplayTableData";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         borderTop: "3px solid red",
     },
     tableStyles: {
-        background: "transparent"
+        background: "transparent",
     },
     trayWrapper: {
-        width: "100%"
+        width: "100%",
     },
     add: {},
     alignLeft: {
         float: "left",
     },
     alignRight: {
-        float: "right"
+        float: "right",
     },
 }));
 
@@ -34,7 +35,6 @@ export const PercentOfThreshold = ({ tableId, tableTag, tableData, setTableData,
 
     const addItemOnClick = () => modifier.addItem(tableData, client, areaIdentifier, tableId);
     const addRowOnClickFactory = (itemId: string) => () => modifier.addRow(tableData, client, areaIdentifier, tableId, itemId);
-
 
     const onSave = async () => {
         const reorderedData = reOrderPercentOfThresholdTableData(tableData);
@@ -58,6 +58,7 @@ export const PercentOfThreshold = ({ tableId, tableTag, tableData, setTableData,
                     </div>
                 </div>
             </AccordionActions>
+            <DisplayTableData tableData={tableData} />
         </>
     );
 };

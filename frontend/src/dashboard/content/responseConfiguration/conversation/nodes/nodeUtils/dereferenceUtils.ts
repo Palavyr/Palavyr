@@ -16,7 +16,7 @@ export const recursivelyDereferenceNodeIdFromChildrenExceptWhen = (exceptNodeId:
 };
 
 const dereferenceChildId = (node: ConvoNode, childNodeIdToDereference: string, nodeList: Conversation, exceptNodeId: string | null = null) => {
-    // 1. get rid of primary signling childe node ids from this node. if this node is not the leftmost parent of the node to dereference
+    // 1. get rid of primary signling child node ids from this node. if this node is not the leftmost parent of the node to dereference
     // 2. Then return array of filtered child nodes.
     const childrenIds = _splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString);
     if (node.nodeId !== exceptNodeId) {
@@ -28,7 +28,7 @@ const dereferenceChildId = (node: ConvoNode, childNodeIdToDereference: string, n
             const newNodeId = uuid();
             newIdsToAdd.push(newNodeId);
         }
-        _createAndAddNewNodes(newIdsToAdd, newIdsToAdd, node.areaIdentifier, ["Continue"], nodeList, false);
+        _createAndAddNewNodes(newIdsToAdd, newIdsToAdd, node.areaIdentifier, ["Continue"], nodeList, false, false);
         node.nodeChildrenString = _joinNodeChildrenStringArray([...filteredChildNodeIds, ...newIdsToAdd]);
         node.shouldRenderChildren = true;
         return filteredChildNodeIds;
@@ -41,7 +41,6 @@ const dereferenceChildId = (node: ConvoNode, childNodeIdToDereference: string, n
  */
 export const recursivelyDereferenceNodeIdFromChildren = (node: ConvoNode, nodeList: Conversation, childIdToDereference: string) => {
     // recursive function.
-
     const filteredChildNodeChildIds = dereferenceChildId(node, childIdToDereference, nodeList);
 
     if (filteredChildNodeChildIds.length > 0) {

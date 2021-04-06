@@ -145,7 +145,7 @@ export const _getAllParentNodeIds = (node: ConvoNode, nodeList: Conversation) =>
     return parentNodes;
 };
 
-export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeIds: string[], areaIdentifier: string, pathOptions: string[], updatedNodeList: Conversation, shouldShowMultiOption: boolean) => {
+export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeIds: string[], areaIdentifier: string, pathOptions: string[], updatedNodeList: Conversation, shouldShowMultiOption: boolean, isDynamicTableNode: boolean) => {
     childIdsToCreate.forEach((id: string, index: number) => {
         let shift = newChildNodeIds.length - childIdsToCreate.length;
         let newNode: ConvoNode = {
@@ -166,7 +166,10 @@ export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeId
             shouldShowMultiOption: shouldShowMultiOption,
             isAnabranchMergePoint: false,
             isAnabranchType: false,
-            nodeComponentType: ""
+            nodeComponentType: "",
+            isDynamicTableNode: isDynamicTableNode,
+            resolveOrder: 0,
+            dynamicType: ""
         };
 
         updatedNodeList.push(newNode);

@@ -6,26 +6,14 @@ import { addKeyValue } from "src/widgetCore/store/dispatcher";
 import { renderNextComponent } from "./renderNextComponent";
 import { setDynamicResponse } from "./setDynamicResponse";
 
-
-export const responseAction = (
-    node: ConvoTableRow,
-    child: ConvoTableRow,
-    nodeList: Array<ConvoTableRow>,
-    client: IClient,
-    convoId: string,
-    response: string,
-    callback: () => void = null
-) => {
-
+export const responseAction = (node: ConvoTableRow, child: ConvoTableRow, nodeList: Array<ConvoTableRow>, client: IClient, convoId: string, response: string, callback: () => void = null) => {
     if (response) {
         if (node.isCritical) {
-            addKeyValue({ [node.text]: response.toString() })
+            addKeyValue({ [node.text]: response.toString() }); // TODO: make unique
         }
 
-        if (node.isDynamicTableNode){
-            if (node.isDynamicTableNode) {
-                setDynamicResponse(node.nodeType, node.nodeId, response.toString());
-            }
+        if (node.isDynamicTableNode) {
+            setDynamicResponse(node.dynamicType, node.nodeId, response.toString());
         }
 
         if (child.optionPath !== null && child.optionPath !== "" && child.optionPath !== "Continue") {

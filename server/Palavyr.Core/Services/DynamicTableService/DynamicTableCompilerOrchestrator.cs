@@ -36,7 +36,6 @@ namespace Palavyr.Core.Services.DynamicTableService
                 var dynamicTableKey = dynamicTableKeys[0];
                 var responses = dynamicResponse[dynamicTableKey];
 
-
                 var dynamicTableName = dynamicTableKey.Split("-").First();
                 var compiler = dynamicTableCompilerRetriever.RetrieveCompiler(dynamicTableName);
 

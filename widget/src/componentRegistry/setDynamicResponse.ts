@@ -1,23 +1,27 @@
-import { cloneDeep } from "lodash";
+import { cloneDeep, findIndex } from "lodash";
 import { getDynamicResponsesContext, setDynamicResponses } from "src/widgetCore/store/dispatcher";
 
-export const setDynamicResponse = (nodeType: string, nodeId: string, response: string) => {
-    let dynamicResponseObject = cloneDeep(getDynamicResponsesContext());
-    // search the list for keys that match the nodeType, e.g. CategoricalCount-1231
-    const currentResponseType = dynamicResponseObject.filter(resp => {
-        return Object.keys(resp).includes(nodeType);
-    });
+export const setDynamicResponse = (dynamicType: string, nodeId: string, response: string) => {
+    const context = getDynamicResponsesContext(); // an array
 
-    // maybe we haven't add this response type to the context yet, so this list is empty
-    if (currentResponseType.length == 0) {
-        // we need to add this response type to the context
-        dynamicResponseObject = {
-            ...dynamicResponseObject,
-            [nodeType]: [{ [nodeId]: response }],
-        };
+    let dynamicResponseContext = cloneDeep(context);
+    // search the list for keys that match the dynamicType, e.g. CategoricalCount-1231
+
+    const currentResponseTypeIndex = findIndex(dynamicResponseContext, resp => {
+        return Object.keys(resp).includes(dynamicType);
+    });
+    // const currentResponseType = dynamicResponseContext.filter(resp => {
+    //     return Object.keys(resp).includes(dynamicType);
+    // });
+
+    if (currentResponseTypeIndex == -1) {
+        // maybe we haven't add this response type to the context yet, so the dynamicType key doesn't exist,
+        // so we need to add this response type to the context
+
+        dynamicResponseContext.push({[dynamicType]: [{ [nodeId]: response }]});
     } else {
-        // we can push a new response to the nodeType collection
-        dynamicResponseObject[nodeType].push({[nodeId]: response});
+        // otherwise, we can push a new response to the dynamicType's collection
+        dynamicResponseContext[currentResponseTypeIndex][dynamicType].push({ [nodeId]: response });
     }
-    setDynamicResponses(dynamicResponseObject);
+    setDynamicResponses(dynamicResponseContext);
 };

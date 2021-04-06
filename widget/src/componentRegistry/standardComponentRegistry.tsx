@@ -54,7 +54,7 @@ export class StandardComponents {
 
     makeMultipleChoiceContinueButtons({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getChildNodes(node.nodeChildrenString, nodeList)[0]; // only one should exist
-        const valueOptions = node.valueOptions.split(",");
+        const valueOptions = node.valueOptions.split("|peg|");
         return () => {
             const cls = useStyles();
             const [disabled, setDisabled] = useState<boolean>(false);

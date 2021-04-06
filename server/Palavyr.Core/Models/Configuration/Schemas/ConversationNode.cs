@@ -12,6 +12,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public string AccountId { get; set; } = null!;
         public string NodeId { get; set; }
         public string NodeType { get; set; } = null!;
+        public string DynamicType { get; set; } = null!;
         public bool Fallback { get; set; }
         public string Text { get; set; } = null!;
         public bool IsRoot { get; set; }
@@ -64,7 +65,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     IsAnabranchMergePoint = false,
                     IsDynamicTableNode = false,
                     IsCurrency = false,
-                    IsMultiOptionEditable = false
+                    IsMultiOptionEditable = false,
+                    DynamicType = null
                 }
             };
         }
@@ -121,7 +123,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             bool isDynamicTableNode = false,
             bool isCurrency = false,
             bool isMultiOptionEditable = false,
-            int? resolveOrder = null
+            int? resolveOrder = null,
+            string dynamicType = null
         )
         {
             return new ConversationNode()
@@ -148,7 +151,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 IsMultiOptionEditable = isMultiOptionEditable,
                 IsDynamicTableNode = isDynamicTableNode,
                 ResolveOrder = resolveOrder,
-                NodeComponentType = nodeComponentType
+                NodeComponentType = nodeComponentType,
+                DynamicType = dynamicType
             };
         }
 
@@ -179,7 +183,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     node.IsDynamicTableNode,
                     node.IsCurrency,
                     node.IsMultiOptionEditable,
-                    node.ResolveOrder
+                    node.ResolveOrder,
+                    node.DynamicType
                 );
                 mappedTransactions.Add(mappedNode);
             }

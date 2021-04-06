@@ -33,7 +33,8 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 dynamicTableMeta.ValuesAsPaths,
                 false,
                 NodeTypeOption.CustomTables,
-                dynamicTableMeta.ValuesAsPaths ? DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceAsPath : DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue
+                dynamicTableMeta.ValuesAsPaths ? DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceAsPath : DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
+                dynamicType: dynamicTableMeta.MakeUniqueIdentifier()
             );
             nodes.AddAdditionalNode(nodeTypeOption);
         }

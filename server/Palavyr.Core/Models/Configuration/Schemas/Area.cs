@@ -51,7 +51,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 ConversationNodes = ConversationNode.CreateDefaultNode(areaId, accountId),
                 StaticTablesMetas = StaticTablesMeta.CreateDefaultMetas(areaId, accountId),
                 IsEnabled = false,
-                AreaDisplayTitle = "Change this in the area Settings.",
+                AreaDisplayTitle = areaName,
                 AccountId = accountId,
                 DynamicTableMetas = null,
                 AreaSpecificEmail = emailAddress,

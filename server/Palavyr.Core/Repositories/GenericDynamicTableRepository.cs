@@ -86,7 +86,7 @@ namespace Palavyr.Core.Repositories
         public async Task<List<TEntity>> GetAllRowsMatchingDynamicResponseId(string accountId, string dynamicResponseId)
         {
             var row = await readonlyQueryExecutor
-                .Where(tableRow => tableRow.AccountId == accountId && dynamicResponseId.EndsWith(tableRow.TableId))
+                .Where(tableRow => tableRow.AccountId == accountId && dynamicResponseId.EndsWith(tableRow.TableId)) // TODO: shhould be dynamicType?
                 .ToListAsync();
             return row;
         }

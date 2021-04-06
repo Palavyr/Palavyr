@@ -5,6 +5,7 @@ import { AccordionActions, Button, makeStyles } from "@material-ui/core";
 import { DynamicTableTypes, IDynamicTableProps } from "../../DynamicTableTypes";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { TwoNestedCategoriesContainer } from "./TwoNestedCategoriesContainer";
+import { DisplayTableData } from "../DisplayTableData";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,6 +56,7 @@ export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, s
                     </div>
                 </div>
             </AccordionActions>
+            <DisplayTableData tableData={tableData} properties={["category", "subCategory"]} />
         </>
     );
 };
