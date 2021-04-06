@@ -23,21 +23,22 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             this.configurationRepository = configurationRepository;
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponse dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, List<Dictionary<string, string>> dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
         {
             var responseId = GetSingleResponseId(dynamicResponseIds);
             var records = await repository.GetAllRowsMatchingDynamicResponseId(accountId, responseId);
 
             // itemName then Count
             var orderedResponseIds = await GetResponsesOrderedByResolveOrder(dynamicResponse);
-            var categoryFilterResponse = GetResponseByResponseId(orderedResponseIds[0], dynamicResponse);
-            var countFilterResponse = GetResponseByResponseId(orderedResponseIds[1], dynamicResponse);
+            var outerCategory = GetResponseByResponseId(orderedResponseIds[0], dynamicResponse);
+            var innerCategory = GetResponseByResponseId(orderedResponseIds[1], dynamicResponse);
 
-            var result = records.Single(rec => rec.Category == categoryFilterResponse && rec.SubCategory == countFilterResponse);
+            var result = records.Single(rec => rec.Category == outerCategory && rec.SubCategory == innerCategory);
+            
             return new List<TableRow>()
             {
                 new TableRow(
-                    string.Join("&", new[] {result.Category, result.SubCategory}),
+                    string.Join(" & ", new[] {result.Category, result.SubCategory}),
                     result.ValueMin,
                     result.ValueMax,
                     false,

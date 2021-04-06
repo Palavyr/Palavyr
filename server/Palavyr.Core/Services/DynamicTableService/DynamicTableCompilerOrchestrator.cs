@@ -23,7 +23,7 @@ namespace Palavyr.Core.Services.DynamicTableService
 
         public async Task<List<Table>> CompileTablesToPdfRows(
             string accountId,
-            List<Dictionary<string, DynamicResponse>> dynamicResponses,
+            List<Dictionary<string, List<Dictionary<string, string>>>> dynamicResponses,
             CultureInfo culture
         )
         {

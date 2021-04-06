@@ -46,9 +46,9 @@ namespace Palavyr.Core.Services.DynamicTableService
             return rows;
         }
 
-        protected string GetSingleResponseValue(DynamicResponse dynamicResponse, List<string> dynamicResponseIds)
+        protected string GetSingleResponseValue(List<Dictionary<string, string>> dynamicResponse, List<string> dynamicResponseIds)
         {
-            var responseComponent = dynamicResponse.ResponseComponents[0]; // this expects only a single response;
+            var responseComponent = dynamicResponse[0]; // this expects only a single response;
             var responseValue = responseComponent.Values.ToList()[0];
             return responseValue;
         }
@@ -58,14 +58,14 @@ namespace Palavyr.Core.Services.DynamicTableService
             return dynamicResponseIds[0];
         }
 
-        protected string GetResponseByResponseId(string responseId, DynamicResponse dynamicResponse)
+        protected string GetResponseByResponseId(string responseId, List<Dictionary<string, string>> dynamicResponse)
         {
-            return dynamicResponse.ResponseComponents.Single(x => x.ContainsKey(responseId)).Values.ToList().Single();
+            return dynamicResponse.Single(x => x.ContainsKey(responseId)).Values.ToList().Single();
         }
 
-        protected async Task<List<string>> GetResponsesOrderedByResolveOrder(DynamicResponse dynamicResponse)
+        protected async Task<List<string>> GetResponsesOrderedByResolveOrder(List<Dictionary<string, string>> dynamicResponse)
         {
-            var responseKeys = dynamicResponse.ResponseComponents.SelectMany(row => row.Keys).ToList();
+            var responseKeys = dynamicResponse.SelectMany(row => row.Keys).ToList();
             return (await Repository.GetConversationNodeByIds(responseKeys))
                 .OrderBy(x => x.ResolveOrder)
                 .Select(x => x.NodeId)

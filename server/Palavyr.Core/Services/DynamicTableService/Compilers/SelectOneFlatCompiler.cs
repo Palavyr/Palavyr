@@ -39,7 +39,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             nodes.AddAdditionalNode(nodeTypeOption);
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponse dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, List<Dictionary<string, string>> dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
         {
             var dynamicResponseId = GetSingleResponseId(dynamicResponseIds);
             var responseValue = GetSingleResponseValue(dynamicResponse, dynamicResponseIds);
