@@ -25,8 +25,11 @@ namespace Palavyr.Core.Repositories
         Task RemoveStaticTables(List<StaticTablesMeta> staticTablesMetas);
         Task<List<Area>> GetActiveAreasWithConvoAndDynamicAndStaticTables(string accountId);
         void RemoveAreaNodes(string areaId, string accountId);
+        
         Task<List<DynamicTableMeta>> GetDynamicTableMetas(string accountId, string areaIdentifier);
-
+        Task<DynamicTableMeta> GetDynamicTableMetaByTableId(string tableId);
+        
+        
         // maintenance methods to delete
         Task<List<DynamicTableMeta>> GetAllDynamicTableMetas();
         Task<List<ConversationNode>> GetAllConversationNodes();

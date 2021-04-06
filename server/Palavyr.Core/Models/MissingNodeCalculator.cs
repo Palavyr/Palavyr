@@ -71,9 +71,9 @@ namespace Palavyr.Core.Models
         )
         {
             var requiredNodesClone = new List<NodeTypeOption>(requiredNodes);
-            if (requiredNodesClone.Select(x => x.Value.TrimLastGuidChunk()).Contains(node.NodeType.TrimLastGuidChunk()))
+            if (requiredNodesClone.Select(x => x.Value).Contains(node.NodeType))
             {
-                requiredNodesClone.RemoveAt(requiredNodesClone.Select(x => x.Value.TrimLastGuidChunk()).ToList().FindIndex(x => x == node.NodeType.TrimLastGuidChunk()));
+                requiredNodesClone.RemoveAt(requiredNodesClone.Select(x => x.Value).ToList().FindIndex(x => x == node.NodeType));
             }
 
             if (node.IsRoot)

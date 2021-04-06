@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
-using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
@@ -14,10 +13,12 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
     public class BasicThresholdCompiler : BaseCompiler<BasicThreshold>, IDynamicTablesCompiler
     {
         private readonly IGenericDynamicTableRepository<BasicThreshold> repository;
+        private readonly IConfigurationRepository configurationRepository;
 
-        public BasicThresholdCompiler(IGenericDynamicTableRepository<BasicThreshold> repository) : base(repository)
+        public BasicThresholdCompiler(IGenericDynamicTableRepository<BasicThreshold> repository, IConfigurationRepository configurationRepository) : base(repository)
         {
             this.repository = repository;
+            this.configurationRepository = configurationRepository;
         }
 
         public Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
@@ -33,7 +34,6 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 NodeTypeOption.CustomTables,
                 DefaultNodeTypeOptions.NodeComponentTypes.TakeNumber,
                 dynamicType: dynamicTableMeta.MakeUniqueIdentifier()
-
             );
             nodes.AddAdditionalNode(nodeTypeOption);
             return Task.CompletedTask;
@@ -47,8 +47,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var responseValueAsDouble = double.Parse(responseValue);
             var allRows = await repository.GetAllRowsMatchingDynamicResponseId(accountId, dynamicResponseId);
 
-            var itemsToCreateRowsFor = allRows.Select(row => row.ItemName).Distinct();
+            var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(allRows.First().TableId);
 
+            var itemsToCreateRowsFor = allRows.Select(row => row.ItemName).Distinct();
 
             var tableRows = new List<TableRow>();
             foreach (var itemName in itemsToCreateRowsFor)
@@ -64,7 +65,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
                         tableRows.Add(
                             new TableRow(
-                                threshold.ItemName,
+                                dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : threshold.ItemName,
                                 minBaseAmount,
                                 maxBaseAmount,
                                 false,
@@ -75,6 +76,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     }
                 }
             }
+
             return tableRows;
         }
     }

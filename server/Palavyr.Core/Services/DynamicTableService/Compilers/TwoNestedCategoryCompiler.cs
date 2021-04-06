@@ -2,11 +2,9 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
-using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
@@ -34,11 +32,12 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var innerCategory = GetResponseByResponseId(orderedResponseIds[1], dynamicResponse);
 
             var result = records.Single(rec => rec.Category == outerCategory && rec.SubCategory == innerCategory);
+            var dynamicTableMeta = await configurationRepository.GetDynamicTableMetaByTableId(result.TableId);
             
             return new List<TableRow>()
             {
                 new TableRow(
-                    string.Join(" & ", new[] {result.Category, result.SubCategory}),
+                    dynamicTableMeta.UseTableTagAsResponseDescription ? dynamicTableMeta.TableTag : string.Join(" & ", new[] {result.Category, result.SubCategory}),
                     result.ValueMin,
                     result.ValueMax,
                     false,
@@ -75,7 +74,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             // Outer-category
             nodes.AddAdditionalNode(
                 NodeTypeOption.Create(
-                    dynamicTableMeta.MakeUniqueIdentifier("Outer-Categories", GuidUtils.CreateShortenedGuid(1)),
+                    dynamicTableMeta.MakeUniqueIdentifier("Outer-Categories"),
                     dynamicTableMeta.ConvertToPrettyName("Outer"),
                     new List<string>() {"Continue"},
                     outerCategories,
@@ -92,7 +91,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             // inner-categories
             nodes.AddAdditionalNode(
                 NodeTypeOption.Create(
-                    dynamicTableMeta.MakeUniqueIdentifier("Inner-Categories", GuidUtils.CreateShortenedGuid(1)),
+                    dynamicTableMeta.MakeUniqueIdentifier("Inner-Categories"),
                     dynamicTableMeta.ConvertToPrettyName("Inner"),
                     new List<string>() {"Continue"},
                     innerCategories,

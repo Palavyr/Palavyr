@@ -28,6 +28,14 @@ namespace Palavyr.Core.Repositories
                 .ToListAsync();
         }
 
+        public async Task<DynamicTableMeta> GetDynamicTableMetaByTableId(string tableId)
+        {
+            return await dashContext
+                .DynamicTableMetas
+                .Where(row => row.TableId == tableId)
+                .SingleAsync();
+        }
+
         public async Task CommitChangesAsync()
         {
             await dashContext.SaveChangesAsync();

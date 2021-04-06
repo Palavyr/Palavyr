@@ -1,9 +1,11 @@
 using Autofac;
+using Palavyr.API.controllers.Conversation;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.API.Controllers.Testing;
 using Palavyr.BackupAndRestore;
 using Palavyr.BackupAndRestore.Postgres;
 using Palavyr.BackupAndRestore.UserData;
+using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Resources.Responses;
@@ -68,6 +70,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<TreeRootFinder>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<TreeWalker>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<NodeCounter>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<GuidFinder>().AsSelf().SingleInstance();
         }
     }
 }

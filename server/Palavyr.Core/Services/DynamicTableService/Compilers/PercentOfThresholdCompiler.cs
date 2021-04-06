@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
-using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
@@ -14,8 +13,11 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 {
     public class PercentOfThresholdCompiler : BaseCompiler<PercentOfThreshold>, IDynamicTablesCompiler
     {
-        public PercentOfThresholdCompiler(IGenericDynamicTableRepository<PercentOfThreshold> repository) : base(repository)
+        private readonly IConfigurationRepository configurationRepository;
+
+        public PercentOfThresholdCompiler(IGenericDynamicTableRepository<PercentOfThreshold> repository, IConfigurationRepository configurationRepository) : base(repository)
         {
+            this.configurationRepository = configurationRepository;
         }
 
         public Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
@@ -43,7 +45,8 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
             var responseValueAsDouble = double.Parse(responseValue);
             var allRows = await Repository.GetAllRowsMatchingDynamicResponseId(accountId, dynamicResponseId);
-
+            var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(allRows[0].TableId);
+            
             var itemIds = allRows.Select(item => item.ItemId).Distinct().ToArray();
             foreach (var itemId in itemIds)
             {
@@ -67,10 +70,11 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                             maxBaseAmount -= maxBaseAmount * (threshold.Modifier / 100);
                         }
 
+                        
                         return new List<TableRow>()
                         {
                             new TableRow(
-                                threshold.ItemName,
+                                dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : threshold.ItemName,
                                 minBaseAmount,
                                 maxBaseAmount,
                                 false,
