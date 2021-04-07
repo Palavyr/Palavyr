@@ -71,36 +71,6 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             };
         }
 
-        public static ConversationNode CreateWidgetNode(
-            string nodeId,
-            string nodeType,
-            bool isCritical,
-            string text,
-            string nodeChildrenString,
-            bool isRoot,
-            string areaIdentifier,
-            string optionPath,
-            string valueOptions,
-            bool isDynamicTableNode,
-            string nodeComponentType
-        )
-        {
-            return new ConversationNode
-            {
-                NodeId = nodeId,
-                NodeType = nodeType,
-                IsCritical = isCritical,
-                Text = text,
-                NodeChildrenString = nodeChildrenString,
-                IsRoot = isRoot,
-                AreaIdentifier = areaIdentifier,
-                OptionPath = optionPath!,
-                ValueOptions = valueOptions,
-                IsDynamicTableNode = isDynamicTableNode,
-                NodeComponentType = nodeComponentType
-            };
-        }
-
         public static ConversationNode CreateNew(
             string nodeId,
             string nodeType,

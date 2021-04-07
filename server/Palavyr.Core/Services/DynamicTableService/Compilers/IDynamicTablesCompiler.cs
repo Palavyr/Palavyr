@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
@@ -15,6 +14,5 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             List<NodeTypeOption> nodes);
 
         Task<List<TableRow>> CompileToPdfTableRow(string accountId, List<Dictionary<string, string>> dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture);
-        // Task<List<ConversationNode>> CompileToConversationNode(DynamicTableMeta dynamicTableMeta);
     }
 }

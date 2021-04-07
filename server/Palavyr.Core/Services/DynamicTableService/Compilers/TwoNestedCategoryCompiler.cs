@@ -33,7 +33,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
             var result = records.Single(rec => rec.Category == outerCategory && rec.SubCategory == innerCategory);
             var dynamicTableMeta = await configurationRepository.GetDynamicTableMetaByTableId(result.TableId);
-            
+
             return new List<TableRow>()
             {
                 new TableRow(
@@ -67,7 +67,6 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
         public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
         {
-
             var (innerCategories, outerCategories) = await GetInnerAndOuterCategories(dynamicTableMeta);
             var widgetResponseKey = dynamicTableMeta.MakeUniqueIdentifier();
 
@@ -82,7 +81,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     true,
                     false,
                     NodeTypeOption.CustomTables,
-                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, //dynamicTableMeta.ValuesAsPaths ? DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceAsPath : DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
+                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
                     resolveOrder: 0,
                     isMultiOptionEditable: false,
                     dynamicType: widgetResponseKey
@@ -99,7 +98,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     true,
                     false,
                     NodeTypeOption.CustomTables,
-                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, //dynamicTableMeta.ValuesAsPaths ? DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceAsPath : DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
+                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
                     resolveOrder: 1,
                     isMultiOptionEditable: false,
                     dynamicType: widgetResponseKey

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.DynamicTableService
@@ -63,53 +62,5 @@ namespace Palavyr.Core.Services.DynamicTableService
 
             return nodes;
         }
-
-        // public Task<List<ConversationNode>> CompileToConversationNode(IEnumerable<DynamicTableMeta> dynamicTableMetas, string accountId, string areaId)
-        // {
-        //     var convoNodes = new List<ConversationNode>();
-        //     foreach (var dynamicTableMeta in dynamicTableMetas)
-        //     {
-        //         var compiler = dynamicTableCompilerRetriever.RetrieveCompiler(dynamicTableMeta.TableType);
-        //         await compiler.
-        //     }
-        // }
     }
 }
-        //
-        // {
-        //     // This table type does not facilitate multiple branches. I.e. the inner categories are all the same for all of the outer categories.
-        //     var rows = (await GetTableRows(dynamicTableMeta)).OrderBy(row => row.RowOrder);
-        //     var outerCategories = rows.Select(row => row.Category).ToList();
-        //
-        //     var itemId = rows.Select(row => row.ItemId).Distinct().First();
-        //     var innerCategories = rows.Where(row => row.ItemId == itemId).Select(row => row.SubCategory).ToList();
-        //
-        //     // Outer-category
-        //     nodes.AddAdditionalNode(
-        //         NodeTypeOption.Create(
-        //             dynamicTableMeta.MakeUniqueIdentifier("Outer-Categories", GuidUtils.CreateShortenedGuid(1)),
-        //             dynamicTableMeta.ConvertToPrettyName("Outer"),
-        //             new List<string>() {"Continue"},
-        //             outerCategories.Distinct().ToList(),
-        //             true,
-        //             true,
-        //             false,
-        //             NodeTypeOption.CustomTables,
-        //             dynamicTableMeta.ValuesAsPaths ? DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceAsPath : DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
-        //             resolveOrder: 0
-        //         ));
-        //
-        //     // inner-categories
-        //     nodes.AddAdditionalNode(
-        //         NodeTypeOption.Create(
-        //             dynamicTableMeta.MakeUniqueIdentifier("Inner-Categories", GuidUtils.CreateShortenedGuid(1)),
-        //             dynamicTableMeta.ConvertToPrettyName("Inner"),
-        //             new List<string>() {"Continue"},
-        //             innerCategories,
-        //             true,
-        //             true,
-        //             false,
-        //             NodeTypeOption.CustomTables,
-        //             dynamicTableMeta.ValuesAsPaths ? DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceAsPath : DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
-        //             resolveOrder: 1
-        //         ));

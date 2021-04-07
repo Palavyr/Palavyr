@@ -12,7 +12,6 @@ using Palavyr.Core.Services.DynamicTableService;
 namespace Palavyr.API.Controllers.WidgetLive
 {
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
-
     public class CreateNewConversationHistoryController : PalavyrBaseController
     {
         private readonly IConfigurationRepository configurationRepository;
@@ -36,11 +35,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             var widgetPreference = await configurationRepository.GetWidgetPreferences(accountId);
 
             logger.LogDebug("Fetching nodes...");
-
-            var standardNodes = (await configurationRepository.GetAreaConversationNodes(accountId, areaId));//.Where(x => !x.IsDynamicTableNode).ToList();
-            // var dynamicNodes = await dynamicTableCompilerOrchestrator.CompileTablesToConfigurationNodes((await configurationRepository.GetDynamicTableMetas(accountId, areaId)), accountId, areaId);
-
-
+            var standardNodes = (await configurationRepository.GetAreaConversationNodes(accountId, areaId));
             var completeConversation = EndingSequence.AttachEndingSequenceToNodeList(standardNodes, areaId, accountId);
 
             logger.LogDebug("Creating new conversation for user with apikey: {apiKey}");
@@ -48,7 +43,5 @@ namespace Palavyr.API.Controllers.WidgetLive
 
             return newConvo;
         }
-        
     }
-    
 }

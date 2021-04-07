@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.API.Registration.BackgroundJobs;
@@ -56,10 +55,6 @@ namespace Palavyr.API
             HangFireJobs hangFireJobs
         )
         {
-            // var logger = loggerFactory.CreateLogger<Startup>();
-            // logger.LogDebug($"CURRENT ENV: {env.EnvironmentName}");
-            // logger.LogDebug($"IsStaging: {env.IsStaging()}");
-            //
             // app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseRequestResponseLogging();
             app.UseHttpsRedirection();

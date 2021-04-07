@@ -15,10 +15,8 @@ namespace Palavyr.Core.Common.UIDUtils
             {
                 return tableId;
             }
+
             throw new Exception($"GUID was not found in the string: {stringWithSingleGuid}");
         }
-        
-        
-        
     }
 }
