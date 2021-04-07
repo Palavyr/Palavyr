@@ -86,4 +86,5 @@ export type IDynamicTableProps = {
     tableMeta: DynamicTableMeta;
     setTableMeta: any;
     deleteAction(): Promise<any>;
+    showDebug: boolean;
 };

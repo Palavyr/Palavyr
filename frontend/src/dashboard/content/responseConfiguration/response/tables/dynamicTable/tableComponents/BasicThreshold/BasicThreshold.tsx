@@ -39,7 +39,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const BasicThreshold = ({ tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<IDynamicTableProps, "tableMeta" | "setTableMeta">) => {
+export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<IDynamicTableProps, "tableMeta" | "setTableMeta">) => {
     const cls = useStyles();
     const client = new ApiClient();
     const [name, setItemName] = useState<string>("");
@@ -87,7 +87,7 @@ export const BasicThreshold = ({ tableId, tableTag, tableData, setTableData, are
                     </div>
                 </div>
             </AccordionActions>
-            <DisplayTableData tableData={tableData} />
+            {showDebug && <DisplayTableData tableData={tableData} />}
         </>
     );
 };

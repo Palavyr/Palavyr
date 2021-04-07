@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, setTableData, areaIdentifier, deleteAction }: Omit<IDynamicTableProps, "setTableMeta">) => {
+export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, setTableData, areaIdentifier, deleteAction, showDebug }: Omit<IDynamicTableProps, "setTableMeta">) => {
     const client = new ApiClient();
     const classes = useStyles();
 
@@ -56,7 +56,7 @@ export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, s
                     </div>
                 </div>
             </AccordionActions>
-            <DisplayTableData tableData={tableData} properties={["category", "subCategory"]} />
+            {showDebug && <DisplayTableData tableData={tableData} properties={["category", "subCategory"]} />}
         </>
     );
 };

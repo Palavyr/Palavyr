@@ -38,7 +38,7 @@ const useStyles = makeStyles({
     },
 });
 
-export const SelectOneFlat = ({ tableMeta, setTableMeta, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: IDynamicTableProps) => {
+export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: IDynamicTableProps) => {
     const client = new ApiClient();
     const classes = useStyles();
 
@@ -79,7 +79,7 @@ export const SelectOneFlat = ({ tableMeta, setTableMeta, tableId, tableTag, tabl
                     </div>
                 </div>
             </AccordionActions>
-            <DisplayTableData tableData={tableData} />
+            {showDebug && <DisplayTableData tableData={tableData} properties={["option", "valueMin", "valueMax", "range", "rowOrder"]} />}
         </>
     );
 };

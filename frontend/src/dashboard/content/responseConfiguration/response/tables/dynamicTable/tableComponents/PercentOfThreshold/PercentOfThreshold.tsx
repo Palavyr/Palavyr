@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const PercentOfThreshold = ({ tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<IDynamicTableProps, "tableMeta" | "setTableMeta">) => {
+export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<IDynamicTableProps, "tableMeta" | "setTableMeta">) => {
     const client = new ApiClient();
     const classes = useStyles();
 
@@ -58,7 +58,7 @@ export const PercentOfThreshold = ({ tableId, tableTag, tableData, setTableData,
                     </div>
                 </div>
             </AccordionActions>
-            <DisplayTableData tableData={tableData} />
+            {showDebug && <DisplayTableData tableData={tableData} />}
         </>
     );
 };

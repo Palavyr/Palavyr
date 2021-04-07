@@ -28,6 +28,7 @@ export interface ISingleDynamicFeeTable {
     setTableMetas: any;
     setLoaded: any;
     tableNumber: number;
+    showDebug: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -54,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, tableMetas, setTableMetas, defaultTableMeta, availablDynamicTableOptions, tableNameMap, parentState, changeParentState, areaIdentifier }: ISingleDynamicFeeTable) => {
+export const SingleDynamicFeeTable = ({ showDebug, tableNumber, setLoaded, tableMetaIndex, tableMetas, setTableMetas, defaultTableMeta, availablDynamicTableOptions, tableNameMap, parentState, changeParentState, areaIdentifier }: ISingleDynamicFeeTable) => {
     const client = new ApiClient();
     const classes = useStyles();
 
@@ -151,16 +152,17 @@ export const SingleDynamicFeeTable = ({ tableNumber, setLoaded, tableMetaIndex, 
                     setTableData={setDynamicTableData}
                     areaIdentifier={areaIdentifier}
                     deleteAction={deleteAction}
+                    showDebug={showDebug}
                 />
             )}
             {tableMeta?.tableType === DynamicTableTypes.PercentOfThreshold && dynamicTableData !== undefined && (
-                <PercentOfThreshold tableTag={tableTag} tableId={tableMeta.tableId} tableData={dynamicTableData} setTableData={setDynamicTableData} areaIdentifier={areaIdentifier} deleteAction={deleteAction} />
+                <PercentOfThreshold showDebug={showDebug} tableTag={tableTag} tableId={tableMeta.tableId} tableData={dynamicTableData} setTableData={setDynamicTableData} areaIdentifier={areaIdentifier} deleteAction={deleteAction} />
             )}
             {tableMeta?.tableType === DynamicTableTypes.BasicThreshold && dynamicTableData !== undefined && (
-                <BasicThreshold tableTag={tableTag} tableId={tableMeta.tableId} tableData={dynamicTableData} setTableData={setDynamicTableData} areaIdentifier={areaIdentifier} deleteAction={deleteAction} />
+                <BasicThreshold showDebug={showDebug} tableTag={tableTag} tableId={tableMeta.tableId} tableData={dynamicTableData} setTableData={setDynamicTableData} areaIdentifier={areaIdentifier} deleteAction={deleteAction} />
             )}
             {tableMeta?.tableType === DynamicTableTypes.TwoNestedCategory && dynamicTableData !== undefined && (
-                <TwoNestedCategories tableTag={tableTag} tableMeta={tableMeta} tableId={tableMeta.tableId} tableData={dynamicTableData} setTableData={setDynamicTableData} areaIdentifier={areaIdentifier} deleteAction={deleteAction} />
+                <TwoNestedCategories showDebug={showDebug} tableTag={tableTag} tableMeta={tableMeta} tableId={tableMeta.tableId} tableData={dynamicTableData} setTableData={setDynamicTableData} areaIdentifier={areaIdentifier} deleteAction={deleteAction} />
             )}
         </section>
     );

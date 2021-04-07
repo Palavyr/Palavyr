@@ -11,7 +11,7 @@ export const DisplayTableData = ({ tableData, properties }: IDisplayTableData) =
         <>
             {tableData.map((x: any) => {
                 return (
-                    <div style={{ fontSize: "24pt" }}>
+                    <div style={{ fontSize: "14pt" }}>
                         <pre>{JSON.stringify(x, properties, "")}</pre>
                     </div>
                 );
