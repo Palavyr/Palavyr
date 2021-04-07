@@ -26,6 +26,11 @@ export type UUID = string;
 export type AnyFunction = (...args: any[]) => any;
 export type AnyVoidFunction = (...args: any[]) => void;
 
+export type SetState<T> = Dispatch<SetStateAction<T>>;
+export type TableGroup<T> = {
+    [itemGroup: string]: T;
+};
+
 // Database
 export type GroupRow = {
     id: number;
@@ -92,6 +97,10 @@ export type ConvoNode = {
     shouldShowMultiOption: boolean;
     isAnabranchType: boolean;
     isAnabranchMergePoint: boolean;
+    nodeComponentType: string;
+    isDynamicTableNode: boolean;
+    resolveOrder: number;
+    dynamicType: string | null;
 };
 
 export type Conversation = Array<ConvoNode>;
@@ -378,19 +387,25 @@ export type PhoneSettingsResponse = {
 };
 
 export type NodeOption = {
-    value: string;
-    pathOptions: Array<Response>;
-    valueOptions: Array<string>;
-    text: string;
-    isDynamicType: boolean;
-    isMultiOptionType: boolean;
-    isTerminalType: boolean;
-    isSplitMergeType: boolean;
-    isAnabranchType: boolean;
-    isAnabranchMergePoint: boolean;
-    shouldShowMultiOption: boolean;
-    stringName: string | null;
     groupName: string;
+    isAnabranchMergePoint: boolean;
+    isAnabranchType: boolean;
+    isCurrency: boolean; // TODO: For the future -- may wish to specify currency or number in the dynamic table
+    isDynamicType: boolean;
+    isMultiOptionEditable: boolean; // TODO- is this used? No...
+    isMultiOptionType: boolean;
+    isSplitMergeType: boolean;
+    isTerminalType: boolean;
+    nodeComponent: string;
+    pathOptions: Array<Response>;
+    resolveOrder: number;
+    shouldRenderChildren: boolean; // TODO: is this used?
+    shouldShowMultiOption: boolean;
+    stringName: string | null; // TODO: this is always null - used?
+    text: string;
+    value: string;
+    valueOptions: Array<string>;
+    dynamicType: string | null;
 };
 
 

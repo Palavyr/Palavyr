@@ -12,6 +12,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public string AccountId { get; set; } = null!;
         public string NodeId { get; set; }
         public string NodeType { get; set; } = null!;
+        public string DynamicType { get; set; } = null!;
         public bool Fallback { get; set; }
         public string Text { get; set; } = null!;
         public bool IsRoot { get; set; }
@@ -23,15 +24,14 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public bool ShouldRenderChildren { get; set; }
         public bool IsSplitMergeType { get; set; }
         public bool ShouldShowMultiOption { get; set; }
-        public bool IsAnabranchType  { get; set; }
+        public bool IsAnabranchType { get; set; }
         public bool IsAnabranchMergePoint { get; set; }
         public bool IsDynamicTableNode { get; set; }
         public string NodeComponentType { get; set; }
         public bool IsMultiOptionEditable { get; set; }
         public bool IsCurrency { get; set; }
         public int? ResolveOrder { get; set; }
-        
-        // public string DynamicTableKey { get; set; } // used to group responses for the widget / compiling multinode dynamic tables
+
 
         public string NodeChildrenString { get; set; } = null!; // stored as comma delimited list as string
 
@@ -51,7 +51,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     Text = "Default Text from server",
                     IsRoot = true,
                     AreaIdentifier = areaIdentifier,
-                    OptionPath = null,
+                    OptionPath = "", // Previous had this set to null...
                     NodeChildrenString = "",
                     ValueOptions = "",
                     IsCritical = false,
@@ -65,7 +65,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     IsAnabranchMergePoint = false,
                     IsDynamicTableNode = false,
                     IsCurrency = false,
-                    IsMultiOptionEditable = false
+                    IsMultiOptionEditable = false,
+                    DynamicType = null
                 }
             };
         }
@@ -79,6 +80,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             string optionPath,
             string valueOptions,
             string accountId,
+            string nodeComponentType,
             bool isRoot = false,
             bool isCritical = true,
             bool isMultiOptionType = false,
@@ -91,7 +93,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             bool isDynamicTableNode = false,
             bool isCurrency = false,
             bool isMultiOptionEditable = false,
-            int? resolveOrder = null
+            int? resolveOrder = null,
+            string dynamicType = null
         )
         {
             return new ConversationNode()
@@ -117,7 +120,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 IsCurrency = isCurrency,
                 IsMultiOptionEditable = isMultiOptionEditable,
                 IsDynamicTableNode = isDynamicTableNode,
-                ResolveOrder = resolveOrder
+                ResolveOrder = resolveOrder,
+                NodeComponentType = nodeComponentType,
+                DynamicType = dynamicType
             };
         }
 
@@ -135,6 +140,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     node.OptionPath,
                     node.ValueOptions,
                     accountId,
+                    node.NodeComponentType,
                     node.IsRoot,
                     node.IsCritical,
                     node.IsMultiOptionType,
@@ -147,10 +153,12 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     node.IsDynamicTableNode,
                     node.IsCurrency,
                     node.IsMultiOptionEditable,
-                    node.ResolveOrder
+                    node.ResolveOrder,
+                    node.DynamicType
                 );
                 mappedTransactions.Add(mappedNode);
             }
+
             return mappedTransactions;
         }
     }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -28,32 +29,33 @@ namespace Palavyr.API.Controllers.Conversation
     {
         private ILogger<GetMissingNodesController> logger;
         private readonly IConfigurationRepository configurationRepository;
+        private readonly RequiredNodeCalculator requiredNodeCalculator;
+        private readonly MissingNodeCalculator missingNodeCalculator;
 
         public GetMissingNodesController(
             ILogger<GetMissingNodesController> logger,
-            IConfigurationRepository configurationRepository
+            IConfigurationRepository configurationRepository,
+            RequiredNodeCalculator requiredNodeCalculator,
+            MissingNodeCalculator missingNodeCalculator
         )
         {
             this.configurationRepository = configurationRepository;
+            this.requiredNodeCalculator = requiredNodeCalculator;
+            this.missingNodeCalculator = missingNodeCalculator;
             this.logger = logger;
         }
 
         [HttpPost("configure-conversations/{areaId}/missing-nodes")]
-        public async Task<string[]> Get([FromHeader] string accountId, string areaId, [FromBody] ConversationNodeDto currentNodes)
+        public async Task<IEnumerable<string>> Get([FromHeader] string accountId, string areaId, [FromBody] ConversationNodeDto currentNodes)
         {
             var area = await configurationRepository.GetAreaComplete(accountId, areaId);
-
-            var requiredDynamicNodeTypes = area
-                .DynamicTableMetas
-                .Select(TreeUtils.TransformRequiredNodeType)
-                .ToArray();
-
+            
             var dynamicTableMetas = area.DynamicTableMetas;
             var staticTableMetas = area.StaticTablesMetas;
-            
-            
-            var allMissingNodeTypes = MissingNodeCalculator.CalculateMissingNodes(requiredDynamicNodeTypes, currentNodes.Transactions, dynamicTableMetas, staticTableMetas);
-            return allMissingNodeTypes.ToArray();
+
+            var requiredDynamicNodeTypes = await requiredNodeCalculator.FindRequiredNodes(area);
+            var allMissingNodeTypeNames = missingNodeCalculator.CalculateMissingNodes(requiredDynamicNodeTypes.ToArray(), currentNodes.Transactions, dynamicTableMetas, staticTableMetas);
+            return allMissingNodeTypeNames;
         }
     }
 }

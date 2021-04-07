@@ -1,10 +1,10 @@
 using System;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Controllers;
+using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Constant;
 
@@ -13,15 +13,17 @@ namespace Palavyr.API.controllers.Conversation
     public class GetIsMultiOptionTypeController : PalavyrBaseController
     {
         private ILogger<GetIsMultiOptionTypeController> logger;
-        string GUIDPattern = @"[{(]?\b[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}\b[)}]?";
+        private readonly GuidFinder guidFinder;
         private DashContext dashContext;
 
         public GetIsMultiOptionTypeController(
             ILogger<GetIsMultiOptionTypeController> logger,
+            GuidFinder guidFinder,
             DashContext dashContext
         )
         {
             this.logger = logger;
+            this.guidFinder = guidFinder;
             this.dashContext = dashContext;
         }
 
@@ -42,7 +44,7 @@ namespace Palavyr.API.controllers.Conversation
             {
                 if (nodeType.StartsWith(dynamicTableType.TableType))
                 {
-                    var tableId = Regex.Match(nodeType, GUIDPattern, RegexOptions.IgnoreCase).Value;
+                    var tableId = guidFinder.FindGuid(nodeType);
                     var table = await dashContext
                         .DynamicTableMetas
                         .SingleOrDefaultAsync(row => row.TableId == tableId);

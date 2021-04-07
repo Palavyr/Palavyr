@@ -1,7 +1,7 @@
 import { SessionStorage } from "localStorage/sessionStorage";
 
 /*
-This will retrieve login credental data from localstorage and send it with the requestover to the server for retrieval.
+This will retrieve login credental data from localsession and send it with the requestover to the server for retrieval.
 */
 export const getSessionIdFromLocalStorage = (): string => {
     var sessionId = SessionStorage.getSessionId()
@@ -24,6 +24,13 @@ export const googleOAuthClientId = process.env.GOOGLE_OAUTH as string;
 export const stripeKey = process.env.STRIPE_KEY as string;
 export const currentEnvironment = process.env.CURRENTENV as string;
 export const softwareVersion = process.env.VERSION as string;
+
+export enum Environments {
+    Development,
+    Staging,
+    Production
+}
+
 
 if (softwareVersion === undefined) {
     console.log("SOFTWARE VERSION IS UNDEFINED");

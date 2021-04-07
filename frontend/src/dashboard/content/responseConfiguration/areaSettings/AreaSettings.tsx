@@ -82,13 +82,6 @@ export const AreaSettings = () => {
         window.location.reload(); // reloads the sidebar...
     };
 
-    // const handleSubjectChange = async (newSubject: string) => {
-    //     if (newSubject === settings.subject) return;
-    //     const { data: updatedSubject } = await client.Configuration.Email.UpdateSubject(areaIdentifier, newSubject);
-    //     setSettings({ ...settings, subject: updatedSubject });
-    //     window.location.reload();
-    // };
-
     const handleAreaDisplayTitleChange = async (newAreaDisplayTitle: any) => {
         if (newAreaDisplayTitle === settings.areaTitle) return;
         const { data: updatedDisplayTitle } = await client.Area.updateDisplayTitle(areaIdentifier, newAreaDisplayTitle);
@@ -180,26 +173,6 @@ export const AreaSettings = () => {
                         clearVal={false}
                     />
                 </Grid>
-                {/* <Grid item xs={8}>
-                    <SettingsGridRowText
-                        fullWidth
-                        inputType="text"
-                        alertNode={
-                            <Alert className={classes.alert} severity="warning">
-                                <AlertTitle className={classes.titleText}>Response Email Subject Line</AlertTitle>
-                                Configure a subject line used with respones emails sent from this area.
-                            </Alert>
-                        }
-                        title=""
-                        name=""
-                        details=""
-                        buttonText="Update"
-                        placeholder="New Response Email Subject"
-                        currentValue={settings.subject}
-                        onClick={handleSubjectChange}
-                        clearVal={false}
-                    />
-                </Grid> */}
             </Grid>
             <Divider />
             <br></br>

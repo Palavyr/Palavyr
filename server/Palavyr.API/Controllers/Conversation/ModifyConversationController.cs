@@ -35,17 +35,12 @@ namespace Palavyr.API.controllers.Conversation
             [FromBody] ConversationNodeDto update)
         {
             // TODO: This makes 3 calls. Confirm that we only need to make 1 call.
+            var mappedUpdates = ConversationNode.MapUpdate(accountId, update.Transactions);
+            var deOrphanedAreaConvo = orphanRemover.RemoveOrphanedNodes(mappedUpdates);
+  
             configurationRepository.RemoveAreaNodes(areaId, accountId);
             var area = await configurationRepository.GetAreaWithConversationNodes(accountId, areaId);
-            var mappedUpdates = ConversationNode.MapUpdate(accountId, update.Transactions);
-
-            area.ConversationNodes.AddRange(mappedUpdates);
-
-            await configurationRepository.CommitChangesAsync();
-
-            var updatedArea = await configurationRepository.GetAreaWithConversationNodes(accountId, areaId);
-            var deOrphanedAreaConvo = orphanRemover.RemoveOrphanedNodes(updatedArea.ConversationNodes);
-            updatedArea.ConversationNodes = deOrphanedAreaConvo;
+            area.ConversationNodes.AddRange(deOrphanedAreaConvo);
             await configurationRepository.CommitChangesAsync();
 
             return await configurationRepository.GetAreaConversationNodes(accountId, areaId);

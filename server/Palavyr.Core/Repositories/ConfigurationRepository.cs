@@ -28,6 +28,14 @@ namespace Palavyr.Core.Repositories
                 .ToListAsync();
         }
 
+        public async Task<DynamicTableMeta> GetDynamicTableMetaByTableId(string tableId)
+        {
+            return await dashContext
+                .DynamicTableMetas
+                .Where(row => row.TableId == tableId)
+                .SingleAsync();
+        }
+
         public async Task CommitChangesAsync()
         {
             await dashContext.SaveChangesAsync();
@@ -119,6 +127,7 @@ namespace Palavyr.Core.Repositories
                 newNode.OptionPath,
                 newNode.ValueOptions,
                 accountId,
+                newNode.NodeComponentType,
                 newNode.IsRoot,
                 newNode.IsCritical,
                 newNode.IsMultiOptionType,

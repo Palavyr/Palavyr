@@ -11,11 +11,6 @@ namespace Palavyr.Core.Models.Resources.Requests
         public int NumIndividuals { get; set; }
 
         public List<Dictionary<string, string>> KeyValues { get; set; } = new List<Dictionary<string, string>>();
-        public List<Dictionary<string, DynamicResponse>> DynamicResponses { get; set; } = new List<Dictionary<string, DynamicResponse>>();
-    }
-
-    public class DynamicResponse
-    {
-        public List<Dictionary<string, string>> ResponseComponents { get; set; }
+        public List<Dictionary<string, List<Dictionary<string, string>>>> DynamicResponses { get; set; } = new List<Dictionary<string, List<Dictionary<string, string>>>>();
     }
 }

@@ -26,7 +26,7 @@ namespace Palavyr.Core.Models
             var fallbackRetrySendEmailSecondAttemptId = GuidUtils.CreateNewId();
             var sendTooComplicatedEmailId = GuidUtils.CreateNewId();
             var mayWeSendAnEmailTooComplicatedId = GuidUtils.CreateNewId();
-            
+
             var mayWeSendAnEmail = ConversationNode.CreateNew(
                 mayWeSendAnEmailId,
                 DefaultNodeTypeOptions.YesNo.StringName,
@@ -34,8 +34,9 @@ namespace Palavyr.Core.Models
                 areaId,
                 nodeChildrenString: TreeUtils.CreateNodeChildrenString(sendEmailId, dontSendEmailRestartId),
                 "",
-                TreeUtils.CreateValueOptions(DefaultNodeTypeOptions.YesNo.No, DefaultNodeTypeOptions.YesNo.Yes),
+                TreeUtils.JoinValueOptionsOnDelimiter(DefaultNodeTypeOptions.YesNo.No, DefaultNodeTypeOptions.YesNo.Yes),
                 accountId,
+                DefaultNodeTypeOptions.YesNo.StringName,
                 false,
                 false,
                 true,
@@ -51,6 +52,7 @@ namespace Palavyr.Core.Models
                 DefaultNodeTypeOptions.YesNo.Yes,
                 "",
                 accountId,
+                DefaultNodeTypeOptions.SendEmail.StringName,
                 false,
                 false,
                 false,
@@ -66,6 +68,7 @@ namespace Palavyr.Core.Models
                 DefaultNodeTypeOptions.YesNo.No,
                 "",
                 accountId,
+                DefaultNodeTypeOptions.Restart.StringName,
                 false,
                 false,
                 false,
@@ -81,6 +84,7 @@ namespace Palavyr.Core.Models
                 "",
                 "",
                 accountId,
+                DefaultNodeTypeOptions.ProvideInfo.StringName,
                 false,
                 false,
                 false,
@@ -96,12 +100,13 @@ namespace Palavyr.Core.Models
                 "",
                 "",
                 accountId,
+                DefaultNodeTypeOptions.Restart.StringName,
                 false,
                 false,
                 false,
                 true
             );
-            
+
             var emailSendFailedFirstAttempt = ConversationNode.CreateNew(
                 EmailFailedNodeId,
                 "EmailSendFailedFirstAttempt",
@@ -111,12 +116,13 @@ namespace Palavyr.Core.Models
                 "",
                 "",
                 accountId,
+                DefaultNodeTypeOptions.ProvideInfo.StringName,
                 false,
                 false,
                 false,
                 false
             );
-                       
+
             var fallbackEmailSendFailedFirstAttempt = ConversationNode.CreateNew(
                 FallbackEmailFailedNodeId,
                 "EmailSendFailedFirstAttempt",
@@ -126,6 +132,7 @@ namespace Palavyr.Core.Models
                 "",
                 "",
                 accountId,
+                DefaultNodeTypeOptions.ProvideInfo.StringName,
                 false,
                 false,
                 false,
@@ -137,10 +144,11 @@ namespace Palavyr.Core.Models
                 DefaultNodeTypeOptions.SendEmail.StringName,
                 "Wait just a moment while I try that again.",
                 areaId,
-                nodeChildrenString: "Placeholder", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
+                "Placeholder", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
                 "",
                 "",
                 accountId,
+                DefaultNodeTypeOptions.SendEmail.StringName,
                 false,
                 false,
                 false,
@@ -156,6 +164,7 @@ namespace Palavyr.Core.Models
                 "",
                 "",
                 accountId,
+                DefaultNodeTypeOptions.SendEmail.StringName,
                 false,
                 false,
                 false,
@@ -167,16 +176,17 @@ namespace Palavyr.Core.Models
                 DefaultNodeTypeOptions.YesNo.StringName,
                 "We'd like to send you a follow-up email with some general information regarding your enquiry. Would that be okay?",
                 areaId,
-                nodeChildrenString: TreeUtils.CreateNodeChildrenString(sendTooComplicatedEmailId, dontSendEmailRestartId),
+                TreeUtils.CreateNodeChildrenString(sendTooComplicatedEmailId, dontSendEmailRestartId),
                 "",
-                TreeUtils.CreateValueOptions(DefaultNodeTypeOptions.YesNo.No, DefaultNodeTypeOptions.YesNo.Yes),
+                TreeUtils.JoinValueOptionsOnDelimiter(DefaultNodeTypeOptions.YesNo.No, DefaultNodeTypeOptions.YesNo.Yes),
                 accountId,
+                DefaultNodeTypeOptions.YesNo.StringName,
                 false,
                 false,
                 true,
                 false
             );
-            
+
             var sendFallbackEmail = ConversationNode.CreateNew( // leads to sending an email to the 'too complicated controller'
                 sendTooComplicatedEmailId,
                 DefaultNodeTypeOptions.SendTooComplicatedEmail.StringName,
@@ -186,12 +196,13 @@ namespace Palavyr.Core.Models
                 DefaultNodeTypeOptions.YesNo.Yes,
                 "",
                 accountId,
+                DefaultNodeTypeOptions.SendTooComplicatedEmail.StringName,
                 false,
                 false,
                 false,
                 false
             );
-            
+
             foreach (var node in nodeList)
             {
                 if (node.IsTerminalType)
@@ -211,6 +222,7 @@ namespace Palavyr.Core.Models
                     throw new Exception($"Our bad - Node type: {node.NodeType} is not handled (EndingSequence.cs)");
                 }
             }
+
             nodeList.AddRange(
                 new List<ConversationNode>
                 {
@@ -221,9 +233,9 @@ namespace Palavyr.Core.Models
                     restart,
                     emailSendFailedFirstAttempt,
                     retrySendEmailSecondAttempt,
-                    fallbackEmailSendFailedFirstAttempt, 
-                    fallbackRetrySendEmailSecondAttempt, 
-                    mayWeSendAnInformationalEmailForTooComplicated, 
+                    fallbackEmailSendFailedFirstAttempt,
+                    fallbackRetrySendEmailSecondAttempt,
+                    mayWeSendAnInformationalEmailForTooComplicated,
                     sendFallbackEmail
                 });
             return nodeList;

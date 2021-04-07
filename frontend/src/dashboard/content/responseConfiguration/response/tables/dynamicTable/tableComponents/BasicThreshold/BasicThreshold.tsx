@@ -9,7 +9,7 @@ import { BasicThresholdBody } from "./BasicThresholdBody";
 import { useState } from "react";
 import { Button, makeStyles, Table, TableContainer, TextField, AccordionActions } from "@material-ui/core";
 import { reOrderBasicThresholdTableData } from "./BasicThresholdUtils";
-
+import { DisplayTableData } from "../DisplayTableData";
 
 const useStyles = makeStyles(() => ({
     alignLeft: {
@@ -39,7 +39,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const BasicThreshold = ({ tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<IDynamicTableProps, "tableMeta" | "setTableMeta">) => {
+export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<IDynamicTableProps, "tableMeta" | "setTableMeta">) => {
     const cls = useStyles();
     const client = new ApiClient();
     const [name, setItemName] = useState<string>("");
@@ -47,10 +47,9 @@ export const BasicThreshold = ({ tableId, tableTag, tableData, setTableData, are
     const modifier = new BasicThresholdModifier(setTableData);
 
     const onSave = async () => {
-
         const reorderedData = reOrderBasicThresholdTableData(tableData);
-        const {data: saveBasicThreshold} = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.BasicThreshold, reorderedData, tableId, tableTag);
-        setTableData(saveBasicThreshold)
+        const { data: saveBasicThreshold } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.BasicThreshold, reorderedData, tableId, tableTag);
+        setTableData(saveBasicThreshold);
         console.log("Saving the table");
         return true;
     };
@@ -88,6 +87,7 @@ export const BasicThreshold = ({ tableId, tableTag, tableData, setTableData, are
                     </div>
                 </div>
             </AccordionActions>
+            {showDebug && <DisplayTableData tableData={tableData} />}
         </>
     );
 };

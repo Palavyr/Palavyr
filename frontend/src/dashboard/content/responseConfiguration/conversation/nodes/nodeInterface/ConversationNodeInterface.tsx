@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { makeStyles, Card, CardContent, Typography } from "@material-ui/core";
 import classNames from "classnames";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
-import { _createAndAddNewNodes, _getLeftMostParentNode, _getNodeById, _getParentNode, _replaceNodeWithUpdatedNode, _splitAndRemoveEmptyNodeChildrenString, _truncateTheTreeAtSpecificNode } from "../nodeUtils/_coreNodeUtils";
 import { useEffect } from "react";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { NodeCheckBox } from "./NodeCheckBox";
@@ -16,6 +15,7 @@ import { _handleMergeBackInOnClick } from "./nodeInterfaceCallbacks/_handleMerge
 import { _showResponseInPdfCheckbox } from "./nodeInterfaceCallbacks/_showResponseInPdfCheckbox";
 import { setNodeAsAnabranchMergePoint, _handleSetAsAnabranchMergePointClick } from "./nodeInterfaceCallbacks/_handleSetAsAnabranchMergePointClick";
 import { _handleUnsetCurrentNodeType } from "./nodeInterfaceCallbacks/_handleUnsetCurrentNodeType";
+import { _getParentNode } from "../nodeUtils/_coreNodeUtils";
 
 type StyleProps = {
     nodeText: string;

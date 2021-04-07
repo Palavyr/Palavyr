@@ -200,7 +200,7 @@ export const ChatDemo = () => {
     const textPickers = [
         { name: "Title", variable: title, method: setTitle, disable: false },
         { name: "Subtitle", variable: subTitle, method: setSubTitle, disable: false },
-        { name: "Placeholder", variable: placeholder, method: setPlaceholder, disable: false },
+        // { name: "Placeholder", variable: placeholder, method: setPlaceholder, disable: false },
     ]
 
     const colorPickers: ColorPickerType[][] = [

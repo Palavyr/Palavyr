@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.API.Registration.BackgroundJobs;
@@ -29,7 +28,7 @@ namespace Palavyr.API
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule(new AmazonModule(configuration));
-            // builder.RegisterModule(new HangfireModule());
+            builder.RegisterModule(new HangfireModule());
             builder.RegisterModule(new GeneralModule());
             builder.RegisterModule(new StripeModule(configuration));
             builder.RegisterModule(new RepositoriesModule());
@@ -46,35 +45,31 @@ namespace Palavyr.API
 
             Configurations.ConfigureStripe(configuration);
             ServiceRegistry.RegisterDatabaseContexts(services, configuration);
-            // ServiceRegistry.RegisterHealthChecks(services);
-            // ServiceRegistry.RegisterHangfire(services, env);
+            ServiceRegistry.RegisterHealthChecks(services);
+            ServiceRegistry.RegisterHangfire(services, env);
         }
 
         public void Configure(
             IApplicationBuilder app,
-            ILoggerFactory loggerFactory
-            // HangFireJobs hangFireJobs
+            ILoggerFactory loggerFactory,
+            HangFireJobs hangFireJobs
         )
         {
-            // var logger = loggerFactory.CreateLogger<Startup>();
-            // logger.LogDebug($"CURRENT ENV: {env.EnvironmentName}");
-            // logger.LogDebug($"IsStaging: {env.IsStaging()}");
-            //
             // app.UseMiddleware<ErrorHandlingMiddleware>();
-            // app.UseRequestResponseLogging();
+            app.UseRequestResponseLogging();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<SetHeadersMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
-            // hangFireJobs.AddHangFireJobs(app);
+            hangFireJobs.AddHangFireJobs(app);
             app.UseEndpoints(
                 endpoints =>
                 {
                     endpoints.MapControllers();
-                    // endpoints.MapHangfireDashboard();
-                    // endpoints.MapHealthChecks("/healthcheck");
+                    endpoints.MapHangfireDashboard();
+                    endpoints.MapHealthChecks("/healthcheck");
                 });
         }
     }

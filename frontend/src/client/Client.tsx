@@ -15,19 +15,14 @@ import {
     ConvoNode,
     ResponseConfigurationType,
     AccountEmailSettingsResponse,
-    GroupTable,
-    Groups,
     Enquiries,
     PhoneSettingsResponse,
     NodeTypeOptions,
-    RequiredDetails,
-    PlanType,
     CompletedConversation,
     PreCheckResult,
     WidgetPreferences,
     VariableDetail,
     LocaleDefinition,
-    ProductOptions,
     ProductIds,
     PlanStatus,
 } from "@Palavyr-Types";
@@ -102,17 +97,12 @@ export class ApiClient {
                 getDynamicTableMetas: async (areaIdentifier: string): Promise<AxiosResponse<DynamicTableMetas>> => this.client.get(`tables/dynamic/type/${areaIdentifier}`),
                 getDynamicTableTypes: async (): Promise<AxiosResponse<TableNameMap>> => this.client.get(`tables/dynamic/table-name-map`),
 
-
                 modifyDynamicTableMeta: async (dynamicTableMeta: DynamicTableMeta): Promise<AxiosResponse<DynamicTableMeta>> => this.client.put(`tables/dynamic/modify`, dynamicTableMeta),
-                createDynamicTable: async (areaIdentifier: string): Promise<AxiosResponse<DynamicTableMeta>> =>
-                    this.client.post(`tables/dynamic/${areaIdentifier}`),
+                createDynamicTable: async (areaIdentifier: string): Promise<AxiosResponse<DynamicTableMeta>> => this.client.post(`tables/dynamic/${areaIdentifier}`),
 
-                deleteDynamicTable: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse> =>
-                    this.client.delete(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`),
-                getDynamicTableDataTemplate: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse<TableData>> =>
-                    this.client.get(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}/template`),
-                getDynamicTableRows: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse<TableData>> =>
-                    this.client.get(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`),
+                deleteDynamicTable: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse> => this.client.delete(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`),
+                getDynamicTableDataTemplate: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse<TableData>> => this.client.get(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}/template`),
+                getDynamicTableRows: async (areaIdentifier: string, tableType: string, tableId: string): Promise<AxiosResponse<TableData>> => this.client.get(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`),
                 saveDynamicTable: async (areaIdentifier: string, tableType: string, tableData: TableData, tableId: string, tableTag: string): Promise<AxiosResponse> =>
                     this.client.put(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`, { TableTag: tableTag, [tableType]: tableData }),
             },
@@ -173,15 +163,15 @@ export class ApiClient {
         GetConversation: async (areaIdentifier: string): Promise<AxiosResponse<Conversation>> => this.client.get(`configure-conversations/${areaIdentifier}`),
         GetConversationNode: async (nodeId: string): Promise<AxiosResponse<ConvoNode>> => this.client.get(`configure-conversations/nodes/${nodeId}`),
         GetNodeOptionsList: async (areaIdentifier: string): Promise<AxiosResponse<NodeTypeOptions>> => this.client.get(`configure-conversations/${areaIdentifier}/node-type-options`),
-        GetMissingNodes: async (areaIdentifier: string, nodeList: Conversation): Promise<AxiosResponse<string[]>> => this.client.post(`configure-conversations/${areaIdentifier}/missing-nodes`, { Transactions: nodeList }),
+        GetMissingNodes: async (areaIdentifier: string, nodeList: Conversation): Promise<AxiosResponse<string[]>> =>
+            this.client.post(`configure-conversations/${areaIdentifier}/missing-nodes`, { Transactions: nodeList }),
 
         CheckIfIsMultiOptionType: async (nodeType: string): Promise<AxiosResponse<boolean>> => this.client.get(`configure-conversations/check-multi-option/${nodeType}`),
         CheckIfIsTerminalType: async (nodeType: string): Promise<AxiosResponse<boolean>> => this.client.get(`configure-conversations/check-terminal/${nodeType}`),
         CheckIfIsSplitMergeType: async (nodeType: string): Promise<AxiosResponse<boolean>> => this.client.get(`configure-conversations/check-is-split-merge/${nodeType}`),
 
         //TODO : Return from API
-        ModifyConversation: async (nodelist: Conversation, areaIdentifier: string): Promise<AxiosResponse> =>
-            this.client.put(`configure-conversations/${areaIdentifier}`, { Transactions: nodelist }),
+        ModifyConversation: async (nodelist: Conversation, areaIdentifier: string): Promise<AxiosResponse> => this.client.put(`configure-conversations/${areaIdentifier}`, { Transactions: nodelist }),
 
         ModifyConversationNode: async (nodeId: string, areaIdentifier: string, updatedNode: ConvoTableRow): Promise<AxiosResponse<Conversation>> => this.client.put(`configure-conversations/${areaIdentifier}/nodes/${nodeId}`, updatedNode),
 

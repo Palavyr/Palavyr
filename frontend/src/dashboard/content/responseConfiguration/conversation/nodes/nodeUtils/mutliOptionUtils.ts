@@ -4,7 +4,7 @@ import { _createAndAddNewNodes, _createNewChildIDs, _removeNodeByID, _resetOptio
 
 export const updateMultiTypeOption = (node: ConvoNode, nodeList: Conversation, valueOptions: string[], setNodes: (updatedNodeList: Conversation) => void) => {
     let optionPaths: string[];
-    if (node.nodeType === "MultipleChoiceContinue") {
+    if (node.nodeComponentType === "MultipleChoiceContinue") {
         optionPaths = ["Continue"];
     } else {
         optionPaths = valueOptions;
@@ -23,7 +23,7 @@ export const updateMultiTypeOption = (node: ConvoNode, nodeList: Conversation, v
     let updatedNodeList = _removeNodeByID(node.nodeId, newNodeList);
     delete node.id;
     updatedNodeList.push(node);
-    updatedNodeList =_createAndAddNewNodes(childIdsToCreate, newChildNodeIds, node.areaIdentifier, optionPaths, updatedNodeList, true);
+    updatedNodeList =_createAndAddNewNodes(childIdsToCreate, newChildNodeIds, node.areaIdentifier, optionPaths, updatedNodeList, true, false);
 
     // need to call _resetNodePathOptions I think
     const previousChildren = previousNodeChildrenString.split(",");

@@ -32,7 +32,7 @@ export const _handleMergeBackInOnClick = (
             const newNode = cloneDeep(node);
             newNode.shouldRenderChildren = true;
             newNode.nodeChildrenString = childId;
-            let updatedNodeList = _createAndAddNewNodes([childId], [childId], node.areaIdentifier, ["Continue"], nodeList, false);
+            let updatedNodeList = _createAndAddNewNodes([childId], [childId], node.areaIdentifier, ["Continue"], nodeList, false, false);
             updateSingleOptionType(newNode, updatedNodeList, setNodes);
             setMergeBoxChecked(false);
         } else {

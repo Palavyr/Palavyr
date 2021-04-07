@@ -1,9 +1,12 @@
 using Autofac;
+using Palavyr.API.controllers.Conversation;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.API.Controllers.Testing;
 using Palavyr.BackupAndRestore;
 using Palavyr.BackupAndRestore.Postgres;
 using Palavyr.BackupAndRestore.UserData;
+using Palavyr.Core.Common.UIDUtils;
+using Palavyr.Core.Models;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
@@ -43,6 +46,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<PreviewResponseGenerator>().As<IPreviewResponseGenerator>();
             builder.RegisterType<PdfResponseGenerator>().As<IPdfResponseGenerator>();
             builder.RegisterType<StaticTableCompiler>().As<IStaticTableCompiler>();
+            builder.RegisterType<DynamicTableCompilerRetriever>().AsSelf();
             
             builder.RegisterGeneric(typeof(GenericDynamicTableRepository<>)).As(typeof(IGenericDynamicTableRepository<>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(DynamicTableCommandHandler<>)).As(typeof(IDynamicTableCommandHandler<>)).InstancePerLifetimeScope();
@@ -59,6 +63,14 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<PostgresBackup>().As<IPostgresBackup>();
             builder.RegisterType<UserDataBackup>().As<IUserDataBackup>();
             builder.RegisterType<UpdateDatabaseLatest>().As<IUpdateDatabaseLatest>();
+
+            builder.RegisterType<WidgetStatusUtils>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<MissingNodeCalculator>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<RequiredNodeCalculator>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<TreeRootFinder>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<TreeWalker>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<NodeCounter>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<GuidFinder>().AsSelf().SingleInstance();
         }
     }
 }

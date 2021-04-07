@@ -13,9 +13,9 @@ export const ConvoNode: ConvoTableRow = {
     optionPath: "",
     valueOptions: "", // needs to be split by ",",
     isDynamicTableNode: false,
-    nodeComponentType: "YesNo"
+    nodeComponentType: "YesNo",
+    dynamicType: ""
 };
-
 
 export const RootOfThree = {
     id: 0,
@@ -30,7 +30,8 @@ export const RootOfThree = {
     optionPath: "",
     valueOptions: "Yes|peg|No", // needs to be split by ",",
     isDynamicTableNode: false,
-    nodeComponentType: "YesNo"
+    nodeComponentType: "YesNo",
+    dynamicType: ""
 }
 
 export const ThreeNodes = [
@@ -48,7 +49,8 @@ export const ThreeNodes = [
         optionPath: "No",
         valueOptions: "", // needs to be split by ",",
         isDynamicTableNode: false,
-        nodeComponentType: ""
+        nodeComponentType: "",
+        dynamicType: ""
     },
     {
         id: 2,
@@ -63,6 +65,7 @@ export const ThreeNodes = [
         optionPath: "Yes",
         valueOptions: "", // needs to be split by ",",
         isDynamicTableNode: false,
-        nodeComponentType: ""
+        nodeComponentType: "",
+        dynamicType: ""
     }
 ]

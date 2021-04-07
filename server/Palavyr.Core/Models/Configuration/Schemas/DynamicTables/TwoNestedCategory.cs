@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Models.Resources.Requests;
 
@@ -60,6 +61,15 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                 AccountId = accountId,
                 AreaIdentifier = areaIdentifier,
                 TableId = tableId,
+                ItemId = GuidUtils.CreateNewId(),
+                Category = "Default Category Text",
+                SubCategory = "",
+                ValueMax = 0.0,
+                ValueMin = 0.0,
+                Range = false,
+                RowId = GuidUtils.CreateNewId(),
+                RowOrder = 0,
+                ItemOrder = 0
             };
         }
 

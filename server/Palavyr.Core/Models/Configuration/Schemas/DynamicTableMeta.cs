@@ -16,14 +16,16 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
         public bool ValuesAsPaths { get; set; } = false; // for tables that specify various options, whether or not to use each option to create a new tree path.
-
+        public bool UseTableTagAsResponseDescription { get; set; } = false;
+        
         public static DynamicTableMeta CreateNew(
             string tableTag,
             string prettyName,
             string tableType,
             string tableId,
             string areaId,
-            string accountId)
+            string accountId
+        )
         {
             return new DynamicTableMeta()
             {

@@ -1,11 +1,12 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace Palavyr.Core.Common.UIDUtils
 {
     public static class GuidUtils
     {
-        public static string CreateShortenedGuid(int take)
+        public static string CreateShortenedGuid([Range(1, 4)] int take)
         {
             var useNumParts = (take > 4) ? 4 : take;
             var ids = Guid.NewGuid().ToString().Split('-').Take(useNumParts).ToList();

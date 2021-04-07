@@ -1,4 +1,4 @@
-import { ConvoTableRow } from "../types";
+import { CompleteConverationDetails, ConvoTableRow } from "../types";
 
 
 export const getRootNode = (nodeList: Array<ConvoTableRow>): ConvoTableRow => {
@@ -9,4 +9,14 @@ export const getRootNode = (nodeList: Array<ConvoTableRow>): ConvoTableRow => {
 export const getChildNodes = (childrenIDs: string, nodeList: Array<ConvoTableRow>) => {
     const ids = childrenIDs.split(",");
     return nodeList.filter((node) => ids.includes(node.nodeId));
+};
+
+export const assembleCompletedConvo = (conversationId: string, areaIdentifier: string, name: string, email: string, PhoneNumber: string): CompleteConverationDetails => {
+    return {
+        ConversationId: conversationId,
+        AreaIdentifier: areaIdentifier,
+        Name: name,
+        Email: email,
+        PhoneNumber: PhoneNumber,
+    };
 };

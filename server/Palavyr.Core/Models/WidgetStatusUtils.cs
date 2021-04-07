@@ -1,33 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
 
 namespace Palavyr.Core.Models
 {
-    public static class WidgetStatusUtils
+    public class WidgetStatusUtils
     {
-        public static PreCheckResult ExecuteWidgetStatusCheck(
+        private readonly RequiredNodeCalculator requiredNodeCalculator;
+        private readonly MissingNodeCalculator missingNodeCalculator;
+        private readonly TreeRootFinder treeRootFinder;
+        private readonly TreeWalker treeWalker;
+        private readonly NodeCounter nodeCounter;
+
+        public WidgetStatusUtils(
+            RequiredNodeCalculator requiredNodeCalculator,
+            MissingNodeCalculator missingNodeCalculator,
+            TreeRootFinder treeRootFinder,
+            TreeWalker treeWalker,
+            NodeCounter nodeCounter
+        )
+        {
+            this.requiredNodeCalculator = requiredNodeCalculator;
+            this.missingNodeCalculator = missingNodeCalculator;
+            this.treeRootFinder = treeRootFinder;
+            this.treeWalker = treeWalker;
+            this.nodeCounter = nodeCounter;
+        }
+
+        public async Task<PreCheckResult> ExecuteWidgetStatusCheck(
             string accountId,
             List<Area> areas,
             WidgetPreference widgetPreferences,
             bool demo,
             ILogger logger)
         {
-         
             var widgetState = widgetPreferences.WidgetState;
             // dynamic tables might have a 'num individuals' requirement
             // static tables might have a 'num individuals' requirement
             // user may simply wish to collect 'num individuals'
 
             logger.LogDebug("Collected areas.... running pre-check");
-            var result = StatusCheck(areas, widgetState, demo, logger);
+            var result = await StatusCheck(areas, widgetState, demo, logger);
             return result;
         }
 
-        private static PreCheckResult StatusCheck(List<Area> areas, bool widgetState, bool demo, ILogger logger)
+        private async Task<PreCheckResult> StatusCheck(List<Area> areas, bool widgetState, bool demo, ILogger logger)
         {
             var incompleteAreas = new List<Area>();
             logger.LogDebug("Attempting RunConversationsPreCheck...");
@@ -36,9 +58,9 @@ namespace Palavyr.Core.Models
             foreach (var area in areas)
             {
                 var nodeList = area.ConversationNodes.ToArray();
-                var allRequiredNodes = MissingNodeCalculator.GetRequiredNodes(area);
+                var allRequiredNodes = (await requiredNodeCalculator.FindRequiredNodes(area)).ToList();
 
-                logger.LogDebug($"Required Nodes Found. Number of required nodes: {allRequiredNodes.Length}");
+                logger.LogDebug($"Required Nodes Found. Number of required nodes: {allRequiredNodes.Count}");
                 List<bool> checks;
                 try
                 {
@@ -83,25 +105,28 @@ namespace Palavyr.Core.Models
             }
         }
 
-        private static bool AllNodesAreSet(ConversationNode[] nodeList)
+        private bool AllNodesAreSet(ConversationNode[] nodeList)
         {
             var emptyNodeTypes = nodeList.Select(x => string.IsNullOrEmpty(x.NodeType)).ToArray();
             return emptyNodeTypes.All(x => x == false);
         }
 
-        private static bool AllBranchesTerminate(ConversationNode[] nodeList)
+        private bool AllBranchesTerminate(ConversationNode[] nodeList)
         {
-            var rootNode = TreeUtils.GetRootNode(nodeList);
-            var terminalNodes = TreeUtils.TraverseTheTreeFromTheTopAsNodeArray(nodeList, rootNode);
+            var terminalNodes = new List<ConversationNode>();
+
+            var rootNode = treeRootFinder.GetRootNode(nodeList);
+            treeWalker.FindAllTerminalNodes(nodeList, rootNode, terminalNodes); // This is not working correctly. Shouldn't need to distinct on this result... (except maybe for anabranch and split merge
+
             var uniqueTerminalNodes = terminalNodes.Distinct().ToList();
             var numLeaves = uniqueTerminalNodes.Count();
-            var numTerminal = TreeUtils.GetNumTerminal(nodeList);
+            var numTerminal = nodeCounter.CountNumTerminal(nodeList);
             return (numLeaves == numTerminal);
         }
 
-        private static bool AllRequiredNodesSatisfied(ConversationNode[] nodeList, string[] requiredNodes)
+        private bool AllRequiredNodesSatisfied(ConversationNode[] nodeList, NodeTypeOption[] requiredNodes)
         {
-            var missingNodes = TreeUtils.GetMissingNodes(nodeList, requiredNodes);
+            var missingNodes = missingNodeCalculator.FindMissingNodes(nodeList, requiredNodes);
             return missingNodes.Length == 0;
         }
     }

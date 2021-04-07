@@ -6,6 +6,8 @@ import { Accordion, AccordionSummary, Typography, Button, makeStyles } from "@ma
 import { SingleDynamicFeeTable } from "./SingleDynamicFeeTable";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AddBoxIcon from '@material-ui/icons/AddBox';
+import { currentEnvironment, Environments } from "@api-client/clientUtils";
+import { OsTypeToggle } from "dashboard/content/responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
 
 export interface IDynamicTable {
     title: string;
@@ -31,7 +33,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
 
     const [loaded, setLoaded] = useState<boolean>(false);
     const [parentState, changeParentState] = useState<boolean>(false);
-
+    const [showDebug, setShowDebug] = useState<boolean>(currentEnvironment === typeof Environments.Production ? false : true)
     const [tableMetas, setTableMetas] = useState<DynamicTableMetas>([]);
     const [availableTables, setAvailableTables] = useState<Array<string>>([]);
     const [tableNameMap, setTableNameMap] = useState<TableNameMap>({});
@@ -70,11 +72,12 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
 
     return (
         <>
-            <Accordion>
+            <Accordion expanded={true}>
                 <AccordionSummary className={classes.header} expandIcon={<ExpandMoreIcon style={{ color: "white" }} />} aria-controls="panel-content" id="panel-header">
                     <Typography className={classes.title}>{title}</Typography>
                 </AccordionSummary>
                 {children}
+                {(currentEnvironment !== typeof Environments.Production) && <OsTypeToggle controlledState={showDebug} onChange={() => setShowDebug(!showDebug)} enabledLabel="Show Debug" disabledLabel="Show Debug" />}
                 <Suspense fallback={<h1>Loading Dynamic Tables...</h1>}>
                     {tableMetas.length === 0 && (
                         <Typography color="secondary" style={{ padding: "0.8rem" }} variant="h5">
@@ -97,6 +100,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
                                 parentState={parentState}
                                 changeParentState={changeParentState}
                                 areaIdentifier={areaIdentifier}
+                                showDebug={showDebug}
                             />
                         );
                     })}

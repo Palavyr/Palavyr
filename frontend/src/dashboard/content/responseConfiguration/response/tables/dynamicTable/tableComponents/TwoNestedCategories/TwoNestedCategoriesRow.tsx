@@ -5,8 +5,15 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { TableData, TwoNestedCategoryData } from "../../DynamicTableTypes";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { SetState } from "@Palavyr-Types";
+import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 
 export interface ITwoNestedCategoriesRow {
+    index: number;
+    shouldDisableInnerCategory: boolean;
+    outerCategoryId: string;
+    outerCategoryName: string;
+    setOuterCategoryName: SetState<string>;
     tableData: TableData;
     row: TwoNestedCategoryData;
     modifier: TwoNestedCategoriesModifier;
@@ -37,38 +44,63 @@ const useStyles = makeStyles((theme) => ({
             return {};
         }
     },
+    outerCategoryInput: {
+        margin: "0.6rem",
+        width: "30ch",
+        paddingLeft: "0.4rem",
+    },
 }));
 
 const cellAlignment = "center";
 
-export const TwoNestedCategoriesRow = ({ tableData, row, modifier }: ITwoNestedCategoriesRow) => {
-    const classes = useStyles(!row.range);
+export const TwoNestedCategoriesRow = ({ index, shouldDisableInnerCategory, outerCategoryId, outerCategoryName, setOuterCategoryName, tableData, row, modifier }: ITwoNestedCategoriesRow) => {
+    const cls = useStyles(!row.range);
 
     const { currencySymbol } = React.useContext(DashboardContext);
 
-    return (
-        <TableRow>
-            <TableCell align={cellAlignment}>
-                <Button size="small" className={classes.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeRow(tableData, row.rowId)}>
-                    Delete
-                </Button>
-            </TableCell>
+    const outerCategoryColumn =
+        index === 0 ? (
             <TableCell align={cellAlignment}>
                 <TextField
-                    className={classes.input}
+                    className={cls.outerCategoryInput}
                     variant="standard"
-                    label="Option"
+                    label="Category name"
+                    type="text"
+                    value={outerCategoryName}
+                    color="primary"
+                    onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
+                        event.preventDefault();
+                        modifier.setOuterCategoryName(tableData, outerCategoryId, event.target.value);
+                        setOuterCategoryName(event.target.value);
+                    }}
+                />
+            </TableCell>
+        ) : (
+            <TableCell></TableCell>
+        );
+
+    return (
+        <TableRow>
+            {outerCategoryColumn}
+
+            <TableCell align={cellAlignment}>
+                <TextField
+                    disabled={shouldDisableInnerCategory}
+                    className={cls.input}
+                    variant="standard"
+                    label="Inner Category Name"
                     type="text"
                     value={row.subCategory}
                     color="primary"
-                    onChange={(event: { preventDefault: () => void; target: { value: any; }; }) => {
+                    onChange={(event: { preventDefault: () => void; target: { value: any } }) => {
                         event.preventDefault();
-                        modifier.setSubCategoryName(tableData, row.rowId, event.target.value);
+                        modifier.setInnerCategoryName(tableData, row.rowOrder, event.target.value);
                     }}
                 />
             </TableCell>
             <TableCell align={cellAlignment}>
                 <CurrencyTextField
+                    // disabled={shouldDisableInnerCategory}
                     label="Amount"
                     variant="standard"
                     value={row.valueMin}
@@ -86,7 +118,7 @@ export const TwoNestedCategoriesRow = ({ tableData, row, modifier }: ITwoNestedC
             </TableCell>
             <TableCell align={cellAlignment}>
                 <CurrencyTextField
-                    className={classes.maxValInput}
+                    className={cls.maxValInput}
                     label="Amount"
                     variant="standard"
                     disabled={!row.range}
@@ -104,17 +136,32 @@ export const TwoNestedCategoriesRow = ({ tableData, row, modifier }: ITwoNestedC
                 />
             </TableCell>
             <TableCell align={cellAlignment}>
-                <Button
-                    variant="contained"
-                    style={{ width: "18ch" }}
-                    color={row.range ? "primary" : "secondary"}
-                    onClick={() => {
-                        modifier.setRangeOrValue(tableData, row.rowId);
-                    }}
-                >
-                    {row.range ? "Range" : "Single Value"}
-                </Button>
+                {!shouldDisableInnerCategory ? (
+                    <Button
+                        disabled={shouldDisableInnerCategory}
+                        variant="contained"
+                        style={{ width: "18ch" }}
+                        color={row.range ? "primary" : "secondary"}
+                        onClick={() => {
+                            modifier.setRangeOrValue(tableData, row.rowOrder);
+                        }}
+                    >
+                        {row.range ? "Range" : "Single Value"}
+                    </Button>
+                ) : (
+                    <></>
+                )}
             </TableCell>
+            <TableCell align={cellAlignment}>
+                {shouldDisableInnerCategory ? (
+                    <></>
+                ) : (
+                    <Button size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeInnerCategory(tableData, row.rowOrder)}>
+                        Delete Inner Category
+                    </Button>
+                )}
+            </TableCell>
+            <TableCell></TableCell>
         </TableRow>
     );
 };

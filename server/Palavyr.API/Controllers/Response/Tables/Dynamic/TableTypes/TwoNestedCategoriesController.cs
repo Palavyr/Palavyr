@@ -5,9 +5,9 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic.TableTypes
 {
     [Route("api/tables/dynamic/TwoNestedCategory")]
     [ApiController]
-    public class TwoNestedCategoriesController : DynamicControllerBase<PercentOfThreshold>
+    public class TwoNestedCategoriesController : DynamicControllerBase<TwoNestedCategory>
     {
-        public TwoNestedCategoriesController(IDynamicTableCommandHandler<PercentOfThreshold> handler) : base(handler)
+        public TwoNestedCategoriesController(IDynamicTableCommandHandler<TwoNestedCategory> handler) : base(handler)
         {
         }
     }

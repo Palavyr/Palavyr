@@ -106,6 +106,12 @@ namespace Palavyr.Core.Models.Configuration.Constant
          * DO NOT SET on the default node types. Only used for dynamic node types.
          */
         public int? ResolveOrder { get; set; }
+
+        /*
+         * Used when the nodetype option is a dynamic type and we need to specify a common type for the dynamic type compiler
+         * The widget will use this to key the collection of dynamic type responses.
+         */
+        public string? DynamicType { get; set; }
         
         public virtual string StringName => null!;
 
@@ -126,7 +132,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
             bool isSplitMergeType = false,
             bool shouldRenderChildren = true,
             bool shouldShowMultiOption = false,
-            int? resolveOrder = null
+            int? resolveOrder = null,
+            string? dynamicType = null
         )
         {
             return new NodeTypeOption()
@@ -147,7 +154,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsSplitMergeType = isSplitMergeType,
                 ShouldRenderChildren = shouldRenderChildren,
                 ShouldShowMultiOption = shouldShowMultiOption,
-                ResolveOrder = resolveOrder
+                ResolveOrder = resolveOrder,
+                DynamicType = dynamicType
             };
         }
 
@@ -162,7 +170,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
             string optionPath,
             bool isDynamic,
             string? nodeComponent = null,
-            int? resolveOrder = null
+            int? resolveOrder = null,
+            string? dynamicType = null
         )
         {
             if (nodeComponent == null && this.NodeComponent == null)
@@ -170,9 +179,9 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 throw new Exception("NodeComponent must be set for dynamic table node types"); // TODO: can I enforce this via the compiler?
             }
 
-            if (isDynamic && resolveOrder == null)
+            if (isDynamic && (resolveOrder == null || dynamicType == null))
             {
-                throw new Exception("Dynamic node types MUST provide a reslove order.");
+                throw new Exception("Dynamic node types MUST provide a resolve order and dynamic type name.");
             }
             
             return new ConversationNode()
@@ -190,7 +199,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsTerminalType = IsTerminalType,
                 IsDynamicTableNode = isDynamic,
                 NodeComponentType = nodeComponent ?? NodeComponent,
-                ResolveOrder = resolveOrder
+                ResolveOrder = resolveOrder,
+                DynamicType = dynamicType
             };
         }
     }

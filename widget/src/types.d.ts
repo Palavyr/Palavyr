@@ -26,6 +26,7 @@ export type ConvoTableRow = {
     valueOptions: string; // needs to be split by ","
     isDynamicTableNode: boolean;
     nodeComponentType: string;
+    dynamicType: string;
 };
 
 export type SelectedOption = {
@@ -99,3 +100,11 @@ export type LocaleMapItem = {
     currencySymbol: string;
 };
 export type LocaleMap = LocaleMapItem[];
+
+
+export interface IProgressTheChat {
+    node: ConvoTableRow;
+    nodeList: Array<ConvoTableRow>;
+    client: IClient;
+    convoId: string;
+}
