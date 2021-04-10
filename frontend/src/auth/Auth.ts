@@ -72,9 +72,6 @@ class Auth {
 
     async loginWithGoogle(oneTimeCode: string, tokenId: string, callback: () => void, errorCallback: (response: Credentials) => void) {
         try {
-            console.log(oneTimeCode);
-            console.log(tokenId);
-
             const { data: authenticationResponse } = await this.loginClient.Login.RequestLoginWithGoogleToken(oneTimeCode, tokenId);
             console.log(authenticationResponse);
 

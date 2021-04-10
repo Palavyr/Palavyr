@@ -34,7 +34,7 @@ namespace Palavyr.API.Registration.BackgroundJobs
         {
             if (env.IsProduction())
             {
-                logger.LogDebug("Current env for hangfire: {env");
+                logger.LogDebug($"Current env for hangfire: {env.EnvironmentName}");
                 logger.LogDebug("Setting up the hangfire dashboard");
                 app.UseHangfireDashboard();
 
