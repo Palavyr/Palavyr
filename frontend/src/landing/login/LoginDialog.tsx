@@ -52,8 +52,6 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
     const [loginPassword, setLoginPassword] = useState<string>("");
     const [rememberMe, setRememberMe] = useState<boolean>(false);
 
-    const classes = useStyles();
-
     const history = useHistory();
 
     useEffect(() => {

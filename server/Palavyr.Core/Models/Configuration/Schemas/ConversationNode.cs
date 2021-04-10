@@ -8,17 +8,17 @@ namespace Palavyr.Core.Models.Configuration.Schemas
     public class ConversationNode : IRecord
     {
         [Key] public int? Id { get; set; }
-        public string AreaIdentifier { get; set; } = null!;
-        public string AccountId { get; set; } = null!;
-        public string NodeId { get; set; }
-        public string NodeType { get; set; } = null!;
-        public string DynamicType { get; set; } = null!;
+        public string? AreaIdentifier { get; set; }
+        public string? AccountId { get; set; }
+        public string? NodeId { get; set; }
+        public string? NodeType { get; set; }
+        public string? DynamicType { get; set; }
         public bool Fallback { get; set; }
-        public string Text { get; set; } = null!;
+        public string? Text { get; set; }
         public bool IsRoot { get; set; }
-        public string OptionPath { get; set; }
+        public string? OptionPath { get; set; }
         public bool IsCritical { get; set; }
-        public string ValueOptions { get; set; } = null!; // stored as comma delimited list as string
+        public string? ValueOptions { get; set; } // stored as comma delimited list as string
         public bool IsMultiOptionType { get; set; }
         public bool IsTerminalType { get; set; }
         public bool ShouldRenderChildren { get; set; }
@@ -27,13 +27,13 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public bool IsAnabranchType { get; set; }
         public bool IsAnabranchMergePoint { get; set; }
         public bool IsDynamicTableNode { get; set; }
-        public string NodeComponentType { get; set; }
+        public string? NodeComponentType { get; set; }
         public bool IsMultiOptionEditable { get; set; }
         public bool IsCurrency { get; set; }
         public int? ResolveOrder { get; set; }
 
 
-        public string NodeChildrenString { get; set; } = null!; // stored as comma delimited list as string
+        public string? NodeChildrenString { get; set; } // stored as comma delimited list as string
 
         public ConversationNode()
         {
@@ -72,15 +72,15 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         }
 
         public static ConversationNode CreateNew(
-            string nodeId,
-            string nodeType,
-            string text,
-            string areaIdentifier,
-            string nodeChildrenString,
-            string optionPath,
-            string valueOptions,
+            string? nodeId,
+            string? nodeType,
+            string? text,
+            string? areaIdentifier,
+            string? nodeChildrenString,
+            string? optionPath,
+            string? valueOptions,
             string accountId,
-            string nodeComponentType,
+            string? nodeComponentType,
             bool isRoot = false,
             bool isCritical = true,
             bool isMultiOptionType = false,
@@ -94,7 +94,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             bool isCurrency = false,
             bool isMultiOptionEditable = false,
             int? resolveOrder = null,
-            string dynamicType = null
+            string? dynamicType = null
         )
         {
             return new ConversationNode()

@@ -107,6 +107,11 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
             return mappedTableRows;
         }
 
+        public bool EnsureValid()
+        {
+            return true;
+        }
+
         public int CompareTo(PercentOfThreshold other)
         {
             return other.Threshold.CompareTo(Threshold);

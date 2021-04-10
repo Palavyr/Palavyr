@@ -20,10 +20,10 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
         
         [HttpPut("account/settings/phone-number")]
-        public async Task<string> Modify([FromHeader] string accountId, LoginCredentials login)
+        public async Task<string> Modify([FromHeader] string accountId, PhoneNumberSettingsRequest settings)
         {
             var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
-            account.PhoneNumber = login.PhoneNumber;
+            account.PhoneNumber = settings.PhoneNumber ?? "";
             await accountsContext.SaveChangesAsync();
             return account.PhoneNumber;
         }

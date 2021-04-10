@@ -5,6 +5,7 @@ using Palavyr.API.Controllers.Response.Tables.Dynamic.TableTypes;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
@@ -20,13 +21,16 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
     {
         private ILogger<SelectOneFlatController> logger;
         private readonly IGenericDynamicTableRepository<TEntity> genericDynamicTableRepository;
+        private readonly DynamicTableCompilerRetriever retriever;
 
         public DynamicTableCommandHandler(
             IGenericDynamicTableRepository<TEntity> genericDynamicTableRepository,
+            DynamicTableCompilerRetriever retriever,
             ILogger<SelectOneFlatController> logger
         )
         {
             this.genericDynamicTableRepository = genericDynamicTableRepository;
+            this.retriever = retriever;
             this.logger = logger;
         }
 
@@ -62,16 +66,26 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 
         public async Task<List<TEntity>> SaveDynamicTable(DynamicTableRequest request, DynamicTable dynamicTable)
         {
+            var workingEntity = new TEntity();
+            workingEntity.EnsureValid();
+            // TODO: check for conversationNodes that use this table and update the valueOptions (rejoin any options).
+
+            var entityCompiler = retriever.RetrieveCompiler(nameof(workingEntity));
+            
             logger.LogInformation($"Saving dynamic table: {request.TableId}");
             var (accountId, areaIdentifier, tableId) = request;
-            var mappedTableRows = (new TEntity()).UpdateTable(dynamicTable);
+
+            var mappedTableRows = workingEntity.UpdateTable(dynamicTable);
             await genericDynamicTableRepository.SaveTable(
                 accountId,
                 areaIdentifier,
                 tableId,
                 mappedTableRows,
                 dynamicTable.TableTag,
-                typeof(TEntity).Name);
+                typeof(TEntity).Name,
+                context => entityCompiler.UpdateConversationNode(context, dynamicTable, tableId)
+                );
+
             return await genericDynamicTableRepository.GetAllRows(accountId, areaIdentifier, tableId);
         }
     }

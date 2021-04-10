@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Repositories
@@ -15,7 +17,9 @@ namespace Palavyr.Core.Repositories
             string tableId,
             List<TEntity> rowUpdates,
             string tableTag,
-            string tableType);
+            string tableType,
+            Action<DashContext>? updateConversationTable = null
+            );
 
         Task UpdateRows(
             string accountId,

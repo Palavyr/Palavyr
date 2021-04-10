@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
@@ -18,6 +20,10 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         public PercentOfThresholdCompiler(IGenericDynamicTableRepository<PercentOfThreshold> repository, IConfigurationRepository configurationRepository) : base(repository)
         {
             this.configurationRepository = configurationRepository;
+        }
+
+        public void UpdateConversationNode(DashContext context, DynamicTable table, string tableId)
+        {
         }
 
         public Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)

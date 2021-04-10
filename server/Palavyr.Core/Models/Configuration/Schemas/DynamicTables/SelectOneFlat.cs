@@ -68,5 +68,11 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 
             return mappedTableRows;
         }
+
+
+        public bool EnsureValid()
+        {
+            return true; // TODO implement validation logic. This is called in the handler
+        }
     }
 }

@@ -8,25 +8,25 @@ namespace Palavyr.Core.Models.Accounts.Schemas
     public class Account
     {
         [Key] public int? Id { get; set; }
-        public string Password { get; set; }
-        public string EmailAddress { get; set; }
+        public string? Password { get; set; }
+        public string? EmailAddress { get; set; }
         public bool DefaultEmailIsVerified { get; set; }
-        public string AccountId { get; set; }
-        public string CompanyName { get; set; }
-        public string PhoneNumber { get; set; }
+        public string? AccountId { get; set; }
+        public string? CompanyName { get; set; }
+        public string? PhoneNumber { get; set; }
         public DateTime CreationDate { get; set; }
-        public string AccountLogoUri { get; set; }
-        public string GeneralFallbackSubject { get; set; }
-        public string GeneralFallbackEmailTemplate { get; set; }
+        public string? AccountLogoUri { get; set; }
+        public string? GeneralFallbackSubject { get; set; }
+        public string? GeneralFallbackEmailTemplate { get; set; }
 
-        public string ApiKey { get; set; }
+        public string? ApiKey { get; set; }
         public bool Active { get; set; }
         public string Locale { get; set; } = "en-AU";
         public AccountType AccountType { get; set; }
         public PlanTypeEnum PlanType { get; set; } = PlanTypeEnum.Free;
         public PaymentIntervalEnum PaymentInterval { get; set; }
         public bool HasUpgraded { get; set; }
-        public string StripeCustomerId { get; set; }
+        public string? StripeCustomerId { get; set; }
         public DateTime CurrentPeriodEnd { get; set; }
 
         [NotMapped] public readonly string DefaultLocale = "en-AU";
@@ -66,9 +66,9 @@ namespace Palavyr.Core.Models.Accounts.Schemas
             string emailAddress,
             string password,
             string accountId,
-            string apiKey,
-            string companyName,
-            string phoneNumber,
+            string? apiKey,
+            string? companyName,
+            string? phoneNumber,
             bool active,
             string locale,
             AccountType accountType,
@@ -93,20 +93,35 @@ namespace Palavyr.Core.Models.Accounts.Schemas
             HasUpgraded = hasUpgraded;
             StripeCustomerId = null;
         }
-        
+
         public static Account CreateGoogleAccount(
-            string apikey, string emailAddress,
-            string accountId, string locale
+            string apikey,
+            string emailAddress,
+            string accountId,
+            string locale
         )
         {
-            return new Account(
-                emailAddress, null, accountId, apikey, null, null, false,
-                locale,
-                AccountType.Google, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
+            return new Account
+            {
+                EmailAddress = emailAddress,
+                Password = null,
+                AccountId = accountId,
+                ApiKey = apikey,
+                CompanyName = null,
+                PhoneNumber = null,
+                Locale = locale,
+                AccountType = AccountType.Google,
+                PlanType = PlanTypeEnum.Free,
+                PaymentInterval = PaymentIntervalEnum.Null,
+                GeneralFallbackSubject = "",
+                GeneralFallbackEmailTemplate = "",
+            };
         }
 
         public static Account CreateAccount(
-            string emailAddress, string password, string accountId,
+            string emailAddress,
+            string password,
+            string accountId,
             AccountType accountType
         )
         {
@@ -117,8 +132,11 @@ namespace Palavyr.Core.Models.Accounts.Schemas
         }
 
         public static Account CreateAccount(
-            string emailAddress, string password, string accountId,
-            string apiKey, AccountType accountType
+            string emailAddress,
+            string password,
+            string accountId,
+            string apiKey,
+            AccountType accountType
         )
         {
             return new Account(
@@ -128,8 +146,16 @@ namespace Palavyr.Core.Models.Accounts.Schemas
         }
 
         public static Account CreateAccount(
-            string userName, string emailAddress, string password, string accountId,
-            string apiKey, string companyName, string phoneNumber, bool active, string locale, AccountType accountType
+            string userName,
+            string emailAddress,
+            string password,
+            string accountId,
+            string apiKey,
+            string companyName,
+            string phoneNumber,
+            bool active,
+            string locale,
+            AccountType accountType
         )
         {
             return new Account(

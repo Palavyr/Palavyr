@@ -14,7 +14,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
 {
     public interface IAuthService
     {
-        public Task<Credentials> PerformLoginAction(LoginCredentials loginCredentials);
+        public Task<Credentials> PerformLoginAction(LoginCredentialsRequest loginCredentialsRequest);
         public Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenId(string accessToken);
     }
 
@@ -80,10 +80,10 @@ namespace Palavyr.Core.Services.AuthenticationServices
             CouldNot
         }
 
-        public async Task<Credentials> PerformLoginAction(LoginCredentials loginCredentials)
+        public async Task<Credentials> PerformLoginAction(LoginCredentialsRequest loginCredentialsRequest)
         {
             logger.LogDebug("Requesting account using login credentials...");
-            var (account, message) = await RequestAccount(loginCredentials);
+            var (account, message) = await RequestAccount(loginCredentialsRequest);
             if (account == null)
             {
                 logger.LogDebug("Login failed -- could not find account ");
@@ -149,31 +149,31 @@ namespace Palavyr.Core.Services.AuthenticationServices
             }
         }
 
-        private async Task<AccountReturn> RequestAccount(LoginCredentials loginCredentials)
+        private async Task<AccountReturn> RequestAccount(LoginCredentialsRequest loginCredentialsRequest)
         {
             logger.LogDebug("Determining login type...");
-            var loginType = DetermineLoginType(loginCredentials);
+            var loginType = DetermineLoginType(loginCredentialsRequest);
 
             logger.LogDebug($"Login type found to be: {loginType}");
             return loginType switch
             {
-                (LoginType.Default) => await RequestAccountViaDefault(loginCredentials),
-                (LoginType.Google) => await RequestAccountViaGoogle(loginCredentials),
+                (LoginType.Default) => await RequestAccountViaDefault(loginCredentialsRequest),
+                (LoginType.Google) => await RequestAccountViaGoogle(loginCredentialsRequest),
                 LoginType.Error => AccountReturn.Return(null, null),
                 _ => AccountReturn.Return(null, message: null)
             };
         }
 
-        private async Task<AccountReturn> RequestAccountViaGoogle(LoginCredentials credential)
+        private async Task<AccountReturn> RequestAccountViaGoogle(LoginCredentialsRequest credentialRequest)
         {
             logger.LogDebug("Requesting account via Google...");
-            var payload = await ValidateGoogleTokenId(credential.OneTimeCode);
+            var payload = await ValidateGoogleTokenId(credentialRequest.OneTimeCode);
             if (payload == null)
             {
                 return AccountReturn.Return(null, CouldNotValidateGoogleAuthToken);
             }
 
-            if (payload.Subject != credential.TokenId)
+            if (payload.Subject != credentialRequest.TokenId)
             {
                 return AccountReturn.Return(null, CouldNotValidateGoogleAuthToken);
             }
@@ -191,9 +191,9 @@ namespace Palavyr.Core.Services.AuthenticationServices
             return AccountReturn.Return(account, null);
         }
 
-        private async Task<AccountReturn> RequestAccountViaDefault(LoginCredentials credentials)
+        private async Task<AccountReturn> RequestAccountViaDefault(LoginCredentialsRequest credentialsRequest)
         {
-            var account = await accountRepository.GetAccountByEmailOrNull(credentials.EmailAddress);
+            var account = await accountRepository.GetAccountByEmailOrNull(credentialsRequest.EmailAddress);
             if (account == null)
             {
                 return AccountReturn.Return(account, CouldNotFindAccount);
@@ -203,7 +203,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
                 return AccountReturn.Return(null, "Default " + DifferentAccountType);
 
 
-            if (!PasswordHashing.ComparePasswords(account.Password, credentials.Password))
+            if (!PasswordHashing.ComparePasswords(account.Password, credentialsRequest.Password))
             {
                 logger.LogDebug("The provided password did not match!");
                 return AccountReturn.Return(null, PasswordsDoNotMatch);
@@ -218,13 +218,13 @@ namespace Palavyr.Core.Services.AuthenticationServices
             return jwtAuthService.GenerateJwtTokenAfterAuthentication(account.EmailAddress);
         }
 
-        private LoginType DetermineLoginType(LoginCredentials loginCredentials)
+        private LoginType DetermineLoginType(LoginCredentialsRequest loginCredentialsRequest)
         {
-            if (!string.IsNullOrWhiteSpace(loginCredentials.OneTimeCode) &&
-                !string.IsNullOrWhiteSpace(loginCredentials.TokenId))
+            if (!string.IsNullOrWhiteSpace(loginCredentialsRequest.OneTimeCode) &&
+                !string.IsNullOrWhiteSpace(loginCredentialsRequest.TokenId))
                 return LoginType.Google;
-            if (!string.IsNullOrWhiteSpace(loginCredentials.EmailAddress) &&
-                !string.IsNullOrWhiteSpace(loginCredentials.Password))
+            if (!string.IsNullOrWhiteSpace(loginCredentialsRequest.EmailAddress) &&
+                !string.IsNullOrWhiteSpace(loginCredentialsRequest.Password))
                 return LoginType.Default;
             logger.LogDebug("Error: Could not determine login type.");
             return LoginType.Error;
