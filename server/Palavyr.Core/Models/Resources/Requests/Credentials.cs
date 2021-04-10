@@ -1,4 +1,5 @@
-﻿namespace Palavyr.Core.Models.Resources.Requests
+﻿#nullable enable
+namespace Palavyr.Core.Models.Resources.Requests
 {
     public class LoginCredentialsRequest
     {
