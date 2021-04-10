@@ -54,7 +54,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var tableRows = new List<TableRow>();
             foreach (var itemName in itemsToCreateRowsFor)
             {
-                var itemRows = allRows.Where(row => row.ItemName == itemName).OrderBy(row => row.Threshold);
+                
+                // should be ordered high to low
+                var itemRows = allRows.Where(row => row.ItemName == itemName).OrderBy(row => row.Threshold).Reverse();
 
                 foreach (var threshold in itemRows)
                 {
