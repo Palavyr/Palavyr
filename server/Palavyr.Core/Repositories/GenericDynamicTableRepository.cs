@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -51,7 +52,9 @@ namespace Palavyr.Core.Repositories
             string tableId,
             List<TEntity> rowUpdates,
             string tableTag,
-            string tableType)
+            string tableType,
+            Action<DashContext>? updateConversationTable = null
+            )
         {
             queryExecutor.RemoveRange(await GetAllRows(accountId, areaIdentifier, tableId));
             await queryExecutor.AddRangeAsync(rowUpdates);
@@ -61,6 +64,11 @@ namespace Palavyr.Core.Repositories
             meta.TableTag = tableTag;
             meta.TableType = tableType;
 
+            if (updateConversationTable != null)
+            {
+                updateConversationTable(dashContext);
+            }
+            
             await dashContext.SaveChangesAsync(); // Need to make sure this saves changes to both tables.
         }
 

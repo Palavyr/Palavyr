@@ -6,7 +6,6 @@ using Palavyr.Core.Services.AccountServices;
 
 namespace Palavyr.API.Controllers.Accounts.Setup
 {
-
     public class CreateNewAccountGoogleController : PalavyrBaseController
     {
         private readonly IAccountSetupService setupService;
@@ -17,7 +16,7 @@ namespace Palavyr.API.Controllers.Accounts.Setup
         {
             this.setupService = setupService;
         }
-        
+
         [AllowAnonymous]
         [HttpPost("account/create/google")]
         public async Task<IActionResult> Create([FromBody] GoogleRegistrationDetails registrationDetails)

@@ -2,9 +2,11 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
@@ -19,6 +21,10 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         {
             this.repository = repository;
             this.configurationRepository = configurationRepository;
+        }
+
+        public void UpdateConversationNode(DashContext dashContext, DynamicTable table, string tableId)
+        {
         }
 
         public Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
@@ -54,7 +60,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var tableRows = new List<TableRow>();
             foreach (var itemName in itemsToCreateRowsFor)
             {
-                var itemRows = allRows.Where(row => row.ItemName == itemName).OrderBy(row => row.Threshold);
+                
+                // should be ordered high to low
+                var itemRows = allRows.Where(row => row.ItemName == itemName).OrderBy(row => row.Threshold).Reverse();
 
                 foreach (var threshold in itemRows)
                 {

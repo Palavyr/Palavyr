@@ -2,9 +2,11 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
@@ -14,11 +16,17 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
     {
         private readonly IGenericDynamicTableRepository<TwoNestedCategory> repository;
         private readonly IConfigurationRepository configurationRepository;
+        private readonly IConversationOptionSplitter splitter;
 
-        public TwoNestedCategoryCompiler(IGenericDynamicTableRepository<TwoNestedCategory> repository, IConfigurationRepository configurationRepository) : base(repository)
+        public TwoNestedCategoryCompiler(
+            IGenericDynamicTableRepository<TwoNestedCategory> repository,
+            IConfigurationRepository configurationRepository,
+            IConversationOptionSplitter splitter
+        ) : base(repository)
         {
             this.repository = repository;
             this.configurationRepository = configurationRepository;
+            this.splitter = splitter;
         }
 
         public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, List<Dictionary<string, string>> dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
@@ -47,10 +55,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             };
         }
 
-        private async Task<CategoryRetriever> GetInnerAndOuterCategories(DynamicTableMeta dynamicTableMeta)
+        private CategoryRetriever GetInnerAndOuterCategories(List<TwoNestedCategory> rawRows)
         {
             // This table type does not facilitate multiple branches. I.e. the inner categories are all the same for all of the outer categories.
-            var rawRows = await GetTableRows(dynamicTableMeta);
             var rows = rawRows.OrderBy(row => row.RowOrder).ToList();
 
             var outerCategories = rows.Select(row => row.Category).Distinct().ToList();
@@ -65,9 +72,23 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             };
         }
 
+        public void UpdateConversationNode(DashContext context, DynamicTable table, string tableId)
+        {
+            var update = table.TwoNestedCategory;
+
+            var (innerCategories, outerCategories) = GetInnerAndOuterCategories(update);
+            var nodes = context
+                .ConversationNodes
+                .Where(x => splitter.GetTableIdFromDynamicNodeType(x.NodeType) == tableId)
+                .OrderBy(x => x.ResolveOrder);
+            nodes.First().ValueOptions = splitter.JoinValueOptions(outerCategories);
+            nodes.Last().ValueOptions = splitter.JoinValueOptions(innerCategories);
+        }
+
         public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
         {
-            var (innerCategories, outerCategories) = await GetInnerAndOuterCategories(dynamicTableMeta);
+            var rawRows = await GetTableRows(dynamicTableMeta);
+            var (innerCategories, outerCategories) = GetInnerAndOuterCategories(rawRows);
             var widgetResponseKey = dynamicTableMeta.MakeUniqueIdentifier();
 
             // Outer-category

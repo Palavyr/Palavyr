@@ -7,5 +7,6 @@ namespace Palavyr.Core.Models.Configuration.Schemas
     {
         public TEntity CreateTemplate(string accountId, string areaIdentifier, string tableId);
         public List<TEntity> UpdateTable(DynamicTable table);
+        public bool EnsureValid();
     }
 }

@@ -71,6 +71,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<TreeWalker>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<NodeCounter>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<GuidFinder>().AsSelf().SingleInstance();
+
+            builder.RegisterType<ConversationOptionSplitter>().As<IConversationOptionSplitter>().SingleInstance();
         }
     }
 }

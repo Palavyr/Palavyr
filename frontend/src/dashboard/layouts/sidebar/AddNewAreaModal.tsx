@@ -34,6 +34,7 @@ export const AddNewAreaModal = ({ open, handleClose, setNewArea }: IAddNewAreaMo
             setNewArea(newArea);
         }
         handleClose();
+        setAreaName("");
     };
 
     const textFieldOnChange = (event: { target: { value: React.SetStateAction<string> } }) => {

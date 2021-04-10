@@ -3,7 +3,7 @@ import { ConvoNode, Conversation, NodeOption, NodeIdentity } from "@Palavyr-Type
 import { getNewNumChildren, createAndReattachNewNodes } from "./commonNodeUtils";
 import { recursivelyDereferenceNodeIdFromChildren } from "./dereferenceUtils";
 import { getPrimarySiblingIdFromChildNodeChildrenString } from "./splitMergeUtils";
-import { _splitAndRemoveEmptyNodeChildrenString, _getNodeById, _replaceNodeWithUpdatedNode, _createAndAddNewNodes, _resetOptionPaths, _joinValueOptionArray, _splitValueOptionString } from "./_coreNodeUtils";
+import { _splitAndRemoveEmptyNodeChildrenString, _getNodeById, _replaceNodeWithUpdatedNode, _createAndAddNewNodes, _resetOptionPaths, _joinValueOptionArray, _splitValueOptionString, _joinNodeChildrenStringArray } from "./_coreNodeUtils";
 
 const AnabranchName = "Anabranch"; // TODO: Get this from the server as nodeOption.stringName
 
@@ -74,7 +74,8 @@ export const changeNodeType = async (previousNode: ConvoNode, nodeList: Conversa
     let updatedNodeList = [...newNodeList];
 
     const previousNodeChildrenString = previousNode.nodeChildrenString;
-    previousNode.nodeChildrenString = newChildNodeIds.join(",");
+
+    previousNode.nodeChildrenString = _joinNodeChildrenStringArray(newChildNodeIds);
     previousNode.isMultiOptionType = nodeOption.isMultiOptionType;
     previousNode.isTerminalType = nodeOption.isTerminalType;
     previousNode.isSplitMergeType = nodeOption.isSplitMergeType;

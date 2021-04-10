@@ -96,5 +96,10 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 
             return mappedTableRows;
         }
+
+        public bool EnsureValid()
+        {
+            return true;
+        }
     }
 }

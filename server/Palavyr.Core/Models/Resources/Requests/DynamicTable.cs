@@ -5,12 +5,12 @@ namespace Palavyr.Core.Models.Resources.Requests
 {
     public class DynamicTable
     {
-        public List<SelectOneFlat> SelectOneFlat { get; set; }
-        public List<PercentOfThreshold> PercentOfThreshold { get; set; }
-        public List<BasicThreshold> BasicThreshold {get; set; }
-        public List<TwoNestedCategory> TwoNestedCategory { get; set; }
-        
+        public List<SelectOneFlat>? SelectOneFlat { get; set; } = new List<SelectOneFlat>();
+        public List<PercentOfThreshold>? PercentOfThreshold { get; set; } = new List<PercentOfThreshold>();
+        public List<BasicThreshold>? BasicThreshold { get; set; } = new List<BasicThreshold>();
+        public List<TwoNestedCategory>? TwoNestedCategory { get; set; } = new List<TwoNestedCategory>();
+
         // add new Dynamic Table type rows properties
-        public string TableTag { get; set; }
+        public string? TableTag { get; set; }
     }
 }

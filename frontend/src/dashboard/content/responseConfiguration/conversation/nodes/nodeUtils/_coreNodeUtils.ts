@@ -3,6 +3,33 @@ import { Conversation, ConvoNode, UUID, ValueOptionDelimiter } from "@Palavyr-Ty
 import { cloneDeep, findIndex } from "lodash";
 import { uuid } from "uuidv4";
 
+export const _splitNodeChildrenString = (nodeChildrenString: string) => {
+    return nodeChildrenString.split(",");
+};
+
+export const _joinNodeChildrenStringArray = (nodeChildrenStrings: string[]) => {
+    return nodeChildrenStrings.join(",");
+};
+
+export const _splitAndRemoveEmptyNodeChildrenString = (nodeChildrenString: string) => {
+    const childrenArray = _splitNodeChildrenString(nodeChildrenString);
+    return childrenArray.filter((childstring: string) => !isNullOrUndefinedOrWhitespace(childstring));
+};
+
+export const _nodeListContainsNodeType = (nodeList: Conversation, nodeType: string) => {
+    const nodeTypes = nodeList.map((node: ConvoNode) => node.nodeType.toUpperCase());
+    return nodeTypes.includes(nodeType.toUpperCase());
+};
+
+export const _joinValueOptionArray = (valueOptionArray: string[]) => {
+    return valueOptionArray.join(ValueOptionDelimiter);
+};
+
+export const _splitValueOptionString = (valueOptionString: string) => {
+    return valueOptionString.split(ValueOptionDelimiter);
+};
+
+
 export const _getIdsToDeleteRecursively = (nodeList: Conversation, topNode: ConvoNode): string => {
     var childRefs = topNode.nodeChildrenString.split(",");
     var childNodes = nodeList.filter((node) => childRefs.includes(node.nodeId));
@@ -177,28 +204,3 @@ export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeId
     return updatedNodeList;
 };
 
-export const _splitNodeChildrenString = (nodeChildrenString: string) => {
-    return nodeChildrenString.split(",");
-};
-
-export const _joinNodeChildrenStringArray = (nodeChildrenStrings: string[]) => {
-    return nodeChildrenStrings.join(",");
-};
-
-export const _splitAndRemoveEmptyNodeChildrenString = (nodeChildrenString: string) => {
-    const childrenArray = _splitNodeChildrenString(nodeChildrenString);
-    return childrenArray.filter((childstring: string) => !isNullOrUndefinedOrWhitespace(childstring));
-};
-
-export const _nodeListContainsNodeType = (nodeList: Conversation, nodeType: string) => {
-    const nodeTypes = nodeList.map((node: ConvoNode) => node.nodeType.toUpperCase());
-    return nodeTypes.includes(nodeType.toUpperCase());
-};
-
-export const _joinValueOptionArray = (valueOptionArray: string[]) => {
-    return valueOptionArray.join(ValueOptionDelimiter);
-};
-
-export const _splitValueOptionString = (valueOptionString: string) => {
-    return valueOptionString.split(ValueOptionDelimiter);
-};
