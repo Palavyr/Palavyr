@@ -68,9 +68,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         {
             var workingEntity = new TEntity();
             workingEntity.EnsureValid();
-            // TODO: check for conversationNodes that use this table and update the valueOptions (rejoin any options).
-
-            var entityCompiler = retriever.RetrieveCompiler(nameof(workingEntity));
+            var entityCompiler = retriever.RetrieveCompiler(workingEntity.GetType().Name);
             
             logger.LogInformation($"Saving dynamic table: {request.TableId}");
             var (accountId, areaIdentifier, tableId) = request;
