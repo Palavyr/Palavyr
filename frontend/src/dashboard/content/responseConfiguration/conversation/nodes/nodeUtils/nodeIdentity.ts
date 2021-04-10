@@ -10,7 +10,7 @@ export const getNodeIdentity = (node: ConvoNode, nodeList: Conversation): NodeId
     const { isDecendentOfAnabranch, decendentLevelFromAnabranch, nodeIdOfMostRecentAnabranch, isDirectChildOfAnabranch, isParentOfAnabranchMergePoint, isAncestorOfAnabranchMergePoint } = collectAnabranchMeta(node, nodeList);
 
     /*
-     * boolean - Is another node already set as the anabranch merge point for this subtree. Searches from most recent anabranch node id down to all leaf nodes
+     * boolean - Is another node already set as the anabranch merge point for this subtree. Searches from most recent anabranch node id down to all leaf nodes.
      */
     const otherNodeAlreadySetAsMergeBranchBool = isDecendentOfAnabranch && otherNodeAlreadySetAsAnabranchMerge(nodeIdOfMostRecentAnabranch, nodeList, node.nodeId);
 
