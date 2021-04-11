@@ -70,7 +70,7 @@ namespace Palavyr.API
                     endpoints.MapHangfireDashboard();
                     endpoints.MapHealthChecks("/healthcheck");
                 });
-            hangFireJobs.AddHangFireJobs(app);
+            // hangFireJobs.AddHangFireJobs(app);
         }
     }
 }
