@@ -32,6 +32,7 @@ namespace Palavyr.API
             builder.RegisterModule(new GeneralModule());
             builder.RegisterModule(new StripeModule(configuration));
             builder.RegisterModule(new RepositoriesModule());
+            builder.RegisterModule(new BackgroundTaskModule());
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -63,6 +64,7 @@ namespace Palavyr.API
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<SetHeadersMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
+            hangFireJobs.AddHangFireJobs(app);
             app.UseEndpoints(
                 endpoints =>
                 {
@@ -70,7 +72,6 @@ namespace Palavyr.API
                     endpoints.MapHangfireDashboard();
                     endpoints.MapHealthChecks("/healthcheck");
                 });
-            // hangFireJobs.AddHangFireJobs(app);
         }
     }
 }

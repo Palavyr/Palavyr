@@ -1,4 +1,3 @@
-using System;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -18,8 +17,6 @@ namespace Palavyr.API
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            // in case we need it
-            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "NOT SET or NOT FOUND";
             var host = Host
                 .CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
