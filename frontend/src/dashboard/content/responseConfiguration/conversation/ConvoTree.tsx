@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Conversation, NodeTypeOptions, PRODUCTION } from "@Palavyr-Types";
+import { Conversation, NodeTypeOptions } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { cloneDeep } from "lodash";
 import { ConversationNode } from "./nodes/ConversationNode";
@@ -16,7 +16,7 @@ import RedoIcon from "@material-ui/icons/Redo";
 import "./stylesConvoTree.css";
 import { getRootNode } from "./nodes/nodeUtils/commonNodeUtils";
 import { ConversationHistoryTracker } from "./nodes/ConversationHistoryTracker";
-import { currentEnvironment } from "@api-client/clientUtils";
+import { isDevelopmentStage } from "@api-client/clientUtils";
 
 const useStyles = makeStyles(() => ({
     conversation: {
@@ -127,7 +127,7 @@ export const ConvoTree = () => {
                 >
                     Redo
                 </Button>
-                {currentEnvironment !== PRODUCTION && (
+                {isDevelopmentStage() && (
                     <Button
                         variant="outlined"
                         style={{ marginLeft: "0.7rem", borderRadius: "10px" }}

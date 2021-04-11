@@ -6,7 +6,7 @@ import { Accordion, AccordionSummary, Typography, Button, makeStyles } from "@ma
 import { SingleDynamicFeeTable } from "./SingleDynamicFeeTable";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AddBoxIcon from '@material-ui/icons/AddBox';
-import { currentEnvironment, Environments } from "@api-client/clientUtils";
+import { isDevelopmentStage } from "@api-client/clientUtils";
 import { OsTypeToggle } from "dashboard/content/responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
 
 export interface IDynamicTable {
@@ -33,7 +33,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
 
     const [loaded, setLoaded] = useState<boolean>(false);
     const [parentState, changeParentState] = useState<boolean>(false);
-    const [showDebug, setShowDebug] = useState<boolean>(currentEnvironment === typeof Environments.Production ? false : true)
+    const [showDebug, setShowDebug] = useState<boolean>(isDevelopmentStage() ? true : false)
     const [tableMetas, setTableMetas] = useState<DynamicTableMetas>([]);
     const [availableTables, setAvailableTables] = useState<Array<string>>([]);
     const [tableNameMap, setTableNameMap] = useState<TableNameMap>({});
@@ -77,7 +77,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
                     <Typography className={cls.title}>{title}</Typography>
                 </AccordionSummary>
                 {children}
-                {(currentEnvironment !== typeof Environments.Production) && <OsTypeToggle controlledState={showDebug} onChange={() => setShowDebug(!showDebug)} enabledLabel="Show Debug" disabledLabel="Show Debug" />}
+                {isDevelopmentStage() && <OsTypeToggle controlledState={showDebug} onChange={() => setShowDebug(!showDebug)} enabledLabel="Show Debug" disabledLabel="Show Debug" />}
                 <Suspense fallback={<h1>Loading Dynamic Tables...</h1>}>
                     {tableMetas.length === 0 && (
                         <Typography color="secondary" style={{ padding: "0.8rem" }} variant="h5">

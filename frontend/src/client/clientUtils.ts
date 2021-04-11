@@ -31,6 +31,9 @@ export enum Environments {
     Production
 }
 
+export const isDevelopmentStage = () => {
+    return currentEnvironment !== typeof(Environments.Production);
+}
 
 if (softwareVersion === undefined) {
     console.log("SOFTWARE VERSION IS UNDEFINED");
