@@ -3,9 +3,9 @@ import React, { useState, useEffect, useContext } from "react";
 import { SteppedLineTo } from "../treeLines/SteppedLineTo";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import { getChildNodesToRender } from "./nodeUtils/commonNodeUtils";
-import { _getAllParentNodeIds, _getParentNode, _splitNodeChildrenString } from "./nodeUtils/_coreNodeUtils";
+import { _getAllParentNodeIds, _splitNodeChildrenString } from "./nodeUtils/_coreNodeUtils";
 
-import "./ConversationNode.css";
+import "./stylesConversationNode.css";
 import { getNodeIdentity } from "./nodeUtils/nodeIdentity";
 import { ConversationNodeInterface } from "./nodeInterface/ConversationNodeInterface";
 

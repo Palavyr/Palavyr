@@ -29,7 +29,6 @@ export const _splitValueOptionString = (valueOptionString: string) => {
     return valueOptionString.split(ValueOptionDelimiter);
 };
 
-
 export const _getIdsToDeleteRecursively = (nodeList: Conversation, topNode: ConvoNode): string => {
     var childRefs = topNode.nodeChildrenString.split(",");
     var childNodes = nodeList.filter((node) => childRefs.includes(node.nodeId));
@@ -118,7 +117,7 @@ export const _getAllParentNodes = (node: ConvoNode, nodeList: Conversation): Con
 };
 
 export const _recursivelyCheckIfLeftmostChildInBranch = (node: ConvoNode, nodeList: Conversation, previousNode: ConvoNode, criteriaCallback: (node: ConvoNode) => boolean) => {
-    if (criteriaCallback(node)) {
+    if (criteriaCallback(node) || node.isRoot) {
         const childrenIds = _splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString);
         const siblingIndex = findIndex(childrenIds, (el) => el === previousNode.nodeId);
         if (siblingIndex === 0) {
@@ -129,23 +128,31 @@ export const _recursivelyCheckIfLeftmostChildInBranch = (node: ConvoNode, nodeLi
         }
     } else {
         const nextNodeUp = _getParentNode(node, nodeList);
-        if (nextNodeUp) {
-            return _recursivelyCheckIfLeftmostChildInBranch(nextNodeUp, nodeList, node, criteriaCallback);
-        }
+        if (nextNodeUp === null) throw new Error("Tried to find parent of root node _recursivelyCheckIfLeftMostChildInBranch")
+        return _recursivelyCheckIfLeftmostChildInBranch(nextNodeUp!, nodeList, node, criteriaCallback);
     }
 };
 
 export const _findLeftmostParentNode = (node: ConvoNode, nodeList: Conversation, parentNodes: Conversation, criteriaCallback: (node: ConvoNode) => boolean) => {
-    for (let index = 0; index < parentNodes.length; index++) {
-        const parentNode = parentNodes[index];
-        const result = _recursivelyCheckIfLeftmostChildInBranch(parentNode, nodeList, node, criteriaCallback);
-        if (result) {
-            return parentNode;
+    if (parentNodes.length === 1) {
+        return parentNodes[0]
+    } else {
+        for (let index = 0; index < parentNodes.length; index++) {
+            const parentNode = parentNodes[index];
+            const result = _recursivelyCheckIfLeftmostChildInBranch(parentNode, nodeList, node, criteriaCallback);
+            if (result) {
+                return parentNode;
+            }
         }
+        throw new Error("Orphan node detected - _findLeftmostParentNode");
     }
+
 };
 
 export const _getLeftMostParentNode = (node: ConvoNode, nodeList: Conversation, criteriaCallback: (node: ConvoNode) => boolean) => {
+    if (node.nodeId === "ad58be93-c29c-46d6-9afc-229af4152af0") {
+        console.log("BRAK");
+    }
     const parentNodes = _getAllParentNodes(node, nodeList);
     const leftmostParent = _findLeftmostParentNode(node, nodeList, parentNodes, criteriaCallback);
     return leftmostParent;
@@ -196,11 +203,10 @@ export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeId
             nodeComponentType: "",
             isDynamicTableNode: isDynamicTableNode,
             resolveOrder: 0,
-            dynamicType: ""
+            dynamicType: "",
         };
 
         updatedNodeList.push(newNode);
     });
     return updatedNodeList;
 };
-

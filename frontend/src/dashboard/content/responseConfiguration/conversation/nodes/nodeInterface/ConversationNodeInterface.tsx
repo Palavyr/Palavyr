@@ -141,7 +141,7 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
 
     const selectionCallback = (node: ConvoNode, nodeList: Conversation, nodeIdOfMostRecentAnabranch: string): Conversation => {
         return setNodeAsAnabranchMergePoint(node, nodeList, nodeIdOfMostRecentAnabranch, setAnabranchMergeChecked);
-    }
+    };
 
     return (
         <Card className={classNames(classes.root, node.nodeId)} variant="outlined">
@@ -158,12 +158,21 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
                         Click to Edit
                     </Typography>
                 </Card>
-                <NodeTypeSelector nodeIdentity={identity} nodeTypeOptions={filteredNodeTypeOptions(identity, nodeTypeOptions)} node={node} reRender={reRender} shouldDisabledNodeTypeSelector={identity.shouldDisabledNodeTypeSelector} selectionCallback={selectionCallback} />
+                <NodeTypeSelector
+                    nodeIdentity={identity}
+                    nodeTypeOptions={filteredNodeTypeOptions(identity, nodeTypeOptions)}
+                    node={node}
+                    reRender={reRender}
+                    shouldDisabledNodeTypeSelector={identity.shouldDisabledNodeTypeSelector}
+                    selectionCallback={selectionCallback}
+                />
                 <ConversationNodeEditor setModalState={setModalState} modalState={modalState} node={node} parentNode={parentNode} />
 
                 {identity.shouldShowResponseInPdfOption && <NodeCheckBox label="Show response in PDF" checked={node.isCritical} onChange={showResponseInPdfCheckbox} />}
                 {identity.shouldShowMergeWithPrimarySiblingBranchOption && <NodeCheckBox label="Merge with primary sibling branch" checked={!node.shouldRenderChildren} onChange={handleMergeBackInOnClick} />}
-                {identity.shouldShowSetAsAnabranchMergePointOption && <NodeCheckBox disabled={node.isAnabranchType && node.isAnabranchMergePoint} label="Set as Anabranch merge point" checked={anabranchMergeChecked} onChange={handleSetAsAnabranchMergePointClick} />}
+                {identity.shouldShowSetAsAnabranchMergePointOption && (
+                    <NodeCheckBox disabled={node.isAnabranchType && node.isAnabranchMergePoint} label="Set as Anabranch merge point" checked={anabranchMergeChecked} onChange={handleSetAsAnabranchMergePointClick} />
+                )}
                 {identity.shouldShowUnsetNodeTypeOption && <SinglePurposeButton buttonText="Unset Node" variant="outlined" color="primary" onClick={handleUnsetCurrentNodeType} />}
                 {identity.shouldShowSplitMergePrimarySiblingLabel && <Typography>This is the primary sibling. Branches will merge to this node.</Typography>}
                 {identity.shouldShowAnabranchMergepointLabel && <Typography style={{ fontWeight: "bolder" }}>This is the Anabranch Merge Node</Typography>}
