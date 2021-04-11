@@ -18,7 +18,7 @@ namespace Palavyr.Core.Repositories
             List<TEntity> rowUpdates,
             string tableTag,
             string tableType,
-            Action<DashContext>? updateConversationTable = null
+            Func<DashContext, Task> updateConversationTable = null
             );
 
         Task UpdateRows(

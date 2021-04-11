@@ -23,7 +23,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             this.configurationRepository = configurationRepository;
         }
 
-        public void UpdateConversationNode(DashContext dashContext, DynamicTable table, string tableId)
+        public async Task UpdateConversationNode(DashContext dashContext, DynamicTable table, string tableId)
         {
         }
 

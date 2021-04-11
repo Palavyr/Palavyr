@@ -29,7 +29,7 @@ export type TableNameMap = {
 };
 export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: IDynamicTable) => {
     const client = new ApiClient();
-    const classes = useStyles();
+    const cls = useStyles();
 
     const [loaded, setLoaded] = useState<boolean>(false);
     const [parentState, changeParentState] = useState<boolean>(false);
@@ -73,8 +73,8 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
     return (
         <>
             <Accordion expanded={true}>
-                <AccordionSummary className={classes.header} expandIcon={<ExpandMoreIcon style={{ color: "white" }} />} aria-controls="panel-content" id="panel-header">
-                    <Typography className={classes.title}>{title}</Typography>
+                <AccordionSummary className={cls.header} expandIcon={<ExpandMoreIcon style={{ color: "white" }} />} aria-controls="panel-content" id="panel-header">
+                    <Typography className={cls.title}>{title}</Typography>
                 </AccordionSummary>
                 {children}
                 {(currentEnvironment !== typeof Environments.Production) && <OsTypeToggle controlledState={showDebug} onChange={() => setShowDebug(!showDebug)} enabledLabel="Show Debug" disabledLabel="Show Debug" />}

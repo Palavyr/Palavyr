@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -27,15 +28,19 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             this.splitter = splitter;
         }
 
-        public void UpdateConversationNode(DashContext context, DynamicTable table, string tableId)
+        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId)
         {
             var currentSelectOneFlatUpdate = table.SelectOneFlat;
-            var valueOptionString = string.Join(Delimiters.ValueOptionDelimiter, currentSelectOneFlatUpdate.Select(x => x.Option));
-            var node = context.ConversationNodes.Single(x => splitter.GetTableIdFromDynamicNodeType(x.NodeType) == tableId);
-            node.ValueOptions = valueOptionString;
+            var valueOptionString = string.Join(Delimiters.ValueOptionDelimiter, currentSelectOneFlatUpdate!.Select(x => x.Option));
+            var node = (await context.ConversationNodes.ToListAsync()).SingleOrDefault(x => x.IsDynamicTableNode && splitter.GetTableIdFromDynamicNodeType(x.NodeType) == tableId);
+            if (node != null)
+            {
+                // only update if the node exists in the conversation
+                node.ValueOptions = valueOptionString;
+            }
             // do not save the context changes here. Following the unit of work pattern,we collect all changes, validate, and then save/commit..
         }
-        
+
         public async Task CompileToConfigurationNodes(
             DynamicTableMeta dynamicTableMeta,
             List<NodeTypeOption> nodes)

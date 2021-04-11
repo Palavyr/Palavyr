@@ -53,7 +53,7 @@ namespace Palavyr.Core.Repositories
             List<TEntity> rowUpdates,
             string tableTag,
             string tableType,
-            Action<DashContext>? updateConversationTable = null
+            Func<DashContext, Task> updateConversationTable = null
             )
         {
             queryExecutor.RemoveRange(await GetAllRows(accountId, areaIdentifier, tableId));
@@ -66,7 +66,7 @@ namespace Palavyr.Core.Repositories
 
             if (updateConversationTable != null)
             {
-                updateConversationTable(dashContext);
+                await updateConversationTable(dashContext);
             }
             
             await dashContext.SaveChangesAsync(); // Need to make sure this saves changes to both tables.

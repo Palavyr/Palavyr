@@ -11,7 +11,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 {
     public interface IDynamicTablesCompiler
     {
-        void UpdateConversationNode(DashContext context, DynamicTable table, string tableId);
+        Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId);
 
         Task CompileToConfigurationNodes(
             DynamicTableMeta dynamicTableMeta,

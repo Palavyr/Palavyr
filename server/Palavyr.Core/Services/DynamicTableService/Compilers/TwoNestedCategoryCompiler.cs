@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -72,17 +73,19 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             };
         }
 
-        public void UpdateConversationNode(DashContext context, DynamicTable table, string tableId)
+        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId)
         {
             var update = table.TwoNestedCategory;
 
             var (innerCategories, outerCategories) = GetInnerAndOuterCategories(update);
-            var nodes = context
-                .ConversationNodes
-                .Where(x => splitter.GetTableIdFromDynamicNodeType(x.NodeType) == tableId)
-                .OrderBy(x => x.ResolveOrder);
-            nodes.First().ValueOptions = splitter.JoinValueOptions(outerCategories);
-            nodes.Last().ValueOptions = splitter.JoinValueOptions(innerCategories);
+            var nodes = (await context.ConversationNodes.ToListAsync())
+                .Where(x => x.IsDynamicTableNode && splitter.GetTableIdFromDynamicNodeType(x.NodeType) == tableId)
+                .OrderBy(x => x.ResolveOrder).ToList();
+            if (nodes.Count > 0)
+            {
+                nodes.First().ValueOptions = splitter.JoinValueOptions(outerCategories);
+                nodes.Last().ValueOptions = splitter.JoinValueOptions(innerCategories);
+            }
         }
 
         public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)

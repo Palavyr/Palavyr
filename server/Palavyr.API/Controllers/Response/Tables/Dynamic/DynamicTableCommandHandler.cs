@@ -80,8 +80,8 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
                 tableId,
                 mappedTableRows,
                 dynamicTable.TableTag,
-                typeof(TEntity).Name,
-                context => entityCompiler.UpdateConversationNode(context, dynamicTable, tableId)
+                typeof(TEntity).Name, 
+                async context => await entityCompiler.UpdateConversationNode(context, dynamicTable, tableId)
                 );
 
             return await genericDynamicTableRepository.GetAllRows(accountId, areaIdentifier, tableId);
