@@ -1,6 +1,6 @@
 import { ConvoNode, Conversation, SplitMergeMeta } from "@Palavyr-Types";
 import { findIndex } from "lodash";
-import { _getNodeById, _getParentNode, _joinNodeChildrenStringArray, _nodeListContainsNodeType, _removeNodeByID, _replaceNodeWithUpdatedNode, _splitAndRemoveEmptyNodeChildrenString, _splitNodeChildrenString } from "./_coreNodeUtils";
+import { _getNodeById, _getLeftMostParentNode, _getParentNode, _joinNodeChildrenStringArray, _nodeListContainsNodeType, _removeNodeByID, _replaceNodeWithUpdatedNode, _splitAndRemoveEmptyNodeChildrenString, _splitNodeChildrenString } from "./_coreNodeUtils";
 
 const SplitMerge = "SplitMerge".toUpperCase();
 
@@ -60,9 +60,9 @@ export const collectSplitMergeMeta = (node: ConvoNode, nodeList: Conversation): 
     do {
         decendentLevelFromSplitMerge++;
         prevChildReference = { ...tempParentNode };
-        tempParentNode = _getParentNode(prevChildReference, nodeList);
-        if (tempParentNode === null) throw new Error("Orphan node detected.");
-        if (tempParentNode.nodeType.toUpperCase() === SplitMerge) {
+        tempParentNode = _getLeftMostParentNode(prevChildReference, nodeList, x => x.isSplitMergeType)!;
+        if (tempParentNode === null) throw new Error("Orphan node detected. _splitMergeUtils");
+        if (tempParentNode.isSplitMergeType) {
             found = true;
             parentNode = tempParentNode;
             splitMergeRootSiblingIndex = getSiblingIndex(parentNode, prevChildReference);

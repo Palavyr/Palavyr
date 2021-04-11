@@ -3,19 +3,7 @@ import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { Conversation, ConvoNode, NodeOption, NodeTypeOptions } from "@Palavyr-Types";
 import { findIndex, sum } from "lodash";
 import { checkIfNodeIsBoundedByAnabranch } from "./AnabranchUtils";
-import {
-    _computeShouldRenderChildren,
-    _createNewChildIDs,
-    _getIdsToDeleteRecursively,
-    _getLeftMostParentNode,
-    _getNodeById,
-    _removeNodeByID,
-    _replaceNodeWithUpdatedNode,
-    _resetOptionPaths,
-    _splitAndRemoveEmptyNodeChildrenString,
-    _splitNodeChildrenString,
-    _truncateTheTreeAtSpecificNode,
-} from "./_coreNodeUtils";
+import { _createNewChildIDs, _getNodeById, _replaceNodeWithUpdatedNode, _splitAndRemoveEmptyNodeChildrenString, _truncateTheTreeAtSpecificNode } from "./_coreNodeUtils";
 
 export const getRootNode = (nodeList: Conversation) => {
     return nodeList.filter((node) => node.isRoot === true)[0];
@@ -25,7 +13,8 @@ export const getNewNumChildren = (optionPaths: string[]) => {
     return optionPaths.filter((x) => x !== null && x !== "").length;
 };
 
-export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, isDecendentOfSplitMerge: boolean, splitMergeRootSiblingIndex: number) => {//, isParentOfAnabranchMergePoint: boolean) => {
+export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, isDecendentOfSplitMerge: boolean, splitMergeRootSiblingIndex: number) => {
+    //, isParentOfAnabranchMergePoint: boolean) => {
     if (isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0) {
         return nodeOptionList.filter((option: NodeOption) => option.groupName === "Provide Info" || option.groupName === "Info Collection" || option.groupName === "Terminal");
     } else {
@@ -119,10 +108,11 @@ export const determineIfIsOnLeftmostBranchGivenAnOriginNode = (targetNodeId: str
     const childrenNodeIds = _splitAndRemoveEmptyNodeChildrenString(rootNode.nodeChildrenString);
     if (childrenNodeIds.length === 0) return false;
     else {
-        if (childrenNodeIds[0] === targetNodeId) { // FOUND
+        if (childrenNodeIds[0] === targetNodeId) {
+            // FOUND
             return true;
         } else {
-            return determineIfIsOnLeftmostBranchGivenAnOriginNode(targetNodeId, nodeList, childrenNodeIds[0])
+            return determineIfIsOnLeftmostBranchGivenAnOriginNode(targetNodeId, nodeList, childrenNodeIds[0]);
         }
     }
 };
@@ -135,9 +125,8 @@ export const checkChildIsLeaf = (node: ConvoNode, nodeList: Conversation) => {
         const childNode = _getNodeById(childId, nodeList);
         const granChildrenIds = _splitAndRemoveEmptyNodeChildrenString(childNode.nodeChildrenString);
         if (granChildrenIds.length !== 0) {
-            return false
+            return false;
         }
     }
     return true;
-
-}
+};
