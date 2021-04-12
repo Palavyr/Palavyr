@@ -32,9 +32,7 @@
     "scripts": {
         "start": "webpack-dev-server --config webpack.config.dev.js --env.development",
         "build": "webpack --config ./webpack.config.prod.js --env.production",
-        "test": "jest --coverage",
-        "storybook": "start-storybook -p 6006",
-        "build-storybook": "build-storybook"
+        "test": "jest --coverage"
     },
     "eslintConfig": {
         "extends": "react-app"
@@ -112,10 +110,6 @@
         "@babel/preset-env": "^7.8.7",
         "@babel/preset-react": "^7.8.3",
         "@babel/preset-typescript": "^7.8.3",
-        "@storybook/addon-actions": "^6.0.21",
-        "@storybook/addon-essentials": "^6.0.21",
-        "@storybook/addon-links": "^6.0.21",
-        "@storybook/react": "^6.0.21",
         "@svgr/webpack": "4.3.3",
         "@testing-library/jest-dom": "^4.2.4",
         "@testing-library/react": "^9.5.0",
