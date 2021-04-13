@@ -31,15 +31,12 @@ namespace Palavyr.API.Controllers.WidgetLive
         [HttpGet("widget/{areaId}/create")]
         public async Task<NewConversation> Create([FromHeader] string accountId, [FromRoute] string areaId)
         {
-            logger.LogDebug("Fetching Preferences...");
-            var widgetPreference = await configurationRepository.GetWidgetPreferences(accountId);
-
             logger.LogDebug("Fetching nodes...");
-            var standardNodes = (await configurationRepository.GetAreaConversationNodes(accountId, areaId));
+            var standardNodes = await configurationRepository.GetAreaConversationNodes(accountId, areaId);
             var completeConversation = EndingSequence.AttachEndingSequenceToNodeList(standardNodes, areaId, accountId);
 
             logger.LogDebug("Creating new conversation for user with apikey: {apiKey}");
-            var newConvo = NewConversation.CreateNew(widgetPreference, completeConversation);
+            var newConvo = NewConversation.CreateNew(completeConversation);
 
             return newConvo;
         }
