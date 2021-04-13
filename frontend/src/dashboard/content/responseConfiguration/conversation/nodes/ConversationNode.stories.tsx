@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Meta } from '@storybook/react/types-6-0';
 import { ConversationNode, IConversationNode } from './ConversationNode';
 import { ParentNode, ChildNode1, ChildNode2 } from 'test/dummyNodeData/dummyNodes';
-import "./ConversationNode.css";
+import "./stylesConversationNode.css";
 
 export default {
     title: "Dashboard/Conversation/ConversationNode",

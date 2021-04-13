@@ -25,7 +25,6 @@ module.exports = (ENV) => {
             new MiniCssExtractPlugin(),
             new Dotenv({ path: envPath }),
             new CleanWebpackPlugin(), //for < v2 versions of CleanWebpackPlugin
-            // new HtmlWebpackPlugin({ title }),
             new ManifestPlugin(manifestOptions),
             new HtmlWebpackPlugin(htmlOptions),
             new ForkTsCheckerWebpackPlugin(),

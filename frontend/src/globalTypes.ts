@@ -18,10 +18,6 @@ So we need to first make a call when the initial page loads to retieve the area 
 render the area list on sidebar, and then also the first area in the list (a second get request).
 */
 
-export const DEVELOPMENT = "DEVELOPMENT";
-export const PRODUCTION = "PRODUCTION";
-export const STAGING = "STAGING";
-
 export type UUID = string;
 export type AnyFunction = (...args: any[]) => any;
 export type AnyVoidFunction = (...args: any[]) => void;

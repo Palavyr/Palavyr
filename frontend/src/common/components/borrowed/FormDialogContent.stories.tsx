@@ -20,7 +20,8 @@ Primary.args = {
     setStatus: () => {},
     isPasswordVisible: true,
     setIsPasswordVisible: () => {},
-    status: null
+    status: null,
+    setRememberMe: () => {}
 }
 
 export const Secondary = Template.bind({});
@@ -32,5 +33,6 @@ Secondary.args = {
     setStatus: () => {},
     isPasswordVisible: true,
     setIsPasswordVisible: () => {},
-    status: "invalidEmail"
+    status: "invalidEmail",
+    setRememberMe: () => {}
 }

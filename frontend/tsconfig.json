@@ -1,38 +1,40 @@
 {
-  "compilerOptions": {
-    "outDir": "./dist/",
-    "module": "esnext",
-    "target": "es5",
-
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": false,
-    "strictNullChecks": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "react",
-    "noEmit": false,
-    "strictPropertyInitialization": false,
-    "baseUrl": "src",
-    "sourceMap": true
-  },
-  "include": [
-    "src/**/*",
-    "src/**/*.d.ts",
-    "customTypes/*.d.ts"
-  ],
-  "exclude": ["node_modules"],
-  "extends": "./tsconfig.paths.json",
-  "typeRoots": [
-    "src/customTypes",
-  ]
+    "compilerOptions": {
+        "strict": false,
+        "outDir": "./dist/",
+        "module": "esnext",
+        "target": "es5",
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "noImplicitAny": false,
+        "jsx": "react",
+        "experimentalDecorators": true,
+        "strictNullChecks": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "moduleResolution": "node",
+        "noEmit": false,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "allowJs": true,
+        "noUnusedLocals": false,
+        "strictPropertyInitialization": false,
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "baseUrl": "src",
+        "paths": {
+            "@Palavyr-Types": ["globalTypes.ts"],
+            "@api-client/*": ["client/*"],
+            "@common/*": ["common/*"],
+            "@components/*": ["components/*"],
+            "@conversation/*": ["dashboard/layouts/content/responseConfiguration/conversation/*"],
+            "@public-routes": ["routes/Routes.tsx"],
+            "@protected-routes": ["routes/ProtectedRoute.tsx"],
+            "@landing/*": ["landing/*"],
+            "@constants": ["constants.ts"]
+        }
+    },
+    "include": ["src/**/*", "src/**/*.d.ts", "customTypes/*.d.ts"],
+    "exclude": ["node_modules"],
+    "typeRoots": ["src/customTypes"]
 }

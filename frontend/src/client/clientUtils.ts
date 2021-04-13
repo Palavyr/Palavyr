@@ -32,7 +32,7 @@ export enum Environments {
 }
 
 export const isDevelopmentStage = () => {
-    return currentEnvironment !== typeof(Environments.Production);
+    return currentEnvironment.toUpperCase() !== typeof(Environments.Production).toString().toUpperCase();
 }
 
 if (softwareVersion === undefined) {

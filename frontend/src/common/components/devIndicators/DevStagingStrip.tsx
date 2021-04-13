@@ -1,6 +1,5 @@
-import { currentEnvironment, softwareVersion } from "@api-client/clientUtils";
+import { currentEnvironment, isDevelopmentStage, softwareVersion } from "@api-client/clientUtils";
 import { Typography } from "@material-ui/core";
-import { PRODUCTION } from "@Palavyr-Types";
 import React from "react";
 
 export const DevStagingStrip = () => {
@@ -9,7 +8,7 @@ export const DevStagingStrip = () => {
 
     return (
         <>
-            {currentEnvironment.toUpperCase() !== PRODUCTION.toUpperCase() ? (
+            {isDevelopmentStage() ? (
                 <div style={{ height: "75px", paddingTop: "10px", backgroundColor: "lightblue", textAlign: "center" }}>
                     <Typography variant="h5">{text}</Typography>
                     <Typography>
