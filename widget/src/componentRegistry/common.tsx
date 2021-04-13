@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Box, makeStyles } from "@material-ui/core";
-import { WidgetPreferences } from "src/types";
 import classNames from "classnames";
+import { WidgetPreferences } from "@Palavyr-Types";
 
 type StyleProps = {
     backgroundColor: string;

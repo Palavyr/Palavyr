@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { Meta } from '@storybook/react/types-6-0';
 import { App } from "./App";
+import { Meta } from '@storybook/react';
 import {MemoryRouter } from 'react-router';
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import CreateClient from './client/Client';
-import { AreaTable } from './types';
+import { WidgetClient } from 'client/Client';
+import { AreaTable } from '@Palavyr-Types';
 
 const fakeKey = "secret-key";
-const client = CreateClient(fakeKey)
+const client = new WidgetClient(fakeKey)
 
 const fakeAreaTables: Array<AreaTable> = [
     {
@@ -19,7 +19,6 @@ const fakeAreaTables: Array<AreaTable> = [
 
 var mock = new MockAdapter(axios);
 mock.onGet(`api/widget/areas?key=${fakeKey}`).reply(200, fakeAreaTables);
-
 
 export default {
     title: "Main/App",

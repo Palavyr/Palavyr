@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import { CssBaseline, MuiThemeProvider } from "@material-ui/core";
 import theme from "./theme";
 import { Provider } from "react-redux";
-import store from "./widgetCore/store";
 import { App } from "./App";
+import store from "store/store";
 
 ReactDOM.render(
     <React.StrictMode>

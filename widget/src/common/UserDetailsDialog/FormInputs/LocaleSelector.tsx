@@ -1,8 +1,9 @@
 import { makeStyles, TextField } from "@material-ui/core";
 import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
+import { LocaleMap, LocaleMapItem } from "@Palavyr-Types";
+import { sortByPropertyAlphabetical } from "common/sorting";
 import React from "react";
-import { sortByPropertyAlphabetical } from "src/common/sorting";
-import { LocaleMap, LocaleMapItem } from "src/types";
+
 
 export interface LocaleSelectorProps {
     options: LocaleMap;

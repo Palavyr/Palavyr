@@ -1,4 +1,4 @@
-import { CompleteConverationDetails, ConvoTableRow } from "../types";
+import { ConvoTableRow, CompleteConverationDetails } from "@Palavyr-Types";
 
 
 export const getRootNode = (nodeList: Array<ConvoTableRow>): ConvoTableRow => {

@@ -1,4 +1,4 @@
-import { Registry } from "../types";
+import { Registry } from "../globalTypes";
 import { StandardComponents } from "./standardComponentRegistry";
 
 const components = new StandardComponents();

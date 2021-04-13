@@ -2,7 +2,6 @@ import { Button, Dialog, DialogContent, makeStyles } from "@material-ui/core";
 import React, { useState } from "react";
 import { SetStateAction } from "react";
 import { Dispatch } from "react";
-import { LocaleMap, LocaleMapItem } from "src/types";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
@@ -11,11 +10,11 @@ import { NameForm } from "./FormInputs/NameForm";
 import { EmailForm } from "./FormInputs/EmailForm";
 import { LocaleSelector } from "./FormInputs/LocaleSelector";
 import { PhoneForm } from "./FormInputs/PhoneForm";
-import CreateClient from "src/client/Client";
-import { closeUserDetails, setRegionContext } from "src/widgetCore/store/dispatcher";
-import { INVALID_EMAIL, INVALID_NAME, INVALID_PHONE } from "./UserDetailsCheck";
 import { useSelector } from "react-redux";
-import { GlobalState } from "src/widgetCore/store/types";
+import { GlobalState, LocaleMap, LocaleMapItem } from "@Palavyr-Types";
+import { setRegionContext, closeUserDetails } from "@store-dispatcher";
+import { INVALID_PHONE, INVALID_EMAIL, INVALID_NAME } from "./UserDetailsCheck";
+import { WidgetClient } from "client/Client";
 
 export interface CollectDetailsFormProps {
     chatStarted: boolean;
@@ -60,8 +59,8 @@ const useStyles = makeStyles(theme => ({
 
 export const CollectDetailsForm = ({ chatStarted, setChatStarted }: CollectDetailsFormProps) => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
-    const client = CreateClient(secretKey);
-    const userDetailsVisible = useSelector((state: GlobalState) => state.behavior.userDetailsVisible);
+    const client = new WidgetClient(secretKey);
+    const userDetailsVisible = useSelector((state: GlobalState) => state.behaviorReducer.userDetailsVisible);
 
     const [options, setOptions] = useState<LocaleMap>([]);
     const [phonePattern, setphonePattern] = useState<string>("");
@@ -69,7 +68,7 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted }: CollectDetai
 
     useEffect(() => {
         (async () => {
-            const { data: locale } = await client.Widget.Access.getLocale();
+            const { data: locale } = await client.Widget.Get.Locale();
             setphonePattern(locale.localePhonePattern);
             setOptions(locale.localeMap);
             setRegionContext(locale.localeId);

@@ -1,4 +1,3 @@
-const path = require('path');
 const autoprefixer = require('autoprefixer');
 
 const createRules = () => {
@@ -24,8 +23,7 @@ const createRules = () => {
             exclude: /node_modules/,
             use: [
                 {
-                    loader: 'style-loader',
-                    // options: { hmr: true }
+                    loader: 'style-loader'
                 },
                 'css-loader',
                 {
@@ -45,7 +43,7 @@ const createRules = () => {
                     loader: 'sass-loader',
                     options: {
                         sassOptions: {
-                            includePaths: ['src/widgetCore/scss']
+                            includePaths: ['src/widget/scss']
                         }
                     }
                 }

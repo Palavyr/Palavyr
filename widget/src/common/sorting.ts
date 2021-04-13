@@ -1,4 +1,4 @@
-import { ConvoTableRow } from "src/types";
+import { ConvoTableRow } from "@Palavyr-Types";
 
 export const sortByPropertyAlphabetical = (stringPropertyGetter: (x: object) => string, array: Array<any>) => {
     if (!array) return [];

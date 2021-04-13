@@ -1,12 +1,12 @@
+import { ConvoTableRow, ConversationUpdate } from "@Palavyr-Types";
+import { addKeyValue, addUserMessage, toggleMsgLoader } from "@store-dispatcher";
+import { WidgetClient } from "client/Client";
 import { random } from "lodash";
-import { IClient } from "src/client/Client";
-import { ConvoTableRow, ConversationUpdate } from "src/types";
-import { addUserMessage, toggleMsgLoader } from "src/widget";
-import { addKeyValue } from "src/widgetCore/store/dispatcher";
+
 import { renderNextComponent } from "./renderNextComponent";
 import { setDynamicResponse } from "./setDynamicResponse";
 
-export const responseAction = (node: ConvoTableRow, child: ConvoTableRow, nodeList: Array<ConvoTableRow>, client: IClient, convoId: string, response: string, callback: () => void = null) => {
+export const responseAction = (node: ConvoTableRow, child: ConvoTableRow, nodeList: Array<ConvoTableRow>, client: WidgetClient, convoId: string, response: string | null, callback: (() => void) | null = null) => {
     if (response) {
         if (node.isCritical) {
             addKeyValue({ [node.text]: response.toString() }); // TODO: make unique
@@ -33,7 +33,7 @@ export const responseAction = (node: ConvoTableRow, child: ConvoTableRow, nodeLi
         NodeType: node.nodeType,
     };
 
-    client.Widget.Access.postUpdateAsync(updatePayload); // no need to await for this
+    client.Widget.Post.ReplyUpdate(updatePayload); // no need to await for this
     setTimeout(() => {
         if (callback) callback();
         renderNextComponent(child, nodeList, client, convoId); // convoId should come from redux store in the future

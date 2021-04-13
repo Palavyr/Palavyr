@@ -1,13 +1,14 @@
-import { IClient } from "src/client/Client";
-import { ConvoTableRow } from "src/types";
-import { renderCustomComponent } from "src/widget";
+
+import { ConvoTableRow } from "@Palavyr-Types";
+import { renderCustomComponent } from "@store-dispatcher";
+import { WidgetClient } from "client/Client";
 import { dummyFailComponent } from "./DummyComponentDev";
 import { ComponentRegistry } from "./registry";
 
 export const renderNextComponent = (
     node: ConvoTableRow,
     nodeList: Array<ConvoTableRow>,
-    client: IClient,
+    client: WidgetClient,
     convoId: string,
 ) => {
     //TODO: make this impossible by geting the configuration right

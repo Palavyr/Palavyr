@@ -2,7 +2,7 @@ const INFINITY = 1 / 0
 const MAX_INTEGER = 1.7976931348623157e+308
 
 
-export const random = (lower: number, upper: number, floating: boolean) => {
+export const random = (lower: number | undefined, upper: number | undefined, floating: boolean) => {
     if (floating === undefined) {
         if (typeof upper === "boolean") {
             floating = upper;
@@ -16,7 +16,7 @@ export const random = (lower: number, upper: number, floating: boolean) => {
         lower = 0;
         upper = 1;
     } else {
-        lower = toFinite(lower);
+        lower = toFinite(lower!);
         if (upper === undefined) {
             upper = lower;
             lower = 0;
@@ -46,6 +46,7 @@ function toFinite(value: number) {
         const sign = value < 0 ? -1 : 1;
         return sign * MAX_INTEGER;
     }
+    // eslint-disable-next-line no-self-compare
     return value === value ? value : 0;
 }
 
@@ -83,7 +84,7 @@ function isObject(value: string) {
 
 function isSymbol(value: string) {
   const type = typeof value
-  return type == 'symbol' || (type === 'object' && value != null && getTag(value) == '[object Symbol]')
+  return type === 'symbol' || (type === 'object' && value != null && getTag(value) === '[object Symbol]')
 }
 
 const toString = Object.prototype.toString

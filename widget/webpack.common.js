@@ -1,26 +1,24 @@
 const path = require('path');
-const { createRules } = require('./webpack/rules')
+const { createRules } = require('./webpack/rules');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
-
-module.exports = (ENV) => {
-
-    const envPath = ENV.production ? ".env.production" : ".env.development";
-    console.log("Building in: " + envPath)
+module.exports = ENV => {
+    const envPath = ENV.production ? '.env.production' : '.env.development';
+    console.log('Building in: ' + envPath);
 
     return {
         entry: {
-            "palavyr-widget-build": './src/index.tsx',
+            'palavyr-widget-build': './src/index.tsx',
         },
         output: {
             filename: '[name].bundle.js',
             path: path.resolve(__dirname, './dist'),
-            publicPath: "/"
+            publicPath: '/',
         },
         resolve: {
             plugins: [new TsconfigPathsPlugin()],
-            extensions: ['.tsx', '.ts', '.js']
+            extensions: ['.tsx', '.ts', '.js'],
         },
-        module: { rules: createRules() }
-    }
-}
+        module: { rules: createRules() },
+    };
+};

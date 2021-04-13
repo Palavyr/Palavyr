@@ -1,36 +1,33 @@
 {
     "compilerOptions": {
         "strict": false,
-        "target": "es6", //"es5"
-        "baseUrl": ".",
         "outDir": "./dist",
+        "module": "esnext",
+        "target": "es5", //"es6"
+        "skipLibCheck": true,
         "sourceMap": true,
         "noImplicitAny": false,
         "jsx": "react",
         "experimentalDecorators": true,
+        "strictNullChecks": true,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
-        "module": "esnext", //commonjs
         "moduleResolution": "node",
-        "allowJs": true,
-        "skipLibCheck": true,
-        "resolveJsonModule": true,
-        "lib": [
-            "dom",
-            "dom.iterable",
-            "esnext"
-        ],
-
-        "noUnusedLocals": false,
-        "isolatedModules": true,
         "noEmit": false,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "allowJs": true,
+        "noUnusedLocals": false,
+        "strictPropertyInitialization": false,
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "baseUrl": "src",
+        "paths": {
+            "@Palavyr-Types": ["globalTypes.ts"],
+            "@store-actions": ["store/actions/actions"],
+            "@store-dispatcher": ["store/dispatcher"]
+        }
     },
-    "include": [
-        "src/**/*",
-        "src/**/*.d.ts",
-        "customTypes/*.d.ts"
-    ],
-    "extends": "./tsconfig.paths.json",
-    "exclude": ["node_modules", "lib"]
+    "include": ["src/**/*", "src/**/*.d.ts", "customTypes/**/*"],
+    "exclude": ["node_modules"] // removed lib
 }

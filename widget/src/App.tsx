@@ -1,16 +1,15 @@
 import * as React from "react";
 import { useState, useCallback, useEffect } from "react";
 import { OptionSelector } from "./options/Options";
-import { SelectedOption, WidgetPreferences } from "./types";
 import { useLocation } from "react-router-dom";
-import CreateClient, { IClient } from "./client/Client";
-import { CustomWidget } from "./widget/CustomWidget";
+import { Widget } from "./widget/Widget";
 import { CollectDetailsForm } from "./common/UserDetailsDialog/CollectDetailsForm";
 import { useSelector } from "react-redux";
-import { GlobalState } from "./widgetCore/store/types";
+import { GlobalState, SelectedOption, WidgetPreferences } from "@Palavyr-Types";
+import { WidgetClient } from "client/Client";
 
 export const App = () => {
-    const userDetailsVisible = useSelector((state: GlobalState) => state.behavior.userDetailsVisible);
+    const userDetailsVisible = useSelector((state: GlobalState) => state.behaviorReducer.userDetailsVisible);
 
     const [selectedOption, setSelectedOption] = useState<SelectedOption | null>(null);
     const [isReady, setIsReady] = useState<boolean>(false);
@@ -21,14 +20,13 @@ export const App = () => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const isDemo = new URLSearchParams(useLocation().search).get("demo");
 
-    let client: IClient;
-    if (secretKey) client = CreateClient(secretKey);
-    const runAppPrecheck = useCallback(async () => {
-        var { data: preCheckResult } = await client.Widget.Access.runPreCheck(isDemo === "true" ? true : false);
+    const client = new WidgetClient(secretKey);
 
+    const runAppPrecheck = useCallback(async () => {
+        var { data: preCheckResult } = await client.Widget.Get.PreCheck(isDemo === "true" ? true : false);
         setIsReady(preCheckResult.isReady);
         if (preCheckResult.isReady) {
-            const { data: prefs } = await client.Widget.Access.fetchPreferences();
+            const { data: prefs } = await client.Widget.Get.WidgetPreferences(); // TODO: check if the app works currently (grabbing the prefs from one layer down.) if so, delete this.
             setWidgetPrefs(prefs);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -40,11 +38,11 @@ export const App = () => {
 
     return (
         <>
-            {isReady === true && selectedOption === null && !userDetailsVisible && <OptionSelector setSelectedOption={setSelectedOption} preferences={widgetPrefs} />}
+            {isReady === true && selectedOption === null && widgetPrefs && !userDetailsVisible && <OptionSelector setSelectedOption={setSelectedOption} preferences={widgetPrefs} />}
             {isReady === true && selectedOption !== null && (
                 <>
                     <CollectDetailsForm chatStarted={chatStarted} setChatStarted={setChatStarted} />
-                    <CustomWidget option={selectedOption} preferences={widgetPrefs} />
+                    {widgetPrefs && <Widget option={selectedOption} preferences={widgetPrefs} />}
                 </>
             )}
             {isReady === false && (

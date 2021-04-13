@@ -1,8 +1,8 @@
 import { TextField } from "@material-ui/core";
+import { getNameContext, getEmailAddressContext, setPhoneContext, setEmailAddressContext } from "@store-dispatcher";
 import React, { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { getEmailAddressContext, getNameContext, setEmailAddressContext, setPhoneContext } from "src/widgetCore/store/dispatcher";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserEmail, checkUserName, INVALID_EMAIL, INVALID_PHONE } from "../UserDetailsCheck";
 
@@ -51,7 +51,7 @@ export const EmailForm = ({ status, setStatus, setDetailsSet }: EmailFormProps) 
                 setEmailAddressContext(e.target.value);
                 setEmailState(e.target.value);
                 if (status === INVALID_EMAIL) {
-                    setStatus(null);
+                    setStatus("");
                 }
             }}
             helperText={status === INVALID_EMAIL && "Email is not formatted."}

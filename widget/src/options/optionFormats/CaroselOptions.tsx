@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { SelectedOption, WidgetPreferences } from '../../types';
+import { SelectedOption, WidgetPreferences } from '../../globalTypes';
 import { useHistory, useLocation } from 'react-router-dom';
-import { Paper, makeStyles, List, Card, Typography, CardContent, ListItem } from '@material-ui/core';
+import { Paper, makeStyles, List, Card, ListItem } from '@material-ui/core';
 import { useEffect } from 'react';
 
 

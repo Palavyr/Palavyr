@@ -1,9 +1,9 @@
 import { makeStyles } from "@material-ui/core";
+import { getPhoneContext, setPhoneContext } from "@store-dispatcher";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import NumberFormat from "react-number-format";
-import { getPhoneContext, setPhoneContext } from "src/widgetCore/store/dispatcher";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserPhone, INVALID_PHONE } from "../UserDetailsCheck";
 
@@ -42,7 +42,7 @@ export const PhoneForm = ({ phonePattern, status, setStatus }: PhoneFormProps) =
     }, []);
     return (
         <NumberFormat
-            style={{border: status === INVALID_PHONE ? "3px solid red" : null}}
+            style={ status === INVALID_PHONE ? {border: "3px solid red"} : {}}
             placeholder="Phone number (optional)"
             onError={() => setStatus(INVALID_PHONE)}
             error={status === INVALID_PHONE ? "WOW" : ""}
@@ -61,7 +61,7 @@ export const PhoneForm = ({ phonePattern, status, setStatus }: PhoneFormProps) =
                 setPhoneContext(values.formattedValue);
                 setPhoneState(values.formattedValue);
                 if (status === INVALID_PHONE) {
-                    setStatus(null);
+                    setStatus("");
                 }
             }}
         />

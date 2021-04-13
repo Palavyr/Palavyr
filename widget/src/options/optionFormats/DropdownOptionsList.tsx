@@ -1,14 +1,13 @@
 import * as React from "react";
-import { SelectedOption, WidgetPreferences } from "../../types";
+import { SelectedOption, WidgetPreferences } from "../../globalTypes";
 import { useHistory, useLocation } from "react-router-dom";
 import { makeStyles, Card, Box, TextField } from "@material-ui/core";
 import { useEffect } from "react";
-import { sortByPropertyAlphabetical } from "src/common/sorting";
 import Autocomplete, { AutocompleteRenderInputParams } from "@material-ui/lab/Autocomplete";
 import classNames from "classnames";
-import { Dispatch } from "react";
-import { SetStateAction } from "react";
-import { openUserDetails, toggleUserDetails } from "src/widgetCore/store/dispatcher";
+import { sortByPropertyAlphabetical } from "common/sorting";
+import { openUserDetails } from "@store-dispatcher";
+
 
 const useStyles = makeStyles(() => ({
     root: {

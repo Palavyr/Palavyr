@@ -1,15 +1,15 @@
 import { assembleCompletedConvo, getChildNodes } from "./utils";
 import React, { useState } from "react";
-import { ConvoTableRow, IProgressTheChat } from "src/types";
-import { responseAction } from "./responseAction";
-import { ResponseButton } from "src/common/ResponseButton";
 import { Table, TableRow, TableCell, makeStyles, TextField, CircularProgress, Button } from "@material-ui/core";
-import { sortChildrenByOptions } from "src/common/sorting";
-import { SingleRowSingleCell } from "src/common/TableCell";
+import { responseAction } from "./responseAction";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
-import { getContextProperties, openUserDetails, setNumIndividualsContext } from "src/widgetCore/store/dispatcher";
 import { ConvoContextProperties } from "./registry";
 import { uuid } from "uuidv4";
+import { IProgressTheChat, ConvoTableRow } from "@Palavyr-Types";
+import { setNumIndividualsContext, getContextProperties, openUserDetails } from "@store-dispatcher";
+import { ResponseButton } from "common/ResponseButton";
+import { sortChildrenByOptions } from "common/sorting";
+import { SingleRowSingleCell } from "common/TableCell";
 
 const useStyles = makeStyles(() => ({
     standardContainer: {
@@ -101,16 +101,18 @@ export class StandardComponents {
                             {sortedChildren.map((child: ConvoTableRow) => {
                                 return (
                                     <TableCell className={cls.table}>
-                                        <ResponseButton
-                                            disabled={disabled}
-                                            key={child.id}
-                                            text={child.optionPath}
-                                            onClick={() => {
-                                                var response = child.optionPath;
-                                                responseAction(node, child, nodeList, client, convoId, response);
-                                                setDisabled(true);
-                                            }}
-                                        />
+                                        {child.optionPath && (
+                                            <ResponseButton
+                                                disabled={disabled}
+                                                key={child.id}
+                                                text={child.optionPath}
+                                                onClick={() => {
+                                                    var response = child.optionPath;
+                                                    responseAction(node, child, nodeList, client, convoId, response);
+                                                    setDisabled(true);
+                                                }}
+                                            />
+                                        )}
                                     </TableCell>
                                 );
                             })}
@@ -251,7 +253,7 @@ export class StandardComponents {
         const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
-            const [response, setResponse] = useState<number>(null);
+            const [response, setResponse] = useState<number | null>(null);
             const [disabled, setDisabled] = useState<boolean>(false);
 
             const cls = useStyles();
@@ -280,9 +282,11 @@ export class StandardComponents {
                             <ResponseButton
                                 disabled={disabled}
                                 onClick={() => {
-                                    responseAction(node, child, nodeList, client, convoId, response.toString());
-                                    setNumIndividualsContext(response);
-                                    setDisabled(true);
+                                    if (response) {
+                                        responseAction(node, child, nodeList, client, convoId, response.toString());
+                                        setNumIndividualsContext(response);
+                                        setDisabled(true);
+                                    }
                                 }}
                             />
                         </TableCell>
@@ -316,10 +320,10 @@ export class StandardComponents {
                 numIndividuals = 1;
             }
 
-            const { data: response } = await client.Widget.Access.sendConfirmationEmail(areaId, email, name, phone, numIndividuals, dynamicResponses, keyvalues, convoId);
+            const { data: response } = await client.Widget.Send.ConfirmationEmail(areaId, email, name, phone, numIndividuals, dynamicResponses, keyvalues, convoId);
             if (response.result) {
                 const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
-                await client.Widget.Access.postCompleteConversation(completeConvo);
+                await client.Widget.Post.CompletedConversation(completeConvo);
             }
             return response;
         };
@@ -421,10 +425,10 @@ export class StandardComponents {
                 const name = contextProperties[ConvoContextProperties.name];
                 const phone = contextProperties[ConvoContextProperties.phoneNumber];
 
-                const { data: response } = await client.Widget.Access.sendFallbackEmail(areaId, email, name, phone, convoId);
+                const { data: response } = await client.Widget.Send.FallbackEmail(areaId, email, name, phone, convoId);
                 if (response.result) {
                     var completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
-                    await client.Widget.Access.postCompleteConversation(completeConvo);
+                    await client.Widget.Post.CompletedConversation(completeConvo);
                 }
                 return response;
             };

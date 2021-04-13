@@ -1,4 +1,4 @@
-import { ConvoTableRow } from "../../types";
+import { ConvoTableRow } from "../../globalTypes";
 
 export const ConvoNode: ConvoTableRow = {
     id: 0,

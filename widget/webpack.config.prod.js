@@ -11,47 +11,33 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-
 process.env.NODE_ENV = 'production';
 
-module.exports = (ENV) => {
-  const envPath = ENV.production ? ".env.production" : ".env.development";
+module.exports = ENV => {
+    const envPath = ENV.production ? '.env.production' : '.env.development';
 
-  return merge(common(ENV), {
-    mode: 'production',
-    devtool: 'source-map', // Don't really need this source map
-    plugins: [
-      new CleanWebpackPlugin(),
-      new MiniCssExtractPlugin({
-        filename: 'styles.css',
-        chunkFileName: '[id].css'
-      }),
-      new Dotenv({ path: envPath }),
-      new ManifestPlugin(manifestOptions),
-      new HtmlWebpackPlugin(htmlOptions),
-      new ForkTsCheckerWebpackPlugin(),
-
-    ],
-    // externals: {
-    //   react: {
-    //     commonjs: 'React',
-    //     commonjs2: 'react',
-    //     amd: 'react'
-    //   },
-    //   'react-dom': {
-    //     commonjs: 'ReactDOM',
-    //     commonjs2: 'react-dom',
-    //     amd: 'react-dom'
-    //   }
-    // },
-    optimization: {
-      minimizer: [
-        new UglifyJsPlugin({
-          cache: true,
-          parallel: true
-        }),
-        new OptimizeCSSAssetsPlugin({})
-      ]
-    }
-  })
-}
+    return merge(common(ENV), {
+        mode: 'production',
+        devtool: 'source-map', // Don't really need this source map
+        plugins: [
+            new CleanWebpackPlugin(),
+            new MiniCssExtractPlugin({
+                filename: 'styles.css',
+                chunkFileName: '[id].css',
+            }),
+            new Dotenv({ path: envPath }),
+            new ManifestPlugin(manifestOptions),
+            new HtmlWebpackPlugin(htmlOptions),
+            new ForkTsCheckerWebpackPlugin(),
+        ],
+        optimization: {
+            minimizer: [
+                new UglifyJsPlugin({
+                    cache: true,
+                    parallel: true,
+                }),
+                new OptimizeCSSAssetsPlugin({}),
+            ],
+        },
+    });
+};
