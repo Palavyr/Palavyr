@@ -25,7 +25,8 @@
         "paths": {
             "@Palavyr-Types": ["globalTypes.ts"],
             "@store-actions": ["store/actions/actions"],
-            "@store-dispatcher": ["store/dispatcher"]
+            "@store-dispatcher": ["store/dispatcher"],
+            "@test-data/*": ["test/data/*"]
         }
     },
     "include": ["src/**/*", "src/**/*.d.ts", "customTypes/**/*"],
