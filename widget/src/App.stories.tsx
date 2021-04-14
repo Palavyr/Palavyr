@@ -1,36 +1,32 @@
-import * as React from 'react';
+import * as React from "react";
 import { App } from "./App";
-import { Meta } from '@storybook/react';
-import {MemoryRouter } from 'react-router';
-import axios from "axios";
-import MockAdapter from "axios-mock-adapter";
-import { WidgetClient } from 'client/Client';
-import { AreaTable } from '@Palavyr-Types';
+import { Meta } from "@storybook/react";
+
+import { WidgetClient } from "client/Client";
+import { ConfigureMockClient } from "test/testUtils/ConfigureMockClient";
+import { precheckResult } from "@test-data/preCheckResults";
+import { widgetPreferences } from "@test-data/widgetPreferences";
+import { areas } from "@test-data/areas";
+import { convoA } from "@test-data/conversationNodes";
 
 const fakeKey = "secret-key";
-const client = new WidgetClient(fakeKey)
+const isDemo = false;
+const areaId = "abc123";
+const routes = new WidgetClient(fakeKey).Routes;
 
-const fakeAreaTables: Array<AreaTable> = [
-    {
-        areaIdentifier: "abc-123",
-        areaDisplayTitle: "Test Display Title",
-    }
-]
-
-var mock = new MockAdapter(axios);
-mock.onGet(`api/widget/areas?key=${fakeKey}`).reply(200, fakeAreaTables);
+const conf = new ConfigureMockClient();
+conf.ConfigureGet(routes.precheck(fakeKey, isDemo), precheckResult);
+conf.ConfigureGet(routes.widgetPreferences(fakeKey), widgetPreferences);
+conf.ConfigureGet(routes.areas(fakeKey), areas);
+conf.ConfigureGet(routes.newConvo(fakeKey, areaId), convoA(areaId));
 
 export default {
     title: "Main/App",
     component: App,
-    argTypes: {}
-
+    argTypes: {},
 } as Meta;
 
-const Template = () => <MemoryRouter><App /></MemoryRouter>;
+const Template = () => <App />;
 
 export const Primary = Template.bind({});
-Primary.args = {}
-
-
-
+Primary.args = {};
