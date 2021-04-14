@@ -136,4 +136,4 @@ const theme = createMuiTheme({
   },
 });
 
-export default responsiveFontSizes(theme);
+export const PalavyrWidgetTheme = responsiveFontSizes(theme);
