@@ -1,13 +1,15 @@
 import { WidgetClient } from "client/Client";
 import { ElementType } from "react";
 
+export type SecretKey = string | null;
+
 export type AreaTable = {
     areaIdentifier: string;
     areaDisplayTitle: string;
 };
 
 export type ConvoTableRow = {
-    id: number;
+    id: number | null;
     nodeId: string;
     nodeType: string;
     isCritical: boolean;
@@ -20,7 +22,7 @@ export type ConvoTableRow = {
     valueOptions: string; // needs to be split by ","
     isDynamicTableNode: boolean;
     nodeComponentType: string;
-    dynamicType: string;
+    dynamicType: string | null;
 };
 
 export type SelectedOption = {
@@ -36,14 +38,14 @@ export type NewConversation = {
     conversationId: string;
     widgetPreferences: WidgetPreferences;
     conversationNodes: ConvoTableRow[];
-}
+};
 
 export type WidgetPreferences = {
-    id: number;
+    // id: number;
     title: string;
     subtitle: string;
     placeholder: string;
-    shouldGroup: boolean;
+    // shouldGroup: boolean;
     selectListColor: string;
     headerColor: string;
     fontFamily: string;
@@ -99,8 +101,6 @@ export type LocaleMapItem = {
     currencySymbol: string;
 };
 export type LocaleMap = LocaleMapItem[];
-
-
 
 export interface IProgressTheChat {
     node: ConvoTableRow;
@@ -208,10 +208,9 @@ export interface GlobalState {
     contextReducer: ContextProperties;
 }
 
-
 export const OPEN_USER_DETAILS = "BEHAVIOR/OPEN_USER_DETAILS";
 export const CLOSE_USER_DETAILS = "BEHAVIOR/CLOSE_USER_DETAILS";
-export const TOGGLE_USER_DETAILS = "BEHAVIOR/TOGGLE_USER_DETAILS"
+export const TOGGLE_USER_DETAILS = "BEHAVIOR/TOGGLE_USER_DETAILS";
 export const TOGGLE_CHAT = "BEHAVIOR/TOGGLE_CHAT";
 export const TOGGLE_INPUT_DISABLED = "BEHAVIOR/TOGGLE_INPUT_DISABLED";
 export const DISABLE_INPUT = "BEHAVIOR/INPUT_DISABLED";
@@ -231,14 +230,14 @@ export const CLOSE_FULLSCREEN_PREVIEW = "FULLSCREEN/CLOSE_PREVIEW";
 export const SET_CONTEXT_PROPERTIES = "CONTEXT_PROPERTIES/SET";
 export const GET_CONTEXT_PROPERTIES = "CONTEXT_PROPERTIES/GET";
 
-export const SET_NUM_INDIVIDUALS_CONTEXT = "CONTEXT_PROPERTIES/SET_NUM_INDIVIDUALS"
-export const SET_NAME_CONTEXT = "CONTEXT_PROPERTIES/SET_NAME"
-export const SET_PHONE_CONTEXT = "CONTEXT_PROPERTIES/SET_PHONE"
-export const SET_EMAILADDRESS_CONTEXT = "CONTEXT_PROPERTIES/SET_EMAILADDRESS"
-export const SET_REGION_CONTEXT = "CONTEXT_PROPERTIES/SET_REGION"
-export const SET_KEYVALUE_CONTEXT = "CONTEXT_PROPERTIES/SET_KEYVALUE"
-export const SET_DYNAMICRESPONSE_CONTEXT = "CONTEXT_PROPERTIES/SET_DYNAMICRESPONSE"
-export const SET_DYNAMICRESPONSES_CONTEXT = "CONTEXT_PROPERTIES/SET_DYNAMICRESPONSES"
+export const SET_NUM_INDIVIDUALS_CONTEXT = "CONTEXT_PROPERTIES/SET_NUM_INDIVIDUALS";
+export const SET_NAME_CONTEXT = "CONTEXT_PROPERTIES/SET_NAME";
+export const SET_PHONE_CONTEXT = "CONTEXT_PROPERTIES/SET_PHONE";
+export const SET_EMAILADDRESS_CONTEXT = "CONTEXT_PROPERTIES/SET_EMAILADDRESS";
+export const SET_REGION_CONTEXT = "CONTEXT_PROPERTIES/SET_REGION";
+export const SET_KEYVALUE_CONTEXT = "CONTEXT_PROPERTIES/SET_KEYVALUE";
+export const SET_DYNAMICRESPONSE_CONTEXT = "CONTEXT_PROPERTIES/SET_DYNAMICRESPONSE";
+export const SET_DYNAMICRESPONSES_CONTEXT = "CONTEXT_PROPERTIES/SET_DYNAMICRESPONSES";
 
 export interface OpenUserDetails {
     type: typeof OPEN_USER_DETAILS;
@@ -254,7 +253,6 @@ export interface ToggleUserDetails {
 export interface ToggleChat {
     type: typeof TOGGLE_CHAT;
 }
-
 
 export interface ToggleInputDisabled {
     type: typeof TOGGLE_INPUT_DISABLED;
@@ -313,7 +311,6 @@ export interface DeleteMessages {
     id?: string;
 }
 
-
 export interface SetBadgeCount {
     type: typeof SET_BADGE_COUNT;
     count: number;
@@ -326,7 +323,6 @@ export interface MarkAllMessagesRead {
 export type BehaviorActions = OpenUserDetails | CloseUserDetails | ToggleUserDetails | ToggleChat | ToggleInputDisabled | ToggleMsgLoader | ToggleInputDisabled | InputEnabled | InputDisabled;
 
 export type MessagesActions = AddUserMessage | AddResponseMessage | AddLinkSnippet | RenderCustomComponent | DropMessages | HideAvatar | DeleteMessages | MarkAllMessagesRead | SetBadgeCount;
-
 
 export interface openFullscreenPreview {
     type: typeof OPEN_FULLSCREEN_PREVIEW;
@@ -375,7 +371,7 @@ export interface addKeyValueContext {
 
 export interface setDynamiceResponses {
     type: typeof SET_DYNAMICRESPONSES_CONTEXT;
-    dynamicResponseObject: DynamicResponses
+    dynamicResponseObject: DynamicResponses;
 }
 
 export interface addNumIndividuals {
@@ -383,15 +379,14 @@ export interface addNumIndividuals {
     numIndividuals: number;
 }
 
-export type ContextPropertyActions = setContextProperties
-| getContextProperties
-| setNameContext
-| setPhoneContext
-| setEmailAddressContext
-| setRegionContext
-| addKeyValueContext
-| setDynamiceResponses;
+export type ContextPropertyActions =
+    | setContextProperties
+    | getContextProperties
+    | setNameContext
+    | setPhoneContext
+    | setEmailAddressContext
+    | setRegionContext
+    | addKeyValueContext
+    | setDynamiceResponses;
 
-export type AllActions = ContextPropertyActions | FullscreenPreviewActions | BehaviorActions | MessagesActions
-
-
+export type AllActions = ContextPropertyActions | FullscreenPreviewActions | BehaviorActions | MessagesActions;
