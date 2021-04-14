@@ -13,4 +13,4 @@ declare global {
 const composeEnhancers = (process.env.NODE_ENV !== "production" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 const reducer = combineReducers({ behaviorReducer, messagesReducer, contextReducer });
 
-export default createStore(reducer, composeEnhancers());
+export const PalavyrWidgetStore = createStore(reducer, composeEnhancers());

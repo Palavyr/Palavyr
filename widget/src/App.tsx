@@ -26,7 +26,7 @@ export const App = () => {
         var { data: preCheckResult } = await client.Widget.Get.PreCheck(isDemo === "true" ? true : false);
         setIsReady(preCheckResult.isReady);
         if (preCheckResult.isReady) {
-            const { data: prefs } = await client.Widget.Get.WidgetPreferences(); // TODO: check if the app works currently (grabbing the prefs from one layer down.) if so, delete this.
+            const { data: prefs } = await client.Widget.Get.WidgetPreferences();
             setWidgetPrefs(prefs);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

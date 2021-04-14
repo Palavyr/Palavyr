@@ -4,9 +4,8 @@ import cn from "classnames";
 import Messages from "../Messages/Messages";
 
 import "./style.scss";
-import { AnyFunction } from "@Palavyr-Types";
 import { WidgetPreferences } from "@Palavyr-Types";
-import { Header } from "../Header/Header";
+import { ConvoHeader } from "../ConvoHeader/ConvoHeader";
 
 type Props = {
     title: string;
@@ -22,7 +21,7 @@ type Props = {
 export const Conversation = ({ title, subtitle, className, profileAvatar, titleAvatar, showTimeStamp, customPreferences }: Props) => {
     return (
         <div className={cn("rcw-conversation-container", className)} aria-live="polite">
-            <Header title={title} subtitle={subtitle} titleAvatar={titleAvatar} customPreferences={customPreferences} />
+            <ConvoHeader title={title} subtitle={subtitle} titleAvatar={titleAvatar} headerColor={customPreferences.headerColor} headerFontColor={customPreferences.headerFontColor} />
             <Messages profileAvatar={profileAvatar} showTimeStamp={showTimeStamp} customPreferences={customPreferences} />
         </div>
     );

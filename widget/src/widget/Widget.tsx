@@ -16,13 +16,14 @@ import { isWidgetOpened, toggleWidget } from "@store-dispatcher";
 import { WidgetClient } from "client/Client";
 import { _openFullscreenPreview } from "@store-actions";
 
-interface ICustomWidget {
+export interface WidgetProps {
     option: SelectedOption;
     preferences: WidgetPreferences;
 }
 
-export const Widget = ({ option, preferences }: ICustomWidget) => {
-    const secretKey = new URLSearchParams(useLocation().search).get("key");
+export const Widget = ({ option, preferences }: WidgetProps) => {
+    const location = useLocation();
+    const secretKey = new URLSearchParams(location.search).get("key");
     const client = new WidgetClient(secretKey);
     const dispatch = useDispatch();
 

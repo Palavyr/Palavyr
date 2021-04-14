@@ -1,18 +1,18 @@
 import { makeStyles } from "@material-ui/core";
 import classNames from "classnames";
 import React from "react";
-import SettingsIcon from '@material-ui/icons/Settings';
+import SettingsIcon from "@material-ui/icons/Settings";
 
-import { WidgetPreferences } from "@Palavyr-Types";
 import "./style.scss";
 import { openUserDetails } from "@store-dispatcher";
 
-type Props = {
+export interface ConvoHeaderProps {
     title: string;
     subtitle: string;
     titleAvatar?: string;
-    customPreferences: WidgetPreferences;
-};
+    headerColor: string;
+    headerFontColor: string;
+}
 
 type StyleProps = {
     headerColor: string;
@@ -22,7 +22,7 @@ type StyleProps = {
 const setHeaderStyles = (props: StyleProps) => {
     let headerObj = {
         backgroundColor: "gray",
-        color: "white"
+        color: "white",
     };
 
     if (props.headerColor) {
@@ -49,20 +49,20 @@ const useStyles = makeStyles({
         right: "5px",
         top: "5px",
         height: "2rem",
-        width: "2rem"
-    }
+        width: "2rem",
+    },
 });
 
-export const Header = ({ title, subtitle, titleAvatar, customPreferences }: Props) => {
-    const cls = useStyles({ headerColor: customPreferences.headerColor, headerFontColor: customPreferences.headerFontColor });
+export const ConvoHeader = ({ title, subtitle, titleAvatar, headerColor, headerFontColor }: ConvoHeaderProps) => {
+    const cls = useStyles({ headerColor: headerColor, headerFontColor: headerFontColor });
     return (
         <div className={classNames(cls.header, cls.flexProperty)}>
             <SettingsIcon className={cls.settingsIcon} onClick={() => openUserDetails()} />
-            <h4 className={"rcw-title"}>
+            <h4 className="rcw-title">
                 {titleAvatar && <img src={titleAvatar} className="avatar" alt="profile" />}
                 {title}
             </h4>
             <span>{subtitle}</span>
         </div>
     );
-}
+};

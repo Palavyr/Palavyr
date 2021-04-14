@@ -12,7 +12,7 @@ export const responseAction = (node: ConvoTableRow, child: ConvoTableRow, nodeLi
             addKeyValue({ [node.text]: response.toString() }); // TODO: make unique
         }
 
-        if (node.isDynamicTableNode) {
+        if (node.isDynamicTableNode && node.dynamicType) {
             setDynamicResponse(node.dynamicType, node.nodeId, response.toString());
         }
 
