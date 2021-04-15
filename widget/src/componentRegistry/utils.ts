@@ -1,6 +1,5 @@
 import { ConvoTableRow, CompleteConverationDetails } from "@Palavyr-Types";
 
-
 export const getRootNode = (nodeList: Array<ConvoTableRow>): ConvoTableRow => {
     var node = nodeList.filter(x => x.isRoot === true)[0];
     return node
