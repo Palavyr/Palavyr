@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { MemoryRouter } from "react-router";
 import { Provider } from "react-redux";
 import { PalavyrWidgetStore } from "store/store";
@@ -6,6 +6,7 @@ import { MockIFrameWrapper } from "test/wrappers/MockIframe";
 import { widgetUrl } from "test/routes";
 import { CssBaseline, MuiThemeProvider } from "@material-ui/core";
 import { PalavyrWidgetTheme } from "../src/PalavyrWidgetTheme";
+import { dropMessages } from "../src/store/dispatcher";
 
 const fakeKey = "secret-key";
 const isDemo = false;
@@ -22,8 +23,13 @@ export const parameters = {
 };
 
 export const decorators = [
-    Story => (
-        <MockIFrameWrapper>
+    Story => {
+        useEffect(() => {
+            return () => {
+                dropMessages();
+            };
+        }, [dropMessages]);
+        return (
             <MemoryRouter initialEntries={[homeUrl]}>
                 <Provider store={PalavyrWidgetStore}>
                     <MuiThemeProvider theme={PalavyrWidgetTheme}>
@@ -32,6 +38,6 @@ export const decorators = [
                     </MuiThemeProvider>
                 </Provider>
             </MemoryRouter>
-        </MockIFrameWrapper>
-    ),
+        );
+    },
 ];

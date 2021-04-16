@@ -5,7 +5,7 @@ import "./styles.scss";
 
 import Loader from "./components/Loader/Loader";
 import { WidgetPreferences, GlobalState, IMessage, Link, CustomCompMessage } from "@Palavyr-Types";
-import { MessageWrapper } from "componentRegistry/common";
+import { MessageWrapper } from "componentRegistry/MessageWrapper";
 import { _markAllMessagesRead, _setBadgeCount } from "store/actions/actions";
 import { scrollToBottom } from "widget/utils/messages";
 

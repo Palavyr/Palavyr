@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogContent, makeStyles } from "@material-ui/core";
+import { Button, Dialog, DialogContent, makeStyles, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { SetStateAction } from "react";
 import { Dispatch } from "react";
@@ -33,7 +33,6 @@ const useStyles = makeStyles(theme => ({
     },
     dialogBackground: {
         zIndex: 9999,
-        backgroundColor: "white",
     },
     dialogPaper: {
         zIndex: 9999,
@@ -42,6 +41,7 @@ const useStyles = makeStyles(theme => ({
         alignItems: "center",
         paddingBottom: theme.spacing(3),
         maxWidth: 420,
+        backgroundColor: "#F4F4F4",
     },
     dialogPaperScrollPaper: {
         maxHeight: "none",
@@ -115,8 +115,13 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted }: CollectDetai
                     <PhoneForm {...formProps} phonePattern={phonePattern} />
                     <LocaleSelector options={options} onChange={onChange} />
                     <div style={{ display: "flex", justifyContent: "center" }}>
-                        <Button disabled={status === INVALID_PHONE || status === INVALID_EMAIL || status === INVALID_NAME} className={cls.button} endIcon={detailsSet && <CheckCircleOutlineIcon />} type="submit">
-                            {chatStarted ? "Continue" : "Begin"}
+                        <Button
+                            disabled={status === INVALID_PHONE || status === INVALID_EMAIL || status === INVALID_NAME}
+                            className={cls.button}
+                            endIcon={detailsSet && <CheckCircleOutlineIcon />}
+                            type="submit"
+                        >
+                            <Typography variant="h5">{chatStarted ? "Continue" : "Begin"}</Typography>
                         </Button>
                     </div>
                 </form>

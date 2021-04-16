@@ -1,5 +1,6 @@
+import { toggleUserDetails } from "@store-dispatcher";
 import { Meta, Story } from "@storybook/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { widgetUrl } from "test/routes";
 import { CollectDetailsForm, CollectDetailsFormProps } from "./CollectDetailsForm";
 
@@ -17,6 +18,15 @@ export default {
     },
 } as Meta;
 
-const Template: Story<CollectDetailsFormProps> = args => <CollectDetailsForm {...args} />;
+const Template: Story<CollectDetailsFormProps> = args => {
+    useEffect(() => {
+        toggleUserDetails();
+        return () => {
+            toggleUserDetails();
+        };
+    });
+
+    return <CollectDetailsForm {...args} />;
+};
 
 export const Primary = Template.bind({});

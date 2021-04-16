@@ -8,7 +8,7 @@ export const convoA = (areaId: string) => (
             "nodeType": "ProvideInfo",
             "dynamicType": null,
             "fallback": false,
-            "text": "Hello",
+            "text": "Hello, this is a test.",
             "isRoot": true,
             "optionPath": "",
             "isCritical": false,

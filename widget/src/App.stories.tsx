@@ -14,11 +14,11 @@ const isDemo = false;
 const areaId = "abc123";
 const routes = new WidgetClient(fakeKey).Routes;
 
-const conf = new ConfigureMockClient();
-conf.ConfigureGet(routes.precheck(fakeKey, isDemo), precheckResult);
-conf.ConfigureGet(routes.widgetPreferences(fakeKey), widgetPreferences);
-conf.ConfigureGet(routes.areas(fakeKey), areas);
-conf.ConfigureGet(routes.newConvo(fakeKey, areaId), convoA(areaId));
+const client = new ConfigureMockClient();
+client.ConfigureGet(routes.precheck(fakeKey, isDemo), precheckResult);
+client.ConfigureGet(routes.widgetPreferences(fakeKey), widgetPreferences);
+client.ConfigureGet(routes.areas(fakeKey), areas);
+client.ConfigureGet(routes.newConvo(fakeKey, areaId), convoA(areaId));
 
 export default {
     title: "Main/App",

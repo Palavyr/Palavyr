@@ -8,6 +8,6 @@ export class ConfigureMockClient {
     }
 
     public ConfigureGet(routeUrl: string, responseData?: any, statusCode: number = 200) {
-        this.mock.onGet(routeUrl).reply(statusCode, responseData)
+        this.mock.onGet(routeUrl).reply(statusCode, responseData);
     }
 }

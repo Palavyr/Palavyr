@@ -10,7 +10,7 @@ type StyleProps = {
 
 const makeChatBodyColor = (props: StyleProps) => {
     let chatBodyStyles = {
-        backgroundColor: "green",
+        backgroundColor: "#F4F4F4",
         color: "white",
         borderRadius: "10px",
         padding: "15px",
@@ -41,5 +41,5 @@ export interface IWrapMessages {
 
 export const MessageWrapper = ({ customPreferences, children }: IWrapMessages) => {
     const cls = useStyles({ color: customPreferences.chatFontColor, backgroundColor: customPreferences.chatBubbleColor });
-    return <Box boxShadow={1} className={classNames(cls.messageText, cls.layout)}>{children}</Box>;
+    return <Box boxShadow={0} className={classNames(cls.messageText, cls.layout)}>{children}</Box>;
 };
