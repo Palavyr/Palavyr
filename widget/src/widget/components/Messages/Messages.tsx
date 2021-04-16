@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import format from "date-fns/format";
+import "./styles.scss";
 
 import Loader from "./components/Loader/Loader";
-import "./styles.scss";
 import { WidgetPreferences, GlobalState, IMessage, Link, CustomCompMessage } from "@Palavyr-Types";
 import { MessageWrapper } from "componentRegistry/common";
 import { _markAllMessagesRead, _setBadgeCount } from "store/actions/actions";

@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "sideEffects": [
-    "**/*.css"
+    "*.css",
+    "*.scss",
+    "*.sass"
   ],
   "dependencies": {
     "@material-ui/core": "^4.11.0",
@@ -32,9 +34,9 @@
     "uuidv4": "^6.2.2"
   },
   "scripts": {
-    "startfull": "npm install --no-save && webpack-dev-server --config webpack.config.dev.js --env.development",
-    "start": "webpack-dev-server --config webpack.config.dev.js --env.development",
-    "build": "webpack --config ./webpack.config.prod.js --env.production",
+    "startfull": "npm install --no-save && webpack-dev-server --config webpack.config.dev.js",
+    "start": "webpack-dev-server --config webpack.config.dev.js",
+    "build": "webpack --config webpack.config.prod.js",
     "test": "jest --coverage",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
@@ -125,6 +127,7 @@
     "@types/classnames": "^2.2.10",
     "@types/enzyme": "^3.10.5",
     "@types/jest": "^25.1.4",
+    "@types/markdown-it": "^12.0.1",
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
     "@types/react-redux": "^7.1.7",
@@ -181,6 +184,7 @@
     "react": "^16.13.1",
     "react-dev-utils": "^10.2.1",
     "react-is": "^16.13.1",
+    "redux-devtools-extension": "^2.13.9",
     "resolve": "1.15.0",
     "resolve-url-loader": "3.1.1",
     "sass-loader": "^10.0.5",

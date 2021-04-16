@@ -26,9 +26,10 @@
             "@Palavyr-Types": ["globalTypes.ts"],
             "@store-actions": ["store/actions/actions"],
             "@store-dispatcher": ["store/dispatcher"],
-            "@test-data/*": ["test/data/*"]
+            "@test-data/*": ["test/data/*"],
+            "@scss/*": ["widget/scss/*"]
         }
     },
     "include": ["src/**/*", "src/**/*.d.ts", "customTypes/**/*"],
-    "exclude": ["node_modules"] // removed lib
+    "exclude": ["node_modules", "lib"] // removed lib
 }

@@ -6,6 +6,7 @@ import { PalavyrWidgetTheme } from "./PalavyrWidgetTheme";
 import { Provider } from "react-redux";
 import { App } from "./App";
 import { PalavyrWidgetStore } from "store/store";
+import { TestComponent } from "test/testComponent";
 
 ReactDOM.render(
     <React.StrictMode>
@@ -14,6 +15,7 @@ ReactDOM.render(
                 <CssBaseline />
                 <Router>
                     <Route exact path="/widget" component={App} />
+                    <Route exact path="/test" component={TestComponent} />
                 </Router>
             </MuiThemeProvider>
         </Provider>
