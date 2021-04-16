@@ -9,7 +9,7 @@ process.env.NODE_ENV = mode;
 
 module.exports = () => {
     return merge(common(`.env.${mode}`), {
-
+        mode,
         devServer: {
             contentBase: path.resolve(__dirname, "dist"),
             historyApiFallback: true,

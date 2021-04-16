@@ -22,17 +22,6 @@ module.exports = {
         return {
             ...config,
             resolve: { ...config.resolve, ...wp.resolve },
-            plugins: [
-                ...config.plugins,
-                ...[
-                    // new Dotenv({ path: ".env.development" }),
-                    // new ForkTsCheckerWebpackPlugin(),
-                    // new HtmlWebpackPlugin(htmlOptions),
-                    // new webpack.ProvidePlugin({
-                    //     React: "react",
-                    // }),
-                ],
-            ],
             module: { ...config.module, rules: [...config.module.rules, ...wp.module.rules] },
         };
     },
