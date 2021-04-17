@@ -4,10 +4,10 @@ import format from "date-fns/format";
 import "./styles.scss";
 
 import Loader from "./components/Loader/Loader";
-import { WidgetPreferences, GlobalState, IMessage, Link, CustomCompMessage } from "@Palavyr-Types";
-import { MessageWrapper } from "componentRegistry/MessageWrapper";
+import { WidgetPreferences, GlobalState } from "@Palavyr-Types";
 import { _markAllMessagesRead, _setBadgeCount } from "store/actions/actions";
 import { scrollToBottom } from "widget/utils/messages";
+import { getComponentToRender } from "componentRegistry/getComponentToRender";
 
 type Props = {
     showTimeStamp: boolean;
@@ -15,7 +15,7 @@ type Props = {
     customPreferences: WidgetPreferences;
 };
 
-function Messages({ profileAvatar, showTimeStamp, customPreferences }: Props) {
+export const Messages = ({ profileAvatar, showTimeStamp, customPreferences }: Props) => {
     const dispatch = useDispatch();
     const { messages, typing, showChat, badgeCount } = useSelector((state: GlobalState) => ({
         messages: state.messagesReducer.messages,
@@ -32,13 +32,7 @@ function Messages({ profileAvatar, showTimeStamp, customPreferences }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [messages, badgeCount, showChat]);
 
-    const getComponentToRender = (message: IMessage | Link | CustomCompMessage) => {
-        const ComponentToRender = message.component;
-        if (message.type === "component") {
-            return <MessageWrapper customPreferences={customPreferences}><ComponentToRender {...message.props} /></MessageWrapper>;
-        }
-        return <ComponentToRender message={message} showTimeStamp={showTimeStamp} />;
-    };
+
 
     // TODO: Fix this function or change to move the avatar to last message from response
     // const shouldRenderAvatar = (message: Message, index: number) => {
@@ -53,12 +47,10 @@ function Messages({ profileAvatar, showTimeStamp, customPreferences }: Props) {
             {messages?.map((message, index) => (
                 <div className="rcw-message" key={`${index}-${format(message.timestamp, "hh:mm")}`}>
                     {profileAvatar/* && message.showAvatar*/ && <img src={profileAvatar} className="rcw-avatar" alt="profile" />}
-                    {getComponentToRender(message)}
+                    {getComponentToRender(message, customPreferences, showTimeStamp)}
                 </div>
             ))}
             <Loader typing={typing} />
         </div>
     );
 }
-
-export default Messages;

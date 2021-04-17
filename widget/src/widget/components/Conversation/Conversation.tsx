@@ -1,7 +1,7 @@
 import React from "react";
 import cn from "classnames";
 
-import Messages from "../Messages/Messages";
+import { Messages } from "../Messages/Messages";
 
 import "./style.scss";
 import { WidgetPreferences } from "@Palavyr-Types";

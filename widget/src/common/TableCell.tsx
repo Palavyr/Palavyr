@@ -3,10 +3,13 @@ import React from 'react'
 
 
 const useStyles = makeStyles(theme => ({
+    row: {
+        width: "100%"
+    },
     cell: {
         border: "0px solid white",
         width: "100%"
-    }
+    },
 }))
 
 export interface IHaveNoBorder {
@@ -24,8 +27,9 @@ export const NoBorderTableCell = ({align, children}: IHaveNoBorder) => {
 
 
 export const SingleRowSingleCell = ({align, children}: IHaveNoBorder) => {
+    const cls = useStyles();
     return (
-        <TableRow style={{width: "100%"}}>
+        <TableRow className={cls.row}>
             <NoBorderTableCell align={align}>
                 {children}
             </NoBorderTableCell>

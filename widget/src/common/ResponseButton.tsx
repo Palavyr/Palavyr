@@ -1,6 +1,9 @@
 import * as React from "react";
 import { Button, makeStyles, PropTypes } from "@material-ui/core";
 
+type ColorProps = {
+    color: string;
+}
 export interface IResponseButton {
     onClick: any;
     disabled?: boolean;
@@ -12,6 +15,7 @@ export interface IResponseButton {
 const useStyles = makeStyles(theme => ({
     button: {
         color: "black",
+        marginBottom: "0.4rem",
         borderColor: "black",
         "&:hover": {
             borderColor: "black",
@@ -24,13 +28,11 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const ResponseButton = ({ onClick, disabled = false, variant = "outlined", text = "Submit", color = "primary" }: IResponseButton) => {
+export const ResponseButton = ({ onClick, disabled = false, variant = "outlined", text = "Submit", }: IResponseButton) => {
     const cls = useStyles();
     return (
-        // <div style={{ width: "100%", display: "flex", justifyContent: "right" }}>
-            <Button disableElevation focusVisibleClassName={cls.buttonFocus} className={cls.button} disabled={disabled} variant={variant} color={color} size="small" onClick={onClick}>
-                {text}
-            </Button>
-        // </div>
+        <Button disableElevation focusVisibleClassName={cls.buttonFocus} className={cls.button} disabled={disabled} variant={variant} size="small" onClick={onClick}>
+            {text}
+        </Button>
     );
 };

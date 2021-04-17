@@ -1,6 +1,6 @@
 import { assembleCompletedConvo, getChildNodes } from "./utils";
-import React, { useState } from "react";
-import { Table, TableRow, TableCell, makeStyles, TextField, CircularProgress, Button } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { Table, TableRow, TableCell, makeStyles, TextField } from "@material-ui/core";
 import { responseAction } from "./responseAction";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import { ConvoContextProperties } from "./registry";
@@ -8,23 +8,19 @@ import { uuid } from "uuidv4";
 import { IProgressTheChat, ConvoTableRow } from "@Palavyr-Types";
 import { setNumIndividualsContext, getContextProperties, openUserDetails } from "@store-dispatcher";
 import { ResponseButton } from "common/ResponseButton";
-import { sortChildrenByOptions } from "common/sorting";
 import { SingleRowSingleCell } from "common/TableCell";
+import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
+import { ChatLoadingSpinner } from "common/UserDetailsDialog/ChatLoadingSpinner";
 
 const useStyles = makeStyles(() => ({
-    standardContainer: {
-        marginTop: "1rem",
-        width: "100%",
+    tableCell: {
         display: "flex",
         flexDirection: "column",
-        justifyContent: "right",
-    },
-
-    table: {
+        justifyContent: "center",
         borderBottom: "none",
     },
     root: {
-        borderBottom: "0px solid white",
+        borderBottom: "none",
     },
 }));
 
@@ -32,40 +28,34 @@ export class StandardComponents {
     public makeProvideInfo({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
         return () => {
-            const cls = useStyles();
-            const [disabled, setDisabled] = useState<boolean>(false);
+            useEffect(() => {
+                setTimeout(() => {
+                    responseAction(node, child, nodeList, client, convoId, null);
+                }, 1500);
+            }, []);
+
             return (
-                <>
-                    {node.text}
-                    <div className={cls.standardContainer}>
-                        <ResponseButton
-                            text="Proceed"
-                            disabled={disabled}
-                            onClick={() => {
-                                responseAction(node, child, nodeList, client, convoId, null);
-                                setDisabled(true);
-                            }}
-                        />
-                    </div>
-                </>
+                <Table>
+                    <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                </Table>
             );
         };
     }
 
     makeMultipleChoiceContinueButtons({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getChildNodes(node.nodeChildrenString, nodeList)[0]; // only one should exist
-        const valueOptions = node.valueOptions.split("|peg|");
+        const valueOptions = splitValueOptionsByDelimiter(node.valueOptions);
         return () => {
             const cls = useStyles();
             const [disabled, setDisabled] = useState<boolean>(false);
 
             return (
                 <Table>
-                    {node.text}
-                    <TableRow>
-                        {valueOptions.map((valueOption: string) => {
-                            return (
-                                <TableCell className={cls.table}>
+                    <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                    {valueOptions.map((valueOption: string) => {
+                        return (
+                            <TableRow>
+                                <TableCell className={cls.tableCell}>
                                     <ResponseButton
                                         disabled={disabled}
                                         key={valueOption + "-" + uuid()}
@@ -77,9 +67,9 @@ export class StandardComponents {
                                         }}
                                     />
                                 </TableCell>
-                            );
-                        })}
-                    </TableRow>
+                            </TableRow>
+                        );
+                    })}
                 </Table>
             );
         };
@@ -87,38 +77,36 @@ export class StandardComponents {
 
     public makeMultipleChoiceAsPathButtons({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const children = getChildNodes(node.nodeChildrenString, nodeList);
-        const sortedChildren = sortChildrenByOptions(children);
+        // const sortedChildren = sortChildrenByOptions(children);
 
         return () => {
             const cls = useStyles();
             const [disabled, setDisabled] = useState<boolean>(false);
 
             return (
-                <>
-                    {node.text}
-                    <Table>
-                        <TableRow>
-                            {sortedChildren.map((child: ConvoTableRow) => {
-                                return (
-                                    <TableCell className={cls.table}>
-                                        {child.optionPath && (
-                                            <ResponseButton
-                                                disabled={disabled}
-                                                key={child.id}
-                                                text={child.optionPath}
-                                                onClick={() => {
-                                                    var response = child.optionPath;
-                                                    responseAction(node, child, nodeList, client, convoId, response);
-                                                    setDisabled(true);
-                                                }}
-                                            />
-                                        )}
-                                    </TableCell>
-                                );
-                            })}
-                        </TableRow>
-                    </Table>
-                </>
+                <Table>
+                    <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                    {children.map((child: ConvoTableRow) => {
+                        return (
+                            <TableRow>
+                                <TableCell className={cls.tableCell}>
+                                    {child.optionPath && (
+                                        <ResponseButton
+                                            disabled={disabled}
+                                            key={child.id}
+                                            text={child.optionPath}
+                                            onClick={() => {
+                                                var response = child.optionPath;
+                                                responseAction(node, child, nodeList, client, convoId, response);
+                                                setDisabled(true);
+                                            }}
+                                        />
+                                    )}
+                                </TableCell>
+                            </TableRow>
+                        );
+                    })}
+                </Table>
             );
         };
     }
@@ -129,7 +117,8 @@ export class StandardComponents {
         return () => {
             const cls = useStyles();
             const [response, setResponse] = useState<string>("");
-            const [disabled, setDisabled] = useState<boolean>(false);
+            const [disabled, setDisabled] = useState<boolean>(true);
+            const [inputDisabled, setInputDisabled] = useState<boolean>(false);
 
             return (
                 <Table>
@@ -137,7 +126,8 @@ export class StandardComponents {
                     <TableRow>
                         <TableCell className={cls.root}>
                             <TextField
-                                disabled={disabled}
+                                disabled={inputDisabled}
+                                fullWidth
                                 label=""
                                 type="number"
                                 onChange={event => {
@@ -145,6 +135,7 @@ export class StandardComponents {
                                     if (!intValue) return;
                                     if (intValue < 0) return;
                                     setResponse(intValue.toString());
+                                    setDisabled(false);
                                 }}
                             />
                         </TableCell>
@@ -156,6 +147,7 @@ export class StandardComponents {
                                 onClick={() => {
                                     responseAction(node, child, nodeList, client, convoId, response);
                                     setDisabled(true);
+                                    setInputDisabled(true);
                                 }}
                             />
                         </TableCell>
@@ -171,8 +163,8 @@ export class StandardComponents {
         return () => {
             const cls = useStyles();
             const [response, setResponse] = useState<number>(0);
-            const [disabled, setDisabled] = useState<boolean>(false);
-
+            const [disabled, setDisabled] = useState<boolean>(true);
+            const [inputDisabled, setInputDisabled] = useState<boolean>(false);
             return (
                 <>
                     <Table>
@@ -180,7 +172,7 @@ export class StandardComponents {
                         <SingleRowSingleCell>
                             <CurrencyTextField
                                 label="Amount"
-                                disabled={disabled}
+                                disabled={inputDisabled}
                                 variant="standard"
                                 value={response}
                                 currencySymbol="$"
@@ -191,6 +183,7 @@ export class StandardComponents {
                                 onChange={(event: any, value: number) => {
                                     if (value !== undefined) {
                                         setResponse(value);
+                                        setDisabled(false);
                                     }
                                 }}
                             />
@@ -201,6 +194,7 @@ export class StandardComponents {
                                 onClick={() => {
                                     responseAction(node, child, nodeList, client, convoId, response.toString());
                                     setDisabled(true);
+                                    setInputDisabled(true);
                                 }}
                             />
                         </SingleRowSingleCell>
@@ -214,21 +208,24 @@ export class StandardComponents {
         const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
-            const cls = useStyles();
             const [response, setResponse] = useState<string>("");
-            const [disabled, setDisabled] = useState<boolean>(false);
+            const [disabled, setDisabled] = useState<boolean>(true);
+            const [inputDisabled, setInputDisabled] = useState<boolean>(false);
 
             return (
                 <>
-                    {node.text}
                     <Table>
+                        <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
                         <SingleRowSingleCell>
                             <TextField
-                                disabled={disabled}
+                                fullWidth
+                                multiline
+                                disabled={inputDisabled}
                                 label="Write here..."
                                 type="text"
                                 onChange={event => {
                                     setResponse(event.target.value);
+                                    setDisabled(false);
                                 }}
                             />
                         </SingleRowSingleCell>
@@ -240,6 +237,7 @@ export class StandardComponents {
                                     setResponse(response);
                                     responseAction(node, child, nodeList, client, convoId, response);
                                     setDisabled(true);
+                                    setInputDisabled(true);
                                 }}
                             />
                         </SingleRowSingleCell>
@@ -254,7 +252,8 @@ export class StandardComponents {
 
         return () => {
             const [response, setResponse] = useState<number | null>(null);
-            const [disabled, setDisabled] = useState<boolean>(false);
+            const [disabled, setDisabled] = useState<boolean>(true);
+            const [inputDisabled, setInputDisabled] = useState<boolean>(false);
 
             const cls = useStyles();
 
@@ -264,11 +263,12 @@ export class StandardComponents {
                     <TableRow>
                         <TableCell className={cls.root}>
                             <TextField
-                                disabled={disabled}
+                                disabled={inputDisabled}
                                 label=""
                                 value={response}
                                 type="number"
                                 onChange={event => {
+                                    setDisabled(false);
                                     const intValue = parseInt(event.target.value);
                                     if (!intValue) return;
                                     if (intValue < 0) return;
@@ -286,6 +286,7 @@ export class StandardComponents {
                                         responseAction(node, child, nodeList, client, convoId, response.toString());
                                         setNumIndividualsContext(response);
                                         setDisabled(true);
+                                        setInputDisabled(true);
                                     }
                                 }}
                             />
@@ -334,26 +335,24 @@ export class StandardComponents {
             const [loading, setLoading] = useState<boolean>(false);
             return (
                 <>
-                    {node.text}
                     <Table>
-                        <TableRow>
-                            <TableCell>
-                                <ResponseButton
-                                    text="Grant permission to send email"
-                                    variant="contained"
-                                    disabled={disabled}
-                                    onClick={async () => {
-                                        setLoading(true);
-                                        const response = await sendEmail();
-                                        const child = nodeList.filter((x: ConvoTableRow) => x.nodeId === response.nextNodeId)[0];
-                                        responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
-                                        setDisabled(true);
-                                    }}
-                                />
-                            </TableCell>
-                        </TableRow>
+                        <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                        <SingleRowSingleCell align="center">
+                            <ResponseButton
+                                text="Send my email"
+                                variant="contained"
+                                disabled={disabled}
+                                onClick={async () => {
+                                    setLoading(true);
+                                    const response = await sendEmail();
+                                    const child = nodeList.filter((x: ConvoTableRow) => x.nodeId === response.nextNodeId)[0];
+                                    responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
+                                    setDisabled(true);
+                                }}
+                            />
+                        </SingleRowSingleCell>
                     </Table>
-                    <div style={{ width: "100%", display: "flex", justifyContent: "center", textAlign: "center" }}>{loading && <CircularProgress />}</div>
+                    <ChatLoadingSpinner loading={loading} />
                 </>
             );
         };
@@ -361,51 +360,47 @@ export class StandardComponents {
 
     makeRestart({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         return () => {
-            const cls = useStyles();
-            const noBorder = { borderBottom: "none" };
             return (
                 <Table>
-                    <TableRow>
-                        <TableCell>{node.text}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell style={noBorder} align="right">
-                            <ResponseButton
-                                text="restart"
-                                onClick={() => {
-                                    window.location.reload();
-                                }}
-                            />
-                        </TableCell>
-                    </TableRow>
+                    <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                    <SingleRowSingleCell align="right">
+                        <ResponseButton
+                            text="restart"
+                            onClick={() => {
+                                // TODO: can reset the widget gby dumping messages and showWidget = false
+                                window.location.reload();
+                            }}
+                        />
+                    </SingleRowSingleCell>
                 </Table>
             );
         };
     }
 
-    makeSendEmailFailedFirstAttempt = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
+    makeSendEmailFailedFirstAttempt = ({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}>  => {
         const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
+        const [loading, setLoading] = useState<boolean>(false);
 
         return () => {
-            const cls = useStyles();
+            console.log("wow");
+
             return (
-                <Table>
-                    <TableRow>
-                        <TableCell>{node.text}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>
+                <>
+                    <Table>
+                        <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                        <SingleRowSingleCell align="center">
                             <ResponseButton
-                                text="Check your email details."
+                                text="Send my email"
                                 variant="contained"
                                 onClick={async () => {
-                                    responseAction(node, child, nodeList, client, convoId, null);
+                                    responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
                                 }}
                             />
-                            <Button onClick={() => openUserDetails()}>Check Details</Button>
-                        </TableCell>
-                    </TableRow>
-                </Table>
+                            <ResponseButton text="Check your details" variant="contained" onClick={() => openUserDetails()} />
+                        </SingleRowSingleCell>
+                    </Table>
+                    <ChatLoadingSpinner loading={loading} />
+                </>
             );
         };
     };
@@ -435,27 +430,23 @@ export class StandardComponents {
             return (
                 <>
                     <Table>
-                        <TableRow>
-                            <TableCell>{node.text}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>
-                                <ResponseButton
-                                    text="Grant permission to send email"
-                                    variant="contained"
-                                    disabled={disabled}
-                                    onClick={async () => {
-                                        setLoading(true);
-                                        const response = await sendFallbackEmail();
-                                        const child = nodeList.filter((x: ConvoTableRow) => x.nodeId === response.nextNodeId)[0];
-                                        responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
-                                        setDisabled(true);
-                                    }}
-                                />
-                            </TableCell>
-                        </TableRow>
+                        <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                        <SingleRowSingleCell align="center">
+                            <ResponseButton
+                                text="Send my email"
+                                variant="contained"
+                                disabled={disabled}
+                                onClick={async () => {
+                                    setLoading(true);
+                                    const response = await sendFallbackEmail();
+                                    const child = nodeList.filter((x: ConvoTableRow) => x.nodeId === response.nextNodeId)[0];
+                                    responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
+                                    setDisabled(true);
+                                }}
+                            />
+                        </SingleRowSingleCell>
                     </Table>
-                    <div style={{ width: "100%", display: "flex", justifyContent: "right" }}>{loading && <CircularProgress />}</div>
+                    <ChatLoadingSpinner loading={loading} />
                 </>
             );
         };
