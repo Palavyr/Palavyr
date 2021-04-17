@@ -19,7 +19,7 @@ const client = new WidgetClient(fakeKey);
 const convoId = "1234";
 
 export default {
-    title: "ChatComponents",
+    title: "Widget/ChatComponents",
     component: registry.makeProvideInfo({ node, nodeList, client, convoId }),
     argTypes: {},
     decorators: [

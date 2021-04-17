@@ -6,7 +6,7 @@ import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import { ConvoContextProperties } from "./registry";
 import { uuid } from "uuidv4";
 import { IProgressTheChat, ConvoTableRow } from "@Palavyr-Types";
-import { setNumIndividualsContext, getContextProperties, openUserDetails } from "@store-dispatcher";
+import { setNumIndividualsContext, getContextProperties, openUserDetails, dropMessages, toggleWidget } from "@store-dispatcher";
 import { ResponseButton } from "common/ResponseButton";
 import { SingleRowSingleCell } from "common/TableCell";
 import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
@@ -367,7 +367,9 @@ export class StandardComponents {
                         <ResponseButton
                             text="restart"
                             onClick={() => {
-                                // TODO: can reset the widget gby dumping messages and showWidget = false
+                                // setSelectedOption(null);
+                                // dropMessages();
+                                // TODO: can reset the widget gby dumping messages and by putting seSelectedOption into redux and setting to null
                                 window.location.reload();
                             }}
                         />
@@ -377,12 +379,11 @@ export class StandardComponents {
         };
     }
 
-    makeSendEmailFailedFirstAttempt = ({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}>  => {
+    makeSendEmailFailedFirstAttempt = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
         const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
-        const [loading, setLoading] = useState<boolean>(false);
 
         return () => {
-            console.log("wow");
+            const [loading, setLoading] = useState<boolean>(false);
 
             return (
                 <>
@@ -393,6 +394,7 @@ export class StandardComponents {
                                 text="Send my email"
                                 variant="contained"
                                 onClick={async () => {
+                                    setLoading(true);
                                     responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
                                 }}
                             />

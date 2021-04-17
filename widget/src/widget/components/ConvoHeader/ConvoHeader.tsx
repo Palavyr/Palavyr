@@ -58,10 +58,10 @@ export const ConvoHeader = ({ title, subtitle, titleAvatar, headerColor, headerF
     return (
         <div className={classNames(cls.header, cls.flexProperty)}>
             <SettingsIcon className={cls.settingsIcon} onClick={() => openUserDetails()} />
-            <h4 className="rcw-title">
+            <h2 className="rcw-title">
                 {titleAvatar && <img src={titleAvatar} className="avatar" alt="profile" />}
                 {title}
-            </h4>
+            </h2>
             <span>{subtitle}</span>
         </div>
     );
