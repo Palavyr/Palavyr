@@ -57,8 +57,7 @@ export class BasicThresholdModifier {
     }
 
     setItemName(tableData: BasicThresholdData[], tableId: string, value: string) {
-
-        for (var i: number; i = 0; i++) {
+        for (var i: number = 0; i < tableData.length; i++) {
             tableData[i].itemName = value;
         }
         this.setTables(tableData);

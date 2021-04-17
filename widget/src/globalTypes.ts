@@ -8,22 +8,22 @@ export type AreaTable = {
     areaDisplayTitle: string;
 };
 
-export type ConvoTableRow = {
-    id: number | null;
+export type WidgetNodeResource = {
+    areaIdentifier: string;
     nodeId: string;
-    nodeType: string;
-    isCritical: boolean;
-    fallback: boolean;
     text: string;
+    nodeType: string;
     nodeChildrenString: string;
     isRoot: boolean;
-    areaIdentifier: string;
+    isCritical: boolean;
     optionPath: string | null;
     valueOptions: string; // needs to be split by ","
-    isDynamicTableNode: boolean;
     nodeComponentType: string;
+    isDynamicTableNode: boolean;
     dynamicType: string | null;
-};
+}
+
+export type WidgetNodes = WidgetNodeResource[];
 
 export type SelectedOption = {
     areaDisplay: string;
@@ -37,15 +37,13 @@ export type Registry = {
 export type NewConversation = {
     conversationId: string;
     widgetPreferences: WidgetPreferences;
-    conversationNodes: ConvoTableRow[];
+    conversationNodes: WidgetNodes;
 };
 
 export type WidgetPreferences = {
-    // id: number;
     title: string;
     subtitle: string;
     placeholder: string;
-    // shouldGroup: boolean;
     selectListColor: string;
     headerColor: string;
     fontFamily: string;
@@ -103,8 +101,8 @@ export type LocaleMapItem = {
 export type LocaleMap = LocaleMapItem[];
 
 export interface IProgressTheChat {
-    node: ConvoTableRow;
-    nodeList: Array<ConvoTableRow>;
+    node: WidgetNodeResource;
+    nodeList: WidgetNodes;
     client: WidgetClient;
     convoId: string;
 }

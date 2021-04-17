@@ -5,7 +5,7 @@ import { responseAction } from "./responseAction";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import { ConvoContextProperties } from "./registry";
 import { uuid } from "uuidv4";
-import { IProgressTheChat, ConvoTableRow } from "@Palavyr-Types";
+import { IProgressTheChat, WidgetNodeResource } from "@Palavyr-Types";
 import { setNumIndividualsContext, getContextProperties, openUserDetails, dropMessages, toggleWidget } from "@store-dispatcher";
 import { ResponseButton } from "common/ResponseButton";
 import { SingleRowSingleCell } from "common/TableCell";
@@ -86,14 +86,14 @@ export class StandardComponents {
             return (
                 <Table>
                     <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
-                    {children.map((child: ConvoTableRow) => {
+                    {children.map((child: WidgetNodeResource) => {
                         return (
                             <TableRow>
                                 <TableCell className={cls.tableCell}>
                                     {child.optionPath && (
                                         <ResponseButton
                                             disabled={disabled}
-                                            key={child.id}
+                                            key={child.nodeId}
                                             text={child.optionPath}
                                             onClick={() => {
                                                 var response = child.optionPath;
@@ -345,7 +345,7 @@ export class StandardComponents {
                                 onClick={async () => {
                                     setLoading(true);
                                     const response = await sendEmail();
-                                    const child = nodeList.filter((x: ConvoTableRow) => x.nodeId === response.nextNodeId)[0];
+                                    const child = nodeList.filter((x: WidgetNodeResource) => x.nodeId === response.nextNodeId)[0];
                                     responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
                                     setDisabled(true);
                                 }}
@@ -441,7 +441,7 @@ export class StandardComponents {
                                 onClick={async () => {
                                     setLoading(true);
                                     const response = await sendFallbackEmail();
-                                    const child = nodeList.filter((x: ConvoTableRow) => x.nodeId === response.nextNodeId)[0];
+                                    const child = nodeList.filter((x: WidgetNodeResource) => x.nodeId === response.nextNodeId)[0];
                                     responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
                                     setDisabled(true);
                                 }}

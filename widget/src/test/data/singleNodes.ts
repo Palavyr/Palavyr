@@ -1,11 +1,9 @@
-import { ConvoTableRow } from "../../globalTypes";
+import { WidgetNodeResource } from "@Palavyr-Types";
 
-export const ConvoNode: ConvoTableRow = {
-    id: 0,
+export const ConvoNode: WidgetNodeResource = {
     nodeId: "abc",
     nodeType: "YesNo",
     isCritical: true,
-    fallback: false,
     text: "This is a test",
     nodeChildrenString: "",
     isRoot: true,

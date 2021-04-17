@@ -1,4 +1,4 @@
-import { ConvoTableRow } from "@Palavyr-Types";
+import { WidgetNodes } from "@Palavyr-Types";
 
 export const sortByPropertyAlphabetical = (stringPropertyGetter: (x: object) => string, array: Array<any>) => {
     if (!array) return [];
@@ -41,7 +41,7 @@ function compareValues<T> (valA: T, valB: T) {
 }
 
 
-export const sortChildrenByOptions = (children: ConvoTableRow[]) => {
+export const sortChildrenByOptions = (children: WidgetNodes) => {
     return children.sort((a, b) => {
         if (a.optionPath == null || b.optionPath == null) {
             return 0;

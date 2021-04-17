@@ -1,13 +1,13 @@
 
-import { ConvoTableRow } from "@Palavyr-Types";
+import { WidgetNodeResource, WidgetNodes } from "@Palavyr-Types";
 import { renderCustomComponent } from "@store-dispatcher";
 import { WidgetClient } from "client/Client";
 import { dummyFailComponent } from "./DummyComponentDev";
 import { ComponentRegistry } from "./registry";
 
 export const renderNextComponent = (
-    node: ConvoTableRow,
-    nodeList: Array<ConvoTableRow>,
+    node: WidgetNodeResource,
+    nodeList: WidgetNodes,
     client: WidgetClient,
     convoId: string,
 ) => {

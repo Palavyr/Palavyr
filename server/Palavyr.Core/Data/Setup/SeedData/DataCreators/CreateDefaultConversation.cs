@@ -9,10 +9,10 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
     public static class CreateDefaultConversation
     {
         public static List<ConversationNode> CreateDefault(
-            string accountId, 
+            string accountId,
             string areaIdentifier,
             string dynamicTableId
-            )
+        )
         {
             var node1Id = Guid.NewGuid().ToString(); // Do you love dogs?
             var node2Id = Guid.NewGuid().ToString(); // No / Too Complicated
@@ -29,7 +29,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     true,
                     TreeUtils.CreateNodeChildrenString(node2Id, node3Id),
                     DefaultNodeTypeOptions.YesNo.StringName,
-                    accountId, 
+                    accountId,
                     areaIdentifier,
                     null,
                     false
@@ -40,7 +40,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     false,
                     "",
                     DefaultNodeTypeOptions.TooComplicated.StringName,
-                    accountId, 
+                    accountId,
                     areaIdentifier,
                     DefaultNodeTypeOptions.YesNo.No,
                     false
@@ -56,7 +56,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     DefaultNodeTypeOptions.YesNo.Yes,
                     false
                 ),
-                
+
                 DefaultNodeTypeOptions.CreateTooComplicated().MapNodeTypeOptionToConversationNode(
                     node4Id,
                     "How can you not love cavvies?? We MUST talk!",
@@ -78,7 +78,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     NodeChildrenString = node6Id,
                     NodeType = $"SelectOneFlat-{dynamicTableId}",
                     OptionPath = DefaultNodeTypeOptions.YesNo.Yes,
-                    ValueOptions = string.Join(Delimiters.PathOptionDelimiter, new []{"Ruby", "Black and Tan", "Blenheim"}),
+                    ValueOptions = string.Join(Delimiters.PathOptionDelimiter, new[] {"Ruby", "Black and Tan", "Blenheim"}),
                     AccountId = accountId,
                     IsMultiOptionType = true,
                     IsTerminalType = false,
@@ -91,7 +91,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     false,
                     "",
                     DefaultNodeTypeOptions.SendResponse.StringName,
-                    accountId, 
+                    accountId,
                     areaIdentifier,
                     DefaultNodeTypeOptions.YesNo.Yes,
                     false

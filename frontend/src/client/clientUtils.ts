@@ -4,17 +4,17 @@ import { SessionStorage } from "localStorage/sessionStorage";
 This will retrieve login credental data from localsession and send it with the requestover to the server for retrieval.
 */
 export const getSessionIdFromLocalStorage = (): string => {
-    var sessionId = SessionStorage.getSessionId()
+    var sessionId = SessionStorage.getSessionId();
     return sessionId || "noIdInStorage";
-}
+};
 
 export const getJwtTokenFromLocalStorage = (): string => {
     var token = SessionStorage.getJwtToken();
-    if (!token){
-        throw new Error("No token in local storage...")
+    if (!token) {
+        throw new Error("No token in local storage...");
     }
     return token || "noTokenInStorage";
-}
+};
 
 export const serverUrl = process.env.API_URL as string;
 export const webUrl = process.env.WEB_URL as string;
@@ -28,38 +28,38 @@ export const softwareVersion = process.env.VERSION as string;
 export enum Environments {
     Development,
     Staging,
-    Production
+    Production,
 }
 
 export const isDevelopmentStage = () => {
-    return currentEnvironment.toUpperCase() !== typeof(Environments.Production).toString().toUpperCase();
-}
+    return currentEnvironment.toUpperCase() !== "Production".toUpperCase(); //typeof(Environments.Production).toString().toUpperCase();
+};
 
 if (softwareVersion === undefined) {
     console.log("SOFTWARE VERSION IS UNDEFINED");
 }
 
 if (serverUrl === undefined) {
-    console.log("SERVER URL UNDEFINED")
+    console.log("SERVER URL UNDEFINED");
 }
 
 if (webUrl === undefined) {
-    console.log("WEB URL UNDEFINED")
+    console.log("WEB URL UNDEFINED");
 }
 
 if (widgetUrl === undefined) {
-    console.log("WIDGET URL UNDEFINED")
+    console.log("WIDGET URL UNDEFINED");
 }
 if (widgetApiKey === undefined) {
-    console.log("WIDGET API KEY UNDEFINED")
+    console.log("WIDGET API KEY UNDEFINED");
 }
 
 if (googleOAuthClientId === undefined) {
-    console.log("GOOGLE OAUTH CLIENT ID UNDEFINED")
+    console.log("GOOGLE OAUTH CLIENT ID UNDEFINED");
 }
 
 if (stripeKey === undefined) {
-    console.log("STRIPE KEY UNDEFINED")
+    console.log("STRIPE KEY UNDEFINED");
 }
 
-export const SPECIAL_HEADERS = {}
+export const SPECIAL_HEADERS = {};

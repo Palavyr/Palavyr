@@ -1,7 +1,5 @@
 #nullable enable
-using System;
 using System.Collections.Generic;
-using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Models.Configuration.Constant
 {
@@ -50,7 +48,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
          */
         public bool IsTerminalType { get; set; }
 
-        
+
         /*
          * Whether or not this type should render its children (used with splitmerge - where children will be duplicated'
          */
@@ -60,12 +58,12 @@ namespace Palavyr.Core.Models.Configuration.Constant
          * Whether or not this type should show the multioption selector
          */
         public bool ShouldShowMultiOption { get; set; }
-        
+
         /*
          * Whether or not its children will result in a remerge of the branch after splitting into N children (all children must remerge)
          */
         public bool IsSplitMergeType { get; set; } = false;
-        
+
         /*
          * Whether or not the node is an Anabranch type (will split, and then all leaves will either terminate or merge into a single node.
          */
@@ -85,17 +83,17 @@ namespace Palavyr.Core.Models.Configuration.Constant
          * The string identifier of the node component Type
          */
         public string NodeComponent { get; set; }
-        
+
         /*
          * Whether or not the response value is currency
          */
         public bool IsCurrency { get; set; }
-        
+
         /*
          * Path options are editable
          */
         public bool IsMultiOptionEditable { get; set; }
-        
+
         /*
          * The key by which we group nodes in the selector
          */
@@ -112,7 +110,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
          * The widget will use this to key the collection of dynamic type responses.
          */
         public string? DynamicType { get; set; }
-        
+
         public virtual string StringName => null!;
 
         public static NodeTypeOption Create(
@@ -154,51 +152,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsSplitMergeType = isSplitMergeType,
                 ShouldRenderChildren = shouldRenderChildren,
                 ShouldShowMultiOption = shouldShowMultiOption,
-                ResolveOrder = resolveOrder,
-                DynamicType = dynamicType
-            };
-        }
-
-        public ConversationNode MapNodeTypeOptionToConversationNode(
-            string nodeId,
-            string text,
-            bool isRoot,
-            string nodeChildrenString,
-            string nodeType,
-            string accountId,
-            string areaIdentifier,
-            string optionPath,
-            bool isDynamic,
-            string? nodeComponent = null,
-            int? resolveOrder = null,
-            string? dynamicType = null
-        )
-        {
-            if (nodeComponent == null && this.NodeComponent == null)
-            {
-                throw new Exception("NodeComponent must be set for dynamic table node types"); // TODO: can I enforce this via the compiler?
-            }
-
-            if (isDynamic && (resolveOrder == null || dynamicType == null))
-            {
-                throw new Exception("Dynamic node types MUST provide a resolve order and dynamic type name.");
-            }
-            
-            return new ConversationNode()
-            {
-                NodeId = nodeId,
-                Text = text,
-                IsRoot = isRoot,
-                NodeChildrenString = nodeChildrenString, //"node-456,node-789",
-                NodeType = nodeType,
-                OptionPath = optionPath,
-                ValueOptions = string.Join(Delimiters.ValueOptionDelimiter, ValueOptions),
-                AccountId = accountId,
-                AreaIdentifier = areaIdentifier,
-                IsMultiOptionType = IsMultiOptionType,
-                IsTerminalType = IsTerminalType,
-                IsDynamicTableNode = isDynamic,
-                NodeComponentType = nodeComponent ?? NodeComponent,
                 ResolveOrder = resolveOrder,
                 DynamicType = dynamicType
             };
