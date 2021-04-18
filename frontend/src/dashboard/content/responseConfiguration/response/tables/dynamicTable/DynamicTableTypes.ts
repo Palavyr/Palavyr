@@ -1,6 +1,7 @@
 import { DynamicTableMeta } from "@Palavyr-Types";
 import { Dispatch, SetStateAction } from "react";
 import { BasicThreshold } from "./tableComponents/BasicThreshold/BasicThreshold";
+import { CategoryNestedThreshold } from "./tableComponents/CategoryNestedThreshold/CategoryNestedThreshold";
 import { PercentOfThreshold } from "./tableComponents/PercentOfThreshold/PercentOfThreshold";
 import { SelectOneFlat } from "./tableComponents/SelectOneFlat/SelectOneFlat";
 import { TwoNestedCategories } from "./tableComponents/TwoNestedCategories/TwoNestedCategories";
@@ -118,5 +119,5 @@ export const DynamicTableComponentMap: DynamicTableComponentMap = {
     [DynamicTableTypes.PercentOfThreshold]: PercentOfThreshold,
     [DynamicTableTypes.BasicThreshold]: BasicThreshold,
     [DynamicTableTypes.TwoNestedCategory]: TwoNestedCategories,
-    [DynamicTableTypes.CategoryNestedThreshold]: TwoNestedCategories,
+    [DynamicTableTypes.CategoryNestedThreshold]: CategoryNestedThreshold,
 };

@@ -56,7 +56,6 @@ export const CategoryNestedThresholdItemTable = ({ categoryIndex, tableData, tab
                         return (
                             <CategoryNestedThresholdRow
                                 key={row.rowId}
-                                shouldDisableInnerCategory={categoryIndex > 0}
                                 categoryId={categoryId}
                                 setCategoryName={setCategoryName}
                                 categoryName={name}

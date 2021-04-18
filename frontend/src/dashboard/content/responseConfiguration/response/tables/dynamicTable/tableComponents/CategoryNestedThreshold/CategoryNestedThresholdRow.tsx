@@ -9,7 +9,6 @@ import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifi
 
 export interface CategoryNestedThresholdProps {
     index: number;
-    shouldDisableInnerCategory: boolean;
     categoryId: string;
     categoryName: string;
     setCategoryName: SetState<string>;
@@ -52,12 +51,12 @@ const useStyles = makeStyles((theme) => ({
 
 const cellAlignment = "center";
 
-export const CategoryNestedThresholdRow = ({ index, shouldDisableInnerCategory, categoryId, categoryName, setCategoryName, tableData, row, modifier }: CategoryNestedThresholdProps) => {
+export const CategoryNestedThresholdRow = ({ index, categoryId, categoryName, setCategoryName, tableData, row, modifier }: CategoryNestedThresholdProps) => {
     const cls = useStyles(!row.range);
 
     const { currencySymbol } = React.useContext(DashboardContext);
 
-    const outerCategoryColumn =
+    const categoryColumn =
         index === 0 ? (
             <TableCell align={cellAlignment}>
                 <TextField
@@ -80,17 +79,17 @@ export const CategoryNestedThresholdRow = ({ index, shouldDisableInnerCategory, 
 
     return (
         <TableRow>
-            {outerCategoryColumn}
-
+            {categoryColumn}
             <TableCell align={cellAlignment}>
                 <CurrencyTextField
-                    disabled={shouldDisableInnerCategory}
-                    className={cls.input}
+                    label="Threshold"
                     variant="standard"
-                    label="Inner Category Name"
-                    type="text"
                     value={row.threshold}
-                    color="primary"
+                    currencySymbol={currencySymbol}
+                    minimumValue="0"
+                    outputFormat="number"
+                    decimalCharacter="."
+                    digitGroupSeparator=","
                     onChange={(event: { preventDefault: () => void; target: { value: any } }) => {
                         event.preventDefault();
                         modifier.setThreshold(tableData, row.rowId, event.target.value);
@@ -134,9 +133,8 @@ export const CategoryNestedThresholdRow = ({ index, shouldDisableInnerCategory, 
                 />
             </TableCell>
             <TableCell align={cellAlignment}>
-                {!shouldDisableInnerCategory ? (
+                {
                     <Button
-                        disabled={shouldDisableInnerCategory}
                         variant="contained"
                         style={{ width: "18ch" }}
                         color={row.range ? "primary" : "secondary"}
@@ -146,18 +144,12 @@ export const CategoryNestedThresholdRow = ({ index, shouldDisableInnerCategory, 
                     >
                         {row.range ? "Range" : "Single Value"}
                     </Button>
-                ) : (
-                    <></>
-                )}
+                }
             </TableCell>
             <TableCell align={cellAlignment}>
-                {shouldDisableInnerCategory ? (
-                    <></>
-                ) : (
-                    <Button size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeThreshold(tableData, row.rowId)}>
-                        Delete Inner Category
-                    </Button>
-                )}
+                <Button size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeThreshold(tableData, row.rowId)}>
+                    Delete Threshold
+                </Button>
             </TableCell>
             <TableCell></TableCell>
         </TableRow>
