@@ -5,18 +5,14 @@ import { TextField, makeStyles, Typography, Table, TableRow, TableCell, TableBod
 import { DynamicTableSelector } from "./DynamicTableSelector";
 import { removeByIndex } from "@common/utils";
 import { cloneDeep } from "lodash";
-import { DynamicTableTypes, TableData } from "./DynamicTableTypes";
-import { SelectOneFlat } from "./tableComponents/SelectOneFlat/SelectOneFlat";
+import { DynamicTableComponentMap, DynamicTableProps, DynamicTableTypes, TableData } from "./DynamicTableTypes";
 import { TableNameMap } from "./DynamicTableConfiguration";
 import { useState } from "react";
 import { useCallback } from "react";
 import { useEffect } from "react";
 import { ChangeEvent } from "react";
-import { PercentOfThreshold } from "./tableComponents/PercentOfThreshold/PercentOfThreshold";
-import { BasicThreshold } from "./tableComponents/BasicThreshold/BasicThreshold";
-import { TwoNestedCategories } from "./tableComponents/TwoNestedCategories/TwoNestedCategories";
 
-export interface ISingleDynamicFeeTable {
+export interface SingleDynamicFeeTableProps {
     defaultTableMeta: DynamicTableMeta;
     availablDynamicTableOptions: Array<string>;
     tableNameMap: TableNameMap;
@@ -55,7 +51,20 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SingleDynamicFeeTable = ({ showDebug, tableNumber, setLoaded, tableMetaIndex, tableMetas, setTableMetas, defaultTableMeta, availablDynamicTableOptions, tableNameMap, parentState, changeParentState, areaIdentifier }: ISingleDynamicFeeTable) => {
+export const SingleDynamicFeeTable = ({
+    showDebug,
+    tableNumber,
+    setLoaded,
+    tableMetaIndex,
+    tableMetas,
+    setTableMetas,
+    defaultTableMeta,
+    availablDynamicTableOptions,
+    tableNameMap,
+    parentState,
+    changeParentState,
+    areaIdentifier,
+}: SingleDynamicFeeTableProps) => {
     const client = new ApiClient();
     const classes = useStyles();
 
@@ -85,7 +94,6 @@ export const SingleDynamicFeeTable = ({ showDebug, tableNumber, setLoaded, table
                 setDynamicTableData(tableDataResponse);
             }
         })();
-
         return () => {};
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,57 +121,54 @@ export const SingleDynamicFeeTable = ({ showDebug, tableNumber, setLoaded, table
         setLoaded(false);
     };
 
+    const metaData: DynamicTableProps | undefined = tableMeta && {
+        showDebug: showDebug,
+        setTableMeta: setTableMeta,
+        tableMeta: tableMeta,
+        tableTag: tableTag,
+        tableId: tableMeta?.tableId,
+        tableData: dynamicTableData,
+        setTableData: setDynamicTableData,
+        areaIdentifier: areaIdentifier,
+        deleteAction: deleteAction,
+    };
+
+    const DynamicTableComponent = tableMeta?.tableType && DynamicTableComponentMap[tableMeta?.tableType];
+
     return (
-        <section className={classes.section}>
-            {tableMeta && (
-                <Table className={classes.table}>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell>
-                                <DynamicTableSelector selection={selection} handleChange={handleChange} tableOptions={availablDynamicTableOptions} />
-                            </TableCell>
-                            <TableCell></TableCell>
-                            <TableCell></TableCell>
-                            <TableCell align="center">
-                                <TextField
-                                    style={{ fontSize: "12pt" }}
-                                    fullWidth
-                                    label="Short table description (2 or 3 words)"
-                                    value={tableTag}
-                                    onChange={(e) => {
-                                        e.preventDefault();
-                                        setTableTag(e.target.value);
-                                    }}
-                                />
-                                <Typography className={classes.headerCol}>Custom fee: {tableNumber + 1}</Typography>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
+        <>
+            {metaData && (
+                <section className={classes.section}>
+                    {tableMeta && (
+                        <Table className={classes.table}>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>
+                                        <DynamicTableSelector selection={selection} handleChange={handleChange} tableOptions={availablDynamicTableOptions} />
+                                    </TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell align="center">
+                                        <TextField
+                                            style={{ fontSize: "12pt" }}
+                                            fullWidth
+                                            label="Short table description (2 or 3 words)"
+                                            value={tableTag}
+                                            onChange={(e) => {
+                                                e.preventDefault();
+                                                setTableTag(e.target.value);
+                                            }}
+                                        />
+                                        <Typography className={classes.headerCol}>Custom fee: {tableNumber + 1}</Typography>
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    )}
+                    {tableMeta === undefined && <div>Loading...</div>}
+                    {dynamicTableData && DynamicTableComponent && <DynamicTableComponent {...metaData} />}
+                </section>
             )}
-            {tableMeta === undefined && <div>Loading...</div>}
-            {tableMeta?.tableType === DynamicTableTypes.SelectOneFlat && dynamicTableData !== undefined && (
-                <SelectOneFlat
-                    setTableMeta={setTableMeta}
-                    tableMeta={tableMeta}
-                    tableTag={tableTag}
-                    tableId={tableMeta.tableId}
-                    tableData={dynamicTableData}
-                    setTableData={setDynamicTableData}
-                    areaIdentifier={areaIdentifier}
-                    deleteAction={deleteAction}
-                    showDebug={showDebug}
-                />
-            )}
-            {tableMeta?.tableType === DynamicTableTypes.PercentOfThreshold && dynamicTableData !== undefined && (
-                <PercentOfThreshold showDebug={showDebug} tableTag={tableTag} tableId={tableMeta.tableId} tableData={dynamicTableData} setTableData={setDynamicTableData} areaIdentifier={areaIdentifier} deleteAction={deleteAction} />
-            )}
-            {tableMeta?.tableType === DynamicTableTypes.BasicThreshold && dynamicTableData !== undefined && (
-                <BasicThreshold showDebug={showDebug} tableTag={tableTag} tableId={tableMeta.tableId} tableData={dynamicTableData} setTableData={setDynamicTableData} areaIdentifier={areaIdentifier} deleteAction={deleteAction} />
-            )}
-            {tableMeta?.tableType === DynamicTableTypes.TwoNestedCategory && dynamicTableData !== undefined && (
-                <TwoNestedCategories showDebug={showDebug} tableTag={tableTag} tableMeta={tableMeta} tableId={tableMeta.tableId} tableData={dynamicTableData} setTableData={setDynamicTableData} areaIdentifier={areaIdentifier} deleteAction={deleteAction} />
-            )}
-        </section>
+        </>
     );
 };

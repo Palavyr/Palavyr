@@ -1,5 +1,5 @@
 import React from "react";
-import { DynamicTableTypes, IDynamicTableProps } from "../../DynamicTableTypes";
+import { DynamicTableTypes, DynamicTableProps } from "../../DynamicTableTypes";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
@@ -39,7 +39,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<IDynamicTableProps, "tableMeta" | "setTableMeta">) => {
+export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<DynamicTableProps, "tableMeta" | "setTableMeta">) => {
     const cls = useStyles();
     const client = new ApiClient();
     const [name, setItemName] = useState<string>("");

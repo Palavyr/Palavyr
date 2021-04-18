@@ -5,7 +5,7 @@ import { TableContainer, Paper, Table, Button, FormControlLabel, Checkbox, Accor
 import { SelectOneFlatHeader } from "./SelectOneFlatHeader";
 import { SelectOneFlatBody } from "./SelectOneFlatBody";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { DynamicTableTypes, IDynamicTableProps } from "../../DynamicTableTypes";
+import { DynamicTableTypes, DynamicTableProps } from "../../DynamicTableTypes";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { DisplayTableData } from "../DisplayTableData";
 
@@ -38,7 +38,7 @@ const useStyles = makeStyles({
     },
 });
 
-export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: IDynamicTableProps) => {
+export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: DynamicTableProps) => {
     const client = new ApiClient();
     const classes = useStyles();
 

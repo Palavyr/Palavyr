@@ -1,5 +1,9 @@
 import { DynamicTableMeta } from "@Palavyr-Types";
 import { Dispatch, SetStateAction } from "react";
+import { BasicThreshold } from "./tableComponents/BasicThreshold/BasicThreshold";
+import { PercentOfThreshold } from "./tableComponents/PercentOfThreshold/PercentOfThreshold";
+import { SelectOneFlat } from "./tableComponents/SelectOneFlat/SelectOneFlat";
+import { TwoNestedCategories } from "./tableComponents/TwoNestedCategories/TwoNestedCategories";
 
 // Dynamic Table types
 export type SelectOneFlatData = {
@@ -61,15 +65,31 @@ export type TwoNestedCategoryData = {
     subCategory: string;
 };
 
+export type CategoryNestedThresholdData = {
+    id: number;
+    accountId: string;
+    areaIdentifier: string;
+    tableId: string;
+    valueMin: number;
+    valueMax: number;
+    range: boolean;
+    rowId: string;
+    rowOrder: number;
+    itemId: string;
+    itemOrder: number;
+    category: string;
+    threshold: number;
+};
 
-export type TableData = SelectOneFlatData[] | PercentOfThresholdData[] | BasicThresholdData[] | TwoNestedCategoryData[] | any; // | SelectOneThresholdData etc
+export type TableData = SelectOneFlatData[] | PercentOfThresholdData[] | BasicThresholdData[] | TwoNestedCategoryData[] | CategoryNestedThresholdData[] | any; // | SelectOneThresholdData etc
 
 //These must be kept in sync
 export const DynamicTableTypes = {
     SelectOneFlat: "SelectOneFlat",
     PercentOfThreshold: "PercentOfThreshold",
     BasicThreshold: "BasicThreshold",
-    TwoNestedCategory: "TwoNestedCategory"
+    TwoNestedCategory: "TwoNestedCategory",
+    CategoryNestedThreshold: "CategoryNestedThreshold",
 };
 
 export interface IDynamicTableBody {
@@ -77,7 +97,7 @@ export interface IDynamicTableBody {
     modifier: any;
 }
 
-export type IDynamicTableProps = {
+export type DynamicTableProps = {
     tableData: Array<TableData>;
     setTableData: Dispatch<SetStateAction<TableData>>;
     areaIdentifier: string;
@@ -87,4 +107,16 @@ export type IDynamicTableProps = {
     setTableMeta: any;
     deleteAction(): Promise<any>;
     showDebug: boolean;
+};
+
+export type DynamicTableComponentMap = {
+    [key: string]: (props: DynamicTableProps) => JSX.Element;
+};
+
+export const DynamicTableComponentMap: DynamicTableComponentMap = {
+    [DynamicTableTypes.SelectOneFlat]: SelectOneFlat,
+    [DynamicTableTypes.PercentOfThreshold]: PercentOfThreshold,
+    [DynamicTableTypes.BasicThreshold]: BasicThreshold,
+    [DynamicTableTypes.TwoNestedCategory]: TwoNestedCategories,
+    [DynamicTableTypes.CategoryNestedThreshold]: TwoNestedCategories,
 };

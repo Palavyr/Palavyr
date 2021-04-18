@@ -35,7 +35,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var responseId = GetSingleResponseId(dynamicResponseIds);
             var records = await repository.GetAllRowsMatchingDynamicResponseId(accountId, responseId);
 
-            // itemName then Count
+            // itemName
             var orderedResponseIds = await GetResponsesOrderedByResolveOrder(dynamicResponse);
             var outerCategory = GetResponseByResponseId(orderedResponseIds[0], dynamicResponse);
             var innerCategory = GetResponseByResponseId(orderedResponseIds[1], dynamicResponse);
@@ -83,8 +83,8 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 .OrderBy(x => x.ResolveOrder).ToList();
             if (nodes.Count > 0)
             {
-                nodes.First().ValueOptions = splitter.JoinValueOptions(outerCategories);
-                nodes.Last().ValueOptions = splitter.JoinValueOptions(innerCategories);
+                nodes.Single(x => x.ResolveOrder == 0).ValueOptions = splitter.JoinValueOptions(outerCategories);
+                nodes.Single(x => x.ResolveOrder == 1).ValueOptions = splitter.JoinValueOptions(innerCategories);
             }
         }
 

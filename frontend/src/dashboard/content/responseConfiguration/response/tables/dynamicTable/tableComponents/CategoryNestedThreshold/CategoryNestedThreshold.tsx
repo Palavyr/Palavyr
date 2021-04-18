@@ -3,10 +3,10 @@ import { ApiClient } from "@api-client/Client";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
 import { DynamicTableTypes, DynamicTableProps } from "../../DynamicTableTypes";
-import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
-import { PercentOfThresholdContainer } from "./PercentOfThresholdContainer";
-import { reOrderPercentOfThresholdTableData } from "./PercentOfThresholdUtils";
+
 import { DisplayTableData } from "../DisplayTableData";
+import { CategoryNestedThresholdContainer } from "./CategoryNestedThresholdContainer";
+import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,30 +27,27 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<DynamicTableProps, "tableMeta" | "setTableMeta">) => {
+export const CategoryNestedThreshold = ({ tableId, tableTag, tableMeta, tableData, setTableData, areaIdentifier, deleteAction, showDebug }: Omit<DynamicTableProps, "setTableMeta">) => {
     const client = new ApiClient();
     const classes = useStyles();
 
-    const modifier = new PercentOfThresholdModifier(setTableData);
-
-    const addItemOnClick = () => modifier.addItem(tableData, client, areaIdentifier, tableId);
-    const addRowOnClickFactory = (itemId: string) => () => modifier.addRow(tableData, client, areaIdentifier, tableId, itemId);
+    const modifier = new CategoryNestedThresholdModifier(setTableData);
+    // const addThreshold = () => modifier.addThreshold(tableData, client, areaIdentifier, tableId);
 
     const onSave = async () => {
-        const reorderedData = reOrderPercentOfThresholdTableData(tableData);
-        const { data: savedData } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.PercentOfThreshold, reorderedData, tableId, tableTag);
+        const { data: savedData } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.TwoNestedCategory, tableData, tableId, tableTag);
         setTableData(savedData);
         return true;
     };
 
     return (
         <>
-            <PercentOfThresholdContainer tableData={tableData} modifier={modifier} addRowOnClickFactory={addRowOnClickFactory} />
+            <CategoryNestedThresholdContainer tableData={tableData} modifier={modifier} tableId={tableId} areaIdentifier={areaIdentifier} />
             <AccordionActions>
                 <div className={classes.trayWrapper}>
                     <div className={classes.alignLeft}>
-                        <Button className={classes.add} onClick={addItemOnClick} color="primary" variant="contained">
-                            Add Item
+                        <Button className={classes.add} onClick={() => modifier.addCategory(tableData, client, areaIdentifier, tableId)} color="primary" variant="contained">
+                            Add Outer Category
                         </Button>
                     </div>
                     <div className={classes.alignRight}>
@@ -58,7 +55,7 @@ export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableData, se
                     </div>
                 </div>
             </AccordionActions>
-            {showDebug && <DisplayTableData tableData={tableData} />}
+            {showDebug && <DisplayTableData tableData={tableData} properties={["category", "subCategory"]} />}
         </>
     );
 };

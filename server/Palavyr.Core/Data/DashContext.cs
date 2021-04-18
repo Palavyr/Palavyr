@@ -23,5 +23,6 @@ namespace Palavyr.Core.Data
         public DbSet<PercentOfThreshold> PercentOfThresholds { get; set; }
         public DbSet<BasicThreshold> BasicThresholds { get; set; }
         public DbSet<TwoNestedCategory> TwoNestedCategories { get; set; }
+        public DbSet<CategoryNestedThreshold> CategoryNestedThresholds { get; set; }
     }
 }

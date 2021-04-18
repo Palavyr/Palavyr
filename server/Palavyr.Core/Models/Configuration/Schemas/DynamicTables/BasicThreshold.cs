@@ -9,7 +9,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
     public class BasicThreshold : IOrderedTable, IDynamicTable<BasicThreshold>, IHaveRange
     {
-        [Key] public int? Id { get; set; }
+        [Key]
+        public int? Id { get; set; }
+
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
         public string TableId { get; set; }
@@ -21,9 +23,20 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
         public string ItemName { get; set; }
         public int RowOrder { get; set; }
 
-        public BasicThreshold() { }
+        public BasicThreshold()
+        {
+        }
 
-        public BasicThreshold CreateNew(string accountId, string areaId, string tableId, string itemName, string rowId, double threshold, double valueMin, double valueMax, bool range)
+        public BasicThreshold CreateNew(
+            string accountId,
+            string areaId,
+            string tableId,
+            string itemName,
+            string rowId,
+            double threshold,
+            double valueMin,
+            double valueMax,
+            bool range)
         {
             return new BasicThreshold()
             {
