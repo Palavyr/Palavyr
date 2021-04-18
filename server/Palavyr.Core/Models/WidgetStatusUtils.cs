@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -13,23 +12,14 @@ namespace Palavyr.Core.Models
     {
         private readonly RequiredNodeCalculator requiredNodeCalculator;
         private readonly MissingNodeCalculator missingNodeCalculator;
-        private readonly TreeRootFinder treeRootFinder;
-        private readonly TreeWalker treeWalker;
-        private readonly NodeCounter nodeCounter;
 
         public WidgetStatusUtils(
             RequiredNodeCalculator requiredNodeCalculator,
-            MissingNodeCalculator missingNodeCalculator,
-            TreeRootFinder treeRootFinder,
-            TreeWalker treeWalker,
-            NodeCounter nodeCounter
+            MissingNodeCalculator missingNodeCalculator
         )
         {
             this.requiredNodeCalculator = requiredNodeCalculator;
             this.missingNodeCalculator = missingNodeCalculator;
-            this.treeRootFinder = treeRootFinder;
-            this.treeWalker = treeWalker;
-            this.nodeCounter = nodeCounter;
         }
 
         public async Task<PreCheckResult> ExecuteWidgetStatusCheck(
@@ -61,21 +51,11 @@ namespace Palavyr.Core.Models
                 var allRequiredNodes = (await requiredNodeCalculator.FindRequiredNodes(area)).ToList();
 
                 logger.LogDebug($"Required Nodes Found. Number of required nodes: {allRequiredNodes.Count}");
-                List<bool> checks;
-                try
-                {
-                    checks = new List<bool>()
-                    {
-                        AllNodesAreSet(nodeList),
-                        AllBranchesTerminate(nodeList),
-                        AllRequiredNodesSatisfied(nodeList, allRequiredNodes.ToArray()),
-                    };
-                }
-                catch (Exception ex)
-                {
-                    logger.LogDebug($"Node checks failed: {ex.Message}");
-                    throw;
-                }
+
+                var nodesSet = AllNodesAreSet(nodeList);
+                var branchesTerminate = AllBranchesTerminate(nodeList);
+                var nodesSatisfied = AllRequiredNodesSatisfied(nodeList, allRequiredNodes.ToArray());
+                var checks = new List<bool>() {nodesSet, branchesTerminate, nodesSatisfied};
 
                 isReady = checks.TrueForAll(x => x);
                 logger.LogDebug($"Checked isReady status: {isReady}");
@@ -113,15 +93,15 @@ namespace Palavyr.Core.Models
 
         private bool AllBranchesTerminate(ConversationNode[] nodeList)
         {
-            var terminalNodes = new List<ConversationNode>();
-
-            var rootNode = treeRootFinder.GetRootNode(nodeList);
-            treeWalker.FindAllTerminalNodes(nodeList, rootNode, terminalNodes); // This is not working correctly. Shouldn't need to distinct on this result... (except maybe for anabranch and split merge
-
-            var uniqueTerminalNodes = terminalNodes.Distinct().ToList();
-            var numLeaves = uniqueTerminalNodes.Count();
-            var numTerminal = nodeCounter.CountNumTerminal(nodeList);
-            return (numLeaves == numTerminal);
+            var terminals = nodeList
+                .Where(t => t.IsTerminalType)
+                .OrderBy(x => x.NodeId)
+                .ToList();
+            var nodeChilds = nodeList
+                .Where(a => string.IsNullOrWhiteSpace(a.NodeChildrenString))
+                .OrderBy(x => x.NodeId)
+                .ToList();
+            return terminals.SequenceEqual(nodeChilds);
         }
 
         private bool AllRequiredNodesSatisfied(ConversationNode[] nodeList, NodeTypeOption[] requiredNodes)

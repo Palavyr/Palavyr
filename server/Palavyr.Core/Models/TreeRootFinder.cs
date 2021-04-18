@@ -9,6 +9,5 @@ namespace Palavyr.Core.Models
         {
             return nodeList.Single(row => row.IsRoot);
         }
-
     }
 }
