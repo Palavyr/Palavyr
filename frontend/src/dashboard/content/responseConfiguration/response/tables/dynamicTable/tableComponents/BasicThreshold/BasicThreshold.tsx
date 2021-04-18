@@ -65,7 +65,7 @@ export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTab
                 color="primary"
                 onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
                     event.preventDefault();
-                    modifier.setItemName(tableData, tableId, event.target.value);
+                    modifier.setItemName(tableData, event.target.value);
                     setItemName(event.target.value);
                 }}
             />

@@ -1,7 +1,7 @@
 import React from "react";
 import { Meta, Story } from "@storybook/react";
 import { StandardComponents } from "./standardComponentRegistry";
-import { ConvoTableRow, IProgressTheChat } from "@Palavyr-Types";
+import { WidgetNodeResource, WidgetNodes } from "@Palavyr-Types";
 import { ConfigureMockClient } from "test/testUtils/ConfigureMockClient";
 import { WidgetClient } from "client/Client";
 import { convoA } from "@test-data/conversationNodes";
@@ -10,8 +10,8 @@ import { widgetPreferences } from "@test-data/widgetPreferences";
 
 const registry = new StandardComponents();
 
-const node: ConvoTableRow = convoA("246")[0];
-const nodeList: Array<ConvoTableRow> = [node];
+const node: WidgetNodeResource = convoA("246")[0];
+const nodeList: WidgetNodes = [node];
 
 const fakeKey = "secret-key";
 const conf = new ConfigureMockClient();

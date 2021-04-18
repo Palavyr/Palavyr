@@ -7,7 +7,7 @@ using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
-    public class BasicThreshold : IComparable<BasicThreshold>, IOrderedTable, IDynamicTable<BasicThreshold>, IHaveRange
+    public class BasicThreshold : IOrderedTable, IDynamicTable<BasicThreshold>, IHaveRange
     {
         [Key] public int? Id { get; set; }
         public string AccountId { get; set; }
@@ -23,13 +23,14 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 
         public BasicThreshold() { }
 
-        public BasicThreshold CreateNew(string accountId, string areaId, string tableId, string rowId, double threshold, double valueMin, double valueMax, bool range)
+        public BasicThreshold CreateNew(string accountId, string areaId, string tableId, string itemName, string rowId, double threshold, double valueMin, double valueMax, bool range)
         {
             return new BasicThreshold()
             {
                 AccountId = accountId,
                 AreaIdentifier = areaId,
                 TableId = tableId,
+                ItemName = itemName,
                 RowId = rowId,
                 Threshold = threshold,
                 ValueMin = valueMin,
@@ -52,12 +53,13 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
         public List<BasicThreshold> UpdateTable(DynamicTable table)
         {
             var mappedTableRows = new List<BasicThreshold>();
-            foreach (var row in table.BasicThreshold)
+            foreach (var row in table.BasicThreshold!)
             {
                 var mappedRow = CreateNew(
                     row.AccountId,
                     row.AreaIdentifier,
                     row.TableId,
+                    row.ItemName,
                     row.RowId,
                     row.Threshold,
                     row.ValueMin,
@@ -73,11 +75,6 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
         public bool EnsureValid()
         {
             return true;
-        }
-
-        public int CompareTo(BasicThreshold other)
-        {
-            return other.Threshold.CompareTo(Threshold);
         }
     }
 }

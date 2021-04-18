@@ -4,13 +4,13 @@ import { Table, TableRow, TableCell, makeStyles, TextField } from "@material-ui/
 import { responseAction } from "./responseAction";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import { ConvoContextProperties } from "./registry";
-import { uuid } from "uuidv4";
 import { IProgressTheChat, WidgetNodeResource } from "@Palavyr-Types";
-import { setNumIndividualsContext, getContextProperties, openUserDetails, dropMessages, toggleWidget } from "@store-dispatcher";
+import { setNumIndividualsContext, getContextProperties, openUserDetails } from "@store-dispatcher";
 import { ResponseButton } from "common/ResponseButton";
 import { SingleRowSingleCell } from "common/TableCell";
 import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "common/UserDetailsDialog/ChatLoadingSpinner";
+import { uuid } from "uuidv4";
 
 const useStyles = makeStyles(() => ({
     tableCell: {
