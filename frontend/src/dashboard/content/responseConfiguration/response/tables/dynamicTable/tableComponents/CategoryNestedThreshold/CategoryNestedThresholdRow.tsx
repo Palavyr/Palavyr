@@ -90,9 +90,10 @@ export const CategoryNestedThresholdRow = ({ index, categoryId, categoryName, se
                     outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(event: { preventDefault: () => void; target: { value: any } }) => {
-                        event.preventDefault();
-                        modifier.setThreshold(tableData, row.rowId, event.target.value);
+                    onChange={(_: any, value: number) => {
+                        if (value !== undefined) {
+                            modifier.setThreshold(tableData, row.rowId, value);
+                        }
                     }}
                 />
             </TableCell>

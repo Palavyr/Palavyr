@@ -9,7 +9,6 @@ import { CategoryNestedThresholdHeader } from "./CategoryNestedThresholdHeader";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 import { CategoryNestedThresholdRow } from "./CategoryNestedThresholdRow";
 
-
 interface CategoryNestedThresholdItemTableProps {
     tableData: CategoryNestedThresholdData[];
     tableId: string;
@@ -36,8 +35,7 @@ const getter = (x: CategoryNestedThresholdData) => x.rowOrder;
 
 // table data: to update the database (this is done via the unified table data object)
 // item data: The grouped data that is used to render and control UI
-export const CategoryNestedThresholdItemTable = ({ categoryIndex, tableData, tableId, categoryData, categoryName, categoryId, modifier, areaIdentifier }: CategoryNestedThresholdItemTableProps
-) => {
+export const CategoryNestedThresholdItemTable = ({ categoryIndex, tableData, tableId, categoryData, categoryName, categoryId, modifier, areaIdentifier }: CategoryNestedThresholdItemTableProps) => {
     const [name, setCategoryName] = useState<string>("");
 
     const cls = useStyles();
@@ -53,30 +51,15 @@ export const CategoryNestedThresholdItemTable = ({ categoryIndex, tableData, tab
                 {categoryIndex === 0 && <CategoryNestedThresholdHeader />}
                 <TableBody>
                     {sortByPropertyNumeric(getter, categoryData).map((row: CategoryNestedThresholdData, index: number) => {
-                        return (
-                            <CategoryNestedThresholdRow
-                                key={row.rowId}
-                                categoryId={categoryId}
-                                setCategoryName={setCategoryName}
-                                categoryName={name}
-                                index={index}
-                                tableData={tableData}
-                                row={row}
-                                modifier={modifier}
-                            />
-                        );
+                        return <CategoryNestedThresholdRow key={row.rowId} categoryId={categoryId} setCategoryName={setCategoryName} categoryName={name} index={index} tableData={tableData} row={row} modifier={modifier} />;
                     })}
                 </TableBody>
             </TableContainer>
             <ItemToolbar
                 addInnerButton={
-                    categoryIndex === 0 ? (
-                        <Button onClick={() => modifier.addThreshold(tableData, categoryIndex, client, areaIdentifier, tableId)} color="primary" variant="contained">
-                            Add Threshold
-                        </Button>
-                    ) : (
-                        <></>
-                    )
+                    <Button onClick={() => modifier.addThreshold(tableData, categoryId, client, areaIdentifier, tableId)} color="primary" variant="contained">
+                        Add Threshold
+                    </Button>
                 }
                 deleteButton={
                     <Button variant="contained" style={{ width: "38ch" }} color="primary" onClick={() => modifier.removeCategory(tableData, categoryId)}>

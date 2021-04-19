@@ -27,7 +27,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ValueOptions = node.ValueOptions,
                 NodeComponentType = node.NodeComponentType,
                 IsDynamicTableNode = node.IsDynamicTableNode,
-                DynamicType = node.DynamicType
+                DynamicType = node.DynamicType,
+                
             };
         }
 
@@ -42,6 +43,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             string areaIdentifier,
             string optionPath,
             bool isDynamic,
+            bool isCritical = false,
             string? nodeComponent = null,
             int? resolveOrder = null,
             string? dynamicType = null
@@ -73,7 +75,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsDynamicTableNode = isDynamic,
                 NodeComponentType = nodeComponent ?? nodeTypeOption.NodeComponent,
                 ResolveOrder = resolveOrder,
-                DynamicType = dynamicType
+                DynamicType = dynamicType,
+                ShouldRenderChildren = nodeTypeOption.ShouldRenderChildren,
+                IsAnabranchType = nodeTypeOption.IsAnabranchType,
+                IsAnabranchMergePoint = nodeTypeOption.IsAnabranchMergePoint,
+                IsMultiOptionEditable = nodeTypeOption.IsMultiOptionEditable,
+                ShouldShowMultiOption = nodeTypeOption.ShouldShowMultiOption,
+                IsSplitMergeType = nodeTypeOption.IsSplitMergeType,
+                IsCurrency = nodeTypeOption.IsCurrency,
+                IsCritical = isCritical
             };
         }
     }

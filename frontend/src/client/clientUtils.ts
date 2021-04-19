@@ -32,10 +32,7 @@ export enum Environments {
 }
 
 export const isDevelopmentStage = () => {
-    console.log("CurrentEnvironment " + currentEnvironment.toUpperCase());
-    console.log("Production".toUpperCase())
-    const isDev = currentEnvironment.toUpperCase() !== "Production".toUpperCase(); //typeof(Environments.Production).toString().toUpperCase();
-    return isDev
+    return currentEnvironment.toUpperCase() !== "Production".toUpperCase();
 };
 
 if (softwareVersion === undefined) {
