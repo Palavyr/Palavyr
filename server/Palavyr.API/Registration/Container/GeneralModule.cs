@@ -41,7 +41,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<PercentOfThresholdCompiler>().AsSelf();
             builder.RegisterType<BasicThresholdCompiler>().AsSelf();
             builder.RegisterType<TwoNestedCategoryCompiler>().AsSelf();
-
+            builder.RegisterType<CategoryNestedThresholdCompiler>().AsSelf();
             
             builder.RegisterType<PreviewResponseGenerator>().As<IPreviewResponseGenerator>();
             builder.RegisterType<PdfResponseGenerator>().As<IPdfResponseGenerator>();
@@ -50,7 +50,6 @@ namespace Palavyr.API.Registration.Container
             
             builder.RegisterGeneric(typeof(GenericDynamicTableRepository<>)).As(typeof(IGenericDynamicTableRepository<>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(DynamicTableCommandHandler<>)).As(typeof(IDynamicTableCommandHandler<>)).InstancePerLifetimeScope();
-
             
             builder.RegisterType<JwtAuthenticationService>().As<IJwtAuthenticationService>();
             builder.RegisterType<AccountSetupService>().As<IAccountSetupService>();
