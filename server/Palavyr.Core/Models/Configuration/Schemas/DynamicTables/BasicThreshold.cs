@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Models.Contracts;
@@ -7,7 +6,7 @@ using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
-    public class BasicThreshold : IOrderedTable, IDynamicTable<BasicThreshold>, IHaveRange
+    public class BasicThreshold : IOrderedTable, IDynamicTable<BasicThreshold>, IHaveRange, IOrderableThreshold
     {
         [Key]
         public int? Id { get; set; }
@@ -22,6 +21,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
         public bool Range { get; set; }
         public string ItemName { get; set; }
         public int RowOrder { get; set; }
+        public bool TriggerFallback { get; set; }
 
         public BasicThreshold()
         {

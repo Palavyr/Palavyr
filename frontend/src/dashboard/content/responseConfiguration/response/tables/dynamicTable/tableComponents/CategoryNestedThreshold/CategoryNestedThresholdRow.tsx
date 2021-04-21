@@ -1,8 +1,8 @@
 import React from "react";
-import { TableRow, TableCell, Button, makeStyles, TextField } from "@material-ui/core";
+import { TableRow, TableCell, Button, makeStyles, TextField, FormControlLabel, Checkbox } from "@material-ui/core";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { CategoryNestedThresholdData, TableData } from "../../DynamicTableTypes";
+import { CategoryNestedThresholdData, TableData } from "@Palavyr-Types";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { SetState } from "@Palavyr-Types";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
@@ -11,6 +11,7 @@ export interface CategoryNestedThresholdProps {
     index: number;
     categoryId: string;
     categoryName: string;
+    categorySize: number;
     setCategoryName: SetState<string>;
     tableData: TableData;
     row: CategoryNestedThresholdData;
@@ -51,11 +52,14 @@ const useStyles = makeStyles((theme) => ({
 
 const cellAlignment = "center";
 
-export const CategoryNestedThresholdRow = ({ index, categoryId, categoryName, setCategoryName, tableData, row, modifier }: CategoryNestedThresholdProps) => {
+export const CategoryNestedThresholdRow = ({ index, categoryId, categoryName, categorySize, setCategoryName, tableData, row, modifier }: CategoryNestedThresholdProps) => {
     const cls = useStyles(!row.range);
 
-    const { currencySymbol } = React.useContext(DashboardContext);
+    const onTriggerFallbackChange = () => {
+        modifier.checkTriggerFallbackChange(tableData, row, categoryId);
+    };
 
+    const { currencySymbol } = React.useContext(DashboardContext);
     const categoryColumn =
         index === 0 ? (
             <TableCell align={cellAlignment}>
@@ -134,25 +138,23 @@ export const CategoryNestedThresholdRow = ({ index, categoryId, categoryName, se
                 />
             </TableCell>
             <TableCell align={cellAlignment}>
-                {
-                    <Button
-                        variant="contained"
-                        style={{ width: "18ch" }}
-                        color={row.range ? "primary" : "secondary"}
-                        onClick={() => {
-                            modifier.setRangeOrValue(tableData, row.rowId);
-                        }}
-                    >
-                        {row.range ? "Range" : "Single Value"}
-                    </Button>
-                }
+                <Button
+                    variant="contained"
+                    style={{ width: "18ch" }}
+                    color={row.range ? "primary" : "secondary"}
+                    onClick={() => {
+                        modifier.setRangeOrValue(tableData, row.rowId);
+                    }}
+                >
+                    {row.range ? "Range" : "Single Value"}
+                </Button>
             </TableCell>
             <TableCell align={cellAlignment}>
                 <Button size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeThreshold(tableData, row.rowId)}>
                     Delete Threshold
                 </Button>
             </TableCell>
-            <TableCell></TableCell>
+            <TableCell>{row.rowOrder === categorySize - 1 && categorySize > 1 && <FormControlLabel label="Trigger Too Complicated" control={<Checkbox checked={row.triggerFallback} onChange={onTriggerFallbackChange} />} />}</TableCell>
         </TableRow>
     );
 };

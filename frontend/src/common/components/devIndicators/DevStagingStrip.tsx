@@ -5,8 +5,6 @@ import React from "react";
 export const DevStagingStrip = () => {
     const text = `This is ${currentEnvironment}` + (softwareVersion ?  `: ${softwareVersion}` : "");
     const isDev = isDevelopmentStage();
-    console.log("Is Dev: "  + isDev);
-
     return (
         <>
             {isDev && (

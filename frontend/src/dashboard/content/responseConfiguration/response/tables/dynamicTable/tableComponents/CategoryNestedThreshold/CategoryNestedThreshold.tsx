@@ -2,11 +2,12 @@ import React from "react";
 import { ApiClient } from "@api-client/Client";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
-import { DynamicTableTypes, DynamicTableProps } from "../../DynamicTableTypes";
+import { DynamicTableProps } from "@Palavyr-Types";
 
 import { DisplayTableData } from "../DisplayTableData";
 import { CategoryNestedThresholdContainer } from "./CategoryNestedThresholdContainer";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
+import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,9 +35,16 @@ export const CategoryNestedThreshold = ({ tableId, tableTag, tableMeta, tableDat
     const modifier = new CategoryNestedThresholdModifier(setTableData);
 
     const onSave = async () => {
-        const { data: savedData } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.TwoNestedCategory, tableData, tableId, tableTag);
-        setTableData(savedData);
-        return true;
+
+        const result = modifier.validateTable(tableData);
+
+        if (result) {
+            const { data: savedData } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.CategoryNestedThreshold, tableData, tableId, tableTag);
+            setTableData(savedData);
+            return true;
+        } else {
+            return false;
+        }
     };
 
     return (
@@ -54,7 +62,7 @@ export const CategoryNestedThreshold = ({ tableId, tableTag, tableMeta, tableDat
                     </div>
                 </div>
             </AccordionActions>
-            {showDebug && <DisplayTableData tableData={tableData} properties={["category", "threshold", "valueMin", "valueMax", "rowOrder", "itemOrder", "itemId"]} />}
+            {showDebug && <DisplayTableData tableData={tableData} properties={["category", "triggerFallback", "threshold", "valueMin", "valueMax", "rowOrder", "rowId", "itemOrder", "itemId"]} />}
         </>
     );
 };

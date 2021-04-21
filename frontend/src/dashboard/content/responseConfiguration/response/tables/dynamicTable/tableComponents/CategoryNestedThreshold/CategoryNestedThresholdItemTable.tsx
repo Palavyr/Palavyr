@@ -1,10 +1,10 @@
 import { ApiClient } from "@api-client/Client";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { Button, makeStyles, TableBody, TableContainer, Paper } from "@material-ui/core";
+import { CategoryNestedThresholdData } from "@Palavyr-Types";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { CategoryNestedThresholdData } from "../../DynamicTableTypes";
 import { CategoryNestedThresholdHeader } from "./CategoryNestedThresholdHeader";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 import { CategoryNestedThresholdRow } from "./CategoryNestedThresholdRow";
@@ -51,7 +51,7 @@ export const CategoryNestedThresholdItemTable = ({ categoryIndex, tableData, tab
                 {categoryIndex === 0 && <CategoryNestedThresholdHeader />}
                 <TableBody>
                     {sortByPropertyNumeric(getter, categoryData).map((row: CategoryNestedThresholdData, index: number) => {
-                        return <CategoryNestedThresholdRow key={row.rowId} categoryId={categoryId} setCategoryName={setCategoryName} categoryName={name} index={index} tableData={tableData} row={row} modifier={modifier} />;
+                        return <CategoryNestedThresholdRow key={row.rowId} categorySize={categoryData.length} categoryId={categoryId} setCategoryName={setCategoryName} categoryName={name} index={index} tableData={tableData} row={row} modifier={modifier} />;
                     })}
                 </TableBody>
             </TableContainer>

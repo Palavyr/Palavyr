@@ -162,7 +162,7 @@ export type StaticFee = {
 export type StaticTableValidationResult = {
     result: boolean;
     message: string;
-}
+};
 
 type HTML = string;
 
@@ -344,7 +344,7 @@ export enum GeneralSettingsLoc {
     companyLogo,
     locale,
     default_email_template,
-    deleteaccount
+    deleteaccount,
 }
 
 export enum AreaSettingsLoc {
@@ -404,7 +404,6 @@ export type NodeOption = {
     dynamicType: string | null;
 };
 
-
 // export type NodeTypeOptions = {[index: string]: NodeOptions};
 export type NodeTypeOptions = NodeOption[];
 
@@ -429,7 +428,7 @@ export type PlanType = "Free" | "Premium" | "Pro";
 export type PlanStatus = {
     status: PlanType;
     hasUpgraded: boolean;
-}
+};
 
 export enum PurchaseTypes {
     Free = "Free",
@@ -471,7 +470,6 @@ export type ConversationUpdate = {
 };
 
 export type CompletedConversation = ConversationUpdate[];
-
 
 export type PreCheckResult = {
     isReady: boolean;
@@ -516,19 +514,18 @@ export type ResetEmailResponse = {
     message: string;
     status: boolean;
     link: string;
-}
+};
 
 export type ResetPasswordResponse = {
     message: string;
     status: boolean;
-}
+};
 
 export type VerificationResponse = {
     message: string;
     status: boolean;
     apiKey: string;
 };
-
 
 export type Settings = {
     emailAddress: string;
@@ -556,21 +553,21 @@ export type LocaleDefinition = {
     localeMap: LocaleMap;
     localeCurrencySymbol: string;
     localePhonePattern: string;
-}
+};
 
 export type LocaleMapItem = {
     localeId: string;
     countryName: string;
     phonePattern: string;
     currencySymbol: string;
-}
+};
 export type LocaleMap = LocaleMapItem[];
 
 export type ProductIds = {
     freeProductId: string;
     premiumProductId: string;
     proProductId: string;
-}
+};
 
 export type Todos = {
     name: string;
@@ -590,13 +587,12 @@ export type TodosAsBoolean = {
     phoneNumber: boolean;
 };
 
-
 export type SplitMergeMeta = {
     isDecendentOfSplitMerge: boolean;
     decendentLevelFromSplitMerge: number;
     splitMergeRootSiblingIndex: number;
     nodeIdOfMostRecentSplitMergePrimarySibling: string;
-}
+};
 
 export type AnabranchMeta = {
     isDecendentOfAnabranch: boolean;
@@ -641,4 +637,112 @@ export type NodeIdentity = {
     shouldDisabledNodeTypeSelector: boolean;
     shouldShowResponseInPdfOption: boolean;
     shouldShowUnsetNodeTypeOption: boolean;
+};
+
+// Dynamic Table types
+export type SelectOneFlatData = {
+    id: number;
+    accountId: string;
+    areaId: string;
+    tableId: string;
+    option: string;
+    valueMin: number;
+    valueMax: number;
+    range: boolean;
+    rowOrder: number;
+};
+
+export type PercentOfThresholdData = {
+    id: number;
+    accountId: string;
+    areaIdentifier: string;
+    tableId: string;
+    itemId: string;
+    itemName: string;
+    rowId: string;
+    threshold: number;
+    valueMin: number;
+    valueMax: number;
+    range: boolean;
+    modifier: number;
+    posNeg: boolean;
+    rowOrder: number;
+    triggerFallback: boolean;
+};
+
+export type BasicThresholdData = {
+    id: number;
+    rowId: number;
+    accountId: string;
+    areaIdentifier: string;
+    tableId: string;
+    itemName: string;
+    threshold: number;
+    valueMin: number;
+    valueMax: number;
+    range: boolean;
+    rowOrder: number;
+    minThreshold: number;
+    maxThreshold: number;
+    triggerFallback: boolean;
+};
+
+export type TwoNestedCategoryData = {
+    id: number;
+    accountId: string;
+    areaIdentifier: string;
+    tableId: string;
+    valueMin: number;
+    valueMax: number;
+    range: boolean;
+    rowId: string;
+    rowOrder: number;
+    itemId: string;
+    itemOrder: number;
+    category: string;
+    subCategory: string;
+};
+
+export type CategoryNestedThresholdData = {
+    id: number;
+    accountId: string;
+    areaIdentifier: string;
+    tableId: string;
+    valueMin: number;
+    valueMax: number;
+    range: boolean;
+    rowId: string;
+    rowOrder: number;
+    itemId: string;
+    itemOrder: number;
+    category: string;
+    threshold: number;
+    triggerFallback: boolean;
+};
+
+export type TableData = SelectOneFlatData[] | PercentOfThresholdData[] | BasicThresholdData[] | TwoNestedCategoryData[] | CategoryNestedThresholdData[] | any; // | SelectOneThresholdData etc
+
+export interface IDynamicTableBody {
+    tableData: TableData;
+    modifier: any;
+}
+
+export type DynamicTableProps = {
+    tableData: Array<TableData>;
+    setTableData: SetState<TableData>;
+    areaIdentifier: string;
+    tableId: string;
+    tableTag: string;
+    tableMeta: DynamicTableMeta;
+    setTableMeta: any;
+    deleteAction(): Promise<any>;
+    showDebug: boolean;
+};
+
+export type DynamicTableComponentMap = {
+    [key: string]: (props: DynamicTableProps) => JSX.Element;
+};
+
+export type TableNameMap = {
+    [tableName: string]: string;
 };

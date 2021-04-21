@@ -1,7 +1,7 @@
 import React from "react";
 import { TableBody } from "@material-ui/core";
 import { SelectOneFlatRow } from "./SelectOneFlatRow";
-import { IDynamicTableBody, SelectOneFlatData } from "../../DynamicTableTypes";
+import { IDynamicTableBody, SelectOneFlatData } from "@Palavyr-Types";
 
 export const SelectOneFlatBody = ({ tableData, modifier }: IDynamicTableBody) => {
     return (

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Palavyr.Core.Data;
@@ -9,9 +10,10 @@ using Palavyr.Core.Data;
 namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
 {
     [DbContext(typeof(DashContext))]
-    partial class DashContextModelSnapshot : ModelSnapshot
+    [Migration("20210420133153_AddMinMaxThresholdForFallback")]
+    partial class AddMinMaxThresholdForFallback
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,6 +221,12 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                     b.Property<string>("ItemName")
                         .HasColumnType("text");
 
+                    b.Property<bool>("MaxThreshold")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("MinThreshold")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("Range")
                         .HasColumnType("boolean");
 
@@ -233,9 +241,6 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
 
                     b.Property<double>("Threshold")
                         .HasColumnType("double precision");
-
-                    b.Property<bool>("TriggerFallback")
-                        .HasColumnType("boolean");
 
                     b.Property<double>("ValueMax")
                         .HasColumnType("double precision");
@@ -270,6 +275,12 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                     b.Property<int>("ItemOrder")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("MaxThreshold")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("MinThreshold")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("Range")
                         .HasColumnType("boolean");
 
@@ -284,9 +295,6 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
 
                     b.Property<double>("Threshold")
                         .HasColumnType("double precision");
-
-                    b.Property<bool>("TriggerFallback")
-                        .HasColumnType("boolean");
 
                     b.Property<double>("ValueMax")
                         .HasColumnType("double precision");
@@ -318,6 +326,12 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                     b.Property<string>("ItemName")
                         .HasColumnType("text");
 
+                    b.Property<bool>("MaxThreshold")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("MinThreshold")
+                        .HasColumnType("boolean");
+
                     b.Property<double>("Modifier")
                         .HasColumnType("double precision");
 
@@ -338,9 +352,6 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
 
                     b.Property<double>("Threshold")
                         .HasColumnType("double precision");
-
-                    b.Property<bool>("TriggerFallback")
-                        .HasColumnType("boolean");
 
                     b.Property<double>("ValueMax")
                         .HasColumnType("double precision");

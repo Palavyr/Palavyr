@@ -2,7 +2,7 @@ import React from "react";
 import { TableRow, TableCell, Button, makeStyles } from "@material-ui/core";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { PercentOfThresholdData, TableData } from "../../DynamicTableTypes";
+import { PercentOfThresholdData, TableData } from "@Palavyr-Types";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, makeStyles, TableCell, TableRow } from "@material-ui/core";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
-import { TableData, BasicThresholdData } from "../../DynamicTableTypes";
+import { TableData, BasicThresholdData } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import DeleteIcon from "@material-ui/icons/Delete";

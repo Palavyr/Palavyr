@@ -3,7 +3,7 @@ import { Button, makeStyles, TableBody, TableContainer, TextField, Paper } from 
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { PercentOfThresholdData } from "../../DynamicTableTypes";
+import { PercentOfThresholdData } from "@Palavyr-Types";
 import { PercentOfThresholdHeader } from "./PercentOfThresholdHeader";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { PercentOfThresholdRow } from "./PercentOfThresholdRow";

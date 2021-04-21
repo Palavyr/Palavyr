@@ -1,7 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
-import { DynamicTableTypes, TableData } from "../../DynamicTableTypes";
+import { SelectOneFlatData, SetState, TableData } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { ApiClient } from "@api-client/Client";
+import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
 
 export class SelectOneFlatModifier {
@@ -9,7 +10,7 @@ export class SelectOneFlatModifier {
     onClick: Dispatch<SetStateAction<TableData>>;
     tableType: string;
 
-    constructor(onClick: Dispatch<SetStateAction<TableData>>) {
+    constructor(onClick: SetState<TableData>) {
         this.onClick = onClick;
         this.tableType = DynamicTableTypes.SelectOneFlat;
     }
@@ -57,5 +58,9 @@ export class SelectOneFlatModifier {
     setRangeOrValue(tableData: TableData, index: number) {
         tableData[index].range = !tableData[index].range;
         this.setTables(tableData);
+    }
+
+    validateTable(tableData: SelectOneFlatData[]) {
+        return true; // TODO: validation logic
     }
 }

@@ -1,16 +1,15 @@
 import React from "react";
-import { DynamicTableMeta, DynamicTableMetas } from "@Palavyr-Types";
+import { DynamicTableMeta, DynamicTableMetas, DynamicTableProps, TableData, TableNameMap } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { TextField, makeStyles, Typography, Table, TableRow, TableCell, TableBody } from "@material-ui/core";
 import { DynamicTableSelector } from "./DynamicTableSelector";
 import { removeByIndex } from "@common/utils";
 import { cloneDeep } from "lodash";
-import { DynamicTableComponentMap, DynamicTableProps, DynamicTableTypes, TableData } from "./DynamicTableTypes";
-import { TableNameMap } from "./DynamicTableConfiguration";
 import { useState } from "react";
 import { useCallback } from "react";
 import { useEffect } from "react";
 import { ChangeEvent } from "react";
+import { dynamicTableComponentMap } from "./DynamicTableRegistry";
 
 export interface SingleDynamicFeeTableProps {
     defaultTableMeta: DynamicTableMeta;
@@ -133,7 +132,7 @@ export const SingleDynamicFeeTable = ({
         deleteAction: deleteAction,
     };
 
-    const DynamicTableComponent = tableMeta?.tableType && DynamicTableComponentMap[tableMeta?.tableType];
+    const DynamicTableComponent = tableMeta?.tableType && dynamicTableComponentMap[tableMeta?.tableType];
 
     return (
         <>

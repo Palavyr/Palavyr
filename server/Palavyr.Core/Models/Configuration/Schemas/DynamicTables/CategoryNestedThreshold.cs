@@ -6,7 +6,7 @@ using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
-    public class CategoryNestedThreshold : IOrderedTable, IDynamicTable<CategoryNestedThreshold>, IHaveRange, IMultiItem
+    public class CategoryNestedThreshold : IOrderedTable, IDynamicTable<CategoryNestedThreshold>, IHaveRange, IMultiItem, IOrderableThreshold
     {
         [Key] public int? Id { get; set; }
         public string AccountId { get; set; }
@@ -21,6 +21,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
         public int ItemOrder { get; set; }
         public string Category { get; set; }
         public double Threshold { get; set; }
+        public bool TriggerFallback { get; set; }
 
         public CategoryNestedThreshold CreateNew(
             string accountId,

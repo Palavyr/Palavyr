@@ -3,7 +3,8 @@ import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { SetState, TableGroup } from "@Palavyr-Types";
 import { cloneDeep, findIndex, groupBy, uniq } from "lodash";
 import { uuid } from "uuidv4";
-import { CategoryNestedThresholdData, DynamicTableTypes, TableData } from "../../DynamicTableTypes";
+import { CategoryNestedThresholdData, TableData } from "@Palavyr-Types";
+import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
 export class CategoryNestedThresholdModifier {
     onClick: SetState<TableData>;
@@ -45,7 +46,7 @@ export class CategoryNestedThresholdModifier {
         template.itemOrder = uniq(categoryRows.map((x: CategoryNestedThresholdData) => x.itemOrder))[0];
         template.itemId = categoryId;
         template.rowId = uuid();
-
+        template.category = categoryRows[0].category;
         tableData.push(template);
 
         this.setTables(tableData);
@@ -53,7 +54,7 @@ export class CategoryNestedThresholdModifier {
 
     setCategoryName(tableData: CategoryNestedThresholdData[], categoryId: string, value: string) {
         tableData.forEach((item: CategoryNestedThresholdData, index: number) => {
-            if (item.itemId === categoryId){
+            if (item.itemId === categoryId) {
                 tableData[index].category = value;
             }
         });
@@ -85,23 +86,47 @@ export class CategoryNestedThresholdModifier {
     }
 
     removeThreshold(tableData: CategoryNestedThresholdData[], rowId: string) {
-        const row = this._getRowById(tableData, rowId);
-        const categoryId = row.itemId;
-        const categoryRows = this._getRowsByCategoryId(tableData, categoryId);
-
-        if (categoryRows.length > 1) {
+        if (this._categoryHasMorethanOneRow(tableData, rowId)) {
             const updatedTable = tableData.filter((x: CategoryNestedThresholdData) => x.rowId !== rowId);
+            const categoryId = this._getCategoryIdFromRowId(tableData, rowId);
+            const updatedCategoryRows = sortByPropertyNumeric(this.rowOrderGetter, this._getRowsByCategoryId(updatedTable, categoryId));
 
-            const sortGetter = (x: CategoryNestedThresholdData) => x.rowOrder;
-            const categoryRows = sortByPropertyNumeric(sortGetter, this._getRowsByCategoryId(updatedTable, categoryId));
-            categoryRows.forEach((x: CategoryNestedThresholdData, order: number) => {
-                const rowIndex = this._getRowIndexById(tableData, rowId);
+            updatedCategoryRows.forEach((x: CategoryNestedThresholdData, order: number) => {
+                const rowIndex = this._getRowIndexById(updatedTable, x.rowId);
                 updatedTable[rowIndex].rowOrder = order;
+                if (updatedCategoryRows.length === 1) {
+                    updatedTable[rowIndex].triggerFallback = false;
+                }
             });
             this.setTables(updatedTable);
         } else {
             alert("Category must have at least one threshold value.");
         }
+    }
+
+    // onchange has to set this rowId to true, and all other category row Ids to false.
+    checkTriggerFallbackChange(tableData: CategoryNestedThresholdData[], row: CategoryNestedThresholdData, categoryId: string) {
+        const categoryRows = this._getRowsByCategoryId(tableData, categoryId);
+        categoryRows.forEach((x: CategoryNestedThresholdData) => {
+            const rowIndex = this._getRowIndexById(tableData, x.rowId);
+            if (x.rowId === row.rowId) {
+                tableData[rowIndex].triggerFallback = true;
+            } else {
+                tableData[rowIndex].triggerFallback = false;
+            }
+        });
+        this.setTables(tableData);
+    }
+
+    _categoryHasMorethanOneRow(tableData: CategoryNestedThresholdData[], rowId: string): boolean {
+        const categoryId = this._getCategoryIdFromRowId(tableData, rowId);
+        const categoryRows = this._getRowsByCategoryId(tableData, categoryId);
+        return categoryRows.length > 1;
+    }
+
+    _getCategoryIdFromRowId(tableData: CategoryNestedThresholdData[], rowId: string) {
+        const row = this._getRowById(tableData, rowId);
+        return row.itemId;
     }
 
     removeCategory(tableData: CategoryNestedThresholdData[], categoryId: string) {
@@ -124,11 +149,20 @@ export class CategoryNestedThresholdModifier {
         }
     }
 
-    __itemIdGetter(x: CategoryNestedThresholdData) {
+    public rowOrderGetter(x: CategoryNestedThresholdData) {
+        return x.rowOrder;
+    }
+
+    public categoryIdGetter(x: CategoryNestedThresholdData) {
         return x.itemOrder;
     }
+
+    public validateTable(tableData: CategoryNestedThresholdData[]) {
+        return true; // TODO: going to need to check things like row orders.
+    }
+
     _getOrderedUniqItemIds(tableData: CategoryNestedThresholdData[]) {
-        return sortByPropertyNumeric(this.__itemIdGetter, uniq(tableData.map((x: CategoryNestedThresholdData) => x.itemId)));
+        return sortByPropertyNumeric(this.categoryIdGetter, uniq(tableData.map((x: CategoryNestedThresholdData) => x.itemId)));
     }
 
     _getRowsByCategoryId(tableData: CategoryNestedThresholdData[], categoryId: string) {

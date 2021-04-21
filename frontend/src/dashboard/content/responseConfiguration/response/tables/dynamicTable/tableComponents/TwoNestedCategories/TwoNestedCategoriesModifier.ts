@@ -1,9 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
-import { DynamicTableTypes, TableData, TwoNestedCategoryData } from "../../DynamicTableTypes";
+import { TableData, TwoNestedCategoryData } from "@Palavyr-Types";
 import { cloneDeep, findIndex, groupBy, max, uniq } from "lodash";
 import { ApiClient } from "@api-client/Client";
 import { TableGroup } from "@Palavyr-Types";
 import { uuid } from "uuidv4";
+import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
 export class TwoNestedCategoriesModifier {
     onClick: Dispatch<SetStateAction<TableData>>;
@@ -85,7 +86,7 @@ export class TwoNestedCategoriesModifier {
             itemIds.forEach((itemId: string) => {
                 let group = outerCategoryGroups[itemId];
                 delete group[rowOrder];
-                group = group.filter((x: TwoNestedCategoryData) => x)
+                group = group.filter((x: TwoNestedCategoryData) => x);
                 group.forEach((x: TwoNestedCategoryData, newRowOrder: number) => {
                     x.rowOrder = newRowOrder;
                 });
@@ -175,5 +176,17 @@ export class TwoNestedCategoriesModifier {
         } else {
             alert("Table must have at least one item.");
         }
+    }
+
+    public outerCategoryOrderGetter(x: TwoNestedCategoryData) {
+        return x.itemOrder;
+    }
+
+    public innerCategoryOrderGetter(x: TwoNestedCategoryData) {
+        return x.rowOrder;
+    }
+
+    validateTable(tableData: TwoNestedCategoryData[]){
+        return true; // TODO: validation logic
     }
 }

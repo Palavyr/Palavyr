@@ -2,7 +2,7 @@ import React from "react";
 import { TableRow, TableCell, Button, makeStyles, TextField } from "@material-ui/core";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { TableData, TwoNestedCategoryData } from "../../DynamicTableTypes";
+import { TableData, TwoNestedCategoryData } from "@Palavyr-Types";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { SetState } from "@Palavyr-Types";

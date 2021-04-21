@@ -1,7 +1,7 @@
 import { sortByPropertyNumeric } from '@common/utils/sorting'
 import { TableBody } from '@material-ui/core'
+import { BasicThresholdData, IDynamicTableBody } from '@Palavyr-Types';
 import React from 'react'
-import { IDynamicTableBody, BasicThresholdData } from '../../DynamicTableTypes'
 import { BasicThresholdRow } from './BasicThresholdRow'
 
 const getter = (x: BasicThresholdData) => x.rowOrder;

@@ -3,12 +3,14 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
@@ -17,15 +19,18 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
     {
         private readonly IConfigurationRepository configurationRepository;
         private readonly IConversationOptionSplitter splitter;
+        private readonly IThresholdEvaluator thresholdEvaluator;
 
         public CategoryNestedThresholdCompiler(
             IGenericDynamicTableRepository<CategoryNestedThreshold> repository,
             IConfigurationRepository configurationRepository,
-            IConversationOptionSplitter splitter
+            IConversationOptionSplitter splitter,
+            IThresholdEvaluator thresholdEvaluator
         ) : base(repository)
         {
             this.configurationRepository = configurationRepository;
             this.splitter = splitter;
+            this.thresholdEvaluator = thresholdEvaluator;
         }
 
         public List<string> GetCategories(List<CategoryNestedThreshold> rawRows)
@@ -34,6 +39,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var categories = rows.Select(row => row.Category).Distinct().ToList();
             return categories;
         }
+
         public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId)
         {
             var update = table.CategoryNestedThreshold;
@@ -57,7 +63,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             nodes.AddAdditionalNode(
                 NodeTypeOption.Create(
                     dynamicTableMeta.MakeUniqueIdentifier("Category"),
-                    dynamicTableMeta.ConvertToPrettyName(),
+                    dynamicTableMeta.ConvertToPrettyName("Category"),
                     new List<string>() {"Continue"},
                     categories,
                     true,
@@ -71,10 +77,12 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 )
             );
 
+            // need special threshold node -- like takenumber with conditions - min and max. Auto Add new nodes at 
+            // compile time to set nodes for min and max. Hmmmm
             nodes.AddAdditionalNode(
                 NodeTypeOption.Create(
                     dynamicTableMeta.MakeUniqueIdentifier("Threshold"),
-                    dynamicTableMeta.ConvertToPrettyName(),
+                    dynamicTableMeta.ConvertToPrettyName("Threshold"),
                     new List<string>() {"Continue"},
                     new List<string>() {"Continue"},
                     true,
@@ -84,7 +92,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     DefaultNodeTypeOptions.NodeComponentTypes.TakeNumber,
                     resolveOrder: 1,
                     isMultiOptionEditable: false,
-                    dynamicType: dynamicTableMeta.MakeUniqueIdentifier()
+                    dynamicType: widgetResponseKey
                 )
             );
         }
@@ -98,34 +106,23 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var category = GetResponseByResponseId(orderedResponseIds[0], dynamicResponse);
             var amount = GetResponseByResponseId(orderedResponseIds[1], dynamicResponse);
 
-            var categorySubset = records.Where(rec => rec.Category == category).OrderBy(x => x.Threshold);
+            var orderedThresholds = records.Where(rec => rec.Category == category).OrderBy(x => x.Threshold);
 
             var responseAmountAsDouble = double.Parse(amount);
 
             var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(records.First().TableId);
-            
-            var tableRows = new List<TableRow>();
-            foreach (var threshold in categorySubset)
+            var thresholdResult = thresholdEvaluator.Evaluate(responseAmountAsDouble, orderedThresholds);
+            return new List<TableRow>()
             {
-                if (responseAmountAsDouble >= threshold.Threshold)
-                {
-                    var minBaseAmount = threshold.ValueMin;
-                    var maxBaseAmount = threshold.ValueMax;
-                    
-                    tableRows.Add(
-                        new TableRow(
-                            dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : string.Join(" @ ", new[] {category, responseAmountAsDouble.ToString("C", culture)}),
-                            minBaseAmount,
-                            maxBaseAmount, 
-                            false,
-                            culture,
-                            threshold.Range
-                            ));
-                    break;
-                }
-            }
-
-            return tableRows;
+                new TableRow(
+                    dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : string.Join(" @ ", new[] {category, responseAmountAsDouble.ToString("C", culture)}),
+                    thresholdResult.ValueMin,
+                    thresholdResult.ValueMax,
+                    false,
+                    culture,
+                    thresholdResult.Range
+                )
+            };
         }
     }
 }

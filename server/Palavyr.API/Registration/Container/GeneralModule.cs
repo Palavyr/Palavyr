@@ -16,6 +16,7 @@ using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Services.ConversationServices;
 using Palavyr.Core.Services.DynamicTableService;
 using Palavyr.Core.Services.DynamicTableService.Compilers;
+using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.PdfService;
@@ -70,6 +71,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<TreeWalker>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<NodeCounter>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<GuidFinder>().AsSelf().SingleInstance();
+            builder.RegisterType<ThresholdEvaluator>().As<IThresholdEvaluator>();
 
             builder.RegisterType<ConversationOptionSplitter>().As<IConversationOptionSplitter>().SingleInstance();
         }

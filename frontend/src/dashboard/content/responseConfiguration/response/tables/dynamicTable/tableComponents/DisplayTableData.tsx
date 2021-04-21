@@ -1,6 +1,6 @@
 import { isDevelopmentStage } from "@api-client/clientUtils";
+import { TableData } from "@Palavyr-Types";
 import React from "react";
-import { TableData } from "../DynamicTableTypes";
 
 export interface IDisplayTableData {
     tableData: TableData;

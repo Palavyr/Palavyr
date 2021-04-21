@@ -25,9 +25,9 @@ import {
     LocaleDefinition,
     ProductIds,
     PlanStatus,
+    TableData,
+    TableNameMap,
 } from "@Palavyr-Types";
-import { TableData } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableTypes";
-import { TableNameMap } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/DynamicTableConfiguration";
 
 export class ApiClient {
     private client: AxiosInstance;
