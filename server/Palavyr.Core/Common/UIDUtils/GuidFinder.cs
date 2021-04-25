@@ -10,13 +10,30 @@ namespace Palavyr.Core.Common.UIDUtils
 
         public string FindGuid(string stringWithSingleGuid)
         {
-            var tableId = Regex.Match(stringWithSingleGuid, GUIDPattern, RegexOptions.IgnoreCase).Value;
-            if (!string.IsNullOrWhiteSpace(tableId))
+            var result = MatchGuid(stringWithSingleGuid);
+            if (!string.IsNullOrWhiteSpace(result))
             {
-                return tableId;
+                return result;
             }
 
             throw new Exception($"GUID was not found in the string: {stringWithSingleGuid}");
+        }
+
+        public string RemoveGuid(string stringWithSingleGuid)
+        {
+            var cleanString = stringWithSingleGuid;
+            var result = MatchGuid(stringWithSingleGuid);
+            if (!string.IsNullOrWhiteSpace(result))
+            {
+                cleanString = cleanString.Replace(result, "").TrimEnd('-');
+            }
+
+            return cleanString;
+        }
+
+        string MatchGuid(string input)
+        {
+            return Regex.Match(input, GUIDPattern, RegexOptions.IgnoreCase).Value;
         }
     }
 }

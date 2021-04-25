@@ -12,14 +12,16 @@ namespace Palavyr.Core.Models
     {
         private readonly RequiredNodeCalculator requiredNodeCalculator;
         private readonly MissingNodeCalculator missingNodeCalculator;
+        private readonly NodeOrderChecker nodeOrderChecker;
 
         public WidgetStatusUtils(
             RequiredNodeCalculator requiredNodeCalculator,
-            MissingNodeCalculator missingNodeCalculator
-        )
+            MissingNodeCalculator missingNodeCalculator,
+            NodeOrderChecker nodeOrderChecker)
         {
             this.requiredNodeCalculator = requiredNodeCalculator;
             this.missingNodeCalculator = missingNodeCalculator;
+            this.nodeOrderChecker = nodeOrderChecker;
         }
 
         public async Task<PreCheckResult> ExecuteWidgetStatusCheck(
@@ -55,7 +57,9 @@ namespace Palavyr.Core.Models
                 var nodesSet = AllNodesAreSet(nodeList);
                 var branchesTerminate = AllBranchesTerminate(nodeList);
                 var nodesSatisfied = AllRequiredNodesSatisfied(nodeList, allRequiredNodes.ToArray());
-                var checks = new List<bool>() {nodesSet, branchesTerminate, nodesSatisfied};
+                var nodeOrderCheckResult = nodeOrderChecker.AllDynamicTypesAreOrderedCorrectlyByResolveOrder(nodeList);
+
+                var checks = new List<bool>() {nodesSet, branchesTerminate, nodesSatisfied, nodeOrderCheckResult.IsOrdered};
 
                 isReady = checks.TrueForAll(x => x);
                 logger.LogDebug($"Checked isReady status: {isReady}");
@@ -84,7 +88,7 @@ namespace Palavyr.Core.Models
                 return PreCheckResult.CreateConvoResult(incompleteAreas, false);
             }
         }
-
+   
         private bool AllNodesAreSet(ConversationNode[] nodeList)
         {
             var emptyNodeTypes = nodeList.Select(x => string.IsNullOrEmpty(x.NodeType)).ToArray();

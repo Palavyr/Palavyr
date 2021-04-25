@@ -44,7 +44,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
             double valueMin,
             double valueMax,
             bool range,
-            bool posNeg
+            bool posNeg,
+            bool triggerFallback
         )
         {
             return new PercentOfThreshold()
@@ -60,7 +61,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                 ValueMin = valueMin,
                 ValueMax = valueMax,
                 Range = range,
-                PosNeg = posNeg
+                PosNeg = posNeg,
+                TriggerFallback = triggerFallback
             };
         }
 
@@ -86,7 +88,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
         public List<PercentOfThreshold> UpdateTable(DynamicTable table)
         {
             var mappedTableRows = new List<PercentOfThreshold>();
-            foreach (var row in table.PercentOfThreshold)
+            foreach (var row in table.PercentOfThreshold!)
             {
                 var mappedRow = CreateNew(
                     row.AccountId,
@@ -100,7 +102,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                     row.ValueMin,
                     row.ValueMax,
                     row.Range,
-                    row.PosNeg
+                    row.PosNeg,
+                    row.TriggerFallback
                 );
                 mappedTableRows.Add(mappedRow);
             }

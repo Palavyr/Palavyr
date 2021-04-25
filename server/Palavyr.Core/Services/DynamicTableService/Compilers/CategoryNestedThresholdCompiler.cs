@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Palavyr.Core.Data;
+using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
@@ -58,12 +59,13 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         {
             var rawRows = await GetTableRows(dynamicTableMeta);
             var categories = GetCategories(rawRows);
+
             var widgetResponseKey = dynamicTableMeta.MakeUniqueIdentifier();
 
             nodes.AddAdditionalNode(
                 NodeTypeOption.Create(
                     dynamicTableMeta.MakeUniqueIdentifier("Category"),
-                    dynamicTableMeta.ConvertToPrettyName("Category"),
+                    dynamicTableMeta.ConvertToPrettyName("Category (1)"),
                     new List<string>() {"Continue"},
                     categories,
                     true,
@@ -82,7 +84,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             nodes.AddAdditionalNode(
                 NodeTypeOption.Create(
                     dynamicTableMeta.MakeUniqueIdentifier("Threshold"),
-                    dynamicTableMeta.ConvertToPrettyName("Threshold"),
+                    dynamicTableMeta.ConvertToPrettyName("Threshold (2)"),
                     new List<string>() {"Continue"},
                     new List<string>() {"Continue"},
                     true,
@@ -92,13 +94,14 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     DefaultNodeTypeOptions.NodeComponentTypes.TakeNumber,
                     resolveOrder: 1,
                     isMultiOptionEditable: false,
-                    dynamicType: widgetResponseKey
+                    dynamicType: widgetResponseKey // check in widget component perhaps if this is dynamic, and thresholdtype... then we can do a check against the server... bleh this is so gross. But there is no other way right now.
                 )
             );
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, List<Dictionary<string, string>> dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
         {
+            // dynamicResponseIds is dynamic table keys
             var responseId = GetSingleResponseId(dynamicResponseIds);
             var records = await Repository.GetAllRowsMatchingDynamicResponseId(accountId, responseId);
 
@@ -106,8 +109,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var category = GetResponseByResponseId(orderedResponseIds[0], dynamicResponse);
             var amount = GetResponseByResponseId(orderedResponseIds[1], dynamicResponse);
 
-            var orderedThresholds = records.Where(rec => rec.Category == category).OrderBy(x => x.Threshold);
-
+            var orderedThresholds = records
+                .Where(rec => rec.Category == category)
+                .OrderBy(x => x.Threshold);
             var responseAmountAsDouble = double.Parse(amount);
 
             var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(records.First().TableId);
@@ -123,6 +127,21 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     thresholdResult.Range
                 )
             };
+        }
+
+        public async Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)
+        {
+            if (node.ResolveOrder == 0) throw new Exception("Shouldn't be doing a check on the first node");
+            var categoryResponse = dynamicResponseComponents.Responses.Single().Values.Single();
+
+            var records = await Repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
+
+            var orderedThresholds = records
+                .Where(rec => rec.Category == categoryResponse)
+                .OrderBy(x => x.Threshold);
+            var currentResponseAsDouble = double.Parse(response);
+            var isTooComplicated = thresholdEvaluator.EvaluateForFallback(currentResponseAsDouble, orderedThresholds);
+            return isTooComplicated;
         }
     }
 }

@@ -31,6 +31,7 @@ namespace Palavyr.Core.Repositories
         Task DeleteTable(string accountId, string areaIdentifier, string tableId);
 
         Task<List<TEntity>> GetAllRowsMatchingDynamicResponseId(string accountId, string dynamicResponseId);
+        Task<List<TEntity>> GetAllRowsMatchingDynamicResponseId(string dynamicResponseId);
 
         Task<List<ConversationNode>> GetConversationNodeByIds(List<string> ids);
 

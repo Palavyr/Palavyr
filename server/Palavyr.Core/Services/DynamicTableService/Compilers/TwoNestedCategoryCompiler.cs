@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Data;
+using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
@@ -30,7 +31,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             this.splitter = splitter;
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, List<Dictionary<string, string>> dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
         {
             var responseId = GetSingleResponseId(dynamicResponseIds);
             var records = await repository.GetAllRowsMatchingDynamicResponseId(accountId, responseId);
@@ -54,6 +55,11 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     result.Range
                 )
             };
+        }
+
+        public Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)
+        {
+            return Task.FromResult(true);
         }
 
         private CategoryRetriever GetInnerAndOuterCategories(List<TwoNestedCategory> rawRows)

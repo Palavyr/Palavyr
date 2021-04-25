@@ -35,7 +35,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
             string category,
             double threshold,
             string itemId,
-            int itemOrder
+            int itemOrder,
+            bool triggerFallback
         )
         {
             return new CategoryNestedThreshold
@@ -51,7 +52,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                 Category = category,
                 Threshold = threshold,
                 ItemId = itemId,
-                ItemOrder = itemOrder
+                ItemOrder = itemOrder,
+                TriggerFallback = triggerFallback
             };
         }
 
@@ -92,7 +94,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                         row.Category,
                         row.Threshold,
                         row.ItemId,
-                        row.ItemOrder));
+                        row.ItemOrder,
+                        row.TriggerFallback));
             }
 
             return mappedTableRows;

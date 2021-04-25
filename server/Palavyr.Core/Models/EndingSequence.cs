@@ -203,6 +203,23 @@ namespace Palavyr.Core.Models
                 false
             );
 
+            var genericTooComplicated = ConversationNode.CreateNew(
+                GuidUtils.CreateNewId(),
+                DefaultNodeTypeOptions.TooComplicated.StringName,
+                "We will need to discuss your situation in person.",
+                areaId,
+                "",
+                "",
+                "",
+                accountId,
+                DefaultNodeTypeOptions.TooComplicated.StringName,
+                false,
+                false,
+                false,
+                true
+            );
+            
+            nodeList.Add(genericTooComplicated);
             foreach (var node in nodeList)
             {
                 if (node.IsTerminalType)

@@ -36,7 +36,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
             double threshold,
             double valueMin,
             double valueMax,
-            bool range)
+            bool range,
+            bool triggerFallback)
         {
             return new BasicThreshold()
             {
@@ -48,7 +49,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                 Threshold = threshold,
                 ValueMin = valueMin,
                 ValueMax = valueMax,
-                Range = range
+                Range = range,
+                TriggerFallback = triggerFallback
             };
         }
 
@@ -77,7 +79,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                     row.Threshold,
                     row.ValueMin,
                     row.ValueMax,
-                    row.Range
+                    row.Range,
+                    row.TriggerFallback
                 );
                 mappedTableRows.Add(mappedRow);
             }

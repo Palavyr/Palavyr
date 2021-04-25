@@ -1,31 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
-
-// TODO Move this to docs somewhere
-
-// DESIGN for the DTO from the widget. The node id refers to the node set in the conversationNOde table. this has a 'resolveOrder' property which is used to
-// determine the order in which these responses should be used to resolve the final result.
-// [
-//     {
-//         "DynamicTableKey?": [
-//             {[node.nodeId]: "Response Value"}, 1
-//             {[node.nodeId]: "Response Value"}, 2
-//             {[node.nodeId]: "Response Value"}  0
-//         ],
-//          "SecondPartPossibly?": [
-//              {"node.nodeId"}
-//         ]
-//     },
-//     {
-//         "SelectOneFlat-1231": [
-//             {"SelectOneFlat-1231": "Ruby"}
-//         ]
-//     }
-// ]
 
 
 namespace Palavyr.Core.Services.DynamicTableService
@@ -46,9 +24,9 @@ namespace Palavyr.Core.Services.DynamicTableService
             return rows;
         }
 
-        protected string GetSingleResponseValue(List<Dictionary<string, string>> dynamicResponse, List<string> dynamicResponseIds)
+        protected string GetSingleResponseValue(DynamicResponseParts dynamicResponses, List<string> dynamicResponseIds)
         {
-            var responseComponent = dynamicResponse[0]; // this expects only a single response;
+            var responseComponent = dynamicResponses[0]; // this expects only a single response;
             var responseValue = responseComponent.Values.ToList()[0];
             return responseValue;
         }
@@ -58,12 +36,12 @@ namespace Palavyr.Core.Services.DynamicTableService
             return dynamicResponseIds[0];
         }
 
-        protected string GetResponseByResponseId(string responseId, List<Dictionary<string, string>> dynamicResponse)
+        protected string GetResponseByResponseId(string responseId, DynamicResponseParts dynamicResponse)
         {
             return dynamicResponse.Single(x => x.ContainsKey(responseId)).Values.ToList().Single();
         }
 
-        protected async Task<List<string>> GetResponsesOrderedByResolveOrder(List<Dictionary<string, string>> dynamicResponse)
+        protected async Task<List<string>> GetResponsesOrderedByResolveOrder(DynamicResponseParts dynamicResponse)
         {
             var responseKeys = dynamicResponse.SelectMany(row => row.Keys).ToList();
             return (await Repository.GetConversationNodeByIds(responseKeys))

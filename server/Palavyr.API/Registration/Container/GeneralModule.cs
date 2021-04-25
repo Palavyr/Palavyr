@@ -72,7 +72,11 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<NodeCounter>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<GuidFinder>().AsSelf().SingleInstance();
             builder.RegisterType<ThresholdEvaluator>().As<IThresholdEvaluator>();
-
+            builder.RegisterType<NodeOrderChecker>().AsSelf();
+            builder.RegisterType<DynamicResponseComponentExtractor>().AsSelf();
+            
+            builder.RegisterType<NodeGetter>().AsSelf();
+            
             builder.RegisterType<ConversationOptionSplitter>().As<IConversationOptionSplitter>().SingleInstance();
         }
     }

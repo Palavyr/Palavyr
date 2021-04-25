@@ -28,7 +28,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = node.NodeComponentType,
                 IsDynamicTableNode = node.IsDynamicTableNode,
                 DynamicType = node.DynamicType,
-                
+                ResolveOrder = node.ResolveOrder
             };
         }
 
