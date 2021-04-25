@@ -1,9 +1,9 @@
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { Button, makeStyles, TableBody, TableContainer, Paper } from "@material-ui/core";
+import { TwoNestedCategoryData } from "@Palavyr-Types";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { TwoNestedCategoryData } from "../../DynamicTableTypes";
 import { TwoNestedCategoriesHeader } from "./TwoNestedCategoriesHeader";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { TwoNestedCategoriesRow } from "./TwoNestedCategoriesRow";
@@ -15,7 +15,6 @@ interface ITwoNestedCategoriesItemTable {
     outerCategoryName: string;
     outerCategoryId: string;
     modifier: TwoNestedCategoriesModifier;
-    // addRowOnClick(): void;
     addInnerCategory(): void;
 }
 

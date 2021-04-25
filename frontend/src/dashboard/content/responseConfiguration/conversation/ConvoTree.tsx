@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Conversation, NodeTypeOptions } from "@Palavyr-Types";
+import { Conversation, NodeTypeOptions, TreeErrors } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { cloneDeep } from "lodash";
 import { ConversationNode } from "./nodes/ConversationNode";
-import { MissingDynamicNodes } from "./MissingDynamicNodes";
+import { TreeErrorPanel, } from "./MissingDynamicNodes";
 import { Button, makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
@@ -24,18 +24,22 @@ const useStyles = makeStyles(() => ({
         position: "static",
         overflow: "auto",
     },
+    treeErrorContainer: {
+        margin: "0.5rem 0rem 1rem 2rem",
+    },
 }));
 
 export const ConvoTree = () => {
     var client = new ApiClient();
-    const classes = useStyles();
+    const cls = useStyles();
 
     const { setIsLoading } = React.useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const [, setLoaded] = useState<boolean>(false);
     const [nodeList, setNodes] = useState<Conversation>([]); // nodeList and state updater for the tree
     const [nodeTypeOptions, setNodeTypeOptions] = useState<NodeTypeOptions>([]);
-    const [missingNodeTypes, setMissingNodeTypes] = useState<string[]>([]);
+    const [treeErrors, setTreeErrors] = useState<TreeErrors>();
+
     const [conversationHistory, setConversationHistory] = useState<Conversation[]>([]);
     const [conversationHistoryPosition, setConversationHistoryPosition] = useState<number>(0);
     const [showDebugData, setShowDebugData] = useState<boolean>(false);
@@ -47,7 +51,7 @@ export const ConvoTree = () => {
     const toggleDebugData = () => {
         setShowDebugData(!showDebugData);
         setNodes(cloneDeep(nodeList));
-    }
+    };
 
     const loadNodes = useCallback(async () => {
         const client = new ApiClient();
@@ -89,8 +93,8 @@ export const ConvoTree = () => {
     useEffect(() => {
         if (nodeList.length > 0) {
             (async () => {
-                const { data: missingNodes } = await client.Conversations.GetMissingNodes(areaIdentifier, nodeList);
-                setMissingNodeTypes(missingNodes);
+                const { data: treeErrors } = await client.Conversations.GetErrors(areaIdentifier, nodeList);
+                setTreeErrors(treeErrors);
             })();
         }
         // Disabling this here because we don't want to rerender on requriedNodes change (thought that seems almost what we want, but actually isn't)
@@ -101,7 +105,7 @@ export const ConvoTree = () => {
     return (
         <ConversationTreeContext.Provider value={{ nodeList, nodeTypeOptions, setNodes: setNodesWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
             <AreaConfigurationHeader
-                divider={missingNodeTypes.length > 0}
+                divider={treeErrors?.anyErrors}
                 title="Palavyr"
                 subtitle="Your palavyr is the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
             />
@@ -128,17 +132,15 @@ export const ConvoTree = () => {
                     Redo
                 </Button>
                 {isDevelopmentStage() && (
-                    <Button
-                        variant="outlined"
-                        style={{ marginLeft: "0.7rem", borderRadius: "10px" }}
-                        onClick={toggleDebugData}
-                    >
+                    <Button variant="outlined" style={{ marginLeft: "0.7rem", borderRadius: "10px" }} onClick={toggleDebugData}>
                         Toggle Debug Data
                     </Button>
                 )}
             </AlignCenter>
-            <div className={classes.conversation}>
-                <div style={{ margin: "0.5rem 0rem 1rem 2rem" }}>{missingNodeTypes.length > 0 && <MissingDynamicNodes missingNodeTypes={missingNodeTypes} />}</div>
+            <div className={cls.conversation}>
+                <div className={cls.treeErrorContainer}>
+                    {treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}
+                </div>
                 <form onSubmit={() => null}>
                     <fieldset className="fieldset" id="tree-test">
                         <div className="main-tree tree-wrap">{nodeList.length > 0 ? <ConversationNode key="tree-start" node={rootNode} reRender={() => null} /> : null}</div>

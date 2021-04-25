@@ -67,8 +67,6 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames, widgetIsActive, update
     const { isActive } = React.useContext(AuthContext);
     const { checkAreaCount, setViewName, subscription, numAreasAllowed } = React.useContext(DashboardContext);
 
-    // const searchParams = new URLSearchParams(location.search); // TODO: can we go to same page when switching areas
-    // const currentTab = searchParams.get("tab") as string;
     const currentPage =  history.location.pathname + history.location.search;
     const classes = useStyles();
 

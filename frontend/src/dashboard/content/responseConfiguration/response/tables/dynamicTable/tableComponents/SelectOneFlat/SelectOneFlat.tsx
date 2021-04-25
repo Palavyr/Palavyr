@@ -5,9 +5,10 @@ import { TableContainer, Paper, Table, Button, FormControlLabel, Checkbox, Accor
 import { SelectOneFlatHeader } from "./SelectOneFlatHeader";
 import { SelectOneFlatBody } from "./SelectOneFlatBody";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { DynamicTableTypes, IDynamicTableProps } from "../../DynamicTableTypes";
+import { DynamicTableProps } from "@Palavyr-Types";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { DisplayTableData } from "../DisplayTableData";
+import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
 const useStyles = makeStyles({
     tableStyles: {
@@ -38,7 +39,7 @@ const useStyles = makeStyles({
     },
 });
 
-export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: IDynamicTableProps) => {
+export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: DynamicTableProps) => {
     const client = new ApiClient();
     const classes = useStyles();
 
@@ -51,9 +52,15 @@ export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tab
     };
 
     const onSave = async () => {
-        const { data: savedData } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.SelectOneFlat, tableData, tableId, tableTag);
-        setTableData(savedData);
-        return true;
+        const result = modifier.validateTable(tableData);
+
+        if (result) {
+            const { data: savedData } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.SelectOneFlat, tableData, tableId, tableTag);
+            setTableData(savedData);
+            return true;
+        } else {
+            return false;
+        }
     };
 
     const addOptionOnClick = () => modifier.addOption(tableData, client, areaIdentifier, tableId);

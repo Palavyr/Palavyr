@@ -1,5 +1,5 @@
 import { sortByPropertyNumeric } from "@common/utils/sorting";
-import { BasicThresholdData } from "../../DynamicTableTypes";
+import { BasicThresholdData } from "@Palavyr-Types";
 
 export const reOrderBasicThresholdTableData = (tableData: any) => {
     const getter = (x: BasicThresholdData) => x.threshold;

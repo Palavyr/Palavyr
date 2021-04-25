@@ -1,6 +1,6 @@
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { uniqBy } from "lodash";
-import { PercentOfThresholdData } from "../../DynamicTableTypes";
+import { PercentOfThresholdData } from "@Palavyr-Types";
 
 export const reOrderPercentOfThresholdTableData = (tableData: PercentOfThresholdData[]) => {
 

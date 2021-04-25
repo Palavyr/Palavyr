@@ -3,11 +3,13 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Palavyr.Core.Data;
+using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
@@ -16,15 +18,22 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
     {
         private readonly IGenericDynamicTableRepository<BasicThreshold> repository;
         private readonly IConfigurationRepository configurationRepository;
+        private readonly IThresholdEvaluator thresholdEvaluator;
 
-        public BasicThresholdCompiler(IGenericDynamicTableRepository<BasicThreshold> repository, IConfigurationRepository configurationRepository) : base(repository)
+        public BasicThresholdCompiler(
+            IGenericDynamicTableRepository<BasicThreshold> repository, 
+            IConfigurationRepository configurationRepository,
+            IThresholdEvaluator thresholdEvaluator
+            ) : base(repository)
         {
             this.repository = repository;
             this.configurationRepository = configurationRepository;
+            this.thresholdEvaluator = thresholdEvaluator;
         }
 
         public async Task UpdateConversationNode(DashContext dashContext, DynamicTable table, string tableId)
         {
+            await Task.CompletedTask;
         }
 
         public Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
@@ -45,7 +54,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return Task.CompletedTask;
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, List<Dictionary<string, string>> dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
         {
             var dynamicResponseId = GetSingleResponseId(dynamicResponseIds);
             var responseValue = GetSingleResponseValue(dynamicResponse, dynamicResponseIds);
@@ -86,6 +95,15 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             }
 
             return tableRows;
+        }
+
+        public async Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)
+        {
+            var records = await Repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
+            var orderedThresholds = records.OrderBy(x => x.Threshold);
+            var currentResponseAsDouble = double.Parse(response);
+            var isTooComplicated = thresholdEvaluator.EvaluateForFallback(currentResponseAsDouble, orderedThresholds);
+            return isTooComplicated;
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Data;
+using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
@@ -63,7 +64,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             nodes.AddAdditionalNode(nodeTypeOption);
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, List<Dictionary<string, string>> dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
         {
             var dynamicResponseId = GetSingleResponseId(dynamicResponseIds);
             var responseValue = GetSingleResponseValue(dynamicResponse, dynamicResponseIds);
@@ -82,6 +83,11 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 culture,
                 option.Range);
             return new List<TableRow>() {row};
+        }
+
+        public Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)
+        {
+            return Task.FromResult(true);
         }
     }
 }

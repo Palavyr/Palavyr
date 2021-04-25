@@ -91,12 +91,20 @@ namespace Palavyr.Core.Repositories
             await dashContext.SaveChangesAsync();
         }
 
-        public async Task<List<TEntity>> GetAllRowsMatchingDynamicResponseId(string accountId, string dynamicResponseId)
+        public async Task<List<TEntity>> GetAllRowsMatchingDynamicResponseId(string accountId, string dynamicTypeId)
         {
-            var row = await readonlyQueryExecutor
-                .Where(tableRow => tableRow.AccountId == accountId && dynamicResponseId.EndsWith(tableRow.TableId)) // TODO: shhould be dynamicType?
+            var rows = await readonlyQueryExecutor
+                .Where(tableRow => tableRow.AccountId == accountId && dynamicTypeId.EndsWith(tableRow.TableId))//&& dynamicResponseId.EndsWith(tableRow.TableId)) // TODO: shhould be dynamicType?
                 .ToListAsync();
-            return row;
+            return rows;
+        }
+
+        public async Task<List<TEntity>> GetAllRowsMatchingDynamicResponseId(string dynamicTypeId)
+        {
+            var rows = await readonlyQueryExecutor
+                .Where(tableRow => dynamicTypeId.EndsWith(tableRow.TableId))//&& dynamicResponseId.EndsWith(tableRow.TableId)) // TODO: shhould be dynamicType?
+                .ToListAsync();
+            return rows;
         }
 
         public async Task<List<ConversationNode>> GetConversationNodeByIds(List<string> ids)

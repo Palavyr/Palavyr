@@ -1,6 +1,6 @@
 import { ApiClient } from "@api-client/Client";
 import React, { useState, useCallback, useEffect, Suspense } from "react";
-import { DynamicTableMetas } from "@Palavyr-Types";
+import { DynamicTableMetas, TableNameMap } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { Accordion, AccordionSummary, Typography, Button, makeStyles } from "@material-ui/core";
 import { SingleDynamicFeeTable } from "./SingleDynamicFeeTable";
@@ -24,9 +24,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export type TableNameMap = {
-    [tableName: string]: string;
-};
+
 export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: IDynamicTable) => {
     const client = new ApiClient();
     const cls = useStyles();

@@ -234,6 +234,9 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                     b.Property<double>("Threshold")
                         .HasColumnType("double precision");
 
+                    b.Property<bool>("TriggerFallback")
+                        .HasColumnType("boolean");
+
                     b.Property<double>("ValueMax")
                         .HasColumnType("double precision");
 
@@ -243,6 +246,57 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                     b.HasKey("Id");
 
                     b.ToTable("BasicThresholds");
+                });
+
+            modelBuilder.Entity("Palavyr.Core.Models.Configuration.Schemas.DynamicTables.CategoryNestedThreshold", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("AccountId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AreaIdentifier")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ItemId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ItemOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Range")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("RowId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("RowOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("TableId")
+                        .HasColumnType("text");
+
+                    b.Property<double>("Threshold")
+                        .HasColumnType("double precision");
+
+                    b.Property<bool>("TriggerFallback")
+                        .HasColumnType("boolean");
+
+                    b.Property<double>("ValueMax")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("ValueMin")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CategoryNestedThresholds");
                 });
 
             modelBuilder.Entity("Palavyr.Core.Models.Configuration.Schemas.DynamicTables.PercentOfThreshold", b =>
@@ -284,6 +338,9 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
 
                     b.Property<double>("Threshold")
                         .HasColumnType("double precision");
+
+                    b.Property<bool>("TriggerFallback")
+                        .HasColumnType("boolean");
 
                     b.Property<double>("ValueMax")
                         .HasColumnType("double precision");

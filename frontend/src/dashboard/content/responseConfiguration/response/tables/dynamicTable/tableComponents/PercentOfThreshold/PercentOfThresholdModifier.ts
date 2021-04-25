@@ -1,13 +1,14 @@
 import { Dispatch, SetStateAction } from "react";
-import { DynamicTableTypes, PercentOfThresholdData, TableData } from "../../DynamicTableTypes";
+import { PercentOfThresholdData, SetState } from "@Palavyr-Types";
 import { cloneDeep, findIndex, uniq } from "lodash";
 import { ApiClient } from "@api-client/Client";
+import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
 export class PercentOfThresholdModifier {
     onClick: Dispatch<SetStateAction<PercentOfThresholdData[]>>;
     tableType: string;
 
-    constructor(onClick: Dispatch<SetStateAction<PercentOfThresholdData[]>>) {
+    constructor(onClick: SetState<PercentOfThresholdData[]>) {
         this.onClick = onClick;
         this.tableType = DynamicTableTypes.PercentOfThreshold;
     }
@@ -16,9 +17,9 @@ export class PercentOfThresholdModifier {
         this.onClick(cloneDeep(newState));
     }
 
-    getItemRows(tableData: PercentOfThresholdData[], rowId: String){
+    getItemRows(tableData: PercentOfThresholdData[], rowId: String) {
         const index = findIndex(tableData, (x: PercentOfThresholdData) => x.rowId === rowId);
-        return tableData[index]
+        return tableData[index];
     }
 
     async addItem(tableData: PercentOfThresholdData[], client: ApiClient, areaIdentifier: string, tableId: string) {
@@ -30,8 +31,7 @@ export class PercentOfThresholdModifier {
     }
 
     async addRow(tableData: PercentOfThresholdData[], client: ApiClient, areaIdentifier: string, tableId: string, itemId: string) {
-
-        const {data: newRowTemplate} = await client.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
+        const { data: newRowTemplate } = await client.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
         newRowTemplate.itemId = itemId;
         tableData.push(newRowTemplate);
         this.setTables(tableData);
@@ -89,28 +89,44 @@ export class PercentOfThresholdModifier {
         const itemData = tableData.filter((x: PercentOfThresholdData) => x.itemId === itemId);
         let indices: number[] = [];
         itemData.forEach((item: PercentOfThresholdData) => {
-            const index = findIndex(tableData, (x: PercentOfThresholdData) => x.rowId === item.rowId );
+            const index = findIndex(tableData, (x: PercentOfThresholdData) => x.rowId === item.rowId);
             indices.push(index);
-        })
+        });
 
         indices.forEach((idx: number) => {
             tableData[idx].itemName = newName;
-        })
+        });
         this.setTables(tableData);
     }
 
-    removeItem(tableData: PercentOfThresholdData[], itemId: string){
-
+    removeItem(tableData: PercentOfThresholdData[], itemId: string) {
         const itemIds: string[] = [];
-        tableData.forEach(x => itemIds.push(x.itemId));
+        tableData.forEach((x) => itemIds.push(x.itemId));
 
         const unique = uniq(itemIds);
-        if (unique.length > 1){
+        if (unique.length > 1) {
             const updatedTable = tableData.filter((x: PercentOfThresholdData) => x.itemId !== itemId);
             this.setTables(updatedTable);
         } else {
-            alert("Table must have at least one item.")
+            alert("Table must have at least one item.");
         }
+    }
 
+    checkTriggerFallbackChange(tableData: PercentOfThresholdData[], itemData: PercentOfThresholdData[], row: PercentOfThresholdData, checked: boolean) {
+        itemData.forEach((x: PercentOfThresholdData) => {
+            const index = findIndex(tableData, (x: PercentOfThresholdData) => x.rowId === row.rowId);
+            if (x.rowId == row.rowId) {
+                tableData[index].triggerFallback = checked;
+            } else {
+                tableData[index].triggerFallback = false;
+            }
+        });
+
+        this.setTables(tableData);
+
+    }
+
+    validateTable(tableData: PercentOfThresholdData[]) {
+        return true; // TODO: validation logic.
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Data;
+using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
@@ -30,12 +31,12 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             this.splitter = splitter;
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, List<Dictionary<string, string>> dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
         {
             var responseId = GetSingleResponseId(dynamicResponseIds);
             var records = await repository.GetAllRowsMatchingDynamicResponseId(accountId, responseId);
 
-            // itemName then Count
+            // itemName
             var orderedResponseIds = await GetResponsesOrderedByResolveOrder(dynamicResponse);
             var outerCategory = GetResponseByResponseId(orderedResponseIds[0], dynamicResponse);
             var innerCategory = GetResponseByResponseId(orderedResponseIds[1], dynamicResponse);
@@ -54,6 +55,11 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     result.Range
                 )
             };
+        }
+
+        public Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)
+        {
+            return Task.FromResult(true);
         }
 
         private CategoryRetriever GetInnerAndOuterCategories(List<TwoNestedCategory> rawRows)
@@ -83,8 +89,8 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 .OrderBy(x => x.ResolveOrder).ToList();
             if (nodes.Count > 0)
             {
-                nodes.First().ValueOptions = splitter.JoinValueOptions(outerCategories);
-                nodes.Last().ValueOptions = splitter.JoinValueOptions(innerCategories);
+                nodes.Single(x => x.ResolveOrder == 0).ValueOptions = splitter.JoinValueOptions(outerCategories);
+                nodes.Single(x => x.ResolveOrder == 1).ValueOptions = splitter.JoinValueOptions(innerCategories);
             }
         }
 

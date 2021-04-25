@@ -21,6 +21,7 @@ export type WidgetNodeResource = {
     nodeComponentType: string;
     isDynamicTableNode: boolean;
     dynamicType: string | null;
+    resolveOrder: number | null;
 }
 
 export type WidgetNodes = WidgetNodeResource[];

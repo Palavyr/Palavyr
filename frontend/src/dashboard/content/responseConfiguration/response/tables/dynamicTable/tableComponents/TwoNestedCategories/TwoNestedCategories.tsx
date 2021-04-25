@@ -2,10 +2,11 @@ import React from "react";
 import { ApiClient } from "@api-client/Client";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
-import { DynamicTableTypes, IDynamicTableProps } from "../../DynamicTableTypes";
+import { DynamicTableProps } from "@Palavyr-Types";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { TwoNestedCategoriesContainer } from "./TwoNestedCategoriesContainer";
 import { DisplayTableData } from "../DisplayTableData";
+import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, setTableData, areaIdentifier, deleteAction, showDebug }: Omit<IDynamicTableProps, "setTableMeta">) => {
+export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, setTableData, areaIdentifier, deleteAction, showDebug }: Omit<DynamicTableProps, "setTableMeta">) => {
     const client = new ApiClient();
     const classes = useStyles();
 
@@ -36,9 +37,15 @@ export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, s
     const addInnerCategory = () => modifier.addInnerCategory(tableData, client, areaIdentifier, tableId);
 
     const onSave = async () => {
-        const { data: savedData } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.TwoNestedCategory, tableData, tableId, tableTag);
-        setTableData(savedData);
-        return true;
+        const result = modifier.validateTable(tableData);
+
+        if (result) {
+            const { data: savedData } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.TwoNestedCategory, tableData, tableId, tableTag);
+            setTableData(savedData);
+            return true;
+        } else {
+            return false;
+        }
     };
 
     return (

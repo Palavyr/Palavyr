@@ -16,17 +16,27 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public static PercentOfThreshold CreatePercentOfThreshold() => new PercentOfThreshold();
         public static BasicThreshold CreateBasicThreshold() => new BasicThreshold();
         public static TwoNestedCategory CreateTwoNestedCategory() => new TwoNestedCategory();
-
+        public static CategoryNestedThreshold CreateCategoryNestedThreshold() => new CategoryNestedThreshold();
         public static List<DynamicType> GetDynamicTableTypes()
         {
             return new List<DynamicType>
             {
-                // TODO: List these using reflection
+                // TODO: List these using reflection checking for IDynamic Table implementations
                 new SelectOneFlat(),
                 new PercentOfThreshold(),
                 new BasicThreshold(),
-                new TwoNestedCategory()
+                new TwoNestedCategory(),
+                new CategoryNestedThreshold()
             };
+        }
+
+        public class CategoryNestedThreshold : DynamicType
+        {
+            public CategoryNestedThreshold()
+            {
+                PrettyName = "Category Nested Threshold";
+                TableType = nameof(CategoryNestedThreshold);
+            }
         }
 
         // TODO: Define these next to the compilers

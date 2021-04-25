@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using Palavyr.Core.Data;
+using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
@@ -17,6 +18,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             DynamicTableMeta dynamicTableMeta,
             List<NodeTypeOption> nodes);
 
-        Task<List<TableRow>> CompileToPdfTableRow(string accountId, List<Dictionary<string, string>> dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture);
+        Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture);
+        Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents);
     }
 }

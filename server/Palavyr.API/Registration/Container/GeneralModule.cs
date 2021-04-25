@@ -16,6 +16,7 @@ using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Services.ConversationServices;
 using Palavyr.Core.Services.DynamicTableService;
 using Palavyr.Core.Services.DynamicTableService.Compilers;
+using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.PdfService;
@@ -41,7 +42,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<PercentOfThresholdCompiler>().AsSelf();
             builder.RegisterType<BasicThresholdCompiler>().AsSelf();
             builder.RegisterType<TwoNestedCategoryCompiler>().AsSelf();
-
+            builder.RegisterType<CategoryNestedThresholdCompiler>().AsSelf();
             
             builder.RegisterType<PreviewResponseGenerator>().As<IPreviewResponseGenerator>();
             builder.RegisterType<PdfResponseGenerator>().As<IPdfResponseGenerator>();
@@ -50,7 +51,6 @@ namespace Palavyr.API.Registration.Container
             
             builder.RegisterGeneric(typeof(GenericDynamicTableRepository<>)).As(typeof(IGenericDynamicTableRepository<>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(DynamicTableCommandHandler<>)).As(typeof(IDynamicTableCommandHandler<>)).InstancePerLifetimeScope();
-
             
             builder.RegisterType<JwtAuthenticationService>().As<IJwtAuthenticationService>();
             builder.RegisterType<AccountSetupService>().As<IAccountSetupService>();
@@ -71,7 +71,12 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<TreeWalker>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<NodeCounter>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<GuidFinder>().AsSelf().SingleInstance();
-
+            builder.RegisterType<ThresholdEvaluator>().As<IThresholdEvaluator>();
+            builder.RegisterType<NodeOrderChecker>().AsSelf();
+            builder.RegisterType<DynamicResponseComponentExtractor>().AsSelf();
+            
+            builder.RegisterType<NodeGetter>().AsSelf();
+            
             builder.RegisterType<ConversationOptionSplitter>().As<IConversationOptionSplitter>().SingleInstance();
         }
     }

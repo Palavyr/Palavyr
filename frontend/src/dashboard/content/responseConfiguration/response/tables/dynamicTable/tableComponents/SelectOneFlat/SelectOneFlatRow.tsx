@@ -3,7 +3,7 @@ import { SelectOneFlatModifier } from "./SelectOneFlatModifier";
 import { TableRow, TableCell, Button, TextField, makeStyles } from "@material-ui/core";
 import CurrencyTextField from '@unicef/material-ui-currency-textfield'
 import DeleteIcon from '@material-ui/icons/Delete';
-import { SelectOneFlatData, TableData } from "../../DynamicTableTypes";
+import { SelectOneFlatData, TableData } from "@Palavyr-Types";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';

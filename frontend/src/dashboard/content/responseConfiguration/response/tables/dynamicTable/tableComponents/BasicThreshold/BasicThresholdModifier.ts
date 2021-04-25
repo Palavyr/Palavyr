@@ -1,8 +1,9 @@
 import { cloneDeep, findIndex } from "lodash";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
-import { BasicThresholdData, DynamicTableTypes } from "../../DynamicTableTypes";
+import { BasicThresholdData } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
+import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
 export class BasicThresholdModifier {
     onClick: Dispatch<SetStateAction<BasicThresholdData[]>>;
@@ -19,15 +20,15 @@ export class BasicThresholdModifier {
 
     removeRow(tableData: BasicThresholdData[], rowId: number) {
         const filteredRows = tableData.filter((x: BasicThresholdData) => x.rowId !== rowId);
-        if (filteredRows.length < 1){
-            alert("Basic Threshold tables must contain at least one row.")
+        if (filteredRows.length < 1) {
+            alert("Basic Threshold tables must contain at least one row.");
         } else {
             this.setTables(filteredRows);
         }
     }
 
     async addThreshold(tableData: BasicThresholdData[], areaIdentifier: string, tableId: string, client: ApiClient) {
-        const {data: newRowTemplate } = await client.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
+        const { data: newRowTemplate } = await client.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
         tableData.push(newRowTemplate);
         this.setTables(tableData);
     }
@@ -61,5 +62,22 @@ export class BasicThresholdModifier {
             tableData[i].itemName = value;
         }
         this.setTables(tableData);
+    }
+
+    checkTriggerFallbackChange(tableData: BasicThresholdData[], row: BasicThresholdData, checked: boolean){
+        tableData.forEach((x: BasicThresholdData) => {
+            const index = findIndex(tableData, (x: BasicThresholdData) => x.rowId === row.rowId);
+            if (x.rowId == row.rowId) {
+                tableData[index].triggerFallback = checked;
+            } else {
+                tableData[index].triggerFallback = false;
+            }
+        })
+        this.setTables(tableData);
+    }
+
+
+    public validateTable(tableData: BasicThresholdData[]){
+        return true; // TODO: Validate this table
     }
 }

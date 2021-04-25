@@ -12,5 +12,6 @@ export const ConvoNode: WidgetNodeResource = {
     valueOptions: "", // needs to be split by ",",
     isDynamicTableNode: false,
     nodeComponentType: "YesNo",
-    dynamicType: ""
+    dynamicType: "",
+    resolveOrder: 0,
 };

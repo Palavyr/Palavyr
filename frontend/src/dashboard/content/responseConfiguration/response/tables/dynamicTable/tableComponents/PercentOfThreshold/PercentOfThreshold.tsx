@@ -2,11 +2,12 @@ import React from "react";
 import { ApiClient } from "@api-client/Client";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
-import { DynamicTableTypes, IDynamicTableProps } from "../../DynamicTableTypes";
+import { DynamicTableProps } from "@Palavyr-Types";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { PercentOfThresholdContainer } from "./PercentOfThresholdContainer";
 import { reOrderPercentOfThresholdTableData } from "./PercentOfThresholdUtils";
 import { DisplayTableData } from "../DisplayTableData";
+import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<IDynamicTableProps, "tableMeta" | "setTableMeta">) => {
+export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<DynamicTableProps, "tableMeta" | "setTableMeta">) => {
     const client = new ApiClient();
     const classes = useStyles();
 
@@ -38,9 +39,16 @@ export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableData, se
 
     const onSave = async () => {
         const reorderedData = reOrderPercentOfThresholdTableData(tableData);
-        const { data: savedData } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.PercentOfThreshold, reorderedData, tableId, tableTag);
-        setTableData(savedData);
-        return true;
+
+        const result = modifier.validateTable(reorderedData);
+
+        if (result){
+            const { data: savedData } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.PercentOfThreshold, reorderedData, tableId, tableTag);
+            setTableData(savedData);
+            return true;
+        } else {
+            return false;
+        }
     };
 
     return (

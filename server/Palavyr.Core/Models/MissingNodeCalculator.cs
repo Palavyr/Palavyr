@@ -1,14 +1,19 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.Core.Models
 {
     public class MissingNodeCalculator
     {
+        private readonly NodeGetter nodeGetter;
+
+        public MissingNodeCalculator(NodeGetter nodeGetter)
+        {
+            this.nodeGetter = nodeGetter;
+        }
+
         public string[] CalculateMissingNodes(
             NodeTypeOption[] requiredDynamicNodeTypes,
             List<ConversationNode> conversationNodes,
@@ -47,23 +52,7 @@ namespace Palavyr.Core.Models
                 .Where(node => node.IsTerminalType && node.NodeType != DefaultNodeTypeOptions.TooComplicated.StringName)
                 .ToArray();
         }
-
-        ConversationNode GetParentNode(ConversationNode[] nodeList, ConversationNode curNode)
-        {
-            var childId = curNode.NodeId;
-            ConversationNode parent = null;
-            foreach (var potentialParent in nodeList)
-            {
-                var childrenIds = potentialParent.NodeChildrenString.Split(",").ToList();
-                if (!childrenIds.Contains(childId)) continue;
-                parent = potentialParent;
-                break;
-            }
-
-            if (parent == null) throw new Exception();
-            return parent;
-        }
-
+        
         public NodeTypeOption[] SearchTerminalResponseBranchesForMissingRequiredNodes(
             ConversationNode node,
             ConversationNode[] nodeList,
@@ -81,7 +70,7 @@ namespace Palavyr.Core.Models
                 return requiredNodesClone.ToArray();
             }
 
-            var nextNode = GetParentNode(nodeList, node);
+            var nextNode = nodeGetter.GetParentNode(nodeList, node);
             return SearchTerminalResponseBranchesForMissingRequiredNodes(nextNode, nodeList, requiredNodesClone.ToArray());
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Models.Contracts;
@@ -7,9 +6,11 @@ using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
 {
-    public class BasicThreshold : IOrderedTable, IDynamicTable<BasicThreshold>, IHaveRange
+    public class BasicThreshold : IOrderedTable, IDynamicTable<BasicThreshold>, IHaveRange, IOrderableThreshold
     {
-        [Key] public int? Id { get; set; }
+        [Key]
+        public int? Id { get; set; }
+
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
         public string TableId { get; set; }
@@ -20,10 +21,23 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
         public bool Range { get; set; }
         public string ItemName { get; set; }
         public int RowOrder { get; set; }
+        public bool TriggerFallback { get; set; }
 
-        public BasicThreshold() { }
+        public BasicThreshold()
+        {
+        }
 
-        public BasicThreshold CreateNew(string accountId, string areaId, string tableId, string itemName, string rowId, double threshold, double valueMin, double valueMax, bool range)
+        public BasicThreshold CreateNew(
+            string accountId,
+            string areaId,
+            string tableId,
+            string itemName,
+            string rowId,
+            double threshold,
+            double valueMin,
+            double valueMax,
+            bool range,
+            bool triggerFallback)
         {
             return new BasicThreshold()
             {
@@ -35,7 +49,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                 Threshold = threshold,
                 ValueMin = valueMin,
                 ValueMax = valueMax,
-                Range = range
+                Range = range,
+                TriggerFallback = triggerFallback
             };
         }
 
@@ -64,7 +79,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                     row.Threshold,
                     row.ValueMin,
                     row.ValueMax,
-                    row.Range
+                    row.Range,
+                    row.TriggerFallback
                 );
                 mappedTableRows.Add(mappedRow);
             }

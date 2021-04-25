@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
@@ -11,7 +12,7 @@ namespace Palavyr.Core.Services.DynamicTableService
     {
         Task<List<Table>> CompileTablesToPdfRows(
             string accountId,
-            List<Dictionary<string, List<Dictionary<string, string>>>> dynamicResponses,
+            DynamicResponses dynamicResponses,
             CultureInfo culture
         );
 
@@ -20,5 +21,6 @@ namespace Palavyr.Core.Services.DynamicTableService
             string accountId,
             string areaId
         );
+        Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents);
     }
 }

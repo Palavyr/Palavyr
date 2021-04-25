@@ -1,6 +1,6 @@
 import { groupBy } from "lodash";
 import React from "react";
-import { IDynamicTableBody, PercentOfThresholdData } from "../../DynamicTableTypes";
+import { IDynamicTableBody, PercentOfThresholdData } from "@Palavyr-Types";
 import { PercentOfThresholdItemTable } from "./PercentOfThresholdItemTable";
 
 interface IPercentOfThresholdContainer extends IDynamicTableBody {

@@ -2,12 +2,14 @@ import {
     AreaTable,
     CompleteConverationDetails,
     ConversationUpdate,
+    DynamicResponse,
     KeyValues,
     LocaleDefinition,
     NewConversation,
     PreCheckResult,
     SecretKey,
     SendEmailResultResponse,
+    WidgetNodeResource,
     WidgetPreferences,
 } from "@Palavyr-Types";
 import axios, { AxiosResponse, AxiosInstance } from "axios";
@@ -36,9 +38,10 @@ export class WidgetClient {
         areas: (secretKey: SecretKey) => `widget/areas?key=${secretKey}`,
         newConvo: (secretKey: SecretKey, areaId: string) => `widget/${areaId}/create?key=${secretKey}`,
         replyUpdate: (secretKey: SecretKey) => `widget/conversation?key=${secretKey}`,
-        completeConvo: (secretKey: SecretKey) => `widget/complete?key=${this.secretKey}`,
+        completeConvo: (secretKey: SecretKey) => `widget/complete?key=${secretKey}`,
         confirmationEmail: (secretKey: SecretKey, areaIdentifier: string) => `widget/area/${areaIdentifier}/email/send?key=${secretKey}`,
         fallbackEmail: (secretKey: SecretKey, areaIdentifier: string) => `widget/area/${areaIdentifier}/email/fallback/send?key=${secretKey}`,
+        internalCheck: (secretKey: SecretKey) => `widget/internal-check?key=${secretKey}`,
     };
 
     public Widget = {
@@ -51,6 +54,11 @@ export class WidgetClient {
         },
 
         Post: {
+            InternalCheck: async (node: WidgetNodeResource, response: string, currentDynamicResponseState: DynamicResponse): Promise<AxiosResponse<boolean>> => this.client.post(this.Routes.internalCheck(this.secretKey), {
+                Node: node,
+                Response: response,
+                CurrentDynamicResponseState: currentDynamicResponseState
+            }),
             ReplyUpdate: async (update: ConversationUpdate): Promise<AxiosResponse> => this.client.post(this.Routes.replyUpdate(this.secretKey), update),
             CompletedConversation: async (completeConvo: CompleteConverationDetails) => this.client.post(this.Routes.completeConvo(this.secretKey), completeConvo),
         },

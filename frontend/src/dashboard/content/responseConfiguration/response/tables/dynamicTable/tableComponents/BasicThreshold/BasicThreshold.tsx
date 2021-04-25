@@ -1,5 +1,5 @@
 import React from "react";
-import { DynamicTableTypes, IDynamicTableProps } from "../../DynamicTableTypes";
+import { DynamicTableProps } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
@@ -10,6 +10,7 @@ import { useState } from "react";
 import { Button, makeStyles, Table, TableContainer, TextField, AccordionActions } from "@material-ui/core";
 import { reOrderBasicThresholdTableData } from "./BasicThresholdUtils";
 import { DisplayTableData } from "../DisplayTableData";
+import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
 const useStyles = makeStyles(() => ({
     alignLeft: {
@@ -39,7 +40,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<IDynamicTableProps, "tableMeta" | "setTableMeta">) => {
+export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<DynamicTableProps, "tableMeta" | "setTableMeta">) => {
     const cls = useStyles();
     const client = new ApiClient();
     const [name, setItemName] = useState<string>("");
@@ -48,10 +49,16 @@ export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTab
 
     const onSave = async () => {
         const reorderedData = reOrderBasicThresholdTableData(tableData);
-        const { data: saveBasicThreshold } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.BasicThreshold, reorderedData, tableId, tableTag);
-        setTableData(saveBasicThreshold);
-        console.log("Saving the table");
-        return true;
+
+        const result = modifier.validateTable(reorderedData);
+        if (result) {
+            const { data: saveBasicThreshold } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.BasicThreshold, reorderedData, tableId, tableTag);
+            setTableData(saveBasicThreshold);
+            console.log("Saving the table");
+            return true;
+        } else {
+            return false;
+        }
     };
     const addThresholdOnClick = () => modifier.addThreshold(tableData, areaIdentifier, tableId, client);
 

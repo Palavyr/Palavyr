@@ -20,8 +20,9 @@ namespace Palavyr.Core.Models.Configuration.Constant
             public static string MultipleChoiceAsPath => DefaultNodeTypeOptions.MultipleChoiceAsPath.StringName;
             public static string MultipleChoiceContinue => DefaultNodeTypeOptions.MultipleChoiceContinue.StringName;
             public static string SplitMerge => DefaultNodeTypeOptions.SplitMerge.StringName;
+            public static string EvaluateThreshold => DefaultNodeTypeOptions.EvaluateThreshold.StringName;
         }
-        
+
         public static List<NodeTypeOption> DefaultNodeTypeOptionsList => // These get sent to the UI for user selection
             new List<NodeTypeOption>()
             {
@@ -52,14 +53,40 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public static MultipleChoiceAsPath CreateMultipleChoiceAsPath() => new MultipleChoiceAsPath();
         public static SplitMerge CreateSplitMerge() => new SplitMerge();
         public static Anabranch CreateAnabranch() => new Anabranch();
-        
+
         public static TakeCurrency CreateTakeCurrency() => new TakeCurrency();
         public static TakeNumber CreateTakeNumber() => new TakeNumber();
         public static TakeNumberIndividuals CreateTakeNumberIndividuals() => new TakeNumberIndividuals();
         public static TooComplicated CreateTooComplicated() => new TooComplicated();
         public static SendResponse CreateSendResponse() => new SendResponse();
         public static Restart CreateRestart() => new Restart();
-        
+
+        public class EvaluateThreshold : NodeTypeOption
+        {
+            // hidden node
+            public new static string StringName => nameof(EvaluateThreshold);
+
+            public EvaluateThreshold()
+            {
+                Text = "EvaluateThreshold";
+                Value = StringName;
+                PathOptions = new List<string>();
+                ValueOptions = new List<string>();
+                IsMultiOptionType = true;
+                IsTerminalType = false;
+                GroupName = InfoCollection;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+                IsDynamicType = false;
+                NodeComponent = NodeComponentTypes.MultipleChoiceAsPath;
+                IsCurrency = false;
+                IsMultiOptionEditable = true;
+            }
+        }
+
         public class Anabranch : NodeTypeOption
         {
             public new static string StringName => nameof(Anabranch);
@@ -84,7 +111,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionEditable = true;
             }
         }
-        
+
         public class SplitMerge : NodeTypeOption
         {
             public new static string StringName => nameof(SplitMerge);
@@ -107,10 +134,9 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponent = NodeComponentTypes.MultipleChoiceAsPath;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
-
             }
         }
-        
+
 
         public class TakeCurrency : NodeTypeOption
         {
@@ -136,7 +162,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionEditable = false;
             }
         }
-        
+
         public class TakeNumberIndividuals : NodeTypeOption
         {
             public new static string StringName => nameof(TakeNumberIndividuals);
@@ -159,10 +185,9 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponent = NodeComponentTypes.TakeNumber;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-
             }
         }
-        
+
         public class TakeNumber : NodeTypeOption
         {
             public new static string StringName => nameof(TakeNumber);
@@ -172,7 +197,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 Text = "Take Number";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { "Continue" };
+                ValueOptions = new List<string>() {"Continue"};
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
@@ -301,7 +326,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 Text = "Take Text";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { "Continue" };
+                ValueOptions = new List<string>() {"Continue"};
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
@@ -326,7 +351,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 Text = "Provide Info";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() { "Continue" };
+                ValueOptions = new List<string>() {"Continue"};
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoProvide;
@@ -440,7 +465,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponent = NodeComponentTypes.SendResponse;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
-
             }
         }
 
@@ -464,8 +488,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsDynamicType = false;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
-
-
             }
         }
 
@@ -489,7 +511,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsDynamicType = false;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
-
             }
         }
 
@@ -513,7 +534,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsDynamicType = false;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
-
             }
         }
     }

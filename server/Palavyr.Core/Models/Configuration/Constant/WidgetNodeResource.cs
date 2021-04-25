@@ -14,5 +14,6 @@
         public string NodeComponentType { get; set; }
         public bool IsDynamicTableNode { get; set; }
         public string DynamicType { get; set; }
+        public int? ResolveOrder { get; set; }
     }
 }
