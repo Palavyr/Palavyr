@@ -746,3 +746,10 @@ export type DynamicTableComponentMap = {
 export type TableNameMap = {
     [tableName: string]: string;
 };
+
+
+export type TreeErrors = {
+    missingNodes: string[];
+    outOfOrder: string[] ;
+    anyErrors: boolean;
+}

@@ -10,6 +10,7 @@ export const BasicThresholdBody = ({tableData, modifier}: IDynamicTableBody) => 
     return (
         <TableBody>
             {sortByPropertyNumeric(getter, tableData).map((row: BasicThresholdData, rowIndex: number) => {
+                row.rowOrder = rowIndex;
                 return <BasicThresholdRow key={row.rowId} rowIndex={rowIndex} tableData={tableData} row={row} modifier={modifier} />
             })}
         </TableBody>

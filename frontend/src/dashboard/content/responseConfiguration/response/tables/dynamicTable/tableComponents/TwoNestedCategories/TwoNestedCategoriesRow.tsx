@@ -6,7 +6,7 @@ import { TableData, TwoNestedCategoryData } from "@Palavyr-Types";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { SetState } from "@Palavyr-Types";
-import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
+
 
 export interface ITwoNestedCategoriesRow {
     index: number;

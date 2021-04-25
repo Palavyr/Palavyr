@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
 
 const getter = (x: PercentOfThresholdData) => x.rowOrder;
 
-
 // table data: to update the database (this is done via the unified table data object)
 // item data: The grouped data that is used to render and control UI
 export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, itemId, modifier, addRowOnClick }: IPercentOfThreshold) => {
@@ -64,7 +63,9 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
                 <PercentOfThresholdHeader />
                 <TableBody>
                     {sortByPropertyNumeric(getter, itemData).map((row: PercentOfThresholdData, index: number) => {
-                        return <PercentOfThresholdRow key={row.rowId} tableData={tableData} row={row} modifier={modifier} baseValue={index === 0 ? true : false} />;
+                        row.rowOrder = index;
+                        const itemLength = itemData.length;
+                        return <PercentOfThresholdRow key={row.rowId} itemData={itemData} itemLength={itemLength} tableData={tableData} row={row} modifier={modifier} baseValue={index === 0 ? true : false} />;
                     })}
                 </TableBody>
             </TableContainer>

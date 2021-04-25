@@ -112,6 +112,20 @@ export class PercentOfThresholdModifier {
         }
     }
 
+    checkTriggerFallbackChange(tableData: PercentOfThresholdData[], itemData: PercentOfThresholdData[], row: PercentOfThresholdData, checked: boolean) {
+        itemData.forEach((x: PercentOfThresholdData) => {
+            const index = findIndex(tableData, (x: PercentOfThresholdData) => x.rowId === row.rowId);
+            if (x.rowId == row.rowId) {
+                tableData[index].triggerFallback = checked;
+            } else {
+                tableData[index].triggerFallback = false;
+            }
+        });
+
+        this.setTables(tableData);
+
+    }
+
     validateTable(tableData: PercentOfThresholdData[]) {
         return true; // TODO: validation logic.
     }

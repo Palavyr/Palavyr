@@ -64,6 +64,19 @@ export class BasicThresholdModifier {
         this.setTables(tableData);
     }
 
+    checkTriggerFallbackChange(tableData: BasicThresholdData[], row: BasicThresholdData, checked: boolean){
+        tableData.forEach((x: BasicThresholdData) => {
+            const index = findIndex(tableData, (x: BasicThresholdData) => x.rowId === row.rowId);
+            if (x.rowId == row.rowId) {
+                tableData[index].triggerFallback = checked;
+            } else {
+                tableData[index].triggerFallback = false;
+            }
+        })
+        this.setTables(tableData);
+    }
+
+
     public validateTable(tableData: BasicThresholdData[]){
         return true; // TODO: Validate this table
     }

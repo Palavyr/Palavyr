@@ -105,12 +105,12 @@ export class CategoryNestedThresholdModifier {
     }
 
     // onchange has to set this rowId to true, and all other category row Ids to false.
-    checkTriggerFallbackChange(tableData: CategoryNestedThresholdData[], row: CategoryNestedThresholdData, categoryId: string) {
+    checkTriggerFallbackChange(tableData: CategoryNestedThresholdData[], row: CategoryNestedThresholdData, categoryId: string, checked: boolean) {
         const categoryRows = this._getRowsByCategoryId(tableData, categoryId);
         categoryRows.forEach((x: CategoryNestedThresholdData) => {
             const rowIndex = this._getRowIndexById(tableData, x.rowId);
             if (x.rowId === row.rowId) {
-                tableData[rowIndex].triggerFallback = true;
+                tableData[rowIndex].triggerFallback = checked;
             } else {
                 tableData[rowIndex].triggerFallback = false;
             }
