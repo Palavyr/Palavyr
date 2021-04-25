@@ -1,10 +1,10 @@
-import { assembleCompletedConvo, getChildNodes } from "./utils";
+import { assembleCompletedConvo, extractDynamicTypeGuid, getChildNodes } from "./utils";
 import React, { useEffect, useState } from "react";
 import { Table, TableRow, TableCell, makeStyles, TextField } from "@material-ui/core";
 import { responseAction } from "./responseAction";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import { ConvoContextProperties } from "./registry";
-import { IProgressTheChat, WidgetNodeResource } from "@Palavyr-Types";
+import { ContextProperties, DynamicResponses, IProgressTheChat, WidgetNodeResource } from "@Palavyr-Types";
 import { setNumIndividualsContext, getContextProperties, openUserDetails } from "@store-dispatcher";
 import { ResponseButton } from "common/ResponseButton";
 import { SingleRowSingleCell } from "common/TableCell";
@@ -112,7 +112,8 @@ export class StandardComponents {
     }
 
     public makeTakeNumber({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
-        const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
+        // With numbers, we have the potential for exceeding some minimum or maximum value.
+        let child = getChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
             const cls = useStyles();
@@ -144,7 +145,24 @@ export class StandardComponents {
                         <TableCell className={cls.root} align="right">
                             <ResponseButton
                                 disabled={disabled}
-                                onClick={() => {
+                                onClick={async () => {
+                                    // will need to do something like this. -- this might all go into the response action..
+
+                                    if (node.isDynamicTableNode && node.dynamicType && node.resolveOrder && node.resolveOrder > 0) {
+                                        // we have some kind of dynamic table node that may or may not
+                                        const contextProperties: ContextProperties = getContextProperties();
+                                        const dynamicResponses = contextProperties[ConvoContextProperties.dynamicResponses] as DynamicResponses;
+
+                                        // const tableId = extractDynamicTypeGuid(node.dynamicType);
+                                        const currentDynamicResponseState = dynamicResponses.filter(x => Object.keys(x)[0] === node.dynamicType)[0];
+
+                                        // send the dynamic responses, the
+                                        const { data: tooComplicated } = await client.Widget.Post.InternalCheck(node, response, currentDynamicResponseState);
+                                        if (tooComplicated) {
+                                            child = nodeList.filter(x => x.nodeType === "TooComplicated")[0];
+                                        }
+                                    }
+
                                     responseAction(node, child, nodeList, client, convoId, response);
                                     setDisabled(true);
                                     setInputDisabled(true);

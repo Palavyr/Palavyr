@@ -17,6 +17,7 @@ export const ComponentRegistry: Registry = {
     "TakeNumber": components.makeTakeNumber,
     "TakeNumberIndividuals": components.makeTakeNumberIndividuals,
 
+    "TooComplicated": components.makeProvideInfo,
     "SendResponse": components.makeProvideInfo,
     "SendEmail": components.makeSendEmail,
     "FirstEmailFailed": components.makeProvideInfo,
