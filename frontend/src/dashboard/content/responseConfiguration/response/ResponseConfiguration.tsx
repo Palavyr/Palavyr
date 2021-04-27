@@ -19,33 +19,30 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-
 const getStaticTableValidationResult = (staticTables: StaticTableMetas): StaticTableValidationResult => {
-
     let validationResult = true;
     staticTables.map((staticTable: StaticTableMeta) => {
         staticTable.staticTableRows.map((staticTableRow: StaticTableRow) => {
-            if (staticTableRow.range){
-                if (staticTableRow.fee.max <= staticTableRow.fee.min){
+            if (staticTableRow.range) {
+                if (staticTableRow.fee.max <= staticTableRow.fee.min) {
                     validationResult = false;
                 }
             }
-        })
-    })
+        });
+    });
 
     if (validationResult) {
         return {
             result: true,
-            message: ""
-        }
+            message: "",
+        };
     } else {
         return {
             result: false,
-            message: "A static table fee upper value is less than or equal to the lower value. Please provide a range where the upper value is greater than the lower value."
-        }
+            message: "A static table fee upper value is less than or equal to the lower value. Please provide a range where the upper value is greater than the lower value.",
+        };
     }
-}
-
+};
 
 export const ResponseConfiguration = () => {
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
@@ -94,8 +91,8 @@ export const ResponseConfiguration = () => {
         const validationResult = getStaticTableValidationResult(staticTables);
         if (validationResult.result === false) {
             alert(validationResult.message); // Temp fix to prevent incorrect values HARDLY. This is not a nice UI experience.
-            return false
-        }; // TODO: the table saver needs to return the validation result and the SaveOrCancel component neesd to require this standard type for the error message.
+            return false;
+        } // TODO: the table saver needs to return the validation result and the SaveOrCancel component neesd to require this standard type for the error message.
 
         const { data: updatedStaticTables } = await client.Configuration.Tables.Static.updateStaticTablesMetas(areaIdentifier, staticTables);
         setStaticTables(updatedStaticTables);
@@ -104,7 +101,7 @@ export const ResponseConfiguration = () => {
 
     const tableCanceler = async () => {
         loadEstimateConfiguration();
-    }
+    };
 
     const loadEstimateConfiguration = useCallback(async () => {
         setIsLoading(true);
@@ -129,23 +126,24 @@ export const ResponseConfiguration = () => {
         <>
             <AreaConfigurationHeader title="Your Response PDF" subtitle="Use this editor to configure the fee tables, as well as associated information, that will be sent in the response PDF for this area." />
             <ExpandableTextBox title="Introductory statement" updatableValue={prologue} onChange={updatePrologue} onSave={savePrologue}>
-                <AreaConfigurationHeader divider title="Create an introduction for your estimate" subtitle="You can make it clear that fees are estimate only, or provide context for your client to understand their estimate." />
+                <AreaConfigurationHeader divider light title="Create an introduction for your response PDF" subtitle="You can make it clear that fees are estimate only, or provide context for your client to understand their estimate." />
             </ExpandableTextBox>
 
             <DynamicTableConfiguration title="Customized Fees" areaIdentifier={areaIdentifier}>
-                <AreaConfigurationHeader divider title="Configure a custom fee table" subtitle="When you configure a custom fee table, it creates a corresponding palavyr node that must be included in the chat conversation." />
+                <AreaConfigurationHeader divider light title="Configure a custom fee table" subtitle="When you configure a custom fee table, it creates a corresponding palavyr node that must be included in the chat conversation." />
             </DynamicTableConfiguration>
 
             <StaticTableConfiguration areaIdentifier={areaIdentifier} title="Static Fees" staticTables={staticTables} tableSaver={tableSaver} tableCanceler={tableCanceler} modifier={staticTablesModifier}>
                 <AreaConfigurationHeader
                     divider
+                    light
                     title="Configure a static fee table"
                     subtitle="Static fees are those fees that don't depend on your customer's responses. If you set any fee a 'per individual', then a corresponding 'Num individals' node must be included in the chat conversation."
                 />
             </StaticTableConfiguration>
 
             <ExpandableTextBox title="Ending statement" updatableValue={epilogue} onChange={updateEpilogue} onSave={saveEpilogue}>
-                <AreaConfigurationHeader divider title="Create an ending statement for your estimate" subtitle="You can make it clear that fees are estimate only, or provide context for your client to understand their estimate." />
+                <AreaConfigurationHeader divider light title="Create an ending statement for your response PDF" subtitle="You can make it clear that fees are estimate only, or provide context for your client to understand their estimate." />
             </ExpandableTextBox>
         </>
     );

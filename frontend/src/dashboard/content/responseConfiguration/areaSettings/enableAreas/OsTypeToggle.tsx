@@ -1,6 +1,6 @@
 import { IOSSwitch } from '@common/components/IOSSwitch'
 import { FormControlLabel } from '@material-ui/core'
-import { AlignCenter } from 'dashboard/layouts/positioning/AlignCenter'
+import { Align } from 'dashboard/layouts/positioning/AlignCenter'
 import React from 'react'
 
 interface ToggleProps {
@@ -12,12 +12,12 @@ interface ToggleProps {
 
 export const OsTypeToggle = ({controlledState, onChange, enabledLabel, disabledLabel}: ToggleProps) => {
     return (
-        <AlignCenter>
+        <Align>
             <FormControlLabel
                     control={<IOSSwitch disabled={controlledState === null} checked={controlledState === true} onChange={onChange} name="Active" />}
                     style={{ color: "black", fontWeight: "bolder", paddingBottom: "0.8rem" }}
                     label={controlledState === null ? "loading..." : controlledState === true ? enabledLabel : disabledLabel}
                 />
-        </AlignCenter>
+        </Align>
     )
 }

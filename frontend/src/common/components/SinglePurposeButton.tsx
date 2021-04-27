@@ -5,12 +5,12 @@ import React from 'react'
 
 
 export interface ISinglePurposeButton {
-    classes?: string;
     variant: "contained" | "outlined";
     color: "primary" | "secondary";
     buttonText: string;
-    disabled?: boolean;
     onClick: AnyFunction;
+    classes?: string;
+    disabled?: boolean;
 }
 
 const useStyles = makeStyles(theme => ({

@@ -9,17 +9,15 @@ import { cloneDeep } from "lodash";
 import { AlertType, Areas, AreaTable, PlanType } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { DashboardHeader } from "./header/DashboardHeader";
-import { CssBaseline, IconButton, makeStyles, useTheme } from "@material-ui/core";
+import { CssBaseline, IconButton, makeStyles, Typography } from "@material-ui/core";
 import { DRAWER_WIDTH } from "@constants";
-
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
 import { DashboardContext } from "./DashboardContext";
-import { webUrl } from "@api-client/clientUtils";
+import { UserDetails } from "./sidebar/UserDetails";
 
 const fetchSidebarInfo = (areaData: Areas) => {
     const areaIdentifiers = areaData.map((x: AreaTable) => x.areaIdentifier);
@@ -56,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     },
     menuDrawerPaper: {
         width: DRAWER_WIDTH,
-        backgroundColor: "#FAFCE8"//"rgb(253,236,234)",
+        backgroundColor: theme.palette.primary.main,
     },
     helpDrawerPaper: {
         width: DRAWER_WIDTH + 300,
@@ -90,7 +88,6 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [numAreasAllowed, setNumAreasAllowed] = useState<number>(0);
     const [alertState, setAlertState] = useState<boolean>(false);
 
-    const [widgetState, setWidgetState] = useState<boolean | undefined>();
     const [planType, setPlanType] = useState<PlanType>();
     const [currencySymbol, setCurrencySymbol] = useState<string>("");
 
@@ -98,7 +95,6 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [dashboardAreasLoading, setDashboardAreasLoading] = useState<boolean>(false);
 
     const cls = useStyles(helpOpen);
-    const theme = useTheme();
 
     const loadAreas = useCallback(async () => {
         setDashboardAreasLoading(true);
@@ -116,9 +112,6 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         const [areaIdentifiers, areaNames] = fetchSidebarInfo(areas);
         setSidebarNames(areaNames);
         setSidebarIds(areaIdentifiers);
-
-        const { data: currentWidgetState } = await client.Configuration.WidgetState.GetWidgetState();
-        setWidgetState(currentWidgetState);
 
         const { data: locale } = await client.Settings.Account.GetLocale();
         setCurrencySymbol(locale.localeCurrencySymbol);
@@ -155,12 +148,6 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         history.push(`/dashboard/editor/email/${newArea.areaIdentifier}?tab=0`);
     };
 
-    const updateWidgetIsActive = async () => {
-        const client = new ApiClient();
-        const { data: updatedWidgetState } = await client.Configuration.WidgetState.SetWidgetState(!widgetState);
-        setWidgetState(updatedWidgetState);
-    };
-
     const handleDrawerClose: () => void = () => {
         setOpen(false);
     };
@@ -191,14 +178,6 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         }
     };
 
-    const createCustomerPortalSession = async () => {
-        const client = new ApiClient();
-        var returnUrl = `${webUrl}/dashboard/`;
-        const { data: customerId } = await client.Purchase.Customer.GetCustomerId();
-        const { data: portalUrl } = await client.Purchase.Customer.GetCustomerPortal(customerId, returnUrl);
-        window.location.href = portalUrl;
-    };
-
     const alertDetails: AlertType = {
         title: "Maximum areas reached",
         message: "Thanks for using Palavyr! Please consider purchasing a subscription to increase the number of areas you can provide.",
@@ -209,9 +188,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     return (
         <DashboardContext.Provider value={{ setIsLoading: setIsLoading, currencySymbol: currencySymbol, subscription: planType, numAreasAllowed, checkAreaCount, areaName: currentViewName, setViewName: setViewName }}>
             <div className={cls.root}>
-                <CssBaseline />
                 <DashboardHeader open={open} handleDrawerOpen={handleDrawerOpen} handleHelpDrawerOpen={handleHelpDrawerOpen} helpOpen={helpOpen} title={currentViewName} />
-
                 <Drawer
                     className={classNames(cls.menuDrawer, cls.menuBorder)}
                     variant="persistent"
@@ -225,8 +202,9 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                 >
                     <>
                         <SideBarHeader handleDrawerClose={handleDrawerClose} />
+                        <UserDetails />
                         <Divider />
-                        <SideBarMenu areaIdentifiers={sidebarIds} areaNames={sidebarNames} widgetIsActive={widgetState} updateWidgetIsActive={updateWidgetIsActive} createCustomerPortalSession={createCustomerPortalSession} />
+                        <SideBarMenu areaIdentifiers={sidebarIds} areaNames={sidebarNames} />
                     </>
                 </Drawer>
                 <ContentLoader isLoading={isLoading} dashboardAreasLoading={dashboardAreasLoading} open={open}>
@@ -243,8 +221,8 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                 >
                     <div className={cls.helpDrawerHeader}>
                         <IconButton onClick={handleHelpDrawerClose}>
-                            Close
-                            {theme.direction === "rtl" ? <ChevronLeftIcon style={{ color: "white" }} /> : <ChevronRightIcon style={{ color: "white" }} />}
+                            <Typography>Close</Typography>
+                            <ChevronRightIcon style={{ color: "black" }} />
                         </IconButton>
                     </div>
                     <Divider />

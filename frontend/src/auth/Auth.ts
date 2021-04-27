@@ -104,14 +104,19 @@ class Auth {
     }
 
     async googleLogout(callback: () => any) {
-        window.gapi.load("auth2", () => {
-            window.gapi.auth2.init({ client_id: googleOAuthClientId, fetch_basic_profile: true });
-            window.gapi.auth2.getAuthInstance().then((auth2) => {
-                auth2.signOut().then(async () => {
-                    auth2.disconnect().then(await this.logout(callback));
+        try {
+
+            window.gapi.load("auth2", () => {
+                window.gapi.auth2.init({ client_id: googleOAuthClientId, fetch_basic_profile: true });
+                window.gapi.auth2.getAuthInstance().then((auth2) => {
+                    auth2.signOut().then(async () => {
+                        auth2.disconnect().then(await this.logout(callback));
+                    });
                 });
             });
-        });
+        } catch {
+            await this.logout(callback);
+        }
     }
 
     isAuthenticated() {

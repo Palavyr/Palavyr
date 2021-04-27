@@ -1,6 +1,6 @@
 import { SinglePurposeButton } from '@common/components/SinglePurposeButton'
 import { makeStyles, Typography } from '@material-ui/core'
-import { AlignCenter } from 'dashboard/layouts/positioning/AlignCenter'
+import { Align } from 'dashboard/layouts/positioning/AlignCenter'
 import React from 'react'
 
 
@@ -23,9 +23,9 @@ export const ChatDemoHeader = () => {
             <Typography align="center" variant="h4" className={cls.customizetext}>
                 Customize your widget
             </Typography>
-            <AlignCenter>
+            <Align>
                 <SinglePurposeButton classes={cls.button} variant="outlined" color="primary" buttonText="Reload" onClick={() => window.location.reload()} />
-            </AlignCenter>
+            </Align>
         </>
     )
 }

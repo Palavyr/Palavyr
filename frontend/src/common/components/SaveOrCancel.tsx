@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
         marginRight: "0.1rem",
         background: "white",
         "&:hover": {
-            background: "#757ce8",
+            background: theme.palette.success.main,
         },
     },
     saveCancelWrapper: {

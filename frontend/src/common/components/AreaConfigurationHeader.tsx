@@ -1,20 +1,38 @@
-import { Divider, Typography } from "@material-ui/core";
+import { Divider, makeStyles, Typography } from "@material-ui/core";
 import React from "react";
 
 interface IAreaConfigurationHeader {
     title: string;
     subtitle: string;
     divider?: boolean;
+    light?: boolean;
 }
+type StyleProps = {
+    light: boolean;
+};
 
-export const AreaConfigurationHeader = ({ title, subtitle, divider = false }: IAreaConfigurationHeader) => {
+const useStyles = makeStyles((theme) => ({
+    container: (props: StyleProps) => ({
+        backgroundColor: props.light ? "white" : theme.palette.background.default,
+        width: "100%",
+    }),
+    title: {
+        marginTop: "1.4rem",
+    },
+    subtitle: {
+        padding: "1rem 3rem 0rem 3rem",
+    },
+}));
+
+export const AreaConfigurationHeader = ({ title, subtitle, divider = false, light = false }: IAreaConfigurationHeader) => {
+    const cls = useStyles({ light });
     return (
         <>
-            <div style={{ width: "100%" }}>
-                <Typography style={{ marginTop: "1.4rem" }} align="center" variant="h4">
+            <div className={cls.container}>
+                <Typography gutterBottom className={cls.title} align="center" variant="h4">
                     {title}
                 </Typography>
-                <Typography paragraph align="center" style={{padding: "1rem 3rem 0rem 3rem"}}>
+                <Typography paragraph gutterBottom className={cls.subtitle} align="center">
                     {subtitle}
                 </Typography>
             </div>

@@ -10,7 +10,7 @@ import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import PhoneIcon from '@material-ui/icons/Phone';
 import BrandingWatermarkIcon from '@material-ui/icons/BrandingWatermark';
 import PublicIcon from '@material-ui/icons/Public';
-import { AlignCenter } from "dashboard/layouts/positioning/AlignCenter";
+import { Align } from "dashboard/layouts/positioning/AlignCenter";
 import { useHistory } from "react-router-dom";
 import { GeneralSettingsLoc } from "@Palavyr-Types";
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
@@ -82,9 +82,9 @@ const SettingsContentInner = ({ setLoaded, children}: ISettingsContentInner ) =>
                     <Tab onClick={() => sendTo(GeneralSettingsLoc.deleteaccount)} className={cls.tabtext} icon={<DeleteSweepIcon className={cls.icon} />} label="Delete" {...areaTabProps(7)} />
                 </Tabs>
             </AppBar>
-            <AlignCenter>
+            <Align>
                 {children}
-            </AlignCenter>
+            </Align>
         </div >
     )
 };

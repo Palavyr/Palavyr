@@ -91,6 +91,9 @@ const useStyles = makeStyles((theme) => ({
     pickerTitle: {
         marginBottom: "0.3rem",
     },
+    optionsContainer: {
+        marginTop: "2rem"
+    }
 }));
 
 type ColorPickerType = {
@@ -187,7 +190,6 @@ export const ChatDemo = () => {
         setChatFontColor(chatFontColor);
         setChatBubbleColor(chatBubbleColor);
         setIsLoading(false);
-
     }, []);
 
     useEffect(() => {
@@ -200,8 +202,7 @@ export const ChatDemo = () => {
     const textPickers = [
         { name: "Title", variable: title, method: setTitle, disable: false },
         { name: "Subtitle", variable: subTitle, method: setSubTitle, disable: false },
-        // { name: "Placeholder", variable: placeholder, method: setPlaceholder, disable: false },
-    ]
+    ];
 
     const colorPickers: ColorPickerType[][] = [
         [
@@ -213,7 +214,7 @@ export const ChatDemo = () => {
             { name: "Options List Font Color", variable: listFontColor, method: setListFontColor, disable: true },
         ],
         [
-            { name: "Chat Bubble Color", variable: chatBubbleColor, method: setChatBubbleColor, disable: true},
+            { name: "Chat Bubble Color", variable: chatBubbleColor, method: setChatBubbleColor, disable: true },
             { name: "Chat Bubble Font Color", variable: chatFontColor, method: setChatFontColor, disable: true },
         ],
     ];
@@ -231,12 +232,12 @@ export const ChatDemo = () => {
                     </Paper>
                 </Grid>
 
-                <Grid container className={classNames(cls.grid)}>
+                <Grid container className={classNames(cls.grid, cls.optionsContainer)}>
                     <Paper className={cls.formroot}>
-                        <div className={cls.editorContainer}>
-                            <HeaderEditor setEditorState={setHeader} initialData={initialHeader} label="Header" />
-                        </div>
                         <Grid item xs={6}>
+                            <div className={cls.editorContainer}>
+                                <HeaderEditor setEditorState={setHeader} initialData={initialHeader} label="Header" />
+                            </div>
                             {textPickers.map((picker: ColorPickerType) => (
                                 <DemoTextInput disabled={picker.disable} text={picker.name} value={picker.variable} onChange={(e) => picker.method(e.target.value)} />
                             ))}
@@ -259,8 +260,6 @@ export const ChatDemo = () => {
                             <div className={cls.root}>
                                 <GridList cellHeight={275} className={cls.gridList}>
                                     {colorPickers.map((picker: ColorPickerType[], index: number) => {
-
-
                                         if (picker.length == 1) {
                                             const pickerA = picker[0];
 

@@ -1,25 +1,36 @@
-import { makeStyles } from '@material-ui/core'
-import React from 'react'
+import { makeStyles } from "@material-ui/core";
+import React from "react";
 
+type Directions = "left" | "right" | "center";
 
-interface IAlignCenter {
+export interface IAlign {
     children: React.ReactNode;
+    direction?: Directions;
+    float?: "left" | "right";
 }
 
-const useStyles = makeStyles(theme => ({
-    center: {
-        display: "flex",
-        justifyContent: "center"
-    }
-}))
+export type StyleProps = {
+    direction: Directions;
+    float: "left" | "right";
+};
 
-export const AlignCenter = ({ children }: IAlignCenter) => {
+const useStyles = makeStyles((theme) => ({
+    align: (props: StyleProps) => {
+        let styles = {};
+        styles = {
+            display: "flex",
+            justifyContent: props.direction ?? "center",
+        };
+        if (props.float) {
+            const float = props.float;
+            styles = { ...styles, float: float };
+        }
+        return styles;
+    },
+}));
 
-    const cls = useStyles();
+export const Align = ({ direction, float, children }: IAlign) => {
+    const cls = useStyles({ direction, float });
 
-    return (
-        <div className={cls.center}>
-            {children}
-        </div>
-    )
-}
+    return <div className={cls.align}>{children}</div>;
+};

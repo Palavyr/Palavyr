@@ -2,8 +2,7 @@ import { Box, Card, Grid, Typography, Button, Divider, makeStyles } from "@mater
 import React from "react";
 import { NavBar } from "../navbar/NavBar";
 
-// "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)"
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     container: {
         paddingLeft: "15%",
         paddingRight: "15%",
@@ -13,7 +12,7 @@ const useStyles = makeStyles(theme => ({
         justifyContent: "center",
         background: "rgb(1,96,162)",
         paddingBottom: "7rem",
-        textAlign: "center"
+        textAlign: "center",
     },
     card: {
         boxShadow: "0 0 white",
@@ -29,19 +28,12 @@ const useStyles = makeStyles(theme => ({
         fontSize: "large",
         backgroundColor: "#90a5bb",
         color: "white",
-        '&:hover': {
+        "&:hover": {
             backgroundColor: "white",
             color: "navy",
-        }
+        },
     },
-    leftBox: {
-        fontFamily: "'Architects Daughter', cursive",
-        textAlign: "center",
-    },
-    rightBox: {
-    }
-
-}))
+}));
 
 interface IHeader {
     openRegisterDialog: any;
@@ -53,12 +45,10 @@ interface IHeader {
     setSelectedTab: any;
 }
 
-
 export const Header = ({ openRegisterDialog, openLoginDialog, handleMobileDrawerOpen, handleMobileDrawerClose, isMobileDrawerOpen, selectedTab, setSelectedTab }: IHeader) => {
-
-    const classes = useStyles();
+    const cls = useStyles();
     return (
-        <div className={classes.container}>
+        <div className={cls.container}>
             <NavBar
                 openRegisterDialog={openRegisterDialog}
                 openLoginDialog={openLoginDialog}
@@ -68,28 +58,28 @@ export const Header = ({ openRegisterDialog, openLoginDialog, handleMobileDrawer
                 selectedTab={selectedTab}
                 setSelectedTab={setSelectedTab}
             />
-            <Card className={classes.card}>
+            <Card className={cls.card}>
                 <Grid container alignContent="center">
                     <Grid item xs={12}>
-                        <Box >
-                            <Typography className={classes.leftBox} variant="h2">
+                        <Box>
+                            <Typography align="center" variant="h2">
                                 Build Incredible Conversations
                             </Typography>
                         </Box>
                     </Grid>
                     <Grid item xs={12}>
                         <Box>
-                            <Typography className={classes.leftBox} variant="h5">
+                            <Typography align="center" variant="h5">
                                 Use Palavyr to configure a custom chat widget for your site to engage customers.
                             </Typography>
                         </Box>
                     </Grid>
                     <Divider />
                 </Grid>
-            </Card >
-            <Button className={classes.button} variant="contained" onClick={openRegisterDialog}>
+            </Card>
+            <Button className={cls.button} variant="contained" onClick={openRegisterDialog}>
                 Create a free account
             </Button>
-        </div >
+        </div>
     );
-}
+};

@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, useState } from "react";
 import { Typography, Card, makeStyles, Divider } from "@material-ui/core";
 import { ApiClient } from "@api-client/Client";
 import { serverUrl, widgetUrl } from "@api-client/clientUtils";
-import { AlignCenter } from "dashboard/layouts/positioning/AlignCenter";
+import { Align } from "dashboard/layouts/positioning/AlignCenter";
 
 const useStyles = makeStyles((theme) => ({
     outerCard: {
@@ -65,7 +65,7 @@ export const GetWidget = () => {
                     </p>
                 </Typography>
                 <Divider />
-                <AlignCenter>
+                <Align direction="center">
                     <Typography align="left">
                         <p>
                             <strong>Example pre-check request</strong>
@@ -91,7 +91,7 @@ export const GetWidget = () => {
                         `}
                         </pre>
                     </Typography>
-                </AlignCenter>
+                </Align>
             </Card>
         </>
     );

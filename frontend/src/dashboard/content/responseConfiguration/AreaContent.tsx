@@ -9,36 +9,35 @@ import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
 import { AuthContext, DashboardContext } from "dashboard/layouts/DashboardContext";
-import { AreaSettingsLoc } from "@Palavyr-Types";
+import { AreaSettingsLoc, SetState } from "@Palavyr-Types";
 
 export interface IAreaContent {
     children: JSX.Element[] | JSX.Element;
 }
 
 export interface IAreaContentInner extends IAreaContent {
-    setLoaded: Dispatch<SetStateAction<boolean>>;
+    setLoaded: SetState<boolean>;
 }
 
-
-const useTabsStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         width: "100%",
         position: "absolute",
         flexGrow: 1,
-        background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)",
+        background: "none",
         height: "100%",
     },
     appbar: {
-        background: "#c7ecee",
+        backgroundColor: theme.palette.primary.main,
         width: "100%",
         top: theme.mixins.toolbar.minHeight,
         height: "72px",
     },
     icon: {
-        color: "navy",
+        color: theme.palette.getContrastText(theme.palette.primary.main),
     },
     tabtext: {
-        color: "navy",
+        color: theme.palette.getContrastText(theme.palette.primary.main),
     },
 }));
 
@@ -49,7 +48,7 @@ export const AreaContent = ({ children }: IAreaContent) => {
 
 export const AreaContentInner = ({ setLoaded, children }: IAreaContentInner) => {
     const history = useHistory();
-    const classes = useTabsStyles();
+    const cls = useStyles();
 
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
@@ -75,15 +74,15 @@ export const AreaContentInner = ({ setLoaded, children }: IAreaContentInner) => 
     }
 
     return (
-        <div className={classes.root}>
-            <AppBar position="static" className={classes.appbar}>
+        <div className={cls.root}>
+            <AppBar position="static" className={cls.appbar}>
                 <Tabs centered value={tab} aria-label="simple tabs example">
-                    <Tab onClick={() => sendTo(AreaSettingsLoc.email)} className={classes.tabtext} icon={<SubjectIcon className={classes.icon} />} label="1. Email" {...areaTabProps(0)} />
-                    <Tab onClick={() => sendTo(AreaSettingsLoc.response)} className={classes.tabtext} icon={<FilterFramesIcon className={classes.icon} />} label="2. Response" {...areaTabProps(1)} />
-                    <Tab onClick={() => sendTo(AreaSettingsLoc.attachments)} className={classes.tabtext} icon={<PictureAsPdfIcon className={classes.icon} />} label="3. Attachments" {...areaTabProps(2)} />
-                    <Tab onClick={() => sendTo(AreaSettingsLoc.conversation)} className={classes.tabtext} icon={<AccountTreeIcon className={classes.icon} />} label="4. Conversation" {...areaTabProps(3)} />
-                    <Tab onClick={() => sendTo(AreaSettingsLoc.settings)} className={classes.tabtext} icon={<SettingsApplicationsIcon className={classes.icon} />} label="5. Settings" {...areaTabProps(4)} />
-                    <Tab onClick={() => sendTo(AreaSettingsLoc.preview)} className={classes.tabtext} icon={<VisibilityIcon className={classes.icon} />} label="6. Preview" {...areaTabProps(5)} />
+                    <Tab onClick={() => sendTo(AreaSettingsLoc.email)} className={cls.tabtext} icon={<SubjectIcon className={cls.icon} />} label="1. Email" {...areaTabProps(0)} />
+                    <Tab onClick={() => sendTo(AreaSettingsLoc.response)} className={cls.tabtext} icon={<FilterFramesIcon className={cls.icon} />} label="2. Response" {...areaTabProps(1)} />
+                    <Tab onClick={() => sendTo(AreaSettingsLoc.attachments)} className={cls.tabtext} icon={<PictureAsPdfIcon className={cls.icon} />} label="3. Attachments" {...areaTabProps(2)} />
+                    <Tab onClick={() => sendTo(AreaSettingsLoc.conversation)} className={cls.tabtext} icon={<AccountTreeIcon className={cls.icon} />} label="4. Conversation" {...areaTabProps(3)} />
+                    <Tab onClick={() => sendTo(AreaSettingsLoc.settings)} className={cls.tabtext} icon={<SettingsApplicationsIcon className={cls.icon} />} label="5. Settings" {...areaTabProps(4)} />
+                    <Tab onClick={() => sendTo(AreaSettingsLoc.preview)} className={cls.tabtext} icon={<VisibilityIcon className={cls.icon} />} label="6. Preview" {...areaTabProps(5)} />
                 </Tabs>
             </AppBar>
             {children}
