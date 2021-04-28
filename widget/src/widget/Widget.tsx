@@ -105,9 +105,9 @@ export const Widget = ({ option, preferences }: WidgetProps) => {
         >
             {showChat && (
                 <Conversation
-                    title={preferences.title}
-                    subtitle={preferences.subtitle}
-                    senderPlaceHolder={preferences.placeholder}
+                    // title={preferences.title}
+                    // subtitle={preferences.subtitle}
+                    // senderPlaceHolder={preferences.placeholder}
                     className={showChat ? "active" : "hidden"}
                     showTimeStamp={true}
                     customPreferences={preferences}

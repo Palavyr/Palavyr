@@ -1,42 +1,26 @@
-import { makeStyles } from "@material-ui/core";
-import classNames from "classnames";
+import { Card, makeStyles } from "@material-ui/core";
 import React from "react";
 import SettingsIcon from "@material-ui/icons/Settings";
 
 import "./style.scss";
 import { openUserDetails } from "@store-dispatcher";
+import { WidgetPreferences } from "@Palavyr-Types";
 
 export interface ConvoHeaderProps {
-    title: string;
-    subtitle: string;
+    chatHeader: string;
     titleAvatar?: string;
-    headerColor: string;
-    headerFontColor: string;
+    preferences: WidgetPreferences;
 }
 
-type StyleProps = {
-    headerColor: string;
-    headerFontColor: string;
-};
-
-const setHeaderStyles = (props: StyleProps) => {
-    let headerObj = {
-        backgroundColor: "gray",
-        color: "white",
-    };
-
-    if (props.headerColor) {
-        headerObj = { ...headerObj, backgroundColor: props.headerColor };
-    }
-    if (props.headerFontColor) {
-        headerObj = { ...headerObj, color: props.headerFontColor };
-    }
-
-    return headerObj;
-};
-
 const useStyles = makeStyles({
-    header: (props: StyleProps) => setHeaderStyles(props),
+    header: (props: WidgetPreferences) => ({
+        backgroundColor: props.headerColor,
+        color: props.headerFontColor,
+        textAlign: "center",
+        minWidth: 275,
+        wordWrap: "break-word",
+        borderRadius: "0px",
+    }),
     flexProperty: {
         flexDirection: "column",
         textAlign: "center",
@@ -45,24 +29,29 @@ const useStyles = makeStyles({
         padding: "15px 0 25px",
     },
     settingsIcon: {
-        position: "absolute",
+        position: "fixed",
         right: "5px",
         top: "5px",
         height: "2rem",
         width: "2rem",
     },
+    headerBehavior: {
+        wordWrap: "break-word",
+        padding: "1rem",
+        paddingBottom: "2rem",
+        width: "100%",
+        wordBreak: "normal",
+        minHeight: "18%",
+    },
 });
 
-export const ConvoHeader = ({ title, subtitle, titleAvatar, headerColor, headerFontColor }: ConvoHeaderProps) => {
-    const cls = useStyles({ headerColor: headerColor, headerFontColor: headerFontColor });
+export const ConvoHeader = ({ titleAvatar, preferences }: ConvoHeaderProps) => {
+    const cls = useStyles(preferences);
     return (
-        <div className={classNames(cls.header, cls.flexProperty)}>
-            <SettingsIcon className={cls.settingsIcon} onClick={() => openUserDetails()} />
-            <h2 className="rcw-title">
-                {titleAvatar && <img src={titleAvatar} className="avatar" alt="profile" />}
-                {title}
-            </h2>
-            <span>{subtitle}</span>
-        </div>
+        <Card className={cls.header}>
+            <SettingsIcon className={cls.settingsIcon} onClick={openUserDetails} />
+            {titleAvatar && <img src={titleAvatar} className="avatar" alt="profile" />}
+            <div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: preferences.chatHeader }} />
+        </Card>
     );
 };

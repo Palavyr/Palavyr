@@ -38,6 +38,7 @@ const useStyles = makeStyles(() => ({
         padding: "1rem",
         width: "100%",
         wordBreak: "normal",
+        minHeight: "18%"
     },
     selectListBgColor: (prefs: WidgetPreferences) => ({
         backgroundColor: prefs.selectListColor,
@@ -88,7 +89,7 @@ export const DropdownListOptions = ({ setSelectedOption, options, preferences }:
     const opts = sortByPropertyAlphabetical(sortGetter, options);
     return (
         <Box height="100%">
-            <Card className={cls.header}>{preferences && <div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: preferences.header }} />}</Card>
+            <Card className={cls.header}>{preferences && <div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: preferences.landingHeader }} />}</Card>
             <div className={classNames(cls.selectListBgColor, cls.selectListFontColor, cls.mainList)}>
                 {options && (
                     <Autocomplete

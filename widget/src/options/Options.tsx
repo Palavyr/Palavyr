@@ -4,15 +4,27 @@ import { useState, useCallback, useEffect } from "react";
 import { DropdownListOptions } from "./optionFormats/DropdownOptionsList";
 import { SelectedOption, WidgetPreferences, AreaTable } from "@Palavyr-Types";
 import { WidgetClient } from "client/Client";
+import { makeStyles } from "@material-ui/core";
 
 interface IOptionSelector {
     setSelectedOption: (option: SelectedOption) => void;
     preferences: WidgetPreferences;
 }
 
+const useStyles = makeStyles(theme => ({
+    optionsContainer: {
+        position: "fixed",
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        height: "100%",
+    },
+}));
+
 export const OptionSelector = ({ setSelectedOption, preferences }: IOptionSelector) => {
     var secretKey = new URLSearchParams(useLocation().search).get("key");
     const Client = new WidgetClient(secretKey);
+    const cls = useStyles();
 
     const [, setUseGroups] = useState<boolean>();
     const [options, setOptions] = useState<Array<SelectedOption>>();
@@ -32,9 +44,5 @@ export const OptionSelector = ({ setSelectedOption, preferences }: IOptionSelect
         loadAreas();
     }, [loadAreas]);
 
-    return (
-        <div style={{ position: "fixed", display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
-            {options && <DropdownListOptions options={options} setSelectedOption={setSelectedOption} preferences={preferences} />}
-        </div>
-    );
+    return <div className={cls.optionsContainer}>{options && <DropdownListOptions options={options} setSelectedOption={setSelectedOption} preferences={preferences} />}</div>;
 };
