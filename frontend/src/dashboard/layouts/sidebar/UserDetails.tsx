@@ -3,6 +3,8 @@ import { makeStyles, Tooltip, Typography } from "@material-ui/core";
 import { SessionStorage } from "localStorage/sessionStorage";
 import { DashboardContext } from "../DashboardContext";
 import Fade from "@material-ui/core/Fade";
+import { GeneralSettingsLoc } from "@Palavyr-Types";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     logwrapper: {
@@ -14,6 +16,9 @@ const useStyles = makeStyles((theme) => ({
         boxShadow: theme.shadows[10],
         borderRadius: "7px",
         backgroundColor: theme.palette.warning.main,
+        "&:hover": {
+            backgroundColor: theme.palette.warning.dark,
+        },
     },
     googleImage: {
         borderRadius: "50%",
@@ -29,19 +34,19 @@ const useStyles = makeStyles((theme) => ({
     toolTipInternal: {
         backgroundColor: theme.palette.primary.main,
         maxWidgth: "none",
-        marginLeft: "2rem"
+        marginLeft: "2rem",
     },
 }));
 
 export const UserDetails = () => {
     const cls = useStyles();
+    const history = useHistory();
 
     const email = SessionStorage.getEmailAddress();
     const googleImage = SessionStorage.getGoogleImage();
-    const { subscription } = React.useContext(DashboardContext);
+    const { subscription, setViewName } = React.useContext(DashboardContext);
 
-    let details;
-
+    let details: JSX.Element;
     if (googleImage && email) {
         details = (
             <>
@@ -67,6 +72,13 @@ export const UserDetails = () => {
     } else {
         details = <Typography>Please Log In</Typography>;
     }
-
-    return <div className={cls.logwrapper}>{details}</div>;
+    const userOnClick = () => {
+        setViewName("General Settings");
+        history.push(`/dashboard/settings/password?tab=${GeneralSettingsLoc.password}`);
+    };
+    return (
+        <div onClick={userOnClick} className={cls.logwrapper}>
+            {details}
+        </div>
+    );
 };

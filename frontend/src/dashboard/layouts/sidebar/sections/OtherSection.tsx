@@ -13,7 +13,7 @@ import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
 
 const useStyles = makeStyles((theme) => ({
     icon: {
-        color: theme.palette.secondary.light,
+        color: theme.palette.secondary.main,
     },
 }));
 
@@ -52,7 +52,7 @@ export const OtherSection = ({ isActive }: OtherSectionProps) => {
                 <SidebarLinkItem text="Get Started" isActive={isActive} onClick={getStartedOnClick} IconComponent={<PlayArrowIcon className={cls.icon} />} />
                 <SidebarLinkItem text="Settings" isActive={isActive} onClick={generalSettingsOnClick} IconComponent={<SettingsIcon className={cls.icon} />} />
                 <SidebarLinkItem text="Get Widget" isActive={isActive} onClick={getWidgetOnClick} IconComponent={<GetAppIcon className={cls.icon} />} />
-                <SidebarLinkItem text="Logout" isActive={isActive} onClick={getWidgetOnClick} IconComponent={<ExitToAppIcon className={cls.icon} />} />
+                <SidebarLinkItem text="Logout" isActive={isActive} onClick={logoutOnClick} IconComponent={<ExitToAppIcon className={cls.icon} />} />
             </Collapse>
         </List>
     );

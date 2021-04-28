@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
 
-type Directions = "left" | "right" | "center";
+type Directions = "flex-start" | "flex-end" | "center";
 
 export interface IAlign {
     children: React.ReactNode;

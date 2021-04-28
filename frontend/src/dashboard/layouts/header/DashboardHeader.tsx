@@ -77,9 +77,7 @@ export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawe
                             <MenuIcon />
                         </IconButton>
                     </Align>
-                    <Align float="right">
-                        <Typography variant="h4">Current Area: {title}</Typography>
-                    </Align>
+                    <Align float="right">{title && <Typography variant="h4">Current Area: {title}</Typography>}</Align>
                 </div>
                 <div className={cls.helpIcon}>
                     <IconButton color="inherit" aria-label="open help drawer" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(cls.helpMenuButton, helpOpen && cls.hide)}>

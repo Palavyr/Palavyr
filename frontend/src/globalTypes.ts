@@ -172,10 +172,16 @@ export type FileLink = {
     link: string;
 };
 
+export type FileLinkReference = {
+    fileReference: string;
+    fileId: string;
+    fileName: string;
+};
+
 export type EnquiryRow = {
     id: number;
     conversationId: string;
-    responsePdfLink: FileLink;
+    linkReference: FileLinkReference;
     timeStamp: string;
     accountId: string;
     areaName: string;
@@ -186,7 +192,7 @@ export type EnquiryRow = {
     phoneNumber: string;
 };
 
-export type Enquiries = Array<EnquiryRow>;
+export type Enquiries = EnquiryRow[];
 
 export type DynamicTableMeta = {
     id: number;
@@ -471,14 +477,21 @@ export type ConversationUpdate = {
 
 export type CompletedConversation = ConversationUpdate[];
 
+export type PreCheckError = {
+    areaName: string;
+    reasons: string[];
+};
+
 export type PreCheckResult = {
     isReady: boolean;
-    incompleteAreas: Array<AreaTable>;
+    preCheckErrors: PreCheckError[];
+    apiKeyExists: boolean;
 };
 
 export type IncompleteArea = {
     areaDisplayTitle: string;
     areaName: string;
+    reason: string[];
 };
 
 export type IncompleteAreas = IncompleteArea[];
@@ -487,9 +500,8 @@ export type WidgetPreferences = {
     selectListColor: string;
     headerColor: string;
     fontFamily: string;
-    header: string;
-    title: string;
-    subtitle: string;
+    landingHeader: string;
+    chatHeader: string;
     placeholder: string;
     listFontColor: string;
     headerFontColor: string;
@@ -747,9 +759,8 @@ export type TableNameMap = {
     [tableName: string]: string;
 };
 
-
 export type TreeErrors = {
     missingNodes: string[];
-    outOfOrder: string[] ;
+    outOfOrder: string[];
     anyErrors: boolean;
-}
+};

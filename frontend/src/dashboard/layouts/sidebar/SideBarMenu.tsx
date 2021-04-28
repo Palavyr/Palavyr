@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     sidebarlist: {
         color: theme.palette.getContrastText(theme.palette.primary.main),
         backgroundColor: theme.palette.primary.main,
+        paddingBottom: "8rem",
     },
 }));
 
