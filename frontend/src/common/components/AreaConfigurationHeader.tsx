@@ -15,10 +15,8 @@ const useStyles = makeStyles((theme) => ({
     container: (props: StyleProps) => ({
         backgroundColor: props.light ? "white" : theme.palette.background.default,
         width: "100%",
+        paddingTop: "1.2rem"
     }),
-    title: {
-        marginTop: "1.4rem",
-    },
     subtitle: {
         padding: "1rem 3rem 0rem 3rem",
     },
@@ -29,7 +27,7 @@ export const AreaConfigurationHeader = ({ title, subtitle, divider = false, ligh
     return (
         <>
             <div className={cls.container}>
-                <Typography gutterBottom className={cls.title} align="center" variant="h4">
+                <Typography gutterBottom align="center" variant="h4">
                     {title}
                 </Typography>
                 <Typography paragraph gutterBottom className={cls.subtitle} align="center">

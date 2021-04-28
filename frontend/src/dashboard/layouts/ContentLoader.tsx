@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import { makeStyles, useTheme } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import { DRAWER_WIDTH } from "@constants";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStrip";
@@ -33,10 +33,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ContentLoader = ({ open, isLoading, dashboardAreasLoading, children }: IContentLoader) => {
-    const classes = useStyles();
+    const cls = useStyles();
 
     return (
-        <main className={classNames(classes.content, { [classes.contentShift]: open })}>
+        <main className={classNames(cls.content, { [cls.contentShift]: open })}>
             {(isLoading || dashboardAreasLoading) && <LinearProgress />}
             <DevStagingStrip />
             <div>{children}</div>

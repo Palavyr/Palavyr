@@ -3,7 +3,7 @@ import { Conversation, NodeTypeOptions, TreeErrors } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { cloneDeep } from "lodash";
 import { ConversationNode } from "./nodes/ConversationNode";
-import { TreeErrorPanel, } from "./MissingDynamicNodes";
+import { TreeErrorPanel } from "./MissingDynamicNodes";
 import { Button, makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
@@ -17,6 +17,7 @@ import "./stylesConvoTree.css";
 import { getRootNode } from "./nodes/nodeUtils/commonNodeUtils";
 import { ConversationHistoryTracker } from "./nodes/ConversationHistoryTracker";
 import { isDevelopmentStage } from "@api-client/clientUtils";
+import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 
 const useStyles = makeStyles(() => ({
     conversation: {
@@ -25,6 +26,10 @@ const useStyles = makeStyles(() => ({
     },
     treeErrorContainer: {
         margin: "0.5rem 0rem 1rem 2rem",
+    },
+    convoTreeMetaButtons: {
+        marginLeft: "0.7rem",
+        borderRadius: "10px",
     },
 }));
 
@@ -111,8 +116,8 @@ export const ConvoTree = () => {
             <Align>
                 <SaveOrCancel onSave={onSave} useModal />
                 <Button
-                    variant="outlined"
-                    style={{ marginLeft: "0.7rem", borderRadius: "10px" }}
+                    variant="contained"
+                    className={cls.convoTreeMetaButtons}
                     startIcon={<UndoIcon />}
                     onClick={() => {
                         historyTracker.stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
@@ -121,8 +126,8 @@ export const ConvoTree = () => {
                     Undo
                 </Button>
                 <Button
-                    variant="outlined"
-                    style={{ marginLeft: "0.7rem", borderRadius: "10px" }}
+                    variant="contained"
+                    className={cls.convoTreeMetaButtons}
                     endIcon={<RedoIcon />}
                     onClick={() => {
                         historyTracker.stepConversationForwardOneStep(conversationHistoryPosition, conversationHistory);
@@ -131,15 +136,13 @@ export const ConvoTree = () => {
                     Redo
                 </Button>
                 {isDevelopmentStage() && (
-                    <Button variant="outlined" style={{ marginLeft: "0.7rem", borderRadius: "10px" }} onClick={toggleDebugData}>
+                    <Button variant="contained" className={cls.convoTreeMetaButtons} onClick={toggleDebugData}>
                         Toggle Debug Data
                     </Button>
                 )}
             </Align>
             <div className={cls.conversation}>
-                <div className={cls.treeErrorContainer}>
-                    {treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}
-                </div>
+                <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
                 <form onSubmit={() => null}>
                     <fieldset className="fieldset" id="tree-test">
                         <div className="main-tree tree-wrap">{nodeList.length > 0 ? <ConversationNode key="tree-start" node={rootNode} reRender={() => null} /> : null}</div>

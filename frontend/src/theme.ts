@@ -1,51 +1,30 @@
 import { createMuiTheme, responsiveFontSizes, Theme } from "@material-ui/core";
 
 const palette = {
-    background: { default: "#AAABB8" },
+    background: { default: "#F2F2F2" },
     primary: {
-        main: "#25274d",
-
-        // dark: "#000025",
-        // light: "#504f79",
-        // contrastText: "red"
+        main: "#264B94",
     },
     secondary: {
-        main: "#464866",
-        // dark: "#1d213b",
-        // light: "#727394"
+        main: "#507FE0",
     },
     error: {
-        main: "#C94259",
-        // dark: "",
-        // light: "",
+        main: "#E6070C",
     },
     warning: {
-        main: "#C9C11A",
-        // dark: "",
-        // light: "",
+        main: "#F2B972",
     },
     info: {
-        main: "#7D7816",
-        // dark: "",
-        // light: "",
+        main: "#6C78E6",
     },
     success: {
-        main: "#2E9CCA",
-        // dark: "",
-        // light: "",
+        main: "#7AE697",
     },
-
-    // text: {
-    //     primary: "#ffffff",
-    // },
-    // background: {
-    //     main: "#AAABB8"
-    // }
+    tonalOffset: 0.1,
 };
 
 export const green = "#168F20";
 export const red = "#8F4807";
-
 
 // Colors
 // #25274D
@@ -106,15 +85,33 @@ const overrides = {
             "*::-webkit-scrollbar": {
                 width: "0px",
                 height: "0px",
-                backgroundColor: "#25274d"
+                backgroundColor: "#25274d",
             },
         },
+    },
+};
+
+// breakpoints
+const xl = 1920;
+const lg = 1280;
+const md = 960;
+const sm = 600;
+const xs = 0;
+
+const breakpoints = {
+    values: {
+        xl,
+        lg,
+        md,
+        sm,
+        xs,
     },
 };
 
 const theme: Theme = createMuiTheme({
     palette,
     typography,
+    breakpoints,
     overrides,
 });
 
@@ -135,13 +132,6 @@ export default responsiveFontSizes(theme);
 // // border
 // const borderWidth = 2;
 // const borderColor = "rgba(0, 0, 0, 0.13)";
-
-// // breakpoints
-// const xl = 1920;
-// const lg = 1280;
-// const md = 960;
-// const sm = 600;
-// const xs = 0;
 
 // // spacing
 // const spacing = 8;

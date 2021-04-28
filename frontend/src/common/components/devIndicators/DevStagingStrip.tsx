@@ -18,7 +18,7 @@ export const DevStagingStrip = () => {
     const [show, setShow] = useState<boolean>(isDev);
     return (
         <>
-            {isDev && show && (
+            {isDev && show && false && (
                 <>
                     <div className={cls.devStripContainer}>
                         <Typography variant="h5">{text}</Typography>

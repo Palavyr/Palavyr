@@ -36,9 +36,6 @@ const useStyles = makeStyles((theme) => ({
         width: DRAWER_WIDTH,
         flexShrink: 0,
     },
-    menuBorder: {
-        // border: "3px solid black"
-    },
     helpDrawer: (helpOpen: boolean) => {
         return {
             width: helpOpen ? DRAWER_WIDTH + 300 : 0,
@@ -54,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     },
     menuDrawerPaper: {
         width: DRAWER_WIDTH,
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.light,
     },
     helpDrawerPaper: {
         width: DRAWER_WIDTH + 300,
@@ -190,22 +187,18 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
             <div className={cls.root}>
                 <DashboardHeader open={open} handleDrawerOpen={handleDrawerOpen} handleHelpDrawerOpen={handleHelpDrawerOpen} helpOpen={helpOpen} title={currentViewName} />
                 <Drawer
-                    className={classNames(cls.menuDrawer, cls.menuBorder)}
+                    className={classNames(cls.menuDrawer)}
                     variant="persistent"
                     anchor="left"
                     open={open}
                     classes={{
                         paper: cls.menuDrawerPaper,
-                        root: cls.menuBorder,
-                        modal: cls.menuBorder,
                     }}
                 >
-                    <>
-                        <SideBarHeader handleDrawerClose={handleDrawerClose} />
-                        <UserDetails />
-                        <Divider />
-                        <SideBarMenu areaIdentifiers={sidebarIds} areaNames={sidebarNames} />
-                    </>
+                    <SideBarHeader handleDrawerClose={handleDrawerClose} />
+                    <UserDetails />
+                    <Divider />
+                    <SideBarMenu areaIdentifiers={sidebarIds} areaNames={sidebarNames} />
                 </Drawer>
                 <ContentLoader isLoading={isLoading} dashboardAreasLoading={dashboardAreasLoading} open={open}>
                     {children}

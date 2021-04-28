@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
         height: "100%",
     },
     appbar: {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.secondary.main,
         width: "100%",
         top: theme.mixins.toolbar.minHeight,
         height: "72px",

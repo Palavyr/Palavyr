@@ -9,7 +9,7 @@ interface SideBarHeaderProps {
 
 const useStyles = makeStyles((theme) => ({
     drawerHeader: {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.dark,
         display: "flex",
         alignItems: "center",
         padding: theme.spacing(0, 1),
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
         ...theme.mixins.toolbar,
     },
     icon: {
-        color: theme.palette.getContrastText(theme.palette.primary.main),
+        color: theme.palette.getContrastText(theme.palette.primary.dark),
     },
 }));
 

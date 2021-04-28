@@ -13,11 +13,11 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: "0.7rem",
         border: `1px solid ${theme.palette.info.main}`,
         margin: "1rem",
-        boxShadow: theme.shadows[10],
+        boxShadow: theme.shadows[20],
         borderRadius: "7px",
-        backgroundColor: theme.palette.warning.main,
+        backgroundColor: theme.palette.success.light,
         "&:hover": {
-            backgroundColor: theme.palette.warning.dark,
+            backgroundColor: theme.palette.success.main,
         },
     },
     googleImage: {
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "center",
     },
     toolTipInternal: {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.light,
         maxWidgth: "none",
         marginLeft: "2rem",
     },

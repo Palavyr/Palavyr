@@ -17,7 +17,7 @@ interface DashboardHeaderProps {
 
 const useStyles = makeStyles((theme) => ({
     topbar: {
-        background: theme.palette.primary.main,
+        background: theme.palette.primary.dark,
         position: "fixed",
     },
     appBar: {
