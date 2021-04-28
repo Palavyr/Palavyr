@@ -147,9 +147,6 @@ export const AreaSettings = () => {
                                 Set the name of this area as used in the widget.
                             </Alert>
                         }
-                        title=""
-                        name=""
-                        details="Update the area title used in the widget."
                         placeholder="New Area Name (Widget)"
                         currentValue={settings.areaTitle}
                         onClick={handleAreaDisplayTitleChange}
@@ -169,9 +166,6 @@ export const AreaSettings = () => {
                                 Submit a new email to be used for responses.
                             </Alert>
                         }
-                        title=""
-                        name=""
-                        details=""
                         buttonText="Update and Verify"
                         placeholder="New Email Address"
                         currentValue={settings.emailAddress}
@@ -203,9 +197,6 @@ export const AreaSettings = () => {
                                 Set the name of area used for your reference on this dashboard.
                             </Alert>
                         }
-                        title=""
-                        name=""
-                        details=" Update the name of this area for dashboard."
                         placeholder="New Area Name (Dashboard)"
                         currentValue={settings.areaName}
                         onClick={handleAreaNameChange}
@@ -233,9 +224,6 @@ export const AreaSettings = () => {
                                 CAREFUL! Use this option to delete this area (and all associated data) forever.
                             </Alert>
                         }
-                        title="Permanently Delete Area"
-                        name="Delete Area"
-                        details="Permanently delete this area."
                         onClick={handleAreaDelete}
                         clearVal={false}
                         buttonText="Permanently Delete"

@@ -35,8 +35,8 @@ export const AreasInNeedOfAttention = ({ preCheckErrors }: AreasInNeedOfAttentio
             {preCheckErrors.length > 0 && (
                 <Grid className={cls.uppercell}>
                     <Grid className={cls.tablegrid}>
-                        <Typography gutterBottom align="center" variant="h6">
-                            Areas in need of attention:
+                        <Typography gutterBottom align="center" variant="h4">
+                            Enabled areas in need of attention:
                         </Typography>
                         <Table className={cls.table}>
                             <TableHead>
@@ -45,7 +45,7 @@ export const AreasInNeedOfAttention = ({ preCheckErrors }: AreasInNeedOfAttentio
                                         <Typography variant="h6">Area Name</Typography>
                                     </TableCell>
                                     <TableCell className={cls.cell} width="50%" align="center">
-                                        <Typography variant="h6">Reason (TODO)</Typography>
+                                        <Typography variant="h6">Reasons</Typography>
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
@@ -57,7 +57,9 @@ export const AreasInNeedOfAttention = ({ preCheckErrors }: AreasInNeedOfAttentio
                                                 <Typography>{error.areaName}</Typography>
                                             </TableCell>
                                             <TableCell key={index} className={cls.cell} width="50%" align="center">
-                                                <Typography variant="body1">{error.reasons.join(", ")}</Typography>
+                                                {error.reasons.map((reason: string) => {
+                                                    return <Typography>{reason}</Typography>;
+                                                })}
                                             </TableCell>
                                         </TableRow>
                                     );

@@ -16,8 +16,8 @@ const useStyles = makeStyles((theme) => ({
     },
     container: {
         paddingBottom: "8rem",
-        marginBottom: "8rem"
-    }
+        marginBottom: "8rem",
+    },
 }));
 
 export const Enquires = () => {
@@ -67,8 +67,8 @@ export const Enquires = () => {
                         <EnquiriesHeader />
                     </TableHead>
                     <TableBody>
-                        {sortByPropertyNumeric(numberPropertyGetter, enquiries).map((enq: EnquiryRow, index: number) => {
-                            return <EnquiriesTableRow key={index} index={index} enquiry={enq} setEnquiries={setEnquiries} />;
+                        {sortByPropertyNumeric(numberPropertyGetter, enquiries, true).map((enq: EnquiryRow, index: number) => {
+                            return <EnquiriesTableRow key={index} index={enquiries.length - (index + 1)} enquiry={enq} setEnquiries={setEnquiries} />;
                         })}
                     </TableBody>
                 </Table>

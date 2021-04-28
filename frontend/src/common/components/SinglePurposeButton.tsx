@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
         color: "black",
         background: "white",
         "&:hover": {
-            color: "white"
+            color: "black"
         }
     }
 }))

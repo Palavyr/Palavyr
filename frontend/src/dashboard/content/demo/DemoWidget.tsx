@@ -1,5 +1,6 @@
 import { widgetUrl } from "@api-client/clientUtils";
 import { makeStyles, Paper, Typography } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import { IncompleteArea, PreCheckError } from "@Palavyr-Types";
 import { Align } from "dashboard/layouts/positioning/AlignCenter";
 import React from "react";
@@ -26,9 +27,9 @@ export const PalavyrDemoWidget = ({ preCheckErrors, apiKey, iframeRefreshed }: D
     return (
         <div>
             {preCheckErrors.length > 0 && (
-                <Typography gutterBottom style={{ paddingTop: "2rem" }}>
-                    The Demo will load once you've fully assembled each of your areas!
-                </Typography>
+                <Alert severity="error" style={{ marginTop: "1rem" }}>
+                    <Typography gutterBottom>The Demo will load once you've fully assembled each of your areas!</Typography>
+                </Alert>
             )}
             <Align>
                 <IFrame widgetUrl={widgetUrl} apiKey={apiKey} iframeRefreshed={iframeRefreshed} preCheckErrors={preCheckErrors} />

@@ -50,7 +50,7 @@ export const ChangePhoneNumber = () => {
             <SettingsGridRowText
                 fullWidth
                 inputType="phone"
-                placeholder={"New Phone Number"}
+                placeholder="New Phone Number"
                 onClick={handlePhoneNumberChange}
                 clearVal={true}
                 currentValue={phoneNumber}

@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
     },
     root: {
         // top: "8px",
-    }
+    },
 }));
 
 export const DeleteAccount = () => {
@@ -41,8 +41,6 @@ export const DeleteAccount = () => {
             <AreaConfigurationHeader title="Delete your account" subtitle="Caution - account deletion is permanent." />
             <Divider />
             <SettingsGridRowText
-                name="Delete your account."
-                details="Cancel your subscription and permanently delete your account."
                 onClick={handleAccountDelete}
                 clearVal={true}
                 buttonText="Delete Account"
