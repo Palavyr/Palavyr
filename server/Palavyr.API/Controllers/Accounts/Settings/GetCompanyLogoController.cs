@@ -1,7 +1,6 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Amazon.S3;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -15,16 +14,16 @@ namespace Palavyr.API.Controllers.Accounts.Settings
     public class GetCompanyLogoController : PalavyrBaseController
     {
         private ILogger<GetCompanyLogoController> logger;
-        private IAmazonS3 s3Client;
+        private readonly ILinkCreator linkCreator;
         private readonly IConfiguration configuration;
 
         public GetCompanyLogoController(
             ILogger<GetCompanyLogoController> logger, 
-            IAmazonS3 s3Client,
+            ILinkCreator linkCreator,
             IConfiguration configuration)
         {
             this.logger = logger;
-            this.s3Client = s3Client;
+            this.linkCreator = linkCreator;
             this.configuration = configuration;
         }
         
@@ -41,12 +40,11 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             {
                 return Ok(null);
             }
-            var link = await UriUtils.CreateLogoImageLinkAsURI(
+            var link = await linkCreator.CreateLogoImageLinkAsUri(
                 logger,
                 accountId,
                 Path.GetFileName(logoFile),
                 logoFile,
-                s3Client,
                 previewBucket
             );
             return Ok(link);

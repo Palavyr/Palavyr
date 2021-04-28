@@ -42,7 +42,7 @@ namespace Palavyr.BackupAndRestore.Postgres
 
             // send to S3, and then 
             var fileKey = AmazonPathUtils.FormS3DatabaseBackupKey(timeStamp);
-            await s3Saver.SaveZipToS3(bucket, outputZipPath, fileKey);
+            await s3Saver.SaveObjectToS3(bucket, outputZipPath, fileKey);
 
             // delete the temp directory if all okay
             DiskUtils.DeleteDbBackupFolder();

@@ -8,5 +8,6 @@ namespace Palavyr.Core.Services.AmazonServices
         public const string SnapshotsDir = "snapshots";
         public const string Databases = "Databases";
         public const string UserData = "UserData";
+        public const int PreSignedUrlExpiration = 3; // in hours
     }
 }

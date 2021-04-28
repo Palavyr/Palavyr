@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using Amazon.S3;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -10,35 +9,35 @@ using Palavyr.Core.Common.FileSystemTools.FormPaths;
 using Palavyr.Core.Common.GlobalConstants;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Models.Resources.Responses;
 
 namespace Palavyr.API.Controllers.Attachments
 {
-
-    public class SaveSingleAttachmentController : AttachmentsBase
+    public class SaveSingleAttachmentController : PalavyrBaseController
     {
         private ILogger<SaveSingleAttachmentController> logger;
+        private readonly IFileLinkRetriever fileLinkRetriever;
         private readonly IConfiguration configuration;
-        private readonly IAmazonS3 s3Client;
         private readonly DashContext dashContext;
 
         public SaveSingleAttachmentController(
             IConfiguration configuration,
             ILogger<SaveSingleAttachmentController> logger,
-            IAmazonS3 s3Client, 
+            IFileLinkRetriever fileLinkRetriever,
             DashContext dashContext
-            )
+        )
         {
             this.configuration = configuration;
-            this.s3Client = s3Client;
             this.logger = logger;
+            this.fileLinkRetriever = fileLinkRetriever;
             this.dashContext = dashContext;
         }
 
         [HttpPost("attachments/{areaId}/save-one")]
         [ActionName("Decode")]
-        public async Task<IActionResult> SaveSingle(
-            [FromHeader] string accountId, 
-            [FromRoute] string areaId, 
+        public async Task<FileLink[]> SaveSingle(
+            [FromHeader] string accountId,
+            [FromRoute] string areaId,
             [FromForm(Name = "files")] IFormFile attachmentFile)
         {
             var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
@@ -56,9 +55,9 @@ namespace Palavyr.API.Controllers.Attachments
             await using var fileStream = new FileStream(fileSavePath, FileMode.Create);
             await attachmentFile.CopyToAsync(fileStream);
             fileStream.Close();
-            
-            var fileLinks = await GetFileLinks(accountId, areaId, dashContext, logger, s3Client, previewBucket);
-            return Ok(fileLinks);
+
+            var fileLinks = await fileLinkRetriever.GetFileLinks(accountId, areaId, dashContext, logger, previewBucket);
+            return fileLinks;
         }
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Amazon.S3;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,27 +15,26 @@ using Palavyr.Core.Services.AmazonServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-
     public class ModifyCompanyLogoController : PalavyrBaseController
     {
         private readonly IConfiguration configuration;
         private ILogger<ModifyCompanyLogoController> logger;
         private AccountsContext accountsContext;
-        private readonly IAmazonS3 s3Client;
+        private readonly ILinkCreator linkCreator;
 
         public ModifyCompanyLogoController(
             IConfiguration configuration,
-            IAmazonS3 s3Client,
-            AccountsContext accountsContext, 
+            AccountsContext accountsContext,
+            ILinkCreator linkCreator,
             ILogger<ModifyCompanyLogoController> logger
         )
         {
             this.configuration = configuration;
             this.logger = logger;
             this.accountsContext = accountsContext;
-            this.s3Client = s3Client;
+            this.linkCreator = linkCreator;
         }
-        
+
         [HttpPut("account/settings/logo")]
         [ActionName("Decode")]
         public async Task<IActionResult> Modify(
@@ -65,12 +63,11 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             account.AccountLogoUri = filepath;
             await accountsContext.SaveChangesAsync();
 
-            var link = await UriUtils.CreateLogoImageLinkAsURI(
+            var link = await linkCreator.CreateLogoImageLinkAsUri(
                 logger,
                 accountId,
                 Path.GetFileName(filepath),
                 filepath,
-                s3Client,
                 previewBucket
             );
             return Ok(link);

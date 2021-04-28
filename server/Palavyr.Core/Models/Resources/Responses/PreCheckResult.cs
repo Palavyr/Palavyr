@@ -3,27 +3,32 @@ using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Models.Resources.Responses
 {
+    public class PreCheckError
+    {
+        public string AreaName { get; set; }
+        public List<string> Reasons { get; } = new List<string>();
+    }
+
     public class PreCheckResult
     {
         public bool IsReady { get; set; }
-        public List<Area> IncompleteAreas { get; set; }
+        public List<PreCheckError> PreCheckErrors { get; set; }
         public bool ApiKeyExists { get; set; }
 
-        private PreCheckResult(bool isReady, List<Area> incompleteAreas)
+        private PreCheckResult(bool isReady, List<PreCheckError> errors)
         {
             IsReady = isReady;
-            IncompleteAreas = incompleteAreas;            
+            PreCheckErrors = errors;
         }
 
         private PreCheckResult(bool apiKeyExists)
         {
-
             ApiKeyExists = apiKeyExists;
         }
 
-        public static PreCheckResult CreateConvoResult(List<Area> incompleteAreas, bool isReady)
+        public static PreCheckResult CreateConvoResult(bool isReady, List<PreCheckError> errors)
         {
-            return new PreCheckResult(isReady, incompleteAreas);
+            return new PreCheckResult(isReady, errors);
         }
 
         public static PreCheckResult CreateApiKeyResult(bool apiKeyExists)
@@ -31,5 +36,4 @@ namespace Palavyr.Core.Models.Resources.Responses
             return new PreCheckResult(apiKeyExists);
         }
     }
-    
 }

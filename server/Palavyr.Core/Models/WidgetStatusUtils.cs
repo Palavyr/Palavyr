@@ -43,59 +43,81 @@ namespace Palavyr.Core.Models
 
         private async Task<PreCheckResult> StatusCheck(List<Area> areas, bool widgetState, bool demo, ILogger logger)
         {
-            var incompleteAreas = new List<Area>();
             logger.LogDebug("Attempting RunConversationsPreCheck...");
 
             var isReady = true;
+            var errors = new List<PreCheckError>();
             foreach (var area in areas)
             {
+                var error = new PreCheckError()
+                {
+                    AreaName = area.AreaName
+                };
+
                 var nodeList = area.ConversationNodes.ToArray();
                 var allRequiredNodes = (await requiredNodeCalculator.FindRequiredNodes(area)).ToList();
 
                 logger.LogDebug($"Required Nodes Found. Number of required nodes: {allRequiredNodes.Count}");
 
-                var nodesSet = AllNodesAreSet(nodeList);
-                var branchesTerminate = AllBranchesTerminate(nodeList);
-                var nodesSatisfied = AllRequiredNodesSatisfied(nodeList, allRequiredNodes.ToArray());
-                var nodeOrderCheckResult = nodeOrderChecker.AllDynamicTypesAreOrderedCorrectlyByResolveOrder(nodeList);
+                var nodesSet = AllNodesAreSet(nodeList, error);
+                var branchesTerminate = AllBranchesTerminate(nodeList, error);
+                var nodesSatisfied = AllRequiredNodesSatisfied(nodeList, allRequiredNodes.ToArray(), error);
+                var dynamicNodesAreOrdered = DynamicNodesAreOrdered(nodeList, error);
 
-                var checks = new List<bool>() {nodesSet, branchesTerminate, nodesSatisfied, nodeOrderCheckResult.IsOrdered};
+                var checks = new List<bool>() {nodesSet, branchesTerminate, nodesSatisfied, dynamicNodesAreOrdered};
 
                 isReady = checks.TrueForAll(x => x);
                 logger.LogDebug($"Checked isReady status: {isReady}");
                 if (isReady) continue;
 
-                incompleteAreas.Add(area);
                 logger.LogDebug($"Area not currently ready: {area.AreaName}");
+                errors.Add(error);
             }
 
             logger.LogDebug("Pre-check Complete. Returning result.");
             if (demo)
             {
                 logger.LogDebug("Demo widget activated");
-                return PreCheckResult.CreateConvoResult(incompleteAreas, isReady);
+                return PreCheckResult.CreateConvoResult(isReady, errors);
             }
 
             logger.LogDebug("Live Widget activated");
             if (widgetState)
             {
                 logger.LogDebug("WidgetState is true");
-                return PreCheckResult.CreateConvoResult(incompleteAreas, isReady);
+                return PreCheckResult.CreateConvoResult(isReady, errors);
             }
             else
             {
                 logger.LogDebug("WidgetState is false");
-                return PreCheckResult.CreateConvoResult(incompleteAreas, false);
+                return PreCheckResult.CreateConvoResult( false, errors);
             }
         }
-   
-        private bool AllNodesAreSet(ConversationNode[] nodeList)
+
+        private bool DynamicNodesAreOrdered(ConversationNode[] nodeList, PreCheckError error)
         {
-            var emptyNodeTypes = nodeList.Select(x => string.IsNullOrEmpty(x.NodeType)).ToArray();
-            return emptyNodeTypes.All(x => x == false);
+            var nodeOrderCheckResult = nodeOrderChecker.AllDynamicTypesAreOrderedCorrectlyByResolveOrder(nodeList);
+            if (!nodeOrderCheckResult.IsOrdered)
+            {
+                error.Reasons.Add("Dynamic Table nodes are not present in the correct order.");
+            }
+
+            return nodeOrderCheckResult.IsOrdered;
         }
 
-        private bool AllBranchesTerminate(ConversationNode[] nodeList)
+        private bool AllNodesAreSet(ConversationNode[] nodeList, PreCheckError error)
+        {
+            var emptyNodeTypes = nodeList.Select(x => string.IsNullOrEmpty(x.NodeType)).ToArray();
+            var result = emptyNodeTypes.All(x => x == false);
+            if (!result)
+            {
+                error.Reasons.Add("A nodes are not set.");
+            }
+
+            return result;
+        }
+
+        private bool AllBranchesTerminate(ConversationNode[] nodeList, PreCheckError error)
         {
             var terminals = nodeList
                 .Where(t => t.IsTerminalType)
@@ -105,13 +127,25 @@ namespace Palavyr.Core.Models
                 .Where(a => string.IsNullOrWhiteSpace(a.NodeChildrenString))
                 .OrderBy(x => x.NodeId)
                 .ToList();
-            return terminals.SequenceEqual(nodeChilds);
+            var result = terminals.SequenceEqual(nodeChilds);
+            if (!result)
+            {
+                error.Reasons.Add("All branches do not terminate.");
+            }
+
+            return result;
         }
 
-        private bool AllRequiredNodesSatisfied(ConversationNode[] nodeList, NodeTypeOption[] requiredNodes)
+        private bool AllRequiredNodesSatisfied(ConversationNode[] nodeList, NodeTypeOption[] requiredNodes, PreCheckError error)
         {
             var missingNodes = missingNodeCalculator.FindMissingNodes(nodeList, requiredNodes);
-            return missingNodes.Length == 0;
+            var result = missingNodes.Length == 0;
+            if (!result)
+            {
+                error.Reasons.Add($"A total of {missingNodes.Length} Dynamic Table nodes have not been added.");
+            }
+
+            return result;
         }
     }
 }
