@@ -42,13 +42,14 @@ export type NewConversation = {
 };
 
 export type WidgetPreferences = {
-    title: string;
-    subtitle: string;
+    // title: string;
+    // subtitle: string;
+    landingHeader: string;
+    chatHeader: string;
     placeholder: string;
     selectListColor: string;
     headerColor: string;
     fontFamily: string;
-    header: string;
     listFontColor: string;
     headerFontColor: string;
     optionsHeaderColor: string;

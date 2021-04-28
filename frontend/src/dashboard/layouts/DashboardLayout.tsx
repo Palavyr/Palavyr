@@ -6,25 +6,26 @@ import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep } from "lodash";
-import { AlertType, Areas, AreaTable, PlanType } from "@Palavyr-Types";
+import { AlertType, AreaNameDetails, Areas, AreaTable, PlanType } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { DashboardHeader } from "./header/DashboardHeader";
-import { CssBaseline, IconButton, makeStyles, useTheme } from "@material-ui/core";
+import { IconButton, makeStyles, Typography } from "@material-ui/core";
 import { DRAWER_WIDTH } from "@constants";
-
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
 import { DashboardContext } from "./DashboardContext";
-import { webUrl } from "@api-client/clientUtils";
+import { UserDetails } from "./sidebar/UserDetails";
 
-const fetchSidebarInfo = (areaData: Areas) => {
-    const areaIdentifiers = areaData.map((x: AreaTable) => x.areaIdentifier);
-    const areaNames = areaData.map((x: AreaTable) => x.areaName);
-    return [areaIdentifiers, areaNames];
+const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
+    const areaNameDetails = areaData.map((x: AreaTable) => {
+        return {
+            areaIdentifier: x.areaIdentifier, areaName: x.areaName
+        }
+    });
+    return areaNameDetails;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -37,9 +38,6 @@ const useStyles = makeStyles((theme) => ({
     menuDrawer: {
         width: DRAWER_WIDTH,
         flexShrink: 0,
-    },
-    menuBorder: {
-        // border: "3px solid black"
     },
     helpDrawer: (helpOpen: boolean) => {
         return {
@@ -56,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     },
     menuDrawerPaper: {
         width: DRAWER_WIDTH,
-        backgroundColor: "#FAFCE8"//"rgb(253,236,234)",
+        backgroundColor: theme.palette.primary.light,
     },
     helpDrawerPaper: {
         width: DRAWER_WIDTH + 300,
@@ -74,9 +72,7 @@ interface IDashboardLayout {
 export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) => {
     const { areaIdentifier } = useParams<{ contentType: string; areaIdentifier: string }>();
 
-    const [sidebarNames, setSidebarNames] = useState<Array<string>>([]);
-    const [sidebarIds, setSidebarIds] = useState<Array<string>>([]);
-
+    const [areaNameDetails, setAreaNameDetails] = useState<AreaNameDetails>([]);
     const [, setLoaded] = useState<boolean>(false);
 
     const history = useHistory();
@@ -90,7 +86,6 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [numAreasAllowed, setNumAreasAllowed] = useState<number>(0);
     const [alertState, setAlertState] = useState<boolean>(false);
 
-    const [widgetState, setWidgetState] = useState<boolean | undefined>();
     const [planType, setPlanType] = useState<PlanType>();
     const [currencySymbol, setCurrencySymbol] = useState<string>("");
 
@@ -98,7 +93,6 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [dashboardAreasLoading, setDashboardAreasLoading] = useState<boolean>(false);
 
     const cls = useStyles(helpOpen);
-    const theme = useTheme();
 
     const loadAreas = useCallback(async () => {
         setDashboardAreasLoading(true);
@@ -113,12 +107,8 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         setNumAreasAllowed(numAllowedBySubscription);
 
         const { data: areas } = await client.Area.GetAreas();
-        const [areaIdentifiers, areaNames] = fetchSidebarInfo(areas);
-        setSidebarNames(areaNames);
-        setSidebarIds(areaIdentifiers);
-
-        const { data: currentWidgetState } = await client.Configuration.WidgetState.GetWidgetState();
-        setWidgetState(currentWidgetState);
+        const areaNameDetails = fetchSidebarInfo(areas);
+        setAreaNameDetails(areaNameDetails);
 
         const { data: locale } = await client.Settings.Account.GetLocale();
         setCurrencySymbol(locale.localeCurrencySymbol);
@@ -142,23 +132,12 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     }, [areaIdentifier, loadAreas]);
 
     const setNewArea = (newArea: AreaTable) => {
-        var newNames = cloneDeep(sidebarNames);
+        var newNames = cloneDeep(areaNameDetails);
 
-        newNames.push(newArea.areaName);
-        setSidebarNames(newNames);
-
-        var newIds = cloneDeep(sidebarIds);
-        newIds.push(newArea.areaIdentifier);
-
-        setSidebarIds(newIds);
+        newNames.push({areaName: newArea.areaName, areaIdentifier: newArea.areaIdentifier});
+        setAreaNameDetails(newNames);
 
         history.push(`/dashboard/editor/email/${newArea.areaIdentifier}?tab=0`);
-    };
-
-    const updateWidgetIsActive = async () => {
-        const client = new ApiClient();
-        const { data: updatedWidgetState } = await client.Configuration.WidgetState.SetWidgetState(!widgetState);
-        setWidgetState(updatedWidgetState);
     };
 
     const handleDrawerClose: () => void = () => {
@@ -184,19 +163,11 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         setModalState(false);
     };
     const checkAreaCount = () => {
-        if (numAreasAllowed && sidebarIds.length >= numAreasAllowed) {
+        if (numAreasAllowed && areaNameDetails.length >= numAreasAllowed) {
             setAlertState(true);
         } else {
             openModal();
         }
-    };
-
-    const createCustomerPortalSession = async () => {
-        const client = new ApiClient();
-        var returnUrl = `${webUrl}/dashboard/`;
-        const { data: customerId } = await client.Purchase.Customer.GetCustomerId();
-        const { data: portalUrl } = await client.Purchase.Customer.GetCustomerPortal(customerId, returnUrl);
-        window.location.href = portalUrl;
     };
 
     const alertDetails: AlertType = {
@@ -209,25 +180,20 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     return (
         <DashboardContext.Provider value={{ setIsLoading: setIsLoading, currencySymbol: currencySymbol, subscription: planType, numAreasAllowed, checkAreaCount, areaName: currentViewName, setViewName: setViewName }}>
             <div className={cls.root}>
-                <CssBaseline />
                 <DashboardHeader open={open} handleDrawerOpen={handleDrawerOpen} handleHelpDrawerOpen={handleHelpDrawerOpen} helpOpen={helpOpen} title={currentViewName} />
-
                 <Drawer
-                    className={classNames(cls.menuDrawer, cls.menuBorder)}
+                    className={classNames(cls.menuDrawer)}
                     variant="persistent"
                     anchor="left"
                     open={open}
                     classes={{
                         paper: cls.menuDrawerPaper,
-                        root: cls.menuBorder,
-                        modal: cls.menuBorder,
                     }}
                 >
-                    <>
-                        <SideBarHeader handleDrawerClose={handleDrawerClose} />
-                        <Divider />
-                        <SideBarMenu areaIdentifiers={sidebarIds} areaNames={sidebarNames} widgetIsActive={widgetState} updateWidgetIsActive={updateWidgetIsActive} createCustomerPortalSession={createCustomerPortalSession} />
-                    </>
+                    <SideBarHeader handleDrawerClose={handleDrawerClose} />
+                    <UserDetails />
+                    <Divider />
+                    <SideBarMenu areaNameDetails={areaNameDetails} />
                 </Drawer>
                 <ContentLoader isLoading={isLoading} dashboardAreasLoading={dashboardAreasLoading} open={open}>
                     {children}
@@ -243,14 +209,14 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                 >
                     <div className={cls.helpDrawerHeader}>
                         <IconButton onClick={handleHelpDrawerClose}>
-                            Close
-                            {theme.direction === "rtl" ? <ChevronLeftIcon style={{ color: "white" }} /> : <ChevronRightIcon style={{ color: "white" }} />}
+                            <Typography>Close</Typography>
+                            <ChevronRightIcon style={{ color: "black" }} />
                         </IconButton>
                     </div>
                     <Divider />
                     {helpComponent}
                 </Drawer>
-                {numAreasAllowed && (sidebarIds.length < numAreasAllowed ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
+                {numAreasAllowed && (areaNameDetails.length < numAreasAllowed ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
                 <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
             </div>
         </DashboardContext.Provider>

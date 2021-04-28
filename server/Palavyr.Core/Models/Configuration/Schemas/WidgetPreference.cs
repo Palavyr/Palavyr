@@ -6,16 +6,14 @@ namespace Palavyr.Core.Models.Configuration.Schemas
     {
         [Key] public int? Id { get; set; }
 
-        public string Title { get; set; }
-
-        public string Subtitle { get; set; }
-
         public string Placeholder { get; set; }
 
         public string AccountId { get; set; }
 
-        public string Header { get; set; }
+        public string LandingHeader { get; set; }
 
+        public string ChatHeader { get; set; }
+        
         public string SelectListColor { get; set; }
 
         public string ListFontColor { get; set; }
@@ -42,7 +40,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
 
         private WidgetPreference(
             string headerFontColor, string listFontColor, string selectListColor,
-            string headerColor, string fontFamily, string header, string title, string subtitle, string placeholder,
+            string headerColor, string fontFamily, string landingHeader, string chatHeader, string placeholder,
             string accountId, bool widgetState
         )
         {
@@ -51,9 +49,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             SelectListColor = selectListColor;
             HeaderColor = headerColor;
             FontFamily = fontFamily;
-            Header = header;
-            Title = title;
-            Subtitle = subtitle;
+            LandingHeader = landingHeader;
+            ChatHeader = chatHeader;
             Placeholder = placeholder;
             AccountId = accountId;
             WidgetState = widgetState;
@@ -61,12 +58,12 @@ namespace Palavyr.Core.Models.Configuration.Schemas
 
         public static WidgetPreference CreateNew(
             string headerFontColor, string listFontColor, string selectListColor,
-            string headerColor, string fontFamily, string header, string title, string subtitle, string placeholder, string accountId, bool widgetState
+            string headerColor, string fontFamily, string landingHeader, string chatHeader, string placeholder, string accountId, bool widgetState
         )
         {
             return new WidgetPreference(
                 headerFontColor, listFontColor, selectListColor, headerColor, fontFamily,
-                header, title, subtitle, placeholder, accountId, widgetState);
+                landingHeader, chatHeader, placeholder, accountId, widgetState);
         }
 
         public static WidgetPreference CreateDefault(string accountId)
@@ -76,13 +73,12 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             var selectListColor = "##F5F1F1";
             var headerColor = "#DBE3E3";
             var fontFamily = "Architects Daughter";
-            var header = "Welcome!";
-            var title = "Tobies Galore";
-            var subtitle = "Experts in Cavalier King Charles Spaniels";
+            var landingHeader = "<h2>Welcome!</h2>";
+            var chatHeader = "<p><h2>Tobies Galore<h2></p><p>Experts in Cavalier King Charles Spaniels</p>";
             var placeholder = "Write here...";
 
             return new WidgetPreference(
-                headerFontColor, listFontColor, selectListColor, headerColor, fontFamily, header, title, subtitle,
+                headerFontColor, listFontColor, selectListColor, headerColor, fontFamily, landingHeader, chatHeader,
                 placeholder, accountId, false);
         }
 
@@ -90,7 +86,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         {
             return new WidgetPreference(
                 null, null, null, null, null,
-                null, null, null, null, accountId, false);
+                null, null, null, accountId, false);
         }
     }
 }

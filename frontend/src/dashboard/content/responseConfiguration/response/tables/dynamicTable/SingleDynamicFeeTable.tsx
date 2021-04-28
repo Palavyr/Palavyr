@@ -39,14 +39,14 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: ".3rem",
     },
     section: {
-        border: `3px dashed ${theme.palette.common.black}`,
+        border: `1px solid ${theme.palette.common.black}`,
         margin: "1.2rem",
         borderRadius: "5px",
-        background: "#C7ECEE",
+        background: theme.palette.secondary.light,
     },
     table: {
         border: "none",
-        background: "#C7ECEE",
+        background: theme.palette.secondary.light,
     },
 }));
 

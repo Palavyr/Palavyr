@@ -31,8 +31,9 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: "5px",
     },
     row: (props: styleProp) => ({
-        background: props.index % 2 == 0 ? "#F5F5F5" : `${theme.palette.background.paper}`,
+        background: theme.palette.secondary.light,//props.index % 2 == 0 ? theme.palette.secondary.main : `${theme.palette.secondary.light}`,
         borderRadius: "5px",
+        // color: theme.palette.common.white
     }),
     maxValInput: (props: styleProp) => {
         if (props.rangeState) {
@@ -59,20 +60,21 @@ export interface IStaticRow {
 }
 
 export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modifier, minFee, maxFee, rangeState, perState, description }: IStaticRow) => {
-    const classes = useStyles({ index, rangeState });
+    const cls = useStyles({ index, rangeState });
     const cellAlignment = "center";
     const { currencySymbol } = React.useContext(DashboardContext);
 
     return (
-        <TableRow>
+        <TableRow className={cls.row}>
             <TableCell align={cellAlignment}>
-                <Button size="small" className={classes.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.delRow(staticTableMetas, tableOrder, rowOrder)}>
+                <Button size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.delRow(staticTableMetas, tableOrder, rowOrder)}>
                     Delete
                 </Button>
             </TableCell>
             <TableCell align={cellAlignment}>
                 <TextField
                     fullWidth
+                    rows={2}
                     value={description}
                     label="Description"
                     color="primary"
@@ -100,7 +102,7 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
             </TableCell>
             <TableCell align={cellAlignment}>
                 <CurrencyTextField
-                    className={classes.maxValInput}
+                    className={cls.maxValInput}
                     label="Amount"
                     variant="standard"
                     disabled={!rangeState}
@@ -144,8 +146,8 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
             </TableCell>
 
             <TableCell align={cellAlignment}>
-                {!modifier.isRowFirstPosition(rowOrder) && <ArrowDropUpIcon className={classes.largeicon} onClick={() => modifier.shiftRowUp(staticTableMetas, tableOrder, rowOrder)} />}
-                {!modifier.isRowLastPosition(staticTableMetas, tableOrder, rowOrder) && <ArrowDropDownIcon className={classes.largeicon} onClick={() => modifier.shiftRowDown(staticTableMetas, tableOrder, rowOrder)} />}
+                {!modifier.isRowFirstPosition(rowOrder) && <ArrowDropUpIcon className={cls.largeicon} onClick={() => modifier.shiftRowUp(staticTableMetas, tableOrder, rowOrder)} />}
+                {!modifier.isRowLastPosition(staticTableMetas, tableOrder, rowOrder) && <ArrowDropDownIcon className={cls.largeicon} onClick={() => modifier.shiftRowDown(staticTableMetas, tableOrder, rowOrder)} />}
             </TableCell>
         </TableRow>
     );

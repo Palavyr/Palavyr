@@ -42,6 +42,16 @@ namespace Palavyr.API.Controllers.Accounts
                 await accountRepository.CommitChangesAsync();
             }
 
+            if (string.IsNullOrWhiteSpace(preferences.ChatHeader))
+            {
+                preferences.ChatHeader = "";
+            }
+
+            if (string.IsNullOrWhiteSpace(preferences.LandingHeader))
+            {
+                preferences.LandingHeader = "";
+            }
+            
             if (string.IsNullOrWhiteSpace(preferences.ChatBubbleColor))
                 preferences.ChatBubbleColor = "#E1E1E1";
 

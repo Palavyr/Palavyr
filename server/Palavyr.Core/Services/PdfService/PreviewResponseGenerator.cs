@@ -21,7 +21,6 @@ namespace Palavyr.Core.Services.PdfService
 {
     public class PreviewResponseGenerator : IPreviewResponseGenerator
     {
-        private readonly IAmazonS3 s3Client;
         private readonly IConfiguration configuration;
         private readonly ILogger<PreviewResponseGenerator> logger;
         private readonly IHtmlToPdfClient htmlToPdfClient;
@@ -29,10 +28,10 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IStaticTableCompiler staticTableCompiler;
         private readonly IConfigurationRepository configurationRepository;
         private readonly IAccountRepository accountRepository;
+        private readonly ILinkCreator linkCreator;
         private readonly IGenericDynamicTableRepository<SelectOneFlat> genericDynamicTableRepository;
 
         public PreviewResponseGenerator(
-            IAmazonS3 s3Client,
             IConfiguration configuration,
             ILogger<PreviewResponseGenerator> logger,
             IHtmlToPdfClient htmlToPdfClient,
@@ -40,10 +39,10 @@ namespace Palavyr.Core.Services.PdfService
             IStaticTableCompiler staticTableCompiler,
             IConfigurationRepository configurationRepository,
             IAccountRepository accountRepository,
+            ILinkCreator linkCreator,
             IGenericDynamicTableRepository<SelectOneFlat> genericDynamicTableRepository
         )
         {
-            this.s3Client = s3Client;
             this.configuration = configuration;
             this.logger = logger;
             this.htmlToPdfClient = htmlToPdfClient;
@@ -51,6 +50,7 @@ namespace Palavyr.Core.Services.PdfService
             this.staticTableCompiler = staticTableCompiler;
             this.configurationRepository = configurationRepository;
             this.accountRepository = accountRepository;
+            this.linkCreator = linkCreator;
             this.genericDynamicTableRepository = genericDynamicTableRepository;
         }
 
@@ -103,9 +103,9 @@ namespace Palavyr.Core.Services.PdfService
             string link;
             try
             {
-                link = await UriUtils.CreatePreSignedPreviewUrlLink(
+                link = await linkCreator.CreatePreSignedPreviewUrlLink(
                     logger, accountId, safeFileNameStem,
-                    safeFileNamePath, s3Client, previewBucket);
+                    safeFileNamePath, previewBucket);
                 logger.LogDebug("Successfully created a pre-signed link to the pdf!");
             }
             catch (Exception ex)

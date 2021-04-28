@@ -21,7 +21,7 @@ namespace Palavyr.Core.Models
             List<StaticTablesMeta> staticTablesMetas)
         {
             var allMissingNodeTypes = new List<string>();
-
+            
             if (requiredDynamicNodeTypes.Length > 0)
             {
                 var rawMissingDynamicNodeTypes = FindMissingNodes(conversationNodes.ToArray(), requiredDynamicNodeTypes);

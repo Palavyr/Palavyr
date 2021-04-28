@@ -7,21 +7,18 @@ import "./style.scss";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { ConvoHeader } from "../ConvoHeader/ConvoHeader";
 
-type Props = {
-    title: string;
-    subtitle: string;
+type ConversationProps = {
     className: string;
-    senderPlaceHolder: string;
     profileAvatar?: string;
     titleAvatar?: string;
     showTimeStamp: boolean;
     customPreferences: WidgetPreferences;
 };
 
-export const Conversation = ({ title, subtitle, className, profileAvatar, titleAvatar, showTimeStamp, customPreferences }: Props) => {
+export const Conversation = ({ className, profileAvatar, titleAvatar, showTimeStamp, customPreferences }: ConversationProps) => {
     return (
         <div className={cn("rcw-conversation-container", className)} aria-live="polite">
-            <ConvoHeader title={title} subtitle={subtitle} titleAvatar={titleAvatar} headerColor={customPreferences.headerColor} headerFontColor={customPreferences.headerFontColor} />
+            <ConvoHeader chatHeader={customPreferences.chatHeader} titleAvatar={titleAvatar} preferences={customPreferences} />
             <Messages profileAvatar={profileAvatar} showTimeStamp={showTimeStamp} customPreferences={customPreferences} />
         </div>
     );

@@ -35,7 +35,7 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
             var result = await widgetStatusUtils.ExecuteWidgetStatusCheck(accountId, areas, widgetPrefs, true, logger);
             logger.LogDebug($"Pre-check run successful.");
             logger.LogDebug($"Ready result:{result.IsReady}");
-            logger.LogDebug($"Incomplete areas: {result.IncompleteAreas.ToList()}");
+            logger.LogDebug($"Incomplete areas: {result.PreCheckErrors.Select(x => x.AreaName).ToList()}");
             return result;
         }
     }

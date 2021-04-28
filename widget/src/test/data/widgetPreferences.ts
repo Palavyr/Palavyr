@@ -1,11 +1,10 @@
 export const widgetPreferences = {
-    title: "Test Title",
-    subtitle: "Test Subtitle",
     placeholder: "Not Used",
     selectListColor: "#A6F0F0",
     headerColor: "#8CCBE5",
     fontFamily: "Architects Daughter",
-    header: "This is the current header",
+    landingHeader: "This is the current header",
+    chatHeader: "This is a chat Header",
     listFontColor: "#0C0C0C",
     headerFontColor: "#0C0C0C",
     optionsHeaderColor: "#0C0C0C",

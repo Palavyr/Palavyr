@@ -10,15 +10,13 @@ import { TwoItemRow } from "./components/TwoItemRow/TwoItemRow";
 import { PricingSection } from "./components/pricing/PricingSection";
 import { rowOne, rowTwo, rowThree } from "./components/landingContent/twoItemRowContent";
 
-
-import AOS from 'aos';
+import AOS from "aos";
 import { Sliver } from "./components/sliver/Sliver";
 import { CHANGE_PASSWORD, REGISTER, TERMS_OF_SERVICE } from "@constants";
 import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStrip";
 AOS.init({
-    duration: 1000
-})
-
+    duration: 1000,
+});
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -34,10 +32,9 @@ const useStyles = makeStyles((theme) => ({
         border: "0px",
     },
     body: {
-        background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)"
-    }
+        background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)",
+    },
 }));
-
 
 export const LandingPage = () => {
     const classes = useStyles();
@@ -47,17 +44,14 @@ export const LandingPage = () => {
     const [dialogOpen, setDialogOpen] = useState<DialogTypes>(null);
     const [isCookieRulesDialogOpen, setIsCookieRulesDialogOpen] = useState<boolean>(false);
 
-
     const openLoginDialog = useCallback(() => {
         setDialogOpen("login");
         setIsMobileDrawerOpen(false);
     }, [setDialogOpen, setIsMobileDrawerOpen]);
 
-
     const closeDialog = useCallback(() => {
         setDialogOpen(null);
     }, [setDialogOpen]);
-
 
     const openRegisterDialog = useCallback(() => {
         setDialogOpen(REGISTER);
@@ -90,23 +84,9 @@ export const LandingPage = () => {
 
     return (
         <div className={classes.wrapper}>
-            {!isCookieRulesDialogOpen && (
-                <CookieConsent
-                    handleCookieRulesDialogOpen={handleCookieRulesDialogOpen}
-                />
-            )}
-            <LandingPageDialogSelector
-                openLoginDialog={openLoginDialog}
-                dialogOpen={dialogOpen}
-                onClose={closeDialog}
-                openTermsDialog={openTermsDialog}
-                openRegisterDialog={openRegisterDialog}
-                openChangePasswordDialog={openChangePasswordDialog}
-            />
-            <CookieRules
-                open={isCookieRulesDialogOpen}
-                onClose={handleCookieRulesDialogClose}
-            />
+            {!isCookieRulesDialogOpen && <CookieConsent handleCookieRulesDialogOpen={handleCookieRulesDialogOpen} />}
+            <LandingPageDialogSelector openLoginDialog={openLoginDialog} dialogOpen={dialogOpen} onClose={closeDialog} openTermsDialog={openTermsDialog} openRegisterDialog={openRegisterDialog} openChangePasswordDialog={openChangePasswordDialog} />
+            <CookieRules open={isCookieRulesDialogOpen} onClose={handleCookieRulesDialogClose} />
             <DevStagingStrip />
             <Header
                 openRegisterDialog={openRegisterDialog}
@@ -124,18 +104,8 @@ export const LandingPage = () => {
                 <TwoItemRow dataList={rowTwo} />
                 <TwoItemRow dataList={rowThree} />
             </div>
-
-            {/* <WhatsThePoint /> */}
             <Sliver />
-            {/* <div className={classes.sliverDiv}>
-                <Typography className={classes.sliver}>
-                    Questions? Get in touch: info.palavyr@gmail.com
-                </Typography>
-            </div> */}
-
             <Footer />
         </div>
-
     );
 };
-

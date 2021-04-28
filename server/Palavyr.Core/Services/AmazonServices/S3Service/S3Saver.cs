@@ -8,7 +8,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
 {
     public interface IS3Saver
     {
-        Task<bool> SaveZipToS3(string bucket, string localFilePath, string fileKey);
+        Task<bool> SaveObjectToS3(string bucket, string localFilePath, string fileKey);
     }
 
     public class S3Saver : IS3Saver
@@ -22,7 +22,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
             this.logger = logger;
         }
 
-        public async Task<bool> SaveZipToS3(string bucket, string localFilePath, string fileKey)
+        public async Task<bool> SaveObjectToS3(string bucket, string localFilePath, string fileKey)
         {
             
             var putRequest = new PutObjectRequest()

@@ -66,6 +66,7 @@ namespace Palavyr.Core.Data.Migrations.AccountsMigrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("Locale")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Password")

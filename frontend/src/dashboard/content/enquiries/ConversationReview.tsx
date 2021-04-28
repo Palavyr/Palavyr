@@ -4,7 +4,7 @@ import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@material-ui/core";
 import { CompletedConversation, ConversationUpdate } from "@Palavyr-Types";
 import classNames from "classnames";
-import { AlignCenter } from "dashboard/layouts/positioning/AlignCenter";
+import { Align } from "dashboard/layouts/positioning/AlignCenter";
 import React from "react";
 import { useCallback } from "react";
 import { useState, useEffect } from "react";
@@ -67,7 +67,7 @@ export const ConversationReview = () => {
             <Typography className={cls.title} align="center" variant="h3">
                 Conversation Review
             </Typography>
-            <AlignCenter>
+            <Align>
                 <TableContainer style={{ width: "95%" }} component={Paper}>
                     <Table>
                         <TableHead>
@@ -92,7 +92,7 @@ export const ConversationReview = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </AlignCenter>
+            </Align>
         </>
     );
 };

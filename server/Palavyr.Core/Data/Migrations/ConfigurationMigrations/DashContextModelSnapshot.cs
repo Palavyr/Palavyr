@@ -579,16 +579,19 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                     b.Property<string>("ChatFontColor")
                         .HasColumnType("text");
 
-                    b.Property<string>("FontFamily")
+                    b.Property<string>("ChatHeader")
                         .HasColumnType("text");
 
-                    b.Property<string>("Header")
+                    b.Property<string>("FontFamily")
                         .HasColumnType("text");
 
                     b.Property<string>("HeaderColor")
                         .HasColumnType("text");
 
                     b.Property<string>("HeaderFontColor")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LandingHeader")
                         .HasColumnType("text");
 
                     b.Property<string>("ListFontColor")
@@ -604,12 +607,6 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                         .HasColumnType("text");
 
                     b.Property<string>("SelectListColor")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Subtitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.Property<bool>("WidgetState")

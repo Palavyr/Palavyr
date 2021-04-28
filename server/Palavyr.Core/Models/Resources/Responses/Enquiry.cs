@@ -4,7 +4,7 @@
     {
         public int? Id { get; set; }
         public string ConversationId { get; set; }
-        public FileLink ResponsePdfLink { get; set; }
+        public FileLinkReference LinkReference { get; set; }
         public string TimeStamp { get; set; }
         public string AccountId { get; set; }
         public string AreaName { get; set; }

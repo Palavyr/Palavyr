@@ -6,7 +6,6 @@ using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {
-
     public class ModifyWidgetPreferencesController : PalavyrBaseController
     {
         private readonly IConfigurationRepository configurationRepository;
@@ -19,9 +18,11 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
         }
 
         [HttpPut("widget-config/preferences")]
-        public async Task SaveWidgetPreferences(
-            [FromHeader] string accountId,
-            [FromBody] WidgetPreference preferences
+        public async Task<WidgetPreference> SaveWidgetPreferences(
+            [FromHeader]
+            string accountId,
+            [FromBody]
+            WidgetPreference preferences
         )
         {
             var prefs = await configurationRepository.GetWidgetPreferences(accountId);
@@ -41,19 +42,14 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
                 prefs.FontFamily = preferences.FontFamily;
             }
 
-            if (!string.IsNullOrWhiteSpace(preferences.Header))
+            if (!string.IsNullOrWhiteSpace(preferences.LandingHeader))
             {
-                prefs.Header = preferences.Header;
+                prefs.LandingHeader = preferences.LandingHeader;
             }
 
-            if (!string.IsNullOrWhiteSpace(preferences.Title))
+            if (!string.IsNullOrWhiteSpace(preferences.ChatHeader))
             {
-                prefs.Title = preferences.Title;
-            }
-
-            if (!string.IsNullOrWhiteSpace(preferences.Subtitle))
-            {
-                prefs.Subtitle = preferences.Subtitle;
+                prefs.ChatHeader = preferences.ChatHeader;
             }
 
             if (!string.IsNullOrWhiteSpace(preferences.Placeholder))
@@ -92,6 +88,8 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
             }
 
             await configurationRepository.CommitChangesAsync();
+
+            return await configurationRepository.GetWidgetPreferences(accountId);
         }
     }
 }

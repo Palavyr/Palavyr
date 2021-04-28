@@ -36,7 +36,7 @@ namespace Palavyr.BackupAndRestore.UserData
             ZipFile.CreateFromDirectory(UserDataDirectory, localZipFilePath);
 
             var fileKey = AmazonPathUtils.FormS3UserDataBackupKey(timeStamp);
-            await s3Saver.SaveZipToS3(bucket, localZipFilePath, fileKey);
+            await s3Saver.SaveObjectToS3(bucket, localZipFilePath, fileKey);
 
             DiskUtils.DeleteUserDataBackupFolder();
             return fileKey;

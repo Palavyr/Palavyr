@@ -3,6 +3,7 @@ import { AppBar, Toolbar, IconButton, Typography, makeStyles } from "@material-u
 import MenuIcon from "@material-ui/icons/Menu";
 import classNames from "classnames";
 import HelpIcon from "@material-ui/icons/Help";
+import { Align } from "../positioning/AlignCenter";
 
 const drawerWidth: number = 240;
 
@@ -16,8 +17,7 @@ interface DashboardHeaderProps {
 
 const useStyles = makeStyles((theme) => ({
     topbar: {
-        background: "rgb(1,96,162)",
-        // background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
+        background: theme.palette.primary.dark,
         position: "fixed",
     },
     appBar: {
@@ -27,8 +27,8 @@ const useStyles = makeStyles((theme) => ({
         }),
     },
     toolbar: {
-        color: "#FAFCE8",
         width: "100%",
+        height: "100%",
         display: "flex",
         justifyContent: "space-between",
     },
@@ -56,10 +56,13 @@ const useStyles = makeStyles((theme) => ({
         alignSelf: "right",
         textAlign: "right",
     },
+    name: {
+        color: theme.palette.secondary.light
+    }
 }));
 
 export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
-    const classes = useStyles();
+    const cls = useStyles();
     const [sized, setSized] = useState<boolean>(false);
     const handle = () => setSized(!sized);
 
@@ -69,25 +72,28 @@ export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawe
     }, [sized]);
 
     return (
-        <AppBar position="absolute" className={classNames(classes.topbar, classes.appBar, { [classes.appBarShift]: open })}>
-            <Toolbar className={classes.toolbar}>
-                <div>
-                    <div style={{ float: "left" }}>
-                        <IconButton color="inherit" aria-label="open drawer" onClick={() => handleDrawerOpen()} edge="start" className={classNames(classes.menuButton, open && classes.hide)}>
-                            <MenuIcon style={{ color: "white" }} />
-                        </IconButton>
-                    </div>
-                    <div style={{ float: "right", paddingTop: "5px", verticalAlign: "middle" }}>
-                        <Typography variant="h4" style={{ color: "#FAFCE8" }}>
-                            {title}
+        <AppBar position="absolute" className={classNames(cls.topbar, cls.appBar, { [cls.appBarShift]: open })}>
+            <Toolbar className={cls.toolbar}>
+                <Align float="left">
+                    <IconButton color="inherit" aria-label="open drawer" onClick={handleDrawerOpen} edge="start" className={classNames(cls.menuButton, open && cls.hide)}>
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography className={cls.name} variant="h4">
+                        Palavyr.com
+                    </Typography>
+                </Align>
+                <Align>
+                    {title && (
+                        <Typography align="center" variant="h4">
+                            Current Area: {title}
                         </Typography>
-                    </div>
-                </div>
-                <div className={classes.helpIcon}>
-                    <IconButton color="inherit" aria-label="open help drawer" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(classes.helpMenuButton, helpOpen && classes.hide)}>
+                    )}
+                </Align>
+                <Align float="right">
+                    <IconButton color="inherit" aria-label="open help drawer" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(cls.helpIcon, cls.helpMenuButton, helpOpen && cls.hide)}>
                         <HelpIcon />
                     </IconButton>
-                </div>
+                </Align>
             </Toolbar>
         </AppBar>
     );

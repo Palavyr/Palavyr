@@ -30,7 +30,7 @@ export const AddNewAreaModal = ({ open, handleClose, setNewArea }: IAddNewAreaMo
 
     const onAdd = async () => {
         if (areaName !== "") {
-            const {data: newArea} = await client.Area.createArea(areaName);
+            const { data: newArea } = await client.Area.createArea(areaName);
             setNewArea(newArea);
         }
         handleClose();

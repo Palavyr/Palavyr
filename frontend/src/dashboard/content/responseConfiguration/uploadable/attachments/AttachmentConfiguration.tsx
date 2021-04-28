@@ -8,17 +8,9 @@ import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
-
 const buttonText = "Add PDF Attachment";
 const summary = "Upload a new PDF attachment to send with responses.";
-const uploadDetails = () => {
-    return (
-        <div className="alert alert-info">
-            Use this dialog to upload attachments that will be sent standard with the response for this area.
-        </div>
-
-    )
-}
+const uploadDetails = <div className="alert alert-info">Use this dialog to upload attachments that will be sent standard with the response for this area.</div>;
 
 export const AttachmentConfiguration = () => {
     var client = new ApiClient();
@@ -34,76 +26,63 @@ export const AttachmentConfiguration = () => {
     const [modalState, setModalState] = useState(false);
     const toggleModal = () => {
         setModalState(!modalState);
-    }
+    };
 
-    const [accordState, setAccordState] = useState(false);
-    const toggleAccord = () => {
-        setAccordState(!accordState)
-    }
     const removeAttachment = async (fileId: string) => {
-        var {data: filelinks} = await client.Configuration.Attachments.removeAttachment(areaIdentifier, fileId)
+        var { data: filelinks } = await client.Configuration.Attachments.removeAttachment(areaIdentifier, fileId);
         setAttachmentList(filelinks);
-    }
+    };
 
     const loadAttachments = useCallback(async () => {
-        var {data: fileLinks} = await client.Configuration.Attachments.fetchAttachmentLinks(areaIdentifier);
+        var { data: fileLinks } = await client.Configuration.Attachments.fetchAttachmentLinks(areaIdentifier);
         setAttachmentList(fileLinks);
         setLoaded(true);
         setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [areaIdentifier])
+    }, [areaIdentifier]);
 
     useEffect(() => {
         setIsLoading(true);
 
-        loadAttachments()
-        if (attachmentList.length === 0) {
-            setAccordState(true)
-        }
+        loadAttachments();
         return () => {
             setLoaded(false);
-            setCurrentPreview(null!)
-        }
-    }, [areaIdentifier, attachmentList.length, loadAttachments])
-
-
+            setCurrentPreview(null!);
+        };
+    }, [areaIdentifier, attachmentList.length, loadAttachments]);
 
     const handleFileSave = async (files: File[]) => {
         var formData = new FormData();
 
         if (files.length === 1) {
-            formData.append('files', files[0])
-            const {data: fileLinks} = await client.Configuration.Attachments.saveSingleAttachment(areaIdentifier, formData);
+            formData.append("files", files[0]);
+            const { data: fileLinks } = await client.Configuration.Attachments.saveSingleAttachment(areaIdentifier, formData);
             setAttachmentList(fileLinks);
-
         } else if (files.length > 1) {
             files.forEach((file: File) => {
-                formData.append('files', file)
-            })
-            const {data: fileLinks} = await client.Configuration.Attachments.saveManyAttachments(areaIdentifier, formData);
+                formData.append("files", file);
+            });
+            const { data: fileLinks } = await client.Configuration.Attachments.saveManyAttachments(areaIdentifier, formData);
             setAttachmentList(fileLinks);
-
         } else {
             const fileLinks = [];
             setAttachmentList(fileLinks);
-
         }
         setCurrentPreview(null);
-    }
+    };
 
     return (
         <>
             <AreaConfigurationHeader title="Attachments" subtitle="Upload PDF and word documents you wish to send to your potential clients." />
             <Upload
+                initialState={attachmentList.length === 0}
                 modalState={modalState}
                 toggleModal={toggleModal}
-                accordState={accordState}
-                toggleAccord={toggleAccord}
                 handleFileSave={handleFileSave}
                 buttonText={buttonText}
                 summary={summary}
                 uploadDetails={uploadDetails}
-                acceptedFiles={['application/pdf']}
+                acceptedFiles={["application/pdf"]}
             />
             <AttachmentList fileList={attachmentList} setCurrentPreview={setCurrentPreview} removeAttachment={removeAttachment} />
             {currentPreview ? <AttachmentPreview preview={currentPreview} /> : null}

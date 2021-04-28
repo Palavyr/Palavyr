@@ -1,4 +1,5 @@
 using Autofac;
+using Palavyr.API.Controllers.Attachments;
 using Palavyr.API.controllers.Conversation;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.API.Controllers.Testing;
@@ -11,6 +12,7 @@ using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AccountServices;
+using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Services.ConversationServices;
@@ -74,6 +76,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<ThresholdEvaluator>().As<IThresholdEvaluator>();
             builder.RegisterType<NodeOrderChecker>().AsSelf();
             builder.RegisterType<DynamicResponseComponentExtractor>().AsSelf();
+            builder.RegisterType<LinkCreator>().As<ILinkCreator>();
+            builder.RegisterType<FileLinkRetriever>().As<IFileLinkRetriever>();
             
             builder.RegisterType<NodeGetter>().AsSelf();
             

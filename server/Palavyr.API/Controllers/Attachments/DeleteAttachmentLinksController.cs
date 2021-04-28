@@ -1,6 +1,4 @@
-using System.Linq;
 using System.Threading.Tasks;
-using Amazon.S3;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,31 +7,32 @@ using Palavyr.Core.Common.FileSystemTools.FormPaths;
 using Palavyr.Core.Common.GlobalConstants;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Models.Resources.Responses;
 
 namespace Palavyr.API.Controllers.Attachments
 {
-    public class DeleteAttachmentLinksController : AttachmentsBase
+    public class DeleteAttachmentLinksController : PalavyrBaseController
     {
         private readonly IConfiguration configuration;
         private DashContext dashContext;
         private ILogger<DeleteAttachmentLinksController> logger;
-        private IAmazonS3 s3Client;
+        private readonly IFileLinkRetriever fileLinkRetriever;
 
         public DeleteAttachmentLinksController(
             IConfiguration configuration,
             DashContext dashContext,
             ILogger<DeleteAttachmentLinksController> logger,
-            IAmazonS3 s3Client
+            IFileLinkRetriever fileLinkRetriever
         )
         {
             this.configuration = configuration;
             this.dashContext = dashContext;
             this.logger = logger;
-            this.s3Client = s3Client;
+            this.fileLinkRetriever = fileLinkRetriever;
         }
 
         [HttpDelete("attachments/{areaId}/file-link")]
-        public async Task<IActionResult> Delete([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] Text text)
+        public async Task<FileLink[]> Delete([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] Text text)
         {
             var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
 
@@ -51,8 +50,8 @@ namespace Palavyr.API.Controllers.Attachments
                 await dashContext.SaveChangesAsync();
             }
 
-            var fileLinks = await GetFileLinks(accountId, areaId, dashContext, logger, s3Client, previewBucket);
-            return Ok(fileLinks.ToArray());
+            var fileLinks = await fileLinkRetriever.GetFileLinks(accountId, areaId, dashContext, logger, previewBucket);
+            return fileLinks;
         }
     }
 }

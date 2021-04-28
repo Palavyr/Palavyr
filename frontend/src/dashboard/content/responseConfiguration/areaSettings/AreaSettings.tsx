@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { ApiClient } from "@api-client/Client";
 import { useHistory, useParams } from "react-router-dom";
-import { Divider, Grid, makeStyles } from "@material-ui/core";
+import { Grid, makeStyles, Typography, useTheme } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { AlertDetails, Settings } from "@Palavyr-Types";
 import { Alert, AlertTitle } from "@material-ui/lab";
@@ -11,12 +11,10 @@ import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHea
 import { OsTypeToggle } from "./enableAreas/OsTypeToggle";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
-const useStyles = makeStyles(() => ({
-    titleText: {
-        fontWeight: "bold",
-    },
+const useStyles = makeStyles((theme) => ({
     alert: {
-        border: "2px solid black",
+        borderTop: `2px solid ${theme.palette.common.black}`,
+        borderBottom: `2px solid ${theme.palette.common.black}`,
     },
     alertTitle: {
         display: "flex",
@@ -122,15 +120,19 @@ export const AreaSettings = () => {
         setIsEnabledState(updatedisEnabled);
     };
 
+    const theme = useTheme();
+
     return loaded ? (
         <>
             <AreaConfigurationHeader title="Area Settings" subtitle={`Modify settings that are specific to this area (${settings.areaName}).`} />
             {isEnabledState !== null && <OsTypeToggle controlledState={isEnabledState} onChange={onAreaEnabledToggleChange} enabledLabel="Area Enabled" disabledLabel="Area Disabled" />}
 
-            <Grid container spacing={3}>
+            <Grid container spacing={3} justify="center">
                 <Grid item xs={12}>
                     <Alert className={classNames(classes.alert, classes.alertTitle)} variant="filled" severity="info">
-                        <AlertTitle className={classes.titleText}>Important Settings</AlertTitle>
+                        <AlertTitle>
+                            <Typography variant="h5">Important Settings</Typography>
+                        </AlertTitle>
                         These options affect the appearance and behavior of the widget.
                     </Alert>
                 </Grid>
@@ -139,13 +141,12 @@ export const AreaSettings = () => {
                         fullWidth
                         alertNode={
                             <Alert className={classes.alert} severity={settings.areaTitle === "Change this in the area Settings." || settings.areaTitle === "" ? "error" : "success"}>
-                                <AlertTitle className={classes.titleText}>Update Widget Display Name</AlertTitle>
+                                <AlertTitle>
+                                    <Typography variant="h5">Update Widget Display Name</Typography>
+                                </AlertTitle>
                                 Set the name of this area as used in the widget.
                             </Alert>
                         }
-                        title=""
-                        name=""
-                        details="Update the area title used in the widget."
                         placeholder="New Area Name (Widget)"
                         currentValue={settings.areaTitle}
                         onClick={handleAreaDisplayTitleChange}
@@ -159,13 +160,12 @@ export const AreaSettings = () => {
                         inputType="email"
                         alertNode={
                             <Alert className={classes.alert} severity={emailSeverity()}>
-                                <AlertTitle className={classes.titleText}>{settings.isVerified ? "Email Verified" : "Verify the email used to send responses for this area"}</AlertTitle>
+                                <AlertTitle>
+                                    <Typography variant="h5">{settings.isVerified ? "Email Verified" : "Verify the email used to send responses for this area"}</Typography>
+                                </AlertTitle>
                                 Submit a new email to be used for responses.
                             </Alert>
                         }
-                        title=""
-                        name=""
-                        details=""
                         buttonText="Update and Verify"
                         placeholder="New Email Address"
                         currentValue={settings.emailAddress}
@@ -174,13 +174,14 @@ export const AreaSettings = () => {
                     />
                 </Grid>
             </Grid>
-            <Divider />
             <br></br>
 
-            <Grid container spacing={3}>
+            <Grid container spacing={3} justify="center">
                 <Grid item xs={12}>
-                    <Alert className={classNames(classes.alert, classes.alertTitle)} variant="filled" severity="warning">
-                        <AlertTitle className={classes.titleText}>Dashboard Specific Options</AlertTitle>
+                    <Alert className={classNames(classes.alert, classes.alertTitle)} style={{backgroundColor: theme.palette.warning.dark}} variant="filled" severity="warning">
+                        <AlertTitle>
+                            <Typography variant="h5">Dashboard Specific Options</Typography>
+                        </AlertTitle>
                         These options only affect what you see in the dashboard.
                     </Alert>
                 </Grid>
@@ -190,13 +191,12 @@ export const AreaSettings = () => {
                         fullWidth
                         alertNode={
                             <Alert className={classes.alert} severity={settings.areaName ? "success" : "warning"}>
-                                <AlertTitle className={classes.titleText}>Update Dashboard Display Name</AlertTitle>
+                                <AlertTitle>
+                                    <Typography variant="h5">Update Dashboard Display Name</Typography>
+                                </AlertTitle>
                                 Set the name of area used for your reference on this dashboard.
                             </Alert>
                         }
-                        title=""
-                        name=""
-                        details=" Update the name of this area for dashboard."
                         placeholder="New Area Name (Dashboard)"
                         currentValue={settings.areaName}
                         onClick={handleAreaNameChange}
@@ -204,12 +204,13 @@ export const AreaSettings = () => {
                     />
                 </Grid>
             </Grid>
-            <Divider />
             <br></br>
-            <Grid container spacing={3}>
+            <Grid container spacing={3} justify="center">
                 <Grid item xs={12}>
                     <Alert className={classNames(classes.alert, classes.alertTitle)} severity="error" variant="filled">
-                        <AlertTitle className={classes.titleText}>DANGER ZONE</AlertTitle>
+                        <AlertTitle>
+                            <Typography variant="h5">DANGER ZONE</Typography>
+                        </AlertTitle>
                         WAIT! These options are permanent.
                     </Alert>
                 </Grid>
@@ -217,13 +218,12 @@ export const AreaSettings = () => {
                     <SettingsGridRowText
                         alertNode={
                             <Alert className={classes.alert} severity="error">
-                                <AlertTitle className={classes.titleText}>Permanently DELETE</AlertTitle>
+                                <AlertTitle>
+                                    <Typography variant="h5">Permanently DELETE</Typography>
+                                </AlertTitle>
                                 CAREFUL! Use this option to delete this area (and all associated data) forever.
                             </Alert>
                         }
-                        title="Permanently Delete Area"
-                        name="Delete Area"
-                        details="Permanently delete this area."
                         onClick={handleAreaDelete}
                         clearVal={false}
                         buttonText="Permanently Delete"

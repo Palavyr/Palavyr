@@ -164,8 +164,7 @@ export class ApiClient {
         GetConversation: async (areaIdentifier: string): Promise<AxiosResponse<Conversation>> => this.client.get(`configure-conversations/${areaIdentifier}`),
         GetConversationNode: async (nodeId: string): Promise<AxiosResponse<ConvoNode>> => this.client.get(`configure-conversations/nodes/${nodeId}`),
         GetNodeOptionsList: async (areaIdentifier: string): Promise<AxiosResponse<NodeTypeOptions>> => this.client.get(`configure-conversations/${areaIdentifier}/node-type-options`),
-        GetErrors: async (areaIdentifier: string, nodeList: Conversation): Promise<AxiosResponse<TreeErrors>> =>
-            this.client.post(`configure-conversations/${areaIdentifier}/tree-errors`, { Transactions: nodeList }),
+        GetErrors: async (areaIdentifier: string, nodeList: Conversation): Promise<AxiosResponse<TreeErrors>> => this.client.post(`configure-conversations/${areaIdentifier}/tree-errors`, { Transactions: nodeList }),
 
         CheckIfIsMultiOptionType: async (nodeType: string): Promise<AxiosResponse<boolean>> => this.client.get(`configure-conversations/check-multi-option/${nodeType}`),
         CheckIfIsTerminalType: async (nodeType: string): Promise<AxiosResponse<boolean>> => this.client.get(`configure-conversations/check-terminal/${nodeType}`),
@@ -231,5 +230,9 @@ export class ApiClient {
         getEnquiries: async (): Promise<AxiosResponse<Enquiries>> => this.client.get(`enquiries`),
         updateEnquiry: async (conversationId: string): Promise<AxiosResponse<Enquiries>> => this.client.put(`enquiries/update/${conversationId}`),
         getConversation: async (conversationId: string): Promise<AxiosResponse<CompletedConversation>> => this.client.get(`enquiries/review/${conversationId}`),
+        getSignedUrl: async (fileId: string): Promise<AxiosResponse<string>> => this.client.get(`enquiries/link/${fileId}`),
     };
 }
+
+// Why doesn't this work?
+// export type Response<T> = Promise<AxiosResponse<T>>;

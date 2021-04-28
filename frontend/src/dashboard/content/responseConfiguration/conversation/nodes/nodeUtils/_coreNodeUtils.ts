@@ -150,9 +150,6 @@ export const _findLeftmostParentNode = (node: ConvoNode, nodeList: Conversation,
 };
 
 export const _getLeftMostParentNode = (node: ConvoNode, nodeList: Conversation, criteriaCallback: (node: ConvoNode) => boolean) => {
-    if (node.nodeId === "ad58be93-c29c-46d6-9afc-229af4152af0") {
-        console.log("BRAK");
-    }
     const parentNodes = _getAllParentNodes(node, nodeList);
     const leftmostParent = _findLeftmostParentNode(node, nodeList, parentNodes, criteriaCallback);
     return leftmostParent;

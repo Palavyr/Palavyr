@@ -5,11 +5,11 @@ import React from "react";
 import { StaticTableMetas } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./staticTableModifier";
 import { ApiClient } from "@api-client/Client";
-import { Accordion, AccordionSummary, Divider, Button, AccordionActions, makeStyles, Typography } from "@material-ui/core";
+import { Button, makeStyles, Typography } from "@material-ui/core";
 import { StaticFeeTable } from "./StaticFeeTable";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AddBoxIcon from "@material-ui/icons/AddBox";
+import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 
 interface IFeeConfiguration {
     title: string;
@@ -22,56 +22,55 @@ interface IFeeConfiguration {
 }
 
 const useStyles = makeStyles((theme) => ({
-    title: {
-        fontWeight: "bold",
+    buttonContainer: {
+        width: "100%",
+        display: "flex",
+        justifyContent: "flex-end",
     },
     tablebutton: {
         margin: theme.spacing(1),
         marginBottom: "1rem",
     },
-    header: {
-        background: "linear-gradient(354deg, rgb(1,161,214,1) 10%, rgba(0,212,255,1) 70%)",
-    },
 }));
 
 export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tableCanceler, modifier, areaIdentifier, children }: IFeeConfiguration) => {
     var client = new ApiClient();
-    const classes = useStyles();
+    const cls = useStyles();
+
+    const actions = (
+        <SaveOrCancel
+            onSave={async () => {
+                const result = await tableSaver(staticTables);
+                if (result) {
+                    return true;
+                }
+                return false;
+            }}
+            onCancel={async () => {
+                await tableCanceler();
+                return true;
+            }}
+        />
+    );
 
     return (
-        <Accordion>
-            <AccordionSummary className={classes.header} expandIcon={<ExpandMoreIcon style={{ color: "white" }} />} aria-controls="panel-content" id="panel-header">
-                <Typography className={classes.title}>{title}</Typography>
-            </AccordionSummary>
+        <PalavyrAccordian title={title} initialState={true} actions={actions}>
             {children}
-            <span className={"m-1"}>
-                {staticTables
-                    .sort((a, b) => a.tableOrder - b.tableOrder)
-                    .map((table, index) => (
-                        <StaticFeeTable staticTableMetas={staticTables} staticTableMeta={table} tableModifier={modifier} key={index} />
-                    ))}
-            </span>
-
-            <Button startIcon={<AddBoxIcon />} variant="contained" size="large" color="primary" className={classes.tablebutton} onClick={() => modifier.addTable(staticTables, client, areaIdentifier)}>
-                Add Table
-            </Button>
-
-            <Divider />
-            <AccordionActions>
-                <SaveOrCancel
-                    onSave={async () => {
-                        const result = await tableSaver(staticTables);
-                        if (result) {
-                            return true;
-                        }
-                        return false;
-                    }}
-                    onCancel={async () => {
-                        await tableCanceler();
-                        return true;
-                    }}
-                />
-            </AccordionActions>
-        </Accordion>
+            {staticTables.length === 0 && (
+                <Typography align="center" color="secondary" style={{ padding: "0.8rem" }} variant="h5">
+                    No static fee tables configured for this area.
+                </Typography>
+            )}
+            {staticTables
+                .sort((a, b) => a.tableOrder - b.tableOrder)
+                .map((table, index) => (
+                    <StaticFeeTable staticTableMetas={staticTables} staticTableMeta={table} tableModifier={modifier} key={index} />
+                ))}
+            <div className={cls.buttonContainer}>
+                <Button startIcon={<AddBoxIcon />} variant="contained" size="large" color="primary" className={cls.tablebutton} onClick={() => modifier.addTable(staticTables, client, areaIdentifier)}>
+                    Add Table
+                </Button>
+            </div>
+        </PalavyrAccordian>
     );
 };

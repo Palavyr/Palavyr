@@ -1,6 +1,6 @@
 import { makeStyles, Table, TableBody, TableContainer, TableHead, Typography } from "@material-ui/core";
 import { TodosAsBoolean } from "@Palavyr-Types";
-import { AlignCenter } from "dashboard/layouts/positioning/AlignCenter";
+import { Align } from "dashboard/layouts/positioning/AlignCenter";
 import React from "react";
 import { DoCompanyLogo } from "./DoCompanyLogo";
 import { DoCompanyName } from "./DoCompanyName";
@@ -26,7 +26,7 @@ export const OnboardingTodo = ({ todos }: OnboardingTodoProps) => {
     const cls = useStyles();
 
     return (
-        <AlignCenter>
+        <Align>
             <TableContainer className={cls.container}>
                 <Table>
                     <TableHead>
@@ -42,6 +42,6 @@ export const OnboardingTodo = ({ todos }: OnboardingTodoProps) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </AlignCenter>
+        </Align>
     );
 };
