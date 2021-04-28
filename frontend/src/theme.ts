@@ -7,6 +7,7 @@ const palette = {
     },
     secondary: {
         main: "#507FE0",
+        light: "#A9D7EE"
     },
     error: {
         main: "#E6070C",
@@ -25,7 +26,6 @@ const palette = {
 
 export const green = "#168F20";
 export const red = "#8F4807";
-
 // Colors
 // #25274D
 // #464866

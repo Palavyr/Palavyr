@@ -3,6 +3,7 @@ import { Typography, Card, makeStyles, Divider } from "@material-ui/core";
 import { ApiClient } from "@api-client/Client";
 import { serverUrl, widgetUrl } from "@api-client/clientUtils";
 import { Align } from "dashboard/layouts/positioning/AlignCenter";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
 const useStyles = makeStyles((theme) => ({
     outerCard: {
@@ -29,12 +30,14 @@ export const GetWidget = () => {
 
     return (
         <>
+            <AreaConfigurationHeader title="Get the Widget" subtitle="Use the following code snippets to integrate the widget into your side. We are currently working on a widget api, so stay tuned!" />
             <Card className={classes.outerCard}>
-                <Typography gutterBottom={true} variant="h4">
+                <Typography gutterBottom variant="h5">
                     Add the configured widget to your website
                 </Typography>
-
-                <Typography paragraph>To add the widget to your website, simply paste the following code into your website's html and apply custom styling:</Typography>
+                <Typography gutterBottom paragraph>
+                    To add the widget to your website, simply paste the following code into your website's html and apply custom styling:
+                </Typography>
                 {apikey !== "" && (
                     <Typography component="pre" paragraph>
                         <strong>
@@ -48,7 +51,7 @@ export const GetWidget = () => {
                 </Typography>
             </Card>
             <Card className={classes.outerCard}>
-                <Typography gutterBottom={true} variant="h4">
+                <Typography gutterBottom variant="h5">
                     Check if your widget is enabled before loading
                 </Typography>
                 <Typography paragraph>

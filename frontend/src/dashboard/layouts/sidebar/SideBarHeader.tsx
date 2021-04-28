@@ -1,7 +1,7 @@
 import React from "react";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, Typography } from "@material-ui/core";
 
 interface SideBarHeaderProps {
     handleDrawerClose: () => void;

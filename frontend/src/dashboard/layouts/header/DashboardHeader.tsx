@@ -56,6 +56,9 @@ const useStyles = makeStyles((theme) => ({
         alignSelf: "right",
         textAlign: "right",
     },
+    name: {
+        color: theme.palette.secondary.light
+    }
 }));
 
 export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
@@ -71,19 +74,26 @@ export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawe
     return (
         <AppBar position="absolute" className={classNames(cls.topbar, cls.appBar, { [cls.appBarShift]: open })}>
             <Toolbar className={cls.toolbar}>
-                <div>
-                    <Align float="left">
-                        <IconButton color="inherit" aria-label="open drawer" onClick={handleDrawerOpen} edge="start" className={classNames(cls.menuButton, open && cls.hide)}>
-                            <MenuIcon />
-                        </IconButton>
-                    </Align>
-                    <Align float="right">{title && <Typography variant="h4">Current Area: {title}</Typography>}</Align>
-                </div>
-                <div className={cls.helpIcon}>
-                    <IconButton color="inherit" aria-label="open help drawer" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(cls.helpMenuButton, helpOpen && cls.hide)}>
+                <Align float="left">
+                    <IconButton color="inherit" aria-label="open drawer" onClick={handleDrawerOpen} edge="start" className={classNames(cls.menuButton, open && cls.hide)}>
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography className={cls.name} variant="h4">
+                        Palavyr.com
+                    </Typography>
+                </Align>
+                <Align>
+                    {title && (
+                        <Typography align="center" variant="h4">
+                            Current Area: {title}
+                        </Typography>
+                    )}
+                </Align>
+                <Align float="right">
+                    <IconButton color="inherit" aria-label="open help drawer" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(cls.helpIcon, cls.helpMenuButton, helpOpen && cls.hide)}>
                         <HelpIcon />
                     </IconButton>
-                </div>
+                </Align>
             </Toolbar>
         </AppBar>
     );

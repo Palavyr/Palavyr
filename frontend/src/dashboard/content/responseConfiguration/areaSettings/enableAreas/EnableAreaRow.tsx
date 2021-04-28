@@ -1,20 +1,21 @@
 import { ApiClient } from "@api-client/Client";
-import { makeStyles, TableCell, TableRow } from "@material-ui/core";
+import { makeStyles, TableCell, TableRow, Typography } from "@material-ui/core";
 import { AreasEnabled } from "@Palavyr-Types";
 import React, { useEffect, useState } from "react";
 import { OsTypeToggle } from "./OsTypeToggle";
 
 const useStyles = makeStyles((theme) => ({
     center: {
-        textAlign: "center",
+        textAlign: "left",
     },
 }));
 
-interface IToggleWrapper {
+export interface EnableAreaRowProps {
     areasEnabled: AreasEnabled;
+    rowNumber: number;
 }
 
-export const EnableAreaWrapper = ({ areasEnabled }: IToggleWrapper) => {
+export const EnableAreaRow = ({ areasEnabled, rowNumber }: EnableAreaRowProps) => {
     const client = new ApiClient();
     const cls = useStyles();
 
@@ -31,7 +32,12 @@ export const EnableAreaWrapper = ({ areasEnabled }: IToggleWrapper) => {
 
     return (
         <TableRow className={cls.center}>
-            <TableCell className={cls.center}>{areasEnabled.areaName}</TableCell>
+            <TableCell className={cls.center}>
+                <Typography variant="body2">{rowNumber}</Typography>
+            </TableCell>
+            <TableCell className={cls.center}>
+                <Typography variant="h6">{areasEnabled.areaName}</Typography>
+            </TableCell>
             <TableCell className={cls.center}>
                 <OsTypeToggle controlledState={isEnabled === true} onChange={onToggleChange} enabledLabel="Area Enabled" disabledLabel="Area Disabled" />
             </TableCell>

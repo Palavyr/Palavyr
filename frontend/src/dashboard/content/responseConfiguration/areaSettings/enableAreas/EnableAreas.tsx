@@ -1,21 +1,20 @@
 import { ApiClient } from "@api-client/Client";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
-import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@material-ui/core";
+import { sortByPropertyAlphabetical } from "@common/utils/sorting";
+import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@material-ui/core";
 import { AreasEnabled, AreaTable } from "@Palavyr-Types";
 import classNames from "classnames";
 import React, { useEffect, useState } from "react";
 import { useCallback } from "react";
-import { EnableAreaWrapper } from "./EnableAreaWrapper";
+import theme from "theme";
+import { EnableAreaRow } from "./EnableAreaRow";
 
 const useStyles = makeStyles(() => ({
     paper: {
-        backgroundColor: "#C7ECEE",
+        backgroundColor: theme.palette.secondary.light,
         padding: "2rem",
         margin: "2rem",
         width: "40%",
-    },
-    titleText: {
-        fontWeight: "bold",
     },
     container: {
         display: "flex",
@@ -54,13 +53,18 @@ export const EnableAreas = () => {
                 <Table component={Paper} className={cls.paper}>
                     <TableHead>
                         <TableRow>
-                            <TableCell className={classNames(cls.center, cls.titleText)}>Area Name</TableCell>
-                            <TableCell className={classNames(cls.center, cls.titleText)}>Status</TableCell>
+                            <TableCell></TableCell>
+                            <TableCell className={classNames(cls.center)}>
+                                <Typography variant="h4">Area Name</Typography>
+                            </TableCell>
+                            <TableCell className={classNames(cls.center)}>
+                                <Typography variant="h4">Status</Typography>
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {areaIds.map((x: AreasEnabled, index: number) => {
-                            return <EnableAreaWrapper key={index} areasEnabled={x} />;
+                        {sortByPropertyAlphabetical((x: AreasEnabled) => x.areaName, areaIds).map((x: AreasEnabled, index: number) => {
+                            return <EnableAreaRow key={index} rowNumber={index + 1} areasEnabled={x} />;
                         })}
                     </TableBody>
                 </Table>

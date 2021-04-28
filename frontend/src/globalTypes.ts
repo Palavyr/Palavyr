@@ -764,3 +764,10 @@ export type TreeErrors = {
     outOfOrder: string[];
     anyErrors: boolean;
 };
+
+export type AreaNameDetail = {
+    areaName: string;
+    areaIdentifier: string;
+};
+
+export type AreaNameDetails = AreaNameDetail[];

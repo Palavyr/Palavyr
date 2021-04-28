@@ -3,7 +3,6 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import ChatIcon from "@material-ui/icons/Chat";
 
-
 const createNavLink = (areaIdentifier: string) => {
     return `/dashboard/editor/email/${areaIdentifier}?tab=${0}`;
 };
@@ -13,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.secondary.light,
     },
     areaNameText: {
-        color: "#FEFED5",
+        color: theme.palette.common.white,
         textDecoration: "none",
     },
     sidebarText: {
@@ -21,7 +20,16 @@ const useStyles = makeStyles((theme) => ({
         fontSize: "14px",
     },
 }));
-export const AreaLinkItem = ({ areaIdentifier, isActive, index, numAreasAllowed, currentPage, areaNames }) => {
+
+export interface AreaLinkItemProps {
+    areaIdentifier: string;
+    isActive: boolean;
+    index: number;
+    numAreasAllowed: number;
+    currentPage: string;
+    areaName: string;
+}
+export const AreaLinkItem = ({ areaIdentifier, isActive, index, numAreasAllowed, currentPage, areaName }: AreaLinkItemProps) => {
     const cls = useStyles();
 
     return (
@@ -30,7 +38,7 @@ export const AreaLinkItem = ({ areaIdentifier, isActive, index, numAreasAllowed,
                 <ListItemIcon className={cls.icon}>
                     <ChatIcon />
                 </ListItemIcon>
-                <ListItemText primary={areaNames[index]} primaryTypographyProps={{ className: cls.sidebarText }} />
+                <ListItemText primary={areaName} primaryTypographyProps={{ className: cls.sidebarText }} />
             </ListItem>
         </NavLink>
     );

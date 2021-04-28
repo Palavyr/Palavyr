@@ -11,10 +11,10 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 const useStyles = makeStyles((theme) => ({
     staticFees: {
         margin: "1.2rem",
-        // background: "#E8E8E8",
-        background: "#C7ECEE",
+        background: theme.palette.secondary.light,//"#C7ECEE",
+        color: theme.palette.getContrastText(theme.palette.secondary.light),
         padding: "1.3rem",
-        border: `3px dashed ${theme.palette.common.black}`,
+        border: `1px solid ${theme.palette.common.black}`,
         borderRadius: "7px",
     },
     tableDescription: {

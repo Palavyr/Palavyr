@@ -7,10 +7,10 @@ import { ReviewSection } from "./sections/ReviewSection";
 import { BillingSection } from "./sections/BillingSection";
 import { WidgetStateSwitch } from "./WidgetStateSwitch";
 import { OtherSection } from "./sections/OtherSection";
+import { AreaNameDetails } from "@Palavyr-Types";
 
 export interface ISideBarMenu {
-    areaIdentifiers: Array<string>;
-    areaNames: Array<string>;
+    areaNameDetails: AreaNameDetails;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SideBarMenu = ({ areaIdentifiers, areaNames }: ISideBarMenu) => {
+export const SideBarMenu = ({ areaNameDetails }: ISideBarMenu) => {
     const history = useHistory();
     const { isActive } = React.useContext(AuthContext);
 
@@ -31,7 +31,7 @@ export const SideBarMenu = ({ areaIdentifiers, areaNames }: ISideBarMenu) => {
     return (
         <div className={cls.sidebarlist}>
             <WidgetStateSwitch isActive={isActive} />
-            <ConfigureSection currentPage={currentPage} areaNames={areaNames} isActive={isActive} areaIdentifiers={areaIdentifiers} />
+            <ConfigureSection currentPage={currentPage} areaNameDetails={areaNameDetails} isActive={isActive} />
             <Divider />
             <ReviewSection isActive={isActive} />
             <Divider />

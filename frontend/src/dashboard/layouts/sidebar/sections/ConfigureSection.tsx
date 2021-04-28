@@ -7,6 +7,8 @@ import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { useHistory } from "react-router-dom";
 import { AreaLinkItem } from "./sectionComponents/AreaLinkItem";
+import { sortByPropertyAlphabetical } from "@common/utils/sorting";
+import { AreaNameDetail, AreaNameDetails } from "@Palavyr-Types";
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -16,12 +18,11 @@ const useStyles = makeStyles((theme) => ({
 
 export interface ConfigureSectionProps {
     isActive: boolean;
-    areaIdentifiers: string[];
     currentPage: string;
-    areaNames: string[];
+    areaNameDetails: AreaNameDetails;
 }
 
-export const ConfigureSection = ({ isActive, areaIdentifiers, currentPage, areaNames }: ConfigureSectionProps) => {
+export const ConfigureSection = ({ isActive, currentPage, areaNameDetails }: ConfigureSectionProps) => {
     const [configureOpen, setConfigureOpen] = useState<boolean>(true);
     const { checkAreaCount, setViewName, numAreasAllowed } = React.useContext(DashboardContext);
 
@@ -37,8 +38,8 @@ export const ConfigureSection = ({ isActive, areaIdentifiers, currentPage, areaN
         <List>
             <SidebarSectionHeader title="Configure" onClick={() => setConfigureOpen(!configureOpen)} currentState={configureOpen} />
             <Collapse in={configureOpen} timeout="auto" unmountOnExit>
-                {areaIdentifiers.map((areaIdentifier, index) => (
-                    <AreaLinkItem areaIdentifier={areaIdentifier} isActive={isActive} index={index} numAreasAllowed={numAreasAllowed} currentPage={currentPage} areaNames={areaNames} />
+                {sortByPropertyAlphabetical((x: AreaNameDetail) => x.areaName, areaNameDetails).map((x: AreaNameDetail, index: number) => (
+                    <AreaLinkItem areaIdentifier={x.areaIdentifier} isActive={isActive} index={index} numAreasAllowed={numAreasAllowed} currentPage={currentPage} areaName={x.areaName} />
                 ))}
                 <Divider />
                 <SidebarLinkItem text="Add New Area" isActive={isActive} onClick={checkAreaCount} IconComponent={<AddCircleOutlineIcon className={cls.icon} />} />

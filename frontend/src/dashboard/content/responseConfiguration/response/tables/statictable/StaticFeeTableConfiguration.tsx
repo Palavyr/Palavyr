@@ -5,10 +5,9 @@ import React from "react";
 import { StaticTableMetas } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./staticTableModifier";
 import { ApiClient } from "@api-client/Client";
-import { Accordion, AccordionSummary, Divider, Button, AccordionActions, makeStyles, Typography } from "@material-ui/core";
+import { Button, makeStyles, Typography } from "@material-ui/core";
 import { StaticFeeTable } from "./StaticFeeTable";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 

@@ -6,10 +6,10 @@ import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep } from "lodash";
-import { AlertType, Areas, AreaTable, PlanType } from "@Palavyr-Types";
+import { AlertType, AreaNameDetails, Areas, AreaTable, PlanType } from "@Palavyr-Types";
 import { ApiClient } from "@api-client/Client";
 import { DashboardHeader } from "./header/DashboardHeader";
-import { CssBaseline, IconButton, makeStyles, Typography } from "@material-ui/core";
+import { IconButton, makeStyles, Typography } from "@material-ui/core";
 import { DRAWER_WIDTH } from "@constants";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Divider from "@material-ui/core/Divider";
@@ -19,10 +19,13 @@ import classNames from "classnames";
 import { DashboardContext } from "./DashboardContext";
 import { UserDetails } from "./sidebar/UserDetails";
 
-const fetchSidebarInfo = (areaData: Areas) => {
-    const areaIdentifiers = areaData.map((x: AreaTable) => x.areaIdentifier);
-    const areaNames = areaData.map((x: AreaTable) => x.areaName);
-    return [areaIdentifiers, areaNames];
+const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
+    const areaNameDetails = areaData.map((x: AreaTable) => {
+        return {
+            areaIdentifier: x.areaIdentifier, areaName: x.areaName
+        }
+    });
+    return areaNameDetails;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -69,9 +72,7 @@ interface IDashboardLayout {
 export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) => {
     const { areaIdentifier } = useParams<{ contentType: string; areaIdentifier: string }>();
 
-    const [sidebarNames, setSidebarNames] = useState<Array<string>>([]);
-    const [sidebarIds, setSidebarIds] = useState<Array<string>>([]);
-
+    const [areaNameDetails, setAreaNameDetails] = useState<AreaNameDetails>([]);
     const [, setLoaded] = useState<boolean>(false);
 
     const history = useHistory();
@@ -106,9 +107,8 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         setNumAreasAllowed(numAllowedBySubscription);
 
         const { data: areas } = await client.Area.GetAreas();
-        const [areaIdentifiers, areaNames] = fetchSidebarInfo(areas);
-        setSidebarNames(areaNames);
-        setSidebarIds(areaIdentifiers);
+        const areaNameDetails = fetchSidebarInfo(areas);
+        setAreaNameDetails(areaNameDetails);
 
         const { data: locale } = await client.Settings.Account.GetLocale();
         setCurrencySymbol(locale.localeCurrencySymbol);
@@ -132,15 +132,10 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     }, [areaIdentifier, loadAreas]);
 
     const setNewArea = (newArea: AreaTable) => {
-        var newNames = cloneDeep(sidebarNames);
+        var newNames = cloneDeep(areaNameDetails);
 
-        newNames.push(newArea.areaName);
-        setSidebarNames(newNames);
-
-        var newIds = cloneDeep(sidebarIds);
-        newIds.push(newArea.areaIdentifier);
-
-        setSidebarIds(newIds);
+        newNames.push({areaName: newArea.areaName, areaIdentifier: newArea.areaIdentifier});
+        setAreaNameDetails(newNames);
 
         history.push(`/dashboard/editor/email/${newArea.areaIdentifier}?tab=0`);
     };
@@ -168,7 +163,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         setModalState(false);
     };
     const checkAreaCount = () => {
-        if (numAreasAllowed && sidebarIds.length >= numAreasAllowed) {
+        if (numAreasAllowed && areaNameDetails.length >= numAreasAllowed) {
             setAlertState(true);
         } else {
             openModal();
@@ -198,7 +193,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                     <SideBarHeader handleDrawerClose={handleDrawerClose} />
                     <UserDetails />
                     <Divider />
-                    <SideBarMenu areaIdentifiers={sidebarIds} areaNames={sidebarNames} />
+                    <SideBarMenu areaNameDetails={areaNameDetails} />
                 </Drawer>
                 <ContentLoader isLoading={isLoading} dashboardAreasLoading={dashboardAreasLoading} open={open}>
                     {children}
@@ -221,7 +216,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                     <Divider />
                     {helpComponent}
                 </Drawer>
-                {numAreasAllowed && (sidebarIds.length < numAreasAllowed ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
+                {numAreasAllowed && (areaNameDetails.length < numAreasAllowed ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
                 <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
             </div>
         </DashboardContext.Provider>

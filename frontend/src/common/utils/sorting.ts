@@ -25,7 +25,6 @@ export const sortByPropertyNumeric = (numberPropertyGetter: (x: object) => numbe
     });
 };
 
-
 function compareValues<T> (valA: T, valB: T) {
 
     if (valA < valB) {

@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
         margin: "0rem"
     },
     paper: {
-        backgroundColor: "#C7ECEE",
+        backgroundColor: theme.palette.secondary.light,//"#C7ECEE",
         padding: "2rem",
         margin: "1rem",
         width: "100%"
