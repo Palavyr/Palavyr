@@ -78,7 +78,7 @@ export const Footer = withWidth()(({ width }: IHaveWidth) => {
                     </Box>
                 </Grid>
                 <Grid item xs={6} md={6} lg={4}>
-                    <Typography variant="h3">Palavy r</Typography>
+                    <Typography variant="h3">Palavyr</Typography>
                     <Typography variant="h6" paragraph>
                         pa·​lav·​yr | \ pə-ˈla-vər
                     </Typography>
