@@ -1,8 +1,7 @@
-import { AreaTable, IncompleteAreas, PreCheckError, WidgetPreferences } from "@Palavyr-Types";
+import { PreCheckError, WidgetPreferences } from "@Palavyr-Types";
 import React, { useState, useCallback, useEffect, Dispatch, SetStateAction } from "react";
 import { ApiClient } from "@api-client/Client";
-import { Grid, Paper, Typography, makeStyles, Divider, GridList, GridListTile } from "@material-ui/core";
-import classNames from "classnames";
+import { Grid, Paper, Typography, makeStyles, Divider } from "@material-ui/core";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { HeaderEditor } from "./HeaderEditor";
 import { ChromePicker } from "react-color";
@@ -34,8 +33,8 @@ const useStyles = makeStyles((theme) => ({
     },
     colorstext: {
         paddingTop: "1.2rem",
-        paddingBottom: "1.2rem"
-    }
+        paddingBottom: "1.2rem",
+    },
 }));
 
 export type ColorPickerType = {
@@ -159,7 +158,9 @@ export const ChatDemo = () => {
             <Divider variant="fullWidth" />
             <Paper>
                 <Align>
-                    <Typography className={cls.colorstext} variant="h4">Select your widget colors</Typography>
+                    <Typography className={cls.colorstext} variant="h4">
+                        Select your widget colors
+                    </Typography>
                 </Align>
                 <div className={cls.gridList}>
                     {widgetPreferences &&
