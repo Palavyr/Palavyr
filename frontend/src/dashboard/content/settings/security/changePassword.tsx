@@ -1,14 +1,13 @@
-import { makeStyles, Theme, createStyles, Grid, FormControl, InputLabel, Input, InputAdornment, Button, IconButton, Paper, Divider } from "@material-ui/core";
+import { makeStyles, Theme, createStyles, Grid, FormControl, InputLabel, Input, InputAdornment, IconButton, Paper, Divider } from "@material-ui/core";
 import { ApiClient } from "@api-client/Client";
 import React, { useState } from "react";
-import { Statement } from "@common/components/Statement";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
-import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { SettingsWrapper } from "../SettingsWrapper";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -23,11 +22,8 @@ const useStyles = makeStyles((theme: Theme) =>
         withoutLabel: {
             marginTop: theme.spacing(3),
         },
-        textField: {
-            // width: '50ch',
-        },
         paper: {
-            backgroundColor: "#C7ECEE",
+            backgroundColor: theme.palette.secondary.light,
             padding: "2rem",
             margin: "2rem",
         },
@@ -56,7 +52,7 @@ export const ChangePassword = () => {
     const [showNewPasswordCopy, setShowNewPasswordCopy] = useState<boolean>(false);
     const [newPasswordCopy, setNewPasswordCopy] = useState<string>("");
 
-    const classes = useStyles();
+    const cls = useStyles();
 
     const handlePasswordChange = async (oldPassword: string, newPassword: string): Promise<boolean> => {
         var { data: success } = await client.Settings.Account.UpdatePassword(oldPassword, newPassword);
@@ -64,12 +60,12 @@ export const ChangePassword = () => {
     };
 
     return (
-        <div style={{ width: "50%" }}>
+        <SettingsWrapper>
             <AreaConfigurationHeader title="Change your password" subtitle="Update the password you use to log in." />
             <Divider />
-            <Paper className={classes.paper}>
+            <Paper className={cls.paper}>
                 <Alert>
-                    <AlertTitle className={classes.titleText}>Update your password</AlertTitle>
+                    <AlertTitle className={cls.titleText}>Update your password</AlertTitle>
                     Choose a strong password that contains at least:
                     <ul>
                         <li>6 or more characters</li>
@@ -78,11 +74,11 @@ export const ChangePassword = () => {
                     </ul>
                 </Alert>
                 <Grid container spacing={3}>
-                    <Grid className={classes.rowStyle} item xs={12}>
-                        <FormControl fullWidth className={classNames(classes.margin, classes.textField)}>
+                    <Grid className={cls.rowStyle} item xs={12}>
+                        <FormControl fullWidth className={classNames(cls.margin)}>
                             <InputLabel htmlFor="standard-adornment-password-old">Old Password</InputLabel>
                             <Input
-                                className={classes.input}
+                                className={cls.input}
                                 id="standard-adornment-password-old"
                                 type={showOldPassword ? "text" : "password"}
                                 value={oldPassword}
@@ -97,8 +93,8 @@ export const ChangePassword = () => {
                             />
                         </FormControl>
                     </Grid>
-                    <Grid className={classes.rowStyle} item xs={12}>
-                        <FormControl fullWidth className={classNames(classes.margin, classes.textField)}>
+                    <Grid className={cls.rowStyle} item xs={12}>
+                        <FormControl fullWidth className={classNames(cls.margin)}>
                             <InputLabel htmlFor="standard-adornment-password-new">New Password</InputLabel>
                             <Input
                                 id="standard-adornment-password-new"
@@ -115,8 +111,8 @@ export const ChangePassword = () => {
                             />
                         </FormControl>
                     </Grid>
-                    <Grid className={classes.rowStyle} item xs={12}>
-                        <FormControl fullWidth className={classNames(classes.margin, classes.textField)}>
+                    <Grid className={cls.rowStyle} item xs={12}>
+                        <FormControl fullWidth className={classNames(cls.margin)}>
                             <InputLabel htmlFor="standard-adornment-password-confirm">Confirm New Password</InputLabel>
                             <Input
                                 id="standard-adornment-password-confirm"
@@ -160,6 +156,6 @@ export const ChangePassword = () => {
                     </div>
                 </Grid>
             </Paper>
-        </div>
+        </SettingsWrapper>
     );
 };

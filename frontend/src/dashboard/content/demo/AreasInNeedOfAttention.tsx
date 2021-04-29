@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme) => ({
     table: {
         border: "0px solid black",
     },
-
     tablegrid: {
         paddingRight: "20%",
         paddingLeft: "20%",

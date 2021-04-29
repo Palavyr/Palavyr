@@ -1,4 +1,5 @@
 import { Box, Card, Grid, Typography, Button, Divider, makeStyles } from "@material-ui/core";
+import { green } from "@material-ui/core/colors";
 import React from "react";
 import { NavBar } from "../navbar/NavBar";
 
@@ -6,12 +7,11 @@ const useStyles = makeStyles((theme) => ({
     container: {
         paddingLeft: "15%",
         paddingRight: "15%",
-        border: "0px dotted black",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        background: "rgb(1,96,162)",
-        paddingBottom: "7rem",
+        backgroundColor: theme.palette.primary.dark,
+        paddingBottom: "3rem",
         textAlign: "center",
     },
     card: {
@@ -22,15 +22,22 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: "2rem",
         minWidth: "60%",
     },
+    primaryText: {
+        color: theme.palette.success.main,
+    },
+    secondaryText: {
+        color: theme.palette.success.dark,
+
+    },
     button: {
         width: "18rem",
         alignSelf: "center",
         fontSize: "large",
-        backgroundColor: "#90a5bb",
-        color: "white",
+        backgroundColor: theme.palette.background.default,//"#90a5bb",
+        color: theme.palette.common.black,
         "&:hover": {
-            backgroundColor: "white",
-            color: "navy",
+            backgroundColor: theme.palette.success.light,
+            color: theme.palette.common.black,
         },
     },
 }));
@@ -62,15 +69,15 @@ export const Header = ({ openRegisterDialog, openLoginDialog, handleMobileDrawer
                 <Grid container alignContent="center">
                     <Grid item xs={12}>
                         <Box>
-                            <Typography align="center" variant="h2">
-                                Build Incredible Conversations
+                            <Typography align="center" variant="h2" className={cls.primaryText}>
+                                CRAFT INCREDIBLE CONVERSATIONS
                             </Typography>
                         </Box>
                     </Grid>
                     <Grid item xs={12}>
                         <Box>
-                            <Typography align="center" variant="h5">
-                                Use Palavyr to configure a custom chat widget for your site to engage customers.
+                            <Typography align="center" variant="h5" className={cls.secondaryText}>
+                                A brand new way to engage your customers
                             </Typography>
                         </Box>
                     </Grid>

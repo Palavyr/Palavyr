@@ -7,10 +7,11 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 import { DropzoneArea } from "material-ui-dropzone";
 import * as React from "react";
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import { SettingsWrapper } from "../SettingsWrapper";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-        backgroundColor: "#C7ECEE",
+        backgroundColor: theme.palette.secondary.light,
         padding: "2rem",
         margin: "1rem",
         width: "100%",
@@ -142,7 +143,7 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
     const previewProps = { classes: { root: cls.previewChip, deleteIcon: cls.deleteIcon, label: cls.label } };
 
     return (
-        <div style={{ width: "50%" }}>
+        <SettingsWrapper>
             <AreaConfigurationHeader title="Change your company logo" subtitle="Update your company logo. This is used in the response email and pdf sent to customers." />
             <Divider />
             <Paper className={cls.paper}>
@@ -197,6 +198,6 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
                     }}
                 />
             </Paper>
-        </div>
+        </SettingsWrapper>
     );
 };

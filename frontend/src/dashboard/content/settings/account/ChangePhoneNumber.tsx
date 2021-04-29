@@ -4,6 +4,7 @@ import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { Divider, makeStyles } from "@material-ui/core";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { SettingsWrapper } from "../SettingsWrapper";
 
 const useStyles = makeStyles(() => ({
     titleText: {
@@ -44,7 +45,7 @@ export const ChangePhoneNumber = () => {
     };
 
     return (
-        <div style={{ width: "50%" }}>
+        <SettingsWrapper>
             <AreaConfigurationHeader title="Change your Primary Phone Number" subtitle="Update your primary phone number. This is the primary contact phone number provided in the response email and pdf sent to customers." />
             <Divider />
             <SettingsGridRowText
@@ -67,6 +68,6 @@ export const ChangePhoneNumber = () => {
                 }
                 locale={locale}
             />
-        </div>
+        </SettingsWrapper>
     );
 };

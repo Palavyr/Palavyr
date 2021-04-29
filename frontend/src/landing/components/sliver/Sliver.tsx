@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "center",
         height: "30px",
         width: "100%",
-        backgroundColor: "gray"
+        backgroundColor: theme.palette.success.dark
     },
     sliver: {
         fontSize: "16pt"
@@ -22,7 +22,7 @@ export const Sliver = () => {
 
     return (
         <div className={classes.sliverDiv}>
-            <Typography data-aos="fade-right" className={classes.sliver}>
+            <Typography variant="h5" data-aos="fade-right">
                 Questions? Get in touch: info.palavyr@gmail.com
             </Typography>
         </div>

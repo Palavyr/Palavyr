@@ -3,9 +3,10 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Divider, makeStyles } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { AlertDetails, EmailVerificationResponse } from "@Palavyr-Types";
+import { AlertDetails } from "@Palavyr-Types";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { SettingsWrapper } from "../SettingsWrapper";
 
 type GeneralSettings = {
     emailAddress: string;
@@ -69,7 +70,6 @@ export const ChangeEmail = () => {
     };
 
     const verifyEmailAddress = async (newEmailAddress: string) => {
-        // const { data: emailConfirmed } = await client.Settings.EmailVerification.CheckEmailVerificationStatus(newEmailAddress);
         const { data: res } = await client.Settings.Account.updateEmail(newEmailAddress);
         setAlertDetails({ title: res.title, message: res.message });
         setAlertState(true);
@@ -78,7 +78,7 @@ export const ChangeEmail = () => {
 
     return (
         <>
-            <div style={{ width: "60%" }}>
+            <SettingsWrapper>
                 <AreaConfigurationHeader title="Primary Email" subtitle="Change the primary email address used to send emails to your customers." />
                 <Divider />
                 <SettingsGridRowText
@@ -113,7 +113,7 @@ export const ChangeEmail = () => {
                     currentValue={settings.emailAddress}
                     buttonText="Update and Send Verification Email"
                 />
-            </div>
+            </SettingsWrapper>
             {alertState && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />}
         </>
     );

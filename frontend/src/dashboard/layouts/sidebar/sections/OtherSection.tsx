@@ -22,7 +22,7 @@ export interface OtherSectionProps {
 }
 
 export const OtherSection = ({ isActive }: OtherSectionProps) => {
-    const [otherOpen, setOtherOpen] = useState<boolean>(false);
+    const [otherOpen, setOtherOpen] = useState<boolean>(true);
     const { setViewName } = React.useContext(DashboardContext);
 
     const cls = useStyles();
@@ -52,8 +52,8 @@ export const OtherSection = ({ isActive }: OtherSectionProps) => {
                 <SidebarLinkItem text="Get Started" isActive={isActive} onClick={getStartedOnClick} IconComponent={<PlayArrowIcon className={cls.icon} />} />
                 <SidebarLinkItem text="Settings" isActive={isActive} onClick={generalSettingsOnClick} IconComponent={<SettingsIcon className={cls.icon} />} />
                 <SidebarLinkItem text="Get Widget" isActive={isActive} onClick={getWidgetOnClick} IconComponent={<GetAppIcon className={cls.icon} />} />
-                <SidebarLinkItem text="Logout" isActive={isActive} onClick={logoutOnClick} IconComponent={<ExitToAppIcon className={cls.icon} />} />
             </Collapse>
+            <SidebarLinkItem text="Logout" isActive={isActive} onClick={logoutOnClick} IconComponent={<ExitToAppIcon className={cls.icon} />} />
         </List>
     );
 };

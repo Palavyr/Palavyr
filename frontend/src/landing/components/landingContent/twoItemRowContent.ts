@@ -35,12 +35,12 @@ export const rowTwo: Array<ItemRowObject> = [
 export const rowThree: Array<ItemRowObject> = [
     {
         title: "Be Transparent",
-        text: "Automate detail collection using the fully customizable Palavyr chat widget and provide transparency for your future clients.",
+        text: "Automate detail collection and provide transparency for your future clients.",
         type: Transparent
     },
     {
         title: "Cut to the Chase",
-        text: "Collect inquiry details and use the equiry dashboard to preemptively learn what your clients are asking about.",
+        text: "Review your enquiries to preemptively learn what your clients are asking about.",
         type: Saber
     }
 ]

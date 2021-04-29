@@ -4,6 +4,7 @@ import { Divider, makeStyles } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { SettingsWrapper } from "../SettingsWrapper";
 
 const useStyles = makeStyles(() => ({
     titleText: {
@@ -41,7 +42,7 @@ export const ChangeCompanyName = () => {
     };
 
     return (
-        <div style={{ width: "50%" }}>
+        <SettingsWrapper>
             <AreaConfigurationHeader title="Change your company name" subtitle="Update your company name. This is used in the response email and pdf sent to customers." />
             <Divider />
             <SettingsGridRowText
@@ -62,6 +63,6 @@ export const ChangeCompanyName = () => {
                     </Alert>
                 }
             />
-        </div>
+        </SettingsWrapper>
     );
 };

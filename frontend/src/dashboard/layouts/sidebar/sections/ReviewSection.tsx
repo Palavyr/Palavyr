@@ -18,7 +18,7 @@ export interface ReviewSectionProps {
 }
 
 export const ReviewSection = ({ isActive }: ReviewSectionProps) => {
-    const [reviewOpen, setReviewOpen] = useState<boolean>(false);
+    const [reviewOpen, setReviewOpen] = useState<boolean>(true);
     const { setViewName } = React.useContext(DashboardContext);
 
     const cls = useStyles();

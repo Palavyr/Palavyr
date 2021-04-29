@@ -3,8 +3,9 @@ import { AppBar, Toolbar, Typography, Hidden, IconButton, Button, makeStyles, Di
 import { menuItems } from "./NavMenuItems";
 import { Link } from "react-router-dom";
 // import Logo from "../../../common/svgs/palavyrBranding/logo.svg";
-import Logo from "../../../common/svgs/palavyrBranding/logo.svg";
-
+// import Logo from "../../../common/svgs/palavyrBranding/logo.svg";
+// import Logo from "../header/logo2.svg"
+// import Logo from "srclandingcomponentsheaderlogo2.svg";
 
 export interface INavBar {
     openRegisterDialog: any;
@@ -16,48 +17,43 @@ export interface INavBar {
     setSelectedTab: any;
 }
 
-const useStyles = makeStyles({
-    menuButton: {
-
-    },
+const useStyles = makeStyles((theme) => ({
     clear: {
         border: "0px solid white",
-
     },
     appBar: {
         marginTop: "1.5rem",
         height: "6rem",
         position: "sticky",
         boxShadow: "0 0 black",
-        marginBottom: "3rem"
+        marginBottom: "3rem",
     },
     toolbar: {
         height: "100%",
         display: "flex",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
     },
     menuButtonText: {
         fontSize: "large",
         color: "white",
-        backgroundColor: "#3e5f82",
+        backgroundColor: theme.palette.success.dark,
         marginRight: "1rem",
-        '&:hover': {
+        "&:hover": {
             backgroundColor: "white",
-            color: "#3e5f82"
-        }
+            color: theme.palette.common.black,
+        },
     },
     brandText: {
-        // color: "black",
         fontSize: 64,
         fontWeight: "bolder",
-        color: "black"
+        color: theme.palette.success.main,
     },
     brandTextSmall: {
         fontWeight: "bolder",
-        color: "black"
+        color: "black",
     },
     noDecoration: {
-        textDecoration: "none !important"
+        textDecoration: "none !important",
     },
     logowrap: {
         display: "flex",
@@ -68,25 +64,29 @@ const useStyles = makeStyles({
         display: "flex",
         flexDirection: "row",
         height: "100%",
-        paddingRight: "1rem"
+        paddingRight: "1rem",
+        border: `3px solid ${theme.palette.success.main}`,
+        color: theme.palette.success.light,
     },
     logotypography: {
         display: "flex",
         flexDirection: "row",
         verticalAlign: "middle",
-    }
-});
+        border: `3px solid ${theme.palette.success.light}`,
+        padding: "0.4rem",
+        borderRadius: "12px"
+    },
+}));
 
 export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawerOpen, handleMobileDrawerClose, mobileDrawerOpen, selectedTab, setSelectedTab }: INavBar) => {
-
     const classes = useStyles();
     return (
         <AppBar position="fixed" className={classes.appBar} color="transparent" classes={{ root: classes.clear }}>
             <Toolbar className={classes.toolbar}>
                 <div className={classes.logowrap}>
-                    <div className={classes.logo}>
-                        <Logo height="125px" width="125px" />
-                    </div>
+                    {/* <div className={classes.logo}>
+                        <Logo height="225px" width="225px" />
+                    </div> */}
                     <div className={classes.logotypography}>
                         <Typography variant="body2" className={classes.brandText} display="inline">
                             Palavyr
@@ -94,44 +94,25 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawer
                     </div>
                 </div>
                 <div>
-                    {
-                        menuItems(openRegisterDialog, openLoginDialog).map(element => {
-                            if (element.link) {
-                                return (
-                                    <Link
-                                        key={element.name}
-                                        to={element.link}
-                                        className={classes.noDecoration}
-                                        onClick={handleMobileDrawerClose}
-                                    >
-                                        <Button
-                                            disableElevation
-                                            variant="contained"
-                                            size="large"
-                                            className={classes.menuButtonText}
-                                        >
-                                            {element.name}
-                                        </Button>
-                                    </Link>
-                                );
-                            }
+                    {menuItems(openRegisterDialog, openLoginDialog).map((element) => {
+                        if (element.link) {
                             return (
-                                <Button
-                                    disableElevation
-                                    variant="contained"
-                                    size="large"
-                                    onClick={element.onClick}
-                                    className={classes.menuButtonText}
-                                    key={element.name}
-                                >
-                                    {element.name}
-                                </Button>
+                                <Link key={element.name} to={element.link} className={classes.noDecoration} onClick={handleMobileDrawerClose}>
+                                    <Button disableElevation variant="contained" size="large" className={classes.menuButtonText}>
+                                        {element.name}
+                                    </Button>
+                                </Link>
                             );
-                        })
-                    }
+                        }
+                        return (
+                            <Button disableElevation variant="contained" size="large" onClick={element.onClick} className={classes.menuButtonText} key={element.name}>
+                                {element.name}
+                            </Button>
+                        );
+                    })}
                 </div>
             </Toolbar>
-            <Divider light/>
+            <Divider light />
         </AppBar>
     );
 };

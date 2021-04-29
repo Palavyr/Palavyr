@@ -14,6 +14,7 @@ import AOS from "aos";
 import { Sliver } from "./components/sliver/Sliver";
 import { CHANGE_PASSWORD, REGISTER, TERMS_OF_SERVICE } from "@constants";
 import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStrip";
+import { GreenStrip } from "./components/sliver/ThinStrip";
 AOS.init({
     duration: 1000,
 });
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
         border: "0px",
     },
     body: {
-        background: "radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)",
+        background: theme.palette.background.default,
     },
 }));
 
@@ -97,13 +98,14 @@ export const LandingPage = () => {
                 selectedTab={selectedTab}
                 setSelectedTab={setSelectedTab}
             />
-            <Divider />
-            <PricingSection />
+            <GreenStrip />
             <div className={classes.body}>
                 <TwoItemRow dataList={rowOne} />
                 <TwoItemRow dataList={rowTwo} />
                 <TwoItemRow dataList={rowThree} />
             </div>
+            <GreenStrip />
+            <PricingSection />
             <Sliver />
             <Footer />
         </div>

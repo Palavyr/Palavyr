@@ -8,13 +8,11 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Auth from "auth/Auth";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { SettingsWrapper } from "../SettingsWrapper";
 
 const useStyles = makeStyles(() => ({
     titleText: {
         fontWeight: "bold",
-    },
-    root: {
-        // top: "8px",
     },
 }));
 
@@ -37,7 +35,7 @@ export const DeleteAccount = () => {
         message: "User Name successfully updated.",
     };
     return (
-        <div className={cls.root}>
+        <SettingsWrapper>
             <AreaConfigurationHeader title="Delete your account" subtitle="Caution - account deletion is permanent." />
             <Divider />
             <SettingsGridRowText
@@ -54,6 +52,6 @@ export const DeleteAccount = () => {
                 }
             />
             {alertState && <CustomAlert alertState={alertState} setAlert={setAlert} alert={alertMessage} />}
-        </div>
+        </SettingsWrapper>
     );
 };
