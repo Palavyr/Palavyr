@@ -24,6 +24,7 @@ export const googleOAuthClientId = process.env.GOOGLE_OAUTH as string;
 export const stripeKey = process.env.STRIPE_KEY as string;
 export const currentEnvironment = process.env.CURRENTENV as string;
 export const softwareVersion = process.env.VERSION as string;
+export const landingWidgetApiKey = process.env.LANDING_WIDGET_APIKEY as string;
 
 export enum Environments {
     Development,
@@ -60,6 +61,11 @@ if (googleOAuthClientId === undefined) {
 
 if (stripeKey === undefined) {
     console.log("STRIPE KEY UNDEFINED");
+}
+
+if (landingWidgetApiKey === undefined) {
+    console.log("LANDING WIDGET API KEY UNDEFINED");
+
 }
 
 export const SPECIAL_HEADERS = {};

@@ -5,8 +5,8 @@ import { SinglePurposeButton } from "../SinglePurposeButton";
 
 const useStyles = makeStyles((theme) => ({
     devStripContainer: {
-        // height: "75px",
-        paddingTop: "10px",
+        paddingTop: "1rem",
+        paddingBottom: "1rem",
         backgroundColor: theme.palette.warning.main,
         textAlign: "center",
     },

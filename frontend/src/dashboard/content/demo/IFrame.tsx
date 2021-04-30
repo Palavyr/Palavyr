@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core";
-import { IncompleteAreas, PreCheckError } from "@Palavyr-Types";
+import { PreCheckError } from "@Palavyr-Types";
 import React, { useEffect, useState } from "react";
 
 type StyleProps = {
@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
         width: "380px",
         borderRadius: "9px",
         border: "0px",
+        background: "#FFFFFF",
     }),
 }));
 
@@ -21,17 +22,19 @@ interface IIframe {
     apiKey: string;
     iframeRefreshed: boolean;
     preCheckErrors: PreCheckError[];
+    demo?: boolean;
 }
 
 type Iframe = HTMLElement & {
     src: string;
 };
 
-export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, preCheckErrors }: IIframe) => {
+export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, preCheckErrors, demo = true }: IIframe) => {
     const [state, setState] = useState<boolean | null>(null);
     const cls = useStyles(preCheckErrors.length > 0);
 
-    const url = `${widgetUrl}/widget?key=${apiKey}&demo=true`;
+    const url = `${widgetUrl}/widget?key=${apiKey}&demo=${demo}`;
+    console.log(url);
 
     useEffect(() => {
         if (iframeRefreshed != state) {
@@ -40,5 +43,5 @@ export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, preCheckErrors }: I
         }
     }, [iframeRefreshed]);
 
-    return <iframe id="chatDemoIframe" title="demo" className={cls.frame} src={url} style={{ background: "#FFFFFF" }}></iframe>;
+    return <iframe id="chatDemoIframe" title={demo ? "demo" : "widget"} className={cls.frame} src={url}></iframe>;
 };

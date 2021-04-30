@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Divider, makeStyles } from "@material-ui/core";
+import { makeStyles, Typography, useTheme } from "@material-ui/core";
 import { CookieConsent } from "legal/cookies/CookieConsent";
 import { LandingPageDialogSelector } from "@landing/components/dialogSelector/LandingPageDialogSelector";
 import { CookieRules } from "legal/cookies/CookieRules";
@@ -15,6 +15,9 @@ import { Sliver } from "./components/sliver/Sliver";
 import { CHANGE_PASSWORD, REGISTER, TERMS_OF_SERVICE } from "@constants";
 import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStrip";
 import { GreenStrip } from "./components/sliver/ThinStrip";
+import { landingWidgetApiKey, widgetApiKey, widgetUrl } from "@api-client/clientUtils";
+import { IFrame } from "dashboard/content/demo/IFrame";
+import { Align } from "dashboard/layouts/positioning/AlignCenter";
 AOS.init({
     duration: 1000,
 });
@@ -35,10 +38,17 @@ const useStyles = makeStyles((theme) => ({
     body: {
         background: theme.palette.background.default,
     },
+    strip: {
+        paddingTop: "3.3rem",
+        paddingBottom: "3.3rem",
+        paddingLeft: "3rem",
+        paddingRight: "3rem",
+    },
 }));
 
 export const LandingPage = () => {
-    const classes = useStyles();
+    const cls = useStyles();
+    const theme = useTheme();
 
     const [selectedTab, setSelectedTab] = useState<string | null>(null);
     const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState<boolean>(false);
@@ -84,7 +94,7 @@ export const LandingPage = () => {
     }, [setIsCookieRulesDialogOpen]);
 
     return (
-        <div className={classes.wrapper}>
+        <div className={cls.wrapper}>
             {!isCookieRulesDialogOpen && <CookieConsent handleCookieRulesDialogOpen={handleCookieRulesDialogOpen} />}
             <LandingPageDialogSelector openLoginDialog={openLoginDialog} dialogOpen={dialogOpen} onClose={closeDialog} openTermsDialog={openTermsDialog} openRegisterDialog={openRegisterDialog} openChangePasswordDialog={openChangePasswordDialog} />
             <CookieRules open={isCookieRulesDialogOpen} onClose={handleCookieRulesDialogClose} />
@@ -99,10 +109,34 @@ export const LandingPage = () => {
                 setSelectedTab={setSelectedTab}
             />
             <GreenStrip />
-            <div className={classes.body}>
+            <div className={cls.body}>
                 <TwoItemRow dataList={rowOne} />
                 <TwoItemRow dataList={rowTwo} />
                 <TwoItemRow dataList={rowThree} />
+            </div>
+            <GreenStrip />
+            <div className={cls.strip} style={{ backgroundColor: theme.palette.primary.main, color: theme.palette.common.white }}>
+                <Typography gutterBottom align="center" variant="h2">
+                    What is Palavyr?
+                </Typography>
+                <br></br>
+                <Typography gutterBottom align="center">
+                    Palavyr is a fully configurable chat system used to automate the delivery of information about your services and fees to potential customers.
+                </Typography>
+                <Typography gutterBottom align="center">
+                    You craft the chats, configure your fees, and styalize your widget, which is embedded into your website.
+                </Typography>
+                <Typography gutterBottom align="center">
+                    Potential customers will provide information that we use to deliver specific information about your services via email.
+                </Typography>
+            </div>
+            <div className={cls.strip} style={{ backgroundColor: theme.palette.primary.main }}>
+                <Typography align="center" variant="h3" style={{ color: theme.palette.common.white }}>
+                    Try it out!
+                </Typography>
+                <Align>
+                    <IFrame widgetUrl={widgetUrl} apiKey={landingWidgetApiKey} iframeRefreshed={true} preCheckErrors={[]} demo={false} />
+                </Align>
             </div>
             <GreenStrip />
             <PricingSection />
