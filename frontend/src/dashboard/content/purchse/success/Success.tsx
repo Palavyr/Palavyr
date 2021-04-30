@@ -13,30 +13,31 @@ const useStyles = makeStyles(() => ({
     },
     card: {
         margin: "2rem",
-        padding: "1rem"
-    }
+        padding: "1rem",
+    },
+    outer: {
+        margin: "3rem",
+        padding: "3rem",
+    },
 }));
 
 export const Success = () => {
-    const location = useLocation();
     const cls = useStyles();
     const history = useHistory();
 
     return (
-        <div className={cls.center}>
-            <Card className={cls.card}>
-                <h1>Success!</h1>
-                <p>Thank you so much for purchasing a subscription! Let us know right away if you encounter any problems or have any feature requests!</p>
-                <SinglePurposeButton
-                    variant="outlined"
-                    color="primary"
-                    buttonText="Return to Dashboard"
-                    disabled={false}
-                    onClick={() => {
-                        history.push("/dashboard");
-                    }}
-                />
-            </Card>
+        <div className={cls.outer}>
+            <h1>Thank you so much for purchasing a subscription!</h1>
+            <p>Let us know right away if you encounter any problems or have any feature requests!</p>
+            <SinglePurposeButton
+                variant="outlined"
+                color="primary"
+                buttonText="Return to Dashboard"
+                disabled={false}
+                onClick={() => {
+                    history.push("/dashboard");
+                }}
+            />
         </div>
     );
 };

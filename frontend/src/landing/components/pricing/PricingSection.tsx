@@ -9,7 +9,8 @@ const useStyles = makeStyles((theme) => ({
         background: theme.palette.background.default,
         borderRadius: "4px",
         paddingLeft: "3rem",
-        paddingRight: "3rem"
+        paddingRight: "3rem",
+        paddingBottom: "2rem"
     },
     width: {
         width: "28%",

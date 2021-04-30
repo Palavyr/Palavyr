@@ -120,7 +120,7 @@ export const Routes = () => {
             <ProtectedRoute exact path="/dashboard/subscribe" component={withLayout(Subscribe, <SubscribeHelp />)} />
             <ProtectedRoute exact path="/dashboard/subscribe/purchase/" component={withLayout(Purchase, <PurchaseHelp />)} />
             <ProtectedRoute exact path="/dashboard/subscribe/success" component={withLayout(Success, <SuccessHelp />)} />
-            <ProtectedRoute exact path="/dashboard/subscribe/canceled" component={withLayout(Cancel, <CancelHelp />)} />
+            <ProtectedRoute exact path="/dashboard/subscribe/cancelled" component={withLayout(Cancel, <CancelHelp />)} />
             <ProtectedRoute exact path="/dashboard/confirm" component={withLayout(PleaseConfirmYourEmail, <PleaseConfirmYourEmailHelp />)} />
         </Router>
     );
