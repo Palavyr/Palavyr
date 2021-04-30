@@ -1,19 +1,18 @@
 import * as React from "react";
-import { FreeCard } from "@landing/components/pricing/FreeCard";
-import { PremiumCard } from "@landing/components/pricing/PremiumCard";
-import { ProCard } from "@landing/components/pricing/ProCard";
 import { Card, Divider, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
 import classNames from "classnames";
-import { pricingContainerStyles } from "@landing/components/pricing/cardStyles";
 import { useHistory } from "react-router-dom";
 import { ApiClient } from "@api-client/Client";
 import { useCallback, useEffect, useState } from "react";
 import { SubscribeStepper } from "../purchse/SubscribeStepper";
 import { PurchaseTypes, ProductOptions, ProductOption, ProductIds, PlanStatus } from "@Palavyr-Types";
 import { PURCHASE_ROUTE } from "@constants";
+import { Premium, Pro } from "@landing/components/pricing/Cards";
+import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
+import classnames from "classnames";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
 const useStyles = makeStyles((theme) => ({
-    root: {},
     body: {
         display: "flex",
         justifyContent: "space-evenly",
@@ -22,22 +21,18 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: "4px",
     },
     card: {
-        marginTop: "5rem",
+        marginTop: "3rem",
         borderRadius: "5px",
+        transition: "all ease-in-out 0.5s",
         "&:hover": {
-            background: "#5CADD8",
-            transition: "margin-top 3s",
+            transition: "ease-in-out 0.5s",
             borderRadius: "20px",
-            border: "4px solid #AAFF97",
             marginTop: "1rem",
             cursor: "pointer",
         },
     },
-    disabledCard: {
-        border: "8px solid #567C4D",
-        marginTop: "5rem",
-        zIndex: 1,
-    },
+
+    width: { width: "40%" },
 }));
 
 export const Subscribe = () => {
@@ -45,7 +40,6 @@ export const Subscribe = () => {
     const [productList, setProductList] = useState<ProductIds>();
 
     const cls = useStyles();
-    const containerCls = pricingContainerStyles();
     const client = new ApiClient();
 
     const history = useHistory();
@@ -76,70 +70,38 @@ export const Subscribe = () => {
         getCurrentPlan();
     }, []);
 
-
     const orderedProductOptions: ProductOptions = [
         {
-            card: <FreeCard />,
-            purchaseType: PurchaseTypes.Free,
-            productId: productList?.freeProductId || null,
-            productClasses: containerCls.paperFree,
-            currentplan: currentPlan?.status === PurchaseTypes.Free,
-        },
-        {
-            card: <PremiumCard />,
+            card: <Premium />,
             purchaseType: PurchaseTypes.Premium,
             productId: productList?.premiumProductId || null,
-            productClasses: containerCls.paperPremium,
-            currentplan: currentPlan ?.status === PurchaseTypes.Premium,
+            currentplan: currentPlan?.status === PurchaseTypes.Premium,
         },
         {
-            card: <ProCard />,
+            card: <Pro />,
             purchaseType: PurchaseTypes.Pro,
             productId: productList?.proProductId || null,
-            productClasses: containerCls.paperPro,
             currentplan: currentPlan?.status === PurchaseTypes.Pro,
         },
     ];
 
     return (
         <>
+            <AreaConfigurationHeader title="Select a subscription plan" divider />
             <SubscribeStepper activeStep={0} />
             {currentPlan !== null && (
-                <div className={classNames(cls.root, cls.body)}>
+                <div className={cls.body}>
                     <Grid container>
                         <Grid item xs={12}>
-                            <div style={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
-                                <Typography variant="h4" align="center">
-                                    Select a subscription plan
-                                    <Divider />
-                                </Typography>
-                            </div>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                            <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+                            <SpaceEvenly>
                                 {orderedProductOptions.map((product: ProductOption, key: number) => {
                                     return (
-                                        <Paper
-                                            key={product.productId + "-" + key.toString()}
-                                            onClick={() => ((product.currentplan || currentPlan.hasUpgraded) ? null : goToPurchase(product.purchaseType, product.productId))}
-                                            data-aos="fade-down"
-                                            data-aos-delay="100"
-                                            className={classNames((product.currentplan || currentPlan.hasUpgraded) ? cls.disabledCard : cls.card, containerCls.paperCommon, product.productClasses)}
-                                            variant="outlined"
-                                        >
-                                            {product.currentplan ? (
-                                                <Card key={product.currentplan + "-" + key.toString()} style={{ position: "relative", backgroundColor: "#567C4D", marginTop: "1.5rem", color: "black", zIndex: 2 }}>
-                                                    <Typography variant="h4" align="center">
-                                                        Your current plan
-                                                    </Typography>
-                                                </Card>
-                                            ) : null}
+                                        <div onClick={() => (product.currentplan || currentPlan.hasUpgraded ? null : goToPurchase(product.purchaseType, product.productId))} className={classnames(cls.width, cls.card)}>
                                             {product.card}
-                                        </Paper>
+                                        </div>
                                     );
                                 })}
-                            </div>
+                            </SpaceEvenly>
                         </Grid>
                     </Grid>
                 </div>

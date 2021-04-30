@@ -3,7 +3,7 @@ import { AppBar, Toolbar, IconButton, Typography, makeStyles } from "@material-u
 import MenuIcon from "@material-ui/icons/Menu";
 import classNames from "classnames";
 import HelpIcon from "@material-ui/icons/Help";
-import { Align } from "../positioning/AlignCenter";
+import { Align } from "../positioning/Align";
 
 const drawerWidth: number = 240;
 

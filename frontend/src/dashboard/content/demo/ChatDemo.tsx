@@ -10,7 +10,7 @@ import { AreasInNeedOfAttention } from "./AreasInNeedOfAttention";
 import { ChatDemoHeader } from "./ChatDemoHeader";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { PalavyrDemoWidget } from "./DemoWidget";
-import { Align } from "dashboard/layouts/positioning/AlignCenter";
+import { Align } from "dashboard/layouts/positioning/Align";
 
 const useStyles = makeStyles((theme) => ({
     gridList: {

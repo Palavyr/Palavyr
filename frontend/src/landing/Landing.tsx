@@ -17,7 +17,8 @@ import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStri
 import { GreenStrip } from "./components/sliver/ThinStrip";
 import { landingWidgetApiKey, widgetApiKey, widgetUrl } from "@api-client/clientUtils";
 import { IFrame } from "dashboard/content/demo/IFrame";
-import { Align } from "dashboard/layouts/positioning/AlignCenter";
+import { Align } from "dashboard/layouts/positioning/Align";
+
 AOS.init({
     duration: 1000,
 });
@@ -135,7 +136,7 @@ export const LandingPage = () => {
                     Try it out!
                 </Typography>
                 <Align>
-                    <IFrame widgetUrl={widgetUrl} apiKey={landingWidgetApiKey} iframeRefreshed={true} preCheckErrors={[]} demo={false} />
+                    <IFrame widgetUrl={widgetUrl} apiKey={landingWidgetApiKey} iframeRefreshed={true} preCheckErrors={[]} demo={false} shadow={true} />
                 </Align>
             </div>
             <GreenStrip />

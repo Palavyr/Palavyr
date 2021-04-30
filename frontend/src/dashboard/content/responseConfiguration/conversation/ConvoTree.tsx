@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { ConversationTreeContext, DashboardContext } from "dashboard/layouts/DashboardContext";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { Align } from "dashboard/layouts/positioning/AlignCenter";
+import { Align } from "dashboard/layouts/positioning/Align";
 import UndoIcon from "@material-ui/icons/Undo";
 import RedoIcon from "@material-ui/icons/Redo";
 

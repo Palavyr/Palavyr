@@ -4,7 +4,7 @@ import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHea
 import { makeStyles } from "@material-ui/core";
 import { VariableDetail } from "@Palavyr-Types";
 import { EmailConfigurationComponent } from "dashboard/content/responseConfiguration/uploadable/emailTemplates/EmailConfigurationComponent";
-import { Align } from "dashboard/layouts/positioning/AlignCenter";
+import { Align } from "dashboard/layouts/positioning/Align";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles(() => ({

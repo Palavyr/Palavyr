@@ -1,7 +1,7 @@
 import React from "react";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { makeStyles, Typography } from "@material-ui/core";
-import { Align } from "dashboard/layouts/positioning/AlignCenter";
+import { Align } from "dashboard/layouts/positioning/Align";
 
 const useStyles = makeStyles((theme) => ({
     customizetext: {

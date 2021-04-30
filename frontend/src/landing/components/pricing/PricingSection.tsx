@@ -1,27 +1,35 @@
-import React from 'react'
-import { PremiumCard } from './PremiumCard';
-import { FreeCard } from './FreeCard';
-import { ProCard } from './ProCard';
-import { Paper } from '@material-ui/core';
-import classNames from 'classnames';
-import { pricingContainerStyles } from './cardStyles';
+import React from "react";
+import { makeStyles } from "@material-ui/core";
+import { Free, Premium, Pro } from "./Cards";
 
+const useStyles = makeStyles((theme) => ({
+    body: {
+        display: "flex",
+        justifyContent: "space-evenly",
+        background: theme.palette.background.default,
+        borderRadius: "4px",
+        paddingLeft: "3rem",
+        paddingRight: "3rem"
+    },
+    width: {
+        width: "28%",
+    },
+}));
 
 export const PricingSection = () => {
-    const cls = pricingContainerStyles();
+    const cls = useStyles();
 
     return (
         <section className={cls.body}>
-
-            <Paper data-aos="fade-down" data-aos-delay="100" className={classNames(cls.paperCommon, cls.paperFree)} variant="outlined">
-                <FreeCard />
-            </Paper>
-            <Paper data-aos="fade-down" data-aos-delay="100" className={classNames(cls.paperCommon, cls.paperPremium)} variant="outlined">
-                <PremiumCard border />
-            </Paper>
-            <Paper data-aos="fade-down" data-aos-delay="100" className={classNames(cls.paperCommon, cls.paperPro)} variant="outlined">
-                <ProCard />
-            </Paper>
-        </section >
-    )
-}
+            <div data-aos="fade-down" data-aos-delay="100" className={cls.width}>
+                <Free />
+            </div>
+            <div data-aos="fade-down" data-aos-delay="100" className={cls.width}>
+                <Premium />
+            </div>
+            <div data-aos="fade-down" data-aos-delay="100" className={cls.width}>
+                <Pro />
+            </div>
+        </section>
+    );
+};

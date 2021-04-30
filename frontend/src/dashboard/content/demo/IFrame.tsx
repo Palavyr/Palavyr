@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 
 type StyleProps = {
     errors: boolean;
+    shadow: boolean;
 };
 const useStyles = makeStyles((theme) => ({
     frame: (props: StyleProps) => ({
@@ -14,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: "9px",
         border: "0px",
         background: "#FFFFFF",
+        boxShadow: props.shadow ? theme.shadows[10] : "none"
     }),
 }));
 
@@ -23,15 +25,16 @@ interface IIframe {
     iframeRefreshed: boolean;
     preCheckErrors: PreCheckError[];
     demo?: boolean;
+    shadow?: boolean;
 }
 
 type Iframe = HTMLElement & {
     src: string;
 };
 
-export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, preCheckErrors, demo = true }: IIframe) => {
+export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, preCheckErrors, demo = true, shadow = false }: IIframe) => {
     const [state, setState] = useState<boolean | null>(null);
-    const cls = useStyles(preCheckErrors.length > 0);
+    const cls = useStyles({errors: preCheckErrors.length > 0, shadow});
 
     const url = `${widgetUrl}/widget?key=${apiKey}&demo=${demo}`;
     console.log(url);

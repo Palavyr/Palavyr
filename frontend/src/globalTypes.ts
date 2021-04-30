@@ -446,7 +446,6 @@ export type ProductOption = {
     card: React.ReactNode;
     purchaseType: PurchaseTypes;
     productId: string | null;
-    productClasses: string;
     currentplan: boolean;
 };
 

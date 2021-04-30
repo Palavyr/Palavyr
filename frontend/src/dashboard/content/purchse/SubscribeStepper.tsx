@@ -3,6 +3,7 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -10,8 +11,10 @@ const useStyles = makeStyles((theme: Theme) =>
             width: "100%",
         },
         stepper: {
-            backgroundColor: "#C7ECEE",
-            borderBottom: "3px solid black"
+            backgroundColor: theme.palette.secondary.light,
+            color: theme.palette.common.white,
+            borderBottom: "3px solid black",
+            borderTop: "3px solid black",
         },
         backButton: {
             marginRight: theme.spacing(1),
@@ -32,14 +35,15 @@ interface ISubscribeStepper {
 }
 
 export const SubscribeStepper = ({ activeStep }: ISubscribeStepper) => {
-    const classes = useStyles();
-    const steps = getSteps();
+    const cls = useStyles();
     return (
-        <div className={classes.root}>
-            <Stepper className={classes.stepper} activeStep={activeStep} alternativeLabel>
-                {steps.map((label) => (
+        <div className={cls.root}>
+            <Stepper className={cls.stepper} activeStep={activeStep} alternativeLabel>
+                {getSteps().map((label) => (
                     <Step key={label}>
-                        <StepLabel>{label}</StepLabel>
+                        <StepLabel>
+                            <Typography variant="h5">{label}</Typography>
+                        </StepLabel>
                     </Step>
                 ))}
             </Stepper>

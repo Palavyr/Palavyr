@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, useState } from "react";
 import { Typography, Card, makeStyles, Divider } from "@material-ui/core";
 import { ApiClient } from "@api-client/Client";
 import { serverUrl, widgetUrl } from "@api-client/clientUtils";
-import { Align } from "dashboard/layouts/positioning/AlignCenter";
+import { Align } from "dashboard/layouts/positioning/Align";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
 const useStyles = makeStyles((theme) => ({

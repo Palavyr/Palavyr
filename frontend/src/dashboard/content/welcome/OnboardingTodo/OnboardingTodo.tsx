@@ -1,6 +1,6 @@
 import { makeStyles, Table, TableBody, TableContainer, TableHead, Typography } from "@material-ui/core";
 import { TodosAsBoolean } from "@Palavyr-Types";
-import { Align } from "dashboard/layouts/positioning/AlignCenter";
+import { Align } from "dashboard/layouts/positioning/Align";
 import React from "react";
 import { DoCompanyLogo } from "./DoCompanyLogo";
 import { DoCompanyName } from "./DoCompanyName";

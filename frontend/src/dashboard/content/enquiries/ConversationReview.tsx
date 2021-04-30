@@ -4,7 +4,7 @@ import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@material-ui/core";
 import { CompletedConversation, ConversationUpdate } from "@Palavyr-Types";
 import classNames from "classnames";
-import { Align } from "dashboard/layouts/positioning/AlignCenter";
+import { Align } from "dashboard/layouts/positioning/Align";
 import React from "react";
 import { useCallback } from "react";
 import { useState, useEffect } from "react";

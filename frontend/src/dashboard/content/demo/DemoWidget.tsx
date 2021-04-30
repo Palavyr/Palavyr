@@ -1,8 +1,8 @@
 import { widgetUrl } from "@api-client/clientUtils";
-import { makeStyles, Paper, Typography } from "@material-ui/core";
+import { makeStyles, Typography } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import { IncompleteArea, PreCheckError } from "@Palavyr-Types";
-import { Align } from "dashboard/layouts/positioning/AlignCenter";
+import { PreCheckError } from "@Palavyr-Types";
+import { Align } from "dashboard/layouts/positioning/Align";
 import React from "react";
 import { IFrame } from "./IFrame";
 
