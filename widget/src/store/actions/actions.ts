@@ -50,7 +50,10 @@ import {
     TOGGLE_INPUT_DISABLED,
     TOGGLE_MESSAGE_LOADER,
     TOGGLE_USER_DETAILS,
+    WidgetPreferences,
+    SET_WIDGETPREFERENCES_CONTEXT,
 } from "@Palavyr-Types";
+import { widgetPreferences } from "@test-data/widgetPreferences";
 
 import { ElementType } from "react";
 
@@ -58,43 +61,43 @@ export const _openUserDetails = (): OpenUserDetails => {
     return {
         type: OPEN_USER_DETAILS,
     };
-}
+};
 
 export const _closeUserDetails = (): CloseUserDetails => {
     return {
         type: CLOSE_USER_DETAILS,
     };
-}
+};
 
 export const _toggleUserDetails = (): ToggleUserDetails => {
     return {
         type: TOGGLE_USER_DETAILS,
     };
-}
+};
 
 export const _toggleChat = (): ToggleChat => {
     return {
         type: TOGGLE_CHAT,
     };
-}
+};
 
 export const _toggleInputDisabled = (): ToggleInputDisabled => {
     return {
         type: TOGGLE_INPUT_DISABLED,
     };
-}
+};
 
 export const _disableInput = (): InputDisabled => {
     return {
         type: DISABLE_INPUT,
     };
-}
+};
 
 export const _enableInput = (): InputEnabled => {
     return {
         type: ENABLE_INPUT,
     };
-}
+};
 
 export const _addUserMessage = (text: string, id?: string): AddUserMessage => {
     return {
@@ -102,7 +105,7 @@ export const _addUserMessage = (text: string, id?: string): AddUserMessage => {
         text,
         id,
     };
-}
+};
 
 export const _addResponseMessage = (text: string, id?: string): AddResponseMessage => {
     return {
@@ -110,13 +113,20 @@ export const _addResponseMessage = (text: string, id?: string): AddResponseMessa
         text,
         id,
     };
-}
+};
+
+export const _setWidgetPreferences = (widgetPreferences: WidgetPreferences) => {
+    return {
+        type: SET_WIDGETPREFERENCES_CONTEXT,
+        widgetPreferences,
+    };
+};
 
 export const _toggleMsgLoader = (): ToggleMsgLoader => {
     return {
         type: TOGGLE_MESSAGE_LOADER,
     };
-}
+};
 
 export const _addLinkSnippet = (link: LinkParams, id?: string): AddLinkSnippet => {
     return {
@@ -124,7 +134,7 @@ export const _addLinkSnippet = (link: LinkParams, id?: string): AddLinkSnippet =
         link,
         id,
     };
-}
+};
 
 export const _renderCustomComponent = (component: ElementType, props: any, showAvatar: boolean, id?: string): RenderCustomComponent => {
     return {
@@ -134,20 +144,20 @@ export const _renderCustomComponent = (component: ElementType, props: any, showA
         showAvatar,
         id,
     };
-}
+};
 
 export const _dropMessages = (): DropMessages => {
     return {
         type: DROP_MESSAGES,
     };
-}
+};
 
 export const _hideAvatar = (index: number): HideAvatar => {
     return {
         type: HIDE_AVATAR,
         index,
     };
-}
+};
 
 export const _deleteMessages = (count: number, id?: string): DeleteMessages => {
     return {
@@ -155,86 +165,86 @@ export const _deleteMessages = (count: number, id?: string): DeleteMessages => {
         count,
         id,
     };
-}
+};
 
 export const _setBadgeCount = (count: number): SetBadgeCount => {
     return {
         type: SET_BADGE_COUNT,
         count,
     };
-}
+};
 
 export const _markAllMessagesRead = (): MarkAllMessagesRead => {
     return {
         type: MARK_ALL_READ,
     };
-}
+};
 
 export const _openFullscreenPreview = (payload: ImageState): FullscreenPreviewActions => {
     return {
         type: OPEN_FULLSCREEN_PREVIEW,
         payload,
     };
-}
+};
 
 export const _closeFullscreenPreview = (): FullscreenPreviewActions => {
     return {
         type: CLOSE_FULLSCREEN_PREVIEW,
     };
-}
+};
 
 export const _setContextProperties = (contextProperties: ContextProperties): ContextPropertyActions => {
     return {
         type: SET_CONTEXT_PROPERTIES,
         contextProperties,
     };
-}
+};
 
 export const _setNameContext = (name: string): ContextPropertyActions => {
     return {
         type: SET_NAME_CONTEXT,
         name,
     };
-}
+};
 
 export const _setPhoneContext = (phoneNumber: string): ContextPropertyActions => {
     return {
         type: SET_PHONE_CONTEXT,
         phoneNumber,
     };
-}
+};
 
 export const _setEmailAddressContext = (emailAddress: string): ContextPropertyActions => {
     return {
         type: SET_EMAILADDRESS_CONTEXT,
         emailAddress,
     };
-}
+};
 
 export const _setRegionContext = (region: string): ContextPropertyActions => {
     return {
         type: SET_REGION_CONTEXT,
         region,
     };
-}
+};
 
 export const _setNumIndividualsContext = (numIndividuals: number) => {
     return {
         type: SET_NUM_INDIVIDUALS_CONTEXT,
         numIndividuals,
     };
-}
+};
 
 export const _addKeyValue = (keyValue: KeyValue): ContextPropertyActions => {
     return {
         type: SET_KEYVALUE_CONTEXT,
         keyValue,
     };
-}
+};
 
 export const _setDynamicResponses = (dynamicResponseObject: DynamicResponses): ContextPropertyActions => {
     return {
         type: SET_DYNAMICRESPONSES_CONTEXT,
         dynamicResponseObject,
     };
-}
+};

@@ -6,20 +6,21 @@ import { Messages } from "../Messages/Messages";
 import "./style.scss";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { ConvoHeader } from "../ConvoHeader/ConvoHeader";
+import { getWidgetPreferences } from "@store-dispatcher";
 
 type ConversationProps = {
     className: string;
     profileAvatar?: string;
     titleAvatar?: string;
     showTimeStamp: boolean;
-    customPreferences: WidgetPreferences;
 };
 
-export const Conversation = ({ className, profileAvatar, titleAvatar, showTimeStamp, customPreferences }: ConversationProps) => {
-    return (
+export const Conversation = ({ className, profileAvatar, titleAvatar, showTimeStamp }: ConversationProps) => {
+    const preferences = getWidgetPreferences();
+    return preferences ? (
         <div className={cn("rcw-conversation-container", className)} aria-live="polite">
-            <ConvoHeader chatHeader={customPreferences.chatHeader} titleAvatar={titleAvatar} preferences={customPreferences} />
-            <Messages profileAvatar={profileAvatar} showTimeStamp={showTimeStamp} customPreferences={customPreferences} />
+            <ConvoHeader titleAvatar={titleAvatar} preferences={preferences} />
+            <Messages profileAvatar={profileAvatar} showTimeStamp={showTimeStamp} preferences={preferences} />
         </div>
-    );
+    ) : null;
 };

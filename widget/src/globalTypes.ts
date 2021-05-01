@@ -22,7 +22,7 @@ export type WidgetNodeResource = {
     isDynamicTableNode: boolean;
     dynamicType: string | null;
     resolveOrder: number | null;
-}
+};
 
 export type WidgetNodes = WidgetNodeResource[];
 
@@ -146,6 +146,7 @@ export type ContextProperties = {
     keyValues: KeyValues;
     dynamicResponses: DynamicResponses;
     numIndividuals: number | null;
+    widgetPreferences: WidgetPreferences | null;
 };
 
 export interface IMessage extends BaseMessage {
@@ -183,6 +184,7 @@ export interface ContextState {
     keyValues: KeyValues;
     dynamicResponses: DynamicResponses;
     numIndividuals: number | null;
+    widgetPreferences: WidgetPreferences | null;
 }
 
 export interface MessagesState {
@@ -230,6 +232,7 @@ export const CLOSE_FULLSCREEN_PREVIEW = "FULLSCREEN/CLOSE_PREVIEW";
 export const SET_CONTEXT_PROPERTIES = "CONTEXT_PROPERTIES/SET";
 export const GET_CONTEXT_PROPERTIES = "CONTEXT_PROPERTIES/GET";
 
+export const SET_WIDGETPREFERENCES_CONTEXT = "CONTEXT_WIDGETPREFS/SET_WIDGETPREFERENCES";
 export const SET_NUM_INDIVIDUALS_CONTEXT = "CONTEXT_PROPERTIES/SET_NUM_INDIVIDUALS";
 export const SET_NAME_CONTEXT = "CONTEXT_PROPERTIES/SET_NAME";
 export const SET_PHONE_CONTEXT = "CONTEXT_PROPERTIES/SET_PHONE";

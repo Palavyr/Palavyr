@@ -4,8 +4,8 @@ import { Table, TableRow, TableCell, makeStyles, TextField } from "@material-ui/
 import { responseAction } from "./responseAction";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import { ConvoContextProperties } from "./registry";
-import { ContextProperties, DynamicResponses, IProgressTheChat, WidgetNodeResource } from "@Palavyr-Types";
-import { setNumIndividualsContext, getContextProperties, openUserDetails } from "@store-dispatcher";
+import { ContextProperties, DynamicResponses, IProgressTheChat, WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
+import { setNumIndividualsContext, getContextProperties, openUserDetails, getWidgetPreferences } from "@store-dispatcher";
 import { ResponseButton } from "common/ResponseButton";
 import { SingleRowSingleCell } from "common/TableCell";
 import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
@@ -45,6 +45,8 @@ export class StandardComponents {
     makeMultipleChoiceContinueButtons({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getChildNodes(node.nodeChildrenString, nodeList)[0]; // only one should exist
         const valueOptions = splitValueOptionsByDelimiter(node.valueOptions);
+        const prefs = getWidgetPreferences();
+
         return () => {
             const cls = useStyles();
             const [disabled, setDisabled] = useState<boolean>(false);
@@ -57,6 +59,7 @@ export class StandardComponents {
                             <TableRow>
                                 <TableCell className={cls.tableCell}>
                                     <ResponseButton
+                                        prefs={prefs!}
                                         disabled={disabled}
                                         key={valueOption + "-" + uuid()}
                                         text={valueOption}
@@ -78,6 +81,7 @@ export class StandardComponents {
     public makeMultipleChoiceAsPathButtons({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const children = getChildNodes(node.nodeChildrenString, nodeList);
         // const sortedChildren = sortChildrenByOptions(children);
+        const prefs = getWidgetPreferences();
 
         return () => {
             const cls = useStyles();
@@ -92,6 +96,7 @@ export class StandardComponents {
                                 <TableCell className={cls.tableCell}>
                                     {child.optionPath && (
                                         <ResponseButton
+                                            prefs={prefs!}
                                             disabled={disabled}
                                             key={child.nodeId}
                                             text={child.optionPath}
@@ -114,6 +119,7 @@ export class StandardComponents {
     public makeTakeNumber({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         // With numbers, we have the potential for exceeding some minimum or maximum value.
         let child = getChildNodes(node.nodeChildrenString, nodeList)[0];
+        const prefs = getWidgetPreferences();
 
         return () => {
             const cls = useStyles();
@@ -144,6 +150,7 @@ export class StandardComponents {
                     <TableRow>
                         <TableCell className={cls.root} align="right">
                             <ResponseButton
+                                prefs={prefs!}
                                 disabled={disabled}
                                 onClick={async () => {
                                     // will need to do something like this. -- this might all go into the response action..
@@ -177,6 +184,7 @@ export class StandardComponents {
 
     makeTakeCurrency({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
+        const prefs = getWidgetPreferences();
 
         return () => {
             const cls = useStyles();
@@ -208,6 +216,7 @@ export class StandardComponents {
                         </SingleRowSingleCell>
                         <SingleRowSingleCell align="right">
                             <ResponseButton
+                                prefs={prefs!}
                                 disabled={disabled}
                                 onClick={() => {
                                     responseAction(node, child, nodeList, client, convoId, response.toString());
@@ -224,6 +233,7 @@ export class StandardComponents {
 
     makeTakeText({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
+        const prefs = getWidgetPreferences();
 
         return () => {
             const [response, setResponse] = useState<string>("");
@@ -249,6 +259,7 @@ export class StandardComponents {
                         </SingleRowSingleCell>
                         <SingleRowSingleCell align="right">
                             <ResponseButton
+                                prefs={prefs!}
                                 disabled={disabled || response === ""}
                                 text="Submit"
                                 onClick={() => {
@@ -267,6 +278,7 @@ export class StandardComponents {
 
     makeTakeNumberIndividuals({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
+        const prefs = getWidgetPreferences();
 
         return () => {
             const [response, setResponse] = useState<number | null>(null);
@@ -298,6 +310,7 @@ export class StandardComponents {
                     <TableRow>
                         <TableCell className={cls.root} align="right">
                             <ResponseButton
+                                prefs={prefs!}
                                 disabled={disabled}
                                 onClick={() => {
                                     if (response) {
@@ -317,6 +330,7 @@ export class StandardComponents {
 
     makeSendEmail({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const areaId = nodeList[0].areaIdentifier;
+        const prefs = getWidgetPreferences();
 
         const sendEmail = async () => {
             const contextProperties = getContextProperties();
@@ -357,6 +371,7 @@ export class StandardComponents {
                         <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
                         <SingleRowSingleCell align="center">
                             <ResponseButton
+                                prefs={prefs!}
                                 text="Send my email"
                                 variant="contained"
                                 disabled={disabled}
@@ -377,12 +392,15 @@ export class StandardComponents {
     }
 
     makeRestart({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+        const prefs = getWidgetPreferences();
+
         return () => {
             return (
                 <Table>
                     <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
                     <SingleRowSingleCell align="right">
                         <ResponseButton
+                            prefs={prefs!}
                             text="restart"
                             onClick={() => {
                                 // setSelectedOption(null);
@@ -399,6 +417,7 @@ export class StandardComponents {
 
     makeSendEmailFailedFirstAttempt = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
         const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
+        const prefs = getWidgetPreferences();
 
         return () => {
             const [loading, setLoading] = useState<boolean>(false);
@@ -409,6 +428,7 @@ export class StandardComponents {
                         <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
                         <SingleRowSingleCell align="center">
                             <ResponseButton
+                                prefs={prefs!}
                                 text="Send my email"
                                 variant="contained"
                                 onClick={async () => {
@@ -416,7 +436,7 @@ export class StandardComponents {
                                     responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
                                 }}
                             />
-                            <ResponseButton text="Check your details" variant="contained" onClick={() => openUserDetails()} />
+                            <ResponseButton prefs={prefs!} text="Check your details" variant="contained" onClick={() => openUserDetails()} />
                         </SingleRowSingleCell>
                     </Table>
                     <ChatLoadingSpinner loading={loading} />
@@ -427,6 +447,7 @@ export class StandardComponents {
 
     makeSendFallbackEmail({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const areaId = nodeList[0].areaIdentifier;
+        const prefs = getWidgetPreferences();
 
         return () => {
             const cls = useStyles();
@@ -453,6 +474,7 @@ export class StandardComponents {
                         <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
                         <SingleRowSingleCell align="center">
                             <ResponseButton
+                                prefs={prefs!}
                                 text="Send my email"
                                 variant="contained"
                                 disabled={disabled}

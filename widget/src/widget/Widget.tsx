@@ -18,10 +18,9 @@ import { _openFullscreenPreview } from "@store-actions";
 
 export interface WidgetProps {
     option: SelectedOption;
-    preferences: WidgetPreferences;
 }
 
-export const Widget = ({ option, preferences }: WidgetProps) => {
+export const Widget = ({ option }: WidgetProps) => {
     const location = useLocation();
     const secretKey = new URLSearchParams(location.search).get("key");
     const client = new WidgetClient(secretKey);
@@ -97,24 +96,13 @@ export const Widget = ({ option, preferences }: WidgetProps) => {
         document.body.setAttribute("style", `overflow: ${visible || fullScreenMode ? "hidden" : "auto"}`);
     }, [fullScreenMode, visible]);
 
-    return preferences ? (
+    return (
         <div
             className={cn("rcw-widget-container", {
                 "rcw-full-screen": fullScreenMode,
             })}
         >
-            {showChat && (
-                <Conversation
-                    // title={preferences.title}
-                    // subtitle={preferences.subtitle}
-                    // senderPlaceHolder={preferences.placeholder}
-                    className={showChat ? "active" : "hidden"}
-                    showTimeStamp={true}
-                    customPreferences={preferences}
-                    // titleAvatar={titleAvatar}
-                    // profileAvatar={profileAvatar}
-                />
-            )}
+            {showChat && <Conversation className={showChat ? "active" : "hidden"} showTimeStamp={true} />}
         </div>
-    ) : null;
+    );
 };

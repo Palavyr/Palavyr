@@ -10,6 +10,7 @@ import {
     SET_NUM_INDIVIDUALS_CONTEXT,
     SET_PHONE_CONTEXT,
     SET_REGION_CONTEXT,
+    SET_WIDGETPREFERENCES_CONTEXT,
 } from "@Palavyr-Types";
 
 export const defaultContextProperties: ContextProperties = {
@@ -20,6 +21,7 @@ export const defaultContextProperties: ContextProperties = {
     name: "",
     region: "",
     numIndividuals: null,
+    widgetPreferences: null,
 };
 
 const reducer = {
@@ -31,6 +33,7 @@ const reducer = {
     [SET_REGION_CONTEXT]: (state: ContextState, { region }): ContextState => ({ ...state, region: region }),
     [SET_KEYVALUE_CONTEXT]: (state: ContextState, { keyValue }): ContextState => ({ ...state, keyValues: [...state.keyValues, keyValue] }),
     [SET_DYNAMICRESPONSES_CONTEXT]: (state: ContextState, { dynamicResponseObject }): ContextState => ({ ...state, dynamicResponses: dynamicResponseObject }),
+    [SET_WIDGETPREFERENCES_CONTEXT]: (state: ContextState, { widgetPreferences }): ContextState => ({ ...state, widgetPreferences: widgetPreferences }),
 };
 
 export const contextReducer = (state: ContextProperties = defaultContextProperties, action: ContextPropertyActions) => {
