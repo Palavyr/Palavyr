@@ -39,21 +39,21 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<ResponseCustomizer>().As<IResponseCustomizer>();
             builder.RegisterType<ResponseHtmlBuilder>().As<IResponseHtmlBuilder>();
             builder.RegisterType<DynamicTableCompilerOrchestrator>().As<IDynamicTableCompilerOrchestrator>().InstancePerLifetimeScope();
-            
+
             builder.RegisterType<SelectOneFlatCompiler>().AsSelf();
             builder.RegisterType<PercentOfThresholdCompiler>().AsSelf();
             builder.RegisterType<BasicThresholdCompiler>().AsSelf();
             builder.RegisterType<TwoNestedCategoryCompiler>().AsSelf();
             builder.RegisterType<CategoryNestedThresholdCompiler>().AsSelf();
-            
+
             builder.RegisterType<PreviewResponseGenerator>().As<IPreviewResponseGenerator>();
             builder.RegisterType<PdfResponseGenerator>().As<IPdfResponseGenerator>();
             builder.RegisterType<StaticTableCompiler>().As<IStaticTableCompiler>();
             builder.RegisterType<DynamicTableCompilerRetriever>().AsSelf();
-            
+
             builder.RegisterGeneric(typeof(GenericDynamicTableRepository<>)).As(typeof(IGenericDynamicTableRepository<>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(DynamicTableCommandHandler<>)).As(typeof(IDynamicTableCommandHandler<>)).InstancePerLifetimeScope();
-            
+
             builder.RegisterType<JwtAuthenticationService>().As<IJwtAuthenticationService>();
             builder.RegisterType<AccountSetupService>().As<IAccountSetupService>();
             builder.RegisterType<AuthService>().As<IAuthService>();
@@ -62,6 +62,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<RequestEmailVerification>().As<IRequestEmailVerification>();
             builder.RegisterType<PdfResponseGenerator>().As<IPdfResponseGenerator>();
             builder.RegisterType<S3Saver>().As<IS3Saver>();
+            builder.RegisterType<S3Deleter>().As<IS3Deleter>();
+
             builder.RegisterType<PostgresBackup>().As<IPostgresBackup>();
             builder.RegisterType<UserDataBackup>().As<IUserDataBackup>();
             builder.RegisterType<UpdateDatabaseLatest>().As<IUpdateDatabaseLatest>();
@@ -78,9 +80,14 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<DynamicResponseComponentExtractor>().AsSelf();
             builder.RegisterType<LinkCreator>().As<ILinkCreator>();
             builder.RegisterType<FileLinkRetriever>().As<IFileLinkRetriever>();
-            
+            builder.RegisterType<AttachmentSaver>().As<IAttachmentSaver>();
+            builder.RegisterType<S3KeyResolver>().As<IS3KeyResolver>();
+            builder.RegisterType<TempPathCreator>().As<ITempPathCreator>();
+            builder.RegisterType<AttachmentRetriever>().As<IAttachmentRetriever>();
+            builder.RegisterType<AttachmentDeleter>().As<IAttachmentDeleter>();
+
             builder.RegisterType<NodeGetter>().AsSelf();
-            
+
             builder.RegisterType<ConversationOptionSplitter>().As<IConversationOptionSplitter>().SingleInstance();
         }
     }

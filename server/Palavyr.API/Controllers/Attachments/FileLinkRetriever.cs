@@ -14,7 +14,6 @@ namespace Palavyr.API.Controllers.Attachments
         Task<FileLink[]> GetFileLinks(
             string accountId,
             string areaId,
-            DashContext dashContext,
             ILogger logger,
             string previewBucket);
     }
@@ -22,16 +21,17 @@ namespace Palavyr.API.Controllers.Attachments
     public class FileLinkRetriever : IFileLinkRetriever
     {
         private readonly ILinkCreator linkCreator;
+        private readonly DashContext dashContext;
 
-        public FileLinkRetriever(ILinkCreator linkCreator)
+        public FileLinkRetriever(ILinkCreator linkCreator, DashContext dashContext)
         {
             this.linkCreator = linkCreator;
+            this.dashContext = dashContext;
         }
 
         public async Task<FileLink[]> GetFileLinks(
             string accountId,
             string areaId,
-            DashContext dashContext,
             ILogger logger,
             string previewBucket)
         {
@@ -41,7 +41,7 @@ namespace Palavyr.API.Controllers.Attachments
             {
                 logger.LogDebug($"File: {fi}");
                 var fileMap = dashContext.FileNameMaps.Single(row => row.SafeName == fi.Name);
-                var link = await linkCreator.CreateAttachmentLinkAsUri(logger, accountId, areaId, fileMap.SafeName, previewBucket);
+                var link = await linkCreator.CreateAttachmentLinkAsUri(accountId, areaId, fileMap.SafeName, previewBucket);
                 links.Add(FileLink.CreateLink(fileMap.RiskyName, link, fileMap.SafeName));
             }
             return links.ToArray();

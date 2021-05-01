@@ -14,56 +14,47 @@ using Palavyr.Core.Models.Resources.Responses;
 
 namespace Palavyr.API.Controllers.Attachments
 {
-
     public class SaveMultipleAttachmentsController : PalavyrBaseController
     {
         private readonly IConfiguration configuration;
         private DashContext dashContext;
         private readonly IFileLinkRetriever fileLinkRetriever;
+        private readonly IAttachmentSaver attachmentSaver;
         private ILogger<SaveMultipleAttachmentsController> logger;
 
         public SaveMultipleAttachmentsController(
             IConfiguration configuration,
             DashContext dashContext,
             IFileLinkRetriever fileLinkRetriever,
+            IAttachmentSaver attachmentSaver,
             ILogger<SaveMultipleAttachmentsController> logger
         )
         {
             this.configuration = configuration;
             this.dashContext = dashContext;
             this.fileLinkRetriever = fileLinkRetriever;
+            this.attachmentSaver = attachmentSaver;
             this.logger = logger;
         }
 
         [HttpPost("attachments/{areaId}/save-many")]
         [ActionName("Decode")]
         public async Task<FileLink[]> SaveMany(
-            [FromRoute] string areaId, 
-            [FromHeader] string accountId,
-            [FromForm(Name = "files")] IList<IFormFile> attachmentFiles)
+            [FromRoute]
+            string areaId,
+            [FromHeader]
+            string accountId,
+            [FromForm(Name = "files")]
+            IList<IFormFile> attachmentFiles)
         {
-            var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
-
-            // TODO write filename only to the database, then generate GUID to use as filename, then save, then use the db map of guid to filename to get the file.
-            var attachmentDir = FormDirectoryPaths.FormAttachmentDirectoryWithCreate(accountId, areaId);
-            foreach (var formFile in attachmentFiles)
+            var fileLinks = new List<FileLink>();
+            foreach (var attachmentFile in attachmentFiles)
             {
-                logger.LogDebug($"File name write: {formFile.FileName}");
-                var safeFileName = Guid.NewGuid().ToString() + ".pdf";
-                var riskyFileName = formFile.FileName;
-
-                var fileMap = FileNameMap.CreateFileMap(safeFileName, riskyFileName, accountId, areaId);
-                await dashContext.FileNameMaps.AddAsync(fileMap);
-
-                var fileSavePath = Path.Combine(attachmentDir, safeFileName);
-                using var fileStream = new FileStream(fileSavePath, FileMode.Create);
-                await formFile.CopyToAsync(fileStream);
+                var fileLink = await attachmentSaver.SaveAttachment(accountId, areaId, attachmentFile);
+                fileLinks.Add(fileLink);
             }
 
-            await dashContext.SaveChangesAsync();
-            var fileLinks = await fileLinkRetriever.GetFileLinks(accountId, areaId, dashContext, logger, previewBucket);
-            return fileLinks;
+            return fileLinks.ToArray();
         }
     }
-    
 }

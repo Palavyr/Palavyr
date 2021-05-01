@@ -31,7 +31,7 @@ namespace Palavyr.API.Controllers.Enquiries
             [FromHeader] string accountId,
             [FromRoute] string fileId)
         {
-            var preSignedUrl = await linkCreator.CreatePreSignedUrlResponseLink(logger, accountId, fileId, PreviewBucket);
+            var preSignedUrl = await linkCreator.CreatePreSignedUrlResponseLink(accountId, fileId, PreviewBucket);
             return preSignedUrl;
         }
     }

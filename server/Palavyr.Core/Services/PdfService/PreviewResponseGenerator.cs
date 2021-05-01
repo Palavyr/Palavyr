@@ -104,7 +104,7 @@ namespace Palavyr.Core.Services.PdfService
             try
             {
                 link = await linkCreator.CreatePreSignedPreviewUrlLink(
-                    logger, accountId, safeFileNameStem,
+                    accountId, safeFileNameStem,
                     safeFileNamePath, previewBucket);
                 logger.LogDebug("Successfully created a pre-signed link to the pdf!");
             }

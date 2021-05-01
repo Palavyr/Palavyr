@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { DropdownListOptions, DropdownListProps } from "./DropdownOptionsList";
-import { widgetPreferences } from "@test-data/widgetPreferences";
 import { Meta, Story } from "@storybook/react";
 
 export default {

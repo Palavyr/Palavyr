@@ -29,8 +29,10 @@ export const AttachmentConfiguration = () => {
     };
 
     const removeAttachment = async (fileId: string) => {
+        setIsLoading(true);
         var { data: filelinks } = await client.Configuration.Attachments.removeAttachment(areaIdentifier, fileId);
         setAttachmentList(filelinks);
+        setIsLoading(false);
     };
 
     const loadAttachments = useCallback(async () => {
@@ -43,15 +45,16 @@ export const AttachmentConfiguration = () => {
 
     useEffect(() => {
         setIsLoading(true);
-
+        setIsLoading(true);
         loadAttachments();
         return () => {
             setLoaded(false);
-            setCurrentPreview(null!);
+            setCurrentPreview(null);
         };
     }, [areaIdentifier, attachmentList.length, loadAttachments]);
 
     const handleFileSave = async (files: File[]) => {
+        setIsLoading(true);
         var formData = new FormData();
 
         if (files.length === 1) {
@@ -69,6 +72,7 @@ export const AttachmentConfiguration = () => {
             setAttachmentList(fileLinks);
         }
         setCurrentPreview(null);
+        setIsLoading(false);
     };
 
     return (

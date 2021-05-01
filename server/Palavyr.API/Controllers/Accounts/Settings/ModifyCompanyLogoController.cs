@@ -64,7 +64,6 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             await accountsContext.SaveChangesAsync();
 
             var link = await linkCreator.CreateLogoImageLinkAsUri(
-                logger,
                 accountId,
                 Path.GetFileName(filepath),
                 filepath,

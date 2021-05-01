@@ -19,45 +19,36 @@ namespace Palavyr.API.Controllers.Attachments
         private readonly IFileLinkRetriever fileLinkRetriever;
         private readonly IConfiguration configuration;
         private readonly DashContext dashContext;
+        private readonly IAttachmentSaver attachmentSaver;
 
         public SaveSingleAttachmentController(
             IConfiguration configuration,
             ILogger<SaveSingleAttachmentController> logger,
             IFileLinkRetriever fileLinkRetriever,
-            DashContext dashContext
+            DashContext dashContext,
+            IAttachmentSaver attachmentSaver
         )
         {
             this.configuration = configuration;
             this.logger = logger;
             this.fileLinkRetriever = fileLinkRetriever;
             this.dashContext = dashContext;
+            this.attachmentSaver = attachmentSaver;
         }
 
         [HttpPost("attachments/{areaId}/save-one")]
         [ActionName("Decode")]
         public async Task<FileLink[]> SaveSingle(
-            [FromHeader] string accountId,
-            [FromRoute] string areaId,
-            [FromForm(Name = "files")] IFormFile attachmentFile)
+            [FromHeader]
+            string accountId,
+            [FromRoute]
+            string areaId,
+            [FromForm(Name = "files")]
+            IFormFile attachmentFile)
         {
-            var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
-            var attachmentDir = FormDirectoryPaths.FormAttachmentDirectoryWithCreate(accountId, areaId);
-            var safeFileName = Guid.NewGuid() + ".pdf";
-            var riskyFileName = attachmentFile.FileName;
-            logger.LogDebug($"File name write: {attachmentFile.FileName}");
-
-            var fileNameMap = FileNameMap.CreateFileMap(safeFileName, riskyFileName, accountId, areaId);
-
-            await dashContext.FileNameMaps.AddAsync(fileNameMap); // must be async
-            await dashContext.SaveChangesAsync();
-
-            var fileSavePath = Path.Combine(attachmentDir, safeFileName);
-            await using var fileStream = new FileStream(fileSavePath, FileMode.Create);
-            await attachmentFile.CopyToAsync(fileStream);
-            fileStream.Close();
-
-            var fileLinks = await fileLinkRetriever.GetFileLinks(accountId, areaId, dashContext, logger, previewBucket);
-            return fileLinks;
+            var fileLink = await attachmentSaver.SaveAttachment(accountId, areaId, attachmentFile);
+            return new[] {fileLink};
+           
         }
     }
 }

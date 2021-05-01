@@ -41,7 +41,6 @@ namespace Palavyr.API.Controllers.Accounts.Settings
                 return Ok(null);
             }
             var link = await linkCreator.CreateLogoImageLinkAsUri(
-                logger,
                 accountId,
                 Path.GetFileName(logoFile),
                 logoFile,
