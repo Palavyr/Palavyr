@@ -34,8 +34,7 @@ export const ChatStart: Story<WidgetProps> = (args: WidgetProps) => {
     return <Widget {...args} />;
 };
 ChatStart.args = {
-    option: getSelectedOption(areaId),
-    preferences: widgetPreferences,
+    option: getSelectedOption(areaId)
 };
 
 export const PopulatedChat: Story<WidgetProps> = (args: WidgetProps) => {
@@ -57,5 +56,4 @@ export const PopulatedChat: Story<WidgetProps> = (args: WidgetProps) => {
 };
 PopulatedChat.args = {
     option: getSelectedOption(areaId),
-    preferences: widgetPreferences,
 };

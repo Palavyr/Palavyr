@@ -15,7 +15,6 @@ const Template = (args: DropdownListProps) => <DropdownListOptions {...args} />;
 export const Primary: Story<DropdownListProps> = Template.bind({});
 Primary.args = {
     setSelectedOption: () => null,
-    preferences: widgetPreferences,
     options: [
         {
             areaDisplay: "Area 1",
