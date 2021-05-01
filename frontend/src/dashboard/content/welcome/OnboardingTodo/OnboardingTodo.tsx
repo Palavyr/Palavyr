@@ -1,11 +1,9 @@
-import { makeStyles, Table, TableBody, TableContainer, TableHead, Typography } from "@material-ui/core";
+import React from "react";
+import { makeStyles, Typography } from "@material-ui/core";
 import { TodosAsBoolean } from "@Palavyr-Types";
 import { Align } from "dashboard/layouts/positioning/Align";
-import React from "react";
-import { DoCompanyLogo } from "./DoCompanyLogo";
-import { DoCompanyName } from "./DoCompanyName";
-import { DoDefaultEmail } from "./DoDefaultEmail";
-import { DoPhoneNumber } from "./DoPhoneNumber";
+import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
+import { TodoCard } from "./TodoCard";
 
 const useStyles = makeStyles(() => ({
     list: {
@@ -26,22 +24,21 @@ export const OnboardingTodo = ({ todos }: OnboardingTodoProps) => {
     const cls = useStyles();
 
     return (
-        <Align>
-            <TableContainer className={cls.container}>
-                <Table>
-                    <TableHead>
-                        <Typography display="inline" style={{ padding: "2rem", fontSize: "24pt", fontWeight: "bolder" }}>
-                            Quick Start To Do list
-                        </Typography>
-                    </TableHead>
-                    <TableBody className={cls.body}>
-                        {!todos?.isVerified && <DoDefaultEmail emailAddress={todos?.emailAddress} awaitingVerification={todos?.awaitingVerification} />}
-                        {!todos?.name && <DoCompanyName />}
-                        {!todos?.logoUri && <DoCompanyLogo />}
-                        {!todos?.phoneNumber && <DoPhoneNumber />}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Align>
+        <div style={{ display: "inline-block" }}>
+            <Typography align="center" display="inline" gutterBottom variant="h4">
+                Quick Start To Do list
+            </Typography>
+            <SpaceEvenly vertical center>
+                {!todos?.isVerified && (
+                    <TodoCard
+                        link="/dashboard/settings/email?tab=1"
+                        text={`Set your default email: ${todos?.emailAddress} - ${todos?.awaitingVerification ? "Check your email to verify you address" : "Trigger an email verification in your settings."}`}
+                    />
+                )}
+                {!todos?.name && <TodoCard link="/dashboard/settings/companyName?tab=2" text="Set your company name" />}
+                {!todos?.logoUri && <TodoCard link="/dashboard/settings/companyLogo?tab=4" text="Set your company logo in the settings page" />}
+                {!todos?.phoneNumber && <TodoCard link="settings/phoneNumber?tab=3" text="Set your default contact phone number in the settings page" />}
+            </SpaceEvenly>
+        </div>
     );
 };

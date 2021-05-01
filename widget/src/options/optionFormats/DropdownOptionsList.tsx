@@ -6,14 +6,13 @@ import { useEffect } from "react";
 import Autocomplete, { AutocompleteRenderInputParams } from "@material-ui/lab/Autocomplete";
 import classNames from "classnames";
 import { sortByPropertyAlphabetical } from "common/sorting";
-import { openUserDetails } from "@store-dispatcher";
-
+import { getWidgetPreferences, openUserDetails } from "@store-dispatcher";
 
 const useStyles = makeStyles(() => ({
     root: {
-        '& .MuiAutocomplete-popper': {
-            backgroundColor: 'black',
-            zIndex: 99999999
+        "& .MuiAutocomplete-popper": {
+            backgroundColor: "black",
+            zIndex: 99999999,
         },
     },
     container: {
@@ -38,7 +37,7 @@ const useStyles = makeStyles(() => ({
         padding: "1rem",
         width: "100%",
         wordBreak: "normal",
-        minHeight: "18%"
+        minHeight: "18%",
     },
     selectListBgColor: (prefs: WidgetPreferences) => ({
         backgroundColor: prefs.selectListColor,
@@ -68,12 +67,12 @@ const useStyles = makeStyles(() => ({
 export interface DropdownListProps {
     setSelectedOption: (option: SelectedOption) => void;
     options: Array<SelectedOption>;
-    preferences: WidgetPreferences;
 }
 
-export const DropdownListOptions = ({ setSelectedOption, options, preferences }: DropdownListProps) => {
+export const DropdownListOptions = ({ setSelectedOption, options }: DropdownListProps) => {
     const history = useHistory();
     var secretKey = new URLSearchParams(useLocation().search).get("key");
+    var preferences = getWidgetPreferences();
     const cls = useStyles(preferences);
 
     useEffect(() => {

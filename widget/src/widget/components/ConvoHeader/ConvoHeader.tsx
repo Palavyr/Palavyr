@@ -3,13 +3,12 @@ import React from "react";
 import SettingsIcon from "@material-ui/icons/Settings";
 
 import "./style.scss";
-import { openUserDetails } from "@store-dispatcher";
+import { getWidgetPreferences, openUserDetails } from "@store-dispatcher";
 import { WidgetPreferences } from "@Palavyr-Types";
 
 export interface ConvoHeaderProps {
-    chatHeader: string;
-    titleAvatar?: string;
     preferences: WidgetPreferences;
+    titleAvatar?: string;
 }
 
 const useStyles = makeStyles({
@@ -45,7 +44,7 @@ const useStyles = makeStyles({
     },
 });
 
-export const ConvoHeader = ({ titleAvatar, preferences }: ConvoHeaderProps) => {
+export const ConvoHeader = ({ preferences, titleAvatar }: ConvoHeaderProps) => {
     const cls = useStyles(preferences);
     return (
         <Card className={cls.header}>

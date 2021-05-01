@@ -7,6 +7,7 @@ import { CollectDetailsForm } from "./common/UserDetailsDialog/CollectDetailsFor
 import { useSelector } from "react-redux";
 import { GlobalState, SelectedOption, WidgetPreferences } from "@Palavyr-Types";
 import { WidgetClient } from "client/Client";
+import { setWidgetPreferences } from "@store-dispatcher";
 
 export const App = () => {
     const userDetailsVisible = useSelector((state: GlobalState) => state.behaviorReducer.userDetailsVisible);
@@ -28,6 +29,7 @@ export const App = () => {
         if (preCheckResult.isReady) {
             const { data: prefs } = await client.Widget.Get.WidgetPreferences();
             setWidgetPrefs(prefs);
+            setWidgetPreferences(prefs);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -38,11 +40,11 @@ export const App = () => {
 
     return (
         <>
-            {isReady === true && selectedOption === null && widgetPrefs && !userDetailsVisible && <OptionSelector setSelectedOption={setSelectedOption} preferences={widgetPrefs} />}
+            {isReady === true && selectedOption === null && widgetPrefs && !userDetailsVisible && <OptionSelector setSelectedOption={setSelectedOption} />}
             {isReady === true && selectedOption !== null && (
                 <>
                     <CollectDetailsForm chatStarted={chatStarted} setChatStarted={setChatStarted} />
-                    {widgetPrefs && <Widget option={selectedOption} preferences={widgetPrefs} />}
+                    {widgetPrefs && <Widget option={selectedOption} />}
                 </>
             )}
             {isReady === false && (

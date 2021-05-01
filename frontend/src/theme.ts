@@ -21,7 +21,7 @@ const palette = {
     success: {
         main: "#7AE697",
     },
-    tonalOffset: 0.1,
+    tonalOffset: 0.2,
 };
 
 export const green = "#168F20";

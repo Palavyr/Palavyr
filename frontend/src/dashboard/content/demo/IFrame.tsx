@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: "9px",
         border: "0px",
         background: "#FFFFFF",
-        boxShadow: props.shadow ? theme.shadows[10] : "none"
+        boxShadow: props.shadow ? theme.shadows[10] : "none",
     }),
 }));
 
@@ -34,7 +34,7 @@ type Iframe = HTMLElement & {
 
 export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, preCheckErrors, demo = true, shadow = false }: IIframe) => {
     const [state, setState] = useState<boolean | null>(null);
-    const cls = useStyles({errors: preCheckErrors.length > 0, shadow});
+    const cls = useStyles({ errors: preCheckErrors.length > 0, shadow });
 
     const url = `${widgetUrl}/widget?key=${apiKey}&demo=${demo}`;
     console.log(url);

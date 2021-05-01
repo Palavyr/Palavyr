@@ -1,155 +1,159 @@
-import { ElementType } from 'react';
+import { ElementType } from "react";
 
-import * as actions from './actions/actions';
-import { LinkParams, ImageState, ContextProperties, KeyValue, DynamicResponses, KeyValues } from '@Palavyr-Types';
-import { PalavyrWidgetStore } from './store';
+import * as actions from "./actions/actions";
+import { LinkParams, ImageState, ContextProperties, KeyValue, DynamicResponses, KeyValues, WidgetPreferences } from "@Palavyr-Types";
+import { PalavyrWidgetStore } from "./store";
 
 export function addUserMessage(text: string, id?: string) {
-  PalavyrWidgetStore.dispatch(actions._addUserMessage(text, id));
+    PalavyrWidgetStore.dispatch(actions._addUserMessage(text, id));
 }
 
 export function addResponseMessage(text: string, id?: string) {
-  PalavyrWidgetStore.dispatch(actions._addResponseMessage(text, id));
+    PalavyrWidgetStore.dispatch(actions._addResponseMessage(text, id));
 }
 
 export function addLinkSnippet(link: LinkParams, id?: string) {
-  PalavyrWidgetStore.dispatch(actions._addLinkSnippet(link, id));
+    PalavyrWidgetStore.dispatch(actions._addLinkSnippet(link, id));
 }
 
 export function toggleMsgLoader() {
-  PalavyrWidgetStore.dispatch(actions._toggleMsgLoader());
+    PalavyrWidgetStore.dispatch(actions._toggleMsgLoader());
 }
 
 export function renderCustomComponent(component: ElementType, props: any, showAvatar = false, id?: string) {
-  PalavyrWidgetStore.dispatch(actions._renderCustomComponent(component, props, showAvatar, id));
+    PalavyrWidgetStore.dispatch(actions._renderCustomComponent(component, props, showAvatar, id));
 }
 
 export function toggleWidget() {
-  PalavyrWidgetStore.dispatch(actions._toggleChat());
+    PalavyrWidgetStore.dispatch(actions._toggleChat());
 }
 
 export function toggleInputDisabled() {
-  PalavyrWidgetStore.dispatch(actions._toggleInputDisabled());
+    PalavyrWidgetStore.dispatch(actions._toggleInputDisabled());
 }
 
 export function openUserDetails() {
-  PalavyrWidgetStore.dispatch(actions._openUserDetails());
+    PalavyrWidgetStore.dispatch(actions._openUserDetails());
 }
 
 export function closeUserDetails() {
-  PalavyrWidgetStore.dispatch(actions._closeUserDetails());
+    PalavyrWidgetStore.dispatch(actions._closeUserDetails());
 }
 
 export function getUserDetailsState(): boolean {
-  return PalavyrWidgetStore.getState().behaviorReducer.userDetailsVisible;
+    return PalavyrWidgetStore.getState().behaviorReducer.userDetailsVisible;
 }
 
-
 export function toggleUserDetails() {
-  PalavyrWidgetStore.dispatch(actions._toggleUserDetails());
+    PalavyrWidgetStore.dispatch(actions._toggleUserDetails());
 }
 
 export function disableInput() {
-  PalavyrWidgetStore.dispatch(actions._disableInput());
+    PalavyrWidgetStore.dispatch(actions._disableInput());
 }
 
 export function enableInput() {
-  PalavyrWidgetStore.dispatch(actions._enableInput());
+    PalavyrWidgetStore.dispatch(actions._enableInput());
 }
 
 export function dropMessages() {
-  PalavyrWidgetStore.dispatch(actions._dropMessages());
+    PalavyrWidgetStore.dispatch(actions._dropMessages());
 }
 
 export function isWidgetOpened(): boolean {
-  return PalavyrWidgetStore.getState().behaviorReducer.showChat;
+    return PalavyrWidgetStore.getState().behaviorReducer.showChat;
 }
 
 export function deleteMessages(count: number, id?: string) {
-  PalavyrWidgetStore.dispatch(actions._deleteMessages(count, id));
+    PalavyrWidgetStore.dispatch(actions._deleteMessages(count, id));
 }
 
 export function markAllAsRead() {
-  PalavyrWidgetStore.dispatch(actions._markAllMessagesRead());
+    PalavyrWidgetStore.dispatch(actions._markAllMessagesRead());
 }
 
 export function setBadgeCount(count: number) {
-  PalavyrWidgetStore.dispatch(actions._setBadgeCount(count));
+    PalavyrWidgetStore.dispatch(actions._setBadgeCount(count));
 }
 
 export function openFullscreenPreview(payload: ImageState) {
-  PalavyrWidgetStore.dispatch(actions._openFullscreenPreview(payload));
+    PalavyrWidgetStore.dispatch(actions._openFullscreenPreview(payload));
 }
 
 export function closeFullscreenPreview() {
-  PalavyrWidgetStore.dispatch(actions._closeFullscreenPreview());
+    PalavyrWidgetStore.dispatch(actions._closeFullscreenPreview());
 }
 
+export function setWidgetPreferences(widgetPreferences: WidgetPreferences) {
+    PalavyrWidgetStore.dispatch(actions._setWidgetPreferences(widgetPreferences));
+}
 
 export function setContextProperties(contextProperties: ContextProperties) {
-  PalavyrWidgetStore.dispatch(actions._setContextProperties(contextProperties))
+    PalavyrWidgetStore.dispatch(actions._setContextProperties(contextProperties));
 }
 
-
 export function setNameContext(name: string) {
-  PalavyrWidgetStore.dispatch(actions._setNameContext(name))
+    PalavyrWidgetStore.dispatch(actions._setNameContext(name));
 }
 
 export function setPhoneContext(phone: string) {
-  PalavyrWidgetStore.dispatch(actions._setPhoneContext(phone))
+    PalavyrWidgetStore.dispatch(actions._setPhoneContext(phone));
 }
 
 export function setEmailAddressContext(emailAddress: string) {
-  PalavyrWidgetStore.dispatch(actions._setEmailAddressContext(emailAddress))
+    PalavyrWidgetStore.dispatch(actions._setEmailAddressContext(emailAddress));
 }
 
 export function setRegionContext(region: string) {
-  PalavyrWidgetStore.dispatch(actions._setRegionContext(region))
+    PalavyrWidgetStore.dispatch(actions._setRegionContext(region));
 }
 
 export function setNumIndividualsContext(numIndividuals: number) {
-  PalavyrWidgetStore.dispatch(actions._setNumIndividualsContext(numIndividuals));
+    PalavyrWidgetStore.dispatch(actions._setNumIndividualsContext(numIndividuals));
 }
 
-
 export function addKeyValue(newKeyValue: KeyValue) {
-  PalavyrWidgetStore.dispatch(actions._addKeyValue(newKeyValue))
+    PalavyrWidgetStore.dispatch(actions._addKeyValue(newKeyValue));
 }
 
 export function setDynamicResponses(dynamicResponseObject: DynamicResponses) {
-  PalavyrWidgetStore.dispatch(actions._setDynamicResponses(dynamicResponseObject));
+    PalavyrWidgetStore.dispatch(actions._setDynamicResponses(dynamicResponseObject));
+}
+
+export function getWidgetPreferences() {
+    return getContextProperties().widgetPreferences;
 }
 
 export function getContextProperties(): ContextProperties {
-  const context = PalavyrWidgetStore.getState().contextReducer as ContextProperties;
-  return context;
+    const context = PalavyrWidgetStore.getState().contextReducer as ContextProperties;
+    return context;
 }
 
 export function getNameContext(): string {
-  return getContextProperties().name;
+    return getContextProperties().name;
 }
 
 export function getPhoneContext() {
-  const contextProperties = getContextProperties();
-  return contextProperties.phoneNumber;
+    const contextProperties = getContextProperties();
+    return contextProperties.phoneNumber;
 }
 
 export function getEmailAddressContext(): string {
-  const contextProperties = getContextProperties();
-  return contextProperties.emailAddress;
+    const contextProperties = getContextProperties();
+    return contextProperties.emailAddress;
 }
 
 export function getRegionContext(): string {
-  const contextProperties = getContextProperties();
-  return contextProperties.region;
+    const contextProperties = getContextProperties();
+    return contextProperties.region;
 }
 
 export function getKeyValueContext(): KeyValues {
-  const contextProperties = getContextProperties();
-  return contextProperties.keyValues;
+    const contextProperties = getContextProperties();
+    return contextProperties.keyValues;
 }
 
 export function getDynamicResponsesContext(): DynamicResponses {
-  const contextProperties = getContextProperties();
-  return contextProperties.dynamicResponses;
+    const contextProperties = getContextProperties();
+    return contextProperties.dynamicResponses;
 }

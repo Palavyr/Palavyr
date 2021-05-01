@@ -8,7 +8,6 @@ import { makeStyles } from "@material-ui/core";
 
 interface IOptionSelector {
     setSelectedOption: (option: SelectedOption) => void;
-    preferences: WidgetPreferences;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -21,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const OptionSelector = ({ setSelectedOption, preferences }: IOptionSelector) => {
+export const OptionSelector = ({ setSelectedOption }: IOptionSelector) => {
     var secretKey = new URLSearchParams(useLocation().search).get("key");
     const Client = new WidgetClient(secretKey);
     const cls = useStyles();
@@ -44,5 +43,5 @@ export const OptionSelector = ({ setSelectedOption, preferences }: IOptionSelect
         loadAreas();
     }, [loadAreas]);
 
-    return <div className={cls.optionsContainer}>{options && <DropdownListOptions options={options} setSelectedOption={setSelectedOption} preferences={preferences} />}</div>;
+    return <div className={cls.optionsContainer}>{options && <DropdownListOptions options={options} setSelectedOption={setSelectedOption} />}</div>;
 };

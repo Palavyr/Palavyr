@@ -11,6 +11,8 @@ import { ChatDemoHeader } from "./ChatDemoHeader";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { PalavyrDemoWidget } from "./DemoWidget";
 import { Align } from "dashboard/layouts/positioning/Align";
+import { FakeWidget } from "./FakeWidget";
+import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
 
 const useStyles = makeStyles((theme) => ({
     gridList: {
@@ -162,15 +164,25 @@ export const ChatDemo = () => {
                         Select your widget colors
                     </Typography>
                 </Align>
+                <Align direction="center">
+                    <SaveOrCancel size="large" onSave={saveWidgetPreferences} />
+                </Align>
+                <Align>
+                    {widgetPreferences && (
+                        <div>
+                            <FakeWidget {...widgetPreferences} />
+                        </div>
+                    )}
+                </Align>
                 <div className={cls.gridList}>
                     {widgetPreferences &&
                         colorPickers(widgetPreferences).map((picker: ColorPickerType, index: number) => {
                             return (
                                 <div>
-                                    <Typography align="center" variant="body1" className={cls.pickerTitle}>
+                                    <Typography align="center" variant="body1" className={cls.pickerTitle} gutterBottom>
                                         {picker.name}
                                     </Typography>
-                                    <div>{picker.variable && <ChromePicker style={{ boxShadow: "none" }} disableAlpha color={picker.variable} onChangeComplete={(color) => picker.method(color.hex)} />}</div>
+                                    <SpaceEvenly>{picker.variable && <ChromePicker width="95%" disableAlpha color={picker.variable} onChangeComplete={(color: { hex: React.SetStateAction<string> }) => picker.method(color.hex)} />}</SpaceEvenly>
                                 </div>
                             );
                         })}

@@ -1,23 +1,39 @@
-import React from 'react';
-import cn from 'classnames';
+import React from "react";
+import cn from "classnames";
 
-import './styles.scss';
-import { Box } from '@material-ui/core';
+import "./styles.scss";
+import { Box, makeStyles } from "@material-ui/core";
+import { getWidgetPreferences } from "@store-dispatcher";
+import { WidgetPreferences } from "@Palavyr-Types";
 
 type Props = {
-  typing: boolean;
-}
+    typing: boolean;
+};
 
-function Loader({ typing }: Props) {
-  return (
-    <div className={cn('loader', { active: typing })}>
-      <Box  boxShadow={1} className="loader-container">
-        <span className="loader-dots"></span>
-        <span className="loader-dots"></span>
-        <span className="loader-dots"></span>
-      </Box>
-    </div>
-  );
-}
+const useStyles = makeStyles(theme => ({
+    loaderContainer: (props: WidgetPreferences) => ({
+        backgroundColor: props.chatBubbleColor,
+        borderRadius: "10px",
+        padding: "15px",
+        maxWidth: "215px",
+        textAlign: "left",
+    }),
+    dotColor: (props: WidgetPreferences) => ({
+        backgroundColor: props.chatBubbleColor ? theme.palette.getContrastText(props.chatBubbleColor) : props.chatBubbleColor,
+    }),
+}));
 
-export default Loader;
+export const Loader = ({ typing }: Props) => {
+    const preferences = getWidgetPreferences();
+    const cls = useStyles(preferences);
+
+    return (
+        <div className={cn("loader", { active: typing })}>
+            <Box boxShadow={1} className={cls.loaderContainer}>
+                <span className={cn("loader-dots", cls.dotColor)}></span>
+                <span className={cn("loader-dots", cls.dotColor)}></span>
+                <span className={cn("loader-dots", cls.dotColor)}></span>
+            </Box>
+        </div>
+    );
+};
