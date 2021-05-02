@@ -7,9 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Palavyr.BackupAndRestore;
-using Palavyr.BackupAndRestore.Postgres;
-using Palavyr.BackupAndRestore.UserData;
 using Palavyr.Core.Common.GlobalConstants;
 using Palavyr.Core.Data;
 
@@ -38,7 +35,7 @@ namespace Palavyr.API.Registration.Container
                 });
         }
 
-        public static void RegisterIISConfiguration(IServiceCollection services, IWebHostEnvironment env)
+        public static void RegisterIisConfiguration(IServiceCollection services, IWebHostEnvironment env)
         {
             if (!env.IsDevelopment()) // only need IIS configured in production and staging
             {

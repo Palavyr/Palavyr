@@ -32,6 +32,7 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IS3KeyResolver s3KeyResolver;
         private readonly ITempPathCreator tempPathCreator;
         private readonly ILocalFileDeleter localFileDeleter;
+        private readonly ICriticalResponses criticalResponses;
 
         public PreviewResponseGenerator(
             IConfiguration configuration,
@@ -46,7 +47,8 @@ namespace Palavyr.Core.Services.PdfService
             IS3Saver s3Saver,
             IS3KeyResolver s3KeyResolver,
             ITempPathCreator tempPathCreator,
-            ILocalFileDeleter localFileDeleter
+            ILocalFileDeleter localFileDeleter,
+            ICriticalResponses criticalResponses
         )
         {
             this.configuration = configuration;
@@ -62,6 +64,7 @@ namespace Palavyr.Core.Services.PdfService
             this.s3KeyResolver = s3KeyResolver;
             this.tempPathCreator = tempPathCreator;
             this.localFileDeleter = localFileDeleter;
+            this.criticalResponses = criticalResponses;
         }
 
         public async Task<FileLink> CreatePdfResponsePreviewAsync(string accountId, string areaId, CultureInfo culture)
@@ -71,7 +74,7 @@ namespace Palavyr.Core.Services.PdfService
             var areaData = await configurationRepository.GetAreaComplete(accountId, areaId);
             var userAccount = await accountRepository.GetAccount(accountId);
 
-            var criticalResponses = new CriticalResponses(
+            var fakeResponses = this.criticalResponses.Compile(
                 new List<Dictionary<string, string>>()
                 {
                     new Dictionary<string, string>() {{"Example info", "Crucial response"}},
@@ -87,7 +90,7 @@ namespace Palavyr.Core.Services.PdfService
             var html = responseHtmlBuilder.BuildResponseHtml(
                 userAccount,
                 areaData,
-                criticalResponses,
+                fakeResponses,
                 staticTables,
                 dynamicTables);
 

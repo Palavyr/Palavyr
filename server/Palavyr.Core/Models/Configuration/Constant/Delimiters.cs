@@ -10,5 +10,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public const string NodeChildrenStringDelimiter = CommaDelimiter;
         public const string DynamicTableKeyDelimiter = "-";
         public const string InternalItemDelimiter = CommaDelimiter;
+
+        public const string UnixDelimiter = "/";
     }
 }

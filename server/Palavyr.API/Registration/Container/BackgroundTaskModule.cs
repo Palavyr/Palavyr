@@ -11,7 +11,6 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<CreatePalavyrSnapshot>().As<ICreatePalavyrSnapshot>();
             builder.RegisterType<RemoveOldS3Archives>().As<IRemoveOldS3Archives>();
             builder.RegisterType<RemoveStaleSessions>().As<IRemoveStaleSessions>();
-            builder.RegisterType<ValidateAttachments>().As<IValidateAttachments>();
         }
     }
 }

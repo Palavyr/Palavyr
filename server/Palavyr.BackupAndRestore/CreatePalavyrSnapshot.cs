@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.BackupAndRestore.Postgres;
-using Palavyr.BackupAndRestore.UserData;
 using Palavyr.Core.Common.UIDUtils;
 
 namespace Palavyr.BackupAndRestore
@@ -11,7 +10,6 @@ namespace Palavyr.BackupAndRestore
     {
         private readonly ILogger<CreatePalavyrSnapshot> logger;
         private readonly IPostgresBackup postgresBackup;
-        private readonly IUserDataBackup userDataBackup;
         private readonly IConfiguration configuration;
         private readonly IUpdateDatabaseLatest updateDatabaseLatest;
 
@@ -23,19 +21,17 @@ namespace Palavyr.BackupAndRestore
         public CreatePalavyrSnapshot(
             ILogger<CreatePalavyrSnapshot> logger,
             IPostgresBackup postgresBackup,
-            IUserDataBackup userDataBackup,
             IConfiguration configuration,
             IUpdateDatabaseLatest updateDatabaseLatest
         )
         {
             this.logger = logger;
             this.postgresBackup = postgresBackup;
-            this.userDataBackup = userDataBackup;
             this.configuration = configuration;
             this.updateDatabaseLatest = updateDatabaseLatest;
         }
 
-        public async Task CreateAndTransferCompleteBackup()
+        public async Task CreateAndTransferCompleteBackup() // TODO: Deprecate once moved to RDP
         {
             var snapshotTimeStamp = TimeUtils.CreateTimeStamp();
             var host = configuration.GetSection(PostgresHost).Value;
@@ -45,10 +41,9 @@ namespace Palavyr.BackupAndRestore
 
             logger.LogDebug("Creating a new backup of the Palavyr user data and database");
             var latestDatabaseBackup = await postgresBackup.CreateFullDatabaseBackup(host, port, pass, snapshotTimeStamp, bucket);
-            var latestUserDataBackup = await userDataBackup.CreateFullUserDataBackup(snapshotTimeStamp, bucket);
             
             logger.LogDebug("Updating the database records now!");
-            await updateDatabaseLatest.UpdateLatestBackupRecords(latestDatabaseBackup, latestUserDataBackup);
+            await updateDatabaseLatest.WriteAndSaveRecords(latestDatabaseBackup);
         }
     }
 }

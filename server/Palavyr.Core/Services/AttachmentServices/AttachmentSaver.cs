@@ -27,7 +27,7 @@ namespace Palavyr.Core.Services.AttachmentServices
         private readonly DashContext dashContext;
         private readonly ILinkCreator linkCreator;
         private readonly ITempPathCreator tempPathCreator;
-        private readonly LocalFileDeleter localFileDeleter;
+        private readonly ILocalFileDeleter localFileDeleter;
 
         public AttachmentSaver(
             IS3Saver s3Saver,
@@ -37,7 +37,7 @@ namespace Palavyr.Core.Services.AttachmentServices
             DashContext dashContext,
             ILinkCreator linkCreator,
             ITempPathCreator tempPathCreator,
-            LocalFileDeleter localFileDeleter
+            ILocalFileDeleter localFileDeleter
         )
         {
             this.s3Saver = s3Saver;

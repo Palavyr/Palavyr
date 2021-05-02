@@ -1,11 +1,9 @@
 using Autofac;
-using Palavyr.API.Controllers.Attachments;
-using Palavyr.API.controllers.Conversation;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.API.Controllers.Testing;
+using Palavyr.API.Controllers.WidgetLive;
 using Palavyr.BackupAndRestore;
 using Palavyr.BackupAndRestore.Postgres;
-using Palavyr.BackupAndRestore.UserData;
 using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Conversation;
@@ -25,6 +23,7 @@ using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.LogoServices;
 using Palavyr.Core.Services.PdfService;
+using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.API.Registration.Container
 {
@@ -68,9 +67,10 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<S3Deleter>().As<IS3Deleter>();
 
             builder.RegisterType<PostgresBackup>().As<IPostgresBackup>();
-            builder.RegisterType<UserDataBackup>().As<IUserDataBackup>();
             builder.RegisterType<UpdateDatabaseLatest>().As<IUpdateDatabaseLatest>();
 
+            builder.RegisterType<NodeGetter>().AsSelf();
+            builder.RegisterType<ConversationOptionSplitter>().As<IConversationOptionSplitter>().SingleInstance();
             builder.RegisterType<WidgetStatusUtils>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<MissingNodeCalculator>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<RequiredNodeCalculator>().AsSelf().InstancePerLifetimeScope();
@@ -91,9 +91,10 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<LogoSaver>().As<ILogoSaver>();
             builder.RegisterType<LogoDeleter>().As<ILogoDeleter>();
             builder.RegisterType<LogoRetriever>().As<ILogoRetriever>();
-            builder.RegisterType<NodeGetter>().AsSelf();
-
-            builder.RegisterType<ConversationOptionSplitter>().As<IConversationOptionSplitter>().SingleInstance();
+            builder.RegisterType<CriticalResponses>().As<ICriticalResponses>();
+            builder.RegisterType<CompileSenderDetails>().As<ICompileSenderDetails>();
+            builder.RegisterType<ResponseEmailSender>().As<IResponseEmailSender>();
+            builder.RegisterType<S3Retriever>().As<IS3Retriever>();
         }
     }
 }

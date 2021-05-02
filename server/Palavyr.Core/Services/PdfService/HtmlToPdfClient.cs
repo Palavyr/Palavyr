@@ -1,11 +1,11 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.FileSystemTools.LocalServices;
-using File = System.IO.File;
 
 namespace Palavyr.Core.Services.PdfService
 {
@@ -46,8 +46,9 @@ namespace Palavyr.Core.Services.PdfService
             }
 
             if (!File.Exists(localTempOutputPath))
-            {
-                throw new Exception("PDF File not written correctly");
+            { 
+                logger.LogDebug("PDF File not written correctly");
+                return null;
             }
 
             logger.LogDebug($"Successfully wrote the pdf file to disk at {localTempOutputPath}!");

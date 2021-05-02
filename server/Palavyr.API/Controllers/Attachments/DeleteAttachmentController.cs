@@ -36,7 +36,7 @@ namespace Palavyr.API.Controllers.Attachments
             
             // this is currently pretty slow -- we should be caching the presigned URLs and only refreshing them once they are invalid.
             // this will always refresh the pre-signed URLs (not a huge problem, but still).
-            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachments(accountId, areaId, cancellationToken);
+            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(accountId, areaId, cancellationToken);
             return attachmentFileLinks;
         }
     }

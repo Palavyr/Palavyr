@@ -23,7 +23,7 @@ namespace Palavyr.API.Controllers.Attachments
             [FromRoute] string areaId,
             CancellationToken cancellationToken)
         {
-            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachments(accountId, areaId, cancellationToken);
+            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(accountId, areaId, cancellationToken);
             return attachmentFileLinks;
         }
     }
