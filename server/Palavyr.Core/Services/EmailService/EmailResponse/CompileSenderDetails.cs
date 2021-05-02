@@ -3,7 +3,7 @@ using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
 
-namespace Palavyr.API.Controllers.WidgetLive
+namespace Palavyr.Core.Services.EmailService.EmailResponse
 {
     public interface ICompileSenderDetails
     {

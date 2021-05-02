@@ -19,6 +19,7 @@ using Palavyr.Core.Services.ConversationServices;
 using Palavyr.Core.Services.DynamicTableService;
 using Palavyr.Core.Services.DynamicTableService.Compilers;
 using Palavyr.Core.Services.DynamicTableService.Thresholds;
+using Palavyr.Core.Services.EmailService.EmailResponse;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.LogoServices;

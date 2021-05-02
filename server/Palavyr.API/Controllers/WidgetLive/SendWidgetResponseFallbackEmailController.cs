@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Services.AuthenticationServices;
+using Palavyr.Core.Services.EmailService.EmailResponse;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {

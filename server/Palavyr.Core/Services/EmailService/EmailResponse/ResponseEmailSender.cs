@@ -7,14 +7,13 @@ using Palavyr.Core.Models;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
-using Palavyr.Core.Services;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AttachmentServices;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
-namespace Palavyr.API.Controllers.WidgetLive
+namespace Palavyr.Core.Services.EmailService.EmailResponse
 {
     public interface IResponseEmailSender
     {

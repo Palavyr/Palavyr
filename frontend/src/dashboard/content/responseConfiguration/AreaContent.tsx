@@ -1,5 +1,5 @@
 import { PanelRange, areaTabProps } from "@common/ContentUtils";
-import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
+import React, { useState, useEffect } from "react";
 import { AppBar, Tabs, Tab, makeStyles } from "@material-ui/core";
 import { useHistory, useParams } from "react-router-dom";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
@@ -8,7 +8,7 @@ import SubjectIcon from "@material-ui/icons/Subject";
 import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
-import { AuthContext, DashboardContext } from "dashboard/layouts/DashboardContext";
+import { AuthContext } from "dashboard/layouts/DashboardContext";
 import { AreaSettingsLoc, SetState } from "@Palavyr-Types";
 
 export interface IAreaContent {
