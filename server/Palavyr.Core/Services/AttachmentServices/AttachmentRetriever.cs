@@ -9,7 +9,7 @@ using Palavyr.Core.Data;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Services.AmazonServices;
 
-namespace Palavyr.API.Controllers.Attachments
+namespace Palavyr.Core.Services.AttachmentServices
 {
     public interface IAttachmentRetriever
     {

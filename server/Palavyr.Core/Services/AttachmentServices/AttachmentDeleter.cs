@@ -8,7 +8,7 @@ using Palavyr.Core.Common.GlobalConstants;
 using Palavyr.Core.Data;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 
-namespace Palavyr.API.Controllers.Attachments
+namespace Palavyr.Core.Services.AttachmentServices
 {
     public interface IAttachmentDeleter
     {

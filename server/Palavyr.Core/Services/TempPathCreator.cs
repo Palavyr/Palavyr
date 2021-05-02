@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Palavyr.Core.Common.FileSystemTools;
 
-namespace Palavyr.API.Controllers.Attachments
+namespace Palavyr.Core.Services
 {
     public interface ITempPathCreator
     {

@@ -64,7 +64,7 @@ namespace Palavyr.Core.Services.PdfService
 
             html = responseCustomizer.Customize(html, emailRequest, account);
 
-            var fileName = await htmlToPdfClient.GeneratePdfFromHtml(html, localWriteToPath, identifier);
+            var fileName = await htmlToPdfClient.GeneratePdfFromHtmlOrNull(html, localWriteToPath, identifier);
             return fileName;
         }
     }

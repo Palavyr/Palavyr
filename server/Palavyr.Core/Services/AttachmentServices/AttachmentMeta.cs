@@ -1,4 +1,4 @@
-﻿namespace Palavyr.API.Controllers.Attachments
+﻿namespace Palavyr.Core.Services.AttachmentServices
 {
     public class AttachmentMeta
     {

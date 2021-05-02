@@ -1,75 +1,33 @@
-using System;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.FileSystemTools.FormPaths;
-using Palavyr.Core.Common.FileSystemTools.IO;
-using Palavyr.Core.Common.FileSystemTools.ListPaths;
-using Palavyr.Core.Common.GlobalConstants;
-using Palavyr.Core.Data;
-using Palavyr.Core.Services.AmazonServices;
+using Palavyr.Core.Services.LogoServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
     public class ModifyCompanyLogoController : PalavyrBaseController
     {
-        private readonly IConfiguration configuration;
-        private ILogger<ModifyCompanyLogoController> logger;
-        private AccountsContext accountsContext;
-        private readonly ILinkCreator linkCreator;
+        private readonly ILogoSaver logoSaver;
+        private readonly ILogoDeleter logoDeleter;
 
         public ModifyCompanyLogoController(
-            IConfiguration configuration,
-            AccountsContext accountsContext,
-            ILinkCreator linkCreator,
-            ILogger<ModifyCompanyLogoController> logger
+            ILogoSaver logoSaver,
+            ILogoDeleter logoDeleter
         )
         {
-            this.configuration = configuration;
-            this.logger = logger;
-            this.accountsContext = accountsContext;
-            this.linkCreator = linkCreator;
+            this.logoSaver = logoSaver;
+            this.logoDeleter = logoDeleter;
         }
 
         [HttpPut("account/settings/logo")]
         [ActionName("Decode")]
-        public async Task<IActionResult> Modify(
+        public async Task<string> Modify(
             [FromHeader] string accountId,
-            [FromForm(Name = "files")] IFormFile file) // will take form data. Check attachments
+            [FromForm(Name = "files")] IFormFile file)
         {
-            var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
-
-            // Get the directory where we save the logo images
-            var extension = Path.GetExtension(file.FileName);
-            var logoDirectory = FormDirectoryPaths.FormLogoImageDir(accountId);
-
-            var files = LogoPaths.ListLogoPathsAsDiskPaths(accountId);
-            if (files.Count > 0)
-            {
-                var dir = new DirectoryInfo(logoDirectory);
-                foreach (var fi in dir.GetFiles())
-                {
-                    fi.Delete();
-                }
-            }
-
-            var filepath = Path.Combine(logoDirectory, Guid.NewGuid().ToString()) + extension;
-            await FileIo.SaveFile(filepath, file);
-            var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
-            account.AccountLogoUri = filepath;
-            await accountsContext.SaveChangesAsync();
-
-            var link = await linkCreator.CreateLogoImageLinkAsUri(
-                accountId,
-                Path.GetFileName(filepath),
-                filepath,
-                previewBucket
-            );
-            return Ok(link);
+            await logoDeleter.DeleteLogo(accountId);
+            var preSignedUrl = await logoSaver.SaveLogo(accountId, file);
+            return preSignedUrl;
         }
     }
 }

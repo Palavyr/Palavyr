@@ -1,14 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.FileSystemTools.FormPaths;
-using Palavyr.Core.Common.GlobalConstants;
-using Palavyr.Core.Data;
-using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Services.AttachmentServices;
 
 namespace Palavyr.API.Controllers.Attachments
 {

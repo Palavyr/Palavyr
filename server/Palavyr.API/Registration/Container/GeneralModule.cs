@@ -11,9 +11,11 @@ using Palavyr.Core.Models;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Services;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AmazonServices.S3Service;
+using Palavyr.Core.Services.AttachmentServices;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Services.ConversationServices;
 using Palavyr.Core.Services.DynamicTableService;
@@ -21,6 +23,7 @@ using Palavyr.Core.Services.DynamicTableService.Compilers;
 using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.EmailService.Verification;
+using Palavyr.Core.Services.LogoServices;
 using Palavyr.Core.Services.PdfService;
 
 namespace Palavyr.API.Registration.Container
@@ -79,13 +82,15 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<NodeOrderChecker>().AsSelf();
             builder.RegisterType<DynamicResponseComponentExtractor>().AsSelf();
             builder.RegisterType<LinkCreator>().As<ILinkCreator>();
-            builder.RegisterType<FileLinkRetriever>().As<IFileLinkRetriever>();
             builder.RegisterType<AttachmentSaver>().As<IAttachmentSaver>();
             builder.RegisterType<S3KeyResolver>().As<IS3KeyResolver>();
             builder.RegisterType<TempPathCreator>().As<ITempPathCreator>();
             builder.RegisterType<AttachmentRetriever>().As<IAttachmentRetriever>();
             builder.RegisterType<AttachmentDeleter>().As<IAttachmentDeleter>();
-
+            builder.RegisterType<LocalFileDeleter>().As<ILocalFileDeleter>();
+            builder.RegisterType<LogoSaver>().As<ILogoSaver>();
+            builder.RegisterType<LogoDeleter>().As<ILogoDeleter>();
+            builder.RegisterType<LogoRetriever>().As<ILogoRetriever>();
             builder.RegisterType<NodeGetter>().AsSelf();
 
             builder.RegisterType<ConversationOptionSplitter>().As<IConversationOptionSplitter>().SingleInstance();

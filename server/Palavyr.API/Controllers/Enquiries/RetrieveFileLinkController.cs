@@ -1,37 +1,36 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.GlobalConstants;
+using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Services.AmazonServices;
+using Palavyr.Core.Services.AmazonServices.S3Service;
 
 namespace Palavyr.API.Controllers.Enquiries
 {
     public class RetrieveFileLinkController : PalavyrBaseController
     {
-        private readonly ILogger<RetrieveFileLinkController> logger;
         private readonly IConfiguration configuration;
         private readonly ILinkCreator linkCreator;
-
-        private string PreviewBucket => configuration.GetSection(ConfigSections.PreviewSection).Value;
+        private readonly IS3KeyResolver s3KeyResolver;
 
         public RetrieveFileLinkController(
-            ILogger<RetrieveFileLinkController> logger,
             IConfiguration configuration,
-            ILinkCreator linkCreator
+            ILinkCreator linkCreator,
+            IS3KeyResolver s3KeyResolver
         )
         {
-            this.logger = logger;
             this.configuration = configuration;
             this.linkCreator = linkCreator;
+            this.s3KeyResolver = s3KeyResolver;
         }
 
         [HttpGet("enquiries/link/{fileId}")]
-        public async Task<string> Get(
+        public string Get(
             [FromHeader] string accountId,
             [FromRoute] string fileId)
         {
-            var preSignedUrl = await linkCreator.CreatePreSignedUrlResponseLink(accountId, fileId, PreviewBucket);
+            var s3Key = s3KeyResolver.ResolvePreviewKey(accountId, fileId);
+            var previewBucket = configuration.GetPreviewBucket();
+            var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(s3Key, previewBucket);
             return preSignedUrl;
         }
     }
