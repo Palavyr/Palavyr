@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 
 export interface SidebarLinkItemProps {
     text: string;
