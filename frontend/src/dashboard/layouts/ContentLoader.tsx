@@ -6,6 +6,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStrip";
 import { yellow } from "@material-ui/core/colors";
 import { isDevelopmentStage } from "@api-client/clientUtils";
+import { YellowStrip } from "@common/components/YellowStrip";
 
 interface IContentLoader {
     open: boolean;
@@ -35,10 +36,6 @@ const useStyles = makeStyles((theme) => ({
     loading: {
         backgroundColor: yellow[300],
     },
-    strip: {
-        backgroundColor: theme.palette.warning.main,
-        height: "1rem",
-    },
 }));
 
 export const ContentLoader = ({ open, isLoading, dashboardAreasLoading, children }: IContentLoader) => {
@@ -50,7 +47,7 @@ export const ContentLoader = ({ open, isLoading, dashboardAreasLoading, children
         <main className={classNames(cls.content, { [cls.contentShift]: open })}>
             {(isLoading || dashboardAreasLoading) && <LinearProgress className={cls.loading} />}
             {isDev && <DevStagingStrip show={show} setShow={setShow} />}
-            {!show && <div className={cls.strip} />}
+            {!show && <YellowStrip />}
             <div>{children}</div>
         </main>
     );

@@ -18,6 +18,7 @@ import { GreenStrip } from "./components/sliver/ThinStrip";
 import { isDevelopmentStage, landingWidgetApiKey, widgetApiKey, widgetUrl } from "@api-client/clientUtils";
 import { IFrame } from "dashboard/content/demo/IFrame";
 import { Align } from "dashboard/layouts/positioning/Align";
+import { YellowStrip } from "@common/components/YellowStrip";
 
 AOS.init({
     duration: 1000,
@@ -99,6 +100,7 @@ export const LandingPage = () => {
             {!isCookieRulesDialogOpen && <CookieConsent handleCookieRulesDialogOpen={handleCookieRulesDialogOpen} />}
             <LandingPageDialogSelector openLoginDialog={openLoginDialog} dialogOpen={dialogOpen} onClose={closeDialog} openTermsDialog={openTermsDialog} openRegisterDialog={openRegisterDialog} openChangePasswordDialog={openChangePasswordDialog} />
             <CookieRules open={isCookieRulesDialogOpen} onClose={handleCookieRulesDialogClose} />
+            {!show && <YellowStrip />}
             <DevStagingStrip show={show} setShow={setShow} />
             <Header
                 openRegisterDialog={openRegisterDialog}
