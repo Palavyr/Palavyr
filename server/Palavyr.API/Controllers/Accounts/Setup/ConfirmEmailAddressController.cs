@@ -17,7 +17,7 @@ namespace Palavyr.API.Controllers.Accounts.Setup
         [HttpPost("account/confirmation/{authToken}/action/setup")]
         public async Task<IActionResult> Post([FromRoute] string authToken)
         {
-            var confirmed = await emailVerificationService.ConfirmEmailAddressAsync(authToken);
+            var confirmed = await emailVerificationService.ConfirmEmailAddressAsync(authToken.Trim());
             return Ok(confirmed);
         }
     }

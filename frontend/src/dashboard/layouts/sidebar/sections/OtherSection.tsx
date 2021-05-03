@@ -53,7 +53,7 @@ export const OtherSection = ({ isActive }: OtherSectionProps) => {
                 <SidebarLinkItem text="Settings" isActive={isActive} onClick={generalSettingsOnClick} IconComponent={<SettingsIcon className={cls.icon} />} />
                 <SidebarLinkItem text="Get Widget" isActive={isActive} onClick={getWidgetOnClick} IconComponent={<GetAppIcon className={cls.icon} />} />
             </Collapse>
-            <SidebarLinkItem text="Logout" isActive={isActive} onClick={logoutOnClick} IconComponent={<ExitToAppIcon className={cls.icon} />} />
+            <SidebarLinkItem text="Logout" isActive={true} onClick={logoutOnClick} IconComponent={<ExitToAppIcon className={cls.icon} />} />
         </List>
     );
 };

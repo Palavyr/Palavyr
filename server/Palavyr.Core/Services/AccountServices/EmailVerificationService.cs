@@ -1,7 +1,12 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Data;
+using Palavyr.Core.Data.Setup.WelcomeEmail;
+using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.StripeServices;
 
@@ -9,7 +14,8 @@ namespace Palavyr.Core.Services.AccountServices
 {
     public interface IEmailVerificationService
     {
-        public Task<bool> ConfirmEmailAddressAsync(string authToken);
+        Task<bool> ConfirmEmailAddressAsync(string authToken);
+        Task<bool> SendConfirmationTokenEmail(string emailAddress, string accountId);
     }
 
     public class EmailVerificationService : IEmailVerificationService
@@ -17,19 +23,22 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly AccountsContext accountsContext;
         private readonly ILogger<EmailVerificationService> logger;
         private readonly IRequestEmailVerification requestEmailVerification;
+        private readonly ISesEmail emailClient;
         private StripeCustomerService stripeCustomerService;
 
         public EmailVerificationService(
             AccountsContext accountsContext,
             ILogger<EmailVerificationService> logger,
             StripeCustomerService stripeCustomerService,
-            IRequestEmailVerification requestEmailVerification
+            IRequestEmailVerification requestEmailVerification,
+            ISesEmail emailClient
         )
         {
             this.stripeCustomerService = stripeCustomerService;
             this.accountsContext = accountsContext;
             this.logger = logger;
             this.requestEmailVerification = requestEmailVerification;
+            this.emailClient = emailClient;
         }
 
         public async Task<bool> ConfirmEmailAddressAsync(string authToken)
@@ -58,18 +67,34 @@ namespace Palavyr.Core.Services.AccountServices
 
             logger.LogDebug("Verifying email address. Already verified using an authtoken, so this is okay");
             var emailVerified = await requestEmailVerification.VerifyEmailAddressAsync(emailVerification.EmailAddress);
-            
+
             if (emailVerified)
             {
                 var customer = await stripeCustomerService.CreateNewStripeCustomer(account.EmailAddress);
-                
+
                 account.StripeCustomerId = customer.Id;
-                
+
                 await accountsContext.SaveChangesAsync();
                 return true;
             }
 
             return false;
+        }
+
+        public async Task<bool> SendConfirmationTokenEmail(string emailAddress, string accountId)
+        {
+            // prepare the account confirmation email
+            logger.LogDebug("Provide an account setup confirmation token");
+            var confirmationToken = Guid.NewGuid().ToString().Split("-")[0];
+            await accountsContext.EmailVerifications.AddAsync(EmailVerification.CreateNew(confirmationToken, emailAddress, accountId));
+            await accountsContext.SaveChangesAsync();
+
+            logger.LogDebug($"Sending emails from {EmailConstants.PalavyrMainEmailAddress}");
+            var htmlBody = EmailConfirmationHTML.GetConfirmationEmailBody(emailAddress, confirmationToken);
+            var textBody = EmailConfirmationHTML.GetConfirmationEmailBodyText(emailAddress, confirmationToken);
+
+            var sendEmailOk = await emailClient.SendEmail(EmailConstants.PalavyrMainEmailAddress, emailAddress, EmailConstants.PalavyrSubject, htmlBody, textBody);
+            return sendEmailOk;
         }
     }
 }

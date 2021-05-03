@@ -1,10 +1,12 @@
 import * as React from "react";
-import { makeStyles, Tooltip, Typography } from "@material-ui/core";
+import { CircularProgress, makeStyles, Tooltip, Typography } from "@material-ui/core";
 import { SessionStorage } from "localStorage/sessionStorage";
 import { DashboardContext } from "../DashboardContext";
 import Fade from "@material-ui/core/Fade";
 import { GeneralSettingsLoc } from "@Palavyr-Types";
 import { useHistory } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Spinner } from "react-bootstrap";
 
 const useStyles = makeStyles((theme) => ({
     logwrapper: {
@@ -44,6 +46,8 @@ export const UserDetails = () => {
 
     const email = SessionStorage.getEmailAddress();
     const googleImage = SessionStorage.getGoogleImage();
+    const [loading, setLoading] = useState<boolean>(true);
+
     const { subscription, setViewName } = React.useContext(DashboardContext);
 
     let details: JSX.Element;
@@ -63,7 +67,7 @@ export const UserDetails = () => {
         details = (
             <>
                 <Typography>Logged in as:</Typography>
-                <Typography gutterBottom noWrap={false}>
+                <Typography gutterBottom noWrap={false} variant="body2">
                     {email}
                 </Typography>
                 <Typography variant="h6">Subscription: {subscription}</Typography>
@@ -76,9 +80,16 @@ export const UserDetails = () => {
         setViewName("General Settings");
         history.push(`/dashboard/settings/password?tab=${GeneralSettingsLoc.password}`);
     };
+
+    useEffect(() => {
+        setTimeout(() => {
+            setLoading(false);
+        }, 1200);
+    }, []);
+
     return (
         <div onClick={userOnClick} className={cls.logwrapper}>
-            {details}
+            {loading ? <CircularProgress /> : details}
         </div>
     );
 };

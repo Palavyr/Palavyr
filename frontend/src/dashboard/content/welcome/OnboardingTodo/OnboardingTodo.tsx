@@ -35,8 +35,8 @@ export const OnboardingTodo = ({ todos }: OnboardingTodoProps) => {
                     />
                 )}
                 {!todos?.name && <TodoCard link="/dashboard/settings/companyName?tab=2" text="Set your company name" />}
-                {!todos?.logoUri && <TodoCard link="/dashboard/settings/companyLogo?tab=4" text="Set your company logo in the settings page" />}
-                {!todos?.phoneNumber && <TodoCard link="settings/phoneNumber?tab=3" text="Set your default contact phone number in the settings page" />}
+                {!todos?.phoneNumber && <TodoCard link="/dashboard/settings/phoneNumber?tab=3" text="Set your default contact phone number" />}
+                {!todos?.logoUri && <TodoCard link="/dashboard/settings/companyLogo?tab=4" text="Set your company logo" />}
             </SpaceEvenly>
         </div>
     );

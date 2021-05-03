@@ -8,6 +8,7 @@ import { BillingSection } from "./sections/BillingSection";
 import { WidgetStateSwitch } from "./WidgetStateSwitch";
 import { OtherSection } from "./sections/OtherSection";
 import { AreaNameDetails } from "@Palavyr-Types";
+import { SidebarLinkItem } from "./sections/sectionComponents/SideBarLinkItem";
 
 export interface ISideBarMenu {
     areaNameDetails: AreaNameDetails;

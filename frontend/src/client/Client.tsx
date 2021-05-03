@@ -193,6 +193,7 @@ export class ApiClient {
         Account: {
             getApiKey: async (): Promise<AxiosResponse<string>> => this.client.get(`account/settings/api-key`),
             confirmEmailAddress: async (authToken: string): Promise<AxiosResponse<boolean>> => this.client.post(`account/confirmation/${authToken}/action/setup`),
+            resendConfirmationToken: async (emailAddress: string): Promise<AxiosResponse<boolean>> => this.client.post(`account/confirmation/token/resend`, { EmailAddress: emailAddress }),
             checkIsActive: async (): Promise<AxiosResponse<boolean>> => this.client.get(`account/is-active`),
 
             UpdatePassword: async (oldPassword: string, newPassword: string): Promise<AxiosResponse<boolean>> => this.client.put(`account/settings/password`, { OldPassword: oldPassword, Password: newPassword }),

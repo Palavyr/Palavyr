@@ -2,15 +2,13 @@ import React, { useState, useCallback, useRef } from "react";
 import { makeStyles, useTheme, TextField, FormControlLabel, Checkbox, Typography, FormHelperText, Button } from "@material-ui/core";
 import { FormDialog } from "@common/components/borrowed/FormDialog";
 import { VisibilityPasswordTextField } from "@common/components/borrowed/VisibilityPasswordTextField";
-import { HighlightedInformation } from "@common/components/borrowed/HighlightedInformation";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
 import { useHistory } from "react-router-dom";
-import GoogleLogin, { GoogleLoginProps, GoogleLoginResponse } from "react-google-login";
+import GoogleLogin, { GoogleLoginResponse } from "react-google-login";
 import { DividerWithText } from "@common/components/DividerWithText";
 import { googleOAuthClientId } from "@api-client/clientUtils";
 import { INVALID_EMAIL, PASSWORDS_DONT_MATCH } from "@constants";
 import Auth from "auth/Auth";
-
 
 const useStyles = makeStyles((theme) => ({
     link: {
@@ -25,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
         },
         "&:enabled:focus": {
             color: theme.palette.primary.dark,
-        }
+        },
     },
     registerbutton: {
         color: "white",
@@ -34,12 +32,9 @@ const useStyles = makeStyles((theme) => ({
     googlebutton: {
         textAlign: "center",
         width: "100%",
-        marginBottom: "1rem"
+        marginBottom: "1rem",
     },
-
 }));
-
-
 
 export type RegisterFormStatusTypes = "passwordsDontMatch" | "passwordTooShort" | "invalidEmail" | null;
 
@@ -51,7 +46,6 @@ export interface IRegisterDialog {
 }
 
 export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: IRegisterDialog) => {
-
     const theme = useTheme();
     const classes = useStyles();
     const history = useHistory();
@@ -69,16 +63,14 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
         setTimeout(() => {
             history.push("/dashboard/confirm");
         }, 150);
-    }
+    };
 
     const defaultError = (response) => {
         console.log(response);
-        alert("Error registering: " + response)
-    }
-
+        alert("Error registering: " + response);
+    };
 
     const register = useCallback(() => {
-
         const termsCheckBoxRef = registerTermsCheckboxRef.current;
         const registerPassword = registerPasswordRef.current;
         const registerEmail = registerEmailRef.current;
@@ -93,7 +85,7 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
         }
 
         if (registerEmail && (registerEmail.value === "" || registerEmail.value === null)) {
-            setStatus(INVALID_EMAIL)
+            setStatus(INVALID_EMAIL);
             return;
         }
 
@@ -103,17 +95,9 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
             setIsLoading(false);
             if (registerEmail !== null && registerPassword !== null) {
                 var res = await Auth.register(registerEmail.value, registerPassword.value, defaultSuccess, defaultError);
-
             }
         }, 1500);
-    }, [
-        setIsLoading,
-        setStatus,
-        setHasTermsOfServiceError,
-        registerPasswordRef,
-        registerPasswordRepeatRef,
-        registerTermsCheckboxRef,
-    ]);
+    }, [setIsLoading, setStatus, setHasTermsOfServiceError, registerPasswordRef, registerPasswordRepeatRef, registerTermsCheckboxRef]);
 
     const passwordHelperText = () => {
         if (status === "passwordTooShort") {
@@ -123,43 +107,44 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
             return "Your passwords dont match.";
         }
         return null;
-    }
+    };
 
     const TermsOfServiceLink = () => {
         return (
             <Typography variant="body1">
                 I agree to the
-                <span className={classes.link} onClick={isLoading ? null : openTermsDialog} tabIndex={0} role="button"
+                <span
+                    className={classes.link}
+                    onClick={isLoading ? null : openTermsDialog}
+                    tabIndex={0}
+                    role="button"
                     onKeyDown={(event) => {
                         // For screenreaders listen to space and enter events
-                        if (
-                            (!isLoading && event.keyCode === 13) ||
-                            event.keyCode === 32
-                        ) {
+                        if ((!isLoading && event.keyCode === 13) || event.keyCode === 32) {
                             openTermsDialog();
                         }
                     }}
                 >
                     {" "}
-                terms of service
+                    terms of service
                 </span>
             </Typography>
-        )
-    }
+        );
+    };
 
     const passwordOnChange = () => {
         if (status === "passwordTooShort" || status === "passwordsDontMatch") {
             setStatus(null);
         }
-    }
+    };
 
     const registerGoogleSuccess = () => {
         defaultSuccess();
-    }
+    };
 
     const registerGoogleError = (response) => {
         defaultError(response.message);
-    }
+    };
 
     const responseGoogleSuccess = useCallback(async (response: GoogleLoginResponse) => {
         const termsCheckBoxRef = registerTermsCheckboxRef.current;
@@ -172,13 +157,13 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
             var other = response.googleId;
             var res = await Auth.registerWithGoogle(oneTimeCode, other, registerGoogleSuccess, registerGoogleError);
         } else {
-            alert("Account not recognized")
+            alert("Account not recognized");
         }
-    }, [])
+    }, []);
 
     const responseGoogleFailure = () => {
         Auth.googleLogout(() => null);
-    }
+    };
 
     return (
         <FormDialog
@@ -193,14 +178,8 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
             hideBackdrop
             content={
                 <>
-                    <div className={classes.googlebutton} >
-                        <GoogleLogin
-                            theme="dark"
-                            clientId={googleOAuthClientId}
-                            buttonText="Sign up with Google"
-                            onSuccess={responseGoogleSuccess}
-                            onFailure={responseGoogleFailure}
-                        />
+                    <div className={classes.googlebutton}>
+                        <GoogleLogin theme="dark" clientId={googleOAuthClientId} buttonText="Sign up with Google" onSuccess={responseGoogleSuccess} onFailure={responseGoogleFailure} />
                     </div>
                     <br></br>
                     <DividerWithText text={"OR"} />
@@ -228,9 +207,7 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
                         margin="normal"
                         required
                         fullWidth
-                        error={
-                            status === "passwordTooShort" || status === "passwordsDontMatch"
-                        }
+                        error={status === "passwordTooShort" || status === "passwordsDontMatch"}
                         label="Password"
                         inputRef={registerPasswordRef}
                         autoComplete="off"
@@ -244,9 +221,7 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
                         margin="normal"
                         required
                         fullWidth
-                        error={
-                            status === "passwordTooShort" || status === "passwordsDontMatch"
-                        }
+                        error={status === "passwordTooShort" || status === "passwordsDontMatch"}
                         label="Repeat Password"
                         inputRef={registerPasswordRepeatRef}
                         autoComplete="off"
@@ -271,8 +246,7 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
                     />
                     {hasTermsOfServiceError && (
                         <FormHelperText error style={{ display: "block", marginTop: theme.spacing(-1) }}>
-                            In order to create an account, you have to accept our terms of
-                            service.
+                            In order to create an account, you have to accept our terms of service.
                         </FormHelperText>
                     )}
                     {/* {status === "accountCreated" ? (
@@ -303,4 +277,4 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
             }
         />
     );
-}
+};
