@@ -8,6 +8,7 @@ param([string]$pass = "0987654321", [string]$user = "postgres", [string]$awsProf
 ## To modify the username/pass, start pgAdmin4 and visit http://127.0.0.1:60026/browser/
 ## make sure the server is creted and if you need to, create the dev user.
 
+# $server = "dev-palavyr-database.clznnuwhyqf6.us-east-1.rds.amazonaws.com";
 $server = "127.0.0.1";
 $port = "5432";
 $api = ".\\Palavyr.API";
