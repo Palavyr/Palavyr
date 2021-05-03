@@ -16,6 +16,7 @@ using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.AttachmentServices;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Services.ConversationServices;
+using Palavyr.Core.Services.Deletion;
 using Palavyr.Core.Services.DynamicTableService;
 using Palavyr.Core.Services.DynamicTableService.Compilers;
 using Palavyr.Core.Services.DynamicTableService.Thresholds;
@@ -96,6 +97,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<CompileSenderDetails>().As<ICompileSenderDetails>();
             builder.RegisterType<ResponseEmailSender>().As<IResponseEmailSender>();
             builder.RegisterType<S3Retriever>().As<IS3Retriever>();
+            builder.RegisterType<AreaDeleter>().As<IAreaDeleter>();
         }
     }
 }
