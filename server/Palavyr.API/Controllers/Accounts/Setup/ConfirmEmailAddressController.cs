@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Services.AccountServices;
@@ -15,10 +16,10 @@ namespace Palavyr.API.Controllers.Accounts.Setup
         }
 
         [HttpPost("account/confirmation/{authToken}/action/setup")]
-        public async Task<IActionResult> Post([FromRoute] string authToken)
+        public async Task<bool> Post([FromRoute] string authToken, CancellationToken cancellationToken)
         {
-            var confirmed = await emailVerificationService.ConfirmEmailAddressAsync(authToken.Trim());
-            return Ok(confirmed);
+            var confirmed = await emailVerificationService.ConfirmEmailAddressAsync(authToken.Trim(), cancellationToken);
+            return confirmed;
         }
     }
 }

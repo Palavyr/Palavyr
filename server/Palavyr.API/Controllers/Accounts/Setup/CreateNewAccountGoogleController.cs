@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,9 +20,9 @@ namespace Palavyr.API.Controllers.Accounts.Setup
 
         [AllowAnonymous]
         [HttpPost("account/create/google")]
-        public async Task<IActionResult> Create([FromBody] GoogleRegistrationDetails registrationDetails)
+        public async Task<IActionResult> Create([FromBody] GoogleRegistrationDetails registrationDetails, CancellationToken cancellationToken)
         {
-            var credentials = await setupService.CreateNewAccountViaGoogleAsync(registrationDetails);
+            var credentials = await setupService.CreateNewAccountViaGoogleAsync(registrationDetails, cancellationToken);
             return Ok(credentials);
         }
     }

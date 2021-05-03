@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,8 +15,8 @@ namespace Palavyr.Core.Services.AccountServices
 {
     public interface IEmailVerificationService
     {
-        Task<bool> ConfirmEmailAddressAsync(string authToken);
-        Task<bool> SendConfirmationTokenEmail(string emailAddress, string accountId);
+        Task<bool> ConfirmEmailAddressAsync(string authToken, CancellationToken cancellationToken);
+        Task<bool> SendConfirmationTokenEmail(string emailAddress, string accountId, CancellationToken cancellationToken);
     }
 
     public class EmailVerificationService : IEmailVerificationService
@@ -41,12 +42,12 @@ namespace Palavyr.Core.Services.AccountServices
             this.emailClient = emailClient;
         }
 
-        public async Task<bool> ConfirmEmailAddressAsync(string authToken)
+        public async Task<bool> ConfirmEmailAddressAsync(string authToken, CancellationToken cancellationToken)
         {
             logger.LogDebug("Attempting to confirm email via auth Token.");
             var emailVerification = await accountsContext
                 .EmailVerifications
-                .SingleOrDefaultAsync(row => row.AuthenticationToken == authToken.Trim());
+                .SingleOrDefaultAsync(row => row.AuthenticationToken == authToken.Trim(), cancellationToken);
             if (emailVerification == null)
             {
                 return false;
@@ -81,13 +82,13 @@ namespace Palavyr.Core.Services.AccountServices
             return false;
         }
 
-        public async Task<bool> SendConfirmationTokenEmail(string emailAddress, string accountId)
+        public async Task<bool> SendConfirmationTokenEmail(string emailAddress, string accountId, CancellationToken cancellationToken)
         {
             // prepare the account confirmation email
             logger.LogDebug("Provide an account setup confirmation token");
             var confirmationToken = Guid.NewGuid().ToString().Split("-")[0];
             await accountsContext.EmailVerifications.AddAsync(EmailVerification.CreateNew(confirmationToken, emailAddress, accountId));
-            await accountsContext.SaveChangesAsync();
+            await accountsContext.SaveChangesAsync(cancellationToken);
 
             logger.LogDebug($"Sending emails from {EmailConstants.PalavyrMainEmailAddress}");
             var htmlBody = EmailConfirmationHTML.GetConfirmationEmailBody(emailAddress, confirmationToken);

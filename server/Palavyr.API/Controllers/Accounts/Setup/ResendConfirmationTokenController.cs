@@ -40,7 +40,7 @@ namespace Palavyr.API.Controllers.Accounts.Setup
             }
 
             // resend
-            var result = await emailVerificationService.SendConfirmationTokenEmail(emailRequest.EmailAddress, accountId);
+            var result = await emailVerificationService.SendConfirmationTokenEmail(emailRequest.EmailAddress, accountId, cancellationToken);
             return result;
         }
     }

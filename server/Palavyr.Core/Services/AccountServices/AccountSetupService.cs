@@ -1,25 +1,24 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.GlobalConstants;
 using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Data;
 using Palavyr.Core.Data.Setup.SeedData;
-using Palavyr.Core.Data.Setup.WelcomeEmail;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Requests.Registration;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Services.AuthenticationServices;
-using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 
 namespace Palavyr.Core.Services.AccountServices
 {
     public interface IAccountSetupService
     {
-        Task<Credentials> CreateNewAccountViaDefaultAsync(AccountDetails newAccountDetails);
-        Task<Credentials> CreateNewAccountViaGoogleAsync(GoogleRegistrationDetails registrationDetails);
+        Task<Credentials> CreateNewAccountViaDefaultAsync(AccountDetails newAccountDetails, CancellationToken cancellationToken);
+        Task<Credentials> CreateNewAccountViaGoogleAsync(GoogleRegistrationDetails registrationDetails, CancellationToken cancellationToken);
     }
 
     public class AccountSetupService : IAccountSetupService
@@ -52,7 +51,7 @@ namespace Palavyr.Core.Services.AccountServices
             this.emailVerificationService = emailVerificationService;
         }
 
-        public async Task<Credentials> CreateNewAccountViaGoogleAsync(GoogleRegistrationDetails googleRegistration)
+        public async Task<Credentials> CreateNewAccountViaGoogleAsync(GoogleRegistrationDetails googleRegistration, CancellationToken cancellationToken)
         {
             logger.LogDebug("Creating an account using Google registration.");
             logger.LogDebug("Attempting to authenticate the google onetime code.");
@@ -81,7 +80,7 @@ namespace Palavyr.Core.Services.AccountServices
             logger.LogDebug("Adding new account via GOOGLE...");
             await accountsContext.Accounts.AddAsync(account);
 
-            var ok = await RegisterAccount(accountId, apiKey, payload.Email);
+            var ok = await RegisterAccount(accountId, apiKey, payload.Email, cancellationToken);
             logger.LogDebug("Send Email result was " + (ok ? "OK" : " a FAIL"));
 
             if (!ok) return Credentials.CreateUnauthenticatedResponse(EmailAddressNotFound);
@@ -109,7 +108,7 @@ namespace Palavyr.Core.Services.AccountServices
             return session;
         }
 
-        public async Task<Credentials> CreateNewAccountViaDefaultAsync(AccountDetails newAccountDetails)
+        public async Task<Credentials> CreateNewAccountViaDefaultAsync(AccountDetails newAccountDetails, CancellationToken cancellationToken)
         {
             // confirm account doesn't already exist
             if (AccountExists(newAccountDetails.EmailAddress))
@@ -131,7 +130,7 @@ namespace Palavyr.Core.Services.AccountServices
             );
             logger.LogDebug("Adding new account via DEFAULT...");
             await accountsContext.Accounts.AddAsync(account);
-            var ok = await RegisterAccount(accountId, apiKey, newAccountDetails.EmailAddress);
+            var ok = await RegisterAccount(accountId, apiKey, newAccountDetails.EmailAddress, cancellationToken);
             logger.LogDebug("Send Email result was " + (ok ? "OK" : " a FAIL"));
 
             if (!ok) return Credentials.CreateUnauthenticatedResponse(EmailAddressNotFound);
@@ -151,7 +150,7 @@ namespace Palavyr.Core.Services.AccountServices
             return account != null;
         }
 
-        private async Task<bool> RegisterAccount(string accountId, string apiKey, string emailAddress)
+        private async Task<bool> RegisterAccount(string accountId, string apiKey, string emailAddress, CancellationToken cancellationToken)
         {
             // Add the default subscription (free with 2 areas)
             logger.LogDebug($"Add default subscription for {accountId}");
@@ -165,7 +164,7 @@ namespace Palavyr.Core.Services.AccountServices
             await dashContext.WidgetPreferences.AddAsync(seeData.WidgetPreference);
             await dashContext.SelectOneFlats.AddRangeAsync(seeData.DefaultDynamicTables);
             await dashContext.DynamicTableMetas.AddRangeAsync(seeData.DefaultDynamicTableMetas);
-            var result = await emailVerificationService.SendConfirmationTokenEmail(emailAddress, accountId);
+            var result = await emailVerificationService.SendConfirmationTokenEmail(emailAddress, accountId, cancellationToken);
             return result;
         }
     }
