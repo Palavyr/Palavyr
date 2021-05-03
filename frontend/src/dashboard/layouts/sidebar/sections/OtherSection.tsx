@@ -13,7 +13,7 @@ import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
 
 const useStyles = makeStyles((theme) => ({
     icon: {
-        color: theme.palette.secondary.main,
+        color: theme.palette.secondary.light,
     },
 }));
 
