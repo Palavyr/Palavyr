@@ -1,15 +1,6 @@
 import React from "react";
 import { makeStyles, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
-    icon: {
-        color: theme.palette.secondary.light,
-    },
-    sidebarText: {
-        fontWeight: "normal",
-        // fontSize: "14px",
-    },
-}));
 export interface SidebarLinkItemProps {
     text: string;
     isActive: boolean;
