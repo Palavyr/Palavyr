@@ -1,4 +1,3 @@
-using System;
 using Autofac;
 using Hangfire;
 using Microsoft.AspNetCore.Builder;
@@ -55,18 +54,6 @@ namespace Palavyr.API.Registration.BackgroundJobs
                         "Clean Expired Sessions",
                         () => container.Resolve<IRemoveStaleSessions>().CleanSessionDB(),
                         Cron.Hourly
-                    );
-                recurringJobManager
-                    .AddOrUpdate(
-                        "Validate All Attachment DB Entries",
-                        () => container.Resolve<IValidateAttachments>().ValidateAllAttachments(),
-                        Cron.Weekly
-                    );
-                recurringJobManager
-                    .AddOrUpdate(
-                        "Validate All Files",
-                        () => container.Resolve<IValidateAttachments>().ValidateAllFiles(),
-                        Cron.Weekly
                     );
             }
         }

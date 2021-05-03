@@ -62,6 +62,9 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                     b.Property<string>("Prologue")
                         .HasColumnType("text");
 
+                    b.Property<bool>("SendAttachmentsOnFallback")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Subject")
                         .HasColumnType("text");
 
@@ -451,6 +454,9 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                         .HasColumnType("text");
 
                     b.Property<string>("RiskyName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("S3Key")
                         .HasColumnType("text");
 
                     b.Property<string>("SafeName")

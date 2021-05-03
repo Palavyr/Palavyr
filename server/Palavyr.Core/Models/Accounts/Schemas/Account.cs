@@ -10,9 +10,9 @@ namespace Palavyr.Core.Models.Accounts.Schemas
     {
         [Key] public int? Id { get; set; }
         public string? Password { get; set; }
-        public string? EmailAddress { get; set; }
+        public string EmailAddress { get; set; }
         public bool DefaultEmailIsVerified { get; set; }
-        public string? AccountId { get; set; }
+        public string AccountId { get; set; }
         public string? CompanyName { get; set; }
         public string? PhoneNumber { get; set; }
         public DateTime CreationDate { get; set; }
@@ -20,7 +20,7 @@ namespace Palavyr.Core.Models.Accounts.Schemas
         public string? GeneralFallbackSubject { get; set; }
         public string? GeneralFallbackEmailTemplate { get; set; }
 
-        public string? ApiKey { get; set; }
+        public string ApiKey { get; set; }
         public bool Active { get; set; }
         public string Locale { get; set; } = "en-AU";
         public AccountType AccountType { get; set; }

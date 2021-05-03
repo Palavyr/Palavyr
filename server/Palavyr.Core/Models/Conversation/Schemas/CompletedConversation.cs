@@ -7,7 +7,7 @@ namespace Palavyr.Core.Models.Conversation.Schemas
     {
         [Key]
         public int? Id { get; set; }
-        public string ConversationId { get; set; }
+        public string ConversationId { get; set; } // This will be used when collecing enquiries. Then used to get the 
         public string ResponsePdfId { get; set; }
         public DateTime TimeStamp { get; set; }
         public string AccountId { get; set; }

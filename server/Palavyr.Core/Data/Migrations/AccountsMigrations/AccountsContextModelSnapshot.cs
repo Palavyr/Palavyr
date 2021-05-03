@@ -27,6 +27,7 @@ namespace Palavyr.Core.Data.Migrations.AccountsMigrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("AccountId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("AccountLogoUri")
@@ -39,6 +40,7 @@ namespace Palavyr.Core.Data.Migrations.AccountsMigrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("ApiKey")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("CompanyName")
@@ -54,6 +56,7 @@ namespace Palavyr.Core.Data.Migrations.AccountsMigrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("EmailAddress")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("GeneralFallbackEmailTemplate")
@@ -97,9 +100,6 @@ namespace Palavyr.Core.Data.Migrations.AccountsMigrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("LatestFullDbBackup")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LatestUserDataBackup")
                         .HasColumnType("text");
 
                     b.HasKey("Id");

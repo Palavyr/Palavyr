@@ -9,7 +9,8 @@ namespace Palavyr.Core.Common.FileSystemTools
 
         public static string InstallationRoot =>
             Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), DataFolder);
-        
+
+        public const string TempData = "TempData";
         public const string UserData = "UserData";
         public const string Attachments = "Attachments";
         public const string ResponsePDF = "ResponsePDF";

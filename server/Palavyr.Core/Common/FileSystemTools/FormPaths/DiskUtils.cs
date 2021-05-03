@@ -11,12 +11,6 @@ namespace Palavyr.Core.Common.FileSystemTools.FormPaths
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
         }
-        
-        public static void DeleteAreaFolder(string accountId, string areaId)
-        {
-            var areaDir = FormDirectoryPaths.FormAreaDir(accountId, areaId);
-            DeleteFolder(areaDir);
-        }
 
         public static void DeleteDbBackupFolder()
         {

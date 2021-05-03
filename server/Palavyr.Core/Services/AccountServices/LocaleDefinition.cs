@@ -12,24 +12,27 @@ namespace Palavyr.Core.Services.AccountServices
         public const string CurrencySymbol = "currencySymbol";
         public const string PhonePattern = "phonePattern";
 
+        public const string DefaultCountryId = "en-US"; 
+        public static Dictionary<string, string> DefaultLocale => new Dictionary<string, string>()
+        {
+            {CountryId, DefaultCountryId},
+            {CountryName, "United States"},
+            {CurrencySymbol, "$"},
+            {PhonePattern, "+1 (###) ###-####"}
+        };
+        
         public string[] GetSupportedLocales => LocaleMap.Select(dict => dict[CountryId]).ToArray();
 
         public Dictionary<string, string>[] LocaleMap =>
-            new Dictionary<string, string>[]
+            new[]
             {
+                DefaultLocale,
                 new Dictionary<string, string>()
                 {
                     {CountryId, "en-AU"},
                     {CountryName, "Australia"},
                     {CurrencySymbol, "$"},
                     {PhonePattern, "+61 (##) ####-####"}
-                },
-                new Dictionary<string, string>()
-                {
-                    {CountryId, "en-US"},
-                    {CountryName, "United States"},
-                    {CurrencySymbol, "$"},
-                    {PhonePattern, "+1 (###) ###-####"}
                 },
                 new Dictionary<string, string>()
                 {

@@ -1,6 +1,6 @@
 using Autofac;
 using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.GlobalConstants;
+using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers;
 using Stripe;
@@ -20,7 +20,7 @@ namespace Palavyr.API.Registration.Container
 
         protected override void Load(ContainerBuilder builder)
         {
-            StripeConfiguration.ApiKey = configuration.GetSection(ConfigSections.StripeKeySection).Value;
+            StripeConfiguration.ApiKey = configuration.GetStripeKey();
             StripeConfiguration.MaxNetworkRetries = stripeRetriesCount;
 
             builder.RegisterType<StripeWebhookAuthService>().AsSelf();

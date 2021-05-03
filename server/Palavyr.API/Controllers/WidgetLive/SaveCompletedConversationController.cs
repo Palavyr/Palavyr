@@ -55,7 +55,6 @@ namespace Palavyr.API.Controllers.WidgetLive
             {
                 convoContext.CompletedConversations.Remove(existingConvo);
                 await convoContext.SaveChangesAsync();
-
             }
             
             // TODO: Add validation on the phone number and the name perhaps

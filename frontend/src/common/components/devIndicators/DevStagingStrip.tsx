@@ -1,6 +1,7 @@
-import { currentEnvironment, isDevelopmentStage, softwareVersion } from "@api-client/clientUtils";
+import { currentEnvironment, softwareVersion } from "@api-client/clientUtils";
 import { makeStyles, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import { SetState } from "@Palavyr-Types";
+import React from "react";
 import { SinglePurposeButton } from "../SinglePurposeButton";
 
 const useStyles = makeStyles((theme) => ({
@@ -11,14 +12,19 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "center",
     },
 }));
-export const DevStagingStrip = () => {
+
+export interface DevStagingStripProps {
+    show: boolean;
+    setShow: SetState<boolean>;
+}
+
+export const DevStagingStrip = ({ show, setShow }: DevStagingStripProps) => {
     const cls = useStyles();
     const text = `This is ${currentEnvironment}` + (softwareVersion ? `: ${softwareVersion}` : "");
-    const isDev = isDevelopmentStage();
-    const [show, setShow] = useState<boolean>(isDev);
+    // const [show, setShow] = useState<boolean>(isDev);
     return (
         <>
-            {isDev && show && (
+            {show && (
                 <>
                     <div className={cls.devStripContainer}>
                         <Typography variant="h5">{text}</Typography>

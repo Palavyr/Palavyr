@@ -7,9 +7,7 @@ namespace Palavyr.BackupAndRestore
 {
     public interface IUpdateDatabaseLatest
     {
-        Task UpdateLatestUserDataRecord(string latestUserDataBackup);
-        Task UpdateLatestDatabaseRecord(string latestDatabaseBackup);
-        Task UpdateLatestBackupRecords(string latestDatabaseBackup, string latestUserDataBackup);
+        Task WriteAndSaveRecords(string latestDatabaseBackup);
     }
 
     public class UpdateDatabaseLatest : IUpdateDatabaseLatest
@@ -21,38 +19,18 @@ namespace Palavyr.BackupAndRestore
             this.accountsContext = accountsContext;
         }
 
-        public async Task UpdateLatestUserDataRecord(string latestUserDataBackup)
-        {
-            await WriteAndSaveRecords("", latestUserDataBackup);
-        }
-
-        public async Task UpdateLatestDatabaseRecord(string latestDatabaseBackup)
-        {
-            await WriteAndSaveRecords(latestDatabaseBackup, "");
-        }
-
-        public async Task UpdateLatestBackupRecords(string latestDatabaseBackup, string latestUserDataBackup)
-        {
-            await WriteAndSaveRecords(latestDatabaseBackup, latestUserDataBackup);
-        }
-
-        async Task WriteAndSaveRecords(string latestDatabaseBackup, string latestUserDataBackup)
+        public async Task WriteAndSaveRecords(string latestDatabaseBackup)
         {
             var currentRecords = await accountsContext.Backups.FirstOrDefaultAsync();
             if (currentRecords == null)
             {
-                await accountsContext.Backups.AddAsync(Backup.Create(latestDatabaseBackup, latestUserDataBackup));
+                await accountsContext.Backups.AddAsync(Backup.Create(latestDatabaseBackup));
             }
             else
             {
                 if (!string.IsNullOrWhiteSpace(latestDatabaseBackup))
                 {
                     currentRecords.LatestFullDbBackup = latestDatabaseBackup;
-                }
-
-                if (!string.IsNullOrWhiteSpace(latestUserDataBackup))
-                {
-                    currentRecords.LatestUserDataBackup = latestUserDataBackup;
                 }
             }
 

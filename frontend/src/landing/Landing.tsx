@@ -15,7 +15,7 @@ import { Sliver } from "./components/sliver/Sliver";
 import { CHANGE_PASSWORD, REGISTER, TERMS_OF_SERVICE } from "@constants";
 import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStrip";
 import { GreenStrip } from "./components/sliver/ThinStrip";
-import { landingWidgetApiKey, widgetApiKey, widgetUrl } from "@api-client/clientUtils";
+import { isDevelopmentStage, landingWidgetApiKey, widgetApiKey, widgetUrl } from "@api-client/clientUtils";
 import { IFrame } from "dashboard/content/demo/IFrame";
 import { Align } from "dashboard/layouts/positioning/Align";
 
@@ -55,6 +55,7 @@ export const LandingPage = () => {
     const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState<boolean>(false);
     const [dialogOpen, setDialogOpen] = useState<DialogTypes>(null);
     const [isCookieRulesDialogOpen, setIsCookieRulesDialogOpen] = useState<boolean>(false);
+    const [show, setShow] = useState<boolean>(isDevelopmentStage());
 
     const openLoginDialog = useCallback(() => {
         setDialogOpen("login");
@@ -93,13 +94,12 @@ export const LandingPage = () => {
     const handleCookieRulesDialogClose = useCallback(() => {
         setIsCookieRulesDialogOpen(false);
     }, [setIsCookieRulesDialogOpen]);
-
     return (
         <div className={cls.wrapper}>
             {!isCookieRulesDialogOpen && <CookieConsent handleCookieRulesDialogOpen={handleCookieRulesDialogOpen} />}
             <LandingPageDialogSelector openLoginDialog={openLoginDialog} dialogOpen={dialogOpen} onClose={closeDialog} openTermsDialog={openTermsDialog} openRegisterDialog={openRegisterDialog} openChangePasswordDialog={openChangePasswordDialog} />
             <CookieRules open={isCookieRulesDialogOpen} onClose={handleCookieRulesDialogClose} />
-            <DevStagingStrip />
+            <DevStagingStrip show={show} setShow={setShow} />
             <Header
                 openRegisterDialog={openRegisterDialog}
                 openLoginDialog={openLoginDialog}

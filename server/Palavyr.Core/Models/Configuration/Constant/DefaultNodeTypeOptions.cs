@@ -224,8 +224,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
             {
                 Value = StringName;
                 Text = "Yes or No";
-                PathOptions = new List<string>() {"No", "Yes"};
-                ValueOptions = new List<string>() {"No", "Yes"};
+                PathOptions = new List<string>() {"Yes", "No"};
+                ValueOptions = new List<string>() {"Yes", "No"};
                 IsMultiOptionType = true; // set to no if we don't want to allow the node value options presented to the user to change. 
                 IsTerminalType = false;
                 GroupName = MultipleChoice;

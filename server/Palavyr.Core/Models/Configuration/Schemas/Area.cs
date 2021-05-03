@@ -9,24 +9,26 @@ namespace Palavyr.Core.Models.Configuration.Schemas
     public class Area
     {
         [Key] public int? Id { get; set; }
-        public string AreaIdentifier { get; set; } = null!;
-        public string AreaName { get; set; } = null!;
-        public string AreaDisplayTitle { get; set; } = null!;
-        public string Prologue { get; set; } = null!;
-        public string Epilogue { get; set; } = null!;
-        public string EmailTemplate { get; set; } = null!;
+        public string AreaIdentifier { get; set; }
+        public string AreaName { get; set; }
+        public string AreaDisplayTitle { get; set; }
+        public string Prologue { get; set; }
+        public string Epilogue { get; set; }
+        public string EmailTemplate { get; set; }
         public bool IsEnabled { get; set; }
         public List<StaticTablesMeta> StaticTablesMetas { get; set; } = new List<StaticTablesMeta>();
         public List<ConversationNode> ConversationNodes { get; set; } = new List<ConversationNode>();
-        public string AccountId { get; set; } = null!;
+        public string AccountId { get; set; }
         public List<DynamicTableMeta> DynamicTableMetas { get; set; } = new List<DynamicTableMeta>();
-        public string AreaSpecificEmail { get; set; } = null!;
+        public string AreaSpecificEmail { get; set; }
         public bool EmailIsVerified { get; set; }
 
         public bool UseAreaFallbackEmail { get; set; }
         public string FallbackSubject { get; set; } = null!;
         public string FallbackEmailTemplate { get; set; } = null!;
-
+        public bool SendAttachmentsOnFallback { get; set; }
+        
+        
         [DefaultValue("Thank you for reaching out!")]
         public string Subject { get; set; } = null!;
 

@@ -4,7 +4,6 @@ using System.IO.Compression;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.BackupAndRestore.Postgres;
-using Palavyr.BackupAndRestore.UserData;
 using Palavyr.Core.Common.FileSystemTools.FormPaths;
 using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Data;
@@ -17,21 +16,18 @@ namespace Palavyr.BackupAndRestore
         private readonly AccountsContext accountsContext;
         private readonly IS3Retriever s3Retriever;
         private readonly PostgresRestorer postgresRestorer;
-        private readonly IUserDataBackup userDataBackup;
         private readonly IPostgresBackup postgresBackup;
 
         public Operations(
             AccountsContext accountsContext,
             IS3Retriever s3Retriever,
             PostgresRestorer postgresRestorer,
-            IUserDataBackup userDataBackup,
             IPostgresBackup postgresBackup
         )
         {
             this.accountsContext = accountsContext;
             this.s3Retriever = s3Retriever;
             this.postgresRestorer = postgresRestorer;
-            this.userDataBackup = userDataBackup;
             this.postgresBackup = postgresBackup;
 
             Console.BackgroundColor = ConsoleColor.Black;
@@ -61,12 +57,6 @@ namespace Palavyr.BackupAndRestore
             var timeStamp = TimeUtils.CreateTimeStamp();
             var latestDatabaseBackup = await postgresBackup.CreateFullDatabaseBackup(host, port, password, timeStamp, bucket);
             return latestDatabaseBackup;
-        }
-
-        public async Task<string> CreateUserDataBackup(TimeUtils timeStamp, string bucket)
-        {
-            var latestUserDataBackup = await userDataBackup.CreateFullUserDataBackup(timeStamp, bucket);
-            return latestUserDataBackup;
         }
     }
 }

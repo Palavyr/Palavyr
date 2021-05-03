@@ -21,13 +21,22 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
             {
                 body.Attachments.Add(filePath);
             }
+
             return body;
         }
 
         //https://stackoverflow.com/questions/6743139/send-attachments-with-amazon-ses
-        private static MimeMessage GetMessage(string fromAddressLabel, string fromAddress, string toAddressLabel, string toAddress, string subject, string htmlBody, string textBody, List<string> filePaths)
+        private static MimeMessage GetMessage(
+            string fromAddressLabel,
+            string fromAddress,
+            string toAddressLabel,
+            string toAddress,
+            string subject,
+            string htmlBody,
+            string textBody,
+            List<string> filePaths)
         {
-            var from  = new MailboxAddress(fromAddressLabel ?? "", fromAddress); // TODO support Labels
+            var from = new MailboxAddress(fromAddressLabel ?? "", fromAddress); // TODO support Labels
             var to = new MailboxAddress(toAddressLabel ?? "", toAddress);
             var body = GetMessageBodyWithAttachments(htmlBody, textBody, filePaths).ToMessageBody();
 
@@ -47,19 +56,8 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
             return stream;
         }
 
-        /// <summary>
-        /// Send an email WITH attachments
-        /// </summary>
-        /// <param name="fromAddress"></param>
-        /// <param name="toAddress"></param>
-        /// <param name="subject"></param>
-        /// <param name="htmlBody"></param>
-        /// <param name="textBody"></param>
-        /// <param name="filePaths"></param>
-        /// <param name="fromAddressLabel"></param>
-        /// <param name="toAddressLabel"></param>
-        /// <returns>bool - Success is True, Fail is false</returns>
-        public async Task<bool> SendEmailWithAttachments(string fromAddress,
+        public async Task<bool> SendEmailWithAttachments(
+            string fromAddress,
             string toAddress,
             string subject,
             string htmlBody,
@@ -68,15 +66,21 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
             string fromAddressLabel = "",
             string toAddressLabel = "")
         {
-
-            var message = GetMessage(fromAddressLabel, fromAddress, toAddressLabel, toAddress, subject, htmlBody,
-                textBody, filePaths);
+            var message = GetMessage(
+                fromAddressLabel,
+                fromAddress,
+                toAddressLabel,
+                toAddress,
+                subject,
+                htmlBody,
+                textBody,
+                filePaths);
 
             var rawSendRequest = new SendRawEmailRequest()
             {
                 RawMessage = new RawMessage(GetMessageStream(message)),
             };
-            
+
             LoggerExtensions.LogDebug(logger, "Trying to send email...");
             try
             {

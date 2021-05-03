@@ -4,6 +4,8 @@ namespace Palavyr.Core.Common.GlobalConstants
     {
         public const string LoggingSection = "Logging";
         public const string PreviewSection = "Previews";
+        public const string UserDataSection = "Userdata";
+
         public const string ConfigurationDbStringKey = "DashContextPostgres";
         public const string AccountDbStringKey = "AccountsContextPostgres";
         public const string ConvoDbStringKey = "ConvoContextPostgres";

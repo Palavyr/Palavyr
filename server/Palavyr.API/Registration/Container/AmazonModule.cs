@@ -5,7 +5,7 @@ using Amazon.S3;
 using Amazon.SimpleEmail;
 using Autofac;
 using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.GlobalConstants;
+using Palavyr.Core.Common.ExtensionMethods;
 
 //https://stackoverflow.com/questions/59200028/registering-more-amazons3client-with-configurations-on-autofac
 
@@ -22,8 +22,8 @@ namespace Palavyr.API.Registration.Container
 
         protected override void Load(ContainerBuilder builder)
         {
-            var accessKey = configuration.GetSection(ConfigSections.AccessKeySection).Value;
-            var secretKey = configuration.GetSection(ConfigSections.SecretKeySection).Value;
+            var accessKey = configuration.GetAccessKey();
+            var secretKey = configuration.GetSecretKey();
             var credentials = new BasicAWSCredentials(accessKey, secretKey);
 
             var s3Config = new AmazonS3Config()

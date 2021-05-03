@@ -5,43 +5,7 @@ namespace Palavyr.Core.Common.FileSystemTools.FormPaths
 {
     public static class FormDirectoryPaths
     {
-        public static string FormAccountDirWithCreate(string accountId)
-        {
-            var accountDir = Path.Combine(MagicPathStrings.InstallationRoot, MagicPathStrings.UserData, accountId);
-            DiskUtils.CreateDir(accountDir);
-            return accountDir;
-        }
-
-        public static string FormAttachmentDirectoryWithCreate(string accountId, string areaId)
-        {
-            var attachmentDir = Path.Combine(FormAccountDirWithCreate(accountId), MagicPathStrings.AreaData, areaId, MagicPathStrings.Attachments);
-            DiskUtils.CreateDir(attachmentDir);
-            return attachmentDir;
-        }
-
-        public static string FormResponsePdfDirWithCreate(string accountId)
-        {
-            var responseDir = Path.Combine(FormAccountDirWithCreate(accountId), MagicPathStrings.PreviewPDF);
-            DiskUtils.CreateDir(responseDir);
-            return responseDir;
-        }
-
-        public static string FormAreaDir(string accountId, string areaId)
-        {
-            var accountDir = FormAccountDirWithCreate(accountId);
-            var areaDir = Path.Combine(accountDir, MagicPathStrings.AreaData, areaId);
-            DiskUtils.CreateDir(areaDir);
-            return areaDir;
-        }
-
-        public static string FormLogoImageDir(string accountId)
-        {
-            var logoImageDir = Path.Combine(FormAccountDirWithCreate(accountId), MagicPathStrings.Logo);
-            DiskUtils.CreateDir(logoImageDir);
-            return logoImageDir;
-        }
-
-        public static string FormTempDbBackupDirectory()
+        public static string FormTempDbBackupDirectory() // DO NOT DELETE
         {
             var backupDirName = "DbBackupTempDirectory";
             var backupDir = Path.Combine(MagicPathStrings.InstallationRoot, backupDirName);
