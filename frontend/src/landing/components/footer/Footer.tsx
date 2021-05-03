@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: "3rem",
         paddingBottom: "3rem",
         color: theme.palette.success.main,
-        background: theme.palette.primary.main, //"linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
+        background: theme.palette.primary.main,
     },
     brandText: {
         fontFamily: "'Baloo Bhaijaan', cursive",

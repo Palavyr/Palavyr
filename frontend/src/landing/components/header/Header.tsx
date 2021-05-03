@@ -1,5 +1,4 @@
 import { Box, Card, Grid, Typography, Button, Divider, makeStyles } from "@material-ui/core";
-import { green } from "@material-ui/core/colors";
 import React from "react";
 import { NavBar } from "../navbar/NavBar";
 
@@ -27,13 +26,12 @@ const useStyles = makeStyles((theme) => ({
     },
     secondaryText: {
         color: theme.palette.success.dark,
-
     },
     button: {
         width: "18rem",
         alignSelf: "center",
         fontSize: "large",
-        backgroundColor: theme.palette.background.default,//"#90a5bb",
+        backgroundColor: theme.palette.background.default,
         color: theme.palette.common.black,
         "&:hover": {
             backgroundColor: theme.palette.success.light,
