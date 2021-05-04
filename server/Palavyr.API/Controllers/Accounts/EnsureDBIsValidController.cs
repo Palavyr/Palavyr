@@ -51,6 +51,16 @@ namespace Palavyr.API.Controllers.Accounts
             {
                 preferences.LandingHeader = "";
             }
+
+            if (string.IsNullOrWhiteSpace(preferences.ButtonColor))
+            {
+                preferences.ButtonColor = "#F2F2F2";
+            }
+
+            if (string.IsNullOrWhiteSpace(preferences.ButtonFontColor))
+            {
+                preferences.ButtonFontColor = "#1F1F1F";
+            }
             
             if (string.IsNullOrWhiteSpace(preferences.ChatBubbleColor))
                 preferences.ChatBubbleColor = "#E1E1E1";

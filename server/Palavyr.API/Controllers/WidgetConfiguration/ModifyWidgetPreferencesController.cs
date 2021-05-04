@@ -82,6 +82,16 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
                 prefs.ChatFontColor = preferences.ChatFontColor;
             }
 
+            if (!string.IsNullOrWhiteSpace(preferences.ButtonColor))
+            {
+                prefs.ButtonColor = preferences.ButtonColor;
+            }
+
+            if (!string.IsNullOrWhiteSpace(preferences.ButtonFontColor))
+            {
+                prefs.ButtonFontColor = preferences.ButtonFontColor;
+            }
+
             if (!string.IsNullOrWhiteSpace(preferences.ChatBubbleColor))
             {
                 prefs.ChatBubbleColor = preferences.ChatBubbleColor;
