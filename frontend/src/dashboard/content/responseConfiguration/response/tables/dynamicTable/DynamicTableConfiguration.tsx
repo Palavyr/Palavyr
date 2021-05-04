@@ -1,4 +1,4 @@
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import React, { useState, useCallback, useEffect, Suspense } from "react";
 import { DynamicTableMetas, TableNameMap } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
@@ -17,7 +17,7 @@ export interface IDynamicTable {
 }
 
 export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: IDynamicTable) => {
-    const client = new ApiClient();
+    const repository = new PalavyrRepository();
 
     const [loaded, setLoaded] = useState<boolean>(false);
     const [parentState, changeParentState] = useState<boolean>(false);
@@ -27,8 +27,8 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
     const [tableNameMap, setTableNameMap] = useState<TableNameMap>({});
 
     const loadTableData = useCallback(async () => {
-        const { data: dynamicTableMetas } = await client.Configuration.Tables.Dynamic.getDynamicTableMetas(areaIdentifier);
-        const { data: tableNameMap } = await client.Configuration.Tables.Dynamic.getDynamicTableTypes();
+        const dynamicTableMetas = await repository.Configuration.Tables.Dynamic.getDynamicTableMetas(areaIdentifier);
+        const tableNameMap = await repository.Configuration.Tables.Dynamic.getDynamicTableTypes();
 
         // map that provides e.g. Select One Flat: SelectOneFlat. used to derive the pretty names
         const availableTablePrettyNames = Object.keys(tableNameMap);
@@ -42,7 +42,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
 
     const addDynamicTable = async () => {
         // We always add the default dynamic table - the Select One Flat table
-        var { data: newMeta } = await client.Configuration.Tables.Dynamic.createDynamicTable(areaIdentifier);
+        var newMeta = await repository.Configuration.Tables.Dynamic.createDynamicTable(areaIdentifier);
         tableMetas.push(newMeta);
         setTableMetas(cloneDeep(tableMetas));
         changeParentState(!parentState); // TODO: Reload the tables...

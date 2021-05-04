@@ -1,8 +1,7 @@
 import React from "react";
-import { ApiClient } from "@api-client/Client";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
-import { Card, makeStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
     center: {

@@ -1,4 +1,4 @@
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import React, { useState, useCallback, useEffect } from "react";
 import { Divider, makeStyles } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ChangeEmail = () => {
-    var client = new ApiClient();
+    const repository = new PalavyrRepository();
     const classes = useStyles();
 
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -34,9 +34,7 @@ export const ChangeEmail = () => {
     const [alertDetails, setAlertDetails] = useState<AlertDetails>({ title: "", message: "" });
 
     const loadEmail = useCallback(async () => {
-        var {
-            data: { emailAddress, isVerified, awaitingVerification },
-        } = await client.Settings.Account.getEmail();
+        const { emailAddress, isVerified, awaitingVerification } = await repository.Settings.Account.getEmail();
         setSettings({
             emailAddress: emailAddress,
             isVerified: isVerified,
@@ -70,7 +68,7 @@ export const ChangeEmail = () => {
     };
 
     const verifyEmailAddress = async (newEmailAddress: string) => {
-        const { data: res } = await client.Settings.Account.updateEmail(newEmailAddress);
+        const res = await repository.Settings.Account.updateEmail(newEmailAddress);
         setAlertDetails({ title: res.title, message: res.message });
         setAlertState(true);
         if (!(res.status === "Failed")) setSettings({ ...settings, emailAddress: newEmailAddress });

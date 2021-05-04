@@ -1,4 +1,4 @@
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import React, { useState, useCallback, useEffect } from "react";
 import { Enquiries, EnquiryRow } from "@Palavyr-Types";
 import { TableContainer, Paper, TableHead, TableBody, Table, makeStyles, Typography } from "@material-ui/core";
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Enquires = () => {
-    const client = new ApiClient();
+    const repository = new PalavyrRepository();
     const cls = useStyles();
 
     const [enquiries, setEnquiries] = useState<Enquiries>([]);
@@ -29,7 +29,7 @@ export const Enquires = () => {
     const { setIsLoading } = React.useContext(DashboardContext);
 
     const loadEnquiries = useCallback(async () => {
-        const { data: enqs } = await client.Enquiries.getEnquiries();
+        const enqs = await repository.Enquiries.getEnquiries();
         setEnquiries(enqs);
         setLoading(false);
         setIsLoading(false);

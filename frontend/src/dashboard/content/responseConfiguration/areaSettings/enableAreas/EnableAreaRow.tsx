@@ -1,4 +1,4 @@
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { makeStyles, TableCell, TableRow, Typography } from "@material-ui/core";
 import { AreasEnabled } from "@Palavyr-Types";
 import React, { useEffect, useState } from "react";
@@ -16,13 +16,13 @@ export interface EnableAreaRowProps {
 }
 
 export const EnableAreaRow = ({ areasEnabled, rowNumber }: EnableAreaRowProps) => {
-    const client = new ApiClient();
+    const repository = new PalavyrRepository();
     const cls = useStyles();
 
     const [isEnabled, setIsEnabled] = useState<boolean | null>(null);
 
     const onToggleChange = async () => {
-        const { data: updatedIsEnabled } = await client.Area.UpdateIsEnabled(!isEnabled, areasEnabled.areaId);
+        const updatedIsEnabled = await repository.Area.UpdateIsEnabled(!isEnabled, areasEnabled.areaId);
         setIsEnabled(updatedIsEnabled);
     };
 

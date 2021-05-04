@@ -2,7 +2,7 @@ import { cloneDeep, findIndex } from "lodash";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
 import { BasicThresholdData } from "@Palavyr-Types";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
 export class BasicThresholdModifier {
@@ -27,8 +27,8 @@ export class BasicThresholdModifier {
         }
     }
 
-    async addThreshold(tableData: BasicThresholdData[], areaIdentifier: string, tableId: string, client: ApiClient) {
-        const { data: newRowTemplate } = await client.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
+    async addThreshold(tableData: BasicThresholdData[], areaIdentifier: string, tableId: string, repository: PalavyrRepository) {
+        const newRowTemplate = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
         tableData.push(newRowTemplate);
         this.setTables(tableData);
     }
@@ -64,7 +64,7 @@ export class BasicThresholdModifier {
         this.setTables(tableData);
     }
 
-    checkTriggerFallbackChange(tableData: BasicThresholdData[], row: BasicThresholdData, checked: boolean){
+    checkTriggerFallbackChange(tableData: BasicThresholdData[], row: BasicThresholdData, checked: boolean) {
         tableData.forEach((x: BasicThresholdData) => {
             const index = findIndex(tableData, (x: BasicThresholdData) => x.rowId === row.rowId);
             if (x.rowId == row.rowId) {
@@ -72,12 +72,11 @@ export class BasicThresholdModifier {
             } else {
                 tableData[index].triggerFallback = false;
             }
-        })
+        });
         this.setTables(tableData);
     }
 
-
-    public validateTable(tableData: BasicThresholdData[]){
+    public validateTable(tableData: BasicThresholdData[]) {
         return true; // TODO: Validate this table
     }
 }

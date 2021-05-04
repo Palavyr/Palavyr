@@ -579,6 +579,12 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                     b.Property<string>("AccountId")
                         .HasColumnType("text");
 
+                    b.Property<string>("ButtonColor")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ButtonFontColor")
+                        .HasColumnType("text");
+
                     b.Property<string>("ChatBubbleColor")
                         .HasColumnType("text");
 

@@ -3,12 +3,9 @@ import { RESET_PASSWORD_FORM } from "@constants";
 import { Typography } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { useCallback } from "react";
-import { useState } from "react";
-import { Redirect, useHistory, useLocation } from "react-router-dom";
-
+import { useHistory, useLocation } from "react-router-dom";
 
 export const ConfirmYourResetLink = () => {
-
     const location = useLocation();
     const history = useHistory();
 
@@ -21,7 +18,7 @@ export const ConfirmYourResetLink = () => {
 
         if (response.status) {
             setTimeout(() => {
-                history.push(`${RESET_PASSWORD_FORM}?key=${response.apiKey}`)
+                history.push(`${RESET_PASSWORD_FORM}?key=${response.apiKey}`);
             }, 2000);
         } else {
         }

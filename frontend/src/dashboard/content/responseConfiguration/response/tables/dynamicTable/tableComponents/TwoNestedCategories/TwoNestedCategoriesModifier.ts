@@ -1,16 +1,15 @@
-import { Dispatch, SetStateAction } from "react";
-import { TableData, TwoNestedCategoryData } from "@Palavyr-Types";
+import { SetState, TableData, TwoNestedCategoryData } from "@Palavyr-Types";
 import { cloneDeep, findIndex, groupBy, max, uniq } from "lodash";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { TableGroup } from "@Palavyr-Types";
 import { uuid } from "uuidv4";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
 export class TwoNestedCategoriesModifier {
-    onClick: Dispatch<SetStateAction<TableData>>;
+    onClick: SetState<TableData>;
     tableType: string;
 
-    constructor(onClick: Dispatch<SetStateAction<TableData>>) {
+    constructor(onClick: SetState<TableData>) {
         this.onClick = onClick;
         this.tableType = DynamicTableTypes.TwoNestedCategory;
     }
@@ -27,9 +26,8 @@ export class TwoNestedCategoriesModifier {
         return tableData[index];
     }
 
-    async addOuterCategory(tableData: TwoNestedCategoryData[], client: ApiClient, areaIdentifier: string, tableId: string) {
-        let { data: template } = await client.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
-        template = template as TwoNestedCategoryData;
+    async addOuterCategory(tableData: TwoNestedCategoryData[], repository: PalavyrRepository, areaIdentifier: string, tableId: string) {
+        const template = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
 
         // get all current inner categories from the first category and assign them to the new one
         const outerCategoryGroups = this.groupByOuterCategory(tableData); // use this groupby method in the modifier.
@@ -50,8 +48,8 @@ export class TwoNestedCategoriesModifier {
         this.setTables(newTableData);
     }
 
-    async addInnerCategory(tableData: TwoNestedCategoryData[], client: ApiClient, areaIdentifier: string, tableId: string) {
-        const data = await client.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
+    async addInnerCategory(tableData: TwoNestedCategoryData[], repository: PalavyrRepository, areaIdentifier: string, tableId: string) {
+        const data = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
         const template = data.data as TwoNestedCategoryData;
 
         // need to copy across all outer categories...
@@ -186,7 +184,7 @@ export class TwoNestedCategoriesModifier {
         return x.rowOrder;
     }
 
-    validateTable(tableData: TwoNestedCategoryData[]){
+    validateTable(tableData: TwoNestedCategoryData[]) {
         return true; // TODO: validation logic
     }
 }

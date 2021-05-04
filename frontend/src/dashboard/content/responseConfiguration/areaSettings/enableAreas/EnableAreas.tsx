@@ -1,4 +1,4 @@
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@material-ui/core";
@@ -26,12 +26,12 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const EnableAreas = () => {
-    const client = new ApiClient();
+    const repository = new PalavyrRepository();
     const cls = useStyles();
     const [areaIds, setAreaIds] = useState<AreasEnabled[]>([]);
 
     const loadAreas = useCallback(async () => {
-        const { data: areaData } = await client.Area.GetAreas();
+        const areaData = await repository.Area.GetAreas();
         const areaIdentifiers = areaData.map((x: AreaTable) => {
             return {
                 areaId: x.areaIdentifier,

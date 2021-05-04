@@ -1,4 +1,4 @@
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { Divider, makeStyles, Typography } from "@material-ui/core";
@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const DeleteAccount = () => {
-    var client = new ApiClient();
+    const repository = new PalavyrRepository();
     const [alertState, setAlert] = useState<boolean>(false);
     const [] = useState<boolean>(false);
     const cls = useStyles();
@@ -27,7 +27,7 @@ export const DeleteAccount = () => {
     const handleAccountDelete = async () => {
         Auth.ClearAuthentication();
         alert("We're sorry to see you go!");
-        await client.Settings.Account.DeleteAccount();
+        await repository.Settings.Account.DeleteAccount();
         history.push("/");
     };
     const alertMessage = {

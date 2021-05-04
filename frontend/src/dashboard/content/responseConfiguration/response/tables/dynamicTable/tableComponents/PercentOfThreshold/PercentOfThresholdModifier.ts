@@ -1,11 +1,11 @@
 import { Dispatch, SetStateAction } from "react";
 import { PercentOfThresholdData, SetState } from "@Palavyr-Types";
 import { cloneDeep, findIndex, uniq } from "lodash";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
 export class PercentOfThresholdModifier {
-    onClick: Dispatch<SetStateAction<PercentOfThresholdData[]>>;
+    onClick: SetState<PercentOfThresholdData[]>;
     tableType: string;
 
     constructor(onClick: SetState<PercentOfThresholdData[]>) {
@@ -22,16 +22,15 @@ export class PercentOfThresholdModifier {
         return tableData[index];
     }
 
-    async addItem(tableData: PercentOfThresholdData[], client: ApiClient, areaIdentifier: string, tableId: string) {
-        const response = await client.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
-        const newItemInitialrow = response.data as PercentOfThresholdData;
+    async addItem(tableData: PercentOfThresholdData[], repository: PalavyrRepository, areaIdentifier: string, tableId: string) {
+        const newItemInitialrow = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
 
         tableData.push(newItemInitialrow);
         this.setTables(tableData);
     }
 
-    async addRow(tableData: PercentOfThresholdData[], client: ApiClient, areaIdentifier: string, tableId: string, itemId: string) {
-        const { data: newRowTemplate } = await client.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
+    async addRow(tableData: PercentOfThresholdData[], repository: PalavyrRepository, areaIdentifier: string, tableId: string, itemId: string) {
+        const newRowTemplate = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
         newRowTemplate.itemId = itemId;
         tableData.push(newRowTemplate);
         this.setTables(tableData);
@@ -123,7 +122,6 @@ export class PercentOfThresholdModifier {
         });
 
         this.setTables(tableData);
-
     }
 
     validateTable(tableData: PercentOfThresholdData[]) {

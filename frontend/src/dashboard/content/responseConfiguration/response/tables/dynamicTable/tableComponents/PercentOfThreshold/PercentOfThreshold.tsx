@@ -1,5 +1,5 @@
 import React from "react";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
 import { DynamicTableProps } from "@Palavyr-Types";
@@ -29,21 +29,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<DynamicTableProps, "tableMeta" | "setTableMeta">) => {
-    const client = new ApiClient();
+    const repository = new PalavyrRepository();
     const classes = useStyles();
 
     const modifier = new PercentOfThresholdModifier(setTableData);
 
-    const addItemOnClick = () => modifier.addItem(tableData, client, areaIdentifier, tableId);
-    const addRowOnClickFactory = (itemId: string) => () => modifier.addRow(tableData, client, areaIdentifier, tableId, itemId);
+    const addItemOnClick = () => modifier.addItem(tableData, repository, areaIdentifier, tableId);
+    const addRowOnClickFactory = (itemId: string) => () => modifier.addRow(tableData, repository, areaIdentifier, tableId, itemId);
 
     const onSave = async () => {
         const reorderedData = reOrderPercentOfThresholdTableData(tableData);
 
         const result = modifier.validateTable(reorderedData);
 
-        if (result){
-            const { data: savedData } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.PercentOfThreshold, reorderedData, tableId, tableTag);
+        if (result) {
+            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.PercentOfThreshold, reorderedData, tableId, tableTag);
             setTableData(savedData);
             return true;
         } else {

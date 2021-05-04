@@ -1,9 +1,10 @@
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { PalavyrAlert } from "@common/components/PalavyrAlert";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { Divider, makeStyles, Paper, Typography } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
+import { SetState } from "@Palavyr-Types";
 import { DropzoneArea } from "material-ui-dropzone";
 import * as React from "react";
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
@@ -83,10 +84,10 @@ export const ChangeLogoImage = () => {
 
 interface ChangeLogoImageInner {
     fileUpload: File[];
-    setFileUpload: Dispatch<SetStateAction<File[]>>;
+    setFileUpload: SetState<File[]>;
 }
 const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInner) => {
-    const client = new ApiClient();
+    const repository = new PalavyrRepository();
     const cls = useStyles();
 
     const [alertState, setAlertState] = useState<boolean>(false);
@@ -98,7 +99,7 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
     };
 
     const loadCompanyLogo = useCallback(async () => {
-        const { data: logoUri } = await client.Settings.Account.getCompanyLogo();
+        const logoUri = await repository.Settings.Account.getCompanyLogo();
         setcompanyLogo(logoUri);
     }, []);
 
@@ -114,7 +115,7 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
         if (fileUpload !== null) {
             const formData = new FormData();
             formData.append("files", fileUpload[0]);
-            const { data: dataUrl } = await client.Settings.Account.updateCompanyLogo(formData);
+            const dataUrl = await repository.Settings.Account.updateCompanyLogo(formData);
             setcompanyLogo(dataUrl);
         }
         setFileUpload([]); // shouldn't this clear the chip

@@ -1,7 +1,7 @@
 import { SessionStorage } from "localStorage/sessionStorage";
 import { LoginClient } from "client/LoginClient";
 import { LogoutClient } from "client/LogoutClient";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { googleOAuthClientId } from "@api-client/clientUtils";
 import { Credentials } from "@Palavyr-Types";
 
@@ -43,9 +43,9 @@ class Auth {
             SessionStorage.setAuthorization(authenticationResponse.sessionId, authenticationResponse.jwtToken);
             SessionStorage.setEmailAddress(authenticationResponse.emailAddress);
 
-            const _client = new ApiClient(); // needs to be authenticated
+            const _client = new PalavyrRepository(); // needs to be authenticated
 
-            const { data: accountIsActive } = await _client.Settings.Account.checkIsActive();
+            const accountIsActive = await _client.Settings.Account.checkIsActive();
             this.isActive = accountIsActive;
             SessionStorage.setIsActive(accountIsActive);
 

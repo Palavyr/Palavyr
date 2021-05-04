@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { StaticTableMeta, StaticTableMetas, StaticTableRow, StaticTableValidationResult } from "@Palavyr-Types";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { StaticTablesModifier } from "./tables/statictable/staticTableModifier";
 import { LogueModifier } from "./logueModifier";
 import { cloneDeep } from "lodash";
@@ -52,7 +52,7 @@ export const ResponseConfiguration = () => {
     const [staticTables, setStaticTables] = useState<StaticTableMetas>([]);
     const [epilogue, setEpilogue] = useState<string>("");
 
-    var client = new ApiClient();
+    const repository = new PalavyrRepository();
     const staticTablesModifier = new StaticTablesModifier(setStaticTables);
     const prologueModifier = new LogueModifier(setPrologue);
     const epilogueModifier = new LogueModifier(setEpilogue);
@@ -60,13 +60,13 @@ export const ResponseConfiguration = () => {
     const { setIsLoading } = React.useContext(DashboardContext);
 
     const savePrologue = async () => {
-        const { data: _prologue_ } = await client.Configuration.updatePrologue(areaIdentifier, prologue);
+        const _prologue_ = await repository.Configuration.updatePrologue(areaIdentifier, prologue);
         setPrologue(_prologue_);
         return true;
     };
 
     const saveEpilogue = async () => {
-        const { data: _epilogue_ } = await client.Configuration.updateEpilogue(areaIdentifier, epilogue);
+        const _epilogue_ = await repository.Configuration.updateEpilogue(areaIdentifier, epilogue);
         setEpilogue(_epilogue_);
         return true;
     };
@@ -94,7 +94,7 @@ export const ResponseConfiguration = () => {
             return false;
         } // TODO: the table saver needs to return the validation result and the SaveOrCancel component neesd to require this standard type for the error message.
 
-        const { data: updatedStaticTables } = await client.Configuration.Tables.Static.updateStaticTablesMetas(areaIdentifier, staticTables);
+        const updatedStaticTables = await repository.Configuration.Tables.Static.updateStaticTablesMetas(areaIdentifier, staticTables);
         setStaticTables(updatedStaticTables);
         return true;
     };
@@ -105,8 +105,7 @@ export const ResponseConfiguration = () => {
 
     const loadEstimateConfiguration = useCallback(async () => {
         setIsLoading(true);
-        const { data } = await client.Configuration.getEstimateConfiguration(areaIdentifier);
-        const { prologue, epilogue, staticTablesMetas } = data;
+        const { prologue, epilogue, staticTablesMetas } = await repository.Configuration.getEstimateConfiguration(areaIdentifier);
         setPrologue(cloneDeep(prologue));
         setEpilogue(cloneDeep(epilogue));
         setStaticTables(staticTablesMetas);

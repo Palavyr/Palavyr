@@ -7,7 +7,7 @@ import { PurchaseTypes } from "@Palavyr-Types";
 import PaymentIcon from "@material-ui/icons/Payment";
 import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
 import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { webUrl } from "@api-client/clientUtils";
 
 const useStyles = makeStyles((theme) => ({
@@ -34,10 +34,10 @@ export const BillingSection = ({ isActive }: BillingSectionProps) => {
     };
 
     const createCustomerPortalSession = async () => {
-        const client = new ApiClient();
+        const repository = new PalavyrRepository();
         var returnUrl = `${webUrl}/dashboard/`;
-        const { data: customerId } = await client.Purchase.Customer.GetCustomerId();
-        const { data: portalUrl } = await client.Purchase.Customer.GetCustomerPortal(customerId, returnUrl);
+        const customerId = await repository.Purchase.Customer.GetCustomerId();
+        const portalUrl = await repository.Purchase.Customer.GetCustomerPortal(customerId, returnUrl);
         window.location.href = portalUrl;
     };
 

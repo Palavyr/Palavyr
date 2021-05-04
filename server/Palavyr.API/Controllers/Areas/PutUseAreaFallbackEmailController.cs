@@ -1,11 +1,9 @@
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Areas
 {
-    [Authorize]
 
     public class PutUseAreaFallbackEmailController : PalavyrBaseController
     {

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Grid, makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { useCallback, useEffect, useState } from "react";
 import { SubscribeStepper } from "../purchse/SubscribeStepper";
 import { PurchaseTypes, ProductOptions, ProductOption, ProductIds, PlanStatus } from "@Palavyr-Types";
@@ -39,7 +39,7 @@ export const Subscribe = () => {
     const [productList, setProductList] = useState<ProductIds>();
 
     const cls = useStyles();
-    const client = new ApiClient();
+    const repository = new PalavyrRepository();
 
     const history = useHistory();
 
@@ -55,12 +55,12 @@ export const Subscribe = () => {
     };
 
     const getCurrentPlan = useCallback(async () => {
-        const { data: plan } = await client.Settings.Account.getCurrentPlan();
+        const plan = await repository.Settings.Account.getCurrentPlan();
         setCurrentPlan(plan);
     }, []);
 
     const getProducts = useCallback(async () => {
-        const { data: products } = await client.Products.getProducts();
+        const products = await repository.Products.getProducts();
         setProductList(products);
     }, []);
 

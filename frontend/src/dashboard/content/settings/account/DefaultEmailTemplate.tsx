@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { makeStyles } from "@material-ui/core";
 import { VariableDetail } from "@Palavyr-Types";
@@ -11,19 +11,19 @@ const useStyles = makeStyles(() => ({
     root: {
         width: "100%",
         height: "100%",
-        marginTop: "1rem"
+        marginTop: "1rem",
     },
 }));
 
 export const DefaultEmailTemplate = () => {
-    const client = new ApiClient();
+    const repository = new PalavyrRepository();
     const cls = useStyles();
 
     const { setIsLoading } = useContext(DashboardContext);
     const [variableDetails, setVariableDetails] = useState<VariableDetail[]>();
 
     const loadVariableDetails = useCallback(async () => {
-        const { data: variableDetails } = await client.Configuration.Email.GetVariableDetails();
+        const variableDetails = await repository.Configuration.Email.GetVariableDetails();
         setVariableDetails(variableDetails);
     }, []);
 
@@ -41,10 +41,10 @@ export const DefaultEmailTemplate = () => {
             {variableDetails && (
                 <EmailConfigurationComponent
                     variableDetails={variableDetails}
-                    saveEmailTemplate={async (emailTemplate: string) => await client.Configuration.Email.SaveDefaultFallbackEmailTemplate(emailTemplate)}
-                    saveEmailSubject={async (subject: string) => await client.Configuration.Email.SaveDefaultFallbackSubject(subject)}
-                    getCurrentEmailSubject={async () => await client.Configuration.Email.GetDefaultFallbackSubject()}
-                    getCurrentEmailTemplate={async () => await client.Configuration.Email.GetDefaultFallbackEmailTemplate()}
+                    saveEmailTemplate={repository.Configuration.Email.SaveDefaultFallbackEmailTemplate}
+                    saveEmailSubject={repository.Configuration.Email.SaveDefaultFallbackSubject}
+                    getCurrentEmailSubject={repository.Configuration.Email.GetDefaultFallbackSubject}
+                    getCurrentEmailTemplate={repository.Configuration.Email.GetDefaultFallbackEmailTemplate}
                 />
             )}
         </div>

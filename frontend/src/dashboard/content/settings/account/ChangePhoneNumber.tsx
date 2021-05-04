@@ -1,4 +1,4 @@
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import React, { useCallback, useState, useEffect } from "react";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { Alert, AlertTitle } from "@material-ui/lab";
@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const ChangePhoneNumber = () => {
-    const client = new ApiClient();
+    const repository = new PalavyrRepository();
     const classes = useStyles();
 
     const [, setLoaded] = useState<boolean>(false);
@@ -21,9 +21,7 @@ export const ChangePhoneNumber = () => {
     const [locale, setLocale] = useState<string>("");
 
     const loadPhoneNumber = useCallback(async () => {
-        const {
-            data: { phoneNumber, locale },
-        } = await client.Settings.Account.getPhoneNumber();
+        const { phoneNumber, locale } = await repository.Settings.Account.getPhoneNumber();
         setPhoneNumber(phoneNumber);
         setLocale(locale);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -39,7 +37,7 @@ export const ChangePhoneNumber = () => {
     }, [setPhoneNumber, loadPhoneNumber]);
 
     const handlePhoneNumberChange = async (newPhoneNumber: string) => {
-        await client.Settings.Account.updatePhoneNumber(newPhoneNumber);
+        await repository.Settings.Account.updatePhoneNumber(newPhoneNumber);
         setPhoneNumber(newPhoneNumber);
         return true;
     };

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Conversation, NodeTypeOptions, TreeErrors } from "@Palavyr-Types";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { cloneDeep } from "lodash";
 import { ConversationNode } from "./nodes/ConversationNode";
 import { TreeErrorPanel } from "./MissingDynamicNodes";
@@ -17,7 +17,6 @@ import "./stylesConvoTree.css";
 import { getRootNode } from "./nodes/nodeUtils/commonNodeUtils";
 import { ConversationHistoryTracker } from "./nodes/ConversationHistoryTracker";
 import { isDevelopmentStage } from "@api-client/clientUtils";
-import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 
 const useStyles = makeStyles(() => ({
     conversation: {
@@ -34,7 +33,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const ConvoTree = () => {
-    var client = new ApiClient();
+    const repository = new PalavyrRepository();
     const cls = useStyles();
 
     const { setIsLoading } = React.useContext(DashboardContext);
@@ -58,10 +57,10 @@ export const ConvoTree = () => {
     };
 
     const loadNodes = useCallback(async () => {
-        const client = new ApiClient();
+        const repository = new PalavyrRepository();
 
-        const { data: nodes } = await client.Conversations.GetConversation(areaIdentifier);
-        const { data: nodeTypeOptions } = await client.Conversations.GetNodeOptionsList(areaIdentifier);
+        const nodes = await repository.Conversations.GetConversation(areaIdentifier);
+        const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier);
 
         setNodeTypeOptions(nodeTypeOptions);
         setNodes(cloneDeep(nodes));
@@ -72,7 +71,7 @@ export const ConvoTree = () => {
     }, [areaIdentifier]);
 
     const onSave = async () => {
-        const { data: updatedConversation } = await client.Conversations.ModifyConversation(nodeList, areaIdentifier);
+        const updatedConversation = await repository.Conversations.ModifyConversation(nodeList, areaIdentifier);
         console.log(updatedConversation);
         historyTracker.addConversationHistoryToQueue(updatedConversation, conversationHistoryPosition, conversationHistory);
         setNodes(updatedConversation);
@@ -97,7 +96,7 @@ export const ConvoTree = () => {
     useEffect(() => {
         if (nodeList.length > 0) {
             (async () => {
-                const { data: treeErrors } = await client.Conversations.GetErrors(areaIdentifier, nodeList);
+                const treeErrors = await repository.Conversations.GetErrors(areaIdentifier, nodeList);
                 setTreeErrors(treeErrors);
             })();
         }

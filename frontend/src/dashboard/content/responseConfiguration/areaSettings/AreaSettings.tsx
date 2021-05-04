@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { useHistory, useParams } from "react-router-dom";
 import { Grid, makeStyles, Typography, useTheme } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const AreaSettings = () => {
-    var client = new ApiClient();
+    const repository = new PalavyrRepository();
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
     const { setIsLoading } = React.useContext(DashboardContext);
@@ -49,7 +49,7 @@ export const AreaSettings = () => {
 
     const loadSettings = useCallback(async () => {
         setIsLoading(true);
-        var { data: areaData } = await client.Area.GetArea(areaIdentifier);
+        const areaData = await repository.Area.GetArea(areaIdentifier);
         setSettings({
             emailAddress: areaData.areaSpecificEmail,
             isVerified: areaData.emailIsVerified,
@@ -75,26 +75,26 @@ export const AreaSettings = () => {
 
     const handleAreaNameChange = async (newAreaName: string) => {
         if (newAreaName === settings.areaName) return;
-        var { data: updatedAreaName } = await client.Area.updateAreaName(areaIdentifier, newAreaName);
+        const updatedAreaName = await repository.Area.updateAreaName(areaIdentifier, newAreaName);
         setSettings({ ...settings, areaName: updatedAreaName });
         window.location.reload(); // reloads the sidebar...
     };
 
     const handleAreaDisplayTitleChange = async (newAreaDisplayTitle: any) => {
         if (newAreaDisplayTitle === settings.areaTitle) return;
-        const { data: updatedDisplayTitle } = await client.Area.updateDisplayTitle(areaIdentifier, newAreaDisplayTitle);
+        const updatedDisplayTitle = await repository.Area.updateDisplayTitle(areaIdentifier, newAreaDisplayTitle);
         window.location.reload();
         setSettings({ ...settings, areaTitle: updatedDisplayTitle });
     };
 
     const handleAreaDelete = async () => {
-        await client.Area.deleteArea(areaIdentifier);
+        await repository.Area.deleteArea(areaIdentifier);
         history.push("/dashboard");
         window.location.reload();
     };
 
     const verifyEmailAddress = async (newEmailAddress: string) => {
-        const { data: emailVerification } = await client.Settings.EmailVerification.RequestEmailVerification(newEmailAddress, areaIdentifier);
+        const emailVerification = await repository.Settings.EmailVerification.RequestEmailVerification(newEmailAddress, areaIdentifier);
         setAlertDetails({ title: emailVerification.title, message: emailVerification.message });
         setAlertState(true);
         if (!(emailVerification.status === "Failed")) setSettings({ ...settings, emailAddress: newEmailAddress });
@@ -116,7 +116,7 @@ export const AreaSettings = () => {
     };
 
     const onAreaEnabledToggleChange = async () => {
-        const { data: updatedisEnabled } = await client.Area.UpdateIsEnabled(!isEnabledState, areaIdentifier);
+        const updatedisEnabled = await repository.Area.UpdateIsEnabled(!isEnabledState, areaIdentifier);
         setIsEnabledState(updatedisEnabled);
     };
 

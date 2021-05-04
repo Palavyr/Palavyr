@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { FileLink } from "@Palavyr-Types";
 import { Upload } from "../Upload";
 import { AttachmentList } from "./AttachmentList";
@@ -13,7 +13,7 @@ const summary = "Upload a new PDF attachment to send with responses.";
 const uploadDetails = <div className="alert alert-info">Use this dialog to upload attachments that will be sent standard with the response for this area.</div>;
 
 export const AttachmentConfiguration = () => {
-    var client = new ApiClient();
+    const repository = new PalavyrRepository();
 
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
@@ -30,13 +30,13 @@ export const AttachmentConfiguration = () => {
 
     const removeAttachment = async (fileId: string) => {
         setIsLoading(true);
-        var { data: filelinks } = await client.Configuration.Attachments.removeAttachment(areaIdentifier, fileId);
+        const filelinks = await repository.Configuration.Attachments.removeAttachment(areaIdentifier, fileId);
         setAttachmentList(filelinks);
         setIsLoading(false);
     };
 
     const loadAttachments = useCallback(async () => {
-        var { data: fileLinks } = await client.Configuration.Attachments.fetchAttachmentLinks(areaIdentifier);
+        const fileLinks = await repository.Configuration.Attachments.fetchAttachmentLinks(areaIdentifier);
         setAttachmentList(fileLinks);
         setLoaded(true);
         setIsLoading(false);
@@ -59,13 +59,13 @@ export const AttachmentConfiguration = () => {
 
         if (files.length === 1) {
             formData.append("files", files[0]);
-            const { data: fileLinks } = await client.Configuration.Attachments.saveSingleAttachment(areaIdentifier, formData);
+            const fileLinks = await repository.Configuration.Attachments.saveSingleAttachment(areaIdentifier, formData);
             setAttachmentList(fileLinks);
         } else if (files.length > 1) {
             files.forEach((file: File) => {
                 formData.append("files", file);
             });
-            const { data: fileLinks } = await client.Configuration.Attachments.saveManyAttachments(areaIdentifier, formData);
+            const fileLinks = await repository.Configuration.Attachments.saveManyAttachments(areaIdentifier, formData);
             setAttachmentList(fileLinks);
         } else {
             const fileLinks = [];

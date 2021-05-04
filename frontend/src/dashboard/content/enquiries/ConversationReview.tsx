@@ -1,4 +1,4 @@
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@material-ui/core";
@@ -25,8 +25,8 @@ const useStyles = makeStyles((theme) => ({
         width: "75%",
     },
     backButton: {
-        marginLeft: "2rem"
-    }
+        marginLeft: "2rem",
+    },
 }));
 
 export const ConversationReview = () => {
@@ -37,12 +37,12 @@ export const ConversationReview = () => {
     const cls = useStyles();
     const history = useHistory();
 
-    const client = new ApiClient();
+    const repository = new PalavyrRepository();
 
     const [completeConversation, setCompleteConversation] = useState<CompletedConversation>([]);
 
     const loadConversation = useCallback(async () => {
-        const { data: completeConversation } = await client.Enquiries.getConversation(conversationId);
+        const completeConversation = await repository.Enquiries.getConversation(conversationId);
         setCompleteConversation(completeConversation);
     }, []);
 
