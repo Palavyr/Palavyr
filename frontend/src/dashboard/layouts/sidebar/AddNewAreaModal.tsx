@@ -4,7 +4,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { AreaTable } from "@Palavyr-Types";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DialogContent, makeStyles } from "@material-ui/core";
 import { AddOrCancel } from "@common/components/AddOrCancel";
 
@@ -26,11 +26,11 @@ export interface IAddNewAreaModal {
 export const AddNewAreaModal = ({ open, handleClose, setNewArea }: IAddNewAreaModal) => {
     const [areaName, setAreaName] = useState<string>("");
     const classes = useStyles();
-    const client = new ApiClient();
+    const client = new PalavyrRepository();
 
     const onAdd = async () => {
         if (areaName !== "") {
-            const { data: newArea } = await client.Area.createArea(areaName);
+            const newArea = await client.Area.createArea(areaName);
             setNewArea(newArea);
         }
         handleClose();

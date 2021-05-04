@@ -1,6 +1,6 @@
 import React from "react";
 import { DynamicTableMeta, DynamicTableMetas, DynamicTableProps, TableData, TableNameMap } from "@Palavyr-Types";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { TextField, makeStyles, Typography, Table, TableRow, TableCell, TableBody } from "@material-ui/core";
 import { DynamicTableSelector } from "./DynamicTableSelector";
 import { removeByIndex } from "@common/utils";
@@ -64,7 +64,7 @@ export const SingleDynamicFeeTable = ({
     changeParentState,
     areaIdentifier,
 }: SingleDynamicFeeTableProps) => {
-    const client = new ApiClient();
+    const client = new PalavyrRepository();
     const classes = useStyles();
 
     const [tableMeta, setTableMeta] = useState<DynamicTableMeta | undefined>();
@@ -74,7 +74,7 @@ export const SingleDynamicFeeTable = ({
 
     const loadDynamicData = useCallback(async () => {
         setTableMeta(defaultTableMeta);
-        var { data: tableData } = await client.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, defaultTableMeta.tableType, defaultTableMeta.tableId);
+        const tableData = await client.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, defaultTableMeta.tableType, defaultTableMeta.tableId);
 
         setDynamicTableData(tableData);
         setSelection(defaultTableMeta.prettyName);
@@ -89,7 +89,7 @@ export const SingleDynamicFeeTable = ({
     useEffect(() => {
         (async () => {
             if (tableMeta !== undefined) {
-                var { data: tableDataResponse } = await client.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, tableMeta.tableType, tableMeta.tableId);
+                var tableDataResponse = await client.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, tableMeta.tableType, tableMeta.tableId);
                 setDynamicTableData(tableDataResponse);
             }
         })();
@@ -106,7 +106,7 @@ export const SingleDynamicFeeTable = ({
         if (tableMeta !== undefined) {
             tableMeta.tableType = newTableTypeSelectionFormatted;
             tableMeta.prettyName = newTableTypeSelection;
-            const { data: updatedTableMeta } = await client.Configuration.Tables.Dynamic.modifyDynamicTableMeta(tableMeta);
+            const updatedTableMeta = await client.Configuration.Tables.Dynamic.modifyDynamicTableMeta(tableMeta);
             setTableMeta(updatedTableMeta);
         }
         setSelection(newTableTypeSelection);

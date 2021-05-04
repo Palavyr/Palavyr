@@ -129,7 +129,7 @@ export type AreaTable = {
 export type StaticTableMetas = Array<StaticTableMeta>;
 export type StaticTableRows = Array<StaticTableRow>;
 
-export type staticTableMetaTemplate = {
+export type StaticTableMetaTemplate = {
     id: number | null;
     description: string;
     areaIdentifier: string;
@@ -137,7 +137,7 @@ export type staticTableMetaTemplate = {
     perPersonInputRequired: boolean;
 };
 
-export type StaticTableMeta = staticTableMetaTemplate & {
+export type StaticTableMeta = StaticTableMetaTemplate & {
     tableOrder: number;
 };
 
@@ -508,6 +508,8 @@ export type WidgetPreferences = {
     optionsHeaderFontColor: string;
     chatFontColor: string;
     chatBubbleColor: string;
+    buttonColor: string;
+    buttonFontColor: string;
 };
 
 export type VariableDetail = {

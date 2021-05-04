@@ -4,7 +4,7 @@
 import React from "react";
 import { StaticTableMetas } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./staticTableModifier";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { Button, makeStyles, Typography } from "@material-ui/core";
 import { StaticFeeTable } from "./StaticFeeTable";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tableCanceler, modifier, areaIdentifier, children }: IFeeConfiguration) => {
-    var client = new ApiClient();
+    var client = new PalavyrRepository();
     const cls = useStyles();
 
     const actions = (

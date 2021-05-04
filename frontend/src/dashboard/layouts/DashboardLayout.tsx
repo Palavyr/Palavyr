@@ -7,7 +7,7 @@ import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep } from "lodash";
 import { AlertType, AreaNameDetails, Areas, AreaTable, PlanType } from "@Palavyr-Types";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DashboardHeader } from "./header/DashboardHeader";
 import { IconButton, makeStyles, Typography } from "@material-ui/core";
 import { DRAWER_WIDTH } from "@constants";
@@ -96,21 +96,21 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
     const loadAreas = useCallback(async () => {
         setDashboardAreasLoading(true);
-        const client = new ApiClient();
+        const client = new PalavyrRepository();
 
         // todo: Deprecate this call in the future once we are confident
         await client.Conversations.EnsureDBIsValid();
 
-        const { data: numAllowedBySubscription } = await client.Settings.Subscriptions.getNumAreas();
-        const { data: currentPlanType } = await client.Settings.Account.getCurrentPlan();
+        const numAllowedBySubscription = await client.Settings.Subscriptions.getNumAreas();
+        const currentPlanType = await client.Settings.Account.getCurrentPlan();
         setPlanType(currentPlanType.status);
         setNumAreasAllowed(numAllowedBySubscription);
 
-        const { data: areas } = await client.Area.GetAreas();
+        const areas = await client.Area.GetAreas();
         const areaNameDetails = fetchSidebarInfo(areas);
         setAreaNameDetails(areaNameDetails);
 
-        const { data: locale } = await client.Settings.Account.GetLocale();
+        const locale = await client.Settings.Account.GetLocale();
         setCurrencySymbol(locale.localeCurrencySymbol);
 
         if (areaIdentifier) {

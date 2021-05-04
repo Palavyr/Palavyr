@@ -3,7 +3,7 @@ import { DynamicTableProps } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { BasicThresholdHeader } from "./BasicThresholdHeader";
 import { BasicThresholdBody } from "./BasicThresholdBody";
 import { useState } from "react";
@@ -42,7 +42,7 @@ const useStyles = makeStyles(() => ({
 
 export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<DynamicTableProps, "tableMeta" | "setTableMeta">) => {
     const cls = useStyles();
-    const client = new ApiClient();
+    const client = new PalavyrRepository();
     const [name, setItemName] = useState<string>("");
 
     const modifier = new BasicThresholdModifier(setTableData);
@@ -52,7 +52,7 @@ export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTab
 
         const result = modifier.validateTable(reorderedData);
         if (result) {
-            const { data: saveBasicThreshold } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.BasicThreshold, reorderedData, tableId, tableTag);
+            const saveBasicThreshold = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.BasicThreshold, reorderedData, tableId, tableTag);
             setTableData(saveBasicThreshold);
             console.log("Saving the table");
             return true;

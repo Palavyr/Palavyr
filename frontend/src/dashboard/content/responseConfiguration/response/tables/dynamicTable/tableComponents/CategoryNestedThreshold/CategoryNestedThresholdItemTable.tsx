@@ -1,4 +1,4 @@
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { Button, makeStyles, TableBody, TableContainer, Paper } from "@material-ui/core";
 import { CategoryNestedThresholdData } from "@Palavyr-Types";
@@ -39,7 +39,7 @@ export const CategoryNestedThresholdItemTable = ({ categoryIndex, tableData, tab
     const [name, setCategoryName] = useState<string>("");
 
     const cls = useStyles();
-    const client = new ApiClient();
+    const client = new PalavyrRepository();
 
     useEffect(() => {
         setCategoryName(categoryName);

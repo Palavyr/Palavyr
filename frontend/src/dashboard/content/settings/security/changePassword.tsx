@@ -1,5 +1,5 @@
 import { makeStyles, Theme, createStyles, Grid, FormControl, InputLabel, Input, InputAdornment, IconButton, Paper, Divider } from "@material-ui/core";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import React, { useState } from "react";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const ChangePassword = () => {
-    var client = new ApiClient();
+    var client = new PalavyrRepository();
 
     const [showOldPassword, setShowOldPassword] = useState<boolean>(false);
     const [oldPassword, setOldPassword] = useState<string>("");
@@ -55,14 +55,13 @@ export const ChangePassword = () => {
     const cls = useStyles();
 
     const handlePasswordChange = async (oldPassword: string, newPassword: string): Promise<boolean> => {
-        var { data: success } = await client.Settings.Account.UpdatePassword(oldPassword, newPassword);
+        const success = await client.Settings.Account.UpdatePassword(oldPassword, newPassword);
         return success;
     };
 
     return (
         <SettingsWrapper>
-            <AreaConfigurationHeader title="Change your password" subtitle="Update the password you use to log in." />
-            <Divider />
+            d <Divider />
             <Paper className={cls.paper}>
                 <Alert>
                     <AlertTitle className={cls.titleText}>Update your password</AlertTitle>

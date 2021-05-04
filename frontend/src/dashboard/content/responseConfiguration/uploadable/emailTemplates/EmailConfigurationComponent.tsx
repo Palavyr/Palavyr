@@ -1,4 +1,3 @@
-import { ApiClient } from "@api-client/Client";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { makeStyles, Typography } from "@material-ui/core";
 import { VariableDetail, PurchaseTypes } from "@Palavyr-Types";
@@ -18,18 +17,17 @@ const useEmailStyles = makeStyles(() => ({
     },
 }));
 
-export type ClientResponse<T> = Promise<AxiosResponse<T>>;
+// export type ClientResponse<T> = Promise<AxiosResponse<T>>;
 
 export interface EmailConfigurationComponentProps {
     variableDetails: VariableDetail[];
-    saveEmailTemplate: (emailTemplate: string) => ClientResponse<string>;
-    saveEmailSubject: (emailSubject: string) => ClientResponse<string>;
-    getCurrentEmailTemplate: () => ClientResponse<string>;
-    getCurrentEmailSubject: () => ClientResponse<string>;
+    saveEmailTemplate: (emailTemplate: string) => Promise<string>;
+    saveEmailSubject: (emailSubject: string) => Promise<string>;
+    getCurrentEmailTemplate: () => Promise<string>;
+    getCurrentEmailSubject: () => Promise<string>;
 }
 
 export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate, saveEmailSubject, getCurrentEmailTemplate, getCurrentEmailSubject }: EmailConfigurationComponentProps) => {
-
     const { setIsLoading, subscription } = useContext(DashboardContext);
     const cls = useEmailStyles();
 
@@ -47,7 +45,7 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
     const handleFileRead = async () => {
         const content = fallbackFileReader.result;
         if (content && typeof content == "string") {
-            const { data: emailTemplate } = await saveEmailTemplate(content);
+            const emailTemplate = await saveEmailTemplate(content);
             setEmailTemplate(emailTemplate);
             setmodalState(false);
         } else {
@@ -63,7 +61,7 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
     };
 
     const saveEditorData = async () => {
-        const { data: updatedEmailTemplate } = await saveEmailTemplate(emailTemplate);
+        const updatedEmailTemplate = await saveEmailTemplate(emailTemplate);
         setEmailTemplate(updatedEmailTemplate);
 
         setmodalState(false);
@@ -72,20 +70,20 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
 
     const onAreaSubjectChange = (event: any) => setAreaSubjectState(event.target.value);
     const onSaveAreaSubject = async () => {
-        const { data: updatedSubject } = await saveEmailSubject(areaSubjectState);
+        const updatedSubject = await saveEmailSubject(areaSubjectState);
         setAreaSubjectState(updatedSubject);
         return true;
     };
 
     const loadAreaSubject = useCallback(async () => {
-        const { data: currentSubject } = await getCurrentEmailSubject();
+        const currentSubject = await getCurrentEmailSubject();
         setAreaSubjectState(currentSubject);
     }, []);
 
     const loadTemplate = useCallback(async () => {
-        const { data: currentEmailTemplate } = await getCurrentEmailTemplate();
+        const currentEmailTemplate = await getCurrentEmailTemplate();
         setEmailTemplate(currentEmailTemplate);
-        setLoaded(true)
+        setLoaded(true);
     }, []);
 
     useEffect(() => {

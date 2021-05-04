@@ -1,13 +1,10 @@
-import { Dispatch, SetStateAction } from "react";
 import { SelectOneFlatData, SetState, TableData } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
-
 export class SelectOneFlatModifier {
-
-    onClick: Dispatch<SetStateAction<TableData>>;
+    onClick: SetState<TableData>;
     tableType: string;
 
     constructor(onClick: SetState<TableData>) {
@@ -19,9 +16,9 @@ export class SelectOneFlatModifier {
         this.onClick(cloneDeep(newState));
     }
 
-    async addOption(tableData: TableData, client: ApiClient, areaIdentifier: string, tableId: string) {
+    async addOption(tableData: TableData, client: PalavyrRepository, areaIdentifier: string, tableId: string) {
         // this is a difficult situation - we need to allow for an array of objects of various types (dynamic table types)
-        const {data: newTableTemplate} = await client.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
+        const newTableTemplate = await client.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
         tableData.push(newTableTemplate);
         this.setTables(tableData);
     }
@@ -33,10 +30,10 @@ export class SelectOneFlatModifier {
                 if (index !== dataIndex) {
                     newRows.push(row);
                 }
-            })
+            });
             this.setTables(newRows);
         } else {
-            alert("Table must have at least one option")
+            alert("Table must have at least one option");
         }
     }
 

@@ -6,10 +6,10 @@ import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHea
 import { OsTypeToggle } from "../../areaSettings/enableAreas/OsTypeToggle";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { EmailConfigurationComponent } from "./EmailConfigurationComponent";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 
 export const EmailConfiguration = () => {
-    var client = new ApiClient();
+    var client = new PalavyrRepository();
 
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const { setIsLoading } = useContext(DashboardContext);
@@ -22,13 +22,13 @@ export const EmailConfiguration = () => {
     const [useAreaFallbackEmail, setUseAreaFallbackEmail] = useState<boolean>(false);
 
     const onUseAreaFallbackEmailToggle = async () => {
-        const { data: updatedUsAreaFallback } = await client.Area.UpdateUseAreaFallbackEmail(!useAreaEmail, areaIdentifier);
+        const updatedUsAreaFallback = await client.Area.UpdateUseAreaFallbackEmail(!useAreaEmail, areaIdentifier);
         setUseAreaEmail(updatedUsAreaFallback);
-        setUseAreaFallbackEmail(!useAreaFallbackEmail)
+        setUseAreaFallbackEmail(!useAreaFallbackEmail);
     };
 
     const loadVariableDetails = useCallback(async () => {
-        const { data: variableDetails } = await client.Configuration.Email.GetVariableDetails();
+        const variableDetails = await client.Configuration.Email.GetVariableDetails();
         setVariableDetails(variableDetails);
         return () => {
             setLoaded(false);
@@ -36,7 +36,7 @@ export const EmailConfiguration = () => {
     }, []);
 
     const loadSettings = useCallback(async () => {
-        var { data: areaData } = await client.Area.GetArea(areaIdentifier);
+        const areaData = await client.Area.GetArea(areaIdentifier);
         setSettings({
             ...settings,
             useAreaFallbackEmail: areaData.useAreaFallbackEmail,

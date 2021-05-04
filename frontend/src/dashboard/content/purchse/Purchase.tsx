@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Divider, FormControl, Grid, InputLabel, makeStyles, MenuItem, Paper, Select, Typography } from "@material-ui/core";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { useEffect } from "react";
 import { useCallback } from "react";
 import { useState } from "react";
@@ -73,7 +73,7 @@ export const Purchase = () => {
 };
 
 const PurchaseInner = () => {
-    const client = new ApiClient();
+    const client = new PalavyrRepository();
     const cls = useStyles();
     const [prices, setPrices] = useState<Prices>([]);
     const location = useLocation();
@@ -99,7 +99,7 @@ const PurchaseInner = () => {
 
     const getProducts = useCallback(async () => {
         if (productId == null) return;
-        const { data: priceOptions } = await client.Purchase.Prices.GetPrices(productId);
+        const priceOptions = await client.Purchase.Prices.GetPrices(productId);
         setPrices(priceOptions);
 
         const filledPriceMap: PriceMap = {};
@@ -117,7 +117,7 @@ const PurchaseInner = () => {
     };
 
     const cancelSubscriptionOnClick = async () => {
-        const { data: result } = await client.Purchase.Subscription.CancelSubscription();
+        const result = await client.Purchase.Subscription.CancelSubscription();
     };
 
     const displayFreeInformation = () => {
@@ -139,7 +139,7 @@ const PurchaseInner = () => {
     const capitalize = (word: string) => word[0].toUpperCase() + word.slice(1);
 
     const singlePurposeButtonOnClick = async (priceId: string) => {
-        const { data: sessionId } = await client.Purchase.Checkout.CreateCheckoutSession(priceId, cancelUrl, successUrl);
+        const sessionId = await client.Purchase.Checkout.CreateCheckoutSession(priceId, cancelUrl, successUrl);
         if (stripe) stripe.redirectToCheckout({ sessionId: sessionId }).then(handleResult);
     };
 
@@ -175,7 +175,13 @@ const PurchaseInner = () => {
                                     {sortByPropertyAlphabetical(intervalGetter, prices).map((price: Price, key) => {
                                         return (
                                             <Grid key={price.product + "-" + key.toString()} item xs={6}>
-                                                <FrequencyCard key={price.productId + "-" + key.toString()} title={capitalize(price.recurring.interval) + "ly"} priceMap={priceMap} interval={price.recurring.interval} onClick={() => singlePurposeButtonOnClick(price.id)} />
+                                                <FrequencyCard
+                                                    key={price.productId + "-" + key.toString()}
+                                                    title={capitalize(price.recurring.interval) + "ly"}
+                                                    priceMap={priceMap}
+                                                    interval={price.recurring.interval}
+                                                    onClick={() => singlePurposeButtonOnClick(price.id)}
+                                                />
                                             </Grid>
                                         );
                                     })}

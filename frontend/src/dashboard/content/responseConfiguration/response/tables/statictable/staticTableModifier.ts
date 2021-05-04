@@ -1,13 +1,12 @@
-import { Dispatch, SetStateAction } from "react";
-import { StaticTableMetas, StaticTableRows, StaticTableRow, staticTableMetaTemplate, StaticTableMeta, AnyVoidFunction } from "@Palavyr-Types";
+import { StaticTableMetas, StaticTableRows, StaticTableRow, StaticTableMeta, AnyVoidFunction, SetState } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { v4 as uuid } from "uuid";
 
 export class StaticTablesModifier {
-    onClick: Dispatch<SetStateAction<StaticTableMetas>> | AnyVoidFunction;
+    onClick: SetState<StaticTableMetas> | AnyVoidFunction;
 
-    constructor(onClick: Dispatch<SetStateAction<StaticTableMetas>> | AnyVoidFunction) {
+    constructor(onClick: SetState<StaticTableMetas> | AnyVoidFunction) {
         this.onClick = onClick;
     }
 
@@ -88,12 +87,11 @@ export class StaticTablesModifier {
         }
     }
 
-    async addTable(staticTableMetas: StaticTableMetas, client: ApiClient, areaIdentifier: string) {
+    async addTable(staticTableMetas: StaticTableMetas, client: PalavyrRepository, areaIdentifier: string) {
         const tableOrders = this._getIDs_(staticTableMetas);
         const newtableOrder = this._generateNextId_(tableOrders);
 
-        const newTableTemplate = (await client.Configuration.Tables.Static.getStaticTablesMetaTemplate(areaIdentifier)).data as staticTableMetaTemplate;
-
+        const newTableTemplate = await client.Configuration.Tables.Static.getStaticTablesMetaTemplate(areaIdentifier);
         const newTable = ((): StaticTableMeta => ({
             ...newTableTemplate,
             tableOrder: newtableOrder,

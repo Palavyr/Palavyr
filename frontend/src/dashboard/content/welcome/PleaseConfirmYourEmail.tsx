@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import classNames from "classnames";
 import { Card, Typography, FormControl, OutlinedInput, makeStyles, useTheme, Divider } from "@material-ui/core";
 import { ColoredButton } from "@common/components/borrowed/ColoredButton";
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const PleaseConfirmYourEmail = () => {
-    const client = new ApiClient();
+    const client = new PalavyrRepository();
     const [authToken, setAuthToken] = useState<string>("");
     const [, setAuthStatus] = useState<string | null>(null);
     const emailAddress = SessionStorage.getEmailAddress();
@@ -57,7 +57,7 @@ export const PleaseConfirmYourEmail = () => {
             setErrorOpen(true);
             return false;
         }
-        const { data: emailConfirmed } = await client.Settings.Account.confirmEmailAddress(authToken);
+        const emailConfirmed = await client.Settings.Account.confirmEmailAddress(authToken);
         setTimeout(() => {
             if (emailConfirmed === true) {
                 setSuccessOpen(true);
@@ -74,7 +74,7 @@ export const PleaseConfirmYourEmail = () => {
     const resendAuthToken = async () => {
         setResendIsLoading(true);
         if (emailAddress) {
-            const { data: resendResult } = await client.Settings.Account.resendConfirmationToken(emailAddress);
+            const resendResult = await client.Settings.Account.resendConfirmationToken(emailAddress);
             if (resendResult) {
                 setResentOpen(true);
             } else {

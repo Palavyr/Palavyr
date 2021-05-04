@@ -1,5 +1,5 @@
 import React from "react";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
 import { DynamicTableProps } from "@Palavyr-Types";
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, setTableData, areaIdentifier, deleteAction, showDebug }: Omit<DynamicTableProps, "setTableMeta">) => {
-    const client = new ApiClient();
+    const client = new PalavyrRepository();
     const classes = useStyles();
 
     const modifier = new TwoNestedCategoriesModifier(setTableData);
@@ -40,7 +40,7 @@ export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, s
         const result = modifier.validateTable(tableData);
 
         if (result) {
-            const { data: savedData } = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.TwoNestedCategory, tableData, tableId, tableTag);
+            const savedData = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.TwoNestedCategory, tableData, tableId, tableTag);
             setTableData(savedData);
             return true;
         } else {

@@ -1,6 +1,6 @@
-import { PreCheckError, WidgetPreferences } from "@Palavyr-Types";
+import { PreCheckError, SetState, WidgetPreferences } from "@Palavyr-Types";
 import React, { useState, useCallback, useEffect, Dispatch, SetStateAction } from "react";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { Grid, Paper, Typography, makeStyles, Divider } from "@material-ui/core";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { HeaderEditor } from "./HeaderEditor";
@@ -40,14 +40,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export type ColorPickerType = {
-    method: Dispatch<SetStateAction<string>>;
+    method: SetState<string>;
     name: string;
     variable: string;
     disable: boolean;
 };
 
 export const ChatDemo = () => {
-    var client = new ApiClient();
+    var client = new PalavyrRepository();
 
     const [preCheckErrors, setPreCheckErrors] = useState<PreCheckError[]>([]);
     const [apiKey, setApiKey] = useState<string>("");
@@ -58,7 +58,7 @@ export const ChatDemo = () => {
     const cls = useStyles(preCheckErrors.length > 0);
 
     const loadMissingNodes = useCallback(async () => {
-        const { data: preCheckResult } = await client.WidgetDemo.RunConversationPrecheck();
+        const preCheckResult = await client.WidgetDemo.RunConversationPrecheck();
         if (!preCheckResult.isReady) {
             setPreCheckErrors(preCheckResult.preCheckErrors);
         }
@@ -66,7 +66,7 @@ export const ChatDemo = () => {
 
     const saveWidgetPreferences = async () => {
         if (widgetPreferences) {
-            const { data: updatedPreferences } = await client.WidgetDemo.SaveWidgetPreferences(widgetPreferences);
+            const updatedPreferences = await client.WidgetDemo.SaveWidgetPreferences(widgetPreferences);
             setWidgetPreferences(updatedPreferences);
             reloadIframe(!iframeRefreshed);
             return true;
@@ -81,10 +81,10 @@ export const ChatDemo = () => {
 
     const loadDemoWidget = useCallback(async () => {
         setIsLoading(true);
-        const { data: key } = await client.Settings.Account.getApiKey();
+        const key = await client.Settings.Account.getApiKey();
         setApiKey(key);
 
-        const { data: currentWidgetPreferences } = await client.WidgetDemo.GetWidetPreferences();
+        const currentWidgetPreferences = await client.WidgetDemo.GetWidetPreferences();
         setWidgetPreferences(currentWidgetPreferences);
 
         setIsLoading(false);

@@ -1,6 +1,5 @@
 import React from "react";
-import { ApiClient } from "@api-client/Client";
-import { webUrl } from "@api-client/clientUtils";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { CONVERSATION_REVIEW, CONVERSATION_REVIEW_PARAMNAME } from "@constants";
 import { Checkbox, Link, makeStyles, TableCell, TableRow, Typography } from "@material-ui/core";
 import { Enquiries, EnquiryRow, SetState } from "@Palavyr-Types";
@@ -41,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTableRowProps) => {
     const cls = useStyles();
-    const client = new ApiClient();
+    const client = new PalavyrRepository();
     const history = useHistory();
 
     const { setIsLoading } = React.useContext(DashboardContext);
@@ -54,7 +53,7 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
 
     const toggleSeenValue = async (conversationId: string) => {
         setIsLoading(true);
-        const { data: enqs } = await client.Enquiries.updateEnquiry(conversationId);
+        const enqs = await client.Enquiries.updateEnquiry(conversationId);
         setEnquiries(enqs);
         setIsLoading(false);
     };
@@ -62,7 +61,7 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
     const responseLinkOnClick = async (enquiry: EnquiryRow) => {
         setIsLoading(true);
         markAsSeen(enquiry.conversationId);
-        const { data: signedUrl } = await client.Enquiries.getSignedUrl(enquiry.linkReference.fileReference);
+        const signedUrl = await client.Enquiries.getSignedUrl(enquiry.linkReference.fileReference);
         window.open(signedUrl, "_blank");
         setIsLoading(false);
     };

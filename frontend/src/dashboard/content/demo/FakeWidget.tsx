@@ -168,6 +168,7 @@ export const FakeWidget = ({ ...prefs }: WidgetPreferences) => {
                                 classes={{ root: cls.selectbox, paper: classNames(cls.selectListBgColor, cls.selectListFontColor) }}
                                 disableClearable
                                 clearOnEscape
+                                open={true}
                                 className={classNames(cls.root, cls.autocomplete, cls.mainList, cls.selectListBgColor, cls.selectListFontColor)}
                                 onChange={(x) => null}
                                 options={[{ x: "First Option" }, { x: "Second Option" }, { x: "Third Option" }]}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ListItem, ListItemText, FormControlLabel, Typography, makeStyles } from "@material-ui/core";
 import { IOSSwitch } from "@common/components/IOSSwitch";
 import { green, red } from "theme";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 
 export interface WidgetStateSwitchProps {
     isActive: boolean;
@@ -19,15 +19,15 @@ export const WidgetStateSwitch = ({ isActive }: WidgetStateSwitchProps) => {
     const cls = useStyles();
 
     const updatewidgetState = async () => {
-        const client = new ApiClient();
-        const { data: updatedWidgetState } = await client.Configuration.WidgetState.SetWidgetState(!widgetState);
+        const client = new PalavyrRepository();
+        const updatedWidgetState = await client.Configuration.WidgetState.SetWidgetState(!widgetState);
         setWidgetState(updatedWidgetState);
     };
 
     useEffect(() => {
-        const client = new ApiClient();
+        const client = new PalavyrRepository();
         (async () => {
-            const { data: currentWidgetState } = await client.Configuration.WidgetState.GetWidgetState();
+            const currentWidgetState = await client.Configuration.WidgetState.GetWidgetState();
             setWidgetState(currentWidgetState);
         })();
     }, []);

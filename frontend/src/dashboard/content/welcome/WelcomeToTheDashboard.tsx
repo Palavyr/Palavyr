@@ -1,31 +1,30 @@
 import * as React from "react";
-import { makeStyles, Card, Typography, Divider, Link } from "@material-ui/core";
-import { Alert, AlertTitle } from "@material-ui/lab";
+import { makeStyles, Card, Typography, Divider } from "@material-ui/core";
 import classNames from "classnames";
 import { useHistory } from "react-router-dom";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { OnboardingTodo } from "./OnboardingTodo/OnboardingTodo";
 import { useState } from "react";
-import { ApiClient } from "@api-client/Client";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { TodosAsBoolean } from "@Palavyr-Types";
 import { allClear, convertTodos } from "./OnboardingTodo/onboardingUtils";
 
 const useStyles = makeStyles((theme) => ({
     background: {
         paddingTop: "3rem",
-        background: theme.palette.background.default, //"radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)",
+        background: theme.palette.background.default,
     },
     wrapper: {
         position: "relative",
         height: "100%",
         textAlign: "center",
-        background: theme.palette.background.default, //"radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)",
+        background: theme.palette.background.default,
     },
     sectionDiv: {
         width: "100%",
         display: "flex",
         justifyContent: "center",
-        background: theme.palette.background.default, //"radial-gradient(circle, rgba(238,241,244,1) 28%, rgba(211,224,227,1) 76%)",
+        background: theme.palette.background.default,
     },
     sectionHeadDiv: {
         width: "100%",
@@ -51,16 +50,13 @@ const useStyles = makeStyles((theme) => ({
         margin: "4rem",
         padding: "3rem",
         color: "white",
-        background: theme.palette.secondary.main, //"linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
+        background: theme.palette.secondary.main,
     },
     alertTitle: {
         fontSize: "16pt",
         fontWeight: "bold",
     },
-    // stepTitle: {
-    //     fontSize: "18pt",
-    //     fontWeight: "bold",
-    // },
+
     highlight: {
         "&:hover": {
             background: theme.palette.primary.dark,
@@ -81,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
 export const WelcomeToTheDashboard = () => {
     const cls = useStyles();
     const history = useHistory();
-    const client = new ApiClient();
+    const client = new PalavyrRepository();
 
     const { checkAreaCount } = React.useContext(DashboardContext);
 
@@ -89,14 +85,10 @@ export const WelcomeToTheDashboard = () => {
     const [loading, setLoading] = useState<boolean>(true);
 
     const loadTodos = React.useCallback(async () => {
-        const { data: name } = await client.Settings.Account.getCompanyName();
-        const { data: logoUri } = await client.Settings.Account.getCompanyLogo();
-        const {
-            data: { phoneNumber, locale },
-        } = await client.Settings.Account.getPhoneNumber();
-        var {
-            data: { emailAddress, isVerified, awaitingVerification },
-        } = await client.Settings.Account.getEmail();
+        const name = await client.Settings.Account.getCompanyName();
+        const logoUri = await client.Settings.Account.getCompanyLogo();
+        const { phoneNumber, locale } = await client.Settings.Account.getPhoneNumber();
+        const { emailAddress, isVerified, awaitingVerification } = await client.Settings.Account.getEmail();
 
         const todos = {
             name,
