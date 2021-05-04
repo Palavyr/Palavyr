@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const ChangePassword = () => {
-    const repository = new PalavyrRepository();
+    var client = new PalavyrRepository();
 
     const [showOldPassword, setShowOldPassword] = useState<boolean>(false);
     const [oldPassword, setOldPassword] = useState<string>("");
@@ -55,13 +55,14 @@ export const ChangePassword = () => {
     const cls = useStyles();
 
     const handlePasswordChange = async (oldPassword: string, newPassword: string): Promise<boolean> => {
-        const success = await repository.Settings.Account.UpdatePassword(oldPassword, newPassword);
+        const success = await client.Settings.Account.UpdatePassword(oldPassword, newPassword);
         return success;
     };
 
     return (
         <SettingsWrapper>
-            d <Divider />
+            <AreaConfigurationHeader title="Change your password" subtitle="Update the password you use to log in." />
+            <Divider />
             <Paper className={cls.paper}>
                 <Alert>
                     <AlertTitle className={cls.titleText}>Update your password</AlertTitle>

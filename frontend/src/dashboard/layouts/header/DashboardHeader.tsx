@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
     topbar: {
         background: theme.palette.primary.dark,
         position: "fixed",
+        zIndex: 9999
     },
     appBar: {
         transition: theme.transitions.create(["margin", "width"], {

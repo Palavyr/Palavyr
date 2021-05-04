@@ -1,5 +1,5 @@
 import { PreCheckError, SetState, WidgetPreferences } from "@Palavyr-Types";
-import React, { useState, useCallback, useEffect, Dispatch, SetStateAction } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { Grid, Paper, Typography, makeStyles, Divider } from "@material-ui/core";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
@@ -11,7 +11,7 @@ import { ChatDemoHeader } from "./ChatDemoHeader";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { PalavyrDemoWidget } from "./DemoWidget";
 import { Align } from "dashboard/layouts/positioning/Align";
-import { FakeWidget } from "./FakeWidget";
+import { FakeWidgets } from "./fakeWidget/FakeWidgets";
 import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
 
 const useStyles = makeStyles((theme) => ({
@@ -167,13 +167,7 @@ export const ChatDemo = () => {
                 <Align direction="center">
                     <SaveOrCancel size="large" onSave={saveWidgetPreferences} />
                 </Align>
-                <Align>
-                    {widgetPreferences && (
-                        <div>
-                            <FakeWidget {...widgetPreferences} />
-                        </div>
-                    )}
-                </Align>
+                <Align>{widgetPreferences && <FakeWidgets {...widgetPreferences} />}</Align>
                 <div className={cls.gridList}>
                     {widgetPreferences &&
                         colorPickers(widgetPreferences).map((picker: ColorPickerType, index: number) => {
