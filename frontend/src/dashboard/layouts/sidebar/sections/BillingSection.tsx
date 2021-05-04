@@ -34,10 +34,10 @@ export const BillingSection = ({ isActive }: BillingSectionProps) => {
     };
 
     const createCustomerPortalSession = async () => {
-        const client = new PalavyrRepository();
+        const repository = new PalavyrRepository();
         var returnUrl = `${webUrl}/dashboard/`;
-        const customerId = await client.Purchase.Customer.GetCustomerId();
-        const portalUrl = await client.Purchase.Customer.GetCustomerPortal(customerId, returnUrl);
+        const customerId = await repository.Purchase.Customer.GetCustomerId();
+        const portalUrl = await repository.Purchase.Customer.GetCustomerPortal(customerId, returnUrl);
         window.location.href = portalUrl;
     };
 

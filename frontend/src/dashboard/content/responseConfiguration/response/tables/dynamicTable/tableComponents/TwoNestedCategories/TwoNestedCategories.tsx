@@ -28,19 +28,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, setTableData, areaIdentifier, deleteAction, showDebug }: Omit<DynamicTableProps, "setTableMeta">) => {
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const classes = useStyles();
 
     const modifier = new TwoNestedCategoriesModifier(setTableData);
 
-    const addOuterCategory = () => modifier.addOuterCategory(tableData, client, areaIdentifier, tableId);
-    const addInnerCategory = () => modifier.addInnerCategory(tableData, client, areaIdentifier, tableId);
+    const addOuterCategory = () => modifier.addOuterCategory(tableData, repository, areaIdentifier, tableId);
+    const addInnerCategory = () => modifier.addInnerCategory(tableData, repository, areaIdentifier, tableId);
 
     const onSave = async () => {
         const result = modifier.validateTable(tableData);
 
         if (result) {
-            const savedData = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.TwoNestedCategory, tableData, tableId, tableTag);
+            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.TwoNestedCategory, tableData, tableId, tableTag);
             setTableData(savedData);
             return true;
         } else {

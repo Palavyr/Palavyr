@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const CategoryNestedThreshold = ({ tableId, tableTag, tableMeta, tableData, setTableData, areaIdentifier, deleteAction, showDebug }: Omit<DynamicTableProps, "setTableMeta">) => {
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const classes = useStyles();
 
     const modifier = new CategoryNestedThresholdModifier(setTableData);
@@ -38,7 +38,7 @@ export const CategoryNestedThreshold = ({ tableId, tableTag, tableMeta, tableDat
         const result = modifier.validateTable(tableData);
 
         if (result) {
-            const savedData = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.CategoryNestedThreshold, tableData, tableId, tableTag);
+            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.CategoryNestedThreshold, tableData, tableId, tableTag);
             setTableData(savedData);
             return true;
         } else {
@@ -52,7 +52,7 @@ export const CategoryNestedThreshold = ({ tableId, tableTag, tableMeta, tableDat
             <AccordionActions>
                 <div className={classes.trayWrapper}>
                     <div className={classes.alignLeft}>
-                        <Button className={classes.add} onClick={() => modifier.addCategory(tableData, client, areaIdentifier, tableId)} color="primary" variant="contained">
+                        <Button className={classes.add} onClick={() => modifier.addCategory(tableData, repository, areaIdentifier, tableId)} color="primary" variant="contained">
                             Add Category
                         </Button>
                     </div>

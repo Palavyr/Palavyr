@@ -27,7 +27,7 @@ const LocaleId = "LocaleId";
 const CountryName = "CountryName";
 
 export const ChangeLocale = () => {
-    var client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
 
     const [, setLoaded] = useState<boolean>(false);
     const [, setLocaleID] = useState<string | undefined>();
@@ -39,7 +39,7 @@ export const ChangeLocale = () => {
     const classes = useStyles();
 
     const loadLocale = useCallback(async () => {
-        const locale = await client.Settings.Account.GetLocale();
+        const locale = await repository.Settings.Account.GetLocale();
 
         setLocaleID(locale.localeId);
         setLocaleName(locale.localeCountry);
@@ -61,7 +61,7 @@ export const ChangeLocale = () => {
     const handleLocaleChange = async (event) => {
         const newLocaleId = event.target.value;
 
-        const updatedLocale = await client.Settings.Account.updateLocale(newLocaleId);
+        const updatedLocale = await repository.Settings.Account.updateLocale(newLocaleId);
 
         setLocaleName(updatedLocale.localeCountry);
         setLocaleID(updatedLocale.localeId);

@@ -26,11 +26,11 @@ export interface IAddNewAreaModal {
 export const AddNewAreaModal = ({ open, handleClose, setNewArea }: IAddNewAreaModal) => {
     const [areaName, setAreaName] = useState<string>("");
     const classes = useStyles();
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
 
     const onAdd = async () => {
         if (areaName !== "") {
-            const newArea = await client.Area.createArea(areaName);
+            const newArea = await repository.Area.createArea(areaName);
             setNewArea(newArea);
         }
         handleClose();

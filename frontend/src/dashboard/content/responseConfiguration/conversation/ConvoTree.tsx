@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const ConvoTree = () => {
-    var client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const cls = useStyles();
 
     const { setIsLoading } = React.useContext(DashboardContext);
@@ -57,10 +57,10 @@ export const ConvoTree = () => {
     };
 
     const loadNodes = useCallback(async () => {
-        const client = new PalavyrRepository();
+        const repository = new PalavyrRepository();
 
-        const nodes = await client.Conversations.GetConversation(areaIdentifier);
-        const nodeTypeOptions = await client.Conversations.GetNodeOptionsList(areaIdentifier);
+        const nodes = await repository.Conversations.GetConversation(areaIdentifier);
+        const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier);
 
         setNodeTypeOptions(nodeTypeOptions);
         setNodes(cloneDeep(nodes));
@@ -71,7 +71,7 @@ export const ConvoTree = () => {
     }, [areaIdentifier]);
 
     const onSave = async () => {
-        const updatedConversation = await client.Conversations.ModifyConversation(nodeList, areaIdentifier);
+        const updatedConversation = await repository.Conversations.ModifyConversation(nodeList, areaIdentifier);
         console.log(updatedConversation);
         historyTracker.addConversationHistoryToQueue(updatedConversation, conversationHistoryPosition, conversationHistory);
         setNodes(updatedConversation);
@@ -96,7 +96,7 @@ export const ConvoTree = () => {
     useEffect(() => {
         if (nodeList.length > 0) {
             (async () => {
-                const treeErrors = await client.Conversations.GetErrors(areaIdentifier, nodeList);
+                const treeErrors = await repository.Conversations.GetErrors(areaIdentifier, nodeList);
                 setTreeErrors(treeErrors);
             })();
         }

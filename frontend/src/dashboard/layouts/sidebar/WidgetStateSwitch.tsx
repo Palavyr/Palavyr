@@ -19,15 +19,15 @@ export const WidgetStateSwitch = ({ isActive }: WidgetStateSwitchProps) => {
     const cls = useStyles();
 
     const updatewidgetState = async () => {
-        const client = new PalavyrRepository();
-        const updatedWidgetState = await client.Configuration.WidgetState.SetWidgetState(!widgetState);
+        const repository = new PalavyrRepository();
+        const updatedWidgetState = await repository.Configuration.WidgetState.SetWidgetState(!widgetState);
         setWidgetState(updatedWidgetState);
     };
 
     useEffect(() => {
-        const client = new PalavyrRepository();
+        const repository = new PalavyrRepository();
         (async () => {
-            const currentWidgetState = await client.Configuration.WidgetState.GetWidgetState();
+            const currentWidgetState = await repository.Configuration.WidgetState.GetWidgetState();
             setWidgetState(currentWidgetState);
         })();
     }, []);

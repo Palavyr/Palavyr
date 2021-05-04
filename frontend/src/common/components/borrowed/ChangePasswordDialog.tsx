@@ -27,7 +27,7 @@ export const ChangePasswordDialog = ({ setLoginStatus, onClose }: IChangePasswor
     const [emailAddress, setEmailAddress] = useState("start");
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [requestSent, setRequestSent] = useState<boolean>(false);
-    console.log("A render")
+    console.log("A render");
 
     const sendPasswordEmail = useCallback(async () => {
         const client = new LoginClient();
@@ -35,7 +35,6 @@ export const ChangePasswordDialog = ({ setLoginStatus, onClose }: IChangePasswor
         setIsLoading(true);
 
         const { data: resetEmailResponse } = await client.Reset.resetPasswordRequest(emailAddress);
-        console.log("eMAIL aDDRESS: " + emailAddress)
         setTimeout(() => {
             if (resetEmailResponse.status) {
                 setLoginStatus(VERIFICATION_EMAIL_SEND);
@@ -64,7 +63,10 @@ export const ChangePasswordDialog = ({ setLoginStatus, onClose }: IChangePasswor
                 <Button
                     onClick={sendPasswordEmail}
                     // type="submit"
-                    variant="contained" color="secondary" disabled={isLoading || requestSent}>
+                    variant="contained"
+                    color="secondary"
+                    disabled={isLoading || requestSent}
+                >
                     Reset password
                     {isLoading && <ButtonCircularProgress />}
                 </Button>
@@ -73,10 +75,10 @@ export const ChangePasswordDialog = ({ setLoginStatus, onClose }: IChangePasswor
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log("setting state: " + event.target.value)
+        console.log("setting state: " + event.target.value);
         setEmailAddress(event.target.value);
-        console.log("Currentstate: " + emailAddress)
-      };
+        console.log("Currentstate: " + emailAddress);
+    };
 
     const RenderCloseButton = () => {
         return <Button onClick={onClose}>Close</Button>;
@@ -90,25 +92,11 @@ export const ChangePasswordDialog = ({ setLoginStatus, onClose }: IChangePasswor
                     sendPasswordEmail();
                 }}
             > */}
-                <DialogContent className={classes.dialogContent}>
-                    <Typography paragraph>Enter your email address below and we will send you instructions on how to reset your password.</Typography>
-                    <TextField
-                        disabled={isLoading || requestSent}
-                        variant="outlined"
-                        margin="dense"
-                        required
-                        fullWidth
-                        label="Email Address"
-                        autoFocus
-                        type="email"
-                        autoComplete="off"
-                        helperText={errorMessage}
-                        onChange={handleChange}
-                    />
-                </DialogContent>
-                <DialogActions className={classes.dialogActions}>
-                    {requestSent ? <RenderCloseButton /> : <RenderSubmitButtons />}
-                </DialogActions>
+            <DialogContent className={classes.dialogContent}>
+                <Typography paragraph>Enter your email address below and we will send you instructions on how to reset your password.</Typography>
+                <TextField disabled={isLoading || requestSent} variant="outlined" margin="dense" required fullWidth label="Email Address" autoFocus type="email" autoComplete="off" helperText={errorMessage} onChange={handleChange} />
+            </DialogContent>
+            <DialogActions className={classes.dialogActions}>{requestSent ? <RenderCloseButton /> : <RenderSubmitButtons />}</DialogActions>
             {/* </form> */}
         </Dialog>
     );

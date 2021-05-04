@@ -64,7 +64,7 @@ export const SingleDynamicFeeTable = ({
     changeParentState,
     areaIdentifier,
 }: SingleDynamicFeeTableProps) => {
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const classes = useStyles();
 
     const [tableMeta, setTableMeta] = useState<DynamicTableMeta | undefined>();
@@ -74,7 +74,7 @@ export const SingleDynamicFeeTable = ({
 
     const loadDynamicData = useCallback(async () => {
         setTableMeta(defaultTableMeta);
-        const tableData = await client.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, defaultTableMeta.tableType, defaultTableMeta.tableId);
+        const tableData = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, defaultTableMeta.tableType, defaultTableMeta.tableId);
 
         setDynamicTableData(tableData);
         setSelection(defaultTableMeta.prettyName);
@@ -89,7 +89,7 @@ export const SingleDynamicFeeTable = ({
     useEffect(() => {
         (async () => {
             if (tableMeta !== undefined) {
-                var tableDataResponse = await client.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, tableMeta.tableType, tableMeta.tableId);
+                var tableDataResponse = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, tableMeta.tableType, tableMeta.tableId);
                 setDynamicTableData(tableDataResponse);
             }
         })();
@@ -106,14 +106,14 @@ export const SingleDynamicFeeTable = ({
         if (tableMeta !== undefined) {
             tableMeta.tableType = newTableTypeSelectionFormatted;
             tableMeta.prettyName = newTableTypeSelection;
-            const updatedTableMeta = await client.Configuration.Tables.Dynamic.modifyDynamicTableMeta(tableMeta);
+            const updatedTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(tableMeta);
             setTableMeta(updatedTableMeta);
         }
         setSelection(newTableTypeSelection);
     };
 
     const deleteAction = async () => {
-        await client.Configuration.Tables.Dynamic.deleteDynamicTable(areaIdentifier, defaultTableMeta.tableType, defaultTableMeta.tableId);
+        await repository.Configuration.Tables.Dynamic.deleteDynamicTable(areaIdentifier, defaultTableMeta.tableType, defaultTableMeta.tableId);
         var newTableMetas = removeByIndex(tableMetas, tableMetaIndex);
         setTableMetas(cloneDeep(newTableMetas));
         changeParentState(!parentState);

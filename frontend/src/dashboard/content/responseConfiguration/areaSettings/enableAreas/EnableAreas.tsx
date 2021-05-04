@@ -26,12 +26,12 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const EnableAreas = () => {
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const cls = useStyles();
     const [areaIds, setAreaIds] = useState<AreasEnabled[]>([]);
 
     const loadAreas = useCallback(async () => {
-        const areaData = await client.Area.GetAreas();
+        const areaData = await repository.Area.GetAreas();
         const areaIdentifiers = areaData.map((x: AreaTable) => {
             return {
                 areaId: x.areaIdentifier,

@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const ChangeCompanyName = () => {
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const classes = useStyles();
 
     const [, setLoaded] = useState<boolean>(false);
@@ -22,7 +22,7 @@ export const ChangeCompanyName = () => {
     const [] = useState<boolean>(false);
 
     const loadCompanyName = useCallback(async () => {
-        const name = await client.Settings.Account.getCompanyName();
+        const name = await repository.Settings.Account.getCompanyName();
         setCompanyName(name);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -37,7 +37,7 @@ export const ChangeCompanyName = () => {
     }, [setCompanyName, loadCompanyName]);
 
     const handleCompanyNameChange = async (newCompanyName: string) => {
-        await client.Settings.Account.updateCompanyName(newCompanyName);
+        await repository.Settings.Account.updateCompanyName(newCompanyName);
         setCompanyName(newCompanyName);
     };
 

@@ -51,7 +51,7 @@ export class AxiosClient implements IAxiosClient {
     put<T, S>(url: string, payload?: S, config?: AxiosRequestConfig): Promise<T> {
         return new Promise<T>(async (resolve, reject) => {
             try {
-                const response = await this.client.post(url, payload, config);
+                const response = await this.client.put(url, payload, config);
                 resolve(response.data as T);
             } catch (response) {
                 reject(response);

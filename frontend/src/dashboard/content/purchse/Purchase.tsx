@@ -73,7 +73,7 @@ export const Purchase = () => {
 };
 
 const PurchaseInner = () => {
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const cls = useStyles();
     const [prices, setPrices] = useState<Prices>([]);
     const location = useLocation();
@@ -99,7 +99,7 @@ const PurchaseInner = () => {
 
     const getProducts = useCallback(async () => {
         if (productId == null) return;
-        const priceOptions = await client.Purchase.Prices.GetPrices(productId);
+        const priceOptions = await repository.Purchase.Prices.GetPrices(productId);
         setPrices(priceOptions);
 
         const filledPriceMap: PriceMap = {};
@@ -117,7 +117,7 @@ const PurchaseInner = () => {
     };
 
     const cancelSubscriptionOnClick = async () => {
-        const result = await client.Purchase.Subscription.CancelSubscription();
+        const result = await repository.Purchase.Subscription.CancelSubscription();
     };
 
     const displayFreeInformation = () => {
@@ -139,7 +139,7 @@ const PurchaseInner = () => {
     const capitalize = (word: string) => word[0].toUpperCase() + word.slice(1);
 
     const singlePurposeButtonOnClick = async (priceId: string) => {
-        const sessionId = await client.Purchase.Checkout.CreateCheckoutSession(priceId, cancelUrl, successUrl);
+        const sessionId = await repository.Purchase.Checkout.CreateCheckoutSession(priceId, cancelUrl, successUrl);
         if (stripe) stripe.redirectToCheckout({ sessionId: sessionId }).then(handleResult);
     };
 

@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const ChangePassword = () => {
-    var client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
 
     const [showOldPassword, setShowOldPassword] = useState<boolean>(false);
     const [oldPassword, setOldPassword] = useState<string>("");
@@ -55,7 +55,7 @@ export const ChangePassword = () => {
     const cls = useStyles();
 
     const handlePasswordChange = async (oldPassword: string, newPassword: string): Promise<boolean> => {
-        const success = await client.Settings.Account.UpdatePassword(oldPassword, newPassword);
+        const success = await repository.Settings.Account.UpdatePassword(oldPassword, newPassword);
         return success;
     };
 

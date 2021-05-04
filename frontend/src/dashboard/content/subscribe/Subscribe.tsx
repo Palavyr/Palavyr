@@ -39,7 +39,7 @@ export const Subscribe = () => {
     const [productList, setProductList] = useState<ProductIds>();
 
     const cls = useStyles();
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
 
     const history = useHistory();
 
@@ -55,12 +55,12 @@ export const Subscribe = () => {
     };
 
     const getCurrentPlan = useCallback(async () => {
-        const plan = await client.Settings.Account.getCurrentPlan();
+        const plan = await repository.Settings.Account.getCurrentPlan();
         setCurrentPlan(plan);
     }, []);
 
     const getProducts = useCallback(async () => {
-        const products = await client.Products.getProducts();
+        const products = await repository.Products.getProducts();
         setProductList(products);
     }, []);
 

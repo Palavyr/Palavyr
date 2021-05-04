@@ -42,7 +42,7 @@ const useStyles = makeStyles(() => ({
 
 export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<DynamicTableProps, "tableMeta" | "setTableMeta">) => {
     const cls = useStyles();
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const [name, setItemName] = useState<string>("");
 
     const modifier = new BasicThresholdModifier(setTableData);
@@ -52,7 +52,7 @@ export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTab
 
         const result = modifier.validateTable(reorderedData);
         if (result) {
-            const saveBasicThreshold = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.BasicThreshold, reorderedData, tableId, tableTag);
+            const saveBasicThreshold = await repository.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.BasicThreshold, reorderedData, tableId, tableTag);
             setTableData(saveBasicThreshold);
             console.log("Saving the table");
             return true;
@@ -60,7 +60,7 @@ export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTab
             return false;
         }
     };
-    const addThresholdOnClick = () => modifier.addThreshold(tableData, areaIdentifier, tableId, client);
+    const addThresholdOnClick = () => modifier.addThreshold(tableData, areaIdentifier, tableId, repository);
 
     return (
         <>

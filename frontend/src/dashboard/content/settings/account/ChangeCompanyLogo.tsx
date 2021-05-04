@@ -87,7 +87,7 @@ interface ChangeLogoImageInner {
     setFileUpload: SetState<File[]>;
 }
 const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInner) => {
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const cls = useStyles();
 
     const [alertState, setAlertState] = useState<boolean>(false);
@@ -99,7 +99,7 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
     };
 
     const loadCompanyLogo = useCallback(async () => {
-        const logoUri = await client.Settings.Account.getCompanyLogo();
+        const logoUri = await repository.Settings.Account.getCompanyLogo();
         setcompanyLogo(logoUri);
     }, []);
 
@@ -115,7 +115,7 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
         if (fileUpload !== null) {
             const formData = new FormData();
             formData.append("files", fileUpload[0]);
-            const dataUrl = await client.Settings.Account.updateCompanyLogo(formData);
+            const dataUrl = await repository.Settings.Account.updateCompanyLogo(formData);
             setcompanyLogo(dataUrl);
         }
         setFileUpload([]); // shouldn't this clear the chip

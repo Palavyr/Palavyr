@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const PleaseConfirmYourEmail = () => {
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const [authToken, setAuthToken] = useState<string>("");
     const [, setAuthStatus] = useState<string | null>(null);
     const emailAddress = SessionStorage.getEmailAddress();
@@ -57,7 +57,7 @@ export const PleaseConfirmYourEmail = () => {
             setErrorOpen(true);
             return false;
         }
-        const emailConfirmed = await client.Settings.Account.confirmEmailAddress(authToken);
+        const emailConfirmed = await repository.Settings.Account.confirmEmailAddress(authToken);
         setTimeout(() => {
             if (emailConfirmed === true) {
                 setSuccessOpen(true);
@@ -74,7 +74,7 @@ export const PleaseConfirmYourEmail = () => {
     const resendAuthToken = async () => {
         setResendIsLoading(true);
         if (emailAddress) {
-            const resendResult = await client.Settings.Account.resendConfirmationToken(emailAddress);
+            const resendResult = await repository.Settings.Account.resendConfirmationToken(emailAddress);
             if (resendResult) {
                 setResentOpen(true);
             } else {

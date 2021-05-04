@@ -29,13 +29,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<DynamicTableProps, "tableMeta" | "setTableMeta">) => {
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const classes = useStyles();
 
     const modifier = new PercentOfThresholdModifier(setTableData);
 
-    const addItemOnClick = () => modifier.addItem(tableData, client, areaIdentifier, tableId);
-    const addRowOnClickFactory = (itemId: string) => () => modifier.addRow(tableData, client, areaIdentifier, tableId, itemId);
+    const addItemOnClick = () => modifier.addItem(tableData, repository, areaIdentifier, tableId);
+    const addRowOnClickFactory = (itemId: string) => () => modifier.addRow(tableData, repository, areaIdentifier, tableId, itemId);
 
     const onSave = async () => {
         const reorderedData = reOrderPercentOfThresholdTableData(tableData);
@@ -43,7 +43,7 @@ export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableData, se
         const result = modifier.validateTable(reorderedData);
 
         if (result) {
-            const savedData = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.PercentOfThreshold, reorderedData, tableId, tableTag);
+            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.PercentOfThreshold, reorderedData, tableId, tableTag);
             setTableData(savedData);
             return true;
         } else {

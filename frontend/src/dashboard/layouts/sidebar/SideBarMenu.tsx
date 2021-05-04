@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { useHistory } from "react-router-dom";
 import { Divider, makeStyles } from "@material-ui/core";
 import { AuthContext } from "../DashboardContext";
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SideBarMenu = ({ areaNameDetails }: ISideBarMenu) => {
+export const SideBarMenu = memo(({ areaNameDetails }: ISideBarMenu) => {
     const history = useHistory();
     const { isActive } = React.useContext(AuthContext);
 
@@ -40,4 +40,4 @@ export const SideBarMenu = ({ areaNameDetails }: ISideBarMenu) => {
             <OtherSection isActive={isActive} />
         </div>
     );
-};
+});

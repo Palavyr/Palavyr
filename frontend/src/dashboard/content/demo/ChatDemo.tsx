@@ -47,7 +47,7 @@ export type ColorPickerType = {
 };
 
 export const ChatDemo = () => {
-    var client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
 
     const [preCheckErrors, setPreCheckErrors] = useState<PreCheckError[]>([]);
     const [apiKey, setApiKey] = useState<string>("");
@@ -58,7 +58,7 @@ export const ChatDemo = () => {
     const cls = useStyles(preCheckErrors.length > 0);
 
     const loadMissingNodes = useCallback(async () => {
-        const preCheckResult = await client.WidgetDemo.RunConversationPrecheck();
+        const preCheckResult = await repository.WidgetDemo.RunConversationPrecheck();
         if (!preCheckResult.isReady) {
             setPreCheckErrors(preCheckResult.preCheckErrors);
         }
@@ -66,7 +66,7 @@ export const ChatDemo = () => {
 
     const saveWidgetPreferences = async () => {
         if (widgetPreferences) {
-            const updatedPreferences = await client.WidgetDemo.SaveWidgetPreferences(widgetPreferences);
+            const updatedPreferences = await repository.WidgetDemo.SaveWidgetPreferences(widgetPreferences);
             setWidgetPreferences(updatedPreferences);
             reloadIframe(!iframeRefreshed);
             return true;
@@ -81,10 +81,10 @@ export const ChatDemo = () => {
 
     const loadDemoWidget = useCallback(async () => {
         setIsLoading(true);
-        const key = await client.Settings.Account.getApiKey();
+        const key = await repository.Settings.Account.getApiKey();
         setApiKey(key);
 
-        const currentWidgetPreferences = await client.WidgetDemo.GetWidetPreferences();
+        const currentWidgetPreferences = await repository.WidgetDemo.GetWidetPreferences();
         setWidgetPreferences(currentWidgetPreferences);
 
         setIsLoading(false);

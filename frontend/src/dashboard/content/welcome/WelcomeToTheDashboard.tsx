@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
 export const WelcomeToTheDashboard = () => {
     const cls = useStyles();
     const history = useHistory();
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
 
     const { checkAreaCount } = React.useContext(DashboardContext);
 
@@ -85,10 +85,10 @@ export const WelcomeToTheDashboard = () => {
     const [loading, setLoading] = useState<boolean>(true);
 
     const loadTodos = React.useCallback(async () => {
-        const name = await client.Settings.Account.getCompanyName();
-        const logoUri = await client.Settings.Account.getCompanyLogo();
-        const { phoneNumber, locale } = await client.Settings.Account.getPhoneNumber();
-        const { emailAddress, isVerified, awaitingVerification } = await client.Settings.Account.getEmail();
+        const name = await repository.Settings.Account.getCompanyName();
+        const logoUri = await repository.Settings.Account.getCompanyLogo();
+        const { phoneNumber, locale } = await repository.Settings.Account.getPhoneNumber();
+        const { emailAddress, isVerified, awaitingVerification } = await repository.Settings.Account.getEmail();
 
         const todos = {
             name,

@@ -40,14 +40,14 @@ const useStyles = makeStyles({
 });
 
 export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: DynamicTableProps) => {
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const classes = useStyles();
 
     const modifier = new SelectOneFlatModifier(setTableData);
 
     const useOptionsAsPathsOnChange = async (event: { target: { checked: boolean } }) => {
         tableMeta.valuesAsPaths = event.target.checked;
-        const newTableMeta = await client.Configuration.Tables.Dynamic.modifyDynamicTableMeta(tableMeta);
+        const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(tableMeta);
         setTableMeta(newTableMeta);
     };
 
@@ -55,7 +55,7 @@ export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tab
         const result = modifier.validateTable(tableData);
 
         if (result) {
-            const savedData = await client.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.SelectOneFlat, tableData, tableId, tableTag);
+            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.SelectOneFlat, tableData, tableId, tableTag);
             setTableData(savedData);
             return true;
         } else {
@@ -63,7 +63,7 @@ export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tab
         }
     };
 
-    const addOptionOnClick = () => modifier.addOption(tableData, client, areaIdentifier, tableId);
+    const addOptionOnClick = () => modifier.addOption(tableData, repository, areaIdentifier, tableId);
 
     return (
         <>

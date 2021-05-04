@@ -14,12 +14,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const GetWidget = () => {
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const [apikey, setApiKey] = useState<string>("");
     const classes = useStyles();
 
     const loadApiKey = useCallback(async () => {
-        const key = await client.Settings.Account.getApiKey();
+        const key = await repository.Settings.Account.getApiKey();
         console.log(`ApiKey: ${key}`);
         setApiKey(key);
     }, []);

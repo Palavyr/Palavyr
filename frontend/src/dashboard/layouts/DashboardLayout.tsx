@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, memo } from "react";
 
 import { SideBarHeader } from "./sidebar/SideBarHeader";
 import { SideBarMenu } from "./sidebar/SideBarMenu";
@@ -9,7 +9,7 @@ import { cloneDeep } from "lodash";
 import { AlertType, AreaNameDetails, Areas, AreaTable, PlanType } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DashboardHeader } from "./header/DashboardHeader";
-import { IconButton, makeStyles, Typography } from "@material-ui/core";
+import { CircularProgress, IconButton, makeStyles, Typography } from "@material-ui/core";
 import { DRAWER_WIDTH } from "@constants";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Divider from "@material-ui/core/Divider";
@@ -18,12 +18,14 @@ import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
 import { DashboardContext } from "./DashboardContext";
 import { UserDetails } from "./sidebar/UserDetails";
+import { Align } from "./positioning/Align";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
         return {
-            areaIdentifier: x.areaIdentifier, areaName: x.areaName
-        }
+            areaIdentifier: x.areaIdentifier,
+            areaName: x.areaName,
+        };
     });
     return areaNameDetails;
 };
@@ -91,26 +93,25 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [dashboardAreasLoading, setDashboardAreasLoading] = useState<boolean>(false);
-
     const cls = useStyles(helpOpen);
 
     const loadAreas = useCallback(async () => {
         setDashboardAreasLoading(true);
-        const client = new PalavyrRepository();
+        const repository = new PalavyrRepository();
 
         // todo: Deprecate this call in the future once we are confident
-        await client.Conversations.EnsureDBIsValid();
+        await repository.Conversations.EnsureDBIsValid();
 
-        const numAllowedBySubscription = await client.Settings.Subscriptions.getNumAreas();
-        const currentPlanType = await client.Settings.Account.getCurrentPlan();
+        const numAllowedBySubscription = await repository.Settings.Subscriptions.getNumAreas();
+        const currentPlanType = await repository.Settings.Account.getCurrentPlan();
         setPlanType(currentPlanType.status);
         setNumAreasAllowed(numAllowedBySubscription);
 
-        const areas = await client.Area.GetAreas();
+        const areas = await repository.Area.GetAreas();
         const areaNameDetails = fetchSidebarInfo(areas);
         setAreaNameDetails(areaNameDetails);
 
-        const locale = await client.Settings.Account.GetLocale();
+        const locale = await repository.Settings.Account.GetLocale();
         setCurrencySymbol(locale.localeCurrencySymbol);
 
         if (areaIdentifier) {
@@ -134,7 +135,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const setNewArea = (newArea: AreaTable) => {
         var newNames = cloneDeep(areaNameDetails);
 
-        newNames.push({areaName: newArea.areaName, areaIdentifier: newArea.areaIdentifier});
+        newNames.push({ areaName: newArea.areaName, areaIdentifier: newArea.areaIdentifier });
         setAreaNameDetails(newNames);
 
         history.push(`/dashboard/editor/email/${newArea.areaIdentifier}?tab=0`);
@@ -193,7 +194,15 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                     <SideBarHeader handleDrawerClose={handleDrawerClose} />
                     <UserDetails />
                     <Divider />
-                    <SideBarMenu areaNameDetails={areaNameDetails} />
+                    {dashboardAreasLoading ? (
+                        <Align verticalCenter>
+                            <div style={{ paddingTop: "4rem" }}>
+                                <CircularProgress />
+                            </div>
+                        </Align>
+                    ) : (
+                        <SideBarMenu areaNameDetails={areaNameDetails} />
+                    )}
                 </Drawer>
                 <ContentLoader isLoading={isLoading} dashboardAreasLoading={dashboardAreasLoading} open={open}>
                     {children}

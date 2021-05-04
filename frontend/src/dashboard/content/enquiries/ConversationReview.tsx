@@ -37,12 +37,12 @@ export const ConversationReview = () => {
     const cls = useStyles();
     const history = useHistory();
 
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
 
     const [completeConversation, setCompleteConversation] = useState<CompletedConversation>([]);
 
     const loadConversation = useCallback(async () => {
-        const completeConversation = await client.Enquiries.getConversation(conversationId);
+        const completeConversation = await repository.Enquiries.getConversation(conversationId);
         setCompleteConversation(completeConversation);
     }, []);
 

@@ -40,20 +40,20 @@ const useStyles = makeStyles((theme) => ({
 
 export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTableRowProps) => {
     const cls = useStyles();
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const history = useHistory();
 
     const { setIsLoading } = React.useContext(DashboardContext);
 
     const markAsSeen = async (conversationId: string) => {
         setIsLoading(true);
-        await client.Enquiries.updateEnquiry(conversationId);
+        await repository.Enquiries.updateEnquiry(conversationId);
         setIsLoading(false);
     };
 
     const toggleSeenValue = async (conversationId: string) => {
         setIsLoading(true);
-        const enqs = await client.Enquiries.updateEnquiry(conversationId);
+        const enqs = await repository.Enquiries.updateEnquiry(conversationId);
         setEnquiries(enqs);
         setIsLoading(false);
     };
@@ -61,7 +61,7 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
     const responseLinkOnClick = async (enquiry: EnquiryRow) => {
         setIsLoading(true);
         markAsSeen(enquiry.conversationId);
-        const signedUrl = await client.Enquiries.getSignedUrl(enquiry.linkReference.fileReference);
+        const signedUrl = await repository.Enquiries.getSignedUrl(enquiry.linkReference.fileReference);
         window.open(signedUrl, "_blank");
         setIsLoading(false);
     };

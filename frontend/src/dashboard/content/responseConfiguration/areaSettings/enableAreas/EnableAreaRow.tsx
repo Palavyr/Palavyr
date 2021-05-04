@@ -16,13 +16,13 @@ export interface EnableAreaRowProps {
 }
 
 export const EnableAreaRow = ({ areasEnabled, rowNumber }: EnableAreaRowProps) => {
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const cls = useStyles();
 
     const [isEnabled, setIsEnabled] = useState<boolean | null>(null);
 
     const onToggleChange = async () => {
-        const updatedIsEnabled = await client.Area.UpdateIsEnabled(!isEnabled, areasEnabled.areaId);
+        const updatedIsEnabled = await repository.Area.UpdateIsEnabled(!isEnabled, areasEnabled.areaId);
         setIsEnabled(updatedIsEnabled);
     };
 

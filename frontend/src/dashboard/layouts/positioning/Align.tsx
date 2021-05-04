@@ -7,11 +7,13 @@ export interface IAlign {
     children: React.ReactNode;
     direction?: Directions;
     float?: "left" | "right";
+    verticalCenter?: boolean;
 }
 
 export type StyleProps = {
     direction: Directions;
     float: "left" | "right";
+    verticalCenter: boolean;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -25,12 +27,16 @@ const useStyles = makeStyles((theme) => ({
             const float = props.float;
             styles = { ...styles, float: float };
         }
+
+        if (props.verticalCenter) {
+            styles = { ...styles, alignItems: "center" };
+        }
         return styles;
     },
 }));
 
-export const Align = ({ direction, float, children }: IAlign) => {
-    const cls = useStyles({ direction, float });
+export const Align = ({ direction, float, children, verticalCenter }: IAlign) => {
+    const cls = useStyles({ direction, float, verticalCenter });
 
     return <div className={cls.align}>{children}</div>;
 };

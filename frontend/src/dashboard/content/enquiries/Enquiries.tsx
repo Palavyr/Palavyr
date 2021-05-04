@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Enquires = () => {
-    const client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const cls = useStyles();
 
     const [enquiries, setEnquiries] = useState<Enquiries>([]);
@@ -29,7 +29,7 @@ export const Enquires = () => {
     const { setIsLoading } = React.useContext(DashboardContext);
 
     const loadEnquiries = useCallback(async () => {
-        const enqs = await client.Enquiries.getEnquiries();
+        const enqs = await repository.Enquiries.getEnquiries();
         setEnquiries(enqs);
         setLoading(false);
         setIsLoading(false);

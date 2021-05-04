@@ -87,11 +87,11 @@ export class StaticTablesModifier {
         }
     }
 
-    async addTable(staticTableMetas: StaticTableMetas, client: PalavyrRepository, areaIdentifier: string) {
+    async addTable(staticTableMetas: StaticTableMetas, repository: PalavyrRepository, areaIdentifier: string) {
         const tableOrders = this._getIDs_(staticTableMetas);
         const newtableOrder = this._generateNextId_(tableOrders);
 
-        const newTableTemplate = await client.Configuration.Tables.Static.getStaticTablesMetaTemplate(areaIdentifier);
+        const newTableTemplate = await repository.Configuration.Tables.Static.getStaticTablesMetaTemplate(areaIdentifier);
         const newTable = ((): StaticTableMeta => ({
             ...newTableTemplate,
             tableOrder: newtableOrder,

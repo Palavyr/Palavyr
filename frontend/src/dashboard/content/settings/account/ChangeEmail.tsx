@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ChangeEmail = () => {
-    var client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const classes = useStyles();
 
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -34,7 +34,7 @@ export const ChangeEmail = () => {
     const [alertDetails, setAlertDetails] = useState<AlertDetails>({ title: "", message: "" });
 
     const loadEmail = useCallback(async () => {
-        const { emailAddress, isVerified, awaitingVerification } = await client.Settings.Account.getEmail();
+        const { emailAddress, isVerified, awaitingVerification } = await repository.Settings.Account.getEmail();
         setSettings({
             emailAddress: emailAddress,
             isVerified: isVerified,
@@ -68,7 +68,7 @@ export const ChangeEmail = () => {
     };
 
     const verifyEmailAddress = async (newEmailAddress: string) => {
-        const res = await client.Settings.Account.updateEmail(newEmailAddress);
+        const res = await repository.Settings.Account.updateEmail(newEmailAddress);
         setAlertDetails({ title: res.title, message: res.message });
         setAlertState(true);
         if (!(res.status === "Failed")) setSettings({ ...settings, emailAddress: newEmailAddress });

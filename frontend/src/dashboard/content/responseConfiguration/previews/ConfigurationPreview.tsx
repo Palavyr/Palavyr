@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ConfigurationPreview = () => {
-    var client = new PalavyrRepository();
+    const repository = new PalavyrRepository();
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const { setIsLoading } = React.useContext(DashboardContext);
 
@@ -29,7 +29,7 @@ export const ConfigurationPreview = () => {
     const classes = useStyles(preview ? true : false);
 
     const loadPreview = React.useCallback(async () => {
-        const fileLink = await client.Configuration.Preview.fetchPreview(areaIdentifier);
+        const fileLink = await repository.Configuration.Preview.fetchPreview(areaIdentifier);
         setPreview(fileLink);
         setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
