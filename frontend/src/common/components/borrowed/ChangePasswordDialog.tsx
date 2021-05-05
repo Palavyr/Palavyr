@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { makeStyles, Dialog, DialogContent, Typography, TextField, DialogActions, Button } from "@material-ui/core";
 import { ButtonCircularProgress } from "./ButtonCircularProgress";
-import { LoginClient } from "@api-client/LoginClient";
+import { LoginRepository } from "@api-client/LoginRepository";
 import { VERIFICATION_EMAIL_SEND } from "@constants";
 import { useEffect } from "react";
 
@@ -29,7 +29,7 @@ export const ChangePasswordDialog = ({ setLoginStatus, onClose }: IChangePasswor
     const [requestSent, setRequestSent] = useState<boolean>(false);
 
     const sendPasswordEmail = useCallback(async () => {
-        const client = new LoginClient();
+        const client = new LoginRepository();
         setIsLoading(true);
 
         const resetEmailResponse = await client.Reset.resetPasswordRequest(emailAddress);

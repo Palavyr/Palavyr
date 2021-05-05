@@ -1,4 +1,4 @@
-import { LoginClient } from "@api-client/LoginClient";
+import { LoginRepository } from "@api-client/LoginRepository";
 import { RESET_PASSWORD_FORM } from "@constants";
 import { Typography } from "@material-ui/core";
 import React, { useEffect } from "react";
@@ -13,7 +13,7 @@ export const ConfirmYourResetLink = () => {
     const secretId = searchParams.get("id") as string; // from url from email
 
     const sendVerificationRequest = useCallback(async () => {
-        const client = new LoginClient();
+        const client = new LoginRepository();
         const response = await client.Reset.verifyResetIdentity(secretId);
 
         if (response.status) {

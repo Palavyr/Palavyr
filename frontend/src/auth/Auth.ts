@@ -1,14 +1,14 @@
 import { SessionStorage } from "localStorage/sessionStorage";
-import { LoginClient } from "client/LoginClient";
-import { LogoutClient } from "client/LogoutClient";
+import { LoginRepository } from "@api-client/LoginRepository";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { googleOAuthClientId } from "@api-client/clientUtils";
 import { Credentials } from "@Palavyr-Types";
+import { LogoutRepository } from "@api-client/LogoutRepository";
 
 class Auth {
     private authenticated: boolean = false;
     private isActive: boolean = false;
-    private loginClient = new LoginClient();
+    private loginClient = new LoginRepository();
 
     get accountIsActive() {
         return this.isActive;
@@ -94,8 +94,8 @@ class Auth {
     async logout(callback: () => any) {
         const sessionId = SessionStorage.getSessionId();
         if (sessionId !== null && sessionId !== "") {
-            const logoutClient = new LogoutClient(); // needs to be authenticated so we should instantiate this on the call
-            await logoutClient.Logout.RequestLogout(sessionId);
+            const logoutRepository = new LogoutRepository(); // needs to be authenticated so we should instantiate this on the call
+            await logoutRepository.Logout.RequestLogout(sessionId);
             SessionStorage.unsetAuthorization();
             SessionStorage.unsetEmailAddress();
         }

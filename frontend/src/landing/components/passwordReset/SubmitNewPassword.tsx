@@ -1,4 +1,4 @@
-import { LoginClient } from "@api-client/LoginClient";
+import { LoginRepository } from "@api-client/LoginRepository";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
 import { VisibilityPasswordTextField } from "@common/components/borrowed/VisibilityPasswordTextField";
 import { PASSWORDS_DONT_MATCH, PASSWORD_TOO_SHORT, RESET_PASSWORD_SUCCESS } from "@constants";
@@ -36,7 +36,7 @@ export const RenderPasswordDialog = () => {
     const onSubmit = useCallback(
         async (event) => {
             event.preventDefault();
-            const client = new LoginClient();
+            const client = new LoginRepository();
 
             const registerPassword = registerPasswordRef.current;
 

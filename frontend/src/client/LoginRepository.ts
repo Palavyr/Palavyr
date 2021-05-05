@@ -2,7 +2,7 @@ import { RESET_PASSWORD_LINK } from "@constants";
 import { Credentials, ResetEmailResponse, ResetPasswordResponse, VerificationResponse } from "@Palavyr-Types";
 import { AxiosClient } from "./AxiosClient";
 
-export class LoginClient {
+export class LoginRepository {
     private client: AxiosClient;
     private resetClient: AxiosClient;
 

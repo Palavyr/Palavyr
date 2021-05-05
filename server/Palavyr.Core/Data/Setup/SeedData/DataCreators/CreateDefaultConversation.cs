@@ -93,7 +93,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     DefaultNodeTypeOptions.SendResponse.StringName,
                     accountId,
                     areaIdentifier,
-                    DefaultNodeTypeOptions.YesNo.Yes,
+                    "",
                     false
                 )
             };
