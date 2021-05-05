@@ -84,9 +84,6 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawer
         <AppBar position="fixed" className={classes.appBar} color="transparent" classes={{ root: classes.clear }}>
             <Toolbar className={classes.toolbar}>
                 <div className={classes.logowrap}>
-                    {/* <div className={classes.logo}>
-                        <Logo height="225px" width="225px" />
-                    </div> */}
                     <div className={classes.logotypography}>
                         <Typography variant="body2" className={classes.brandText} display="inline">
                             Palavyr

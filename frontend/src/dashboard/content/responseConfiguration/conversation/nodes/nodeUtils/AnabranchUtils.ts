@@ -163,7 +163,6 @@ export const AllNonTerminalLeavesReferenceThisNode = (node: ConvoNode, nodeList:
 
 export const otherNodeAlreadySetAsAnabranchMerge = (nodeId: string, nodeList: Conversation, currentNodeId: string) => {
     const rootNode = _getNodeById(nodeId, nodeList);
-    console.log(rootNode);
     const childrenNodes: Conversation = [];
     const result: Conversation = uniqBy(gatherChildren(rootNode, nodeList, childrenNodes, currentNodeId), (x: ConvoNode) => x.nodeId);
     const anabranchMerges = result.map((node: ConvoNode) => (node.isAnabranchMergePoint ? 1 : 0));
@@ -175,7 +174,6 @@ const gatherChildren = (node: ConvoNode, nodeList: Conversation, children: Conve
     try {
         childrenIds = _splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString);
     } catch {
-        console.log("WOW");
         childrenIds = [];
     }
 

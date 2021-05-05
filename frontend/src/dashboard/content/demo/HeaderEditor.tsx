@@ -22,18 +22,13 @@ export const HeaderEditor = ({ setEditorState, initialData }: IEditor) => {
             data={initData}
             onInit={(editor) => {
                 // You can store the "editor" and use when it is needed.
-                // console.log('Editor is ready to use!', editor);
             }}
             onChange={(event, editor) => {
                 const data = editor.getData();
                 setEditorState(data);
             }}
-            onBlur={(event, editor) => {
-                console.log("Blur.", editor);
-            }}
-            onFocus={(event, editor) => {
-                console.log("Focus.", editor);
-            }}
+            onBlur={(event, editor) => {}}
+            onFocus={(event, editor) => {}}
         />
     );
 };

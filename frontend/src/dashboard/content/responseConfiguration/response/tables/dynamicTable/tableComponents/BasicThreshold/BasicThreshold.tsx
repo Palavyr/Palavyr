@@ -54,7 +54,6 @@ export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTab
         if (result) {
             const saveBasicThreshold = await repository.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.BasicThreshold, reorderedData, tableId, tableTag);
             setTableData(saveBasicThreshold);
-            console.log("Saving the table");
             return true;
         } else {
             return false;

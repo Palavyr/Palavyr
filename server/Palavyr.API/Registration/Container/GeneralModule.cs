@@ -1,4 +1,5 @@
 using Autofac;
+using Palavyr.API.Controllers.Enquiries;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.API.Controllers.Testing;
 using Palavyr.API.Controllers.WidgetLive;
@@ -37,8 +38,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<LocaleDefinition>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<TestDataProvider>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<OrphanRemover>().AsSelf().InstancePerLifetimeScope();
-            builder.RegisterType<CompletedConversationRetriever>().AsSelf().InstancePerLifetimeScope();
-            builder.RegisterType<CompletedConversationModifier>().AsSelf().InstancePerLifetimeScope();
+            // builder.RegisterType<CompletedConversationRetriever>().AsSelf().InstancePerLifetimeScope();
+            // builder.RegisterType<CompletedConversationModifier>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<HtmlToPdfClient>().As<IHtmlToPdfClient>().InstancePerLifetimeScope();
             builder.RegisterType<ResponseCustomizer>().As<IResponseCustomizer>();
             builder.RegisterType<ResponseHtmlBuilder>().As<IResponseHtmlBuilder>();
@@ -98,6 +99,9 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<ResponseEmailSender>().As<IResponseEmailSender>();
             builder.RegisterType<S3Retriever>().As<IS3Retriever>();
             builder.RegisterType<AreaDeleter>().As<IAreaDeleter>();
+            builder.RegisterType<EnquiryDeleter>().As<IEnquiryDeleter>();
+            builder.RegisterType<CompletedConversationRetriever>().As<ICompletedConversationRetriever>();
+            builder.RegisterType<CompletedConversationModifier>().As<ICompletedConversationModifier>();
         }
     }
 }

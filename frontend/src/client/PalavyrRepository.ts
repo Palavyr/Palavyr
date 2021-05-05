@@ -26,6 +26,7 @@ import {
     TableData,
     TableNameMap,
     TreeErrors,
+    FileLinkReference,
 } from "@Palavyr-Types";
 import { AxiosClient } from "./AxiosClient";
 
@@ -215,5 +216,7 @@ export class PalavyrRepository {
         updateEnquiry: async (conversationId: string) => this.client.put<Enquiries, {}>(`enquiries/update/${conversationId}`),
         getConversation: async (conversationId: string) => this.client.get<CompletedConversation>(`enquiries/review/${conversationId}`),
         getSignedUrl: async (fileId: string) => this.client.get<string>(`enquiries/link/${fileId}`),
+        deleteEnquiry: async (fileReference: string) => this.client.delete<Enquiries>(`enquiries/${fileReference}`),
+        deleteSelectedEnquiries: async (fileReferences: string[]) => this.client.put<Enquiries, {}>(`enquiries/selected`, { FileReferences: fileReferences }),
     };
 }

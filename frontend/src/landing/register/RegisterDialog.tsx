@@ -66,7 +66,6 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
     };
 
     const defaultError = (response) => {
-        console.log(response);
         alert("Error registering: " + response);
     };
 

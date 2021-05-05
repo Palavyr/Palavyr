@@ -82,7 +82,6 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
     };
 
     const googleError = (response: Credentials) => {
-        console.log(response.message);
         if (response.message === COULD_NOT_VALIDATE_GOOGLE_TOKEN) {
             setStatus(INVALID_GOOGLE_TOKEN);
         } else if (response.message === GOOGLE_EMAIL_USED_WITH_DIFFERENT_ACCOUNT_TYPE) {

@@ -27,11 +27,9 @@ export const ChangePasswordDialog = ({ setLoginStatus, onClose }: IChangePasswor
     const [emailAddress, setEmailAddress] = useState("start");
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [requestSent, setRequestSent] = useState<boolean>(false);
-    console.log("A render");
 
     const sendPasswordEmail = useCallback(async () => {
         const client = new LoginClient();
-        console.log("Emaill Addy at start of send: " + emailAddress);
         setIsLoading(true);
 
         const { data: resetEmailResponse } = await client.Reset.resetPasswordRequest(emailAddress);
@@ -60,13 +58,7 @@ export const ChangePasswordDialog = ({ setLoginStatus, onClose }: IChangePasswor
                 <Button onClick={onClose} disabled={isLoading || requestSent}>
                     Cancel
                 </Button>
-                <Button
-                    onClick={sendPasswordEmail}
-                    // type="submit"
-                    variant="contained"
-                    color="secondary"
-                    disabled={isLoading || requestSent}
-                >
+                <Button onClick={sendPasswordEmail} variant="contained" color="secondary" disabled={isLoading || requestSent}>
                     Reset password
                     {isLoading && <ButtonCircularProgress />}
                 </Button>
@@ -75,9 +67,7 @@ export const ChangePasswordDialog = ({ setLoginStatus, onClose }: IChangePasswor
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log("setting state: " + event.target.value);
         setEmailAddress(event.target.value);
-        console.log("Currentstate: " + emailAddress);
     };
 
     const RenderCloseButton = () => {
@@ -86,18 +76,11 @@ export const ChangePasswordDialog = ({ setLoginStatus, onClose }: IChangePasswor
 
     return (
         <Dialog open hideBackdrop onClose={onClose} disableBackdropClick={isLoading} disableEscapeKeyDown={isLoading} maxWidth="xs">
-            {/* <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    sendPasswordEmail();
-                }}
-            > */}
             <DialogContent className={classes.dialogContent}>
                 <Typography paragraph>Enter your email address below and we will send you instructions on how to reset your password.</Typography>
                 <TextField disabled={isLoading || requestSent} variant="outlined" margin="dense" required fullWidth label="Email Address" autoFocus type="email" autoComplete="off" helperText={errorMessage} onChange={handleChange} />
             </DialogContent>
             <DialogActions className={classes.dialogActions}>{requestSent ? <RenderCloseButton /> : <RenderSubmitButtons />}</DialogActions>
-            {/* </form> */}
         </Dialog>
     );
 };

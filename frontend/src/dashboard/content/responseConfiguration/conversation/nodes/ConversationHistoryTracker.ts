@@ -48,7 +48,6 @@ export class ConversationHistoryTracker {
         const newPosition = conversationHistoryPosition - 1;
         this.setConversationHistoryPosition(newPosition);
         this.setNodes(conversationHistory[newPosition]);
-        console.log(newPosition);
     };
 
     stepConversationForwardOneStep(conversationHistoryPosition: number, conversationHistory: Conversation[]) {
@@ -56,7 +55,6 @@ export class ConversationHistoryTracker {
         if (newPosition <= conversationHistory.length - 1) {
             this.setNodes(conversationHistory[newPosition]);
             this.setConversationHistoryPosition(newPosition);
-            console.log(newPosition);
         } else {
             alert("Currently at the end of the history.");
         }

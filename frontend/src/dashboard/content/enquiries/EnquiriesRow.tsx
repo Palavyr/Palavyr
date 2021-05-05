@@ -5,6 +5,9 @@ import { Checkbox, Link, makeStyles, TableCell, TableRow, Typography } from "@ma
 import { Enquiries, EnquiryRow, SetState } from "@Palavyr-Types";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { useHistory } from "react-router-dom";
+import { ColoredButton } from "@common/components/borrowed/ColoredButton";
+import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
+import { useState } from "react";
 
 export interface EnquiriesTableRowProps {
     enquiry: EnquiryRow;
@@ -17,13 +20,8 @@ const formConversationReviewPath = (conversationId: string) => {
 };
 
 const useStyles = makeStyles((theme) => ({
-    headerCell: {
-        fontWeight: "bold",
-        fontSize: "16pt",
-        textAlign: "center",
-    },
     headerRow: {
-        borderBottom: "3px solid black",
+        borderBottom: theme.palette.common.black,
     },
     title: {
         padding: "1rem",
@@ -36,12 +34,17 @@ const useStyles = makeStyles((theme) => ({
             cursor: "pointer",
         },
     },
+    delete: {
+        minWidth: "8ch",
+    },
 }));
 
 export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTableRowProps) => {
     const cls = useStyles();
     const repository = new PalavyrRepository();
     const history = useHistory();
+
+    const [deleteIsWorking, setDeleteIsWorking] = useState<boolean>(false);
 
     const { setIsLoading } = React.useContext(DashboardContext);
 
@@ -66,12 +69,21 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
         setIsLoading(false);
     };
 
-    const convoDetailsOnClick = async (enqiury: EnquiryRow) => {
+    const convoDetailsOnClick = async (enquiry: EnquiryRow) => {
         setIsLoading(true);
         const url = formConversationReviewPath(enquiry.conversationId);
         markAsSeen(enquiry.conversationId);
         history.push(url);
         setIsLoading(false);
+    };
+
+    const deleteEnquiryOnClick = async (enquiry: EnquiryRow) => {
+        setIsLoading(true);
+        setDeleteIsWorking(true);
+        const enquiries = await repository.Enquiries.deleteEnquiry(enquiry.linkReference.fileReference);
+        setEnquiries(enquiries);
+        setIsLoading(false);
+        setDeleteIsWorking(false);
     };
 
     const formatTimeStamp = (timeStamp: string) => {
@@ -96,8 +108,8 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
         const formattedDate = `${date[1]} - ${months[parseInt(date[2]) - 1]} - ${date[0]}`;
         return (
             <>
-                <Typography>{formattedDate}</Typography>
-                <Typography>{formattedTime}</Typography>
+                <Typography variant="caption">{formattedDate}</Typography>
+                <Typography variant="caption">{formattedTime}</Typography>
             </>
         );
     };
@@ -105,32 +117,32 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
     return (
         <TableRow style={{ backgroundColor: enquiry.seen ? "white" : "lightgray", fontWeight: enquiry.seen ? "normal" : "bold" }} key={enquiry.conversationId}>
             <TableCell className={cls.tableCell} key={enquiry.conversationId + "a"}>
-                {index + 1}
+                <Typography variant="caption">{index + 1}</Typography>
             </TableCell>
             <TableCell className={cls.tableCell} key={enquiry.conversationId + "b"}>
-                {enquiry.name}
+                <Typography variant="caption">{enquiry.name}</Typography>
             </TableCell>
             <TableCell className={cls.tableCell} key={enquiry.conversationId + "c"}>
-                {enquiry.email}
+                <Typography variant="caption">{enquiry.email}</Typography>
             </TableCell>
             <TableCell className={cls.tableCell} key={enquiry.conversationId + "d"}>
-                {enquiry.phoneNumber}
+                <Typography variant="caption">{enquiry.phoneNumber}</Typography>
             </TableCell>
             <TableCell className={cls.tableCell} key={enquiry.conversationId + "e"}>
                 <Link className={cls.link} onClick={() => convoDetailsOnClick(enquiry)}>
-                    Conversation Details
+                    <Typography variant="caption">History</Typography>
                 </Link>
             </TableCell>
             <TableCell className={cls.tableCell} key={enquiry.conversationId + "f"}>
                 <Link className={cls.link} onClick={() => responseLinkOnClick(enquiry)}>
-                    Response PDF
+                    <Typography variant="caption">PDF</Typography>
                 </Link>
             </TableCell>
             <TableCell className={cls.tableCell} key={enquiry.conversationId + "g"}>
-                {enquiry.areaName}
+                <Typography variant="caption">{enquiry.areaName}</Typography>
             </TableCell>
             <TableCell className={cls.tableCell} key={enquiry.conversationId + "h"}>
-                {formatTimeStamp(enquiry.timeStamp)}
+                <Typography variant="caption">{formatTimeStamp(enquiry.timeStamp)}</Typography>
             </TableCell>
             <TableCell className={cls.tableCell} key={enquiry.conversationId + "i"}>
                 <Checkbox
@@ -139,6 +151,12 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
                         toggleSeenValue(enquiry.conversationId);
                     }}
                 ></Checkbox>
+            </TableCell>
+            <TableCell>
+                <ColoredButton classes={cls.delete} variant="outlined" color="primary" onClick={() => deleteEnquiryOnClick(enquiry)}>
+                    <Typography variant="caption"> Delete</Typography>
+                    {deleteIsWorking && <ButtonCircularProgress />}
+                </ColoredButton>
             </TableCell>
         </TableRow>
     );

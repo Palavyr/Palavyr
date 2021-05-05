@@ -72,7 +72,6 @@ export const ConvoTree = () => {
 
     const onSave = async () => {
         const updatedConversation = await repository.Conversations.ModifyConversation(nodeList, areaIdentifier);
-        console.log(updatedConversation);
         historyTracker.addConversationHistoryToQueue(updatedConversation, conversationHistoryPosition, conversationHistory);
         setNodes(updatedConversation);
         return true;

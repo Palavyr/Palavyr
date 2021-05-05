@@ -1,13 +1,7 @@
-import { makeStyles, TableRow, TableCell } from "@material-ui/core";
-import classNames from "classnames";
+import { makeStyles, TableRow, TableCell, Typography } from "@material-ui/core";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
-    headerCell: {
-        fontWeight: "bold",
-        fontSize: "16pt",
-        textAlign: "center",
-    },
     headerRow: {
         borderBottom: "3px solid black",
     },
@@ -18,15 +12,48 @@ export const EnquiriesHeader = () => {
 
     return (
         <TableRow className={cls.headerRow}>
-            <TableCell className={classNames(cls.headerCell)}></TableCell>
-            <TableCell className={classNames(cls.headerCell)}>Client</TableCell>
-            <TableCell className={classNames(cls.headerCell)}>Email</TableCell>
-            <TableCell className={classNames(cls.headerCell)}>Phone Number</TableCell>
-            <TableCell className={classNames(cls.headerCell)}>Conversation</TableCell>
-            <TableCell className={classNames(cls.headerCell)}>Estimate</TableCell>
-            <TableCell className={classNames(cls.headerCell)}>Area</TableCell>
-            <TableCell className={classNames(cls.headerCell)}>Time</TableCell>
-            <TableCell className={classNames(cls.headerCell)}>Seen</TableCell>
+            <TableCell></TableCell>
+            <TableCell>
+                <Typography align="center" variant="h5">
+                    Client
+                </Typography>
+            </TableCell>
+            <TableCell>
+                <Typography align="center" variant="h5">
+                    Email
+                </Typography>
+            </TableCell>
+            <TableCell>
+                <Typography align="center" variant="h5">
+                    Phone Number
+                </Typography>
+            </TableCell>
+            <TableCell>
+                <Typography align="center" variant="h5">
+                    Conversation
+                </Typography>
+            </TableCell>
+            <TableCell>
+                <Typography align="center" variant="h5">
+                    Estimate
+                </Typography>
+            </TableCell>
+            <TableCell>
+                <Typography align="center" variant="h5">
+                    Area
+                </Typography>
+            </TableCell>
+            <TableCell>
+                <Typography align="center" variant="h5">
+                    Time
+                </Typography>
+            </TableCell>
+            <TableCell>
+                <Typography align="center" variant="h5">
+                    Seen
+                </Typography>
+            </TableCell>
+            <TableCell></TableCell>
         </TableRow>
     );
 };

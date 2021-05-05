@@ -113,7 +113,6 @@ const CSSModules = () => {
 }
 
 const URLLoaderRule = () => {
-    console.log("URLLOADER: " + path.resolve(__dirname, '/node_modules'));
     return {
         test: /\.(png|jpg|gif)$/i,
         use: [

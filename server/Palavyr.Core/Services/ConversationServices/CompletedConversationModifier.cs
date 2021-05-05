@@ -5,12 +5,17 @@ using Palavyr.Core.Models.Resources.Responses;
 
 namespace Palavyr.Core.Services.ConversationServices
 {
-    public class CompletedConversationModifier
+    public interface ICompletedConversationModifier
+    {
+        Task<Enquiry[]> ModifyCompletedConversation(string accountId, string conversationId);
+    }
+
+    public class CompletedConversationModifier : ICompletedConversationModifier
     {
         private readonly ConvoContext convoContext;
-        private readonly CompletedConversationRetriever completedConversationRetriever;
+        private readonly ICompletedConversationRetriever completedConversationRetriever;
 
-        public CompletedConversationModifier(ConvoContext convoContext, CompletedConversationRetriever completedConversationRetriever)
+        public CompletedConversationModifier(ConvoContext convoContext, ICompletedConversationRetriever completedConversationRetriever)
         {
             this.convoContext = convoContext;
             this.completedConversationRetriever = completedConversationRetriever;

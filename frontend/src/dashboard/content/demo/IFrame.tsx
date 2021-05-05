@@ -37,7 +37,6 @@ export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, preCheckErrors, dem
     const cls = useStyles({ errors: preCheckErrors.length > 0, shadow });
 
     const url = `${widgetUrl}/widget?key=${apiKey}&demo=${demo}`;
-    console.log(url);
 
     useEffect(() => {
         if (iframeRefreshed != state) {

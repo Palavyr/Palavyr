@@ -13,12 +13,9 @@ export interface IColoredButton {
 }
 
 export const ColoredButton = memo(({ color, children, onClick, variant, type, disabled, classes }: IColoredButton) => {
-
-
     return (
         <Button className={classes} variant={variant} onClick={onClick} color={color} type={type} disabled={disabled}>
             {children}
         </Button>
     );
-})
-
+});

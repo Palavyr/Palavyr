@@ -6,6 +6,10 @@ import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { EnquiriesTableRow } from "./EnquiriesRow";
 import { EnquiriesHeader } from "./EnquiriesHeader";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { ColoredButton } from "@common/components/borrowed/ColoredButton";
+import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
+import { Align } from "dashboard/layouts/positioning/Align";
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -18,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: "8rem",
         marginBottom: "8rem",
     },
+    delete: {
+        margin: "0.4rem",
+    },
 }));
 
 export const Enquires = () => {
@@ -27,13 +34,25 @@ export const Enquires = () => {
     const [enquiries, setEnquiries] = useState<Enquiries>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const { setIsLoading } = React.useContext(DashboardContext);
+    const [deleteIsLoading, setDeleteIsLoading] = useState<boolean>(false);
+
+    const deleteSelectedEnquiries = async (enquiries: Enquiries) => {
+        setDeleteIsLoading(true);
+        setIsLoading(true);
+        const seenEnquiries = enquiries.filter((x: EnquiryRow) => x.seen);
+        const enqs = await repository.Enquiries.deleteSelectedEnquiries(seenEnquiries.map((x: EnquiryRow) => x.linkReference.fileReference));
+        setTimeout(() => {
+            setEnquiries(enqs);
+            setIsLoading(false);
+            setDeleteIsLoading(false);
+        }, 1000);
+    };
 
     const loadEnquiries = useCallback(async () => {
         const enqs = await repository.Enquiries.getEnquiries();
         setEnquiries(enqs);
         setLoading(false);
         setIsLoading(false);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [setLoading]);
 
     const numberPropertyGetter = (enquiry: EnquiryRow) => {
@@ -58,9 +77,7 @@ export const Enquires = () => {
 
     return (
         <div className={cls.container}>
-            <Typography className={cls.title} align="center" variant="h3">
-                Enquiries
-            </Typography>
+            <AreaConfigurationHeader title="Enquiries" subtitle="Review your recent enquiries. Use the 'History' link to view the conversation. Use the 'PDF' link to view the response PDF that was sent." />
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -74,6 +91,14 @@ export const Enquires = () => {
                 </Table>
             </TableContainer>
             {!loading && enquiries.length === 0 && <NoDataAvailable />}
+            {enquiries.length !== 0 && (
+                <Align float="right">
+                    <ColoredButton classes={cls.delete} variant="outlined" color="primary" onClick={() => deleteSelectedEnquiries(enquiries)}>
+                        Delete All Seen Enquiries
+                        {deleteIsLoading && <ButtonCircularProgress />}
+                    </ColoredButton>
+                </Align>
+            )}
         </div>
     );
 };

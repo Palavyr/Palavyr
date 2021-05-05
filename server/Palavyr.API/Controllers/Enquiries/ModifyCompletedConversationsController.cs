@@ -9,11 +9,11 @@ namespace Palavyr.API.Controllers.Enquiries
 
     public class ModifyCompletedConversationsController : PalavyrBaseController
     {
-        private readonly CompletedConversationModifier completedConversationModifier;
+        private readonly ICompletedConversationModifier completedConversationModifier;
         private ILogger<ModifyCompletedConversationsController> logger;
 
         public ModifyCompletedConversationsController(
-            CompletedConversationModifier completedConversationModifier,
+            ICompletedConversationModifier completedConversationModifier,
             ILogger<ModifyCompletedConversationsController> logger
         )
         {

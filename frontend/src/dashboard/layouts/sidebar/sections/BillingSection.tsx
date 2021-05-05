@@ -28,7 +28,6 @@ export const BillingSection = ({ isActive }: BillingSectionProps) => {
     const history = useHistory();
 
     const subscribeOnClick = () => {
-        console.log("Setting Header!");
         setViewName("Subscriptions");
         history.push("/dashboard/subscribe/");
     };

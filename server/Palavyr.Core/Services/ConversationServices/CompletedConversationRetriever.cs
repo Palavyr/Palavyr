@@ -11,14 +11,20 @@ using Palavyr.Core.Models.Resources.Responses;
 
 namespace Palavyr.Core.Services.ConversationServices
 {
-    public class CompletedConversationRetriever
+    public interface ICompletedConversationRetriever
+    {
+        Task<Enquiry[]> RetrieveCompletedConversations(string accountId);
+        Enquiry MapEnquiryToResponse(CompletedConversation conversation, string accountId);
+    }
+
+    public class CompletedConversationRetriever : ICompletedConversationRetriever
     {
         private readonly ConvoContext convoContext;
-        private readonly ILogger<CompletedConversationRetriever> logger;
+        private readonly ILogger<ICompletedConversationRetriever> logger;
 
         public CompletedConversationRetriever(
             ConvoContext convoContext,
-            ILogger<CompletedConversationRetriever> logger
+            ILogger<ICompletedConversationRetriever> logger
         )
         {
             this.convoContext = convoContext;
