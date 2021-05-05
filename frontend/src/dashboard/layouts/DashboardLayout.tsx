@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
     },
     helpDrawer: (helpOpen: boolean) => {
         return {
+            zIndex: 99999,
             width: helpOpen ? DRAWER_WIDTH + 300 : 0,
             flexShrink: 0,
         };

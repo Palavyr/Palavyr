@@ -3,11 +3,14 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AccountServices;
+using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.AttachmentServices;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.PdfService;
@@ -32,6 +35,9 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
         private readonly IPdfResponseGenerator pdfResponseGenerator;
         private readonly ICompileSenderDetails compileSenderDetails;
         private readonly ISesEmail client;
+        private readonly IS3Saver s3Saver;
+        private readonly IConfiguration configuration;
+        private readonly IS3KeyResolver s3KeyResolver;
 
         public ResponseEmailSender(
             ICriticalResponses criticalResponses,
@@ -42,7 +48,10 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             ILocalFileDeleter localFileDeleter,
             IPdfResponseGenerator pdfResponseGenerator,
             ICompileSenderDetails compileSenderDetails,
-            ISesEmail client
+            ISesEmail client,
+            IS3Saver s3Saver,
+            IConfiguration configuration, 
+            IS3KeyResolver s3KeyResolver
         )
         {
             this.criticalResponses = criticalResponses;
@@ -54,14 +63,14 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             this.pdfResponseGenerator = pdfResponseGenerator;
             this.compileSenderDetails = compileSenderDetails;
             this.client = client;
+            this.s3Saver = s3Saver;
+            this.configuration = configuration;
+            this.s3KeyResolver = s3KeyResolver;
         }
 
         public async Task<SendEmailResultResponse> SendEmail(string accountId, string areaId, EmailRequest emailRequest, CancellationToken cancellationToken)
         {
             var responses = criticalResponses.Compile(emailRequest.KeyValues);
-
-            // TODO: This may need to work a little differently. Previously we sent emails from local files. That works.
-            // Here we might try to attach files directly from S3 but I think we need to transfer them first to the server.
             var attachments = await attachmentRetriever.RetrieveAttachmentFiles(accountId, areaId, cancellationToken);
 
             var culture = await GetCulture(accountId);
@@ -70,7 +79,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                 responses,
                 emailRequest,
                 culture,
-                tempPathCreator.Create(safeFileNameStem + ".pdf"),
+                tempPathCreator.Create(string.Join(".", safeFileNameStem, "pdf")),
                 safeFileNameStem,
                 accountId,
                 areaId
@@ -78,8 +87,10 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 
             if (localFilePath == null)
             {
-                throw new Exception("Could not generate PDF Response");
+                throw new Exception("Could not generate PDF Response - check the pdf server is active");
             }
+
+            await SaveResponsePdfToS3(localFilePath, accountId, safeFileNameStem);
 
             var senderDetails = await compileSenderDetails.Compile(accountId, areaId, emailRequest);
             var responseResult = await Send(senderDetails, attachments);
@@ -151,6 +162,16 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
         {
             var account = await configurationRepository.GetAreaById(accountId, areaId);
             return account.SendAttachmentsOnFallback;
+        }
+        
+        private async Task SaveResponsePdfToS3(string localFilePath, string accountId, string safeFileNameStem)
+        {
+            var userDataBucket = configuration.GetUserDataSection();
+            var success = await s3Saver.SaveObjectToS3(userDataBucket, localFilePath, s3KeyResolver.ResolveResponsePdfKey(accountId, safeFileNameStem));
+            if (!success)
+            {
+                throw new Exception("Could not save pdf response to S3");
+            }
         }
     }
 }

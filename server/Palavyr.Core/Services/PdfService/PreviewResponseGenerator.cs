@@ -95,11 +95,12 @@ namespace Palavyr.Core.Services.PdfService
                 dynamicTables);
 
             var safeFileNameStem = GuidUtils.CreateNewId();
-            var localTempPath = tempPathCreator.Create(safeFileNameStem);
+            var localTempPath = tempPathCreator.Create(string.Join(".", safeFileNameStem, "pdf"));
 
             var tempLocalFilePdfPath = await htmlToPdfClient.GeneratePdfFromHtmlOrNull(html, localTempPath, safeFileNameStem);
             if (tempLocalFilePdfPath == null)
             {
+                localFileDeleter.Delete(localTempPath);
                 throw new Exception("Unable to generate PDF from html");
             }
             

@@ -7,14 +7,14 @@ using Palavyr.Core.Services.ConversationServices;
 namespace Palavyr.API.Controllers.Enquiries
 {
 
-    public class GetCompletedConversationsController : PalavyrBaseController
+    public class GetEnquiriesController : PalavyrBaseController
     {
-        private readonly ILogger<GetCompletedConversationsController> logger;
+        private readonly ILogger<GetEnquiriesController> logger;
         private readonly CompletedConversationRetriever completedConversationRetriever;
 
 
-        public GetCompletedConversationsController(
-            ILogger<GetCompletedConversationsController> logger,
+        public GetEnquiriesController(
+            ILogger<GetEnquiriesController> logger,
             CompletedConversationRetriever completedConversationRetriever
         )
         {

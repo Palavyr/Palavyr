@@ -35,7 +35,6 @@ namespace Palavyr.Core.Services.PdfService
             {
                 var response = await Client.PostAsync(LocalServices.PdfServiceUrl, content);
                 localTempOutputPath = await response.Content.ReadAsStringAsync();
-                logger.LogDebug("Successfully created a PDF file.");
             }
             catch (Exception ex)
             {

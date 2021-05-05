@@ -6,13 +6,13 @@ using Palavyr.Core.Services.AmazonServices.S3Service;
 
 namespace Palavyr.API.Controllers.Enquiries
 {
-    public class RetrieveFileLinkController : PalavyrBaseController
+    public class GetEnquiryFileLinkController : PalavyrBaseController
     {
         private readonly IConfiguration configuration;
         private readonly ILinkCreator linkCreator;
         private readonly IS3KeyResolver s3KeyResolver;
 
-        public RetrieveFileLinkController(
+        public GetEnquiryFileLinkController(
             IConfiguration configuration,
             ILinkCreator linkCreator,
             IS3KeyResolver s3KeyResolver
@@ -28,8 +28,8 @@ namespace Palavyr.API.Controllers.Enquiries
             [FromHeader] string accountId,
             [FromRoute] string fileId)
         {
-            var s3Key = s3KeyResolver.ResolvePreviewKey(accountId, fileId);
-            var previewBucket = configuration.GetPreviewBucket();
+            var s3Key = s3KeyResolver.ResolveResponsePdfKey(accountId, fileId);
+            var previewBucket = configuration.GetUserDataSection();
             var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(s3Key, previewBucket);
             return preSignedUrl;
         }

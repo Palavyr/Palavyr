@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,15 +24,14 @@ namespace Palavyr.API.Controllers.Enquiries
             this.convoContext = convoContext;
         }
 
-        [ResponseCache(Duration = 3600)]
         [HttpGet("enquiries/review/{conversationId}")]
-        public async Task<ConversationUpdate[]> Get([FromHeader] string accountId, [FromRoute] string conversationId)
+        public async Task<ConversationUpdate[]> Get([FromHeader] string accountId, [FromRoute] string conversationId, CancellationToken cancellationToken)
         {
             logger.LogDebug("Collecting Conversation for viewing...");
             var convoRows = await convoContext
                 .Conversations
                 .Where(row => row.ConversationId == conversationId)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             convoRows.Sort((x, y) => x.Id > y.Id ? 1 : -1);
             return convoRows.ToArray();
