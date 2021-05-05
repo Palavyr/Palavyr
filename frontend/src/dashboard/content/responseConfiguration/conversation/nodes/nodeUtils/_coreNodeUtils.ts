@@ -128,14 +128,14 @@ export const _recursivelyCheckIfLeftmostChildInBranch = (node: ConvoNode, nodeLi
         }
     } else {
         const nextNodeUp = _getParentNode(node, nodeList);
-        if (nextNodeUp === null) throw new Error("Tried to find parent of root node _recursivelyCheckIfLeftMostChildInBranch")
+        if (nextNodeUp === null) throw new Error("Tried to find parent of root node _recursivelyCheckIfLeftMostChildInBranch");
         return _recursivelyCheckIfLeftmostChildInBranch(nextNodeUp!, nodeList, node, criteriaCallback);
     }
 };
 
 export const _findLeftmostParentNode = (node: ConvoNode, nodeList: Conversation, parentNodes: Conversation, criteriaCallback: (node: ConvoNode) => boolean) => {
     if (parentNodes.length === 1) {
-        return parentNodes[0]
+        return parentNodes[0];
     } else {
         for (let index = 0; index < parentNodes.length; index++) {
             const parentNode = parentNodes[index];
@@ -146,7 +146,6 @@ export const _findLeftmostParentNode = (node: ConvoNode, nodeList: Conversation,
         }
         throw new Error("Orphan node detected - _findLeftmostParentNode");
     }
-
 };
 
 export const _getLeftMostParentNode = (node: ConvoNode, nodeList: Conversation, criteriaCallback: (node: ConvoNode) => boolean) => {
