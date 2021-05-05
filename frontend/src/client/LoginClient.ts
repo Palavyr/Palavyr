@@ -1,63 +1,50 @@
 import { RESET_PASSWORD_LINK } from "@constants";
 import { Credentials, ResetEmailResponse, ResetPasswordResponse, VerificationResponse } from "@Palavyr-Types";
-import axios, { AxiosInstance, AxiosResponse } from "axios";
-import { serverUrl, SPECIAL_HEADERS } from "./clientUtils";
+import { AxiosClient } from "./AxiosClient";
 
 export class LoginClient {
-    private client: AxiosInstance;
-    private resetClient: AxiosInstance;
+    private client: AxiosClient;
+    private resetClient: AxiosClient;
 
-    constructor(serverURL: string = serverUrl) {
-        this.client = axios.create({
-            headers: {
-                action: "login",
-                ...SPECIAL_HEADERS,
-            },
-        });
-        this.client.defaults.baseURL = serverURL + "/api/";
-
-        this.resetClient = axios.create({
-            headers: {
-                action: "apiKeyAccess",
-            },
-        });
-        this.resetClient.defaults.baseURL = serverURL + "/api/";
+    constructor() {
+        this.client = new AxiosClient("login");
+        this.resetClient = new AxiosClient("apiKeyAccess");
     }
 
     public Login = {
-        RequestLogin: async (email: string, password: string): Promise<AxiosResponse<Credentials>> =>
-            this.client.post("authentication/login", {
+        RequestLogin: async (email: string, password: string) =>
+            this.client.post<Credentials, {}>("authentication/login", {
                 EmailAddress: email,
                 Password: password,
             }),
 
-        RequestLoginWithGoogleToken: async (oneTimeCode: string, tokenId: string): Promise<AxiosResponse<Credentials>> =>
-            this.client.post("authentication/login", {
+        RequestLoginWithGoogleToken: async (oneTimeCode: string, tokenId: string) =>
+            this.client.post<Credentials, {}>("authentication/login", {
                 OneTimeCode: oneTimeCode,
                 TokenId: tokenId,
             }),
     };
 
     public Status = {
-        CheckIfLoggedIn: async (): Promise<AxiosResponse<boolean>> => this.client.get(`authentication/status`),
+        CheckIfLoggedIn: async () => this.client.get<boolean>(`authentication/status`),
     };
 
     public Account = {
-        registerNewAccount: async (EmailAddress: string, Password: string): Promise<AxiosResponse<Credentials>> => this.client.post(`account/create/default`, { EmailAddress, Password }),
-        registerNewAccountWithGoogle: async (oneTimeCode: string, tokenId: string): Promise<AxiosResponse<Credentials>> =>
-            this.client.post("account/create/google", {
+        registerNewAccount: async (EmailAddress: string, Password: string) => this.client.post<Credentials, {}>(`account/create/default`, { EmailAddress, Password }),
+        registerNewAccountWithGoogle: async (oneTimeCode: string, tokenId: string) =>
+            this.client.post<Credentials, {}>("account/create/google", {
                 OneTimeCode: oneTimeCode,
                 TokenId: tokenId,
             }),
     };
 
     public Reset = {
-        resetPasswordRequest: async (emailAddress: string): Promise<AxiosResponse<ResetEmailResponse>> =>
-            this.client.post(`authentication/password-reset-request`, {
+        resetPasswordRequest: async (emailAddress: string) =>
+            this.client.post<ResetEmailResponse, {}>(`authentication/password-reset-request`, {
                 EmailAddress: emailAddress,
                 ResetPasswordLinkTemplate: RESET_PASSWORD_LINK,
             }),
-        verifyResetIdentity: async (accessToken: string): Promise<AxiosResponse<VerificationResponse>> => this.client.post(`authentication/verify-password-reset/${accessToken}`),
-        resetPassword: async (password: string, secretKey: string): Promise<AxiosResponse<ResetPasswordResponse>> => this.resetClient.post(`authentication/reset-my-password?key=${secretKey}`, { Password: password }),
+        verifyResetIdentity: async (accessToken: string) => this.client.post<VerificationResponse, {}>(`authentication/verify-password-reset/${accessToken}`),
+        resetPassword: async (password: string, secretKey: string) => this.resetClient.post<ResetPasswordResponse, {}>(`authentication/reset-my-password?key=${secretKey}`, { Password: password }),
     };
 }

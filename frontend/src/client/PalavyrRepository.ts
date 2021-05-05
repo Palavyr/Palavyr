@@ -26,14 +26,14 @@ import {
     TableData,
     TableNameMap,
     TreeErrors,
-    FileLinkReference,
 } from "@Palavyr-Types";
 import { AxiosClient } from "./AxiosClient";
+import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./clientUtils";
 
 export class PalavyrRepository {
     private client: AxiosClient;
     constructor() {
-        this.client = new AxiosClient();
+        this.client = new AxiosClient("tubmcgubs", getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
     }
 
     public Purchase = {

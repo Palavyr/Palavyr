@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import { serverUrl, getSessionIdFromLocalStorage, SPECIAL_HEADERS, getJwtTokenFromLocalStorage } from "./clientUtils";
+import { serverUrl, SPECIAL_HEADERS } from "./clientUtils";
 
 interface IAxiosClient {
     get<T>(url: string, config: AxiosRequestConfig): Promise<T>;
@@ -11,18 +11,19 @@ interface IAxiosClient {
 export class AxiosClient implements IAxiosClient {
     private client: AxiosInstance;
 
-    constructor() {
-        var sessionId = getSessionIdFromLocalStorage();
-        var authToken = getJwtTokenFromLocalStorage();
+    constructor(action: string, sessionIdCallback?: () => string, authTokenCallback?: () => string) {
+        let headers: any = { action: action, ...SPECIAL_HEADERS };
 
-        this.client = axios.create({
-            headers: {
-                action: "tubmcgubs",
-                sessionId: sessionId,
-                Authorization: "Bearer " + authToken, //include space after Bearer
-                ...SPECIAL_HEADERS,
-            },
-        });
+        if (sessionIdCallback) {
+            const sessionId = sessionIdCallback();
+            headers = { ...headers, sessionId: sessionId };
+        }
+        if (authTokenCallback) {
+            const authToken = authTokenCallback();
+            headers = { ...headers, Authorization: "Bearer " + authToken }; //include space after Bearer
+        }
+
+        this.client = axios.create({ headers: headers });
         this.client.defaults.baseURL = serverUrl + "/api/";
     }
 

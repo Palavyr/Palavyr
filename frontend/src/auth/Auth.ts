@@ -24,7 +24,7 @@ class Auth {
 
     async register(email: string, password: string, callback: () => any, errorCallback: (response) => any) {
         try {
-            const { data: authenticationResponse } = await this.loginClient.Account.registerNewAccount(email, password);
+            const authenticationResponse = await this.loginClient.Account.registerNewAccount(email, password);
             return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
         } catch {
             console.log("Error trying to reach the server.");
@@ -33,7 +33,7 @@ class Auth {
     }
 
     async registerWithGoogle(oneTimeCode: string, tokenId: string, callback: () => void, errorCallback: (response) => void) {
-        const { data: authenticationResponse } = await this.loginClient.Account.registerNewAccountWithGoogle(oneTimeCode, tokenId);
+        const authenticationResponse = await this.loginClient.Account.registerNewAccountWithGoogle(oneTimeCode, tokenId);
         return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
     }
 
@@ -62,7 +62,7 @@ class Auth {
     async login(email: string | null, password: string | null, callback: () => any, errorCallback: (response: Credentials) => any) {
         if (email === null || password === null) return false;
         try {
-            const { data: authenticationResponse } = await this.loginClient.Login.RequestLogin(email, password);
+            const authenticationResponse = await this.loginClient.Login.RequestLogin(email, password);
             return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
         } catch {
             console.log("Error attempting to reach the server.");
@@ -72,7 +72,7 @@ class Auth {
 
     async loginWithGoogle(oneTimeCode: string, tokenId: string, callback: () => void, errorCallback: (response: Credentials) => void) {
         try {
-            const { data: authenticationResponse } = await this.loginClient.Login.RequestLoginWithGoogleToken(oneTimeCode, tokenId);
+            const authenticationResponse = await this.loginClient.Login.RequestLoginWithGoogleToken(oneTimeCode, tokenId);
             console.log(authenticationResponse);
 
             return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
@@ -105,7 +105,6 @@ class Auth {
 
     async googleLogout(callback: () => any) {
         try {
-
             window.gapi.load("auth2", () => {
                 window.gapi.auth2.init({ client_id: googleOAuthClientId, fetch_basic_profile: true });
                 window.gapi.auth2.getAuthInstance().then((auth2) => {

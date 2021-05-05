@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const RenderPasswordDialog = () => {
-
     const cls = useStyles();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [status, setStatus] = useState<string | null>(null);
@@ -34,30 +33,32 @@ export const RenderPasswordDialog = () => {
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
+    const onSubmit = useCallback(
+        async (event) => {
+            event.preventDefault();
+            const client = new LoginClient();
 
-    const onSubmit = useCallback(async (event) => {
-        event.preventDefault();
-        const client = new LoginClient();
+            const registerPassword = registerPasswordRef.current;
 
-        const registerPassword = registerPasswordRef.current;
-
-        if (registerPassword && registerPassword.value !== registerPassword.value) {
-            setStatus(PASSWORDS_DONT_MATCH);
-            return;
-        }
-
-        setStatus(null);
-        setIsLoading(true);
-        setTimeout(async () => {
-            if (registerPassword !== null) {
-                var { data: resetResponse } = await client.Reset.resetPassword(registerPassword.value, secretKey);
-                if (resetResponse.status) {
-                    history.push(RESET_PASSWORD_SUCCESS)
-                }
+            if (registerPassword && registerPassword.value !== registerPassword.value) {
+                setStatus(PASSWORDS_DONT_MATCH);
+                return;
             }
-            setIsLoading(false);
-        }, 1500);
-    }, [setIsLoading, setStatus, registerPasswordRef, registerPasswordRepeatRef]);
+
+            setStatus(null);
+            setIsLoading(true);
+            setTimeout(async () => {
+                if (registerPassword !== null) {
+                    const resetResponse = await client.Reset.resetPassword(registerPassword.value, secretKey);
+                    if (resetResponse.status) {
+                        history.push(RESET_PASSWORD_SUCCESS);
+                    }
+                }
+                setIsLoading(false);
+            }, 1500);
+        },
+        [setIsLoading, setStatus, registerPasswordRef, registerPasswordRepeatRef]
+    );
 
     const passwordHelperText = () => {
         if (status === PASSWORD_TOO_SHORT) {
@@ -75,11 +76,12 @@ export const RenderPasswordDialog = () => {
         }
     };
 
-
     return (
-        <div style={{display: "flex", justifyContent: "center", width: "100%",  paddingTop: "5%"}}>
-            <form style={{width: "400px"}} onSubmit={onSubmit}>
-                <Typography align="center" variant="h5">Choose a new password</Typography>
+        <div style={{ display: "flex", justifyContent: "center", width: "100%", paddingTop: "5%" }}>
+            <form style={{ width: "400px" }} onSubmit={onSubmit}>
+                <Typography align="center" variant="h5">
+                    Choose a new password
+                </Typography>
                 <div>
                     <VisibilityPasswordTextField
                         variant="outlined"
