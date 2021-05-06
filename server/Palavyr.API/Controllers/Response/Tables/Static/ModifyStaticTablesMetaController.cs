@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -8,7 +7,6 @@ using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Response.Tables.Static
 {
-    [Authorize]
     public class ModifyStaticTablesMetaController : PalavyrBaseController
     {
         private ILogger<ModifyStaticTablesMetaController> logger;

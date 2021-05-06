@@ -76,7 +76,7 @@ namespace Palavyr.Core.Services.AccountServices
             var apiKey = Guid.NewGuid().ToString();
             logger.LogDebug($"New Account Details--Account: {accountId}  -- apiKey: {apiKey}");
 
-            var account = Account.CreateGoogleAccount(apiKey, payload.Email, accountId, payload.Locale);
+            var account = Account.CreateGoogleAccount(apiKey, payload.Email, accountId);
             logger.LogDebug("Adding new account via GOOGLE...");
             await accountsContext.Accounts.AddAsync(account);
 

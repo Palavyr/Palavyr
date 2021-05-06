@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
 
-namespace Palavyr.API.Controllers.Response
+namespace Palavyr.API.Controllers.Response.Tables.Static
 {
 
     public class GetStaticTablesMetasController : PalavyrBaseController

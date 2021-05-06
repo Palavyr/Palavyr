@@ -92,7 +92,7 @@ export const ResponseConfiguration = () => {
         if (validationResult.result === false) {
             alert(validationResult.message); // Temp fix to prevent incorrect values HARDLY. This is not a nice UI experience.
             return false;
-        } // TODO: the table saver needs to return the validation result and the SaveOrCancel component neesd to require this standard type for the error message.
+        } // TODO: the table saver needs to return the validation result and the SaveOrCancel component needs to require this standard type for the error message.
 
         const updatedStaticTables = await repository.Configuration.Tables.Static.updateStaticTablesMetas(areaIdentifier, staticTables);
         setStaticTables(updatedStaticTables);

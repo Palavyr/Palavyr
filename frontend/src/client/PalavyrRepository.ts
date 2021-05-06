@@ -26,6 +26,7 @@ import {
     TableData,
     TableNameMap,
     TreeErrors,
+    StaticTableRow,
 } from "@Palavyr-Types";
 import { AxiosClient } from "./AxiosClient";
 import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./clientUtils";
@@ -98,6 +99,7 @@ export class PalavyrRepository {
             Static: {
                 updateStaticTablesMetas: async (areaIdentifier: string, staticTablesMetas: StaticTableMetas) => this.client.put<StaticTableMetas, {}>(`response/configuration/${areaIdentifier}/static/tables/save`, staticTablesMetas),
                 getStaticTablesMetaTemplate: async (areaIdentifier: string) => this.client.get<StaticTableMetaTemplate>(`response/configuration/${areaIdentifier}/static/tables/template`),
+                getStaticTableRowTemplate: async (areaIdentifier: string, tableOrder: number) => this.client.get<StaticTableRow>(`response/configuration/${areaIdentifier}/static/tables/${tableOrder}/row/template`)
             },
         },
 

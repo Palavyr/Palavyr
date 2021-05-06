@@ -39,7 +39,7 @@ export const ConfigureSection = ({ isActive, currentPage, areaNameDetails }: Con
             <SidebarSectionHeader title="Configure" onClick={() => setConfigureOpen(!configureOpen)} currentState={configureOpen} />
             <Collapse in={configureOpen} timeout="auto" unmountOnExit>
                 {sortByPropertyAlphabetical((x: AreaNameDetail) => x.areaName, areaNameDetails).map((x: AreaNameDetail, index: number) => (
-                    <AreaLinkItem areaIdentifier={x.areaIdentifier} isActive={isActive} index={index} numAreasAllowed={numAreasAllowed} currentPage={currentPage} areaName={x.areaName} />
+                    <AreaLinkItem key={index} areaIdentifier={x.areaIdentifier} isActive={isActive} index={index} numAreasAllowed={numAreasAllowed} currentPage={currentPage} areaName={x.areaName} />
                 ))}
                 <Divider />
                 <SidebarLinkItem text="Add New Area" isActive={isActive} onClick={checkAreaCount} IconComponent={<AddCircleOutlineIcon className={cls.icon} />} />

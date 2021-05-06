@@ -98,9 +98,7 @@ namespace Palavyr.Core.Models.Accounts.Schemas
         public static Account CreateGoogleAccount(
             string apikey,
             string emailAddress,
-            string accountId,
-            string locale
-        )
+            string accountId)
         {
             return new Account
             {
@@ -110,7 +108,7 @@ namespace Palavyr.Core.Models.Accounts.Schemas
                 ApiKey = apikey,
                 CompanyName = null,
                 PhoneNumber = null,
-                Locale = locale,
+                Locale = "en-AU",
                 AccountType = AccountType.Google,
                 PlanType = PlanTypeEnum.Free,
                 PaymentInterval = PaymentIntervalEnum.Null,
@@ -119,18 +117,18 @@ namespace Palavyr.Core.Models.Accounts.Schemas
             };
         }
 
-        public static Account CreateAccount(
-            string emailAddress,
-            string password,
-            string accountId,
-            AccountType accountType
-        )
-        {
-            return new Account(
-                emailAddress, password, accountId, null, null, null, false,
-                "en-AU",
-                accountType, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
-        }
+        // public static Account CreateAccount(
+        //     string emailAddress,
+        //     string password,
+        //     string accountId,
+        //     AccountType accountType
+        // )
+        // {
+        //     return new Account(
+        //         emailAddress, password, accountId, null, null, null, false,
+        //         "en-AU",
+        //         accountType, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
+        // }
 
         public static Account CreateAccount(
             string emailAddress,
@@ -161,7 +159,7 @@ namespace Palavyr.Core.Models.Accounts.Schemas
         {
             return new Account(
                 emailAddress, password, accountId, apiKey, companyName, phoneNumber,
-                active, locale, accountType, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
+                active, "en-AU", accountType, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
         }
     }
 }

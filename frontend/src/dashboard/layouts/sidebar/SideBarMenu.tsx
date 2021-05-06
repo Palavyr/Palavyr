@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.getContrastText(theme.palette.primary.dark),
         backgroundColor: theme.palette.primary.dark,
         paddingBottom: "8rem",
+        // height: "inherit"
     },
 }));
 

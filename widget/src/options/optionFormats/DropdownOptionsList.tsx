@@ -75,10 +75,6 @@ export const DropdownListOptions = ({ setSelectedOption, options }: DropdownList
     var preferences = getWidgetPreferences();
     const cls = useStyles(preferences);
 
-    useEffect(() => {
-        console.log(preferences);
-    }, []);
-
     const onChange = (event: any, newOption: SelectedOption) => {
         setSelectedOption(newOption);
         history.push(`/widget?key=${secretKey}`);

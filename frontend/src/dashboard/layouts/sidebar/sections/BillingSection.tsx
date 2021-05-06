@@ -45,7 +45,9 @@ export const BillingSection = ({ isActive }: BillingSectionProps) => {
             <SidebarSectionHeader title="Billing" onClick={() => setBillingOpen(!billingOpen)} currentState={billingOpen} />
             <Collapse in={billingOpen} timeout="auto" unmountOnExit>
                 {!(subscription === PurchaseTypes.Premium || subscription === PurchaseTypes.Pro) && <SidebarLinkItem text="Subscribe" isActive={isActive} onClick={subscribeOnClick} IconComponent={<SubscriptionsIcon className={cls.icon} />} />}
-                <SidebarLinkItem text="Manage" isActive={isActive || subscription === PurchaseTypes.Premium || subscription === PurchaseTypes.Pro} onClick={createCustomerPortalSession} IconComponent={<PaymentIcon className={cls.icon} />} />
+                {(subscription === PurchaseTypes.Premium || subscription === PurchaseTypes.Pro) && (
+                    <SidebarLinkItem text="Manage" isActive={isActive || subscription === PurchaseTypes.Premium || subscription === PurchaseTypes.Pro} onClick={createCustomerPortalSession} IconComponent={<PaymentIcon className={cls.icon} />} />
+                )}
             </Collapse>
         </List>
     );

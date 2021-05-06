@@ -8,8 +8,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas
 {
     public class StaticTablesMeta : IStaticTable
     {
-        [Key] 
+        [Key]
         public int? Id { get; set; }
+
         public int TableOrder { get; set; }
         public string Description { get; set; }
         public string AreaIdentifier { get; set; }
@@ -17,8 +18,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public string AccountId { get; set; }
         public bool PerPersonInputRequired { get; set; }
 
-        [NotMapped] private static string DefaultDescription { get; } = "Default Description";
-        
+        [NotMapped]
+        private static string DefaultDescription { get; } = "Default Description";
+
         public static List<StaticTablesMeta> CreateDefaultMetas(string areaId, string accountId)
         {
             return new List<StaticTablesMeta>()
@@ -39,6 +41,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         {
             return new StaticTablesMeta()
             {
+                TableOrder = 0,
                 Description = DefaultDescription,
                 AreaIdentifier = areaId,
                 StaticTableRows = StaticTableRow.CreateDefaultStaticTable(0, areaId, accountId),
@@ -49,18 +52,18 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public static List<StaticTablesMeta> BindTemplateList(List<StaticTablesMeta> staticTablesMetas, string accountId)
         {
             var boundMetas = new List<StaticTablesMeta>() { };
-            boundMetas.AddRange(staticTablesMetas.Select(meta => new StaticTablesMeta()
-            {
-                TableOrder = meta.TableOrder,
-                Description = meta.Description,
-                AreaIdentifier = meta.AreaIdentifier,
-                AccountId = accountId,
-                StaticTableRows = StaticTableRow.BindTemplateList(meta.StaticTableRows, accountId),
-                PerPersonInputRequired = meta.PerPersonInputRequired
-            }));
+            boundMetas.AddRange(
+                staticTablesMetas.Select(
+                    meta => new StaticTablesMeta()
+                    {
+                        TableOrder = meta.TableOrder,
+                        Description = meta.Description,
+                        AreaIdentifier = meta.AreaIdentifier,
+                        AccountId = accountId,
+                        StaticTableRows = StaticTableRow.BindTemplateList(meta.StaticTableRows, accountId),
+                        PerPersonInputRequired = meta.PerPersonInputRequired
+                    }));
             return boundMetas;
         }
-
-    
     }
 }

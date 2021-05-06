@@ -4,6 +4,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import classNames from "classnames";
 import HelpIcon from "@material-ui/icons/Help";
 import { Align } from "../positioning/Align";
+import { useLocation } from "react-router-dom";
 
 const drawerWidth: number = 240;
 
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     topbar: {
         background: theme.palette.primary.dark,
         position: "fixed",
-        zIndex: 9999
+        zIndex: 9999,
     },
     appBar: {
         transition: theme.transitions.create(["margin", "width"], {
@@ -58,14 +59,15 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "right",
     },
     name: {
-        color: theme.palette.secondary.light
-    }
+        color: theme.palette.secondary.light,
+    },
 }));
 
 export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
     const cls = useStyles();
     const [sized, setSized] = useState<boolean>(false);
     const handle = () => setSized(!sized);
+    const location = useLocation();
 
     useEffect(() => {
         window.addEventListener("resize", handle);
@@ -90,11 +92,13 @@ export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawe
                         </Typography>
                     )}
                 </Align>
-                <Align float="right">
-                    <IconButton color="inherit" aria-label="open help drawer" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(cls.helpIcon, cls.helpMenuButton, helpOpen && cls.hide)}>
-                        <HelpIcon />
-                    </IconButton>
-                </Align>
+                {location.pathname !== "/dashboard" && (
+                    <Align float="right">
+                        <IconButton color="inherit" aria-label="open help drawer" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(cls.helpIcon, cls.helpMenuButton, helpOpen && cls.hide)}>
+                            <HelpIcon />
+                        </IconButton>
+                    </Align>
+                )}
             </Toolbar>
         </AppBar>
     );

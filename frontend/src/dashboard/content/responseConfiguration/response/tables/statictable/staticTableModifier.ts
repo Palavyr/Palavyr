@@ -5,9 +5,11 @@ import { v4 as uuid } from "uuid";
 
 export class StaticTablesModifier {
     onClick: SetState<StaticTableMetas> | AnyVoidFunction;
+    repository: PalavyrRepository;
 
     constructor(onClick: SetState<StaticTableMetas> | AnyVoidFunction) {
         this.onClick = onClick;
+        this.repository = new PalavyrRepository();
     }
 
     setTableMetas(newState: StaticTableMetas) {
@@ -107,21 +109,15 @@ export class StaticTablesModifier {
         this.setTableMetas(staticTableMetas);
     }
 
-    addRow(staticTableMetas: StaticTableMetas, tableOrder: number) {
+    async addRow(staticTableMetas: StaticTableMetas, tableOrder: number) {
         const rowOrders = this._getrowOrders_(staticTableMetas[tableOrder].staticTableRows);
         const nextrowOrder = this._generateNextId_(rowOrders);
-        const curtableOrder = staticTableMetas[0].tableOrder;
-        const curareaIdentifier = staticTableMetas[0].areaIdentifier;
-        const newRow: StaticTableRow = {
-            id: null,
-            rowOrder: nextrowOrder,
-            fee: { id: null, feeId: uuid(), min: 0.0, max: 0.0 },
-            description: "",
-            perPerson: true,
-            range: false,
-            tableOrder: curtableOrder,
-            areaIdentifier: curareaIdentifier,
-        };
+        const curTableOrder = staticTableMetas[0].tableOrder;
+        const curAreaIdentifier = staticTableMetas[0].areaIdentifier;
+
+        const newRow = await this.repository.Configuration.Tables.Static.getStaticTableRowTemplate(curAreaIdentifier, curTableOrder);
+
+        newRow.rowOrder = nextrowOrder;
 
         staticTableMetas[tableOrder].staticTableRows.push(newRow);
 
@@ -147,7 +143,6 @@ export class StaticTablesModifier {
 
             this.setTableMetas(staticTableMetas);
         }
-        console.log("Moving row up");
     }
 
     shiftRowDown(staticTableMetas: StaticTableMetas, tableOrder: number, rowOrder: number) {

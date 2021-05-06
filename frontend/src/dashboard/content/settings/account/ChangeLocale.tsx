@@ -1,6 +1,6 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import React, { useCallback, useState, useEffect } from "react";
-import { Divider, makeStyles, MenuItem } from "@material-ui/core";
+import { Divider, makeStyles, MenuItem, Typography } from "@material-ui/core";
 import { SettingsGridRowList } from "@common/components/SettingsGridRowList";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { LocaleMapItem, LocaleMap } from "@Palavyr-Types";
@@ -45,8 +45,6 @@ export const ChangeLocale = () => {
         setLocaleName(locale.localeCountry);
         setCurrencySymbol(locale.localeCurrencySymbol);
         setLocaleMap(locale.localeMap);
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -90,7 +88,7 @@ export const ChangeLocale = () => {
                 alertNode={
                     <Alert>
                         <AlertTitle className={classes.titleText}>Set your Locale</AlertTitle>
-                        Set the locale of your company. This will be used to determine the following properties of your estimates:
+                        <Typography>This will be used to determine the following properties of your estimates:</Typography>
                         <ul>
                             <li>Currency Symbol</li>
                         </ul>
