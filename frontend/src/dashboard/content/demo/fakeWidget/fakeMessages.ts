@@ -37,10 +37,17 @@ const secondClient = (reg: StandardComponents): FakeMessage => ({
 });
 
 const thirdMessage = (reg: StandardComponents): FakeMessage => ({
+    component: reg.makeTakeNumber("Give us a number"),
+    sender: "response",
+    timestamp: new Date(),
+    unread: false,
+});
+
+const fourthMessage = (reg: StandardComponents): FakeMessage => ({
     component: reg.makeMultipleChoiceContinueButtons("Choose an option. There are a few options to choose from", ["First option", "Second option", "Another third Option"]),
     sender: "response",
     timestamp: new Date(),
     unread: false,
 });
 
-export const fakeMessages = (reg: StandardComponents) => [firstMessage(reg), firstClient(reg), secondMessage(reg), secondClient(reg), thirdMessage(reg)];
+export const fakeMessages = (reg: StandardComponents) => [firstMessage(reg), firstClient(reg), secondMessage(reg), secondClient(reg), thirdMessage(reg), fourthMessage(reg)];

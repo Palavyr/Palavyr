@@ -56,6 +56,8 @@ export type WidgetPreferences = {
     optionsHeaderFontColor: string;
     chatFontColor: string;
     chatBubbleColor: string;
+    buttonColor: string;
+    buttonFontColor: string;
 };
 
 export type ConversationUpdate = {

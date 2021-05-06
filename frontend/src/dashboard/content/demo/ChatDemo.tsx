@@ -1,10 +1,9 @@
-import { PreCheckError, SetState, WidgetPreferences } from "@Palavyr-Types";
+import { PreCheckError, WidgetPreferences } from "@Palavyr-Types";
 import React, { useState, useCallback, useEffect } from "react";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { Grid, Paper, Typography, makeStyles, Divider } from "@material-ui/core";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { HeaderEditor } from "./HeaderEditor";
-import { ChromePicker } from "react-color";
 import { CustomSelect } from "../responseConfiguration/response/tables/dynamicTable/CustomSelect";
 import { AreasInNeedOfAttention } from "./AreasInNeedOfAttention";
 import { ChatDemoHeader } from "./ChatDemoHeader";
@@ -12,23 +11,9 @@ import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { PalavyrDemoWidget } from "./DemoWidget";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { FakeWidgets } from "./fakeWidget/FakeWidgets";
-import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
+import { WidgetColorOptions } from "./ColorOptions";
 
 const useStyles = makeStyles((theme) => ({
-    gridList: {
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        paddingLeft: "2rem",
-        paddingRight: "2rem",
-        paddingBottom: "4rem",
-    },
-
-    pickerTitle: {
-        marginBottom: "0.3rem",
-    },
     paper: {
         padding: theme.spacing(5),
         marginTop: theme.spacing(3),
@@ -38,13 +23,6 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: "1.2rem",
     },
 }));
-
-export type ColorPickerType = {
-    method: SetState<string>;
-    name: string;
-    variable: string;
-    disable: boolean;
-};
 
 export const ChatDemo = () => {
     const repository = new PalavyrRepository();
@@ -96,17 +74,6 @@ export const ChatDemo = () => {
     }, []);
 
     const supportedFonts = ["Architects Daughter"];
-
-    const colorPickers = (widgetPreferences: WidgetPreferences): ColorPickerType[] => {
-        return [
-            { name: "Header Color", variable: widgetPreferences.headerColor, method: (headerColor: string) => setWidgetPreferences({ ...widgetPreferences, headerColor }), disable: true },
-            { name: "Header Font Color", variable: widgetPreferences.headerFontColor, method: (headerFontColor: string) => setWidgetPreferences({ ...widgetPreferences, headerFontColor }), disable: true },
-            { name: "Options List Color", variable: widgetPreferences.selectListColor, method: (selectListColor: string) => setWidgetPreferences({ ...widgetPreferences, selectListColor }), disable: true },
-            { name: "Options List Font Color", variable: widgetPreferences.listFontColor, method: (listFontColor: string) => setWidgetPreferences({ ...widgetPreferences, listFontColor }), disable: true },
-            { name: "Chat Bubble Color", variable: widgetPreferences.chatBubbleColor, method: (chatBubbleColor: string) => setWidgetPreferences({ ...widgetPreferences, chatBubbleColor }), disable: true },
-            { name: "Chat Bubble Font Color", variable: widgetPreferences.chatFontColor, method: (chatFontColor: string) => setWidgetPreferences({ ...widgetPreferences, chatFontColor }), disable: true },
-        ];
-    };
 
     return (
         <>
@@ -168,19 +135,7 @@ export const ChatDemo = () => {
                     <SaveOrCancel size="large" onSave={saveWidgetPreferences} />
                 </Align>
                 <Align>{widgetPreferences && <FakeWidgets {...widgetPreferences} />}</Align>
-                <div className={cls.gridList}>
-                    {widgetPreferences &&
-                        colorPickers(widgetPreferences).map((picker: ColorPickerType, index: number) => {
-                            return (
-                                <div>
-                                    <Typography align="center" variant="body1" className={cls.pickerTitle} gutterBottom>
-                                        {picker.name}
-                                    </Typography>
-                                    <SpaceEvenly>{picker.variable && <ChromePicker width="95%" disableAlpha color={picker.variable} onChangeComplete={(color: { hex: React.SetStateAction<string> }) => picker.method(color.hex)} />}</SpaceEvenly>
-                                </div>
-                            );
-                        })}
-                </div>
+                {widgetPreferences && <WidgetColorOptions widgetPreferences={widgetPreferences} setWidgetPreferences={setWidgetPreferences} />}
             </Paper>
         </>
     );

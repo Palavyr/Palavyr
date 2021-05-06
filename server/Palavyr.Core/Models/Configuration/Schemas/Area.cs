@@ -51,7 +51,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 FallbackEmailTemplate = "<h2>Fallback email</h2>",
                 FallbackSubject = "Fallback Subject",
                 ConversationNodes = ConversationNode.CreateDefaultNode(areaId, accountId),
-                StaticTablesMetas = new List<StaticTablesMeta>(), //StaticTablesMeta.CreateDefaultMetas(areaId, accountId),
+                StaticTablesMetas = new List<StaticTablesMeta>(),
                 IsEnabled = false,
                 AreaDisplayTitle = areaName,
                 AccountId = accountId,

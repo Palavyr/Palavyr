@@ -1,6 +1,6 @@
 import { assembleCompletedConvo, extractDynamicTypeGuid, getChildNodes } from "./utils";
 import React, { useEffect, useState } from "react";
-import { Table, TableRow, TableCell, makeStyles, TextField } from "@material-ui/core";
+import { Table, TableRow, TableCell, makeStyles, TextField, Typography } from "@material-ui/core";
 import { responseAction } from "./responseAction";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import { ConvoContextProperties } from "./registry";
@@ -22,12 +22,18 @@ const useStyles = makeStyles(() => ({
     root: {
         borderBottom: "none",
     },
+    textField: (prefs: WidgetPreferences) => ({
+        color: prefs.chatFontColor,
+    }),
 }));
 
 export class StandardComponents {
     public makeProvideInfo({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
+        const prefs = getWidgetPreferences();
+
         return () => {
+            const cls = useStyles(prefs);
             useEffect(() => {
                 setTimeout(() => {
                     responseAction(node, child, nodeList, client, convoId, null);
@@ -36,7 +42,11 @@ export class StandardComponents {
 
             return (
                 <Table>
-                    <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                    <SingleRowSingleCell>
+                        <Typography variant="body1" className={cls.textField}>
+                            {node.text}
+                        </Typography>
+                    </SingleRowSingleCell>
                 </Table>
             );
         };
@@ -53,7 +63,11 @@ export class StandardComponents {
 
             return (
                 <Table>
-                    <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                    <SingleRowSingleCell>
+                        <Typography variant="body1" className={cls.textField}>
+                            {node.text}
+                        </Typography>
+                    </SingleRowSingleCell>
                     {valueOptions.map((valueOption: string) => {
                         return (
                             <TableRow>
@@ -89,7 +103,11 @@ export class StandardComponents {
 
             return (
                 <Table>
-                    <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                    <SingleRowSingleCell>
+                        <Typography variant="body1" className={cls.textField}>
+                            {node.text}
+                        </Typography>
+                    </SingleRowSingleCell>
                     {children.map((child: WidgetNodeResource) => {
                         return (
                             <TableRow>
@@ -129,10 +147,17 @@ export class StandardComponents {
 
             return (
                 <Table>
-                    <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                    <SingleRowSingleCell>
+                        <Typography variant="body1" className={cls.textField}>
+                            {node.text}
+                        </Typography>
+                    </SingleRowSingleCell>
                     <TableRow>
                         <TableCell className={cls.root}>
                             <TextField
+                                InputProps={{
+                                    className: cls.textField,
+                                }}
                                 disabled={inputDisabled}
                                 fullWidth
                                 label=""
@@ -187,16 +212,24 @@ export class StandardComponents {
         const prefs = getWidgetPreferences();
 
         return () => {
-            const cls = useStyles();
+            const cls = useStyles(prefs);
             const [response, setResponse] = useState<number>(0);
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
             return (
                 <>
                     <Table>
-                        <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                        <SingleRowSingleCell>
+                            <Typography variant="body1" className={cls.textField}>
+                                {node.text}
+                            </Typography>
+                        </SingleRowSingleCell>
                         <SingleRowSingleCell>
                             <CurrencyTextField
+                                InputProps={{
+                                    className: cls.textField,
+                                }}
+                                className={cls.tableCell}
                                 label="Amount"
                                 disabled={inputDisabled}
                                 variant="standard"
@@ -239,13 +272,20 @@ export class StandardComponents {
             const [response, setResponse] = useState<string>("");
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
-
+            const cls = useStyles(prefs);
             return (
                 <>
                     <Table>
-                        <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                        <SingleRowSingleCell>
+                            <Typography variant="body1" className={cls.textField}>
+                                {node.text}
+                            </Typography>
+                        </SingleRowSingleCell>{" "}
                         <SingleRowSingleCell>
                             <TextField
+                                InputProps={{
+                                    className: cls.textField,
+                                }}
                                 fullWidth
                                 multiline
                                 disabled={inputDisabled}
@@ -289,10 +329,17 @@ export class StandardComponents {
 
             return (
                 <Table>
-                    <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                    <SingleRowSingleCell>
+                        <Typography variant="body1" className={cls.textField}>
+                            {node.text}
+                        </Typography>
+                    </SingleRowSingleCell>{" "}
                     <TableRow>
                         <TableCell className={cls.root}>
                             <TextField
+                                InputProps={{
+                                    className: cls.textField,
+                                }}
                                 disabled={inputDisabled}
                                 label=""
                                 value={response}
@@ -368,7 +415,11 @@ export class StandardComponents {
             return (
                 <>
                     <Table>
-                        <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                        <SingleRowSingleCell>
+                            <Typography variant="body1" className={cls.textField}>
+                                {node.text}
+                            </Typography>
+                        </SingleRowSingleCell>{" "}
                         <SingleRowSingleCell align="center">
                             <ResponseButton
                                 prefs={prefs!}
@@ -395,9 +446,14 @@ export class StandardComponents {
         const prefs = getWidgetPreferences();
 
         return () => {
+            const cls = useStyles(prefs);
             return (
                 <Table>
-                    <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                    <SingleRowSingleCell>
+                        <Typography variant="body1" className={cls.textField}>
+                            {node.text}
+                        </Typography>
+                    </SingleRowSingleCell>{" "}
                     <SingleRowSingleCell align="right">
                         <ResponseButton
                             prefs={prefs!}
@@ -421,11 +477,15 @@ export class StandardComponents {
 
         return () => {
             const [loading, setLoading] = useState<boolean>(false);
-
+            const cls = useStyles(prefs);
             return (
                 <>
                     <Table>
-                        <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                        <SingleRowSingleCell>
+                            <Typography variant="body1" className={cls.textField}>
+                                {node.text}
+                            </Typography>
+                        </SingleRowSingleCell>{" "}
                         <SingleRowSingleCell align="center">
                             <ResponseButton
                                 prefs={prefs!}
@@ -471,7 +531,11 @@ export class StandardComponents {
             return (
                 <>
                     <Table>
-                        <SingleRowSingleCell>{node.text}</SingleRowSingleCell>
+                        <SingleRowSingleCell>
+                            <Typography variant="body1" className={cls.textField}>
+                                {node.text}
+                            </Typography>
+                        </SingleRowSingleCell>{" "}
                         <SingleRowSingleCell align="center">
                             <ResponseButton
                                 prefs={prefs!}

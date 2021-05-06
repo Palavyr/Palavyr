@@ -77,7 +77,7 @@ const allComponents = [
     SendEmail,
     Restart,
     SendEmailFailedFirstAttempt,
-    SendFallbackEmail
+    SendFallbackEmail,
 ];
 
 export const AllComponents: Story = () => {

@@ -13,21 +13,22 @@ export interface IResponseButton {
 
 const useStyles = makeStyles(theme => ({
     button: (prefs: WidgetPreferences) => ({
-        color: prefs.chatBubbleColor ? theme.palette.getContrastText(theme.palette.getContrastText(prefs.chatBubbleColor)) : "none",
-        backgroundColor: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : "none",
+        color: prefs.buttonFontColor,
+        backgroundColor: prefs.buttonColor,
         marginBottom: "0.4rem",
         transion: "all ease-in-out 0.2s",
+        border: "none",
         "&:hover": {
-            backgroundColor: prefs.chatBubbleColor ? theme.palette.getContrastText(theme.palette.getContrastText(prefs.chatBubbleColor)) : prefs.chatFontColor,
-            color: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : prefs.chatFontColor,
+            color: prefs.buttonFontColor,
+            backgroundColor: prefs.buttonColor,
             transition: "all ease-in-out 0.2s",
-            boxShadow: theme.shadows[14],
+            boxShadow: theme.shadows[10],
             border: "none",
         },
     }),
     buttonFocus: (prefs: WidgetPreferences) => ({
-        color: prefs.chatFontColor,
-        borderColor: prefs.chatFontColor,
+        // color: prefs.chatFontColor,
+        // borderColor: prefs.chatFontColor,
     }),
 }));
 

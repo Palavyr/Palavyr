@@ -14,21 +14,22 @@ const useStyles = makeStyles((theme) => ({
         width: "100%",
     },
     button: (prefs: WidgetPreferences) => ({
-        color: prefs.chatBubbleColor ? theme.palette.getContrastText(theme.palette.getContrastText(prefs.chatBubbleColor)) : "none",
-        backgroundColor: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : "none",
+        color: prefs.buttonFontColor,
+        backgroundColor: prefs.buttonColor,
         marginBottom: "0.4rem",
         transion: "all ease-in-out 0.2s",
+        border: "none",
         "&:hover": {
-            backgroundColor: prefs.chatBubbleColor ? theme.palette.getContrastText(theme.palette.getContrastText(prefs.chatBubbleColor)) : prefs.chatFontColor,
-            color: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : prefs.chatFontColor,
+            color: prefs.buttonFontColor,
+            backgroundColor: prefs.buttonColor,
             transition: "all ease-in-out 0.2s",
-            boxShadow: theme.shadows[14],
+            boxShadow: theme.shadows[10],
             border: "none",
         },
     }),
     buttonFocus: (prefs: WidgetPreferences) => ({
-        color: prefs.chatFontColor,
-        borderColor: prefs.chatFontColor,
+        // color: prefs.chatFontColor,
+        // borderColor: prefs.chatFontColor,
     }),
     tableCell: {
         display: "flex",
@@ -57,6 +58,9 @@ const useStyles = makeStyles((theme) => ({
         fontSize: "10px",
         marginTop: "5px",
     },
+    textField: (prefs: WidgetPreferences) => ({
+        color: prefs.chatFontColor,
+    }),
 }));
 
 export interface TextProp {
@@ -126,6 +130,7 @@ export class StandardComponents {
     }
 
     makeMultipleChoiceContinueButtons(text: string, valueOptions: string[]): React.ElementType<{}> {
+        const uniqId = uuid();
         return () => {
             const cls = useStyles();
             return (
@@ -135,7 +140,7 @@ export class StandardComponents {
                         return (
                             <TableRow>
                                 <TableCell className={cls.tableCell}>
-                                    <ResponseButton prefs={this.prefs} disabled={false} key={valueOption + "-" + uuid()} text={valueOption} onClick={() => null} />
+                                    <ResponseButton prefs={this.prefs} disabled={false} key={valueOption + "-" + uniqId} text={valueOption} onClick={() => null} />
                                 </TableCell>
                             </TableRow>
                         );
@@ -147,13 +152,13 @@ export class StandardComponents {
 
     public makeTakeNumber(text: string): React.ElementType<{}> {
         return () => {
-            const cls = useStyles();
+            const cls = useStyles(this.prefs);
             return (
                 <Table>
                     <SingleRowSingleCell>{text}</SingleRowSingleCell>
                     <TableRow>
                         <TableCell className={cls.root}>
-                            <TextField disabled={false} fullWidth label="" type="number" />
+                            <TextField InputProps={{ className: cls.textField }} disabled={false} fullWidth label="" type="number" />
                         </TableCell>
                     </TableRow>
                     <TableRow>
