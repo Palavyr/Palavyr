@@ -79,7 +79,8 @@ const routesToExclude = [
     "/dashboard/enquiries/",
     "/dashboard/demo/",
     "/dashboard/subscribe/",
-    "/dashboard/subscribe/purchase"
+    "/dashboard/subscribe/purchase",
+    "/dashboard/confirm"
 
 ];
 
