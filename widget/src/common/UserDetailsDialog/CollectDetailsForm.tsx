@@ -32,6 +32,7 @@ const useStyles = makeStyles(theme => ({
         position: "absolute",
     },
     dialogBackground: {
+        backgroundColor: theme.palette.common.white,
         zIndex: 9999,
     },
     dialogPaper: {
@@ -41,7 +42,7 @@ const useStyles = makeStyles(theme => ({
         alignItems: "center",
         paddingBottom: theme.spacing(3),
         maxWidth: 420,
-        backgroundColor: "#F4F4F4",
+        backgroundColor: theme.palette.common.white,
     },
     dialogPaperScrollPaper: {
         maxHeight: "none",

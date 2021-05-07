@@ -1,4 +1,4 @@
-import { assembleCompletedConvo, extractDynamicTypeGuid, getChildNodes } from "./utils";
+import { assembleCompletedConvo, getChildNodes } from "./utils";
 import React, { useEffect, useState } from "react";
 import { Table, TableRow, TableCell, makeStyles, TextField, Typography } from "@material-ui/core";
 import { responseAction } from "./responseAction";
@@ -12,7 +12,7 @@ import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "common/UserDetailsDialog/ChatLoadingSpinner";
 import { uuid } from "uuidv4";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
     tableCell: {
         display: "flex",
         flexDirection: "column",
@@ -24,6 +24,13 @@ const useStyles = makeStyles(() => ({
     },
     textField: (prefs: WidgetPreferences) => ({
         color: prefs.chatFontColor,
+        borderColor:  theme.palette.getContrastText(prefs.chatBubbleColor),
+    }),
+    textLabel: (prefs: WidgetPreferences) => ({
+        color: theme.palette.getContrastText(prefs.chatBubbleColor),
+        "&:focus": {
+            color: theme.palette.getContrastText(prefs.chatBubbleColor),
+        },
     }),
 }));
 
@@ -158,6 +165,9 @@ export class StandardComponents {
                                 InputProps={{
                                     className: cls.textField,
                                 }}
+                                InputLabelProps={{
+                                    className: cls.textLabel,
+                                }}
                                 disabled={inputDisabled}
                                 fullWidth
                                 label=""
@@ -229,6 +239,9 @@ export class StandardComponents {
                                 InputProps={{
                                     className: cls.textField,
                                 }}
+                                InputLabelProps={{
+                                    className: cls.textLabel,
+                                }}
                                 className={cls.tableCell}
                                 label="Amount"
                                 disabled={inputDisabled}
@@ -286,6 +299,9 @@ export class StandardComponents {
                                 InputProps={{
                                     className: cls.textField,
                                 }}
+                                InputLabelProps={{
+                                    className: cls.textLabel,
+                                }}
                                 fullWidth
                                 multiline
                                 disabled={inputDisabled}
@@ -339,6 +355,9 @@ export class StandardComponents {
                             <TextField
                                 InputProps={{
                                     className: cls.textField,
+                                }}
+                                InputLabelProps={{
+                                    className: cls.textLabel,
                                 }}
                                 disabled={inputDisabled}
                                 label=""

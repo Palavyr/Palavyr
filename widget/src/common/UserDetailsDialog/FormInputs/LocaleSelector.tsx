@@ -4,7 +4,6 @@ import { LocaleMap, LocaleMapItem } from "@Palavyr-Types";
 import { sortByPropertyAlphabetical } from "common/sorting";
 import React from "react";
 
-
 export interface LocaleSelectorProps {
     options: LocaleMap;
     onChange(event: any, newOption: LocaleMapItem): void;
@@ -13,9 +12,14 @@ export interface LocaleSelectorProps {
 const useStyles = makeStyles(theme => ({
     select: {
         zIndex: 99999,
+        backgroundColor: theme.palette.common.white,
     },
     root: {
-        marginTop: "2rem"
+        marginTop: "2rem",
+        backgroundColor: theme.palette.common.white,
+    },
+    paper: {
+        backgroundColor: theme.palette.common.white
     }
 }));
 
@@ -28,6 +32,7 @@ export const LocaleSelector = ({ options, onChange }: LocaleSelectorProps) => {
         options && (
             <Autocomplete
                 size="small"
+                classes={{root: cls.root, paper: cls.paper}}
                 className={cls.root}
                 disableClearable
                 clearOnEscape
