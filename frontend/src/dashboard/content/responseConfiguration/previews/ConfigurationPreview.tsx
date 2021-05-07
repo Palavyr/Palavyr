@@ -10,7 +10,7 @@ const MediaType = "application/pdf";
 
 const useStyles = makeStyles((theme) => ({
     paper: (preview: boolean) => ({
-        backgroundColor: theme.palette.secondary.light, //"#C7ECEE",
+        backgroundColor: theme.palette.secondary.light,
         alignContent: "center",
         padding: "2.5rem",
         height: preview ? "1200px" : "0px",

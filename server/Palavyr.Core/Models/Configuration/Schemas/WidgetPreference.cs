@@ -119,7 +119,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             var headerColor = "#DBE3E3";
             var fontFamily = "Architects Daughter";
             var landingHeader = "<h2>Welcome!</h2>";
-            var chatHeader = "<h2>Tobies Galore<h2><h4>Experts in Cavalier King Charles Spaniels</h4>";
+            var chatHeader = "<h2>Tobies Galore</h2><h4>Experts in Cavalier King Charles Spaniels</h4>";
             var placeholder = "Write here...";
             var optionsHeaderColor = "#37DCDC";
             var optionsHeaderFontColor = "#0E0909";

@@ -48,7 +48,8 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     false,
                     NodeTypeOption.CustomTables,
                     DefaultNodeTypeOptions.NodeComponentTypes.TakeNumber, // this is for the tree, so okay, but it should be what the dynamic table item type is. We don't have access to that here, so we just say its a number.
-                    dynamicType: dynamicTableMeta.MakeUniqueIdentifier()
+                    dynamicType: dynamicTableMeta.MakeUniqueIdentifier(),
+                    shouldRenderChildren: true
                 ));
             return Task.CompletedTask;
         }

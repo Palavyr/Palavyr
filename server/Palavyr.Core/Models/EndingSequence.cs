@@ -6,9 +6,6 @@ using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Models
 {
-    /// <summary>
-    /// Class to hold the response email
-    /// </summary>
     public static class EndingSequence
     {
         public static readonly string EmailSuccessfulNodeId = "EmailSuccessfulNodeId";

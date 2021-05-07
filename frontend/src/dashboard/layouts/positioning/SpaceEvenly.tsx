@@ -9,9 +9,8 @@ type StyleProps = {
 const useStyles = makeStyles((theme) => ({
     align: (props: StyleProps) => ({
         display: "flex",
-        justifyItems: props.center ? "center" : "none",
         flexDirection: props.vertical ? "column" : "row",
-        // justifyContent: "space-evenly",
+        justifyContent: props.center ? "center" : "space-evenly",
     }),
 }));
 

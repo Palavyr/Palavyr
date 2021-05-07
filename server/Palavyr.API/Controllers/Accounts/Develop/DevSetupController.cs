@@ -43,7 +43,10 @@ namespace Palavyr.API.Controllers.Accounts.Develop
             await stripeCustomerService.DeleteStripeTestCustomers();
 
             if (devKey != "secretTobyface")
+            {
                 logger.LogDebug("This is an attempt to Refresh database data.");
+                return;
+            }
             var devData = new DevDataHolder(
                 "qwerty",
                 "devdashboard",

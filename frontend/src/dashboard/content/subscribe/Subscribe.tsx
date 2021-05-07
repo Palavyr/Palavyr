@@ -71,13 +71,13 @@ export const Subscribe = () => {
 
     const orderedProductOptions: ProductOptions = [
         {
-            card: <Premium />,
+            card: <Premium priceInfo={false} />,
             purchaseType: PurchaseTypes.Premium,
             productId: productList?.premiumProductId || null,
             currentplan: currentPlan?.status === PurchaseTypes.Premium,
         },
         {
-            card: <Pro />,
+            card: <Pro priceInfo={false} />,
             purchaseType: PurchaseTypes.Pro,
             productId: productList?.proProductId || null,
             currentplan: currentPlan?.status === PurchaseTypes.Pro,
@@ -86,13 +86,13 @@ export const Subscribe = () => {
 
     return (
         <>
-            <AreaConfigurationHeader title="Select a subscription plan" divider />
+            <AreaConfigurationHeader title="Select a subscription plan" subtitle="You won't be charged yet." divider />
             <SubscribeStepper activeStep={0} />
             {currentPlan !== null && (
                 <div className={cls.body}>
                     <Grid container>
                         <Grid item xs={12}>
-                            <SpaceEvenly>
+                            <SpaceEvenly center >
                                 {orderedProductOptions.map((product: ProductOption, key: number) => {
                                     return (
                                         <div onClick={() => (product.currentplan || currentPlan.hasUpgraded ? null : goToPurchase(product.purchaseType, product.productId))} className={classnames(cls.width, cls.card)}>

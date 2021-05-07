@@ -23,26 +23,31 @@ export interface PricingCardHeaderProps {
     currency: string;
     amount: string;
     per?: boolean;
+    priceInfo?: boolean;
 }
 
-export const PricingCardHeader = ({ icon, title, currency, amount, per = false }: PricingCardHeaderProps) => {
+export const PricingCardHeader = ({ icon, title, currency, amount, priceInfo = true, per = false }: PricingCardHeaderProps) => {
     const cls = useStyles();
     return (
         <>
             {icon}
-            <Typography className={cls.title} variant="h4">
+            <Typography className={cls.title} variant="h3">
                 {title}
             </Typography>
-            <Typography className={classNames(cls.price, cls.money)} variant="h3">
-                {currency}
-            </Typography>
-            <Typography variant="h3" className={cls.price}>
-                {amount}
-            </Typography>
-            {per && (
-                <Typography className={cls.price} variant="h5">
-                    / month
-                </Typography>
+            {priceInfo && (
+                <>
+                    <Typography className={classNames(cls.price, cls.money)} variant="h3">
+                        {currency}
+                    </Typography>
+                    <Typography variant="h3" className={cls.price}>
+                        {amount}
+                    </Typography>
+                    {per && (
+                        <Typography className={cls.price} variant="h5">
+                            / month
+                        </Typography>
+                    )}
+                </>
             )}
         </>
     );

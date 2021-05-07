@@ -1,11 +1,10 @@
 import React from "react";
-import { Card, Divider, FormControl, Grid, InputLabel, makeStyles, MenuItem, Paper, Select, Typography } from "@material-ui/core";
+import { Divider, makeStyles, Paper, Typography } from "@material-ui/core";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { useEffect } from "react";
 import { useCallback } from "react";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { Interval, Price, PriceMap, Prices } from "@Palavyr-Types";
 import { Elements, useStripe } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -14,16 +13,14 @@ import { SubscribeStepper } from "./SubscribeStepper";
 import { FrequencyCard } from "./FrequencyCard";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { DividerWithText } from "@common/components/DividerWithText";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { Align } from "dashboard/layouts/positioning/Align";
+import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        height: "100%",
-    },
-    body: {
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        justifyContent: "center",
+    container: {
+        backgroundColor: theme.palette.background.default,
+        marginTop: theme.spacing(2),
     },
     paper: {
         width: "75%",
@@ -31,35 +28,8 @@ const useStyles = makeStyles((theme) => ({
         height: "100%",
         marginTop: "2rem",
         marginBottom: "3rem",
-        backgroundColor: "#C7ECEE",
+        backgroundColor: theme.palette.primary.light,
     },
-    formControl: {
-        margin: theme.spacing(1),
-        minWidth: 120,
-        width: "100%",
-    },
-    selectEmpty: {
-        marginTop: theme.spacing(2),
-    },
-    justifyCenter: {
-        display: "flex",
-        justifyContent: "center",
-    },
-    card: {
-        margin: "2rem",
-        padding: "2rem",
-    },
-    selectbox: {
-        border: "1px solid gray",
-        borderBottom: "0px solid black",
-        borderRadius: "0px",
-        borderBottomLeftRadius: "3px",
-        borderBottomRightRadius: "3px",
-        backgroundColor: "white",
-        padding: ".2rem",
-        textAlign: "center",
-    },
-    freeInformationDiv: { width: "100%", display: "flex", justifyContent: "center", flexDirection: "column" },
 }));
 
 const stripePromise = loadStripe(stripeKey);
@@ -116,22 +86,6 @@ const PurchaseInner = () => {
         }
     };
 
-    const cancelSubscriptionOnClick = async () => {
-        const result = await repository.Purchase.Subscription.CancelSubscription();
-    };
-
-    const displayFreeInformation = () => {
-        return (
-            <div className={cls.freeInformationDiv}>
-                <Typography align="center" variant="h4">
-                    We're sad to see you go :( But if go you must...
-                </Typography>
-                <Divider />
-                <SinglePurposeButton variant="outlined" color="primary" buttonText="Cancel your subscription" onClick={cancelSubscriptionOnClick} />
-            </div>
-        );
-    };
-
     useEffect(() => {
         getProducts();
     }, []);
@@ -146,51 +100,27 @@ const PurchaseInner = () => {
     const intervalGetter = (x: Price) => x.recurring.interval;
 
     return (
-        <>
+        <div className={cls.container}>
+            {productId !== null && productId !== "null" ? <AreaConfigurationHeader title="Billing Frequency" subtitle="Select your preferred billing frequency. This will take to an external website (Stripe.com) for your purchase." /> : <></>}
             {productId !== null && productId !== "null" ? <SubscribeStepper activeStep={1} /> : <></>}
-            <Grid container>
-                <Grid item xs={12}>
-                    {productId !== null && productId !== "null" ? (
-                        <div style={{ display: "flex", justifyContent: "center", marginTop: "4rem" }}>
-                            <Typography variant="h4" align="center">
-                                Billing Frequency
-                                <Divider />
-                            </Typography>
-                        </div>
-                    ) : (
-                        <></>
-                    )}
-                </Grid>
-
-                <Grid item xs={12}>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
-                        <Paper className={cls.paper}>
-                            {productId === null || productId === "null" ? (
-                                displayFreeInformation()
-                            ) : (
-                                <Grid container direction="row" justify="center" alignItems="center">
-                                    <Grid item xs={12}>
-                                        <DividerWithText text={productType} variant="h4" />
-                                    </Grid>
-                                    {sortByPropertyAlphabetical(intervalGetter, prices).map((price: Price, key) => {
-                                        return (
-                                            <Grid key={price.product + "-" + key.toString()} item xs={6}>
-                                                <FrequencyCard
-                                                    key={price.productId + "-" + key.toString()}
-                                                    title={capitalize(price.recurring.interval) + "ly"}
-                                                    priceMap={priceMap}
-                                                    interval={price.recurring.interval}
-                                                    onClick={() => singlePurposeButtonOnClick(price.id)}
-                                                />
-                                            </Grid>
-                                        );
-                                    })}
-                                </Grid>
-                            )}
-                        </Paper>
-                    </div>
-                </Grid>
-            </Grid>
-        </>
+            <Align>
+                <Paper className={cls.paper}>
+                    <DividerWithText text={productType} variant="h4" />
+                    <SpaceEvenly>
+                        {sortByPropertyAlphabetical(intervalGetter, prices).map((price: Price, key: number) => {
+                            return (
+                                <FrequencyCard
+                                    key={price.productId + "-" + key.toString()}
+                                    title={capitalize(price.recurring.interval) + "ly"}
+                                    priceMap={priceMap}
+                                    interval={price.recurring.interval}
+                                    onClick={() => singlePurposeButtonOnClick(price.id)}
+                                />
+                            );
+                        })}
+                    </SpaceEvenly>
+                </Paper>
+            </Align>
+        </div>
     );
 };

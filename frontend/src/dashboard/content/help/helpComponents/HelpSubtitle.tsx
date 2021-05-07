@@ -8,6 +8,7 @@ export interface IHelpSubtitle {
 const useStyles = makeStyles((theme) => ({
     body: {
         paddingTop: "1rem",
+        paddingBottom: "1rem",
     },
 }));
 
@@ -15,7 +16,9 @@ export const HelpSubtitle = ({ subtitle }: IHelpSubtitle) => {
     const cls = useStyles();
     return (
         <div className={cls.body}>
-            <Typography>{subtitle}</Typography>
+            <Typography variant="h5" align="center">
+                {subtitle}
+            </Typography>
         </div>
     );
 };

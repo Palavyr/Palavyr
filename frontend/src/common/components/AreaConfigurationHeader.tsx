@@ -6,6 +6,7 @@ interface IAreaConfigurationHeader {
     subtitle?: string;
     divider?: boolean;
     light?: boolean;
+    gutterBottom?: boolean;
 }
 type StyleProps = {
     light: boolean;
@@ -20,9 +21,12 @@ const useStyles = makeStyles((theme) => ({
     subtitle: {
         padding: "1rem 3rem 0rem 3rem",
     },
+    gutter: {
+        height: "1.5rem"
+    }
 }));
 
-export const AreaConfigurationHeader = ({ title, subtitle, divider = false, light = false }: IAreaConfigurationHeader) => {
+export const AreaConfigurationHeader = ({ title, subtitle, divider = false, light = false, gutterBottom = false }: IAreaConfigurationHeader) => {
     const cls = useStyles({ light });
     return (
         <>
@@ -37,6 +41,7 @@ export const AreaConfigurationHeader = ({ title, subtitle, divider = false, ligh
                 )}
             </div>
             {divider && <Divider />}
+            {gutterBottom && <div className={cls.gutter}></div>}
         </>
     );
 };

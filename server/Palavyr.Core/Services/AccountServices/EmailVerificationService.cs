@@ -86,13 +86,13 @@ namespace Palavyr.Core.Services.AccountServices
         {
             // prepare the account confirmation email
             logger.LogDebug("Provide an account setup confirmation token");
-            var confirmationToken = Guid.NewGuid().ToString().Split("-")[0];
+            var confirmationToken = GuidUtils.CreateShortenedGuid(1);
             await accountsContext.EmailVerifications.AddAsync(EmailVerification.CreateNew(confirmationToken, emailAddress, accountId));
             await accountsContext.SaveChangesAsync(cancellationToken);
 
             logger.LogDebug($"Sending emails from {EmailConstants.PalavyrMainEmailAddress}");
-            var htmlBody = EmailConfirmationHTML.GetConfirmationEmailBody(emailAddress, confirmationToken);
-            var textBody = EmailConfirmationHTML.GetConfirmationEmailBodyText(emailAddress, confirmationToken);
+            var htmlBody = EmailConfirmationHtml.GetConfirmationEmailBody(emailAddress, confirmationToken);
+            var textBody = EmailConfirmationHtml.GetConfirmationEmailBodyText(emailAddress, confirmationToken);
 
             var sendEmailOk = await emailClient.SendEmail(EmailConstants.PalavyrMainEmailAddress, emailAddress, EmailConstants.PalavyrSubject, htmlBody, textBody);
             return sendEmailOk;

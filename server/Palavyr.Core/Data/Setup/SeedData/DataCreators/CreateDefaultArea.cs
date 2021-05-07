@@ -128,7 +128,10 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                 DynamicTableMetas = dynamicTableMetas,
                 AreaSpecificEmail = defaultEmail,
                 EmailIsVerified = false,
-                Subject = "Thanks for contacting us!"
+                Subject = "Thanks for contacting us!",
+                FallbackSubject = "",
+                FallbackEmailTemplate = "",
+                
             };
             return area;
         }

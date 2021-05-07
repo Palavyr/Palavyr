@@ -2,12 +2,12 @@ import { makeStyles, Typography } from '@material-ui/core'
 import classNames from 'classnames';
 import React from 'react'
 
-const useStyles = makeStyles(({
+const useStyles = makeStyles((theme) => ({
     line: {
         height: "1px",
         width: "35%",
-        marginTop: "10px",
-        borderTop: "1px solid gray"
+        marginTop: "20px",
+        borderTop: `1px solid ${theme.palette.common.black}`
     },
     left: {
         marginLeft: "5%",

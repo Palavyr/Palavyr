@@ -5,6 +5,7 @@ import classNames from "classnames";
 import HelpIcon from "@material-ui/icons/Help";
 import { Align } from "../positioning/Align";
 import { useLocation } from "react-router-dom";
+import { log } from "console";
 
 const drawerWidth: number = 240;
 
@@ -63,12 +64,31 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const routesToExclude = [
+    "/dashboard",
+    "/dashboard/welcome",
+    "/dashboard/settings/password",
+    "/dashboard/settings/email",
+    "/dashboard/settings/companyName",
+    "/dashboard/settings/phoneNumber",
+    "/dashboard/settings/companyLogo",
+    "/dashboard/settings/locale",
+    "/dashboard/settings/default_email_template",
+    "/dashboard/settings/deleteaccount",
+    "/dashboard/set-areas",
+    "/dashboard/enquiries/",
+    "/dashboard/demo/",
+    "/dashboard/subscribe/",
+    "/dashboard/subscribe/purchase"
+
+];
+
 export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
     const cls = useStyles();
     const [sized, setSized] = useState<boolean>(false);
     const handle = () => setSized(!sized);
     const location = useLocation();
-
+    console.log(location.pathname)
     useEffect(() => {
         window.addEventListener("resize", handle);
         return () => window.removeEventListener("resize", handle);
@@ -92,7 +112,7 @@ export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawe
                         </Typography>
                     )}
                 </Align>
-                {location.pathname !== "/dashboard" && (
+                {!routesToExclude.includes(location.pathname) && (
                     <Align float="right">
                         <IconButton color="inherit" aria-label="open help drawer" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(cls.helpIcon, cls.helpMenuButton, helpOpen && cls.hide)}>
                             <HelpIcon />

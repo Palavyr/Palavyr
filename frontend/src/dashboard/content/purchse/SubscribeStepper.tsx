@@ -16,19 +16,10 @@ const useStyles = makeStyles((theme: Theme) =>
             borderBottom: "3px solid black",
             borderTop: "3px solid black",
         },
-        backButton: {
-            marginRight: theme.spacing(1),
-        },
-        instructions: {
-            marginTop: theme.spacing(1),
-            marginBottom: theme.spacing(1),
-        },
     })
 );
 
-function getSteps() {
-    return ["Select a subcription plan", "Select billing frequency", "Proceed to Stripe Checkout"];
-}
+const steps = ["Select a subcription plan", "Select billing frequency", "Proceed to Stripe Checkout"]
 
 interface ISubscribeStepper {
     activeStep: 0 | 1 | 2;
@@ -39,7 +30,7 @@ export const SubscribeStepper = ({ activeStep }: ISubscribeStepper) => {
     return (
         <div className={cls.root}>
             <Stepper className={cls.stepper} activeStep={activeStep} alternativeLabel>
-                {getSteps().map((label) => (
+                {steps.map((label) => (
                     <Step key={label}>
                         <StepLabel>
                             <Typography variant="h5">{label}</Typography>

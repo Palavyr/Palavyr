@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
+using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.StripeServices;
 
 namespace Palavyr.Core.Repositories.Delete

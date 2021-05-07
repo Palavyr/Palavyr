@@ -114,7 +114,8 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
                     resolveOrder: 0,
                     isMultiOptionEditable: false,
-                    dynamicType: widgetResponseKey
+                    dynamicType: widgetResponseKey,
+                    shouldRenderChildren: true
                 ));
 
             // inner-categories
@@ -131,7 +132,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
                     resolveOrder: 1,
                     isMultiOptionEditable: false,
-                    dynamicType: widgetResponseKey
+                    dynamicType: widgetResponseKey,
+                    shouldRenderChildren: true
+
                 ));
         }
 

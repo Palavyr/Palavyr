@@ -17,19 +17,16 @@ namespace Palavyr.Core.Data.Setup.SeedData
         public const string AreaName = "Buying a Cavvy";
         private const string TableTag = "Cavvy Types";
         public string EmailTemplate => CreateEmailTemplate.Create();
-        
-        
+
+
         protected BaseSeedData(string accountId, string defaultEmail)
         {
             var areaIdentifier = GuidUtils.CreateNewId();
             var dynamicTableId = GuidUtils.CreateNewId();
 
-            DefaultConversationNodes =
-                CreateDefaultConversation.CreateDefault(accountId, areaIdentifier, dynamicTableId);
-            DefaultDynamicTables =
-                CreateDefaultDynamicTable.CreateDefaultTable(TableTag, accountId, areaIdentifier, dynamicTableId);
-            DefaultDynamicTableMetas =
-                CreateDefaultDynamicTable.CreateDefaultMeta(TableTag, accountId, dynamicTableId, areaIdentifier);
+            DefaultConversationNodes = CreateDefaultConversation.CreateDefault(accountId, areaIdentifier, dynamicTableId);
+            DefaultDynamicTables = CreateDefaultDynamicTable.CreateDefaultTable(TableTag, accountId, areaIdentifier, dynamicTableId);
+            DefaultDynamicTableMetas = CreateDefaultDynamicTable.CreateDefaultMeta(TableTag, accountId, dynamicTableId, areaIdentifier);
             WidgetPreference = WidgetPreference.CreateDefault(accountId);
             Areas = new List<Area>()
             {
@@ -41,7 +38,7 @@ namespace Palavyr.Core.Data.Setup.SeedData
                     DefaultDynamicTableMetas,
                     EmailTemplate,
                     defaultEmail
-                    )
+                )
             };
         }
     }

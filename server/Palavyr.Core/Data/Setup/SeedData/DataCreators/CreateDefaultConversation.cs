@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -14,12 +15,12 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
             string dynamicTableId
         )
         {
-            var node1Id = Guid.NewGuid().ToString(); // Do you love dogs?
-            var node2Id = Guid.NewGuid().ToString(); // No / Too Complicated
-            var node3Id = Guid.NewGuid().ToString(); // Yes / Do you love cavvies?
-            var node4Id = Guid.NewGuid().ToString(); // No / Too Complicated
-            var node5Id = Guid.NewGuid().ToString(); // Yes / What kind of Cavvy would you like?
-            var node6Id = Guid.NewGuid().ToString(); // SelectOneFlat
+            var node1Id = GuidUtils.CreateNewId(); // Do you love dogs?
+            var node2Id = GuidUtils.CreateNewId(); // No / Too Complicated
+            var node3Id = GuidUtils.CreateNewId(); // Yes / Do you love cavvies?
+            var node4Id = GuidUtils.CreateNewId(); // No / Too Complicated
+            var node5Id = GuidUtils.CreateNewId(); // Yes / What kind of Cavvy would you like?
+            var node6Id = GuidUtils.CreateNewId(); // SelectOneFlat
 
             return new List<ConversationNode>()
             {
@@ -69,7 +70,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     false
                 ),
                 // Dynamic table node doesn't have default creator method
-                new ConversationNode()
+                new ConversationNode
                 {
                     NodeId = node5Id,
                     AreaIdentifier = areaIdentifier,
@@ -83,6 +84,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     IsMultiOptionType = true,
                     IsTerminalType = false,
                     IsDynamicTableNode = true,
+                    ShouldRenderChildren = true,
                     NodeComponentType = DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue
                 },
                 DefaultNodeTypeOptions.CreateSendResponse().MapNodeTypeOptionToConversationNode(
@@ -93,7 +95,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     DefaultNodeTypeOptions.SendResponse.StringName,
                     accountId,
                     areaIdentifier,
-                    "",
+                    "Continue",
                     false
                 )
             };

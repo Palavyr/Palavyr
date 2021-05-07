@@ -60,9 +60,12 @@ export const Free = () => {
     );
 };
 
-export const Premium = () => {
+export interface PriceInfoProps {
+    priceInfo?: boolean;
+}
+export const Premium = ({ priceInfo }: PriceInfoProps) => {
     const cls = useStyles();
-    const header = <PricingCardHeader icon={<CardMembershipIcon className={cls.icon} />} title="Premium" currency="$" amount="50" per />;
+    const header = <PricingCardHeader priceInfo={priceInfo} icon={<CardMembershipIcon className={cls.icon} />} title="Premium" currency="$" amount="50" per />;
     const body = <PricingCardBody editor={checkIcon(cls.yes)} response={checkIcon(cls.yes)} email={checkIcon(cls.yes)} area="6" enquiries={checkIcon(cls.yes)} attachments={checkIcon(cls.yes)} table="2" />;
 
     return (
@@ -72,10 +75,10 @@ export const Premium = () => {
     );
 };
 
-export const Pro = () => {
+export const Pro = ({ priceInfo }: PriceInfoProps) => {
     const cls = useStyles();
 
-    const header = <PricingCardHeader icon={<AccountBalanceIcon className={cls.icon} />} title="Pro" currency="$" amount="75" per />;
+    const header = <PricingCardHeader priceInfo={priceInfo} icon={<AccountBalanceIcon className={cls.icon} />} title="Pro" currency="$" amount="75" per />;
     const body = <PricingCardBody editor={checkIcon(cls.yes)} response={checkIcon(cls.yes)} email={checkIcon(cls.yes)} area="Unlimited" enquiries={checkIcon(cls.yes)} attachments={checkIcon(cls.yes)} table="Unlimited" />;
 
     return (
