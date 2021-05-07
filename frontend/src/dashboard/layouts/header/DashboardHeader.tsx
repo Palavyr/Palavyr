@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     topbar: {
         background: theme.palette.primary.dark,
         position: "fixed",
-        zIndex: 9999,
+        zIndex: 999,
     },
     appBar: {
         transition: theme.transitions.create(["margin", "width"], {
@@ -80,8 +80,7 @@ const routesToExclude = [
     "/dashboard/demo/",
     "/dashboard/subscribe/",
     "/dashboard/subscribe/purchase",
-    "/dashboard/confirm"
-
+    "/dashboard/confirm",
 ];
 
 export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
@@ -89,7 +88,7 @@ export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawe
     const [sized, setSized] = useState<boolean>(false);
     const handle = () => setSized(!sized);
     const location = useLocation();
-    console.log(location.pathname)
+    console.log(location.pathname);
     useEffect(() => {
         window.addEventListener("resize", handle);
         return () => window.removeEventListener("resize", handle);
