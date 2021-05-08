@@ -1,10 +1,11 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import React, { useState, useEffect } from "react";
 import { FileLink } from "@Palavyr-Types";
-import { makeStyles, Paper } from "@material-ui/core";
+import { CircularProgress, makeStyles, Paper } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { Align } from "dashboard/layouts/positioning/Align";
 
 const MediaType = "application/pdf";
 
@@ -49,9 +50,11 @@ export const ConfigurationPreview = () => {
             <AreaConfigurationHeader title="Response PDF Preview" subtitle="Preview the response PDF that will be produced for this area." />
             <Paper id="dashpaper" className={classes.paper}>
                 {loaded && preview && <object id="output-fram-id" data={preview.link} type={MediaType} width="100%" height="100%" aria-label="preview"></object>}
-                {
-                    // !loaded && <Spinner />
-                }
+                {!loaded && (
+                    <Align>
+                        <CircularProgress />
+                    </Align>
+                )}
             </Paper>
         </>
     );

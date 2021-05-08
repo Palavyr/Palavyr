@@ -4,7 +4,7 @@ import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { cloneDeep } from "lodash";
 import { ConversationNode } from "./nodes/ConversationNode";
 import { TreeErrorPanel } from "./MissingDynamicNodes";
-import { Button, makeStyles } from "@material-ui/core";
+import { Button, Divider, makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { ConversationTreeContext, DashboardContext } from "dashboard/layouts/DashboardContext";
@@ -80,8 +80,8 @@ export const ConvoTree = () => {
 
     const setNodesWithHistory = (updatedNodeList: Conversation) => {
         var freshNodeList = cloneDeep(updatedNodeList);
-        setNodes(freshNodeList);
         historyTracker.addConversationHistoryToQueue(freshNodeList, conversationHistoryPosition, conversationHistory);
+        setNodes(freshNodeList);
     };
 
     useEffect(() => {
@@ -113,7 +113,7 @@ export const ConvoTree = () => {
                 subtitle="Your palavyr is the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
             />
             <Align>
-                <SaveOrCancel onSave={onSave} />
+                <SaveOrCancel position="right" onSave={onSave} />
                 <Button
                     variant="contained"
                     className={cls.convoTreeMetaButtons}
@@ -140,6 +140,20 @@ export const ConvoTree = () => {
                     </Button>
                 )}
             </Align>
+            {isDevelopmentStage() && (
+                <>
+                    <Divider />
+                    {showDebugData &&
+                        conversationHistory.map((convo: Conversation, index: number) => {
+                            return (
+                                <div key={index}>
+                                    <Divider />
+                                    {convo.map((x) => " | " + x.nodeType)}
+                                </div>
+                            );
+                        })}
+                </>
+            )}
             <div className={cls.conversation}>
                 <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
                 <fieldset className="fieldset" id="tree-test">

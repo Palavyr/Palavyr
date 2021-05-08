@@ -9,7 +9,7 @@ export interface PalavyrErrorBoundaryState {
     errorInfo: ErrorInfo | null;
 }
 
-export interface PalavyrErrorBoundarProps extends WithStyles<typeof styles> {
+export interface PalavyrErrorBoundaryProps extends WithStyles<typeof styles> {
     children: React.ReactNode;
 }
 
@@ -20,8 +20,8 @@ const styles = (theme) =>
         },
     });
 
-export class PalavyrErrorBoundary extends React.Component<PalavyrErrorBoundarProps, PalavyrErrorBoundaryState> {
-    constructor(props: PalavyrErrorBoundarProps) {
+export class PalavyrErrorBoundary extends React.Component<PalavyrErrorBoundaryProps, PalavyrErrorBoundaryState> {
+    constructor(props: PalavyrErrorBoundaryProps) {
         super(props);
         this.state = { error: null, errorInfo: null };
     }

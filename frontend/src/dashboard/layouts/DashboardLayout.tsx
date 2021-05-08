@@ -20,6 +20,7 @@ import { DashboardContext } from "./DashboardContext";
 import { UserDetails } from "./sidebar/UserDetails";
 import { Align } from "./positioning/Align";
 import { PalavyrSnackbar } from "@common/components/PalavyrSnackbar";
+import { PalavyrErrorBoundary } from "@common/components/Errors/PalavyrErrorBoundary";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {

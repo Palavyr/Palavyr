@@ -6,6 +6,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { SnackbarPositions } from "@Palavyr-Types";
 
 export type AlertMessage = {
     title: string;
@@ -23,6 +24,7 @@ export interface ISaveOrCancel {
     cancelText?: string;
     deleteText?: string;
     position?: "left" | "right" | "center";
+    useSaveIcon?: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -55,17 +57,42 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, customCancelMessage, size = "small", timeout = 2000, saveText = "Save", cancelText = "Cancel", deleteText = "Delete" }: ISaveOrCancel) => {
+type PositionMap = {
+    [key: string]: SnackbarPositions;
+};
+const positionMap: PositionMap = {
+    right: "br",
+    left: "bl",
+    center: "b",
+};
+
+export const SaveOrCancel = ({
+    onSave,
+    onCancel,
+    onDelete,
+    customSaveMessage,
+    customCancelMessage,
+    position = "center",
+    size = "small",
+    timeout = 2000,
+    saveText = "Save",
+    cancelText = "Cancel",
+    deleteText = "Delete",
+    useSaveIcon = true,
+}: ISaveOrCancel) => {
     const classes = useStyles();
     const [isSaving, setIsSaving] = useState<boolean>(false);
 
     const { setSuccessText, successOpen, setSuccessOpen, setWarningText, warningOpen, setWarningOpen, setSnackPosition } = React.useContext(DashboardContext);
-    setSnackPosition("b");
+    const setPosition = () => {
+        const anchorPosition = positionMap[position];
+        setSnackPosition(anchorPosition);
+    };
     return (
         <>
             {
                 <Button
-                    startIcon={isSaving ? <CircularProgress size={20} /> : <SaveIcon />}
+                    startIcon={isSaving ? <CircularProgress size={20} /> : useSaveIcon ? <SaveIcon /> : <></>}
                     variant="outlined"
                     className={classNames(classes.button, classes.saveButton)}
                     onClick={async (e) => {
@@ -73,10 +100,12 @@ export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, cu
                         setTimeout(async () => {
                             var res = await onSave(e);
                             if (res === true || res === null) {
+                                setPosition()
                                 if (warningOpen) setWarningOpen(false);
                                 setSuccessText(customSaveMessage ?? "Save Successful");
                                 setSuccessOpen(true);
                             } else {
+                                setPosition()
                                 setWarningText(customCancelMessage ?? "Cancelled");
                                 setWarningOpen(true);
                             }
@@ -93,6 +122,7 @@ export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, cu
                     variant="outlined"
                     className={classNames(classes.button, classes.cancelButton)}
                     onClick={async () => {
+                        setPosition()
                         await onCancel();
                         if (successOpen) setSuccessOpen(false);
                         setWarningText(customCancelMessage ?? "Cancelled");
@@ -109,6 +139,7 @@ export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, cu
                     variant="outlined"
                     className={classNames(classes.button, classes.delButton)}
                     onClick={async () => {
+                        setPosition()
                         await onDelete();
                         setWarningText("Delete Successful");
                         setWarningOpen(true);

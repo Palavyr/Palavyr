@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { makeStyles, FormControl, InputLabel, FormHelperText, TextField } from "@material-ui/core";
 import { NodeOption, NodeTypeOptions } from "@Palavyr-Types";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -13,7 +13,6 @@ const useStyles = makeStyles(() => ({
     autocomplete: {
         marginTop: "1rem",
         paddingBottom: "0.5rem",
-        // height: "50px",
         borderRadius: "0px",
         borderBottomLeftRadius: "3px",
         borderBottomRightRadius: "3px",
@@ -32,11 +31,8 @@ const useStyles = makeStyles(() => ({
     },
     otherbox: {
         textAlign: "center",
-        // paddingLeft: "2rem",
-        // paddingRight: "2rem",
     },
     inputLabel: {
-        // height: "200px",
         "& .MuiFormLabel-root": {
             color: "black",
             fontSize: "10pt",

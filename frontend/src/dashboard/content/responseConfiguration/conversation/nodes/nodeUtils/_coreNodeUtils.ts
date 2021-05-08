@@ -97,6 +97,12 @@ export const _getNodeById = (nodeId: string, nodeList: Conversation) => {
     return nodeList.filter((node: ConvoNode) => node.nodeId === nodeId)[0];
 };
 
+export const _getNodeByIdOrNull = (nodeId: string, nodeList: Conversation) => {
+    const result = nodeList.filter((node: ConvoNode) => node.nodeId === nodeId);
+    if (result.length == 0) return null;
+    return result[0];
+};
+
 export const _replaceNodeWithUpdatedNode = (nodeData: ConvoNode, nodeList: Conversation) => {
     // replace the old node with the new node in the list
     const filteredNodeList = _removeNodeByID(nodeData.nodeId, nodeList);
@@ -205,4 +211,23 @@ export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeId
         updatedNodeList.push(newNode);
     });
     return updatedNodeList;
+};
+
+// TODO: This is a dirty hack. We shouldn't be saving conversations where a node has no child into the history.
+export const _cleanConversationNodesWithNoChildren = (dirtyConversation: Conversation) => {
+    const cleanConvo: Conversation = [];
+    dirtyConversation.forEach((node: ConvoNode) => {
+        const nodeChildren = _splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString);
+        const childrenThatExist: string[] = [];
+        nodeChildren.forEach((childId: string) => {
+            const tryNode = _getNodeByIdOrNull(childId, dirtyConversation);
+            if (tryNode !== null) {
+                childrenThatExist.push(tryNode.nodeId);
+            }
+        });
+        const rejoinedChildString = _joinNodeChildrenStringArray(childrenThatExist);
+        node.nodeChildrenString = rejoinedChildString;
+        cleanConvo.push(node);
+    });
+    return cleanConvo;
 };

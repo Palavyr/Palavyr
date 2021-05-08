@@ -1,4 +1,5 @@
 import { Conversation, SetState } from "@Palavyr-Types";
+import { _cleanConversationNodesWithNoChildren } from "./nodeUtils/_coreNodeUtils";
 
 type SetConversationHistory = SetState<Conversation[]>;
 type SetConversation = SetState<Conversation>;
@@ -18,9 +19,9 @@ export class ConversationHistoryTracker {
     }
 
     // Maybe can set the historyPosition as internal state too.
-    addConversationHistoryToQueue(newConversationRecord: Conversation, conversationHistoryPosition: number, conversationHistory: Conversation[]) {
+    addConversationHistoryToQueue(dirtyConversationRecord: Conversation, conversationHistoryPosition: number, conversationHistory: Conversation[]) {
         const newPos = conversationHistoryPosition + 1;
-
+        const newConversationRecord = _cleanConversationNodesWithNoChildren(dirtyConversationRecord);
         if (conversationHistory.length < this.MaxConversationHistory) {
             if (newPos < conversationHistory.length - 1) {
                 this.setConversationHistory([...conversationHistory.slice(0, newPos), newConversationRecord]);
@@ -45,7 +46,9 @@ export class ConversationHistoryTracker {
         }
         const newPosition = conversationHistoryPosition - 1;
         this.setConversationHistoryPosition(newPosition);
-        this.setNodes(conversationHistory[newPosition]);
+        const oneBack = conversationHistory[newPosition];
+        const cleanOneBack = _cleanConversationNodesWithNoChildren(oneBack);
+        this.setNodes(cleanOneBack);
     }
 
     stepConversationForwardOneStep(conversationHistoryPosition: number, conversationHistory: Conversation[]) {
