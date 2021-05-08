@@ -142,7 +142,6 @@ export const ConvoTree = () => {
             </Align>
             {isDevelopmentStage() && (
                 <>
-                    <Divider />
                     {showDebugData &&
                         conversationHistory.map((convo: Conversation, index: number) => {
                             return (
