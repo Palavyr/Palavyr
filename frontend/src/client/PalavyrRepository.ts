@@ -206,6 +206,7 @@ export class PalavyrRepository {
             getCurrentPlan: async () => this.client.get<PlanStatus>(`account/settings/current-plan`),
 
             DeleteAccount: async () => this.client.post(`account/delete-account`),
+            CheckNeedsPassword: async () => this.client.get<boolean>(`account/needs-password`)
         },
         EmailVerification: {
             RequestEmailVerification: async (emailAddress: string, areaIdentifier: string) => this.client.post<EmailVerificationResponse, {}>(`verification/email/${areaIdentifier}`, { EmailAddress: emailAddress }),

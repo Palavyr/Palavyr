@@ -81,10 +81,7 @@ export const ChangeLocale = () => {
                     </MenuItem>
                 ))}
                 useModal
-                modalMessage={{
-                    title: "",
-                    message: "Locale successfully updated.",
-                }}
+                modalMessage="Locale successfully updated."
                 alertNode={
                     <Alert>
                         <AlertTitle className={classes.titleText}>Set your Locale</AlertTitle>

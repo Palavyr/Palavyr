@@ -35,7 +35,7 @@ export const OtherSection = ({ isActive }: OtherSectionProps) => {
 
     const generalSettingsOnClick = () => {
         setViewName("General Settings");
-        history.push(`/dashboard/settings/password?tab=${GeneralSettingsLoc.password}`);
+        history.push(`/dashboard/settings/email?tab=${GeneralSettingsLoc.email}`);
     };
 
     const getWidgetOnClick = () => {

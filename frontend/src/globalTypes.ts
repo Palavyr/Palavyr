@@ -343,7 +343,6 @@ export type Price = StripeProduct & {
 };
 
 export enum GeneralSettingsLoc {
-    password,
     email,
     companyName,
     phoneNumber,
@@ -351,6 +350,7 @@ export enum GeneralSettingsLoc {
     locale,
     default_email_template,
     deleteaccount,
+    password,
 }
 
 export enum AreaSettingsLoc {

@@ -5,6 +5,7 @@ import { SinglePurposeButton } from "./SinglePurposeButton";
 import { AlertMessage } from "./SaveOrCancel";
 import NumberFormat from "react-number-format";
 import { PalavyrAlert } from "./PalavyrAlert";
+import { PalavyrSnackbar } from "./PalavyrSnackbar";
 
 export interface ISettingsGridRow {
     onClick: (data: any) => Promise<boolean | null | undefined | void>;
@@ -40,19 +41,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({
-    locale,
-    useAlert,
-    alertMessage,
-    fullWidth,
-    inputType,
-    alertNode,
-    placeholder,
-    onClick,
-    currentValue,
-    clearVal = false,
-    buttonText = "Update",
-}: ISettingsGridRow) => {
+export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ locale, useAlert, alertMessage, fullWidth, inputType, alertNode, placeholder, onClick, currentValue, clearVal = false, buttonText = "Update" }: ISettingsGridRow) => {
     const [inputVal, setInputVal] = useState<string>();
     const [inputValStatus, setInputValStatus] = useState<string | null>(null);
     const [alertState, setAlertState] = useState<boolean>(false);
@@ -133,7 +122,7 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({
                     />
                 </div>
             </Paper>
-            {useAlert && <PalavyrAlert alertMessage={alertMessage} alertState={alertState} setAlertState={setAlertState} />}
+            <PalavyrSnackbar successText="Phone Number successfully updated." successOpen={alertState} setSuccessOpen={setAlertState} />
         </>
     );
 };

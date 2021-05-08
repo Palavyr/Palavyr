@@ -5,7 +5,6 @@ import classNames from "classnames";
 import HelpIcon from "@material-ui/icons/Help";
 import { Align } from "../positioning/Align";
 import { useLocation } from "react-router-dom";
-import { log } from "console";
 
 const drawerWidth: number = 240;
 
@@ -88,6 +87,7 @@ const routesToExclude = [
     "/dashboard/subscribe/",
     "/dashboard/subscribe/purchase",
     "/dashboard/confirm",
+    "/dashboard/getwidget/",
 ];
 
 export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
