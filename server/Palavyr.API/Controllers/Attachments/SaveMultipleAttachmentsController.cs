@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,12 +11,15 @@ namespace Palavyr.API.Controllers.Attachments
     public class SaveMultipleAttachmentsController : PalavyrBaseController
     {
         private readonly IAttachmentSaver attachmentSaver;
-     
+        private readonly IAttachmentRetriever attachmentRetriever;
+
         public SaveMultipleAttachmentsController(
-            IAttachmentSaver attachmentSaver
+            IAttachmentSaver attachmentSaver,
+            IAttachmentRetriever attachmentRetriever
         )
         {
             this.attachmentSaver = attachmentSaver;
+            this.attachmentRetriever = attachmentRetriever;
         }
 
         [HttpPost("attachments/{areaId}/save-many")]
@@ -23,17 +27,16 @@ namespace Palavyr.API.Controllers.Attachments
         public async Task<FileLink[]> SaveMany(
             [FromRoute] string areaId,
             [FromHeader] string accountId,
-            [FromForm(Name = "files")] IList<IFormFile> attachmentFiles
+            [FromForm(Name = "files")] IList<IFormFile> attachmentFiles,
+            CancellationToken cancellationToken
         )
         {
-            var fileLinks = new List<FileLink>();
             foreach (var attachmentFile in attachmentFiles)
             {
-                var fileLink = await attachmentSaver.SaveAttachment(accountId, areaId, attachmentFile);
-                fileLinks.Add(fileLink);
+                await attachmentSaver.SaveAttachment(accountId, areaId, attachmentFile);
             }
-
-            return fileLinks.ToArray();
+            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(accountId, areaId, cancellationToken);
+            return attachmentFileLinks;
         }
     }
 }

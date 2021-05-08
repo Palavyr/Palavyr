@@ -10,11 +10,14 @@ import { AddOrCancel } from "@common/components/AddOrCancel";
 
 const useStyles = makeStyles((theme) => ({
     dialog: {
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.palette.primary.dark,
     },
     dialogContent: {},
     dialogTitle: {},
     dialogActions: {},
+    text: {
+        color: theme.palette.common.white,
+    },
 }));
 
 export interface IAddNewAreaModal {
@@ -25,7 +28,7 @@ export interface IAddNewAreaModal {
 
 export const AddNewAreaModal = ({ open, handleClose, setNewArea }: IAddNewAreaModal) => {
     const [areaName, setAreaName] = useState<string>("");
-    const classes = useStyles();
+    const cls = useStyles();
     const repository = new PalavyrRepository();
 
     const onAdd = async () => {
@@ -42,10 +45,10 @@ export const AddNewAreaModal = ({ open, handleClose, setNewArea }: IAddNewAreaMo
     };
 
     return (
-        <Dialog fullWidth classes={{ root: classes.dialog, paper: classes.dialog }} open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">Add a new Area</DialogTitle>
+        <Dialog fullWidth classes={{ root: cls.dialog }} open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <DialogTitle>Add a new Area</DialogTitle>
             <DialogContent>
-                <TextField autoFocus margin="dense" value={areaName} onChange={textFieldOnChange} id="name" label="New Area Name" type="text" fullWidth />
+                <TextField className={cls.text} autoFocus margin="dense" value={areaName} onChange={textFieldOnChange} id="name" label="New Area Name" type="text" fullWidth />
             </DialogContent>
             <DialogActions>
                 <AddOrCancel onAdd={onAdd} onCancel={handleClose} addText="Add" cancelText="Cancel" />

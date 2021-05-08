@@ -257,7 +257,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                         paper: cls.helpDrawerPaper,
                     }}
                 >
-                    <SideBarHeader handleDrawerClose={handleHelpDrawerClose} side="right">
+                    <SideBarHeader handleDrawerClose={handleHelpDrawerClose} side="right" roundTop>
                         <Typography className={cls.helpDrawerHeaderText}>Close</Typography>
                     </SideBarHeader>
                     <Divider />

@@ -47,7 +47,7 @@ export const ChangeCompanyName = () => {
             <Divider />
             <SettingsGridRowText
                 fullWidth
-                placeholder={"New Company Name"}
+                placeholder="New Company Name"
                 onClick={handleCompanyNameChange}
                 clearVal={true}
                 currentValue={companyName}
@@ -58,7 +58,7 @@ export const ChangeCompanyName = () => {
                 }}
                 alertNode={
                     <Alert severity={companyName === "" ? "error" : "success"}>
-                        <AlertTitle className={classes.titleText}>{companyName === "" ? "Please set your company name." : "Company / Business name name."}</AlertTitle>
+                        <AlertTitle className={classes.titleText}>{companyName === "" ? "Please set your company name." : "Company / Business name."}</AlertTitle>
                         Set your company or business name. This will be used in the header of each response PDF sent via the widget.
                     </Alert>
                 }

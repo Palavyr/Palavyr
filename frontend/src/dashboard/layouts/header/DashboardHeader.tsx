@@ -19,7 +19,7 @@ interface DashboardHeaderProps {
 
 const useStyles = makeStyles((theme) => ({
     topbar: {
-        background: theme.palette.primary.dark,
+        background: theme.palette.primary.main,
         position: "fixed",
         zIndex: 999,
     },
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "right",
     },
     name: {
-        color: theme.palette.secondary.light,
+        color: theme.palette.success.main,
     },
     helpIconText: {
         paddingRight: theme.spacing(3),
