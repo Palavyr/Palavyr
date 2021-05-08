@@ -17,6 +17,7 @@ import "./stylesConvoTree.css";
 import { getRootNode } from "./nodes/nodeUtils/commonNodeUtils";
 import { ConversationHistoryTracker } from "./nodes/ConversationHistoryTracker";
 import { isDevelopmentStage } from "@api-client/clientUtils";
+import PalavyrErrorBoundary from "@common/components/Errors/PalavyrErrorBoundary";
 
 const useStyles = makeStyles(() => ({
     conversation: {
@@ -142,7 +143,9 @@ export const ConvoTree = () => {
             <div className={cls.conversation}>
                 <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
                 <fieldset className="fieldset" id="tree-test">
-                    <div className="main-tree tree-wrap">{nodeList.length > 0 ? <ConversationNode key="tree-start" node={rootNode} reRender={() => null} /> : null}</div>
+                    <PalavyrErrorBoundary>
+                        <div className="main-tree tree-wrap">{nodeList.length > 0 ? <ConversationNode key="tree-start" node={rootNode} reRender={() => null} /> : null}</div>
+                    </PalavyrErrorBoundary>
                 </fieldset>
             </div>
         </ConversationTreeContext.Provider>

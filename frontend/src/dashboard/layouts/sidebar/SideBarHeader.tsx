@@ -1,14 +1,19 @@
 import React from "react";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles, Typography } from "@material-ui/core";
 
 interface SideBarHeaderProps {
     handleDrawerClose: () => void;
+    side?: "right" | "left";
+    children?: React.ReactNode;
 }
 
 const useStyles = makeStyles((theme) => ({
     drawerHeader: {
+        borderTopLeftRadius: "7px",
+        borderTopRightRadius: "7px",
         backgroundColor: theme.palette.primary.dark,
         display: "flex",
         alignItems: "center",
@@ -20,15 +25,22 @@ const useStyles = makeStyles((theme) => ({
     icon: {
         color: theme.palette.getContrastText(theme.palette.primary.dark),
     },
+    button: {
+        borderRadius: "10px",
+        "&:hover": {
+            backgroundColor: theme.palette.primary.light
+        }
+    }
 }));
 
-export const SideBarHeader = ({ handleDrawerClose }: SideBarHeaderProps) => {
+export const SideBarHeader = ({ handleDrawerClose, children, side = "left" }: SideBarHeaderProps) => {
     const cls = useStyles();
 
     return (
         <div className={cls.drawerHeader}>
-            <IconButton onClick={() => handleDrawerClose()}>
-                <ChevronLeftIcon className={cls.icon} />
+            <IconButton className={cls.button} onClick={() => handleDrawerClose()}>
+                {children}
+                {side === "left" ? <ChevronLeftIcon className={cls.icon} /> : <ChevronRightIcon className={cls.icon} />}
             </IconButton>
         </div>
     );
