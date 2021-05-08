@@ -146,12 +146,8 @@ export const ChangePassword = () => {
                                 }
                                 return true;
                             }}
-                            useModal
                             size="large"
-                            customSaveMessage={{
-                                title: "",
-                                message: "Password successfully updated.",
-                            }}
+                            customSaveMessage="Password successfully updated."
                         />
                     </div>
                 </Grid>

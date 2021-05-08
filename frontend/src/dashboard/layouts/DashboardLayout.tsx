@@ -6,7 +6,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep } from "lodash";
-import { AlertType, AreaNameDetails, Areas, AreaTable, PlanType } from "@Palavyr-Types";
+import { AlertType, AreaNameDetails, Areas, AreaTable, PlanType, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DashboardHeader } from "./header/DashboardHeader";
 import { CircularProgress, IconButton, makeStyles, Typography } from "@material-ui/core";
@@ -19,6 +19,7 @@ import classNames from "classnames";
 import { DashboardContext } from "./DashboardContext";
 import { UserDetails } from "./sidebar/UserDetails";
 import { Align } from "./positioning/Align";
+import { PalavyrSnackbar } from "@common/components/PalavyrSnackbar";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
@@ -72,6 +73,15 @@ interface IDashboardLayout {
     helpComponent: JSX.Element[] | JSX.Element;
 }
 
+type Positions = {
+    [key: string]: SnackbarPositions;
+};
+const positionMap: Positions = {
+    center: "b",
+    left: "bl",
+    right: "br",
+};
+
 export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) => {
     const { areaIdentifier } = useParams<{ contentType: string; areaIdentifier: string }>();
 
@@ -95,6 +105,17 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [dashboardAreasLoading, setDashboardAreasLoading] = useState<boolean>(false);
     const cls = useStyles(helpOpen);
+
+    const [successOpen, setSuccessOpen] = useState<boolean>(false);
+    const [successText, setSuccessText] = useState<string>("Success");
+
+    const [warningOpen, setWarningOpen] = useState<boolean>(false);
+    const [warningText, setWarningText] = useState<string>("Warning");
+
+    const [errorOpen, setErrorOpen] = useState<boolean>(false);
+    const [errorText, setErrorText] = useState<string>("Error");
+
+    const [snackPosition, setSnackPosition] = useState<SnackbarPositions>("br");
 
     const loadAreas = useCallback(async () => {
         setDashboardAreasLoading(true);
@@ -180,7 +201,31 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     };
 
     return (
-        <DashboardContext.Provider value={{ setIsLoading: setIsLoading, currencySymbol: currencySymbol, subscription: planType, numAreasAllowed, checkAreaCount, areaName: currentViewName, setViewName: setViewName }}>
+        <DashboardContext.Provider
+            value={{
+                successOpen,
+                setSuccessOpen,
+                successText,
+                setSuccessText,
+                warningOpen,
+                setWarningOpen,
+                warningText,
+                setWarningText,
+                errorOpen,
+                errorText,
+                setErrorOpen,
+                setErrorText,
+                snackPosition,
+                setSnackPosition,
+                setIsLoading: setIsLoading,
+                currencySymbol: currencySymbol,
+                subscription: planType,
+                numAreasAllowed,
+                checkAreaCount,
+                areaName: currentViewName,
+                setViewName: setViewName,
+            }}
+        >
             <div className={cls.root}>
                 <DashboardHeader open={open} handleDrawerOpen={handleDrawerOpen} handleHelpDrawerOpen={handleHelpDrawerOpen} helpOpen={helpOpen} title={currentViewName} />
                 <Drawer
@@ -229,6 +274,9 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                 {numAreasAllowed && (areaNameDetails.length < numAreasAllowed ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
                 <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
             </div>
+            {successOpen && <PalavyrSnackbar position={snackPosition} successText={successText} successOpen={successOpen} setSuccessOpen={setSuccessOpen} />}
+            {warningOpen && <PalavyrSnackbar position={snackPosition} warningText={warningText} warningOpen={warningOpen} setWarningOpen={setWarningOpen} />}
+            {errorOpen && <PalavyrSnackbar position={snackPosition} errorText={errorText} errorOpen={errorOpen} setErrorOpen={setErrorOpen} />}
         </DashboardContext.Provider>
     );
 };

@@ -5,9 +5,14 @@ export const getRootNode = (nodeList: WidgetNodes): WidgetNodeResource => {
     return node;
 };
 
-export const getChildNodes = (childrenIDs: string, nodeList: WidgetNodes) => {
+export const getOrderedChildNodes = (childrenIDs: string, nodeList: WidgetNodes) => {
     const ids = childrenIDs.split(",");
-    return nodeList.filter(node => ids.includes(node.nodeId));
+    const children: WidgetNodes = [];
+    ids.forEach((id: string) => {
+        const node = nodeList.filter((node) => node.nodeId === id)[0] // each ID should only refer to 1 existing node.
+        children.push(node)
+    })
+    return children;
 };
 
 export const assembleCompletedConvo = (conversationId: string, areaIdentifier: string, name: string, email: string, PhoneNumber: string): CompleteConverationDetails => {

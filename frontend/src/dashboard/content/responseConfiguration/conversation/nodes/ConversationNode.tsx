@@ -22,7 +22,7 @@ export type lineStyle = {
 };
 
 export const connectionStyle: lineStyle = {
-    borderColor: "#54585A", //"white"
+    borderColor: "#54585A",
     borderStyle: "solid",
     borderWidth: 1,
     zIndex: 0,

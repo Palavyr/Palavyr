@@ -1,9 +1,10 @@
-import { FileLink } from "@Palavyr-Types"
-import { TableRow, TableCell } from "@material-ui/core"
-import React from "react"
-import { LinkButton } from "./LinkButton"
-import AttachmentIcon from '@material-ui/icons/Attachment';
-
+import { FileLink } from "@Palavyr-Types";
+import { TableRow, TableCell } from "@material-ui/core";
+import React from "react";
+import { LinkButton } from "./LinkButton";
+import AttachmentIcon from "@material-ui/icons/Attachment";
+import { useContext } from "react";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 interface IAttachmentTableRow {
     fileName: string;
@@ -15,40 +16,44 @@ interface IAttachmentTableRow {
 
 var tableCellStyle = {
     padding: "2rem",
-    margin: "3rem"
-}
+    margin: "3rem",
+};
 
 var tableRowStyle = {
     margin: "3rem",
     padding: "10rem",
     backgroundColor: "#C7ECEE",
+};
 
-}
-
-
-export const AttachmentListRow = ({ fileName, link, fileId, setCurrentPreview, removeAttachment}: IAttachmentTableRow) => {
-
+export const AttachmentListRow = ({ fileName, link, fileId, setCurrentPreview, removeAttachment }: IAttachmentTableRow) => {
     const viewButtonClickAction = (fileName: string, link: string, fileId: string) => {
         var attachmentLink: FileLink = {
             fileName,
             link,
-            fileId
-        }
+            fileId,
+        };
         setCurrentPreview(attachmentLink);
-    }
+    };
 
     const removeButtonClickAction = (fileName: string, link: string, fileId: string) => {
-        removeAttachment(fileId)
+        removeAttachment(fileId);
         setCurrentPreview(null!);
-    }
+    };
 
     return (
-        <TableRow style={tableRowStyle} >
-            <TableCell style={tableCellStyle}><AttachmentIcon /></TableCell>
-            <TableCell style={tableCellStyle}><strong>{fileName}</strong></TableCell>
-            <TableCell style={tableCellStyle}><LinkButton color={"primary"} link={link} fileName={fileName} fileId={fileId} clickAction={viewButtonClickAction} childText="View" /></TableCell>
-            <TableCell style={tableCellStyle}><LinkButton color="secondary" link={link} fileName={fileName} fileId={fileId} clickAction={removeButtonClickAction} childText="Remove" /></TableCell>
-        </TableRow >
-
+        <TableRow style={tableRowStyle}>
+            <TableCell style={tableCellStyle}>
+                <AttachmentIcon />
+            </TableCell>
+            <TableCell style={tableCellStyle}>
+                <strong>{fileName}</strong>
+            </TableCell>
+            <TableCell style={tableCellStyle}>
+                <LinkButton color={"primary"} link={link} fileName={fileName} fileId={fileId} clickAction={viewButtonClickAction} childText="View" />
+            </TableCell>
+            <TableCell style={tableCellStyle}>
+                <LinkButton color="secondary" link={link} fileName={fileName} fileId={fileId} clickAction={removeButtonClickAction} childText="Remove" />
+            </TableCell>
+        </TableRow>
     );
-}
+};

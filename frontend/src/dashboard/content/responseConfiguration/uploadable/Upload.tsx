@@ -1,7 +1,8 @@
 import React from "react";
-import { Button } from "@material-ui/core";
+import { Button, makeStyles } from "@material-ui/core";
 import { DropzoneDialog } from "material-ui-dropzone";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
+import { getachorOrigin } from "@common/components/PalavyrSnackbar";
 
 export interface IUploadAttachment {
     initialState?: boolean;
@@ -19,12 +20,20 @@ export type FileUpload = Blob & {
     readonly name: string;
 };
 
+const useStyles = makeStyles((theme) => ({
+    snackbarProps: {
+        color: theme.palette.common.black,
+    },
+}));
+
 export const Upload = ({ initialState = false, modalState, toggleModal, handleFileSave, summary, buttonText, uploadDetails, acceptedFiles }: IUploadAttachment) => {
     const onSave = (files: File[], e: any) => {
         handleFileSave(files);
         toggleModal();
     };
+    const cls = useStyles();
 
+    const anchorOrigin = getachorOrigin("br");
     return (
         <PalavyrAccordian title={summary} initialState={initialState}>
             <div>
@@ -34,7 +43,16 @@ export const Upload = ({ initialState = false, modalState, toggleModal, handleFi
                     {buttonText}
                 </Button>
             </div>
-            <DropzoneDialog open={modalState} onSave={onSave} useChipsForPreview acceptedFiles={acceptedFiles} showPreviews={true} maxFileSize={2000000} onClose={toggleModal} />
+            <DropzoneDialog
+                alertSnackbarProps={{ anchorOrigin, classes: { root: cls.snackbarProps } }}
+                open={modalState}
+                onSave={onSave}
+                useChipsForPreview
+                acceptedFiles={acceptedFiles}
+                showPreviews={true}
+                maxFileSize={2000000}
+                onClose={toggleModal}
+            />
         </PalavyrAccordian>
     );
 };

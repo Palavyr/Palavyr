@@ -98,9 +98,6 @@ export const changeNodeType = async (
         previousNode.isAnabranchMergePoint = true; // needs to set true if inside anabranch and
         updatedNodeList = selectionCallback(previousNode, updatedNodeList, identity.nodeIdOfMostRecentAnabranch);
     }
-    // else {
-    // previousNode.isAnabranchMergePoint = nodeOption.isAnabranchMergePoint
-    // }
 
     // set any value options
     previousNode.valueOptions = valueOptions;

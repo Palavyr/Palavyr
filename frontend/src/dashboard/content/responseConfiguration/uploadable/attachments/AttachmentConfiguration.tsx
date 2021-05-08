@@ -7,6 +7,7 @@ import { AttachmentPreview } from "./AttachmentPreview";
 import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { useContext } from "react";
 
 const buttonText = "Add PDF Attachment";
 const summary = "Upload a new PDF attachment to send with responses.";
@@ -17,7 +18,7 @@ export const AttachmentConfiguration = () => {
 
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
-    const { setIsLoading } = React.useContext(DashboardContext);
+    const { setIsLoading, setSuccessOpen, setSuccessText } = useContext(DashboardContext);
 
     const [, setLoaded] = useState<boolean>(false);
     const [currentPreview, setCurrentPreview] = useState<FileLink | null>();
@@ -32,6 +33,8 @@ export const AttachmentConfiguration = () => {
         setIsLoading(true);
         const filelinks = await repository.Configuration.Attachments.removeAttachment(areaIdentifier, fileId);
         setAttachmentList(filelinks);
+        setSuccessText("Attachment Removed");
+        setSuccessOpen(true);
         setIsLoading(false);
     };
 
@@ -73,6 +76,8 @@ export const AttachmentConfiguration = () => {
         }
         setCurrentPreview(null);
         setIsLoading(false);
+        setSuccessText("Attachment Uploaded");
+        setSuccessOpen(true);
     };
 
     return (

@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core";
 import classNames from "classnames";
-import { CustomAlert } from "./customAlert/CutomAlert";
 import SaveIcon from "@material-ui/icons/Save";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 export type AlertMessage = {
     title: string;
@@ -16,13 +16,13 @@ export interface ISaveOrCancel {
     onSave(e?: any): Promise<boolean>;
     onCancel?(): Promise<any> | any;
     onDelete?(): Promise<any>;
-    customSaveMessage?: AlertMessage;
-    customCancelMessage?: AlertMessage;
-    useModal?: boolean;
+    customSaveMessage?: string;
+    customCancelMessage?: string;
     timeout?: number;
     saveText?: string;
     cancelText?: string;
     deleteText?: string;
+    position?: "left" | "right" | "center";
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -55,12 +55,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, customCancelMessage, useModal, size = "small", timeout = 2000, saveText = "Save", cancelText = "Cancel", deleteText = "Delete"}: ISaveOrCancel) => {
+export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, customCancelMessage, size = "small", timeout = 2000, saveText = "Save", cancelText = "Cancel", deleteText = "Delete" }: ISaveOrCancel) => {
     const classes = useStyles();
-    const [alertState, setAlertState] = useState<boolean>(false);
-    const [cancelAlertState, setCancelAlertState] = useState<boolean>(false);
     const [isSaving, setIsSaving] = useState<boolean>(false);
 
+    const { setSuccessText, successOpen, setSuccessOpen, setWarningText, warningOpen, setWarningOpen, setSnackPosition } = React.useContext(DashboardContext);
+    setSnackPosition("b");
     return (
         <>
             {
@@ -73,10 +73,12 @@ export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, cu
                         setTimeout(async () => {
                             var res = await onSave(e);
                             if (res === true || res === null) {
-                                if (cancelAlertState) setCancelAlertState(false); // TODO: these don't show modal for static tables.
-                                setAlertState(true);
+                                if (warningOpen) setWarningOpen(false);
+                                setSuccessText(customSaveMessage ?? "Save Successful");
+                                setSuccessOpen(true);
                             } else {
-                                setCancelAlertState(true);
+                                setWarningText(customCancelMessage ?? "Cancelled");
+                                setWarningOpen(true);
                             }
                             setIsSaving(false);
                         }, timeout);
@@ -86,6 +88,21 @@ export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, cu
                     {saveText}
                 </Button>
             }
+            {onCancel && (
+                <Button
+                    variant="outlined"
+                    className={classNames(classes.button, classes.cancelButton)}
+                    onClick={async () => {
+                        await onCancel();
+                        if (successOpen) setSuccessOpen(false);
+                        setWarningText(customCancelMessage ?? "Cancelled");
+                        setWarningOpen(true);
+                    }}
+                    size={size}
+                >
+                    {cancelText}
+                </Button>
+            )}
             {onDelete && (
                 <Button
                     startIcon={<DeleteOutlineIcon />}
@@ -93,28 +110,14 @@ export const SaveOrCancel = ({ onSave, onCancel, onDelete, customSaveMessage, cu
                     className={classNames(classes.button, classes.delButton)}
                     onClick={async () => {
                         await onDelete();
+                        setWarningText("Delete Successful");
+                        setWarningOpen(true);
                     }}
                     size={size}
                 >
                     {deleteText}
                 </Button>
             )}
-            {onCancel && (
-                <Button
-                    variant="outlined"
-                    className={classNames(classes.button, classes.cancelButton)}
-                    onClick={async () => {
-                        await onCancel();
-                        if (alertState) setAlertState(false);
-                        setCancelAlertState(true);
-                    }}
-                    size={size}
-                >
-                    {cancelText}
-                </Button>
-            )}
-            {alertState && useModal && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={customSaveMessage ?? { title: "Save Successful", message: "" }} />}
-            {alertState && useModal && <CustomAlert setAlert={setCancelAlertState} alertState={cancelAlertState} alert={customCancelMessage ?? { title: "Cancelled", message: "" }} />}
         </>
     );
 };

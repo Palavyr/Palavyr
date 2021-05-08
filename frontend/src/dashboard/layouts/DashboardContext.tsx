@@ -1,15 +1,29 @@
-import { Conversation, ConvoNode, NodeSetterWithHistory, NodeTypeOptions, PlanType } from "@Palavyr-Types";
+import { Conversation, NodeSetterWithHistory, NodeTypeOptions, PlanType, SetState, SnackbarPositions } from "@Palavyr-Types";
 import { ConversationHistoryTracker } from "dashboard/content/responseConfiguration/conversation/nodes/ConversationHistoryTracker";
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 
 interface IDashboardContext {
     numAreasAllowed: number;
     checkAreaCount(): void;
     areaName: string;
-    setViewName: Dispatch<SetStateAction<string>>;
+    setViewName: SetState<string>;
     subscription: PlanType | undefined;
     currencySymbol: string;
-    setIsLoading: Dispatch<SetStateAction<boolean>>;
+    setIsLoading: SetState<boolean>;
+    successText: string;
+    successOpen: boolean;
+    setSuccessOpen: SetState<boolean>;
+    setSuccessText: SetState<string>;
+    warningText: string;
+    warningOpen: boolean;
+    setWarningOpen: SetState<boolean>;
+    setWarningText: SetState<string>;
+    errorText: string;
+    errorOpen: boolean;
+    setErrorOpen: SetState<boolean>;
+    setErrorText: SetState<string>;
+    setSnackPosition: SetState<SnackbarPositions>;
+    snackPosition: SnackbarPositions;
 }
 
 interface IAuthContext {
@@ -27,9 +41,6 @@ interface IConversationTreeContext {
     showDebugData: boolean;
 }
 
-
-// interface IConversationHistoryContext {
-
-export const AuthContext = React.createContext({isActive: false, isAuthenticated: false} as IAuthContext);
-export const DashboardContext = React.createContext({} as IDashboardContext);
+export const AuthContext = React.createContext({ isActive: false, isAuthenticated: false } as IAuthContext);
+export const DashboardContext = React.createContext({ successOpen: false, warningOpen: false, errorOpen: false, successText: "Success", warningText: "Warning", errorText: "Error" } as IDashboardContext);
 export const ConversationTreeContext = React.createContext({} as IConversationTreeContext);

@@ -112,7 +112,7 @@ export const ConvoTree = () => {
                 subtitle="Your palavyr is the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
             />
             <Align>
-                <SaveOrCancel onSave={onSave} useModal />
+                <SaveOrCancel onSave={onSave} />
                 <Button
                     variant="contained"
                     className={cls.convoTreeMetaButtons}
@@ -141,11 +141,9 @@ export const ConvoTree = () => {
             </Align>
             <div className={cls.conversation}>
                 <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
-                <form onSubmit={() => null}>
-                    <fieldset className="fieldset" id="tree-test">
-                        <div className="main-tree tree-wrap">{nodeList.length > 0 ? <ConversationNode key="tree-start" node={rootNode} reRender={() => null} /> : null}</div>
-                    </fieldset>
-                </form>
+                <fieldset className="fieldset" id="tree-test">
+                    <div className="main-tree tree-wrap">{nodeList.length > 0 ? <ConversationNode key="tree-start" node={rootNode} reRender={() => null} /> : null}</div>
+                </fieldset>
             </div>
         </ConversationTreeContext.Provider>
     );

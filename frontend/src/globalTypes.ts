@@ -772,3 +772,5 @@ export type AreaNameDetail = {
 };
 
 export type AreaNameDetails = AreaNameDetail[];
+
+export type SnackbarPositions = "tr" | "t" | "tl" | "bl" | "b" | "br";

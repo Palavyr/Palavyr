@@ -1,4 +1,4 @@
-import { assembleCompletedConvo, getChildNodes } from "./utils";
+import { assembleCompletedConvo, getOrderedChildNodes } from "./utils";
 import React, { useEffect, useState } from "react";
 import { Table, TableRow, TableCell, makeStyles, TextField, Typography } from "@material-ui/core";
 import { responseAction } from "./responseAction";
@@ -24,19 +24,19 @@ const useStyles = makeStyles(theme => ({
     },
     textField: (prefs: WidgetPreferences) => ({
         color: prefs.chatFontColor,
-        borderColor:  theme.palette.getContrastText(prefs.chatBubbleColor),
+        borderColor:  theme.palette.getContrastText(prefs.chatBubbleColor ?? "black"),
     }),
     textLabel: (prefs: WidgetPreferences) => ({
-        color: theme.palette.getContrastText(prefs.chatBubbleColor),
+        color: theme.palette.getContrastText(prefs.chatBubbleColor ?? "black"),
         "&:focus": {
-            color: theme.palette.getContrastText(prefs.chatBubbleColor),
+            color: theme.palette.getContrastText(prefs.chatBubbleColor ?? "black"),
         },
     }),
 }));
 
 export class StandardComponents {
     public makeProvideInfo({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
-        const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
+        const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         const prefs = getWidgetPreferences();
 
         return () => {
@@ -60,12 +60,12 @@ export class StandardComponents {
     }
 
     makeMultipleChoiceContinueButtons({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
-        const child = getChildNodes(node.nodeChildrenString, nodeList)[0]; // only one should exist
+        const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0]; // only one should exist
         const valueOptions = splitValueOptionsByDelimiter(node.valueOptions);
         const prefs = getWidgetPreferences();
 
         return () => {
-            const cls = useStyles();
+            const cls = useStyles(prefs);
             const [disabled, setDisabled] = useState<boolean>(false);
 
             return (
@@ -100,12 +100,12 @@ export class StandardComponents {
     }
 
     public makeMultipleChoiceAsPathButtons({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
-        const children = getChildNodes(node.nodeChildrenString, nodeList);
+        const children = getOrderedChildNodes(node.nodeChildrenString, nodeList);
         // const sortedChildren = sortChildrenByOptions(children);
         const prefs = getWidgetPreferences();
 
         return () => {
-            const cls = useStyles();
+            const cls = useStyles(prefs);
             const [disabled, setDisabled] = useState<boolean>(false);
 
             return (
@@ -143,11 +143,11 @@ export class StandardComponents {
 
     public makeTakeNumber({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         // With numbers, we have the potential for exceeding some minimum or maximum value.
-        let child = getChildNodes(node.nodeChildrenString, nodeList)[0];
+        let child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         const prefs = getWidgetPreferences();
 
         return () => {
-            const cls = useStyles();
+            const cls = useStyles(prefs);
             const [response, setResponse] = useState<string>("");
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
@@ -218,7 +218,7 @@ export class StandardComponents {
     }
 
     makeTakeCurrency({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
-        const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
+        const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         const prefs = getWidgetPreferences();
 
         return () => {
@@ -278,7 +278,7 @@ export class StandardComponents {
     }
 
     makeTakeText({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
-        const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
+        const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         const prefs = getWidgetPreferences();
 
         return () => {
@@ -333,7 +333,7 @@ export class StandardComponents {
     }
 
     makeTakeNumberIndividuals({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
-        const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
+        const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         const prefs = getWidgetPreferences();
 
         return () => {
@@ -341,7 +341,7 @@ export class StandardComponents {
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
 
-            const cls = useStyles();
+            const cls = useStyles(prefs);
 
             return (
                 <Table>
@@ -428,7 +428,7 @@ export class StandardComponents {
         };
 
         return () => {
-            const cls = useStyles();
+            const cls = useStyles(prefs);
             const [disabled, setDisabled] = useState<boolean>(false);
             const [loading, setLoading] = useState<boolean>(false);
             return (
@@ -491,7 +491,7 @@ export class StandardComponents {
     }
 
     makeSendEmailFailedFirstAttempt = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
-        const child = getChildNodes(node.nodeChildrenString, nodeList)[0];
+        const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         const prefs = getWidgetPreferences();
 
         return () => {
@@ -529,7 +529,7 @@ export class StandardComponents {
         const prefs = getWidgetPreferences();
 
         return () => {
-            const cls = useStyles();
+            const cls = useStyles(prefs);
             const [disabled, setDisabled] = useState<boolean>(false);
             const [loading, setLoading] = useState<boolean>(false);
 

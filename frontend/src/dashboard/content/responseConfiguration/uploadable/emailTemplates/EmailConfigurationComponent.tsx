@@ -28,7 +28,7 @@ export interface EmailConfigurationComponentProps {
 }
 
 export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate, saveEmailSubject, getCurrentEmailTemplate, getCurrentEmailSubject }: EmailConfigurationComponentProps) => {
-    const { setIsLoading, subscription } = useContext(DashboardContext);
+    const { setIsLoading, subscription, setSuccessOpen, setSuccessText } = useContext(DashboardContext);
     const cls = useEmailStyles();
 
     const fallbackFileReader = new FileReader();
@@ -100,7 +100,7 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
         <>
             <EmailSubject subject={areaSubjectState} accordianTitle="Update the subject line for this email" onChange={onAreaSubjectChange}>
                 <div className={cls.saveOrCancel}>
-                    <SaveOrCancel onSave={onSaveAreaSubject} onCancel={loadAreaSubject} useModal={true} />
+                    <SaveOrCancel onSave={onSaveAreaSubject} onCancel={loadAreaSubject} />
                 </div>
             </EmailSubject>
             <Upload
@@ -115,7 +115,7 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
             {subscription === PurchaseTypes.Premium || subscription === PurchaseTypes.Pro ? (
                 <EmailEditor accordianTitle="Use an editor to craft your response email" uploadDetails={<EditorDetails key={"Editor"} variableDetails={variableDetails} />} setEmailTemplate={setEmailTemplate} emailTemplate={emailTemplate}>
                     <div className={cls.saveOrCancel}>
-                        <SaveOrCancel onSave={saveEditorData} onCancel={loadTemplate} useModal={true} />
+                        <SaveOrCancel onSave={saveEditorData} onCancel={loadTemplate} />
                     </div>
                 </EmailEditor>
             ) : (
