@@ -32,9 +32,10 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, parent
 
     const handleCloseModal = () => {
         setModalState(false);
+        setText("");
     };
 
-    const handleUpdateNode = async (value: string, valueOptions: string[]) => {
+    const handleUpdateNode = (value: string, valueOptions: string[]) => {
         const updatedNode = { ...node };
         updatedNode.text = value;
         if (node.isMultiOptionType) {
@@ -42,6 +43,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, parent
         } else {
             updateSingleOptionType(updatedNode, nodeList, setNodes);
         }
+        setText("");
     };
 
     const addMultiChoiceOptionsOnClick = () => {
@@ -75,10 +77,13 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, parent
             </DialogContent>
             <DialogActions>
                 <SaveOrCancel
-                    saveText="Ok"
-                    onSave={async (e) => {
-                        e.preventDefault();
-                        await handleUpdateNode(textState, options);
+                    position="right"
+                    customSaveMessage="Node Text Updated"
+                    customCancelMessage="Changes cancelled"
+                    useSaveIcon={false}
+                    saveText="Update Node Text"
+                    onSave={async () => {
+                        handleUpdateNode(textState, options);
                         handleCloseModal();
                         return true;
                     }}

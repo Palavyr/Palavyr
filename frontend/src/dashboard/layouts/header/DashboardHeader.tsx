@@ -37,8 +37,12 @@ const useStyles = makeStyles((theme) => ({
     },
 
     helpIcon: {
+        borderRadius: "10px",
         marginRight: "2rem",
         paddingRIght: "5rem",
+        "&:hover": {
+            backgroundColor: theme.palette.primary.light,
+        },
     },
     appBarShift: {
         width: `calc(100% - ${drawerWidth}px)`,
@@ -61,6 +65,9 @@ const useStyles = makeStyles((theme) => ({
     },
     name: {
         color: theme.palette.secondary.light,
+    },
+    helpIconText: {
+        paddingRight: theme.spacing(3),
     },
 }));
 
@@ -88,7 +95,6 @@ export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawe
     const [sized, setSized] = useState<boolean>(false);
     const handle = () => setSized(!sized);
     const location = useLocation();
-    console.log(location.pathname);
     useEffect(() => {
         window.addEventListener("resize", handle);
         return () => window.removeEventListener("resize", handle);
@@ -115,6 +121,9 @@ export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawe
                 {!routesToExclude.includes(location.pathname) && (
                     <Align float="right">
                         <IconButton color="inherit" aria-label="open help drawer" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(cls.helpIcon, cls.helpMenuButton, helpOpen && cls.hide)}>
+                            <Typography className={cls.helpIconText} variant="h5">
+                                Help
+                            </Typography>
                             <HelpIcon />
                         </IconButton>
                     </Align>

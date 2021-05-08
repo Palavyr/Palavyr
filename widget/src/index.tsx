@@ -7,18 +7,22 @@ import { Provider } from "react-redux";
 import { App } from "./App";
 import { PalavyrWidgetStore } from "store/store";
 import { TestComponent } from "test/testComponent";
+import { ErrorBoundary } from "react-error-boundary";
+import { ErrorFallback } from "common/ErrorBoundaries/AppLevelErrorBoundary";
 
 ReactDOM.render(
     <React.StrictMode>
-        <Provider store={PalavyrWidgetStore}>
-            <MuiThemeProvider theme={PalavyrWidgetTheme}>
-                <CssBaseline />
-                <Router>
-                    <Route exact path="/widget" component={App} />
-                    <Route exact path="/test" component={TestComponent} />
-                </Router>
-            </MuiThemeProvider>
-        </Provider>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Provider store={PalavyrWidgetStore}>
+                <MuiThemeProvider theme={PalavyrWidgetTheme}>
+                    <CssBaseline />
+                    <Router>
+                        <Route exact path="/widget" component={App} />
+                        <Route exact path="/test" component={TestComponent} />
+                    </Router>
+                </MuiThemeProvider>
+            </Provider>
+        </ErrorBoundary>
     </React.StrictMode>,
     document.getElementById("root")
 );

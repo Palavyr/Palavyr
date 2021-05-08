@@ -1,12 +1,11 @@
-import { Conversation } from "@Palavyr-Types";
-import { Dispatch, SetStateAction } from "react";
+import { Conversation, SetState } from "@Palavyr-Types";
+import { _cleanConversationNodesWithNoChildren } from "./nodeUtils/_coreNodeUtils";
 
-type SetConversationHistory = Dispatch<SetStateAction<Conversation[]>>
-type SetConversation = Dispatch<SetStateAction<Conversation>>
-type SetConversationHistoryPosition = Dispatch<SetStateAction<number>>;
+type SetConversationHistory = SetState<Conversation[]>;
+type SetConversation = SetState<Conversation>;
+type SetConversationHistoryPosition = SetState<number>;
 
 export class ConversationHistoryTracker {
-
     private MaxConversationHistory = 50; // the number of times you can hit the back button
 
     setConversationHistory: SetConversationHistory;
@@ -20,9 +19,9 @@ export class ConversationHistoryTracker {
     }
 
     // Maybe can set the historyPosition as internal state too.
-    addConversationHistoryToQueue(newConversationRecord: Conversation, conversationHistoryPosition: number, conversationHistory: Conversation[]) {
+    addConversationHistoryToQueue(dirtyConversationRecord: Conversation, conversationHistoryPosition: number, conversationHistory: Conversation[]) {
         const newPos = conversationHistoryPosition + 1;
-
+        const newConversationRecord = _cleanConversationNodesWithNoChildren(dirtyConversationRecord);
         if (conversationHistory.length < this.MaxConversationHistory) {
             if (newPos < conversationHistory.length - 1) {
                 this.setConversationHistory([...conversationHistory.slice(0, newPos), newConversationRecord]);
@@ -38,7 +37,7 @@ export class ConversationHistoryTracker {
         }
 
         this.setConversationHistoryPosition(newPos);
-    };
+    }
 
     stepConversationBackOneStep(conversationHistoryPosition: number, conversationHistory: Conversation[]) {
         if (conversationHistoryPosition === 0) {
@@ -47,8 +46,10 @@ export class ConversationHistoryTracker {
         }
         const newPosition = conversationHistoryPosition - 1;
         this.setConversationHistoryPosition(newPosition);
-        this.setNodes(conversationHistory[newPosition]);
-    };
+        const oneBack = conversationHistory[newPosition];
+        const cleanOneBack = _cleanConversationNodesWithNoChildren(oneBack);
+        this.setNodes(cleanOneBack);
+    }
 
     stepConversationForwardOneStep(conversationHistoryPosition: number, conversationHistory: Conversation[]) {
         const newPosition = conversationHistoryPosition + 1;
@@ -58,5 +59,5 @@ export class ConversationHistoryTracker {
         } else {
             alert("Currently at the end of the history.");
         }
-    };
+    }
 }

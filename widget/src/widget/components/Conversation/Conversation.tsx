@@ -4,7 +4,6 @@ import cn from "classnames";
 import { Messages } from "../Messages/Messages";
 
 import "./style.scss";
-import { WidgetPreferences } from "@Palavyr-Types";
 import { ConvoHeader } from "../ConvoHeader/ConvoHeader";
 import { getWidgetPreferences } from "@store-dispatcher";
 

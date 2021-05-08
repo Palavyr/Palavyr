@@ -20,6 +20,7 @@ import { DashboardContext } from "./DashboardContext";
 import { UserDetails } from "./sidebar/UserDetails";
 import { Align } from "./positioning/Align";
 import { PalavyrSnackbar } from "@common/components/PalavyrSnackbar";
+import { PalavyrErrorBoundary } from "@common/components/Errors/PalavyrErrorBoundary";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
@@ -66,21 +67,15 @@ const useStyles = makeStyles((theme) => ({
         paddingRight: "1rem",
         paddingTop: "1rem",
     },
+    helpDrawerHeaderText: {
+        color: theme.palette.common.white,
+    },
 }));
 
 interface IDashboardLayout {
     children: JSX.Element[] | JSX.Element;
     helpComponent: JSX.Element[] | JSX.Element;
 }
-
-type Positions = {
-    [key: string]: SnackbarPositions;
-};
-const positionMap: Positions = {
-    center: "b",
-    left: "bl",
-    right: "br",
-};
 
 export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) => {
     const { areaIdentifier } = useParams<{ contentType: string; areaIdentifier: string }>();
@@ -262,12 +257,9 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                         paper: cls.helpDrawerPaper,
                     }}
                 >
-                    <div className={cls.helpDrawerHeader}>
-                        <IconButton onClick={handleHelpDrawerClose}>
-                            <Typography>Close</Typography>
-                            <ChevronRightIcon style={{ color: "black" }} />
-                        </IconButton>
-                    </div>
+                    <SideBarHeader handleDrawerClose={handleHelpDrawerClose} side="right">
+                        <Typography className={cls.helpDrawerHeaderText}>Close</Typography>
+                    </SideBarHeader>
                     <Divider />
                     {helpComponent}
                 </Drawer>

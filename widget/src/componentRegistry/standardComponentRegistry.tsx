@@ -101,7 +101,6 @@ export class StandardComponents {
 
     public makeMultipleChoiceAsPathButtons({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const children = getOrderedChildNodes(node.nodeChildrenString, nodeList);
-        // const sortedChildren = sortChildrenByOptions(children);
         const prefs = getWidgetPreferences();
 
         return () => {
