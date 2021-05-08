@@ -74,10 +74,10 @@ export const AttachmentConfiguration = () => {
             const fileLinks = [];
             setAttachmentList(fileLinks);
         }
-        setCurrentPreview(null);
         setIsLoading(false);
         setSuccessText("Attachment Uploaded");
         setSuccessOpen(true);
+        setCurrentPreview(null);
     };
 
     return (

@@ -27,10 +27,10 @@ export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) =
     const messageRef = useRef<HTMLDivElement | null>(null);
     useEffect(() => {
         scrollToBottom(messageRef.current);
-        if (showChat && badgeCount) dispatch(_markAllMessagesRead());
-        else dispatch(_setBadgeCount(messages.filter(message => message.unread).length));
+        // if (showChat && badgeCount) dispatch(_markAllMessagesRead());
+        // else dispatch(_setBadgeCount(messages.filter(message => message.unread).length));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [messages, badgeCount, showChat]);
+    }, [messages, badgeCount, showChat, typing]);
 
     // TODO: Fix this function or change to move the avatar to last message from response
     // const shouldRenderAvatar = (message: Message, index: number) => {
@@ -48,7 +48,7 @@ export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) =
                     {getComponentToRender(message, preferences, showTimeStamp)}
                 </div>
             ))}
-            <Loader typing={typing} />
+            {typing && <Loader typing={typing} />}
         </div>
     );
 };

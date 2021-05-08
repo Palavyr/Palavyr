@@ -1,9 +1,7 @@
-import * as React from 'react';
-import { Paper, Grid, makeStyles, FormControl, InputLabel, Typography, Divider, Select } from '@material-ui/core';
-import { useState } from 'react';
-import { CustomAlert } from './customAlert/CutomAlert';
-import { AlertMessage } from './SaveOrCancel';
-
+import * as React from "react";
+import { Paper, Grid, makeStyles, FormControl, InputLabel, Typography, Divider, Select } from "@material-ui/core";
+import { useState } from "react";
+import { PalavyrSnackbar } from "./PalavyrSnackbar";
 
 export interface ISettingsGridRow {
     currentValue?: string;
@@ -11,33 +9,31 @@ export interface ISettingsGridRow {
     menu: React.ReactNode;
     alertNode?: React.ReactNode;
     useModal?: boolean;
-    modalMessage: AlertMessage;
+    modalMessage: string;
     onChange(event: any): void;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     row: {
         padding: "1rem",
-        margin: "1rem"
+        margin: "1rem",
     },
     paper: {
         backgroundColor: theme.palette.secondary.light,
         padding: "2rem",
         margin: "1rem",
-        width: "100%"
+        width: "100%",
     },
     formControl: {
         margin: theme.spacing(1),
-        width: "50%"
+        width: "50%",
     },
     selectEmpty: {
         marginTop: theme.spacing(2),
     },
-}))
-
+}));
 
 export const SettingsGridRowList: React.FC<ISettingsGridRow> = ({ onChange, modalMessage, useModal, alertNode, currentValue, menuName, menu }: ISettingsGridRow) => {
-
     const classes = useStyles();
     const [alertState, setAlertState] = useState<boolean>(false);
 
@@ -53,8 +49,8 @@ export const SettingsGridRowList: React.FC<ISettingsGridRow> = ({ onChange, moda
                             labelId="select-list-locale"
                             id="select-text-locale"
                             value={currentValue}
-                            onChange={(event)=> {
-                                onChange(event)
+                            onChange={(event) => {
+                                onChange(event);
                                 setAlertState(true);
                             }}
                         >
@@ -64,18 +60,19 @@ export const SettingsGridRowList: React.FC<ISettingsGridRow> = ({ onChange, moda
                 </Grid>
                 <Divider />
                 <Grid className={classes.row}>
-                    {
-                        currentValue &&
+                    {currentValue && (
                         <>
-                            <Typography display="inline" style={{ paddingTop: "1rem" }} variant="body1">Current locale: </Typography>
-                            <Typography display="inline" style={{ paddingTop: "1rem", fontWeight: "bold" }}>{currentValue}</Typography>
+                            <Typography display="inline" style={{ paddingTop: "1rem" }} variant="body1">
+                                Current locale:{" "}
+                            </Typography>
+                            <Typography display="inline" style={{ paddingTop: "1rem", fontWeight: "bold" }}>
+                                {currentValue}
+                            </Typography>
                         </>
-                    }
+                    )}
                 </Grid>
             </Paper>
-            {
-                alertState && useModal && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={modalMessage ?? { title: "Save Successful", message: "" }} />
-            }
+            <PalavyrSnackbar successOpen={alertState} setSuccessOpen={setAlertState} successText={modalMessage ?? "Save Successful"} />
         </>
-    )
-}
+    );
+};

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Models.Resources.Responses;
@@ -9,12 +10,15 @@ namespace Palavyr.API.Controllers.Attachments
     public class SaveSingleAttachmentController : PalavyrBaseController
     {
         private readonly IAttachmentSaver attachmentSaver;
+        private readonly IAttachmentRetriever attachmentRetriever;
 
         public SaveSingleAttachmentController(
-            IAttachmentSaver attachmentSaver
+            IAttachmentSaver attachmentSaver,
+            IAttachmentRetriever attachmentRetriever
         )
         {
             this.attachmentSaver = attachmentSaver;
+            this.attachmentRetriever = attachmentRetriever;
         }
 
         [HttpPost("attachments/{areaId}/save-one")]
@@ -22,10 +26,12 @@ namespace Palavyr.API.Controllers.Attachments
         public async Task<FileLink[]> SaveSingle(
             [FromHeader] string accountId,
             [FromRoute] string areaId,
-            [FromForm(Name = "files")] IFormFile attachmentFile)
+            [FromForm(Name = "files")] IFormFile attachmentFile,
+            CancellationToken cancellationToken)
         {
-            var fileLink = await attachmentSaver.SaveAttachment(accountId, areaId, attachmentFile);
-            return new[] {fileLink};
+            await attachmentSaver.SaveAttachment(accountId, areaId, attachmentFile);
+            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(accountId, areaId, cancellationToken);
+            return attachmentFileLinks;
         }
     }
 }

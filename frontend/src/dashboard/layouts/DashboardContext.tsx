@@ -3,6 +3,7 @@ import { ConversationHistoryTracker } from "dashboard/content/responseConfigurat
 import React from "react";
 
 interface IDashboardContext {
+    accountTypeNeedsPassword: boolean;
     numAreasAllowed: number;
     checkAreaCount(): void;
     areaName: string;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, memo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 import { SideBarHeader } from "./sidebar/SideBarHeader";
 import { SideBarMenu } from "./sidebar/SideBarMenu";
@@ -9,9 +9,8 @@ import { cloneDeep } from "lodash";
 import { AlertType, AreaNameDetails, Areas, AreaTable, PlanType, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DashboardHeader } from "./header/DashboardHeader";
-import { CircularProgress, IconButton, makeStyles, Typography } from "@material-ui/core";
+import { CircularProgress, makeStyles, Typography } from "@material-ui/core";
 import { DRAWER_WIDTH } from "@constants";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
@@ -20,7 +19,6 @@ import { DashboardContext } from "./DashboardContext";
 import { UserDetails } from "./sidebar/UserDetails";
 import { Align } from "./positioning/Align";
 import { PalavyrSnackbar } from "@common/components/PalavyrSnackbar";
-import { PalavyrErrorBoundary } from "@common/components/Errors/PalavyrErrorBoundary";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
@@ -111,6 +109,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [errorText, setErrorText] = useState<string>("Error");
 
     const [snackPosition, setSnackPosition] = useState<SnackbarPositions>("br");
+    const [accountTypeNeedsPassword, setAccountTypeNeedsPassword] = useState<boolean>(false);
 
     const loadAreas = useCallback(async () => {
         setDashboardAreasLoading(true);
@@ -130,6 +129,9 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
         const locale = await repository.Settings.Account.GetLocale();
         setCurrencySymbol(locale.localeCurrencySymbol);
+
+        const needsPassword = await repository.Settings.Account.CheckNeedsPassword();
+        setAccountTypeNeedsPassword(needsPassword);
 
         if (areaIdentifier) {
             var currentView = areas.filter((x: AreaTable) => x.areaIdentifier === areaIdentifier).pop();
@@ -198,6 +200,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     return (
         <DashboardContext.Provider
             value={{
+                accountTypeNeedsPassword,
                 successOpen,
                 setSuccessOpen,
                 successText,
@@ -257,7 +260,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                         paper: cls.helpDrawerPaper,
                     }}
                 >
-                    <SideBarHeader handleDrawerClose={handleHelpDrawerClose} side="right">
+                    <SideBarHeader handleDrawerClose={handleHelpDrawerClose} side="right" roundTop>
                         <Typography className={cls.helpDrawerHeaderText}>Close</Typography>
                     </SideBarHeader>
                     <Divider />

@@ -50,7 +50,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             ICompileSenderDetails compileSenderDetails,
             ISesEmail client,
             IS3Saver s3Saver,
-            IConfiguration configuration, 
+            IConfiguration configuration,
             IS3KeyResolver s3KeyResolver
         )
         {
@@ -71,7 +71,6 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
         public async Task<SendEmailResultResponse> SendEmail(string accountId, string areaId, EmailRequest emailRequest, CancellationToken cancellationToken)
         {
             var responses = criticalResponses.Compile(emailRequest.KeyValues);
-            var attachments = await attachmentRetriever.RetrieveAttachmentFiles(accountId, areaId, cancellationToken);
 
             var culture = await GetCulture(accountId);
             var safeFileNameStem = emailRequest.ConversationId;
@@ -93,6 +92,8 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             await SaveResponsePdfToS3(localFilePath, accountId, safeFileNameStem);
 
             var senderDetails = await compileSenderDetails.Compile(accountId, areaId, emailRequest);
+            var attachments = await attachmentRetriever.RetrieveAttachmentFiles(accountId, areaId, new[] {localFilePath}, cancellationToken);
+
             var responseResult = await Send(senderDetails, attachments);
             localFileDeleter.Delete(localFilePath);
             foreach (var attachment in attachments)
@@ -110,7 +111,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             string[] attachments;
             if (sendAttachmentsOnFallback)
             {
-                attachments = await attachmentRetriever.RetrieveAttachmentFiles(accountId, areaId, cancellationToken);
+                attachments = await attachmentRetriever.RetrieveAttachmentFiles(accountId, areaId, null, cancellationToken);
             }
             else
             {
@@ -163,7 +164,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             var account = await configurationRepository.GetAreaById(accountId, areaId);
             return account.SendAttachmentsOnFallback;
         }
-        
+
         private async Task SaveResponsePdfToS3(string localFilePath, string accountId, string safeFileNameStem)
         {
             var userDataBucket = configuration.GetUserDataSection();

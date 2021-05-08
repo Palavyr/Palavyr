@@ -10,7 +10,7 @@ export const ResponseConfigurationHelp = () => {
             <HelpSubtitle subtitle="" />
             <HelpDetails>
                 <span>This section is used to configure the body of your Response PDF (see the preview tab for a current example). </span>
-                <span>The body of the Response PDF can broken into four section: </span>
+                <p>The body of the Response PDF can broken into four section: </p>
                 <ol>
                     <li>The Introductory state</li>
                     <li>Customized Fees</li>

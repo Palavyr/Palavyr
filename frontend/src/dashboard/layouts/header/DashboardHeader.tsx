@@ -5,7 +5,6 @@ import classNames from "classnames";
 import HelpIcon from "@material-ui/icons/Help";
 import { Align } from "../positioning/Align";
 import { useLocation } from "react-router-dom";
-import { log } from "console";
 
 const drawerWidth: number = 240;
 
@@ -19,9 +18,9 @@ interface DashboardHeaderProps {
 
 const useStyles = makeStyles((theme) => ({
     topbar: {
-        background: theme.palette.primary.dark,
+        background: theme.palette.primary.main,
         position: "fixed",
-        zIndex: 999,
+        zIndex: 500,
     },
     appBar: {
         transition: theme.transitions.create(["margin", "width"], {
@@ -64,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "right",
     },
     name: {
-        color: theme.palette.secondary.light,
+        color: theme.palette.success.main,
     },
     helpIconText: {
         paddingRight: theme.spacing(3),
@@ -88,6 +87,7 @@ const routesToExclude = [
     "/dashboard/subscribe/",
     "/dashboard/subscribe/purchase",
     "/dashboard/confirm",
+    "/dashboard/getwidget/",
 ];
 
 export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {

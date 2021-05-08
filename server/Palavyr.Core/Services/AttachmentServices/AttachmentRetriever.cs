@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace Palavyr.Core.Services.AttachmentServices
     public interface IAttachmentRetriever
     {
         Task<FileLink[]> RetrieveAttachmentLinks(string account, string areaId, CancellationToken cancellationToken);
-        Task<string[]> RetrieveAttachmentFiles(string account, string areaId, CancellationToken cancellationToken);
+        Task<string[]> RetrieveAttachmentFiles(string account, string areaId, string[]? additionalFiles, CancellationToken cancellationToken);
     }
 
     public class AttachmentRetriever : IAttachmentRetriever
@@ -62,7 +63,7 @@ namespace Palavyr.Core.Services.AttachmentServices
             return fileLinks.ToArray();
         }
 
-        public async Task<string[]> RetrieveAttachmentFiles(string account, string areaId, CancellationToken cancellationToken)
+        public async Task<string[]> RetrieveAttachmentFiles(string account, string areaId, string[]? additionalFiles, CancellationToken cancellationToken)
         {
             var userDataBucket = configuration.GetSection(ConfigSections.UserDataSection).Value;
             var metas = await dashContext.FileNameMaps
@@ -75,7 +76,6 @@ namespace Palavyr.Core.Services.AttachmentServices
                         RiskyName = x.RiskyName
                     }).ToListAsync(cancellationToken);
 
-            // var s3FileKeys = metas.Select(x => x.S3Key).ToArray();
             var localFilePaths = await s3Retriever.DownloadObjectsFromS3(userDataBucket, metas, cancellationToken);
             if (localFilePaths == null)
             {
@@ -89,7 +89,16 @@ namespace Palavyr.Core.Services.AttachmentServices
                 }
             }
 
-            return localFilePaths;
+            if (additionalFiles != null)
+            {
+                var allLocalFiles = localFilePaths.ToList();
+                allLocalFiles.AddRange(additionalFiles.ToList());
+                return allLocalFiles.ToArray();
+            }
+            else
+            {
+                return localFilePaths;
+            }
         }
     }
 }

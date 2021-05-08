@@ -23,14 +23,16 @@ export const EmailHelp = () => {
                     <h4>Inline Editor</h4>
                     If you don't have a prepared html email template, you can use our inline editor. This provides functionality to fully customize your email response in rich text. Behind the scenes, this editor will convert your formatted text to
                     html.
-                    <i>Note: The inline editor feature is only available with the pro subscription plan.</i>
                 </span>
+                <p>
+                    <i>
+                        <strong>Note</strong>: The inline editor feature is only available with the pro subscription plan.
+                    </i>
+                </p>
                 <span>
                     <h4>Fallback Email</h4>
                     <p>You have the option to specify an area specific fallback email in cases where your Palavyr ends with a 'Too Complicated' conversation node. This email will be sent as is without any attachments.</p>
-                    <p>
-                        If you have opted to not send an area specific email, then the default fallback email will be used, so be sure to set this email in the general settings.
-                    </p>
+                    <p>If you have opted to not send an area specific email, then the default fallback email will be used, so be sure to set this email in the general settings.</p>
                 </span>
             </HelpDetails>
         </>

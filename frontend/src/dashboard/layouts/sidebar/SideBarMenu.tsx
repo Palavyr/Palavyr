@@ -16,9 +16,8 @@ export interface ISideBarMenu {
 const useStyles = makeStyles((theme) => ({
     sidebarlist: {
         color: theme.palette.getContrastText(theme.palette.primary.dark),
-        backgroundColor: theme.palette.primary.dark,
+        backgroundColor: theme.palette.primary.main,
         paddingBottom: "8rem",
-        // height: "inherit"
     },
 }));
 

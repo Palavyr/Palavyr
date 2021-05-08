@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
     selectbox: {
         paddingLeft: "2rem",
         paddingRight: "2rem",
+        zIndex: 940
     },
     mainList: {
         height: "100%",
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         "& .MuiAutocomplete-popper": {
             backgroundColor: "black",
-            zIndex: 99999999,
+            zIndex: 930,
         },
     },
     inputLabel: (prefs: WidgetPreferences) => ({
