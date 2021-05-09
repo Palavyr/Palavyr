@@ -3,12 +3,14 @@ import ReactDOM from "react-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { ReactQueryDevtools } from "react-query-devtools";
+import ReactGA from "react-ga";
+import { googleAnalyticsTrackingId, isDevelopmentStage } from "@api-client/clientUtils";
 
 import { App } from "./App";
 
-import ReactGA from "react-ga";
-import { googleAnalyticsTrackingId } from "@api-client/clientUtils";
-ReactGA.initialize(googleAnalyticsTrackingId);
+if (!isDevelopmentStage()) {
+    ReactGA.initialize(googleAnalyticsTrackingId);
+}
 
 ReactDOM.render(
     <>

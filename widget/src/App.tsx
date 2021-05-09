@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 import { GlobalState, SelectedOption, WidgetPreferences } from "@Palavyr-Types";
 import { WidgetClient } from "client/Client";
 import { setWidgetPreferences } from "@store-dispatcher";
-import { BrandingStrip } from "common/BrandingStrip";
 
 export const App = () => {
     const userDetailsVisible = useSelector((state: GlobalState) => state.behaviorReducer.userDetailsVisible);

@@ -10,11 +10,13 @@ import { TestComponent } from "test/testComponent";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "common/ErrorBoundaries/AppLevelErrorBoundary";
 
-import ReactGA from 'react-ga';
+import ReactGA from "react-ga";
 import RouteChangeTracker from "Analytics/RouteChangeTracker";
-const TRACKING_ID = "";
+import { googleAnalyticsTrackingId, isDevelopmentStage } from "client/clientUtils";
 
-ReactGA.initialize(TRACKING_ID);
+if (!isDevelopmentStage()) {
+    ReactGA.initialize(googleAnalyticsTrackingId);
+}
 
 ReactDOM.render(
     <React.StrictMode>
