@@ -19,6 +19,7 @@ import { isDevelopmentStage, landingWidgetApiKey, widgetApiKey, widgetUrl } from
 import { IFrame } from "dashboard/content/demo/IFrame";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { YellowStrip } from "@common/components/YellowStrip";
+import { AlphaStrip } from "@common/components/devIndicators/AlphaStrip";
 
 AOS.init({
     duration: 1000,
@@ -102,6 +103,7 @@ export const LandingPage = () => {
             <CookieRules open={isCookieRulesDialogOpen} onClose={handleCookieRulesDialogClose} />
             {!show && <YellowStrip />}
             <DevStagingStrip show={show} setShow={setShow} />
+            <AlphaStrip />
             <Header
                 openRegisterDialog={openRegisterDialog}
                 openLoginDialog={openLoginDialog}

@@ -52,7 +52,7 @@ export const GetWidget = () => {
             </Card>
             <Card className={classes.outerCard}>
                 <Typography gutterBottom variant="h5">
-                    Check if your widget is enabled before loading
+                    Check if your widget is enabled before loading (This feature is currently disabled during Alpha testing )
                 </Typography>
                 <Typography paragraph>
                     <p>You may wish to perform a precheck on your widget before you attempt to load it in your website. Doing so will help guard against accidental loading of your widget when it is in an incomplete state.</p>
@@ -77,7 +77,7 @@ export const GetWidget = () => {
                             {`
                     <script>
                         var iframeId = "id-of-your-iframe-container-element";
-                        var url = ${serverUrl}/api/widget/widget-precheck?key=${apikey}}
+                        var url = ${serverUrl}/api/widget/widget-precheck?key=${apikey}
                         fetch(
                             url,
                             {

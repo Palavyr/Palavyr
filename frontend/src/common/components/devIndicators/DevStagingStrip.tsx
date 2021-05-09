@@ -21,7 +21,6 @@ export interface DevStagingStripProps {
 export const DevStagingStrip = ({ show, setShow }: DevStagingStripProps) => {
     const cls = useStyles();
     const text = `This is ${currentEnvironment}` + (softwareVersion ? `: ${softwareVersion}` : "");
-    // const [show, setShow] = useState<boolean>(isDev);
     return (
         <>
             {show && (
