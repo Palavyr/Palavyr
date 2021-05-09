@@ -7,6 +7,7 @@ import Autocomplete, { AutocompleteRenderInputParams } from "@material-ui/lab/Au
 import classNames from "classnames";
 import { sortByPropertyAlphabetical } from "common/sorting";
 import { getWidgetPreferences, openUserDetails } from "@store-dispatcher";
+import { BrandingStrip } from "common/BrandingStrip";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -53,8 +54,8 @@ const useStyles = makeStyles(() => ({
         paddingTop: "1rem",
     },
     mainList: {
-        maxHeight: "100%",
-        height: "100%",
+        maxHeight: "97%",
+        height: "97%",
     },
     inputLabel: (prefs: WidgetPreferences) => ({
         "& .MuiFormLabel-root": {
@@ -66,7 +67,7 @@ const useStyles = makeStyles(() => ({
 
 export interface DropdownListProps {
     setSelectedOption: (option: SelectedOption) => void;
-    options: Array<SelectedOption>;
+    options: SelectedOption[];
 }
 
 export const DropdownListOptions = ({ setSelectedOption, options }: DropdownListProps) => {
@@ -83,7 +84,7 @@ export const DropdownListOptions = ({ setSelectedOption, options }: DropdownList
     const sortGetter = (opt: SelectedOption) => opt.areaDisplay;
     const opts = sortByPropertyAlphabetical(sortGetter, options);
     return (
-        <Box height="100%">
+        <Box height="100%" className={cls.container}>
             <Card className={cls.header}>{preferences && <div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: preferences.landingHeader }} />}</Card>
             <div className={classNames(cls.selectListBgColor, cls.selectListFontColor, cls.mainList)}>
                 {options && (
@@ -111,6 +112,7 @@ export const DropdownListOptions = ({ setSelectedOption, options }: DropdownList
                     />
                 )}
             </div>
+            <BrandingStrip />
         </Box>
     );
 };

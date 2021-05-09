@@ -104,7 +104,6 @@ export const Widget = ({ option }: WidgetProps) => {
             })}
         >
             {showChat && <Conversation className={showChat ? "active" : "hidden"} showTimeStamp={true} />}
-            <BrandingStrip />
         </div>
     );
 };

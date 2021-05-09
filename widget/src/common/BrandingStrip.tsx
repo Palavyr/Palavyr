@@ -2,24 +2,19 @@ import { makeStyles, Typography } from "@material-ui/core";
 import React from "react";
 
 const useStyles = makeStyles(theme => ({
-    brandName: {
-        // color: "",
+    leadingText: {},
+    wrapper: {
         fontFamily: "Poppins",
-    },
-    leadingText: {
-        fontFamily: "Poppins",
+        display: "static",
+        bottom: "0px",
+        alignText: "center",
     },
 }));
 export const BrandingStrip = () => {
     const cls = useStyles();
     return (
-        <div>
-            <Typography display="inline" className={cls.leadingText}>
-                Powered By
-            </Typography>
-            <Typography display="inline" className={cls.brandName}>
-                 Palavyr
-            </Typography>
-        </div>
+        <Typography className={cls.wrapper} variant="caption" align="center" display="inline">
+            Crafted with <strong>Palavyr</strong>
+        </Typography>
     );
 };

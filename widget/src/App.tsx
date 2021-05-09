@@ -41,25 +41,22 @@ export const App = () => {
 
     return (
         <>
-            <div>
-                {isReady === true && selectedOption === null && widgetPrefs && !userDetailsVisible && (
-                    <>
-                        <OptionSelector setSelectedOption={setSelectedOption} />
-                    </>
-                )}
-                {isReady === true && selectedOption !== null && (
-                    <>
-                        <CollectDetailsForm chatStarted={chatStarted} setChatStarted={setChatStarted} />
-                        {widgetPrefs && <Widget option={selectedOption} />}
-                    </>
-                )}
-                {isReady === false && (
-                    <div style={{ textAlign: "center", paddingTop: "3rem" }}>
-                        <span>Not ready</span>
-                    </div>
-                )}
-            </div>
-            <BrandingStrip />
+            {isReady === true && selectedOption === null && widgetPrefs && !userDetailsVisible && (
+                <>
+                    <OptionSelector setSelectedOption={setSelectedOption} />
+                </>
+            )}
+            {isReady === true && selectedOption !== null && (
+                <>
+                    <CollectDetailsForm chatStarted={chatStarted} setChatStarted={setChatStarted} />
+                    {widgetPrefs && <Widget option={selectedOption} />}
+                </>
+            )}
+            {isReady === false && (
+                <div style={{ textAlign: "center", paddingTop: "3rem" }}>
+                    <span>Not ready</span>
+                </div>
+            )}
         </>
     );
 };

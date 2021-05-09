@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexDirection: "column",
         width: "100%",
-        height: "100%",
+        height: "97%",
     },
 }));
 
@@ -47,7 +47,6 @@ export const OptionSelector = ({ setSelectedOption }: IOptionSelector) => {
     return (
         <>
             <div className={cls.optionsContainer}>{options && <DropdownListOptions options={options} setSelectedOption={setSelectedOption} />}</div>
-            <BrandingStrip />
         </>
     );
 };
