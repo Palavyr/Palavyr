@@ -55,7 +55,6 @@ namespace Palavyr.Core.Services.LogoServices
         {
             var userDataBucket = configuration.GetSection(ConfigSections.UserDataSection).Value;
             var safeFileName = GuidUtils.CreateNewId();
-            var riskyFileName = logoFile.FileName;
             var pathExtension = Path.GetExtension(logoFile.FileName);
             if (pathExtension == null) throw new Exception("File type could not be identified");
 
@@ -65,7 +64,6 @@ namespace Palavyr.Core.Services.LogoServices
             account.AccountLogoUri = s3AttachmentKey;
             await accountRepository.CommitChangesAsync();
 
-            var fileNameMap = FileNameMap.CreateFileMap(safeFileName, riskyFileName, s3AttachmentKey, accountId, "logo");
             var localTempPath = tempPathCreator.Create(string.Join(".", safeFileName, pathExtension));
 
             await using var fileStream = new FileStream(localTempPath, FileMode.Create);
@@ -74,9 +72,6 @@ namespace Palavyr.Core.Services.LogoServices
 
             await s3Saver.SaveObjectToS3(userDataBucket, localTempPath, s3AttachmentKey);
             localFileDeleter.Delete(localTempPath);
-
-            await dashContext.FileNameMaps.AddAsync(fileNameMap); // DB now has s3 key : risky name
-            await dashContext.SaveChangesAsync();
 
             var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(s3AttachmentKey, userDataBucket);
             return preSignedUrl;

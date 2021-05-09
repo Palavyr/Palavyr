@@ -6,11 +6,12 @@ import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { Divider, makeStyles, Paper, Typography } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { SetState } from "@Palavyr-Types";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
 import { DropzoneArea } from "material-ui-dropzone";
 import * as React from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { SettingsWrapper } from "../SettingsWrapper";
 
 const useStyles = makeStyles((theme) => ({
@@ -34,6 +35,8 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: "450px",
         maxHeight: "450px",
         textAlign: "center",
+        marginBottom: "1.2rem"
+
     },
     previewChip: {
         minWidth: 130,
@@ -79,6 +82,7 @@ interface ChangeLogoImageInner {
 const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInner) => {
     const repository = new PalavyrRepository();
     const cls = useStyles();
+    const { setIsLoading } = useContext(DashboardContext);
 
     const [alertState, setAlertState] = useState<boolean>(false);
     const [companyLogo, setcompanyLogo] = useState<string>("");
@@ -102,6 +106,7 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
     };
 
     const handleFileSave = async () => {
+        setIsLoading(true);
         if (fileUpload !== null) {
             const formData = new FormData();
             formData.append("files", fileUpload[0]);
@@ -109,6 +114,7 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
             setcompanyLogo(dataUrl);
         }
         setFileUpload([]); // shouldn't this clear the chip
+        setIsLoading(false);
     };
 
     const getDropRejectMessage = (rejectedFile: File, acceptedFiles: string[], maxFileSize: number) => {
@@ -125,8 +131,10 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
     };
 
     const handleDeleteLogo = async () => {
+        setIsLoading(true);
         await repository.Settings.Account.deleteCompanyLogo();
-        setcompanyLogo("")
+        setcompanyLogo("");
+        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -185,7 +193,7 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
                         showPreviewsInDropzone={false}
                         previewChipProps={previewProps}
                         acceptedFiles={["image/png", "image/svg"]}
-                        showPreviews={true}
+                        showPreviews={fileUpload.length > 0}
                         maxFileSize={500000}
                         previewGridProps={{ item: { alignContent: "flex-start" }, container: { spacing: 2, direction: "row" } }}
                         filesLimit={1}
@@ -196,8 +204,8 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
                     <PalavyrAlert alertState={alertState} setAlertState={setAlertState} useAlert alertMessage={alertMessage} />
                 </div>
                 <SpaceEvenly>
-                    <SinglePurposeButton variant="contained" color="primary" buttonText="Upload and Save" onClick={handleFileSave} />
-                    <SinglePurposeButton variant="contained" color="secondary" buttonText="Delete current logo" onClick={handleDeleteLogo} />
+                    <SinglePurposeButton disabled={fileUpload.length === 0} variant="contained" color="primary" buttonText="Upload and Save" onClick={handleFileSave} />
+                    <SinglePurposeButton disabled={companyLogo === ""} variant="contained" color="secondary" buttonText="Delete current logo" onClick={handleDeleteLogo} />
                 </SpaceEvenly>
             </Paper>
         </SettingsWrapper>

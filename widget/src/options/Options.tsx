@@ -5,6 +5,7 @@ import { DropdownListOptions } from "./optionFormats/DropdownOptionsList";
 import { SelectedOption, WidgetPreferences, AreaTable } from "@Palavyr-Types";
 import { WidgetClient } from "client/Client";
 import { makeStyles } from "@material-ui/core";
+import { BrandingStrip } from "common/BrandingStrip";
 
 interface IOptionSelector {
     setSelectedOption: (option: SelectedOption) => void;
@@ -43,5 +44,10 @@ export const OptionSelector = ({ setSelectedOption }: IOptionSelector) => {
         loadAreas();
     }, [loadAreas]);
 
-    return <div className={cls.optionsContainer}>{options && <DropdownListOptions options={options} setSelectedOption={setSelectedOption} />}</div>;
+    return (
+        <>
+            <div className={cls.optionsContainer}>{options && <DropdownListOptions options={options} setSelectedOption={setSelectedOption} />}</div>
+            <BrandingStrip />
+        </>
+    );
 };

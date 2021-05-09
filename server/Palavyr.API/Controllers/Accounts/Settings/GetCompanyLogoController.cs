@@ -1,4 +1,6 @@
 #nullable enable
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Services.LogoServices;
 
@@ -16,10 +18,11 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
 
         [HttpGet("account/settings/logo")]
-        public string? Get(
-            [FromHeader] string accountId)
+        public async Task<string?> Get(
+            [FromHeader] string accountId,
+            CancellationToken cancellationToken)
         {
-            var preSignedUrl = logoRetriever.GetLogo(accountId);
+            var preSignedUrl = await logoRetriever.GetLogo(accountId, cancellationToken);
             return preSignedUrl;
         }
     }

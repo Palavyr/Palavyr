@@ -38,21 +38,20 @@ namespace Palavyr.Core.Services.LogoServices
         public async Task DeleteLogo(string accountId, CancellationToken cancellationToken)
         {
             var account = await accountsContext.Accounts.SingleAsync(x => x.AccountId == accountId);
-            account.AccountLogoUri = "";
-            await accountsContext.SaveChangesAsync(cancellationToken);
-            
-            var fileNameMap = dashContext.FileNameMaps.SingleOrDefault(x => x.AccountId == accountId && x.AreaIdentifier == "logo");
-            if (fileNameMap != null)
+
+            var s3Key = account.AccountLogoUri;
+            if (!string.IsNullOrWhiteSpace(s3Key))
             {
                 var userDataBucket = configuration.GetUserDataSection();
-                var success = await s3Deleter.DeleteObjectFromS3Async(userDataBucket, fileNameMap.S3Key);
+                var success = await s3Deleter.DeleteObjectFromS3Async(userDataBucket, s3Key);
                 if (!success)
                 {
                     throw new AmazonS3Exception("Unable to delete logo file from S3");
                 }
-                dashContext.FileNameMaps.Remove(fileNameMap);
-                await dashContext.SaveChangesAsync(cancellationToken);
             }
+            
+            account.AccountLogoUri = "";
+            await accountsContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

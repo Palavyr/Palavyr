@@ -10,6 +10,11 @@ import { TestComponent } from "test/testComponent";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "common/ErrorBoundaries/AppLevelErrorBoundary";
 
+import ReactGA from 'react-ga';
+const TRACKING_ID = "";
+
+ReactGA.initialize(TRACKING_ID);
+
 ReactDOM.render(
     <React.StrictMode>
         <ErrorBoundary FallbackComponent={ErrorFallback}>

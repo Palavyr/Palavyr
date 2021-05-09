@@ -15,6 +15,7 @@ import "./style.scss";
 import { isWidgetOpened, toggleWidget } from "@store-dispatcher";
 import { WidgetClient } from "client/Client";
 import { _openFullscreenPreview } from "@store-actions";
+import { BrandingStrip } from "common/BrandingStrip";
 
 export interface WidgetProps {
     option: SelectedOption;
@@ -103,6 +104,7 @@ export const Widget = ({ option }: WidgetProps) => {
             })}
         >
             {showChat && <Conversation className={showChat ? "active" : "hidden"} showTimeStamp={true} />}
+            <BrandingStrip />
         </div>
     );
 };
