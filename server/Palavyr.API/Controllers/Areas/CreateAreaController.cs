@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,9 +30,9 @@ namespace Palavyr.API.Controllers.Areas
         }
 
         [HttpPost("areas/create")]
-        public async Task<Area> Create([FromHeader] string accountId, [FromBody] AreaNameText areaNameText)
+        public async Task<Area> Create([FromHeader] string accountId, [FromBody] AreaNameText areaNameText, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount(accountId);
+            var account = await accountRepository.GetAccount(accountId, cancellationToken);
 
             var defaultEmail = account.EmailAddress;
             var isVerified = account.DefaultEmailIsVerified;

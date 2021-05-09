@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export const getachorOrigin = (position: SnackbarPositions) => {
+export const getAnchorOrigin = (position: SnackbarPositions) => {
     let anchorOrigin: SnackbarOrigin;
     switch (position) {
         case "tr":
@@ -82,7 +82,7 @@ export const PalavyrSnackbar = ({ successText, warningText, errorText, successOp
         if (setWarningOpen) setWarningOpen(false);
         if (setErrorOpen) setErrorOpen(false);
     };
-    const anchorOrigin = getachorOrigin(position);
+    const anchorOrigin = getAnchorOrigin(position);
 
     useEffect(() => {
         setTimeout(() => {

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -51,10 +52,11 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
         [HttpPost("checkout/create-checkout-session")]
         public async Task<string> CreateSession(
             [FromHeader] string accountId,
-            [FromBody] CreateCheckoutSessionRequest request
+            [FromBody] CreateCheckoutSessionRequest request,
+            CancellationToken cancellationToken
         )
         {
-            var account = await accountRepository.GetAccount(accountId);
+            var account = await accountRepository.GetAccount(accountId, cancellationToken);
             if (account.StripeCustomerId == null)
             {
                 throw new Exception("Account and Stripe customer Id must be set");

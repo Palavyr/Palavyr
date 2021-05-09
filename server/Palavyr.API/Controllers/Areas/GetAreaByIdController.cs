@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,6 @@ using Palavyr.Core.Services.EmailService.Verification;
 namespace Palavyr.API.Controllers.Areas
 {
     [Authorize]
-
     public class GetAreaByIdController : PalavyrBaseController
     {
         private readonly IConfigurationRepository configurationRepository;
@@ -34,13 +34,16 @@ namespace Palavyr.API.Controllers.Areas
         ///https://docs.aws.amazon.com/sdkfornet/v3/apidocs/index.html
         /// The verification status of an email address is "Pending" until the email address owner clicks the link within the verification email that Amazon SES sent to that address. If the email address owner clicks the link within 24 hours, the verification status of the email address changes to "Success". If the link is not clicked within 24 hours, the verification status changes to "Failed." In that case, if you still want to verify the email address, you must restart the verification process from the beginning.
         [HttpGet("areas/{areaId}")]
-        public async Task<Area> Get([FromHeader] string accountId, string areaId)
+        public async Task<Area> Get(
+            [FromHeader] string accountId,
+            string areaId,
+            CancellationToken cancellationToken)
         {
             var area = await configurationRepository.GetAreaById(accountId, areaId);
 
             if (string.IsNullOrWhiteSpace(area.AreaSpecificEmail))
             {
-                var account = await accountRepository.GetAccount(accountId);
+                var account = await accountRepository.GetAccount(accountId, cancellationToken);
                 area.AreaSpecificEmail = account.EmailAddress;
             }
 

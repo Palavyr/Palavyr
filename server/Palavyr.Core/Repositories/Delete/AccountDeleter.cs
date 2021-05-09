@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
-using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.StripeServices;
 
 namespace Palavyr.Core.Repositories.Delete
@@ -26,17 +26,17 @@ namespace Palavyr.Core.Repositories.Delete
             this.logger = logger;
         }
 
-        public async Task DeleteAccount(string accountId)
+        public async Task DeleteAccount(string accountId, CancellationToken cancellationToken)
         {
-            await DeleteAccountRecord(accountId);
+            await DeleteAccountRecord(accountId, cancellationToken);
             DeleteEmailVerifications(accountId);
             DeleteSessionsByAccount(accountId);
             DeleteSubscriptionsByAccount(accountId);
         }
 
-        public async Task DeleteStripeIntegration(string accountId)
+        public async Task DeleteStripeIntegration(string accountId, CancellationToken cancellationToken)
         {
-            var account = await GetAccount(accountId);
+            var account = await GetAccount(accountId, cancellationToken);
             if (account.StripeCustomerId == null)
             {
                 logger.LogCritical("A customer wished to be deleted, however their stripe customer ID was not found.");
@@ -49,10 +49,10 @@ namespace Palavyr.Core.Repositories.Delete
             // AWS: Do Not Delete the email Address... TODO: Perhaps we should delete the email from aws ses on account delete
         }
 
-        public async Task DeleteAccountRecord(string accountId)
+        public async Task DeleteAccountRecord(string accountId, CancellationToken cancellationToken)
         {
             logger.LogInformation($"Deleting the account record for {accountId}");
-            var account = await GetAccount(accountId);
+            var account = await GetAccount(accountId, cancellationToken);
             accountsContext.Accounts.Remove(account);
         }
 

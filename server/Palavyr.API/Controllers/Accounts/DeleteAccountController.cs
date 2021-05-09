@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -26,7 +27,7 @@ namespace Palavyr.API.Controllers.Accounts
         }
 
         [HttpPost("account/delete-account")]
-        public async Task<IActionResult> DeleteAccount([FromHeader] string accountId)
+        public async Task<IActionResult> DeleteAccount([FromHeader] string accountId, CancellationToken cancellationToken)
         {
             logger.LogInformation($"Deleting details for account: {accountId}");
 
@@ -37,7 +38,7 @@ namespace Palavyr.API.Controllers.Accounts
             dashDeleter.DeleteAccount(accountId);
 
             logger.LogDebug("Deleting from the Accounts database...");
-            await accountDeleter.DeleteAccount(accountId);
+            await accountDeleter.DeleteAccount(accountId, cancellationToken);
 
             await accountDeleter.CommitChangesAsync();
             await dashDeleter.CommitChangesAsync();

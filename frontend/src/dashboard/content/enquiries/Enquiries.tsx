@@ -74,7 +74,7 @@ export const Enquires = () => {
             </div>
         );
     };
-
+    const anyEnquiriesSeen = enquiries.filter((x) => x.seen).length > 0;
     return (
         <div className={cls.container}>
             <AreaConfigurationHeader title="Enquiries" subtitle="Review your recent enquiries. Use the 'History' link to view the conversation. Use the 'PDF' link to view the response PDF that was sent." />
@@ -91,7 +91,7 @@ export const Enquires = () => {
                 </Table>
             </TableContainer>
             {!loading && enquiries.length === 0 && <NoDataAvailable />}
-            {enquiries.length !== 0 && (
+            {enquiries.length !== 0 && anyEnquiriesSeen && (
                 <Align float="right">
                     <ColoredButton classes={cls.delete} variant="outlined" color="primary" onClick={() => deleteSelectedEnquiries(enquiries)}>
                         Delete All Seen Enquiries
