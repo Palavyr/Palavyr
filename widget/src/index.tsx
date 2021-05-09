@@ -11,6 +11,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "common/ErrorBoundaries/AppLevelErrorBoundary";
 
 import ReactGA from 'react-ga';
+import RouteChangeTracker from "Analytics/RouteChangeTracker";
 const TRACKING_ID = "";
 
 ReactGA.initialize(TRACKING_ID);
@@ -24,6 +25,7 @@ ReactDOM.render(
                     <Router>
                         <Route exact path="/widget" component={App} />
                         <Route exact path="/test" component={TestComponent} />
+                        <RouteChangeTracker />
                     </Router>
                 </MuiThemeProvider>
             </Provider>
