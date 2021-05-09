@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -30,10 +31,10 @@ namespace Palavyr.API.Controllers.Accounts
         }
 
         [HttpPost("configure-conversations/ensure-db-valid")]
-        public async Task<NoContentResult> Ensure([FromHeader] string accountId)
+        public async Task<NoContentResult> Ensure([FromHeader] string accountId, CancellationToken cancellationToken)
         {
             var preferences = await configurationRepository.GetWidgetPreferences(accountId);
-            var account = await accountRepository.GetAccount(accountId);
+            var account = await accountRepository.GetAccount(accountId, cancellationToken);
 
             if (string.IsNullOrWhiteSpace(account.StripeCustomerId))
             {

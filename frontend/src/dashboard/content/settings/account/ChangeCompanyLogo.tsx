@@ -1,13 +1,16 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { PalavyrAlert } from "@common/components/PalavyrAlert";
+import { getAnchorOrigin } from "@common/components/PalavyrSnackbar";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { Divider, makeStyles, Paper, Typography } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { SetState } from "@Palavyr-Types";
+import { Align } from "dashboard/layouts/positioning/Align";
+import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
 import { DropzoneArea } from "material-ui-dropzone";
 import * as React from "react";
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SettingsWrapper } from "../SettingsWrapper";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,24 +24,9 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "center",
         position: "relative",
     },
-    dwrapper: {
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-    },
     dropzone: {
         textAlign: "left",
         width: "100%",
-    },
-    title: {
-        fontSize: "16pt",
-    },
-    snackbar: {
-        backgroundColor: "#C7ECEE",
-    },
-    sep: {
-        marginTop: "1rem",
-        marginBottom: "1rem",
     },
     logoPreview: {
         verticalAlign: "middle",
@@ -65,7 +53,6 @@ const useStyles = makeStyles((theme) => ({
     label: {
         color: "white",
     },
-    alert: {},
     img: {
         maxWidth: "100%",
         maxHeight: "100%",
@@ -74,6 +61,9 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
+    },
+    snackbarProps: {
+        color: theme.palette.common.black,
     },
 }));
 
@@ -134,6 +124,11 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
         return message;
     };
 
+    const handleDeleteLogo = async () => {
+        await repository.Settings.Account.deleteCompanyLogo();
+        setcompanyLogo("")
+    };
+
     useEffect(() => {
         loadCompanyLogo();
         return () => {
@@ -143,23 +138,33 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
 
     const previewProps = { classes: { root: cls.previewChip, deleteIcon: cls.deleteIcon, label: cls.label } };
 
+    const anchorOrigin = getAnchorOrigin("br");
+
     return (
         <SettingsWrapper>
             <AreaConfigurationHeader title="Change your company logo" subtitle="Update your company logo. This is used in the response email and pdf sent to customers." />
             <Divider />
             <Paper className={cls.paper}>
-                <Alert className={cls.alert} severity={companyLogo === "" ? "error" : "success"}>
+                <Alert style={{ marginBottom: "1.4rem" }} severity={companyLogo === "" ? "error" : "success"}>
                     <AlertTitle>
-                        <Typography className={cls.title}>{companyLogo === "" ? "Upload your company logo" : "Logo uploaded"}</Typography>
-                    </AlertTitle>
-                    <p>Your company logo is placed into the top left area of each response PDF.</p>
-                    <p>For the best results, use a square 250px by 250px png or svg image.</p>
-                </Alert>
-                <div style={{ textAlign: "center", justifyContent: "center", display: "flex" }}>
-                    <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", marginTop: "1.4rem" }}>
-                        <Typography variant="h5" style={{ marginBottom: "1rem" }}>
-                            Your Current Logo
+                        <Typography align="left" variant="h5">
+                            {companyLogo === "" ? "Upload your company logo" : "Logo uploaded"}
                         </Typography>
+                    </AlertTitle>
+                    <Typography align="left" variant="body1" display="block">
+                        Your company logo is placed into the top left area of each response PDF.
+                    </Typography>
+                    <Typography align="left" variant="body1" display="block">
+                        For the best results, use a square 250px by 250px png or svg image.
+                    </Typography>
+                </Alert>
+                {companyLogo !== "" && (
+                    <Typography display="block" align="center" variant="h5" gutterBottom>
+                        Your Current Logo
+                    </Typography>
+                )}
+                <Align>
+                    <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", marginTop: "1.4rem" }}>
                         {companyLogo === "" ? (
                             "Upload a company logo"
                         ) : (
@@ -168,36 +173,32 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
                             </Paper>
                         )}
                     </div>
-                </div>
-                <Divider className={cls.sep} />
+                </Align>
+                <Divider />
                 <div className={cls.dropzone}>
                     <DropzoneArea
                         showAlerts={true}
                         onChange={handleFileChange}
                         onDelete={handleFileDelete}
-                        dropzoneText={"Drag and drop a new image logo here or click"}
+                        dropzoneText="Drag and drop a new image logo here or click"
                         useChipsForPreview
                         showPreviewsInDropzone={false}
                         previewChipProps={previewProps}
-                        acceptedFiles={["image/*"]}
+                        acceptedFiles={["image/png", "image/svg"]}
                         showPreviews={true}
                         maxFileSize={500000}
                         previewGridProps={{ item: { alignContent: "flex-start" }, container: { spacing: 2, direction: "row" } }}
                         filesLimit={1}
                         previewText="Selected Files"
-                        alertSnackbarProps={{ className: cls.snackbar }}
+                        alertSnackbarProps={{ anchorOrigin, classes: { root: cls.snackbarProps } }}
                         getDropRejectMessage={getDropRejectMessage}
                     />
                     <PalavyrAlert alertState={alertState} setAlertState={setAlertState} useAlert alertMessage={alertMessage} />
                 </div>
-                <SinglePurposeButton
-                    variant="contained"
-                    color="primary"
-                    buttonText="Upload and Save"
-                    onClick={() => {
-                        handleFileSave();
-                    }}
-                />
+                <SpaceEvenly>
+                    <SinglePurposeButton variant="contained" color="primary" buttonText="Upload and Save" onClick={handleFileSave} />
+                    <SinglePurposeButton variant="contained" color="secondary" buttonText="Delete current logo" onClick={handleDeleteLogo} />
+                </SpaceEvenly>
             </Paper>
         </SettingsWrapper>
     );

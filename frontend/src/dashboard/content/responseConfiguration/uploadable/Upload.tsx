@@ -2,7 +2,7 @@ import React from "react";
 import { Button, makeStyles } from "@material-ui/core";
 import { DropzoneDialog } from "material-ui-dropzone";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
-import { getachorOrigin } from "@common/components/PalavyrSnackbar";
+import { getAnchorOrigin } from "@common/components/PalavyrSnackbar";
 
 export interface IUploadAttachment {
     initialState?: boolean;
@@ -33,7 +33,7 @@ export const Upload = ({ initialState = false, modalState, toggleModal, handleFi
     };
     const cls = useStyles();
 
-    const anchorOrigin = getachorOrigin("br");
+    const anchorOrigin = getAnchorOrigin("br");
     return (
         <PalavyrAccordian title={summary} initialState={initialState}>
             <div>

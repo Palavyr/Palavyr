@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.PdfService.PdfSections;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
@@ -9,6 +12,14 @@ namespace Palavyr.Core.Services.PdfService
 {
     public class ResponseHtmlBuilder : IResponseHtmlBuilder
     {
+        private readonly ILinkCreator linkCreator;
+        private readonly IConfiguration configuration;
+
+        public ResponseHtmlBuilder(ILinkCreator linkCreator, IConfiguration configuration)
+        {
+            this.linkCreator = linkCreator;
+            this.configuration = configuration;
+        }
         public string BuildResponseHtml(Account account, Area previewData, CriticalResponses response, List<Table> staticTables, List<Table> dynamicTables)
         {
             var previewBuilder = new StringBuilder();
@@ -23,8 +34,8 @@ namespace Palavyr.Core.Services.PdfService
                         </head>
                         <body>
                             <div>");
-            
-            previewBuilder.Append(HeaderSection.GetHeader(account, response));
+            var userDataBucket = configuration.GetUserDataSection();
+            previewBuilder.Append(HeaderSection.GetHeader(account, response, linkCreator, userDataBucket));
             previewBuilder.Append(AreaTitleSection.GetAreaDisplayTitle(previewData.AreaDisplayTitle));
             previewBuilder.Append(PrologueSection.GetPrologue(previewData.Prologue));
             previewBuilder.Append(TablesSection.GetEstimateTables(staticTables, dynamicTables));

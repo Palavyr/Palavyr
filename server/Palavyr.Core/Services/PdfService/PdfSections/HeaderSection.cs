@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.PdfService.PdfSections
@@ -80,14 +81,13 @@ namespace Palavyr.Core.Services.PdfService.PdfSections
             return builder.ToString();
         }
 
-        public static string GetHeader(Account account, CriticalResponses response)
+        public static string GetHeader(Account account, CriticalResponses response, ILinkCreator linkCreator, string userDataBucket)
         {
             var imageLocation = account.AccountLogoUri ?? "";
-            string logoUri = "";
+            var logoUri = "";
             if (!string.IsNullOrWhiteSpace(imageLocation))
             {
-                var uri = new Uri(imageLocation);
-                logoUri = uri.AbsoluteUri;
+                logoUri = linkCreator.GenericCreatePreSignedUrl(imageLocation, userDataBucket);
             }
             
             var companyDetails = new List<string>()

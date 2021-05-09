@@ -1,13 +1,16 @@
 import React from "react";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { CONVERSATION_REVIEW, CONVERSATION_REVIEW_PARAMNAME } from "@constants";
-import { Checkbox, Link, makeStyles, TableCell, TableRow, Typography } from "@material-ui/core";
+import { Checkbox, Link, makeStyles, TableRow, Typography } from "@material-ui/core";
 import { Enquiries, EnquiryRow, SetState } from "@Palavyr-Types";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { useHistory } from "react-router-dom";
 import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
 import { useState } from "react";
+import { EnquiryTableRowCell } from "./EnquiriesTableRowCell";
+import { formatTimeStamp } from "./enquiriesUtils";
+import { EnquiryTimeStamp } from "./EnquiryTimeStamp";
 
 export interface EnquiriesTableRowProps {
     enquiry: EnquiryRow;
@@ -25,9 +28,6 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         padding: "1rem",
-    },
-    tableCell: {
-        textAlign: "center",
     },
     link: {
         "&:hover": {
@@ -86,78 +86,52 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
         setDeleteIsWorking(false);
     };
 
-    const formatTimeStamp = (timeStamp: string) => {
-        const parts = timeStamp.split("--");
-
-        const time = parts[1].split("-");
-        const hour = parseInt(time[0]);
-        let formattedHour: number;
-        let phase: string;
-        if (hour < 12) {
-            formattedHour = hour;
-            phase = "a.m.";
-        } else {
-            formattedHour = hour === 12 ? hour : hour - 12;
-            phase = "p.m.";
-        }
-
-        const formattedTime = `${formattedHour}: ${time[1]} ${phase}`;
-
-        const date = parts[0].split("-");
-        const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
-        const formattedDate = `${date[1]} - ${months[parseInt(date[2]) - 1]} - ${date[0]}`;
-        return (
-            <>
-                <Typography variant="caption">{formattedDate}</Typography>
-                <Typography variant="caption">{formattedTime}</Typography>
-            </>
-        );
-    };
+    const { formattedDate, formattedTime } = formatTimeStamp(enquiry.timeStamp);
 
     return (
         <TableRow style={{ backgroundColor: enquiry.seen ? "white" : "lightgray", fontWeight: enquiry.seen ? "normal" : "bold" }} key={enquiry.conversationId}>
-            <TableCell className={cls.tableCell} key={enquiry.conversationId + "a"}>
+            <EnquiryTableRowCell>
                 <Typography variant="caption">{index + 1}</Typography>
-            </TableCell>
-            <TableCell className={cls.tableCell} key={enquiry.conversationId + "b"}>
+            </EnquiryTableRowCell>
+            <EnquiryTableRowCell>
                 <Typography variant="caption">{enquiry.name}</Typography>
-            </TableCell>
-            <TableCell className={cls.tableCell} key={enquiry.conversationId + "c"}>
+            </EnquiryTableRowCell>
+            <EnquiryTableRowCell>
                 <Typography variant="caption">{enquiry.email}</Typography>
-            </TableCell>
-            <TableCell className={cls.tableCell} key={enquiry.conversationId + "d"}>
+            </EnquiryTableRowCell>
+            <EnquiryTableRowCell>
                 <Typography variant="caption">{enquiry.phoneNumber}</Typography>
-            </TableCell>
-            <TableCell className={cls.tableCell} key={enquiry.conversationId + "e"}>
+            </EnquiryTableRowCell>
+            <EnquiryTableRowCell>
                 <Link className={cls.link} onClick={() => convoDetailsOnClick(enquiry)}>
                     <Typography variant="caption">History</Typography>
                 </Link>
-            </TableCell>
-            <TableCell className={cls.tableCell} key={enquiry.conversationId + "f"}>
+            </EnquiryTableRowCell>
+            <EnquiryTableRowCell>
                 <Link className={cls.link} onClick={() => responseLinkOnClick(enquiry)}>
                     <Typography variant="caption">PDF</Typography>
                 </Link>
-            </TableCell>
-            <TableCell className={cls.tableCell} key={enquiry.conversationId + "g"}>
+            </EnquiryTableRowCell>
+            <EnquiryTableRowCell>
                 <Typography variant="caption">{enquiry.areaName}</Typography>
-            </TableCell>
-            <TableCell className={cls.tableCell} key={enquiry.conversationId + "h"}>
-                <Typography variant="caption">{formatTimeStamp(enquiry.timeStamp)}</Typography>
-            </TableCell>
-            <TableCell className={cls.tableCell} key={enquiry.conversationId + "i"}>
+            </EnquiryTableRowCell>
+            <EnquiryTableRowCell>
+                <EnquiryTimeStamp formattedDate={formattedDate} formattedTime={formattedTime} />
+            </EnquiryTableRowCell>
+            <EnquiryTableRowCell>
                 <Checkbox
                     checked={enquiry.seen}
                     onClick={() => {
                         toggleSeenValue(enquiry.conversationId);
                     }}
-                ></Checkbox>
-            </TableCell>
-            <TableCell>
+                />
+            </EnquiryTableRowCell>
+            <EnquiryTableRowCell>
                 <ColoredButton classes={cls.delete} variant="outlined" color="primary" onClick={() => deleteEnquiryOnClick(enquiry)}>
                     <Typography variant="caption"> Delete</Typography>
                     {deleteIsWorking && <ButtonCircularProgress />}
                 </ColoredButton>
-            </TableCell>
+            </EnquiryTableRowCell>
         </TableRow>
     );
 };

@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,11 +24,23 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         [ActionName("Decode")]
         public async Task<string> Modify(
             [FromHeader] string accountId,
-            [FromForm(Name = "files")] IFormFile file)
+            [FromForm(Name = "files")] IFormFile file,
+            CancellationToken cancellationToken
+            )
         {
-            await logoDeleter.DeleteLogo(accountId);
-            var preSignedUrl = await logoSaver.SaveLogo(accountId, file);
+            await logoDeleter.DeleteLogo(accountId, cancellationToken);
+            var preSignedUrl = await logoSaver.SaveLogo(accountId, file, cancellationToken);
             return preSignedUrl;
+        }
+
+        [HttpDelete("account/settings/logo")]
+        public async Task Delete(
+            [FromHeader]
+            string accountId,
+            CancellationToken cancellationToken
+            )
+        {
+            await logoDeleter.DeleteLogo(accountId, cancellationToken);
         }
     }
 }

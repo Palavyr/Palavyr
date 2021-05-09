@@ -7,7 +7,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
     {
         string ResolveAttachmentKey(string accountId, string areaId, string safeFileName);
         string ResolvePreviewKey(string accountId, string safeFileName);
-        string ResolveLogoKey(string account, string safeFileName);
+        string ResolveLogoKey(string account, string safeFileName, string fileExtension);
         string ResolveResponsePdfKey(string account, string safeFileName);
     }
 
@@ -23,9 +23,9 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
             return Path.Combine(accountId, "Previews", safeFileName + ".pdf").ConvertToUnix();
         }
 
-        public string ResolveLogoKey(string account, string safeFileName)
+        public string ResolveLogoKey(string account, string safeFileName, string fileExtension)
         {
-            return Path.Combine(account, "Logos", safeFileName + ".pdf").ConvertToUnix();
+            return Path.Combine(account, "Logos", safeFileName + fileExtension).ConvertToUnix();
         }
 
         public string ResolveResponsePdfKey(string account, string safeFileName)

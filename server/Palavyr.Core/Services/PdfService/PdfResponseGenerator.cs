@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
@@ -46,13 +47,14 @@ namespace Palavyr.Core.Services.PdfService
             string localWriteToPath,
             string identifier,
             string accountId,
-            string areaId
+            string areaId,
+            CancellationToken cancellationToken
         )
         {
             if (emailRequest.NumIndividuals <= 0) throw new Exception("Num individuals must be 1 or more.");
 
             var areaData = await configurationRepository.GetAreaComplete(accountId, areaId);
-            var account = await accountRepository.GetAccount(accountId);
+            var account = await accountRepository.GetAccount(accountId, cancellationToken);
 
             var staticTables = staticTableCompiler.CollectStaticTables(areaData, culture, emailRequest.NumIndividuals); // ui always sends a number - 1 or greater.
             var dynamicTables = await dynamicTablesCompiler.CompileTablesToPdfRows(accountId, emailRequest.DynamicResponses, culture);

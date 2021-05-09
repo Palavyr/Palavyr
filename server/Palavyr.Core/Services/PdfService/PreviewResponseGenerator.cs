@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -67,12 +68,12 @@ namespace Palavyr.Core.Services.PdfService
             this.criticalResponses = criticalResponses;
         }
 
-        public async Task<FileLink> CreatePdfResponsePreviewAsync(string accountId, string areaId, CultureInfo culture)
+        public async Task<FileLink> CreatePdfResponsePreviewAsync(string accountId, string areaId, CultureInfo culture, CancellationToken cancellationToken)
         {
             var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
 
             var areaData = await configurationRepository.GetAreaComplete(accountId, areaId);
-            var userAccount = await accountRepository.GetAccount(accountId);
+            var userAccount = await accountRepository.GetAccount(accountId, cancellationToken);
 
             var fakeResponses = this.criticalResponses.Compile(
                 new List<Dictionary<string, string>>()

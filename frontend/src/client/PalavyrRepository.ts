@@ -99,7 +99,7 @@ export class PalavyrRepository {
             Static: {
                 updateStaticTablesMetas: async (areaIdentifier: string, staticTablesMetas: StaticTableMetas) => this.client.put<StaticTableMetas, {}>(`response/configuration/${areaIdentifier}/static/tables/save`, staticTablesMetas),
                 getStaticTablesMetaTemplate: async (areaIdentifier: string) => this.client.get<StaticTableMetaTemplate>(`response/configuration/${areaIdentifier}/static/tables/template`),
-                getStaticTableRowTemplate: async (areaIdentifier: string, tableOrder: number) => this.client.get<StaticTableRow>(`response/configuration/${areaIdentifier}/static/tables/${tableOrder}/row/template`)
+                getStaticTableRowTemplate: async (areaIdentifier: string, tableOrder: number) => this.client.get<StaticTableRow>(`response/configuration/${areaIdentifier}/static/tables/${tableOrder}/row/template`),
             },
         },
 
@@ -203,10 +203,11 @@ export class PalavyrRepository {
 
             GetLocale: async () => this.client.get<LocaleDefinition>(`account/settings/locale`),
             getCompanyLogo: async () => this.client.get<string>(`account/settings/logo`),
+            deleteCompanyLogo: async () => this.client.delete(`account/settings/logo`),
             getCurrentPlan: async () => this.client.get<PlanStatus>(`account/settings/current-plan`),
 
             DeleteAccount: async () => this.client.post(`account/delete-account`),
-            CheckNeedsPassword: async () => this.client.get<boolean>(`account/needs-password`)
+            CheckNeedsPassword: async () => this.client.get<boolean>(`account/needs-password`),
         },
         EmailVerification: {
             RequestEmailVerification: async (emailAddress: string, areaIdentifier: string) => this.client.post<EmailVerificationResponse, {}>(`verification/email/${areaIdentifier}`, { EmailAddress: emailAddress }),

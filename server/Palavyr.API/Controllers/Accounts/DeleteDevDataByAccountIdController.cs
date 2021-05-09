@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Repositories.Delete;
@@ -26,7 +27,7 @@ namespace Palavyr.API.Controllers.Accounts
         }
 
         [HttpDelete("dev/{devKey}/{accountId}")]
-        public async Task Delete(string accountId, string devKey)
+        public async Task Delete(string accountId, string devKey, CancellationToken cancellationToken)
         {
             if (devKey != "secretTobyface")
             {
@@ -43,7 +44,7 @@ namespace Palavyr.API.Controllers.Accounts
             dashDeleter.DeleteAccount(accountId);
 
             logger.LogDebug("Deleting from the Accounts database...");
-            await accountDeleter.DeleteAccount(accountId);
+            await accountDeleter.DeleteAccount(accountId, cancellationToken);
 
             await accountDeleter.CommitChangesAsync();
             await dashDeleter.CommitChangesAsync();

@@ -72,7 +72,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
         {
             var responses = criticalResponses.Compile(emailRequest.KeyValues);
 
-            var culture = await GetCulture(accountId);
+            var culture = await GetCulture(accountId, cancellationToken);
             var safeFileNameStem = emailRequest.ConversationId;
             var localFilePath = await pdfResponseGenerator.GeneratePdfResponseAsync(
                 responses,
@@ -81,7 +81,8 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                 tempPathCreator.Create(string.Join(".", safeFileNameStem, "pdf")),
                 safeFileNameStem,
                 accountId,
-                areaId
+                areaId,
+                cancellationToken
             );
 
             if (localFilePath == null)
@@ -91,7 +92,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 
             await SaveResponsePdfToS3(localFilePath, accountId, safeFileNameStem);
 
-            var senderDetails = await compileSenderDetails.Compile(accountId, areaId, emailRequest);
+            var senderDetails = await compileSenderDetails.Compile(accountId, areaId, emailRequest, cancellationToken);
             var attachments = await attachmentRetriever.RetrieveAttachmentFiles(accountId, areaId, new[] {localFilePath}, cancellationToken);
 
             var responseResult = await Send(senderDetails, attachments);
@@ -118,7 +119,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                 attachments = new string[] { };
             }
 
-            var senderDetails = await compileSenderDetails.Compile(accountId, areaId, emailRequest);
+            var senderDetails = await compileSenderDetails.Compile(accountId, areaId, emailRequest, cancellationToken);
             var responseResult = await Send(senderDetails, attachments);
             foreach (var attachment in attachments)
             {
@@ -152,9 +153,9 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                 : SendEmailResultResponse.CreateFailure(EndingSequence.EmailFailedNodeId);
         }
 
-        private async Task<CultureInfo> GetCulture(string accountId)
+        private async Task<CultureInfo> GetCulture(string accountId, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount(accountId);
+            var account = await accountRepository.GetAccount(accountId, cancellationToken);
             var locale = account.Locale ?? LocaleDefinition.DefaultCountryId;
             return new CultureInfo(locale);
         }

@@ -1,5 +1,6 @@
 #nullable enable
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -25,10 +26,10 @@ namespace Palavyr.Core.Repositories
             await accountsContext.SaveChangesAsync();
         }
 
-        public async Task<Account> GetAccount(string accountId)
+        public async Task<Account> GetAccount(string accountId, CancellationToken cancellationToken)
         {
             logger.LogInformation($"Retrieving user account: {accountId}");
-            return await accountsContext.Accounts.SingleAsync(row => row.AccountId == accountId);
+            return await accountsContext.Accounts.SingleAsync(row => row.AccountId == accountId, cancellationToken);
         }
 
         public async Task<Account> GetAccountOrNull(string accountId)
