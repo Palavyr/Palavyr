@@ -29,5 +29,10 @@ namespace Palavyr.Core.Common.ExtensionMethods
         {
             return configuration.GetSection(ConfigSections.SecretKeySection).Value;
         }
+
+        public static string GetJwtKey(this IConfiguration configuration)
+        {
+            return configuration.GetSection(ConfigSections.JwtSecretKey).Value;
+        }
     }
 }

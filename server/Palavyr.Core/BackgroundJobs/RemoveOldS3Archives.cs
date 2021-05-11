@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.ExtensionMethods.PathExtensions;
 
 namespace Palavyr.Core.BackgroundJobs
 {
@@ -45,18 +43,6 @@ namespace Palavyr.Core.BackgroundJobs
             {
                 _logger.LogInformation($"Could not delete: {ex.Message}");
             }
-        }
-
-        private static List<string> FilterStaleFolders(List<S3Object> objects)
-        {
-            var folders = new List<string>();
-            foreach (var s3Object in objects)
-            {
-                var folderPath = Path.Combine(s3Object.Key.Split("/").Take(2).ToArray()).ConvertToUnix(); //.Replace("\\", "/");
-                folders.Add(folderPath + "/");
-            }
-
-            return folders;
         }
 
         private async Task<List<S3Object>> ListS3Archives()

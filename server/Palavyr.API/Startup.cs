@@ -1,9 +1,11 @@
+#nullable enable
 using Autofac;
 using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.API.Registration.BackgroundJobs;
@@ -25,30 +27,43 @@ namespace Palavyr.API
 
         public ILifetimeScope AutofacContainer { get; private set; }
 
-        public void ConfigureContainer(ContainerBuilder builder)
+        public virtual void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterModule(new AmazonModule(configuration));
+            ContainerSetup(builder, configuration);
+        }
+
+        public static void ContainerSetup(ContainerBuilder builder, IConfiguration configuration)
+        {
             builder.RegisterModule(new HangfireModule());
+            builder.RegisterModule(new AmazonModule(configuration));
             builder.RegisterModule(new GeneralModule());
             builder.RegisterModule(new StripeModule(configuration));
             builder.RegisterModule(new RepositoriesModule());
             builder.RegisterModule(new BackgroundTaskModule());
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        public static void RegisterStores(IServiceCollection services, IConfiguration configuration)
         {
-            // services.AddLogging(loggingBuilder => { loggingBuilder.AddSeq(); });
-            services.AddHttpContextAccessor();
-
-            AuthenticationConfiguration.AddAuthenticationSchemes(services, configuration);
-            CorsConfiguration.ConfigureCorsService(services, env);
-            services.AddControllers();
-
-            Configurations.ConfigureStripe(configuration);
             ServiceRegistry.RegisterDatabaseContexts(services, configuration);
-            ServiceRegistry.RegisterHealthChecks(services);
-            ServiceRegistry.RegisterHangfire(services, env);
         }
+
+        public virtual void ConfigureServices(IServiceCollection services)
+        {
+            AuthenticationConfiguration.AddAuthenticationSchemes(services, configuration);
+            SetServices(services, configuration, env);
+        }
+
+        public static void SetServices(IServiceCollection services, IConfiguration config, IWebHostEnvironment environ)
+        {
+            services.AddHttpContextAccessor();
+            CorsConfiguration.ConfigureCorsService(services, environ);
+            services.AddControllers();
+            Configurations.ConfigureStripe(config);
+            RegisterStores(services, config);
+            ServiceRegistry.RegisterHangfire(services, environ);
+            ServiceRegistry.RegisterHealthChecks(services);
+        }
+
 
         public void Configure(
             IApplicationBuilder app,
@@ -64,7 +79,9 @@ namespace Palavyr.API
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<SetHeadersMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
+
             hangFireJobs.AddHangFireJobs(app);
+
             app.UseEndpoints(
                 endpoints =>
                 {
