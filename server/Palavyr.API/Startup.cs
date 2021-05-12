@@ -63,7 +63,6 @@ namespace Palavyr.API
             ServiceRegistry.RegisterHealthChecks(services);
         }
 
-
         public void Configure(
             IApplicationBuilder app,
             ILoggerFactory loggerFactory,

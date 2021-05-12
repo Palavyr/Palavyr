@@ -12,7 +12,7 @@ namespace Palavyr.IntegrationTests.Tests.ControllerFixtures.Accounts.Settings
     public class GetApiKeyControllerFixture : InMemoryIntegrationFixture
     {
         private readonly InMemoryAutofacWebApplicationFactory factory;
-        private const string Route = "api/account/settings/api-key";
+        private const string Route = "account/settings/api-key";
         public GetApiKeyControllerFixture(InMemoryAutofacWebApplicationFactory factory)
         {
             this.factory = factory;
@@ -21,7 +21,7 @@ namespace Palavyr.IntegrationTests.Tests.ControllerFixtures.Accounts.Settings
         [Fact]
         public async Task GetApiKeyTest()
         {
-            var client = factory.CreateInMemAuthedClient();
+            var client = factory.CreateInMemAuthedClient(acc => acc.CreateDefaultMinimalAccount());
             var response = await client.GetAsync(Route);
             response.EnsureSuccessStatusCode();
         }
@@ -29,7 +29,7 @@ namespace Palavyr.IntegrationTests.Tests.ControllerFixtures.Accounts.Settings
         [Fact]
         public async Task GetApiKeySuccess()
         {
-            var client = factory.CreateInMemAuthedClient();
+            var client = factory.CreateInMemAuthedClient(acc => acc.CreateCompleteDefaultAccount());
             var response = await client.GetStringAsync(Route);
             Assert.Equal(response, IntegrationConstants.ApiKey);
         }

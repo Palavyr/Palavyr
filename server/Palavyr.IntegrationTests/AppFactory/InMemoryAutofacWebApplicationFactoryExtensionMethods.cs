@@ -37,6 +37,7 @@ namespace Palavyr.IntegrationTests.AppFactory
                             .UseTestServer();
                     })
                 .CreateClient();
+            client.BaseAddress = new Uri(IntegrationConstants.BaseUri);
             return client;
         }
 
@@ -61,6 +62,7 @@ namespace Palavyr.IntegrationTests.AppFactory
                             .UseTestServer();
                     })
                 .CreateClient();
+            client.BaseAddress = new Uri(IntegrationConstants.BaseUri);
             return client;
         }
     }
