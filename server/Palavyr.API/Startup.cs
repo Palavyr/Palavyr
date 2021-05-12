@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.API.Registration.BackgroundJobs;
@@ -25,7 +24,7 @@ namespace Palavyr.API
             this.configuration = configuration;
         }
 
-        public ILifetimeScope AutofacContainer { get; private set; }
+        public ILifetimeScope AutofacContainer { get; private set; } = null!;
 
         public virtual void ConfigureContainer(ContainerBuilder builder)
         {
@@ -71,7 +70,7 @@ namespace Palavyr.API
             HangFireJobs hangFireJobs
         )
         {
-            // app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseRequestResponseLogging();
             app.UseHttpsRedirection();
             app.UseRouting();

@@ -1,10 +1,10 @@
+using System;
 using Autofac;
 using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Palavyr.BackupAndRestore;
 using Palavyr.Core.BackgroundJobs;
 
 namespace Palavyr.API.Registration.BackgroundJobs
@@ -31,6 +31,8 @@ namespace Palavyr.API.Registration.BackgroundJobs
 
         public void AddHangFireJobs(IApplicationBuilder app)
         {
+            Action staleSessionAction = () => container.Resolve<IRemoveStaleSessions>().CleanSessionDB();
+            
             if (env.IsProduction())
             {
                 logger.LogDebug($"Current env for hangfire: {env.EnvironmentName}");
@@ -39,20 +41,8 @@ namespace Palavyr.API.Registration.BackgroundJobs
 
                 recurringJobManager
                     .AddOrUpdate(
-                        "Backup database",
-                        () => container.Resolve<ICreatePalavyrSnapshot>().CreateAndTransferCompleteBackup(),
-                        Cron.Daily
-                    );
-                recurringJobManager
-                    .AddOrUpdate(
-                        "Keep only the last 50 snapshots",
-                        () => container.Resolve<IRemoveOldS3Archives>().RemoveS3Objects(),
-                        Cron.Daily
-                    );
-                recurringJobManager
-                    .AddOrUpdate(
                         "Clean Expired Sessions",
-                        () => container.Resolve<IRemoveStaleSessions>().CleanSessionDB(),
+                        () => staleSessionAction(),
                         Cron.Hourly
                     );
             }

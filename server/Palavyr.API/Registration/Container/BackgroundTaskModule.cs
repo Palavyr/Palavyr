@@ -7,7 +7,6 @@ namespace Palavyr.API.Registration.Container
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<RemoveOldS3Archives>().As<IRemoveOldS3Archives>();
             builder.RegisterType<RemoveStaleSessions>().As<IRemoveStaleSessions>();
         }
     }

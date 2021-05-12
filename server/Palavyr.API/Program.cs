@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
-using NLog.Web;
 using Palavyr.Core.Common.GlobalConstants;
+using NLog.Web;
 
 namespace Palavyr.API
 {
