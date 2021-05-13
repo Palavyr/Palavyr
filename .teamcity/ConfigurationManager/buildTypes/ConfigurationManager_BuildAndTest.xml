@@ -36,7 +36,7 @@
         <parameters>
           <param name="command" value="vstest" />
           <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
-          <param name="paths" value="publish/Palavyr.UnitTests publish/Palavyr.IntegrationTests" />
+          <param name="paths" value="publish/Palavyr.UnitTests.dll publish/Palavyr.IntegrationTests.dll" />
           <param name="platform" value="auto" />
           <param name="teamcity.build.workingDir" value="server" />
           <param name="teamcity.step.mode" value="default" />
