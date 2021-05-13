@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Palavyr.UnitTests", "Palavy
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Palavyr.Data.Migrator", "Palavyr.Data.Migrator\Palavyr.Data.Migrator.csproj", "{6AAB3D29-1B99-4F80-AC7E-39DD8EFC5EE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.BackupAndRestore", "Palavyr.BackupAndRestore\Palavyr.BackupAndRestore.csproj", "{8167EBA0-D6F6-4EB6-AF16-D7250BEEB0A5}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Palavyr.Testing", "Palavyr.Testing", "{4205BA0C-DAB4-429E-963B-88A095E9AD29}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palavyr.Core", "Palavyr.Core\Palavyr.Core.csproj", "{70003649-ABC7-4113-807F-1F87A6CC47CE}"
@@ -35,10 +33,6 @@ Global
 		{6AAB3D29-1B99-4F80-AC7E-39DD8EFC5EE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6AAB3D29-1B99-4F80-AC7E-39DD8EFC5EE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6AAB3D29-1B99-4F80-AC7E-39DD8EFC5EE6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8167EBA0-D6F6-4EB6-AF16-D7250BEEB0A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8167EBA0-D6F6-4EB6-AF16-D7250BEEB0A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8167EBA0-D6F6-4EB6-AF16-D7250BEEB0A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8167EBA0-D6F6-4EB6-AF16-D7250BEEB0A5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{70003649-ABC7-4113-807F-1F87A6CC47CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{70003649-ABC7-4113-807F-1F87A6CC47CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70003649-ABC7-4113-807F-1F87A6CC47CE}.Release|Any CPU.ActiveCfg = Release|Any CPU

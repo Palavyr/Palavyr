@@ -60,7 +60,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                 });
 
             accountsContext.Sessions.Add(
-                new Session()
+                new Session
                 {
                     AccountId = IntegrationConstants.AccountId,
                     ApiKey = IntegrationConstants.ApiKey,

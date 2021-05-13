@@ -1,13 +1,11 @@
 #nullable enable
 using Autofac;
-using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware;
-using Palavyr.API.Registration.BackgroundJobs;
 using Palavyr.API.Registration.Configuration;
 using Palavyr.API.Registration.Container;
 
@@ -33,12 +31,10 @@ namespace Palavyr.API
 
         public static void ContainerSetup(ContainerBuilder builder, IConfiguration configuration)
         {
-            builder.RegisterModule(new HangfireModule());
             builder.RegisterModule(new AmazonModule(configuration));
             builder.RegisterModule(new GeneralModule());
             builder.RegisterModule(new StripeModule(configuration));
             builder.RegisterModule(new RepositoriesModule());
-            builder.RegisterModule(new BackgroundTaskModule());
         }
 
         public static void RegisterStores(IServiceCollection services, IConfiguration configuration)
@@ -59,14 +55,13 @@ namespace Palavyr.API
             services.AddControllers();
             Configurations.ConfigureStripe(config);
             RegisterStores(services, config);
-            ServiceRegistry.RegisterHangfire(services, environ);
             ServiceRegistry.RegisterHealthChecks(services);
+            ServiceRegistry.RegisterIisConfiguration(services, environ);
         }
 
         public void Configure(
             IApplicationBuilder app,
-            ILoggerFactory loggerFactory,
-            HangFireJobs hangFireJobs
+            ILoggerFactory loggerFactory
         )
         {
             app.UseMiddleware<ErrorHandlingMiddleware>();
@@ -78,13 +73,11 @@ namespace Palavyr.API
             app.UseAuthorization();
             app.UseMiddleware<SetHeadersMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
 
-            hangFireJobs.AddHangFireJobs(app);
 
             app.UseEndpoints(
                 endpoints =>
                 {
                     endpoints.MapControllers();
-                    endpoints.MapHangfireDashboard();
                     endpoints.MapHealthChecks("/healthcheck");
                 });
         }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.Services.StripeServices;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Repositories.Delete
 {
@@ -17,9 +18,10 @@ namespace Palavyr.Core.Repositories.Delete
         public AccountDeleter(
             AccountsContext accountsContext,
             StripeCustomerService stripeCustomerService,
+            IRemoveStaleSessions removeStaleSessions,
             ILogger<AccountDeleter> logger
         )
-            : base(accountsContext, logger)
+            : base(accountsContext, logger, removeStaleSessions)
         {
             this.accountsContext = accountsContext;
             this.stripeCustomerService = stripeCustomerService;

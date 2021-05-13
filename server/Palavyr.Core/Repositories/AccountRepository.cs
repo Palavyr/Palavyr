@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Repositories
 {
@@ -14,11 +15,13 @@ namespace Palavyr.Core.Repositories
     {
         private readonly AccountsContext accountsContext;
         private readonly ILogger<AccountRepository> logger;
+        private readonly IRemoveStaleSessions removeStaleSessions;
 
-        public AccountRepository(AccountsContext accountsContext, ILogger<AccountRepository> logger)
+        public AccountRepository(AccountsContext accountsContext, ILogger<AccountRepository> logger, IRemoveStaleSessions removeStaleSessions)
         {
             this.accountsContext = accountsContext;
             this.logger = logger;
+            this.removeStaleSessions = removeStaleSessions;
         }
 
         public async Task CommitChangesAsync()
@@ -52,6 +55,7 @@ namespace Palavyr.Core.Repositories
 
         public async Task<Session> CreateAndAddNewSession(string token, string accountId, string apiKey)
         {
+            await removeStaleSessions.CleanSessionDb();
             var session = Session.CreateNew(token, accountId, apiKey);
             var newSession = await accountsContext.Sessions.AddAsync(session);
             await accountsContext.SaveChangesAsync();

@@ -1,6 +1,4 @@
 using System;
-using Hangfire;
-using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -18,21 +16,6 @@ namespace Palavyr.API.Registration.Container
         public static void RegisterHealthChecks(IServiceCollection services)
         {
             services.AddHealthChecks();
-        }
-
-        public static void RegisterHangfire(IServiceCollection services, IWebHostEnvironment env)
-        {
-            services.AddHangfire(
-                config =>
-                    config
-                        .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                        .UseSimpleAssemblyNameTypeSerializer()
-                        .UseMemoryStorage());
-            services.AddHangfireServer(
-                opt =>
-                {
-                    opt.WorkerCount = 1;
-                });
         }
 
         public static void RegisterIisConfiguration(IServiceCollection services, IWebHostEnvironment env)

@@ -2,9 +2,6 @@ using Autofac;
 using Palavyr.API.Controllers.Enquiries;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.API.Controllers.Testing;
-using Palavyr.API.Controllers.WidgetLive;
-using Palavyr.BackupAndRestore;
-using Palavyr.BackupAndRestore.Postgres;
 using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Conversation;
@@ -27,6 +24,7 @@ using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.LogoServices;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Registration.Container
 {
@@ -38,8 +36,6 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<LocaleDefinition>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<TestDataProvider>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<OrphanRemover>().AsSelf().InstancePerLifetimeScope();
-            // builder.RegisterType<CompletedConversationRetriever>().AsSelf().InstancePerLifetimeScope();
-            // builder.RegisterType<CompletedConversationModifier>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<HtmlToPdfClient>().As<IHtmlToPdfClient>().InstancePerLifetimeScope();
             builder.RegisterType<ResponseCustomizer>().As<IResponseCustomizer>();
             builder.RegisterType<ResponseHtmlBuilder>().As<IResponseHtmlBuilder>();
@@ -68,9 +64,6 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<PdfResponseGenerator>().As<IPdfResponseGenerator>();
             builder.RegisterType<S3Saver>().As<IS3Saver>();
             builder.RegisterType<S3Deleter>().As<IS3Deleter>();
-
-            builder.RegisterType<PostgresBackup>().As<IPostgresBackup>();
-            builder.RegisterType<UpdateDatabaseLatest>().As<IUpdateDatabaseLatest>();
 
             builder.RegisterType<NodeGetter>().AsSelf();
             builder.RegisterType<ConversationOptionSplitter>().As<IConversationOptionSplitter>().SingleInstance();
@@ -102,6 +95,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<EnquiryDeleter>().As<IEnquiryDeleter>();
             builder.RegisterType<CompletedConversationRetriever>().As<ICompletedConversationRetriever>();
             builder.RegisterType<CompletedConversationModifier>().As<ICompletedConversationModifier>();
+            builder.RegisterType<RemoveStaleSessions>().As<IRemoveStaleSessions>();
+
         }
     }
 }

@@ -7,6 +7,9 @@ param([string]$pass = "0987654321", [string]$user = "postgres", [string]$awsProf
 ## Postgress Password: (pass in as first argument. Something simple, but it must align with our installation of postgres)
 ## To modify the username/pass, start pgAdmin4 and visit http://127.0.0.1:60026/browser/
 ## make sure the server is creted and if you need to, create the dev user.
+## locally, these are located at something like: %APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json
+## https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-5.0&tabs=windows
+
 
 # $server = "dev-palavyr-database.clznnuwhyqf6.us-east-1.rds.amazonaws.com";
 $server = "127.0.0.1";
