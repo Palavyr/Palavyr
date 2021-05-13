@@ -32,31 +32,16 @@
           <param name="verbosity" value="Normal" />
         </parameters>
       </runner>
-      <runner id="RUNNER_8" name="Run Unit Tests" type="NUnit">
+      <runner id="RUNNER_8" name="Run Unit Tests" type="dotnet">
         <parameters>
-          <param name="dotNetCoverage.NCover.HTMLReport.File.Sort" value="0" />
-          <param name="dotNetCoverage.NCover.HTMLReport.File.Type" value="1" />
-          <param name="dotNetCoverage.NCover.Reg" value="selected" />
-          <param name="dotNetCoverage.NCover.platformBitness" value="x86" />
-          <param name="dotNetCoverage.NCover.platformVersion" value="v2.0" />
-          <param name="dotNetCoverage.NCover3.Reg" value="selected" />
-          <param name="dotNetCoverage.NCover3.args" value="//ias .*" />
-          <param name="dotNetCoverage.NCover3.platformBitness" value="x86" />
-          <param name="dotNetCoverage.NCover3.platformVersion" value="v2.0" />
-          <param name="dotNetCoverage.NCover3.reporter.executable.args" value="//or FullCoverageReport:Html:{teamcity.report.path}" />
-          <param name="dotNetCoverage.PartCover.Reg" value="selected" />
-          <param name="dotNetCoverage.PartCover.includes" value="[*]*" />
-          <param name="dotNetCoverage.PartCover.platformBitness" value="x86" />
-          <param name="dotNetCoverage.PartCover.platformVersion" value="v2.0" />
+          <param name="command" value="vstest" />
           <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
-          <param name="dotNetTestRunner.Type" value="NUnit" />
-          <param name="nunit_enabled" value="checked" />
-          <param name="nunit_environment" value="auto" />
-          <param name="nunit_include" value="server/publish/Palavyr.UnitTests.dll" />
-          <param name="nunit_path" value="%teamcity.tool.NUnit.Console.DEFAULT%" />
-          <param name="nunit_platform" value="MSIL" />
-          <param name="nunit_version" value="NUnit-3.0.0" />
+          <param name="paths" value="publish/Palavyr.UnitTests.dll" />
+          <param name="platform" value="auto" />
+          <param name="teamcity.build.workingDir" value="server" />
           <param name="teamcity.step.mode" value="default" />
+          <param name="verbosity" value="Diagnostic" />
+          <param name="vstest.version" value="VSTest_CrossPlatform" />
         </parameters>
       </runner>
       <runner id="RUNNER_21" name="Run Integration Tests" type="jetbrains_powershell">
