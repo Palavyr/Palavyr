@@ -75,7 +75,7 @@ export const Header = ({ openRegisterDialog, openLoginDialog, handleMobileDrawer
                     <Grid item xs={12}>
                         <Box>
                             <Typography align="center" variant="h5" className={cls.secondaryText}>
-                                A brand new way to engage your customers
+                                Client engagement done <i>YOUR</i> way
                             </Typography>
                         </Box>
                     </Grid>
