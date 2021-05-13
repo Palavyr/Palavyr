@@ -73,8 +73,6 @@ class Auth {
     async loginWithGoogle(oneTimeCode: string, tokenId: string, callback: () => void, errorCallback: (response: Credentials) => void) {
         try {
             const authenticationResponse = await this.loginClient.Login.RequestLoginWithGoogleToken(oneTimeCode, tokenId);
-            console.log(authenticationResponse);
-
             return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
         } catch {
             console.log("Error attempting to reach the server.");
@@ -128,7 +126,6 @@ class Auth {
         if (loginType === SessionStorage.GoogleLoginType) {
             this.googleLogout(logoutCallback);
         } else {
-            console.log("Logging Out");
             this.logout(logoutCallback);
         }
     }
