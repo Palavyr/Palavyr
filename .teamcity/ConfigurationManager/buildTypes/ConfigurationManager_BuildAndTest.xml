@@ -39,7 +39,7 @@
         <parameters>
           <param name="command" value="test" />
           <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
-          <param name="paths" value="publish\Palavyr.UnitTests.dll" />
+          <param name="paths" value="publish/Palavyr.UnitTests publish/Palavyr.IntegrationTests" />
           <param name="skipBuild" value="true" />
           <param name="teamcity.build.workingDir" value="server" />
           <param name="teamcity.step.mode" value="default" />
