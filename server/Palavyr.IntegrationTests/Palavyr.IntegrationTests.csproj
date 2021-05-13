@@ -24,7 +24,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="DataBuilders" />
+      <None Remove="xunit.runner.json" />
+      <EmbeddedResource Include="xunit.runner.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
-    
 </Project>
