@@ -49,6 +49,7 @@
           <param name="paths" value="Palavyr.IntegrationTests" />
           <param name="teamcity.build.workingDir" value="server" />
           <param name="teamcity.step.mode" value="default" />
+          <param name="verbosity" value="Normal" />
         </parameters>
       </runner>
       <runner id="RUNNER_10" name="Pack Server API" type="octopus.pack.package">
