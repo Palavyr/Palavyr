@@ -34,14 +34,12 @@
       </runner>
       <runner id="RUNNER_8" name="Run Unit Tests" type="dotnet">
         <parameters>
-          <param name="command" value="vstest" />
+          <param name="command" value="test" />
           <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
-          <param name="paths" value="publish/Palavyr.UnitTests.dll" />
-          <param name="platform" value="auto" />
+          <param name="paths" value="Palavyr.UnitTests" />
           <param name="teamcity.build.workingDir" value="server" />
           <param name="teamcity.step.mode" value="default" />
           <param name="verbosity" value="Diagnostic" />
-          <param name="vstest.version" value="VSTest_CrossPlatform" />
         </parameters>
       </runner>
       <runner id="RUNNER_21" name="Run Integration Tests" type="jetbrains_powershell">
