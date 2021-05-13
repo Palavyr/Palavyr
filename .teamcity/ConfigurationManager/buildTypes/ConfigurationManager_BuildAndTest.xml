@@ -45,17 +45,16 @@
           <param name="vstest.version" value="VSTest_16_Windows" />
         </parameters>
       </runner>
-      <runner id="RUNNER_21" name="Run Unit Tests (1)" type="dotnet">
+      <runner id="RUNNER_21" name="Run Integration Tests" type="dotnet">
         <parameters>
           <param name="command" value="vstest" />
           <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
-          <param name="paths" value="publish/Palavyr.UnitTests.dll publish/Palavyr.IntegrationTests.dll" />
-          <param name="platform" value="x64" />
+          <param name="paths" value="publish/Palavyr.IntegrationTests.dll" />
+          <param name="platform" value="auto" />
           <param name="teamcity.build.workingDir" value="server" />
           <param name="teamcity.step.mode" value="default" />
           <param name="verbosity" value="Detailed" />
-          <param name="vstest.InIsolation" value="true" />
-          <param name="vstest.version" value="VSTest_16_Windows" />
+          <param name="vstest.version" value="VSTest_CrossPlatform" />
         </parameters>
       </runner>
       <runner id="RUNNER_10" name="Pack Server API" type="octopus.pack.package">
