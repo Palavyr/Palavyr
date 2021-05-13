@@ -59,16 +59,14 @@
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
-      <runner id="RUNNER_21" name="Run Integration Tests" type="dotnet">
+      <runner id="RUNNER_21" name="Run Integration Tests" type="jetbrains_powershell">
         <parameters>
-          <param name="command" value="vstest" />
-          <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
-          <param name="paths" value="publish/Palavyr.IntegrationTests.dll" />
-          <param name="platform" value="auto" />
+          <param name="jetbrains_powershell_execution" value="PS1" />
+          <param name="jetbrains_powershell_noprofile" value="true" />
+          <param name="jetbrains_powershell_script_code" value="dotnet vstest ./publish/Palavyr.IntegrationTests.dll" />
+          <param name="jetbrains_powershell_script_mode" value="CODE" />
           <param name="teamcity.build.workingDir" value="server" />
           <param name="teamcity.step.mode" value="default" />
-          <param name="verbosity" value="Detailed" />
-          <param name="vstest.version" value="VSTest_CrossPlatform" />
         </parameters>
       </runner>
       <runner id="RUNNER_10" name="Pack Server API" type="octopus.pack.package">
