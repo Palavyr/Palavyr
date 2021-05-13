@@ -34,12 +34,13 @@
       </runner>
       <runner id="RUNNER_8" name="Run Unit Tests" type="dotnet">
         <parameters>
-          <param name="command" value="test" />
+          <param name="command" value="vstest" />
           <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
           <param name="paths" value="publish/Palavyr.UnitTests publish/Palavyr.IntegrationTests" />
-          <param name="skipBuild" value="true" />
+          <param name="platform" value="auto" />
           <param name="teamcity.build.workingDir" value="server" />
           <param name="teamcity.step.mode" value="default" />
+          <param name="vstest.version" value="VSTest_CrossPlatform" />
         </parameters>
       </runner>
       <runner id="RUNNER_10" name="Pack Server API" type="octopus.pack.package">
