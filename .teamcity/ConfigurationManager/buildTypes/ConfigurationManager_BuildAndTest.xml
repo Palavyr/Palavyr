@@ -42,12 +42,11 @@
           <param name="verbosity" value="Diagnostic" />
         </parameters>
       </runner>
-      <runner id="RUNNER_21" name="Run Integration Tests" type="jetbrains_powershell">
+      <runner id="RUNNER_21" name="Run Integration Tests" type="dotnet">
         <parameters>
-          <param name="jetbrains_powershell_execution" value="PS1" />
-          <param name="jetbrains_powershell_noprofile" value="true" />
-          <param name="jetbrains_powershell_script_code" value="dotnet vstest ./publish/Palavyr.IntegrationTests.dll" />
-          <param name="jetbrains_powershell_script_mode" value="CODE" />
+          <param name="command" value="test" />
+          <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
+          <param name="paths" value="Palavyr.IntegrationTests" />
           <param name="teamcity.build.workingDir" value="server" />
           <param name="teamcity.step.mode" value="default" />
         </parameters>
