@@ -40,7 +40,7 @@ namespace Palavyr.Core.Services.PdfService
             this.dynamicTablesCompiler = dynamicTablesCompiler;
         }
 
-        public async Task<string?> GeneratePdfResponseAsync(
+        public async Task<PdfServerResponse> GeneratePdfResponseAsync(
             CriticalResponses criticalResponses,
             EmailRequest emailRequest,
             CultureInfo culture,
@@ -63,8 +63,8 @@ namespace Palavyr.Core.Services.PdfService
 
             html = responseCustomizer.Customize(html, emailRequest, account);
 
-            var fileName = await htmlToPdfClient.GeneratePdfFromHtmlOrNull(html, localWriteToPath, identifier);
-            return fileName;
+            var pdfServerResponse = await htmlToPdfClient.GeneratePdfFromHtmlOrNull(html, localWriteToPath, identifier);
+            return pdfServerResponse;
         }
     }
 }

@@ -33,15 +33,16 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         justifyContent: "space-between",
     },
-    menuButtonText: {
-        fontSize: "large",
-        color: "white",
+    menuButton: {
         backgroundColor: theme.palette.success.dark,
         marginRight: "1rem",
         "&:hover": {
             backgroundColor: "white",
             color: theme.palette.common.black,
         },
+    },
+    menuButtonText: {
+        color: "white",
     },
     brandText: {
         fontSize: 64,
@@ -74,18 +75,18 @@ const useStyles = makeStyles((theme) => ({
         verticalAlign: "middle",
         border: `3px solid ${theme.palette.success.light}`,
         padding: "0.4rem",
-        borderRadius: "12px"
+        borderRadius: "12px",
     },
 }));
 
 export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawerOpen, handleMobileDrawerClose, mobileDrawerOpen, selectedTab, setSelectedTab }: INavBar) => {
-    const classes = useStyles();
+    const cls = useStyles();
     return (
-        <AppBar position="fixed" className={classes.appBar} color="transparent" classes={{ root: classes.clear }}>
-            <Toolbar className={classes.toolbar}>
-                <div className={classes.logowrap}>
-                    <div className={classes.logotypography}>
-                        <Typography variant="body2" className={classes.brandText} display="inline">
+        <AppBar position="fixed" className={cls.appBar} color="transparent" classes={{ root: cls.clear }}>
+            <Toolbar className={cls.toolbar}>
+                <div className={cls.logowrap}>
+                    <div className={cls.logotypography}>
+                        <Typography variant="body2" className={cls.brandText} display="inline">
                             Palavyr
                         </Typography>
                     </div>
@@ -94,22 +95,26 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawer
                     {menuItems(openRegisterDialog, openLoginDialog).map((element) => {
                         if (element.link) {
                             return (
-                                <Link key={element.name} to={element.link} className={classes.noDecoration} onClick={handleMobileDrawerClose}>
-                                    <Button disableElevation variant="contained" size="large" className={classes.menuButtonText}>
-                                        {element.name}
+                                <Link key={element.name} to={element.link} className={cls.noDecoration} onClick={handleMobileDrawerClose}>
+                                    <Button disableElevation variant="contained" size="large" className={cls.menuButton}>
+                                        <Typography variant="h6" className={cls.menuButtonText}>
+                                            {element.name}
+                                        </Typography>
                                     </Button>
                                 </Link>
                             );
                         }
                         return (
-                            <Button disableElevation variant="contained" size="large" onClick={element.onClick} className={classes.menuButtonText} key={element.name}>
-                                {element.name}
+                            <Button disableElevation variant="contained" size="medium" onClick={element.onClick} className={cls.menuButton} key={element.name}>
+                                <Typography variant="h6" className={cls.menuButtonText}>
+                                    {element.name}
+                                </Typography>
                             </Button>
                         );
                     })}
                 </div>
             </Toolbar>
-            <Divider light />
+            {/* <Divider light /> */}
         </AppBar>
     );
 };

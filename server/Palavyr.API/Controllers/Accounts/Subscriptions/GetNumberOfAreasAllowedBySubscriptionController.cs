@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Palavyr.Core.Common.GlobalConstants;
 using Palavyr.Core.Data;
+using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Models.Accounts.Schemas;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
@@ -29,13 +29,13 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
             switch (planType)
             {
                 case Account.PlanTypeEnum.Free:
-                    numAreasAllowed = SubscriptionConstants.DefaultNumAreas;
+                    numAreasAllowed = ApplicationConstants.SubscriptionConstants.DefaultNumAreas;
                     break;
                 case Account.PlanTypeEnum.Premium:
-                    numAreasAllowed = SubscriptionConstants.PremiumNumAreas;
+                    numAreasAllowed = ApplicationConstants.SubscriptionConstants.PremiumNumAreas;
                     break;
                 case Account.PlanTypeEnum.Pro:
-                    numAreasAllowed = SubscriptionConstants.ProNumAreas;
+                    numAreasAllowed = ApplicationConstants.SubscriptionConstants.ProNumAreas;
                     break;
                 default:
                     throw new Exception("PlanType Enum does not coallesce with the current values in the database. Investigate.");

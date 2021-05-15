@@ -7,9 +7,8 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const { TypeScriptLoaderRule, BabelLoaderRule, StylesLoader, URLLoaderRule, SVGRLoader } = require("./webpack/rules");
-const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = (ENV) => {
 
@@ -28,6 +27,16 @@ module.exports = (ENV) => {
             new ManifestPlugin(manifestOptions),
             new HtmlWebpackPlugin(htmlOptions),
             new ForkTsCheckerWebpackPlugin(),
+            new CopyPlugin({
+                patterns: [
+                 { from: './favicon.ico'},
+                 { from: './favicon-16x16.png'},
+                 { from: './favicon-32x32.png'},
+                 { from: './apple-touch-icon.png'},
+                 { from: './android-chrome-192x192.png'},
+                 { from: './android-chrome-512x512.png'},
+                ]
+             })
         ],
         output: {
             filename: '[name].bundle.js',

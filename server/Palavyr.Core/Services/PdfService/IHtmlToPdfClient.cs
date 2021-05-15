@@ -5,6 +5,6 @@ namespace Palavyr.Core.Services.PdfService
 {
     public interface IHtmlToPdfClient
     {
-        Task<string?> GeneratePdfFromHtmlOrNull(string htmlString, string localWriteToPath, string identifier);
+        Task<PdfServerResponse> GeneratePdfFromHtmlOrNull(string htmlString, string localWriteToPath, string identifier);
     }
 }

@@ -103,7 +103,7 @@ export const LandingPage = () => {
             <CookieRules open={isCookieRulesDialogOpen} onClose={handleCookieRulesDialogClose} />
             {!show && <YellowStrip />}
             <DevStagingStrip show={show} setShow={setShow} />
-            <AlphaStrip />
+            {/* <AlphaStrip /> */}
             <Header
                 openRegisterDialog={openRegisterDialog}
                 openLoginDialog={openLoginDialog}

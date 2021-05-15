@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Services.TemporaryPaths;
 
 namespace Palavyr.Core.Services.AmazonServices.S3Service
 {
@@ -16,7 +17,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
         private readonly IAmazonS3 s3Client;
         private readonly ILogger<S3Saver> logger;
 
-        public S3Saver(IAmazonS3 s3Client, ILogger<S3Saver> logger)
+        public S3Saver(IAmazonS3 s3Client, ITemporaryPath temporaryPath, ILogger<S3Saver> logger)
         {
             this.s3Client = s3Client;
             this.logger = logger;

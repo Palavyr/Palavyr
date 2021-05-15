@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Palavyr.Core.Common.UIDUtils;
+using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Configuration.Constant;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers

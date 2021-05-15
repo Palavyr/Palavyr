@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -27,10 +28,18 @@ namespace Palavyr.API.CustomMiddleware
             }
             catch (Exception ex)
             {
-                logger.LogDebug("There was a critical exception in the request pipeline, or in the server. Refer to the following message:");
-                logger.LogDebug("-------- Error Middleware exception -----------");
-                logger.LogDebug(ex.Message);
-                logger.LogDebug("-----------------------------------------------");
+                switch (ex)
+                {
+                    case IOException ioException:
+                        logger.LogInformation("File IO exception.");
+                        logger.LogError($"{ioException.Message}");
+                        break;
+                        
+                    default:
+                        logger.LogError("Unknown Exception");
+                        logger.LogError($"{ex.Message}");
+                        break;
+                }
             }
         }
     }

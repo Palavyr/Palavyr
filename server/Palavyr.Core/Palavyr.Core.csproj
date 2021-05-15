@@ -46,4 +46,7 @@
         <PackageReference Include="Google.Apis.Auth.AspNetCore3" Version="1.51.0" />
         <PackageReference Include="MimeKit" Version="2.11.0" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Common\RequestsTools" />
+    </ItemGroup>
 </Project>

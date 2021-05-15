@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Common.UIDUtils;
+using Palavyr.Core.Common.FileSystemTools;
+using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AmazonServices.S3Service;
+using Palavyr.Core.Services.TemporaryPaths;
 
 namespace Palavyr.Core.Services.AttachmentServices
 {
@@ -26,8 +28,8 @@ namespace Palavyr.Core.Services.AttachmentServices
         private readonly IS3KeyResolver s3KeyResolver;
         private readonly DashContext dashContext;
         private readonly ILinkCreator linkCreator;
-        private readonly ITempPathCreator tempPathCreator;
-        private readonly ILocalFileDeleter localFileDeleter;
+        private readonly ITemporaryPath temporaryPath;
+        private readonly ILocalIo localIo;
 
         public AttachmentSaver(
             IS3Saver s3Saver,
@@ -36,8 +38,8 @@ namespace Palavyr.Core.Services.AttachmentServices
             IS3KeyResolver s3KeyResolver,
             DashContext dashContext,
             ILinkCreator linkCreator,
-            ITempPathCreator tempPathCreator,
-            ILocalFileDeleter localFileDeleter
+            ITemporaryPath temporaryPath,
+            ILocalIo localIo
         )
         {
             this.s3Saver = s3Saver;
@@ -46,8 +48,8 @@ namespace Palavyr.Core.Services.AttachmentServices
             this.s3KeyResolver = s3KeyResolver;
             this.dashContext = dashContext;
             this.linkCreator = linkCreator;
-            this.tempPathCreator = tempPathCreator;
-            this.localFileDeleter = localFileDeleter;
+            this.temporaryPath = temporaryPath;
+            this.localIo = localIo;
         }
 
         public async Task<FileLink> SaveAttachment(string accountId, string areaId, IFormFile attachmentFile)
@@ -58,15 +60,13 @@ namespace Palavyr.Core.Services.AttachmentServices
             var s3AttachmentKey = s3KeyResolver.ResolveAttachmentKey(accountId, areaId, safeFileName);
 
             var fileNameMap = FileNameMap.CreateFileMap(safeFileName, riskyFileName, s3AttachmentKey, accountId, areaId);
-            var localTempPath = tempPathCreator.Create(safeFileName + ".pdf");
+            var localTempSafeFile = temporaryPath.CreateLocalTempSafeFile();
+
+            await localIo.SaveFile(localTempSafeFile.FullPath, attachmentFile);
             
-            await using var fileStream = new FileStream(localTempPath, FileMode.Create);
-            await attachmentFile.CopyToAsync(fileStream);
-            fileStream.Close();
-
-            await s3Saver.SaveObjectToS3(userDataBucket, localTempPath, s3AttachmentKey);
-            localFileDeleter.Delete(localTempPath);
-
+            await s3Saver.SaveObjectToS3(userDataBucket, localTempSafeFile.FullPath, s3AttachmentKey);
+            temporaryPath.DeleteLocalTempFile(localTempSafeFile.FileNameWithExtension);
+      
             await dashContext.FileNameMaps.AddAsync(fileNameMap); // DB now has s3 key : risky name
             await dashContext.SaveChangesAsync();
 

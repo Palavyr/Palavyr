@@ -7,36 +7,35 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.UIDUtils;
-using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Services.AttachmentServices;
+using Palavyr.Core.Services.TemporaryPaths;
 
 namespace Palavyr.Core.Services.AmazonServices.S3Service
 {
     public interface IS3Retriever
     {
         Task<bool> GetLatestDatabaseBackup(string bucket, string s3FileKey, string saveToPath);
-        Task<string[]?> DownloadObjectsFromS3(string bucket, List<AttachmentMeta> metas, CancellationToken cancellationToken);
+        Task<S3DownloadFile[]?> DownloadObjectsFromS3(string bucket, List<AttachmentMeta> metas, CancellationToken cancellationToken);
     }
 
     public class S3Retriever : IS3Retriever
     {
-        private readonly ITempPathCreator tempPathCreator;
+        private readonly ITemporaryPath temporaryPath;
         private readonly IAmazonS3 s3Client;
         private readonly ILogger<IS3Retriever> logger;
 
         public S3Retriever(
-            ITempPathCreator tempPathCreator,
+            ITemporaryPath temporaryPath,
             IAmazonS3 s3Client,
             ILogger<IS3Retriever> logger
         )
         {
-            this.tempPathCreator = tempPathCreator;
+            this.temporaryPath = temporaryPath;
             this.s3Client = s3Client;
             this.logger = logger;
         }
 
-        public async Task<string[]?> DownloadObjectsFromS3(string bucket, List<AttachmentMeta> metas, CancellationToken cancellationToken)
+        public async Task<S3DownloadFile[]?> DownloadObjectsFromS3(string bucket, List<AttachmentMeta> metas, CancellationToken cancellationToken)
         {
             var areComplete = new List<Task<GetObjectResponse>>();
             foreach (var meta in metas)
@@ -63,16 +62,16 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
             try
             {
                 var writesAreComplete = new List<Task>();
-                var localTempPaths = new List<string>();
+                var localTempPaths = new List<S3DownloadFile>();
 
                 for (var i = 0; i < responses.Length; i++)
                 {
                     var response = responses[i];
                     var riskyName = metas[i].RiskyName;
 
-                    var localTempPath = tempPathCreator.Create(string.Join("-", new[] {GuidUtils.CreateShortenedGuid(1), riskyName}));
-                    writesAreComplete.Add(response.WriteResponseStreamToFileAsync(localTempPath, false, cancellationToken));
-                    localTempPaths.Add(localTempPath);
+                    var s3DownloadFile = temporaryPath.CreateLocalS3SavePath(riskyName);
+                    writesAreComplete.Add(response.WriteResponseStreamToFileAsync(s3DownloadFile.FullPath, false, cancellationToken));
+                    localTempPaths.Add(s3DownloadFile);
                 }
 
                 await Task.WhenAll(writesAreComplete);
@@ -86,11 +85,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
                 return null;
             }
         }
-
-        private string ExtractFileNameFromKey(string key)
-        {
-            return key.Split(Delimiters.UnixDelimiter).Last();
-        }
+        
 
         public async Task<bool> GetLatestDatabaseBackup(string bucket, string s3FileKey, string saveToPath)
         {

@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Data;
+using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Stripe;
 

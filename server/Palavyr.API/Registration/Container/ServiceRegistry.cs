@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Palavyr.Core.Common.GlobalConstants;
 using Palavyr.Core.Data;
+using Palavyr.Core.GlobalConstants;
 
 namespace Palavyr.API.Registration.Container
 {
@@ -33,13 +33,13 @@ namespace Palavyr.API.Registration.Container
         {
             services.AddDbContext<AccountsContext>(
                 opt =>
-                    opt.UseNpgsql(configuration.GetConnectionString(ConfigSections.AccountDbStringKey)));
+                    opt.UseNpgsql(configuration.GetConnectionString(ApplicationConstants.ConfigSections.AccountDbStringKey)));
             services.AddDbContext<ConvoContext>(
                 opt =>
-                    opt.UseNpgsql(configuration.GetConnectionString(ConfigSections.ConvoDbStringKey)));
+                    opt.UseNpgsql(configuration.GetConnectionString(ApplicationConstants.ConfigSections.ConvoDbStringKey)));
             services.AddDbContext<DashContext>(
                 opt =>
-                    opt.UseNpgsql(configuration.GetConnectionString(ConfigSections.ConfigurationDbStringKey)));
+                    opt.UseNpgsql(configuration.GetConnectionString(ApplicationConstants.ConfigSections.ConfigurationDbStringKey)));
         }
     }
 }

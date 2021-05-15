@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;

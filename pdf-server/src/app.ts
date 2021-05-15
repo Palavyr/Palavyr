@@ -1,7 +1,7 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import pdf, { CreateOptions } from "html-pdf";
-
+import { existsSync } from "fs";
 
 const app: Application = express();
 const port: string = process.env.PORT || "5603";  // Critical This port is hard coded in the API
@@ -27,6 +27,12 @@ const createOptions = (formId: string): CreateOptions => {
     }
 }
 
+type ResponseBody = {
+    FullPath: string;
+    TempDirectory: string;
+    FileNameWithExtension: string;
+    FileStem: string;
+}
 
 ///
 /// This enpoint is very simple -- it receives a string and writes to a provided path.
@@ -42,9 +48,33 @@ app.post("/create-pdf", (req: Request, res: Response, next: NextFunction) => {
     pdf.create(html, STANDARD_PAPER_OPTIONS).toFile(savePath, (err: any) => {
         if (err) {
             console.log("ERROR: " + err)
-            res.send(Promise.reject())
+            res.statusCode = 400;
+            res.statusMessage = "Unable to write pdf file: " + err;
+            res.send(null);
         }
-        res.send(savePath);
+
+        let responseBody: ResponseBody;
+        if (!existsSync(savePath)) {
+            console.log("Failed to save file - check that the .pdf extension exists on the filename.")
+            responseBody = {
+                FullPath: "",
+                FileNameWithExtension: "",
+                FileStem: "",
+                TempDirectory: ""
+            }
+            res.statusCode = 400;
+            res.statusMessage = "Failed to save file - check that the pdf extension exists. This is required.";
+            res.send(null);
+        } else {
+            console.log("Saved pdf file to " + savePath);
+            responseBody = {
+                FullPath: savePath,
+                FileNameWithExtension: identifier + ".pdf",
+                FileStem: identifier,
+                TempDirectory: savePath.split("/").slice(0, -1).join("/")
+            }
+            res.send(responseBody);
+        }
     })
 })
 

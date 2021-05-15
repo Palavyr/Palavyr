@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.GlobalConstants;
-using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Data;
 using Palavyr.Core.Data.Setup.SeedData;
+using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Services.StripeServices;
 
 namespace Palavyr.API.Controllers.Accounts.Develop
@@ -111,7 +111,7 @@ namespace Palavyr.API.Controllers.Accounts.Develop
         {
             var devAccount = Account.CreateAccount(dh.UserName, dh.Email, dh.HashedPassword, dh.AccountId,
                 dh.ApiKey, dh.CompanyName, dh.PhoneNumber, dh.Active, dh.Locale, dh.AccountType);
-            var subscription = Subscription.CreateNew(dh.AccountId, dh.ApiKey, SubscriptionConstants.DefaultNumAreas);
+            var subscription = Subscription.CreateNew(dh.AccountId, dh.ApiKey, ApplicationConstants.SubscriptionConstants.DefaultNumAreas);
             var data = new DevSeedData(dh.AccountId, dh.Email);    
 
             var customer = await stripeCustomerService.CreateNewStripeCustomer(dh.Email);

@@ -8,7 +8,7 @@ namespace Palavyr.Core.Services.PdfService
 {
     public interface IPdfResponseGenerator
     {
-        Task<string?> GeneratePdfResponseAsync(
+        Task<PdfServerResponse> GeneratePdfResponseAsync(
             CriticalResponses criticalResponses,
             EmailRequest emailRequest,
             CultureInfo culture,

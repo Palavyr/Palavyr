@@ -2,7 +2,8 @@ using Autofac;
 using Palavyr.API.Controllers.Enquiries;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.API.Controllers.Testing;
-using Palavyr.Core.Common.UIDUtils;
+using Palavyr.Core.Common.FileSystemTools;
+using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Resources.Responses;
@@ -24,6 +25,7 @@ using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.LogoServices;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Services.TemporaryPaths;
 using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Registration.Container
@@ -80,10 +82,9 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<LinkCreator>().As<ILinkCreator>();
             builder.RegisterType<AttachmentSaver>().As<IAttachmentSaver>();
             builder.RegisterType<S3KeyResolver>().As<IS3KeyResolver>();
-            builder.RegisterType<TempPathCreator>().As<ITempPathCreator>();
+            builder.RegisterType<TemporaryPath>().As<ITemporaryPath>();
             builder.RegisterType<AttachmentRetriever>().As<IAttachmentRetriever>();
             builder.RegisterType<AttachmentDeleter>().As<IAttachmentDeleter>();
-            builder.RegisterType<LocalFileDeleter>().As<ILocalFileDeleter>();
             builder.RegisterType<LogoSaver>().As<ILogoSaver>();
             builder.RegisterType<LogoDeleter>().As<ILogoDeleter>();
             builder.RegisterType<LogoRetriever>().As<ILogoRetriever>();
@@ -96,7 +97,9 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<CompletedConversationRetriever>().As<ICompletedConversationRetriever>();
             builder.RegisterType<CompletedConversationModifier>().As<ICompletedConversationModifier>();
             builder.RegisterType<RemoveStaleSessions>().As<IRemoveStaleSessions>();
-
+            builder.RegisterType<SafeFileNameCreator>().AsSelf();
+            builder.RegisterType<LocalIo>().As<ILocalIo>();
+            builder.RegisterType<PdfServerClient>().As<IPdfServerClient>();
         }
     }
 }

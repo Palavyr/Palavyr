@@ -5,6 +5,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require("clean-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 const webpack = require("webpack");
 
@@ -23,6 +24,16 @@ module.exports = envPath => {
             }),
             new ManifestPlugin(manifestOptions),
             new CleanWebpackPlugin(),
+            new CopyPlugin({
+                patterns: [
+                 { from: './favicon.ico'},
+                 { from: './favicon-16x16.png' },
+                 { from: './favicon-32x32.png' },
+                 { from: './apple-touch-icon.png' },
+                 { from: './android-chrome-192x192.png' },
+                 { from: './android-chrome-512x512.png' },
+                ]
+             })
         ],
         entry: {
             "palavyr-widget-build": "./src/index.tsx",

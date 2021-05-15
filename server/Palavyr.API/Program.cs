@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
-using Palavyr.Core.Common.GlobalConstants;
 using NLog.Web;
+using Palavyr.Core.GlobalConstants;
 
 namespace Palavyr.API
 {
@@ -25,7 +25,7 @@ namespace Palavyr.API
                     (hostingContext, logging) =>
                     {
                         logging.ClearProviders();
-                        logging.AddConfiguration(hostingContext.Configuration.GetSection(ConfigSections.LoggingSection));
+                        logging.AddConfiguration(hostingContext.Configuration.GetSection(ApplicationConstants.ConfigSections.LoggingSection));
                         logging.SetMinimumLevel(LogLevel.Trace);
                         logging.AddConsole();
                         logging.AddDebug();
