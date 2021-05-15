@@ -2,7 +2,7 @@ import * as React from "react";
 import { App } from "./App";
 import { Meta } from "@storybook/react";
 
-import { WidgetClient } from "client/Client";
+import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { ConfigureMockClient } from "test/testUtils/ConfigureMockClient";
 import { precheckResult } from "@test-data/preCheckResults";
 import { widgetPreferences } from "@test-data/widgetPreferences";
@@ -12,7 +12,7 @@ import { convoA } from "@test-data/conversationNodes";
 const fakeKey = "secret-key";
 const isDemo = false;
 const areaId = "abc123";
-const routes = new WidgetClient(fakeKey).Routes;
+const routes = new PalavyrWidgetRepository(fakeKey).Routes;
 
 const client = new ConfigureMockClient();
 client.ConfigureGet(routes.precheck(fakeKey, isDemo), precheckResult);

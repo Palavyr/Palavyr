@@ -4,7 +4,7 @@ import { getRootNode } from "../componentRegistry/utils";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { renderNextComponent } from "componentRegistry/renderNextComponent";
-import { GlobalState, SelectedOption, WidgetPreferences } from "@Palavyr-Types";
+import { GlobalState, SelectedOption } from "@Palavyr-Types";
 import { useDispatch } from "react-redux";
 import { Conversation } from "./components/Conversation/Conversation";
 
@@ -13,9 +13,8 @@ import cn from "classnames";
 
 import "./style.scss";
 import { isWidgetOpened, toggleWidget } from "@store-dispatcher";
-import { WidgetClient } from "client/Client";
+import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { _openFullscreenPreview } from "@store-actions";
-import { BrandingStrip } from "common/BrandingStrip";
 
 export interface WidgetProps {
     option: SelectedOption;
@@ -24,11 +23,11 @@ export interface WidgetProps {
 export const Widget = ({ option }: WidgetProps) => {
     const location = useLocation();
     const secretKey = new URLSearchParams(location.search).get("key");
-    const client = new WidgetClient(secretKey);
+    const client = new PalavyrWidgetRepository(secretKey);
     const dispatch = useDispatch();
 
     const initializeConvo = async () => {
-        const { data: newConversation } = await client.Widget.Get.NewConversation(option.areaId);
+        const newConversation = await client.Widget.Get.NewConversation(option.areaId);
         const nodes = newConversation.conversationNodes;
         const convoId = newConversation.conversationId;
 

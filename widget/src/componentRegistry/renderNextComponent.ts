@@ -1,14 +1,14 @@
 
 import { WidgetNodeResource, WidgetNodes } from "@Palavyr-Types";
 import { renderCustomComponent } from "@store-dispatcher";
-import { WidgetClient } from "client/Client";
+import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { dummyFailComponent } from "./DummyComponentDev";
 import { ComponentRegistry } from "./registry";
 
 export const renderNextComponent = (
     node: WidgetNodeResource,
     nodeList: WidgetNodes,
-    client: WidgetClient,
+    client: PalavyrWidgetRepository,
     convoId: string,
 ) => {
     //TODO: make this impossible by geting the configuration right

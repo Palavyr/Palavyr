@@ -1,4 +1,4 @@
-import { WidgetClient } from "client/Client";
+import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { ElementType } from "react";
 
 export type SecretKey = string | null;
@@ -107,7 +107,7 @@ export type LocaleMap = LocaleMapItem[];
 export interface IProgressTheChat {
     node: WidgetNodeResource;
     nodeList: WidgetNodes;
-    client: WidgetClient;
+    client: PalavyrWidgetRepository;
     convoId: string;
 }
 

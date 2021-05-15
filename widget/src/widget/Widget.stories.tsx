@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 
-import { widgetPreferences } from "@test-data/widgetPreferences";
 import { Meta, Story } from "@storybook/react";
 import { Widget, WidgetProps } from "./Widget";
 import { getSelectedOption, options } from "@test-data/options";
-import { WidgetClient } from "client/Client";
+import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { ConfigureMockClient } from "test/testUtils/ConfigureMockClient";
 import { newConversation } from "@test-data/newConversation";
 import { addResponseMessage, addUserMessage, closeUserDetails, dropMessages, toggleWidget } from "@store-dispatcher";
@@ -12,7 +11,7 @@ import { shortStaticConvoSequence } from "@test-data/conversationNodes";
 
 const fakeKey = "secret-key";
 const areaId = "abc123";
-const routes = new WidgetClient(fakeKey).Routes;
+const routes = new PalavyrWidgetRepository(fakeKey).Routes;
 
 const conf = new ConfigureMockClient();
 conf.ConfigureGet(routes.newConvo(fakeKey, areaId), newConversation(areaId));

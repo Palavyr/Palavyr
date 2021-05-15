@@ -2,6 +2,7 @@ import React from "react";
 import { AppBar, Toolbar, Typography, Hidden, IconButton, Button, makeStyles, Divider } from "@material-ui/core";
 import { menuItems } from "./NavMenuItems";
 import { Link } from "react-router-dom";
+import classNames from "classnames";
 // import Logo from "../../../common/svgs/palavyrBranding/logo.svg";
 // import Logo from "../../../common/svgs/palavyrBranding/logo.svg";
 // import Logo from "../header/logo2.svg"
@@ -37,12 +38,14 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.success.dark,
         marginRight: "1rem",
         "&:hover": {
-            backgroundColor: "white",
-            color: theme.palette.common.black,
+            backgroundColor: theme.palette.common.white,
         },
     },
     menuButtonText: {
-        color: "white",
+        color: theme.palette.common.white,
+        "&:hover": {
+            color: theme.palette.success.main,
+        },
     },
     brandText: {
         fontSize: 64,
@@ -96,7 +99,7 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawer
                         if (element.link) {
                             return (
                                 <Link key={element.name} to={element.link} className={cls.noDecoration} onClick={handleMobileDrawerClose}>
-                                    <Button disableElevation variant="contained" size="large" className={cls.menuButton}>
+                                    <Button disableElevation variant="contained" size="medium" className={classNames(cls.menuButtonText, cls.menuButton)}>
                                         <Typography variant="h6" className={cls.menuButtonText}>
                                             {element.name}
                                         </Typography>
@@ -105,7 +108,7 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawer
                             );
                         }
                         return (
-                            <Button disableElevation variant="contained" size="medium" onClick={element.onClick} className={cls.menuButton} key={element.name}>
+                            <Button disableElevation variant="contained" size="medium" onClick={element.onClick} className={classNames(cls.menuButtonText, cls.menuButton)} key={element.name}>
                                 <Typography variant="h6" className={cls.menuButtonText}>
                                     {element.name}
                                 </Typography>

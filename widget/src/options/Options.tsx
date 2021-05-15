@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useState, useCallback, useEffect } from "react";
 import { DropdownListOptions } from "./optionFormats/DropdownOptionsList";
 import { SelectedOption, WidgetPreferences, AreaTable } from "@Palavyr-Types";
-import { WidgetClient } from "client/Client";
+import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { makeStyles } from "@material-ui/core";
 import { BrandingStrip } from "common/BrandingStrip";
 
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 
 export const OptionSelector = ({ setSelectedOption }: IOptionSelector) => {
     var secretKey = new URLSearchParams(useLocation().search).get("key");
-    const Client = new WidgetClient(secretKey);
+    const Client = new PalavyrWidgetRepository(secretKey);
     const cls = useStyles();
 
     const [, setUseGroups] = useState<boolean>();
@@ -33,7 +33,7 @@ export const OptionSelector = ({ setSelectedOption }: IOptionSelector) => {
         setUseGroups(false);
 
         var areas = await Client.Widget.Get.Areas();
-        var options = areas.data.map((area: AreaTable) => {
+        var options = areas.map((area: AreaTable) => {
             return { areaDisplay: area.areaDisplayTitle, areaId: area.areaIdentifier };
         });
 

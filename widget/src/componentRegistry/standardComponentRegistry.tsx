@@ -198,7 +198,7 @@ export class StandardComponents {
                                         const currentDynamicResponseState = dynamicResponses.filter(x => Object.keys(x)[0] === node.dynamicType)[0];
 
                                         // send the dynamic responses, the
-                                        const { data: tooComplicated } = await client.Widget.Post.InternalCheck(node, response, currentDynamicResponseState);
+                                        const tooComplicated = await client.Widget.Post.InternalCheck(node, response, currentDynamicResponseState);
                                         if (tooComplicated) {
                                             child = nodeList.filter(x => x.nodeType === "TooComplicated")[0];
                                         }
@@ -418,7 +418,7 @@ export class StandardComponents {
                 numIndividuals = 1;
             }
 
-            const { data: response } = await client.Widget.Send.ConfirmationEmail(areaId, email, name, phone, numIndividuals, dynamicResponses, keyvalues, convoId);
+            const response = await client.Widget.Send.ConfirmationEmail(areaId, email, name, phone, numIndividuals, dynamicResponses, keyvalues, convoId);
             if (response.result) {
                 const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
                 await client.Widget.Post.CompletedConversation(completeConvo);
@@ -539,7 +539,7 @@ export class StandardComponents {
                 const name = contextProperties[ConvoContextProperties.name];
                 const phone = contextProperties[ConvoContextProperties.phoneNumber];
 
-                const { data: response } = await client.Widget.Send.FallbackEmail(areaId, email, name, phone, convoId);
+                const response = await client.Widget.Send.FallbackEmail(areaId, email, name, phone, convoId);
                 if (response.result) {
                     var completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
                     await client.Widget.Post.CompletedConversation(completeConvo);

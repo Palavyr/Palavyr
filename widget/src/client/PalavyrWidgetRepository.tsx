@@ -12,23 +12,16 @@ import {
     WidgetNodeResource,
     WidgetPreferences,
 } from "@Palavyr-Types";
-import axios, { AxiosResponse, AxiosInstance } from "axios";
-import { serverUrl } from "./clientUtils";
+import { AxiosClient } from "./AxiosClient";
 
-export class WidgetClient {
-    private client: AxiosInstance;
+export class PalavyrWidgetRepository {
+    private client: AxiosClient;
     public secretKey: string | null;
 
     constructor(secretKey: SecretKey = null) {
+        this.client = new AxiosClient("apiKeyAccess");
         if (secretKey === null) throw new Error("ApiKey not set correctly");
         this.secretKey = secretKey;
-
-        this.client = axios.create({
-            headers: {
-                action: "apiKeyAccess",
-            },
-        });
-        this.client.defaults.baseURL = serverUrl + "/api/";
     }
 
     public Routes = {
@@ -46,20 +39,21 @@ export class WidgetClient {
 
     public Widget = {
         Get: {
-            PreCheck: async (isDemo: boolean): Promise<AxiosResponse<PreCheckResult>> => this.client.get(this.Routes.precheck(this.secretKey, isDemo)),
-            WidgetPreferences: async (): Promise<AxiosResponse<WidgetPreferences>> => this.client.get(this.Routes.widgetPreferences(this.secretKey)),
-            Locale: async (): Promise<AxiosResponse<LocaleDefinition>> => this.client.get(this.Routes.locale(this.secretKey)),
-            Areas: async (): Promise<AxiosResponse<Array<AreaTable>>> => this.client.get(this.Routes.areas(this.secretKey)),
-            NewConversation: async (areaId: string): Promise<AxiosResponse<NewConversation>> => this.client.get(this.Routes.newConvo(this.secretKey, areaId)),
+            PreCheck: async (isDemo: boolean) => this.client.get<PreCheckResult>(this.Routes.precheck(this.secretKey, isDemo)),
+            WidgetPreferences: async () => this.client.get<WidgetPreferences>(this.Routes.widgetPreferences(this.secretKey)),
+            Locale: async () => this.client.get<LocaleDefinition>(this.Routes.locale(this.secretKey)),
+            Areas: async () => this.client.get<Array<AreaTable>>(this.Routes.areas(this.secretKey)),
+            NewConversation: async (areaId: string) => this.client.get<NewConversation>(this.Routes.newConvo(this.secretKey, areaId)),
         },
 
         Post: {
-            InternalCheck: async (node: WidgetNodeResource, response: string, currentDynamicResponseState: DynamicResponse): Promise<AxiosResponse<boolean>> => this.client.post(this.Routes.internalCheck(this.secretKey), {
-                Node: node,
-                Response: response,
-                CurrentDynamicResponseState: currentDynamicResponseState
-            }),
-            ReplyUpdate: async (update: ConversationUpdate): Promise<AxiosResponse> => this.client.post(this.Routes.replyUpdate(this.secretKey), update),
+            InternalCheck: async (node: WidgetNodeResource, response: string, currentDynamicResponseState: DynamicResponse) =>
+                this.client.post<boolean, {}>(this.Routes.internalCheck(this.secretKey), {
+                    Node: node,
+                    Response: response,
+                    CurrentDynamicResponseState: currentDynamicResponseState,
+                }),
+            ReplyUpdate: async (update: ConversationUpdate) => this.client.post(this.Routes.replyUpdate(this.secretKey), update),
             CompletedConversation: async (completeConvo: CompleteConverationDetails) => this.client.post(this.Routes.completeConvo(this.secretKey), completeConvo),
         },
 
@@ -73,8 +67,8 @@ export class WidgetClient {
                 dynamicResponses: Array<{ [key: string]: string }>,
                 keyValues: KeyValues,
                 convoId: string
-            ): Promise<AxiosResponse<SendEmailResultResponse>> =>
-                this.client.post(this.Routes.confirmationEmail(this.secretKey, areaIdentifier), {
+            ) =>
+                this.client.post<SendEmailResultResponse, {}>(this.Routes.confirmationEmail(this.secretKey, areaIdentifier), {
                     ConversationId: convoId,
                     EmailAddress: emailAddress,
                     DynamicResponses: dynamicResponses,
@@ -84,7 +78,7 @@ export class WidgetClient {
                     NumIndividuals: numIndividuals,
                 }),
             FallbackEmail: async (areaIdentifier: string, emailAddress: string, name: string, phone: string, convoId: string) =>
-                this.client.post(this.Routes.fallbackEmail(this.secretKey, areaIdentifier), {
+                this.client.post<SendEmailResultResponse, {}>(this.Routes.fallbackEmail(this.secretKey, areaIdentifier), {
                     ConversationId: convoId,
                     EmailAddress: emailAddress,
                     Name: name,

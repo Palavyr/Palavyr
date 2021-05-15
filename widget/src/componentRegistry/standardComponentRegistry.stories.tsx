@@ -3,7 +3,7 @@ import { Meta, Story } from "@storybook/react";
 import { StandardComponents } from "./standardComponentRegistry";
 import { WidgetNodeResource, WidgetNodes } from "@Palavyr-Types";
 import { ConfigureMockClient } from "test/testUtils/ConfigureMockClient";
-import { WidgetClient } from "client/Client";
+import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { convoA } from "@test-data/conversationNodes";
 import { MessageWrapper } from "componentRegistry/MessageWrapper";
 import { widgetPreferences } from "@test-data/widgetPreferences";
@@ -15,7 +15,7 @@ const nodeList: WidgetNodes = [node];
 
 const fakeKey = "secret-key";
 const conf = new ConfigureMockClient();
-const client = new WidgetClient(fakeKey);
+const client = new PalavyrWidgetRepository(fakeKey);
 const convoId = "1234";
 
 export default {

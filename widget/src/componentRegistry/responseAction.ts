@@ -1,12 +1,12 @@
 import { WidgetNodeResource, ConversationUpdate, WidgetNodes } from "@Palavyr-Types";
 import { addKeyValue, addUserMessage, toggleMsgLoader } from "@store-dispatcher";
-import { WidgetClient } from "client/Client";
+import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { random } from "lodash";
 
 import { renderNextComponent } from "./renderNextComponent";
 import { setDynamicResponse } from "./setDynamicResponse";
 
-export const responseAction = (node: WidgetNodeResource, child: WidgetNodeResource, nodeList: WidgetNodes, client: WidgetClient, convoId: string, response: string | null, callback: (() => void) | null = null) => {
+export const responseAction = (node: WidgetNodeResource, child: WidgetNodeResource, nodeList: WidgetNodes, client: PalavyrWidgetRepository, convoId: string, response: string | null, callback: (() => void) | null = null) => {
     if (response) {
         if (node.isCritical) {
             addKeyValue({ [node.text]: response.toString() }); // TODO: make unique

@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 import { GlobalState, LocaleMap, LocaleMapItem } from "@Palavyr-Types";
 import { setRegionContext, closeUserDetails } from "@store-dispatcher";
 import { INVALID_PHONE, INVALID_EMAIL, INVALID_NAME } from "./UserDetailsCheck";
-import { WidgetClient } from "client/Client";
+import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 
 export interface CollectDetailsFormProps {
     chatStarted: boolean;
@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
 
 export const CollectDetailsForm = ({ chatStarted, setChatStarted }: CollectDetailsFormProps) => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
-    const client = new WidgetClient(secretKey);
+    const client = new PalavyrWidgetRepository(secretKey);
     const userDetailsVisible = useSelector((state: GlobalState) => state.behaviorReducer.userDetailsVisible);
 
     const [options, setOptions] = useState<LocaleMap>([]);
@@ -69,7 +69,7 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted }: CollectDetai
 
     useEffect(() => {
         (async () => {
-            const { data: locale } = await client.Widget.Get.Locale();
+            const locale = await client.Widget.Get.Locale();
             setphonePattern(locale.localePhonePattern);
             setOptions(locale.localeMap);
             setRegionContext(locale.localeId);

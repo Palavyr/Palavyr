@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
     button: {
         width: "18rem",
         alignSelf: "center",
-        fontSize: "large",
         backgroundColor: theme.palette.background.default,
         color: theme.palette.common.black,
         "&:hover": {
@@ -83,7 +82,7 @@ export const Header = ({ openRegisterDialog, openLoginDialog, handleMobileDrawer
                 </Grid>
             </Card>
             <Button className={cls.button} variant="contained" onClick={openRegisterDialog}>
-                Create a free account
+                <Typography variant="h6">Create a free account</Typography>
             </Button>
         </div>
     );

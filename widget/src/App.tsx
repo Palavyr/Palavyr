@@ -6,7 +6,7 @@ import { Widget } from "./widget/Widget";
 import { CollectDetailsForm } from "./common/UserDetailsDialog/CollectDetailsForm";
 import { useSelector } from "react-redux";
 import { GlobalState, SelectedOption, WidgetPreferences } from "@Palavyr-Types";
-import { WidgetClient } from "client/Client";
+import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { setWidgetPreferences } from "@store-dispatcher";
 
 export const App = () => {
@@ -21,13 +21,13 @@ export const App = () => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const isDemo = new URLSearchParams(useLocation().search).get("demo");
 
-    const client = new WidgetClient(secretKey);
+    const client = new PalavyrWidgetRepository(secretKey);
 
     const runAppPrecheck = useCallback(async () => {
-        var { data: preCheckResult } = await client.Widget.Get.PreCheck(isDemo === "true" ? true : false);
+        const preCheckResult = await client.Widget.Get.PreCheck(isDemo === "true" ? true : false);
         setIsReady(preCheckResult.isReady);
         if (preCheckResult.isReady) {
-            const { data: prefs } = await client.Widget.Get.WidgetPreferences();
+            const prefs = await client.Widget.Get.WidgetPreferences();
             setWidgetPrefs(prefs);
             setWidgetPreferences(prefs);
         }
