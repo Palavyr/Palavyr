@@ -26,12 +26,12 @@ module.exports = envPath => {
             new CleanWebpackPlugin(),
             new CopyPlugin({
                 patterns: [
-                 { from: './favicon.ico'},
-                 { from: './favicon-16x16.png' },
-                 { from: './favicon-32x32.png' },
-                 { from: './apple-touch-icon.png' },
-                 { from: './android-chrome-192x192.png' },
-                 { from: './android-chrome-512x512.png' },
+                 { from: './public/favicon.ico'},
+                 { from: './public/favicon-16x16.png' },
+                 { from: './public/favicon-32x32.png' },
+                 { from: './public/apple-touch-icon.png' },
+                 { from: './public/android-chrome-192x192.png' },
+                 { from: './public/android-chrome-512x512.png' },
                 ]
              })
         ],
