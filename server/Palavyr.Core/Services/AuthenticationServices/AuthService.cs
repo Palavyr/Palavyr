@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Google.Apis.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;

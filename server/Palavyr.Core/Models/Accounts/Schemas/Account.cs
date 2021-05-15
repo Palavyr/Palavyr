@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Palavyr.Core.Common.UIDUtils;
+using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.Core.Models.Accounts.Schemas
 {

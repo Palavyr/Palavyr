@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Palavyr.Core.Common.RequestsTools;
 using Palavyr.Core.Data;
+using Palavyr.Core.GlobalConstants;
 
 namespace Palavyr.API.CustomMiddleware
 {
@@ -48,7 +48,7 @@ namespace Palavyr.API.CustomMiddleware
             // https://widget.palavyr.com/widget?key={apikey} with header  "action": "apiKeyAccess"
             var httpContext = httpContextAccessor.HttpContext; // Access context here
 
-            if (httpContext.Request.Headers[MagicUrlStrings.Action].ToString() != MagicUrlStrings.ApiKeyAccess)
+            if (httpContext.Request.Headers[ApplicationConstants.MagicUrlStrings.Action].ToString() != ApplicationConstants.MagicUrlStrings.ApiKeyAccess)
             {
                 return await Task.FromResult(AuthenticateResult.Fail("Incorrect action header"));
             }
@@ -72,7 +72,7 @@ namespace Palavyr.API.CustomMiddleware
             }
             
             // set the account id in the header
-            httpContext.Request.Headers[MagicUrlStrings.AccountId] = account.AccountId;
+            httpContext.Request.Headers[ApplicationConstants.MagicUrlStrings.AccountId] = account.AccountId;
             
             // account found - apikey is legit. Now make a claim ticket...
             var claims = new[] {new Claim(ClaimTypes.SerialNumber, apiKey.ToString())};

@@ -6,18 +6,19 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.GlobalConstants;
 using Palavyr.Core.Data;
+using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AmazonServices.S3Service;
+using Palavyr.Core.Services.TemporaryPaths;
 
 namespace Palavyr.Core.Services.AttachmentServices
 {
     public interface IAttachmentRetriever
     {
         Task<FileLink[]> RetrieveAttachmentLinks(string account, string areaId, CancellationToken cancellationToken);
-        Task<string[]> RetrieveAttachmentFiles(string account, string areaId, string[]? additionalFiles, CancellationToken cancellationToken);
+        Task<IHoldTemporaryPathDetails[]> RetrieveAttachmentFiles(string account, string areaId, IHoldTemporaryPathDetails[]? additionalFiles, CancellationToken cancellationToken);
     }
 
     public class AttachmentRetriever : IAttachmentRetriever
@@ -42,7 +43,7 @@ namespace Palavyr.Core.Services.AttachmentServices
 
         public async Task<FileLink[]> RetrieveAttachmentLinks(string account, string areaId, CancellationToken cancellationToken)
         {
-            var userDataBucket = configuration.GetSection(ConfigSections.UserDataSection).Value;
+            var userDataBucket = configuration.GetSection(ApplicationConstants.ConfigSections.UserDataSection).Value;
             var metas = await dashContext.FileNameMaps
                 .Where(x => x.AreaIdentifier == areaId)
                 .Select(
@@ -63,9 +64,9 @@ namespace Palavyr.Core.Services.AttachmentServices
             return fileLinks.ToArray();
         }
 
-        public async Task<string[]> RetrieveAttachmentFiles(string account, string areaId, string[]? additionalFiles, CancellationToken cancellationToken)
+        public async Task<IHoldTemporaryPathDetails[]> RetrieveAttachmentFiles(string account, string areaId, IHoldTemporaryPathDetails[]? additionalFiles, CancellationToken cancellationToken)
         {
-            var userDataBucket = configuration.GetSection(ConfigSections.UserDataSection).Value;
+            var userDataBucket = configuration.GetSection(ApplicationConstants.ConfigSections.UserDataSection).Value;
             var metas = await dashContext.FileNameMaps
                 .Where(x => x.AreaIdentifier == areaId)
                 .Select(
@@ -76,7 +77,7 @@ namespace Palavyr.Core.Services.AttachmentServices
                         RiskyName = x.RiskyName
                     }).ToListAsync(cancellationToken);
 
-            var localFilePaths = await s3Retriever.DownloadObjectsFromS3(userDataBucket, metas, cancellationToken);
+            IHoldTemporaryPathDetails[]? localFilePaths = await s3Retriever.DownloadObjectsFromS3(userDataBucket, metas, cancellationToken);
             if (localFilePaths == null)
             {
                 throw new AmazonS3Exception("Unable to download to server!"); // TODO Tech debt - what is better pattern -- all these inner exceptions. No time right now.
@@ -85,13 +86,14 @@ namespace Palavyr.Core.Services.AttachmentServices
             {
                 for (var i = 0; i < metas.Count; i++)
                 {
-                    metas[i].SetLocalFilePath(localFilePaths[i]);
+                    metas[i].SetLocalFilePath(localFilePaths[i].FullPath);
                 }
             }
 
+            var allLocalFiles = new List<IHoldTemporaryPathDetails>();
             if (additionalFiles != null)
             {
-                var allLocalFiles = localFilePaths.ToList();
+                allLocalFiles.AddRange(localFilePaths.ToList());
                 allLocalFiles.AddRange(additionalFiles.ToList());
                 return allLocalFiles.ToArray();
             }

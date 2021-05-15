@@ -3,10 +3,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.GlobalConstants;
-using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Data;
 using Palavyr.Core.Data.Setup.SeedData;
+using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Requests.Registration;
@@ -154,7 +153,7 @@ namespace Palavyr.Core.Services.AccountServices
         {
             // Add the default subscription (free with 2 areas)
             logger.LogDebug($"Add default subscription for {accountId}");
-            var newSubscription = Subscription.CreateNew(accountId, apiKey, SubscriptionConstants.DefaultNumAreas);
+            var newSubscription = Subscription.CreateNew(accountId, apiKey, ApplicationConstants.SubscriptionConstants.DefaultNumAreas);
             await accountsContext.Subscriptions.AddAsync(newSubscription);
 
             // install seed Data

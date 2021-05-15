@@ -1,7 +1,7 @@
 ﻿using System;
-using Palavyr.Core.Common.UIDUtils;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
 {

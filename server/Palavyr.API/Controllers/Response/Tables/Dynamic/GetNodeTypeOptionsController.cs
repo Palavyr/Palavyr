@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.DynamicTableService;

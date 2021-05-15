@@ -1,5 +1,5 @@
 ﻿using System.Net.Http;
-using Palavyr.Core.Common.RequestsTools;
+using Palavyr.Core.GlobalConstants;
 
 namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods.ClientExtensionMethods
 {
@@ -7,8 +7,8 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods.ClientExtensionMe
     {
         public static void AddCustomHeaders(this HttpClient client)
         {
-            client.DefaultRequestHeaders.Add(MagicUrlStrings.Action, MagicUrlStrings.SessionAction);
-            client.DefaultRequestHeaders.Add(MagicUrlStrings.SessionId, IntegrationConstants.SessionId);
+            client.DefaultRequestHeaders.Add(ApplicationConstants.MagicUrlStrings.Action, ApplicationConstants.MagicUrlStrings.SessionAction);
+            client.DefaultRequestHeaders.Add(ApplicationConstants.MagicUrlStrings.SessionId, IntegrationConstants.SessionId);
         }
     }
 }

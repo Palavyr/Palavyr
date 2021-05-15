@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.GlobalConstants;
 using Palavyr.Core.Data;
+using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 
 namespace Palavyr.Core.Services.AttachmentServices
@@ -35,7 +35,7 @@ namespace Palavyr.Core.Services.AttachmentServices
 
         public async Task DeleteAttachment(string fileId, CancellationToken cancellationToken)
         {
-            var userDataBucket = configuration.GetSection(ConfigSections.UserDataSection).Value;
+            var userDataBucket = configuration.GetSection(ApplicationConstants.ConfigSections.UserDataSection).Value;
             var meta = await dashContext.FileNameMaps.SingleAsync(x => x.SafeName == fileId, cancellationToken);
             var success = await s3Deleter.DeleteObjectFromS3Async(userDataBucket, meta.S3Key);
             if (!success)
@@ -49,7 +49,7 @@ namespace Palavyr.Core.Services.AttachmentServices
 
         public async Task DeleteAllAreaAttachments(string areaId, CancellationToken cancellationToken)
         {
-            var userDataBucket = configuration.GetSection(ConfigSections.UserDataSection).Value;
+            var userDataBucket = configuration.GetSection(ApplicationConstants.ConfigSections.UserDataSection).Value;
             var metas = dashContext.FileNameMaps
                 .Where(x => x.AreaIdentifier == areaId);
             var keys = await metas

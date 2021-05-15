@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Palavyr.Core.Common.UIDUtils;
+using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Models.Resources.Requests;
 

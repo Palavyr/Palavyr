@@ -5,8 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.GlobalConstants;
-using Palavyr.Core.Common.UIDUtils;
+using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
@@ -15,6 +14,7 @@ using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Services.TemporaryPaths;
 
 namespace Palavyr.Core.Services.PdfService
 {
@@ -31,8 +31,7 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IGenericDynamicTableRepository<SelectOneFlat> genericDynamicTableRepository;
         private readonly IS3Saver s3Saver;
         private readonly IS3KeyResolver s3KeyResolver;
-        private readonly ITempPathCreator tempPathCreator;
-        private readonly ILocalFileDeleter localFileDeleter;
+        private readonly ITemporaryPath temporaryPath;
         private readonly ICriticalResponses criticalResponses;
 
         public PreviewResponseGenerator(
@@ -47,8 +46,7 @@ namespace Palavyr.Core.Services.PdfService
             IGenericDynamicTableRepository<SelectOneFlat> genericDynamicTableRepository,
             IS3Saver s3Saver,
             IS3KeyResolver s3KeyResolver,
-            ITempPathCreator tempPathCreator,
-            ILocalFileDeleter localFileDeleter,
+            ITemporaryPath temporaryPath,
             ICriticalResponses criticalResponses
         )
         {
@@ -63,19 +61,18 @@ namespace Palavyr.Core.Services.PdfService
             this.genericDynamicTableRepository = genericDynamicTableRepository;
             this.s3Saver = s3Saver;
             this.s3KeyResolver = s3KeyResolver;
-            this.tempPathCreator = tempPathCreator;
-            this.localFileDeleter = localFileDeleter;
+            this.temporaryPath = temporaryPath;
             this.criticalResponses = criticalResponses;
         }
 
         public async Task<FileLink> CreatePdfResponsePreviewAsync(string accountId, string areaId, CultureInfo culture, CancellationToken cancellationToken)
         {
-            var previewBucket = configuration.GetSection(ConfigSections.PreviewSection).Value;
+            var previewBucket = configuration.GetPreviewBucket();
 
             var areaData = await configurationRepository.GetAreaComplete(accountId, areaId);
             var userAccount = await accountRepository.GetAccount(accountId, cancellationToken);
 
-            var fakeResponses = this.criticalResponses.Compile(
+            var fakeResponses = criticalResponses.Compile(
                 new List<Dictionary<string, string>>()
                 {
                     new Dictionary<string, string>() {{"Example info", "Crucial response"}},
@@ -95,32 +92,26 @@ namespace Palavyr.Core.Services.PdfService
                 staticTables,
                 dynamicTables);
 
-            var safeFileNameStem = GuidUtils.CreateNewId();
-            var localTempPath = tempPathCreator.Create(string.Join(".", safeFileNameStem, "pdf"));
+            var localTempSafeFile = temporaryPath.CreateLocalTempSafeFile();
 
-            var tempLocalFilePdfPath = await htmlToPdfClient.GeneratePdfFromHtmlOrNull(html, localTempPath, safeFileNameStem);
-            if (tempLocalFilePdfPath == null)
-            {
-                localFileDeleter.Delete(localTempPath);
-                throw new Exception("Unable to generate PDF from html");
-            }
+            var pdfServerResponse = await htmlToPdfClient.GeneratePdfFromHtmlOrNull(html, localTempSafeFile.FullPath, localTempSafeFile.FileStem);
             
-            var s3Key = s3KeyResolver.ResolvePreviewKey(accountId, safeFileNameStem);
-            var success = await s3Saver.SaveObjectToS3(previewBucket, tempLocalFilePdfPath, s3Key);
+            var s3Key = s3KeyResolver.ResolvePreviewKey(accountId, localTempSafeFile.FileStem);
+            var success = await s3Saver.SaveObjectToS3(previewBucket, pdfServerResponse.FullPath, s3Key);
             if (!success)
             {
+                temporaryPath.DeleteLocalTempFile(localTempSafeFile.FileNameWithExtension);
                 throw new Exception("Unable to save object to s3.");
             }
             else
             {
-                localFileDeleter.Delete(tempLocalFilePdfPath);
+                temporaryPath.DeleteLocalTempFile(pdfServerResponse.FullPath);
             }
             
             var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(s3Key, previewBucket);
-            var fileLink = FileLink.CreateLink("Preview", preSignedUrl, safeFileNameStem);
+            var fileLink = FileLink.CreateLink("Preview", preSignedUrl, localTempSafeFile.FileStem);
             return fileLink;
         }
-
 
         /// Only use for the preview (will generate a sensible row result given the type of dynamic table logged in the area table
         private async Task<List<Table>> CollectPreviewDynamicTables(Area area, string accountId, CultureInfo culture)

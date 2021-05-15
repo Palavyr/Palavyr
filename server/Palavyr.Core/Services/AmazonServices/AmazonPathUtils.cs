@@ -1,6 +1,6 @@
 using System.IO;
 using Palavyr.Core.Common.ExtensionMethods.PathExtensions;
-using Palavyr.Core.Common.UIDUtils;
+using Palavyr.Core.Common.UniqueIdentifiers;
 
 namespace Palavyr.Core.Services.AmazonServices
 {

@@ -5,53 +5,34 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.FileSystemTools.LocalServices;
 
 namespace Palavyr.Core.Services.PdfService
 {
     public class HtmlToPdfClient : IHtmlToPdfClient
     {
         private readonly ILogger<HtmlToPdfClient> logger;
-        private static readonly HttpClient Client = new HttpClient();
+        private readonly IPdfServerClient pdfServerClient;
 
-        public HtmlToPdfClient(ILogger<HtmlToPdfClient> logger)
+        public HtmlToPdfClient(ILogger<HtmlToPdfClient> logger, IPdfServerClient pdfServerClient)
         {
             this.logger = logger;
+            this.pdfServerClient = pdfServerClient;
         }
 
-        public async Task<string?> GeneratePdfFromHtmlOrNull(string htmlString, string localWriteToPath, string identifier)
+        public async Task<PdfServerResponse> GeneratePdfFromHtmlOrNull(string htmlString, string localWriteToPath, string identifier)
         {
             var values = new Dictionary<string, string>
             {
-                {LocalServices.html, htmlString.Trim()},
-                {LocalServices.path, localWriteToPath},
-                {LocalServices.id, identifier} // used as label inside the pdf, not part of the save path
+                {PdfServerConstants.html, htmlString.Trim()},
+                {PdfServerConstants.path, localWriteToPath},
+                {PdfServerConstants.id, identifier} // used as label inside the pdf, not part of the save path
             };
 
             var content = new FormUrlEncodedContent(values);
+            var pdfServerResponse = await pdfServerClient.PostToPdfServer(content);
 
-            string localTempOutputPath;
-            try
-            {
-                var response = await Client.PostAsync(LocalServices.PdfServiceUrl, content);
-                localTempOutputPath = await response.Content.ReadAsStringAsync();
-            }
-            catch (Exception ex)
-            {
-                logger.LogCritical($"Failed to convert and write the HTML to PDF using the express server.");
-                logger.LogCritical($"Attempted to use url: {LocalServices.PdfServiceUrl}");
-                logger.LogCritical($"Encountered Error: {ex.Message}");
-                return null;
-            }
-
-            if (!File.Exists(localTempOutputPath))
-            { 
-                logger.LogDebug("PDF File not written correctly");
-                return null;
-            }
-
-            logger.LogDebug($"Successfully wrote the pdf file to disk at {localTempOutputPath}!");
-            return localTempOutputPath;
+            logger.LogDebug($"Successfully wrote the pdf file to disk at {pdfServerResponse.FullPath}!");
+            return pdfServerResponse;
         }
     }
 }

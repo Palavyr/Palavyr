@@ -15,6 +15,7 @@ using Palavyr.Core.Services.AttachmentServices;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Services.TemporaryPaths;
 
 namespace Palavyr.Core.Services.EmailService.EmailResponse
 {
@@ -30,8 +31,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
         private readonly IAttachmentRetriever attachmentRetriever;
         private readonly IAccountRepository accountRepository;
         private readonly IConfigurationRepository configurationRepository;
-        private readonly ITempPathCreator tempPathCreator;
-        private readonly ILocalFileDeleter localFileDeleter;
+        private readonly ITemporaryPath temporaryPath;
         private readonly IPdfResponseGenerator pdfResponseGenerator;
         private readonly ICompileSenderDetails compileSenderDetails;
         private readonly ISesEmail client;
@@ -44,8 +44,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             IAttachmentRetriever attachmentRetriever,
             IAccountRepository accountRepository,
             IConfigurationRepository configurationRepository,
-            ITempPathCreator tempPathCreator,
-            ILocalFileDeleter localFileDeleter,
+            ITemporaryPath temporaryPath,
             IPdfResponseGenerator pdfResponseGenerator,
             ICompileSenderDetails compileSenderDetails,
             ISesEmail client,
@@ -58,8 +57,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             this.attachmentRetriever = attachmentRetriever;
             this.accountRepository = accountRepository;
             this.configurationRepository = configurationRepository;
-            this.tempPathCreator = tempPathCreator;
-            this.localFileDeleter = localFileDeleter;
+            this.temporaryPath = temporaryPath;
             this.pdfResponseGenerator = pdfResponseGenerator;
             this.compileSenderDetails = compileSenderDetails;
             this.client = client;
@@ -73,33 +71,29 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             var responses = criticalResponses.Compile(emailRequest.KeyValues);
 
             var culture = await GetCulture(accountId, cancellationToken);
-            var safeFileNameStem = emailRequest.ConversationId;
-            var localFilePath = await pdfResponseGenerator.GeneratePdfResponseAsync(
+            var localTempPath = temporaryPath.CreateLocalTempSafeFile(emailRequest.ConversationId);
+            
+            var pdfServerResponse = await pdfResponseGenerator.GeneratePdfResponseAsync(
                 responses,
                 emailRequest,
                 culture,
-                tempPathCreator.Create(string.Join(".", safeFileNameStem, "pdf")),
-                safeFileNameStem,
+                localTempPath.FullPath,
+                localTempPath.FileStem,
                 accountId,
                 areaId,
                 cancellationToken
             );
 
-            if (localFilePath == null)
-            {
-                throw new Exception("Could not generate PDF Response - check the pdf server is active");
-            }
-
-            await SaveResponsePdfToS3(localFilePath, accountId, safeFileNameStem);
+            await SaveResponsePdfToS3(pdfServerResponse.FullPath, accountId, pdfServerResponse.FileStem);
 
             var senderDetails = await compileSenderDetails.Compile(accountId, areaId, emailRequest, cancellationToken);
-            var attachments = await attachmentRetriever.RetrieveAttachmentFiles(accountId, areaId, new[] {localFilePath}, cancellationToken);
+            var attachments = await attachmentRetriever.RetrieveAttachmentFiles(accountId, areaId, new IHoldTemporaryPathDetails[] {pdfServerResponse}, cancellationToken);
 
-            var responseResult = await Send(senderDetails, attachments);
-            localFileDeleter.Delete(localFilePath);
+            var responseResult = await Send(senderDetails, attachments.Select(x => x.FullPath).ToArray());
+            temporaryPath.DeleteLocalTempFile(pdfServerResponse.FileStem);
             foreach (var attachment in attachments)
             {
-                localFileDeleter.Delete(attachment);
+                temporaryPath.DeleteLocalTempFile(attachment.FileNameWithExtension);
             }
 
             return responseResult;
@@ -109,21 +103,21 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
         {
             var sendAttachmentsOnFallback = await SendAttachmentsWhenFallback(accountId, areaId);
 
-            string[] attachments;
+            IHoldTemporaryPathDetails[] attachments;
             if (sendAttachmentsOnFallback)
             {
                 attachments = await attachmentRetriever.RetrieveAttachmentFiles(accountId, areaId, null, cancellationToken);
             }
             else
             {
-                attachments = new string[] { };
+                attachments = new IHoldTemporaryPathDetails[] { };
             }
 
             var senderDetails = await compileSenderDetails.Compile(accountId, areaId, emailRequest, cancellationToken);
-            var responseResult = await Send(senderDetails, attachments);
+            var responseResult = await Send(senderDetails, attachments.Select(x => x.FullPath).ToArray());
             foreach (var attachment in attachments)
             {
-                localFileDeleter.Delete(attachment);
+                temporaryPath.DeleteLocalTempFile(attachment.FileNameWithExtension);
             }
 
             return responseResult;
