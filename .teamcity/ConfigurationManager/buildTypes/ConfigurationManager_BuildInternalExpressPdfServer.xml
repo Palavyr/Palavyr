@@ -29,6 +29,14 @@
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
+      <runner id="RUNNER_22" name="Bundle Express Server" type="simpleRunner">
+        <parameters>
+          <param name="script.content" value="set NODE_ENV=production &amp;&amp; npx webpack --config webpack.production.js --env.production --display-error-detail" />
+          <param name="teamcity.build.workingDir" value="pdf-server" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
     </build-runners>
     <vcs-settings>
       <vcs-entry-ref root-id="ConfigurationManager_HttpsGithubComPalavyrConfigurationManagerGitRefsHeadsMaster" />
