@@ -10,7 +10,8 @@ import { logDebug } from 'utils/logging';
 
 const app: Application = express();
 const port: string = process.env.PORT || '5603'; // Critical This port is hard coded in the API
-logDebug('starting PDF service on port: ' + port);
+console.log('starting PDF service on port: ' + port);
+
 
 // middleware
 app.use(cors());
@@ -71,4 +72,4 @@ app.post('/create-pdf', (req: Request, res: Response, next: NextFunction) => {
 	});
 });
 
-app.listen(port, () => logDebug('Server listening...'));
+app.listen(port, () => console.log('Server listening...'));

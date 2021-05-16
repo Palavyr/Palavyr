@@ -4,9 +4,9 @@
   "private": true,
   "description": "A simple express server to convert html to pdf",
   "scripts": {
-    "start": "npm install --no-save && set NODE_ENV=development && npx webpack --config webpack.development.js --env.development --display-error-detail  &&  node dist/palavyr-pdf.server.js",
+    "start": "npm install --no-save && set NODE_ENV=development && npx webpack --config webpack.development.js &&  node dist/palavyr-pdf.server.js",
     "dev": "nodemon src/app.ts",
-    "build": "set NODE_ENV=production && npx webpack --config webpack.production.js --env.production --display-error-detail",
+    "build": "set NODE_ENV=production && npx webpack --config webpack.production.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -35,7 +35,7 @@
     "ts-node": "^8.10.2",
     "tsconfig-paths-webpack-plugin": "^3.5.1",
     "typescript": "^4.2.4",
-    "webpack-cli": "^3.3.12",
+    "webpack-cli": "^4.7.0",
     "webpack-dev-server": "^3.11.0",
     "webpack-manifest-plugin": "^2.2.0",
     "webpack-merge": "^5.1.4",

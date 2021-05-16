@@ -1,28 +1,29 @@
 {
   "compilerOptions": {
     "strict": false,
-    "outDir": "./dist",
-    "module": "esnext",
-    "target": "es5",
     "skipLibCheck": true,
     "sourceMap": true,
-    "noImplicitAny": false,
     "experimentalDecorators": true,
     "strictNullChecks": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
     "noEmit": false,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "allowJs": true,
     "noUnusedLocals": false,
     "strictPropertyInitialization": false,
     "baseUrl": "src",
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "module": "es6",
+    "target": "es5",
+    "jsx": "react",
+    "allowJs": true,
+    "moduleResolution": "node",
     "paths": {
       "@Palavyr-Types": ["globalTypes.ts"]
     }
   },
-  "include": ["src/**/*", "src/**/*.d.ts", "customTypes/*.d.ts"],
+  "include": ["src/**/*"]
 }

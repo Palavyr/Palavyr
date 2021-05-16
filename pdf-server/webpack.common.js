@@ -8,16 +8,17 @@ var nodeExternals = require('webpack-node-externals');
 
 module.exports = (ENV) => {
 
-    const envPath = ENV.production ? ".env.production" : ".env.development";
+    const envPath = ENV === "production" ? ".env.production" : ".env.development";
     console.log("Building in.... " + envPath)
 
     return {
         entry: {
             "palavyr-pdf": './src/app.ts',
         },
+        target: "node",
         plugins: [
-            new Dotenv({ path: envPath }),
-            new CleanWebpackPlugin(), //for < v2 versions of CleanWebpackPlugin
+            // new Dotenv({ path: envPath }),
+            // new CleanWebpackPlugin(), //for < v2 versions of CleanWebpackPlugin
             new ForkTsCheckerWebpackPlugin(),
         ],
         output: {
@@ -36,6 +37,5 @@ module.exports = (ENV) => {
                 BabelLoaderRule() // IN USE
             ],
         },
-        externals: [nodeExternals()]
     }
 }
