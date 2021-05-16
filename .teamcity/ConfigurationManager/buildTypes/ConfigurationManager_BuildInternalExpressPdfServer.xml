@@ -18,6 +18,14 @@
           <param name="use.custom.script" value="true" />
         </parameters>
       </runner>
+      <runner id="RUNNER_22" name="Bundle Express Server" type="simpleRunner">
+        <parameters>
+          <param name="script.content" value="set NODE_ENV=production &amp;&amp; npx webpack --config webpack.production.js --env.production --display-error-detail" />
+          <param name="teamcity.build.workingDir" value="pdf-server" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
       <runner id="RUNNER_2" name="Package the express server into a zip" type="octopus.pack.package">
         <parameters>
           <param name="octopus_packageformat" value="Zip" />
@@ -27,14 +35,6 @@
           <param name="octopus_packageversion" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
           <param name="octopus_publishartifacts" value="true" />
           <param name="teamcity.step.mode" value="default" />
-        </parameters>
-      </runner>
-      <runner id="RUNNER_22" name="Bundle Express Server" type="simpleRunner">
-        <parameters>
-          <param name="script.content" value="set NODE_ENV=production &amp;&amp; npx webpack --config webpack.production.js --env.production --display-error-detail" />
-          <param name="teamcity.build.workingDir" value="pdf-server" />
-          <param name="teamcity.step.mode" value="default" />
-          <param name="use.custom.script" value="true" />
         </parameters>
       </runner>
     </build-runners>
