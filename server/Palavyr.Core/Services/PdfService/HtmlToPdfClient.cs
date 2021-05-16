@@ -1,10 +1,7 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Services.PdfService.PdfServer;
 
 namespace Palavyr.Core.Services.PdfService
 {
@@ -19,17 +16,10 @@ namespace Palavyr.Core.Services.PdfService
             this.pdfServerClient = pdfServerClient;
         }
 
-        public async Task<PdfServerResponse> GeneratePdfFromHtmlOrNull(string htmlString, string localWriteToPath, string identifier)
+        public async Task<PdfServerResponse> GeneratePdfFromHtml(string htmlString, string bucket, string s3Key, string identifier, Paper paperOptions)
         {
-            var values = new Dictionary<string, string>
-            {
-                {PdfServerConstants.html, htmlString.Trim()},
-                {PdfServerConstants.path, localWriteToPath},
-                {PdfServerConstants.id, identifier} // used as label inside the pdf, not part of the save path
-            };
-
-            var content = new FormUrlEncodedContent(values);
-            var pdfServerResponse = await pdfServerClient.PostToPdfServer(content);
+            var request = CompilePdfServerRequest.Compile(bucket, s3Key, htmlString, identifier, paperOptions);
+            var pdfServerResponse = await pdfServerClient.PostToPdfServer(request);
 
             logger.LogDebug($"Successfully wrote the pdf file to disk at {pdfServerResponse.FullPath}!");
             return pdfServerResponse;

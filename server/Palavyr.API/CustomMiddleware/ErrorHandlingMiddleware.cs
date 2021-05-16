@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -34,7 +35,12 @@ namespace Palavyr.API.CustomMiddleware
                         logger.LogInformation("File IO exception.");
                         logger.LogError($"{ioException.Message}");
                         break;
-                        
+
+                    case HttpRequestException httpRequestException:
+                        logger.LogInformation("Failed to create/write PDF to S3");
+                        logger.LogError($"{httpRequestException.Message}");
+                        break;
+
                     default:
                         logger.LogError("Unknown Exception");
                         logger.LogError($"{ex.Message}");

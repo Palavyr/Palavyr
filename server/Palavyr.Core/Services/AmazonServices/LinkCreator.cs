@@ -14,13 +14,11 @@ namespace Palavyr.Core.Services.AmazonServices
     public class LinkCreator : ILinkCreator
     {
         private readonly IAmazonS3 s3Client;
-        private readonly IS3Saver s3Saver;
         private readonly ILogger<LinkCreator> logger;
 
-        public LinkCreator(IAmazonS3 s3Client, IS3Saver s3Saver, ILogger<LinkCreator> logger)
+        public LinkCreator(IAmazonS3 s3Client, ILogger<LinkCreator> logger)
         {
             this.s3Client = s3Client;
-            this.s3Saver = s3Saver;
             this.logger = logger;
         }
 

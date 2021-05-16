@@ -16,6 +16,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
     {
         Task<bool> GetLatestDatabaseBackup(string bucket, string s3FileKey, string saveToPath);
         Task<S3DownloadFile[]?> DownloadObjectsFromS3(string bucket, List<AttachmentMeta> metas, CancellationToken cancellationToken);
+        Task<bool> CheckIfFileExists(string bucket, string key);
     }
 
     public class S3Retriever : IS3Retriever
@@ -85,7 +86,30 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
                 return null;
             }
         }
-        
+
+        public async Task<bool> CheckIfFileExists(string bucket, string key)
+        {
+            try
+            {
+                await s3Client.GetObjectMetadataAsync(
+                    new GetObjectMetadataRequest()
+                    {
+                        BucketName = bucket,
+                        Key = key
+                    });
+                return true;
+            }
+            catch (AmazonS3Exception ex)
+            {
+                if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return false;
+                }
+
+                throw;
+            }
+        }
+
 
         public async Task<bool> GetLatestDatabaseBackup(string bucket, string s3FileKey, string saveToPath)
         {

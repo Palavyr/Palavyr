@@ -49,7 +49,7 @@ export const AttachmentPreview = ({ preview }: IAttachmentPreview) => {
                     type="application/pdf"
                     width="100%"
                     height="100%"
-                    aria-label={"preview"}
+                    aria-label="preview"
                 >
                 </object>
             </Paper>

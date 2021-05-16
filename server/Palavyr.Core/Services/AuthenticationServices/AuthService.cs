@@ -14,7 +14,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
     public interface IAuthService
     {
         public Task<Credentials> PerformLoginAction(LoginCredentialsRequest loginCredentialsRequest);
-        public Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenId(string accessToken);
+        public Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenId(string? accessToken);
     }
 
     public class AuthService : IAuthService
@@ -47,8 +47,8 @@ namespace Palavyr.Core.Services.AuthenticationServices
 
         private class AccountReturn
         {
-            public Account Account { get; private set; }
-            public string Message { get; private set; }
+            public Account? Account { get; private set; }
+            public string? Message { get; private set; }
 
             public static AccountReturn Return(Account? account, string? message)
             {

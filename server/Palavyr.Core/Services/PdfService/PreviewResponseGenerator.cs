@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +13,7 @@ using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Services.PdfService.PdfServer;
 using Palavyr.Core.Services.TemporaryPaths;
 
 namespace Palavyr.Core.Services.PdfService
@@ -29,7 +29,6 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IAccountRepository accountRepository;
         private readonly ILinkCreator linkCreator;
         private readonly IGenericDynamicTableRepository<SelectOneFlat> genericDynamicTableRepository;
-        private readonly IS3Saver s3Saver;
         private readonly IS3KeyResolver s3KeyResolver;
         private readonly ITemporaryPath temporaryPath;
         private readonly ICriticalResponses criticalResponses;
@@ -44,7 +43,6 @@ namespace Palavyr.Core.Services.PdfService
             IAccountRepository accountRepository,
             ILinkCreator linkCreator,
             IGenericDynamicTableRepository<SelectOneFlat> genericDynamicTableRepository,
-            IS3Saver s3Saver,
             IS3KeyResolver s3KeyResolver,
             ITemporaryPath temporaryPath,
             ICriticalResponses criticalResponses
@@ -59,7 +57,6 @@ namespace Palavyr.Core.Services.PdfService
             this.accountRepository = accountRepository;
             this.linkCreator = linkCreator;
             this.genericDynamicTableRepository = genericDynamicTableRepository;
-            this.s3Saver = s3Saver;
             this.s3KeyResolver = s3KeyResolver;
             this.temporaryPath = temporaryPath;
             this.criticalResponses = criticalResponses;
@@ -94,20 +91,9 @@ namespace Palavyr.Core.Services.PdfService
 
             var localTempSafeFile = temporaryPath.CreateLocalTempSafeFile();
 
-            var pdfServerResponse = await htmlToPdfClient.GeneratePdfFromHtmlOrNull(html, localTempSafeFile.FullPath, localTempSafeFile.FileStem);
-            
             var s3Key = s3KeyResolver.ResolvePreviewKey(accountId, localTempSafeFile.FileStem);
-            var success = await s3Saver.SaveObjectToS3(previewBucket, pdfServerResponse.FullPath, s3Key);
-            if (!success)
-            {
-                temporaryPath.DeleteLocalTempFile(localTempSafeFile.FileNameWithExtension);
-                throw new Exception("Unable to save object to s3.");
-            }
-            else
-            {
-                temporaryPath.DeleteLocalTempFile(pdfServerResponse.FullPath);
-            }
-            
+            await htmlToPdfClient.GeneratePdfFromHtml(html, previewBucket, s3Key, localTempSafeFile.FileStem, Paper.CreateDefault(localTempSafeFile.FileStem));
+
             var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(s3Key, previewBucket);
             var fileLink = FileLink.CreateLink("Preview", preSignedUrl, localTempSafeFile.FileStem);
             return fileLink;

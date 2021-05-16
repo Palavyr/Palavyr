@@ -72,7 +72,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 
             var culture = await GetCulture(accountId, cancellationToken);
             var localTempPath = temporaryPath.CreateLocalTempSafeFile(emailRequest.ConversationId);
-            
+
             var pdfServerResponse = await pdfResponseGenerator.GeneratePdfResponseAsync(
                 responses,
                 emailRequest,
@@ -83,14 +83,10 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                 areaId,
                 cancellationToken
             );
-
-            await SaveResponsePdfToS3(pdfServerResponse.FullPath, accountId, pdfServerResponse.FileStem);
-
             var senderDetails = await compileSenderDetails.Compile(accountId, areaId, emailRequest, cancellationToken);
             var attachments = await attachmentRetriever.RetrieveAttachmentFiles(accountId, areaId, new IHoldTemporaryPathDetails[] {pdfServerResponse}, cancellationToken);
 
             var responseResult = await Send(senderDetails, attachments.Select(x => x.FullPath).ToArray());
-            temporaryPath.DeleteLocalTempFile(pdfServerResponse.FileStem);
             foreach (var attachment in attachments)
             {
                 temporaryPath.DeleteLocalTempFile(attachment.FileNameWithExtension);

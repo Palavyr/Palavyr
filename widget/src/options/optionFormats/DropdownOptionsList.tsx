@@ -90,6 +90,7 @@ export const DropdownListOptions = ({ setSelectedOption, options }: DropdownList
                 {options && (
                     <Autocomplete
                         size="small"
+                        open={true}
                         classes={{ root: cls.selectbox, paper: classNames(cls.selectListBgColor, cls.selectListFontColor) }}
                         disableClearable
                         clearOnEscape
