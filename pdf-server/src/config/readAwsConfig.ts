@@ -20,7 +20,7 @@ export const setConfig = () => {
 };
 
 export const getAwsCredentials = () => {
-	setConfig();
+	if (process.env.AWS_REGION === undefined) setConfig();
 	const aws_access_key = process.env.AWS_SECRET_KEY as string;
 	const aws_secret_key = process.env.AWS_ACCESS_KEY as string;
 	const aws_region = process.env.AWS_REGION as string;

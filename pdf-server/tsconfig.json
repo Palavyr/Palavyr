@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "strict": false,
+    "strict": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "experimentalDecorators": true,
@@ -11,15 +11,16 @@
     "noEmit": false,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "checkJs": false,
     "noUnusedLocals": false,
     "strictPropertyInitialization": false,
     "baseUrl": "src",
     "outDir": "./dist/",
     "noImplicitAny": true,
-    "module": "es6",
-    "target": "es5",
-    "jsx": "react",
+    "module": "CommonJS",
+    "target": "ES5",
     "allowJs": true,
+    "types": ["node"],
     "moduleResolution": "node",
     "paths": {
       "@Palavyr-Types": ["globalTypes.ts"]
