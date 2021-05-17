@@ -14,9 +14,7 @@ export const sendResponse = (
 ): void => {
     response.statusCode = statusCode;
     response.statusMessage = statuseMessage;
-    setTimeout(() => {
-        response.send(responseBody);
-    }, 1000);
+    response.send(responseBody);
 };
 
 export const createEmptyResponseBody = () => {
