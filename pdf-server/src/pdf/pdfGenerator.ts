@@ -1,12 +1,8 @@
-/* tslint:disable */
-
 import { unlink, createReadStream, ReadStream } from 'fs';
 import { spawn } from 'child_process';
 import assert from 'assert';
 import { FileInfo } from '@Palavyr-Types';
-import { logDebug } from 'utils/logging';
-
-const phantomjs = require('phantomjs-prebuilt');
+import { logDebug } from 'logging/logging';
 
 /*
  * phantomjs version 1.8.1 and later should work.
@@ -22,21 +18,13 @@ const phantomjs = require('phantomjs-prebuilt');
  * When no #pageContent is available, phantomjs will use document.body as pdf content
  */
 
-export type PdfOptions = {
-    phantomPath: string;
-    phantomArgs: string[];
-    localUrlAccess: string;
-    timeout: number;
-    childProcessOptions: any;
-};
-
-class PDF {
+class PdfGenerator {
     public html: string;
     public pathToPhantom: string;
     public pathToScript: string;
     public paperOptions: any;
 
-	public timeout: number;
+    public timeout: number;
     public phantomArgs: string[];
     public filename: string;
 
@@ -45,13 +33,12 @@ class PDF {
         this.paperOptions = paperOptions;
         this.pathToPhantom = pathToPhantom;
         this.pathToScript = pathToScript;
-        this.filename = ''; // TODO
+        this.filename = 'temp';
         this.phantomArgs = ['--local-url-access=false'];
         this.timeout = 30000;
 
         logDebug('Setting Filename as ' + this.filename);
-		logDebug("PaperOptions: " + this.paperOptions);
-		logDebug("pathToScript: " + this.pathToScript)
+        logDebug('pathToScript: ' + this.pathToScript);
         logDebug('Using phantom options: ' + this.phantomArgs);
 
         assert(
@@ -76,7 +63,7 @@ class PDF {
             }
 
             logDebug('Setting stream Success function');
-            stream.on('end', function() {
+            stream.on('end', function () {
                 unlink(res!.filename, function unlinkPdfFile(error) {
                     if (error) console.log('html-pdf:', error);
                 });
@@ -173,4 +160,4 @@ export const kill = (child: any, onData: any, onError: any) => {
     child.kill();
 };
 
-export default PDF;
+export default PdfGenerator;

@@ -16,50 +16,45 @@ $server = "127.0.0.1";
 $port = "5432";
 $api = ".\\Palavyr.API";
 $migrator = ".\\Palavyr.Data.Migrator";
-$backupAndRestore = ".\\Palavyr.BackupAndRestore";
 
-function WriteSecrets($projectPath) {
-    Write-Host "`r`nSetting Connection Strings for $projectPath...`r`n"
-    dotnet user-secrets set ConnectionStrings:AccountsContextPostgres "Server=$server;Port=$port;Database=Accounts;User Id=$user;Password=$pass" --project $projectPath
-    dotnet user-secrets set ConnectionStrings:ConvoContextPostgres "Server=$server;Port=$port;Database=Conversations;User Id=$user;Password=$pass" --project $projectPath
-    dotnet user-secrets set ConnectionStrings:DashContextPostgres "Server=$server;Port=$port;Database=Configuration;User Id=$user;Password=$pass" --project $projectPath
-}
-
-Write-Host "`r`nClearing previous Secrets`r`n"
-dotnet user-secrets clear --project $api;
-dotnet user-secrets clear --project $migrator;
-dotnet user-secrets clear --project $backupAndRestore;
-
-WriteSecrets($api)
-WriteSecrets($migrator)
-WriteSecrets($backupAndRestore)
-
-##################
-# Write Migrator Environment
-
-Write-Host "`r`nSetting Environment for $migrator"
-dotnet user-secrets set Environment "Development" --project $migrator;
-
-
-##################
-# WRITE AWS SECRETS
 Write-Host "`r`nSetting Secrets for AWS Credentials"
 $prof = Get-AWSCredential $awsProfile;
 $credentials = $prof.GetCredentials();
 $accessKey = $credentials.AccessKey;
 $secretKey = $credentials.SecretKey;
+$region = 'us-east-1'
 
-dotnet user-secrets set AWS:AccessKey "$accessKey" --project $api
-dotnet user-secrets set AWS:SecretKey "$secretKey" --project $api
-dotnet user-secrets set AWS:Region "us-east-1" --project $backupAndRestore
-# dotnet user-secrets set AWS:Region "ap-southeast-2" --project $api
+function WriteDatabaseSecrets($projectPath) {
+    Write-Host "`r`nSetting Connection Strings`r`n"
+    dotnet user-secrets set ConnectionStrings:AccountsContextPostgres "Server=$server;Port=$port;Database=Accounts;User Id=$user;Password=$pass" --project $projectPath
+    dotnet user-secrets set ConnectionStrings:ConvoContextPostgres "Server=$server;Port=$port;Database=Conversations;User Id=$user;Password=$pass" --project $projectPath
+    dotnet user-secrets set ConnectionStrings:DashContextPostgres "Server=$server;Port=$port;Database=Configuration;User Id=$user;Password=$pass" --project $projectPath
+}
 
-dotnet user-secrets set AWS:AccessKey "$accessKey" --project $backupAndRestore
-dotnet user-secrets set AWS:SecretKey "$secretKey" --project $backupAndRestore
-dotnet user-secrets set AWS:Region "us-east-1" --project $backupAndRestore
-# dotnet user-secrets set AWS:Region "ap-southeast-2" --project $backupAndRestore
+function WriteAWSSecrets($projectPath) {
+    Write-Host "`r`nSetting AWS Secrets`r`n"
+    dotnet user-secrets set AWS:AccessKey "$accessKey" --project $projectPath
+    dotnet user-secrets set AWS:SecretKey "$secretKey" --project $projectPath
+    dotnet user-secrets set AWS:Region "$region" --project $projectPath
+}
+
+Write-Host "`r`nClearing previous Secrets`r`n"
+dotnet user-secrets clear --project $api;
+dotnet user-secrets clear --project $migrator;
 
 
+##################
+# Write Migrator Environment
+
+Write-Host "`r`nSetting Migrator secrets ($migrator)`r`n"
+dotnet user-secrets set Environment "Development" --project $migrator;
+WriteDatabaseSecrets($migrator)
+
+
+
+Write-Host "`r`nSetting API secrets ($api)`r`n"
+WriteDatabaseSecrets($api)
+WriteAWSSecrets($api);
 ###################
 # Write JWT Secrets (Json Web Token...?)
 # dotnet user-secrets set JwtToken:Issuer "http://localhost:8080/" --project $api
@@ -69,5 +64,4 @@ dotnet user-secrets set JWTSecretKey "SomeSecretKey345345345345ThatIsITagkhjasdh
 ### STRIPE
 $stripeKey = (Get-Item -Path Env:PalavyrStipeSecretKey).Value
 dotnet user-secrets set Stripe:SecretKey $stripeKey --project $api
-
 # Clear-Host

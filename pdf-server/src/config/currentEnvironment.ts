@@ -1,12 +1,12 @@
-import { logDebug } from "utils/logging";
+import { logDebug } from 'logging/logging';
 
 export const currentEnvironment = process.env.NODE_ENV as string;
 
-if (currentEnvironment === undefined){
-    logDebug("CURRENTENV not set");
-    throw new Error("Must Set Node Env during build.");
+if (currentEnvironment === undefined) {
+    logDebug('CURRENTENV not set');
+    throw new Error('Must Set Node Env during build.');
 }
 
 export const isDevelopmentStage = () => {
-    return currentEnvironment.toUpperCase() === "development".toUpperCase();
+    return currentEnvironment.toUpperCase() === 'development'.toUpperCase();
 };

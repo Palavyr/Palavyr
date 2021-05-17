@@ -1,30 +1,30 @@
 {
-  "compilerOptions": {
-    "strict": true,
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "experimentalDecorators": true,
-    "strictNullChecks": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": false,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "checkJs": false,
-    "noUnusedLocals": false,
-    "strictPropertyInitialization": false,
-    "baseUrl": "src",
-    "outDir": "./dist/",
-    "noImplicitAny": true,
-    "module": "CommonJS",
-    "target": "ES5",
-    "allowJs": true,
-    "types": ["node"],
-    "moduleResolution": "node",
-    "paths": {
-      "@Palavyr-Types": ["globalTypes.ts"]
-    }
-  },
-  "include": ["src/**/*"]
+    "compilerOptions": {
+        "strict": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "experimentalDecorators": true,
+        "strictNullChecks": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "noEmit": false,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "checkJs": false,
+        "noUnusedLocals": false,
+        "strictPropertyInitialization": false,
+        "baseUrl": "src",
+        "outDir": "./dist/",
+        "noImplicitAny": true,
+        "module": "CommonJS",
+        "target": "ES5",
+        "allowJs": true,
+        "types": ["node"],
+        "moduleResolution": "node",
+        "paths": {
+            "@Palavyr-Types": ["globalTypes.ts"]
+        }
+    },
+    "include": ["src/**/*"] //, "assets/pdf_a4_portrait.js"]
 }
