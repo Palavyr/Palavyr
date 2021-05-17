@@ -38,6 +38,9 @@ namespace Palavyr.Core.GlobalConstants
             public const string AccessKeySection = "AWS:AccessKey";
             public const string SecretKeySection = "AWS:SecretKey";
             public const string RegionSection = "AWS:Region";
+
+            public const string PdfServerHost = "Pdf.Server.Host";
+            public const string PdfServerPort = "Pdf.Server.Port";
         }
     }
 }

@@ -35,6 +35,16 @@ namespace Palavyr.Core.Common.ExtensionMethods
             return configuration.GetSection(ApplicationConstants.ConfigSections.SecretKeySection).Value;
         }
 
+        public static string GetPdfServerPort(this IConfiguration configuration)
+        {
+            return configuration.GetSection(ApplicationConstants.ConfigSections.PdfServerPort).Value;
+        }
+
+        public static string GetPdfServerHost(this IConfiguration configuration)
+        {
+            return configuration.GetSection(ApplicationConstants.ConfigSections.PdfServerHost).Value;
+        }
+
         public static string GetJwtKey(this IConfiguration configuration)
         {
             return configuration.GetSection(ApplicationConstants.ConfigSections.JwtSecretKey).Value;
