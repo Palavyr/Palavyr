@@ -25,6 +25,11 @@ namespace Palavyr.Core.Common.ExtensionMethods
             return configuration.GetSection(ApplicationConstants.ConfigSections.AccessKeySection).Value;
         }
 
+        public static string GetRegion(this IConfiguration configuration)
+        {
+            return configuration.GetSection(ApplicationConstants.ConfigSections.RegionSection).Value;
+        }
+        
         public static string GetSecretKey(this IConfiguration configuration)
         {
             return configuration.GetSection(ApplicationConstants.ConfigSections.SecretKeySection).Value;
