@@ -4,7 +4,7 @@ import assert from 'assert';
 import { FileInfo } from '@Palavyr-Types';
 import { logDebug } from 'logging/logging';
 
-/*
+/* This code is 'borrowed' and refactored from https://github.com/marcbachmann/node-html-pdf
  * phantomjs version 1.8.1 and later should work.
  *
  * Create a PDF file out of an html string.
