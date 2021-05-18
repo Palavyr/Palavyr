@@ -12,20 +12,22 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         private AccountsContext accountsContext;
         private ILogger<GetApiKeyController> logger;
 
+        public const string Uri = "account/settings/api-key";
+
         public GetApiKeyController(AccountsContext accountsContext, ILogger<GetApiKeyController> logger)
         {
             this.logger = logger;
             this.accountsContext = accountsContext;
         }
 
-        [HttpGet("account/settings/api-key")]
+        [HttpGet(Uri)]
         public async Task<string> Get([FromHeader] string accountId)
         {
             var account = await accountsContext
                 .Accounts
                 .SingleOrDefaultAsync(
                     row => row.AccountId == accountId);
-            return account.ApiKey ?? "No Api Key Found";
+            return account?.ApiKey ?? "No Api Key Found";
         }
     }
 }

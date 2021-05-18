@@ -23,6 +23,7 @@ namespace Palavyr.Core.Models.Resources.Responses
             this.linkCreator = linkCreator;
             this.configuration = configuration;
         }
+
         public string Customize(string html, EmailRequest request, Account account)
         {
             html = CustomizeWithClientsName(html, request);

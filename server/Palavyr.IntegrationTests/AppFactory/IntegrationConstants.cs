@@ -5,6 +5,7 @@
         public const string SessionId = "abc123treu";
         public const string ApiKey = "fgsa-sagasf-asfsf";
         public const string AccountId = "345jhgk435";
+        public const string DefaultArea = "area-234";
         public const string EmailAddress = "test@gmail.com";
         public const string Password = "12345";
         public const string DbPassword = "0987654321";

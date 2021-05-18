@@ -116,20 +116,7 @@ namespace Palavyr.Core.Models.Accounts.Schemas
                 GeneralFallbackEmailTemplate = "",
             };
         }
-
-        // public static Account CreateAccount(
-        //     string emailAddress,
-        //     string password,
-        //     string accountId,
-        //     AccountType accountType
-        // )
-        // {
-        //     return new Account(
-        //         emailAddress, password, accountId, null, null, null, false,
-        //         "en-AU",
-        //         accountType, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
-        // }
-
+        
         public static Account CreateAccount(
             string emailAddress,
             string password,
