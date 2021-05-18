@@ -2,7 +2,7 @@ import { S3ClientConfig } from '@aws-sdk/client-s3';
 import * as fs from 'fs';
 
 export type ResponseBody = {
-    FullPath: string;
+    S3Key: string;
     FileNameWithExtension: string;
     FileStem: string;
 };

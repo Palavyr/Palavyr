@@ -62,9 +62,9 @@ namespace Palavyr.Core.Services.AttachmentServices
             var fileNameMap = FileNameMap.CreateFileMap(safeFileName, riskyFileName, s3AttachmentKey, accountId, areaId);
             var localTempSafeFile = temporaryPath.CreateLocalTempSafeFile();
 
-            await localIo.SaveFile(localTempSafeFile.FullPath, attachmentFile);
+            await localIo.SaveFile(localTempSafeFile.S3Key, attachmentFile);
             
-            await s3Saver.SaveObjectToS3(userDataBucket, localTempSafeFile.FullPath, s3AttachmentKey);
+            await s3Saver.SaveObjectToS3(userDataBucket, localTempSafeFile.S3Key, s3AttachmentKey);
             temporaryPath.DeleteLocalTempFile(localTempSafeFile.FileNameWithExtension);
       
             await dashContext.FileNameMaps.AddAsync(fileNameMap); // DB now has s3 key : risky name

@@ -15,7 +15,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
     public interface IS3Retriever
     {
         Task<bool> GetLatestDatabaseBackup(string bucket, string s3FileKey, string saveToPath);
-        Task<S3DownloadFile[]?> DownloadObjectsFromS3(string bucket, List<AttachmentMeta> metas, CancellationToken cancellationToken);
+        Task<IHaveBeenDownloadedFromS3[]?> DownloadObjectsFromS3(string bucket, List<S3SDownloadRequestMeta> metas, CancellationToken cancellationToken);
         Task<bool> CheckIfFileExists(string bucket, string key);
     }
 
@@ -36,7 +36,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
             this.logger = logger;
         }
 
-        public async Task<S3DownloadFile[]?> DownloadObjectsFromS3(string bucket, List<AttachmentMeta> metas, CancellationToken cancellationToken)
+        public async Task<IHaveBeenDownloadedFromS3[]?> DownloadObjectsFromS3(string bucket, List<S3SDownloadRequestMeta> metas, CancellationToken cancellationToken)
         {
             var areComplete = new List<Task<GetObjectResponse>>();
             foreach (var meta in metas)
@@ -63,15 +63,15 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
             try
             {
                 var writesAreComplete = new List<Task>();
-                var localTempPaths = new List<S3DownloadFile>();
+                var localTempPaths = new List<IHaveBeenDownloadedFromS3>();
 
                 for (var i = 0; i < responses.Length; i++)
                 {
                     var response = responses[i];
-                    var riskyName = metas[i].RiskyName;
+                    var riskyName = metas[i].FileNameWithExtension;
 
                     var s3DownloadFile = temporaryPath.CreateLocalS3SavePath(riskyName);
-                    writesAreComplete.Add(response.WriteResponseStreamToFileAsync(s3DownloadFile.FullPath, false, cancellationToken));
+                    writesAreComplete.Add(response.WriteResponseStreamToFileAsync(s3DownloadFile.TempFilePath, false, cancellationToken));
                     localTempPaths.Add(s3DownloadFile);
                 }
 

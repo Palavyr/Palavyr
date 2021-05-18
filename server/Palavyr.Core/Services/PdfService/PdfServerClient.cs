@@ -49,7 +49,7 @@ namespace Palavyr.Core.Services.PdfService
                 var response = await httpClient.PostAsync(PdfServerConstants.PdfServiceUrl(host, port), requestBody);
                 if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
-                    throw new HttpRequestException($"Unable to save file to Pdf Server: {response.RequestMessage}");
+                    throw new HttpRequestException($"Unable to create PDF file: {response.RequestMessage}");
                 }
 
                 var result = JsonConvert.DeserializeObject<PdfServerResponse>(await response.Content.ReadAsStringAsync());
@@ -62,10 +62,13 @@ namespace Palavyr.Core.Services.PdfService
                     if (count > retryCount)
                     {
                         logger.LogDebug("PDF File not written correctly");
-                        throw new IOException($"Pdf file not written correctly to {result.FullPath}");
+                        throw new IOException($"Pdf file not written correctly to {result.S3Key}");
                     }
 
-                    Thread.Sleep(500);
+                    if (!found)
+                    {
+                        Thread.Sleep(500);
+                    }
                     count++;
                 }
 

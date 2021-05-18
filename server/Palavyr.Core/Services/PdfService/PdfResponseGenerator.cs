@@ -54,7 +54,6 @@ namespace Palavyr.Core.Services.PdfService
             CriticalResponses criticalResponses,
             EmailRequest emailRequest,
             CultureInfo culture,
-            string localWriteToPath,
             string identifier,
             string accountId,
             string areaId,

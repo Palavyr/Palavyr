@@ -12,11 +12,12 @@ export const renderNextComponent = (
     convoId: string,
 ) => {
     //TODO: make this impossible by geting the configuration right
-    if (node.nodeType === "" || node.nodeType === null || node.nodeChildrenString === "" || node.nodeChildrenString === null) {
+
+    if (node.nodeType === "" || node.nodeType === null || node.nodeChildrenString === "" || node.nodeChildrenString === null || node === undefined) {
         return renderCustomComponent(dummyFailComponent, {}, false);
     }
-    var makeNextComponent = ComponentRegistry[node.nodeComponentType];
+    const makeNextComponent = ComponentRegistry[node.nodeComponentType];
 
-    var nextComponent = makeNextComponent({ node, nodeList, client, convoId });
+    const nextComponent = makeNextComponent({ node, nodeList, client, convoId });
     return renderCustomComponent(nextComponent, {}, false);
 };

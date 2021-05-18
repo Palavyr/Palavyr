@@ -63,9 +63,9 @@ namespace Palavyr.Core.Services.LogoServices
             account.AccountLogoUri = s3AttachmentKey;
             await accountRepository.CommitChangesAsync();
 
-            await localIo.SaveFile(localSafePath.FullPath, logoFile);
+            await localIo.SaveFile(localSafePath.S3Key, logoFile);
 
-            await s3Saver.SaveObjectToS3(userDataBucket, localSafePath.FullPath, s3AttachmentKey);
+            await s3Saver.SaveObjectToS3(userDataBucket, localSafePath.S3Key, s3AttachmentKey);
             temporaryPath.DeleteLocalTempFile(localSafePath.FileNameWithExtension);
 
             var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(s3AttachmentKey, userDataBucket);

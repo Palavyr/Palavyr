@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Amazon.S3;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -39,6 +40,11 @@ namespace Palavyr.API.CustomMiddleware
                     case HttpRequestException httpRequestException:
                         logger.LogInformation("Failed to create/write PDF to S3");
                         logger.LogError($"{httpRequestException.Message}");
+                        break;
+
+                    case AmazonS3Exception amazonS3Exception:
+                        logger.LogInformation("Failed to communicate with S3");
+                        logger.LogError($"{amazonS3Exception.Message}");
                         break;
 
                     default:

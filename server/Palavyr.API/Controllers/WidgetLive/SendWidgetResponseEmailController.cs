@@ -33,7 +33,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             var resultResponse = await responseEmailSender.SendEmail(
                 accountId,
                 areaId,
-                emailRequest,
+                emailRequest, 
                 cancellationToken
             );
             return resultResponse;

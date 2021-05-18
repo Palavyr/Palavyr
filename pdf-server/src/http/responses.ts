@@ -17,18 +17,17 @@ export const sendResponse = (
     response.send(responseBody);
 };
 
-export const createEmptyResponseBody = () => {
+export const createEmptyResponseBody = (): ResponseBody => {
     return {
-        FullPath: '',
+        S3Key: '',
         FileNameWithExtension: '',
         FileStem: '',
-        TempDirectory: '',
     };
 };
 
-export const createSuccessResponseBody = (s3Key: string, identifier: string) => {
+export const createSuccessResponseBody = (s3Key: string, identifier: string): ResponseBody => {
     return {
-        FullPath: s3Key,
+        S3Key: s3Key,
         FileNameWithExtension: identifier + '.pdf',
         FileStem: identifier,
     };

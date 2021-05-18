@@ -28,7 +28,7 @@ namespace Palavyr.Core.Services.PdfService
             var request = CompilePdfServerRequest.Compile(bucket, s3Key, accessKey, secretKey, region, htmlString, identifier, paperOptions);
             var pdfServerResponse = await pdfServerClient.PostToPdfServer(request);
 
-            logger.LogDebug($"Successfully wrote the pdf file to disk at {pdfServerResponse.FullPath}!");
+            logger.LogDebug($"Successfully wrote the pdf file to disk at {pdfServerResponse.S3Key}!");
             return pdfServerResponse;
         }
     }

@@ -33,7 +33,7 @@ namespace Palavyr.Core.Services.TemporaryPaths
                 FileStem = safeFileName.Stem,
                 FileNameWithExtension = safeFileName.FileNameWithExtension,
                 TempDirectory = isolatedStorageDirectory,
-                FullPath = Path.Combine(isolatedStorageDirectory, safeFileName.FileNameWithExtension)
+                S3Key = Path.Combine(isolatedStorageDirectory, safeFileName.FileNameWithExtension)
             };
         }
 
@@ -46,7 +46,7 @@ namespace Palavyr.Core.Services.TemporaryPaths
                 FileStem = safeFileName.Stem,
                 FileNameWithExtension = safeFileName.FileNameWithExtension,
                 TempDirectory = isolatedStorageDirectory,
-                FullPath = Path.Combine(isolatedStorageDirectory, safeFileName.FileNameWithExtension)
+                S3Key = Path.Combine(isolatedStorageDirectory, safeFileName.FileNameWithExtension)
             };
         }
 
@@ -57,7 +57,7 @@ namespace Palavyr.Core.Services.TemporaryPaths
             {
                 FileNameWithExtension = fileName,
                 TempDirectory = isolatedStorageDirectory,
-                FullPath = Path.Combine(isolatedStorageDirectory, fileName)
+                TempFilePath = Path.Combine(isolatedStorageDirectory, fileName)
             };
         }
 
@@ -80,30 +80,5 @@ namespace Palavyr.Core.Services.TemporaryPaths
         }
     }
 
-    public class S3DownloadFile : IHoldTemporaryPathDetails
-    {
-        public string FullPath { get; set; }
-        public string TempDirectory { get; set; }
-        public string FileNameWithExtension { get; set; }
-    }
-
-    public class SafeFile : IHoldTemporaryPathDetailsWithFileStem
-    {
-        public string FileStem { get; set; }
-        public string FileNameWithExtension { get; set; }
-        public string TempDirectory { get; set; }
-        public string FullPath { get; set; }
-    }
-    
-    public interface IHoldTemporaryPathDetails
-    {
-        public string FullPath { get; set; }
-        public string FileNameWithExtension { get; set; }
-        public string TempDirectory { get; set; }
-    }
-
-    public interface IHoldTemporaryPathDetailsWithFileStem : IHoldTemporaryPathDetails
-    {
-        public string FileStem { get; set; }
-    }
+ 
 }

@@ -437,7 +437,7 @@ export class StandardComponents {
                             <Typography variant="body1" className={cls.textField}>
                                 {node.text}
                             </Typography>
-                        </SingleRowSingleCell>{" "}
+                        </SingleRowSingleCell>
                         <SingleRowSingleCell align="center">
                             <ResponseButton
                                 prefs={prefs!}

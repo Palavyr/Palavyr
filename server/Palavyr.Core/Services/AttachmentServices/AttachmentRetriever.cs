@@ -18,7 +18,7 @@ namespace Palavyr.Core.Services.AttachmentServices
     public interface IAttachmentRetriever
     {
         Task<FileLink[]> RetrieveAttachmentLinks(string account, string areaId, CancellationToken cancellationToken);
-        Task<IHoldTemporaryPathDetails[]> RetrieveAttachmentFiles(string account, string areaId, IHoldTemporaryPathDetails[]? additionalFiles, CancellationToken cancellationToken);
+        Task<IHaveBeenDownloadedFromS3[]> RetrieveAttachmentFiles(string account, string areaId, S3SDownloadRequestMeta[]? additionalFiles, CancellationToken cancellationToken);
     }
 
     public class AttachmentRetriever : IAttachmentRetriever
@@ -64,43 +64,31 @@ namespace Palavyr.Core.Services.AttachmentServices
             return fileLinks.ToArray();
         }
 
-        public async Task<IHoldTemporaryPathDetails[]> RetrieveAttachmentFiles(string account, string areaId, IHoldTemporaryPathDetails[]? additionalFiles, CancellationToken cancellationToken)
+
+        public async Task<IHaveBeenDownloadedFromS3[]> RetrieveAttachmentFiles(string account, string areaId, S3SDownloadRequestMeta[]? additionalFiles, CancellationToken cancellationToken)
         {
             var userDataBucket = configuration.GetSection(ApplicationConstants.ConfigSections.UserDataSection).Value;
             var metas = await dashContext.FileNameMaps
                 .Where(x => x.AreaIdentifier == areaId)
                 .Select(
-                    x => new AttachmentMeta
+                    x => new S3SDownloadRequestMeta()
                     {
-                        SafeFileId = x.SafeName,
                         S3Key = x.S3Key,
-                        RiskyName = x.RiskyName
+                        FileNameWithExtension = x.RiskyName
                     }).ToListAsync(cancellationToken);
 
-            IHoldTemporaryPathDetails[]? localFilePaths = await s3Retriever.DownloadObjectsFromS3(userDataBucket, metas, cancellationToken);
-            if (localFilePaths == null)
-            {
-                throw new AmazonS3Exception("Unable to download to server!"); // TODO Tech debt - what is better pattern -- all these inner exceptions. No time right now.
-            }
-            else
-            {
-                for (var i = 0; i < metas.Count; i++)
-                {
-                    metas[i].SetLocalFilePath(localFilePaths[i].FullPath);
-                }
-            }
-
-            var allLocalFiles = new List<IHoldTemporaryPathDetails>();
             if (additionalFiles != null)
             {
-                allLocalFiles.AddRange(localFilePaths.ToList());
-                allLocalFiles.AddRange(additionalFiles.ToList());
-                return allLocalFiles.ToArray();
+                metas.AddRange(additionalFiles);
             }
-            else
+
+            var localFilePaths = await s3Retriever.DownloadObjectsFromS3(userDataBucket, metas, cancellationToken);
+            if (localFilePaths == null)
             {
-                return localFilePaths;
+                throw new AmazonS3Exception("Unable to download to server!");
             }
+
+            return localFilePaths;
         }
     }
 }
