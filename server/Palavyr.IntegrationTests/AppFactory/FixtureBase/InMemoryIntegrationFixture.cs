@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
+using Palavyr.IntegrationTests.TestUtils;
 
 // https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-3.1#inject-mock-services 
 namespace Palavyr.IntegrationTests.AppFactory.FixtureBase
@@ -26,6 +27,7 @@ namespace Palavyr.IntegrationTests.AppFactory.FixtureBase
         public ConvoContext ConvoContext { get; set; } = null!;
         public WebApplicationFactory<Startup> WebHostFactory { get; set; } = null!;
         public IServiceProvider Container { get; set; } = null!;
+        public IConfiguration Configuration { get; set; } = null!;
 
         protected InMemoryIntegrationFixture(InMemoryAutofacWebApplicationFactory factory)
         {
@@ -35,6 +37,8 @@ namespace Palavyr.IntegrationTests.AppFactory.FixtureBase
 
         public virtual ContainerBuilder CustomizeContainer(ContainerBuilder builder)
         {
+
+            builder.RegisterType<CreateS3TempFile>().AsSelf();
             return builder;
         }
 
@@ -62,6 +66,7 @@ namespace Palavyr.IntegrationTests.AppFactory.FixtureBase
             Client = webHost.ConfigureInMemoryClient();
             WebHostFactory = webHost;
             Container = webHost.Services;
+            Configuration = TestConfiguration.GetTestConfiguration();
         }
     }
 }

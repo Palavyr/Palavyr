@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>Palavyr.IntegrationTests</RootNamespace>
-    </PropertyGroup>
+      <UserSecretsId>d50d54cd-7578-46ae-be18-9c2ea74993b6</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.11" />

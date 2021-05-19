@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System.Threading.Tasks;
+using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.IntegrationTests.AppFactory.FixtureBase;
 
@@ -59,11 +60,11 @@ namespace Palavyr.IntegrationTests.DataBuilders
         
         public async Task<FileNameMap> Build()
         {
-            var safename = this.safeName;
-            var s3Key = this.s3Key;
-            var riskyname = this.riskyName;
-            var accountId = this.accountId;
-            var areaId = this.areaIdentifier;
+            var safename = this.safeName ?? A.RandomName();
+            var s3Key = this.s3Key ?? A.RandomName();
+            var riskyname = this.riskyName ?? A.RandomName();
+            var accountId = this.accountId ?? A.RandomName();
+            var areaId = this.areaIdentifier ?? A.RandomName();
 
             var resource = new FileNameMap
             {

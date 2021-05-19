@@ -1,27 +1,11 @@
-﻿namespace Palavyr.Core.GlobalConstants
+﻿namespace Palavyr.IntegrationTests.TestUtils
 {
-    public class ApplicationConstants
+    public class TestConstants
     {
-        public class MagicUrlStrings
-        {
-            public const string SessionAction = "tubmcgubs";
-            public const string Action = "action";
-            public const string AccountId = "accountId";
-            public const string SessionId = "sessionId";
-            public const string ApiKeyAccess = "apiKeyAccess";
-            public const string DevAccess = "secretDevAccess";
-            public const string DevAccount = "dashboardDev";
-        }
-
-        public class SubscriptionConstants
-        {
-            public const int DefaultNumAreas = 2;
-            public const int PremiumNumAreas = 6;
-            public const int ProNumAreas = 99999999;
-        }
-
         public class ConfigSections
         {
+            public const string TestDataSection = "TestData";
+
             public const string LoggingSection = "Logging";
             public const string PreviewSection = "Previews";
             public const string UserDataSection = "Userdata";

@@ -13,15 +13,14 @@ using Xunit;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
 {
-    public class AttachmentRetrieverFixture : InMemoryIntegrationFixture
+    public class WhenAttachmentLinksAreRetrieved : InMemoryIntegrationFixture
     {
-
-        public AttachmentRetrieverFixture(InMemoryAutofacWebApplicationFactory factory) : base(factory)
+        public WhenAttachmentLinksAreRetrieved(InMemoryAutofacWebApplicationFactory factory) : base(factory)
         {
         }
 
         [Fact]
-        public async Task WhenAnAttachmentIsDownloaded_TheCorrectPropertiesAreSet()
+        public async Task PropertiesAreSetCorrectly()
         {
             // arrange
             await this.CreateFileNameMapBuilder()
@@ -39,11 +38,11 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
             result.Length.ShouldBe(1);
             result.Select(x => x.FileName).Single().ShouldBe("ThisRiskyName.pdf");
         }
-        
+
         public override ContainerBuilder CustomizeContainer(ContainerBuilder builder)
         {
             builder.RegisterType<TestLinkCreator>().As<ILinkCreator>();
-            return builder;
+            return base.CustomizeContainer(builder);
         }
     }
 
@@ -55,4 +54,3 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
         }
     }
 }
-

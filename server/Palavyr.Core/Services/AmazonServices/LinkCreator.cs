@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Amazon.S3;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Services.AmazonServices.S3Service;
 
 namespace Palavyr.Core.Services.AmazonServices
 {
