@@ -3,7 +3,7 @@ using System.Linq;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 
-namespace Palavyr.Core.Models
+namespace Palavyr.Core.Models.Nodes
 {
     public class MissingNodeCalculator
     {
@@ -70,7 +70,7 @@ namespace Palavyr.Core.Models
                 return requiredNodesClone.ToArray();
             }
 
-            var nextNode = nodeGetter.GetParentNode(nodeList, node);
+            var nextNode = nodeGetter.GetAnyParentNode(nodeList, node);
             return SearchTerminalResponseBranchesForMissingRequiredNodes(nextNode, nodeList, requiredNodesClone.ToArray());
         }
     }

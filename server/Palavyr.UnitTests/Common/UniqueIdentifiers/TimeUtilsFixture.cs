@@ -1,16 +1,17 @@
-using NUnit.Framework;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Shouldly;
+using Xunit;
 
 namespace PalavyrServer.UnitTests.Common.UniqueIdentifiers
 {
-    [TestFixture]
+    [Trait("Utils", "Time")]
     public class TimeUtilsFixture
     {
-        [Test]
+        [Fact]
         public void TestDateTimeFormat()
         {
             var format = TimeUtils.DateTimeFormat;
-            Assert.AreEqual(format, "yyyy-dd-M--HH-mm-ss");
+            format.ShouldBe("yyyy-dd-M--HH-mm-ss");
         }
     }
 }

@@ -6,7 +6,7 @@ using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.FixtureBase;
 
-namespace Palavyr.IntegrationTests.DataBuilders
+namespace Palavyr.IntegrationTests.DataCreators
 {
     public static class CreateAccountBuilder
     {

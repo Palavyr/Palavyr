@@ -34,7 +34,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public int? ResolveOrder { get; set; }
         public bool IsCurrency { get; set; }
         public bool Fallback { get; set; }
-        public string? NodeChildrenString { get; set; } // stored as comma delimited list as string
+        public string? NodeChildrenString { get; set; } = ""; // stored as comma delimited list as string
 
         public ConversationNode()
         {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Test.Common.Constants;
 
-namespace Palavyr.IntegrationTests.TestUtils.ExtensionMethods
+namespace Test.Common.ExtensionsMethods
 {
     public static class TestConfigurationExtensionMethods
     {

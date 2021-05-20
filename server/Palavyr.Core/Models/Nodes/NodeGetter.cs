@@ -4,7 +4,7 @@ using System.Linq;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.DynamicTableService.Compilers;
 
-namespace Palavyr.Core.Models
+namespace Palavyr.Core.Models.Nodes
 {
     public class NodeGetter
     {
@@ -14,10 +14,14 @@ namespace Palavyr.Core.Models
         {
             this.splitter = splitter;
         }
-        public ConversationNode GetParentNode(ConversationNode[] nodeList, ConversationNode curNode)
+
+        public ConversationNode GetAnyParentNode(ConversationNode[] nodeList, ConversationNode curNode)
         {
-            // does not consider mergesplit or anabranch
-            if (curNode.IsRoot) return null;
+            // does not consider merge-split or anabranch
+            if (curNode.IsRoot)
+            {
+                return null;
+            }
 
             var childId = curNode.NodeId;
             ConversationNode parent = null;

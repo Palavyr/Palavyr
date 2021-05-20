@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Palavyr.Core.Models
+namespace Palavyr.Core.Models.Nodes
 {
     public class NodeOrderCheckResult
     {

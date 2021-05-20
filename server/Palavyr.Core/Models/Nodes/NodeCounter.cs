@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Palavyr.Core.Models.Configuration.Schemas;
 
-namespace Palavyr.Core.Models
+namespace Palavyr.Core.Models.Nodes
 {
     public class NodeCounter
     {

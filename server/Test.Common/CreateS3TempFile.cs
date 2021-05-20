@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Services.AmazonServices.S3Service;
-using Palavyr.IntegrationTests.TestUtils.ExtensionMethods;
+using Test.Common.ExtensionsMethods;
 
-namespace Palavyr.IntegrationTests.TestUtils
+namespace Test.Common
 {
     public class CreateS3TempFile
     {

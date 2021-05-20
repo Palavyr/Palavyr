@@ -2,6 +2,7 @@
 using System.Linq;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Configuration.Constant;
+using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
 {
@@ -41,6 +42,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         public string GetTableIdFromDynamicNodeType(string nodeName) => finder.FindGuid(nodeName);
 
         public string[] SplitNodeChildrenString(string nodeChildrenString) => nodeChildrenString.Split(Delimiters.NodeChildrenStringDelimiter);
+
+        public string JoinNodeChildrenArray(List<string> nodeChildrenParts) => string.Join(Delimiters.NodeChildrenStringDelimiter, nodeChildrenParts);
+
     }
     
 }

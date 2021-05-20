@@ -5,7 +5,7 @@ using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.DynamicTableService;
 
-namespace Palavyr.Core.Models
+namespace Palavyr.Core.Models.Nodes
 {
     public class RequiredNodeCalculator
     {

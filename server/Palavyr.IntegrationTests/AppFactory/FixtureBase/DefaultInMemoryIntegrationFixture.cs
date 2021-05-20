@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.DataBuilders;
+using Palavyr.IntegrationTests.DataCreators;
 using Xunit;
 
 namespace Palavyr.IntegrationTests.AppFactory.FixtureBase

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
-using Palavyr.IntegrationTests.TestUtils;
+using Test.Common;
 
 // https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-3.1#inject-mock-services 
 namespace Palavyr.IntegrationTests.AppFactory.FixtureBase

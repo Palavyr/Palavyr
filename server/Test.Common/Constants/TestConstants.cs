@@ -1,11 +1,9 @@
-﻿namespace Palavyr.IntegrationTests.TestUtils
+﻿namespace Test.Common.Constants
 {
     public class TestConstants
     {
         public class ConfigSections
         {
-            public const string TestDataSection = "TestData";
-
             public const string LoggingSection = "Logging";
             public const string PreviewSection = "Previews";
             public const string UserDataSection = "Userdata";

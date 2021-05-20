@@ -1,15 +1,13 @@
-﻿using NUnit.Framework;
-using Palavyr.Core.GlobalConstants;
+﻿using Palavyr.Core.GlobalConstants;
 using Shouldly;
+using Xunit;
 
 namespace PalavyrServer.UnitTests.Core.GlobalConstants
 {
-
-    [TestFixture(Category = "Authentication")]
+    [Trait("Constants ", "Subscriptions")]
     public class SubscriptionConstantsFixture
     {
-
-        [Test]
+        [Fact]
         public void SubscriptionConstantsAreSetCorrectly()
         {
             ApplicationConstants.SubscriptionConstants.DefaultNumAreas.ShouldBe(2);

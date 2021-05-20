@@ -1,31 +1,19 @@
 ﻿using System.Collections.Generic;
-using NUnit.Framework;
+using System.Threading.Tasks;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models.Configuration.Constant;
 using Shouldly;
+using Xunit;
 
 namespace PalavyrServer.UnitTests.Core.ExtensionMethods
 {
-    [TestFixture]
-    public class NodeTypeOptionsExtensionsFixtures
+    [Trait("Extension Methods ", "Node Type Options")]
+    public class NodeTypeOptionsExtensionsFixtures : IAsyncLifetime
     {
         public List<NodeTypeOption> NodeList { get; set; }
 
-        [SetUp]
-        public void Setup()
-        {
-            NodeList = new List<NodeTypeOption>()
-            {
-                NodeTypeOption.Create(
-                    "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
-                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue),
-                NodeTypeOption.Create(
-                    "three", "four", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
-                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue)
-            };
-        }
 
-        [Test]
+        [Fact]
         public void AddAdditionalNode_addsNode()
         {
             var newNode = NodeTypeOption.Create(
@@ -36,7 +24,7 @@ namespace PalavyrServer.UnitTests.Core.ExtensionMethods
             NodeList.Count.ShouldBe(3);
         }
 
-        [Test]
+        [Fact]
         public void AddAdditionalNode_addsNodes()
         {
             var node1 = NodeTypeOption.Create(
@@ -56,6 +44,25 @@ namespace PalavyrServer.UnitTests.Core.ExtensionMethods
             NodeList.Count.ShouldBe(4);
             NodeList.ShouldContain(node1);
             NodeList.ShouldContain(node2);
+        }
+
+        public Task InitializeAsync()
+        {
+            NodeList = new List<NodeTypeOption>()
+            {
+                NodeTypeOption.Create(
+                    "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
+                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue),
+                NodeTypeOption.Create(
+                    "three", "four", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
+                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue)
+            };
+            return Task.CompletedTask;
+        }
+
+        public Task DisposeAsync()
+        {
+            return Task.CompletedTask;
         }
     }
 }

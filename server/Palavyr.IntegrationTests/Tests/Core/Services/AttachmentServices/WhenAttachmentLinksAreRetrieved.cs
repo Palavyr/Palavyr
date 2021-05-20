@@ -7,7 +7,7 @@ using Palavyr.Core.Services.AttachmentServices;
 using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.FixtureBase;
-using Palavyr.IntegrationTests.DataBuilders;
+using Palavyr.IntegrationTests.DataCreators;
 using Shouldly;
 using Xunit;
 

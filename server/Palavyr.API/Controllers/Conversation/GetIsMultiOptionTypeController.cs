@@ -3,12 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.Controllers;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Constant;
 
-namespace Palavyr.API.controllers.Conversation
+namespace Palavyr.API.Controllers.Conversation
 {
     public class GetIsMultiOptionTypeController : PalavyrBaseController
     {

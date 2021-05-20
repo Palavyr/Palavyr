@@ -4,7 +4,7 @@ using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.IntegrationTests.AppFactory.FixtureBase;
 
-namespace Palavyr.IntegrationTests.DataBuilders
+namespace Palavyr.IntegrationTests.DataCreators
 {
     public static class CreateFileNameMapBuilderExtensionMethod
     {
