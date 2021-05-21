@@ -206,6 +206,8 @@ export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeId
             isDynamicTableNode: isDynamicTableNode,
             resolveOrder: 0,
             dynamicType: "",
+            isImageNode: false,
+            imageKey: ""
         };
 
         updatedNodeList.push(newNode);

@@ -95,6 +95,8 @@ export type ConvoNode = {
     isAnabranchMergePoint: boolean;
     nodeComponentType: string;
     isDynamicTableNode: boolean;
+    isImageNode: boolean;
+    imageKey: string;
     resolveOrder: number;
     dynamicType: string | null;
 };
@@ -408,6 +410,8 @@ export type NodeOption = {
     value: string;
     valueOptions: Array<string>;
     dynamicType: string | null;
+    isImageNode: boolean;
+    imageKey: string;
 };
 
 // export type NodeTypeOptions = {[index: string]: NodeOptions};

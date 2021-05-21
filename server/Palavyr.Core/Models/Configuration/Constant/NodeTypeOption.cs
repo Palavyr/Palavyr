@@ -110,6 +110,12 @@ namespace Palavyr.Core.Models.Configuration.Constant
          * The widget will use this to key the collection of dynamic type responses.
          */
         public string? DynamicType { get; set; }
+        
+        /*
+         * Used to indicate whether or not this node provides an image in the chat. In the dashboard, used to determine whether
+         * or not to show the image upload component.
+         */
+        public bool IsImageNode { get; set; }
 
         public virtual string StringName => null!;
 

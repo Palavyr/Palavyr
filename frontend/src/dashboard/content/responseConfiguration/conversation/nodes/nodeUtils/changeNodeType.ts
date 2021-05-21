@@ -93,6 +93,8 @@ export const changeNodeType = async (
     previousNode.isDynamicTableNode = nodeOption.isDynamicType;
     previousNode.resolveOrder = nodeOption.resolveOrder;
     previousNode.dynamicType = nodeOption.dynamicType;
+    previousNode.isImageNode = nodeOption.isImageNode;
+    previousNode.imageKey = nodeOption.imageKey;
 
     if (identity.shouldShowSetAsAnabranchMergePointOption && nodeOption.isAnabranchType) {
         previousNode.isAnabranchMergePoint = true; // needs to set true if inside anabranch and

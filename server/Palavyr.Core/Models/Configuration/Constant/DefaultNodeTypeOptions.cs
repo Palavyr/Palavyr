@@ -22,6 +22,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             public static string SplitMerge => DefaultNodeTypeOptions.SplitMerge.StringName;
             public static string EvaluateThreshold => DefaultNodeTypeOptions.EvaluateThreshold.StringName;
             public static string ShowImage => DefaultNodeTypeOptions.ShowImage.StringName;
+            public static string EndWithoutResponse => DefaultNodeTypeOptions.EndWithoutResponse.StringName;
         }
 
         public static List<NodeTypeOption> DefaultNodeTypeOptionsList => // These get sent to the UI for user selection
@@ -42,7 +43,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 new TooComplicated(),
                 new SplitMerge(),
                 new Anabranch(),
-                new ShowImage()
+                new ShowImage(),
+                new EndWithoutResponse()
             };
 
         public static YesNo CreateYesNo() => new YesNo();
@@ -56,13 +58,39 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public static SplitMerge CreateSplitMerge() => new SplitMerge();
         public static Anabranch CreateAnabranch() => new Anabranch();
         public static ShowImage CreateShowImage() => new ShowImage();
-        
+
         public static TakeCurrency CreateTakeCurrency() => new TakeCurrency();
         public static TakeNumber CreateTakeNumber() => new TakeNumber();
         public static TakeNumberIndividuals CreateTakeNumberIndividuals() => new TakeNumberIndividuals();
         public static TooComplicated CreateTooComplicated() => new TooComplicated();
         public static SendResponse CreateSendResponse() => new SendResponse();
         public static Restart CreateRestart() => new Restart();
+        public static EndWithoutResponse CreateEndWithoutResponse() => new EndWithoutResponse();
+
+        public class EndWithoutResponse : NodeTypeOption
+        {
+            public new static string StringName => nameof(EndWithoutResponse);
+
+            public EndWithoutResponse()
+            {
+                Text = "End Without Response";
+                Value = StringName;
+                PathOptions = new List<string>();
+                ValueOptions = new List<string>();
+                IsMultiOptionType = false;
+                IsTerminalType = false;
+                GroupName = Terminal;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = false;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+                IsDynamicType = false;
+                NodeComponent = NodeComponentTypes.EndWithoutResponse; //TODO create widget component
+                IsCurrency = false;
+                IsMultiOptionEditable = false;
+            }
+        }
 
         public class ShowImage : NodeTypeOption
         {
@@ -70,10 +98,10 @@ namespace Palavyr.Core.Models.Configuration.Constant
 
             public ShowImage()
             {
-                Text = "";
+                Text = "Show Image";
                 Value = StringName;
-                PathOptions = new List<string>();
-                ValueOptions = new List<string>();
+                PathOptions = new List<string>() {"Continue"};
+                ValueOptions = new List<string>() {"Continue"};
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoProvide;
@@ -86,9 +114,10 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponent = NodeComponentTypes.ShowImage; //TODO create widget component
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
+                IsImageNode = true;
             }
         }
-        
+
         public class EvaluateThreshold : NodeTypeOption
         {
             // hidden node
@@ -96,10 +125,10 @@ namespace Palavyr.Core.Models.Configuration.Constant
 
             public EvaluateThreshold()
             {
-                Text = "EvaluateThreshold";
+                Text = "Evaluate Threshold";
                 Value = StringName;
-                PathOptions = new List<string>();
-                ValueOptions = new List<string>();
+                PathOptions = new List<string>() {"Continue"};
+                ValueOptions = new List<string>() {"Continue"};
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
@@ -460,7 +489,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsTerminalType = true;
                 GroupName = Terminal;
                 IsSplitMergeType = false;
-                ShouldRenderChildren = true;
+                ShouldRenderChildren = false;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
@@ -485,7 +514,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsTerminalType = true;
                 GroupName = Terminal;
                 IsSplitMergeType = false;
-                ShouldRenderChildren = true;
+                ShouldRenderChildren = false;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;

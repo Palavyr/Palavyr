@@ -7,6 +7,7 @@ import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import { updateMultiTypeOption } from "../../nodeUtils/mutliOptionUtils";
 import { updateSingleOptionType } from "../../nodeUtils/commonNodeUtils";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
+import { ImageUpload } from "./ImageUpload";
 
 export interface IConversationNodeEditor {
     modalState: boolean;
@@ -27,7 +28,6 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, parent
         if (node.isMultiOptionType && !isNullOrUndefinedOrWhitespace(node.valueOptions)) {
             setOptions(node.valueOptions.split(ValueOptionDelimiter));
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [node]);
 
     const handleCloseModal = () => {
@@ -56,41 +56,41 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, parent
         <Dialog fullWidth open={modalState} onClose={handleCloseModal} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Edit a conversation node</DialogTitle>
             <DialogContent>
-                <TextField
-                    margin="dense"
-                    value={textState}
-                    multiline
-                    rows={4}
-                    onChange={(event) => {
-                        setText(event.target.value);
-                    }}
-                    id="question"
-                    label="Question or Information"
-                    type="text"
-                    fullWidth
-                />
-                {node.isMultiOptionType && node.shouldShowMultiOption && (
+                {!node.isImageNode && (
                     <>
-                        <MultiChoiceOptions options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} addMultiChoiceOptionsOnClick={addMultiChoiceOptionsOnClick} />
+                        <TextField margin="dense" value={textState} multiline rows={4} onChange={(event) => setText(event.target.value)} id="question" label="Question or Information" type="text" fullWidth />
+                        {node.isMultiOptionType && node.shouldShowMultiOption && (
+                            <>
+                                <MultiChoiceOptions options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} addMultiChoiceOptionsOnClick={addMultiChoiceOptionsOnClick} />
+                            </>
+                        )}
+                    </>
+                )}
+                {node.isImageNode && (
+                    <>
+                        <ImageUpload />
                     </>
                 )}
             </DialogContent>
-            <DialogActions>
-                <SaveOrCancel
-                    position="right"
-                    customSaveMessage="Node Text Updated"
-                    customCancelMessage="Changes cancelled"
-                    useSaveIcon={false}
-                    saveText="Update Node Text"
-                    onSave={async () => {
-                        handleUpdateNode(textState, options);
-                        handleCloseModal();
-                        return true;
-                    }}
-                    onCancel={handleCloseModal}
-                    timeout={200}
-                />
-            </DialogActions>
+            {!node.isImageNode && (
+                <DialogActions>
+                    <SaveOrCancel
+                        position="right"
+                        customSaveMessage="Node Text Updated"
+                        customCancelMessage="Changes cancelled"
+                        useSaveIcon={false}
+                        saveText="Update Node Text"
+                        onSave={async () => {
+                            handleUpdateNode(textState, options);
+                            handleCloseModal();
+                            return true;
+                        }}
+                        onCancel={handleCloseModal}
+                        timeout={200}
+                    />
+                </DialogActions>
+            )}
         </Dialog>
     );
 };
+

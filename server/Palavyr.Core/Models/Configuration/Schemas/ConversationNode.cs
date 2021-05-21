@@ -8,8 +8,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas
 {
     public class ConversationNode : IRecord
     {
-        
-        [Key] public int? Id { get; set; }
+        [Key]
+        public int? Id { get; set; }
+
         public string? AreaIdentifier { get; set; }
         public string? AccountId { get; set; }
         public string? NodeId { get; set; }
@@ -25,6 +26,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public bool IsAnabranchMergePoint { get; set; }
         public bool IsDynamicTableNode { get; set; }
         public bool IsMultiOptionEditable { get; set; }
+        public bool IsImageNode { get; set; }
+        public string ImageS3Key { get; set; }
+        
         
         public string? OptionPath { get; set; }
         public string? ValueOptions { get; set; }
@@ -67,7 +71,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     IsDynamicTableNode = false,
                     IsCurrency = false,
                     IsMultiOptionEditable = false,
-                    DynamicType = null
+                    DynamicType = null,
+                    IsImageNode = false,
+                    ImageS3Key = ""
                 }
             };
         }
@@ -95,7 +101,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             bool isCurrency = false,
             bool isMultiOptionEditable = false,
             int? resolveOrder = null,
-            string? dynamicType = null
+            string? dynamicType = null,
+            bool isImageNode = false,
+            string imageKey = ""
         )
         {
             return new ConversationNode()
@@ -123,7 +131,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 IsDynamicTableNode = isDynamicTableNode,
                 ResolveOrder = resolveOrder,
                 NodeComponentType = nodeComponentType,
-                DynamicType = dynamicType
+                DynamicType = dynamicType,
+                IsImageNode = isImageNode,
+                ImageS3Key = ""
             };
         }
 
@@ -155,7 +165,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     node.IsCurrency,
                     node.IsMultiOptionEditable,
                     node.ResolveOrder,
-                    node.DynamicType
+                    node.DynamicType,
+                    node.IsImageNode,
+                    node.ImageS3Key
                 );
                 mappedTransactions.Add(mappedNode);
             }

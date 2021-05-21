@@ -65,7 +65,6 @@ const useStyles = makeStyles(() => ({
     }),
     text: {
         margin: ".1rem",
-        // fontSize: "16px",
     },
     formstyle: {
         fontSize: "12px",
