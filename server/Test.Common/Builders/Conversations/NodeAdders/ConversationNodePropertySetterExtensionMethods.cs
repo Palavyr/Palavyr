@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Services.DynamicTableService;
 using Palavyr.Core.Services.DynamicTableService.Compilers;
 
 namespace Test.Common.Builders.Conversations.NodeAdders
@@ -19,13 +20,13 @@ namespace Test.Common.Builders.Conversations.NodeAdders
 
         public static SingleNodeReturnObject WithText(this SingleNodeReturnObject container, string nodeText)
         {
-            container.CurrentNode.Text = nodeText;
+            container.PreviousNode.Text = nodeText;
             return container;
         }
 
         public static MultiNodeReturnObject WithText(this MultiNodeReturnObject container, string nodeText)
         {
-            container.CurrentNode.Text = nodeText;
+            container.PreviousNode.Text = nodeText;
             return container;
         }
 

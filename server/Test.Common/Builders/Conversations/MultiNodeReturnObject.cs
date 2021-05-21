@@ -4,18 +4,18 @@ namespace Test.Common.Builders.Conversations
 {
     public class MultiNodeReturnObject : IHaveCurrentNode
     {
-        public ConversationNode CurrentNode { get; set; }
+        public ConversationNode PreviousNode { get; set; }
         public ConversationNode[] ChildNodes { get; set; }
 
-        private MultiNodeReturnObject(ConversationNode currentNode, ConversationNode[] node)
+        private MultiNodeReturnObject(ConversationNode previousNode, ConversationNode[] node)
         {
-            CurrentNode = currentNode;
+            PreviousNode = previousNode;
             ChildNodes = node;
         }
 
-        public static MultiNodeReturnObject Return(ConversationNode currentNode, params ConversationNode[] nodes)
+        public static MultiNodeReturnObject Return(ConversationNode previousNode, params ConversationNode[] nextNodes)
         {
-            return new MultiNodeReturnObject(currentNode, nodes);
+            return new MultiNodeReturnObject(previousNode, nextNodes);
         }
     }
 }

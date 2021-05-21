@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Palavyr.API;
 using Palavyr.Core.Data;
-using Palavyr.IntegrationTests.TestAuthentication;
+using Palavyr.IntegrationTests.AppFactory.TestAuthentication;
 
 // We using 3.1 but...
 //https://www.thinktecture.com/en/entity-framework-core/isolation-of-integration-tests-in-2-1/

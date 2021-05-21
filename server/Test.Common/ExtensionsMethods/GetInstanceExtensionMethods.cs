@@ -1,6 +1,6 @@
 ﻿using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Nodes;
-using Palavyr.Core.Services.DynamicTableService.Compilers;
+using Palavyr.Core.Services.DynamicTableService;
 
 namespace Test.Common.ExtensionsMethods
 {
@@ -14,6 +14,11 @@ namespace Test.Common.ExtensionsMethods
         public static NodeGetter GetNodeGetter(this ITestBase _)
         {
             return new NodeGetter(new ConversationOptionSplitter(new GuidFinder()));
+        }
+
+        public static GuidFinder GetGuidFinder(this ITestBase _)
+        {
+            return new GuidFinder();
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             public static string MultipleChoiceContinue => DefaultNodeTypeOptions.MultipleChoiceContinue.StringName;
             public static string SplitMerge => DefaultNodeTypeOptions.SplitMerge.StringName;
             public static string EvaluateThreshold => DefaultNodeTypeOptions.EvaluateThreshold.StringName;
+            public static string ShowImage => DefaultNodeTypeOptions.ShowImage.StringName;
         }
 
         public static List<NodeTypeOption> DefaultNodeTypeOptionsList => // These get sent to the UI for user selection
@@ -41,6 +42,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 new TooComplicated(),
                 new SplitMerge(),
                 new Anabranch(),
+                new ShowImage()
             };
 
         public static YesNo CreateYesNo() => new YesNo();
@@ -53,7 +55,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public static MultipleChoiceAsPath CreateMultipleChoiceAsPath() => new MultipleChoiceAsPath();
         public static SplitMerge CreateSplitMerge() => new SplitMerge();
         public static Anabranch CreateAnabranch() => new Anabranch();
-
+        public static ShowImage CreateShowImage() => new ShowImage();
+        
         public static TakeCurrency CreateTakeCurrency() => new TakeCurrency();
         public static TakeNumber CreateTakeNumber() => new TakeNumber();
         public static TakeNumberIndividuals CreateTakeNumberIndividuals() => new TakeNumberIndividuals();
@@ -61,6 +64,31 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public static SendResponse CreateSendResponse() => new SendResponse();
         public static Restart CreateRestart() => new Restart();
 
+        public class ShowImage : NodeTypeOption
+        {
+            public new static string StringName => nameof(ShowImage);
+
+            public ShowImage()
+            {
+                Text = "";
+                Value = StringName;
+                PathOptions = new List<string>();
+                ValueOptions = new List<string>();
+                IsMultiOptionType = false;
+                IsTerminalType = false;
+                GroupName = InfoProvide;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+                IsDynamicType = false;
+                NodeComponent = NodeComponentTypes.ShowImage; //TODO create widget component
+                IsCurrency = false;
+                IsMultiOptionEditable = false;
+            }
+        }
+        
         public class EvaluateThreshold : NodeTypeOption
         {
             // hidden node

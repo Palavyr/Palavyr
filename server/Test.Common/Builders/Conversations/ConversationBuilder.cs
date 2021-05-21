@@ -25,13 +25,13 @@ namespace Test.Common.Builders.Conversations
         
         public ConversationNode WithNode(SingleNodeReturnObject nodeReturn)
         {
-            conversation.Add(nodeReturn.CurrentNode);
+            conversation.Add(nodeReturn.PreviousNode);
             return nodeReturn.ChildNode;
         }
 
         public ConversationNode[] WithNode(MultiNodeReturnObject nodeReturn)
         {
-            conversation.Add(nodeReturn.CurrentNode);
+            conversation.Add(nodeReturn.PreviousNode);
             return nodeReturn.ChildNodes;
         }
 

@@ -18,8 +18,8 @@ namespace PalavyrServer.UnitTests.Core.Services.TemporaryPaths
             
             result.Stem.ShouldNotEndWith(ExtensionTypes.Pdf.ToString());
             result.FileNameWithExtension.ShouldEndWith(ExtensionTypes.Pdf.ToString());
-            guidFinder.FindGuid(result.Stem).ShouldNotBeEmpty();
-            guidFinder.FindGuid(result.FileNameWithExtension).ShouldNotBeEmpty();
+            guidFinder.FindFirstGuidSuffix(result.Stem).ShouldNotBeEmpty();
+            guidFinder.FindFirstGuidSuffix(result.FileNameWithExtension).ShouldNotBeEmpty();
         }
 
         [Fact]

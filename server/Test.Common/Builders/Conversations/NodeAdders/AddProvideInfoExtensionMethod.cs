@@ -9,11 +9,11 @@ namespace Test.Common.Builders.Conversations.NodeAdders
     {
         public static SingleNodeReturnObject AddProvideInfo(this ConversationNode previousNode, string areaId = DefaultConstants.AreaIdentifier, string accountId = DefaultConstants.AccountId)
         {
-            var newId = GuidUtils.CreateNewId();
-            previousNode.AttachNewChildId(newId);
+            var thisNodesId = GuidUtils.CreateNewId();
+            previousNode.AttachNewChildId(thisNodesId);
 
             var provideInfo = ConversationNode.CreateNew(
-                newId,
+                thisNodesId,
                 DefaultNodeTypeOptions.ProvideInfo.StringName,
                 "",
                 areaId,
@@ -28,7 +28,7 @@ namespace Test.Common.Builders.Conversations.NodeAdders
                 false
             );
 
-            return SingleNodeReturnObject.Return(provideInfo, new ConversationNode());
+            return SingleNodeReturnObject.Return(previousNode, provideInfo);
         }
     }
 }

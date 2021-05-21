@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 
-namespace Palavyr.IntegrationTests.TestAuthentication
+namespace Palavyr.IntegrationTests.AppFactory.TestAuthentication
 {
     public class TestAuthenticationSchemeOptions : AuthenticationSchemeOptions
     {
