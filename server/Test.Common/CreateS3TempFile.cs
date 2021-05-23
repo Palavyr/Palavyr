@@ -23,7 +23,7 @@ namespace Test.Common
             var fileStem = A.RandomName();
             var localTempFile = Path.GetTempFileName();
             var temps3Key = TempS3Utils.CreateTempS3Key(fileStem);
-            var bucket = configuration.GetUserDataSection();
+            var bucket = configuration.GetUserDataBucket();
             await saver.SaveObjectToS3(bucket, localTempFile, temps3Key);
             return new TempS3FileMeta()
             {

@@ -60,7 +60,7 @@ namespace Palavyr.Core.Models.Resources.Responses
             }
             else
             {
-                var bucket = configuration.GetUserDataSection();
+                var bucket = configuration.GetUserDataBucket();
                 var link = linkCreator.GenericCreatePreSignedUrl(account.AccountLogoUri, bucket);
                 var imgTag = $"<img src=\"{link}\" alt=\"Logo\" />";
                 var updatedHtml = html.Replace(ResponseVariableDefinition.LogoUriVariablePattern, imgTag);

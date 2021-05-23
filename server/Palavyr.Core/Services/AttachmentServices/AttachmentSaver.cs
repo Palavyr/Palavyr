@@ -54,7 +54,7 @@ namespace Palavyr.Core.Services.AttachmentServices
 
         public async Task<FileLink> SaveAttachment(string accountId, string areaId, IFormFile attachmentFile)
         {
-            var userDataBucket = configuration.GetUserDataSection();
+            var userDataBucket = configuration.GetUserDataBucket();
             var safeFileName = GuidUtils.CreateNewId();
             var riskyFileName = attachmentFile.FileName;
             var s3AttachmentKey = s3KeyResolver.ResolveAttachmentKey(accountId, areaId, safeFileName);

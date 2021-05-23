@@ -29,6 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Tests\Api" />
+      <Folder Include="Tests\Api\ControllerFixtures\Conversation\Images" />
+      <Folder Include="Tests\Core\Services\ImageServices" />
     </ItemGroup>
 </Project>

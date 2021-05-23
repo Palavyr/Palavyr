@@ -44,7 +44,7 @@ namespace Palavyr.Core.Services.AttachmentServices
 
         public async Task<FileLink[]> RetrieveAttachmentLinks(string account, string areaId, CancellationToken cancellationToken)
         {
-            var userDataBucket = configuration.GetUserDataSection();
+            var userDataBucket = configuration.GetUserDataBucket();
             var metas = await dashContext.FileNameMaps
                 .Where(x => x.AreaIdentifier == areaId)
                 .Select(
@@ -68,7 +68,7 @@ namespace Palavyr.Core.Services.AttachmentServices
 
         public async Task<IHaveBeenDownloadedFromS3[]> RetrieveAttachmentFiles(string account, string areaId, S3SDownloadRequestMeta[]? additionalFiles, CancellationToken cancellationToken)
         {
-            var userDataBucket = configuration.GetUserDataSection();
+            var userDataBucket = configuration.GetUserDataBucket();
             var metas = await dashContext.FileNameMaps
                 .Where(x => x.AreaIdentifier == areaId)
                 .Select(

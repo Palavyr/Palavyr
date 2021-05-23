@@ -27,8 +27,8 @@ export const PalavyrDemoWidget = ({ preCheckErrors, apiKey, iframeRefreshed }: D
     return (
         <div>
             {preCheckErrors.length > 0 && (
-                <Alert severity="error" style={{ marginTop: "1rem" }}>
-                    <Typography gutterBottom>The Demo will load once you've fully assembled each of your areas!</Typography>
+                <Alert severity="error" style={{ marginTop: "1rem", marginBottom: "1.5rem" }}>
+                    <Typography gutterBottom>The demo will load once you've fully assembled each of your areas!</Typography>
                 </Alert>
             )}
             <Align>

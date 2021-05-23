@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 
 namespace Palavyr.Core.Exceptions
 {
@@ -8,7 +9,7 @@ namespace Palavyr.Core.Exceptions
         {
         }
 
-        public GuidNotFoundException(string message) : base(message)
+        public GuidNotFoundException(string? message) : base(message)
         {
         }
     }

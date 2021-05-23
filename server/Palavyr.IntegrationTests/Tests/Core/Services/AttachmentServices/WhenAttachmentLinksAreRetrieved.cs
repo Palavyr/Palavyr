@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,7 +49,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
 
     public class TestLinkCreator : ILinkCreator
     {
-        public string GenericCreatePreSignedUrl(string fileKey, string bucket)
+        public string GenericCreatePreSignedUrl(string fileKey, string bucket, DateTime? expiration = null)
         {
             return "S3.ThisIsAFakePre-signedUrl";
         }

@@ -96,7 +96,7 @@ export type ConvoNode = {
     nodeComponentType: string;
     isDynamicTableNode: boolean;
     isImageNode: boolean;
-    imageKey: string;
+    imageId: string | null;
     resolveOrder: number;
     dynamicType: string | null;
 };
@@ -172,6 +172,7 @@ export type FileLink = {
     fileId: string;
     fileName: string;
     link: string;
+    isUrl: boolean;
 };
 
 export type FileLinkReference = {
@@ -411,7 +412,7 @@ export type NodeOption = {
     valueOptions: Array<string>;
     dynamicType: string | null;
     isImageNode: boolean;
-    imageKey: string;
+    imageId: string | null;
 };
 
 // export type NodeTypeOptions = {[index: string]: NodeOptions};

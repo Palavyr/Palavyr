@@ -1,46 +1,7 @@
 import React from "react";
-import { makeStyles, FormControl, InputLabel, FormHelperText, TextField } from "@material-ui/core";
 import { NodeOption, NodeTypeOptions } from "@Palavyr-Types";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
-
-const useStyles = makeStyles(() => ({
-    formControl: {
-        minWidth: 120,
-        width: "100%",
-        textAlign: "center",
-    },
-    autocomplete: {
-        marginTop: "1rem",
-        paddingBottom: "0.5rem",
-        borderRadius: "0px",
-        borderBottomLeftRadius: "3px",
-        borderBottomRightRadius: "3px",
-        border: "0px dashed green",
-
-    },
-    selectbox: {
-        color: "black",
-        textAlign: "center",
-        border: "0px solid yellow",
-        borderRadius: "0px",
-        borderBottomLeftRadius: "3px",
-        borderBottomRightRadius: "3px",
-        backgroundColor: "white",
-        height: "200px"
-    },
-    otherbox: {
-        textAlign: "center",
-    },
-    inputLabel: {
-        "& .MuiFormLabel-root": {
-            color: "black",
-            fontSize: "10pt",
-            textAlign: "center",
-            wordWrap: "auto",
-        },
-    },
-}));
+import { PalavyrAutoComplete } from "@common/components/PalavyrAutoComplete";
 
 export interface ISelectNodeType {
     onChange: (event: any, nodeOption: NodeOption) => void;
@@ -51,37 +12,17 @@ export interface ISelectNodeType {
 }
 
 //https://github.com/mui-org/material-ui/issues/19173 to help resolve the label not resetting to '' when unsetting the node.
-export const CustomNodeSelect = ({
-    onChange,
-    label,
-    nodeTypeOptions,
-    shouldDisabledNodeTypeSelector,
-    reRender
-}: ISelectNodeType) => {
-    const cls = useStyles();
+export const CustomNodeSelect = ({ onChange, label, nodeTypeOptions, shouldDisabledNodeTypeSelector, reRender }: ISelectNodeType) => {
     const groupGetter = (val: NodeOption) => val.groupName;
     const sortedNodeOptions = sortByPropertyAlphabetical(groupGetter, nodeTypeOptions);
     return (
-        <div>
-            <FormControl className={cls.formControl}>
-                <InputLabel id="autocomplete-label"></InputLabel>
-                {nodeTypeOptions && (
-                    <Autocomplete
-                        size="small"
-                        disabled={shouldDisabledNodeTypeSelector}
-                        disableClearable
-                        clearOnEscape
-                        className={cls.autocomplete}
-                        classes={{ root: cls.otherbox }}
-                        onChange={onChange}
-                        options={sortedNodeOptions}
-                        groupBy={(nodeOption) => nodeOption.groupName}
-                        getOptionLabel={(option) => option.text}
-                        renderInput={(params) => <TextField {...params} InputLabelProps={{ className: cls.inputLabel }} className={cls.inputLabel} data-lpignore="true" label={label} />}
-                    />
-                )}
-                <FormHelperText className={cls.formControl}>Select</FormHelperText>
-            </FormControl>
-        </div>
+        <PalavyrAutoComplete
+            label={label}
+            options={sortedNodeOptions}
+            shouldDisableSelect={shouldDisabledNodeTypeSelector}
+            onChange={onChange}
+            groupby={(nodeOption: NodeOption) => nodeOption.groupName}
+            getOptionLabel={(option: NodeOption) => option.text}
+        />
     );
 };

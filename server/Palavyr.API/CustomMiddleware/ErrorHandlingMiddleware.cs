@@ -53,6 +53,11 @@ namespace Palavyr.API.CustomMiddleware
                         logger.LogError($"{guidNotFoundException.Message}");
                         break;
 
+                    case DomainException domainException:
+                        logger.LogInformation("A domain exception was encountered.");
+                        logger.LogError($"{domainException.Message}");
+                        break;
+
                     default:
                         logger.LogError("Unknown Exception");
                         logger.LogError($"{ex.Message}");

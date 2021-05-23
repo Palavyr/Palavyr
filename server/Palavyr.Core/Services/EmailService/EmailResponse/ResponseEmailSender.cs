@@ -164,7 +164,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 
         private async Task SaveResponsePdfToS3(string localFilePath, string accountId, string safeFileNameStem)
         {
-            var userDataBucket = configuration.GetUserDataSection();
+            var userDataBucket = configuration.GetUserDataBucket();
             var success = await s3Saver.SaveObjectToS3(userDataBucket, localFilePath, s3KeyResolver.ResolveResponsePdfKey(accountId, safeFileNameStem));
             if (!success)
             {

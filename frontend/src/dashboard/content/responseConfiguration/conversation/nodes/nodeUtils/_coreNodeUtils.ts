@@ -207,7 +207,7 @@ export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeId
             resolveOrder: 0,
             dynamicType: "",
             isImageNode: false,
-            imageKey: ""
+            imageId: null
         };
 
         updatedNodeList.push(newNode);

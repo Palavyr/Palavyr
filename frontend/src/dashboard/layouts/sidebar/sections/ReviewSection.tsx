@@ -6,6 +6,7 @@ import CompareIcon from "@material-ui/icons/Compare";
 import { DashboardContext } from "../../DashboardContext";
 import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
 import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
+import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -34,12 +35,18 @@ export const ReviewSection = ({ isActive }: ReviewSectionProps) => {
         history.push("/dashboard/demo/");
     };
 
+    const imagesReviewOnClick = () => {
+        setViewName("Images");
+        history.push("/dashboard/images");
+    };
+
     return (
         <List>
             <SidebarSectionHeader title="Review" onClick={() => setReviewOpen(!reviewOpen)} currentState={reviewOpen} />
             <Collapse in={reviewOpen} timeout="auto" unmountOnExit>
                 <SidebarLinkItem text="Check Enquiries" isActive={isActive} onClick={enquiriesOnClick} IconComponent={<InboxIcon className={cls.icon} />} />
                 <SidebarLinkItem text="Chat Demo" isActive={isActive} onClick={chatDemoOnClick} IconComponent={<CompareIcon className={cls.icon} />} />
+                <SidebarLinkItem text="Uploads" isActive={isActive} onClick={imagesReviewOnClick} IconComponent={<PhotoLibraryIcon className={cls.icon} />} />
             </Collapse>
         </List>
     );

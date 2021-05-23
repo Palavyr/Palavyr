@@ -5,7 +5,7 @@ namespace Test.Common.ExtensionsMethods
 {
     public static class TestConfigurationExtensionMethods
     {
-        public static string GetUserDataSection(this IConfiguration configuration)
+        public static string GetUserDataBucket(this IConfiguration configuration)
         {
             return configuration.GetSection(TestConstants.ConfigSections.UserDataSection).Value;
         }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Models.Resources.Responses
 {

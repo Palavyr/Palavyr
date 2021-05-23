@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Services.AmazonServices.S3Service;
 
 namespace Palavyr.Core.Repositories
 {
     public interface IConfigurationRepository
     {
         Task CommitChangesAsync();
+        Task CommitChangesAsync(CancellationToken cancellationToken);
         Task<Area> CreateAndAddNewArea(string name, string accountId, string emailAddress, bool isVerified);
         Task<List<Area>> GetAllAreasShallow(string accountId);
         Task<Area> GetAreaById(string accountId, string areaId);
@@ -25,10 +29,15 @@ namespace Palavyr.Core.Repositories
         Task RemoveStaticTables(List<StaticTablesMeta> staticTablesMetas);
         Task<List<Area>> GetActiveAreasWithConvoAndDynamicAndStaticTables(string accountId);
         void RemoveAreaNodes(string areaId, string accountId);
-        
+
         Task<List<DynamicTableMeta>> GetDynamicTableMetas(string accountId, string areaIdentifier);
         Task<DynamicTableMeta> GetDynamicTableMetaByTableId(string tableId);
-        
+
+        Task<Image> GetImageById(string imageId, CancellationToken cancellationToken);
+        Task<Image[]> GetImagesByIds(string[] imageIds, CancellationToken cancellationToken);
+        Task<ConversationNode[]> GetConvoNodesByImageIds(string[] imageIds, CancellationToken cancellationToken);
+        Task RemoveImagesByIds(string[] imageIds, IS3Deleter s3Deleter, string userDataBucket, CancellationToken cancellationToken);
+        Task<Image[]> GetImagesByAccountId(string accountId, CancellationToken cancellationToken);
         
         // maintenance methods to delete
         Task<List<DynamicTableMeta>> GetAllDynamicTableMetas();

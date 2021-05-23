@@ -53,7 +53,7 @@ namespace Palavyr.Core.Services.Deletion
 
         private async Task DeleteS3Data(string accountId, string areaId, CancellationToken cancellationToken)
         {
-            var userDataBucket = configuration.GetUserDataSection();
+            var userDataBucket = configuration.GetUserDataBucket();
             var s3KeysToDelete = await dashContext.FileNameMaps
                 .Where(x => x.AreaIdentifier == areaId && x.AccountId == accountId)
                 .Select(x => x.S3Key)

@@ -27,9 +27,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public bool IsDynamicTableNode { get; set; }
         public bool IsMultiOptionEditable { get; set; }
         public bool IsImageNode { get; set; }
-        public string ImageS3Key { get; set; }
-        
-        
+        public string? ImageId { get; set; } // no extension on this
+
         public string? OptionPath { get; set; }
         public string? ValueOptions { get; set; }
         public string? NodeType { get; set; }
@@ -73,7 +72,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     IsMultiOptionEditable = false,
                     DynamicType = null,
                     IsImageNode = false,
-                    ImageS3Key = ""
+                    ImageId = null
                 }
             };
         }
@@ -103,7 +102,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             int? resolveOrder = null,
             string? dynamicType = null,
             bool isImageNode = false,
-            string imageKey = ""
+            string? imageId = null
         )
         {
             return new ConversationNode()
@@ -133,7 +132,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 NodeComponentType = nodeComponentType,
                 DynamicType = dynamicType,
                 IsImageNode = isImageNode,
-                ImageS3Key = ""
+                ImageId = imageId
             };
         }
 
@@ -167,7 +166,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     node.ResolveOrder,
                     node.DynamicType,
                     node.IsImageNode,
-                    node.ImageS3Key
+                    node.ImageId
                 );
                 mappedTransactions.Add(mappedNode);
             }

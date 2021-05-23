@@ -12,6 +12,7 @@ import { logDebug, logTrace } from 'logging/logging';
 import PdfGenerator from 'pdf/pdfGenerator';
 import { Application, Request, Response, NextFunction } from 'express';
 import { pathToPhantom, pathToScript } from 'utils/pathUtils';
+import { ReadStream } from 'fs';
 
 export const configureEndpoints = (app: Application) => {
     ///
@@ -22,7 +23,7 @@ export const configureEndpoints = (app: Application) => {
         const options = unpackRequest(request);
         const pdf = new PdfGenerator(options.html, pathToPhantom, pathToScript, options.paper);
 
-        pdf.toStream(async (error: any, readStream: any) => {
+        pdf.toStream(async (error: any, readStream?: ReadStream) => {
             if (error) {
                 logDebug(error);
                 logDebug(FAIL_TO_STREAM_MESSAGE);

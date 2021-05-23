@@ -64,8 +64,10 @@ namespace Palavyr.Core.Models
                 var branchesTerminate = AllBranchesTerminate(nodeList, error);
                 var nodesSatisfied = AllRequiredNodesSatisfied(nodeList, allRequiredNodes.ToArray(), error);
                 var dynamicNodesAreOrdered = DynamicNodesAreOrdered(nodeList, error);
-
-                var checks = new List<bool>() {nodesSet, branchesTerminate, nodesSatisfied, dynamicNodesAreOrdered};
+                var allImageNodesHaveImagesSet = AllImageNodesSet(nodeList, error);
+                
+                
+                var checks = new List<bool>() {nodesSet, branchesTerminate, nodesSatisfied, dynamicNodesAreOrdered, allImageNodesHaveImagesSet};
 
                 isReady = checks.TrueForAll(x => x);
                 logger.LogDebug($"Checked isReady status: {isReady}");
@@ -95,6 +97,27 @@ namespace Palavyr.Core.Models
             }
         }
 
+        private bool AllImageNodesSet(ConversationNode[] nodeList, PreCheckError error)
+        {
+            var imageNodes = nodeList.Where(x => x.IsImageNode);
+            var count = 0;
+            foreach (var imageNode in imageNodes)
+            {
+                if (imageNode.ImageId == null)
+                {
+                    count++;
+                }
+            }
+
+            if (count > 0)
+            {
+                error.Reasons.Add($"A total of {count} image nodes do not have images set.");
+                return false;
+            }
+
+            return true;
+        }
+
         private bool DynamicNodesAreOrdered(ConversationNode[] nodeList, PreCheckError error)
         {
             var nodeOrderCheckResult = nodeOrderChecker.AllDynamicTypesAreOrderedCorrectlyByResolveOrder(nodeList);
@@ -112,7 +135,7 @@ namespace Palavyr.Core.Models
             var result = emptyNodeTypes.All(x => x == false);
             if (!result)
             {
-                error.Reasons.Add("A nodes are not set.");
+                error.Reasons.Add("All nodes are not set.");
             }
 
             return result;

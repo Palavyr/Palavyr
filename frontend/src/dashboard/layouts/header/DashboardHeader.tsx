@@ -88,6 +88,7 @@ const routesToExclude = [
     "/dashboard/subscribe/purchase",
     "/dashboard/confirm",
     "/dashboard/getwidget/",
+    "/dashboard/images",
 ];
 
 export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
