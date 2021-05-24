@@ -95,6 +95,8 @@ export type ConvoNode = {
     isAnabranchMergePoint: boolean;
     nodeComponentType: string;
     isDynamicTableNode: boolean;
+    isImageNode: boolean;
+    imageId: string | null;
     resolveOrder: number;
     dynamicType: string | null;
 };
@@ -170,6 +172,7 @@ export type FileLink = {
     fileId: string;
     fileName: string;
     link: string;
+    isUrl: boolean;
 };
 
 export type FileLinkReference = {
@@ -190,6 +193,7 @@ export type EnquiryRow = {
     name: string;
     email: string;
     phoneNumber: string;
+    hasResponse: boolean;
 };
 
 export type Enquiries = EnquiryRow[];
@@ -375,6 +379,7 @@ export type ResponseConfigurationType = {
     prologue: string;
     epilogue: string;
     staticTablesMetas: StaticTableMetas;
+    sendPdfResponse: boolean;
 };
 
 export type AccountEmailSettingsResponse = {
@@ -408,6 +413,8 @@ export type NodeOption = {
     value: string;
     valueOptions: Array<string>;
     dynamicType: string | null;
+    isImageNode: boolean;
+    imageId: string | null;
 };
 
 // export type NodeTypeOptions = {[index: string]: NodeOptions};

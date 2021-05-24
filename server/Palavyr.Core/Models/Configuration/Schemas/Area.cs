@@ -27,7 +27,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public string FallbackSubject { get; set; } = null!;
         public string FallbackEmailTemplate { get; set; } = null!;
         public bool SendAttachmentsOnFallback { get; set; }
-        
+        public bool SendPdfResponse { get; set; } = true;
         
         [DefaultValue("Thank you for reaching out!")]
         public string Subject { get; set; } = null!;
@@ -57,7 +57,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 AccountId = accountId,
                 DynamicTableMetas = null,
                 AreaSpecificEmail = emailAddress,
-                EmailIsVerified = emailIsVerified
+                EmailIsVerified = emailIsVerified,
+                SendPdfResponse = true
             };
         }
     }

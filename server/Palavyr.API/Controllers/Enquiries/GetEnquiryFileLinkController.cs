@@ -29,7 +29,7 @@ namespace Palavyr.API.Controllers.Enquiries
             [FromRoute] string fileId)
         {
             var s3Key = s3KeyResolver.ResolveResponsePdfKey(accountId, fileId);
-            var previewBucket = configuration.GetUserDataSection();
+            var previewBucket = configuration.GetUserDataBucket();
             var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(s3Key, previewBucket);
             return preSignedUrl;
         }

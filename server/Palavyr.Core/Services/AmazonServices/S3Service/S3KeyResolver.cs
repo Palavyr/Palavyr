@@ -9,6 +9,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
         string ResolvePreviewKey(string accountId, string safeFileName);
         string ResolveLogoKey(string account, string safeFileName, string fileExtension);
         string ResolveResponsePdfKey(string account, string safeFileName);
+        string ResolveImageKey(string account, string safeName);
     }
 
     public class S3KeyResolver : IS3KeyResolver
@@ -31,6 +32,11 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
         public string ResolveResponsePdfKey(string account, string safeFileName)
         {
             return Path.Combine(account, "Responses", safeFileName + ".pdf").ConvertToUnix();
+        }
+
+        public string ResolveImageKey(string account, string safeName) // safename includes extension
+        {
+            return Path.Combine(account, "Images", safeName).ConvertToUnix();
         }
     }
 }

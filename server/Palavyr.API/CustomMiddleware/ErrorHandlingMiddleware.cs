@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
+using Palavyr.Core.Exceptions;
 
 namespace Palavyr.API.CustomMiddleware
 {
@@ -45,6 +46,16 @@ namespace Palavyr.API.CustomMiddleware
                     case AmazonS3Exception amazonS3Exception:
                         logger.LogInformation("Failed to communicate with S3");
                         logger.LogError($"{amazonS3Exception.Message}");
+                        break;
+
+                    case GuidNotFoundException guidNotFoundException:
+                        logger.LogInformation("Failed to find a GUID substring.");
+                        logger.LogError($"{guidNotFoundException.Message}");
+                        break;
+
+                    case DomainException domainException:
+                        logger.LogInformation("A domain exception was encountered.");
+                        logger.LogError($"{domainException.Message}");
                         break;
 
                     default:

@@ -17,6 +17,7 @@ namespace Palavyr.Core.Data
         public DbSet<StaticTablesMeta> StaticTablesMetas { get; set; }
         public DbSet<StaticTableRow> StaticTablesRows { get; set; }
         public DbSet<DynamicTableMeta> DynamicTableMetas { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         public DbSet<WidgetPreference> WidgetPreferences { get; set; }
         public DbSet<SelectOneFlat> SelectOneFlats { get; set; }

@@ -11,7 +11,7 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 const useStyles = makeStyles((theme) => ({
     staticFees: {
         margin: "1.2rem",
-        background: theme.palette.secondary.light,//"#C7ECEE",
+        background: theme.palette.secondary.light,
         color: theme.palette.getContrastText(theme.palette.secondary.light),
         padding: "1.3rem",
         border: `1px solid ${theme.palette.common.black}`,
@@ -58,8 +58,8 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                 result = true;
             }
         });
-        if (result === false){
-            tableModifier.setPerPersonRequired(staticTableMetas, staticTableMeta.tableOrder, false)
+        if (result === false) {
+            tableModifier.setPerPersonRequired(staticTableMetas, staticTableMeta.tableOrder, false);
         }
         return result;
     };
@@ -137,11 +137,9 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                     Remove Table
                 </Button>
 
-                {anyStaticTableRowsWithPerIndividualSet(staticTableMeta) && <FormControlLabel
-                    label="Require num individuals"
-                    control={<Checkbox checked={staticTableMeta.perPersonInputRequired}
-                    onChange={() => tableModifier.togglePerPersonRequired(staticTableMetas, staticTableMeta.tableOrder)} />}
-                />}
+                {anyStaticTableRowsWithPerIndividualSet(staticTableMeta) && (
+                    <FormControlLabel label="Require num individuals" control={<Checkbox checked={staticTableMeta.perPersonInputRequired} onChange={() => tableModifier.togglePerPersonRequired(staticTableMetas, staticTableMeta.tableOrder)} />} />
+                )}
             </div>
         </div>
     );

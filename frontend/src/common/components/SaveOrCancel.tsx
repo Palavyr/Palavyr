@@ -14,7 +14,7 @@ export type AlertMessage = {
 };
 export interface ISaveOrCancel {
     size?: "small" | "medium" | "large" | undefined;
-    onSave(e?: any): Promise<boolean>;
+    onSave?(e?: any): Promise<boolean>;
     onCancel?(): Promise<any> | any;
     onDelete?(): Promise<any>;
     customSaveMessage?: string;
@@ -25,6 +25,7 @@ export interface ISaveOrCancel {
     deleteText?: string;
     position?: "left" | "right" | "center";
     useSaveIcon?: boolean;
+    buttonType?: "button" | "submit";
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -79,8 +80,9 @@ export const SaveOrCancel = ({
     cancelText = "Cancel",
     deleteText = "Delete",
     useSaveIcon = true,
+    buttonType = "button"
 }: ISaveOrCancel) => {
-    const classes = useStyles();
+    const cls = useStyles();
     const [isSaving, setIsSaving] = useState<boolean>(false);
 
     const { setSuccessText, successOpen, setSuccessOpen, setWarningText, warningOpen, setWarningOpen, setSnackPosition } = React.useContext(DashboardContext);
@@ -92,24 +94,27 @@ export const SaveOrCancel = ({
         <>
             {
                 <Button
+                    type={buttonType}
                     startIcon={isSaving ? <CircularProgress size={20} /> : useSaveIcon ? <SaveIcon /> : <></>}
                     variant="outlined"
-                    className={classNames(classes.button, classes.saveButton)}
+                    className={classNames(cls.button, cls.saveButton)}
                     onClick={async (e) => {
                         setIsSaving(true);
                         setTimeout(async () => {
-                            var res = await onSave(e);
-                            if (res === true || res === null) {
-                                setPosition()
-                                if (warningOpen) setWarningOpen(false);
-                                setSuccessText(customSaveMessage ?? "Save Successful");
-                                setSuccessOpen(true);
-                            } else {
-                                setPosition()
-                                setWarningText(customCancelMessage ?? "Cancelled");
-                                setWarningOpen(true);
+                            if (onSave) {
+                                var res = await onSave(e);
+                                if (res === true || res === null) {
+                                    setPosition();
+                                    if (warningOpen) setWarningOpen(false);
+                                    setSuccessText(customSaveMessage ?? "Save Successful");
+                                    setSuccessOpen(true);
+                                } else {
+                                    setPosition();
+                                    setWarningText(customCancelMessage ?? "Cancelled");
+                                    setWarningOpen(true);
+                                }
+                                setIsSaving(false);
                             }
-                            setIsSaving(false);
                         }, timeout);
                     }}
                     size={size}
@@ -120,9 +125,9 @@ export const SaveOrCancel = ({
             {onCancel && (
                 <Button
                     variant="outlined"
-                    className={classNames(classes.button, classes.cancelButton)}
+                    className={classNames(cls.button, cls.cancelButton)}
                     onClick={async () => {
-                        setPosition()
+                        setPosition();
                         await onCancel();
                         if (successOpen) setSuccessOpen(false);
                         setWarningText(customCancelMessage ?? "Cancelled");
@@ -137,9 +142,9 @@ export const SaveOrCancel = ({
                 <Button
                     startIcon={<DeleteOutlineIcon />}
                     variant="outlined"
-                    className={classNames(classes.button, classes.delButton)}
+                    className={classNames(cls.button, cls.delButton)}
                     onClick={async () => {
-                        setPosition()
+                        setPosition();
                         await onDelete();
                         setWarningText("Delete Successful");
                         setWarningOpen(true);

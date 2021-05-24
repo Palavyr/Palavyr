@@ -11,6 +11,7 @@ import { SingleRowSingleCell } from "common/TableCell";
 import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "common/UserDetailsDialog/ChatLoadingSpinner";
 import { uuid } from "uuidv4";
+import { CustomImage } from "common/CustomImage";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {
@@ -24,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     },
     textField: (prefs: WidgetPreferences) => ({
         color: prefs.chatFontColor,
-        borderColor:  theme.palette.getContrastText(prefs.chatBubbleColor ?? "black"),
+        borderColor: theme.palette.getContrastText(prefs.chatBubbleColor ?? "black"),
     }),
     textLabel: (prefs: WidgetPreferences) => ({
         color: theme.palette.getContrastText(prefs.chatBubbleColor ?? "black"),
@@ -32,6 +33,15 @@ const useStyles = makeStyles(theme => ({
             color: theme.palette.getContrastText(prefs.chatBubbleColor ?? "black"),
         },
     }),
+    image: {
+        height: "100%",
+        width: "100%",
+        borderRadius: "5px",
+        padding: "0.2rem",
+        "&:hover": {
+            cursor: "pointer",
+        },
+    },
 }));
 
 export class StandardComponents {
@@ -273,6 +283,30 @@ export class StandardComponents {
                     </Table>
                 </>
             );
+        };
+    }
+
+    makeShowImage({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+        const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
+        const prefs = getWidgetPreferences();
+
+        return () => {
+            const cls = useStyles(prefs);
+            const [loaded, setLoaded] = useState<boolean>(false);
+            const [link, setLink] = useState<string>("");
+            useEffect(() => {
+                (async () => {
+                    const presignedUrl = await client.Widget.Get.NodeImage(node.nodeId);
+                    setLink(presignedUrl);
+                    setLoaded(false);
+                })();
+
+                setTimeout(() => {
+                    responseAction(node, child, nodeList, client, convoId, null);
+                }, 2500);
+            }, []);
+
+            return <CustomImage imageLink={link} />;
         };
     }
 
@@ -541,7 +575,7 @@ export class StandardComponents {
 
                 const response = await client.Widget.Send.FallbackEmail(areaId, email, name, phone, convoId);
                 if (response.result) {
-                    var completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
+                    const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
                     await client.Widget.Post.CompletedConversation(completeConvo);
                 }
                 return response;
@@ -572,6 +606,39 @@ export class StandardComponents {
                     </Table>
                     <ChatLoadingSpinner loading={loading} />
                 </>
+            );
+        };
+    }
+
+    makeEndWithoutEmail({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+        const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
+        const prefs = getWidgetPreferences();
+
+        return () => {
+            const cls = useStyles(prefs);
+            const contextProperties = getContextProperties();
+
+            const areaId = nodeList[0].areaIdentifier;
+            const email = contextProperties[ConvoContextProperties.emailAddress];
+            const name = contextProperties[ConvoContextProperties.name];
+            const phone = contextProperties[ConvoContextProperties.phoneNumber];
+
+            useEffect(() => {
+                setTimeout(async () => {
+                    const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone, false);
+                    await client.Widget.Post.CompletedConversation(completeConvo);
+                    responseAction(node, child, nodeList, client, convoId, null);
+                }, 1500);
+            }, []);
+
+            return (
+                <Table>
+                    <SingleRowSingleCell>
+                        <Typography variant="body1" className={cls.textField}>
+                            {node.text}
+                        </Typography>
+                    </SingleRowSingleCell>
+                </Table>
             );
         };
     }

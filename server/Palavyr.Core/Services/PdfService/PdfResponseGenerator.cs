@@ -72,7 +72,7 @@ namespace Palavyr.Core.Services.PdfService
 
             html = responseCustomizer.Customize(html, emailRequest, account);
 
-            var userDataBucket = configuration.GetUserDataSection();
+            var userDataBucket = configuration.GetUserDataBucket();
             var s3Key = s3KeyResolver.ResolveResponsePdfKey(accountId, identifier);
             var pdfServerResponse = await htmlToPdfClient.GeneratePdfFromHtml(html, userDataBucket, s3Key, identifier, Paper.CreateDefault(identifier)); // TODO: Make this configurable via the DBs
             return pdfServerResponse;

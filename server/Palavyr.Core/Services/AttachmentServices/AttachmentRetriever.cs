@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Models.Resources.Responses;
@@ -43,7 +44,7 @@ namespace Palavyr.Core.Services.AttachmentServices
 
         public async Task<FileLink[]> RetrieveAttachmentLinks(string account, string areaId, CancellationToken cancellationToken)
         {
-            var userDataBucket = configuration.GetSection(ApplicationConstants.ConfigSections.UserDataSection).Value;
+            var userDataBucket = configuration.GetUserDataBucket();
             var metas = await dashContext.FileNameMaps
                 .Where(x => x.AreaIdentifier == areaId)
                 .Select(
@@ -67,7 +68,7 @@ namespace Palavyr.Core.Services.AttachmentServices
 
         public async Task<IHaveBeenDownloadedFromS3[]> RetrieveAttachmentFiles(string account, string areaId, S3SDownloadRequestMeta[]? additionalFiles, CancellationToken cancellationToken)
         {
-            var userDataBucket = configuration.GetSection(ApplicationConstants.ConfigSections.UserDataSection).Value;
+            var userDataBucket = configuration.GetUserDataBucket();
             var metas = await dashContext.FileNameMaps
                 .Where(x => x.AreaIdentifier == areaId)
                 .Select(

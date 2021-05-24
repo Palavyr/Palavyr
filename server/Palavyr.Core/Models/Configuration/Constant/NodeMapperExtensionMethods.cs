@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -32,7 +33,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             };
         }
 
-        public static ConversationNode MapNodeTypeOptionToConversationNode(
+        public static ConversationNode  MapNodeTypeOptionToConversationNode(
             this NodeTypeOption nodeTypeOption,
             string nodeId,
             string text,

@@ -1,4 +1,5 @@
 using Autofac;
+using Palavyr.API.Controllers.Conversation.Images;
 using Palavyr.API.Controllers.Enquiries;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.API.Controllers.Testing;
@@ -6,6 +7,7 @@ using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Conversation;
+using Palavyr.Core.Models.Nodes;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services;
@@ -22,6 +24,7 @@ using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.EmailService.EmailResponse;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.EmailService.Verification;
+using Palavyr.Core.Services.ImageServices;
 using Palavyr.Core.Services.LogoServices;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
@@ -100,6 +103,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<SafeFileNameCreator>().AsSelf();
             builder.RegisterType<LocalIo>().As<ILocalIo>();
             builder.RegisterType<PdfServerClient>().As<IPdfServerClient>();
+            builder.RegisterType<ImageSaver>().As<IImageSaver>();
+            builder.RegisterType<ImageRemover>().As<IImageRemover>();
         }
     }
 }

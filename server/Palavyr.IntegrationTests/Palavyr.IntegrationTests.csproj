@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>Palavyr.IntegrationTests</RootNamespace>
-    </PropertyGroup>
+      <UserSecretsId>d50d54cd-7578-46ae-be18-9c2ea74993b6</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.11" />
@@ -12,16 +13,12 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
         <PackageReference Include="Shouldly" Version="4.0.3" />
         <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
-        <PackageReference Include="xunit" Version="2.4.1" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Palavyr.API\Palavyr.API.csproj" />
       <ProjectReference Include="..\Palavyr.Core\Palavyr.Core.csproj" />
+      <ProjectReference Include="..\Test.Common\Test.Common.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -29,5 +26,10 @@
       <EmbeddedResource Include="xunit.runner.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Tests\Api\ControllerFixtures\Conversation\Images" />
+      <Folder Include="Tests\Core\Services\ImageServices" />
     </ItemGroup>
 </Project>

@@ -215,7 +215,7 @@ namespace Palavyr.Core.Models
                 false,
                 true
             );
-            
+
             nodeList.Add(genericTooComplicated);
             foreach (var node in nodeList)
             {
@@ -230,6 +230,12 @@ namespace Palavyr.Core.Models
                     if (node.NodeType == DefaultNodeTypeOptions.SendResponse.StringName)
                     {
                         node.NodeChildrenString = mayWeSendAnEmailId; // we're deciding that the thanksId node will be the entry point in to the response ending sequence
+                        continue;
+                    }
+
+                    if (node.NodeType == DefaultNodeTypeOptions.EndWithoutEmail.StringName)
+                    {
+                        node.NodeChildrenString = dontSendEmailRestartId;
                         continue;
                     }
 

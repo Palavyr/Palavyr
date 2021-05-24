@@ -10,6 +10,8 @@ namespace Palavyr.Core.Models.Resources.Requests
         public string Name { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
+        public bool HasResponse { get; set; }
+        
         public CompleteConversation() { }
         
         private CompleteConversation(
@@ -43,19 +45,26 @@ namespace Palavyr.Core.Models.Resources.Requests
                 phone);
         }
 
-        public static CompletedConversation BindReceiverToSchemaType(string conversationId, string accountId, string areaName, string emailTemplateUsed, string name, string email, string phoneNumber)
+        public static CompletedConversation BindReceiverToSchemaType(
+            string conversationId, 
+            string accountId, 
+            string areaName, 
+            string emailTemplateUsed, 
+            string name, 
+            string email, 
+            string phoneNumber,
+            bool hasResponse)
         {
             var timeStamp = DateTime.Now;
-            var seen = false;
 
             var completedConversation = CompletedConversation.CreateNew(
                 conversationId,
-                conversationId,
+                hasResponse ? conversationId : "",
                 timeStamp,
                 accountId,
                 areaName,
                 emailTemplateUsed,
-                seen,
+                false,
                 name,
                 email,
                 phoneNumber);

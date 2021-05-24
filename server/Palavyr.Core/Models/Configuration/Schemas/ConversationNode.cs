@@ -8,8 +8,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas
 {
     public class ConversationNode : IRecord
     {
-        
-        [Key] public int? Id { get; set; }
+        [Key]
+        public int? Id { get; set; }
+
         public string? AreaIdentifier { get; set; }
         public string? AccountId { get; set; }
         public string? NodeId { get; set; }
@@ -25,7 +26,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public bool IsAnabranchMergePoint { get; set; }
         public bool IsDynamicTableNode { get; set; }
         public bool IsMultiOptionEditable { get; set; }
-        
+        public bool IsImageNode { get; set; }
+        public string? ImageId { get; set; } // no extension on this
+
         public string? OptionPath { get; set; }
         public string? ValueOptions { get; set; }
         public string? NodeType { get; set; }
@@ -34,7 +37,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public int? ResolveOrder { get; set; }
         public bool IsCurrency { get; set; }
         public bool Fallback { get; set; }
-        public string? NodeChildrenString { get; set; } // stored as comma delimited list as string
+        public string? NodeChildrenString { get; set; } = ""; // stored as comma delimited list as string
 
         public ConversationNode()
         {
@@ -67,7 +70,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     IsDynamicTableNode = false,
                     IsCurrency = false,
                     IsMultiOptionEditable = false,
-                    DynamicType = null
+                    DynamicType = null,
+                    IsImageNode = false,
+                    ImageId = null
                 }
             };
         }
@@ -95,7 +100,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             bool isCurrency = false,
             bool isMultiOptionEditable = false,
             int? resolveOrder = null,
-            string? dynamicType = null
+            string? dynamicType = null,
+            bool isImageNode = false,
+            string? imageId = null
         )
         {
             return new ConversationNode()
@@ -123,7 +130,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 IsDynamicTableNode = isDynamicTableNode,
                 ResolveOrder = resolveOrder,
                 NodeComponentType = nodeComponentType,
-                DynamicType = dynamicType
+                DynamicType = dynamicType,
+                IsImageNode = isImageNode,
+                ImageId = imageId
             };
         }
 
@@ -155,7 +164,9 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     node.IsCurrency,
                     node.IsMultiOptionEditable,
                     node.ResolveOrder,
-                    node.DynamicType
+                    node.DynamicType,
+                    node.IsImageNode,
+                    node.ImageId
                 );
                 mappedTransactions.Add(mappedNode);
             }

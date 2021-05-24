@@ -42,7 +42,7 @@ namespace Palavyr.Core.Services.LogoServices
             var s3Key = account.AccountLogoUri;
             if (!string.IsNullOrWhiteSpace(s3Key))
             {
-                var userDataBucket = configuration.GetUserDataSection();
+                var userDataBucket = configuration.GetUserDataBucket();
                 var success = await s3Deleter.DeleteObjectFromS3Async(userDataBucket, s3Key);
                 if (!success)
                 {

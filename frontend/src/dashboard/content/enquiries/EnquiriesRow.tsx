@@ -108,9 +108,13 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
                 </Link>
             </EnquiryTableRowCell>
             <EnquiryTableRowCell>
-                <Link className={cls.link} onClick={() => responseLinkOnClick(enquiry)}>
-                    <Typography variant="caption">PDF</Typography>
-                </Link>
+                {enquiry.hasResponse ? (
+                    <Link className={cls.link} onClick={() => responseLinkOnClick(enquiry)}>
+                        <Typography variant="caption">PDF</Typography>
+                    </Link>
+                ) : (
+                    <Typography variant="body2">N/A</Typography>
+                )}
             </EnquiryTableRowCell>
             <EnquiryTableRowCell>
                 <Typography variant="caption">{enquiry.areaName}</Typography>

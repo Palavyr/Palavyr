@@ -5,7 +5,7 @@ namespace Palavyr.Core.Common.ExtensionMethods
 {
     public static class ConfigurationExtensionMethods
     {
-        public static string GetUserDataSection(this IConfiguration configuration)
+        public static string GetUserDataBucket(this IConfiguration configuration)
         {
             return configuration.GetSection(ApplicationConstants.ConfigSections.UserDataSection).Value;
         }

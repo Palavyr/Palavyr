@@ -65,6 +65,9 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                     b.Property<bool>("SendAttachmentsOnFallback")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("SendPdfResponse")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Subject")
                         .HasColumnType("text");
 
@@ -98,6 +101,9 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                     b.Property<bool>("Fallback")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("ImageId")
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsAnabranchMergePoint")
                         .HasColumnType("boolean");
 
@@ -111,6 +117,9 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsDynamicTableNode")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsImageNode")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsMultiOptionEditable")
@@ -465,6 +474,41 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                     b.HasKey("Id");
 
                     b.ToTable("FileNameMaps");
+                });
+
+            modelBuilder.Entity("Palavyr.Core.Models.Configuration.Schemas.Image", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("AccountId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsUrl")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("RiskyName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("S3Key")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SafeName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("Palavyr.Core.Models.Configuration.Schemas.StaticFee", b =>

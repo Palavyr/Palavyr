@@ -34,7 +34,7 @@ namespace Palavyr.Core.Services.PdfService
                         </head>
                         <body>
                             <div>");
-            var userDataBucket = configuration.GetUserDataSection();
+            var userDataBucket = configuration.GetUserDataBucket();
             previewBuilder.Append(HeaderSection.GetHeader(account, response, linkCreator, userDataBucket));
             previewBuilder.Append(AreaTitleSection.GetAreaDisplayTitle(previewData.AreaDisplayTitle));
             previewBuilder.Append(PrologueSection.GetPrologue(previewData.Prologue));

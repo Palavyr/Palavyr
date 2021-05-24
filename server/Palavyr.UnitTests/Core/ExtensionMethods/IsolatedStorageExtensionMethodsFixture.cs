@@ -1,14 +1,14 @@
 ﻿using System.IO.IsolatedStorage;
-using NUnit.Framework;
 using Palavyr.Core.Common.ExtensionMethods;
 using Shouldly;
+using Xunit;
 
 namespace PalavyrServer.UnitTests.Core.ExtensionMethods
 {
-    [TestFixture(Category = "Extension Methods")]
+    [Trait("Extension Methods", "Isolated Storage")]
     public class IsolatedStorageExtensionMethodsFixture
     {
-        [Test]
+        [Fact]
         public void IsolatedStorageRootDirectoryIsCorrectlyFound()
         {
             // a

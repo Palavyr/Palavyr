@@ -17,5 +17,10 @@
         {
             return new FileLinkReference(fileName, fileReference, fileId);
         }
+
+        public static FileLinkReference CreateEmptyLink()
+        {
+            return new FileLinkReference("No Pdf Sent", "", "");
+        }
     }
 }

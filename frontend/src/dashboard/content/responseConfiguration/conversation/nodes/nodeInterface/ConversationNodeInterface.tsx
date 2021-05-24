@@ -1,5 +1,5 @@
 import { Conversation, ConvoNode, NodeIdentity } from "@Palavyr-Types";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { makeStyles, Card, CardContent, Typography } from "@material-ui/core";
 import classNames from "classnames";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
@@ -16,6 +16,8 @@ import { _showResponseInPdfCheckbox } from "./nodeInterfaceCallbacks/_showRespon
 import { setNodeAsAnabranchMergePoint, _handleSetAsAnabranchMergePointClick } from "./nodeInterfaceCallbacks/_handleSetAsAnabranchMergePointClick";
 import { _handleUnsetCurrentNodeType } from "./nodeInterfaceCallbacks/_handleUnsetCurrentNodeType";
 import { _getParentNode } from "../nodeUtils/_coreNodeUtils";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { CustomImage } from "./nodeEditor/imageNode/CustomImage";
 
 type StyleProps = {
     nodeText: string;
@@ -24,6 +26,7 @@ type StyleProps = {
     isDecendentOfSplitMerge: boolean;
     splitMergeRootSiblingIndex: number;
     debugOn: boolean;
+    isImageNode: boolean;
 };
 
 const useStyles = makeStyles(() => ({
@@ -56,8 +59,8 @@ const useStyles = makeStyles(() => ({
         border: "1px solid gray",
         padding: "10px",
         textAlign: "center",
-        color: props.nodeText === "Ask your question!" ? "white" : "black",
-        background: props.nodeText === "Ask your question!" ? "red" : "white",
+        color: props.nodeText === "Ask your question!" && !props.isImageNode ? "white" : "black",
+        background: props.nodeText === "Ask your question!" && !props.isImageNode ? "red" : "white",
         "&:hover": {
             background: "lightgray",
             color: "black",
@@ -65,7 +68,6 @@ const useStyles = makeStyles(() => ({
     }),
     text: {
         margin: ".1rem",
-        // fontSize: "16px",
     },
     formstyle: {
         fontSize: "12px",
@@ -91,20 +93,38 @@ export interface IConversationNodeInterface {
 }
 
 export const ConversationNodeInterface = ({ node, identity, reRender }: IConversationNodeInterface) => {
+    const repository = new PalavyrRepository();
     const { setNodes, nodeList, nodeTypeOptions, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData } = React.useContext(ConversationTreeContext);
-    const parentNode = _getParentNode(node, nodeList);
 
     const [modalState, setModalState] = useState<boolean>(false);
     const [mergeBoxChecked, setMergeBoxChecked] = useState<boolean>(false);
     const [anabranchMergeChecked, setAnabranchMergeChecked] = useState<boolean>(false);
 
-    const classes = useStyles({
+    const [imageLink, setImageLink] = useState<string>("");
+    const [imageName, setImageName] = useState<string>("");
+    const [currentImageId, setCurrentImageId] = useState<string>("");
+
+    const loadImage = useCallback(async () => {
+        if (node.imageId !== null) {
+            const fileLinks = await repository.Configuration.Images.getImages([node.imageId]);
+            const fileLink = fileLinks[0];
+            if (!fileLink.isUrl) {
+                const presignedUrl = await repository.Configuration.Images.getSignedUrl(fileLink.link);
+                setImageLink(presignedUrl);
+                setImageName(fileLink.fileName);
+                setCurrentImageId(fileLink.fileId);
+            }
+        }
+    }, [nodeList]);
+
+    const cls = useStyles({
         nodeType: node.nodeType,
         nodeText: node.text,
         checked: node.isCritical,
         isDecendentOfSplitMerge: identity.isDecendentOfSplitMerge,
         splitMergeRootSiblingIndex: identity.splitMergeRootSiblingIndex,
         debugOn: showDebugData,
+        isImageNode: node.imageId !== null,
     });
 
     const dataItems = [...debugDataItems(identity), ...[{ anabranchMergeChecked: anabranchMergeChecked }, { conversationHistoryPosition: conversationHistoryPosition }, { modalState: modalState }, { mergeBoxChecked: mergeBoxChecked }]];
@@ -119,6 +139,10 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
             setAnabranchMergeChecked(true);
         }
     }, []);
+
+    useEffect(() => {
+        loadImage();
+    }, [nodeList]);
 
     const showResponseInPdfCheckbox = (event: { target: { checked: boolean } }) => {
         const checked = event.target.checked;
@@ -144,17 +168,26 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
     };
 
     return (
-        <Card className={classNames(classes.root, node.nodeId)} variant="outlined">
-            <CardContent className={classes.card}>
+        <Card className={classNames(cls.root, node.nodeId)} variant="outlined">
+            <CardContent className={cls.card}>
                 {showDebugData && <DataLogging nodeProperties={nodeProperties} nodeChildren={node.nodeChildrenString} nodeId={node.nodeId} data={dataItems} />}
-                <Typography className={classes.interfaceElement} variant={node.isRoot ? "h5" : "body1"} align="center">
+                <Typography className={cls.interfaceElement} variant={node.isRoot ? "h5" : "body1"} align="center">
                     {node.isRoot ? "Begin" : node.optionPath === "Continue" ? node.optionPath : "If " + node.optionPath}
                 </Typography>
-                <Card elevation={0} className={classNames(classes.interfaceElement, classes.textCard)} onClick={() => setModalState(true)}>
-                    <Typography className={classes.text} variant="body2" component="span" noWrap={false}>
-                        {node.text}
-                    </Typography>
-                    <Typography align="center" className={classes.editorStyle} onClick={() => setModalState(true)}>
+                <Card elevation={0} className={classNames(cls.interfaceElement, cls.textCard)} onClick={() => setModalState(true)}>
+                    {node.isImageNode ? (
+                        <CustomImage imageName={imageName} imageLink={imageLink} titleVariant="body1" />
+                    ) : (
+                        // <Align>
+                        //     <div style={{ visibility: imageLoading ? "hidden" : "visible", maxWidth: "100px", margin: "1rem" }}>
+                        //         <img className={cls.image} key={Date.now()} src={imageLink} onChange={() => setImageLoading(true)} onLoadStart={() => setImageLoading(true)} onLoad={() => setImageLoading(false)} />
+                        //     </div>
+                        // </Align>
+                        <Typography className={cls.text} variant="body2" component="span" noWrap={false}>
+                            {node.text}
+                        </Typography>
+                    )}
+                    <Typography align="center" className={cls.editorStyle} onClick={() => setModalState(true)}>
                         Click to Edit
                     </Typography>
                 </Card>
@@ -166,7 +199,7 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
                     shouldDisabledNodeTypeSelector={identity.shouldDisabledNodeTypeSelector}
                     selectionCallback={selectionCallback}
                 />
-                <ConversationNodeEditor setModalState={setModalState} modalState={modalState} node={node} parentNode={parentNode} />
+                <ConversationNodeEditor setImageLink={setImageLink} setImageName={setImageName} currentImageId={currentImageId} imageName={imageName} imageLink={imageLink} setModalState={setModalState} modalState={modalState} node={node} />
 
                 {identity.shouldShowResponseInPdfOption && <NodeCheckBox label="Show response in PDF" checked={node.isCritical} onChange={showResponseInPdfCheckbox} />}
                 {identity.shouldShowMergeWithPrimarySiblingBranchOption && <NodeCheckBox label="Merge with primary sibling branch" checked={!node.shouldRenderChildren} onChange={handleMergeBackInOnClick} />}

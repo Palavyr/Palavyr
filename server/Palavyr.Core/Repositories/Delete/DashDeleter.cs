@@ -30,10 +30,10 @@ namespace Palavyr.Core.Repositories.Delete
 
         public void DeleteAccount(string accountId)
         {
+            var userDataBucket = configuration.GetUserDataBucket();
             try
             {
                 var s3Keys = dashContext.FileNameMaps.Where(x => x.AccountId == accountId).Select(x => x.S3Key).ToArray();
-                var userDataBucket = configuration.GetUserDataSection();
                 s3Deleter.DeleteObjectsFromS3Async(userDataBucket, s3Keys);
             }
             catch (Exception)
@@ -41,6 +41,17 @@ namespace Palavyr.Core.Repositories.Delete
                 // ignored
             }
 
+            try
+            {
+                var s3Keys = dashContext.Images.Where(x => x.AccountId == accountId).Select(x => x.S3Key).ToArray();
+                s3Deleter.DeleteObjectsFromS3Async(userDataBucket, s3Keys);
+            }
+            catch (Exception)
+            {
+                // ignore
+            }
+            
+            
             DeleteAreasByAccount(accountId);
             DeleteConvoNodesByAccount(accountId);
             DeleteDynamicTableMetasByAccount(accountId);
@@ -49,6 +60,7 @@ namespace Palavyr.Core.Repositories.Delete
             DeleteStaticTableMetasByAccount(accountId);
             DeleteStaticTableRowsByAccount(accountId);
             DeleteWidgetPreferencesByAccount(accountId);
+            DeleteImagesByAccount(accountId);
 
             //dynamic tables
             DeleteSelectOneFlatsByAccount(accountId);
@@ -56,6 +68,13 @@ namespace Palavyr.Core.Repositories.Delete
             DeleteBasicThresholdByAccount(accountId);
             DeleteCategoryNestedThresholdByAccount(accountId);
             DeleteTwoNestedCategoriesByAccount(accountId);
+        }
+
+        public void DeleteImagesByAccount(string accountId)
+        {
+            logger.LogInformation($"Deleted Images for {accountId}");
+            var images = dashContext.Images.Where(row => row.AccountId == accountId);
+            dashContext.RemoveRange(images);
         }
 
         public void DeleteAreasByAccount(string accountId)

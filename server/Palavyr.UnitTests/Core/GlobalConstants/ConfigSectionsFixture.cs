@@ -1,13 +1,13 @@
-﻿using NUnit.Framework;
-using Palavyr.Core.GlobalConstants;
+﻿using Palavyr.Core.GlobalConstants;
 using Shouldly;
+using Xunit;
 
 namespace PalavyrServer.UnitTests.Core.GlobalConstants
 {
-    [TestFixture(Category = "Constants")]
+    [Trait("Constants", "Global")]
     public class ConfigSectionsFixture
     {
-        [Test]
+        [Fact]
         public void ConfigSectionsAreSet()
         {
             ApplicationConstants.ConfigSections.LoggingSection.ShouldBe("Logging");

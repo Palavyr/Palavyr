@@ -12,6 +12,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import RemoveIcon from "@material-ui/icons/Remove";
 import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 
 type styleProp = {
     index: number;
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: "5px",
     },
     row: (props: styleProp) => ({
-        background: theme.palette.secondary.light,//props.index % 2 == 0 ? theme.palette.secondary.main : `${theme.palette.secondary.light}`,
+        background: theme.palette.secondary.light, //props.index % 2 == 0 ? theme.palette.secondary.main : `${theme.palette.secondary.light}`,
         borderRadius: "5px",
         // color: theme.palette.common.white
     }),

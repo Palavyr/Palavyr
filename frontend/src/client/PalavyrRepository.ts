@@ -33,6 +33,12 @@ import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./cli
 
 export class PalavyrRepository {
     private client: AxiosClient;
+
+    private formDataHeaders: { [key: string]: string } = {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+    };
+
     constructor() {
         this.client = new AxiosClient("tubmcgubs", getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
     }
@@ -71,6 +77,7 @@ export class PalavyrRepository {
         updateAreaName: (areaIdentifier: string, areaName: string) => this.client.put<string, {}>(`areas/update/name/${areaIdentifier}`, { AreaName: areaName }),
         updateDisplayTitle: (areaIdentifier: string, displayTitle: string) => this.client.put<string, {}>(`areas/update/display-title/${areaIdentifier}`, { AreaDisplayTitle: displayTitle }),
         deleteArea: (areaIdentifier: string) => this.client.delete<void>(`areas/delete/${areaIdentifier}`),
+        toggleSendPdfResponse: (areaIdentifier: string) => this.client.post<boolean, {}>(`area/send-pdf/${areaIdentifier}`),
     };
 
     public Configuration = {
@@ -145,6 +152,18 @@ export class PalavyrRepository {
                         "Content-Type": "multipart/form-data",
                     },
                 }),
+        },
+
+        Images: {
+            // Node Editor Flow
+            saveSingleImage: async (formData: FormData) => this.client.post<FileLink[], {}>(`images/save-one`, formData, { headers: this.formDataHeaders }),
+            saveImageUrl: async (url: string, nodeId: string) => this.client.post<FileLink[], {}>(`images/use-link/${nodeId}`, { Url: url }),
+            getImages: async (imageIds?: string[]) => this.client.get<FileLink[]>(`images${imageIds !== undefined ? `?imageIds=${imageIds.join(",")}` : ""}`), // takes a querystring comma delimieted of imageIds
+            savePreExistingImage: async (imageId: string, nodeId: string) => this.client.post<ConvoNode, {}>(`images/pre-existing/${imageId}/${nodeId}`),
+            // DO NOT USE WITH NODE
+            saveMultipleImages: async (formData: FormData) => this.client.post<FileLink[], {}>(`images/save-many`, formData, { headers: this.formDataHeaders }),
+            deleteImage: async (imageIds: string[]) => this.client.delete<FileLink[]>(`images?imageIds=${imageIds.join(",")}`), // takes a querystring command delimited of imageIds
+            getSignedUrl: async (s3Key: string) => this.client.post<string, {}>(`images/link`, { s3Key: s3Key }),
         },
     };
 

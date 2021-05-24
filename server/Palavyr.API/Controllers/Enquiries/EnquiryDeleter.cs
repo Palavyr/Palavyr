@@ -58,7 +58,7 @@ namespace Palavyr.API.Controllers.Enquiries
         {
             // Delete from S3
             var s3Key = s3KeyResolver.ResolveResponsePdfKey(accountId, fileReference);
-            var userDataBucket = configuration.GetUserDataSection();
+            var userDataBucket = configuration.GetUserDataBucket();
             var success = await s3Deleter.DeleteObjectFromS3Async(userDataBucket, s3Key);
             if (!success)
             {

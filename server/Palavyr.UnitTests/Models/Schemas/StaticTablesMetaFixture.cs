@@ -1,18 +1,14 @@
 using System.Linq;
-using NUnit.Framework;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Shouldly;
+using Xunit;
 
 namespace PalavyrServer.UnitTests.Models.Schemas
 {
-    [TestFixture]
+    [Trait("Static Tables", "Meta")]
     public class StaticTablesMetaFixture
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
-        [Test]
+        [Fact]
         public void BindTemplateList_BindsAllProperties()
         {
             var testAccountId = "test-account";
@@ -22,10 +18,10 @@ namespace PalavyrServer.UnitTests.Models.Schemas
             
             var result = StaticTablesMeta.BindTemplateList(testStaticTablesMetas, "test-account").First();
             
-            Assert.AreEqual(result.AccountId, testAccountId);
-            Assert.AreEqual(result.AreaIdentifier, testAreaId);
-            Assert.AreEqual(result.Description, "Default Description");
-            Assert.AreEqual(result.TableOrder, 0);
+            result.AccountId.ShouldBe(testAccountId);
+            result.AreaIdentifier.ShouldBe(testAreaId);
+            result.Description.ShouldBe("Default Description");
+            result.TableOrder.ShouldBe(0);
         }
     }
 }

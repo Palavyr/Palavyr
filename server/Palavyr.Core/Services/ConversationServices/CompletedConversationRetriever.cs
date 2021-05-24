@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -70,12 +71,22 @@ namespace Palavyr.Core.Services.ConversationServices
         public Enquiry MapEnquiryToResponse(CompletedConversation conversation, string accountId)
         {
             var fileId = conversation.ResponsePdfId;
-            var linkReference = FileLinkReference.CreateLink("Response PDF", fileId, fileId + ".pdf");
-            var enquiry = BindToEnquiry(conversation, linkReference);
+            FileLinkReference? linkReference;
+            if (!string.IsNullOrEmpty(fileId))
+            { 
+                linkReference = FileLinkReference.CreateLink("Response PDF", fileId, fileId + ".pdf");
+            }
+            else
+            {
+                linkReference = null;
+            }
+
+            var hasResponse = linkReference != null;
+            var enquiry = BindToEnquiry(conversation, linkReference, hasResponse);
             return enquiry;
         }
 
-        private static Enquiry BindToEnquiry(CompletedConversation conversation, FileLinkReference linkReference)
+        private static Enquiry BindToEnquiry(CompletedConversation conversation, FileLinkReference? linkReference, bool hasResponse)
         {
             return new Enquiry
             {
@@ -89,7 +100,8 @@ namespace Palavyr.Core.Services.ConversationServices
                 Seen = conversation.Seen,
                 Name = conversation.Name,
                 Email = conversation.Email,
-                PhoneNumber = conversation.PhoneNumber
+                PhoneNumber = conversation.PhoneNumber,
+                HasResponse = hasResponse
             };
         }
     }

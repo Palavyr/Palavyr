@@ -1,12 +1,15 @@
 ﻿#nullable enable
 using System;
+using System.Net.Http;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Palavyr.API;
 using Palavyr.Core.Data;
-using Palavyr.IntegrationTests.TestAuthentication;
+using Palavyr.IntegrationTests.AppFactory.TestAuthentication;
 
 // We using 3.1 but...
 //https://www.thinktecture.com/en/entity-framework-core/isolation-of-integration-tests-in-2-1/
@@ -53,8 +56,9 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                             catch (Exception ex)
                             {
                                 accLogger.LogError(
-                                    ex, "An error occurred setting up the " +
-                                        "accounts database for the test. Error: {Message}", ex.Message);
+                                    ex,
+                                    "An error occurred setting up the " +
+                                    "accounts database for the test. Error: {Message}", ex.Message);
                             }
                         }
 
@@ -67,8 +71,9 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                             catch (Exception ex)
                             {
                                 dashLogger.LogError(
-                                    ex, "An error occurred setting up the " +
-                                        "dash database for the test. Error: {Message}", ex.Message);
+                                    ex,
+                                    "An error occurred setting up the " +
+                                    "dash database for the test. Error: {Message}", ex.Message);
                             }
                         }
 
@@ -81,8 +86,9 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                             catch (Exception ex)
                             {
                                 convoLogger.LogError(
-                                    ex, "An error occurred setting up the " +
-                                        "convo database for the test. Error: {Message}", ex.Message);
+                                    ex,
+                                    "An error occurred setting up the " +
+                                    "convo database for the test. Error: {Message}", ex.Message);
                             }
                         }
 
@@ -90,7 +96,6 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                         dashContext.SaveChanges();
                         convoContext.SaveChanges();
                     });
-            
         }
 
         public static IWebHostBuilder ConfigureAuthentication(this IWebHostBuilder builder)
@@ -128,6 +133,13 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
                         services.ClearDescriptors();
                         services.ConfigureRealPostgresTestDatabases();
                     });
+        }
+
+        public static HttpClient ConfigureInMemoryClient(this WebApplicationFactory<Startup> builder)
+        {
+            var client = builder.CreateClient();
+            client.BaseAddress = new Uri(IntegrationConstants.BaseUri);
+            return client;
         }
     }
 }

@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using Amazon.S3;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Services.AmazonServices.S3Service;
 
 namespace Palavyr.Core.Services.AmazonServices
 {
     public interface ILinkCreator
     {
-        string GenericCreatePreSignedUrl(string fileKey, string bucket);
+        string GenericCreatePreSignedUrl(string fileKey, string bucket, DateTime? expiration = null);
     }
 
     public class LinkCreator : ILinkCreator
@@ -22,9 +21,9 @@ namespace Palavyr.Core.Services.AmazonServices
             this.logger = logger;
         }
 
-        public string GenericCreatePreSignedUrl(string fileKey, string bucket)
+        public string GenericCreatePreSignedUrl(string fileKey, string bucket, DateTime? expiry = null)
         {
-            var expiration = DateTime.Now.AddHours(AmazonConstants.PreSignedUrlExpiration);
+            var expiration = expiry ?? DateTime.Now.AddHours(AmazonConstants.PreSignedUrlExpiration);
             string preSignedUrl;
             try
             {

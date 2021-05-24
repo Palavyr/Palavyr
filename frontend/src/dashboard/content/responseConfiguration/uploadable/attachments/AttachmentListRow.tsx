@@ -27,10 +27,11 @@ var tableRowStyle = {
 
 export const AttachmentListRow = ({ fileName, link, fileId, setCurrentPreview, removeAttachment }: IAttachmentTableRow) => {
     const viewButtonClickAction = (fileName: string, link: string, fileId: string) => {
-        var attachmentLink: FileLink = {
+        const attachmentLink: FileLink = {
             fileName,
             link,
             fileId,
+            isUrl: false
         };
         setCurrentPreview(attachmentLink);
     };
@@ -49,7 +50,7 @@ export const AttachmentListRow = ({ fileName, link, fileId, setCurrentPreview, r
                 <strong>{fileName}</strong>
             </TableCell>
             <TableCell style={tableCellStyle}>
-                <LinkButton color={"primary"} link={link} fileName={fileName} fileId={fileId} clickAction={viewButtonClickAction} childText="View" />
+                <LinkButton color="primary" link={link} fileName={fileName} fileId={fileId} clickAction={viewButtonClickAction} childText="View" />
             </TableCell>
             <TableCell style={tableCellStyle}>
                 <LinkButton color="secondary" link={link} fileName={fileName} fileId={fileId} clickAction={removeButtonClickAction} childText="Remove" />

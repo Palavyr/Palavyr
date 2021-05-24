@@ -1,14 +1,14 @@
-﻿using NUnit.Framework;
-using Palavyr.Core.Common.UniqueIdentifiers;
+﻿using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Services.TemporaryPaths;
 using Shouldly;
+using Xunit;
 
 namespace PalavyrServer.UnitTests.Core.Services.TemporaryPaths
 {
-    [TestFixture(Category = "TemporaryPaths")]
+    [Trait("TemporaryPaths", "SafeFile")]
     public class SafeFileNameCreatorFixture
     {
-        [Test]
+        [Fact]
         public void WhenASafeFileNameIsCreated_PropertyAreSetCorrectly()
         {
             var fileNameCreator = new SafeFileNameCreator();
@@ -18,11 +18,11 @@ namespace PalavyrServer.UnitTests.Core.Services.TemporaryPaths
             
             result.Stem.ShouldNotEndWith(ExtensionTypes.Pdf.ToString());
             result.FileNameWithExtension.ShouldEndWith(ExtensionTypes.Pdf.ToString());
-            guidFinder.FindGuid(result.Stem).ShouldNotBeEmpty();
-            guidFinder.FindGuid(result.FileNameWithExtension).ShouldNotBeEmpty();
+            guidFinder.FindFirstGuidSuffix(result.Stem).ShouldNotBeEmpty();
+            guidFinder.FindFirstGuidSuffix(result.FileNameWithExtension).ShouldNotBeEmpty();
         }
 
-        [Test]
+        [Fact]
         public void WhenAnExtensionIsGiven_ItIsPlacedCorrectly()
         {
             var fileNameCreator = new SafeFileNameCreator();

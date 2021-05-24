@@ -1,11 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
+using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Services.AmazonServices.S3Service;
 
 namespace Palavyr.Core.Repositories
 {
@@ -36,9 +39,63 @@ namespace Palavyr.Core.Repositories
                 .SingleAsync();
         }
 
+        public async Task<Image> GetImageById(string imageId, CancellationToken cancellationToken)
+        {
+            // validate the image id
+            var image = await dashContext.Images.SingleOrDefaultAsync(x => x.ImageId == imageId, cancellationToken);
+            if (image == null)
+            {
+                throw new DomainException("Image Id was not found");
+            }
+
+            return image;
+        }
+
+        public async Task<Image[]> GetImagesByIds(string[] imageIds, CancellationToken cancellationToken)
+        {
+            var images = await dashContext.Images.Where(x => imageIds.Contains(x.ImageId)).ToArrayAsync(cancellationToken);
+            return images;
+        }
+
+        public async Task<ConversationNode[]> GetConvoNodesByImageIds(string[] imageIds, CancellationToken cancellationToken)
+        {
+            var convoNodes = await dashContext.ConversationNodes.Where(x => imageIds.Contains(x.ImageId)).ToArrayAsync(cancellationToken); // this could be empty
+            return convoNodes;
+        }
+
+        public async Task RemoveImagesByIds(string[] imageIds, IS3Deleter s3Deleter, string userDataBucket, CancellationToken cancellationToken)
+        {
+            var images = dashContext.Images.Where(x => imageIds.Contains(x.ImageId));
+
+            var s3Keys = new List<string>();
+            foreach (var image in images)
+            {
+                s3Keys.Add(image.S3Key);
+            }
+
+            var result = await s3Deleter.DeleteObjectsFromS3Async(userDataBucket, s3Keys.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray());
+            if (!result)
+            {
+                throw new DomainException("Could not delete files from S3!");
+            }
+
+            dashContext.RemoveRange(images);
+        }
+
+        public async Task<Image[]> GetImagesByAccountId(string accountId, CancellationToken cancellationToken)
+        {
+            var images = await dashContext.Images.Where(x => x.AccountId == accountId).ToArrayAsync(cancellationToken);
+            return images;
+        }
+
         public async Task CommitChangesAsync()
         {
-            await dashContext.SaveChangesAsync();
+            await dashContext.SaveChangesAsync(CancellationToken.None);
+        }
+
+        public async Task CommitChangesAsync(CancellationToken cancellationToken)
+        {
+            await dashContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<Area> CreateAndAddNewArea(string name, string accountId, string emailAddress, bool isVerified)

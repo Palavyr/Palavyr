@@ -1,14 +1,14 @@
-﻿using NUnit.Framework;
-using Palavyr.Core.Services.AuthenticationServices;
+﻿using Palavyr.Core.Services.AuthenticationServices;
 using Shouldly;
+using Xunit;
 
-namespace PalavyrServer.Tests.Core.Services.AuthenticationServices
+namespace PalavyrServer.UnitTests.Core.Services.AuthenticationServices
 {
-    [TestFixture(Category = "Authentication")]
+    [Trait("Authentication", "Account Type")]
     public class AccountTypeFixture
     {
 
-        [Test]
+        [Fact]
         public void AccountEnumIsOrderedCorrectly()
         {
             ((int)AccountType.Default).ShouldBe(0);

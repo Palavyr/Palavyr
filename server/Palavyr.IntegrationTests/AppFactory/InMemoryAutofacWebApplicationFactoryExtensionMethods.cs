@@ -41,6 +41,31 @@ namespace Palavyr.IntegrationTests.AppFactory
             return client;
         }
 
+        public static HttpClient CreateDefaultClient(
+            this InMemoryAutofacWebApplicationFactory factory,
+            Action<AccountsContext>? configureAccounts = null,
+            Action<DashContext>? configureDash = null,
+            Action<ConvoContext>? configureConvo = null
+        )
+        {
+            factory.Server.BaseAddress = new Uri(IntegrationConstants.BaseUri);
+            var dbRoot = new InMemoryDatabaseRoot();
+            var client = factory
+                .WithWebHostBuilder(
+                    builder =>
+                    {
+                        builder
+                            .ConfigureTestContainer<ContainerBuilder>(builder => builder.CallStartupTestContainerConfiguration())
+                            .ConfigureTestServices(services => services.CallStartupServicesConfiguration().AddMvcCore().AddApplicationPart(typeof(Startup).Assembly))
+                            .ConfigureInMemoryDatabase(dbRoot)
+                            .EnsureAndConfigureDbs(configureAccounts, configureDash, configureConvo)
+                            .UseTestServer();
+                    })
+                .CreateClient();
+            client.BaseAddress = new Uri(IntegrationConstants.BaseUri);
+            return client;
+        }
+
         public static HttpClient ConfigureUnauthenticatedClientWithInMemContext(
             this InMemoryAutofacWebApplicationFactory factory,
             Action<AccountsContext>? configureAccounts = null,

@@ -5,8 +5,6 @@ import { Request } from 'express';
 import { APPLICATION_PDF } from './contentTypes';
 
 export const unpackRequest = (req: Request): RequestBody => {
-    console.log(req.body);
-    console.log('999999999999999999999999999999999999');
     return {
         bucket: req.body.Bucket,
         key: req.body.Key,

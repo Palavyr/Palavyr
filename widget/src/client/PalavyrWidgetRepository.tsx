@@ -35,6 +35,7 @@ export class PalavyrWidgetRepository {
         confirmationEmail: (secretKey: SecretKey, areaIdentifier: string) => `widget/area/${areaIdentifier}/email/send?key=${secretKey}`,
         fallbackEmail: (secretKey: SecretKey, areaIdentifier: string) => `widget/area/${areaIdentifier}/email/fallback/send?key=${secretKey}`,
         internalCheck: (secretKey: SecretKey) => `widget/internal-check?key=${secretKey}`,
+        nodeImage: (secretKey: SecretKey, nodeId: string) => `widget/node-image/${nodeId}?key=${secretKey}`,
     };
 
     public Widget = {
@@ -44,6 +45,7 @@ export class PalavyrWidgetRepository {
             Locale: async () => this.client.get<LocaleDefinition>(this.Routes.locale(this.secretKey)),
             Areas: async () => this.client.get<Array<AreaTable>>(this.Routes.areas(this.secretKey)),
             NewConversation: async (areaId: string) => this.client.get<NewConversation>(this.Routes.newConvo(this.secretKey, areaId)),
+            NodeImage: async (nodeId: string) => this.client.get<string>(this.Routes.nodeImage(this.secretKey, nodeId)),
         },
 
         Post: {

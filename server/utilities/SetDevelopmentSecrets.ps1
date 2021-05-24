@@ -16,6 +16,7 @@ $server = "127.0.0.1";
 $port = "5432";
 $api = ".\\Palavyr.API";
 $migrator = ".\\Palavyr.Data.Migrator";
+$integrationTests = ".\\Palavyr.IntegrationTests"
 
 Write-Host "`r`nSetting Secrets for AWS Credentials"
 $prof = Get-AWSCredential $awsProfile;
@@ -41,7 +42,7 @@ function WriteAWSSecrets($projectPath) {
 Write-Host "`r`nClearing previous Secrets`r`n"
 dotnet user-secrets clear --project $api;
 dotnet user-secrets clear --project $migrator;
-
+dotnet user-secrets clear --project $integrationTests
 
 ##################
 # Write Migrator Environment
@@ -55,6 +56,9 @@ WriteDatabaseSecrets($migrator)
 Write-Host "`r`nSetting API secrets ($api)`r`n"
 WriteDatabaseSecrets($api)
 WriteAWSSecrets($api);
+
+Write-Host "`r`nSetting Integration Test secrets ($api)`r`n"
+WriteAWSSecrets($integrationTests);
 ###################
 # Write JWT Secrets (Json Web Token...?)
 # dotnet user-secrets set JwtToken:Issuer "http://localhost:8080/" --project $api

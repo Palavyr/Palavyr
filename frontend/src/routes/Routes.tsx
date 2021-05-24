@@ -63,6 +63,8 @@ import { EnableAreas } from "dashboard/content/responseConfiguration/areaSetting
 import { SetAreasHelp } from "dashboard/content/help/SetAreasHelp";
 import { DefaultEmailTemplate } from "dashboard/content/settings/account/DefaultEmailTemplate";
 import { DefaultEmailTemplateHelp } from "dashboard/content/help/DefaultEmailTemplateHelp";
+import { ImageReview } from "dashboard/content/images/ImageReview";
+import { ImageReviewHelp } from "dashboard/content/help/ImageReviewHelp";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -90,7 +92,7 @@ export const Routes = () => {
             <Route exact path={RESET_PASSWORD_FORM} component={RenderPasswordDialog} />
             <Route exact path={RESET_PASSWORD_SUCCESS} component={RenderResetSuccess} />
 
-            <ProtectedRoute exact path="/dashboard/" component={withLayout(WelcomeToTheDashboard, <WelcomeToTheDashboardHelp />)} />
+            <ProtectedRoute exact path="/dashboard" component={withLayout(WelcomeToTheDashboard, <WelcomeToTheDashboardHelp />)} />
             <ProtectedRoute exact path="/dashboard/welcome" component={withLayout(WelcomeToTheDashboard, <WelcomeToTheDashboardHelp />)} />
             <ProtectedRoute exact path="/dashboard/editor/email/:areaIdentifier" component={withLayout(withAreaTabs(<EmailConfiguration />), <EmailHelp />)} />
             <ProtectedRoute exact path="/dashboard/editor/response/:areaIdentifier" component={withLayout(withAreaTabs(<ResponseConfiguration />), <ResponseConfigurationHelp />)} />
@@ -111,14 +113,13 @@ export const Routes = () => {
             <ProtectedRoute exact path="/dashboard/settings/deleteaccount" component={withLayout(withSettingsTabs(<DeleteAccount />), <DeleteAccountHelp />)} />
 
             <ProtectedRoute exact path="/dashboard/demo/" component={withLayout(ChatDemo, <ChatDemoHelp />)} />
-            <ProtectedRoute exact path="/dashboard/getWidget/" component={withLayout(GetWidget, <GetWidgetHelp />)} />
-            <ProtectedRoute exact path="/dashboard/enquiries/" component={withLayout(Enquires, <EnquiriesHelp />)} />
+            <ProtectedRoute exact path="/dashboard/getWidget" component={withLayout(GetWidget, <GetWidgetHelp />)} />
+            <ProtectedRoute exact path="/dashboard/enquiries" component={withLayout(Enquires, <EnquiriesHelp />)} />
             <ProtectedRoute exact path="/dashboard/enquiries/conversation" component={withLayout(ConversationReview, <ConversationReviewHelp />)} />
-
-
+            <ProtectedRoute exact path="/dashboard/images" component={withLayout(ImageReview, <ImageReviewHelp />)} />
 
             <ProtectedRoute exact path="/dashboard/subscribe" component={withLayout(Subscribe, <SubscribeHelp />)} />
-            <ProtectedRoute exact path="/dashboard/subscribe/purchase/" component={withLayout(Purchase, <PurchaseHelp />)} />
+            <ProtectedRoute exact path="/dashboard/subscribe/purchase" component={withLayout(Purchase, <PurchaseHelp />)} />
             <ProtectedRoute exact path="/dashboard/subscribe/success" component={withLayout(Success, <SuccessHelp />)} />
             <ProtectedRoute exact path="/dashboard/subscribe/cancelled" component={withLayout(Cancel, <CancelHelp />)} />
             <ProtectedRoute exact path="/dashboard/confirm" component={withLayout(PleaseConfirmYourEmail, <PleaseConfirmYourEmailHelp />)} />

@@ -34,7 +34,7 @@ namespace Palavyr.Core.Services.LogoServices
         {
             var account = await accountRepository.GetAccount(accountId, cancellationToken);
             var s3Key = account.AccountLogoUri;
-            var userDataBucket = configuration.GetUserDataSection();
+            var userDataBucket = configuration.GetUserDataBucket();
 
             if (string.IsNullOrWhiteSpace(s3Key))
             {

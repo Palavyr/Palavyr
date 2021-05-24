@@ -24,5 +24,14 @@ namespace Palavyr.Core.Common.UniqueIdentifiers
         {
             return Guid.NewGuid().ToString();
         }
+
+    }
+    
+    public static class A 
+    {
+        public static string RandomName()
+        {
+            return Guid.NewGuid().ToString().Split('-').Take(1).ToList().Single();
+        }
     }
 }

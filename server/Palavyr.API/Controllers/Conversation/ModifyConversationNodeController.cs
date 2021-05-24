@@ -2,11 +2,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.API.Controllers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
 
-namespace Palavyr.API.controllers.Conversation
+namespace Palavyr.API.Controllers.Conversation
 {
 
     public class ModifyConversationNodeController : PalavyrBaseController
