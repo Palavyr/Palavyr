@@ -9,6 +9,8 @@ import React from "react";
 import { useCallback } from "react";
 import { useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
+import { formatLegitTimeStamp } from "./enquiriesUtils";
+import { EnquiryTimeStamp } from "./EnquiryTimeStamp";
 
 const useStyles = makeStyles((theme) => ({
     headerCell: {
@@ -80,12 +82,16 @@ export const ConversationReview = () => {
                         </TableHead>
                         <TableBody>
                             {sortByPropertyNumeric(numberPropertyGetter, completeConversation).map((convo: ConversationUpdate, index: number) => {
+                                const { formattedDate, formattedTime } = formatLegitTimeStamp(convo.timeStamp);
+
                                 return (
                                     <TableRow style={{ backgroundColor: index % 2 == 0 ? "white" : "lightgray" }} key={convo.id}>
                                         <TableCell key={convo.id + "a"}>{index + 1}</TableCell>
                                         <TableCell key={convo.id + "b"}>{convo.prompt}</TableCell>
                                         <TableCell key={convo.id + "c"}>{convo.userResponse}</TableCell>
-                                        <TableCell key={convo.id + "d"}>{convo.timeStamp}</TableCell>
+                                        <TableCell key={convo.id + "d"}>
+                                            <EnquiryTimeStamp formattedDate={formattedDate} formattedTime={formattedTime} />
+                                        </TableCell>
                                     </TableRow>
                                 );
                             })}

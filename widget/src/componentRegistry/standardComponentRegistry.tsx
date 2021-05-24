@@ -575,7 +575,7 @@ export class StandardComponents {
 
                 const response = await client.Widget.Send.FallbackEmail(areaId, email, name, phone, convoId);
                 if (response.result) {
-                    var completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
+                    const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
                     await client.Widget.Post.CompletedConversation(completeConvo);
                 }
                 return response;
@@ -606,6 +606,39 @@ export class StandardComponents {
                     </Table>
                     <ChatLoadingSpinner loading={loading} />
                 </>
+            );
+        };
+    }
+
+    makeEndWithoutEmail({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+        const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
+        const prefs = getWidgetPreferences();
+
+        return () => {
+            const cls = useStyles(prefs);
+            const contextProperties = getContextProperties();
+
+            const areaId = nodeList[0].areaIdentifier;
+            const email = contextProperties[ConvoContextProperties.emailAddress];
+            const name = contextProperties[ConvoContextProperties.name];
+            const phone = contextProperties[ConvoContextProperties.phoneNumber];
+
+            useEffect(() => {
+                setTimeout(async () => {
+                    const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone, false);
+                    await client.Widget.Post.CompletedConversation(completeConvo);
+                    responseAction(node, child, nodeList, client, convoId, null);
+                }, 1500);
+            }, []);
+
+            return (
+                <Table>
+                    <SingleRowSingleCell>
+                        <Typography variant="body1" className={cls.textField}>
+                            {node.text}
+                        </Typography>
+                    </SingleRowSingleCell>
+                </Table>
             );
         };
     }

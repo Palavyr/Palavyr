@@ -103,7 +103,7 @@ export const DropdownListOptions = ({ setSelectedOption, options }: DropdownList
                                 {...params}
                                 id="field1"
                                 className={cls.inputLabel}
-                                label="Select an area or start typing..."
+                                label="What can I help you with today?"
                                 inputProps={{
                                     ...params.inputProps,
                                     autoComplete: "new-password",

@@ -49,7 +49,10 @@ namespace Palavyr.Core.Models.Nodes
         ConversationNode[] GetCompletePathTerminalNodes(ConversationNode[] nodeList)
         {
             return nodeList
-                .Where(node => node.IsTerminalType && node.NodeType != DefaultNodeTypeOptions.TooComplicated.StringName)
+                .Where(
+                    node => node.IsTerminalType 
+                            && node.NodeType != DefaultNodeTypeOptions.TooComplicated.StringName 
+                            && node.NodeType != DefaultNodeTypeOptions.EndWithoutEmail.StringName)
                 .ToArray();
         }
         

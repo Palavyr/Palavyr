@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -77,18 +78,26 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             var culture = await GetCulture(accountId, cancellationToken);
             var localTempPath = temporaryPath.CreateLocalTempSafeFile(emailRequest.ConversationId);
 
-            logger.LogDebug("Generating PDF Response from Send Email");
-            var pdfServerResponse = await pdfResponseGenerator.GeneratePdfResponseAsync(
-                responses,
-                emailRequest,
-                culture,
-                localTempPath.FileStem, 
-                accountId,
-                areaId,
-                cancellationToken
-            );
+            var area = await configurationRepository.GetAreaById(accountId, areaId);
+            var additionalFiles = new List<S3SDownloadRequestMeta>();
+
+            if (area.SendPdfResponse)
+            {
+                logger.LogDebug("Generating PDF Response from Send Email");
+                var pdfServerResponse = await pdfResponseGenerator.GeneratePdfResponseAsync(
+                    responses,
+                    emailRequest,
+                    culture,
+                    localTempPath.FileStem,
+                    accountId,
+                    areaId,
+                    cancellationToken
+                );
+                additionalFiles.Add(pdfServerResponse.ToS3DownloadRequestMeta());
+            }
+
             var senderDetails = await compileSenderDetails.Compile(accountId, areaId, emailRequest, cancellationToken);
-            var attachments = await attachmentRetriever.RetrieveAttachmentFiles(accountId, areaId, new[] {pdfServerResponse.ToS3DownloadRequestMeta()}, cancellationToken);
+            var attachments = await attachmentRetriever.RetrieveAttachmentFiles(accountId, areaId, additionalFiles.ToArray(), cancellationToken);
 
             logger.LogDebug("Sending Email...");
             var responseResult = await Send(senderDetails, attachments.Select(x => x.TempFilePath).ToArray());
@@ -142,7 +151,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                     details.Subject,
                     details.BodyAsHtml,
                     details.BodyAsText,
-                    attachments.ToList());// Attachments here should be local file paths that are temporary
+                    attachments.ToList()); // Attachments here should be local file paths that are temporary
 
             return ok
                 ? SendEmailResultResponse.CreateSuccess(EndingSequence.EmailSuccessfulNodeId)

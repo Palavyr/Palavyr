@@ -77,6 +77,7 @@ export class PalavyrRepository {
         updateAreaName: (areaIdentifier: string, areaName: string) => this.client.put<string, {}>(`areas/update/name/${areaIdentifier}`, { AreaName: areaName }),
         updateDisplayTitle: (areaIdentifier: string, displayTitle: string) => this.client.put<string, {}>(`areas/update/display-title/${areaIdentifier}`, { AreaDisplayTitle: displayTitle }),
         deleteArea: (areaIdentifier: string) => this.client.delete<void>(`areas/delete/${areaIdentifier}`),
+        toggleSendPdfResponse: (areaIdentifier: string) => this.client.post<boolean, {}>(`area/send-pdf/${areaIdentifier}`),
     };
 
     public Configuration = {

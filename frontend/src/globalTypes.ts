@@ -193,6 +193,7 @@ export type EnquiryRow = {
     name: string;
     email: string;
     phoneNumber: string;
+    hasResponse: boolean;
 };
 
 export type Enquiries = EnquiryRow[];
@@ -378,6 +379,7 @@ export type ResponseConfigurationType = {
     prologue: string;
     epilogue: string;
     staticTablesMetas: StaticTableMetas;
+    sendPdfResponse: boolean;
 };
 
 export type AccountEmailSettingsResponse = {

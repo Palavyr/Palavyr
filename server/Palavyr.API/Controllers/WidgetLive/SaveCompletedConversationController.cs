@@ -44,9 +44,17 @@ namespace Palavyr.API.Controllers.WidgetLive
             var email = completeConvo.Email;
             var name = completeConvo.Name;
             var phone = completeConvo.PhoneNumber;
+            var hasResponse = completeConvo.HasResponse;
 
-            var completedConversation = CompleteConversation.BindReceiverToSchemaType(conversationId, accountId,
-                areaName, emailTemplateUsed, name, email, phone);
+            var completedConversation = CompleteConversation.BindReceiverToSchemaType(
+                conversationId, 
+                accountId,
+                areaName,
+                emailTemplateUsed, 
+                name, 
+                email, 
+                phone,
+                hasResponse);
 
             // do a quick check to see if the conversation ID already exists. If it does, delete it -- later  we should throw an exception
             // TODO: Throw an exception

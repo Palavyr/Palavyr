@@ -11,6 +11,7 @@ import { makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { OsTypeToggle } from "../areaSettings/enableAreas/OsTypeToggle";
 
 const useStyles = makeStyles(() => ({
     titleText: {
@@ -105,10 +106,11 @@ export const ResponseConfiguration = () => {
 
     const loadEstimateConfiguration = useCallback(async () => {
         setIsLoading(true);
-        const { prologue, epilogue, staticTablesMetas } = await repository.Configuration.getEstimateConfiguration(areaIdentifier);
+        const { prologue, epilogue, staticTablesMetas, sendPdfResponse } = await repository.Configuration.getEstimateConfiguration(areaIdentifier);
         setPrologue(cloneDeep(prologue));
         setEpilogue(cloneDeep(epilogue));
         setStaticTables(staticTablesMetas);
+        setSendPdfWithResponse(sendPdfResponse);
         setLoaded(true);
         setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -121,9 +123,18 @@ export const ResponseConfiguration = () => {
         };
     }, [areaIdentifier, loadEstimateConfiguration]);
 
+    const [sendPdfWithResponse, setSendPdfWithResponse] = useState<boolean | null>(null);
+
+    const onToggleSendPdfWithResponse = async () => {
+        const toSend = await repository.Area.toggleSendPdfResponse(areaIdentifier);
+        setSendPdfWithResponse(toSend);
+    };
+
     return (
         <>
             <AreaConfigurationHeader title="Your Response PDF" subtitle="Use this editor to configure the fee tables, as well as associated information, that will be sent in the response PDF for this area." />
+            {sendPdfWithResponse !== null && <OsTypeToggle controlledState={sendPdfWithResponse} onChange={onToggleSendPdfWithResponse} enabledLabel="Send response Pdf with email" disabledLabel="Do not send response Pdf with email" />}
+
             <ExpandableTextBox title="Introductory statement" updatableValue={prologue} onChange={updatePrologue} onSave={savePrologue}>
                 <AreaConfigurationHeader divider light title="Create an introduction for your response PDF" subtitle="You can make it clear that fees are estimate only, or provide context for your client to understand their estimate." />
             </ExpandableTextBox>

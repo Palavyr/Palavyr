@@ -131,6 +131,7 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                 Subject = "Thanks for contacting us!",
                 FallbackSubject = "",
                 FallbackEmailTemplate = "",
+                SendPdfResponse = true
                 
             };
             return area;

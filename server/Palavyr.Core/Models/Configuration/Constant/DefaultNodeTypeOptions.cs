@@ -22,7 +22,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             public static string SplitMerge => DefaultNodeTypeOptions.SplitMerge.StringName;
             public static string EvaluateThreshold => DefaultNodeTypeOptions.EvaluateThreshold.StringName;
             public static string ShowImage => DefaultNodeTypeOptions.ShowImage.StringName;
-            public static string EndWithoutResponse => DefaultNodeTypeOptions.EndWithoutResponse.StringName;
+            public static string EndWithoutEmail => DefaultNodeTypeOptions.EndWithoutEmail.StringName;
         }
 
         public static List<NodeTypeOption> DefaultNodeTypeOptionsList => // These get sent to the UI for user selection
@@ -44,7 +44,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 new SplitMerge(),
                 new Anabranch(),
                 new ShowImage(),
-                new EndWithoutResponse()
+                new EndWithoutEmail()
             };
 
         public static YesNo CreateYesNo() => new YesNo();
@@ -65,20 +65,20 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public static TooComplicated CreateTooComplicated() => new TooComplicated();
         public static SendResponse CreateSendResponse() => new SendResponse();
         public static Restart CreateRestart() => new Restart();
-        public static EndWithoutResponse CreateEndWithoutResponse() => new EndWithoutResponse();
+        public static EndWithoutEmail CreateEndWithoutEmail() => new EndWithoutEmail();
 
-        public class EndWithoutResponse : NodeTypeOption
+        public class EndWithoutEmail : NodeTypeOption
         {
-            public new static string StringName => nameof(EndWithoutResponse);
+            public new static string StringName => nameof(EndWithoutEmail);
 
-            public EndWithoutResponse()
+            public EndWithoutEmail() // This means no email at all. We have an option in the 
             {
                 Text = "End Without Response";
                 Value = StringName;
                 PathOptions = new List<string>();
                 ValueOptions = new List<string>();
                 IsMultiOptionType = false;
-                IsTerminalType = false;
+                IsTerminalType = true;
                 GroupName = Terminal;
                 IsSplitMergeType = false;
                 ShouldRenderChildren = false;
@@ -86,7 +86,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.EndWithoutResponse; //TODO create widget component
+                NodeComponent = NodeComponentTypes.EndWithoutEmail; 
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
             }

@@ -35,7 +35,7 @@ export const EnquiriesHeader = () => {
             </TableCell>
             <TableCell>
                 <Typography align="center" variant="h5">
-                    Estimate
+                    Response Pdf
                 </Typography>
             </TableCell>
             <TableCell>

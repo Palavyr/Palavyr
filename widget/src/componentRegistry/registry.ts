@@ -24,6 +24,7 @@ export const ComponentRegistry: Registry = {
     FirstEmailFailed: components.makeProvideInfo,
     SendTooComplicatedEmail: components.makeSendFallbackEmail,
     Restart: components.makeRestart,
+    EndWithoutEmail: components.makeEndWithoutEmail,
 };
 
 export const ConvoContextProperties = {

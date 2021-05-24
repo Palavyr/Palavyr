@@ -14,8 +14,8 @@ const useStyles = makeStyles((theme) => ({
         width: "100%",
         borderRadius: "5px",
         "&:hover": {
-            cursor: "pointer"
-        }
+            cursor: "pointer",
+        },
     },
 }));
 
@@ -47,9 +47,7 @@ export const ImageReview = () => {
             <div>
                 <AreaConfigurationHeader title="Review the images you've uploaded" subtitle="Add or remove stored images. These are accessible within the Palavy designer." />
             </div>
-            {/* <div> */}
             <ImageReviewUpload setImageRecords={setImageRecords} />
-            {/* </div> */}
             <Grid container style={{ width: "100%" }}>
                 <Grid item xs={6}>
                     <TableContainer style={{ width: "100%", paddingLeft: "1rem", paddingRight: "1rem" }}>

@@ -82,12 +82,12 @@ const routesToExclude = [
     "/dashboard/settings/default_email_template",
     "/dashboard/settings/deleteaccount",
     "/dashboard/set-areas",
-    "/dashboard/enquiries/",
+    "/dashboard/enquiries",
     "/dashboard/demo/",
-    "/dashboard/subscribe/",
+    "/dashboard/subscribe",
     "/dashboard/subscribe/purchase",
     "/dashboard/confirm",
-    "/dashboard/getwidget/",
+    "/dashboard/getwidget",
     "/dashboard/images",
 ];
 
