@@ -13,11 +13,10 @@ namespace Palavyr.IntegrationTests.Tests
 {
     public class TestControllerIntegrationTest : InMemoryIntegrationFixture
     {
-
         public TestControllerIntegrationTest(ITestOutputHelper testOutputHelper, InMemoryAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
         }
-        
+
         [Fact]
         public async Task HomeExists()
         {
@@ -61,7 +60,7 @@ namespace Palavyr.IntegrationTests.Tests
             var expected = new[] {"One", "Two", "Three"};
             var responseStream = await Client.GetStreamAsync("test");
             var model = await JsonSerializer.DeserializeAsync<List<string>>(responseStream, new JsonSerializerOptions() {PropertyNameCaseInsensitive = true});
-            
+
             Assert.NotNull(model);
             Assert.Equal(expected.OrderBy(s => s), model.OrderBy(s => s));
         }
@@ -71,9 +70,9 @@ namespace Palavyr.IntegrationTests.Tests
         {
             var expected = new[] {"One", "Two", "Three"};
             var model = await Client.GetFromJsonAsync<List<string>>("test");
-            
+
             Assert.NotNull(model);
-            Assert.Equal(expected.OrderBy(s => s), model.OrderBy(s => s));        
+            Assert.Equal(expected.OrderBy(s => s), model.OrderBy(s => s));
         }
 
         [Fact]
