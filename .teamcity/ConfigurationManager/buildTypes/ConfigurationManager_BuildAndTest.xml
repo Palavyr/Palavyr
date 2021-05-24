@@ -20,6 +20,16 @@
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
+      <runner id="RUNNER_23" name="Set Secrets" type="jetbrains_powershell">
+        <parameters>
+          <param name="jetbrains_powershell_execution" value="PS1" />
+          <param name="jetbrains_powershell_noprofile" value="true" />
+          <param name="jetbrains_powershell_script_file" value="./utilities/SetDevelopmentSecrets.ps1" />
+          <param name="jetbrains_powershell_script_mode" value="FILE" />
+          <param name="teamcity.build.workingDir" value="server" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
       <runner id="RUNNER_9" name="Publish API server" type="dotnet">
         <parameters>
           <param name="args" value="-c Release /p:Version=%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
@@ -60,16 +70,6 @@
           <param name="octopus_packagesourcepath" value="server\publish" />
           <param name="octopus_packageversion" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
           <param name="octopus_publishartifacts" value="true" />
-          <param name="teamcity.step.mode" value="default" />
-        </parameters>
-      </runner>
-      <runner id="RUNNER_23" name="Set Secrets" type="jetbrains_powershell">
-        <parameters>
-          <param name="jetbrains_powershell_execution" value="PS1" />
-          <param name="jetbrains_powershell_noprofile" value="true" />
-          <param name="jetbrains_powershell_script_file" value="./utilities/SetDevelopmentSecrets.ps1" />
-          <param name="jetbrains_powershell_script_mode" value="FILE" />
-          <param name="teamcity.build.workingDir" value="server" />
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
