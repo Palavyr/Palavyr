@@ -23,6 +23,7 @@
       <runner id="RUNNER_23" name="Set Secrets" type="jetbrains_powershell">
         <parameters>
           <param name="jetbrains_powershell_execution" value="PS1" />
+          <param name="jetbrains_powershell_minVersion" value="5.1" />
           <param name="jetbrains_powershell_noprofile" value="true" />
           <param name="jetbrains_powershell_script_file" value="./utilities/SetDevelopmentSecrets.ps1" />
           <param name="jetbrains_powershell_script_mode" value="FILE" />
