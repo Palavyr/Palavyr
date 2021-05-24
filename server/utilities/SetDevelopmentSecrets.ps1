@@ -15,7 +15,7 @@ Import-Module AWSPowerShell.NetCore
 
 
 Write-Host "---------------------"
-Get-AWSCredential -ListProfileDetail
+Write-Host (Get-AWSCredential -ListProfileDetail)
 Write-Host "---------------------"
 
 # $server = "dev-palavyr-database.clznnuwhyqf6.us-east-1.rds.amazonaws.com";
@@ -31,7 +31,8 @@ $credentials = $prof.GetCredentials();
 $accessKey = $credentials.AccessKey;
 $secretKey = $credentials.SecretKey;
 $region = 'us-east-1'
-
+Write-Host $accessKey;
+Write-Host $secretKey;
 
 function WriteDatabaseSecrets($projectPath) {
     Write-Host "`r`nSetting Connection Strings`r`n"
