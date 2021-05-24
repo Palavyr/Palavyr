@@ -11,7 +11,6 @@
     </options>
     <disabled-settings>
       <setting-ref ref="ARTIFACT_DEPENDENCY_5" />
-      <setting-ref ref="vcsTrigger" />
     </disabled-settings>
     <parameters />
     <build-runners>
