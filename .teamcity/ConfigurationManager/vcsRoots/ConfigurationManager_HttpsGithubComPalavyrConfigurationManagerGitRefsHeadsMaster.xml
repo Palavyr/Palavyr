@@ -8,7 +8,7 @@
   <param name="ignoreKnownHosts" value="true" />
   <param name="secure:password" value="credentialsJSON:6733b2fc-c52e-47a4-b68b-7e05b68cf00e" />
   <param name="submoduleCheckout" value="CHECKOUT" />
-  <param name="teamcity:branchSpec" value="refs/pull/*/head" />
+  <param name="teamcity:branchSpec" value="+:refs/pull/*/head" />
   <param name="url" value="https://github.com/Palavyr/Configuration-Manager.git" />
   <param name="useAlternates" value="true" />
   <param name="username" value="paul.e.gradie@gmail.com" />
