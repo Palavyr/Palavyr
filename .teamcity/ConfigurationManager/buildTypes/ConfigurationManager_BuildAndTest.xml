@@ -20,15 +20,12 @@
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
-      <runner id="RUNNER_23" name="Set Secrets" type="jetbrains_powershell">
+      <runner id="RUNNER_23" name="Set Secrets" type="simpleRunner">
         <parameters>
-          <param name="jetbrains_powershell_execution" value="PS1" />
-          <param name="jetbrains_powershell_minVersion" value="5.1" />
-          <param name="jetbrains_powershell_noprofile" value="true" />
-          <param name="jetbrains_powershell_script_file" value="./utilities/SetDevelopmentSecrets.ps1" />
-          <param name="jetbrains_powershell_script_mode" value="FILE" />
+          <param name="script.content" value="C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Version 5.1 -NoProfile -NonInteractive -ExecutionPolicy ByPass -File  C:\TeamCity\BuildAgent2\work\e2fb359037671d65\server\utilities\SetDevelopmentSecrets.ps1" />
           <param name="teamcity.build.workingDir" value="server" />
           <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
         </parameters>
       </runner>
       <runner id="RUNNER_9" name="Publish API server" type="dotnet">
