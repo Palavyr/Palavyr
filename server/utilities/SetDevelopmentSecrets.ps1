@@ -13,6 +13,7 @@ param([string]$pass = "0987654321", [string]$user = "postgres", [string]$awsProf
 Get-Module -Name AWSPowerShell.NetCore
 Import-Module AWSPowerShell.NetCore
 
+Write-Host $PSVersionTable.PSVersion;
 
 Write-Host "---------------------"
 Write-Host (Get-AWSCredential -ListProfileDetail)
