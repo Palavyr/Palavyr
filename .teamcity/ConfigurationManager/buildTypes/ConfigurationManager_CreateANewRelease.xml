@@ -40,6 +40,19 @@
         </parameters>
       </build-trigger>
     </build-triggers>
+    <build-extensions>
+      <extension id="BUILD_EXT_1" type="teamcity.github.status">
+        <parameters>
+          <param name="github_report_on" value="on start and finish" />
+          <param name="guthub_authentication_type" value="token" />
+          <param name="guthub_context" value="continuous-integration/teamcity" />
+          <param name="guthub_host" value="https://api.github.com" />
+          <param name="guthub_owner" value="Paul Gradie" />
+          <param name="guthub_repo" value="Configuration-Manager" />
+          <param name="secure:github_access_token" value="credentialsJSON:6733b2fc-c52e-47a4-b68b-7e05b68cf00e" />
+        </parameters>
+      </extension>
+    </build-extensions>
     <dependencies>
       <depend-on sourceBuildTypeId="ConfigurationManager_DeployToOctopus">
         <options>
