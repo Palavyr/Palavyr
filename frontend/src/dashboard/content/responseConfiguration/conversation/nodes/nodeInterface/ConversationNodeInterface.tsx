@@ -178,11 +178,6 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
                     {node.isImageNode ? (
                         <CustomImage imageName={imageName} imageLink={imageLink} titleVariant="body1" />
                     ) : (
-                        // <Align>
-                        //     <div style={{ visibility: imageLoading ? "hidden" : "visible", maxWidth: "100px", margin: "1rem" }}>
-                        //         <img className={cls.image} key={Date.now()} src={imageLink} onChange={() => setImageLoading(true)} onLoadStart={() => setImageLoading(true)} onLoad={() => setImageLoading(false)} />
-                        //     </div>
-                        // </Align>
                         <Typography className={cls.text} variant="body2" component="span" noWrap={false}>
                             {node.text}
                         </Typography>

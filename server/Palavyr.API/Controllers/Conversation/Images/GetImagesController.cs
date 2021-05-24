@@ -33,8 +33,10 @@ namespace Palavyr.API.Controllers.Conversation.Images
 
         [HttpGet(Route)]
         public async Task<FileLink[]> GetImages(
-            [FromHeader] string accountId,
-            [FromQuery] string imageIds,
+            [FromHeader]
+            string accountId,
+            [FromQuery]
+            string imageIds,
             CancellationToken cancellationToken) // should be comma separated
         {
             // TODO: https://www.strathweb.com/2017/07/customizing-query-string-parameter-binding-in-asp-net-core-mvc/
@@ -56,9 +58,8 @@ namespace Palavyr.API.Controllers.Conversation.Images
             {
                 records = await dashContext.Images.Where(x => x.AccountId == accountId).ToListAsync(cancellationToken);
             }
-    
-            // TOO SLOw = must follow enquiries strategy here...
-            return records.ToFileLinks(); //.ToFileLinks(linkCreator, configuration.GetUserDataSection());
+
+            return records.ToFileLinks();
         }
     }
 }

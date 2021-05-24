@@ -23,36 +23,17 @@ export interface IConversationNodeEditor {
 }
 
 export const ConversationNodeEditor = ({ modalState, setModalState, node, currentImageId, imageName, setImageName, imageLink, setImageLink }: IConversationNodeEditor) => {
-    const repository = new PalavyrRepository();
-
     const [options, setOptions] = useState<Array<string>>([]);
     const [textState, setText] = useState<string>("");
     const [switchState, setSwitchState] = useState<boolean>(true);
 
     const { nodeList, setNodes } = React.useContext(ConversationTreeContext);
-    // const [imageLink, setImageLink] = useState<string>("");
-    // const [imageName, setImageName] = useState<string>("");
-    // const [currentImageId, setCurrentImageId] = useState<string>("");
-
-    // const loadImage = useCallback(async () => {
-    //     if (node.imageId !== null) {
-    //         const fileLinks = await repository.Configuration.Images.getImages([node.imageId]);
-    //         const fileLink = fileLinks[0];
-    //         if (!fileLink.isUrl) {
-    //             const presignedUrl = await repository.Configuration.Images.getSignedUrl(fileLink.link);
-    //             setImageLink(presignedUrl);
-    //             setImageName(fileLink.fileName);
-    //             setCurrentImageId(fileLink.fileId);
-    //         }
-    //     }
-    // }, [nodeList]);
 
     useEffect(() => {
         setText(node.text);
         if (node.isMultiOptionType && !isNullOrUndefinedOrWhitespace(node.valueOptions)) {
             setOptions(node.valueOptions.split(ValueOptionDelimiter));
         }
-        // loadImage();
     }, [node]);
 
     const handleCloseModal = () => {
