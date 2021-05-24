@@ -9,6 +9,9 @@
       <option name="publishArtifactCondition" value="SUCCESSFUL" />
       <option name="shouldFailBuildOnAnyErrorMessage" value="true" />
     </options>
+    <disabled-settings>
+      <setting-ref ref="RUNNER_21" />
+    </disabled-settings>
     <parameters />
     <build-runners>
       <runner id="RUNNER_17" name="Clean build Directory" type="dotnet">
