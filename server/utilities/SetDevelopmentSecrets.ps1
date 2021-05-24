@@ -10,7 +10,8 @@ param([string]$pass = "0987654321", [string]$user = "postgres", [string]$awsProf
 ## locally, these are located at something like: %APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json
 ## https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-5.0&tabs=windows
 
-Get-Module -Name AWSPowerShell
+Get-Module -Name AWSPowerShell.NetCore
+Import-Module AWSPowerShell.NetCore
 
 # $server = "dev-palavyr-database.clznnuwhyqf6.us-east-1.rds.amazonaws.com";
 $server = "127.0.0.1";
@@ -19,7 +20,7 @@ $api = ".\\Palavyr.API";
 $migrator = ".\\Palavyr.Data.Migrator";
 $integrationTests = ".\\Palavyr.IntegrationTests"
 
-Write-Host "`r`nSetting Secrets for AWS Credentials"
+Write-Host "`r`nSetting Secrets for AWS Credentials for $awsProfile"
 $prof = Get-AWSCredential $awsProfile;
 $credentials = $prof.GetCredentials();
 $accessKey = $credentials.AccessKey;
