@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Shouldly;
 using Test.Common.ExtensionsMethods;
+using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
 {
@@ -21,7 +23,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
         private IS3Saver s3Saver;
         private string testUserDataBucket;
 
-        public S3SaverFixture(InMemoryAutofacWebApplicationFactory factory) : base(factory)
+        public S3SaverFixture(ITestOutputHelper testOutputHelper, InMemoryAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
         }
 
@@ -36,6 +38,9 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
             var areaId = A.RandomName();
             var fileName = A.RandomName();
             var s3Key = s3KeyResolver.ResolveAttachmentKey(accountId, areaId, fileName);
+
+            TestOutputHelper.WriteLine(Configuration.GetAccessKey());
+            TestOutputHelper.WriteLine(Configuration.GetSecretKey());
 
             try
             {
@@ -54,6 +59,8 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
         [Fact]
         public async Task WhenTheSaverFailsToUploadAFile_AFalseValueIsReturned()
         {
+            
+            
             var tempFile = Path.GetTempFileName();
             using var stream = File.OpenRead(tempFile);
             var formFile = new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name));

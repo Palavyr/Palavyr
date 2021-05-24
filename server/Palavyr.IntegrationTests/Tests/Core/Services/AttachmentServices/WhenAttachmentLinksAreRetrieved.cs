@@ -11,12 +11,13 @@ using Palavyr.IntegrationTests.AppFactory.FixtureBase;
 using Palavyr.IntegrationTests.DataCreators;
 using Shouldly;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
 {
     public class WhenAttachmentLinksAreRetrieved : InMemoryIntegrationFixture
     {
-        public WhenAttachmentLinksAreRetrieved(InMemoryAutofacWebApplicationFactory factory) : base(factory)
+        public WhenAttachmentLinksAreRetrieved(ITestOutputHelper testOutputHelper, InMemoryAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
         }
 

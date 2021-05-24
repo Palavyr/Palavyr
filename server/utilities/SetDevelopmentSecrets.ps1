@@ -10,6 +10,7 @@ param([string]$pass = "0987654321", [string]$user = "postgres", [string]$awsProf
 ## locally, these are located at something like: %APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json
 ## https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-5.0&tabs=windows
 
+Get-Module -Name AWSPowerShell
 
 # $server = "dev-palavyr-database.clznnuwhyqf6.us-east-1.rds.amazonaws.com";
 $server = "127.0.0.1";
@@ -24,6 +25,7 @@ $credentials = $prof.GetCredentials();
 $accessKey = $credentials.AccessKey;
 $secretKey = $credentials.SecretKey;
 $region = 'us-east-1'
+
 
 function WriteDatabaseSecrets($projectPath) {
     Write-Host "`r`nSetting Connection Strings`r`n"

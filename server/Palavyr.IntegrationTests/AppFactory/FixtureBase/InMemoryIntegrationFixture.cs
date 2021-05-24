@@ -13,12 +13,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Test.Common;
+using Xunit.Abstractions;
 
 // https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-3.1#inject-mock-services 
 namespace Palavyr.IntegrationTests.AppFactory.FixtureBase
 {
     public abstract class InMemoryIntegrationFixture : IClassFixture<InMemoryAutofacWebApplicationFactory>
     {
+        public ITestOutputHelper TestOutputHelper { get; set; } = null!;
         private readonly InMemoryAutofacWebApplicationFactory factory;
 
         public HttpClient Client { get; set; } = null!;
@@ -29,8 +31,9 @@ namespace Palavyr.IntegrationTests.AppFactory.FixtureBase
         public IServiceProvider Container { get; set; } = null!;
         public IConfiguration Configuration { get; set; } = null!;
 
-        protected InMemoryIntegrationFixture(InMemoryAutofacWebApplicationFactory factory)
+        protected InMemoryIntegrationFixture(ITestOutputHelper testOutputHelper, InMemoryAutofacWebApplicationFactory factory)
         {
+            this.TestOutputHelper = testOutputHelper;
             this.factory = factory;
             CreateContext();
         }

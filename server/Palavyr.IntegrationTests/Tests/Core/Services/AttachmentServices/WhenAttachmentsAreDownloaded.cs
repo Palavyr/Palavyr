@@ -11,19 +11,20 @@ using Palavyr.IntegrationTests.DataCreators;
 using Shouldly;
 using Test.Common;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
 {
     public class WhenAttachmentsAreDownloaded : InMemoryIntegrationFixture, IAsyncLifetime
     {
-        public WhenAttachmentsAreDownloaded(InMemoryAutofacWebApplicationFactory factory) : base(factory)
+        public WhenAttachmentsAreDownloaded(ITestOutputHelper testOutputHelper, InMemoryAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
         }
 
         private string s3Key = null!;
         private string s3Bucket = null!;
         private string RiskyName = "ThisRiskyName.pdf";
-        
+
         [Fact]
         public async Task PropertiesAreSetCorrectly()
         {

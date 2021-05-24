@@ -4,6 +4,7 @@ using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.FixtureBase;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Settings
 {
@@ -11,7 +12,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Setting
     {
         private const string Route = GetApiKeyController.Uri;
 
-        public GetApiKeyControllerFixture(InMemoryAutofacWebApplicationFactory factory) : base(factory)
+        public GetApiKeyControllerFixture(ITestOutputHelper testOutputHelper, InMemoryAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
         }
 
@@ -34,7 +35,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Setting
     {
         private const string Route = GetApiKeyController.Uri;
 
-        public ApiKeyFail(InMemoryAutofacWebApplicationFactory factory) : base(factory)
+        public ApiKeyFail(ITestOutputHelper testOutputHelper, InMemoryAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
         }
 
