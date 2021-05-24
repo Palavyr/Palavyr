@@ -27,7 +27,6 @@ $secretKey = $credentials.SecretKey;
 $region = 'us-east-1'
 
 
-
 function WriteDatabaseSecrets($projectPath) {
     Write-Host "`r`nSetting Connection Strings`r`n"
     dotnet user-secrets set ConnectionStrings:AccountsContextPostgres "Server=$server;Port=$port;Database=Accounts;User Id=$user;Password=$pass" --project $projectPath

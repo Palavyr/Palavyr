@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.FixtureBase;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests
 {
     public class TestControllerIntegrationTest : InMemoryIntegrationFixture
     {
 
-        public TestControllerIntegrationTest(InMemoryAutofacWebApplicationFactory factory) : base(factory)
+        public TestControllerIntegrationTest(ITestOutputHelper testOutputHelper, InMemoryAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
         }
         
