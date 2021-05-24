@@ -47,6 +47,18 @@ palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number
         </parameters>
       </build-trigger>
     </build-triggers>
+    <build-extensions>
+      <extension id="BUILD_EXT_2" type="pullRequests">
+        <parameters>
+          <param name="authenticationType" value="token" />
+          <param name="filterAuthorRole" value="MEMBER" />
+          <param name="filterTargetBranch" value="+:refs/pull/(*/merge)" />
+          <param name="providerType" value="github" />
+          <param name="secure:accessToken" value="credentialsJSON:6733b2fc-c52e-47a4-b68b-7e05b68cf00e" />
+          <param name="vcsRootId" value="ConfigurationManager_HttpsGithubComPalavyrConfigurationManagerGitRefsHeadsMaster" />
+        </parameters>
+      </extension>
+    </build-extensions>
     <artifact-dependencies>
       <dependency id="ARTIFACT_DEPENDENCY_2" sourceBuildTypeId="ConfigurationManager_Frontend" cleanDestination="false">
         <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
