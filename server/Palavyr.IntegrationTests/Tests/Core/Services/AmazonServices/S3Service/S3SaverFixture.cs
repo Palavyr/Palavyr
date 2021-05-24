@@ -39,6 +39,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
             var fileName = A.RandomName();
             var s3Key = s3KeyResolver.ResolveAttachmentKey(accountId, areaId, fileName);
 
+            TestOutputHelper.WriteLine("LOOK FOR THIS LIST ----------------");
             TestOutputHelper.WriteLine(Configuration.GetAccessKey());
             TestOutputHelper.WriteLine(Configuration.GetSecretKey());
 
