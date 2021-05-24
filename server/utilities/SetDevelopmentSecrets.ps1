@@ -13,6 +13,11 @@ param([string]$pass = "0987654321", [string]$user = "postgres", [string]$awsProf
 Get-Module -Name AWSPowerShell.NetCore
 Import-Module AWSPowerShell.NetCore
 
+
+Write-Host "---------------------"
+Get-AWSCredential -ListProfileDetail
+Write-Host "---------------------"
+
 # $server = "dev-palavyr-database.clznnuwhyqf6.us-east-1.rds.amazonaws.com";
 $server = "127.0.0.1";
 $port = "5432";
