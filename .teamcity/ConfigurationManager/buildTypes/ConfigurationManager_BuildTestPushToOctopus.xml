@@ -122,7 +122,7 @@ palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number
       </extension>
     </build-extensions>
     <dependencies>
-      <depend-on sourceBuildTypeId="ConfigurationManager_DeployToOctopus">
+      <depend-on sourceBuildTypeId="ConfigurationManager_CreateVersionNumber">
         <options>
           <option name="run-build-if-dependency-failed" value="CANCEL" />
           <option name="run-build-if-dependency-failed-to-start" value="CANCEL" />
