@@ -4,7 +4,6 @@
   <description>Build the frontend</description>
   <settings>
     <options>
-      <option name="artifactRules" value="palavyr.frontend.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
       <option name="buildNumberPattern" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
       <option name="publishArtifactCondition" value="SUCCESSFUL" />
     </options>
