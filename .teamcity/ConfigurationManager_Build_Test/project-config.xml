@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" parent-id="ConfigurationManager_Build" uuid="1f84bb09-eada-4042-9adf-501ff6af9fb5" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2020.1/project-config.xsd">
+  <name>Test</name>
+  <description>Run all test suites</description>
+  <parameters />
+  <cleanup />
+</project>
+
