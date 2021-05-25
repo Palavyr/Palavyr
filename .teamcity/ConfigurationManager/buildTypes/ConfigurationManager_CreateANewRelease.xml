@@ -54,6 +54,19 @@
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
+      <runner id="RUNNER_29" name="Push to Octopus Cloud" type="octopus.push.package">
+        <parameters>
+          <param name="octopus_forcepush" value="true" />
+          <param name="octopus_host" value="https://palavyr.octopus.app" />
+          <param name="octopus_packagepaths"><![CDATA[palavyr.server.windows.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip
+palavyr.frontend.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip
+palavyr.pdfserver.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip
+palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip]]></param>
+          <param name="octopus_space_name" value="Palavyr" />
+          <param name="secure:octopus_apikey" value="credentialsJSON:6733b2fc-c52e-47a4-b68b-7e05b68cf00e" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
       <runner id="RUNNER_6" name="Create a new release on Octopus Deploy" type="octopus.create.release">
         <conditions>
           <equals name="teamcity.build.branch.is_default" value="true" />
@@ -67,19 +80,6 @@
           <param name="octopus_space_name" value="Palavyr" />
           <param name="octopus_version" value="3.0+" />
           <param name="secure:octopus_apikey" value="credentialsJSON:206075a8-c12f-4f17-a3be-213a6915ef08" />
-          <param name="teamcity.step.mode" value="default" />
-        </parameters>
-      </runner>
-      <runner id="RUNNER_29" name="Push to Octopus Cloud" type="octopus.push.package">
-        <parameters>
-          <param name="octopus_forcepush" value="true" />
-          <param name="octopus_host" value="https://palavyr.octopus.app" />
-          <param name="octopus_packagepaths"><![CDATA[palavyr.server.windows.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip
-palavyr.frontend.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip
-palavyr.pdfserver.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip
-palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip]]></param>
-          <param name="octopus_space_name" value="Palavyr" />
-          <param name="secure:octopus_apikey" value="credentialsJSON:6733b2fc-c52e-47a4-b68b-7e05b68cf00e" />
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
