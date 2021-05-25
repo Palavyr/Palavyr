@@ -111,6 +111,15 @@ palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number
           <param name="secure:github_access_token" value="credentialsJSON:6733b2fc-c52e-47a4-b68b-7e05b68cf00e" />
         </parameters>
       </extension>
+      <extension id="BUILD_EXT_9" type="pullRequests">
+        <parameters>
+          <param name="authenticationType" value="token" />
+          <param name="filterAuthorRole" value="MEMBER" />
+          <param name="filterTargetBranch" value="+:refs/heads/master" />
+          <param name="providerType" value="github" />
+          <param name="secure:accessToken" value="credentialsJSON:6733b2fc-c52e-47a4-b68b-7e05b68cf00e" />
+        </parameters>
+      </extension>
     </build-extensions>
     <dependencies>
       <depend-on sourceBuildTypeId="ConfigurationManager_DeployToOctopus">
