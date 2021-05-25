@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="15213669-0709-4187-9972-eb425bad0916" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2020.1/project-config.xsd">
-  <name>Build and Pack the Widget</name>
+  <name>Build the Widget</name>
   <description>Builds and zips the widget</description>
   <settings>
     <options>
-      <option name="artifactRules" value="palavyr.widget.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip" />
       <option name="buildNumberPattern" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
       <option name="publishArtifactCondition" value="SUCCESSFUL" />
     </options>
