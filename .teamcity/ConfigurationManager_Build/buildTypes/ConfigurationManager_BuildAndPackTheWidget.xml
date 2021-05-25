@@ -59,6 +59,7 @@
         <options>
           <option name="run-build-if-dependency-failed" value="CANCEL" />
           <option name="run-build-if-dependency-failed-to-start" value="CANCEL" />
+          <option name="run-build-on-the-same-agent" value="true" />
         </options>
       </depend-on>
     </dependencies>
