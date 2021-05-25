@@ -95,6 +95,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, curren
                         )}
                     </>
                 )}
+
             </DialogContent>
             {!node.isImageNode && (
                 <DialogActions>
