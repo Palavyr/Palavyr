@@ -4,5 +4,6 @@
   <description>Build Artifacts</description>
   <parameters />
   <cleanup />
+  <buildTypesOrder order="ConfigurationManager_CreateVersionNumber,ConfigurationManager_Frontend,ConfigurationManager_BuildAndPackTheWidget,ConfigurationManager_BuildInternalExpressPdfServer,ConfigurationManager_BuildPalavyrServerWindows" />
 </project>
 
