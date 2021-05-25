@@ -11,6 +11,7 @@
     </options>
     <disabled-settings>
       <setting-ref ref="ARTIFACT_DEPENDENCY_5" />
+      <setting-ref ref="RUNNER_12" />
     </disabled-settings>
     <parameters />
     <build-runners>
