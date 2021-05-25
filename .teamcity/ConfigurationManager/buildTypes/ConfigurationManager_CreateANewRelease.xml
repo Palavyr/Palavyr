@@ -10,28 +10,12 @@
     </options>
     <parameters />
     <build-runners>
-      <runner id="RUNNER_6" name="Create a new release on Octopus Deploy" type="octopus.create.release">
-        <conditions>
-          <equals name="teamcity.build.branch.is_default" value="true" />
-        </conditions>
-        <parameters>
-          <param name="octopus_channel_name" value="Main Channel" />
-          <param name="octopus_deploymenttimeout" value="00:20:00" />
-          <param name="octopus_host" value="https://palavyr.octopus.app" />
-          <param name="octopus_project_name" value="Palavyr Configuration Manager" />
-          <param name="octopus_releasenumber" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
-          <param name="octopus_space_name" value="Palavyr" />
-          <param name="octopus_version" value="3.0+" />
-          <param name="secure:octopus_apikey" value="credentialsJSON:206075a8-c12f-4f17-a3be-213a6915ef08" />
-          <param name="teamcity.step.mode" value="default" />
-        </parameters>
-      </runner>
-      <runner id="RUNNER_25" name="Package the frontend" type="octopus.pack.package">
+      <runner id="RUNNER_27" name="Package the express server into a zip" type="octopus.pack.package">
         <parameters>
           <param name="octopus_packageformat" value="Zip" />
-          <param name="octopus_packageid" value="palavyr.frontend" />
-          <param name="octopus_packageoutputpath" value="frontend\pack" />
-          <param name="octopus_packagesourcepath" value="frontend\dist" />
+          <param name="octopus_packageid" value="palavyr.pdfserver" />
+          <param name="octopus_packageoutputpath" value="pdf-server/pack" />
+          <param name="octopus_packagesourcepath" value="pdf-server/dist" />
           <param name="octopus_packageversion" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
           <param name="octopus_publishartifacts" value="true" />
           <param name="teamcity.step.mode" value="default" />
@@ -48,12 +32,12 @@
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
-      <runner id="RUNNER_27" name="Package the express server into a zip" type="octopus.pack.package">
+      <runner id="RUNNER_25" name="Package the frontend" type="octopus.pack.package">
         <parameters>
           <param name="octopus_packageformat" value="Zip" />
-          <param name="octopus_packageid" value="palavyr.pdfserver" />
-          <param name="octopus_packageoutputpath" value="pdf-server/pack" />
-          <param name="octopus_packagesourcepath" value="pdf-server/dist" />
+          <param name="octopus_packageid" value="palavyr.frontend" />
+          <param name="octopus_packageoutputpath" value="frontend\pack" />
+          <param name="octopus_packagesourcepath" value="frontend\dist" />
           <param name="octopus_packageversion" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
           <param name="octopus_publishartifacts" value="true" />
           <param name="teamcity.step.mode" value="default" />
@@ -67,6 +51,22 @@
           <param name="octopus_packagesourcepath" value="server\publish" />
           <param name="octopus_packageversion" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
           <param name="octopus_publishartifacts" value="true" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_6" name="Create a new release on Octopus Deploy" type="octopus.create.release">
+        <conditions>
+          <equals name="teamcity.build.branch.is_default" value="true" />
+        </conditions>
+        <parameters>
+          <param name="octopus_channel_name" value="Main Channel" />
+          <param name="octopus_deploymenttimeout" value="00:20:00" />
+          <param name="octopus_host" value="https://palavyr.octopus.app" />
+          <param name="octopus_project_name" value="Palavyr Configuration Manager" />
+          <param name="octopus_releasenumber" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
+          <param name="octopus_space_name" value="Palavyr" />
+          <param name="octopus_version" value="3.0+" />
+          <param name="secure:octopus_apikey" value="credentialsJSON:206075a8-c12f-4f17-a3be-213a6915ef08" />
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
