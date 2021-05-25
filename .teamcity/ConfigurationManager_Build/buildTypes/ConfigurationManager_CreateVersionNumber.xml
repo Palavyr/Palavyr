@@ -18,7 +18,7 @@ echo %build.counter%]]></param>
       </runner>
     </build-runners>
     <vcs-settings>
-      <vcs-entry-ref root-id="ConfigurationManager_HttpsGithubComPalavyrConfigurationManagerGitRefsHeadsMaster" />
+      <vcs-entry-ref root-id="ConfigurationManager_Build_HttpsGithubComPalavyrConfigurationManagerGitRefsHeadsMaster" />
     </vcs-settings>
     <requirements />
     <build-triggers />
