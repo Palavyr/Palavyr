@@ -94,7 +94,7 @@
       </extension>
     </build-extensions>
     <dependencies>
-      <depend-on sourceBuildTypeId="ConfigurationManager_CreateVersionNumber">
+      <depend-on sourceBuildTypeId="ConfigurationManager_BuildPalavyrServerWindows">
         <options>
           <option name="run-build-if-dependency-failed" value="CANCEL" />
           <option name="run-build-if-dependency-failed-to-start" value="CANCEL" />
