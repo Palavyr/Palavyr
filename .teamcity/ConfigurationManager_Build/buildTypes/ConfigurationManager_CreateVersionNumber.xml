@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="8040efae-0ce6-4dc9-9a13-d35aa0ecb90b" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2020.1/project-config.xsd">
-  <name>Create Version Number</name>
+  <name>Compute Next Version Number</name>
   <description>Create the common version number to be used across all snapshot dependencies</description>
   <settings>
     <options>
