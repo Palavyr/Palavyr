@@ -13,7 +13,7 @@
     </disabled-settings>
     <parameters />
     <build-runners>
-      <runner id="RUNNER_27" name="Package the express server into a zip" type="octopus.pack.package">
+      <runner id="RUNNER_27" name="Package the Pdf Server" type="octopus.pack.package">
         <parameters>
           <param name="octopus_packageformat" value="Zip" />
           <param name="octopus_packageid" value="palavyr.pdfserver" />
