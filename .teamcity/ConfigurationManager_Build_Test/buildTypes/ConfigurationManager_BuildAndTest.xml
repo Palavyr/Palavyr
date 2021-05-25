@@ -53,7 +53,7 @@
           <param name="paths" value="Palavyr.UnitTests" />
           <param name="teamcity.build.workingDir" value="server" />
           <param name="teamcity.step.mode" value="default" />
-          <param name="verbosity" value="Normal" />
+          <param name="verbosity" value="Detailed" />
         </parameters>
       </runner>
       <runner id="RUNNER_21" name="Run Integration Tests" type="dotnet">
