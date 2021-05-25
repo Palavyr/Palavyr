@@ -5,6 +5,7 @@
   <settings>
     <options>
       <option name="buildNumberPattern" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
+      <option name="maximumNumberOfBuilds" value="3" />
       <option name="publishArtifactCondition" value="SUCCESSFUL" />
     </options>
     <disabled-settings>
