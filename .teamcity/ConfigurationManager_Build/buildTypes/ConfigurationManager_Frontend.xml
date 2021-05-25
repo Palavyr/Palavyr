@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="2dd44166-8ff7-41ef-934b-9c1f890922b4" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2020.1/project-config.xsd">
-  <name>Build and Pack Frontend</name>
+  <name>Build the Frontend</name>
   <description>Build the frontend</description>
   <settings>
     <options>
-      <option name="artifactRules" value="palavyr.frontend.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip" />
+      <option name="artifactRules" value="palavyr.frontend.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
       <option name="buildNumberPattern" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
       <option name="publishArtifactCondition" value="SUCCESSFUL" />
     </options>
