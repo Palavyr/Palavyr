@@ -17,8 +17,8 @@
         <parameters>
           <param name="octopus_packageformat" value="Zip" />
           <param name="octopus_packageid" value="palavyr.pdfserver" />
-          <param name="octopus_packageoutputpath" value="pdf-server/pack" />
-          <param name="octopus_packagesourcepath" value="pdf-server/dist" />
+          <param name="octopus_packageoutputpath" value="pdf-server\pack" />
+          <param name="octopus_packagesourcepath" value="pdf-server\dist" />
           <param name="octopus_packageversion" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
           <param name="octopus_publishartifacts" value="true" />
           <param name="teamcity.step.mode" value="default" />
