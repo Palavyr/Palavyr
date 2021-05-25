@@ -8,7 +8,7 @@ export const AttachmentsHelp = () => {
         <>
             <HelpTitle title="Response Attachments" />
             <HelpSubtitle subtitle="" />
-            <HelpDetails >
+            <HelpDetails>
                 <span>This section is used to upload PDF attachments that will be sent alongside the pdf response from this area. </span>
                 <span>
                     <h4>Uploads</h4>
