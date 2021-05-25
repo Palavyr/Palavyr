@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="71330b36-3b09-4d73-8cb9-fb812b7d32ab" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2020.1/project-config.xsd">
-  <name>Create a new Release</name>
+  <name>Build, Test, Push, and Create a Release</name>
   <description>Automatically creates a new release and deploys it to staging</description>
   <settings>
     <options>
