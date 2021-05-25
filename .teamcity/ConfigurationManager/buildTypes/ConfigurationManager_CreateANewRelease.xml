@@ -48,6 +48,17 @@
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
+      <runner id="RUNNER_27" name="Package the express server into a zip" type="octopus.pack.package">
+        <parameters>
+          <param name="octopus_packageformat" value="Zip" />
+          <param name="octopus_packageid" value="palavyr.pdfserver" />
+          <param name="octopus_packageoutputpath" value="pdf-server/pack" />
+          <param name="octopus_packagesourcepath" value="pdf-server/dist" />
+          <param name="octopus_packageversion" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
+          <param name="octopus_publishartifacts" value="true" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
     </build-runners>
     <vcs-settings>
       <vcs-entry-ref root-id="ConfigurationManager_HttpsGithubComPalavyrConfigurationManagerGitRefsHeadsMaster1" />
