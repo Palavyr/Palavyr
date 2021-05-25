@@ -15,7 +15,7 @@ export const EnquiriesHelp = () => {
             <HelpDetails>
                 <span>Some help details</span>
             </HelpDetails>
-            <MoreInformation/>
+            <MoreInformation />
         </>
     );
 };
