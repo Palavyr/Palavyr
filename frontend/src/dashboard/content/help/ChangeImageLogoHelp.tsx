@@ -1,6 +1,5 @@
-import React from 'react'
+import React from "react";
 
 export const ChangeImageLogoHelp = () => {
-
-    return <div>Placeholder</div>
-}
+    return <div>Placeholder</div>;
+};

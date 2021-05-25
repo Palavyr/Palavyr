@@ -11,7 +11,6 @@ import { CustomImage } from "./imageNode/CustomImage";
 import { NodeImageUpload } from "./imageNode/ImageUpload";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 
-
 export interface IConversationNodeEditor {
     modalState: boolean;
     setModalState: (state: boolean) => void;
