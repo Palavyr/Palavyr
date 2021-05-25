@@ -26,6 +26,17 @@
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
+      <runner id="RUNNER_25" name="Package the frontend" type="octopus.pack.package">
+        <parameters>
+          <param name="octopus_packageformat" value="Zip" />
+          <param name="octopus_packageid" value="palavyr.frontend" />
+          <param name="octopus_packageoutputpath" value="frontend\pack" />
+          <param name="octopus_packagesourcepath" value="frontend\dist" />
+          <param name="octopus_packageversion" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
+          <param name="octopus_publishartifacts" value="true" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
     </build-runners>
     <vcs-settings>
       <vcs-entry-ref root-id="ConfigurationManager_HttpsGithubComPalavyrConfigurationManagerGitRefsHeadsMaster1" />
