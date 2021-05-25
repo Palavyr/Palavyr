@@ -9,6 +9,7 @@
       <option name="shouldFailBuildOnAnyErrorMessage" value="true" />
     </options>
     <disabled-settings>
+      <setting-ref ref="RUNNER_10" />
       <setting-ref ref="RUNNER_17" />
       <setting-ref ref="RUNNER_21" />
       <setting-ref ref="RUNNER_23" />
