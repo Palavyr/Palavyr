@@ -80,7 +80,8 @@ export const ConversationNode = ({ node, reRender }: IConversationNode) => {
                 steppedLineNodes.map((id: string, index: number) => {
                     // if mergeTypeSituation, we want to only render first and last steppedLineNodes.
                     // else render all.
-                    if (false) { // need to figure out if this is legit.
+                    if (false) {
+                        // need to figure out if this is legit.
                         // (identity.isDecendentOfSplitMerge) {
                         return id !== "" && (index === 0 || index === steppedLineNodes.length - 1) ? (
                             <SteppedLineTo key={node.nodeId + "-" + id + "-" + "stepped-line"} from={node.nodeId} to={id} fromAnchor="top" toAnchor="bottom" orientation="v" {...connectionStyle} />
