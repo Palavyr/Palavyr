@@ -6,6 +6,7 @@
     <options>
       <option name="allowPersonalBuildTriggering" value="false" />
       <option name="buildNumberPattern" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
+      <option name="cleanBuild" value="true" />
       <option name="maximumNumberOfBuilds" value="3" />
     </options>
     <parameters />
