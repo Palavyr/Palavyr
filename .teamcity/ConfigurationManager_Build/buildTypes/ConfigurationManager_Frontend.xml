@@ -41,7 +41,7 @@
       </runner>
     </build-runners>
     <vcs-settings>
-      <vcs-entry-ref root-id="ConfigurationManager_Build_HttpsGithubComPalavyrConfigurationManagerGitRefsHeadsMaster1" />
+      <vcs-entry-ref root-id="ConfigurationManager_Build_HttpsGithubComPalavyrConfigurationManagerGitRefsHeadsMaster2" />
     </vcs-settings>
     <requirements />
     <build-triggers />
