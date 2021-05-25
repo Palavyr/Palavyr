@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="0f3459f4-c083-4682-a30a-12d58f425486" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2020.1/project-config.xsd">
-  <name>Build Express PDF Server</name>
+  <name>Build PDF Server</name>
   <description>Builds the pdf express server that is used internal next to the api server.</description>
   <settings>
     <options>
-      <option name="artifactRules" value="palavyr.pdfserver.%dep.ConfigurationManager_CreateVersionNumber.system.build.number%.zip" />
       <option name="buildNumberPattern" value="%dep.ConfigurationManager_CreateVersionNumber.system.build.number%" />
       <option name="publishArtifactCondition" value="SUCCESSFUL" />
     </options>
