@@ -4,7 +4,15 @@
   <description>Build and test. Do not push to octopus. Do not create a release</description>
   <settings>
     <parameters />
-    <build-runners />
+    <build-runners>
+      <runner id="RUNNER_24" name="Execute Build" type="simpleRunner">
+        <parameters>
+          <param name="script.content" value="echo &quot;FINISHED&quot;" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+    </build-runners>
     <vcs-settings>
       <vcs-entry-ref root-id="ConfigurationManager_HttpsGithubComPalavyrConfigurationManagerGitRefsHeadsMaster" />
     </vcs-settings>
