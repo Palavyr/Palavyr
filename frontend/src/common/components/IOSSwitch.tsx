@@ -8,8 +8,6 @@ const useStyles = makeStyles(theme => ({
         padding: 0,
         margin: theme.spacing(1),
     },
-
-
     switchBase: {
         padding: 1,
         '&$checked': {
