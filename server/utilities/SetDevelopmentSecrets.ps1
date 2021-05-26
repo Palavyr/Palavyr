@@ -13,26 +13,21 @@ param([string]$pass = "0987654321", [string]$user = "postgres", [string]$awsProf
 Get-Module -Name AWSPowerShell.NetCore
 Import-Module AWSPowerShell.NetCore
 
-Write-Host $PSVersionTable.PSVersion;
 
-Write-Host "---------------------"
-Write-Host (Get-AWSCredential -ListProfileDetail)
-Write-Host "---------------------"
+Write-Host "Powershell version: $PSVersionTable.PSVersion";
+
+$serverPath = ($PSCommandPath).Replace("utilities\SetDevelopmentSecrets.ps1", "")
 
 # $server = "dev-palavyr-database.clznnuwhyqf6.us-east-1.rds.amazonaws.com";
 $server = "127.0.0.1";
 $port = "5432";
-$api = ".\\Palavyr.API";
-$migrator = ".\\Palavyr.Data.Migrator";
-$integrationTests = ".\\Palavyr.IntegrationTests"
+$api = Join-Path -Path $serverPath -ChildPath "Palavyr.API";
+$migrator = Join-Path -Path $serverPath -ChildPath "Palavyr.Data.Migrator";
+$integrationTests = Join-Path -Path $serverPath -ChildPath "Palavyr.IntegrationTests";
 
 Write-Host "`r`nSetting Secrets for AWS Credentials for $awsProfile"
-$prof = (Get-AWSCredential $awsProfile);
+$credentials = (Get-AWSCredential $awsProfile).GetCredentials();
 
-Write-Host "NEXT";
-Write-Host $prof
-
-$credentials = $prof.GetCredentials();
 $accessKey = $credentials.AccessKey;
 $secretKey = $credentials.SecretKey;
 $region = 'us-east-1'
