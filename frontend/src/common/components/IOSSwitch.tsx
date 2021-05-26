@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export const IOSSwitch = ({...props}: SwitchProps ) => {
+export const IOSSwitch = ({ ...props }: SwitchProps) => {
     const classes = useStyles();
     return (
         <Switch
