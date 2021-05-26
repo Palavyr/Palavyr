@@ -27,7 +27,11 @@ $migrator = ".\\Palavyr.Data.Migrator";
 $integrationTests = ".\\Palavyr.IntegrationTests"
 
 Write-Host "`r`nSetting Secrets for AWS Credentials for $awsProfile"
-$prof = Get-AWSCredential $awsProfile;
+$prof = (Get-AWSCredential $awsProfile);
+
+Write-Host "NEXT";
+Write-Host $prof
+
 $credentials = $prof.GetCredentials();
 $accessKey = $credentials.AccessKey;
 $secretKey = $credentials.SecretKey;
