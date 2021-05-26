@@ -24,6 +24,8 @@ const useStyles = makeStyles(theme => ({
             border: '6px solid #fff',
         },
     },
+
+
     thumb: {
         width: 24,
         height: 24,
