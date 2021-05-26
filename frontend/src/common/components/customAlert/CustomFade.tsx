@@ -22,7 +22,6 @@ const InnerFade = (props: FadeProps, ref: ((instance: HTMLDivElement | null) => 
                 onEnter();
             }
 
-
         },
         onRest: () => {
             if (!open && onExited) {
