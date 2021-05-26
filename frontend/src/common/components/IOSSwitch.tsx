@@ -25,10 +25,18 @@ const useStyles = makeStyles(theme => ({
             color: '#52d869',
             border: '6px solid #fff',
         },
+
+
     },
     thumb: {
+
+
         width: 24,
         height: 24,
+
+
+
+
     },
     track: {
         borderRadius: 26 / 2,
@@ -43,7 +51,7 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export const IOSSwitch = ({...props}: SwitchProps ) => {
+export const IOSSwitch = ({ ...props }: SwitchProps) => {
     const classes = useStyles();
     return (
         <Switch

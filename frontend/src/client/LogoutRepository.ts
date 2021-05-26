@@ -11,3 +11,6 @@ export class LogoutRepository {
         RequestLogout: async (sessionId: string) => this.client.post<void, {}>("authentication/logout", { SessionId: sessionId }),
     };
 }
+
+
+

@@ -16,14 +16,14 @@ export const ProtectedRoute = ({ component: Component, ...rest }) => {
             render={(props) => {
 
                 if (auth.accountIsAuthenticated && auth.accountIsActive) {
-                    if (location.pathname == confirmationLoc){
+                    if (location.pathname == confirmationLoc) {
                         return <Redirect to={welcome} />
                     }
                     return <Component {...props} />;
                 }
 
                 if (auth.accountIsAuthenticated && !auth.accountIsActive) {
-                    if (location.pathname == confirmationLoc){
+                    if (location.pathname == confirmationLoc) {
                         return <Component {...props} />;
                     } else {
                         return <Redirect to={confirmationLoc} />;
