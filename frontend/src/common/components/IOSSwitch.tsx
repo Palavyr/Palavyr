@@ -1,12 +1,6 @@
 import * as React from 'react';
 import { makeStyles, Switch, SwitchProps } from '@material-ui/core';
 
-
-
-
-
-
-
 const useStyles = makeStyles(theme => ({
     root: {
         width: 42,
@@ -14,6 +8,8 @@ const useStyles = makeStyles(theme => ({
         padding: 0,
         margin: theme.spacing(1),
     },
+
+
     switchBase: {
         padding: 1,
         '&$checked': {
