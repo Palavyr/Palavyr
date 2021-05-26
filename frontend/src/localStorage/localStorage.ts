@@ -1,4 +1,6 @@
 export const x = () => null;
+
+
 // class LocalStorageAccess {
 //     private AuthString: string = "authenticated";
 //     private SessionString: string = "sessionId";
