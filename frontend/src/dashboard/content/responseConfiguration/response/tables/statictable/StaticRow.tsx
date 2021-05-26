@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles, TextField, Switch, Button, TableRow, TableCell } from "@material-ui/core";
+import { makeStyles, TextField, Button, TableRow, TableCell } from "@material-ui/core";
 import { StaticTableMetas } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./staticTableModifier";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -12,7 +12,6 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import RemoveIcon from "@material-ui/icons/Remove";
 import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 
 type styleProp = {
     index: number;

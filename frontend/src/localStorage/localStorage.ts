@@ -1,4 +1,6 @@
 export const x = () => null;
+
+
 // class LocalStorageAccess {
 //     private AuthString: string = "authenticated";
 //     private SessionString: string = "sessionId";
@@ -16,7 +18,12 @@ export const x = () => null;
 //         sessionStorage.setItem(key, converted);
 //     }
 
-//     private _getItem(key: string) {
+
+
+
+//     private _getItem(key: string) {sss
+
+
 //         return sessionStorage.getItem(key);
 //     }
 
