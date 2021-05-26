@@ -6,9 +6,9 @@ interface FadeProps {
     in: boolean;
     onEnter?: () => {};
     onExited?: () => {};
+
+
 }
-
-
 
 
 
