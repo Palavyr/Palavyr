@@ -9,8 +9,6 @@ interface FadeProps {
 }
 
 
-
-
 const InnerFade = (props: FadeProps, ref: ((instance: HTMLDivElement | null) => void) | React.RefObject<HTMLDivElement> | null | undefined) => {
     const { in: open, children, onEnter, onExited, ...other } = props;
 
