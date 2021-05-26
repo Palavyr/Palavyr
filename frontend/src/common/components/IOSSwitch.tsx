@@ -27,6 +27,8 @@ const useStyles = makeStyles(theme => ({
         },
     },
     thumb: {
+
+
         width: 24,
         height: 24,
     },
