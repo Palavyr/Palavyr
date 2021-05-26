@@ -27,13 +27,18 @@ $migrator = ".\\Palavyr.Data.Migrator";
 $integrationTests = ".\\Palavyr.IntegrationTests"
 
 Write-Host "`r`nSetting Secrets for AWS Credentials for $awsProfile"
-$prof = Get-AWSCredential $awsProfile;
+$prof = (Get-AWSCredential $awsProfile);
+
+Write-Host "NEXT";
+Write-Host $prof
+
 $credentials = $prof.GetCredentials();
 $accessKey = $credentials.AccessKey;
 $secretKey = $credentials.SecretKey;
 $region = 'us-east-1'
 Write-Host $accessKey;
 Write-Host $secretKey;
+
 
 function WriteDatabaseSecrets($projectPath) {
     Write-Host "`r`nSetting Connection Strings`r`n"
