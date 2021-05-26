@@ -25,18 +25,10 @@ const useStyles = makeStyles(theme => ({
             color: '#52d869',
             border: '6px solid #fff',
         },
-
-
     },
     thumb: {
-
-
         width: 24,
         height: 24,
-
-
-
-
     },
     track: {
         borderRadius: 26 / 2,
