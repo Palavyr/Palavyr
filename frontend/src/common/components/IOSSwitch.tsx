@@ -33,6 +33,10 @@ const useStyles = makeStyles(theme => ({
 
         width: 24,
         height: 24,
+
+
+
+
     },
     track: {
         borderRadius: 26 / 2,
