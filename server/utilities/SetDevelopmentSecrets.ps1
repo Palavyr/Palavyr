@@ -1,4 +1,4 @@
-param([string]$pass = "0987654321", [string]$user = "postgres", [string]$awsProfile = "palavyr")
+param([string]$pass = "0987654321", [string]$user = "postgres", [string]$awsProfile = "palavyr", [string] $secretKey = "", [string] $accessKey = "", [string] $region = "")
 
 ### sets the secret password used to connect to the postgres DB in DEV.
 
@@ -10,8 +10,6 @@ param([string]$pass = "0987654321", [string]$user = "postgres", [string]$awsProf
 ## locally, these are located at something like: %APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json
 ## https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-5.0&tabs=windows
 
-Get-Module -Name AWSPowerShell.NetCore
-Import-Module AWSPowerShell.NetCore
 
 
 Write-Host "Powershell version: $PSVersionTable.PSVersion";
@@ -26,14 +24,18 @@ $migrator = Join-Path -Path $serverPath -ChildPath "Palavyr.Data.Migrator";
 $integrationTests = Join-Path -Path $serverPath -ChildPath "Palavyr.IntegrationTests";
 
 Write-Host "`r`nSetting Secrets for AWS Credentials for $awsProfile"
-$credentials = (Get-AWSCredential $awsProfile).GetCredentials();
 
-$accessKey = $credentials.AccessKey;
-$secretKey = $credentials.SecretKey;
-$region = 'us-east-1'
-Write-Host $accessKey;
-Write-Host $secretKey;
-
+if ($secretkey -eq "" -and $accessKey -eq "") {
+    Get-Module -Name AWSPowerShell.NetCore
+    Import-Module AWSPowerShell.NetCore
+    Write-Host "Setting AWS secrets Automagically"
+    $credentials = (Get-AWSCredential $awsProfile).GetCredentials();
+    $accessKey = $credentials.AccessKey;
+    $secretKey = $credentials.SecretKey;
+}
+if ($region -eq "") {
+    $region = 'us-east-1'
+}
 
 function WriteDatabaseSecrets($projectPath) {
     Write-Host "`r`nSetting Connection Strings`r`n"
