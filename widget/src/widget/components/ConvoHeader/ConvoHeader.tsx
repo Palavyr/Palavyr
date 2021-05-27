@@ -34,6 +34,9 @@ const useStyles = makeStyles({
         top: "5px",
         height: "2rem",
         width: "2rem",
+        "&:hover": {
+            cursor: "pointer"
+        }
     },
     headerBehavior: {
         wordWrap: "break-word",
