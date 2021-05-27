@@ -1,6 +1,7 @@
 import { Card, makeStyles } from "@material-ui/core";
 import React from "react";
 import SettingsIcon from "@material-ui/icons/Settings";
+import FaceIcon from '@material-ui/icons/Face';
 
 import "./style.scss";
 import { getWidgetPreferences, openUserDetails } from "@store-dispatcher";
@@ -48,7 +49,7 @@ export const ConvoHeader = ({ preferences, titleAvatar }: ConvoHeaderProps) => {
     const cls = useStyles(preferences);
     return (
         <Card className={cls.header}>
-            <SettingsIcon className={cls.settingsIcon} onClick={openUserDetails} />
+            <FaceIcon className={cls.settingsIcon} onClick={openUserDetails} />
             {titleAvatar && <img src={titleAvatar} className="avatar" alt="profile" />}
             <div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: preferences.chatHeader }} />
         </Card>
