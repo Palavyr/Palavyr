@@ -1,13 +1,21 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { makeStyles, TableCell, TableRow, Typography } from "@material-ui/core";
 import { AreasEnabled } from "@Palavyr-Types";
+import classNames from "classnames";
 import React, { useEffect, useState } from "react";
 import { OsTypeToggle } from "./OsTypeToggle";
+
+type styleProps = {
+    isEnabled: boolean;
+};
 
 const useStyles = makeStyles((theme) => ({
     center: {
         textAlign: "left",
     },
+    row: (props: styleProps) => ({
+        backgroundColor: props.isEnabled ? theme.palette.success.light : theme.palette.primary.light,
+    }),
 }));
 
 export interface EnableAreaRowProps {
@@ -17,9 +25,9 @@ export interface EnableAreaRowProps {
 
 export const EnableAreaRow = ({ areasEnabled, rowNumber }: EnableAreaRowProps) => {
     const repository = new PalavyrRepository();
-    const cls = useStyles();
-
     const [isEnabled, setIsEnabled] = useState<boolean | null>(null);
+
+    const cls = useStyles({ isEnabled });
 
     const onToggleChange = async () => {
         const updatedIsEnabled = await repository.Area.UpdateIsEnabled(!isEnabled, areasEnabled.areaId);
@@ -31,7 +39,7 @@ export const EnableAreaRow = ({ areasEnabled, rowNumber }: EnableAreaRowProps) =
     }, []);
 
     return (
-        <TableRow className={cls.center}>
+        <TableRow className={classNames(cls.center, cls.row)}>
             <TableCell className={cls.center}>
                 <Typography variant="body2">{rowNumber}</Typography>
             </TableCell>

@@ -8,12 +8,24 @@ import { WidgetPreferences, GlobalState } from "@Palavyr-Types";
 import { _markAllMessagesRead, _setBadgeCount } from "store/actions/actions";
 import { scrollToBottom } from "widget/utils/messages";
 import { getComponentToRender } from "componentRegistry/getComponentToRender";
+import { BrandingStrip } from "common/BrandingStrip";
+import { SpaceEvenly } from "common/SpaceEvenly";
+import { makeStyles } from "@material-ui/core";
 
 type Props = {
     showTimeStamp: boolean;
     profileAvatar?: string;
     preferences: WidgetPreferences;
 };
+
+const useStyles = makeStyles(theme => ({
+    spacer: {
+        height: "7%",
+        width: "100%",
+        backgroundColor: "#264B94",
+        color: "white"
+    },
+}));
 
 export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) => {
     const dispatch = useDispatch();
@@ -39,16 +51,22 @@ export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) =
     //     dispatch(hideAvatar(index));
     //   }
     // }
+    const cls = useStyles();
 
     return (
-        <div id="messages" className="rcw-messages-container" ref={messageRef} style={{ paddingBottom: "2rem" }}>
-            {messages?.map((message, index) => (
-                <div className="rcw-message" key={`${index}-${format(message.timestamp, "hh:mm")}`}>
-                    {profileAvatar /* && message.showAvatar*/ && <img src={profileAvatar} className="rcw-avatar" alt="profile" />}
-                    {getComponentToRender(message, preferences, showTimeStamp)}
-                </div>
-            ))}
-            {typing && <Loader typing={typing} />}
-        </div>
+        <>
+            <div id="messages" className="rcw-messages-container" ref={messageRef} style={{ paddingBottom: "2rem" }}>
+                {messages?.map((message, index) => (
+                    <div className="rcw-message" key={`${index}-${format(message.timestamp, "hh:mm")}`}>
+                        {profileAvatar /* && message.showAvatar*/ && <img src={profileAvatar} className="rcw-avatar" alt="profile" />}
+                        {getComponentToRender(message, preferences, showTimeStamp)}
+                    </div>
+                ))}
+                {typing && <Loader typing={typing} />}
+            </div>
+            <SpaceEvenly vertical classes={cls.spacer} center>
+                <BrandingStrip />
+            </SpaceEvenly>
+        </>
     );
 };

@@ -12,7 +12,7 @@ export interface ConvoHeaderProps {
     titleAvatar?: string;
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     header: (props: WidgetPreferences) => ({
         backgroundColor: props.headerColor,
         color: props.headerFontColor,
@@ -28,7 +28,8 @@ const useStyles = makeStyles({
         display: "flex",
         padding: "15px 0 25px",
     },
-    settingsIcon: {
+    settingsIcon: (props: WidgetPreferences) => ({
+        color: theme.palette.getContrastText(props.headerColor),
         position: "fixed",
         right: "5px",
         top: "5px",
@@ -37,16 +38,16 @@ const useStyles = makeStyles({
         "&:hover": {
             cursor: "pointer"
         }
-    },
+    }),
     headerBehavior: {
         wordWrap: "break-word",
         padding: "1rem",
         paddingBottom: "2rem",
         width: "100%",
         wordBreak: "normal",
-        minHeight: "18%",
+        minHeight: "10%",
     },
-});
+}));
 
 export const ConvoHeader = ({ preferences, titleAvatar }: ConvoHeaderProps) => {
     const cls = useStyles(preferences);
