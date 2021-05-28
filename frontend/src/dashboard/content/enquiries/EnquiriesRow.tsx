@@ -46,7 +46,7 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
 
     const [deleteIsWorking, setDeleteIsWorking] = useState<boolean>(false);
 
-    const { setIsLoading } = React.useContext(DashboardContext);
+    const { setIsLoading, setUnseenNotifications } = React.useContext(DashboardContext);
 
     const markAsSeen = async (conversationId: string) => {
         setIsLoading(true);
@@ -57,6 +57,8 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
     const toggleSeenValue = async (conversationId: string) => {
         setIsLoading(true);
         const enqs = await repository.Enquiries.updateEnquiry(conversationId);
+        const numUnseen = enqs.filter((x: EnquiryRow) => !x.seen).length;
+        setUnseenNotifications(numUnseen);
         setEnquiries(enqs);
         setIsLoading(false);
     };

@@ -6,7 +6,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep } from "lodash";
-import { AlertType, AreaNameDetails, Areas, AreaTable, PlanType, SnackbarPositions } from "@Palavyr-Types";
+import { AlertType, AreaNameDetails, Areas, AreaTable, EnquiryRow, PlanType, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DashboardHeader } from "./header/DashboardHeader";
 import { CircularProgress, makeStyles, Typography } from "@material-ui/core";
@@ -111,6 +111,8 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [snackPosition, setSnackPosition] = useState<SnackbarPositions>("br");
     const [accountTypeNeedsPassword, setAccountTypeNeedsPassword] = useState<boolean>(false);
 
+    const [unseenNotifications, setUnseenNotifications] = useState<number>(0);
+
     const loadAreas = useCallback(async () => {
         setDashboardAreasLoading(true);
         const repository = new PalavyrRepository();
@@ -132,6 +134,10 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
         const needsPassword = await repository.Settings.Account.CheckNeedsPassword();
         setAccountTypeNeedsPassword(needsPassword);
+
+        const enqs = await repository.Enquiries.getEnquiries();
+        const numUnseen = enqs.filter((x: EnquiryRow) => !x.seen).length;
+        setUnseenNotifications(numUnseen);
 
         if (areaIdentifier) {
             var currentView = areas.filter((x: AreaTable) => x.areaIdentifier === areaIdentifier).pop();
@@ -222,10 +228,12 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                 checkAreaCount,
                 areaName: currentViewName,
                 setViewName: setViewName,
+                unseenNotifications: unseenNotifications,
+                setUnseenNotifications: setUnseenNotifications,
             }}
         >
             <div className={cls.root}>
-                <DashboardHeader open={open} handleDrawerOpen={handleDrawerOpen} handleHelpDrawerOpen={handleHelpDrawerOpen} helpOpen={helpOpen} title={currentViewName} />
+                <DashboardHeader open={open} unseenNotifications={unseenNotifications} handleDrawerOpen={handleDrawerOpen} handleHelpDrawerOpen={handleHelpDrawerOpen} helpOpen={helpOpen} title={currentViewName} />
                 <Drawer
                     className={classNames(cls.menuDrawer)}
                     variant="persistent"

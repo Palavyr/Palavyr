@@ -2,6 +2,7 @@ import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { makeStyles, TableCell, TableRow, Typography } from "@material-ui/core";
 import { AreasEnabled } from "@Palavyr-Types";
 import classNames from "classnames";
+import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
 import React, { useEffect, useState } from "react";
 import { OsTypeToggle } from "./OsTypeToggle";
 
@@ -11,10 +12,16 @@ type styleProps = {
 
 const useStyles = makeStyles((theme) => ({
     center: {
+        textAlign: "center",
+    },
+    cell: {
         textAlign: "left",
+        // display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
     },
     row: (props: styleProps) => ({
-        backgroundColor: props.isEnabled ? theme.palette.success.light : theme.palette.primary.light,
+        backgroundColor: props.isEnabled ? theme.palette.success.light : theme.palette.error.light,
     }),
 }));
 
@@ -39,14 +46,14 @@ export const EnableAreaRow = ({ areasEnabled, rowNumber }: EnableAreaRowProps) =
     }, []);
 
     return (
-        <TableRow className={classNames(cls.center, cls.row)}>
-            <TableCell className={cls.center}>
+        <TableRow className={classNames(cls.row)}>
+            <TableCell className={cls.cell}>
                 <Typography variant="body2">{rowNumber}</Typography>
             </TableCell>
-            <TableCell className={cls.center}>
+            <TableCell className={cls.cell}>
                 <Typography variant="h6">{areasEnabled.areaName}</Typography>
             </TableCell>
-            <TableCell className={cls.center}>
+            <TableCell className={cls.cell}>
                 <OsTypeToggle controlledState={isEnabled === true} onChange={onToggleChange} enabledLabel="Area Enabled" disabledLabel="Area Disabled" />
             </TableCell>
         </TableRow>

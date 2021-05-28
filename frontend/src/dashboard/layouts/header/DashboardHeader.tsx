@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { AppBar, Toolbar, IconButton, Typography, makeStyles } from "@material-ui/core";
+import { AppBar, Toolbar, IconButton, Typography, makeStyles, Badge, Tooltip } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import classNames from "classnames";
 import HelpIcon from "@material-ui/icons/Help";
 import { Align } from "../positioning/Align";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import InfoIcon from "@material-ui/icons/Info";
+import { SpaceEvenly } from "../positioning/SpaceEvenly";
 
 const drawerWidth: number = 240;
 
@@ -14,6 +17,7 @@ interface DashboardHeaderProps {
     handleDrawerOpen: () => void;
     handleHelpDrawerOpen: () => void;
     title: string;
+    unseenNotifications: number;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -29,13 +33,14 @@ const useStyles = makeStyles((theme) => ({
         }),
     },
     toolbar: {
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        justifyContent: "space-between",
+        // width: "100%",
+        // height: "100%",
+        // display: "flex",
+        // flexGrow: 1,
+        // justifyContent: "space-between",
     },
 
-    helpIcon: {
+    icon: {
         borderRadius: "10px",
         marginRight: "2rem",
         paddingRIght: "5rem",
@@ -54,19 +59,11 @@ const useStyles = makeStyles((theme) => ({
     hide: {
         display: "none",
     },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    helpMenuButton: {
-        marginLeft: theme.spacing(5),
-        alignSelf: "right",
-        textAlign: "right",
-    },
     name: {
         color: theme.palette.success.main,
     },
     helpIconText: {
-        paddingRight: theme.spacing(3),
+        // paddingRight: theme.spacing(3),
     },
 }));
 
@@ -91,11 +88,13 @@ const routesToExclude = [
     "/dashboard/images",
 ];
 
-export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
+export const DashboardHeader = ({ unseenNotifications, open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
     const cls = useStyles();
     const [sized, setSized] = useState<boolean>(false);
     const handle = () => setSized(!sized);
     const location = useLocation();
+    const history = useHistory();
+
     useEffect(() => {
         window.addEventListener("resize", handle);
         return () => window.removeEventListener("resize", handle);
@@ -105,30 +104,49 @@ export const DashboardHeader = ({ open, handleDrawerOpen, title, handleHelpDrawe
         <AppBar position="absolute" className={classNames(cls.topbar, cls.appBar, { [cls.appBarShift]: open })}>
             <Toolbar className={cls.toolbar}>
                 <Align float="left">
-                    <IconButton color="inherit" aria-label="open drawer" onClick={handleDrawerOpen} edge="start" className={classNames(cls.menuButton, open && cls.hide)}>
+                    <IconButton color="inherit" aria-label="open drawer" onClick={handleDrawerOpen} edge="start" className={classNames(open && cls.hide)}>
                         <MenuIcon />
                     </IconButton>
                     <Typography className={cls.name} variant="h4">
                         Palavyr.com
                     </Typography>
                 </Align>
+                <div style={{ flexGrow: 1 }} />
                 <Align>
                     {title && (
-                        <Typography align="center" variant="h4">
-                            Current Area: {title}
-                        </Typography>
+                        <SpaceEvenly vertical>
+                            <Typography display="inline" align="center" variant="h6">
+                                Current Area:
+                            </Typography>
+                            <Typography display="inline" align="center" variant="h5">
+                                {title}
+                            </Typography>
+                        </SpaceEvenly>
                     )}
                 </Align>
-                {!routesToExclude.includes(location.pathname) && (
+                <div style={{ flexGrow: 1 }} />
+                <div style={{ display: "flex" }}>
                     <Align float="right">
-                        <IconButton color="inherit" aria-label="open help drawer" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(cls.helpIcon, cls.helpMenuButton, helpOpen && cls.hide)}>
-                            <Typography className={cls.helpIconText} variant="h5">
-                                Help
-                            </Typography>
-                            <HelpIcon />
-                        </IconButton>
+                        {!routesToExclude.includes(location.pathname) ? (
+                            <Tooltip title="Help about this page">
+                                <IconButton color="inherit" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(cls.icon, helpOpen && cls.hide)}>
+                                    <InfoIcon />
+                                </IconButton>
+                            </Tooltip>
+                        ) : (
+                            <div></div>
+                        )}
                     </Align>
-                )}
+                    <Align float="right">
+                        <Tooltip title="Unseen enquiries">
+                            <IconButton onClick={() => history.push("/dashboard/enquiries")} className={cls.icon} edge="start" color="inherit">
+                                <Badge badgeContent={unseenNotifications} color="secondary">
+                                    <NotificationsIcon />
+                                </Badge>
+                            </IconButton>
+                        </Tooltip>
+                    </Align>
+                </div>
             </Toolbar>
         </AppBar>
     );

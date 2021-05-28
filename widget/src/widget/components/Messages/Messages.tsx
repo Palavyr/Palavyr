@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import format from "date-fns/format";
-import "./styles.scss";
-
+import FaceIcon from "@material-ui/icons/Face";
 import { Loader } from "./components/Loader/Loader";
 import { WidgetPreferences, GlobalState } from "@Palavyr-Types";
 import { _markAllMessagesRead, _setBadgeCount } from "store/actions/actions";
@@ -11,6 +10,8 @@ import { getComponentToRender } from "componentRegistry/getComponentToRender";
 import { BrandingStrip } from "common/BrandingStrip";
 import { SpaceEvenly } from "common/SpaceEvenly";
 import { makeStyles } from "@material-ui/core";
+
+import "./styles.scss";
 
 type Props = {
     showTimeStamp: boolean;
@@ -23,8 +24,11 @@ const useStyles = makeStyles(theme => ({
         height: "7%",
         width: "100%",
         backgroundColor: "#264B94",
-        color: "white"
+        color: "white",
     },
+    face: {
+        height: "4rem"
+    }
 }));
 
 export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) => {
@@ -58,7 +62,8 @@ export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) =
             <div id="messages" className="rcw-messages-container" ref={messageRef} style={{ paddingBottom: "2rem" }}>
                 {messages?.map((message, index) => (
                     <div className="rcw-message" key={`${index}-${format(message.timestamp, "hh:mm")}`}>
-                        {profileAvatar /* && message.showAvatar*/ && <img src={profileAvatar} className="rcw-avatar" alt="profile" />}
+                        {/* {profileAvatar  && message.showAvatar && <img src={profileAvatar} className="rcw-avatar" alt="profile" />} */}
+                        {/* <FaceIcon className={cls.face} /> */}
                         {getComponentToRender(message, preferences, showTimeStamp)}
                     </div>
                 ))}
