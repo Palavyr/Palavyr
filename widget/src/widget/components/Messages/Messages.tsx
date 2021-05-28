@@ -56,6 +56,8 @@ export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) =
     //     dispatch(hideAvatar(index));
     //   }
     // }
+
+
     const cls = useStyles();
 
     return (
