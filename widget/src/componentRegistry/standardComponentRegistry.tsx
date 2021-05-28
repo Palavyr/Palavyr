@@ -44,7 +44,16 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export class StandardComponents {
+export class ComponentRegisteryMethods {
+    MinNumeric: number = 0;
+
+    public parseNumericResponse(newValue: string): string {
+        const intValue = parseInt(newValue);
+        return intValue < this.MinNumeric ? this.MinNumeric.toString() : intValue.toString();
+    }
+}
+
+export class StandardComponents extends ComponentRegisteryMethods {
     public makeProvideInfo({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         const prefs = getWidgetPreferences();
@@ -69,7 +78,7 @@ export class StandardComponents {
         };
     }
 
-    makeMultipleChoiceContinueButtons({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    public makeMultipleChoiceContinueButtons({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0]; // only one should exist
         const valueOptions = splitValueOptionsByDelimiter(node.valueOptions);
         const prefs = getWidgetPreferences();
@@ -85,14 +94,14 @@ export class StandardComponents {
                             {node.text}
                         </Typography>
                     </SingleRowSingleCell>
-                    {valueOptions.map((valueOption: string) => {
+                    {valueOptions.map((valueOption: string, index: number) => {
                         return (
                             <TableRow>
                                 <TableCell className={cls.tableCell}>
                                     <ResponseButton
                                         prefs={prefs!}
                                         disabled={disabled}
-                                        key={valueOption + "-" + uuid()}
+                                        key={valueOption + "-" + index}
                                         text={valueOption}
                                         onClick={() => {
                                             const response = valueOption;
@@ -182,10 +191,7 @@ export class StandardComponents {
                                 label=""
                                 type="number"
                                 onChange={event => {
-                                    const intValue = parseInt(event.target.value);
-                                    if (!intValue) return;
-                                    if (intValue < 0) return;
-                                    setResponse(intValue.toString());
+                                    setResponse(this.parseNumericResponse(event.target.value));
                                     setDisabled(false);
                                 }}
                             />
@@ -382,7 +388,7 @@ export class StandardComponents {
                         <Typography variant="body1" className={cls.textField}>
                             {node.text}
                         </Typography>
-                    </SingleRowSingleCell>{" "}
+                    </SingleRowSingleCell>
                     <TableRow>
                         <TableCell className={cls.root}>
                             <TextField
@@ -400,8 +406,11 @@ export class StandardComponents {
                                     setDisabled(false);
                                     const intValue = parseInt(event.target.value);
                                     if (!intValue) return;
-                                    if (intValue < 0) return;
-                                    setResponse(intValue);
+                                    if (intValue < this.MinNumeric) {
+                                        setResponse(this.MinNumeric);
+                                    } else {
+                                        setResponse(intValue);
+                                    }
                                 }}
                             />
                         </TableCell>

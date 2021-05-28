@@ -6,12 +6,12 @@ import { AreasEnabled, AreaTable } from "@Palavyr-Types";
 import classNames from "classnames";
 import React, { useEffect, useState } from "react";
 import { useCallback } from "react";
-import theme from "theme";
 import { EnableAreaRow } from "./EnableAreaRow";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
     paper: {
         backgroundColor: theme.palette.secondary.light,
+        color: "black",
         padding: "2rem",
         margin: "2rem",
         width: "40%",
@@ -23,6 +23,9 @@ const useStyles = makeStyles(() => ({
     center: {
         textAlign: "center",
     },
+    header: {
+        backgroundColor: theme.palette.secondary.light,
+    }
 }));
 
 export const EnableAreas = () => {
@@ -52,7 +55,7 @@ export const EnableAreas = () => {
             <TableContainer className={cls.container}>
                 <Table component={Paper} className={cls.paper}>
                     <TableHead>
-                        <TableRow>
+                        <TableRow className={cls.header}>
                             <TableCell></TableCell>
                             <TableCell className={classNames(cls.center)}>
                                 <Typography variant="h4">Area Name</Typography>

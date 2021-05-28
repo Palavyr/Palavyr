@@ -1,7 +1,6 @@
 import React from "react";
 import { makeStyles, Paper } from "@material-ui/core";
 import { PricingCard } from "./PricingCard";
-import { PricingCardTableRow } from "./PricingCardTableRow";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import NotInterestedIcon from "@material-ui/icons/NotInterested";
 import { green, red } from "theme";

@@ -25,6 +25,8 @@ interface IDashboardContext {
     setErrorText: SetState<string>;
     setSnackPosition: SetState<SnackbarPositions>;
     snackPosition: SnackbarPositions;
+    unseenNotifications: number;
+    setUnseenNotifications: SetState<number>;
 }
 
 interface IAuthContext {
@@ -43,5 +45,5 @@ interface IConversationTreeContext {
 }
 
 export const AuthContext = React.createContext({ isActive: false, isAuthenticated: false } as IAuthContext);
-export const DashboardContext = React.createContext({ successOpen: false, warningOpen: false, errorOpen: false, successText: "Success", warningText: "Warning", errorText: "Error" } as IDashboardContext);
+export const DashboardContext = React.createContext({ unseenNotifications: 0, successOpen: false, warningOpen: false, errorOpen: false, successText: "Success", warningText: "Warning", errorText: "Error" } as IDashboardContext);
 export const ConversationTreeContext = React.createContext({} as IConversationTreeContext);

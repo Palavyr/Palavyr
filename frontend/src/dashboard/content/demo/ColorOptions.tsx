@@ -49,8 +49,8 @@ export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: 
         return [
             { name: "Chat Bubble Color", variable: widgetPreferences.chatBubbleColor, method: (chatBubbleColor: string) => setWidgetPreferences({ ...widgetPreferences, chatBubbleColor }), disable: true },
             { name: "Chat Bubble Font Color", variable: widgetPreferences.chatFontColor, method: (chatFontColor: string) => setWidgetPreferences({ ...widgetPreferences, chatFontColor }), disable: true },
-            { name: "Chat Button Color", variable: widgetPreferences.chatFontColor, method: (buttonColor: string) => setWidgetPreferences({ ...widgetPreferences, buttonColor }), disable: true },
-            { name: "Chat Button Font Color", variable: widgetPreferences.chatFontColor, method: (buttonFontColor: string) => setWidgetPreferences({ ...widgetPreferences, buttonFontColor }), disable: true },
+            { name: "Chat Button Color", variable: widgetPreferences.buttonColor, method: (buttonColor: string) => setWidgetPreferences({ ...widgetPreferences, buttonColor }), disable: true },
+            { name: "Chat Button Font Color", variable: widgetPreferences.buttonFontColor, method: (buttonFontColor: string) => setWidgetPreferences({ ...widgetPreferences, buttonFontColor }), disable: true },
         ];
     };
 

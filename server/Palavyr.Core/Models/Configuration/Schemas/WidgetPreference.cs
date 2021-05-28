@@ -34,7 +34,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public string ChatBubbleColor { get; set; }
 
         public string ButtonColor { get; set; }
-        
+
         public string ButtonFontColor { get; set; }
 
         public bool WidgetState { get; set; }
@@ -60,7 +60,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             string chatBubbleColor,
             string buttonColor,
             string buttonFontColor
-                )
+        )
         {
             HeaderFontColor = headerFontColor;
             ListFontColor = listFontColor;
@@ -102,13 +102,13 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             return new WidgetPreference(
                 headerFontColor, listFontColor, selectListColor, headerColor, fontFamily,
                 landingHeader, chatHeader, placeholder, accountId, widgetState,
-                 optionsHeaderColor,
-                 optionsHeaderFontColor,
-                 chatFontColor,
-                 chatBubbleColor,
-                 buttonColor,
-                 buttonFontColor
-                );
+                optionsHeaderColor,
+                optionsHeaderFontColor,
+                chatFontColor,
+                chatBubbleColor,
+                buttonColor,
+                buttonFontColor
+            );
         }
 
         public static WidgetPreference CreateDefault(string accountId)
@@ -130,21 +130,22 @@ namespace Palavyr.Core.Models.Configuration.Schemas
 
             return new WidgetPreference(
                 headerFontColor, listFontColor, selectListColor, headerColor, fontFamily, landingHeader, chatHeader,
-                placeholder, accountId, false, 
+                placeholder, accountId, false,
                 optionsHeaderColor,
                 optionsHeaderFontColor,
                 chatFontColor,
                 chatBubbleColor,
                 buttonColor,
                 buttonFontColor
-                );
+            );
         }
 
         public static WidgetPreference CreateEmpty(string accountId)
         {
             return new WidgetPreference(
                 null, null, null, null, null,
-                null, null, null, accountId, false, null, null, null, null, null, null);
+                null, null, null, accountId, false, null, null, null,
+                null, null, null);
         }
     }
 }
