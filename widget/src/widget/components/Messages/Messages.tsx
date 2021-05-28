@@ -48,6 +48,7 @@ export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) =
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [messages, badgeCount, showChat, typing]);
 
+    // Can make the avatar only appear on the message with the current index. So
     // TODO: Fix this function or change to move the avatar to last message from response
     // const shouldRenderAvatar = (message: Message, index: number) => {
     //   const previousMessage = messages[index - 1];
