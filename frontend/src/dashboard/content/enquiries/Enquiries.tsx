@@ -10,6 +10,7 @@ import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHea
 import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
 import { Align } from "dashboard/layouts/positioning/Align";
+import { OsTypeToggle } from "../responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -35,6 +36,7 @@ export const Enquires = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const { setIsLoading } = React.useContext(DashboardContext);
     const [deleteIsLoading, setDeleteIsLoading] = useState<boolean>(false);
+    const [showSeen, setShowSeen] = useState<boolean | null>(null);
 
     const deleteSelectedEnquiries = async (enquiries: Enquiries) => {
         setDeleteIsLoading(true);
@@ -49,6 +51,9 @@ export const Enquires = () => {
     };
 
     const loadEnquiries = useCallback(async () => {
+        const show = await repository.Enquiries.getShowSeenEnquiries();
+        setShowSeen(show);
+
         const enqs = await repository.Enquiries.getEnquiries();
         setEnquiries(enqs);
         setLoading(false);
@@ -70,14 +75,19 @@ export const Enquires = () => {
                 <Typography align="center" variant="h4">
                     There are no completed enquires yet.
                 </Typography>
-                ;
             </div>
         );
     };
     const anyEnquiriesSeen = enquiries.filter((x) => x.seen).length > 0;
+
+    const toggleShowSeen = async () => {
+        const result = await repository.Enquiries.toggleShowSeenEnquiries();
+        setShowSeen(result);
+    };
     return (
         <div className={cls.container}>
             <AreaConfigurationHeader title="Enquiries" subtitle="Review your recent enquiries. Use the 'History' link to view the conversation. Use the 'PDF' link to view the response PDF that was sent." />
+            {showSeen !== null && <OsTypeToggle controlledState={showSeen} onChange={toggleShowSeen} enabledLabel="Show Seen Enquiries" disabledLabel="Hide Seen Enquiries" />}
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -85,7 +95,13 @@ export const Enquires = () => {
                     </TableHead>
                     <TableBody>
                         {sortByPropertyNumeric(numberPropertyGetter, enquiries, true).map((enq: EnquiryRow, index: number) => {
-                            return <EnquiriesTableRow key={index} index={enquiries.length - (index + 1)} enquiry={enq} setEnquiries={setEnquiries} />;
+                            if (showSeen) {
+                                if (enq.seen) {
+                                    return <EnquiriesTableRow key={index} index={enquiries.length - (index + 1)} enquiry={enq} setEnquiries={setEnquiries} />;
+                                }
+                            } else {
+                                return <EnquiriesTableRow key={index} index={enquiries.length - (index + 1)} enquiry={enq} setEnquiries={setEnquiries} />;
+                            }
                         })}
                     </TableBody>
                 </Table>

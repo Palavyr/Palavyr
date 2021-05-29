@@ -30,6 +30,8 @@ namespace Palavyr.Core.Models.Accounts.Schemas
         public string? StripeCustomerId { get; set; }
         public DateTime CurrentPeriodEnd { get; set; }
 
+        public bool ShowSeenEnquiries { get; set; }
+
         [NotMapped] public readonly string DefaultLocale = "en-AU";
 
 

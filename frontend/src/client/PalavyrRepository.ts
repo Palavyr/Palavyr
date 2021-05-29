@@ -236,6 +236,10 @@ export class PalavyrRepository {
 
     public Enquiries = {
         getEnquiries: async () => this.client.get<Enquiries>(`enquiries`),
+
+        getShowSeenEnquiries: async () => this.client.get<boolean>(`enquiries/show`),
+        toggleShowSeenEnquiries: async () => this.client.put<boolean, {}>(`enquiries/toggle-show`),
+
         updateEnquiry: async (conversationId: string) => this.client.put<Enquiries, {}>(`enquiries/update/${conversationId}`),
         getConversation: async (conversationId: string) => this.client.get<CompletedConversation>(`enquiries/review/${conversationId}`),
         getSignedUrl: async (fileId: string) => this.client.get<string>(`enquiries/link/${fileId}`),
