@@ -4,13 +4,14 @@ using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
-using Palavyr.IntegrationTests.AppFactory.FixtureBase;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 
 namespace Palavyr.IntegrationTests.DataCreators
 {
     public static class CreateAccountBuilder
     {
-        public static DefaultAccountAndSessionBuilder CreateDefaultAccountAndSessionBuilder(this InMemoryIntegrationFixture test)
+        public static DefaultAccountAndSessionBuilder CreateDefaultAccountAndSessionBuilder(this BaseIntegrationFixture test)
         {
             return new DefaultAccountAndSessionBuilder(test);
         }
@@ -18,14 +19,14 @@ namespace Palavyr.IntegrationTests.DataCreators
 
     public class DefaultAccountAndSessionBuilder
     {
-        private readonly InMemoryIntegrationFixture test;
+        private readonly BaseIntegrationFixture test;
         private string? emailAddress;
         private string? password;
         private string? accountId;
         private AccountType? accountType;
         private string? apikey;
 
-        public DefaultAccountAndSessionBuilder(InMemoryIntegrationFixture test)
+        public DefaultAccountAndSessionBuilder(BaseIntegrationFixture test)
         {
             this.test = test;
         }

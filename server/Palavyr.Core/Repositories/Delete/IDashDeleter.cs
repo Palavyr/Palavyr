@@ -1,8 +1,10 @@
-﻿namespace Palavyr.Core.Repositories.Delete
+﻿using System.Threading.Tasks;
+
+namespace Palavyr.Core.Repositories.Delete
 {
     public interface IDashDeleter : IConfigurationRepository
     {
-        void DeleteAccount(string accountId);
+        Task DeleteAccount(string accountId);
         void DeleteAreasByAccount(string accountId);
         void DeleteConvoNodesByAccount(string accountId);
         void DeleteDynamicTableMetasByAccount(string accountId);

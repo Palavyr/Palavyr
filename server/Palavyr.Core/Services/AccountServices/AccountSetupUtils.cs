@@ -2,11 +2,17 @@
 
 namespace Palavyr.Core.Services.AccountServices
 {
-    public static class NewAccountUtils
+    public class NewAccountUtils : INewAccountUtils
     {
-        public static string GetNewAccountId()
+        private readonly IGuidUtils guidUtils;
+
+        public NewAccountUtils(IGuidUtils guidUtils)
         {
-            return GuidUtils.CreateShortenedGuid(2);
+            this.guidUtils = guidUtils;
+        }
+        public string GetNewAccountId()
+        {
+            return guidUtils.CreateShortenedGuid(2);
         }
     }
 }

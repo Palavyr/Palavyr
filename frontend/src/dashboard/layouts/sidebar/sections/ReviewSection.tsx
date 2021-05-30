@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { List, Collapse, makeStyles } from "@material-ui/core";
+import { List, Collapse, makeStyles, Badge } from "@material-ui/core";
 import InboxIcon from "@material-ui/icons/Inbox";
 import CompareIcon from "@material-ui/icons/Compare";
 import { DashboardContext } from "../../DashboardContext";
 import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
 import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
 import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
+import NotificationsIcon from "@material-ui/icons/Notifications";
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -20,7 +21,7 @@ export interface ReviewSectionProps {
 
 export const ReviewSection = ({ isActive }: ReviewSectionProps) => {
     const [reviewOpen, setReviewOpen] = useState<boolean>(true);
-    const { setViewName } = React.useContext(DashboardContext);
+    const { setViewName, unseenNotifications } = React.useContext(DashboardContext);
 
     const cls = useStyles();
     const history = useHistory();
@@ -44,7 +45,11 @@ export const ReviewSection = ({ isActive }: ReviewSectionProps) => {
         <List>
             <SidebarSectionHeader title="Review" onClick={() => setReviewOpen(!reviewOpen)} currentState={reviewOpen} />
             <Collapse in={reviewOpen} timeout="auto" unmountOnExit>
-                <SidebarLinkItem text="Check Enquiries" isActive={isActive} onClick={enquiriesOnClick} IconComponent={<InboxIcon className={cls.icon} />} />
+                <SidebarLinkItem text="Check Enquiries" isActive={isActive} onClick={enquiriesOnClick} IconComponent={<InboxIcon className={cls.icon} />}>
+                    <Badge showZero={false} badgeContent={unseenNotifications} color="secondary">
+                        <NotificationsIcon fontSize="small" />
+                    </Badge>
+                </SidebarLinkItem>
                 <SidebarLinkItem text="Chat Demo" isActive={isActive} onClick={chatDemoOnClick} IconComponent={<CompareIcon className={cls.icon} />} />
                 <SidebarLinkItem text="Uploads" isActive={isActive} onClick={imagesReviewOnClick} IconComponent={<PhotoLibraryIcon className={cls.icon} />} />
             </Collapse>

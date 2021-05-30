@@ -14,7 +14,7 @@ namespace Test.Common.Builders.Conversations.NodeAdders
             string accountId = DefaultConstants.AccountId
         )
         {
-            var newId = GuidUtils.CreateNewId();
+            var newId = StaticGuidUtils.CreateNewId();
             previousNode.AttachNewChildId(newId);
             var currentNode = ConversationNode.CreateNew(
                 newId,

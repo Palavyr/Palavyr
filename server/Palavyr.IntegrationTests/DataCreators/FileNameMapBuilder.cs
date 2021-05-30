@@ -2,7 +2,9 @@
 using System.Threading.Tasks;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.IntegrationTests.AppFactory.FixtureBase;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
+using Test.Common.Random;
 
 namespace Palavyr.IntegrationTests.DataCreators
 {

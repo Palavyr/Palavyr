@@ -32,14 +32,6 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.leavingScreen,
         }),
     },
-    toolbar: {
-        // width: "100%",
-        // height: "100%",
-        // display: "flex",
-        // flexGrow: 1,
-        // justifyContent: "space-between",
-    },
-
     icon: {
         borderRadius: "10px",
         marginRight: "2rem",
@@ -102,7 +94,7 @@ export const DashboardHeader = ({ unseenNotifications, open, handleDrawerOpen, t
 
     return (
         <AppBar position="absolute" className={classNames(cls.topbar, cls.appBar, { [cls.appBarShift]: open })}>
-            <Toolbar className={cls.toolbar}>
+            <Toolbar>
                 <Align float="left">
                     <IconButton color="inherit" aria-label="open drawer" onClick={handleDrawerOpen} edge="start" className={classNames(open && cls.hide)}>
                         <MenuIcon />

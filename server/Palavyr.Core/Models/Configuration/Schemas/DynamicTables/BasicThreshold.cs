@@ -61,7 +61,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                 AccountId = accountId,
                 AreaIdentifier = areaId,
                 TableId = tableId,
-                RowId = GuidUtils.CreateNewId()
+                RowId = StaticGuidUtils.CreateNewId()
             };
         }
 

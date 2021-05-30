@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Repositories;
@@ -31,16 +32,24 @@ namespace Palavyr.API.Controllers.Accounts
         }
 
         [HttpPost("configure-conversations/ensure-db-valid")]
-        public async Task<NoContentResult> Ensure([FromHeader] string accountId, CancellationToken cancellationToken)
+        public async Task<NoContentResult> Ensure(
+            [FromHeader]
+            string accountId,
+            CancellationToken cancellationToken)
         {
             var preferences = await configurationRepository.GetWidgetPreferences(accountId);
             var account = await accountRepository.GetAccount(accountId, cancellationToken);
 
-            if (string.IsNullOrWhiteSpace(account.StripeCustomerId))
+            if (string.IsNullOrWhiteSpace(account.StripeCustomerId) && account.Active)
             {
-                var newCustomer = await stripeCustomerService.CreateNewStripeCustomer(account.EmailAddress);
-                account.StripeCustomerId = newCustomer.Id;
-                await accountRepository.CommitChangesAsync();
+                Thread.Sleep(5000);
+
+                if (string.IsNullOrWhiteSpace(account.StripeCustomerId) && account.Active)
+                {
+                    var newCustomer = await stripeCustomerService.CreateNewStripeCustomer(account.EmailAddress, cancellationToken);
+                    account.StripeCustomerId = newCustomer.Id;
+                    await accountRepository.CommitChangesAsync();
+                }
             }
 
             if (string.IsNullOrWhiteSpace(preferences.ChatHeader))
@@ -62,7 +71,7 @@ namespace Palavyr.API.Controllers.Accounts
             {
                 preferences.ButtonFontColor = "#1F1F1F";
             }
-            
+
             if (string.IsNullOrWhiteSpace(preferences.ChatBubbleColor))
                 preferences.ChatBubbleColor = "#E1E1E1";
 

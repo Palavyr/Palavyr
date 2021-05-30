@@ -9,7 +9,7 @@ namespace Test.Common.Builders.Conversations.NodeAdders
     {
         public static SingleNodeReturnObject AddProvideInfo(this ConversationNode previousNode, string areaId = DefaultConstants.AreaIdentifier, string accountId = DefaultConstants.AccountId)
         {
-            var thisNodesId = GuidUtils.CreateNewId();
+            var thisNodesId = StaticGuidUtils.CreateNewId();
             previousNode.AttachNewChildId(thisNodesId);
 
             var provideInfo = ConversationNode.CreateNew(

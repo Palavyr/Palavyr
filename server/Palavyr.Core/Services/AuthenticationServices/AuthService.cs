@@ -125,7 +125,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
             }
         }
 
-        public async Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenId(string oneTimeCode)
+        public async Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenId(string? oneTimeCode)
         {
             try
             {

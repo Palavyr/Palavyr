@@ -1,50 +1,41 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SimpleEmail;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
 using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.EmailService.Verification;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-
     public class GetDefaultEmailController : PalavyrBaseController
     {
-        private const string Pending = "Pending";
-        private const string Success = "Success";
-        private const string Failed = "Failed";
-
-        private AccountsContext accountsContext;
-        private readonly EmailVerificationStatus emailVerificationStatus;
-        private ILogger<GetDefaultEmailController> logger;
-        private IAmazonSimpleEmailService client;
+        private readonly IEmailVerificationStatus emailVerificationStatus;
+        private readonly IAccountRepository accountRepository;
 
         public GetDefaultEmailController(
-            EmailVerificationStatus emailVerificationStatus,
-            IAmazonSimpleEmailService client,
-            AccountsContext accountsContext,
-            ILogger<GetDefaultEmailController> logger
+            IEmailVerificationStatus emailVerificationStatus,
+            IAccountRepository accountRepository
         )
         {
             this.emailVerificationStatus = emailVerificationStatus;
-            this.logger = logger;
-            this.accountsContext = accountsContext;
-            this.client = client;
+            this.accountRepository = accountRepository;
         }
 
         [HttpGet("account/settings/email")]
-        public async Task<AccountEmailSettingsResponse> Get([FromHeader] string accountId)
+        public async Task<AccountEmailSettingsResponse> Get(
+            [FromHeader] string accountId,
+            CancellationToken cancellationToken)
         {
-            var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
+            var account = await accountRepository.GetAccount(accountId, cancellationToken);
             if (string.IsNullOrWhiteSpace(account.EmailAddress)) throw new Exception($"Default email for account id {account.AccountId} not found. Account corruption.");
 
             var verificationResponse = await emailVerificationStatus.GetVerificationResponse(account.EmailAddress);
 
             account.DefaultEmailIsVerified = verificationResponse.IsVerified();
-            await accountsContext.SaveChangesAsync();
+            await accountRepository.CommitChangesAsync();
 
             return AccountEmailSettingsResponse.CreateNew(
                 account.EmailAddress,

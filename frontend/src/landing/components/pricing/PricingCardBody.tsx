@@ -3,24 +3,48 @@ import { PricingCardTableRow } from "./PricingCardTableRow";
 
 export interface PricingCardBody {
     response: string | React.ReactNode;
-    email: string | React.ReactNode;
-    area: string | React.ReactNode;
-    enquiries: string | React.ReactNode;
-    attachments: string | React.ReactNode;
-    table: string | React.ReactNode;
-    editor: string | React.ReactNode;
+    perAreaEmail: string | React.ReactNode;
+    enquiriesDashboard: string | React.ReactNode;
+    imageUpload: string | React.ReactNode;
+    emailNotifications: string | React.ReactNode;
+    inlineEmailEditor: string | React.ReactNode;
+    smsNotifications: string | React.ReactNode;
+    attachmentsPerArea: string | React.ReactNode;
+    staticFeeTables: string | React.ReactNode;
+    dynamicFeeTables: string | React.ReactNode;
+    numberOfAreas: string | React.ReactNode;
+    rowStyle?: {};
+    textStyle?: {};
 }
 
-export const PricingCardBody = ({ response, email, area, enquiries, attachments, table, editor }: PricingCardBody) => {
+export const PricingCardBody = ({
+    response,
+    perAreaEmail,
+    enquiriesDashboard,
+    imageUpload,
+    emailNotifications,
+    inlineEmailEditor,
+    smsNotifications,
+    attachmentsPerArea,
+    staticFeeTables,
+    dynamicFeeTables,
+    numberOfAreas,
+    rowStyle,
+    textStyle,
+}: PricingCardBody) => {
     return (
         <>
-            <PricingCardTableRow left="Areas" right={area} />
-            <PricingCardTableRow left="Static Fee Tables" right={table} />
-            <PricingCardTableRow left="PDF Response" right={response} />
-            <PricingCardTableRow left="Configurable Email" right={email} />
-            <PricingCardTableRow left="Inline Email Editor" right={editor} />
-            <PricingCardTableRow left="Enquiries Dashboard" right={enquiries} />
-            <PricingCardTableRow left="Attachments per Area" right={attachments} />
+            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="PDF Response" value={response} />
+            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Per Area Email" value={perAreaEmail} />
+            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Enquiries Dashboard" value={enquiriesDashboard} />
+            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Image Upload" value={imageUpload} />
+            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Email Notifications" value={emailNotifications} />
+            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Inline Email Editor" value={inlineEmailEditor} />
+            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="SMS Notifications" value={smsNotifications} />
+            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Attachments per Area" value={attachmentsPerArea} />
+            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Static Fee Tables" value={staticFeeTables} />
+            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Dynamic Fee Tables" value={dynamicFeeTables} />
+            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Number of Areas" value={numberOfAreas} />
         </>
     );
 };

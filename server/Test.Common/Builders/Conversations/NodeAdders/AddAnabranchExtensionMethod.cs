@@ -9,11 +9,11 @@ namespace Test.Common.Builders.Conversations.NodeAdders
     {
         public static MultiNodeReturnObject AddAnabranch(this ConversationNode previousNode, string[] options, string areaId = DefaultConstants.AreaIdentifier, string accountId = DefaultConstants.AccountId)
         {
-            var newId = GuidUtils.CreateNewId();
+            var newId = StaticGuidUtils.CreateNewId();
             previousNode.AttachNewChildId(newId);
 
             var anabranch = ConversationNode.CreateNew(
-                GuidUtils.CreateNewId(),
+                StaticGuidUtils.CreateNewId(),
                 DefaultNodeTypeOptions.Anabranch.StringName,
                 "",
                 areaId,

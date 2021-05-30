@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { SubscribeStepper } from "../purchse/SubscribeStepper";
 import { PurchaseTypes, ProductOptions, ProductOption, ProductIds, PlanStatus } from "@Palavyr-Types";
 import { PURCHASE_ROUTE } from "@constants";
-import { Premium, Pro } from "@landing/components/pricing/Cards";
+import { Lyte, Premium, Pro } from "@landing/components/pricing/Cards";
 import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
 import classnames from "classnames";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
@@ -71,13 +71,19 @@ export const Subscribe = () => {
 
     const orderedProductOptions: ProductOptions = [
         {
-            card: <Premium priceInfo={false} />,
+            card: <Lyte priceInfo={true} showYearly />,
+            purchaseType: PurchaseTypes.Premium,
+            productId: productList?.premiumProductId || null,
+            currentplan: currentPlan?.status === PurchaseTypes.Lyte,
+        },
+        {
+            card: <Premium priceInfo={true} showYearly />,
             purchaseType: PurchaseTypes.Premium,
             productId: productList?.premiumProductId || null,
             currentplan: currentPlan?.status === PurchaseTypes.Premium,
         },
         {
-            card: <Pro priceInfo={false} />,
+            card: <Pro priceInfo={true} showYearly />,
             purchaseType: PurchaseTypes.Pro,
             productId: productList?.proProductId || null,
             currentplan: currentPlan?.status === PurchaseTypes.Pro,
@@ -92,7 +98,7 @@ export const Subscribe = () => {
                 <div className={cls.body}>
                     <Grid container>
                         <Grid item xs={12}>
-                            <SpaceEvenly center >
+                            <SpaceEvenly center>
                                 {orderedProductOptions.map((product: ProductOption, key: number) => {
                                     return (
                                         <div onClick={() => (product.currentplan || currentPlan.hasUpgraded ? null : goToPurchase(product.purchaseType, product.productId))} className={classnames(cls.width, cls.card)}>

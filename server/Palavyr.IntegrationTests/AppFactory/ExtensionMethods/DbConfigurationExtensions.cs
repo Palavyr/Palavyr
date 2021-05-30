@@ -9,21 +9,42 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
 {
     public static class DbConfigurationExtensions
     {
-        public static void ConfigureRealPostgresTestDatabases(this IServiceCollection services)
+        public static void AddRealDatabaseContexts(this IServiceCollection services)
         {
-            var accountId = GuidUtils.CreateShortenedGuid(5);
-            var dashId = GuidUtils.CreateShortenedGuid(5);
-            var convoId = GuidUtils.CreateShortenedGuid(5);
+            var accountId = StaticGuidUtils.CreateShortenedGuid(5);
+            var dashId = StaticGuidUtils.CreateShortenedGuid(5);
+            var convoId = StaticGuidUtils.CreateShortenedGuid(5);
             services.AddDbContext<AccountsContext>(opt => { opt.UseNpgsql(IntegrationConstants.AccountDbConnString(accountId)); });
             services.AddDbContext<DashContext>(opt => { opt.UseNpgsql(IntegrationConstants.DashDbConnString(dashId)); });
             services.AddDbContext<ConvoContext>(opt => { opt.UseNpgsql(IntegrationConstants.ConvoDbConnString(convoId)); });
         }
 
+        public static void CreateDatabases(this IServiceCollection services)
+        {
+            var sp = ServiceCollectionContainerBuilderExtensions.BuildServiceProvider(services);
+            using var scope = sp.CreateScope();
+            var scopedServices = scope.ServiceProvider;
+
+            var accountContext = scopedServices.GetRequiredService<AccountsContext>();
+            var dashContext = scopedServices.GetRequiredService<DashContext>();
+            var convoContext = scopedServices.GetRequiredService<ConvoContext>();
+
+            accountContext.Database.EnsureCreated();
+            dashContext.Database.EnsureCreated();
+            convoContext.Database.EnsureCreated();
+
+            DbSetupAndTeardown.ResetDbs(accountContext, dashContext, convoContext);
+
+            accountContext.SaveChanges();
+            dashContext.SaveChanges();
+            convoContext.SaveChanges();
+        }
+
         public static void ConfigureInMemoryDatabases(this IServiceCollection services, InMemoryDatabaseRoot dbRoot)
         {
-            var accountDbName = "TestAccountDbInMemory-" + GuidUtils.CreateShortenedGuid(5);
-            var dashDbName = "TestDashDbInMemory-" + GuidUtils.CreateShortenedGuid(5);
-            var convoDbName = "TestConvoDbInMemory-" + GuidUtils.CreateShortenedGuid(5);
+            var accountDbName = "TestAccountDbInMemory-" + StaticGuidUtils.CreateShortenedGuid(5);
+            var dashDbName = "TestDashDbInMemory-" + StaticGuidUtils.CreateShortenedGuid(5);
+            var convoDbName = "TestConvoDbInMemory-" + StaticGuidUtils.CreateShortenedGuid(5);
             
             services.AddDbContext<AccountsContext>(opt => { opt.UseInMemoryDatabase(accountDbName, dbRoot); });
             services.AddDbContext<DashContext>(opt => { opt.UseInMemoryDatabase(dashDbName, dbRoot); });

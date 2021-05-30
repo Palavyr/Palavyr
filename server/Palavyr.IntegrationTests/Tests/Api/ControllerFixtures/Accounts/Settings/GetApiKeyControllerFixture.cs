@@ -2,17 +2,17 @@
 using Palavyr.API.Controllers.Accounts.Settings;
 using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.FixtureBase;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Settings
 {
-    public class GetApiKeyControllerFixture : DefaultInMemoryIntegrationFixture
+    public class GetApiKeyControllerFixture : DefaultRealDatabaseIntegrationFixture
     {
         private const string Route = GetApiKeyController.Uri;
 
-        public GetApiKeyControllerFixture(ITestOutputHelper testOutputHelper, InMemoryAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public GetApiKeyControllerFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
         }
 
@@ -28,23 +28,6 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Setting
         {
             var response = await Client.GetStringAsync(Route);
             Assert.Equal(response, IntegrationConstants.ApiKey);
-        }
-    }
-
-    public class ApiKeyFail : BareInMemoryIntegrationFixture
-    {
-        private const string Route = GetApiKeyController.Uri;
-
-        public ApiKeyFail(ITestOutputHelper testOutputHelper, InMemoryAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
-        {
-        }
-
-
-        [Fact]
-        public async Task GetApiKeyFails()
-        {
-            var response = await Client.GetStringAsync(Route);
-            Assert.Equal("No Api Key Found", response);
         }
     }
 }

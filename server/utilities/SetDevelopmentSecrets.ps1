@@ -1,4 +1,4 @@
-param([string]$pass = "0987654321", [string]$user = "postgres", [string]$awsProfile = "palavyr", [string] $secretKey = "", [string] $accessKey = "", [string] $region = "")
+param([string]$pass = "0987654321", [string]$user = "postgres", [string]$awsProfile = "palavyr", [string] $secretKey = "", [string] $accessKey = "", [string] $region = "", [string] $stripeKey = "")
 
 ### sets the secret password used to connect to the postgres DB in DEV.
 
@@ -76,8 +76,13 @@ WriteAWSSecrets($integrationTests);
 # dotnet user-secrets set JwtToken:Issuer "http://localhost:8080/" --project $api
 # dotnet user-secrets set JwtToken:SecretKey "tobySuperSecretKey" --project $api
 dotnet user-secrets set JWTSecretKey "SomeSecretKey345345345345ThatIsITagkhjasdhjsf" --project $api
+dotnet user-secrets set JWTSecretKey "SomeSecretKey345345345345ThatIsITagkhjasdhjsf" --project $integrationTests
 
 ### STRIPE
-$stripeKey = (Get-Item -Path Env:PalavyrStipeSecretKey).Value
+if ($stripeKey -eq "") {
+    $stripeKey = (Get-Item -Path Env:PalavyrStipeSecretKey).Value
+}
 dotnet user-secrets set Stripe:SecretKey $stripeKey --project $api
+dotnet user-secrets set Stripe:SecretKey $stripeKey --project $integrationTests
+
 # Clear-Host

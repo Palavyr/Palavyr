@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Test.Common.ExtensionsMethods;
+using Test.Common.Random;
 
 namespace Test.Common
 {

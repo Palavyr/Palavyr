@@ -436,7 +436,7 @@ export type FormStatusTypes =
     | typeof VERIFICATION_EMAIL_SEND
     | null;
 
-export type PlanType = "Free" | "Premium" | "Pro";
+export type PlanType = "Free" | "Lyte" | "Premium" | "Pro";
 
 export type PlanStatus = {
     status: PlanType;
@@ -445,6 +445,7 @@ export type PlanStatus = {
 
 export enum PurchaseTypes {
     Free = "Free",
+    Lyte = "Lyte",
     Premium = "Premium",
     Pro = "Pro",
 }
@@ -585,6 +586,7 @@ export type LocaleMap = LocaleMapItem[];
 
 export type ProductIds = {
     freeProductId: string;
+    lyteProductId: string;
     premiumProductId: string;
     proProductId: string;
 };

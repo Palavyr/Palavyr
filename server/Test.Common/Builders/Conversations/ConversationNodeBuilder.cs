@@ -20,7 +20,7 @@ namespace Test.Common.Builders.Conversations
             return new ConversationNode
             {
                 IsRoot = true,
-                NodeId = GuidUtils.CreateNewId(),
+                NodeId = StaticGuidUtils.CreateNewId(),
                 Text = "Root Node",
                 AreaIdentifier = areaIdentifier,
                 AccountId = accountId,

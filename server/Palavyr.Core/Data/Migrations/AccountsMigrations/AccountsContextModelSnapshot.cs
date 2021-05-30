@@ -84,6 +84,9 @@ namespace Palavyr.Core.Data.Migrations.AccountsMigrations
                     b.Property<int>("PlanType")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("ShowSeenEnquiries")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("StripeCustomerId")
                         .HasColumnType("text");
 

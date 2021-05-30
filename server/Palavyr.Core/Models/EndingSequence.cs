@@ -16,13 +16,13 @@ namespace Palavyr.Core.Models
 
         public static List<ConversationNode> AttachEndingSequenceToNodeList(List<ConversationNode> nodeList, string areaId, string accountId)
         {
-            var mayWeSendAnEmailId = GuidUtils.CreateNewId();
-            var sendEmailId = GuidUtils.CreateNewId();
-            var dontSendEmailRestartId = GuidUtils.CreateNewId();
-            var retrySendEmailSecondAttemptId = GuidUtils.CreateNewId();
-            var fallbackRetrySendEmailSecondAttemptId = GuidUtils.CreateNewId();
-            var sendTooComplicatedEmailId = GuidUtils.CreateNewId();
-            var mayWeSendAnEmailTooComplicatedId = GuidUtils.CreateNewId();
+            var mayWeSendAnEmailId = StaticGuidUtils.CreateNewId();
+            var sendEmailId = StaticGuidUtils.CreateNewId();
+            var dontSendEmailRestartId = StaticGuidUtils.CreateNewId();
+            var retrySendEmailSecondAttemptId = StaticGuidUtils.CreateNewId();
+            var fallbackRetrySendEmailSecondAttemptId = StaticGuidUtils.CreateNewId();
+            var sendTooComplicatedEmailId = StaticGuidUtils.CreateNewId();
+            var mayWeSendAnEmailTooComplicatedId = StaticGuidUtils.CreateNewId();
 
             var mayWeSendAnEmail = ConversationNode.CreateNew(
                 mayWeSendAnEmailId,
@@ -201,7 +201,7 @@ namespace Palavyr.Core.Models
             );
 
             var genericTooComplicated = ConversationNode.CreateNew(
-                GuidUtils.CreateNewId(),
+                StaticGuidUtils.CreateNewId(),
                 DefaultNodeTypeOptions.TooComplicated.StringName,
                 "We will need to discuss your situation in person.",
                 areaId,

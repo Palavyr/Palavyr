@@ -36,10 +36,10 @@ namespace Palavyr.API.Controllers.Enquiries
         }
 
 
-        public async Task DeleteEnquiry(string accountId, string fileReference, CancellationToken cancellationToken)
+        public async Task DeleteEnquiry(string accountId, string conversationId, CancellationToken cancellationToken)
         {
-            await DeleteFromS3(accountId, fileReference);
-            TrackDeleteFromDb(fileReference);
+            await DeleteFromS3(accountId, conversationId);
+            TrackDeleteFromDb(conversationId);
             await convoContext.SaveChangesAsync(cancellationToken);
         }
 
@@ -48,7 +48,6 @@ namespace Palavyr.API.Controllers.Enquiries
             foreach (var fileReference in fileReferences)
             {
                 await DeleteEnquiry(accountId, fileReference, cancellationToken);
-                TrackDeleteFromDb(fileReference);
             }
 
             await convoContext.SaveChangesAsync(cancellationToken);
@@ -66,9 +65,9 @@ namespace Palavyr.API.Controllers.Enquiries
             }
         }
 
-        public void TrackDeleteFromDb(string fileReference)
+        public void TrackDeleteFromDb(string conversationId)
         {
-            var rowsToDelete = convoContext.CompletedConversations.Where(x => x.ConversationId == fileReference);
+            var rowsToDelete = convoContext.CompletedConversations.Where(x => x.ConversationId == conversationId);
             convoContext.CompletedConversations.RemoveRange(rowsToDelete);
         }
     }

@@ -41,7 +41,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
 
         public static Image CreateImageRecord(string riskyName, IS3KeyResolver resolver, string accountId)
         {
-            var newImageId = GuidUtils.CreateNewId();
+            var newImageId = StaticGuidUtils.CreateNewId();
             var extension = Path.GetExtension(riskyName);
             var safeName = string.Join("", newImageId, extension.ToLowerInvariant());
             var s3Key = resolver.ResolveImageKey(accountId, safeName);
@@ -50,7 +50,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
 
         public static Image CreateImageUrlRecord(string url, string accountId)
         {
-            var newImageId = GuidUtils.CreateNewId();
+            var newImageId = StaticGuidUtils.CreateNewId();
             return new Image(newImageId, accountId, url);
         }
     }

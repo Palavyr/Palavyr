@@ -1,6 +1,7 @@
 ﻿using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Data;
-using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 
 namespace Palavyr.IntegrationTests.AppFactory
 {
@@ -8,23 +9,23 @@ namespace Palavyr.IntegrationTests.AppFactory
     {
 
 
-        // public static void DisposeDbsByReset(this PostgresOrmWebApplicationFactory factory)
-        // {
-        //     var services = factory.Services;
-        //     var accountContext = services.GetRequiredService<AccountsContext>();
-        //     var dashContext = services.GetRequiredService<DashContext>();
-        //     var convoContext = services.GetRequiredService<ConvoContext>();
-        //     ResetDbs(accountContext, dashContext, convoContext);
-        // }
-        //
-        // public static void DisposeByDelete(this PostgresOrmWebApplicationFactory factory)
-        // {
-        //     var services = factory.Services;
-        //     var accountContext = services.GetRequiredService<AccountsContext>();
-        //     var dashContext = services.GetRequiredService<DashContext>();
-        //     var convoContext = services.GetRequiredService<ConvoContext>();
-        //     DeleteDbs(accountContext, dashContext, convoContext);
-        // }
+        public static void DisposeDbsByReset(this RealDatabaseIntegrationFixture fixture)
+        {
+            var services = fixture.Factory.Services;
+            var accountContext = services.GetService<AccountsContext>();
+            var dashContext = services.GetService<DashContext>();
+            var convoContext = services.GetService<ConvoContext>();
+            ResetDbs(accountContext, dashContext, convoContext);
+        }
+        
+        public static void DisposeByDelete(this RealDatabaseIntegrationFixture fixture)
+        {
+            var services = fixture.Factory.Services;
+            var accountContext = services.GetService<AccountsContext>();
+            var dashContext = services.GetService<DashContext>();
+            var convoContext = services.GetService<ConvoContext>();
+            DeleteDbs(accountContext, dashContext, convoContext);
+        }
 
         public static void ResetDbs(AccountsContext accountContext, DashContext dashContext, ConvoContext convoContext)
         {

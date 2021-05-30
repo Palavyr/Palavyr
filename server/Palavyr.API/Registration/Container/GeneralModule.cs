@@ -37,7 +37,7 @@ namespace Palavyr.API.Registration.Container
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<EmailVerificationStatus>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<EmailVerificationStatus>().As<IEmailVerificationStatus>().InstancePerLifetimeScope();
             builder.RegisterType<LocaleDefinition>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<TestDataProvider>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<OrphanRemover>().AsSelf().InstancePerLifetimeScope();
@@ -105,6 +105,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<PdfServerClient>().As<IPdfServerClient>();
             builder.RegisterType<ImageSaver>().As<IImageSaver>();
             builder.RegisterType<ImageRemover>().As<IImageRemover>();
+            builder.RegisterType<NewAccountUtils>().As<INewAccountUtils>();
+            builder.RegisterType<GuidUtils>().As<IGuidUtils>();
         }
     }
 }

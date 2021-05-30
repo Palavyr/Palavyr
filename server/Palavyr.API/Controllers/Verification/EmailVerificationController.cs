@@ -11,12 +11,12 @@ namespace Palavyr.API.Controllers.Verification
     public class EmailVerificationController : PalavyrBaseController
     {
         private readonly IConfigurationRepository configurationRepository;
-        private readonly EmailVerificationStatus emailVerificationStatus;
+        private readonly IEmailVerificationStatus emailVerificationStatus;
         private ILogger<EmailVerificationController> logger;
 
         public EmailVerificationController(
             IConfigurationRepository configurationRepository,
-            EmailVerificationStatus emailVerificationStatus,
+            IEmailVerificationStatus emailVerificationStatus,
             ILogger<EmailVerificationController> logger
         )
         {
