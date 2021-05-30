@@ -72,8 +72,8 @@ export const Subscribe = () => {
     const orderedProductOptions: ProductOptions = [
         {
             card: <Lyte priceInfo={true} showYearly />,
-            purchaseType: PurchaseTypes.Premium,
-            productId: productList?.premiumProductId || null,
+            purchaseType: PurchaseTypes.Lyte,
+            productId: productList?.lyteProductId || null,
             currentplan: currentPlan?.status === PurchaseTypes.Lyte,
         },
         {

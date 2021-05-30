@@ -16,6 +16,10 @@ Refresh the server
     Invoke-WebRequest -URI https://localhost:5001/api/setup -Header  -Method Post
 ```
 
+## Running the Stripe CLI tool
+
+stripe listen --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify
+stripe trigger invoice.payment_succeeded
 
 ### Updating tools
 
