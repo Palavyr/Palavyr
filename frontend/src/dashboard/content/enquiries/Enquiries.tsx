@@ -42,7 +42,7 @@ export const Enquires = () => {
         setDeleteIsLoading(true);
         setIsLoading(true);
         const seenEnquiries = enquiries.filter((x: EnquiryRow) => x.seen);
-        const enqs = await repository.Enquiries.deleteSelectedEnquiries(seenEnquiries.map((x: EnquiryRow) => x.linkReference.fileReference));
+        const enqs = await repository.Enquiries.deleteSelectedEnquiries(seenEnquiries.map((x: EnquiryRow) => x.conversationId));
         setTimeout(() => {
             setEnquiries(enqs);
             setIsLoading(false);
@@ -69,11 +69,14 @@ export const Enquires = () => {
         loadEnquiries();
     }, [loadEnquiries]);
 
-    const NoDataAvailable = () => {
+    interface NoDataMessageProps {
+        text: string;
+    }
+    const NoDataAvailable = ({ text }: NoDataMessageProps) => {
         return (
             <div style={{ paddingTop: "3rem" }}>
                 <Typography align="center" variant="h4">
-                    There are no completed enquires yet.
+                    {text}
                 </Typography>
             </div>
         );
@@ -95,8 +98,8 @@ export const Enquires = () => {
                     </TableHead>
                     <TableBody>
                         {sortByPropertyNumeric(numberPropertyGetter, enquiries, true).map((enq: EnquiryRow, index: number) => {
-                            if (showSeen) {
-                                if (enq.seen) {
+                            if (!showSeen) {
+                                if (!enq.seen) {
                                     return <EnquiriesTableRow key={index} index={enquiries.length - (index + 1)} enquiry={enq} setEnquiries={setEnquiries} />;
                                 }
                             } else {
@@ -106,8 +109,13 @@ export const Enquires = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            {!loading && enquiries.length === 0 && <NoDataAvailable />}
-            {enquiries.length !== 0 && anyEnquiriesSeen && (
+            {!loading &&
+                (enquiries.length === 0 ? (
+                    <NoDataAvailable text="There are no completed enquires available." />
+                ) : (
+                    !showSeen && enquiries.filter((x: EnquiryRow) => x.seen === false).length === 0 && <NoDataAvailable text="There are no unseen enquiries." />
+                ))}
+            {enquiries.length !== 0 && anyEnquiriesSeen && showSeen && (
                 <Align float="right">
                     <ColoredButton classes={cls.delete} variant="outlined" color="primary" onClick={() => deleteSelectedEnquiries(enquiries)}>
                         Delete All Seen Enquiries

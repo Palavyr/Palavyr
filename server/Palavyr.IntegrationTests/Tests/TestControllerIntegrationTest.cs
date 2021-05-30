@@ -5,7 +5,8 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.FixtureBase;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -13,7 +14,7 @@ namespace Palavyr.IntegrationTests.Tests
 {
     public class TestControllerIntegrationTest : InMemoryIntegrationFixture
     {
-        public TestControllerIntegrationTest(ITestOutputHelper testOutputHelper, InMemoryAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public TestControllerIntegrationTest(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
         }
 

@@ -10,12 +10,12 @@ using Palavyr.API;
 
 namespace Palavyr.IntegrationTests.AppFactory.TestStartup
 {
-    public class InMemoryTestStartup : Startup
+    public class IntegrationTestStartup : Startup
     {
         private readonly IWebHostEnvironment env;
         private readonly IConfiguration configuration;
 
-        public InMemoryTestStartup(IWebHostEnvironment env, IConfiguration configuration) : base(env, configuration)
+        public IntegrationTestStartup(IWebHostEnvironment env, IConfiguration configuration) : base(env, configuration)
         {
             this.env = env;
             this.configuration = configuration;
@@ -23,7 +23,7 @@ namespace Palavyr.IntegrationTests.AppFactory.TestStartup
 
         public override void ConfigureContainer(ContainerBuilder builder)
         {
-            Console.WriteLine("CONFIGURE CONTAINER IN MEMORY STAERTUP");
+            Console.WriteLine("CONFIGURE CONTAINER IN MEMORY STARTUP");
             ContainerSetup(builder, configuration);
         }
 

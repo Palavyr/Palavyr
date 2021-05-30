@@ -37,7 +37,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
             var dynamicTables = area.DynamicTableMetas.ToList();
 
             var tableId = Guid.NewGuid().ToString();
-            var tableTag = "Default-" + GuidUtils.CreatePseudoRandomString(5);
+            var tableTag = "Default-" + StaticGuidUtils.CreatePseudoRandomString(5);
 
             var newTableMeta = DynamicTableMeta.CreateNew(
                 tableTag,

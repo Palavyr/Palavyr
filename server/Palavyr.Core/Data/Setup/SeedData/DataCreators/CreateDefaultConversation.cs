@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Constant;
@@ -15,12 +14,12 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
             string dynamicTableId
         )
         {
-            var node1Id = GuidUtils.CreateNewId(); // Do you love dogs?
-            var node2Id = GuidUtils.CreateNewId(); // No / Too Complicated
-            var node3Id = GuidUtils.CreateNewId(); // Yes / Do you love cavvies?
-            var node4Id = GuidUtils.CreateNewId(); // No / Too Complicated
-            var node5Id = GuidUtils.CreateNewId(); // Yes / What kind of Cavvy would you like?
-            var node6Id = GuidUtils.CreateNewId(); // SelectOneFlat
+            var node1Id = StaticGuidUtils.CreateNewId(); // Do you love dogs?
+            var node2Id = StaticGuidUtils.CreateNewId(); // No / Too Complicated
+            var node3Id = StaticGuidUtils.CreateNewId(); // Yes / Do you love cavvies?
+            var node4Id = StaticGuidUtils.CreateNewId(); // No / Too Complicated
+            var node5Id = StaticGuidUtils.CreateNewId(); // Yes / What kind of Cavvy would you like?
+            var node6Id = StaticGuidUtils.CreateNewId(); // SelectOneFlat
 
             return new List<ConversationNode>()
             {

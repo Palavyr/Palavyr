@@ -30,6 +30,7 @@ namespace Palavyr.Core.Services.AttachmentServices
         private readonly ILinkCreator linkCreator;
         private readonly ITemporaryPath temporaryPath;
         private readonly ILocalIo localIo;
+        private readonly IGuidUtils guidUtils;
 
         public AttachmentSaver(
             IS3Saver s3Saver,
@@ -39,7 +40,8 @@ namespace Palavyr.Core.Services.AttachmentServices
             DashContext dashContext,
             ILinkCreator linkCreator,
             ITemporaryPath temporaryPath,
-            ILocalIo localIo
+            ILocalIo localIo,
+            IGuidUtils guidUtils
         )
         {
             this.s3Saver = s3Saver;
@@ -50,12 +52,13 @@ namespace Palavyr.Core.Services.AttachmentServices
             this.linkCreator = linkCreator;
             this.temporaryPath = temporaryPath;
             this.localIo = localIo;
+            this.guidUtils = guidUtils;
         }
 
         public async Task<FileLink> SaveAttachment(string accountId, string areaId, IFormFile attachmentFile)
         {
             var userDataBucket = configuration.GetUserDataBucket();
-            var safeFileName = GuidUtils.CreateNewId();
+            var safeFileName = guidUtils.CreateNewId();
             var riskyFileName = attachmentFile.FileName;
             var s3AttachmentKey = s3KeyResolver.ResolveAttachmentKey(accountId, areaId, safeFileName);
 

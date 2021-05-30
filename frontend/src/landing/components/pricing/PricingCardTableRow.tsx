@@ -23,19 +23,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export interface PricingCarTableRowProps {
-    left: string;
-    right: string | React.ReactNode;
+    itemName: string;
+    value: string | React.ReactNode;
+    rowStyle?: {};
+    textStyle?: {};
 }
 
-export const PricingCardTableRow = ({ left, right }: PricingCarTableRowProps) => {
+export const PricingCardTableRow = ({ itemName, value, rowStyle, textStyle }: PricingCarTableRowProps) => {
     const cls = useStyles();
     return (
         <TableRow className={cls.tableRow}>
-            <TableCell classes={{ root: cls.tableRoot }} className={cls.tablecellLeft} align="left">
-                <Typography align="left">{left}</Typography>
+            <TableCell style={rowStyle} classes={{ root: cls.tableRoot }} className={cls.tablecellLeft} align="left">
+                <Typography style={textStyle} align="left">
+                    {itemName}
+                </Typography>
             </TableCell>
-            <TableCell classes={{ root: cls.tableRoot }} className={cls.tablecellRight} align="right">
-                <Typography>{right}</Typography>
+            <TableCell style={rowStyle} classes={{ root: cls.tableRoot }} className={cls.tablecellRight} align="right">
+                <Typography style={textStyle}>{value}</Typography>
             </TableCell>
         </TableRow>
     );

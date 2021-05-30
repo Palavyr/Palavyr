@@ -64,13 +64,13 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                 AccountId = accountId,
                 AreaIdentifier = areaIdentifier,
                 TableId = tableId,
-                ItemId = GuidUtils.CreateNewId(),
+                ItemId = StaticGuidUtils.CreateNewId(),
                 Category = "Default Category Text",
                 Threshold = 0.0,
                 ValueMax = 0.0,
                 ValueMin = 0.0,
                 Range = false,
-                RowId = GuidUtils.CreateNewId(),
+                RowId = StaticGuidUtils.CreateNewId(),
                 RowOrder = 0,
                 ItemOrder = 0
             };

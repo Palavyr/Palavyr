@@ -1,6 +1,7 @@
 import React from "react";
-import { makeStyles, Typography } from "@material-ui/core";
+import { Divider, makeStyles, Typography } from "@material-ui/core";
 import classNames from "classnames";
+import { DividerWithText } from "@common/components/DividerWithText";
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -24,9 +25,11 @@ export interface PricingCardHeaderProps {
     amount: string;
     per?: boolean;
     priceInfo?: boolean;
+    showYearly?: boolean;
+    yearlyAmount?: string;
 }
 
-export const PricingCardHeader = ({ icon, title, currency, amount, priceInfo = true, per = false }: PricingCardHeaderProps) => {
+export const PricingCardHeader = ({ icon, title, currency, amount, priceInfo = true, per = false, showYearly = false, yearlyAmount }: PricingCardHeaderProps) => {
     const cls = useStyles();
     return (
         <>
@@ -46,6 +49,24 @@ export const PricingCardHeader = ({ icon, title, currency, amount, priceInfo = t
                         <Typography className={cls.price} variant="h5">
                             / month
                         </Typography>
+                    )}
+                    <DividerWithText text="Or" />
+                    {showYearly && (
+                        <>
+                            <Typography className={classNames(cls.price, cls.money)} variant="h4">
+                                {currency}
+                            </Typography>
+                            <Typography display="block" variant="h4" className={classNames(cls.price, cls.money)}>
+                                {yearlyAmount}
+                            </Typography>
+                            {per && (
+                                <>
+                                    <Typography display="block" className={cls.price} variant="h5">
+                                        / year
+                                    </Typography>
+                                </>
+                            )}
+                        </>
                     )}
                 </>
             )}

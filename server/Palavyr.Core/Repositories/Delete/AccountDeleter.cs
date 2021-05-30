@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Sessions;
@@ -19,9 +20,10 @@ namespace Palavyr.Core.Repositories.Delete
             AccountsContext accountsContext,
             StripeCustomerService stripeCustomerService,
             IRemoveStaleSessions removeStaleSessions,
-            ILogger<AccountDeleter> logger
+            ILogger<AccountDeleter> logger,
+            IGuidUtils guidUtils
         )
-            : base(accountsContext, logger, removeStaleSessions)
+            : base(accountsContext, logger, removeStaleSessions, guidUtils)
         {
             this.accountsContext = accountsContext;
             this.stripeCustomerService = stripeCustomerService;

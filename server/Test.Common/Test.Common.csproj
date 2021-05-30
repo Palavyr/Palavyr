@@ -5,14 +5,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Palavyr.API\Palavyr.API.csproj"/>
-        <ProjectReference Include="..\Palavyr.Core\Palavyr.Core.csproj"/>
+        <ProjectReference Include="..\Palavyr.API\Palavyr.API.csproj" />
+        <ProjectReference Include="..\Palavyr.Core\Palavyr.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Shouldly" Version="4.0.3"/>
-        <PackageReference Include="xunit" Version="2.4.1"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.13"/>
+        <PackageReference Include="NSubstitute" Version="4.2.2" />
+        <PackageReference Include="Shouldly" Version="4.0.3" />
+        <PackageReference Include="xunit" Version="2.4.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.13" />
 
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
             <PrivateAssets>all</PrivateAssets>

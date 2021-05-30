@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Stripe;
 
@@ -6,16 +9,16 @@ namespace Palavyr.Core.Services.StripeServices
 {
     public class StripeCustomerService
     {
-        private bool IsTest => StripeConfiguration.ApiKey.Contains("test");
-        
+        private bool IsTest => StripeConfiguration.ApiKey.ToLowerInvariant().Contains("test");
+
         private CustomerService customerService;
-        
+
         public StripeCustomerService()
         {
             var stripeClient = new StripeClient(StripeConfiguration.ApiKey);
             this.customerService = new CustomerService(stripeClient);
         }
-        
+
         public async Task<Customer> UpdateStripeCustomerEmail(string emailAddress, string customerId)
         {
             var options = new CustomerUpdateOptions
@@ -30,7 +33,19 @@ namespace Palavyr.Core.Services.StripeServices
         {
             await customerService.DeleteAsync(stripeCustomerId);
         }
-        
+
+        public async Task DeleteStripeTestCustomerByEmailAddress(string emailAddress)
+        {
+            var customers = (await customerService.ListAsync(new CustomerListOptions() {Email = emailAddress})).ToList();
+            if (customers.Count != 1)
+            {
+                throw new StripeException("Multiple customers were found during testing with the same email address. Please generate random unique test emails in your tests");
+            }
+
+            var customer = customers.Single();
+            await customerService.DeleteAsync(customer.Id);
+        }
+
         public async Task DeleteStripeTestCustomers()
         {
             if (!IsTest)
@@ -56,6 +71,17 @@ namespace Palavyr.Core.Services.StripeServices
             };
             var customer = await customerService.CreateAsync(createOptions);
             return customer;
+        }
+        
+        public async Task<Customer> GetCustomerByCustomerId(string customerId, CancellationToken cancellationToken)
+        {
+            var customer = await customerService.GetAsync(customerId, cancellationToken: cancellationToken);
+            return customer;
+        }
+
+        public async Task<List<Customer>> ListCustomers(CancellationToken cancellationToken)
+        {
+            return (await customerService.ListAsync(cancellationToken: cancellationToken)).ToList();
         }
     }
 }

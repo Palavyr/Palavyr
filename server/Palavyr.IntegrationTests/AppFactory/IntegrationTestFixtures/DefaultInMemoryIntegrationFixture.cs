@@ -1,18 +1,19 @@
 ﻿using System.Threading.Tasks;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Palavyr.IntegrationTests.DataCreators;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Palavyr.IntegrationTests.AppFactory.FixtureBase
+namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures
 {
     public class DefaultInMemoryIntegrationFixture : InMemoryIntegrationFixture, IAsyncLifetime
     {
-        public DefaultInMemoryIntegrationFixture(ITestOutputHelper testOutputHelper, InMemoryAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public DefaultInMemoryIntegrationFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
         }
 
-        public async Task InitializeAsync()
+        public virtual async Task InitializeAsync()
         {
             await this
                 .CreateDefaultAccountAndSessionBuilder()
@@ -24,16 +25,9 @@ namespace Palavyr.IntegrationTests.AppFactory.FixtureBase
                 .Build();
         }
 
-        public Task DisposeAsync()
+        public virtual Task DisposeAsync()
         {
             return Task.CompletedTask;
-        }
-    }
-
-    public class BareInMemoryIntegrationFixture : InMemoryIntegrationFixture
-    {
-        public BareInMemoryIntegrationFixture(ITestOutputHelper testOutputHelper, InMemoryAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
-        {
         }
     }
 }

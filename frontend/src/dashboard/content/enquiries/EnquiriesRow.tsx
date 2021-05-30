@@ -11,6 +11,7 @@ import { useState } from "react";
 import { EnquiryTableRowCell } from "./EnquiriesTableRowCell";
 import { formatTimeStamp } from "./enquiriesUtils";
 import { EnquiryTimeStamp } from "./EnquiryTimeStamp";
+import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 
 export interface EnquiriesTableRowProps {
     enquiry: EnquiryRow;
@@ -82,10 +83,12 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
     const deleteEnquiryOnClick = async (enquiry: EnquiryRow) => {
         setIsLoading(true);
         setDeleteIsWorking(true);
-        const enquiries = await repository.Enquiries.deleteEnquiry(enquiry.linkReference.fileReference);
-        setEnquiries(enquiries);
-        setIsLoading(false);
-        setDeleteIsWorking(false);
+        setTimeout(async () => {
+            const enquiries = await repository.Enquiries.deleteSelectedEnquiries([enquiry.conversationId]);
+            setEnquiries(enquiries);
+            setIsLoading(false);
+            setDeleteIsWorking(false);
+        }, 1500);
     };
 
     const { formattedDate, formattedTime } = formatTimeStamp(enquiry.timeStamp);

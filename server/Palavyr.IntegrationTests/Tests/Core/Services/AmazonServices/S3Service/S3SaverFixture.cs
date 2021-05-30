@@ -3,14 +3,16 @@ using System.IO;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.FixtureBase;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
-using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Shouldly;
 using Test.Common.ExtensionsMethods;
+using Test.Common.Random;
 using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
@@ -23,7 +25,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
         private IS3Saver s3Saver;
         private string testUserDataBucket;
 
-        public S3SaverFixture(ITestOutputHelper testOutputHelper, InMemoryAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public S3SaverFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
         }
 
@@ -79,7 +81,8 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
             s3Retriever = Container.GetService<IS3Retriever>();
             s3KeyResolver = Container.GetService<IS3KeyResolver>();
             s3Deleter = Container.GetService<IS3Deleter>();
-            testUserDataBucket = TestConfigurationExtensionMethods.GetUserDataBucket(Configuration);
+            var config = Container.GetService<IConfiguration>();
+            testUserDataBucket = config.GetUserDataBucket();
             return Task.CompletedTask;
         }
 

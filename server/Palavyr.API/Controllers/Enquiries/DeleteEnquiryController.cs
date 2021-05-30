@@ -20,20 +20,6 @@ namespace Palavyr.API.Controllers.Enquiries
             this.completedConversationRetriever = completedConversationRetriever;
         }
 
-        [HttpDelete("enquiries/{fileId}")]
-        public async Task<Enquiry[]> Delete(
-            [FromHeader]
-            string accountId,
-            [FromRoute]
-            string fileId,
-            CancellationToken cancellationToken)
-        {
-            await enquiryDeleter.DeleteEnquiry(accountId, fileId, cancellationToken);
-
-            // get the new enquiry list and return it
-            return await completedConversationRetriever.RetrieveCompletedConversations(accountId);
-        }
-
         [HttpPut("enquiries/selected")]
         public async Task<Enquiry[]> DeleteSelected(
             [FromHeader] string accountId,

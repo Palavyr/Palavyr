@@ -10,9 +10,15 @@ namespace Palavyr.Core.Services.TemporaryPaths
 
     public class SafeFileNameCreator
     {
+        private readonly IGuidUtils guidUtils;
+
+        public SafeFileNameCreator(IGuidUtils guidUtils)
+        {
+            this.guidUtils = guidUtils;
+        }
         public SafeFileName CreateSafeFileName(ExtensionTypes extension = ExtensionTypes.Pdf)
         {
-            var fileStem = GuidUtils.CreateNewId();
+            var fileStem = guidUtils.CreateNewId();
             var fileName = string.Join(".", fileStem, extension.ToString().ToLowerInvariant());
             return new SafeFileName
             {

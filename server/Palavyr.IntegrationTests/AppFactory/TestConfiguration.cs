@@ -10,11 +10,11 @@ namespace Palavyr.IntegrationTests.AppFactory
         public static IConfiguration GetTestConfiguration()
         {
             var myConfiguration = new Dictionary<string, string>();
-            myConfiguration.Add(ApplicationConstants.ConfigSections.StripeKeySection, "TEST_stripeSecretKey");
-            myConfiguration.Add(ApplicationConstants.ConfigSections.JwtSecretKey, "SomeSecretKeyagasgasghery336356345345");
+            myConfiguration.Add(ApplicationConstants.ConfigSections.StripeKeySection, "stripe_secret_key_placeholder");
+            myConfiguration.Add(ApplicationConstants.ConfigSections.JwtSecretKey, "jwt_secret_key_section");
             myConfiguration.Add(ApplicationConstants.ConfigSections.PreviewSection, "test-palavyr-previews");
             myConfiguration.Add(ApplicationConstants.ConfigSections.UserDataSection, "test-palavyr-userdata");
-            myConfiguration.Add(ApplicationConstants.ConfigSections.LoggingSection, "");
+            myConfiguration.Add(ApplicationConstants.ConfigSections.LoggingSection, "logging_section");
 
 
             myConfiguration.Add(ApplicationConstants.ConfigSections.ConfigurationDbStringKey, "DashContextPostgres");
@@ -33,7 +33,7 @@ namespace Palavyr.IntegrationTests.AppFactory
 
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(myConfiguration)
-                .AddUserSecrets(assembly, true)
+                .AddUserSecrets(assembly, false)
                 .Build();
 
             return configuration;

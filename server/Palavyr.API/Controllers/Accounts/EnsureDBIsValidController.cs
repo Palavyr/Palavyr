@@ -36,7 +36,7 @@ namespace Palavyr.API.Controllers.Accounts
             var preferences = await configurationRepository.GetWidgetPreferences(accountId);
             var account = await accountRepository.GetAccount(accountId, cancellationToken);
 
-            if (string.IsNullOrWhiteSpace(account.StripeCustomerId))
+            if (string.IsNullOrWhiteSpace(account.StripeCustomerId) && account.Active)
             {
                 var newCustomer = await stripeCustomerService.CreateNewStripeCustomer(account.EmailAddress);
                 account.StripeCustomerId = newCustomer.Id;

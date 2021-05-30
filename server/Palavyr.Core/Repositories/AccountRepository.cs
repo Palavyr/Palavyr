@@ -16,12 +16,14 @@ namespace Palavyr.Core.Repositories
         private readonly AccountsContext accountsContext;
         private readonly ILogger<AccountRepository> logger;
         private readonly IRemoveStaleSessions removeStaleSessions;
+        private readonly IGuidUtils guidUtils;
 
-        public AccountRepository(AccountsContext accountsContext, ILogger<AccountRepository> logger, IRemoveStaleSessions removeStaleSessions)
+        public AccountRepository(AccountsContext accountsContext, ILogger<AccountRepository> logger, IRemoveStaleSessions removeStaleSessions, IGuidUtils guidUtils)
         {
             this.accountsContext = accountsContext;
             this.logger = logger;
             this.removeStaleSessions = removeStaleSessions;
+            this.guidUtils = guidUtils;
         }
 
         public async Task CommitChangesAsync()
@@ -64,7 +66,7 @@ namespace Palavyr.Core.Repositories
 
         public async Task<Session> CreateAndAddNewSession(Account account)
         {
-            var token = GuidUtils.CreateNewId();
+            var token = guidUtils.CreateNewId();
             var session = Session.CreateNew(token, account.AccountId, account.ApiKey);
             var newSession = await accountsContext.Sessions.AddAsync(session);
             await accountsContext.SaveChangesAsync();

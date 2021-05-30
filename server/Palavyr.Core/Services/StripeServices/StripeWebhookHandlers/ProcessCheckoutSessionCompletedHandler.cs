@@ -15,16 +15,19 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers
     public class ProcessStripeCheckoutSessionCompletedHandler : IProcessStripeCheckoutSessionCompletedHandler
     {
         private AccountsContext accountsContext;
+        private readonly IProductRegistry productRegistry;
         private ILogger<ProcessStripeCheckoutSessionCompletedHandler> logger;
         private StripeSubscriptionService stripeSubscriptionService;
 
         public ProcessStripeCheckoutSessionCompletedHandler(
             AccountsContext accountsContext,
+            IProductRegistry productRegistry,
             ILogger<ProcessStripeCheckoutSessionCompletedHandler> logger,
             StripeSubscriptionService stripeSubscriptionService
         )
         {
             this.accountsContext = accountsContext;
+            this.productRegistry = productRegistry;
             this.logger = logger;
             this.stripeSubscriptionService = stripeSubscriptionService;
         }
@@ -49,7 +52,7 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers
             var subscription = await stripeSubscriptionService.GetSubscription(session);
             var priceDetails = stripeSubscriptionService.GetPriceDetails(subscription);
             var productId = stripeSubscriptionService.GetProductId(priceDetails);
-            var planTypeEnum = ProductRegistry.GetPlanTypeEnum(productId);
+            var planTypeEnum = productRegistry.GetPlanTypeEnum(productId);
             var paymentInterval = stripeSubscriptionService.GetPaymentInterval(priceDetails);
             var paymentIntervalEnum = paymentInterval.GetPaymentIntervalEnum();
             var bufferedPeriodEnd = paymentIntervalEnum.AddEndTimeBuffer(subscription.CurrentPeriodEnd);

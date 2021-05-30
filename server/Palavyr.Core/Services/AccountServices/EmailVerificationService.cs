@@ -26,6 +26,7 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly ILogger<EmailVerificationService> logger;
         private readonly IRequestEmailVerification requestEmailVerification;
         private readonly ISesEmail emailClient;
+        private readonly IGuidUtils guidUtils;
         private StripeCustomerService stripeCustomerService;
 
         public EmailVerificationService(
@@ -33,7 +34,8 @@ namespace Palavyr.Core.Services.AccountServices
             ILogger<EmailVerificationService> logger,
             StripeCustomerService stripeCustomerService,
             IRequestEmailVerification requestEmailVerification,
-            ISesEmail emailClient
+            ISesEmail emailClient,
+            IGuidUtils guidUtils
         )
         {
             this.stripeCustomerService = stripeCustomerService;
@@ -41,6 +43,7 @@ namespace Palavyr.Core.Services.AccountServices
             this.logger = logger;
             this.requestEmailVerification = requestEmailVerification;
             this.emailClient = emailClient;
+            this.guidUtils = guidUtils;
         }
 
         public async Task<bool> ConfirmEmailAddressAsync(string authToken, CancellationToken cancellationToken)
@@ -65,6 +68,7 @@ namespace Palavyr.Core.Services.AccountServices
             }
 
             account.Active = true;
+
             accountsContext.EmailVerifications.Remove(emailVerification);
 
             logger.LogDebug("Verifying email address. Already verified using an authtoken, so this is okay");
@@ -87,7 +91,7 @@ namespace Palavyr.Core.Services.AccountServices
         {
             // prepare the account confirmation email
             logger.LogDebug("Provide an account setup confirmation token");
-            var confirmationToken = GuidUtils.CreateShortenedGuid(1);
+            var confirmationToken = guidUtils.CreateShortenedGuid(1);
             await accountsContext.EmailVerifications.AddAsync(EmailVerification.CreateNew(confirmationToken, emailAddress, accountId));
             await accountsContext.SaveChangesAsync(cancellationToken);
 

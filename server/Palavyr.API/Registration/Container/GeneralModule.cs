@@ -105,6 +105,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<PdfServerClient>().As<IPdfServerClient>();
             builder.RegisterType<ImageSaver>().As<IImageSaver>();
             builder.RegisterType<ImageRemover>().As<IImageRemover>();
+            builder.RegisterType<NewAccountUtils>().As<INewAccountUtils>();
+            builder.RegisterType<GuidUtils>().As<IGuidUtils>();
         }
     }
 }

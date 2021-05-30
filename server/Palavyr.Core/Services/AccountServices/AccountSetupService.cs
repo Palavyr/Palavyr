@@ -24,6 +24,7 @@ namespace Palavyr.Core.Services.AccountServices
     {
         private readonly DashContext dashContext;
         private readonly AccountsContext accountsContext;
+        private readonly INewAccountUtils newAccountUtils;
         private readonly ILogger<AuthService> logger;
         private readonly IAuthService authService;
         private readonly IJwtAuthenticationService jwtAuthService;
@@ -34,16 +35,18 @@ namespace Palavyr.Core.Services.AccountServices
         private const string EmailAddressNotFound = "Email Address Not Found";
 
         public AccountSetupService(
-            IAuthService authService,
             DashContext dashContext,
             AccountsContext accountsContext,
+            INewAccountUtils newAccountUtils,
             ILogger<AuthService> logger,
+            IAuthService authService,
             IJwtAuthenticationService jwtService,
             IEmailVerificationService emailVerificationService
         )
         {
             this.dashContext = dashContext;
             this.accountsContext = accountsContext;
+            this.newAccountUtils = newAccountUtils;
             this.logger = logger;
             this.authService = authService;
             jwtAuthService = jwtService;
@@ -71,7 +74,7 @@ namespace Palavyr.Core.Services.AccountServices
             }
 
             logger.LogDebug("Creating New Account Details...");
-            var accountId = NewAccountUtils.GetNewAccountId();
+            var accountId = newAccountUtils.GetNewAccountId();
             var apiKey = Guid.NewGuid().ToString();
             logger.LogDebug($"New Account Details--Account: {accountId}  -- apiKey: {apiKey}");
 
@@ -118,7 +121,7 @@ namespace Palavyr.Core.Services.AccountServices
 
             // Add the new account
             logger.LogDebug("Creating a new account");
-            var accountId = NewAccountUtils.GetNewAccountId();
+            var accountId = newAccountUtils.GetNewAccountId();
             var apiKey = Guid.NewGuid().ToString();
             var account = Account.CreateAccount(
                 newAccountDetails.EmailAddress,

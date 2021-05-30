@@ -7,7 +7,8 @@ using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AttachmentServices;
 using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.FixtureBase;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Palavyr.IntegrationTests.DataCreators;
 using Shouldly;
 using Xunit;
@@ -17,7 +18,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
 {
     public class WhenAttachmentLinksAreRetrieved : InMemoryIntegrationFixture
     {
-        public WhenAttachmentLinksAreRetrieved(ITestOutputHelper testOutputHelper, InMemoryAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public WhenAttachmentLinksAreRetrieved(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
         }
 

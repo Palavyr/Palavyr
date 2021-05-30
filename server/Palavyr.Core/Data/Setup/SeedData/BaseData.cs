@@ -21,8 +21,8 @@ namespace Palavyr.Core.Data.Setup.SeedData
 
         protected BaseSeedData(string accountId, string defaultEmail)
         {
-            var areaIdentifier = GuidUtils.CreateNewId();
-            var dynamicTableId = GuidUtils.CreateNewId();
+            var areaIdentifier = StaticGuidUtils.CreateNewId();
+            var dynamicTableId = StaticGuidUtils.CreateNewId();
 
             DefaultConversationNodes = CreateDefaultConversation.CreateDefault(accountId, areaIdentifier, dynamicTableId);
             DefaultDynamicTables = CreateDefaultDynamicTable.CreateDefaultTable(TableTag, accountId, areaIdentifier, dynamicTableId);

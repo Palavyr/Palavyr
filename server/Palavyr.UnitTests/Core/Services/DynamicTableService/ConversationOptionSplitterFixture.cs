@@ -47,7 +47,7 @@ namespace PalavyrServer.UnitTests.Core.Services.DynamicTableService
         [Fact]
         public void WhenAGuidIsRequested_AGuidIsReturned()
         {
-            var guid = GuidUtils.CreateNewId();
+            var guid = StaticGuidUtils.CreateNewId();
             var sut = "wow-" + guid;
             var result = splitter.GetTableIdFromDynamicNodeType(sut);
             

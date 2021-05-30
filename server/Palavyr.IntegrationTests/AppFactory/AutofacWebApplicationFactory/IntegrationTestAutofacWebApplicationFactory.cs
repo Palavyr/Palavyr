@@ -5,11 +5,11 @@ using Test.Common;
 
 namespace Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory
 {
-    public class InMemoryAutofacWebApplicationFactory : AutofacWebApplicationFactory, IIntegrationTestFixture
+    public class IntegrationTestAutofacWebApplicationFactory : AutofacWebApplicationFactory, IIntegrationTestFixture
     {
         protected override IHostBuilder CreateHostBuilder()
         {
-            return Host.CreateDefaultBuilder().ConfigureWebHostDefaults(x => x.UseStartup<InMemoryTestStartup>());
+            return Host.CreateDefaultBuilder().ConfigureWebHostDefaults(x => x.UseStartup<IntegrationTestStartup>());
         }
     }
 }

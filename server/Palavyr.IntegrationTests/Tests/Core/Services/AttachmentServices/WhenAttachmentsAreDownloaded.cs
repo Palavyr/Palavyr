@@ -6,7 +6,8 @@ using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.AttachmentServices;
 using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.FixtureBase;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Palavyr.IntegrationTests.DataCreators;
 using Shouldly;
 using Test.Common;
@@ -17,7 +18,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
 {
     public class WhenAttachmentsAreDownloaded : InMemoryIntegrationFixture, IAsyncLifetime
     {
-        public WhenAttachmentsAreDownloaded(ITestOutputHelper testOutputHelper, InMemoryAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public WhenAttachmentsAreDownloaded(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
         }
 

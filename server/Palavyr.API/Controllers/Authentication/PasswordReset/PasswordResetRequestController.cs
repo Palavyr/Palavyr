@@ -42,7 +42,7 @@ namespace Palavyr.API.Controllers.Authentication.PasswordReset
                 return new ResetEmailResponse("This account does use password sign-in.", false);
             }
 
-            var token = string.Join("-", new[] {GuidUtils.CreateNewId(), GuidUtils.CreateNewId(), GuidUtils.CreateNewId(), GuidUtils.CreateNewId()}).Replace("-", "");
+            var token = string.Join("-", new[] {StaticGuidUtils.CreateNewId(), StaticGuidUtils.CreateNewId(), StaticGuidUtils.CreateNewId(), StaticGuidUtils.CreateNewId()}).Replace("-", "");
             var accountId = account.AccountId;
             var apiKey = account.ApiKey;
 

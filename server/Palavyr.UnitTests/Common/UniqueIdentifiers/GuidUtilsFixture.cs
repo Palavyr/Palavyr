@@ -11,7 +11,7 @@ namespace PalavyrServer.UnitTests.Common.UniqueIdentifiers
         [Fact]
         public void WhenSingleGuidIsPresent_SingleGuidIsFound()
         {
-            var guid = GuidUtils.CreateNewId();
+            var guid = StaticGuidUtils.CreateNewId();
             var test = $"wow-thisisas-{guid}";
             this.GetGuidFinder().FindFirstGuidSuffix(test).ShouldBe(guid);
         }
@@ -19,8 +19,8 @@ namespace PalavyrServer.UnitTests.Common.UniqueIdentifiers
         [Fact]
         public void WhenMultipleGuidIsPresent_FirstGuidIsReturned()
         {
-            var guid = GuidUtils.CreateNewId();
-            var guidTwo = GuidUtils.CreateNewId();
+            var guid = StaticGuidUtils.CreateNewId();
+            var guidTwo = StaticGuidUtils.CreateNewId();
             var test = $"{guid}-wow-{guidTwo}";
             var result= this.GetGuidFinder().FindFirstGuidSuffix(test);
             result.ShouldBe(guid);
@@ -29,22 +29,22 @@ namespace PalavyrServer.UnitTests.Common.UniqueIdentifiers
         [Fact]
         public void WhenSingleGuidIsPresent_GuidIsRemoved()
         {
-            var test = $"wow-{GuidUtils.CreateNewId()}";
+            var test = $"wow-{StaticGuidUtils.CreateNewId()}";
             this.GetGuidFinder().RemoveGuid(test).ShouldBe("wow");
         }
 
         [Fact]
         public void WhenSingleGuidISPresent_AndNoSeparatorIsProvided_GuidShouldNotBeRemoved()
         {
-            var test = $"wow{GuidUtils.CreateNewId()}";
+            var test = $"wow{StaticGuidUtils.CreateNewId()}";
             this.GetGuidFinder().RemoveGuid(test).ShouldBe(test);
         }
 
         [Fact]
         public void WhenMultipleGuidIsPresent_FirstGuidIsRemoved()
         {
-            var guidOne = GuidUtils.CreateNewId();
-            var guidTwo = GuidUtils.CreateNewId();
+            var guidOne = StaticGuidUtils.CreateNewId();
+            var guidTwo = StaticGuidUtils.CreateNewId();
             
             var test = $"wow-{guidOne}-{guidTwo}";
             this.GetGuidFinder().RemoveGuid(test).ShouldBe($"wow-{guidTwo}");

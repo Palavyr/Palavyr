@@ -25,7 +25,7 @@ namespace Palavyr.Core.Models.Accounts.Schemas
         public string Locale { get; set; } = "en-AU";
         public AccountType AccountType { get; set; }
         public PlanTypeEnum PlanType { get; set; } = PlanTypeEnum.Free;
-        public PaymentIntervalEnum PaymentInterval { get; set; }
+        public PaymentIntervalEnum? PaymentInterval { get; set; }
         public bool HasUpgraded { get; set; }
         public string? StripeCustomerId { get; set; }
         public DateTime CurrentPeriodEnd { get; set; }
@@ -37,6 +37,7 @@ namespace Palavyr.Core.Models.Accounts.Schemas
 
         public class PlanTypes
         {
+            public const string Lyte = "Lyte";
             public const string Premium = "Premium";
             public const string Pro = "Pro";
         }
@@ -50,8 +51,9 @@ namespace Palavyr.Core.Models.Accounts.Schemas
         public enum PlanTypeEnum // ORDER IS CRITICAL. DO NOT CHANGE.
         {
             Free = 0,
-            Premium = 1,
-            Pro = 2
+            Lyte = 1,
+            Premium = 2,
+            Pro = 3
         }
 
         public enum PaymentIntervalEnum

@@ -11,7 +11,7 @@ namespace PalavyrServer.UnitTests.Core.Services.TemporaryPaths
         [Fact]
         public void WhenASafeFileNameIsCreated_PropertyAreSetCorrectly()
         {
-            var fileNameCreator = new SafeFileNameCreator();
+            var fileNameCreator = new SafeFileNameCreator(new GuidUtils());
             var guidFinder = new GuidFinder();
             
             var result = fileNameCreator.CreateSafeFileName();
@@ -25,7 +25,7 @@ namespace PalavyrServer.UnitTests.Core.Services.TemporaryPaths
         [Fact]
         public void WhenAnExtensionIsGiven_ItIsPlacedCorrectly()
         {
-            var fileNameCreator = new SafeFileNameCreator();
+            var fileNameCreator = new SafeFileNameCreator(new GuidUtils());
 
             var result = fileNameCreator.CreateSafeFileName(ExtensionTypes.Png);
             

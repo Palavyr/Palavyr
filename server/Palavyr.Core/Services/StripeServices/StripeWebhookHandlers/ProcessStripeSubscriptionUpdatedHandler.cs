@@ -10,16 +10,19 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers
     {
         private readonly AccountsContext accountsContext;
         private readonly StripeSubscriptionService stripeSubscriptionService;
+        private readonly IProductRegistry productRegistry;
         private readonly ILogger<ProcessStripeSubscriptionUpdatedHandler> logger;
 
         public ProcessStripeSubscriptionUpdatedHandler(
             AccountsContext accountsContext,
             StripeSubscriptionService stripeSubscriptionService,
+            IProductRegistry productRegistry,
             ILogger<ProcessStripeSubscriptionUpdatedHandler> logger
         )
         {
             this.accountsContext = accountsContext;
             this.stripeSubscriptionService = stripeSubscriptionService;
+            this.productRegistry = productRegistry;
             this.logger = logger;
         }
 
@@ -42,7 +45,7 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers
                 
                 // check the updated subscription type and apply
                 var productId = stripeSubscriptionService.GetProductId(priceDetails);
-                var planTypeEnum = ProductRegistry.GetPlanTypeEnum(productId);
+                var planTypeEnum = productRegistry.GetPlanTypeEnum(productId);
                 account.PlanType = planTypeEnum;
             }
 
