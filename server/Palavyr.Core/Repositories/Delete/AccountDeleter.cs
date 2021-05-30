@@ -36,21 +36,16 @@ namespace Palavyr.Core.Repositories.Delete
             DeleteEmailVerifications(accountId);
             DeleteSessionsByAccount(accountId);
             DeleteSubscriptionsByAccount(accountId);
+            await DeleteStripeIntegration(accountId, cancellationToken);
         }
 
         public async Task DeleteStripeIntegration(string accountId, CancellationToken cancellationToken)
         {
             var account = await GetAccount(accountId, cancellationToken);
-            if (account.StripeCustomerId == null)
+            if (!string.IsNullOrEmpty(account.StripeCustomerId))
             {
-                logger.LogCritical("A customer wished to be deleted, however their stripe customer ID was not found.");
-                throw new Exception("Stripe Customer ID not set in database");
+                await stripeCustomerService.DeleteSingleLiveStripeCustomer(account.StripeCustomerId);
             }
-
-            // Update Integrations
-            //Stripe
-            await stripeCustomerService.DeleteSingleLiveStripeCustomer(account.StripeCustomerId);
-            // AWS: Do Not Delete the email Address... TODO: Perhaps we should delete the email from aws ses on account delete
         }
 
         public async Task DeleteAccountRecord(string accountId, CancellationToken cancellationToken)

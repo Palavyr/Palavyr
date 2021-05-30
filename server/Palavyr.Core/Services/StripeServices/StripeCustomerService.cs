@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Palavyr.Core.Exceptions;
 using Stripe;
 
@@ -10,12 +11,14 @@ namespace Palavyr.Core.Services.StripeServices
 {
     public class StripeCustomerService
     {
+        private readonly ILogger<StripeCustomerService> logger;
         private bool IsTest => StripeConfiguration.ApiKey.ToLowerInvariant().Contains("test");
 
         private CustomerService customerService;
 
-        public StripeCustomerService()
+        public StripeCustomerService(ILogger<StripeCustomerService> logger)
         {
+            this.logger = logger;
             var stripeClient = new StripeClient(StripeConfiguration.ApiKey);
             this.customerService = new CustomerService(stripeClient);
         }
@@ -32,7 +35,14 @@ namespace Palavyr.Core.Services.StripeServices
 
         public async Task DeleteSingleLiveStripeCustomer(string stripeCustomerId)
         {
-            await customerService.DeleteAsync(stripeCustomerId);
+            try
+            {
+                await customerService.DeleteAsync(stripeCustomerId);
+            }
+            catch (StripeException stripeException)
+            {
+                throw new DomainException($"The stripe customer ID was not found in Stripe: {stripeCustomerId}. {stripeException.Message}");
+            }
         }
 
         public async Task DeleteStripeTestCustomerByEmailAddress(string emailAddress)

@@ -15,13 +15,13 @@ namespace Palavyr.API.Controllers.Areas
     {
         private readonly IConfigurationRepository configurationRepository;
         private readonly IAccountRepository accountRepository;
-        private readonly EmailVerificationStatus emailVerificationStatus;
+        private readonly IEmailVerificationStatus emailVerificationStatus;
         private ILogger<GetAreaByIdController> logger;
 
         public GetAreaByIdController(
             IConfigurationRepository configurationRepository,
             IAccountRepository accountRepository,
-            EmailVerificationStatus emailVerificationStatus,
+            IEmailVerificationStatus emailVerificationStatus,
             ILogger<GetAreaByIdController> logger
         )
         {

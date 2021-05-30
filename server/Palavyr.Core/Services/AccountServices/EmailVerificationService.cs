@@ -27,7 +27,7 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly IRequestEmailVerification requestEmailVerification;
         private readonly ISesEmail emailClient;
         private readonly IGuidUtils guidUtils;
-        private readonly EmailVerificationStatus emailVerificationStatus;
+        private readonly IEmailVerificationStatus emailVerificationStatus;
         private StripeCustomerService stripeCustomerService;
 
         public EmailVerificationService(
@@ -37,7 +37,7 @@ namespace Palavyr.Core.Services.AccountServices
             IRequestEmailVerification requestEmailVerification,
             ISesEmail emailClient,
             IGuidUtils guidUtils,
-            EmailVerificationStatus emailVerificationStatus
+            IEmailVerificationStatus emailVerificationStatus
         )
         {
             this.stripeCustomerService = stripeCustomerService;

@@ -6,7 +6,7 @@ using Amazon.SimpleEmail.Model;
 
 namespace Palavyr.Core.Services.EmailService.Verification
 {
-    public class EmailVerificationStatus
+    public class EmailVerificationStatus : IEmailVerificationStatus
     {
         private readonly IRequestEmailVerification requestEmailVerification;
         private readonly IAmazonSimpleEmailService emailClient;

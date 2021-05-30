@@ -9,11 +9,11 @@ namespace Palavyr.API.Controllers.Verification
 
     public class CheckEmailVerificationStatusController : PalavyrBaseController
     {
-        private readonly EmailVerificationStatus emailVerificationStatus;
+        private readonly IEmailVerificationStatus emailVerificationStatus;
         private ILogger<CheckEmailVerificationStatusController> logger;
 
         public CheckEmailVerificationStatusController(
-            EmailVerificationStatus emailVerificationStatus,
+            IEmailVerificationStatus emailVerificationStatus,
             ILogger<CheckEmailVerificationStatusController> logger)
         {
             this.emailVerificationStatus = emailVerificationStatus;

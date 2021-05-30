@@ -37,7 +37,7 @@ namespace Palavyr.API.Registration.Container
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<EmailVerificationStatus>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<EmailVerificationStatus>().As<IEmailVerificationStatus>().InstancePerLifetimeScope();
             builder.RegisterType<LocaleDefinition>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<TestDataProvider>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<OrphanRemover>().AsSelf().InstancePerLifetimeScope();
