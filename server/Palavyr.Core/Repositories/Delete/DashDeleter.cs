@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
@@ -28,13 +29,16 @@ namespace Palavyr.Core.Repositories.Delete
             this.logger = logger;
         }
 
-        public void DeleteAccount(string accountId)
+        public async Task DeleteAccount(string accountId)
         {
             var userDataBucket = configuration.GetUserDataBucket();
             try
             {
                 var s3Keys = dashContext.FileNameMaps.Where(x => x.AccountId == accountId).Select(x => x.S3Key).ToArray();
-                s3Deleter.DeleteObjectsFromS3Async(userDataBucket, s3Keys);
+                if (s3Keys.Length > 0)
+                {
+                    await s3Deleter.DeleteObjectsFromS3Async(userDataBucket, s3Keys);
+                }
             }
             catch (Exception)
             {
@@ -44,14 +48,17 @@ namespace Palavyr.Core.Repositories.Delete
             try
             {
                 var s3Keys = dashContext.Images.Where(x => x.AccountId == accountId).Select(x => x.S3Key).ToArray();
-                s3Deleter.DeleteObjectsFromS3Async(userDataBucket, s3Keys);
+                if (s3Keys.Length > 0)
+                {
+                    await s3Deleter.DeleteObjectsFromS3Async(userDataBucket, s3Keys);
+                }
             }
             catch (Exception)
             {
                 // ignore
             }
-            
-            
+
+
             DeleteAreasByAccount(accountId);
             DeleteConvoNodesByAccount(accountId);
             DeleteDynamicTableMetasByAccount(accountId);

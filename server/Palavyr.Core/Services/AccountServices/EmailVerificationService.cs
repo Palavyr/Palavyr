@@ -27,6 +27,7 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly IRequestEmailVerification requestEmailVerification;
         private readonly ISesEmail emailClient;
         private readonly IGuidUtils guidUtils;
+        private readonly EmailVerificationStatus emailVerificationStatus;
         private StripeCustomerService stripeCustomerService;
 
         public EmailVerificationService(
@@ -35,7 +36,8 @@ namespace Palavyr.Core.Services.AccountServices
             StripeCustomerService stripeCustomerService,
             IRequestEmailVerification requestEmailVerification,
             ISesEmail emailClient,
-            IGuidUtils guidUtils
+            IGuidUtils guidUtils,
+            EmailVerificationStatus emailVerificationStatus
         )
         {
             this.stripeCustomerService = stripeCustomerService;
@@ -44,6 +46,7 @@ namespace Palavyr.Core.Services.AccountServices
             this.requestEmailVerification = requestEmailVerification;
             this.emailClient = emailClient;
             this.guidUtils = guidUtils;
+            this.emailVerificationStatus = emailVerificationStatus;
         }
 
         public async Task<bool> ConfirmEmailAddressAsync(string authToken, CancellationToken cancellationToken)
@@ -72,11 +75,21 @@ namespace Palavyr.Core.Services.AccountServices
             accountsContext.EmailVerifications.Remove(emailVerification);
 
             logger.LogDebug("Verifying email address. Already verified using an authtoken, so this is okay");
-            var emailVerified = await requestEmailVerification.VerifyEmailAddressAsync(emailVerification.EmailAddress);
+
+            bool emailVerified;
+            var alreadyVerified = await emailVerificationStatus.CheckVerificationStatus(account.EmailAddress);
+            if (alreadyVerified)
+            {
+                emailVerified = true;
+            }
+            else
+            {
+                emailVerified = await requestEmailVerification.VerifyEmailAddressAsync(emailVerification.EmailAddress);
+            }
 
             if (emailVerified)
             {
-                var customer = await stripeCustomerService.CreateNewStripeCustomer(account.EmailAddress);
+                var customer = await stripeCustomerService.CreateNewStripeCustomer(account.EmailAddress, cancellationToken);
 
                 account.StripeCustomerId = customer.Id;
 

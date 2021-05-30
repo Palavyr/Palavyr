@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +39,7 @@ namespace Palavyr.API.Controllers.Accounts.Develop
 
         [AllowAnonymous]
         [HttpPut("setup/{devKey}")]
-        public async Task RefreshData(string devKey)
+        public async Task RefreshData(string devKey, CancellationToken cancellationToken)
         {
             await stripeCustomerService.DeleteStripeTestCustomers();
 
@@ -89,7 +90,7 @@ namespace Palavyr.API.Controllers.Accounts.Develop
             try
             {
                 logger.LogDebug("-----Attempting to populate with dev data...");
-                await PopulateDBs(devData);
+                await PopulateDBs(devData, cancellationToken);
             }
             catch (Exception ex)
             {
@@ -99,7 +100,7 @@ namespace Palavyr.API.Controllers.Accounts.Develop
             try
             {
                 logger.LogDebug("-----Attempting to populate with demo data...");
-                await PopulateDBs(demoData);
+                await PopulateDBs(demoData, cancellationToken);
             }
             catch (Exception ex)
             {
@@ -107,14 +108,14 @@ namespace Palavyr.API.Controllers.Accounts.Develop
             }
         }
 
-        private async Task PopulateDBs(DevDataHolder dh)
+        private async Task PopulateDBs(DevDataHolder dh, CancellationToken cancellationToken)
         {
             var devAccount = Account.CreateAccount(dh.UserName, dh.Email, dh.HashedPassword, dh.AccountId,
                 dh.ApiKey, dh.CompanyName, dh.PhoneNumber, dh.Active, dh.Locale, dh.AccountType);
             var subscription = Subscription.CreateNew(dh.AccountId, dh.ApiKey, ApplicationConstants.SubscriptionConstants.DefaultNumAreas);
             var data = new DevSeedData(dh.AccountId, dh.Email);    
 
-            var customer = await stripeCustomerService.CreateNewStripeCustomer(dh.Email);
+            var customer = await stripeCustomerService.CreateNewStripeCustomer(dh.Email, cancellationToken);
 
             devAccount.StripeCustomerId = customer.Id;
 

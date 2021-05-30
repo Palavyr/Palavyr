@@ -117,7 +117,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         setDashboardAreasLoading(true);
         const repository = new PalavyrRepository();
 
-        // todo: Deprecate this call in the future once we are confident
+        // todo: Deprecate this call in the future once we are confident that it is no longer needed...
         await repository.Conversations.EnsureDBIsValid();
 
         const numAllowedBySubscription = await repository.Settings.Subscriptions.getNumAreas();

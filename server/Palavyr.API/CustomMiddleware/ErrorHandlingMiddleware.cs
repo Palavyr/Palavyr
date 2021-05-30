@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.Exceptions;
+using Stripe;
 
 namespace Palavyr.API.CustomMiddleware
 {
@@ -33,6 +34,11 @@ namespace Palavyr.API.CustomMiddleware
             {
                 switch (ex)
                 {
+                    case StripeException stripeException:
+                        logger.LogInformation("Encountered an exception with Stripe");
+                        logger.LogError($"{stripeException.Message}");
+                        break;
+
                     case IOException ioException:
                         logger.LogInformation("File IO exception.");
                         logger.LogError($"{ioException.Message}");

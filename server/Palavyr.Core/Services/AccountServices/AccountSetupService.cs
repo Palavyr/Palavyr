@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.Data.Setup.SeedData;
+using Palavyr.Core.Exceptions;
 using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Requests.Registration;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Services.AuthenticationServices;
+using Palavyr.Core.Services.StripeServices;
 
 namespace Palavyr.Core.Services.AccountServices
 {
@@ -29,6 +31,7 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly IAuthService authService;
         private readonly IJwtAuthenticationService jwtAuthService;
         private readonly IEmailVerificationService emailVerificationService;
+        private readonly StripeCustomerService stripeCustomerService;
 
         private const string CouldNotValidateGoogleAuthToken = "Could not validate the Google Authentication token";
         private const string AccountAlreadyExists = "Account already exists";
@@ -41,7 +44,9 @@ namespace Palavyr.Core.Services.AccountServices
             ILogger<AuthService> logger,
             IAuthService authService,
             IJwtAuthenticationService jwtService,
-            IEmailVerificationService emailVerificationService
+            IEmailVerificationService emailVerificationService, 
+            StripeCustomerService stripeCustomerService
+
         )
         {
             this.dashContext = dashContext;
@@ -51,6 +56,7 @@ namespace Palavyr.Core.Services.AccountServices
             this.authService = authService;
             jwtAuthService = jwtService;
             this.emailVerificationService = emailVerificationService;
+            this.stripeCustomerService = stripeCustomerService;
         }
 
         public async Task<Credentials> CreateNewAccountViaGoogleAsync(GoogleRegistrationDetails googleRegistration, CancellationToken cancellationToken)
@@ -82,11 +88,17 @@ namespace Palavyr.Core.Services.AccountServices
             logger.LogDebug("Adding new account via GOOGLE...");
             await accountsContext.Accounts.AddAsync(account);
 
+            var existingCustomers = await stripeCustomerService.GetCustomerByEmailAddress(payload.Email, cancellationToken);
+            if (existingCustomers.Count() > 0)
+            {
+                throw new DomainException($"A customer with this email address already exists {payload.Email}.");
+            }
+            
             var ok = await RegisterAccount(accountId, apiKey, payload.Email, cancellationToken);
             logger.LogDebug("Send Email result was " + (ok ? "OK" : " a FAIL"));
 
             if (!ok) return Credentials.CreateUnauthenticatedResponse(EmailAddressNotFound);
-
+            
             var token = CreateNewJwtToken(account);
             var session = CreateNewSession(account);
             await accountsContext.Sessions.AddAsync(session);

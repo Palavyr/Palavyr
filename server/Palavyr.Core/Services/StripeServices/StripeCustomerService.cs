@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Palavyr.Core.Exceptions;
 using Stripe;
 
 namespace Palavyr.Core.Services.StripeServices
@@ -61,21 +62,37 @@ namespace Palavyr.Core.Services.StripeServices
             }
         }
 
-        public async Task<Customer> CreateNewStripeCustomer(string emailAddress)
+        public async Task<Customer> CreateNewStripeCustomer(string emailAddress, CancellationToken cancellationToken)
         {
-            var description = IsTest ? "testing" : "production";
+            var existing = await GetCustomerByEmailAddress(emailAddress, cancellationToken);
+            if (existing.Count() != 0)
+            {
+                throw new DomainException("Attempting to create a Stripe Customer using an email address that already exists in the Stripe Customer List");
+            }
+
             var createOptions = new CustomerCreateOptions
             {
-                Description = $"Customer automatically added for {description}.",
+                Description = $"Customer automatically added for {(IsTest ? "testing" : "production")}.",
                 Email = emailAddress
             };
             var customer = await customerService.CreateAsync(createOptions);
             return customer;
         }
-        
+
         public async Task<Customer> GetCustomerByCustomerId(string customerId, CancellationToken cancellationToken)
         {
             var customer = await customerService.GetAsync(customerId, cancellationToken: cancellationToken);
+            return customer;
+        }
+
+        public async Task<StripeList<Customer>> GetCustomerByEmailAddress(string emailAddress, CancellationToken cancellationToken)
+        {
+            var customer = await customerService.ListAsync(new CustomerListOptions() {Email = emailAddress});
+            if (customer.Count() > 1)
+            {
+                throw new DomainException("Multiple stripe customers with the same email address found. This is not currently allowed.");
+            }
+
             return customer;
         }
 
