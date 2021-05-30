@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
+import React from "react";
 import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 export interface SidebarLinkItemProps {
     text: string;
