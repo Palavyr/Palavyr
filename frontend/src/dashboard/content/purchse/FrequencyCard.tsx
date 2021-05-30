@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
         margin: "2rem",
         padding: "1rem",
         backgroundColor: theme.palette.primary.dark,
-        width: "100%",
+        width: "80%",
     },
     row: {
         textAlign: "center",

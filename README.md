@@ -236,4 +236,3 @@ https://docs.hangfire.io/en/latest/deployment-to-production/making-aspnet-app-al
 Products are stored in stripe. We currently keep the product ID in the frontend. Should put this in the server.
 METADATA: MUST BE SET
 
-Plantype: Premium/Pro

@@ -1,5 +1,5 @@
 import React from "react";
-import { Divider, makeStyles, Paper, Typography } from "@material-ui/core";
+import { makeStyles, Paper } from "@material-ui/core";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { useEffect } from "react";
 import { useCallback } from "react";
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
         height: "100%",
         marginTop: "2rem",
         marginBottom: "3rem",
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.success.light,
     },
 }));
 
@@ -47,7 +47,6 @@ const PurchaseInner = () => {
     const cls = useStyles();
     const [prices, setPrices] = useState<Prices>([]);
     const location = useLocation();
-    const [interval, setInterval] = useState<Interval>(Interval.yearly);
     const [priceMap, setPriceMap] = useState<PriceMap>({});
     const [priceId, setSelectedPriceId] = useState<string | number>("");
     const [currentPrice, setCurrentPrice] = useState<number>(0);
@@ -60,12 +59,6 @@ const PurchaseInner = () => {
     var successUrl = `${webUrl}/dashboard/subscribe/success?session_id={CHECKOUT_SESSION_ID}`;
     var cancelUrl = `${webUrl}/dashboard/subscribe/cancelled`;
 
-    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        const interval = event.target.value as Interval;
-        setInterval(interval);
-        const selectedPriceId = priceMap[interval];
-        setSelectedPriceId(selectedPriceId);
-    };
 
     const getProducts = useCallback(async () => {
         if (productId == null) return;
