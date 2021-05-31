@@ -21,7 +21,7 @@ export interface ReviewSectionProps {
 
 export const ReviewSection = ({ isActive }: ReviewSectionProps) => {
     const [reviewOpen, setReviewOpen] = useState<boolean>(true);
-    const { setViewName, unseenNotifications } = React.useContext(DashboardContext);
+    const { setViewName, unseenNotifications, planTypeMeta } = React.useContext(DashboardContext);
 
     const cls = useStyles();
     const history = useHistory();
@@ -51,7 +51,7 @@ export const ReviewSection = ({ isActive }: ReviewSectionProps) => {
                     </Badge>
                 </SidebarLinkItem>
                 <SidebarLinkItem text="Chat Demo" isActive={isActive} onClick={chatDemoOnClick} IconComponent={<CompareIcon className={cls.icon} />} />
-                <SidebarLinkItem text="Uploads" isActive={isActive} onClick={imagesReviewOnClick} IconComponent={<PhotoLibraryIcon className={cls.icon} />} />
+                <SidebarLinkItem disabled={planTypeMeta && !planTypeMeta.allowedImageUpload} text="Uploads" isActive={isActive} onClick={imagesReviewOnClick} IconComponent={<PhotoLibraryIcon className={cls.icon} />} />
             </Collapse>
         </List>
     );

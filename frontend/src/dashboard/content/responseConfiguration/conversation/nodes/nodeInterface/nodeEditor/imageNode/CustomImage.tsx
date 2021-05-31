@@ -1,3 +1,4 @@
+import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { CircularProgress, makeStyles, Typography } from "@material-ui/core";
 import { Variant } from "@material-ui/core/styles/createTypography";
 import { Align } from "dashboard/layouts/positioning/Align";
@@ -31,9 +32,9 @@ export const CustomImage = ({ imageName, imageLink, titleVariant = "h6" }: Custo
     return (
         <>
             <Typography variant={titleVariant} align="center">
-                Current Image: {imageName}
+                {!isLoading && isNullOrUndefinedOrWhitespace(imageLink) ?  "No Image" : `Current Image: ${imageName}`}
             </Typography>
-            {isLoading && (
+            {isLoading && imageLink && (
                 <Align>
                     <CircularProgress style={{ padding: ".5rem", margin: "1rem" }} />
                 </Align>

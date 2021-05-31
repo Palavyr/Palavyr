@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Conversation, NodeTypeOptions, TreeErrors } from "@Palavyr-Types";
+import { Conversation, NodeOption, NodeTypeOptions, PlanType, PlanTypeMeta, PurchaseTypes, TreeErrors } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { cloneDeep } from "lodash";
 import { ConversationNode } from "./nodes/ConversationNode";
@@ -37,7 +37,7 @@ export const ConvoTree = () => {
     const repository = new PalavyrRepository();
     const cls = useStyles();
 
-    const { setIsLoading } = React.useContext(DashboardContext);
+    const { setIsLoading, planTypeMeta } = React.useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const [, setLoaded] = useState<boolean>(false);
     const [nodeList, setNodes] = useState<Conversation>([]); // nodeList and state updater for the tree
@@ -57,19 +57,41 @@ export const ConvoTree = () => {
         setNodes(cloneDeep(nodeList));
     };
 
+    const filterNodeTypeOptionsOnSubscription = (nodeTypeOptions: NodeTypeOptions, planTypeMeta: PlanTypeMeta) => {
+        const excludeFromFree: string[] = ["ShowImage"];
+        const excludeFromLyte: string[] = ["ShowImage"];
+        const excludeFromPremium: string[] = [];
+
+        let filteredNodes = [...nodeTypeOptions];
+        if (planTypeMeta.planType === PurchaseTypes.Premium) {
+            filteredNodes = filteredNodes.filter((x: NodeOption) => !excludeFromPremium.includes(x.value));
+        }
+        if (planTypeMeta.planType === PurchaseTypes.Lyte) {
+            filteredNodes = filteredNodes.filter((x: NodeOption) => !excludeFromLyte.includes(x.value));
+        }
+
+        if (planTypeMeta.planType === PurchaseTypes.Free) {
+            filteredNodes = nodeTypeOptions.filter((x: NodeOption) => !excludeFromFree.includes(x.value));
+        }
+        return filteredNodes;
+    };
+
     const loadNodes = useCallback(async () => {
         const repository = new PalavyrRepository();
 
         const nodes = await repository.Conversations.GetConversation(areaIdentifier);
         const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier);
 
-        setNodeTypeOptions(nodeTypeOptions);
-        setNodes(cloneDeep(nodes));
-        setIsLoading(false);
-        setConversationHistory([cloneDeep(nodes)]);
+        if (planTypeMeta) {
+            const filteredTypeOptions = filterNodeTypeOptionsOnSubscription(nodeTypeOptions, planTypeMeta);
+            setNodeTypeOptions(filteredTypeOptions);
+            setNodes(cloneDeep(nodes));
+            setIsLoading(false);
+            setConversationHistory([cloneDeep(nodes)]);
+        }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [areaIdentifier]);
+    }, [areaIdentifier, planTypeMeta]);
 
     const onSave = async () => {
         const updatedConversation = await repository.Conversations.ModifyConversation(nodeList, areaIdentifier);

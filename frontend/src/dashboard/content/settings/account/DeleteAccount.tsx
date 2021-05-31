@@ -47,7 +47,7 @@ export const DeleteAccount = () => {
                         <AlertTitle className={cls.titleText}>
                             <Typography>Delete your account</Typography>
                         </AlertTitle>
-                        <p>Cancel your subscription and permanently delete your account.</p>{" "}
+                        <p>Cancel your subscription and permanently delete your account.</p>
                     </Alert>
                 }
             />

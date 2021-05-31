@@ -8,8 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
-using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Services.AccountServices;
+using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.TemporaryPaths;
@@ -28,18 +29,21 @@ namespace Palavyr.Core.Services.AttachmentServices
         private readonly IConfiguration configuration;
         private readonly ILinkCreator linkCreator;
         private readonly IS3Retriever s3Retriever;
+        private readonly IBusinessRules businessRules;
 
         public AttachmentRetriever(
             DashContext dashContext,
             IConfiguration configuration,
             ILinkCreator linkCreator,
-            IS3Retriever s3Retriever
+            IS3Retriever s3Retriever,
+            IBusinessRules businessRules
         )
         {
             this.dashContext = dashContext;
             this.configuration = configuration;
             this.linkCreator = linkCreator;
             this.s3Retriever = s3Retriever;
+            this.businessRules = businessRules;
         }
 
         public async Task<FileLink[]> RetrieveAttachmentLinks(string account, string areaId, CancellationToken cancellationToken)
@@ -66,7 +70,7 @@ namespace Palavyr.Core.Services.AttachmentServices
         }
 
 
-        public async Task<IHaveBeenDownloadedFromS3[]> RetrieveAttachmentFiles(string account, string areaId, S3SDownloadRequestMeta[]? additionalFiles, CancellationToken cancellationToken)
+        public async Task<IHaveBeenDownloadedFromS3[]> RetrieveAttachmentFiles(string accountId, string areaId, S3SDownloadRequestMeta[]? additionalFiles, CancellationToken cancellationToken)
         {
             var userDataBucket = configuration.GetUserDataBucket();
             var metas = await dashContext.FileNameMaps
@@ -89,7 +93,8 @@ namespace Palavyr.Core.Services.AttachmentServices
                 throw new AmazonS3Exception("Unable to download to server!");
             }
 
-            return localFilePaths;
+            var totalAttachmentsAllowed = await businessRules.GetAllowedAttachments(accountId, cancellationToken);
+            return localFilePaths.Take(totalAttachmentsAllowed).ToArray();
         }
     }
 }

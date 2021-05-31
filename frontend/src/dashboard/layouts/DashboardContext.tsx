@@ -1,14 +1,12 @@
-import { Conversation, NodeSetterWithHistory, NodeTypeOptions, PlanType, SetState, SnackbarPositions } from "@Palavyr-Types";
+import { Conversation, NodeSetterWithHistory, NodeTypeOptions, PlanType, PlanTypeMeta, SetState, SnackbarPositions } from "@Palavyr-Types";
 import { ConversationHistoryTracker } from "dashboard/content/responseConfiguration/conversation/nodes/ConversationHistoryTracker";
 import React from "react";
 
 interface IDashboardContext {
     accountTypeNeedsPassword: boolean;
-    numAreasAllowed: number;
     checkAreaCount(): void;
     areaName: string;
     setViewName: SetState<string>;
-    subscription: PlanType | undefined;
     currencySymbol: string;
     setIsLoading: SetState<boolean>;
     successText: string;
@@ -27,6 +25,7 @@ interface IDashboardContext {
     snackPosition: SnackbarPositions;
     unseenNotifications: number;
     setUnseenNotifications: SetState<number>;
+    planTypeMeta: PlanTypeMeta | undefined;
 }
 
 interface IAuthContext {

@@ -450,6 +450,22 @@ export enum PurchaseTypes {
     Pro = "Pro",
 }
 
+export type PlanTypeMeta = {
+    allowedAttachments: number;
+    allowedStaticTables: number;
+    allowedDynamicTables: number;
+    allowedAreas: number;
+
+    allowedImageUpload: boolean;
+    allowedEmailNotifications: boolean;
+    allowedInlineEmailEditor: boolean;
+    allowedSmsNotifications: boolean;
+
+    planType: PurchaseTypes;
+    isFreePlan: boolean;
+}
+
+
 export type ProductOption = {
     card: React.ReactNode;
     purchaseType: PurchaseTypes;

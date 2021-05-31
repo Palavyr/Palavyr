@@ -17,8 +17,6 @@ const useEmailStyles = makeStyles(() => ({
     },
 }));
 
-// export type ClientResponse<T> = Promise<AxiosResponse<T>>;
-
 export interface EmailConfigurationComponentProps {
     variableDetails: VariableDetail[];
     saveEmailTemplate: (emailTemplate: string) => Promise<string>;
@@ -28,7 +26,7 @@ export interface EmailConfigurationComponentProps {
 }
 
 export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate, saveEmailSubject, getCurrentEmailTemplate, getCurrentEmailSubject }: EmailConfigurationComponentProps) => {
-    const { setIsLoading, subscription, setSuccessOpen, setSuccessText } = useContext(DashboardContext);
+    const { setIsLoading, planTypeMeta, setSuccessOpen, setSuccessText } = useContext(DashboardContext);
     const cls = useEmailStyles();
 
     const fallbackFileReader = new FileReader();
@@ -112,7 +110,7 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
                 uploadDetails={<EditorDetails key={"Upload"} variableDetails={variableDetails} />}
                 acceptedFiles={["text/html", "text/plain"]}
             />
-            {subscription === PurchaseTypes.Premium || subscription === PurchaseTypes.Pro ? (
+            {planTypeMeta && planTypeMeta.allowedInlineEmailEditor ? (
                 <EmailEditor accordianTitle="Use an editor to craft your response email" uploadDetails={<EditorDetails key={"Editor"} variableDetails={variableDetails} />} setEmailTemplate={setEmailTemplate} emailTemplate={emailTemplate}>
                     <div className={cls.saveOrCancel}>
                         <SaveOrCancel onSave={saveEditorData} onCancel={loadTemplate} />

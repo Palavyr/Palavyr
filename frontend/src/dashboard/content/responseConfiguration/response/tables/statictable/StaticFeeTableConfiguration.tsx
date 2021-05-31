@@ -10,6 +10,8 @@ import { StaticFeeTable } from "./StaticFeeTable";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { useContext } from "react";
 
 interface IFeeConfiguration {
     title: string;
@@ -31,11 +33,19 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
         marginBottom: "1rem",
     },
+    addButton: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-end",
+        marginRight: "1.2rem",
+    },
 }));
 
 export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tableCanceler, modifier, areaIdentifier, children }: IFeeConfiguration) => {
     const repository = new PalavyrRepository();
     const cls = useStyles();
+
+    const { planTypeMeta } = useContext(DashboardContext);
 
     const actions = (
         <SaveOrCancel
@@ -53,6 +63,22 @@ export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tabl
         />
     );
 
+    const addTableButton =
+        planTypeMeta && staticTables.length >= planTypeMeta.allowedStaticTables ? (
+            <div className={cls.addButton}>
+                <Typography display="block">
+                    <strong>Upgrade your subscription to add more static tables</strong>
+                </Typography>
+                <Button disabled={true} startIcon={<AddBoxIcon />} variant="contained" size="large" color="primary" className={cls.tablebutton} onClick={() => modifier.addTable(staticTables, repository, areaIdentifier)}>
+                    <Typography>Add Table</Typography>
+                </Button>
+            </div>
+        ) : (
+            <Button startIcon={<AddBoxIcon />} variant="contained" size="large" color="primary" className={cls.tablebutton} onClick={() => modifier.addTable(staticTables, repository, areaIdentifier)}>
+                <Typography>Add Table</Typography>
+            </Button>
+        );
+
     return (
         <PalavyrAccordian title={title} initialState={true} actions={actions}>
             {children}
@@ -67,9 +93,10 @@ export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tabl
                     <StaticFeeTable staticTableMetas={staticTables} staticTableMeta={table} tableModifier={modifier} key={index} />
                 ))}
             <div className={cls.buttonContainer}>
-                <Button startIcon={<AddBoxIcon />} variant="contained" size="large" color="primary" className={cls.tablebutton} onClick={() => modifier.addTable(staticTables, repository, areaIdentifier)}>
+                {addTableButton}
+                {/* <Button startIcon={<AddBoxIcon />} variant="contained" size="large" color="primary" className={cls.tablebutton} onClick={() => modifier.addTable(staticTables, repository, areaIdentifier)}>
                     Add Table
-                </Button>
+                </Button> */}
             </div>
         </PalavyrAccordian>
     );

@@ -24,7 +24,7 @@ export interface ConfigureSectionProps {
 
 export const ConfigureSection = ({ isActive, currentPage, areaNameDetails }: ConfigureSectionProps) => {
     const [configureOpen, setConfigureOpen] = useState<boolean>(true);
-    const { checkAreaCount, setViewName, numAreasAllowed } = React.useContext(DashboardContext);
+    const { checkAreaCount, setViewName, planTypeMeta } = React.useContext(DashboardContext);
 
     const history = useHistory();
     const cls = useStyles();
@@ -38,9 +38,10 @@ export const ConfigureSection = ({ isActive, currentPage, areaNameDetails }: Con
         <List>
             <SidebarSectionHeader title="Configure" onClick={() => setConfigureOpen(!configureOpen)} currentState={configureOpen} />
             <Collapse in={configureOpen} timeout="auto" unmountOnExit>
-                {sortByPropertyAlphabetical((x: AreaNameDetail) => x.areaName, areaNameDetails).map((x: AreaNameDetail, index: number) => (
-                    <AreaLinkItem key={index} areaIdentifier={x.areaIdentifier} isActive={isActive} index={index} numAreasAllowed={numAreasAllowed} currentPage={currentPage} areaName={x.areaName} />
-                ))}
+                {sortByPropertyAlphabetical((x: AreaNameDetail) => x.areaName, areaNameDetails).map(
+                    (x: AreaNameDetail, index: number) =>
+                        planTypeMeta && <AreaLinkItem key={index} areaIdentifier={x.areaIdentifier} isActive={isActive} index={index} numAreasAllowed={planTypeMeta.allowedAreas} currentPage={currentPage} areaName={x.areaName} />
+                )}
                 <Divider />
                 <SidebarLinkItem text="Add New Area" isActive={isActive} onClick={checkAreaCount} IconComponent={<AddCircleOutlineIcon className={cls.icon} />} />
                 <SidebarLinkItem text="Enable / Disable Areas" isActive={isActive} onClick={enableAreasOnClick} IconComponent={<PowerSettingsNewIcon className={cls.icon} />} />

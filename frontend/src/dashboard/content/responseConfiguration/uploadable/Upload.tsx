@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, makeStyles } from "@material-ui/core";
+import { Button, makeStyles, Typography } from "@material-ui/core";
 import { DropzoneArea, DropzoneDialog, FileObject } from "material-ui-dropzone";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 import { getAnchorOrigin } from "@common/components/PalavyrSnackbar";
@@ -15,6 +15,7 @@ export interface IUploadAttachment {
     uploadDetails: JSX.Element;
     acceptedFiles: Array<string>;
     dropzoneType?: "dialog" | "area";
+    disableButton?: boolean;
 }
 
 export type FileUpload = Blob & {
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Upload = ({ dropzoneType = "dialog", initialState = false, modalState, toggleModal, handleFileSave, summary, buttonText, uploadDetails, acceptedFiles }: IUploadAttachment) => {
+export const Upload = ({ dropzoneType = "dialog", initialState = false, modalState, toggleModal, handleFileSave, summary, buttonText, uploadDetails, acceptedFiles, disableButton }: IUploadAttachment) => {
     const onSave = (rawFiles: File[], e: any) => {
         const files = rawFiles.filter((x: File) => !isNullOrUndefinedOrWhitespace(x));
         if (files.length === 0) return;
@@ -55,9 +56,16 @@ export const Upload = ({ dropzoneType = "dialog", initialState = false, modalSta
                 {uploadDetails}
                 <br></br>
                 {dropzoneType === "dialog" && (
-                    <Button onClick={toggleModal} variant="contained" color="primary">
-                        {buttonText}
-                    </Button>
+                    <>
+                        <Button onClick={toggleModal} variant="contained" color="primary" disabled={disableButton}>
+                            {buttonText}
+                        </Button>
+                        {disableButton && (
+                            <Typography display="block">
+                                <strong>Upgrade your subscription to enable uploads</strong>
+                            </Typography>
+                        )}
+                    </>
                 )}
             </div>
             {dropzoneType === "dialog" ? (

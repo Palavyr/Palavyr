@@ -6,7 +6,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep } from "lodash";
-import { AlertType, AreaNameDetails, Areas, AreaTable, EnquiryRow, PlanType, SnackbarPositions } from "@Palavyr-Types";
+import { AlertType, AreaNameDetails, Areas, AreaTable, EnquiryRow, PlanType, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DashboardHeader } from "./header/DashboardHeader";
 import { CircularProgress, makeStyles, Typography } from "@material-ui/core";
@@ -19,6 +19,7 @@ import { DashboardContext } from "./DashboardContext";
 import { UserDetails } from "./sidebar/UserDetails";
 import { Align } from "./positioning/Align";
 import { PalavyrSnackbar } from "@common/components/PalavyrSnackbar";
+import { redirectToHomeWhenSessionNotEstablished } from "@api-client/clientUtils";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
@@ -76,12 +77,13 @@ interface IDashboardLayout {
 }
 
 export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) => {
+    const history = useHistory();
+    redirectToHomeWhenSessionNotEstablished(history);
+
     const { areaIdentifier } = useParams<{ contentType: string; areaIdentifier: string }>();
 
     const [areaNameDetails, setAreaNameDetails] = useState<AreaNameDetails>([]);
     const [, setLoaded] = useState<boolean>(false);
-
-    const history = useHistory();
 
     const [open, setOpen] = useState<boolean>(true);
     const [helpOpen, setHelpOpen] = useState<boolean>(false);
@@ -89,11 +91,12 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [modalState, setModalState] = useState<boolean>(false);
     const [currentViewName, setViewName] = useState<string>("");
 
-    const [numAreasAllowed, setNumAreasAllowed] = useState<number>(0);
+    // const [numAreasAllowed, setNumAreasAllowed] = useState<number>(0);
     const [alertState, setAlertState] = useState<boolean>(false);
 
     const [planType, setPlanType] = useState<PlanType>();
     const [currencySymbol, setCurrencySymbol] = useState<string>("");
+    const [planTypeMeta, setPlanTypeMeta] = useState<PlanTypeMeta>();
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [dashboardAreasLoading, setDashboardAreasLoading] = useState<boolean>(false);
@@ -120,10 +123,13 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         // todo: Deprecate this call in the future once we are confident that it is no longer needed...
         await repository.Conversations.EnsureDBIsValid();
 
-        const numAllowedBySubscription = await repository.Settings.Subscriptions.getNumAreas();
-        const currentPlanType = await repository.Settings.Account.getCurrentPlan();
+        // const numAllowedBySubscription = await repository.Settings.Subscriptions.getNumAreas();
+        const currentPlanType = await repository.Settings.Account.getCurrentPlan(); // TODO: Deprecate
+        const currentPlanTypeMeta = await repository.Settings.Subscriptions.getCurrentPlanMeta();
+
         setPlanType(currentPlanType.status);
-        setNumAreasAllowed(numAllowedBySubscription);
+        // setNumAreasAllowed(numAllowedBySubscription);
+        setPlanTypeMeta(currentPlanTypeMeta);
 
         const areas = await repository.Area.GetAreas();
         const areaNameDetails = fetchSidebarInfo(areas);
@@ -189,7 +195,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         setModalState(false);
     };
     const checkAreaCount = () => {
-        if (numAreasAllowed && areaNameDetails.length >= numAreasAllowed) {
+        if (planTypeMeta && areaNameDetails.length >= planTypeMeta.allowedAreas) {
             setAlertState(true);
         } else {
             openModal();
@@ -197,9 +203,12 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     };
 
     const alertDetails: AlertType = {
-        title: "Maximum areas reached",
-        message: "Thanks for using Palavyr! Please consider purchasing a subscription to increase the number of areas you can provide.",
-        link: "/dashboard/subscribe",
+        title: `Maximum areas reached for your current plan (${planType})`,
+        message:
+            planTypeMeta && planTypeMeta.planType === PurchaseTypes.Free
+                ? "Thanks for using Palavyr! Please consider purchasing a subscription to increase the number of areas you can provide."
+                : "Thanks for using Palavyr! To increase the number of areas you can provide, please consider upgrading your subscription the Manage link in the side bar menu.",
+        link: planTypeMeta && planTypeMeta.isFreePlan ? "/dashboard/subscribe" : "/dashboard",
         linktext: "Subscriptions",
     };
 
@@ -223,13 +232,12 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                 setSnackPosition,
                 setIsLoading: setIsLoading,
                 currencySymbol: currencySymbol,
-                subscription: planType,
-                numAreasAllowed,
                 checkAreaCount,
                 areaName: currentViewName,
                 setViewName: setViewName,
                 unseenNotifications: unseenNotifications,
                 setUnseenNotifications: setUnseenNotifications,
+                planTypeMeta: planTypeMeta,
             }}
         >
             <div className={cls.root}>
@@ -274,7 +282,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                     <Divider />
                     {helpComponent}
                 </Drawer>
-                {numAreasAllowed && (areaNameDetails.length < numAreasAllowed ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
+                {planTypeMeta && (areaNameDetails.length < planTypeMeta.allowedAreas ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
                 <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
             </div>
             {successOpen && <PalavyrSnackbar position={snackPosition} successText={successText} successOpen={successOpen} setSuccessOpen={setSuccessOpen} />}

@@ -1,14 +1,14 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import React, { useState, useCallback, useEffect, Suspense } from "react";
+import React, { useState, useCallback, useEffect, Suspense, useContext } from "react";
 import { DynamicTableMetas, TableNameMap } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
-import { Accordion, AccordionSummary, Typography, Button, makeStyles } from "@material-ui/core";
+import { Typography, Button, Tooltip } from "@material-ui/core";
 import { SingleDynamicFeeTable } from "./SingleDynamicFeeTable";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { isDevelopmentStage } from "@api-client/clientUtils";
 import { OsTypeToggle } from "dashboard/content/responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 export interface IDynamicTable {
     title: string;
@@ -25,6 +25,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
     const [tableMetas, setTableMetas] = useState<DynamicTableMetas>([]);
     const [availableTables, setAvailableTables] = useState<Array<string>>([]);
     const [tableNameMap, setTableNameMap] = useState<TableNameMap>({});
+    const { planTypeMeta } = useContext(DashboardContext);
 
     const loadTableData = useCallback(async () => {
         const dynamicTableMetas = await repository.Configuration.Tables.Dynamic.getDynamicTableMetas(areaIdentifier);
@@ -58,11 +59,21 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
         };
     }, [areaIdentifier, loadTableData]);
 
-    const actions = (
-        <Button startIcon={<AddBoxIcon />} variant="contained" color="primary" onClick={addDynamicTable}>
-            Add Dynamic Table
-        </Button>
-    );
+    const actions =
+        planTypeMeta && tableMetas.length >= planTypeMeta.allowedDynamicTables ? (
+            <>
+                <Typography display="inline">
+                    <strong>Upgrade your subscription to add more dynamic tables</strong>
+                </Typography>
+                <Button disabled={true} startIcon={<AddBoxIcon />} variant="contained" color="primary" onClick={addDynamicTable}>
+                    <Typography>Add Dynamic Table</Typography>
+                </Button>
+            </>
+        ) : (
+            <Button startIcon={<AddBoxIcon />} variant="contained" color="primary" onClick={addDynamicTable}>
+                <Typography>Add Dynamic Table</Typography>
+            </Button>
+        );
 
     return (
         <PalavyrAccordian title={title} initialState={true} actions={actions}>

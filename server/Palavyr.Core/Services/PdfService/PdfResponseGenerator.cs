@@ -26,7 +26,6 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IConfiguration configuration;
         private readonly IS3KeyResolver s3KeyResolver;
 
-
         public PdfResponseGenerator(
             IAccountRepository accountRepository,
             IConfigurationRepository configurationRepository,
@@ -65,7 +64,7 @@ namespace Palavyr.Core.Services.PdfService
             var areaData = await configurationRepository.GetAreaComplete(accountId, areaId);
             var account = await accountRepository.GetAccount(accountId, cancellationToken);
 
-            var staticTables = staticTableCompiler.CollectStaticTables(areaData, culture, emailRequest.NumIndividuals); // ui always sends a number - 1 or greater.
+            var staticTables = await staticTableCompiler.CollectStaticTables(accountId, areaData, culture, emailRequest.NumIndividuals, cancellationToken); // ui always sends a number - 1 or greater.
             var dynamicTables = await dynamicTablesCompiler.CompileTablesToPdfRows(accountId, emailRequest.DynamicResponses, culture);
 
             var html = responseHtmlBuilder.BuildResponseHtml(account, areaData, criticalResponses, staticTables, dynamicTables);
