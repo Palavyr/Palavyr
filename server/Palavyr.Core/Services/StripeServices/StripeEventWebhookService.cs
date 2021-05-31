@@ -130,7 +130,7 @@ namespace Palavyr.Core.Services.StripeServices
                 case Events.PriceUpdated:
                     var priceUpdate = (Price) stripeEvent.Data.Object;
                     await processStripePriceUpdatedHandler.ProcessPriceUpdated(priceUpdate);
-                    // use this to update customers that the pricGe for their plan has been updated (hopefully to a lower price? But if we must... to a higher)
+                    // use this to update customers that the price for their plan has been updated (hopefully to a lower price? But if we must... to a higher)
                     break;
 
                 default:
@@ -140,7 +140,7 @@ namespace Palavyr.Core.Services.StripeServices
             }
 
             var stripeEventId = stripeEvent.Id;
-
+            // todo - write to store?
         }
     }
 }

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { FileLink, PurchaseTypes } from "@Palavyr-Types";
+import { FileLink } from "@Palavyr-Types";
 import { Upload } from "../Upload";
 import { AttachmentList } from "./AttachmentList";
 import { AttachmentPreview } from "./AttachmentPreview";
@@ -9,7 +9,6 @@ import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHea
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { useContext } from "react";
 
-// const buttonText = "Add PDF Attachment";
 const summary = "Upload a new PDF attachment to send with responses.";
 const uploadDetails = <div className="alert alert-info">Use this dialog to upload attachments that will be sent standard with the response for this area.</div>;
 

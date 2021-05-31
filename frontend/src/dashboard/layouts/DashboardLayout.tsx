@@ -91,7 +91,6 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [modalState, setModalState] = useState<boolean>(false);
     const [currentViewName, setViewName] = useState<string>("");
 
-    // const [numAreasAllowed, setNumAreasAllowed] = useState<number>(0);
     const [alertState, setAlertState] = useState<boolean>(false);
 
     const [planType, setPlanType] = useState<PlanType>();
@@ -123,12 +122,10 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         // todo: Deprecate this call in the future once we are confident that it is no longer needed...
         await repository.Conversations.EnsureDBIsValid();
 
-        // const numAllowedBySubscription = await repository.Settings.Subscriptions.getNumAreas();
         const currentPlanType = await repository.Settings.Account.getCurrentPlan(); // TODO: Deprecate
         const currentPlanTypeMeta = await repository.Settings.Subscriptions.getCurrentPlanMeta();
 
         setPlanType(currentPlanType.status);
-        // setNumAreasAllowed(numAllowedBySubscription);
         setPlanTypeMeta(currentPlanTypeMeta);
 
         const areas = await repository.Area.GetAreas();

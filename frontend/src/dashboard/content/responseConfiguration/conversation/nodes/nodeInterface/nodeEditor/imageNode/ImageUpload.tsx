@@ -31,7 +31,7 @@ export const NodeImageUpload = ({ node, setImageName, setImageLink, currentImage
     const history = useHistory();
 
     useEffect(() => {
-        if (planTypeMeta && (planTypeMeta.planType === PurchaseTypes.Free || planTypeMeta.planType === PurchaseTypes.Lyte)) {
+        if (planTypeMeta && !planTypeMeta.allowedImageUpload) {
             history.push("/dashboard/please-subscribe");
         }
     }, [planTypeMeta]);
@@ -75,7 +75,7 @@ export const NodeImageUpload = ({ node, setImageName, setImageLink, currentImage
             </div>
             <Divider />
             <div className={cls.imageBlock}>
-                {planTypeMeta && (planTypeMeta.planType === PurchaseTypes.Premium || planTypeMeta.planType === PurchaseTypes.Pro) && (
+                {planTypeMeta && planTypeMeta.allowedImageUpload && (
                     <Upload
                         dropzoneType="area"
                         initialState={initialState}

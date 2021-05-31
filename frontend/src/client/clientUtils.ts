@@ -8,23 +8,20 @@ export const getSessionIdFromLocalStorage = (): string => {
     return sessionId || "noIdInStorage";
 };
 
-export const getJwtTokenFromLocalStorage = (history?: History): string => {
+export const getJwtTokenFromLocalStorage = (): string => {
     var token = SessionStorage.getJwtToken();
     if (!token) {
-        if (history) {
-        } else {
-            throw new Error("No token in local storage...");
-        }
+        throw new Error("No token in local storage...");
     }
     return token || "noTokenInStorage";
 };
 
 export const redirectToHomeWhenSessionNotEstablished = (history) => {
     const result = SessionStorage.getJwtToken();
-    if (!result){
-        history.push("/")
+    if (!result) {
+        history.push("/");
     }
-}
+};
 
 export const serverUrl = process.env.API_URL as string;
 export const webUrl = process.env.WEB_URL as string;

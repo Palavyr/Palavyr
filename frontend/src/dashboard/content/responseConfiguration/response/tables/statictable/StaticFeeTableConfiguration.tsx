@@ -92,12 +92,7 @@ export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tabl
                 .map((table, index) => (
                     <StaticFeeTable staticTableMetas={staticTables} staticTableMeta={table} tableModifier={modifier} key={index} />
                 ))}
-            <div className={cls.buttonContainer}>
-                {addTableButton}
-                {/* <Button startIcon={<AddBoxIcon />} variant="contained" size="large" color="primary" className={cls.tablebutton} onClick={() => modifier.addTable(staticTables, repository, areaIdentifier)}>
-                    Add Table
-                </Button> */}
-            </div>
+            <div className={cls.buttonContainer}>{addTableButton}</div>
         </PalavyrAccordian>
     );
 };
