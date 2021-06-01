@@ -110,6 +110,8 @@ namespace Palavyr.Core.Services.StripeServices
                     break;
 
                 case Events.CustomerCreated: // Do we need this here? I don't think so. WE create the customer/ customer ID on registration.
+                    // this will get triggered when the customer finished registration with their auth token.
+                    // I could take this and check it against the records to confirm we've got the customer Id correct.
                     break;
 
                 case Events.InvoiceCreated:
@@ -138,7 +140,7 @@ namespace Palavyr.Core.Services.StripeServices
             }
 
             var stripeEventId = stripeEvent.Id;
-
+            // todo - write to store?
         }
     }
 }

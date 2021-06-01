@@ -16,6 +16,13 @@ export const getJwtTokenFromLocalStorage = (): string => {
     return token || "noTokenInStorage";
 };
 
+export const redirectToHomeWhenSessionNotEstablished = (history) => {
+    const result = SessionStorage.getJwtToken();
+    if (!result) {
+        history.push("/");
+    }
+};
+
 export const serverUrl = process.env.API_URL as string;
 export const webUrl = process.env.WEB_URL as string;
 export const widgetUrl = process.env.WIDGET_URL as string;

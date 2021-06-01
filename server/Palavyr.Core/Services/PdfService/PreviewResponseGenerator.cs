@@ -78,7 +78,7 @@ namespace Palavyr.Core.Services.PdfService
 
             logger.LogDebug("Attempting to collect table data....");
 
-            var staticTables = staticTableCompiler.CollectStaticTables(areaData, culture, 2); // ui always sends a number - 1 or greater.
+            var staticTables = await staticTableCompiler.CollectStaticTables(accountId, areaData, culture, 2, cancellationToken); // ui always sends a number - 1 or greater.
             var dynamicTables = await CollectPreviewDynamicTables(areaData, accountId, culture);
 
             logger.LogDebug($"Generating PDF Html string to send to express server...");

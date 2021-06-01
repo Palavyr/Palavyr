@@ -1,17 +1,19 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { Divider, makeStyles, Typography } from "@material-ui/core";
-import { ConvoNode, FileLink, SetState } from "@Palavyr-Types";
+import { ConvoNode, FileLink, PurchaseTypes, SetState } from "@Palavyr-Types";
 import { Upload } from "dashboard/content/responseConfiguration/uploadable/Upload";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useState } from "react";
 import { SelectFromExistingImages } from "./SelectFromExistingImages";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { useHistory } from "react-router-dom";
 
 export interface ImageUploadProps {
     node: ConvoNode;
     setImageName: SetState<string>;
     setImageLink: SetState<string>;
     currentImageId: string;
+    setModalState: SetState<boolean>;
     initialState?: boolean;
 }
 
@@ -23,11 +25,18 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const NodeImageUpload = ({ node, setImageName, setImageLink, currentImageId, initialState = false }: ImageUploadProps) => {
-    const { setIsLoading, setSuccessOpen, setSuccessText } = useContext(DashboardContext);
+export const NodeImageUpload = ({ node, setImageName, setImageLink, currentImageId, initialState = false, setModalState }: ImageUploadProps) => {
+    const cls = useStyles();
+    const { setIsLoading, setSuccessOpen, setSuccessText, planTypeMeta } = useContext(DashboardContext);
+    const history = useHistory();
+
+    useEffect(() => {
+        if (planTypeMeta && !planTypeMeta.allowedImageUpload) {
+            history.push("/dashboard/please-subscribe");
+        }
+    }, [planTypeMeta]);
 
     const repository = new PalavyrRepository();
-    const cls = useStyles();
     const [modal, setModal] = useState(false);
 
     const toggleModal = () => {
@@ -56,6 +65,7 @@ export const NodeImageUpload = ({ node, setImageName, setImageLink, currentImage
         await repository.Configuration.Images.savePreExistingImage(result[0].fileId, node.nodeId);
         setIsLoading(false);
         setSuccessOpen(true);
+        setModalState(false);
     };
 
     return (
@@ -65,17 +75,19 @@ export const NodeImageUpload = ({ node, setImageName, setImageLink, currentImage
             </div>
             <Divider />
             <div className={cls.imageBlock}>
-                <Upload
-                    dropzoneType="area"
-                    initialState={initialState}
-                    modalState={modal}
-                    toggleModal={() => toggleModal()}
-                    handleFileSave={(files: File[]) => fileSave(files)}
-                    summary="Upload a file."
-                    buttonText="Upload"
-                    uploadDetails={<Typography>Upload an image, pdf, or other document you wish to share with your users</Typography>}
-                    acceptedFiles={["image/png", "image/jpg"]}
-                />
+                {planTypeMeta && planTypeMeta.allowedImageUpload && (
+                    <Upload
+                        dropzoneType="area"
+                        initialState={initialState}
+                        modalState={modal}
+                        toggleModal={() => toggleModal()}
+                        handleFileSave={(files: File[]) => fileSave(files)}
+                        summary="Upload a file."
+                        buttonText="Upload"
+                        uploadDetails={<Typography>Upload an image, pdf, or other document you wish to share with your users</Typography>}
+                        acceptedFiles={["image/png", "image/jpg"]}
+                    />
+                )}
             </div>
         </>
     );

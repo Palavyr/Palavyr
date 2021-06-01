@@ -9,7 +9,6 @@ import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHea
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { useContext } from "react";
 
-const buttonText = "Add PDF Attachment";
 const summary = "Upload a new PDF attachment to send with responses.";
 const uploadDetails = <div className="alert alert-info">Use this dialog to upload attachments that will be sent standard with the response for this area.</div>;
 
@@ -18,7 +17,7 @@ export const AttachmentConfiguration = () => {
 
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
-    const { setIsLoading, setSuccessOpen, setSuccessText } = useContext(DashboardContext);
+    const { setIsLoading, setSuccessOpen, setSuccessText, planTypeMeta } = useContext(DashboardContext);
 
     const [, setLoaded] = useState<boolean>(false);
     const [currentPreview, setCurrentPreview] = useState<FileLink | null>();
@@ -80,6 +79,10 @@ export const AttachmentConfiguration = () => {
         setCurrentPreview(null);
     };
 
+    const shouldDisableUploadButton = () => {
+        return planTypeMeta && (attachmentList.length >= planTypeMeta.allowedAttachments);
+    };
+
     return (
         <>
             <AreaConfigurationHeader title="Attachments" subtitle="Upload PDF and word documents you wish to send to your potential clients." />
@@ -88,10 +91,11 @@ export const AttachmentConfiguration = () => {
                 modalState={modalState}
                 toggleModal={toggleModal}
                 handleFileSave={handleFileSave}
-                buttonText={buttonText}
+                buttonText="Add PDF Attachment"
                 summary={summary}
                 uploadDetails={uploadDetails}
                 acceptedFiles={["application/pdf"]}
+                disableButton={shouldDisableUploadButton()}
             />
             <AttachmentList fileList={attachmentList} setCurrentPreview={setCurrentPreview} removeAttachment={removeAttachment} />
             {currentPreview ? <AttachmentPreview preview={currentPreview} /> : null}

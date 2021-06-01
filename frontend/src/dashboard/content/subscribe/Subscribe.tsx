@@ -2,7 +2,7 @@ import * as React from "react";
 import { Grid, makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { SubscribeStepper } from "../purchse/SubscribeStepper";
 import { PurchaseTypes, ProductOptions, ProductOption, ProductIds, PlanStatus } from "@Palavyr-Types";
 import { PURCHASE_ROUTE } from "@constants";
@@ -10,6 +10,7 @@ import { Lyte, Premium, Pro } from "@landing/components/pricing/Cards";
 import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
 import classnames from "classnames";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     body: {
@@ -37,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
 export const Subscribe = () => {
     const [currentPlan, setCurrentPlan] = useState<PlanStatus | null>(null);
     const [productList, setProductList] = useState<ProductIds>();
+    const { planTypeMeta } = useContext(DashboardContext);
 
     const cls = useStyles();
     const repository = new PalavyrRepository();
@@ -72,21 +74,21 @@ export const Subscribe = () => {
     const orderedProductOptions: ProductOptions = [
         {
             card: <Lyte priceInfo={true} showYearly />,
-            purchaseType: PurchaseTypes.Lyte,
-            productId: productList?.lyteProductId || null,
-            currentplan: currentPlan?.status === PurchaseTypes.Lyte,
+            purchaseType: PurchaseTypes.Premium,
+            productId: productList?.premiumProductId || null,
+            currentplan: planTypeMeta?.planType === PurchaseTypes.Lyte,
         },
         {
             card: <Premium priceInfo={true} showYearly />,
             purchaseType: PurchaseTypes.Premium,
             productId: productList?.premiumProductId || null,
-            currentplan: currentPlan?.status === PurchaseTypes.Premium,
+            currentplan: planTypeMeta?.planType === PurchaseTypes.Premium,
         },
         {
             card: <Pro priceInfo={true} showYearly />,
             purchaseType: PurchaseTypes.Pro,
             productId: productList?.proProductId || null,
-            currentplan: currentPlan?.status === PurchaseTypes.Pro,
+            currentplan: planTypeMeta?.planType === PurchaseTypes.Pro,
         },
     ];
 
@@ -99,13 +101,14 @@ export const Subscribe = () => {
                     <Grid container>
                         <Grid item xs={12}>
                             <SpaceEvenly center>
-                                {orderedProductOptions.map((product: ProductOption, key: number) => {
-                                    return (
-                                        <div onClick={() => (product.currentplan || currentPlan.hasUpgraded ? null : goToPurchase(product.purchaseType, product.productId))} className={classnames(cls.width, cls.card)}>
-                                            {product.card}
-                                        </div>
-                                    );
-                                })}
+                                {planTypeMeta &&
+                                    orderedProductOptions.map((product: ProductOption, key: number) => {
+                                        return (
+                                            <div onClick={() => (planTypeMeta && planTypeMeta.isFreePlan ? null : goToPurchase(product.purchaseType, product.productId))} className={classnames(cls.width, cls.card)}>
+                                                {product.card}
+                                            </div>
+                                        );
+                                    })}
                             </SpaceEvenly>
                         </Grid>
                     </Grid>

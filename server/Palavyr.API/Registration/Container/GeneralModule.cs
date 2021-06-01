@@ -12,6 +12,7 @@ using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services;
 using Palavyr.Core.Services.AccountServices;
+using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.AttachmentServices;
@@ -107,6 +108,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<ImageRemover>().As<IImageRemover>();
             builder.RegisterType<NewAccountUtils>().As<INewAccountUtils>();
             builder.RegisterType<GuidUtils>().As<IGuidUtils>();
+            builder.RegisterType<PlanTypeRetriever>().As<IPlanTypeRetriever>();
+            builder.RegisterType<BusinessRules>().As<IBusinessRules>();
         }
     }
 }

@@ -27,6 +27,7 @@ import {
     TableNameMap,
     TreeErrors,
     StaticTableRow,
+    PlanTypeMeta,
 } from "@Palavyr-Types";
 import { AxiosClient } from "./AxiosClient";
 import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./clientUtils";
@@ -192,6 +193,7 @@ export class PalavyrRepository {
 
     public Settings = {
         Subscriptions: {
+            getCurrentPlanMeta: async () => this.client.get<PlanTypeMeta>(`account/settings/current-plan-meta`),
             getNumAreas: async () => this.client.get<number>(`subscriptions/count`),
         },
 

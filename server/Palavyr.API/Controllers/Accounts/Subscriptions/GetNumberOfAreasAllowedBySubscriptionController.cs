@@ -31,6 +31,9 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
                 case Account.PlanTypeEnum.Free:
                     numAreasAllowed = ApplicationConstants.SubscriptionConstants.DefaultNumAreas;
                     break;
+                case Account.PlanTypeEnum.Lyte:
+                    numAreasAllowed = ApplicationConstants.SubscriptionConstants.LyteNumAreas;
+                    break;
                 case Account.PlanTypeEnum.Premium:
                     numAreasAllowed = ApplicationConstants.SubscriptionConstants.PremiumNumAreas;
                     break;

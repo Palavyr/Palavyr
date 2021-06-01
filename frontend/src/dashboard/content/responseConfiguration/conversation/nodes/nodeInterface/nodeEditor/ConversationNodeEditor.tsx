@@ -79,7 +79,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, curren
                                 <Typography align="center" variant="h6">
                                     Upload an image or provide a url
                                 </Typography>
-                                <NodeImageUpload node={node} currentImageId={currentImageId} setImageLink={setImageLink} setImageName={setImageName} />
+                                <NodeImageUpload setModalState={setModalState} node={node} currentImageId={currentImageId} setImageLink={setImageLink} setImageName={setImageName} />
                             </>
                         ) : (
                             <>
@@ -88,7 +88,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, curren
                                 <Typography align="center" variant="h6">
                                     Choose a new image
                                 </Typography>
-                                <NodeImageUpload node={node} currentImageId={currentImageId} setImageLink={setImageLink} setImageName={setImageName} initialState={false} />
+                                <NodeImageUpload setModalState={setModalState} node={node} currentImageId={currentImageId} setImageLink={setImageLink} setImageName={setImageName} initialState={false} />
                                 <Divider />
                             </>
                         )}

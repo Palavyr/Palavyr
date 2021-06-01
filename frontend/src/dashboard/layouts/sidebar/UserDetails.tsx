@@ -48,7 +48,7 @@ export const UserDetails = () => {
     const googleImage = SessionStorage.getGoogleImage();
     const [loading, setLoading] = useState<boolean>(true);
 
-    const { subscription, setViewName } = React.useContext(DashboardContext);
+    const { planTypeMeta, setViewName } = React.useContext(DashboardContext);
 
     let details: JSX.Element;
     if (googleImage && email) {
@@ -60,7 +60,7 @@ export const UserDetails = () => {
                         <img src={googleImage} alt="" className={cls.googleImage} />
                     </div>
                 </Tooltip>
-                <Typography variant="h6">Subscription: {subscription}</Typography>
+                {planTypeMeta && <Typography variant="h6">Subscription: {planTypeMeta.planType}</Typography>}
             </>
         );
     } else if (email) {
@@ -70,7 +70,7 @@ export const UserDetails = () => {
                 <Typography gutterBottom noWrap={false} variant="body2">
                     {email}
                 </Typography>
-                <Typography variant="h6">Subscription: {subscription}</Typography>
+                {planTypeMeta && <Typography variant="h6">Subscription: {planTypeMeta.planType}</Typography>}
             </>
         );
     } else {
