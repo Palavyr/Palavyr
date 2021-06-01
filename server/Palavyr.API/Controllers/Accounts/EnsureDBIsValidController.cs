@@ -40,17 +40,17 @@ namespace Palavyr.API.Controllers.Accounts
             var preferences = await configurationRepository.GetWidgetPreferences(accountId);
             var account = await accountRepository.GetAccount(accountId, cancellationToken);
 
-            if (string.IsNullOrWhiteSpace(account.StripeCustomerId) && account.Active)
-            {
-                Thread.Sleep(5000);
+            // if (string.IsNullOrWhiteSpace(account.StripeCustomerId)/* && account.Active*/)
+            // {
+            //     Thread.Sleep(5000);
 
-                if (string.IsNullOrWhiteSpace(account.StripeCustomerId) && account.Active)
+                if (string.IsNullOrWhiteSpace(account.StripeCustomerId)/* && account.Active*/)
                 {
                     var newCustomer = await stripeCustomerService.CreateNewStripeCustomer(account.EmailAddress, cancellationToken);
                     account.StripeCustomerId = newCustomer.Id;
                     await accountRepository.CommitChangesAsync();
                 }
-            }
+            // }
 
             if (string.IsNullOrWhiteSpace(preferences.ChatHeader))
             {

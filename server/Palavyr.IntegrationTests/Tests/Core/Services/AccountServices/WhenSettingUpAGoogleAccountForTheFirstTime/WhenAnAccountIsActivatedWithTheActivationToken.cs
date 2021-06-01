@@ -101,7 +101,9 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             result.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var account = AccountsContext.Accounts.Single(x => x.AccountId == testAccount);
+            
             await AccountsContext.Entry(account).ReloadAsync();
+            
             account.Active.ShouldBeTrue();
             account.StripeCustomerId.ShouldNotBeEmpty();
 

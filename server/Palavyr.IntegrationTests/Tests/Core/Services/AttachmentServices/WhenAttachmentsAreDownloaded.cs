@@ -1,13 +1,14 @@
 ﻿#nullable enable
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.AttachmentServices;
 using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Palavyr.IntegrationTests.DataCreators;
 using Shouldly;
 using Test.Common;
@@ -16,48 +17,106 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
 {
-    public class WhenAttachmentsAreDownloaded : InMemoryIntegrationFixture, IAsyncLifetime
+    public class WhenAttachmentsAreDownloaded
     {
-        public WhenAttachmentsAreDownloaded(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public class WhileOnAProPlan : ProPlanIntegrationFixture
         {
+            private List<TempS3FileMeta> s3Metas = null!;
+            private string RiskyName => $"ThisRiskyName-{StaticGuidUtils.CreateShortenedGuid(1)}.pdf";
+
+            public WhileOnAProPlan(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+            {
+            }
+
+            [Fact]
+            public async Task DownloadMetasLookCorrect()
+            {
+                var retriever = Container.GetService<IAttachmentRetriever>();
+                var result = await retriever.RetrieveAttachmentFiles(IntegrationConstants.AccountId, IntegrationConstants.DefaultArea, null, default);
+
+                // assert
+                result.Length.ShouldBe(5);
+            }
+
+            public override async Task InitializeAsync()
+            {
+                var s3TempCreator = Container.GetService<ICreateS3TempFile>();
+
+                s3Metas = await s3TempCreator.CreateTempFilesOnS3(5);
+                foreach (var s3Meta in s3Metas)
+                {
+                    await this.CreateFileNameMapBuilder()
+                        .WithAccountId(IntegrationConstants.AccountId)
+                        .WithAreaIdentifier(IntegrationConstants.DefaultArea)
+                        .WithSafeName(s3Meta.LocalFileName)
+                        .WithS3Key(s3Meta.Key)
+                        .WithRiskyName(RiskyName)
+                        .Build();
+                }
+
+                await base.InitializeAsync();
+            }
+
+            public override async Task DisposeAsync()
+            {
+                var s3Deleter = Container.GetService<IS3Deleter>();
+                foreach (var s3Meta in s3Metas)
+                {
+                    await s3Deleter.DeleteObjectFromS3Async(s3Meta.Bucket, s3Meta.Key);
+                }
+
+                await base.DisposeAsync();
+            }
         }
 
-        private string s3Key = null!;
-        private string s3Bucket = null!;
-        private string RiskyName = "ThisRiskyName.pdf";
-
-        [Fact]
-        public async Task PropertiesAreSetCorrectly()
+        public class WhileOnAFreePlan : FreePlanIntegrationFixture
         {
-            var retriever = Container.GetService<IAttachmentRetriever>();
-            var result = await retriever.RetrieveAttachmentFiles(IntegrationConstants.AccountId, IntegrationConstants.DefaultArea, null, default);
+            private List<TempS3FileMeta> s3Metas = null!;
+            private string RiskyName => $"ThisRiskyName-{StaticGuidUtils.CreateShortenedGuid(1)}.pdf";
 
-            // assert
-            result.Length.ShouldBe(1);
-            result.Select(x => x.FileNameWithExtension).Single().ShouldBe(RiskyName);
-        }
+            public WhileOnAFreePlan(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+            {
+            }
 
-        public async Task InitializeAsync()
-        {
-            var s3TempCreator = Container.GetService<CreateS3TempFile>();
-            var s3Meta = await s3TempCreator.CreateTempFileOnS3();
+            [Fact]
+            public async Task NoAttachmentsAreReturned()
+            {
+                var retriever = Container.GetService<IAttachmentRetriever>();
+                var result = await retriever.RetrieveAttachmentFiles(IntegrationConstants.AccountId, IntegrationConstants.DefaultArea, null, default);
 
-            s3Key = s3Meta.Key;
-            s3Bucket = s3Meta.Bucket;
+                // assert
+                result.Length.ShouldBe(0);
+            }
 
-            await this.CreateFileNameMapBuilder()
-                .WithAccountId(IntegrationConstants.AccountId)
-                .WithAreaIdentifier(IntegrationConstants.DefaultArea)
-                .WithSafeName(s3Meta.LocalFileName)
-                .WithS3Key(s3Meta.Key)
-                .WithRiskyName(RiskyName)
-                .Build();
-        }
+            public override async Task InitializeAsync()
+            {
+                var s3TempCreator = Container.GetService<ICreateS3TempFile>();
 
-        public async Task DisposeAsync()
-        {
-            var s3Deleter = Container.GetService<IS3Deleter>();
-            await s3Deleter.DeleteObjectFromS3Async(s3Bucket, s3Key);
+                s3Metas = await s3TempCreator.CreateTempFilesOnS3(5);
+                foreach (var s3Meta in s3Metas)
+                {
+                    await this.CreateFileNameMapBuilder()
+                        .WithAccountId(IntegrationConstants.AccountId)
+                        .WithAreaIdentifier(IntegrationConstants.DefaultArea)
+                        .WithSafeName(s3Meta.LocalFileName)
+                        .WithS3Key(s3Meta.Key)
+                        .WithRiskyName(RiskyName)
+                        .Build();
+                }
+
+                await base.InitializeAsync();
+            }
+
+            public override async Task DisposeAsync()
+            {
+                var s3Deleter = Container.GetService<IS3Deleter>();
+                foreach (var s3Meta in s3Metas)
+                {
+                    await s3Deleter.DeleteObjectFromS3Async(s3Meta.Bucket, s3Meta.Key);
+                }
+
+                await base.DisposeAsync();
+            }
         }
     }
 }

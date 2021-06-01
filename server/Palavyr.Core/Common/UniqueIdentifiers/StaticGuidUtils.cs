@@ -13,6 +13,11 @@ namespace Palavyr.Core.Common.UniqueIdentifiers
             return string.Join('-', ids);
         }
 
+        public static string CreateShortenedGuid()
+        {
+            return CreateShortenedGuid(1);
+        }
+
         public static string CreatePseudoRandomString(int take)
         {
             var ids = string.Join("", Guid.NewGuid().ToString().Split('-'));

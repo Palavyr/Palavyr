@@ -4,7 +4,6 @@ using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 
 namespace Palavyr.IntegrationTests.DataCreators
@@ -25,6 +24,7 @@ namespace Palavyr.IntegrationTests.DataCreators
         private string? accountId;
         private AccountType? accountType;
         private string? apikey;
+        private Account.PlanTypeEnum? planType;
 
         public DefaultAccountAndSessionBuilder(BaseIntegrationFixture test)
         {
@@ -61,6 +61,31 @@ namespace Palavyr.IntegrationTests.DataCreators
             return this;
         }
 
+        public DefaultAccountAndSessionBuilder WithProPlan()
+        {
+            this.planType = Account.PlanTypeEnum.Pro;
+            return this;
+        }
+
+        public DefaultAccountAndSessionBuilder WithPremiumPlan()
+        {
+            this.planType = Account.PlanTypeEnum.Premium;
+            return this;
+        }
+
+        public DefaultAccountAndSessionBuilder WithLytePlan()
+        {
+            this.planType = Account.PlanTypeEnum.Lyte;
+            return this;
+        }
+
+        public DefaultAccountAndSessionBuilder WithFreePlan()
+        {
+            this.planType = Account.PlanTypeEnum.Free;
+            return this;
+        }
+
+
         public async Task<Account> Build()
         {
             var email = this.emailAddress ?? "test@gmail.com";
@@ -70,6 +95,9 @@ namespace Palavyr.IntegrationTests.DataCreators
             var apiKey = this.apikey ?? "";
 
             var defaultAccount = Account.CreateAccount(email, pass, id, apiKey, accType);
+
+            defaultAccount.PlanType = this.planType ?? Account.PlanTypeEnum.Free;
+
             await test.AccountsContext.AddAsync(defaultAccount);
             test.AccountsContext.SeedSession(IntegrationConstants.AccountId, null);
             await test.AccountsContext.SaveChangesAsync();

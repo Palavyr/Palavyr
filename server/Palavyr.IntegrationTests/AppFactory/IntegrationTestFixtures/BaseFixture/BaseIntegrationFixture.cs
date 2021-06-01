@@ -38,7 +38,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 
         public virtual ContainerBuilder CustomizeContainer(ContainerBuilder builder)
         {
-            builder.RegisterType<CreateS3TempFile>().AsSelf();
+            builder.RegisterType<CreateS3TempFile>().As<ICreateS3TempFile>();
             return builder;
         }
     }

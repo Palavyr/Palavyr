@@ -11,6 +11,7 @@ using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Requests.Registration;
 using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Services.StripeServices;
 
@@ -166,9 +167,11 @@ namespace Palavyr.Core.Services.AccountServices
 
         private async Task<bool> RegisterAccount(string accountId, string apiKey, string emailAddress, CancellationToken cancellationToken)
         {
+            var freePlanType = new LytePlanTypeMeta();
+
             // Add the default subscription (free with 2 areas)
             logger.LogDebug($"Add default subscription for {accountId}");
-            var newSubscription = Subscription.CreateNew(accountId, apiKey, ApplicationConstants.SubscriptionConstants.DefaultNumAreas);
+            var newSubscription = Subscription.CreateNew(accountId, apiKey, freePlanType.GetDefaultNumAreas());
             await accountsContext.Subscriptions.AddAsync(newSubscription);
 
             // install seed Data

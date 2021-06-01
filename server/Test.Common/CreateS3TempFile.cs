@@ -1,14 +1,20 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Test.Common.ExtensionsMethods;
 using Test.Common.Random;
 
 namespace Test.Common
 {
-    public class CreateS3TempFile
+    public interface ICreateS3TempFile
+    {
+        Task<List<TempS3FileMeta>> CreateTempFilesOnS3(int numFiles);
+        Task<TempS3FileMeta> CreateTempFileOnS3();
+    }
+
+    public class CreateS3TempFile : ICreateS3TempFile
     {
         private readonly IS3Saver saver;
         private readonly IConfiguration configuration;
@@ -17,6 +23,18 @@ namespace Test.Common
         {
             this.saver = saver;
             this.configuration = configuration;
+        }
+
+        public async Task<List<TempS3FileMeta>> CreateTempFilesOnS3(int numFiles)
+        {
+            var tempFiles = new List<TempS3FileMeta>();
+            for (var i = 0; i < numFiles; i++)
+            {
+                var meta = await CreateTempFileOnS3();
+                tempFiles.Add(meta);
+            }
+
+            return tempFiles;
         }
 
         public async Task<TempS3FileMeta> CreateTempFileOnS3()

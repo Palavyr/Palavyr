@@ -6,9 +6,9 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures
 {
-    public class DefaultRealDatabaseIntegrationFixture : RealDatabaseIntegrationFixture
+    public class FreePlanIntegrationFixture : RealDatabaseIntegrationFixture
     {
-        public DefaultRealDatabaseIntegrationFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
+        public FreePlanIntegrationFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
         }
 
@@ -21,6 +21,7 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures
                 .WithDefaultAccountType()
                 .WithDefaultApiKey()
                 .WithDefaultEmailAddress()
+                .WithFreePlan()
                 .Build();
         }
     }
