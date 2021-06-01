@@ -194,7 +194,6 @@ export class PalavyrRepository {
     public Settings = {
         Subscriptions: {
             getCurrentPlanMeta: async () => this.client.get<PlanTypeMeta>(`account/settings/current-plan-meta`),
-            getNumAreas: async () => this.client.get<number>(`subscriptions/count`),
         },
 
         Account: {

@@ -90,14 +90,16 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             await accountSetupService.CreateNewAccountViaGoogleAsync(googleCredentials, CancellationToken.None);
             AccountsContext.Accounts.Single(x => x.AccountId == testAccount).Active.ShouldBeFalse();
 
+            // populate stripe id before it is set
+            var ensureRoute = "configure-conversations/ensure-db-valid";
+            var ensureResult = await Client.PostAsyncWithoutContent(ensureRoute);
+            ensureResult.EnsureSuccessStatusCode();
+
             // Send token
             var route = $"account/confirmation/{testConfirmationToken}/action/setup";
             var result = await Client.PostAsyncWithoutContent(route);
             result.EnsureSuccessStatusCode();
 
-            var ensureRoute = "configure-conversations/ensure-db-valid";
-            var ensureResult = await Client.PostAsyncWithoutContent(ensureRoute);
-            ensureResult.EnsureSuccessStatusCode();
 
             var account = AccountsContext.Accounts.Single(x => x.AccountId == testAccount);
             await AccountsContext.Entry(account).ReloadAsync();

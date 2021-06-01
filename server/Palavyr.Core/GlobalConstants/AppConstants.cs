@@ -13,14 +13,6 @@
             public const string DevAccount = "dashboardDev";
         }
 
-        public class SubscriptionConstants
-        {
-            public const int DefaultNumAreas = 2;
-            public const int LyteNumAreas = 4;
-            public const int PremiumNumAreas = 8;
-            public const int ProNumAreas = 99999999;
-        }
-
         public class ConfigSections
         {
             public const string LoggingSection = "Logging";

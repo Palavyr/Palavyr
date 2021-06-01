@@ -1,8 +1,6 @@
 ﻿#nullable enable
 using System.Threading.Tasks;
-using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Test.Common.Random;
 
@@ -10,7 +8,7 @@ namespace Palavyr.IntegrationTests.DataCreators
 {
     public static class CreateFileNameMapBuilderExtensionMethod
     {
-        public static FileNameMapBuilder CreateFileNameMapBuilder(this InMemoryIntegrationFixture test)
+        public static FileNameMapBuilder CreateFileNameMapBuilder(this BaseIntegrationFixture test)
         {
             return new FileNameMapBuilder(test);
         }
@@ -18,14 +16,14 @@ namespace Palavyr.IntegrationTests.DataCreators
 
     public class FileNameMapBuilder
     {
-        private readonly InMemoryIntegrationFixture test;
+        private readonly BaseIntegrationFixture test;
         private string? safeName;
         private string? s3Key;
         private string? riskyName;
         private string? accountId;
         private string? areaIdentifier;
 
-        public FileNameMapBuilder(InMemoryIntegrationFixture test)
+        public FileNameMapBuilder(BaseIntegrationFixture test)
         {
             this.test = test;
         }

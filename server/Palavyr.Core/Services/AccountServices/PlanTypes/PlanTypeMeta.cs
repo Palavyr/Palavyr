@@ -14,5 +14,7 @@
 
         public string PlanType { get; set; }
         public bool IsFreePlan { get; set; }
+
+        public int GetDefaultNumAreas() => (new LytePlanTypeMeta()).AllowedAreas;
     }
 }

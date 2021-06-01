@@ -7,6 +7,11 @@ namespace Palavyr.Core.Common.UniqueIdentifiers
         public string CreateShortenedGuid([Range(1, 4)]int take)
         {
             return StaticGuidUtils.CreateShortenedGuid(take);
+        }   
+
+        public string CreateShortenedGuid()
+        {
+            return CreateShortenedGuid(1);
         }
 
         public string CreatePseudoRandomString(int take)

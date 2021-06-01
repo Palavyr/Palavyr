@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Settings
 {
-    public class GetApiKeyControllerFixture : DefaultRealDatabaseIntegrationFixture
+    public class GetApiKeyControllerFixture : ProPlanIntegrationFixture
     {
         private const string Route = GetApiKeyController.Uri;
 

@@ -44,7 +44,8 @@ namespace Palavyr.API.Controllers.Accounts
             {
                 Thread.Sleep(5000);
 
-                if (string.IsNullOrWhiteSpace(account.StripeCustomerId) && account.Active)
+                var existingCustomer = await stripeCustomerService.GetCustomerByEmailAddress(account.EmailAddress, cancellationToken);
+                if (existingCustomer.Count() == 0)
                 {
                     var newCustomer = await stripeCustomerService.CreateNewStripeCustomer(account.EmailAddress, cancellationToken);
                     account.StripeCustomerId = newCustomer.Id;

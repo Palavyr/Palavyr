@@ -20,7 +20,7 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSettingUpAGoogleAccountForTheFirstTime
 {
-    public class WhenCreatingAnAccountWithAnEmailThatAlreadyExists : DefaultRealDatabaseIntegrationFixture
+    public class WhenCreatingAnAccountWithAnEmailThatAlreadyExists : ProPlanIntegrationFixture
     {
         public WhenCreatingAnAccountWithAnEmailThatAlreadyExists(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
