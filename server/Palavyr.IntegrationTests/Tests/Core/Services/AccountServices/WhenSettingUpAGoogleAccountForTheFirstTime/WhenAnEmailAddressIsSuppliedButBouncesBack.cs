@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Data.CompanyData;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AuthenticationServices;
@@ -63,6 +64,8 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             emailVerificationStatus.CheckVerificationStatus(testEmail).Returns(false);
 
             requestVerification.VerifyEmailAddressAsync(testEmail).Returns(false);
+            var allowedUsers = Substitute.For<IAllowedUsers>();
+            allowedUsers.IsEmailAllowedToCreateAccount(testEmail).ReturnsForAnyArgs(true);
 
             var accountSetupService = new AccountSetupService(
                 DashContext,
@@ -72,7 +75,9 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
                 authService,
                 jwtService,
                 new EmailVerificationService(AccountsContext, verifyLogger, customerService, requestVerification, emailClient, guidUtils, emailVerificationStatus),
-                customerService
+                customerService,
+                new GuidUtils(),
+                allowedUsers
             );
 
             var result = await accountSetupService.CreateNewAccountViaGoogleAsync(googleCredentials, CancellationToken.None);

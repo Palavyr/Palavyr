@@ -1,16 +1,16 @@
 using Autofac;
-using Palavyr.API.Controllers.Conversation.Images;
 using Palavyr.API.Controllers.Enquiries;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.API.Controllers.Testing;
+using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Data.CompanyData;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Nodes;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
-using Palavyr.Core.Services;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Services.AmazonServices;
@@ -38,6 +38,7 @@ namespace Palavyr.API.Registration.Container
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<AllowedUsers>().As<IAllowedUsers>().SingleInstance();
             builder.RegisterType<EmailVerificationStatus>().As<IEmailVerificationStatus>().InstancePerLifetimeScope();
             builder.RegisterType<LocaleDefinition>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<TestDataProvider>().AsSelf().InstancePerLifetimeScope();
@@ -110,6 +111,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<GuidUtils>().As<IGuidUtils>();
             builder.RegisterType<PlanTypeRetriever>().As<IPlanTypeRetriever>();
             builder.RegisterType<BusinessRules>().As<IBusinessRules>();
+            builder.RegisterType<DetermineCurrentEnvironment>().As<IDetermineCurrentEnvironment>();
         }
     }
 }

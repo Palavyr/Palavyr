@@ -2,11 +2,15 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Common.Environment;
+using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data;
+using Palavyr.Core.Data.CompanyData;
 using Palavyr.Core.Data.Setup.SeedData;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Requests.Registration;
@@ -33,10 +37,15 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly IJwtAuthenticationService jwtAuthService;
         private readonly IEmailVerificationService emailVerificationService;
         private readonly StripeCustomerService stripeCustomerService;
+        private readonly IGuidUtils guidUtils;
+        private readonly IAllowedUsers allowedUsers;
+
 
         private const string CouldNotValidateGoogleAuthToken = "Could not validate the Google Authentication token";
         private const string AccountAlreadyExists = "Account already exists";
         private const string EmailAddressNotFound = "Email Address Not Found";
+
+        private const string AccountNotAllowed = "Account not allowed in this environment.";
 
         public AccountSetupService(
             DashContext dashContext,
@@ -45,9 +54,10 @@ namespace Palavyr.Core.Services.AccountServices
             ILogger<AuthService> logger,
             IAuthService authService,
             IJwtAuthenticationService jwtService,
-            IEmailVerificationService emailVerificationService, 
-            StripeCustomerService stripeCustomerService
-
+            IEmailVerificationService emailVerificationService,
+            StripeCustomerService stripeCustomerService,
+            IGuidUtils guidUtils,
+            IAllowedUsers allowedUsers
         )
         {
             this.dashContext = dashContext;
@@ -58,10 +68,15 @@ namespace Palavyr.Core.Services.AccountServices
             jwtAuthService = jwtService;
             this.emailVerificationService = emailVerificationService;
             this.stripeCustomerService = stripeCustomerService;
+            this.guidUtils = guidUtils;
+            this.allowedUsers = allowedUsers;
         }
+        
 
         public async Task<Credentials> CreateNewAccountViaGoogleAsync(GoogleRegistrationDetails googleRegistration, CancellationToken cancellationToken)
         {
+      
+
             logger.LogDebug("Creating an account using Google registration.");
             logger.LogDebug("Attempting to authenticate the google onetime code.");
 
@@ -73,6 +88,12 @@ namespace Palavyr.Core.Services.AccountServices
                 return Credentials.CreateUnauthenticatedResponse(CouldNotValidateGoogleAuthToken);
             }
 
+            if (!allowedUsers.IsEmailAllowedToCreateAccount(payload.Email))
+            {
+                return Credentials.CreateUnauthenticatedResponse(AccountNotAllowed);
+            }
+            
+            
             logger.LogDebug("Checking if Email already exists as non-google account.");
             if (AccountExists(payload.Email))
             {
@@ -94,12 +115,12 @@ namespace Palavyr.Core.Services.AccountServices
             {
                 throw new DomainException($"A customer with this email address already exists {payload.Email}.");
             }
-            
+
             var ok = await RegisterAccount(accountId, apiKey, payload.Email, cancellationToken);
             logger.LogDebug("Send Email result was " + (ok ? "OK" : " a FAIL"));
 
             if (!ok) return Credentials.CreateUnauthenticatedResponse(EmailAddressNotFound);
-            
+
             var token = CreateNewJwtToken(account);
             var session = CreateNewSession(account);
             await accountsContext.Sessions.AddAsync(session);
@@ -116,7 +137,7 @@ namespace Palavyr.Core.Services.AccountServices
 
         private Session CreateNewSession(Account account)
         {
-            var sessionId = Guid.NewGuid().ToString();
+            var sessionId = guidUtils.CreateNewId();
             logger.LogDebug("Attempting to create a new Session.");
             var session = Session.CreateNew(sessionId, account.AccountId, account.ApiKey);
             logger.LogDebug($"New Session created: {session.SessionId}");
@@ -125,6 +146,11 @@ namespace Palavyr.Core.Services.AccountServices
 
         public async Task<Credentials> CreateNewAccountViaDefaultAsync(AccountDetails newAccountDetails, CancellationToken cancellationToken)
         {
+            if (!allowedUsers.IsEmailAllowedToCreateAccount(newAccountDetails.EmailAddress))
+            {
+                return Credentials.CreateUnauthenticatedResponse(AccountNotAllowed);
+            }
+            
             // confirm account doesn't already exist
             if (AccountExists(newAccountDetails.EmailAddress))
             {
