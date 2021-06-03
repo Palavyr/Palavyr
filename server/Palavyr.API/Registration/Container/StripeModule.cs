@@ -1,7 +1,10 @@
+using Amazon.S3;
 using Autofac;
 using Microsoft.Extensions.Configuration;
+using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Services.StripeServices;
+using Palavyr.Core.Services.StripeServices.Products;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers;
 using Stripe;
 
@@ -29,8 +32,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<StripeSubscriptionService>().AsSelf();
             builder.RegisterType<StripeProductService>().AsSelf();
             builder.RegisterType<StripeCheckoutService>().AsSelf();
-            
-            
+
             builder.RegisterType<ProcessStripeSubscriptionUpdatedHandler>().AsSelf();
             builder.RegisterType<ProcessStripeSubscriptionDeletedHandler>().AsSelf();
             builder.RegisterType<ProcessStripeCheckoutSessionCompletedHandler>().AsSelf();
@@ -42,7 +44,21 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<ProcessStripeInvoiceCreatedHandler>().AsSelf();
             builder.RegisterType<ProcessStripePriceUpdatedHandler>().AsSelf();
 
-            builder.RegisterType<ProductRegistry>().As<IProductRegistry>();
+            builder.Register<IProductRegistry>(
+                    context =>
+                    {
+                        var determineCurrentEnvironment = new DetermineCurrentEnvironment(configuration);
+                        if (determineCurrentEnvironment.IsProduction())
+                        {
+                            return new ProductionProductRegistry();
+                        }
+                        else
+                        {
+                            return new StagingProductRegistry();
+                        }
+                    })
+                .As<IProductRegistry>()
+                .InstancePerLifetimeScope();
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
+using Palavyr.Core.Services.StripeServices.Products;
 using Stripe;
 using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 

@@ -1,16 +1,16 @@
 ﻿using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Services.StripeServices;
+using Palavyr.Core.Services.StripeServices.Products;
 using Shouldly;
 using Xunit;
 
 namespace PalavyrServer.UnitTests.Core.Services.StripeServices
 {
-    public class ProductRegistryFixture
+    public class StagingProductRegistryFixture
     {
         [Fact]
         public void WhenGettingProductIds_AllProductTypesAreSet()
         {
-            var registry = new ProductRegistry();
+            var registry = new StagingProductRegistry();
             var productIds = registry.GetProductIds();
 
             productIds.FreeProductId.ShouldBe("");
@@ -22,27 +22,27 @@ namespace PalavyrServer.UnitTests.Core.Services.StripeServices
         [Fact]
         public void WhenGivenTheFreeProductId_TheFreePlanTypeEnumIsReturned()
         {
-            var registry = new ProductRegistry();
+            var registry = new StagingProductRegistry();
 
-            var planTypeEnum = registry.GetPlanTypeEnum(Products.FreeProduct.FreeProductId);
+            var planTypeEnum = registry.GetPlanTypeEnum(StagingProducts.FreeProduct.FreeProductId);
             planTypeEnum.ShouldBe(Account.PlanTypeEnum.Free);
         }
 
         [Fact]
         public void WhenGivenTheLyteProductId_TheLytePlanTypeEnumIsReturned()
         {
-            var registry = new ProductRegistry();
+            var registry = new StagingProductRegistry();
 
-            var planTypeEnum = registry.GetPlanTypeEnum(Products.LyteProduct.LyteProductId);
+            var planTypeEnum = registry.GetPlanTypeEnum(StagingProducts.LyteProduct.LyteProductId);
             planTypeEnum.ShouldBe(Account.PlanTypeEnum.Lyte);
         }
 
         [Fact]
         public void WhenGivenThePremiumProductId_ThePremiumPlanTypeEnumIsReturned()
         {
-            var registry = new ProductRegistry();
+            var registry = new StagingProductRegistry();
 
-            var planTypeEnum = registry.GetPlanTypeEnum(Products.PremiumProduct.PremiumProductId);
+            var planTypeEnum = registry.GetPlanTypeEnum(StagingProducts.PremiumProduct.PremiumProductId);
             planTypeEnum.ShouldBe(Account.PlanTypeEnum.Premium);
         }
 
@@ -50,9 +50,9 @@ namespace PalavyrServer.UnitTests.Core.Services.StripeServices
         [Fact]
         public void WhenGettingTheProPlanEnumType_TheProPlanTypeEnumIsReturned()
         {
-            var registry = new ProductRegistry();
+            var registry = new StagingProductRegistry();
 
-            var planTypeEnum = registry.GetPlanTypeEnum(Products.ProProduct.ProProductId);
+            var planTypeEnum = registry.GetPlanTypeEnum(StagingProducts.ProProduct.ProProductId);
             planTypeEnum.ShouldBe(Account.PlanTypeEnum.Pro);
         }
     }

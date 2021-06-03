@@ -1,6 +1,6 @@
-﻿namespace Palavyr.Core.Services.StripeServices
+﻿namespace Palavyr.Core.Services.StripeServices.Products
 {
-    public static class Products
+    public class StagingProducts
     {
         public static class FreeProduct
         {

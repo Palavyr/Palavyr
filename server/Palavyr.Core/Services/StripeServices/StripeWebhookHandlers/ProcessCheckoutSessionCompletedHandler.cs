@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
+using Palavyr.Core.Services.StripeServices.Products;
 using Stripe.Checkout;
 
 namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers
