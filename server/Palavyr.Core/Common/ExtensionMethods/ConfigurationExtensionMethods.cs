@@ -49,5 +49,10 @@ namespace Palavyr.Core.Common.ExtensionMethods
         {
             return configuration.GetSection(ApplicationConstants.ConfigSections.JwtSecretKey).Value;
         }
+
+        public static string GetCurrentEnvironment(this IConfiguration configuration)
+        {
+            return configuration.GetSection(ApplicationConstants.ConfigSections.CurrentEnvironment).Value;
+        }
     }
 }

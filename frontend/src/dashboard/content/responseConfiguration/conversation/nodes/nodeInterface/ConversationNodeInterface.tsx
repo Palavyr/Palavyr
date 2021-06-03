@@ -18,6 +18,7 @@ import { _handleUnsetCurrentNodeType } from "./nodeInterfaceCallbacks/_handleUns
 import { _getParentNode } from "../nodeUtils/_coreNodeUtils";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { CustomImage } from "./nodeEditor/imageNode/CustomImage";
+import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 
 type StyleProps = {
     nodeText: string;
@@ -105,7 +106,7 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
     const [currentImageId, setCurrentImageId] = useState<string>("");
 
     const loadImage = useCallback(async () => {
-        if (node.imageId !== null) {
+        if (node.imageId !== null && node.imageId !== undefined) {
             const fileLinks = await repository.Configuration.Images.getImages([node.imageId]);
             const fileLink = fileLinks[0];
             if (!fileLink.isUrl) {

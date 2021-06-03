@@ -35,6 +35,7 @@ module.exports = (ENV) => {
                  { from: './public/apple-touch-icon.png'},
                  { from: './public/android-chrome-192x192.png'},
                  { from: './public/android-chrome-512x512.png'},
+                 { from: './public/MAINTENANCE.html'}
                 ]
              })
         ],

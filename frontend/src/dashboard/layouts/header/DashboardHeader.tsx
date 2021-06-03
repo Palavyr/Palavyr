@@ -131,8 +131,8 @@ export const DashboardHeader = ({ unseenNotifications, open, handleDrawerOpen, t
                     </Align>
                     <Align float="right">
                         <Tooltip title="Unseen enquiries">
-                            <IconButton onClick={() => history.push("/dashboard/enquiries")} className={cls.icon} edge="start" color="inherit">
-                                <Badge badgeContent={unseenNotifications} color="secondary">
+                            <IconButton disabled={unseenNotifications === 0} onClick={() => history.push("/dashboard/enquiries")} className={cls.icon} edge="start" color="inherit">
+                                <Badge showZero={false} badgeContent={unseenNotifications} color="secondary">
                                     <NotificationsIcon />
                                 </Badge>
                             </IconButton>
