@@ -95,6 +95,7 @@ export const changeNodeType = async (
     previousNode.dynamicType = nodeOption.dynamicType;
     previousNode.isImageNode = nodeOption.isImageNode;
     previousNode.imageId = nodeOption.imageId;
+    previousNode.shouldRenderChildren = nodeOption.shouldRenderChildren;
 
     if (identity.shouldShowSetAsAnabranchMergePointOption && nodeOption.isAnabranchType) {
         previousNode.isAnabranchMergePoint = true; // needs to set true if inside anabranch and
