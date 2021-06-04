@@ -1,11 +1,13 @@
 ﻿#nullable enable
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Palavyr.API;
+using Palavyr.Core.Services.StripeServices;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Xunit;
@@ -47,7 +49,10 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
             AccountsContext.Database.EnsureDeleted();
             DashContext.Database.EnsureDeleted();
             ConvoContext.Database.EnsureDeleted();
+            
             await Task.CompletedTask;
         }
+        
+
     }
 }
