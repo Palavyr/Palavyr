@@ -40,7 +40,7 @@ export const OtherSection = ({ isActive }: OtherSectionProps) => {
 
     const getWidgetOnClick = () => {
         setViewName("Get Widget");
-        history.push("/dashboard/getwidget/");
+        history.push("/dashboard/getwidget");
     };
 
     const logoutOnClick = () => Auth.PerformLogout(() => history.push("/"));

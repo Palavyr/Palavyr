@@ -147,7 +147,7 @@ export const WelcomeToTheDashboard = () => {
                     </Card>
                 </div>
                 <div className={cls.sectionDiv}>
-                    <Card className={classNames(cls.card, cls.highlight, cls.clickable)} onClick={() => history.push("/dashboard/getwidget/")}>
+                    <Card className={classNames(cls.card, cls.highlight, cls.clickable)} onClick={() => history.push("/dashboard/getwidget")}>
                         <Typography gutterBottom variant="h4">
                             Add the widget to your site
                         </Typography>
