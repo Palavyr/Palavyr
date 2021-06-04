@@ -15,11 +15,10 @@ import { Sliver } from "./components/sliver/Sliver";
 import { CHANGE_PASSWORD, REGISTER, TERMS_OF_SERVICE } from "@constants";
 import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStrip";
 import { GreenStrip } from "./components/sliver/ThinStrip";
-import { isDevelopmentStage, landingWidgetApiKey, widgetApiKey, widgetUrl } from "@api-client/clientUtils";
+import { isDevelopmentStage, landingWidgetApiKey, widgetUrl } from "@api-client/clientUtils";
 import { IFrame } from "dashboard/content/demo/IFrame";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { YellowStrip } from "@common/components/YellowStrip";
-import { AlphaStrip } from "@common/components/devIndicators/AlphaStrip";
 
 AOS.init({
     duration: 1000,
@@ -103,7 +102,6 @@ export const LandingPage = () => {
             <CookieRules open={isCookieRulesDialogOpen} onClose={handleCookieRulesDialogClose} />
             {!show && <YellowStrip />}
             <DevStagingStrip show={show} setShow={setShow} />
-            {/* <AlphaStrip /> */}
             <Header
                 openRegisterDialog={openRegisterDialog}
                 openLoginDialog={openLoginDialog}

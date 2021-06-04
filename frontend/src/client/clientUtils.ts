@@ -26,7 +26,6 @@ export const redirectToHomeWhenSessionNotEstablished = (history) => {
 export const serverUrl = process.env.API_URL as string;
 export const webUrl = process.env.WEB_URL as string;
 export const widgetUrl = process.env.WIDGET_URL as string;
-export const widgetApiKey = process.env.WIDGET_APIKEY as string;
 export const googleOAuthClientId = process.env.GOOGLE_OAUTH as string;
 export const stripeKey = process.env.STRIPE_KEY as string;
 export const currentEnvironment = process.env.CURRENTENV as string;
@@ -58,9 +57,6 @@ if (webUrl === undefined) {
 
 if (widgetUrl === undefined) {
     console.log("WIDGET URL UNDEFINED");
-}
-if (widgetApiKey === undefined) {
-    console.log("WIDGET API KEY UNDEFINED");
 }
 
 if (googleOAuthClientId === undefined) {

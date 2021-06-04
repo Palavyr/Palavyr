@@ -1,5 +1,4 @@
 import { ItemRowObject } from "../TwoItemRow/TwoItemRow";
-import Wifi from "../../../common/svgs/misc/wifi.svg";
 import TimeCircle from "../../../common/svgs/misc/_24h.svg";
 import SimpleIntegration from "../../../common/svgs/misc/speak_and_spell.svg";
 import Ring from "../../../common/svgs/misc/ring.svg";
