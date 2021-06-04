@@ -14,8 +14,8 @@ export const Cancel = () => {
     const history = useHistory();
     return (
         <div className={cls.outer}>
-            <h1>Don't worry - you've cancelled the transaction :D</h1>
-            <p>You haven't paid anything to use. If you change your mind, head back to the Subscribe page.</p>
+            <h1>You've cancelled your transaction :D</h1>
+            <p>You haven't paid anything. If you change your mind, head back to the Subscribe page.</p>
             <SinglePurposeButton
                 variant="outlined"
                 color="primary"

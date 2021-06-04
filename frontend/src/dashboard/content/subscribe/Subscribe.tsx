@@ -74,8 +74,8 @@ export const Subscribe = () => {
     const orderedProductOptions: ProductOptions = [
         {
             card: <Lyte priceInfo={true} showYearly />,
-            purchaseType: PurchaseTypes.Premium,
-            productId: productList?.premiumProductId || null,
+            purchaseType: PurchaseTypes.Lyte,
+            productId: productList?.lyteProductId || null,
             currentplan: planTypeMeta?.planType === PurchaseTypes.Lyte,
         },
         {
@@ -104,7 +104,7 @@ export const Subscribe = () => {
                                 {planTypeMeta &&
                                     orderedProductOptions.map((product: ProductOption, key: number) => {
                                         return (
-                                            <div onClick={() => (planTypeMeta && planTypeMeta.isFreePlan ? null : goToPurchase(product.purchaseType, product.productId))} className={classnames(cls.width, cls.card)}>
+                                            <div onClick={() => (planTypeMeta && goToPurchase(product.purchaseType, product.productId))} className={classnames(cls.width, cls.card)}>
                                                 {product.card}
                                             </div>
                                         );
