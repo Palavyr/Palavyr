@@ -4,10 +4,7 @@ import { IHaveWidth } from "@Palavyr-Types";
 import { infos } from "./Infos";
 import { socialIcons } from "./SocialIcons";
 import transitions from "@material-ui/core/styles/transitions";
-import OctopusLogo from "./octopusLogo.svg";
-import { Align } from "dashboard/layouts/positioning/Align";
-import { DividerWithText } from "@common/components/DividerWithText";
-import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
+import { DeployedWith } from "./DeployedWith";
 
 const useStyles = makeStyles((theme) => ({
     footer: {
@@ -96,19 +93,9 @@ export const Footer = withWidth()(({ width }: IHaveWidth) => {
                             </Box>
                         ))}
                     </Box>
+                    <DeployedWith />
                 </Grid>
             </Grid>
-            <Align>
-                <div style={{ width: "100%", marginTop: "2rem" }}>
-                    <DividerWithText text="Proudly deployed using" />
-                    <br></br>
-                    <SpaceEvenly center>
-                        <div style={{ width: "30%" }}>
-                            <OctopusLogo style={{ cursor: "pointer" }} onClick={() => window.open("https://www.octopus.com", "_blank")} />
-                        </div>
-                    </SpaceEvenly>
-                </div>
-            </Align>
         </footer>
     );
 });
