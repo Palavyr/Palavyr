@@ -48,7 +48,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
                     await this.CreateFileNameMapBuilder()
                         .WithAccountId(IntegrationConstants.AccountId)
                         .WithAreaIdentifier(IntegrationConstants.DefaultArea)
-                        .WithSafeName(s3Meta.LocalFileName)
+                        .WithSafeName(s3Meta.SafeName)
                         .WithS3Key(s3Meta.Key)
                         .WithRiskyName(RiskyName)
                         .Build();
@@ -98,7 +98,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
                     await this.CreateFileNameMapBuilder()
                         .WithAccountId(IntegrationConstants.AccountId)
                         .WithAreaIdentifier(IntegrationConstants.DefaultArea)
-                        .WithSafeName(s3Meta.LocalFileName)
+                        .WithSafeName(s3Meta.SafeName)
                         .WithS3Key(s3Meta.Key)
                         .WithRiskyName(RiskyName)
                         .Build();

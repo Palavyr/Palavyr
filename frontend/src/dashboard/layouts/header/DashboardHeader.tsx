@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const routesToExclude = [
+const baseRoutesToExclude = [
     "/dashboard",
     "/dashboard/welcome",
     "/dashboard/settings/password",
@@ -72,13 +72,15 @@ const routesToExclude = [
     "/dashboard/settings/deleteaccount",
     "/dashboard/set-areas",
     "/dashboard/enquiries",
-    "/dashboard/demo/",
+    "/dashboard/demo",
     "/dashboard/subscribe",
     "/dashboard/subscribe/purchase",
     "/dashboard/confirm",
     "/dashboard/getwidget",
     "/dashboard/images",
 ];
+
+const routesToExclude = baseRoutesToExclude.concat(baseRoutesToExclude.map((x) => x + "/"));
 
 export const DashboardHeader = ({ unseenNotifications, open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
     const cls = useStyles();

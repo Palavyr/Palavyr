@@ -19,7 +19,8 @@ namespace Palavyr.API.Controllers.Accounts.Settings
 
         [HttpGet("account/settings/logo")]
         public async Task<string?> Get(
-            [FromHeader] string accountId,
+            [FromHeader]
+            string accountId,
             CancellationToken cancellationToken)
         {
             var preSignedUrl = await logoRetriever.GetLogo(accountId, cancellationToken);

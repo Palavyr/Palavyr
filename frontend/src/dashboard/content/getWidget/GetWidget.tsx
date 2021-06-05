@@ -39,7 +39,7 @@ export const GetWidget = () => {
                     To add the widget to your website, simply paste the following code into your website's html and apply custom styling:
                 </Typography>
                 {apikey !== "" && (
-                    <Typography onClick={() => window.open(`${widgetUrl}/widget?key=${apikey}`, "_blank")} component="pre" paragraph>
+                    <Typography style={{cursor: "pointer"}} onClick={() => window.open(`${widgetUrl}/widget?key=${apikey}`, "_blank")} component="pre" paragraph>
                         <strong>
                             &lt;iframe src="{widgetUrl}/widget?key={apikey}" /&gt;
                         </strong>

@@ -170,15 +170,5 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             var account = await configurationRepository.GetAreaById(accountId, areaId);
             return account.SendAttachmentsOnFallback;
         }
-
-        private async Task SaveResponsePdfToS3(string localFilePath, string accountId, string safeFileNameStem)
-        {
-            var userDataBucket = configuration.GetUserDataBucket();
-            var success = await s3Saver.SaveObjectToS3(userDataBucket, localFilePath, s3KeyResolver.ResolveResponsePdfKey(accountId, safeFileNameStem));
-            if (!success)
-            {
-                throw new Exception("Could not save pdf response to S3");
-            }
-        }
     }
 }

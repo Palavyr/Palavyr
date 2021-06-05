@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.FileSystemTools;
-using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.GlobalConstants;
-using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AmazonServices.S3Service;
@@ -57,18 +55,18 @@ namespace Palavyr.Core.Services.LogoServices
             var pathExtension = Path.GetExtension(logoFile.FileName);
             if (pathExtension == null) throw new Exception("File type could not be identified");
 
-            var s3AttachmentKey = s3KeyResolver.ResolveLogoKey(accountId, localSafePath.FileStem, pathExtension);
+            var logoKey = s3KeyResolver.ResolveLogoKey(accountId, localSafePath.FileStem, pathExtension);
 
             var account = await accountRepository.GetAccount(accountId, cancellationToken);
-            account.AccountLogoUri = s3AttachmentKey;
+            account.AccountLogoUri = logoKey;
             await accountRepository.CommitChangesAsync();
 
             await localIo.SaveFile(localSafePath.S3Key, logoFile);
 
-            await s3Saver.SaveObjectToS3(userDataBucket, localSafePath.S3Key, s3AttachmentKey);
+            await s3Saver.StreamObjectToS3(userDataBucket, logoFile, logoKey);
             temporaryPath.DeleteLocalTempFile(localSafePath.FileNameWithExtension);
 
-            var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(s3AttachmentKey, userDataBucket);
+            var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(logoKey, userDataBucket);
             return preSignedUrl;
         }
     }

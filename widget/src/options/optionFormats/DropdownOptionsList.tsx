@@ -2,7 +2,6 @@ import * as React from "react";
 import { SelectedOption, WidgetPreferences } from "../../globalTypes";
 import { useHistory, useLocation } from "react-router-dom";
 import { makeStyles, Card, Box, TextField } from "@material-ui/core";
-import { useEffect } from "react";
 import Autocomplete, { AutocompleteRenderInputParams } from "@material-ui/lab/Autocomplete";
 import classNames from "classnames";
 import { sortByPropertyAlphabetical } from "common/sorting";
@@ -30,6 +29,8 @@ const useStyles = makeStyles(() => ({
         color: prefs.headerFontColor,
         textAlign: "center",
         minWidth: 275,
+        minHeight: "20%",
+        maxHeight: "30%",
         wordWrap: "break-word",
         borderRadius: "0px",
     }),

@@ -37,8 +37,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         public async Task Delete(
             [FromHeader]
             string accountId,
-            CancellationToken cancellationToken
-            )
+            CancellationToken cancellationToken)
         {
             await logoDeleter.DeleteLogo(accountId, cancellationToken);
         }

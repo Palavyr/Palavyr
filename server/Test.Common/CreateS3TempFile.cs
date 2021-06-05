@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Test.Common.ExtensionsMethods;
@@ -40,15 +41,18 @@ namespace Test.Common
         public async Task<TempS3FileMeta> CreateTempFileOnS3()
         {
             var fileStem = A.RandomName();
-            var localTempFile = Path.GetTempFileName();
             var temps3Key = TempS3Utils.CreateTempS3Key(fileStem);
             var bucket = configuration.GetUserDataBucket();
-            await saver.SaveObjectToS3(bucket, localTempFile, temps3Key);
+
+            var stream = new MemoryStream(new byte[] { }, 0, 0);
+
+            var formFile = new FormFile(stream, 0, stream.Length, "TempStream", "TempFile.tmp");
+            await saver.StreamObjectToS3(bucket, formFile, temps3Key);
             return new TempS3FileMeta()
             {
                 Bucket = bucket,
                 Key = temps3Key,
-                LocalFileName = fileStem + ".tmp"
+                SafeName = fileStem + ".tmp"
             };
         }
     }
@@ -57,6 +61,6 @@ namespace Test.Common
     {
         public string Key { get; set; }
         public string Bucket { get; set; }
-        public string LocalFileName { get; set; }
+        public string SafeName { get; set; }
     }
 }
