@@ -44,6 +44,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<ProcessStripeInvoiceCreatedHandler>().AsSelf();
             builder.RegisterType<ProcessStripePriceUpdatedHandler>().AsSelf();
 
+            builder.RegisterType<StripeCustomerManagementPortalService>().As<IStripeCustomerManagementPortalService>();
+
             builder.Register<IProductRegistry>(
                     context =>
                     {

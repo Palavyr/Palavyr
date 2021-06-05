@@ -1,8 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Stripe;
-using Stripe.BillingPortal;
+using Palavyr.Core.Services.StripeServices;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
@@ -11,34 +9,21 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
         public string CustomerId { get; set; }
         public string ReturnUrl { get; set; }
     }
-
-    // TODO
-    /// <summary>
-    /// Used to update customer billing information - card numbers, etc
-    /// </summary>
+    
     public class CreateCustomerPortalSessionController : PalavyrBaseController
     {
-        private ILogger<CreateCustomerPortalSessionController> logger;
-        private readonly IStripeClient stripeClient;
+        private readonly IStripeCustomerManagementPortalService stripeCustomerManagementPortalService;
 
-        public CreateCustomerPortalSessionController(ILogger<CreateCustomerPortalSessionController> logger)
+        public CreateCustomerPortalSessionController(IStripeCustomerManagementPortalService stripeCustomerManagementPortalService)
         {
-            this.stripeClient = new StripeClient(StripeConfiguration.ApiKey);
-            this.logger = logger;
+            this.stripeCustomerManagementPortalService = stripeCustomerManagementPortalService;
         }
 
         [HttpPost("payments/customer-portal")]
         public async Task<string> Create([FromHeader] string accountId, [FromBody] CustomerPortalRequest request)
         {
-            var options = new SessionCreateOptions()
-            {
-                Customer = request.CustomerId,
-                ReturnUrl = request.ReturnUrl,
-            };
-            var service = new SessionService();
-            var session = await service.CreateAsync(options);
-
-            return session.Url;
+            var portalUrl = await stripeCustomerManagementPortalService.FormCustomerSubscriptionManagementPortalUrl(request.CustomerId, request.ReturnUrl);
+            return portalUrl;
         }
     }
 }
