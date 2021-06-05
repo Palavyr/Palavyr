@@ -28,12 +28,12 @@ export const ReviewSection = ({ isActive }: ReviewSectionProps) => {
 
     const enquiriesOnClick = () => {
         setViewName("Enquiries");
-        history.push("/dashboard/enquiries/");
+        history.push("/dashboard/enquiries");
     };
 
     const chatDemoOnClick = () => {
         setViewName("Widget Demo");
-        history.push("/dashboard/demo/");
+        history.push("/dashboard/demo");
     };
 
     const imagesReviewOnClick = () => {

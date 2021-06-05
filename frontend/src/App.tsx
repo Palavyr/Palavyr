@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Fragment, Suspense } from "react";
 import { MuiThemeProvider, CssBaseline } from "@material-ui/core";
 import { BrowserRouter } from "react-router-dom";
 import theme from "./theme";
@@ -14,9 +13,7 @@ const App = () => {
             <BrowserRouter>
                 <MuiThemeProvider theme={theme}>
                     <CssBaseline />
-                    {/* <Suspense fallback={<Fragment />}> */}
                     <Routes />
-                    {/* </Suspense> */}
                 </MuiThemeProvider>
                 <RouteChangeTracker />
             </BrowserRouter>

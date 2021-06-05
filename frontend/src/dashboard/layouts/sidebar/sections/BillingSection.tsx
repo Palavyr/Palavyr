@@ -28,14 +28,16 @@ export const BillingSection = ({ isActive }: BillingSectionProps) => {
 
     const subscribeOnClick = () => {
         setViewName("Subscriptions");
-        history.push("/dashboard/subscribe/");
+        history.push("/dashboard/subscribe");
     };
 
     const createCustomerPortalSession = async () => {
         const repository = new PalavyrRepository();
-        var returnUrl = `${webUrl}/dashboard/`;
+        const returnUrl = `${webUrl}/dashboard`;
         const customerId = await repository.Purchase.Customer.GetCustomerId();
+        console.log(customerId);
         const portalUrl = await repository.Purchase.Customer.GetCustomerPortal(customerId, returnUrl);
+        console.log(portalUrl);
         window.open(portalUrl, "_blank");
     };
 
