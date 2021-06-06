@@ -1,5 +1,5 @@
 import React from "react";
-import { DynamicTableProps } from "@Palavyr-Types";
+import { BasicThresholdData, DynamicTableProps } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
@@ -52,7 +52,7 @@ export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTab
 
         const result = modifier.validateTable(reorderedData);
         if (result) {
-            const saveBasicThreshold = await repository.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.BasicThreshold, reorderedData, tableId, tableTag);
+            const saveBasicThreshold = await repository.Configuration.Tables.Dynamic.saveDynamicTable<BasicThresholdData[]>(areaIdentifier, DynamicTableTypes.BasicThreshold, reorderedData, tableId, tableTag);
             setTableData(saveBasicThreshold);
             return true;
         } else {

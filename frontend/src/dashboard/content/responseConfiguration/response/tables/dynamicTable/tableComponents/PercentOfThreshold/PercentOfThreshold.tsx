@@ -2,7 +2,7 @@ import React from "react";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
-import { DynamicTableProps } from "@Palavyr-Types";
+import { DynamicTableProps, PercentOfThresholdData } from "@Palavyr-Types";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { PercentOfThresholdContainer } from "./PercentOfThresholdContainer";
 import { reOrderPercentOfThresholdTableData } from "./PercentOfThresholdUtils";
@@ -43,7 +43,7 @@ export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableData, se
         const result = modifier.validateTable(reorderedData);
 
         if (result) {
-            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.PercentOfThreshold, reorderedData, tableId, tableTag);
+            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable<PercentOfThresholdData[]>(areaIdentifier, DynamicTableTypes.PercentOfThreshold, reorderedData, tableId, tableTag);
             setTableData(savedData);
             return true;
         } else {

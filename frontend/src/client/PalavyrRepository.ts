@@ -99,10 +99,10 @@ export class PalavyrRepository {
                 createDynamicTable: async (areaIdentifier: string) => this.client.post<DynamicTableMeta, {}>(`tables/dynamic/${areaIdentifier}`),
 
                 deleteDynamicTable: async (areaIdentifier: string, tableType: string, tableId: string) => this.client.delete(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`),
-                getDynamicTableDataTemplate: async (areaIdentifier: string, tableType: string, tableId: string) => this.client.get<TableData>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}/template`),
+                getDynamicTableDataTemplate: async <T>(areaIdentifier: string, tableType: string, tableId: string) => this.client.get<T>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}/template`),
                 getDynamicTableRows: async (areaIdentifier: string, tableType: string, tableId: string) => this.client.get<TableData>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`),
-                saveDynamicTable: async (areaIdentifier: string, tableType: string, tableData: TableData, tableId: string, tableTag: string) =>
-                    this.client.put(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`, { TableTag: tableTag, [tableType]: tableData }),
+                saveDynamicTable: async <T>(areaIdentifier: string, tableType: string, tableData: TableData, tableId: string, tableTag: string) =>
+                    this.client.put<T, {}>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`, { TableTag: tableTag, [tableType]: tableData }),
             },
             Static: {
                 updateStaticTablesMetas: async (areaIdentifier: string, staticTablesMetas: StaticTableMetas) => this.client.put<StaticTableMetas, {}>(`response/configuration/${areaIdentifier}/static/tables/save`, staticTablesMetas),

@@ -23,14 +23,14 @@ export class PercentOfThresholdModifier {
     }
 
     async addItem(tableData: PercentOfThresholdData[], repository: PalavyrRepository, areaIdentifier: string, tableId: string) {
-        const newItemInitialrow = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
+        const newItemInitialrow = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<PercentOfThresholdData>(areaIdentifier, this.tableType, tableId);
 
         tableData.push(newItemInitialrow);
         this.setTables(tableData);
     }
 
     async addRow(tableData: PercentOfThresholdData[], repository: PalavyrRepository, areaIdentifier: string, tableId: string, itemId: string) {
-        const newRowTemplate = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
+        const newRowTemplate = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<PercentOfThresholdData>(areaIdentifier, this.tableType, tableId);
         newRowTemplate.itemId = itemId;
         tableData.push(newRowTemplate);
         this.setTables(tableData);

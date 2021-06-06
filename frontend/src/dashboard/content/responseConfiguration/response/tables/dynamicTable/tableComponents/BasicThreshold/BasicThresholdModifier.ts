@@ -28,7 +28,7 @@ export class BasicThresholdModifier {
     }
 
     async addThreshold(tableData: BasicThresholdData[], areaIdentifier: string, tableId: string, repository: PalavyrRepository) {
-        const newRowTemplate = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
+        const newRowTemplate = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<BasicThresholdData>(areaIdentifier, this.tableType, tableId);
         tableData.push(newRowTemplate);
         this.setTables(tableData);
     }

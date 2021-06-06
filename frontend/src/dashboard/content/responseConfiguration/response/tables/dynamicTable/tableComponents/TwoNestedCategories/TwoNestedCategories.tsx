@@ -2,7 +2,7 @@ import React from "react";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
-import { DynamicTableProps } from "@Palavyr-Types";
+import { DynamicTableProps, TwoNestedCategoryData } from "@Palavyr-Types";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { TwoNestedCategoriesContainer } from "./TwoNestedCategoriesContainer";
 import { DisplayTableData } from "../DisplayTableData";
@@ -40,7 +40,7 @@ export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, s
         const result = modifier.validateTable(tableData);
 
         if (result) {
-            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.TwoNestedCategory, tableData, tableId, tableTag);
+            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable<TwoNestedCategoryData[]>(areaIdentifier, DynamicTableTypes.TwoNestedCategory, tableData, tableId, tableTag);
             setTableData(savedData);
             return true;
         } else {

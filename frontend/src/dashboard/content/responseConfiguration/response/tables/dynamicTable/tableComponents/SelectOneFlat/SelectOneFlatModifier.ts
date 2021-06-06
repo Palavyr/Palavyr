@@ -1,30 +1,30 @@
-import { SelectOneFlatData, SetState, TableData } from "@Palavyr-Types";
+import { SelectOneFlatData, SetState } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
 export class SelectOneFlatModifier {
-    onClick: SetState<TableData>;
+    onClick: SetState<SelectOneFlatData[]>;
     tableType: string;
 
-    constructor(onClick: SetState<TableData>) {
+    constructor(onClick: SetState<SelectOneFlatData[]>) {
         this.onClick = onClick;
         this.tableType = DynamicTableTypes.SelectOneFlat;
     }
 
-    setTables(newState: TableData) {
+    setTables(newState: SelectOneFlatData[]) {
         this.onClick(cloneDeep(newState));
     }
 
-    async addOption(tableData: TableData, repository: PalavyrRepository, areaIdentifier: string, tableId: string) {
+    async addOption(tableData: SelectOneFlatData[], repository: PalavyrRepository, areaIdentifier: string, tableId: string) {
         // this is a difficult situation - we need to allow for an array of objects of various types (dynamic table types)
-        const newTableTemplate = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
+        const newTableTemplate = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<SelectOneFlatData>(areaIdentifier, this.tableType, tableId);
         tableData.push(newTableTemplate);
         this.setTables(tableData);
     }
 
-    removeOption(tableData: TableData, dataIndex: number) {
-        const newRows: TableData = [];
+    removeOption(tableData: SelectOneFlatData[], dataIndex: number) {
+        const newRows:SelectOneFlatData[] = [];
         if (tableData.length > 1) {
             tableData.forEach((row, index: number) => {
                 if (index !== dataIndex) {
@@ -37,22 +37,22 @@ export class SelectOneFlatModifier {
         }
     }
 
-    setOptionText(tableData: TableData, index: number, newText: string) {
+    setOptionText(tableData: SelectOneFlatData[], index: number, newText: string) {
         tableData[index].option = newText;
         this.setTables(tableData);
     }
 
-    setOptionValue(tableData: TableData, index: number, newValue: number) {
+    setOptionValue(tableData: SelectOneFlatData[], index: number, newValue: number) {
         tableData[index].valueMin = newValue;
         this.setTables(tableData);
     }
 
-    setOptionMaxValue(tableData: TableData, index: number, newValue: number) {
+    setOptionMaxValue(tableData: SelectOneFlatData[], index: number, newValue: number) {
         tableData[index].valueMax = newValue;
         this.setTables(tableData);
     }
 
-    setRangeOrValue(tableData: TableData, index: number) {
+    setRangeOrValue(tableData: SelectOneFlatData[], index: number) {
         tableData[index].range = !tableData[index].range;
         this.setTables(tableData);
     }

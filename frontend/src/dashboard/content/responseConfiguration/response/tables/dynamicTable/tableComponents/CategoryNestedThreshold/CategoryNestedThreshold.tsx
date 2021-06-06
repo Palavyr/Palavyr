@@ -2,7 +2,7 @@ import React from "react";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
-import { DynamicTableProps } from "@Palavyr-Types";
+import { CategoryNestedThresholdData, DynamicTableProps } from "@Palavyr-Types";
 
 import { DisplayTableData } from "../DisplayTableData";
 import { CategoryNestedThresholdContainer } from "./CategoryNestedThresholdContainer";
@@ -38,7 +38,7 @@ export const CategoryNestedThreshold = ({ tableId, tableTag, tableMeta, tableDat
         const result = modifier.validateTable(tableData);
 
         if (result) {
-            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.CategoryNestedThreshold, tableData, tableId, tableTag);
+            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable<CategoryNestedThresholdData[]>(areaIdentifier, DynamicTableTypes.CategoryNestedThreshold, tableData, tableId, tableTag);
             setTableData(savedData);
             return true;
         } else {

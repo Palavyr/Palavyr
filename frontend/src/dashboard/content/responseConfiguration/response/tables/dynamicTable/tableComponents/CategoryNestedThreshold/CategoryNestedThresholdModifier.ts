@@ -23,7 +23,7 @@ export class CategoryNestedThresholdModifier {
     }
 
     async addCategory(tableData: CategoryNestedThresholdData[], repository: PalavyrRepository, areaIdentifier: string, tableId: string) {
-        const template = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
+        const template = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<CategoryNestedThresholdData>(areaIdentifier, this.tableType, tableId);
 
         const categoryIds = uniq(tableData.map((x: CategoryNestedThresholdData) => x.itemId));
         template.itemOrder = categoryIds.length;
@@ -37,7 +37,7 @@ export class CategoryNestedThresholdModifier {
     }
 
     async addThreshold(tableData: CategoryNestedThresholdData[], categoryId: string, repository: PalavyrRepository, areaIdentifier: string, tableId: string) {
-        const template = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate(areaIdentifier, this.tableType, tableId);
+        const template = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<CategoryNestedThresholdData>(areaIdentifier, this.tableType, tableId);
 
         const categoryRows = this._getRowsByCategoryId(tableData, categoryId);
         template.rowOrder = categoryRows.length;

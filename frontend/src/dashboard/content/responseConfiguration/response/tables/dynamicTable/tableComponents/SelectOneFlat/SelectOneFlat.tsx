@@ -55,7 +55,7 @@ export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tab
         const result = modifier.validateTable(tableData);
 
         if (result) {
-            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable(areaIdentifier, DynamicTableTypes.SelectOneFlat, tableData, tableId, tableTag);
+            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable<SelectOneFlatModifier[]>(areaIdentifier, DynamicTableTypes.SelectOneFlat, tableData, tableId, tableTag);
             setTableData(savedData);
             return true;
         } else {
