@@ -34,7 +34,6 @@ namespace Palavyr.Core.Models.Accounts.Schemas
 
         [NotMapped] public readonly string DefaultLocale = "en-AU";
 
-
         public class PlanTypes
         {
             public const string Lyte = "Lyte";
@@ -118,6 +117,7 @@ namespace Palavyr.Core.Models.Accounts.Schemas
                 PaymentInterval = PaymentIntervalEnum.Null,
                 GeneralFallbackSubject = "",
                 GeneralFallbackEmailTemplate = "",
+                CreationDate = DateTime.Now
             };
         }
         

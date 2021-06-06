@@ -22,12 +22,12 @@ namespace Palavyr.API.Controllers.Accounts.Setup
         }
 
         [HttpGet("account/is-active")]
-        public async Task<IActionResult> CheckIsActive([FromHeader] string accountId)
+        public async Task<bool> CheckIsActive([FromHeader] string accountId)
         {
             logger.LogDebug("Activation controller hit! Again!");
             var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
             var isActive = account.Active;
-            return Ok(isActive);
+            return isActive;
         }
     }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { List, Collapse, makeStyles } from "@material-ui/core";
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
@@ -19,7 +19,7 @@ export interface BillingSectionProps {
     isActive: boolean;
 }
 
-export const BillingSection = ({ isActive }: BillingSectionProps) => {
+export const BillingSection = memo(({ isActive }: BillingSectionProps) => {
     const [billingOpen, setBillingOpen] = useState<boolean>(false);
     const { setViewName, planTypeMeta } = React.useContext(DashboardContext);
 
@@ -59,4 +59,4 @@ export const BillingSection = ({ isActive }: BillingSectionProps) => {
             </Collapse>
         </List>
     );
-};
+});

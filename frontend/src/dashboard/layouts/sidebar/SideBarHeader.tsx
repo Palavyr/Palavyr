@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import IconButton from "@material-ui/core/IconButton";
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SideBarHeader = ({ handleDrawerClose, children, side = "left", roundTop = false }: SideBarHeaderProps) => {
+export const SideBarHeader = memo(({ handleDrawerClose, children, side = "left", roundTop = false }: SideBarHeaderProps) => {
     const cls = useStyles({ roundTop });
 
     return (
@@ -49,4 +49,4 @@ export const SideBarHeader = ({ handleDrawerClose, children, side = "left", roun
             </IconButton>
         </div>
     );
-};
+});

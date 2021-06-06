@@ -15,7 +15,7 @@ namespace Palavyr.Core.Services.StripeServices
         private readonly IAccountRepository accountRepository;
         private ILogger<StripeWebhookAuthService> logger;
         private IConfiguration configuration;
-        private const string stripeSignature = "Stripe-Signature";
+        private const string StripeSignature = "Stripe-Signature";
         private readonly string webhookKeySection = "Stripe:WebhookKey";
 
         public StripeWebhookAuthService(
@@ -37,7 +37,7 @@ namespace Palavyr.Core.Services.StripeServices
             {
                 var webhookSecret = configuration.GetSection(webhookKeySection).Value;
                 
-                var signatureItems = context.Request.Headers[stripeSignature]
+                var signatureItems = context.Request.Headers[StripeSignature]
                     .ToString()
                     .Trim()
                     .Split(',')
@@ -48,7 +48,7 @@ namespace Palavyr.Core.Services.StripeServices
                 
                 var eventPayload = EventUtility.ConstructEvent(
                     requestBody,
-                    context.Request.Headers[stripeSignature],
+                    context.Request.Headers[StripeSignature],
                     webhookSecret,
                     tolerance: 150
                 );

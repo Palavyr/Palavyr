@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { List, Collapse, makeStyles } from "@material-ui/core";
 import Auth from "auth/Auth";
@@ -21,7 +21,7 @@ export interface OtherSectionProps {
     isActive: boolean;
 }
 
-export const OtherSection = ({ isActive }: OtherSectionProps) => {
+export const OtherSection = memo(({ isActive }: OtherSectionProps) => {
     const [otherOpen, setOtherOpen] = useState<boolean>(true);
     const { setViewName } = React.useContext(DashboardContext);
 
@@ -56,4 +56,4 @@ export const OtherSection = ({ isActive }: OtherSectionProps) => {
             <SidebarLinkItem text="Logout" isActive={true} onClick={logoutOnClick} IconComponent={<ExitToAppIcon className={cls.icon} />} />
         </List>
     );
-};
+});

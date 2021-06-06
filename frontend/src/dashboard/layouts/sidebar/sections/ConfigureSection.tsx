@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { DashboardContext } from "../../DashboardContext";
 import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
 import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
@@ -22,7 +22,7 @@ export interface ConfigureSectionProps {
     areaNameDetails: AreaNameDetails;
 }
 
-export const ConfigureSection = ({ isActive, currentPage, areaNameDetails }: ConfigureSectionProps) => {
+export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails }: ConfigureSectionProps) => {
     const [configureOpen, setConfigureOpen] = useState<boolean>(true);
     const { checkAreaCount, setViewName, planTypeMeta } = React.useContext(DashboardContext);
 
@@ -48,4 +48,4 @@ export const ConfigureSection = ({ isActive, currentPage, areaNameDetails }: Con
             </Collapse>
         </List>
     );
-};
+});

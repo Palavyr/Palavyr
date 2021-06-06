@@ -1,6 +1,6 @@
 ﻿using Palavyr.Core.Models.Accounts.Schemas;
 
-namespace Palavyr.Core.Services.StripeServices
+namespace Palavyr.Core.Services.StripeServices.Products
 {
     public class PlanTypeMap
     {

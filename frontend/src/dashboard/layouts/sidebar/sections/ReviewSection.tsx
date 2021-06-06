@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { List, Collapse, makeStyles, Badge } from "@material-ui/core";
 import InboxIcon from "@material-ui/icons/Inbox";
@@ -19,7 +19,7 @@ export interface ReviewSectionProps {
     isActive: boolean;
 }
 
-export const ReviewSection = ({ isActive }: ReviewSectionProps) => {
+export const ReviewSection = memo(({ isActive }: ReviewSectionProps) => {
     const [reviewOpen, setReviewOpen] = useState<boolean>(true);
     const { setViewName, unseenNotifications, planTypeMeta } = React.useContext(DashboardContext);
 
@@ -55,4 +55,4 @@ export const ReviewSection = ({ isActive }: ReviewSectionProps) => {
             </Collapse>
         </List>
     );
-};
+});

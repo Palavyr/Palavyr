@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { ListItem, ListItemText, FormControlLabel, Typography, makeStyles } from "@material-ui/core";
 import { IOSSwitch } from "@common/components/IOSSwitch";
 import { green, red } from "theme";
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const WidgetStateSwitch = ({ isActive }: WidgetStateSwitchProps) => {
+export const WidgetStateSwitch = memo(({ isActive }: WidgetStateSwitchProps) => {
     const [widgetState, setWidgetState] = useState<boolean | undefined>();
     const cls = useStyles();
 
@@ -44,4 +44,4 @@ export const WidgetStateSwitch = ({ isActive }: WidgetStateSwitchProps) => {
             <FormControlLabel control={Switch} className={cls.text} label={widgetState === undefined ? "loading..." : widgetState ? "Enabled" : "Disabled"} />
         </ListItem>
     );
-};
+});

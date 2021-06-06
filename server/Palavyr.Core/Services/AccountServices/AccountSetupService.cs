@@ -2,10 +2,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data;
 using Palavyr.Core.Data.CompanyData;
@@ -104,7 +101,7 @@ namespace Palavyr.Core.Services.AccountServices
             logger.LogDebug("Creating New Account Details...");
             var accountId = newAccountUtils.GetNewAccountId();
             var apiKey = Guid.NewGuid().ToString();
-            logger.LogDebug($"New Account Details--Account: {accountId}  -- apiKey: {apiKey}");
+            // logger.LogDebug($"New Account Details--Account: {accountId}  -- apiKey: {apiKey}");
 
             var account = Account.CreateGoogleAccount(apiKey, payload.Email, accountId);
             logger.LogDebug("Adding new account via GOOGLE...");
@@ -161,7 +158,7 @@ namespace Palavyr.Core.Services.AccountServices
             // Add the new account
             logger.LogDebug("Creating a new account");
             var accountId = newAccountUtils.GetNewAccountId();
-            var apiKey = Guid.NewGuid().ToString();
+            var apiKey = guidUtils.CreateNewId();
             var account = Account.CreateAccount(
                 newAccountDetails.EmailAddress,
                 PasswordHashing.CreateHashedPassword(newAccountDetails.Password),

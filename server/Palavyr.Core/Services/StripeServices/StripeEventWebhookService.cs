@@ -50,6 +50,10 @@ namespace Palavyr.Core.Services.StripeServices
 
         public async Task ProcessStripeEvent(Event stripeEvent)
         {
+            //TODO: write to store and early bail if this already exists
+            // TODO: write a cleanup task to remove old stripe events (older than say a week?
+            
+            
             switch (stripeEvent.Type)
             {
                 case Events.CustomerSubscriptionUpdated:

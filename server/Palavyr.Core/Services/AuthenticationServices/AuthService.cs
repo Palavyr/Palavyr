@@ -115,13 +115,9 @@ namespace Palavyr.Core.Services.AuthenticationServices
             // if the current_period_end plus a few days is in the future, then active stays true
             logger.LogDebug("Updated current active state given the subscription status.");
             var periodEndWithBuffer = account.CurrentPeriodEnd.AddDays(GracePeriod); // 5 day grace period if they don't pay.
-            if (DateTime.Now > periodEndWithBuffer && account.PlanType != Account.PlanTypeEnum.Free)
+            if (account.PlanType != Account.PlanTypeEnum.Free && DateTime.Now > periodEndWithBuffer)
             {
-                account.Active = false;
-            }
-            else
-            {
-                account.Active = true;
+                account.PlanType = Account.PlanTypeEnum.Free;
             }
         }
 
