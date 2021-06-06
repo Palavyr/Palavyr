@@ -44,10 +44,10 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 
         public virtual async Task DisposeAsync()
         {
-            AccountsContext.Database.EnsureDeleted();
-            DashContext.Database.EnsureDeleted();
-            ConvoContext.Database.EnsureDeleted();
-            await Task.CompletedTask;
+            await DeleteTestStripeCustomers(); // needs to be run BEFORE we delete the databases
+            await AccountsContext.Database.EnsureDeletedAsync();
+            await DashContext.Database.EnsureDeletedAsync();
+            await ConvoContext.Database.EnsureDeletedAsync();
         }
     }
 }

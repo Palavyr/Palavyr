@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Palavyr.API;
 using Palavyr.Core.Data;
+using Palavyr.Core.Services.StripeServices;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Test.Common;
@@ -40,6 +45,17 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
         {
             builder.RegisterType<CreateS3TempFile>().As<ICreateS3TempFile>();
             return builder;
+        }
+
+
+        private protected virtual async Task DeleteTestStripeCustomers()
+        {
+            var customerId = await AccountsContext.Accounts.Select(x => x.StripeCustomerId).Where(x => !string.IsNullOrWhiteSpace(x)).ToListAsync(CancellationToken.None);
+            if (customerId.Any())
+            {
+                var customerService = Container.GetService<StripeCustomerService>();
+                await customerService.DeleteStripeTestCustomers(customerId);
+            }
         }
     }
 }

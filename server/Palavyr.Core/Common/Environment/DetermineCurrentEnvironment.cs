@@ -15,9 +15,9 @@ namespace Palavyr.Core.Common.Environment
     {
         private readonly IConfiguration configuration;
 
-        private const string Development = "Development";
-        private const string Staging = "Staging";
-        private const string Production = "Production";
+        public const string Development = "Development";
+        public const string Staging = "Staging";
+        public const string Production = "Production";
 
         public DetermineCurrentEnvironment(IConfiguration configuration)
         {

@@ -1,4 +1,4 @@
-using Amazon.S3;
+using System;
 using Autofac;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.Environment;
@@ -23,7 +23,17 @@ namespace Palavyr.API.Registration.Container
 
         protected override void Load(ContainerBuilder builder)
         {
-            StripeConfiguration.ApiKey = configuration.GetStripeKey();
+            var currentEnv = configuration.GetCurrentEnvironment();
+            var stripeKey = configuration.GetStripeKey();
+            if (currentEnv != DetermineCurrentEnvironment.Production)
+            {
+                if (stripeKey.ToLowerInvariant().StartsWith("sk_live_"))
+                {
+                    throw new Exception("CRITICAL - attempting to use a production stripe API key in test environment - CRITICAL");
+                } 
+            }
+            
+            StripeConfiguration.ApiKey = stripeKey;
             StripeConfiguration.MaxNetworkRetries = stripeRetriesCount;
 
             builder.RegisterType<StripeWebhookAuthService>().AsSelf();

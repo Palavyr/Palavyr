@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Common.Environment;
+using Palavyr.Core.Data.CompanyData;
 using Palavyr.Core.Exceptions;
 using Stripe;
 
@@ -12,13 +14,21 @@ namespace Palavyr.Core.Services.StripeServices
     public class StripeCustomerService
     {
         private readonly ILogger<StripeCustomerService> logger;
+        private readonly IDetermineCurrentEnvironment determineCurrentEnvironment;
+        private readonly IAllowedUsers allowedUsers;
         private bool IsTest => StripeConfiguration.ApiKey.ToLowerInvariant().Contains("test");
 
         private CustomerService customerService;
 
-        public StripeCustomerService(ILogger<StripeCustomerService> logger)
+        public StripeCustomerService(
+            ILogger<StripeCustomerService> logger,
+            IDetermineCurrentEnvironment determineCurrentEnvironment,
+            IAllowedUsers allowedUsers
+        )
         {
             this.logger = logger;
+            this.determineCurrentEnvironment = determineCurrentEnvironment;
+            this.allowedUsers = allowedUsers;
             var stripeClient = new StripeClient(StripeConfiguration.ApiKey);
             this.customerService = new CustomerService(stripeClient);
         }
@@ -57,18 +67,25 @@ namespace Palavyr.Core.Services.StripeServices
             await customerService.DeleteAsync(customer.Id);
         }
 
-        public async Task DeleteStripeTestCustomers()
+        public async Task DeleteStripeTestCustomers(List<string> customerIds)
         {
             if (!IsTest)
             {
                 throw new Exception("You may only delete test customers!");
             }
 
-            var options = new CustomerListOptions { };
-            var customers = await customerService.ListAsync(options);
-            foreach (var customer in customers)
+            if (determineCurrentEnvironment.IsProduction())
             {
-                await customerService.DeleteAsync(customer.Id);
+                throw new DomainException("DeleteStripeTestCustomers not allowed to be called in production");
+            }
+
+            foreach (var customerId in customerIds)
+            {
+                var customer = await customerService.GetAsync(customerId, new CustomerGetOptions());
+                if (allowedUsers.IsATestStripeEmail(customer.Email))
+                {
+                    await customerService.DeleteAsync(customer.Id);
+                }
             }
         }
 

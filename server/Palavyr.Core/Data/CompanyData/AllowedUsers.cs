@@ -7,6 +7,7 @@ namespace Palavyr.Core.Data.CompanyData
     public interface IAllowedUsers
     {
         bool IsEmailAllowedToCreateAccount(string emailAddress);
+        bool IsATestStripeEmail(string emailAddress);
     }
 
     public class AllowedUsers : IAllowedUsers
@@ -27,6 +28,12 @@ namespace Palavyr.Core.Data.CompanyData
                 "anasadeghi15@gmail.com"
             };
 
+        public bool IsATestStripeEmail(string emailAddress)
+        {
+            // test stripe customer ids should not appear in this whitelist
+            return !StagingWhiteList.Contains(emailAddress);
+        }
+        
         // TODO: Extend this later to autogenerate a database of emails to ignore (malicious accounts, etc)
         public bool IsEmailAllowedToCreateAccount(string emailAddress)
         {

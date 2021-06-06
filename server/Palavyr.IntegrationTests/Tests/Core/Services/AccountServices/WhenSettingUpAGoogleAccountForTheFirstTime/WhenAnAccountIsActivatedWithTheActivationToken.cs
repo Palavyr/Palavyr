@@ -116,13 +116,5 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             var customers = await customerService.ListCustomers(CancellationToken.None);
             customers.Where(x => x.Id == account.StripeCustomerId).Count().ShouldBe(1);
         }
-
-
-        public override async Task DisposeAsync()
-        {
-            var customerService = Container.GetService<StripeCustomerService>();
-            await customerService.DeleteStripeTestCustomerByEmailAddress(testEmail);
-            await base.DisposeAsync();
-        }
     }
 }

@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Data;
 using Palavyr.Core.Data.Setup.SeedData;
-using Palavyr.Core.GlobalConstants;
+using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Services.AuthenticationServices;
@@ -14,7 +17,6 @@ using Palavyr.Core.Services.StripeServices;
 
 namespace Palavyr.API.Controllers.Accounts.Develop
 {
-
     public class DefaultDataController : PalavyrBaseController
     {
         private ILogger<DefaultDataController> logger;
@@ -22,13 +24,15 @@ namespace Palavyr.API.Controllers.Accounts.Develop
         private ConvoContext convoContext;
         private DashContext dashContext;
         private StripeCustomerService stripeCustomerService;
+        private readonly IDetermineCurrentEnvironment determineCurrentEnvironment;
 
         public DefaultDataController(
             ILogger<DefaultDataController> logger,
             AccountsContext accountsContext,
             ConvoContext convoContext,
             DashContext dashContext,
-            StripeCustomerService stripeCustomerService
+            StripeCustomerService stripeCustomerService,
+            IDetermineCurrentEnvironment determineCurrentEnvironment
         )
         {
             this.logger = logger;
@@ -36,19 +40,27 @@ namespace Palavyr.API.Controllers.Accounts.Develop
             this.convoContext = convoContext;
             this.dashContext = dashContext;
             this.stripeCustomerService = stripeCustomerService;
+            this.determineCurrentEnvironment = determineCurrentEnvironment;
         }
 
         [AllowAnonymous]
         [HttpPut("setup/{devKey}")]
         public async Task RefreshData(string devKey, CancellationToken cancellationToken)
         {
-            await stripeCustomerService.DeleteStripeTestCustomers();
+            if (determineCurrentEnvironment.IsProduction())
+            {
+                throw new DomainException("Refreshing data is not allowed in Production");
+            }
+
+            var customerIds = await accountsContext.Accounts.Select(x => x.StripeCustomerId).ToListAsync(cancellationToken);
+            await stripeCustomerService.DeleteStripeTestCustomers(customerIds);
 
             if (devKey != "secretTobyface")
             {
                 logger.LogDebug("This is an attempt to Refresh database data.");
                 return;
             }
+
             var devData = new DevDataHolder(
                 "qwerty",
                 "devdashboard",
@@ -112,11 +124,12 @@ namespace Palavyr.API.Controllers.Accounts.Develop
         private async Task PopulateDBs(DevDataHolder dh, CancellationToken cancellationToken)
         {
             var freePlanType = new LytePlanTypeMeta();
-            
-            var devAccount = Account.CreateAccount(dh.UserName, dh.Email, dh.HashedPassword, dh.AccountId,
+
+            var devAccount = Account.CreateAccount(
+                dh.UserName, dh.Email, dh.HashedPassword, dh.AccountId,
                 dh.ApiKey, dh.CompanyName, dh.PhoneNumber, dh.Active, dh.Locale, dh.AccountType);
             var subscription = Subscription.CreateNew(dh.AccountId, dh.ApiKey, freePlanType.GetDefaultNumAreas());
-            var data = new DevSeedData(dh.AccountId, dh.Email);    
+            var data = new DevSeedData(dh.AccountId, dh.Email);
 
             var customer = await stripeCustomerService.CreateNewStripeCustomer(dh.Email, cancellationToken);
 
