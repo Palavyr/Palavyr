@@ -61,7 +61,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             var requestVerification = Substitute.For<IRequestEmailVerification>();
             var verifyLogger = Substitute.For<ILogger<EmailVerificationService>>();
             var customerService = Container.GetService<StripeCustomerService>();
-            
+
             jwtService.GenerateJwtTokenAfterAuthentication(testEmail).Returns(jwtToken);
             guidUtils.CreateShortenedGuid(1).Returns(testConfirmationToken);
             emailClient.SendEmail(
@@ -114,14 +114,6 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             // confirm that only one account exists with this email address on stripe
             var customers = await customerService.ListCustomers(CancellationToken.None);
             customers.Where(x => x.Id == account.StripeCustomerId).Count().ShouldBe(1);
-        }
-
-
-        public override async Task DisposeAsync()
-        {
-            var customerService = Container.GetService<StripeCustomerService>();
-            await customerService.DeleteStripeTestCustomerByEmailAddress(testEmail);
-            await base.DisposeAsync();
         }
     }
 }

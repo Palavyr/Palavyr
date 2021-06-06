@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.Data.Setup.SeedData;
-using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Services.AuthenticationServices;
@@ -42,7 +43,8 @@ namespace Palavyr.API.Controllers.Accounts.Develop
         [HttpPut("setup/{devKey}")]
         public async Task RefreshData(string devKey, CancellationToken cancellationToken)
         {
-            await stripeCustomerService.DeleteStripeTestCustomers();
+            var customerIds = await accountsContext.Accounts.Select(x => x.StripeCustomerId).ToListAsync(cancellationToken);
+            await stripeCustomerService.DeleteStripeTestCustomers(customerIds);
 
             if (devKey != "secretTobyface")
             {

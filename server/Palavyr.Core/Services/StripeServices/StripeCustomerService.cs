@@ -67,7 +67,7 @@ namespace Palavyr.Core.Services.StripeServices
             await customerService.DeleteAsync(customer.Id);
         }
 
-        public async Task DeleteStripeTestCustomers()
+        public async Task DeleteStripeTestCustomers(List<string> customerIds)
         {
             if (!IsTest)
             {
@@ -79,10 +79,9 @@ namespace Palavyr.Core.Services.StripeServices
                 throw new DomainException("DeleteStripeTestCustomers not allowed to be called in production");
             }
 
-            var options = new CustomerListOptions { };
-            var customers = await customerService.ListAsync(options);
-            foreach (var customer in customers)
+            foreach (var customerId in customerIds)
             {
+                var customer = await customerService.GetAsync(customerId, new CustomerGetOptions());
                 if (allowedUsers.IsATestStripeEmail(customer.Email))
                 {
                     await customerService.DeleteAsync(customer.Id);
