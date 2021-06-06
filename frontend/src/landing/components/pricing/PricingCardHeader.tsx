@@ -50,9 +50,9 @@ export const PricingCardHeader = ({ icon, title, currency, amount, priceInfo = t
                             / month
                         </Typography>
                     )}
-                    <DividerWithText text="Or" />
                     {showYearly && (
                         <>
+                            <DividerWithText text="Or" />
                             <Typography className={classNames(cls.price, cls.money)} variant="h4">
                                 {currency}
                             </Typography>
