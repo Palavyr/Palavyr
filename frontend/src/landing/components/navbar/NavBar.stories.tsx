@@ -1,13 +1,11 @@
-import * as React from 'react';
-import { Meta } from '@storybook/react/types-6-0';
-import { NavBar, INavBar } from './NavBar';
-
+import * as React from "react";
+import { Meta } from "@storybook/react/types-6-0";
+import { NavBar, INavBar } from "./NavBar";
 
 export default {
     title: "Landing/NavBar",
-    component: NavBar
+    component: NavBar,
 } as Meta;
-
 
 const Template = (args: INavBar) => <NavBar {...args} />;
 
@@ -19,6 +17,5 @@ Primary.args = {
     handleMobileDrawerClose: () => {},
     mobileDrawerOpen: true,
     selectedTab: "",
-    selectTab: () => {}
-}
-
+    selectTab: () => {},
+};
