@@ -1,17 +1,16 @@
-import * as React from 'react';
-import HowToRegIcon from '@material-ui/icons/HowToReg';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
-import HomeIcon from '@material-ui/icons/Home';
-import BookIcon from '@material-ui/icons/Book';
-
+import * as React from "react";
+import HowToRegIcon from "@material-ui/icons/HowToReg";
+import LockOpenIcon from "@material-ui/icons/LockOpen";
+import HomeIcon from "@material-ui/icons/Home";
+import BookIcon from "@material-ui/icons/Book";
 
 type menuItem = {
     name: string;
     link?: string;
     icon?: React.ReactNode;
     onClick?(): void;
-}
-export const menuItems = (openRegisterDialog: any, openLoginDialog: any): menuItem[] =>  ([
+};
+export const menuItems = (openRegisterDialog: any, openLoginDialog: any): menuItem[] => [
     // {
     //     name: "Home",
     //     link: "/",
@@ -30,11 +29,11 @@ export const menuItems = (openRegisterDialog: any, openLoginDialog: any): menuIt
     {
         name: "Register",
         onClick: openRegisterDialog,
-        icon: <HowToRegIcon className="text-white" />
+        icon: <HowToRegIcon className="text-white" />,
     },
     {
         name: "Login",
         onClick: openLoginDialog,
-        icon: <LockOpenIcon className="text-white" />
-    }
-]);
+        icon: <LockOpenIcon className="text-white" />,
+    },
+];
