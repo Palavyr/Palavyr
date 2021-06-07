@@ -16,7 +16,7 @@ Before we begin, we just need to confirm that email address!
 
 Account: {emailAddress}
 
-To confirm your email, provide the following token to plavyr.com after you sign in.
+To confirm your email, provide the following token to palavyr.com after you sign in.
 
 {confirmationId}
 
@@ -48,33 +48,40 @@ The Palavyr Team
         <section
             style='color: white; text-align: center; border-radius: 7px; background-color: #507FE0; padding-top: 2rem; padding-left: 2rem; padding-right: 2rem; margin-top: 2rem; margin-left: 2rem; margin-right: 2rem;'
             id='header'>
-            <h1>Palavyr Confirmation Email</h1>
+            <div style='text-align: center; height: 60%;'><img style='border-radius: 16px;'
+                    src='https://palavyr-public-assets.s3.amazonaws.com/LogoMedium.png' /></div>
             <br />
         </section>
         <section
-            style='background-color: white; padding-top: 2rem; padding-left: 2rem; padding-right: 2rem; margin-top: 2rem; margin-left: 2rem; margin-right: 2rem;'
+            style='border-radius: 5%;  text-align: left; margin-left: 25%; padding-left: 2rem; margin-right: 25%; background-color: white; padding-top: 2rem; margin-top: 2rem;'
             id='body'>
             <h2>
-                Welcome to Palavyr!
+                Welcome to the Palavyr family!
             </h2>
             <p>
-                Before we begin, we just need to confirm that email address!
+                We think you are going to love using Palavyr to craft engaging conversations that are sure to delight your customers. :D
             </p>
             <p>
-                Account: {emailAddress}<br />
+                Before we begin, we just need to confirm your email address!
             </p>
             <p>
-                To confirm your email, provide the following token to plavyr.com after you sign in.
+                Provide the following token to palavyr.com after you sign in to activate your account:
             </p>
             <p>
-                <h2>{confirmationId}</h2>
+            <h2>{confirmationId}</h2>
             </p>
             <p>
-                With that, its smooth sailing!
+                <span><strong>Important!</strong></span><br />
+                <span>
+                    After you log in and provide this token, you will receive an email from Amazon Web Services with a link to confirming your email with them.
+                    We use Amazon to send out emails on your behalf, so be sure to click the verification link they send you some time in the next 24 hours.
+                </span>
             </p>
-
             <p>
-                Thanks once again for joining Palavyr.com. We hope you'll enjoy our service and benefit greatly from it!
+                And with that, its smooth sailing!
+            </p>
+            <p>
+                If you have any questions, need any help, or run into any issues while using Palavyr.com, reach out to us at info.palavyr@gmail.com
             </p>
             <p>
                 Sincerely,

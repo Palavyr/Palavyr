@@ -7,7 +7,7 @@ using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Stripe;
 
-namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers
+namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid
 {
     public class ProcessStripeInvoicePaidHandler
     {
@@ -41,12 +41,16 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers
 
                 account.CurrentPeriodEnd = invoice.Subscription.CurrentPeriodEnd;
                 await accountsContext.SaveChangesAsync();
-                var subject = "Thanks for you recent payment - From your friends at Palavyr.com";
-                var htmlBody = "<h3>Thank you for your recent purchase.";
-                var textBody = "Thank you for your recent purchase";
-                //TODO: Design a nice email for this payment confirmation.
-                
-                var ok = await emailClient.SendEmail(EmailConstants.PalavyrMainEmailAddress, account.EmailAddress, subject, htmlBody, textBody);
+
+                var htmlBody = PaymentSucceededEmail.GetPaymentSucceededEmailHtml(invoice.Subscription.CurrentPeriodEnd);
+                var textBody = PaymentSucceededEmail.GetPaymentSucceededEmailText(invoice.Subscription.CurrentPeriodEnd);
+
+                var ok = await emailClient.SendEmail(
+                    EmailConstants.PalavyrMainEmailAddress,
+                    account.EmailAddress,
+                    EmailConstants.PalavyrPaymentSucceededSubject,
+                    htmlBody,
+                    textBody);
                 if (!ok)
                 {
                     throw new Exception($"This email should be verified: {account.EmailAddress}");

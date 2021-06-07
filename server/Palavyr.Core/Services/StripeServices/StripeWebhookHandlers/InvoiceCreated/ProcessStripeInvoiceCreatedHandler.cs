@@ -1,12 +1,14 @@
 using System;
 using System.Threading.Tasks;
+using Humanizer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
+using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Stripe;
 
-namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers
+namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCreated
 {
     public class ProcessStripeInvoiceCreatedHandler
     {
@@ -40,10 +42,14 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers
                     throw new Exception("ERROR TODO: EMAIL paul.e.gradie@gmail.com to manually set status");
                 }
 
-                var subject = $"Your Palavyr Subscription Invoice for {invoiceCreated.DueDate}";
-                var htmlBody = $"<h4>Your Next Palavyr Subscription invoice</h4>Cost:{invoiceCreated.AmountDue} - Due Date: {invoiceCreated.DueDate}";
-                var textBody = "Your Next Palavyr Subscription invoice. Cost:{invoiceCreated.AmountDue} - Due Date: {invoiceCreated.DueDate}";
-                await emailClient.SendEmail("palavyr@gmail.com", account.EmailAddress, subject, htmlBody, textBody);
+                var htmlBody = InvoiceCreatedEmail.GetInvoiceCreatedEmailHtml(invoiceCreated.Currency.Humanize(), invoiceCreated.AmountDue.ToString(), invoiceCreated.DueDate.Humanize());
+                var textBody = InvoiceCreatedEmail.GetInvoiceCreatedEmailText(invoiceCreated.Currency.Humanize(), invoiceCreated.AmountDue.ToString(), invoiceCreated.DueDate.Humanize());
+                await emailClient.SendEmail(
+                    EmailConstants.PalavyrMainEmailAddress, 
+                    account.EmailAddress, 
+                    EmailConstants.PalavyrInvoiceCreatedSubject(invoiceCreated.DueDate), 
+                    htmlBody, 
+                    textBody);
             }
         }
     }

@@ -5,9 +5,10 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
+using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid;
 using Stripe;
 
-namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers
+namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFailed
 {
     public interface IProcessStripeInvoicePaymentFailedHandler
     {
@@ -50,13 +51,14 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers
                 // to not use the service.
                 var endDate = account.CurrentPeriodEnd;
                 var subject = "Your recent payment to Palavyr.com failed. :(";
-                var htmlBody = "<h4>Sincere apologies</h4> You're recent payment to "
-                               + "Palavyr.com failed. Please visit the billing tab in the "
-                               + "dashboard to update your payment information."
-                               + $" Your subscription will lapse on {endDate}";
-                var textBody = "Apologies, your recent payment failed. Please visit the billing tab in the dashboard to update your payment information.";
-                // TODO create a nice email that uses the information below to update the customer
-                await emailClient.SendEmail(EmailConstants.PalavyrMainEmailAddress, account.EmailAddress, subject, htmlBody, textBody);
+                var htmlBody = EmailPaymentFailed.GetPaymentFailedEmailHtml(endDate);
+                 var textBody = EmailPaymentFailed.GetPaymentFailedEmailText(endDate);
+                await emailClient.SendEmail(
+                    EmailConstants.PalavyrMainEmailAddress,
+                    account.EmailAddress, 
+                    EmailConstants.PalavyrPaymentFailedSubject, 
+                    htmlBody, 
+                    textBody);
             }
 
             // var emailAddress = account.EmailAddress;

@@ -1,6 +1,6 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { Divider, makeStyles, Typography } from "@material-ui/core";
-import { ConvoNode, FileLink, PurchaseTypes, SetState } from "@Palavyr-Types";
+import { ConvoNode, FileLink, SetState } from "@Palavyr-Types";
 import { Upload } from "dashboard/content/responseConfiguration/uploadable/Upload";
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";

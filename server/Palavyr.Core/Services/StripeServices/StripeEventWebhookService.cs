@@ -1,6 +1,10 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers;
+using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCreated;
+using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid;
+using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFailed;
+using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.SubscriptionCreated;
 using Stripe;
 using Stripe.Checkout;
 

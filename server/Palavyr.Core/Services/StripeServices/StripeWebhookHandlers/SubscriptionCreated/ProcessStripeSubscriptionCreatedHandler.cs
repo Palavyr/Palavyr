@@ -6,7 +6,7 @@ using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Stripe;
 
-namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers
+namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.SubscriptionCreated
 {
     public class ProcessStripeSubscriptionCreatedHandler
     {
@@ -29,14 +29,14 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers
         {
             var account = await subscription.GetAccount(accountsContext, logger);
             var customerEmail = account.EmailAddress;
-            var htmlBody = "<p>Thanks so much for subscribing to Palavyr!</p>";
-            var textBody = "Thanks so much for subscribing to Palavyr!";
-            
+            var htmlBody = SubscriptionCreated.GetSubscriptionCreatedHtml();
+            var textBody = SubscriptionCreated.GetSubscriptionCreatedText();
+
             var ok = await client.SendEmail(
-                EmailConstants.PalavyrMainEmailAddress, 
-                customerEmail, 
-                EmailConstants.PalavyrSubscriptionCreateSubject, 
-                htmlBody, 
+                EmailConstants.PalavyrMainEmailAddress,
+                customerEmail,
+                EmailConstants.PalavyrSubscriptionCreateSubject,
+                htmlBody,
                 textBody);
 
             if (!ok)

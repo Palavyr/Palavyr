@@ -6,6 +6,10 @@ using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.Core.Services.StripeServices.Products;
 using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers;
+using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoiceCreated;
+using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid;
+using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFailed;
+using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.SubscriptionCreated;
 using Stripe;
 
 namespace Palavyr.API.Registration.Container

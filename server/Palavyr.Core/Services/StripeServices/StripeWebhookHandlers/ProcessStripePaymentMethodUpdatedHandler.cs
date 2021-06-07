@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
+using Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.InvoicePaid;
 using Stripe;
 
 namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers
