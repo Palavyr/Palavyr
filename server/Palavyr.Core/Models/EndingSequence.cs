@@ -42,14 +42,14 @@ namespace Palavyr.Core.Models
 
             var sendEmail = ConversationNode.CreateNew(
                 sendEmailId,
-                DefaultNodeTypeOptions.SendEmail.StringName,
+                InternalNodeTypeOptions.SendEmail.StringName,
                 "Wait just a moment while I send you a confirmation email with some information",
                 areaId,
                 nodeChildrenString: "Placeholder", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
                 DefaultNodeTypeOptions.YesNo.Yes,
                 "",
                 accountId,
-                DefaultNodeTypeOptions.SendEmail.StringName,
+                InternalNodeTypeOptions.SendEmail.StringName,
                 false,
                 false,
                 false,
@@ -58,14 +58,14 @@ namespace Palavyr.Core.Models
 
             var restartAfterDontSendEmail = ConversationNode.CreateNew(
                 dontSendEmailRestartId,
-                DefaultNodeTypeOptions.Restart.StringName,
+                InternalNodeTypeOptions.Restart.StringName,
                 "Thanks for your time. If you'd like to start again, click the button below.",
                 areaId,
                 "Placeholder",
                 DefaultNodeTypeOptions.YesNo.No,
                 "",
                 accountId,
-                DefaultNodeTypeOptions.Restart.StringName,
+                InternalNodeTypeOptions.Restart.StringName,
                 false,
                 false,
                 false,
@@ -77,7 +77,7 @@ namespace Palavyr.Core.Models
                 DefaultNodeTypeOptions.ProvideInfo.StringName,
                 "We've sent through an email to the address you provided. Sometimes these emails are picked up as spam, so if you don't see it, be sure to check your spam folder.",
                 areaId,
-                DefaultNodeTypeOptions.Restart.StringName,
+                InternalNodeTypeOptions.Restart.StringName,
                 "",
                 "",
                 accountId,
@@ -89,15 +89,15 @@ namespace Palavyr.Core.Models
             );
 
             var restart = ConversationNode.CreateNew(
-                DefaultNodeTypeOptions.Restart.StringName,
-                DefaultNodeTypeOptions.Restart.StringName,
+                InternalNodeTypeOptions.Restart.StringName,
+                InternalNodeTypeOptions.Restart.StringName,
                 "Thanks for your time. If you'd like to start again, click the button below.",
                 areaId,
                 "Terminate",
                 "",
                 "",
                 accountId,
-                DefaultNodeTypeOptions.Restart.StringName,
+                InternalNodeTypeOptions.Restart.StringName,
                 false,
                 false,
                 false,
@@ -138,14 +138,14 @@ namespace Palavyr.Core.Models
 
             var retrySendEmailSecondAttempt = ConversationNode.CreateNew(
                 retrySendEmailSecondAttemptId,
-                DefaultNodeTypeOptions.SendEmail.StringName,
+                InternalNodeTypeOptions.SendEmail.StringName,
                 "Wait just a moment while I try that again.",
                 areaId,
                 "Placeholder", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
                 "",
                 "",
                 accountId,
-                DefaultNodeTypeOptions.SendEmail.StringName,
+                InternalNodeTypeOptions.SendEmail.StringName,
                 false,
                 false,
                 false,
@@ -154,14 +154,14 @@ namespace Palavyr.Core.Models
 
             var fallbackRetrySendEmailSecondAttempt = ConversationNode.CreateNew(
                 fallbackRetrySendEmailSecondAttemptId,
-                DefaultNodeTypeOptions.SendEmail.StringName,
+                InternalNodeTypeOptions.SendEmail.StringName,
                 "Wait just a moment while I try that again.",
                 areaId,
                 nodeChildrenString: "Placeholder", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
                 "",
                 "",
                 accountId,
-                DefaultNodeTypeOptions.SendEmail.StringName,
+                InternalNodeTypeOptions.SendEmail.StringName,
                 false,
                 false,
                 false,
@@ -186,14 +186,14 @@ namespace Palavyr.Core.Models
 
             var sendFallbackEmail = ConversationNode.CreateNew( // leads to sending an email to the 'too complicated controller'
                 sendTooComplicatedEmailId,
-                DefaultNodeTypeOptions.SendTooComplicatedEmail.StringName,
+                InternalNodeTypeOptions.SendTooComplicatedEmail.StringName,
                 "Wait just a moment while I send an email.",
                 areaId,
                 nodeChildrenString: "Placeholder", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
                 DefaultNodeTypeOptions.YesNo.Yes,
                 "",
                 accountId,
-                DefaultNodeTypeOptions.SendTooComplicatedEmail.StringName,
+                InternalNodeTypeOptions.SendTooComplicatedEmail.StringName,
                 false,
                 false,
                 false,

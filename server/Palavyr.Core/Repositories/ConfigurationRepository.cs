@@ -148,6 +148,23 @@ namespace Palavyr.Core.Repositories
             return result;
         }
 
+        public async Task<List<ConversationNode>> UpdateConversation(string accountId, string areaId, List<ConversationNode> convoUpdate, CancellationToken cancellationToken)
+        {
+            var area = await dashContext
+                .Areas
+                .Where(row => row.AccountId == accountId)
+                .Where(row => row.AreaIdentifier == areaId)
+                .Include(p => p.ConversationNodes)
+                .SingleOrDefaultAsync();
+
+            RemoveAreaNodes(areaId, accountId);
+            await dashContext.SaveChangesAsync(cancellationToken);
+
+            area.ConversationNodes.AddRange(convoUpdate);
+            await dashContext.SaveChangesAsync(cancellationToken);
+            return convoUpdate;
+        }
+
         public async Task<Area> GetAreaWithConversationNodes(string accountId, string areaId)
         {
             var area = await dashContext

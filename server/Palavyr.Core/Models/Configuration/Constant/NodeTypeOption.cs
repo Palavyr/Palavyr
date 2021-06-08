@@ -82,7 +82,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         /*
          * The string identifier of the node component Type
          */
-        public string NodeComponent { get; set; }
+        public string NodeComponentType { get; set; }
 
         /*
          * Whether or not the response value is currency
@@ -128,7 +128,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             bool isMultiOptionType,
             bool isTerminalType,
             string groupName,
-            string nodeComponent,
+            string nodeComponentType,
             bool isMultiOptionEditable = true,
             bool isCurrency = false,
             bool isAnabranchType = false,
@@ -150,7 +150,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsTerminalType = isTerminalType,
                 IsDynamicType = isDynamicType,
                 GroupName = groupName,
-                NodeComponent = nodeComponent,
+                NodeComponentType = nodeComponentType,
                 IsCurrency = isCurrency,
                 IsMultiOptionEditable = isMultiOptionEditable,
                 IsAnabranchType = isAnabranchType,

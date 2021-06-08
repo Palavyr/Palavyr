@@ -71,32 +71,42 @@ export const changeNodeType = async (
         }
     }
 
-    // TODO: This is kind of gross and complicates extendability since we later have to be sure not to intro any '-' in to the names. But
-    // since we are taking this fromthe option, we have to deal with it as a string until we try a refactor to get it into an object form
-    // so we can supply properties. ^ The option comes in from the event, which currently passes the value as a string. Can this be an object?
-    previousNode.nodeType = nodeOption.value; // SelectOneFlat-sdfs-sdfs-sgs-s
 
     const newNumChildren = getNewNumChildren(pathOptions);
     const { newNodeList, newChildNodeIds, childIdsToCreate } = createAndReattachNewNodes(previousNode, nodeList, newNumChildren);
 
     let updatedNodeList = [...newNodeList];
 
+
     const previousNodeChildrenString = previousNode.nodeChildrenString;
 
     previousNode.nodeChildrenString = _joinNodeChildrenStringArray(newChildNodeIds);
-    previousNode.isMultiOptionType = nodeOption.isMultiOptionType;
-    previousNode.isTerminalType = nodeOption.isTerminalType;
-    previousNode.isSplitMergeType = nodeOption.isSplitMergeType;
-    previousNode.shouldShowMultiOption = nodeOption.shouldShowMultiOption;
-    previousNode.isAnabranchType = nodeOption.isAnabranchType;
-    previousNode.nodeComponentType = nodeOption.nodeComponent;
-    previousNode.isDynamicTableNode = nodeOption.isDynamicType;
-    previousNode.resolveOrder = nodeOption.resolveOrder;
-    previousNode.dynamicType = nodeOption.dynamicType;
-    previousNode.isImageNode = nodeOption.isImageNode;
-    previousNode.imageId = nodeOption.imageId;
-    previousNode.shouldRenderChildren = nodeOption.shouldRenderChildren;
 
+
+    // TODO: This is kind of gross and complicates extendability since we later have to be sure not to intro any '-' in to the names. But
+    // since we are taking this fromthe option, we have to deal with it as a string until we try a refactor to get it into an object form
+    // so we can supply properties. ^ The option comes in from the event, which currently passes the value as a string. Can this be an object?
+    // previousNode.isMultiOptionType = nodeOption.isMultiOptionType;
+    // previousNode.isTerminalType = nodeOption.isTerminalType;
+    // previousNode.isSplitMergeType = nodeOption.isSplitMergeType;
+    // previousNode.shouldShowMultiOption = nodeOption.shouldShowMultiOption;
+    // previousNode.isAnabranchType = nodeOption.isAnabranchType;
+    // previousNode.nodeComponentType = nodeOption.nodeComponentType;
+    // previousNode.isDynamicTableNode = nodeOption.isDynamicType;
+    // previousNode.resolveOrder = nodeOption.resolveOrder;
+    // previousNode.dynamicType = nodeOption.dynamicType;
+    // previousNode.isImageNode = nodeOption.isImageNode;
+    // previousNode.imageId = nodeOption.imageId;
+    // previousNode.shouldRenderChildren = nodeOption.shouldRenderChildren;
+
+    const nodeOptionKeys = Object.keys(nodeOption);
+    nodeOptionKeys.forEach((key: string) => {
+        previousNode[key] = nodeOption[key];
+    })
+
+
+    // override specific properties
+    previousNode.nodeType = nodeOption.value; // SelectOneFlat-sdfs-sdfs-sgs-s
     if (identity.shouldShowSetAsAnabranchMergePointOption && nodeOption.isAnabranchType) {
         previousNode.isAnabranchMergePoint = true; // needs to set true if inside anabranch and
         updatedNodeList = selectionCallback(previousNode, updatedNodeList, identity.nodeIdOfMostRecentAnabranch);

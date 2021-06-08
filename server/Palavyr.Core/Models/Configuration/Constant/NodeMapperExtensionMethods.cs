@@ -20,13 +20,13 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 AreaIdentifier = node.AreaIdentifier,
                 Text = node.Text,
                 NodeType = node.NodeType,
+                NodeComponentType = node.NodeComponentType,
                 NodeId = node.NodeId,
                 NodeChildrenString = node.NodeChildrenString,
                 IsRoot = node.IsRoot,
                 IsCritical = node.IsCritical,
                 OptionPath = node.OptionPath,
                 ValueOptions = node.ValueOptions,
-                NodeComponentType = node.NodeComponentType,
                 IsDynamicTableNode = node.IsDynamicTableNode,
                 DynamicType = node.DynamicType,
                 ResolveOrder = node.ResolveOrder
@@ -45,14 +45,14 @@ namespace Palavyr.Core.Models.Configuration.Constant
             string optionPath,
             bool isDynamic,
             bool isCritical = false,
-            string? nodeComponent = null,
+            string? nodeComponentType = null,
             int? resolveOrder = null,
             string? dynamicType = null
         )
         {
-            if (nodeComponent == null && nodeTypeOption.NodeComponent == null)
+            if (nodeComponentType == null && nodeTypeOption.NodeComponentType== null)
             {
-                throw new Exception("NodeComponent must be set for dynamic table node types"); // TODO: can I enforce this via the compiler?
+                throw new Exception("NodeComponent must be set for dynamic table node types"); // TODO: can I enforce this via the compiler? Rosalyn Analyzer
             }
 
             if (isDynamic && (resolveOrder == null || dynamicType == null))
@@ -67,6 +67,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsRoot = isRoot,
                 NodeChildrenString = nodeChildrenString, //"node-456,node-789",
                 NodeType = nodeType,
+                NodeComponentType = nodeComponentType ?? nodeTypeOption.NodeComponentType,
                 OptionPath = optionPath,
                 ValueOptions = string.Join(Delimiters.ValueOptionDelimiter, nodeTypeOption.ValueOptions),
                 AccountId = accountId,
@@ -74,7 +75,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = nodeTypeOption.IsMultiOptionType,
                 IsTerminalType = nodeTypeOption.IsTerminalType,
                 IsDynamicTableNode = isDynamic,
-                NodeComponentType = nodeComponent ?? nodeTypeOption.NodeComponent,
                 ResolveOrder = resolveOrder,
                 DynamicType = dynamicType,
                 ShouldRenderChildren = nodeTypeOption.ShouldRenderChildren,

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Conversation, NodeOption, NodeTypeOptions, PlanType, PlanTypeMeta, PurchaseTypes, TreeErrors } from "@Palavyr-Types";
+import { Conversation, NodeOption, NodeTypeOptions, PlanTypeMeta, PurchaseTypes, TreeErrors } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { cloneDeep } from "lodash";
 import { ConversationNode } from "./nodes/ConversationNode";
@@ -101,9 +101,15 @@ export const ConvoTree = () => {
     };
 
     const setNodesWithHistory = (updatedNodeList: Conversation) => {
-        var freshNodeList = cloneDeep(updatedNodeList);
+        const freshNodeList = cloneDeep(updatedNodeList);
         historyTracker.addConversationHistoryToQueue(freshNodeList, conversationHistoryPosition, conversationHistory);
         setNodes(freshNodeList);
+    };
+
+    const resetTree = () => {
+        const rootNode = getRootNode(nodeList);
+        rootNode.nodeChildrenString = "";
+        setNodes([rootNode]);
     };
 
     useEffect(() => {
@@ -157,9 +163,14 @@ export const ConvoTree = () => {
                     Redo
                 </Button>
                 {isDevelopmentStage() && (
-                    <Button variant="contained" className={cls.convoTreeMetaButtons} onClick={toggleDebugData}>
-                        Toggle Debug Data
-                    </Button>
+                    <>
+                        <Button variant="contained" className={cls.convoTreeMetaButtons} onClick={toggleDebugData}>
+                            Toggle Debug Data
+                        </Button>
+                        <Button variant="contained" className={cls.convoTreeMetaButtons} onClick={resetTree}>
+                            Reset Tree
+                        </Button>
+                    </>
                 )}
             </Align>
             {isDevelopmentStage() && (

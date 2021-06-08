@@ -112,6 +112,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<PlanTypeRetriever>().As<IPlanTypeRetriever>();
             builder.RegisterType<BusinessRules>().As<IBusinessRules>();
             builder.RegisterType<DetermineCurrentEnvironment>().As<IDetermineCurrentEnvironment>();
+            builder.RegisterType<ConversationNodeUpdater>().As<IConversationNodeUpdater>();
         }
     }
 }

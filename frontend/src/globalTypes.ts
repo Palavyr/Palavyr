@@ -403,10 +403,10 @@ export type NodeOption = {
     isMultiOptionType: boolean;
     isSplitMergeType: boolean;
     isTerminalType: boolean;
-    nodeComponent: string;
+    nodeComponentType: string;
     pathOptions: Array<Response>;
     resolveOrder: number;
-    shouldRenderChildren: boolean; // TODO: is this used?
+    shouldRenderChildren: boolean;
     shouldShowMultiOption: boolean;
     stringName: string | null; // TODO: this is always null - used?
     text: string;

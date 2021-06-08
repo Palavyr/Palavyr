@@ -135,43 +135,5 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 ImageId = imageId
             };
         }
-
-        public static List<ConversationNode> MapUpdate(string accountId, List<ConversationNode> nodeUpdates)
-        {
-            var mappedTransactions = new List<ConversationNode>();
-            foreach (var node in nodeUpdates)
-            {
-                var mappedNode = CreateNew(
-                    node.NodeId,
-                    node.NodeType,
-                    node.Text,
-                    node.AreaIdentifier,
-                    node.NodeChildrenString,
-                    node.OptionPath,
-                    node.ValueOptions,
-                    accountId,
-                    node.NodeComponentType,
-                    node.IsRoot,
-                    node.IsCritical,
-                    node.IsMultiOptionType,
-                    node.IsTerminalType,
-                    node.ShouldRenderChildren,
-                    node.IsSplitMergeType,
-                    node.ShouldShowMultiOption,
-                    node.IsAnabranchType,
-                    node.IsAnabranchMergePoint,
-                    node.IsDynamicTableNode,
-                    node.IsCurrency,
-                    node.IsMultiOptionEditable,
-                    node.ResolveOrder,
-                    node.DynamicType,
-                    node.IsImageNode,
-                    node.ImageId
-                );
-                mappedTransactions.Add(mappedNode);
-            }
-
-            return mappedTransactions;
-        }
     }
 }
