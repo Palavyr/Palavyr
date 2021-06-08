@@ -49,7 +49,7 @@ class Auth {
             this.isActive = accountIsActive;
             SessionStorage.setIsActive(accountIsActive);
 
-            callback();
+            await callback();
             return true;
         } else {
             this.authenticated = false;
@@ -84,7 +84,7 @@ class Auth {
         const token = SessionStorage.getJwtToken();
         if (token) {
             if (await this.loginClient.Status.CheckIfLoggedIn()) {
-                callback();
+                await callback();
             }
         }
     }
@@ -98,7 +98,7 @@ class Auth {
             SessionStorage.unsetEmailAddress();
         }
         this.authenticated = false;
-        callback();
+        await callback();
     }
 
     async googleLogout(callback: () => any) {
