@@ -38,7 +38,6 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, curren
 
     const handleCloseModal = () => {
         setModalState(false);
-        setText("");
     };
 
     const handleUpdateNode = (value: string, valueOptions: string[]) => {
@@ -49,7 +48,6 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, curren
         } else {
             updateSingleOptionType(updatedNode, nodeList, setNodes);
         }
-        setText("");
     };
 
     const addMultiChoiceOptionsOnClick = () => {

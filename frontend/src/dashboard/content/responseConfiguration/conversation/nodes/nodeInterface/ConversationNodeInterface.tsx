@@ -195,7 +195,7 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
                     shouldDisabledNodeTypeSelector={identity.shouldDisabledNodeTypeSelector}
                     selectionCallback={selectionCallback}
                 />
-                <ConversationNodeEditor setImageLink={setImageLink} setImageName={setImageName} currentImageId={currentImageId} imageName={imageName} imageLink={imageLink} setModalState={setModalState} modalState={modalState} node={node} />
+                <ConversationNodeEditor key={node.nodeId} setImageLink={setImageLink} setImageName={setImageName} currentImageId={currentImageId} imageName={imageName} imageLink={imageLink} setModalState={setModalState} modalState={modalState} node={node} />
 
                 {identity.shouldShowResponseInPdfOption && <NodeCheckBox label="Show response in PDF" checked={node.isCritical} onChange={showResponseInPdfCheckbox} />}
                 {identity.shouldShowMergeWithPrimarySiblingBranchOption && <NodeCheckBox label="Merge with primary sibling branch" checked={!node.shouldRenderChildren} onChange={handleMergeBackInOnClick} />}
