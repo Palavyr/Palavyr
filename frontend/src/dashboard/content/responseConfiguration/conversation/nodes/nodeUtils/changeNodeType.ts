@@ -79,31 +79,15 @@ export const changeNodeType = async (
 
 
     const previousNodeChildrenString = previousNode.nodeChildrenString;
+    const previousText = previousNode.text;
 
     previousNode.nodeChildrenString = _joinNodeChildrenStringArray(newChildNodeIds);
-
-
-    // TODO: This is kind of gross and complicates extendability since we later have to be sure not to intro any '-' in to the names. But
-    // since we are taking this fromthe option, we have to deal with it as a string until we try a refactor to get it into an object form
-    // so we can supply properties. ^ The option comes in from the event, which currently passes the value as a string. Can this be an object?
-    // previousNode.isMultiOptionType = nodeOption.isMultiOptionType;
-    // previousNode.isTerminalType = nodeOption.isTerminalType;
-    // previousNode.isSplitMergeType = nodeOption.isSplitMergeType;
-    // previousNode.shouldShowMultiOption = nodeOption.shouldShowMultiOption;
-    // previousNode.isAnabranchType = nodeOption.isAnabranchType;
-    // previousNode.nodeComponentType = nodeOption.nodeComponentType;
-    // previousNode.isDynamicTableNode = nodeOption.isDynamicType;
-    // previousNode.resolveOrder = nodeOption.resolveOrder;
-    // previousNode.dynamicType = nodeOption.dynamicType;
-    // previousNode.isImageNode = nodeOption.isImageNode;
-    // previousNode.imageId = nodeOption.imageId;
-    // previousNode.shouldRenderChildren = nodeOption.shouldRenderChildren;
 
     const nodeOptionKeys = Object.keys(nodeOption);
     nodeOptionKeys.forEach((key: string) => {
         previousNode[key] = nodeOption[key];
     })
-
+    previousNode.text = previousText;
 
     // override specific properties
     previousNode.nodeType = nodeOption.value; // SelectOneFlat-sdfs-sdfs-sgs-s

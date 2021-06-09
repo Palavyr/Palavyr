@@ -9,7 +9,6 @@ import { updateSingleOptionType } from "../../nodeUtils/commonNodeUtils";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { CustomImage } from "./imageNode/CustomImage";
 import { NodeImageUpload } from "./imageNode/ImageUpload";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 
 export interface IConversationNodeEditor {
     modalState: boolean;
@@ -75,7 +74,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, curren
                         {node.imageId === null ? (
                             <>
                                 <Typography align="center" variant="h6">
-                                    Upload an image or provide a url
+                                    Upload an image
                                 </Typography>
                                 <NodeImageUpload setModalState={setModalState} node={node} currentImageId={currentImageId} setImageLink={setImageLink} setImageName={setImageName} />
                             </>

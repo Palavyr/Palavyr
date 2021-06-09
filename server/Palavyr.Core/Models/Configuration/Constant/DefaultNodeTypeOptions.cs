@@ -21,10 +21,12 @@ namespace Palavyr.Core.Models.Configuration.Constant
             public static string SplitMerge => DefaultNodeTypeOptions.SplitMerge.StringName;
 
             // public static string EvaluateThreshold => DefaultNodeTypeOptions.EvaluateThreshold.StringName;
+
             public static string ShowImage => DefaultNodeTypeOptions.ShowImage.StringName;
             public static string TooComplicated => DefaultNodeTypeOptions.TooComplicated.StringName;
             public static string SendResponse => DefaultNodeTypeOptions.SendResponse.StringName;
             public static string EndWithoutEmail => DefaultNodeTypeOptions.EndWithoutEmail.StringName;
+            public static string Loopback => DefaultNodeTypeOptions.Loopback.StringName;
         }
 
         public static List<NodeTypeOption> DefaultNodeTypeOptionsList => // These get sent to the UI for user selection
@@ -46,7 +48,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 new SplitMerge(),
                 new Anabranch(),
                 new ShowImage(),
-                new EndWithoutEmail()
+                new EndWithoutEmail(),
+                new Loopback()
             };
 
         public static YesNo CreateYesNo() => new YesNo();
@@ -68,8 +71,35 @@ namespace Palavyr.Core.Models.Configuration.Constant
 
         public static SendResponse CreateSendResponse() => new SendResponse();
 
+        public static Loopback CreateLoopback() => new Loopback();
+        
         // public static Restart CreateRestart() => new Restart();
         public static EndWithoutEmail CreateEndWithoutEmail() => new EndWithoutEmail();
+
+        public class Loopback : NodeTypeOption
+        {
+            public new static string StringName => nameof(Loopback);
+
+            public Loopback()
+            {
+                Text = "Loop back";
+                Value = StringName;
+                PathOptions = new List<string>() {"Continue"};
+                ValueOptions = new List<string>() {"Continue"};
+                IsMultiOptionType = false;
+                IsTerminalType = true;
+                GroupName = Terminal;
+                IsSplitMergeType = false;
+                ShouldRenderChildren = false;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+                IsDynamicType = false;
+                NodeComponentType = NodeComponentTypes.EndWithoutEmail;
+                IsCurrency = false;
+                IsMultiOptionEditable = false;
+            }
+        }
 
         public class EndWithoutEmail : NodeTypeOption
         {

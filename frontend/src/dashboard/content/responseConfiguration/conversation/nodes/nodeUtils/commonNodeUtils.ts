@@ -14,7 +14,6 @@ export const getNewNumChildren = (optionPaths: string[]) => {
 };
 
 export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, isDecendentOfSplitMerge: boolean, splitMergeRootSiblingIndex: number) => {
-    //, isParentOfAnabranchMergePoint: boolean) => {
     if (isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0) {
         return nodeOptionList.filter((option: NodeOption) => option.groupName === "Provide Info" || option.groupName === "Info Collection" || option.groupName === "Terminal");
     } else {
@@ -23,10 +22,10 @@ export const checkedNodeOptionList = (nodeOptionList: NodeTypeOptions, isDecende
 };
 
 export const getChildNodesToRender = (node: ConvoNode, nodeList: Conversation) => {
-    return node.isSplitMergeType || node.isAnabranchType ? getChildeNodesOrderedByChildString(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);
+    return node.isSplitMergeType || node.isAnabranchType ? getChildNodesOrderedByChildString(node.nodeChildrenString, nodeList) : getChildNodesSortedByOptionPath(node.nodeChildrenString, nodeList);
 };
 
-export const getChildeNodesOrderedByChildString = (childrenIDs: string, nodeList: Conversation) => {
+export const getChildNodesOrderedByChildString = (childrenIDs: string, nodeList: Conversation) => {
     const ids = childrenIDs.split(",");
     if (ids.length === 1 && ids[0] === "") return [];
     const unorderedNodes: Conversation = [];
@@ -38,7 +37,7 @@ export const getChildeNodesOrderedByChildString = (childrenIDs: string, nodeList
 };
 
 export const getChildNodesSortedByOptionPath = (childrenIds: string, nodeList: Conversation) => {
-    const unsortedChildNodes = getChildeNodesOrderedByChildString(childrenIds, nodeList);
+    const unsortedChildNodes = getChildNodesOrderedByChildString(childrenIds, nodeList);
     const getter = (x: ConvoNode) => x.optionPath.toUpperCase();
     return sortByPropertyAlphabetical(getter, unsortedChildNodes);
 };
