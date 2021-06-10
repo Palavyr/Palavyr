@@ -1,4 +1,5 @@
 import { Conversation, NodeSetterWithHistory, NodeTypeOptions, PlanType, PlanTypeMeta, SetState, SnackbarPositions } from "@Palavyr-Types";
+import { PalavyrLinkedList } from "dashboard/content/responseConfiguration/conversation/convoDataStructure/PalavyrLinkedList";
 import { ConversationHistoryTracker } from "dashboard/content/responseConfiguration/conversation/nodes/ConversationHistoryTracker";
 import React from "react";
 
@@ -41,6 +42,7 @@ interface IConversationTreeContext {
     conversationHistoryPosition: number;
     nodeTypeOptions: NodeTypeOptions;
     showDebugData: boolean;
+    palavyrLinkedList?: PalavyrLinkedList;
 }
 
 export const AuthContext = React.createContext({ isActive: false, isAuthenticated: false } as IAuthContext);

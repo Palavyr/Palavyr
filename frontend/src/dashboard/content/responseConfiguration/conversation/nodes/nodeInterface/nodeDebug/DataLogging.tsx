@@ -7,38 +7,18 @@ type DataItem = {
 };
 
 interface DataProps {
-    data: DataItem[];
+    debugData: DataItem[];
     nodeId: string;
     nodeChildren: string;
-    nodeProperties: DataItem[];
 }
 
 
-export const DataLogging = ({ data, nodeId, nodeChildren, nodeProperties }: DataProps) => {
+export const DataLogging = ({ debugData, nodeId, nodeChildren }: DataProps) => {
     return (
         <div>
             <Typography align="center">{nodeId}</Typography>
             <ul>
-                {sortArrayOfObjects(data).map((item: DataItem) => {
-                    const key = Object.keys(item)[0];
-                    let val = Object.values(item)[0];
-                    if (typeof val === "boolean") {
-                        val = val.toString().toUpperCase();
-                    }
-                    return (
-                        <>
-                            <li>
-                                <Typography>
-                                    {key}: {val}
-                                </Typography>
-                            </li>
-                        </>
-                    );
-                })}
-            </ul>
-            <Divider />
-            <ul>
-                {sortArrayOfObjects(nodeProperties).map((item: DataItem) => {
+                {sortArrayOfObjects(debugData).map((item: DataItem) => {
                     const key = Object.keys(item)[0];
                     let val = Object.values(item)[0];
                     if (typeof val === "boolean") {

@@ -74,20 +74,24 @@ export type Responses = Array<Response>;
 
 export const ValueOptionDelimiter = "|peg|";
 
-export type ConvoNode = {
+export type ConvoNode = { // these properties are written to the database
+    id?: number | undefined;
+    areaIdentifier: string;
+
+    isRoot: boolean;
+    nodeId: string;
     isTerminalType: boolean;
     isMultiOptionType: boolean;
-    nodeId: string;
-    nodeType: string;
-    fallback: boolean;
     text: string;
     nodeChildrenString: string;
     isCritical: boolean;
-    isRoot: boolean;
-    areaIdentifier: string;
+
+
+
+    nodeType: string;
+    fallback: boolean;
     optionPath: Response;
     valueOptions: string; // an array, but bc of the dtabase we store as a string delimited by |peg|
-    id?: number | undefined;
     shouldRenderChildren: boolean;
     isSplitMergeType: boolean;
     shouldShowMultiOption: boolean;

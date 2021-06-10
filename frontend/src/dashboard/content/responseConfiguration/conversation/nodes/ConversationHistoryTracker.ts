@@ -1,8 +1,9 @@
-import { Conversation, SetState } from "@Palavyr-Types";
+import { SetState } from "@Palavyr-Types";
+import { PalavyrLinkedList } from "../convoDataStructure/PalavyrLinkedList";
 import { _cleanConversationNodesWithNoChildren } from "./nodeUtils/_coreNodeUtils";
 
-type SetConversationHistory = SetState<Conversation[]>;
-type SetConversation = SetState<Conversation>;
+type SetConversationHistory = SetState<PalavyrLinkedList[]>;
+type SetConversation = SetState<PalavyrLinkedList>;
 type SetConversationHistoryPosition = SetState<number>;
 
 export class ConversationHistoryTracker {
@@ -19,9 +20,9 @@ export class ConversationHistoryTracker {
     }
 
     // Maybe can set the historyPosition as internal state too.
-    addConversationHistoryToQueue(dirtyConversationRecord: Conversation, conversationHistoryPosition: number, conversationHistory: Conversation[]) {
+    addConversationHistoryToQueue(dirtyConversationRecord: PalavyrLinkedList, conversationHistoryPosition: number, conversationHistory: PalavyrLinkedList[]) {
         const newPos = conversationHistoryPosition + 1;
-        const newConversationRecord = _cleanConversationNodesWithNoChildren(dirtyConversationRecord);
+        const newConversationRecord = dirtyConversationRecord; // _cleanConversationNodesWithNoChildren(dirtyConversationRecord); TODO: Should be cleaned up with the linked list implementation
         if (conversationHistory.length < this.MaxConversationHistory) {
             if (newPos < conversationHistory.length - 1) {
                 this.setConversationHistory([...conversationHistory.slice(0, newPos), newConversationRecord]);
@@ -39,7 +40,7 @@ export class ConversationHistoryTracker {
         this.setConversationHistoryPosition(newPos);
     }
 
-    stepConversationBackOneStep(conversationHistoryPosition: number, conversationHistory: Conversation[]) {
+    stepConversationBackOneStep(conversationHistoryPosition: number, conversationHistory: PalavyrLinkedList[]) {
         if (conversationHistoryPosition === 0) {
             alert("Currently at the beginning the history.");
             return;
@@ -51,7 +52,7 @@ export class ConversationHistoryTracker {
         this.setNodes(cleanOneBack);
     }
 
-    stepConversationForwardOneStep(conversationHistoryPosition: number, conversationHistory: Conversation[]) {
+    stepConversationForwardOneStep(conversationHistoryPosition: number, conversationHistory: PalavyrLinkedList[]) {
         const newPosition = conversationHistoryPosition + 1;
         if (newPosition <= conversationHistory.length - 1) {
             this.setNodes(conversationHistory[newPosition]);

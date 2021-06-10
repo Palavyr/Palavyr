@@ -216,8 +216,8 @@ export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeId
 };
 
 // TODO: This is a dirty hack. We shouldn't be saving conversations where a node has no child into the history.
-export const _cleanConversationNodesWithNoChildren = (dirtyConversation: Conversation) => {
-    const cleanConvo: Conversation = [];
+export const _cleanConversationNodesWithNoChildren = (dirtyConversation: PalavyrLinkedList) => {
+    const cleanConvo: PalavyrLinkedList = [];
     dirtyConversation.forEach((node: ConvoNode) => {
         const nodeChildren = _splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString);
         const childrenThatExist: string[] = [];

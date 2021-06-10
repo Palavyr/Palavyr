@@ -71,13 +71,9 @@ export const changeNodeType = async (
         }
     }
 
-
     const newNumChildren = getNewNumChildren(pathOptions);
     const { newNodeList, newChildNodeIds, childIdsToCreate } = createAndReattachNewNodes(previousNode, nodeList, newNumChildren);
-
     let updatedNodeList = [...newNodeList];
-
-
     const previousNodeChildrenString = previousNode.nodeChildrenString;
     const previousText = previousNode.text;
 
@@ -87,9 +83,9 @@ export const changeNodeType = async (
     nodeOptionKeys.forEach((key: string) => {
         previousNode[key] = nodeOption[key];
     })
-    previousNode.text = previousText;
 
     // override specific properties
+    previousNode.text = previousText;
     previousNode.nodeType = nodeOption.value; // SelectOneFlat-sdfs-sdfs-sgs-s
     if (identity.shouldShowSetAsAnabranchMergePointOption && nodeOption.isAnabranchType) {
         previousNode.isAnabranchMergePoint = true; // needs to set true if inside anabranch and

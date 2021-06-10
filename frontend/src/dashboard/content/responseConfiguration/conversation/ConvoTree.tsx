@@ -18,6 +18,7 @@ import { getRootNode } from "./nodes/nodeUtils/commonNodeUtils";
 import { ConversationHistoryTracker } from "./nodes/ConversationHistoryTracker";
 import { isDevelopmentStage } from "@api-client/clientUtils";
 import PalavyrErrorBoundary from "@common/components/Errors/PalavyrErrorBoundary";
+import { PalavyrLinkedList } from "./convoDataStructure/PalavyrLinkedList";
 
 const useStyles = makeStyles(() => ({
     conversation: {
@@ -40,21 +41,22 @@ export const ConvoTree = () => {
     const { setIsLoading, planTypeMeta } = React.useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const [, setLoaded] = useState<boolean>(false);
-    const [nodeList, setNodes] = useState<Conversation>([]); // nodeList and state updater for the tree
+
     const [nodeTypeOptions, setNodeTypeOptions] = useState<NodeTypeOptions>([]);
     const [treeErrors, setTreeErrors] = useState<TreeErrors>();
 
-    const [conversationHistory, setConversationHistory] = useState<Conversation[]>([]);
+    const [conversationHistory, setConversationHistory] = useState<PalavyrLinkedList[]>([]);
     const [conversationHistoryPosition, setConversationHistoryPosition] = useState<number>(0);
     const [showDebugData, setShowDebugData] = useState<boolean>(false);
 
-    const rootNode = getRootNode(nodeList);
+    const [linkedNodeList, setLinkedNodes] = useState<PalavyrLinkedList>();
 
-    const historyTracker = new ConversationHistoryTracker(setConversationHistory, setConversationHistoryPosition, setNodes);
+    const historyTracker = new ConversationHistoryTracker(setConversationHistory, setConversationHistoryPosition, setLinkedNodes);
 
     const toggleDebugData = () => {
         setShowDebugData(!showDebugData);
-        setNodes(cloneDeep(nodeList));
+        setLinkedNodes(cloneDeep(linkedNodeList));
+        // setNodes(cloneDeep(nodeList));
     };
 
     const filterNodeTypeOptionsOnSubscription = (nodeTypeOptions: NodeTypeOptions, planTypeMeta: PlanTypeMeta) => {
@@ -82,34 +84,44 @@ export const ConvoTree = () => {
         const nodes = await repository.Conversations.GetConversation(areaIdentifier);
         const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier);
 
+        const nodesLinkedList = new PalavyrLinkedList(nodes, areaIdentifier, () => null);
+
         if (planTypeMeta) {
             const filteredTypeOptions = filterNodeTypeOptionsOnSubscription(nodeTypeOptions, planTypeMeta);
             setNodeTypeOptions(filteredTypeOptions);
-            setNodes(cloneDeep(nodes));
+            setLinkedNodes(nodesLinkedList);
+
             setIsLoading(false);
-            setConversationHistory([cloneDeep(nodes)]);
+            setConversationHistory([cloneDeep(nodesLinkedList)]);
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier, planTypeMeta]);
 
     const onSave = async () => {
-        const updatedConversation = await repository.Conversations.ModifyConversation(nodeList, areaIdentifier);
-        historyTracker.addConversationHistoryToQueue(updatedConversation, conversationHistoryPosition, conversationHistory);
-        setNodes(updatedConversation);
-        return true;
+        if (linkedNodeList) {
+            const updatedConversation = await repository.Conversations.ModifyConversation(linkedNodeList.compile(), areaIdentifier);
+            historyTracker.addConversationHistoryToQueue(linkedNodeList, conversationHistoryPosition, conversationHistory);
+            // setNodes(updatedConversation);
+            setLinkedNodes(new PalavyrLinkedList(updatedConversation, areaIdentifier, () => null));
+            return true;
+        } else {
+            return false;
+        }
     };
 
-    const setNodesWithHistory = (updatedNodeList: Conversation) => {
+    const setNodesWithHistory = (updatedNodeList: PalavyrLinkedList) => {
         const freshNodeList = cloneDeep(updatedNodeList);
         historyTracker.addConversationHistoryToQueue(freshNodeList, conversationHistoryPosition, conversationHistory);
-        setNodes(freshNodeList);
+        setLinkedNodes(linkedNodeList);
     };
 
     const resetTree = () => {
-        const rootNode = getRootNode(nodeList);
-        rootNode.nodeChildrenString = "";
-        setNodes([rootNode]);
+        if (linkedNodeList) {
+            const head = linkedNodeList.rootNode.compileConvoNode(areaIdentifier);
+            const newList = new PalavyrLinkedList([head], areaIdentifier, () => null);
+            setNodesWithHistory(newList);
+        }
     };
 
     useEffect(() => {
@@ -122,19 +134,22 @@ export const ConvoTree = () => {
     }, [areaIdentifier, loadNodes]);
 
     useEffect(() => {
-        if (nodeList.length > 0) {
-            (async () => {
-                const treeErrors = await repository.Conversations.GetErrors(areaIdentifier, nodeList);
-                setTreeErrors(treeErrors);
-            })();
+        if (linkedNodeList) {
+            const nodeList = linkedNodeList.compile();
+            if (nodeList.length > 0) {
+                (async () => {
+                    const treeErrors = await repository.Conversations.GetErrors(areaIdentifier, nodeList);
+                    setTreeErrors(treeErrors);
+                })();
+            }
         }
         // Disabling this here because we don't want to rerender on requriedNodes change (thought that seems almost what we want, but actually isn't)
         // We compute this on the nodeList in fact, and the requiredNodes only change when we change areaIdentifier (or update the dynamic tables option on the other tab)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [areaIdentifier, nodeList]);
+    }, [areaIdentifier, linkedNodeList]);
 
     return (
-        <ConversationTreeContext.Provider value={{ nodeList, nodeTypeOptions, setNodes: setNodesWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
+        <ConversationTreeContext.Provider value={{ palavyrLinkedList: linkedNodeList, nodeList, nodeTypeOptions, setNodes: setNodesWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
             <AreaConfigurationHeader
                 divider={treeErrors?.anyErrors}
                 title="Palavyr"
@@ -176,11 +191,11 @@ export const ConvoTree = () => {
             {isDevelopmentStage() && (
                 <>
                     {showDebugData &&
-                        conversationHistory.map((convo: Conversation, index: number) => {
+                        conversationHistory.map((convo: PalavyrLinkedList, index: number) => {
                             return (
                                 <div key={index}>
                                     <Divider />
-                                    {convo.map((x) => " | " + x.nodeType)}
+                                    {convo.compile().map((x) => " | " + x.nodeType)}
                                 </div>
                             );
                         })}
@@ -190,7 +205,9 @@ export const ConvoTree = () => {
                 <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
                 <fieldset className="fieldset" id="tree-test">
                     <PalavyrErrorBoundary>
-                        <div className="main-tree tree-wrap">{nodeList.length > 0 ? <ConversationNode key="tree-start" node={rootNode} reRender={() => null} /> : null}</div>
+                        {linkedNodeList && linkedNodeList.renderNodeTree()}
+
+                        {/* <div className="main-tree tree-wrap">{nodeList.length > 0 ? <ConversationNode key="tree-start" node={rootNode} reRender={() => null} /> : null}</div> */}
                     </PalavyrErrorBoundary>
                 </fieldset>
             </div>

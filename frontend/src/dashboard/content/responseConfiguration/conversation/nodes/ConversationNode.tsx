@@ -8,9 +8,11 @@ import { _getAllParentNodeIds, _splitNodeChildrenString } from "./nodeUtils/_cor
 import "./stylesConversationNode.css";
 import { getNodeIdentity } from "./nodeUtils/nodeIdentity";
 import { ConversationNodeInterface } from "./nodeInterface/ConversationNodeInterface";
+import { PalavyrNode } from "../convoDataStructure/PalavyrNode";
 
 export interface IConversationNode {
     node: ConvoNode;
+    palavyrNode: PalavyrNode;
     reRender: () => void;
 }
 
@@ -68,7 +70,7 @@ export const ConversationNode = ({ node, reRender }: IConversationNode) => {
         <>
             <div className={"tree-item " + nodeWrapper}>
                 <div className="tree-block-wrap">
-                    <ConversationNodeInterface key={node.nodeId} node={node} identity={identity} reRender={reRender} />
+                    <ConversationNodeInterface key={node.nodeId} node={node} identity={identity} reRender={nextReRender} />
                 </div>
                 {childNodes.length > 0 && (
                     <div key={node.nodeId} className="tree-row">

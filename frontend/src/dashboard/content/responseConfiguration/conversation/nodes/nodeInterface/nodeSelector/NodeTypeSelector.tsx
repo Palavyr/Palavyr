@@ -7,7 +7,8 @@ import { changeNodeType } from "../../nodeUtils/changeNodeType";
 import { _replaceNodeWithUpdatedNode } from "../../nodeUtils/_coreNodeUtils";
 
 export interface INodeTypeSelector {
-    node: ConvoNode;
+    node?: ConvoNode;
+    nodeType: string;
     nodeIdentity: NodeIdentity;
     reRender: () => void;
     nodeTypeOptions: NodeTypeOptions;
@@ -15,7 +16,7 @@ export interface INodeTypeSelector {
     selectionCallback: (node: ConvoNode, nodeList: Conversation, nodeIdOfMostRecentAnabranch: string) => Conversation;
 }
 
-export const NodeTypeSelector = ({ node, nodeIdentity, reRender, nodeTypeOptions, shouldDisabledNodeTypeSelector, selectionCallback }: INodeTypeSelector) => {
+export const NodeTypeSelector = ({ node, nodeType, nodeIdentity, reRender, nodeTypeOptions, shouldDisabledNodeTypeSelector, selectionCallback }: INodeTypeSelector) => {
     const [alertState, setAlertState] = useState<boolean>(false);
     const [alertDetails, setAlertDetails] = useState<AlertType>();
     const [label, setLabel] = useState<string>("");
@@ -23,11 +24,11 @@ export const NodeTypeSelector = ({ node, nodeIdentity, reRender, nodeTypeOptions
     const { nodeList, setNodes } = React.useContext(ConversationTreeContext);
 
     useEffect(() => {
-        const currentNodeOption = nodeTypeOptions.filter((option: NodeOption) => option.value === node.nodeType)[0];
+        const currentNodeOption = nodeTypeOptions.filter((option: NodeOption) => option.value === nodeType)[0];
         if (currentNodeOption) {
             setLabel(currentNodeOption.text);
         }
-    }, [node]);
+    }, [nodeType]);
 
     const duplicateDynamicFeeNodeFound = (option: string) => {
         const dynamicNodeTypeOptions = nodeTypeOptions.filter((x: NodeOption) => x.isDynamicType);
