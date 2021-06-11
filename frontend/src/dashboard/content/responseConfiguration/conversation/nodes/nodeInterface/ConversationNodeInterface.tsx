@@ -171,7 +171,7 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
     return (
         <Card className={classNames(cls.root, node.nodeId)} variant="outlined">
             <CardContent className={cls.card}>
-                {showDebugData && nodeProperties && <DataLogging nodeProperties={nodeProperties} nodeChildren={node.nodeChildrenString} nodeId={node.nodeId} data={dataItems} />}
+                {/* {showDebugData && nodeProperties && <DataLogging nodeProperties={nodeProperties} nodeChildren={node.nodeChildrenString} nodeId={node.nodeId} data={dataItems} />} */}
                 <Typography className={cls.interfaceElement} variant={node.isRoot ? "h5" : "body1"} align="center">
                     {node.isRoot ? "Begin" : node.optionPath === "Continue" ? node.optionPath : "If " + node.optionPath}
                 </Typography>
@@ -190,7 +190,7 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
                 <NodeTypeSelector
                     nodeIdentity={identity}
                     nodeTypeOptions={filteredNodeTypeOptions(identity, nodeTypeOptions)}
-                    node={node}
+                    nodeType={node.nodeType}
                     reRender={reRender}
                     shouldDisabledNodeTypeSelector={identity.shouldDisabledNodeTypeSelector}
                     selectionCallback={selectionCallback}

@@ -8,12 +8,13 @@ import { findIndex } from "lodash";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 
 export interface SelectFromExistingImagesProps {
-    node: ConvoNode;
+    node?: ConvoNode;
+    nodeId: string;
     setImageName: SetState<string>;
     setImageLink: SetState<string>;
     currentImageId: string;
 }
-export const SelectFromExistingImages = ({ node, setImageName, setImageLink, currentImageId }: SelectFromExistingImagesProps) => {
+export const SelectFromExistingImages = ({ node, nodeId, setImageName, setImageLink, currentImageId }: SelectFromExistingImagesProps) => {
     const repository = new PalavyrRepository();
     const { nodeList, setNodes } = useContext(ConversationTreeContext);
 
@@ -21,19 +22,12 @@ export const SelectFromExistingImages = ({ node, setImageName, setImageLink, cur
     const [label, setLabel] = useState<string>("");
 
     const onChange = async (_: any, option: FileLink) => {
-        // set the imageId to the node
-        if (option === null) {
-            console.log("OPTIONS WERE NULL WHAT");
-        }
-        if (node === null) {
-            console.log("NODE WAS NULL");
-        }
 
         if (node === null || option === null) {
             return;
         }
 
-        const convoNode = await repository.Configuration.Images.savePreExistingImage(option.fileId, node.nodeId);
+        const convoNode = await repository.Configuration.Images.savePreExistingImage(option.fileId, nodeId);
         setLabel(option.fileName);
         const nodeIndex = findIndex(nodeList, (n: ConvoNode) => n.nodeId == convoNode.nodeId);
         nodeList[nodeIndex].imageId = option.fileId;
@@ -51,8 +45,8 @@ export const SelectFromExistingImages = ({ node, setImageName, setImageLink, cur
     const loadOptions = useCallback(async () => {
         const fileLinks = await repository.Configuration.Images.getImages();
         const sortedOptions = sortByPropertyAlphabetical(groupGetter, fileLinks);
-        const filteredOptions = sortedOptions.filter((l: FileLink) => {
-            return l.fileId !== currentImageId;
+        const filteredOptions = sortedOptions.filter((link: FileLink) => {
+            return link.fileId !== currentImageId;
         });
         setOptions(filteredOptions);
     }, [currentImageId]);

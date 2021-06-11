@@ -9,7 +9,7 @@ import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { useHistory } from "react-router-dom";
 
 export interface ImageUploadProps {
-    node: ConvoNode;
+    nodeId: string;
     setImageName: SetState<string>;
     setImageLink: SetState<string>;
     currentImageId: string;
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const NodeImageUpload = ({ node, setImageName, setImageLink, currentImageId, initialState = false, setModalState }: ImageUploadProps) => {
+export const NodeImageUpload = ({ nodeId, setImageName, setImageLink, currentImageId, initialState = false, setModalState }: ImageUploadProps) => {
     const cls = useStyles();
     const { setIsLoading, setSuccessOpen, setSuccessText, planTypeMeta } = useContext(DashboardContext);
     const history = useHistory();
@@ -62,7 +62,7 @@ export const NodeImageUpload = ({ node, setImageName, setImageLink, currentImage
             return;
         }
 
-        await repository.Configuration.Images.savePreExistingImage(result[0].fileId, node.nodeId);
+        await repository.Configuration.Images.savePreExistingImage(result[0].fileId, nodeId);
         setIsLoading(false);
         setSuccessOpen(true);
         setModalState(false);
@@ -71,7 +71,7 @@ export const NodeImageUpload = ({ node, setImageName, setImageLink, currentImage
     return (
         <>
             <div className={cls.imageBlock}>
-                <SelectFromExistingImages node={node} currentImageId={currentImageId} setImageLink={setImageLink} setImageName={setImageName} />
+                <SelectFromExistingImages nodeId={nodeId} currentImageId={currentImageId} setImageLink={setImageLink} setImageName={setImageName} />
             </div>
             <Divider />
             <div className={cls.imageBlock}>

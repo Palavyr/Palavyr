@@ -13,7 +13,7 @@ export interface INodeTypeSelector {
     reRender: () => void;
     nodeTypeOptions: NodeTypeOptions;
     shouldDisabledNodeTypeSelector: boolean;
-    selectionCallback: (node: ConvoNode, nodeList: Conversation, nodeIdOfMostRecentAnabranch: string) => Conversation;
+    selectionCallback: (node: ConvoNode, nodeList: Conversation, nodeIdOfMostRecentAnabranch: string) => void;
 }
 
 export const NodeTypeSelector = ({ node, nodeType, nodeIdentity, reRender, nodeTypeOptions, shouldDisabledNodeTypeSelector, selectionCallback }: INodeTypeSelector) => {
@@ -55,7 +55,7 @@ export const NodeTypeSelector = ({ node, nodeType, nodeIdentity, reRender, nodeT
             return;
         }
 
-        changeNodeType(node, nodeList, setNodes, nodeOption, nodeIdentity, selectionCallback);
+        // changeNodeType(node, nodeList, setNodes, nodeOption, nodeIdentity, selectionCallback);
         reRender();
     };
 

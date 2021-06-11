@@ -12,7 +12,6 @@ import { PalavyrNode } from "../convoDataStructure/PalavyrNode";
 
 export interface IConversationNode {
     node: ConvoNode;
-    palavyrNode: PalavyrNode;
     reRender: () => void;
 }
 

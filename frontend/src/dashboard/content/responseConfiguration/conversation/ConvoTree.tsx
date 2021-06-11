@@ -206,7 +206,6 @@ export const ConvoTree = () => {
                 <fieldset className="fieldset" id="tree-test">
                     <PalavyrErrorBoundary>
                         {linkedNodeList && linkedNodeList.renderNodeTree()}
-
                         {/* <div className="main-tree tree-wrap">{nodeList.length > 0 ? <ConversationNode key="tree-start" node={rootNode} reRender={() => null} /> : null}</div> */}
                     </PalavyrErrorBoundary>
                 </fieldset>
