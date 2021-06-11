@@ -34,9 +34,10 @@ export const NodeTypeSelector = ({ node, nodeType, nodeIdentity, reRender, nodeT
         const dynamicNodeTypeOptions = nodeTypeOptions.filter((x: NodeOption) => x.isDynamicType);
         if (dynamicNodeTypeOptions.length > 0) {
             const dynamicNodeTypes = dynamicNodeTypeOptions.map((x: NodeOption) => x.value);
-            const dynamicNodesPresentInTheCurrentNodeList = nodeList.filter((x: ConvoNode) => dynamicNodeTypes.includes(x.nodeType));
-            const dynamicNodes = dynamicNodesPresentInTheCurrentNodeList.map((x: ConvoNode) => x.nodeType);
-            return dynamicNodes.includes(option) ? true : false;
+            // const dynamicNodesPresentInTheCurrentNodeList = nodeList.filter((x: ConvoNode) => dynamicNodeTypes.includes(x.nodeType));
+            // const dynamicNodes = dynamicNodesPresentInTheCurrentNodeList.map((x: ConvoNode) => x.nodeType);
+            // return dynamicNodes.includes(option) ? true : false;
+            return false;
         }
         return false;
     };

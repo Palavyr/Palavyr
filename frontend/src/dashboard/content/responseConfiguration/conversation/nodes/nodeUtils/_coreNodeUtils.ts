@@ -2,6 +2,7 @@ import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { Conversation, ConvoNode, UUID, ValueOptionDelimiter } from "@Palavyr-Types";
 import { cloneDeep, findIndex } from "lodash";
 import { uuid } from "uuidv4";
+import { PalavyrLinkedList } from "../../convoDataStructure/PalavyrLinkedList";
 
 export const _splitNodeChildrenString = (nodeChildrenString: string) => {
     return nodeChildrenString.split(",");
@@ -217,19 +218,20 @@ export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeId
 
 // TODO: This is a dirty hack. We shouldn't be saving conversations where a node has no child into the history.
 export const _cleanConversationNodesWithNoChildren = (dirtyConversation: PalavyrLinkedList) => {
-    const cleanConvo: PalavyrLinkedList = [];
-    dirtyConversation.forEach((node: ConvoNode) => {
-        const nodeChildren = _splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString);
-        const childrenThatExist: string[] = [];
-        nodeChildren.forEach((childId: string) => {
-            const tryNode = _getNodeByIdOrNull(childId, dirtyConversation);
-            if (tryNode !== null) {
-                childrenThatExist.push(tryNode.nodeId);
-            }
-        });
-        const rejoinedChildString = _joinNodeChildrenStringArray(childrenThatExist);
-        node.nodeChildrenString = rejoinedChildString;
-        cleanConvo.push(node);
-    });
-    return cleanConvo;
+    // const cleanConvo: PalavyrLinkedList = [];
+    // dirtyConversation.forEach((node: ConvoNode) => {
+    //     const nodeChildren = _splitAndRemoveEmptyNodeChildrenString(node.nodeChildrenString);
+    //     const childrenThatExist: string[] = [];
+    //     nodeChildren.forEach((childId: string) => {
+    //         const tryNode = _getNodeByIdOrNull(childId, dirtyConversation);
+    //         if (tryNode !== null) {
+    //             childrenThatExist.push(tryNode.nodeId);
+    //         }
+    //     });
+    //     const rejoinedChildString = _joinNodeChildrenStringArray(childrenThatExist);
+    //     node.nodeChildrenString = rejoinedChildString;
+    //     cleanConvo.push(node);
+    // });
+    // return cleanConvo;
+    return [];
 };

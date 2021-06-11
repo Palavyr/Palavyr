@@ -35,10 +35,11 @@ interface IAuthContext {
 }
 
 interface IConversationTreeContext {
-    nodeList: Conversation;
+    nodeList?: PalavyrLinkedList;
+    rawNodeList: Conversation;
     setNodes: NodeSetterWithHistory;
     historyTracker: ConversationHistoryTracker;
-    conversationHistory: Conversation[];
+    conversationHistory: PalavyrLinkedList[];
     conversationHistoryPosition: number;
     nodeTypeOptions: NodeTypeOptions;
     showDebugData: boolean;

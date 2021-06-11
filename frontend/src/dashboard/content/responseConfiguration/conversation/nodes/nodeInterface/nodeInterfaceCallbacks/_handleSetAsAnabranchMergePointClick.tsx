@@ -40,6 +40,6 @@ export const _handleSetAsAnabranchMergePointClick = (checked: boolean, node: Con
         updatedNodeList = unsetNodeAsAnabranchMergePoint(node, nodeList, nodeIdOfMostRecentAnabranch, setAnabranchMergeChecked);
     }
     if (updatedNodeList) {
-        setNodes(cloneDeep(updatedNodeList));
+        // setNodes(cloneDeep(updatedNodeList));
     }
 };

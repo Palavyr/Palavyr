@@ -30,13 +30,13 @@ export const connectionStyle: lineStyle = {
 };
 
 export const ConversationNode = ({ node, reRender }: IConversationNode) => {
-    const { nodeList } = useContext(ConversationTreeContext);
+    const { rawNodeList } = useContext(ConversationTreeContext);
     const [nodeState, changeNodeState] = useState<boolean>(true);
     const [loaded, setLoaded] = useState(false);
 
-    const allParentNodes = _getAllParentNodeIds(node, nodeList);
-    const childNodes = getChildNodesToRender(node, nodeList);
-    const identity = getNodeIdentity(node, nodeList);
+    const allParentNodes = _getAllParentNodeIds(node, rawNodeList);
+    const childNodes = getChildNodesToRender(node, rawNodeList);
+    const identity = getNodeIdentity(node, rawNodeList);
 
     const nextReRender = () => {
         changeNodeState(!nodeState);

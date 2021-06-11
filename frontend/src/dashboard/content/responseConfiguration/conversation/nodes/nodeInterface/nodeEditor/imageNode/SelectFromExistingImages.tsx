@@ -3,18 +3,21 @@ import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 import { PalavyrAutoComplete } from "@common/components/PalavyrAutoComplete";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { ConvoNode, FileLink, SetState } from "@Palavyr-Types";
+import { PalavyrLinkedList } from "dashboard/content/responseConfiguration/conversation/convoDataStructure/PalavyrLinkedList";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import { findIndex } from "lodash";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 
 export interface SelectFromExistingImagesProps {
     node?: ConvoNode;
+    container: PalavyrLinkedList;
     nodeId: string;
     setImageName: SetState<string>;
     setImageLink: SetState<string>;
     currentImageId: string;
 }
-export const SelectFromExistingImages = ({ node, nodeId, setImageName, setImageLink, currentImageId }: SelectFromExistingImagesProps) => {
+
+export const SelectFromExistingImages = ({ container, node, nodeId, setImageName, setImageLink, currentImageId }: SelectFromExistingImagesProps) => {
     const repository = new PalavyrRepository();
     const { nodeList, setNodes } = useContext(ConversationTreeContext);
 
@@ -29,15 +32,16 @@ export const SelectFromExistingImages = ({ node, nodeId, setImageName, setImageL
 
         const convoNode = await repository.Configuration.Images.savePreExistingImage(option.fileId, nodeId);
         setLabel(option.fileName);
-        const nodeIndex = findIndex(nodeList, (n: ConvoNode) => n.nodeId == convoNode.nodeId);
-        nodeList[nodeIndex].imageId = option.fileId;
 
-        if (!option.isUrl) {
-            const presignedUrl = await repository.Configuration.Images.getSignedUrl(option.link);
-            setImageLink(presignedUrl);
-            setImageName(option.fileName);
-        }
-        setNodes(nodeList);
+        // const nodeIndex = findIndex(nodeList, (n: ConvoNode) => n.nodeId == convoNode.nodeId);
+        // nodeList[nodeIndex].imageId = option.fileId;
+
+        // if (!option.isUrl) {
+        //     const presignedUrl = await repository.Configuration.Images.getSignedUrl(option.link);
+        //     setImageLink(presignedUrl);
+        //     setImageName(option.fileName);
+        // }
+        // setNodes(nodeList);
     };
 
     const groupGetter = (val: FileLink) => val.fileName;

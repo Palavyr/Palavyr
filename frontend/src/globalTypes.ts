@@ -1,4 +1,5 @@
 import { COULD_NOT_FIND_SERVER, GOOGLE_ACCOUNT_NOT_FOUND, INVALID_EMAIL, INVALID_GOOGLE_TOKEN, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, NOT_A_GOOGLE_ACCOUNT, VERIFICATION_EMAIL_SEND } from "@constants";
+import { PalavyrLinkedList } from "dashboard/content/responseConfiguration/conversation/convoDataStructure/PalavyrLinkedList";
 import { Dispatch, SetStateAction } from "react";
 // / <reference types="node" />
 // / <reference types="react" />
@@ -647,7 +648,7 @@ export type AnabranchMeta = {
 
 export type NodeId = string;
 
-export type NodeSetterWithHistory = (value: React.SetStateAction<Conversation>) => void;
+export type NodeSetterWithHistory = (value: React.SetStateAction<PalavyrLinkedList>) => void;
 
 export type NodeIdentity = {
     // splitmerge

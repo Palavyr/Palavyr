@@ -50,7 +50,7 @@ export const ConvoTree = () => {
     const [showDebugData, setShowDebugData] = useState<boolean>(false);
 
     const [linkedNodeList, setLinkedNodes] = useState<PalavyrLinkedList>();
-
+    const [rawNodeList, setRawNodeList] = useState<Conversation>([]);
     const historyTracker = new ConversationHistoryTracker(setConversationHistory, setConversationHistoryPosition, setLinkedNodes);
 
     const toggleDebugData = () => {
@@ -149,7 +149,7 @@ export const ConvoTree = () => {
     }, [areaIdentifier, linkedNodeList]);
 
     return (
-        <ConversationTreeContext.Provider value={{ palavyrLinkedList: linkedNodeList, nodeList, nodeTypeOptions, setNodes: setNodesWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
+        <ConversationTreeContext.Provider value={{ palavyrLinkedList: linkedNodeList, rawNodeList: rawNodeList, nodeList: linkedNodeList  , nodeTypeOptions, setNodes: setNodesWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
             <AreaConfigurationHeader
                 divider={treeErrors?.anyErrors}
                 title="Palavyr"
@@ -206,7 +206,6 @@ export const ConvoTree = () => {
                 <fieldset className="fieldset" id="tree-test">
                     <PalavyrErrorBoundary>
                         {linkedNodeList && linkedNodeList.renderNodeTree()}
-                        {/* <div className="main-tree tree-wrap">{nodeList.length > 0 ? <ConversationNode key="tree-start" node={rootNode} reRender={() => null} /> : null}</div> */}
                     </PalavyrErrorBoundary>
                 </fieldset>
             </div>

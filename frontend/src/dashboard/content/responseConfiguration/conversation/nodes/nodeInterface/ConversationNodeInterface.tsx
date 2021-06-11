@@ -95,7 +95,7 @@ export interface IConversationNodeInterface {
 
 export const ConversationNodeInterface = ({ node, identity, reRender }: IConversationNodeInterface) => {
     const repository = new PalavyrRepository();
-    const { setNodes, nodeList, nodeTypeOptions, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData } = React.useContext(ConversationTreeContext);
+    const { setNodes, rawNodeList, nodeTypeOptions, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData } = React.useContext(ConversationTreeContext);
 
     const [modalState, setModalState] = useState<boolean>(false);
     const [mergeBoxChecked, setMergeBoxChecked] = useState<boolean>(false);
@@ -116,7 +116,7 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
                 setCurrentImageId(fileLink.fileId);
             }
         }
-    }, [nodeList]);
+    }, [rawNodeList]);
 
     const cls = useStyles({
         nodeType: node.nodeType,
@@ -133,7 +133,7 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
 
     useEffect(() => {
         setMergeBoxChecked(identity.shouldCheckSplitMergeBox);
-    }, [node, nodeList]);
+    }, [node, rawNodeList]);
 
     useEffect(() => {
         if (identity.isAnabranchMergePoint) {
@@ -143,29 +143,29 @@ export const ConversationNodeInterface = ({ node, identity, reRender }: IConvers
 
     useEffect(() => {
         loadImage();
-    }, [nodeList]);
+    }, [rawNodeList]);
 
     const showResponseInPdfCheckbox = (event: { target: { checked: boolean } }) => {
         const checked = event.target.checked;
-        _showResponseInPdfCheckbox(checked, node, nodeList, setNodes, conversationHistoryPosition, historyTracker, conversationHistory);
+        _showResponseInPdfCheckbox(checked, node, rawNodeList, setNodes, conversationHistoryPosition, historyTracker, conversationHistory);
     };
 
     const handleMergeBackInOnClick = (event: { target: { checked: boolean } }) => {
         const checked = event.target.checked;
-        _handleMergeBackInOnClick(checked, node, nodeList, conversationHistoryPosition, historyTracker, conversationHistory, setNodes, setMergeBoxChecked, identity.nodeIdOfMostRecentSplitMergePrimarySibling);
+        _handleMergeBackInOnClick(checked, node, rawNodeList, conversationHistoryPosition, historyTracker, conversationHistory, setNodes, setMergeBoxChecked, identity.nodeIdOfMostRecentSplitMergePrimarySibling);
     };
 
     const handleSetAsAnabranchMergePointClick = (event: { target: { checked: boolean } }) => {
         const checked = event.target.checked;
-        _handleSetAsAnabranchMergePointClick(checked, node, nodeList, identity.nodeIdOfMostRecentAnabranch, setAnabranchMergeChecked, setNodes);
+        _handleSetAsAnabranchMergePointClick(checked, node, rawNodeList, identity.nodeIdOfMostRecentAnabranch, setAnabranchMergeChecked, setNodes);
     };
 
     const handleUnsetCurrentNodeType = () => {
-        _handleUnsetCurrentNodeType(node, nodeList, setNodes);
+        _handleUnsetCurrentNodeType(node, rawNodeList, setNodes);
     };
 
-    const selectionCallback = (node: ConvoNode, nodeList: Conversation, nodeIdOfMostRecentAnabranch: string): Conversation => {
-        return setNodeAsAnabranchMergePoint(node, nodeList, nodeIdOfMostRecentAnabranch, setAnabranchMergeChecked);
+    const selectionCallback = (node: ConvoNode, rawNodeList: Conversation, nodeIdOfMostRecentAnabranch: string): Conversation => {
+        return setNodeAsAnabranchMergePoint(node, rawNodeList, nodeIdOfMostRecentAnabranch, setAnabranchMergeChecked);
     };
 
     return (

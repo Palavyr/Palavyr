@@ -14,5 +14,5 @@ export const _handleUnsetCurrentNodeType = (node: ConvoNode, nodeList: Conversat
     newNode.nodeChildrenString = "";
     newNode.valueOptions = "";
     updatedNodeList = _replaceNodeWithUpdatedNode(newNode, updatedNodeList);
-    setNodes(cloneDeep([...updatedNodeList]));
+    // setNodes(cloneDeep([...updatedNodeList]));
 };

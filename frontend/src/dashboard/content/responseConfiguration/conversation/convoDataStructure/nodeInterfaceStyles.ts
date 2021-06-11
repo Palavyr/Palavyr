@@ -65,4 +65,9 @@ export const useNodeInterfaceStyles = makeStyles(() => ({
     interfaceElement: {
         paddingBottom: "1rem",
     },
+    imageBlock: {
+        padding: "1rem",
+        marginBottom: "0.5rem",
+        marginTop: "0.5rem",
+    },
 }));

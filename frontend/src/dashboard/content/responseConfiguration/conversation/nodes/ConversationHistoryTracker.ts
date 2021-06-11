@@ -49,7 +49,8 @@ export class ConversationHistoryTracker {
         this.setConversationHistoryPosition(newPosition);
         const oneBack = conversationHistory[newPosition];
         const cleanOneBack = _cleanConversationNodesWithNoChildren(oneBack);
-        this.setNodes(cleanOneBack);
+        // this.setNodes(cleanOneBack);
+        this.setNodes(oneBack);
     }
 
     stepConversationForwardOneStep(conversationHistoryPosition: number, conversationHistory: PalavyrLinkedList[]) {

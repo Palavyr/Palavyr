@@ -80,6 +80,8 @@ export class PalavyrNode implements IPalavyrNode {
     public isMemberOfLeftmostBranch: boolean;
 
     public rawNode: ConvoNode; // Get Rid Of This.
+    public rawNodeList: Conversation;
+
     public lineMap: LineMap = [];
 
     protected rerender: () => void;
@@ -136,7 +138,7 @@ export class PalavyrNode implements IPalavyrNode {
         this.isMemberOfLeftmostBranch = leftmostBranch;
 
         this.rawNode = node;
-
+        this.rawNodeList = nodeList;
         this.rerender = reRender;
 
         // deprecated
@@ -207,9 +209,7 @@ export class PalavyrNode implements IPalavyrNode {
     }
 
     public renderPalavyrNode() {
-        // non jsx
         return () => {
-            // jsx
             return (
                 <>
                     <div className={`tree-item tree-item-${this.nodeId}`}>
@@ -266,21 +266,21 @@ export class PalavyrNode implements IPalavyrNode {
 
             const showResponseInPdfCheckbox = (event: { target: { checked: boolean } }) => {
                 const checked = event.target.checked;
-                _showResponseInPdfCheckbox(checked, this.rawNode, nodeList, setNodes, conversationHistoryPosition, historyTracker, conversationHistory);
+                _showResponseInPdfCheckbox(checked, this.rawNode, this.rawNodeList, setNodes, conversationHistoryPosition, historyTracker, conversationHistory);
             };
 
             const handleMergeBackInOnClick = (event: { target: { checked: boolean } }) => {
                 const checked = event.target.checked;
-                _handleMergeBackInOnClick(checked, this.rawNode, nodeList, conversationHistoryPosition, historyTracker, conversationHistory, setNodes, setMergeBoxChecked, this.nodeIdentity.nodeIdOfMostRecentSplitMergePrimarySibling);
+                _handleMergeBackInOnClick(checked, this.rawNode, this.rawNodeList, conversationHistoryPosition, historyTracker, conversationHistory, setNodes, setMergeBoxChecked, this.nodeIdentity.nodeIdOfMostRecentSplitMergePrimarySibling);
             };
 
             const handleSetAsAnabranchMergePointClick = (event: { target: { checked: boolean } }) => {
                 const checked = event.target.checked;
-                _handleSetAsAnabranchMergePointClick(checked, this.rawNode, nodeList, this.nodeIdentity.nodeIdOfMostRecentAnabranch, setAnabranchMergeChecked, setNodes);
+                _handleSetAsAnabranchMergePointClick(checked, this.rawNode, this.rawNodeList, this.nodeIdentity.nodeIdOfMostRecentAnabranch, setAnabranchMergeChecked, setNodes);
             };
 
             const handleUnsetCurrentNodeType = () => {
-                _handleUnsetCurrentNodeType(this.rawNode, nodeList, setNodes);
+                _handleUnsetCurrentNodeType(this.rawNode, this.rawNodeList, setNodes);
             };
 
             const selectionCallback = (node: ConvoNode, nodeList: Conversation, nodeIdOfMostRecentAnabranch: string): void => {
@@ -292,9 +292,11 @@ export class PalavyrNode implements IPalavyrNode {
                     <CardContent className={cls.card}>
                         {showDebugData && <DataLogging debugData={this.compileDebug()} nodeChildren={this.nodeChildrenString} nodeId={this.nodeId} />}
                         <NodeInterfaceHeader isRoot={this.isRoot} optionPath={this.optionPath} />
+
                         {this.renderNodeFace(setModalState)}
                         {this.renderNodeTypeSelector(selectionCallback)} // TODO: do this
                         {this.renderNodeEditor(modalState, setModalState)}
+
                         {this.nodeIdentity.shouldShowResponseInPdfOption && <NodeCheckBox label="Show response in PDF" checked={this.shouldPresentResponse} onChange={showResponseInPdfCheckbox} />}
                         {this.nodeIdentity.shouldShowMergeWithPrimarySiblingBranchOption && <NodeCheckBox label="Merge with primary sibling branch" checked={!this.shouldRenderChildren} onChange={handleMergeBackInOnClick} />}
                         {this.nodeIdentity.shouldShowSetAsAnabranchMergePointOption && (

@@ -26,7 +26,7 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, curren
     const [textState, setText] = useState<string>("");
     const [switchState, setSwitchState] = useState<boolean>(true);
 
-    const { nodeList, setNodes } = React.useContext(ConversationTreeContext);
+    const { rawNodeList, setNodes } = React.useContext(ConversationTreeContext);
 
     useEffect(() => {
         setText(node.text);
@@ -43,9 +43,9 @@ export const ConversationNodeEditor = ({ modalState, setModalState, node, curren
         const updatedNode = { ...node };
         updatedNode.text = value;
         if (node.isMultiOptionType) {
-            updateMultiTypeOption(updatedNode, nodeList, valueOptions, setNodes); // create new nodes and update the Database
+            // updateMultiTypeOption(updatedNode, rawNodeList, valueOptions, setNodes); // create new nodes and update the Database
         } else {
-            updateSingleOptionType(updatedNode, nodeList, setNodes);
+            // updateSingleOptionType(updatedNode, rawNodeList, setNodes);
         }
     };
 
