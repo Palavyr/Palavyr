@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ConvoNode } from "@Palavyr-Types";
+import { ConvoNode, NodeTypeOptions } from "@Palavyr-Types";
 import { getRootNode } from "../nodes/nodeUtils/commonNodeUtils";
 import { _getNodeById, _splitAndRemoveEmptyNodeChildrenString, _splitNodeChildrenString } from "../nodes/nodeUtils/_coreNodeUtils";
 import { LinkedListBucket } from "./LinkedListBucket";
@@ -21,15 +21,18 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     private areaId: string; // areaIdentifier
     public rootNode: PalavyrNode;
     private head: ConvoNode;
-    private rerender: () => void;
+    private rerender: () => null;
     private repository: PalavyrRepository = new PalavyrRepository();
+    private nodeTypeOptions: NodeTypeOptions;
 
     /**
      * List object for interacting with the list. This will have methods for performing insertions, deletions, additions, subtractions, etc
      */
-    constructor(nodeList: ConvoNode[], areaId: string, rerender: () => void) {
+    constructor(nodeList: ConvoNode[], nodeTypeOptions: NodeTypeOptions, areaId: string, rerender: () => null) {
         this.areaId = areaId;
         this.head = getRootNode(nodeList);
+        this.nodeTypeOptions = nodeTypeOptions;
+        this.rerender = rerender;
         this.assembleDoubleLinkedMultiBranchLinkedList(nodeList);
     }
 
@@ -44,10 +47,10 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         let palavyrNode: PalavyrNode;
         switch (rawNode.isImageNode) {
             case true:
-                palavyrNode = new PalavyrImageNode(container, repository, rawNode, nodeList, rerender, leftMostBranch);
+                palavyrNode = new PalavyrImageNode(container, this.nodeTypeOptions, repository, rawNode, nodeList, rerender, leftMostBranch);
                 break;
             case false:
-                palavyrNode = new PalavyrTextNode(container, repository, rawNode, nodeList, rerender, leftMostBranch);
+                palavyrNode = new PalavyrTextNode(container, this.nodeTypeOptions, repository, rawNode, nodeList, rerender, leftMostBranch);
                 break;
             default:
                 throw new Error("Node type couldn't be determined when construting the palavyr convo tree.");
@@ -81,11 +84,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     }
 
     renderNodeTree() {
-        // ideally this will execute a recursive function that will traverse the tree recursively (to account for all branches)
-        // keep track of all the node Ids visited globally scoped, and then return a node object to the JSX with all of copies of the rendered
-        // nodes.
-
-        return this.rootNode.renderPalavyrNode();
+        return this.rootNode.createPalavyrNodeComponent();
     }
 
     traverse(): void {

@@ -1,20 +1,9 @@
-import { useState, useCallback } from "react";
 import { Selector, ParsedAnchor } from "./LineTypes";
 
 export const defaultAnchor = { x: 0.5, y: 0.5 };
 export const defaultBorderColor = "#f00";
 export const defaultBorderStyle = "solid";
 export const defaultBorderWidth = 1;
-
-// export function useForceUpdate(): () => void {
-//     const [, dispatch] = useState<{}>(Object.create(null));
-
-//     // Turn dispatch(required_parameter) into dispatch().
-//     const memoizedDispatch = useCallback((): void => {
-//         dispatch(Object.create(null));
-//     }, [dispatch]);
-//     return memoizedDispatch;
-// }
 
 export const parseDelay = (value: string | undefined) => {
     if (typeof value === "undefined") {
@@ -68,13 +57,17 @@ export const parseAnchor = (value: string) => {
     return Object.assign({}, defaultAnchor, x ? parseAnchorText(x) || { x: parseAnchorPercent(x) } : {}, y ? parseAnchorText(y) || { y: parseAnchorPercent(y) } : {});
 };
 
-export const findElement = (className: string) => {
+export const findElementById = (id: string) => {
+    return document.getElementById(id);
+};
+
+export const findElementByClassName = (className: string) => {
     return document.getElementsByClassName(className)[0];
 };
 
 export const getPoints = (from: Selector, to: Selector, parsedFromAnchor: ParsedAnchor, parsedToAnchor: ParsedAnchor) => {
-    const a = findElement(from);
-    const b = findElement(to);
+    const a = findElementByClassName(from);
+    const b = findElementByClassName(to);
 
     if (!a || !b) {
         return false;
@@ -86,7 +79,7 @@ export const getPoints = (from: Selector, to: Selector, parsedFromAnchor: Parsed
     let offsetX = window.pageXOffset;
     let offsetY = window.pageYOffset;
 
-    const p = findElement("tree-item");
+    const p = findElementByClassName("tree-item");
     const boxp = p.getBoundingClientRect();
 
     offsetX -= boxp.left + (window.pageXOffset || document.documentElement.scrollLeft) - p.scrollLeft;

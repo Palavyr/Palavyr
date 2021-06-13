@@ -30,13 +30,13 @@ export const connectionStyle: lineStyle = {
 };
 
 export const ConversationNode = ({ node, reRender }: IConversationNode) => {
-    const { rawNodeList } = useContext(ConversationTreeContext);
+    // const { rawNodeList } = useContext(ConversationTreeContext);
     const [nodeState, changeNodeState] = useState<boolean>(true);
     const [loaded, setLoaded] = useState(false);
 
-    const allParentNodes = _getAllParentNodeIds(node, rawNodeList);
-    const childNodes = getChildNodesToRender(node, rawNodeList);
-    const identity = getNodeIdentity(node, rawNodeList);
+    // const allParentNodes = _getAllParentNodeIds(node, rawNodeList);
+    // const childNodes = getChildNodesToRender(node, rawNodeList);
+    // const identity = getNodeIdentity(node, rawNodeList);
 
     const nextReRender = () => {
         changeNodeState(!nodeState);
@@ -53,29 +53,29 @@ export const ConversationNode = ({ node, reRender }: IConversationNode) => {
 
     let steppedLineNodes: string[] = [];
 
-    if (allParentNodes) {
-        if (allParentNodes.length == 1) {
-            steppedLineNodes.push(allParentNodes[0].nodeId);
-            if (allParentNodes[0].isSplitMergeType) {
-                const siblingNodeIds = _splitNodeChildrenString(allParentNodes[0].nodeChildrenString).filter((x: string) => x !== node.nodeId);
-                siblingNodeIds.map((id: string) => steppedLineNodes.push(id));
-            }
-        } else {
-            steppedLineNodes = allParentNodes.map((x) => x.nodeId);
-        }
-    }
+    // if (allParentNodes) {
+    //     if (allParentNodes.length == 1) {
+    //         steppedLineNodes.push(allParentNodes[0].nodeId);
+    //         if (allParentNodes[0].isSplitMergeType) {
+    //             const siblingNodeIds = _splitNodeChildrenString(allParentNodes[0].nodeChildrenString).filter((x: string) => x !== node.nodeId);
+    //             siblingNodeIds.map((id: string) => steppedLineNodes.push(id));
+    //         }
+    //     } else {
+    //         steppedLineNodes = allParentNodes.map((x) => x.nodeId);
+    //     }
+    // }
     const nodeWrapper = "tree-item-" + node?.nodeId;
     return (
         <>
             <div className={"tree-item " + nodeWrapper}>
                 <div className="tree-block-wrap">
-                    <ConversationNodeInterface key={node.nodeId} node={node} identity={identity} reRender={nextReRender} />
+                    {/* <ConversationNodeInterface key={node.nodeId} node={node} identity={identity} reRender={nextReRender} /> */}
                 </div>
-                {childNodes.length > 0 && (
+                {/* {childNodes.length > 0 && ( */}
                     <div key={node.nodeId} className="tree-row">
-                        {node.shouldRenderChildren ? childNodes.filter((n: ConvoNode) => n !== undefined).map((nextNode, index) => <ConversationNode key={nextNode.nodeId + "-" + index.toString()} node={nextNode} reRender={nextReRender} />) : null}
+                        {/* {node.shouldRenderChildren ? childNodes.filter((n: ConvoNode) => n !== undefined).map((nextNode, index) => <ConversationNode key={nextNode.nodeId + "-" + index.toString()} node={nextNode} reRender={nextReRender} />) : null} */}
                     </div>
-                )}
+                {/* )} */}
             </div>
             {loaded &&
                 steppedLineNodes.map((id: string, index: number) => {

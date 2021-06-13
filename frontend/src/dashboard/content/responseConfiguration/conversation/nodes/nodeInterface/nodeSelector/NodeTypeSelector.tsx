@@ -21,7 +21,7 @@ export const NodeTypeSelector = ({ node, nodeType, nodeIdentity, reRender, nodeT
     const [alertDetails, setAlertDetails] = useState<AlertType>();
     const [label, setLabel] = useState<string>("");
 
-    const { nodeList, setNodes } = React.useContext(ConversationTreeContext);
+    const { setNodes } = React.useContext(ConversationTreeContext);
 
     useEffect(() => {
         const currentNodeOption = nodeTypeOptions.filter((option: NodeOption) => option.value === nodeType)[0];

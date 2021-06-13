@@ -21,6 +21,7 @@ export const DataLogging = ({ debugData, nodeId, nodeChildren }: DataProps) => {
                 {sortArrayOfObjects(debugData).map((item: DataItem) => {
                     const key = Object.keys(item)[0];
                     let val = Object.values(item)[0];
+                    if (typeof val === "object") return;
                     if (typeof val === "boolean") {
                         val = val.toString().toUpperCase();
                     }

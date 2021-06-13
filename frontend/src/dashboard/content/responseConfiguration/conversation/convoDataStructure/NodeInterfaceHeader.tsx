@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const NodeInterfaceHeader = ({ isRoot, optionPath }: INodeInterfaceHeader) => {
+export const NodeHeader = ({ isRoot, optionPath }: INodeInterfaceHeader) => {
     const cls = useStyles();
     return (
         <Typography className={cls.interfaceElement} variant={isRoot ? "h5" : "body1"} align="center">

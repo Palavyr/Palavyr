@@ -1,7 +1,7 @@
+import React from "react";
 import { Anchor, Selector, LineStyles } from "./LineTypes";
 import { parseAnchor, getPoints, defaultBorderWidth } from "./LineUtils";
 import { LineProps, Line } from "./Line";
-import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { debounce } from "lodash";
@@ -20,9 +20,7 @@ export type SteppedLineToProps = {
 
 export const SteppedLineTo: React.FC<SteppedLineToProps> = ({ fromAnchor, toAnchor, from, to, borderColor, borderStyle, borderWidth, zIndex, orientation }: SteppedLineToProps) => {
     const [sized, setSized] = useState<boolean>(false);
-
     const handle = () => setSized(!sized)
-
     useEffect(() => {
         window.addEventListener("resize", debounce(handle, 10));
         return () => window.removeEventListener("resize", debounce(handle, 10));
@@ -53,7 +51,7 @@ const renderVertical = ({ x0, y0, x1, y1, zIndex, borderColor, borderStyle, bord
     const maxX = Math.max(x0, x1);
 
     return (
-        <div className="react-steppedlineto">
+        <div>
             <Line {...{ zIndex, borderColor, borderStyle, bWidth }} x0={x0} y0={y0} x1={x0} y1={y2} />
             <Line {...{ zIndex, borderColor, borderStyle, bWidth }} x0={x1} y0={y1} x1={x1} y1={y2} />
             <Line {...{ zIndex, borderColor, borderStyle, bWidth }} x0={minX + 1} y0={y2} x1={maxX + 1} y1={y2} />
@@ -75,7 +73,7 @@ const renderHorizontal = ({ x0, y0, x1, y1, zIndex, borderColor, borderStyle, bo
     const maxY = Math.max(y0, y1);
 
     return (
-        <div className="react-steppedlineto">
+        <div>
             <Line {...{ zIndex, borderColor, borderStyle, bWidth }} x0={x0} y0={y0} x1={x2} y1={y0} />
             <Line {...{ zIndex, borderColor, borderStyle, bWidth }} x0={x1} y0={y1} x1={x2} y1={y1} />
             <Line {...{ zIndex, borderColor, borderStyle, bWidth }} x0={x2} y0={minY} x1={x2} y1={maxY} />

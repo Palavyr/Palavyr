@@ -28,6 +28,7 @@ export type TableGroup<T> = {
     [itemGroup: string]: T;
 };
 
+
 // Database
 export type GroupRow = {
     id: number;

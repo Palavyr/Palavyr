@@ -35,15 +35,12 @@ interface IAuthContext {
 }
 
 interface IConversationTreeContext {
-    nodeList?: PalavyrLinkedList;
-    rawNodeList: Conversation;
     setNodes: NodeSetterWithHistory;
     historyTracker: ConversationHistoryTracker;
     conversationHistory: PalavyrLinkedList[];
     conversationHistoryPosition: number;
     nodeTypeOptions: NodeTypeOptions;
     showDebugData: boolean;
-    palavyrLinkedList?: PalavyrLinkedList;
 }
 
 export const AuthContext = React.createContext({ isActive: false, isAuthenticated: false } as IAuthContext);

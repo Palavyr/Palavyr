@@ -67,6 +67,7 @@ import { ImageReview } from "dashboard/content/images/ImageReview";
 import { ImageReviewHelp } from "dashboard/content/help/ImageReviewHelp";
 import { PleaseSubscribe } from "dashboard/content/purchse/pleaseSubscribe/PleaseSubscribe";
 import { PleaseSubscribeHelp } from "dashboard/content/help/PleaseSubscribeHelp";
+import { StructuredConvoTree } from "dashboard/content/responseConfiguration/conversation/convoDataStructure/StructuredConvoTree";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -100,7 +101,7 @@ export const Routes = () => {
                 <ProtectedRoute exact path="/dashboard/editor/email/:areaIdentifier" component={withLayout(withAreaTabs(<EmailConfiguration />), <EmailHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/response/:areaIdentifier" component={withLayout(withAreaTabs(<ResponseConfiguration />), <ResponseConfigurationHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/attachments/:areaIdentifier" component={withLayout(withAreaTabs(<AttachmentConfiguration />), <AttachmentsHelp />)} />
-                <ProtectedRoute exact path="/dashboard/editor/conversation/:areaIdentifier" component={withLayout(withAreaTabs(<ConvoTree />), <ConversationHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/conversation/:areaIdentifier" component={withLayout(withAreaTabs(<StructuredConvoTree />), <ConversationHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/settings/:areaIdentifier" component={withLayout(withAreaTabs(<AreaSettings />), <AreaSettingsHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/preview/:areaIdentifier" component={withLayout(withAreaTabs(<ConfigurationPreview />), <PreviewHelp />)} />
 

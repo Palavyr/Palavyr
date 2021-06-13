@@ -9,15 +9,15 @@ import { useNodeInterfaceStyles } from "./nodeInterfaceStyles";
 import { PalavyrNode } from "./PalavyrNode";
 
 export class PalavyrTextNode extends PalavyrNode {
-    constructor(containerList, repository, rawNode, nodeList, rerender, leftMostBranch) {
-        super(containerList, repository, rawNode, nodeList, rerender, leftMostBranch);
+    constructor(containerList, nodeTypeOptions, repository, rawNode, nodeList, rerender, leftMostBranch) {
+        super(containerList, nodeTypeOptions, repository, rawNode, nodeList, rerender, leftMostBranch);
     }
 
-    protected renderNodeFace(setModalState: SetState<boolean>) {
+    public renderNodeFace() {
         const cls = useNodeInterfaceStyles();
-        return () => {
+        return ({ openEditor }) => {
             return (
-                <NodeBody setModalState={setModalState}>
+                <NodeBody openEditor={openEditor}>
                     <Typography className={cls.text} variant="body2" component="span" noWrap={false}>
                         {this.userText}
                     </Typography>
@@ -26,14 +26,10 @@ export class PalavyrTextNode extends PalavyrNode {
         };
     }
 
-    protected renderNodeEditor(modalState, setModalState): React.ReactNode {
-        return () => {
+    public renderNodeEditor() {
+        return ({ editorIsOpen, closeEditor }) => {
             const [options, setOptions] = useState<Array<string>>([]);
             const [textState, setText] = useState<string>("");
-
-            const handleCloseModal = () => {
-                setModalState(false);
-            };
 
             const handleUpdateNode = (value: string, valueOptions: string[]) => {
                 const updatedNode = { ...this.rawNode };
@@ -46,33 +42,31 @@ export class PalavyrTextNode extends PalavyrNode {
             };
 
             return (
-                <Dialog fullWidth open={modalState} onClose={handleCloseModal} aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">Edit a conversation node</DialogTitle>
-                    <DialogContent>{this.renderTextEditor(setText, setOptions, textState, options)}</DialogContent>
-                    {!this.isImageNode && (
-                        <DialogActions>
-                            <SaveOrCancel
-                                position="right"
-                                customSaveMessage="Node Text Updated"
-                                customCancelMessage="Changes cancelled"
-                                useSaveIcon={false}
-                                saveText="Update Node Text"
-                                onSave={async () => {
-                                    handleUpdateNode(textState, options);
-                                    handleCloseModal();
-                                    return true;
-                                }}
-                                onCancel={handleCloseModal}
-                                timeout={200}
-                            />
-                        </DialogActions>
-                    )}
+                <Dialog fullWidth open={editorIsOpen} onClose={closeEditor}>
+                    <DialogTitle>Edit a conversation node</DialogTitle>
+                    <DialogContent>{this.renderTextEditor(setText, setOptions, textState, options)()}</DialogContent>
+                    <DialogActions>
+                        <SaveOrCancel
+                            position="right"
+                            customSaveMessage="Node Text Updated"
+                            customCancelMessage="Changes cancelled"
+                            useSaveIcon={false}
+                            saveText="Update Node Text"
+                            onSave={async () => {
+                                handleUpdateNode(textState, options);
+                                closeEditor();
+                                return true;
+                            }}
+                            onCancel={closeEditor}
+                            timeout={200}
+                        />
+                    </DialogActions>
                 </Dialog>
             );
         };
     }
 
-    private renderTextEditor(setText, setOptions, textState, options) {
+    public renderTextEditor(setText, setOptions, textState, options) {
         return () => {
             const [switchState, setSwitchState] = useState<boolean>(true);
 
@@ -86,13 +80,13 @@ export class PalavyrTextNode extends PalavyrNode {
             return (
                 <>
                     <TextField margin="dense" value={textState} multiline rows={4} onChange={(event) => setText(event.target.value)} id="question" label="Question or Information" type="text" fullWidth />
-                    {this.renderMultiOptionInputs(setOptions, options, switchState, setSwitchState)}
+                    {this.renderMultiOptionInputs(setOptions, options, switchState, setSwitchState)()}
                 </>
             );
         };
     }
 
-    private renderMultiOptionInputs(setOptions, options, switchState, setSwitchState) {
+    public renderMultiOptionInputs(setOptions, options, switchState, setSwitchState) {
         return () => {
             const addMultiChoiceOptionsOnClick = () => {
                 options.push("");

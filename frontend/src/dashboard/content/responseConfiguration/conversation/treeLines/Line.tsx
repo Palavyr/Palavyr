@@ -47,6 +47,7 @@ export const Line = ({ x0, x1, y0, y1, borderColor, borderStyle, borderWidth, zI
         borderTopStyle: borderStyle ?? defaultBorderStyle,
         borderTopWidth: borderWidth ?? defaultBorderWidth,
     };
+
     return (
         <div style={{ ...defaultStyle, ...positionStyle }}></div>
     );

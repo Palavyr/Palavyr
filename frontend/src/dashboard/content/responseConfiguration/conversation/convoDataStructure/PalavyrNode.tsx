@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { ComponentProps, useState } from "react";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
-import { NodeIdentity, ConvoNode, SetState, Conversation } from "@Palavyr-Types";
+import { NodeIdentity, ConvoNode, SetState, Conversation, NodeTypeOptions } from "@Palavyr-Types";
 import classNames from "classnames";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import { Card, CardContent, Typography } from "@material-ui/core";
@@ -12,7 +12,7 @@ import { getNodeIdentity } from "../nodes/nodeUtils/nodeIdentity";
 import { useNodeInterfaceStyles } from "./nodeInterfaceStyles";
 import { NodeReferences } from "./PalavyrChildNodes";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { NodeInterfaceHeader } from "./NodeInterfaceHeader";
+import { NodeHeader } from "./NodeInterfaceHeader";
 import { PalavyrLinkedList } from "./PalavyrLinkedList";
 import { _handleMergeBackInOnClick } from "../nodes/nodeInterface/nodeInterfaceCallbacks/_handleMergeBackInOnClick";
 import { _handleSetAsAnabranchMergePointClick, setNodeAsAnabranchMergePoint } from "../nodes/nodeInterface/nodeInterfaceCallbacks/_handleSetAsAnabranchMergePointClick";
@@ -20,8 +20,12 @@ import { _handleUnsetCurrentNodeType } from "../nodes/nodeInterface/nodeInterfac
 import { _showResponseInPdfCheckbox } from "../nodes/nodeInterface/nodeInterfaceCallbacks/_showResponseInPdfCheckbox";
 import { SteppedLineTo } from "../treeLines/SteppedLineTo";
 
+import "./stylesPalavyrNode.css";
+
+type ComponentType = React.ComponentType<{}>;
+
 interface IPalavyrNode {
-    compileDebug(): { [key: string]: string }[];
+    createPalavyrNodeComponent(): ComponentType;
 }
 
 export type LineLink = {
@@ -44,7 +48,7 @@ export const connectionStyle: lineStyle = {
     zIndex: 0,
 };
 
-export class PalavyrNode implements IPalavyrNode {
+export abstract class PalavyrNode implements IPalavyrNode {
     // used in widget resource
     public isRoot: boolean;
     public nodeId: string;
@@ -90,6 +94,7 @@ export class PalavyrNode implements IPalavyrNode {
 
     // deprecated
     protected fallback: boolean;
+    protected nodeTypeOptions: NodeTypeOptions;
 
     /**
      * this node type will hold a reference to the parent nodes
@@ -101,9 +106,11 @@ export class PalavyrNode implements IPalavyrNode {
      * We could have no children (if not set)
      **/
 
-    constructor(containerList: PalavyrLinkedList, repository: PalavyrRepository, node: ConvoNode, nodeList: ConvoNode[], reRender: () => void, leftmostBranch: boolean) {
+    constructor(containerList: PalavyrLinkedList, nodeTypeOptions: NodeTypeOptions, repository: PalavyrRepository, node: ConvoNode, nodeList: ConvoNode[], reRender: () => void, leftmostBranch: boolean) {
         this.repository = repository;
         this.palavyrLinkedList = containerList;
+
+        this.nodeTypeOptions = nodeTypeOptions;
 
         this.childNodeReferences = new NodeReferences();
         this.parentNodeReferences = new NodeReferences();
@@ -198,7 +205,7 @@ export class PalavyrNode implements IPalavyrNode {
         };
     }
 
-    public compileDebug(): { [key: string]: string }[] {
+    private compileDebug(): { [key: string]: string }[] {
         // this will return an array of objects that will be used to preset debug data
         const { ...object } = this;
         return Object.keys(object).map((key: string) => {
@@ -208,51 +215,59 @@ export class PalavyrNode implements IPalavyrNode {
         });
     }
 
-    public renderPalavyrNode() {
+    // TODO: Would this work: https://sourceforge.net/projects/js-graph-it/ ?
+    public createPalavyrNodeComponent() {
         return () => {
             return (
                 <>
                     <div className={`tree-item tree-item-${this.nodeId}`}>
-                        <div className="tree-block-wrap">{this.renderNodeInterface()}</div>
-                        {this.childNodeReferences.NotEmpty() && (
-                            <div key={this.nodeId} className="tree-row">
-                                {this.shouldRenderChildren ? this.childNodeReferences.nodes.map((nextNode: PalavyrNode) => nextNode.renderPalavyrNode()) : <></>}
-                            </div>
-                        )}
+                        <div className="tree-block-wrap">{this.renderNodeInterface()()}</div>
+                        <div className="tree-row">
+                            {this.childNodeReferences.NotEmpty() &&
+                                (this.shouldRenderChildren ? (
+                                    this.childNodeReferences.nodes.map(
+                                        (nextNode: PalavyrNode): React.ReactNode => {
+                                            const Node = nextNode.createPalavyrNodeComponent();
+                                            return <Node key={nextNode.nodeId} />;
+                                        }
+                                    )
+                                ) : (
+                                    <></>
+                                ))}
+                        </div>
                     </div>
                     {this.lineMap.map((line: LineLink, index: number) => {
-                        const { from, to } = line;
-                        return <SteppedLineTo key={`${this.nodeId}-${index}-stepped-line`} from={from} to={to} fromAnchor="top" toAnchor="bottom" orientation="v" {...connectionStyle} />;
+                        return <SteppedLineTo key={`${line.to}-${line.from}-stepped-line`} from={line.from} to={line.to} fromAnchor="top" toAnchor="bottom" orientation="v" {...connectionStyle} />;
                     })}
                 </>
             );
         };
     }
 
-    protected renderNodeEditor(modalState: boolean, setModalState: SetState<boolean>) {}
-    protected renderNodeFace(setModalState: SetState<boolean>) {}
-
     private renderNodeTypeSelector(selectionCallback: (node: ConvoNode, nodeList: Conversation, nodeIdOfMostRecentAnabranch: string) => void) {
-        const { nodeTypeOptions } = React.useContext(ConversationTreeContext);
-        return (
-            <NodeTypeSelector
-                nodeIdentity={this.nodeIdentity}
-                nodeTypeOptions={filteredNodeTypeOptions(this.nodeIdentity, nodeTypeOptions)}
-                nodeType={this.nodeType}
-                reRender={this.rerender} // this will need to be called from somewhere
-                shouldDisabledNodeTypeSelector={this.nodeIdentity.shouldDisabledNodeTypeSelector}
-                selectionCallback={selectionCallback} // passed to changeNodeType, and takes care of the anabranch scenario
-            />
-        );
+        return () => {
+            return (
+                <NodeTypeSelector
+                    nodeIdentity={this.nodeIdentity}
+                    nodeTypeOptions={filteredNodeTypeOptions(this.nodeIdentity, this.nodeTypeOptions)}
+                    nodeType={this.nodeType}
+                    reRender={this.rerender} // this will need to be called from somewhere
+                    shouldDisabledNodeTypeSelector={this.nodeIdentity.shouldDisabledNodeTypeSelector}
+                    selectionCallback={selectionCallback} // passed to changeNodeType, and takes care of the anabranch scenario
+                />
+            );
+        };
     }
 
-    private renderNodeInterface(): React.ReactNode {
+    abstract renderNodeEditor(): ({ editorIsOpen, closeEditor }) => JSX.Element;
+    abstract renderNodeFace(): ({ openEditor }) => JSX.Element;
+    private renderNodeInterface() {
         return () => {
-            const { setNodes, nodeList, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData } = React.useContext(ConversationTreeContext);
+            const { showDebugData } = React.useContext(ConversationTreeContext);
 
-            const [modalState, setModalState] = useState<boolean>(false);
-            const [anabranchMergeChecked, setAnabranchMergeChecked] = useState<boolean>(false);
-            const [mergeBoxChecked, setMergeBoxChecked] = useState<boolean>(false);
+            const [editorIsOpen, setEditorState] = useState<boolean>(false);
+            const openEditor = () => setEditorState(true);
+            const closeEditor = () => setEditorState(false);
 
             const cls = useNodeInterfaceStyles({
                 nodeType: this.nodeType,
@@ -263,6 +278,32 @@ export class PalavyrNode implements IPalavyrNode {
                 debugOn: showDebugData,
                 isImageNode: this.imageId !== null,
             });
+
+            const selectionCallback = (node: ConvoNode, nodeList: Conversation, nodeIdOfMostRecentAnabranch: string): void => {
+                // return setNodeAsAnabranchMergePoint(node, nodeList, nodeIdOfMostRecentAnabranch, setAnabranchMergeChecked);
+            };
+
+            return (
+                <Card className={classNames(cls.root, this.nodeId)} variant="outlined">
+                    <CardContent className={cls.card}>
+                        {showDebugData && <DataLogging debugData={this.compileDebug()} nodeChildren={this.nodeChildrenString} nodeId={this.nodeId} />}
+                        <NodeHeader isRoot={this.isRoot} optionPath={this.optionPath} />
+                        {this.renderNodeFace()({ openEditor })}
+                        {this.renderNodeTypeSelector(selectionCallback)()}
+                        {this.renderNodeEditor()({ editorIsOpen, closeEditor })}
+                        {this.renderOptionals()()}
+                    </CardContent>
+                </Card>
+            );
+        };
+    }
+
+    private renderOptionals() {
+        return () => {
+            const { setNodes, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData } = React.useContext(ConversationTreeContext);
+
+            const [anabranchMergeChecked, setAnabranchMergeChecked] = useState<boolean>(false);
+            const [mergeBoxChecked, setMergeBoxChecked] = useState<boolean>(false);
 
             const showResponseInPdfCheckbox = (event: { target: { checked: boolean } }) => {
                 const checked = event.target.checked;
@@ -283,30 +324,17 @@ export class PalavyrNode implements IPalavyrNode {
                 _handleUnsetCurrentNodeType(this.rawNode, this.rawNodeList, setNodes);
             };
 
-            const selectionCallback = (node: ConvoNode, nodeList: Conversation, nodeIdOfMostRecentAnabranch: string): void => {
-                // return setNodeAsAnabranchMergePoint(node, nodeList, nodeIdOfMostRecentAnabranch, setAnabranchMergeChecked);
-            };
-
             return (
-                <Card className={classNames(cls.root, this.nodeId)} variant="outlined">
-                    <CardContent className={cls.card}>
-                        {showDebugData && <DataLogging debugData={this.compileDebug()} nodeChildren={this.nodeChildrenString} nodeId={this.nodeId} />}
-                        <NodeInterfaceHeader isRoot={this.isRoot} optionPath={this.optionPath} />
-
-                        {this.renderNodeFace(setModalState)}
-                        {this.renderNodeTypeSelector(selectionCallback)} // TODO: do this
-                        {this.renderNodeEditor(modalState, setModalState)}
-
-                        {this.nodeIdentity.shouldShowResponseInPdfOption && <NodeCheckBox label="Show response in PDF" checked={this.shouldPresentResponse} onChange={showResponseInPdfCheckbox} />}
-                        {this.nodeIdentity.shouldShowMergeWithPrimarySiblingBranchOption && <NodeCheckBox label="Merge with primary sibling branch" checked={!this.shouldRenderChildren} onChange={handleMergeBackInOnClick} />}
-                        {this.nodeIdentity.shouldShowSetAsAnabranchMergePointOption && (
-                            <NodeCheckBox disabled={this.isAnabranchType && this.isAnabranchMergePoint} label="Set as Anabranch merge point" checked={anabranchMergeChecked} onChange={handleSetAsAnabranchMergePointClick} />
-                        )}
-                        {this.nodeIdentity.shouldShowUnsetNodeTypeOption && <SinglePurposeButton buttonText="Unset Node" variant="outlined" color="primary" onClick={handleUnsetCurrentNodeType} />}
-                        {this.nodeIdentity.shouldShowSplitMergePrimarySiblingLabel && <Typography>This is the primary sibling. Branches will merge to this node.</Typography>}
-                        {this.nodeIdentity.shouldShowAnabranchMergepointLabel && <Typography style={{ fontWeight: "bolder" }}>This is the Anabranch Merge Node</Typography>}
-                    </CardContent>
-                </Card>
+                <>
+                    {this.nodeIdentity.shouldShowResponseInPdfOption && <NodeCheckBox label="Show response in PDF" checked={this.shouldPresentResponse} onChange={showResponseInPdfCheckbox} />}
+                    {this.nodeIdentity.shouldShowMergeWithPrimarySiblingBranchOption && <NodeCheckBox label="Merge with primary sibling branch" checked={!this.shouldRenderChildren} onChange={handleMergeBackInOnClick} />}
+                    {this.nodeIdentity.shouldShowSetAsAnabranchMergePointOption && (
+                        <NodeCheckBox disabled={this.isAnabranchType && this.isAnabranchMergePoint} label="Set as Anabranch merge point" checked={anabranchMergeChecked} onChange={handleSetAsAnabranchMergePointClick} />
+                    )}
+                    {this.nodeIdentity.shouldShowUnsetNodeTypeOption && <SinglePurposeButton buttonText="Unset Node" variant="outlined" color="primary" onClick={handleUnsetCurrentNodeType} />}
+                    {this.nodeIdentity.shouldShowSplitMergePrimarySiblingLabel && <Typography>This is the primary sibling. Branches will merge to this node.</Typography>}
+                    {this.nodeIdentity.shouldShowAnabranchMergepointLabel && <Typography style={{ fontWeight: "bolder" }}>This is the Anabranch Merge Node</Typography>}
+                </>
             );
         };
     }

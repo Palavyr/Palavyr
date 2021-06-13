@@ -32,16 +32,15 @@ const useStyles = makeStyles((theme) => ({
 
 interface INodeBody {
     children: React.ReactNode;
-    setModalState: SetState<boolean>;
+    openEditor(): void;
 }
 
-export const NodeBody = ({ setModalState, children }: INodeBody) => {
+export const NodeBody = ({ openEditor, children }: INodeBody) => {
     const cls = useStyles();
     return (
-        <Card elevation={0} className={classNames(cls.interfaceElement, cls.textCard)} onClick={() => setModalState(true)}>
-            {/* <CustomImage imageName={imageName} imageLink={imageLink} titleVariant="body1" /> */}
+        <Card elevation={0} className={classNames(cls.interfaceElement, cls.textCard)} onClick={openEditor}>
             {children}
-            <Typography align="center" className={cls.editorStyle} onClick={() => setModalState(true)}>
+            <Typography align="center" className={cls.editorStyle} onClick={openEditor}>
                 Click to Edit
             </Typography>
         </Card>
