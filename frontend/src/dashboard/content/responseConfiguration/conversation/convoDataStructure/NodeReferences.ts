@@ -1,3 +1,4 @@
+import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { _joinNodeChildrenStringArray } from "../nodes/nodeUtils/_coreNodeUtils";
 import { PalavyrNode } from "./PalavyrNode";
 
@@ -14,12 +15,16 @@ export class NodeReferences {
         return this.nodeReferences;
     }
 
-    public get childNodeString() {
-        return this.joinNodeChildrenStringArray(this.childNodeStringAsArray);
+    public get joinedReferenceString() {
+        return this.joinNodeChildrenStringArray(this.referenceStringArray);
     }
 
-    public get childNodeStringAsArray() {
+    public get referenceStringArray() {
         return this.nodeReferences.map((x) => x.nodeId);
+    }
+
+    public get getPalavyrNodesReferences() {
+        return this.nodeReferences;
     }
 
     private joinNodeChildrenStringArray(nodeChildrenStrings: string[]) {
@@ -42,5 +47,9 @@ export class NodeReferences {
 
     public NotEmpty() {
         return this.nodeReferences.length > 0;
+    }
+
+    public OrderByOptionPath() {
+        this.nodeReferences = sortByPropertyAlphabetical((x: PalavyrNode) => x.optionPath.toUpperCase(), this.nodeReferences);
     }
 }

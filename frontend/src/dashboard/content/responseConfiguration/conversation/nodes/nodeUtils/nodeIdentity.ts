@@ -17,17 +17,17 @@ export const getNodeIdentity = (node: ConvoNode, nodeList: Conversation): NodeId
     /*
      * booelan - for node to show the 'include in pdf response' check box. Yes if this is a node type that elicits a response.
      */
-    const shouldShowResponseInPdfOption = !node.isTerminalType && !(node.nodeType === "ProvideInfo");
+    // const shouldShowResponseInPdfOption = !node.isTerminalType && !(node.nodeType === "ProvideInfo");
 
     /*
      * boolean - Should node be able to set child node as the primary sibling branch - should show merge check box
      */
-    const shouldShowMergeWithPrimarySiblingBranchOption = isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0 && node.nodeType !== "" && !node.isTerminalType && !node.isMultiOptionType && checkChildIsLeaf(node, nodeList);
+        // const shouldShowMergeWithPrimarySiblingBranchOption = isDecendentOfSplitMerge && splitMergeRootSiblingIndex > 0 && node.nodeType !== "" && !node.isTerminalType && !node.isMultiOptionType && checkChildIsLeaf(node, nodeList);
 
     /*
      * boolean - is the node on the left most branch from an origin node Id
      */
-    const isOnLeftmostAnabranchBranch = nodeIdOfMostRecentAnabranch && determineIfIsOnLeftmostBranchGivenAnOriginNode(node.nodeId, nodeList, nodeIdOfMostRecentAnabranch);
+    // const isOnLeftmostAnabranchBranch = nodeIdOfMostRecentAnabranch && determineIfIsOnLeftmostBranchGivenAnOriginNode(node.nodeId, nodeList, nodeIdOfMostRecentAnabranch);
 
     /*
      * boolean - Should node be able be an anabranch merge point. Node cannot have siblings

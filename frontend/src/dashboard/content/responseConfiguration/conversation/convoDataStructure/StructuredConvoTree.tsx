@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Conversation, NodeOption, NodeTypeOptions, PlanTypeMeta, PurchaseTypes, TreeErrors } from "@Palavyr-Types";
+import { Conversation, NodeTypeOptions, TreeErrors } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { cloneDeep } from "lodash";
 import { Button, Divider, makeStyles } from "@material-ui/core";
@@ -53,17 +53,13 @@ export const StructuredConvoTree = () => {
 
     const loadNodes = useCallback(async () => {
         if (planTypeMeta) {
-            console.log(planTypeMeta);
-            const repository = new PalavyrRepository();
-
             const nodes = await repository.Conversations.GetConversation(areaIdentifier);
             setRawNodeList(nodes);
 
-            const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier);
-
+            const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
             const nodesLinkedList = new PalavyrLinkedList(nodes, nodeTypeOptions, areaIdentifier, () => null);
-            const filteredTypeOptions = filterNodeTypeOptionsOnSubscription(nodeTypeOptions, planTypeMeta);
-            setNodeTypeOptions(filteredTypeOptions);
+
+            setNodeTypeOptions(nodeTypeOptions);
             setLinkedNodes(nodesLinkedList);
 
             setIsLoading(false);
@@ -103,24 +99,6 @@ export const StructuredConvoTree = () => {
         // setNodes(cloneDeep(nodeList));
     };
 
-    const filterNodeTypeOptionsOnSubscription = (nodeTypeOptions: NodeTypeOptions, planTypeMeta: PlanTypeMeta) => {
-        const excludeFromFree: string[] = ["ShowImage"];
-        const excludeFromLyte: string[] = ["ShowImage"];
-        const excludeFromPremium: string[] = [];
-
-        let filteredNodes = [...nodeTypeOptions];
-        if (planTypeMeta.planType === PurchaseTypes.Premium) {
-            filteredNodes = filteredNodes.filter((x: NodeOption) => !excludeFromPremium.includes(x.value));
-        }
-        if (planTypeMeta.planType === PurchaseTypes.Lyte) {
-            filteredNodes = filteredNodes.filter((x: NodeOption) => !excludeFromLyte.includes(x.value));
-        }
-
-        if (planTypeMeta.planType === PurchaseTypes.Free) {
-            filteredNodes = nodeTypeOptions.filter((x: NodeOption) => !excludeFromFree.includes(x.value));
-        }
-        return filteredNodes;
-    };
 
     const onSave = async () => {
         if (linkedNodeList) {
@@ -141,9 +119,9 @@ export const StructuredConvoTree = () => {
     };
 
     const resetTree = async () => {
-        if (linkedNodeList) {
+        if (linkedNodeList && planTypeMeta) {
             const head = linkedNodeList.rootNode.compileConvoNode(areaIdentifier);
-            const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier);
+            const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
             const newList = new PalavyrLinkedList([head], nodeTypeOptions, areaIdentifier, () => null);
             setNodesWithHistory(newList);
         }

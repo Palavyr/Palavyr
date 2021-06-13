@@ -1,5 +1,3 @@
-import React from "react";
-
 import { ConvoNode, NodeTypeOptions } from "@Palavyr-Types";
 import { getRootNode } from "../nodes/nodeUtils/commonNodeUtils";
 import { _getNodeById, _splitAndRemoveEmptyNodeChildrenString, _splitNodeChildrenString } from "../nodes/nodeUtils/_coreNodeUtils";
@@ -70,13 +68,14 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
 
             // double linked
             parentNode.childNodeReferences.addReference(newNode);
-            newNode.parentNodeReferences.addReference(parentNode);
-            newNode.addLine(parentNode.nodeId);
+
+            newNode.configure(parentNode);
 
             this.linkedListBucket.addToBucket(newNode); // I think this works since we rebuild the list on every render. Otherwise the compile method needs to call a method that will traverse the list recursively
-
             this.recursivelyAssembleLinkedList(newNode, childConvoNode.nodeChildrenString, nodeList);
         }
+
+        parentNode.sortChildReferences();
     }
 
     compile(): ConvoNode[] {

@@ -61,7 +61,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
 
         /*
          * Whether or not its children will result in a remerge of the branch after splitting into N children (all children must remerge)
-         */
+         */ 
         public bool IsSplitMergeType { get; set; } = false;
 
         /*

@@ -1,4 +1,4 @@
-import React, { ComponentProps, useState } from "react";
+import React, { useState } from "react";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { NodeIdentity, ConvoNode, SetState, Conversation, NodeTypeOptions } from "@Palavyr-Types";
 import classNames from "classnames";
@@ -10,7 +10,7 @@ import { NodeTypeSelector } from "../nodes/nodeInterface/nodeSelector/NodeTypeSe
 import { filteredNodeTypeOptions } from "../nodes/nodeInterface/nodeTypeFilter";
 import { getNodeIdentity } from "../nodes/nodeUtils/nodeIdentity";
 import { useNodeInterfaceStyles } from "./nodeInterfaceStyles";
-import { NodeReferences } from "./PalavyrChildNodes";
+import { NodeReferences } from "./NodeReferences";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { NodeHeader } from "./NodeInterfaceHeader";
 import { PalavyrLinkedList } from "./PalavyrLinkedList";
@@ -21,6 +21,7 @@ import { _showResponseInPdfCheckbox } from "../nodes/nodeInterface/nodeInterface
 import { SteppedLineTo } from "../treeLines/SteppedLineTo";
 
 import "./stylesPalavyrNode.css";
+import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 
 type ComponentType = React.ComponentType<{}>;
 
@@ -33,20 +34,6 @@ export type LineLink = {
     to: string;
 };
 export type LineMap = LineLink[];
-
-export type lineStyle = {
-    borderColor: "white" | string;
-    borderStyle: "solid";
-    borderWidth: number;
-    zIndex: number;
-};
-
-export const connectionStyle: lineStyle = {
-    borderColor: "#54585A",
-    borderStyle: "solid",
-    borderWidth: 1,
-    zIndex: 0,
-};
 
 export abstract class PalavyrNode implements IPalavyrNode {
     // used in widget resource
@@ -65,7 +52,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
     public nodeChildrenString: string;
 
     protected valueOptions: string; // the options available from this node, if any. I none, then "Continue" is used |peg| delimted
-    protected optionPath: string; // the value option that was used with the parent of this node.
+    public optionPath: string; // the value option that was used with the parent of this node.
 
     // transient
     protected shouldRenderChildren: boolean;
@@ -95,6 +82,20 @@ export abstract class PalavyrNode implements IPalavyrNode {
     // deprecated
     protected fallback: boolean;
     protected nodeTypeOptions: NodeTypeOptions;
+
+    // NEW PROPERTIES TO DEAL WITH anabranch and split merge types --
+
+    // ANA BRANCH (we get isAnabranch from the DB. We should infer the rest here when constructing the linked list)
+    public isPalavyrAnabranchStart: boolean;
+    public isPalavyrAnabranchMember: boolean;
+    public isPalavyrAnabranchEnd: boolean;
+
+    // SPLIT MERGE (we also get isSplitMerge from Db, so samesy - infer the rest here)
+    public isPalavyrSplitmergeStart: boolean;
+    public isPalavyrSplitmergeMember: boolean;
+    public isPalavyrSplitmergePrimarybranch: boolean;
+    public isPalavyySplitmergeEnd: boolean;
+    public isPalavyrSplitMergeMergePoint: boolean;
 
     /**
      * this node type will hold a reference to the parent nodes
@@ -132,10 +133,12 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.nodeComponentType = node.nodeComponentType; // type of component to use in the widget - standardized list of types in the widget registry
         this.dynamicType = node.dynamicType; // generic dynamic type, e.g. SelectOneFlat-3242-2342-234-2423
 
-        this.nodeChildrenString = this.childNodeReferences.childNodeString;
+        this.nodeChildrenString = this.childNodeReferences.joinedReferenceString;
+        this.shouldShowMultiOption = node.shouldShowMultiOption;
 
         this.isSplitMergeType = node.isSplitMergeType;
-        this.shouldShowMultiOption = node.shouldShowMultiOption;
+        this.isPalavyrSplitMergeMergePoint = node.IsSplitMergeMergePoint;
+
         this.isAnabranchType = node.isAnabranchType;
         this.isAnabranchMergePoint = node.isAnabranchMergePoint;
         this.isImageNode = node.isImageNode;
@@ -150,6 +153,33 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
         // deprecated
         this.fallback = node.fallback;
+    }
+
+    public configure(parentNode: PalavyrNode) {
+        this.parentNodeReferences.addReference(parentNode);
+        this.addLine(parentNode.nodeId);
+        this.configureAnabranch(parentNode);
+        this.configureSplitMerge(parentNode);
+    }
+
+    private configureAnabranch(parentNode: PalavyrNode) {
+        this.isPalavyrAnabranchStart = this.isAnabranchType;
+        this.isPalavyrAnabranchMember = parentNode.isAnabranchType || (parentNode.isPalavyrAnabranchMember && !parentNode.isPalavyrAnabranchEnd);
+        this.isPalavyrAnabranchEnd = this.isAnabranchMergePoint;
+    }
+
+    private configureSplitMerge(parentNode: PalavyrNode) {
+        this.isPalavyrSplitmergeStart = this.isSplitMergeType;
+        this.isPalavyrSplitmergeMember = parentNode.isSplitMergeType || (parentNode.isPalavyrSplitmergeMember && !parentNode.isPalavyySplitmergeEnd);
+        this.isPalavyrSplitmergePrimarybranch = this.isMemberOfLeftmostBranch;
+        this.isPalavyySplitmergeEnd = this.isPalavyrSplitMergeMergePoint;
+    }
+
+    public sortChildReferences() {
+        // reorder parent's child refs depending on if parent is a anabranch or splitmerge type
+        if (!this.isAnabranchType && !this.isSplitMergeType) {
+            this.childNodeReferences.OrderByOptionPath();
+        }
     }
 
     public updateNodeText(newText: string) {
@@ -185,7 +215,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
             text: this.userText,
             nodeType: this.nodeType,
             nodeComponentType: this.nodeComponentType,
-            nodeChildrenString: this.childNodeReferences.childNodeString,
+            nodeChildrenString: this.childNodeReferences.joinedReferenceString,
             isCritical: this.shouldPresentResponse,
             optionPath: this.optionPath,
             valueOptions: this.valueOptions,
@@ -197,6 +227,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
             isMultiOptionType: this.isMultiOptionType,
             fallback: this.fallback,
             isSplitMergeType: this.isSplitMergeType,
+            IsSplitMergeMergePoint: this.isPalavyrSplitMergeMergePoint,
             shouldShowMultiOption: this.shouldShowMultiOption,
             isAnabranchType: this.isAnabranchType,
             isAnabranchMergePoint: this.isAnabranchMergePoint,
@@ -236,8 +267,8 @@ export abstract class PalavyrNode implements IPalavyrNode {
                                 ))}
                         </div>
                     </div>
-                    {this.lineMap.map((line: LineLink, index: number) => {
-                        return <SteppedLineTo key={`${line.to}-${line.from}-stepped-line`} from={line.from} to={line.to} fromAnchor="top" toAnchor="bottom" orientation="v" {...connectionStyle} />;
+                    {this.lineMap.map((line: LineLink) => {
+                        return <SteppedLineTo key={`${line.to}-${line.from}-stepped-line`} from={line.from} to={line.to} />;
                     })}
                 </>
             );
@@ -326,8 +357,8 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
             return (
                 <>
-                    {this.nodeIdentity.shouldShowResponseInPdfOption && <NodeCheckBox label="Show response in PDF" checked={this.shouldPresentResponse} onChange={showResponseInPdfCheckbox} />}
-                    {this.nodeIdentity.shouldShowMergeWithPrimarySiblingBranchOption && <NodeCheckBox label="Merge with primary sibling branch" checked={!this.shouldRenderChildren} onChange={handleMergeBackInOnClick} />}
+                    {this.shouldShowResponseInPdfOption() && <NodeCheckBox label="Show response in PDF" checked={this.shouldPresentResponse} onChange={showResponseInPdfCheckbox} />}
+                    {this.shouldShowMergeWithPrimarySiblingBranchOption() && <NodeCheckBox label="Merge with primary sibling branch" checked={!this.shouldRenderChildren} onChange={handleMergeBackInOnClick} />}
                     {this.nodeIdentity.shouldShowSetAsAnabranchMergePointOption && (
                         <NodeCheckBox disabled={this.isAnabranchType && this.isAnabranchMergePoint} label="Set as Anabranch merge point" checked={anabranchMergeChecked} onChange={handleSetAsAnabranchMergePointClick} />
                     )}
@@ -337,5 +368,37 @@ export abstract class PalavyrNode implements IPalavyrNode {
                 </>
             );
         };
+    }
+
+    private shouldShowResponseInPdfOption() {
+        const nodeTypesThatDoNotProvideFeedback = ["ProvideInfo"];
+        return !this.isTerminal && !nodeTypesThatDoNotProvideFeedback.includes(this.nodeType);
+    }
+
+    private shouldShowMergeWithPrimarySiblingBranchOption() {
+        return this.isPalavyrSplitmergeMember
+        && this.isPalavyrSplitmergePrimarybranch
+        && this.nodeTypeIsSet()
+        && !this.isTerminal
+        && !this.isMultiOptionType
+        && this.isPenultimate();
+    }
+
+    private nodeTypeIsSet() {
+        return !isNullOrUndefinedOrWhitespace(this.nodeType);
+    }
+
+    private isPenultimate() {
+        if (this.childNodeReferences.Empty()) return false;
+
+
+        for (let index = 0; index < this.childNodeReferences.getPalavyrNodesReferences.length; index++) {
+            const childNodeReference = this.childNodeReferences.getPalavyrNodesReferences[index];
+            if (childNodeReference.childNodeReferences.getPalavyrNodesReferences.length !== 0) {
+                return false;// check this logic TODO:!
+            }
+            return true;
+
+        }
     }
 }

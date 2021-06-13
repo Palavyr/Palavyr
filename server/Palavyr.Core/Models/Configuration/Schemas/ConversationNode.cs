@@ -20,10 +20,14 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public bool IsMultiOptionType { get; set; }
         public bool IsTerminalType { get; set; }
         public bool ShouldRenderChildren { get; set; }
+
         public bool IsSplitMergeType { get; set; }
-        public bool ShouldShowMultiOption { get; set; }
+        public bool IsSplitMergeMergePoint { get; set; }
+
         public bool IsAnabranchType { get; set; }
         public bool IsAnabranchMergePoint { get; set; }
+        
+        public bool ShouldShowMultiOption { get; set; }
         public bool IsDynamicTableNode { get; set; }
         public bool IsMultiOptionEditable { get; set; }
         public bool IsImageNode { get; set; }

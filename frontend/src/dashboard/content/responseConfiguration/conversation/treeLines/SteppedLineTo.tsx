@@ -7,20 +7,20 @@ import { useState } from "react";
 import { debounce } from "lodash";
 
 export type SteppedLineToProps = {
-    fromAnchor: Anchor;
-    toAnchor: Anchor;
     from: Selector;
     to: Selector;
+    fromAnchor?: Anchor;
+    toAnchor?: Anchor;
     borderColor?: string;
     borderStyle?: LineStyles;
     borderWidth?: number;
     zIndex?: number;
-    orientation: "h" | "v";
+    orientation?: "h" | "v";
 };
 
-export const SteppedLineTo: React.FC<SteppedLineToProps> = ({ fromAnchor, toAnchor, from, to, borderColor, borderStyle, borderWidth, zIndex, orientation }: SteppedLineToProps) => {
+export const SteppedLineTo: React.FC<SteppedLineToProps> = ({ fromAnchor = "top", toAnchor = "bottom", from, to, borderColor = "#54585A", borderStyle = "solid", borderWidth = 1, zIndex = 0, orientation = "v" }: SteppedLineToProps) => {
     const [sized, setSized] = useState<boolean>(false);
-    const handle = () => setSized(!sized)
+    const handle = () => setSized(!sized);
     useEffect(() => {
         window.addEventListener("resize", debounce(handle, 10));
         return () => window.removeEventListener("resize", debounce(handle, 10));

@@ -29,6 +29,7 @@ import {
     StaticTableRow,
     PlanTypeMeta,
 } from "@Palavyr-Types";
+import { filterNodeTypeOptionsOnSubscription } from "dashboard/subscriptionFilters/filterConvoNodeTypes";
 import { AxiosClient } from "./AxiosClient";
 import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./clientUtils";
 
@@ -171,7 +172,7 @@ export class PalavyrRepository {
     public Conversations = {
         GetConversation: async (areaIdentifier: string) => this.client.get<Conversation>(`configure-conversations/${areaIdentifier}`),
         GetConversationNode: async (nodeId: string) => this.client.get<ConvoNode>(`configure-conversations/nodes/${nodeId}`),
-        GetNodeOptionsList: async (areaIdentifier: string) => this.client.get<NodeTypeOptions>(`configure-conversations/${areaIdentifier}/node-type-options`),
+        GetNodeOptionsList: async (areaIdentifier: string, planTypeMeta: PlanTypeMeta) => filterNodeTypeOptionsOnSubscription(await this.client.get<NodeTypeOptions>(`configure-conversations/${areaIdentifier}/node-type-options`), planTypeMeta),
         GetErrors: async (areaIdentifier: string, nodeList: Conversation) => this.client.post<TreeErrors, {}>(`configure-conversations/${areaIdentifier}/tree-errors`, { Transactions: nodeList }),
 
         CheckIfIsMultiOptionType: async (nodeType: string) => this.client.get<boolean>(`configure-conversations/check-multi-option/${nodeType}`),

@@ -87,7 +87,10 @@ export type ConvoNode = { // these properties are written to the database
     text: string;
     nodeChildrenString: string;
     isCritical: boolean;
-
+    isSplitMergeType: boolean;
+    IsSplitMergeMergePoint: boolean;
+    isAnabranchType: boolean;
+    isAnabranchMergePoint: boolean;
 
 
     nodeType: string;
@@ -95,10 +98,7 @@ export type ConvoNode = { // these properties are written to the database
     optionPath: Response;
     valueOptions: string; // an array, but bc of the dtabase we store as a string delimited by |peg|
     shouldRenderChildren: boolean;
-    isSplitMergeType: boolean;
     shouldShowMultiOption: boolean;
-    isAnabranchType: boolean;
-    isAnabranchMergePoint: boolean;
     nodeComponentType: string;
     isDynamicTableNode: boolean;
     isImageNode: boolean;
