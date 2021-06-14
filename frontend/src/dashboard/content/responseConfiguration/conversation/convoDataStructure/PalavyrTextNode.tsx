@@ -1,7 +1,6 @@
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from "@material-ui/core";
-import { SetState, ValueOptionDelimiter } from "@Palavyr-Types";
 import React, { useEffect, useState } from "react";
 import { MultiChoiceOptions } from "../nodes/nodeInterface/nodeEditor/MultiChoiceOptions";
 import { NodeBody } from "./NodeBody";
@@ -73,7 +72,7 @@ export class PalavyrTextNode extends PalavyrNode {
             useEffect(() => {
                 setText(this.userText);
                 if (this.isMultiOptionType && !isNullOrUndefinedOrWhitespace(this.valueOptions)) {
-                    setOptions(this.valueOptions.split(ValueOptionDelimiter));
+                    setOptions(this.valueOptions);
                 }
             }, [this]);
 

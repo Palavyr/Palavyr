@@ -32,4 +32,15 @@ export class LinkedListBucket implements ILinkedListBucket {
         });
         return convoBucket;
     }
+
+    public clear() {
+        this.linkedListBucket = [];
+    }
+
+    public findById(nodeId: string) {
+        const node = this.linkedListBucket.filter((x: PalavyrNode) => x.nodeId === nodeId);
+        if (node.length === 0) throw new Error("Attempting to find a node that does not exist in the tree");
+        if (node.length > 1) throw new Error("Attempting to find a node that was somehow duplicated.");
+        return node[0];
+    }
 }

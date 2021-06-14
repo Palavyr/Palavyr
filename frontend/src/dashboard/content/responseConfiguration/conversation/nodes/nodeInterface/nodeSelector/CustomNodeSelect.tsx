@@ -8,11 +8,10 @@ export interface ISelectNodeType {
     nodeTypeOptions: NodeTypeOptions;
     label: string;
     shouldDisabledNodeTypeSelector: boolean;
-    reRender: () => void;
 }
 
 //https://github.com/mui-org/material-ui/issues/19173 to help resolve the label not resetting to '' when unsetting the node.
-export const CustomNodeSelect = ({ onChange, label, nodeTypeOptions, shouldDisabledNodeTypeSelector, reRender }: ISelectNodeType) => {
+export const CustomNodeSelect = ({ onChange, label, nodeTypeOptions, shouldDisabledNodeTypeSelector }: ISelectNodeType) => {
     const groupGetter = (val: NodeOption) => val.groupName;
     const sortedNodeOptions = sortByPropertyAlphabetical(groupGetter, nodeTypeOptions);
     return (

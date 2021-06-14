@@ -51,7 +51,6 @@ export const StructuredConvoTree = () => {
     const [rawNodeList, setRawNodeList] = useState<Conversation>([]);
     const historyTracker = new ConversationHistoryTracker(setConversationHistory, setConversationHistoryPosition, setLinkedNodes);
 
-
     const setTreeWithHistory = (updatedNodeList: PalavyrLinkedList) => {
         const freshNodeList = cloneDeep(updatedNodeList);
         historyTracker.addConversationHistoryToQueue(freshNodeList, conversationHistoryPosition, conversationHistory);
@@ -87,7 +86,7 @@ export const StructuredConvoTree = () => {
 
     useEffect(() => {
         if (linkedNodeList) {
-            const nodeList = linkedNodeList.compile();
+            const nodeList = linkedNodeList.compileToConvoNodes();
             if (nodeList.length > 0) {
                 (async () => {
                     const treeErrors = await repository.Conversations.GetErrors(areaIdentifier, nodeList);
@@ -103,22 +102,20 @@ export const StructuredConvoTree = () => {
     const toggleDebugData = () => {
         setShowDebugData(!showDebugData);
         setLinkedNodes(cloneDeep(linkedNodeList));
-        // setNodes(cloneDeep(nodeList));
     };
 
-
     const onSave = async () => {
-        if (linkedNodeList) {
-            const updatedConversation = await repository.Conversations.ModifyConversation(linkedNodeList.compile(), areaIdentifier);
-            historyTracker.addConversationHistoryToQueue(linkedNodeList, conversationHistoryPosition, conversationHistory);
-            // setNodes(updatedConversation);
-            // setLinkedNodes(new PalavyrLinkedList(updatedConversation, areaIdentifier, () => null));
+        if (linkedNodeList && planTypeMeta) {
+            const updatedConvoNodes = await repository.Conversations.ModifyConversation(linkedNodeList.compileToConvoNodes(), areaIdentifier);
+            const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
+            const updatedLinkedList = new PalavyrLinkedList(updatedConvoNodes, nodeTypeOptions, areaIdentifier, setTreeWithHistory);
+            historyTracker.addConversationHistoryToQueue(updatedLinkedList, conversationHistoryPosition, conversationHistory);
+            setLinkedNodes(updatedLinkedList);
             return true;
         } else {
             return false;
         }
     };
-
 
     const resetTree = async () => {
         if (linkedNodeList && planTypeMeta) {
@@ -178,7 +175,7 @@ export const StructuredConvoTree = () => {
                             return (
                                 <div key={index}>
                                     <Divider />
-                                    {convo.compile().map((x) => " | " + x.nodeType)}
+                                    {convo.compileToConvoNodes().map((x) => " | " + x.nodeType)}
                                 </div>
                             );
                         })}

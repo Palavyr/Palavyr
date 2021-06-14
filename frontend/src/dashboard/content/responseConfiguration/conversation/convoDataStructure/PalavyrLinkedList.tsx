@@ -4,14 +4,13 @@ import { _getNodeById, _splitAndRemoveEmptyNodeChildrenString, _splitNodeChildre
 import { LinkedListBucket } from "./LinkedListBucket";
 import { PalavyrNode } from "./PalavyrNode";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { PalavyrImageNode } from "./PalavyrImageNode";
-import { PalavyrTextNode } from "./PalavyrTextNode";
+import { NodeReferences } from "./NodeReferences";
 
 interface IPalavyrLinkedList {
     traverse(): void;
     insert(): void;
     delete(): void;
-    compile(): ConvoNode[];
+    compileToConvoNodes(): ConvoNode[];
 }
 
 export class PalavyrLinkedList implements IPalavyrLinkedList {
@@ -35,32 +34,10 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     }
 
     private assembleDoubleLinkedMultiBranchLinkedList(nodeList: ConvoNode[]) {
-        const headNode = this.convertToPalavyrNode(this, this.repository, this.head, nodeList, this.setTreeWithHistory, true);
+        const headNode = PalavyrNode.convertToPalavyrNode(this, this.repository, this.nodeTypeOptions, this.head, nodeList, this.setTreeWithHistory, true);
         this.rootNode = headNode;
         this.linkedListBucket.addToBucket(headNode);
         this.recursivelyAssembleLinkedList(headNode, this.head.nodeChildrenString, nodeList);
-    }
-
-    private convertToPalavyrNode(
-        container: PalavyrLinkedList,
-        repository: PalavyrRepository,
-        rawNode: ConvoNode,
-        nodeList: ConvoNode[],
-        setTreeWithHistory: (updatedTree: PalavyrLinkedList) => void,
-        leftMostBranch: boolean
-    ) {
-        let palavyrNode: PalavyrNode;
-        switch (rawNode.isImageNode) {
-            case true:
-                palavyrNode = new PalavyrImageNode(container, this.nodeTypeOptions, repository, rawNode, nodeList, setTreeWithHistory, leftMostBranch);
-                break;
-            case false:
-                palavyrNode = new PalavyrTextNode(container, this.nodeTypeOptions, repository, rawNode, nodeList, setTreeWithHistory, leftMostBranch);
-                break;
-            default:
-                throw new Error("Node type couldn't be determined when construting the palavyr convo tree.");
-        }
-        return palavyrNode;
     }
 
     private recursivelyAssembleLinkedList(parentNode: PalavyrNode, nodeChildrenString: string, nodeList: ConvoNode[]) {
@@ -71,26 +48,84 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
             const childId = childIds[index];
             const childConvoNode = _getNodeById(childId, nodeList);
 
-            const newNode = this.convertToPalavyrNode(this, this.repository, childConvoNode, nodeList, this.setTreeWithHistory, index === 0);
-            newNode.addNewNodeReference(newNode, parentNode);
-            this.linkedListBucket.addToBucket(newNode); // I think this works since we rebuild the list on every render. Otherwise the compile method needs to call a method that will traverse the list recursively
+            const newNode = PalavyrNode.convertToPalavyrNode(this, this.repository, this.nodeTypeOptions, childConvoNode, nodeList, this.setTreeWithHistory, index === 0);
+            newNode.addNewNodeReferenceAndConfigure(newNode, parentNode);
             this.recursivelyAssembleLinkedList(newNode, childConvoNode.nodeChildrenString, nodeList);
         }
 
         parentNode.sortChildReferences();
     }
 
-    compile(): ConvoNode[] {
+    compileToConvoNodes(): ConvoNode[] {
+        this.linkedListBucket.clear();
+
+        const compileCallback = (node: PalavyrNode) => {
+            this.linkedListBucket.addToBucket(node);
+        };
+        this.traverse(compileCallback);
+
         return this.linkedListBucket.convertToConvoNodes(this.areaId); // or perhaps we recursively traverse and hit all nodes, adding them to the bucket....
+    }
+
+    compileToBucket(): LinkedListBucket {
+        this.linkedListBucket.clear();
+
+        const compileCallback = (node: PalavyrNode) => {
+            this.linkedListBucket.addToBucket(node);
+        };
+        this.traverse(compileCallback);
+
+        return this.linkedListBucket;
     }
 
     renderNodeTree() {
         return this.rootNode.createPalavyrNodeComponent();
     }
 
-    traverse(): void {
-        throw new Error("Method not implemented.");
+    findNode(nodeId: string): PalavyrNode {
+        this.linkedListBucket.clear();
+
+        const compileCallback = (node: PalavyrNode) => {
+            this.linkedListBucket.addToBucket(node);
+        };
+        this.traverse(compileCallback);
+
+        const node = this.linkedListBucket.findById(nodeId);
+        return node;
+        // const rootNode = this.rootNode;
+        // const findNodeRecursively = (parentNode: PalavyrNode) => {
+        //     for (let index = 0; index < parentNode.childNodeReferences.Length; index++) {
+        //         const childNode = parentNode.childNodeReferences.references[index];
+        //         if (childNode.nodeId === nodeId) {
+        //             return childNode;
+        //         } else {
+        //             const nodeToFind = findNodeRecursively(childNode);
+        //             if (nodeToFind !== undefined) {
+        //                 return nodeToFind;
+        //             }
+        //         }
+        //     }
+        // };
+        // const node = findNodeRecursively(rootNode);
+        // if (node === undefined) {
+        //     throw new Error("Attempting to find a node that does not exist in the tree");
+        // }
+        // return node as PalavyrNode;
     }
+
+    traverse(perNodeCallback?: any): void {
+        const recurseTheTree = (childReferences: NodeReferences) => {
+            for (let index = 0; index < childReferences.Length; index++) {
+                const childNode = childReferences.references[index];
+                if (perNodeCallback) perNodeCallback(childNode);
+                recurseTheTree(childNode.childNodeReferences);
+            }
+        };
+        const headNode = this.rootNode;
+        perNodeCallback(headNode);
+        recurseTheTree(headNode.childNodeReferences);
+    }
+
     insert(): void {
         throw new Error("Method not implemented.");
     }

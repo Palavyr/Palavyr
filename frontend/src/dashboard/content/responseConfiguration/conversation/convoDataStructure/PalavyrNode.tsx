@@ -1,27 +1,27 @@
-import React, { useState } from "react";
-import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
-import { NodeIdentity, ConvoNode, SetState, Conversation, NodeTypeOptions } from "@Palavyr-Types";
+import React, { useEffect, useState } from "react";
+import { NodeIdentity, ConvoNode, Conversation, NodeTypeOptions, AlertType, NodeOption, ValueOptionDelimiter } from "@Palavyr-Types";
 import classNames from "classnames";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
-import { Card, CardContent, Typography } from "@material-ui/core";
-import { NodeCheckBox } from "../nodes/nodeInterface/NodeCheckBox";
+import { Card, CardContent } from "@material-ui/core";
 import { DataLogging } from "../nodes/nodeInterface/nodeDebug/DataLogging";
-import { NodeTypeSelector } from "../nodes/nodeInterface/nodeSelector/NodeTypeSelector";
-import { filteredNodeTypeOptions } from "../nodes/nodeInterface/nodeTypeFilter";
-import { getNodeIdentity } from "../nodes/nodeUtils/nodeIdentity";
 import { useNodeInterfaceStyles } from "./nodeInterfaceStyles";
 import { NodeReferences } from "./NodeReferences";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { NodeHeader } from "./NodeInterfaceHeader";
 import { PalavyrLinkedList } from "./PalavyrLinkedList";
 import { _handleMergeBackInOnClick } from "../nodes/nodeInterface/nodeInterfaceCallbacks/_handleMergeBackInOnClick";
-import { _handleSetAsAnabranchMergePointClick, setNodeAsAnabranchMergePoint } from "../nodes/nodeInterface/nodeInterfaceCallbacks/_handleSetAsAnabranchMergePointClick";
+import { _handleSetAsAnabranchMergePointClick } from "../nodes/nodeInterface/nodeInterfaceCallbacks/_handleSetAsAnabranchMergePointClick";
 import { _handleUnsetCurrentNodeType } from "../nodes/nodeInterface/nodeInterfaceCallbacks/_handleUnsetCurrentNodeType";
 import { _showResponseInPdfCheckbox } from "../nodes/nodeInterface/nodeInterfaceCallbacks/_showResponseInPdfCheckbox";
 import { SteppedLineTo } from "../treeLines/SteppedLineTo";
 
 import "./stylesPalavyrNode.css";
+import { PalavyrImageNode } from "./PalavyrImageNode";
+import { PalavyrTextNode } from "./PalavyrTextNode";
+import { PalavyrNodeOptionals } from "./PalavyrNodeOptionals";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
+import { CustomAlert } from "@common/components/customAlert/CutomAlert";
+import { CustomNodeSelect } from "../nodes/nodeInterface/nodeSelector/CustomNodeSelect";
 
 type ComponentType = React.ComponentType<{}>;
 
@@ -34,6 +34,14 @@ export type LineLink = {
     to: string;
 };
 export type LineMap = LineLink[];
+
+export type SplitmergeContext = {
+    splitmergeOriginId: string; // the node Id of the split merge root node
+};
+
+export type AnabranchContext = {
+    anabranchOriginId: string; // the node Id of the anabranch root node
+};
 
 export abstract class PalavyrNode implements IPalavyrNode {
     // used in widget resource
@@ -52,7 +60,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
     protected dynamicType: string | null; // generic dynamic type, e.g. SelectOneFlat-3242-2342-234-2423
     public nodeChildrenString: string;
 
-    protected valueOptions: string; // the options available from this node, if any. I none, then "Continue" is used |peg| delimted
+    protected valueOptions: string[]; // the options available from this node, if any. I none, then "Continue" is used |peg| delimted
     public optionPath: string; // the value option that was used with the parent of this node.
 
     // transient
@@ -64,6 +72,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
     protected isImageNode: boolean;
     protected imageId: string | null;
 
+    public isCurrency: boolean;
     // core
     protected nodeIdentity: NodeIdentity;
     public childNodeReferences: NodeReferences;
@@ -72,7 +81,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
     public isMemberOfLeftmostBranch: boolean;
 
     public rawNode: ConvoNode; // Get Rid Of This.
-    public rawNodeList: Conversation;
+    public rawNodeList: Conversation; // Get Rid of this
 
     public lineMap: LineMap = [];
 
@@ -83,6 +92,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
     // deprecated
     protected fallback: boolean;
     protected nodeTypeOptions: NodeTypeOptions;
+    private shouldDisableNodeTypeSelector: boolean;
 
     // NEW PROPERTIES TO DEAL WITH anabranch and split merge types --
 
@@ -90,13 +100,16 @@ export abstract class PalavyrNode implements IPalavyrNode {
     public isPalavyrAnabranchStart: boolean;
     public isPalavyrAnabranchMember: boolean;
     public isPalavyrAnabranchEnd: boolean;
+    public isAnabranchLocked: boolean;
+    public anabranchContext: AnabranchContext;
 
     // SPLIT MERGE (we also get isSplitMerge from Db, so samesy - infer the rest here)
     public isPalavyrSplitmergeStart: boolean;
     public isPalavyrSplitmergeMember: boolean;
     public isPalavyrSplitmergePrimarybranch: boolean;
-    public isPalavyySplitmergeEnd: boolean;
-    public isPalavyrSplitMergeMergePoint: boolean;
+    public isPalavyrSplitmergeEnd: boolean;
+    public isPalavyrSplitmergeMergePoint: boolean;
+    public splitmergeContext: SplitmergeContext;
 
     /**
      * this node type will hold a reference to the parent nodes
@@ -126,7 +139,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.parentNodeReferences = new NodeReferences();
 
         this.optionPath = node.optionPath; // the value option that was used with the parent of this node.
-        this.valueOptions = node.valueOptions; // the options available from this node, if any. I none, then "Continue" is used |peg| delimted
+        this.valueOptions = node.valueOptions.split(ValueOptionDelimiter); // the options available from this node, if any. I none, then "Continue" is used |peg| delimted
 
         // convo node
         this.isRoot = node.isRoot;
@@ -146,13 +159,12 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.shouldShowMultiOption = node.shouldShowMultiOption;
 
         this.isSplitMergeType = node.isSplitMergeType;
-        this.isPalavyrSplitMergeMergePoint = node.IsSplitMergeMergePoint;
+        this.isPalavyrSplitmergeMergePoint = node.IsSplitMergeMergePoint;
 
         this.isAnabranchType = node.isAnabranchType;
         this.isAnabranchMergePoint = node.isAnabranchMergePoint;
         this.isImageNode = node.isImageNode;
         this.imageId = node.imageId;
-        this.nodeIdentity = getNodeIdentity(node, nodeList);
 
         this.isMemberOfLeftmostBranch = leftmostBranch;
 
@@ -160,12 +172,27 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.rawNodeList = nodeList;
         this.setTreeWithHistory = setTreeWithHistory;
 
+        this.isAnabranchLocked = false; // TODO set this dynamically
+        this.shouldDisableNodeTypeSelector = false; // todo set this dynamically
+
         // deprecated
         this.fallback = node.fallback;
     }
 
     public UpdateTree() {
         this.setTreeWithHistory(this.palavyrLinkedList);
+    }
+
+    public removeSelf() {
+        this.parentNodeReferences.removeReference(this);
+    }
+
+    public nodeIsSet() {
+        return !isNullOrUndefinedOrWhitespace(this.nodeType);
+    }
+
+    public nodeIsNotSet() {
+        return isNullOrUndefinedOrWhitespace(this.nodeType);
     }
 
     public configure(parentNode: PalavyrNode) {
@@ -177,15 +204,29 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
     private configureAnabranch(parentNode: PalavyrNode) {
         this.isPalavyrAnabranchStart = this.isAnabranchType;
-        this.isPalavyrAnabranchMember = parentNode.isAnabranchType || (parentNode.isPalavyrAnabranchMember && !parentNode.isPalavyrAnabranchEnd);
+        this.isPalavyrAnabranchMember = parentNode.isAnabranchType || (parentNode.isPalavyrAnabranchMember && !parentNode.isPalavyrAnabranchEnd) || this.isAnabranchType || this.isAnabranchMergePoint;
         this.isPalavyrAnabranchEnd = this.isAnabranchMergePoint;
+
+        if (this.isPalavyrAnabranchStart) {
+            this.anabranchContext = {
+                ...parentNode.anabranchContext,
+                anabranchOriginId: this.nodeId,
+            };
+        }
     }
 
     private configureSplitMerge(parentNode: PalavyrNode) {
         this.isPalavyrSplitmergeStart = this.isSplitMergeType;
-        this.isPalavyrSplitmergeMember = parentNode.isSplitMergeType || (parentNode.isPalavyrSplitmergeMember && !parentNode.isPalavyySplitmergeEnd);
+        this.isPalavyrSplitmergeMember = parentNode.isSplitMergeType || (parentNode.isPalavyrSplitmergeMember && !parentNode.isPalavyrSplitmergeEnd);
         this.isPalavyrSplitmergePrimarybranch = this.isMemberOfLeftmostBranch;
-        this.isPalavyySplitmergeEnd = this.isPalavyrSplitMergeMergePoint;
+        this.isPalavyrSplitmergeEnd = this.isPalavyrSplitmergeMergePoint;
+
+        if (this.isPalavyrAnabranchStart) {
+            this.splitmergeContext = {
+                ...parentNode.splitmergeContext,
+                splitmergeOriginId: this.nodeId,
+            };
+        }
     }
 
     public sortChildReferences() {
@@ -195,18 +236,79 @@ export abstract class PalavyrNode implements IPalavyrNode {
         }
     }
 
-    public async addDefaultChild() {
-        const defaultNode = await this.repository.Conversations.GetDefaultConversationNode();
-        this.addNewNodeReference(defaultNode, this);
+    public async addDefaultChild(optionPath: string) {
+        // const defaultNode = (await this.repository.Conversations.GetDefaultConversationNode()) as ConvoNode;
+        const defaultNode: ConvoNode = {
+            IsSplitMergeMergePoint: false,
+            nodeId: "",
+            nodeType: "",
+            text: "Ask your question!",
+            nodeChildrenString: "",
+            isRoot: false,
+            fallback: false,
+            isCritical: false,
+            areaIdentifier: "",
+            optionPath: optionPath,
+            valueOptions: "",
+            isMultiOptionType: false,
+            isTerminalType: false,
+            isSplitMergeType: false,
+            shouldRenderChildren: true,
+            shouldShowMultiOption: false,
+            isAnabranchMergePoint: false,
+            isAnabranchType: false,
+            nodeComponentType: "",
+            isDynamicTableNode: false,
+            resolveOrder: 0,
+            dynamicType: "",
+            isImageNode: false,
+            imageId: null
+        };
+        const newPalavyrNode = PalavyrNode.convertToPalavyrNode(
+            this.palavyrLinkedList,
+            this.repository,
+            this.nodeTypeOptions,
+            defaultNode,
+            this.rawNodeList,
+            this.setTreeWithHistory,
+            this.isMemberOfLeftmostBranch
+        );
+        this.addNewNodeReferenceAndConfigure(newPalavyrNode, this);
         this.UpdateTree();
     }
 
-    public addNewNodeReference(newNode: PalavyrNode, parentNode: PalavyrNode) {
+    public addNewNodeReferenceAndConfigure(newNode: PalavyrNode, parentNode: PalavyrNode) {
         // double linked
         parentNode.childNodeReferences.addReference(newNode);
         newNode.configure(parentNode);
     }
 
+    public AddNewChildReference(newChildReference: PalavyrNode) {
+        this.childNodeReferences.addReference(newChildReference);
+    }
+
+    public static convertToPalavyrNode(
+        container: PalavyrLinkedList,
+        repository: PalavyrRepository,
+        nodeTypeOptions: NodeTypeOptions,
+        rawNode: ConvoNode,
+        nodeList: ConvoNode[],
+        setTreeWithHistory: (updatedTree: PalavyrLinkedList) => void,
+        leftMostBranch: boolean
+    ) {
+        let palavyrNode: PalavyrNode;
+        switch (rawNode.isImageNode) {
+            case true:
+                palavyrNode = new PalavyrImageNode(container, nodeTypeOptions, repository, rawNode, nodeList, setTreeWithHistory, leftMostBranch);
+                break;
+            case false:
+                palavyrNode = new PalavyrTextNode(container, nodeTypeOptions, repository, rawNode, nodeList, setTreeWithHistory, leftMostBranch);
+                break;
+            default:
+                throw new Error("Node type couldn't be determined when construting the palavyr convo tree.");
+        }
+        return palavyrNode;
+    }
 
     public updateNodeText(newText: string) {
         this.userText = newText;
@@ -244,7 +346,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
             nodeChildrenString: this.childNodeReferences.joinedReferenceString,
             isCritical: this.shouldPresentResponse,
             optionPath: this.optionPath,
-            valueOptions: this.valueOptions,
+            valueOptions: this.valueOptions.join(ValueOptionDelimiter),
             isDynamicTableNode: this.isDynamicTableNode,
             dynamicType: this.dynamicType,
             resolveOrder: this.resolveOrder,
@@ -253,7 +355,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
             isMultiOptionType: this.isMultiOptionType,
             fallback: this.fallback,
             isSplitMergeType: this.isSplitMergeType,
-            IsSplitMergeMergePoint: this.isPalavyrSplitMergeMergePoint,
+            IsSplitMergeMergePoint: this.isPalavyrSplitmergeMergePoint,
             shouldShowMultiOption: this.shouldShowMultiOption,
             isAnabranchType: this.isAnabranchType,
             isAnabranchMergePoint: this.isAnabranchMergePoint,
@@ -301,19 +403,95 @@ export abstract class PalavyrNode implements IPalavyrNode {
         };
     }
 
-    private renderNodeTypeSelector(selectionCallback: (node: ConvoNode, nodeList: Conversation, nodeIdOfMostRecentAnabranch: string) => void) {
+    private renderPalavyrNodeTypeSelector() {
         return () => {
+            const [alertState, setAlertState] = useState<boolean>(false);
+            const [alertDetails, setAlertDetails] = useState<AlertType>();
+            const [label, setLabel] = useState<string>("");
+
+            useEffect(() => {
+                const currentNodeOption = this.nodeTypeOptions.filter((option: NodeOption) => option.value === this.nodeType)[0];
+                if (currentNodeOption) {
+                    setLabel(currentNodeOption.text);
+                }
+            }, [this.nodeType]);
+
+            const duplicateDynamicFeeNodeFound = (option: string) => {
+                const dynamicNodeTypeOptions = this.nodeTypeOptions.filter((x: NodeOption) => x.isDynamicType);
+                if (dynamicNodeTypeOptions.length > 0) {
+                    const dynamicNodeTypes = dynamicNodeTypeOptions.map((x: NodeOption) => x.value);
+                    const nodeList = this.palavyrLinkedList.compileToConvoNodes(); // Write methods to handle this natively - this is a bit of a cheat atm.
+                    const dynamicNodesPresentInTheCurrentNodeList = nodeList.filter((x: ConvoNode) => dynamicNodeTypes.includes(x.nodeType));
+                    const dynamicNodes = dynamicNodesPresentInTheCurrentNodeList.map((x: ConvoNode) => x.nodeType);
+                    return dynamicNodes.includes(option);
+                }
+                return false;
+            };
+
+            const autocompleteOnChange = async (_: any, nodeOption: NodeOption) => {
+                if (nodeOption === null) {
+                    return;
+                }
+
+                if (duplicateDynamicFeeNodeFound(nodeOption.value)) {
+                    setAlertDetails({
+                        title: `You've already placed dynamic table ${nodeOption.text} in this conversation`,
+                        message:
+                            "You can only place each dynamic table in your conversation once. If you would like to change where you've placed it in the conversation, you need to recreate that portion of the tree by selection a different node.",
+                    });
+                    setAlertState(true);
+                    return;
+                }
+
+                // changeNodeType(node, nodeList, setNodes, nodeOption, nodeIdentity, selectionCallback);
+                this.convertTo(nodeOption);
+                this.setTreeWithHistory(this.palavyrLinkedList);
+            };
+
             return (
-                <NodeTypeSelector
-                    nodeIdentity={this.nodeIdentity}
-                    nodeTypeOptions={filteredNodeTypeOptions(this.nodeIdentity, this.nodeTypeOptions)}
-                    nodeType={this.nodeType}
-                    reRender={this.rerender} // this will need to be called from somewhere
-                    shouldDisabledNodeTypeSelector={this.nodeIdentity.shouldDisabledNodeTypeSelector}
-                    selectionCallback={selectionCallback} // passed to changeNodeType, and takes care of the anabranch scenario
-                />
+                <>
+                    <CustomNodeSelect onChange={autocompleteOnChange} label={label} nodeTypeOptions={this.nodeTypeOptions} shouldDisabledNodeTypeSelector={this.shouldDisableNodeTypeSelector} />
+                    {alertDetails && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />}
+                </>
             );
         };
+    }
+
+    // value: string;
+    // groupName: string;
+    // isAnabranchMergePoint: boolean;
+    // isAnabranchType: boolean;
+    // isCurrency: boolean; // TODO: For the future -- may wish to specify currency or number in the dynamic table
+    // isDynamicType: boolean;
+    // isMultiOptionEditable: boolean; // TODO- is this used? No...
+    // isMultiOptionType: boolean;
+    // isSplitMergeType: boolean;
+    // isTerminalType: boolean;
+    // nodeComponentType: string;
+    // pathOptions: Array<Response>;
+    // resolveOrder: number;
+    // shouldRenderChildren: boolean;
+    // shouldShowMultiOption: boolean;
+    // stringName: string | null; // TODO: this is always null - used?
+    // text: string;
+    // valueOptions: Array<string>;
+    // dynamicType: string | null;
+
+    // isImageNode: boolean;
+    // imageId: string | null;
+    private convertTo(nodeOption: NodeOption) {
+        this.nodeType = nodeOption.value;
+        this.isCurrency = nodeOption.isCurrency;
+        this.isDynamicTableNode = nodeOption.isDynamicType;
+        this.isMultiOptionType = nodeOption.isMultiOptionType;
+        this.isSplitMergeType = nodeOption.isSplitMergeType;
+        this.isTerminal = nodeOption.isTerminalType;
+        this.nodeComponentType = nodeOption.nodeComponentType;
+        this.resolveOrder = nodeOption.resolveOrder; // IS this right?
+        this.shouldRenderChildren = nodeOption.shouldRenderChildren;
+        this.shouldShowMultiOption = nodeOption.shouldShowMultiOption;
+        this.valueOptions = nodeOption.valueOptions;
+        this.dynamicType = nodeOption.dynamicType;
     }
 
     abstract renderNodeEditor(): ({ editorIsOpen, closeEditor }) => JSX.Element;
@@ -336,17 +514,13 @@ export abstract class PalavyrNode implements IPalavyrNode {
                 isImageNode: this.imageId !== null,
             });
 
-            const selectionCallback = (node: ConvoNode, nodeList: Conversation, nodeIdOfMostRecentAnabranch: string): void => {
-                // return setNodeAsAnabranchMergePoint(node, nodeList, nodeIdOfMostRecentAnabranch, setAnabranchMergeChecked);
-            };
-
             return (
                 <Card className={classNames(cls.root, this.nodeId)} variant="outlined">
                     <CardContent className={cls.card}>
                         {showDebugData && <DataLogging debugData={this.compileDebug()} nodeChildren={this.nodeChildrenString} nodeId={this.nodeId} />}
                         <NodeHeader isRoot={this.isRoot} optionPath={this.optionPath} />
                         {this.renderNodeFace()({ openEditor })}
-                        {this.renderNodeTypeSelector(selectionCallback)()}
+                        {this.renderPalavyrNodeTypeSelector()()}
                         {this.renderNodeEditor()({ editorIsOpen, closeEditor })}
                         {this.renderOptionals()()}
                     </CardContent>
@@ -389,178 +563,87 @@ export abstract class PalavyrNode implements IPalavyrNode {
         }
     }
 
+    private lock() {
+        this.isAnabranchLocked = true;
+        this.shouldDisableNodeTypeSelector = true;
+    }
+    private unlock() {
+        // TODO: either make this anabranch specific or don't do; anabranch lock here. LOck means uneditable? Or just no nodeType changes?
+        this.isAnabranchLocked = false;
+        this.shouldDisableNodeTypeSelector = false;
+    }
+
+    private setAsProvideInfo() {
+        this.nodeType = "ProvideInfo";
+    }
+
+    public recursiveReferenceThisAnabranchOrigin(anabranchMergeNode: PalavyrNode) {
+        if (!this.isAnabranchType) throw new Error("Attempting to call anabranch reference method from non-anabranch-origin node");
+
+        const recurseAndReference = (childReferences: NodeReferences) => {
+            for (let index = 0; index < childReferences.Length; index++) {
+                const childNode = childReferences.references[index];
+                childNode.lock();
+                if (childNode.nodeIsNotSet()) {
+                    childNode.AddNewChildReference(anabranchMergeNode);
+                    anabranchMergeNode.parentNodeReferences.addReference(childNode);
+                    childNode.setAsProvideInfo();
+                } else {
+                    recurseAndReference(childNode.childNodeReferences);
+                }
+            }
+        };
+
+        recurseAndReference(this.childNodeReferences);
+    }
+
+    public recursiveDereferenceThisAnabranchOrigin(anabranchMergeNode: PalavyrNode) {
+        if (!this.isAnabranchType) throw new Error("Attempting to call anabranch reference method from non-anabranch-origin node");
+
+        const recurseAndDereference = (childReferences: NodeReferences) => {
+            for (let index = 0; index < childReferences.Length; index++) {
+                const childNode = childReferences.references[index];
+                childNode.unlock();
+
+                const childReferencesAnabranchMerge = childNode.childNodeReferences.checkIfReferenceExistsOnCondition((x: PalavyrNode) => x.nodeId === anabranchMergeNode.nodeId);
+                if (childReferencesAnabranchMerge && !childNode.isMemberOfLeftmostBranch) {
+                    childNode.childNodeReferences.removeReference(anabranchMergeNode);
+                    anabranchMergeNode.parentNodeReferences.removeReference(childNode);
+                } else {
+                    recurseAndDereference(childNode.childNodeReferences);
+                }
+            }
+        };
+
+        recurseAndDereference(this.childNodeReferences);
+    }
+
+    public isPenultimate() {
+        if (this.childNodeReferences.Empty()) return false;
+
+        for (let index = 0; index < this.childNodeReferences.Length; index++) {
+            const childNodeReference = this.childNodeReferences.references[index];
+            if (childNodeReference.childNodeReferences.Length !== 0) {
+                return false; // check this logic TODO:!
+            }
+            return true;
+        }
+    }
+
     private renderOptionals() {
         const nodeOptionals = new PalavyrNodeOptionals(this);
 
         return () => {
-            const { setNodes, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData } = React.useContext(ConversationTreeContext);
-
-            const [anabranchMergeChecked, setAnabranchMergeChecked] = useState<boolean>(false);
-            // const [mergeBoxChecked, setMergeBoxChecked] = useState<boolean>(false);
-
-            // const showResponseInPdfCheckbox = (event: { target: { checked: boolean } }) => {
-            //     const checked = event.target.checked;
-            //     _showResponseInPdfCheckbox(checked, this.rawNode, this.rawNodeList, setNodes, conversationHistoryPosition, historyTracker, conversationHistory);
-            // };
-
-            // const handleMergeBackInOnClick = (event: { target: { checked: boolean } }) => {
-            //     const checked = event.target.checked;
-            //     _handleMergeBackInOnClick(
-            //         checked,
-            //         this.rawNode,
-            //         this.rawNodeList,
-            //         conversationHistoryPosition,
-            //         historyTracker,
-            //         conversationHistory,
-            //         setNodes,
-            //         setMergeBoxChecked,
-            //         this.nodeIdentity.nodeIdOfMostRecentSplitMergePrimarySibling
-            //     );
-            // };
-
-            const handleSetAsAnabranchMergePointClick = (event: { target: { checked: boolean } }) => {
-                const checked = event.target.checked;
-                _handleSetAsAnabranchMergePointClick(checked, this.rawNode, this.rawNodeList, this.nodeIdentity.nodeIdOfMostRecentAnabranch, setAnabranchMergeChecked, setNodes);
-            };
-
-            const handleUnsetCurrentNodeType = () => {
-                _handleUnsetCurrentNodeType(this.rawNode, this.rawNodeList, setNodes);
-            };
-
             return (
                 <>
                     {nodeOptionals.renderShowResponseInPdf()()}
-                    {/* {this.shouldShowResponseInPdfOption() && <NodeCheckBox label="Show response in PDF" checked={this.shouldPresentResponse} onChange={showResponseInPdfCheckbox} />} */}
-
-                    {/* {this.shouldShowMergeWithPrimarySiblingBranchOption() && <NodeCheckBox label="Merge with primary sibling branch" checked={!this.shouldRenderChildren} onChange={handleMergeBackInOnClick} />} */}
-
-                    {this.nodeIdentity.shouldShowSetAsAnabranchMergePointOption && (
-                        <NodeCheckBox
-                            disabled={this.isAnabranchType && this.isAnabranchMergePoint}
-                            label="Set as Anabranch merge point"
-                            checked={anabranchMergeChecked}
-                            onChange={handleSetAsAnabranchMergePointClick}
-                        />
-                    )}
-
-                    {this.nodeIdentity.shouldShowUnsetNodeTypeOption && <SinglePurposeButton buttonText="Unset Node" variant="outlined" color="primary" onClick={handleUnsetCurrentNodeType} />}
-
-                    {this.nodeIdentity.shouldShowSplitMergePrimarySiblingLabel && <Typography>This is the primary sibling. Branches will merge to this node.</Typography>}
-
-                    {this.nodeIdentity.shouldShowAnabranchMergepointLabel && <Typography style={{ fontWeight: "bolder" }}>This is the Anabranch Merge Node</Typography>}
+                    {nodeOptionals.renderShowMergeWithPrimarySiblingBranchOption()()}
+                    {nodeOptionals.renderAnabranchMergeCheckBox()()}
+                    {nodeOptionals.renderUnsetNodeButton()()}
+                    {nodeOptionals.renderSplitMergeAnchorLabel()()}
+                    {nodeOptionals.renderAnabranchMergeNodeLabel()()}
                 </>
             );
         };
-    }
-
-    // private shouldShowResponseInPdfOption() {
-    //     const nodeTypesThatDoNotProvideFeedback = ["ProvideInfo"];
-    //     return !this.isTerminal && !nodeTypesThatDoNotProvideFeedback.includes(this.nodeType);
-    // }
-
-    // private shouldShowMergeWithPrimarySiblingBranchOption() {
-    //     return this.isPalavyrSplitmergeMember && this.isPalavyrSplitmergePrimarybranch && this.nodeTypeIsSet() && !this.isTerminal && !this.isMultiOptionType && this.isPenultimate();
-    // }
-
-    // private nodeTypeIsSet() {
-    //     return !isNullOrUndefinedOrWhitespace(this.nodeType);
-    // }
-
-    private isPenultimate() {
-        if (this.childNodeReferences.Empty()) return false;
-
-        for (let index = 0; index < this.childNodeReferences.getPalavyrNodesReferences.length; index++) {
-            const childNodeReference = this.childNodeReferences.getPalavyrNodesReferences[index];
-            if (childNodeReference.childNodeReferences.getPalavyrNodesReferences.length !== 0) {
-                return false; // check this logic TODO:!
-            }
-            return true;
-        }
-    }
-}
-
-export type OnChangeBooleanCallback = (event: { target: { checked: boolean } }) => void;
-
-export class PalavyrNodeOptionals {
-    private palavyrNode: PalavyrNode;
-    constructor(node: PalavyrNode) {
-        this.palavyrNode = node;
-    }
-
-    public renderShowResponseInPdf() {
-        const shouldShowResponseInPdfOption = () => {
-            const nodeTypesThatDoNotProvideFeedback = ["ProvideInfo"];
-            return !this.palavyrNode.isTerminal && !nodeTypesThatDoNotProvideFeedback.includes(this.palavyrNode.nodeType);
-        };
-        const toggleShowResponse = (event: { target: { checked: boolean } }) => {
-            const checked = event.target.checked;
-            this.palavyrNode.shouldPresentResponse = checked;
-            this.palavyrNode.setTreeWithHistory(this.palavyrNode.palavyrLinkedList);
-        };
-
-        return () => {
-            return shouldShowResponseInPdfOption() ? <NodeCheckBox label="Show response in PDF" checked={this.palavyrNode.shouldPresentResponse} onChange={toggleShowResponse} /> : <></>;
-        };
-    }
-
-    public renderShowMergeWithPrimarySiblingBranchOption() {
-        const shouldShowMergeWithPrimarySiblingBranchOption = () => {
-            return (
-                this.palavyrNode.isPalavyrSplitmergeMember &&
-                this.palavyrNode.isPalavyrSplitmergePrimarybranch &&
-                this.nodeTypeIsSet() &&
-                !this.palavyrNode.isTerminal &&
-                !this.palavyrNode.isMultiOptionType &&
-                this.isPenultimate()
-            );
-        };
-
-        const handleMergeBackInOnClick = async (event: { target: { checked: boolean } }, setMergeBoxChecked: SetState<boolean>) => {
-            const checked = event.target.checked;
-            setMergeBoxChecked(checked);
-            if (checked) {
-                this.palavyrNode.RouteToMostRecentSplitMerge();
-            } else {
-
-                await this.palavyrNode.addDefaultChild();
-
-                // if (conversationHistoryPosition === 0) {
-                //     const childId = uuid();
-                //     const newNode = cloneDeep(node);
-                //     newNode.shouldRenderChildren = true;
-                //     newNode.nodeChildrenString = childId;
-                //     let updatedNodeList = _createAndAddNewNodes([childId], [childId], node.areaIdentifier, ["Continue"], nodeList, false, false);
-                //     // updateSingleOptionType(newNode, updatedNodeList, setNodes);
-                //     setMergeBoxChecked(false);
-                // } else {
-                //     historyTracker.stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
-                // }
-            }
-        };
-
-        return () => {
-            const [mergeBoxChecked, setMergeBoxChecked] = useState<boolean>(false);
-            return shouldShowMergeWithPrimarySiblingBranchOption() ? (
-                <NodeCheckBox label="Merge with primary sibling branch" checked={mergeBoxChecked} onChange={(event) => handleMergeBackInOnClick(event, setMergeBoxChecked)} />
-            ) : (
-                <></>
-            );
-        };
-    }
-
-    private nodeTypeIsSet() {
-        return !isNullOrUndefinedOrWhitespace(this.palavyrNode.nodeType);
-    }
-
-    private isPenultimate() {
-        if (this.palavyrNode.childNodeReferences.Empty()) return false;
-
-        for (let index = 0; index < this.palavyrNode.childNodeReferences.getPalavyrNodesReferences.length; index++) {
-            const childNodeReference = this.palavyrNode.childNodeReferences.getPalavyrNodesReferences[index];
-            if (childNodeReference.childNodeReferences.getPalavyrNodesReferences.length !== 0) {
-                return false; // check this logic TODO:!
-            }
-            return true;
-        }
     }
 }

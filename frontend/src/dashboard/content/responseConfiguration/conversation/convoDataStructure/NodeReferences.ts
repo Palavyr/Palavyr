@@ -1,4 +1,5 @@
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
+import { sum } from "lodash";
 import { _joinNodeChildrenStringArray } from "../nodes/nodeUtils/_coreNodeUtils";
 import { PalavyrNode } from "./PalavyrNode";
 
@@ -23,7 +24,7 @@ export class NodeReferences {
         return this.nodeReferences.map((x) => x.nodeId);
     }
 
-    public get getPalavyrNodesReferences() {
+    public get references() {
         return this.nodeReferences;
     }
 
@@ -65,7 +66,16 @@ export class NodeReferences {
         try {
             return this.nodeReferences[index];
         } catch {
-            throw new Error(`Failed to find node reference index: Index: ${index} out of range ${this.Length}`)
+            throw new Error(`Failed to find node reference index: Index: ${index} out of range ${this.Length}`);
         }
+    }
+
+    public removeReference(palavyrNode: PalavyrNode) {
+        this.nodeReferences.filter((node: PalavyrNode) => node.nodeId !== palavyrNode.nodeId);
+    }
+
+    public checkIfReferenceExistsOnCondition(condition: (nodeReference: PalavyrNode) => boolean) {
+        const result = this.nodeReferences.map(condition);
+        return result.some(x => x); // TODO: Check this works;
     }
 }

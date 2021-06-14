@@ -208,7 +208,8 @@ export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeId
             resolveOrder: 0,
             dynamicType: "",
             isImageNode: false,
-            imageId: null
+            imageId: null,
+            IsSplitMergeMergePoint: false
         };
 
         updatedNodeList.push(newNode);
