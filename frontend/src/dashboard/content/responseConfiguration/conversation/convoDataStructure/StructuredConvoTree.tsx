@@ -51,13 +51,20 @@ export const StructuredConvoTree = () => {
     const [rawNodeList, setRawNodeList] = useState<Conversation>([]);
     const historyTracker = new ConversationHistoryTracker(setConversationHistory, setConversationHistoryPosition, setLinkedNodes);
 
+
+    const setTreeWithHistory = (updatedNodeList: PalavyrLinkedList) => {
+        const freshNodeList = cloneDeep(updatedNodeList);
+        historyTracker.addConversationHistoryToQueue(freshNodeList, conversationHistoryPosition, conversationHistory);
+        setLinkedNodes(linkedNodeList);
+    };
+
     const loadNodes = useCallback(async () => {
         if (planTypeMeta) {
             const nodes = await repository.Conversations.GetConversation(areaIdentifier);
             setRawNodeList(nodes);
 
             const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
-            const nodesLinkedList = new PalavyrLinkedList(nodes, nodeTypeOptions, areaIdentifier, () => null);
+            const nodesLinkedList = new PalavyrLinkedList(nodes, nodeTypeOptions, areaIdentifier, setTreeWithHistory);
 
             setNodeTypeOptions(nodeTypeOptions);
             setLinkedNodes(nodesLinkedList);
@@ -112,25 +119,20 @@ export const StructuredConvoTree = () => {
         }
     };
 
-    const setNodesWithHistory = (updatedNodeList: PalavyrLinkedList) => {
-        const freshNodeList = cloneDeep(updatedNodeList);
-        historyTracker.addConversationHistoryToQueue(freshNodeList, conversationHistoryPosition, conversationHistory);
-        setLinkedNodes(linkedNodeList);
-    };
 
     const resetTree = async () => {
         if (linkedNodeList && planTypeMeta) {
             const head = linkedNodeList.rootNode.compileConvoNode(areaIdentifier);
             const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
             const newList = new PalavyrLinkedList([head], nodeTypeOptions, areaIdentifier, () => null);
-            setNodesWithHistory(newList);
+            setTreeWithHistory(newList);
         }
     };
 
     const Tree = linkedNodeList !== undefined ? linkedNodeList.renderNodeTree() : null;
 
     return (
-        <ConversationTreeContext.Provider value={{ nodeTypeOptions, setNodes: setNodesWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
+        <ConversationTreeContext.Provider value={{ nodeTypeOptions, setNodes: setTreeWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
             <AreaConfigurationHeader
                 divider={treeErrors?.anyErrors}
                 title="Palavyr"

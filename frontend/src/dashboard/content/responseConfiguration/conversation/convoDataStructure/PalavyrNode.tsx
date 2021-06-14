@@ -40,13 +40,14 @@ export abstract class PalavyrNode implements IPalavyrNode {
     public isRoot: boolean;
     public nodeId: string;
 
-    protected isTerminal: boolean;
-    protected isMultiOptionType: boolean;
+    public isTerminal: boolean;
+    public shouldPresentResponse: boolean; // isCritical
+    public nodeType: string; // type of node - e.g. YesNo, Outer-Categories-TwoNestedCategory-fffeefb5-36f2-40cd-96c1-f1eff401393c
+    public isMultiOptionType: boolean;
+
     protected userText: string; // text
-    protected shouldPresentResponse: boolean; // isCritical
     protected isDynamicTableNode: boolean;
     protected resolveOrder: number;
-    protected nodeType: string; // type of node - e.g. YesNo, Outer-Categories-TwoNestedCategory-fffeefb5-36f2-40cd-96c1-f1eff401393c
     protected nodeComponentType: string; // type of component to use in the widget - standardized list of types in the widget registry
     protected dynamicType: string | null; // generic dynamic type, e.g. SelectOneFlat-3242-2342-234-2423
     public nodeChildrenString: string;
@@ -55,7 +56,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
     public optionPath: string; // the value option that was used with the parent of this node.
 
     // transient
-    protected shouldRenderChildren: boolean;
+    public shouldRenderChildren: boolean;
     protected isSplitMergeType: boolean;
     protected shouldShowMultiOption: boolean;
     protected isAnabranchType: boolean;
@@ -75,9 +76,9 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
     public lineMap: LineMap = [];
 
-    protected rerender: () => void;
+    public setTreeWithHistory: (updatedTree: PalavyrLinkedList) => void;
     protected repository: PalavyrRepository;
-    protected palavyrLinkedList: PalavyrLinkedList; // the containing list object that this node is a member of. Used to acccess update methods
+    public palavyrLinkedList: PalavyrLinkedList; // the containing list object that this node is a member of. Used to acccess update methods
 
     // deprecated
     protected fallback: boolean;
@@ -107,7 +108,15 @@ export abstract class PalavyrNode implements IPalavyrNode {
      * We could have no children (if not set)
      **/
 
-    constructor(containerList: PalavyrLinkedList, nodeTypeOptions: NodeTypeOptions, repository: PalavyrRepository, node: ConvoNode, nodeList: ConvoNode[], reRender: () => void, leftmostBranch: boolean) {
+    constructor(
+        containerList: PalavyrLinkedList,
+        nodeTypeOptions: NodeTypeOptions,
+        repository: PalavyrRepository,
+        node: ConvoNode,
+        nodeList: ConvoNode[],
+        setTreeWithHistory: (updatedTree: PalavyrLinkedList) => void,
+        leftmostBranch: boolean
+    ) {
         this.repository = repository;
         this.palavyrLinkedList = containerList;
 
@@ -149,10 +158,14 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
         this.rawNode = node;
         this.rawNodeList = nodeList;
-        this.rerender = reRender;
+        this.setTreeWithHistory = setTreeWithHistory;
 
         // deprecated
         this.fallback = node.fallback;
+    }
+
+    public UpdateTree() {
+        this.setTreeWithHistory(this.palavyrLinkedList);
     }
 
     public configure(parentNode: PalavyrNode) {
@@ -181,6 +194,19 @@ export abstract class PalavyrNode implements IPalavyrNode {
             this.childNodeReferences.OrderByOptionPath();
         }
     }
+
+    public async addDefaultChild() {
+        const defaultNode = await this.repository.Conversations.GetDefaultConversationNode();
+        this.addNewNodeReference(defaultNode, this);
+        this.UpdateTree();
+    }
+
+    public addNewNodeReference(newNode: PalavyrNode, parentNode: PalavyrNode) {
+        // double linked
+        parentNode.childNodeReferences.addReference(newNode);
+        newNode.configure(parentNode);
+    }
+
 
     public updateNodeText(newText: string) {
         this.userText = newText;
@@ -329,22 +355,68 @@ export abstract class PalavyrNode implements IPalavyrNode {
         };
     }
 
+    public RouteToMostRecentSplitMerge() {
+        this.childNodeReferences.Clear();
+        let parentReferences = this.parentNodeReferences;
+
+        const findMostRecentSplitMergeAndAssign = (parentNode: PalavyrNode) => {
+            let found = false;
+            while (true) {
+                for (let index = 0; index < parentReferences.Length; index++) {
+                    if (parentNode.isSplitMergeType) {
+                        this.childNodeReferences.addReference(parentNode);
+                        found = true;
+                        return true;
+                    } else if (parentNode.isRoot) {
+                        throw new Error("Failed to find the Split Merge origin - logic error.");
+                    } else {
+                        findMostRecentSplitMergeAndAssign(parentNode);
+                    }
+                    parentNode = parentReferences.getByIndex(index);
+                }
+            }
+        };
+
+        for (let index = 0; index < parentReferences.Length; index++) {
+            const parent = parentReferences.getByIndex(index);
+            const result = findMostRecentSplitMergeAndAssign(parent);
+            if (result) {
+                console.log("UPDATED THE TREE AFTER SPLIT MERGE UPDATE");
+                this.shouldRenderChildren = false;
+                this.UpdateTree();
+                break; // early break
+            }
+        }
+    }
+
     private renderOptionals() {
+        const nodeOptionals = new PalavyrNodeOptionals(this);
+
         return () => {
             const { setNodes, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData } = React.useContext(ConversationTreeContext);
 
             const [anabranchMergeChecked, setAnabranchMergeChecked] = useState<boolean>(false);
-            const [mergeBoxChecked, setMergeBoxChecked] = useState<boolean>(false);
+            // const [mergeBoxChecked, setMergeBoxChecked] = useState<boolean>(false);
 
-            const showResponseInPdfCheckbox = (event: { target: { checked: boolean } }) => {
-                const checked = event.target.checked;
-                _showResponseInPdfCheckbox(checked, this.rawNode, this.rawNodeList, setNodes, conversationHistoryPosition, historyTracker, conversationHistory);
-            };
+            // const showResponseInPdfCheckbox = (event: { target: { checked: boolean } }) => {
+            //     const checked = event.target.checked;
+            //     _showResponseInPdfCheckbox(checked, this.rawNode, this.rawNodeList, setNodes, conversationHistoryPosition, historyTracker, conversationHistory);
+            // };
 
-            const handleMergeBackInOnClick = (event: { target: { checked: boolean } }) => {
-                const checked = event.target.checked;
-                _handleMergeBackInOnClick(checked, this.rawNode, this.rawNodeList, conversationHistoryPosition, historyTracker, conversationHistory, setNodes, setMergeBoxChecked, this.nodeIdentity.nodeIdOfMostRecentSplitMergePrimarySibling);
-            };
+            // const handleMergeBackInOnClick = (event: { target: { checked: boolean } }) => {
+            //     const checked = event.target.checked;
+            //     _handleMergeBackInOnClick(
+            //         checked,
+            //         this.rawNode,
+            //         this.rawNodeList,
+            //         conversationHistoryPosition,
+            //         historyTracker,
+            //         conversationHistory,
+            //         setNodes,
+            //         setMergeBoxChecked,
+            //         this.nodeIdentity.nodeIdOfMostRecentSplitMergePrimarySibling
+            //     );
+            // };
 
             const handleSetAsAnabranchMergePointClick = (event: { target: { checked: boolean } }) => {
                 const checked = event.target.checked;
@@ -357,48 +429,138 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
             return (
                 <>
-                    {this.shouldShowResponseInPdfOption() && <NodeCheckBox label="Show response in PDF" checked={this.shouldPresentResponse} onChange={showResponseInPdfCheckbox} />}
-                    {this.shouldShowMergeWithPrimarySiblingBranchOption() && <NodeCheckBox label="Merge with primary sibling branch" checked={!this.shouldRenderChildren} onChange={handleMergeBackInOnClick} />}
+                    {nodeOptionals.renderShowResponseInPdf()()}
+                    {/* {this.shouldShowResponseInPdfOption() && <NodeCheckBox label="Show response in PDF" checked={this.shouldPresentResponse} onChange={showResponseInPdfCheckbox} />} */}
+
+                    {/* {this.shouldShowMergeWithPrimarySiblingBranchOption() && <NodeCheckBox label="Merge with primary sibling branch" checked={!this.shouldRenderChildren} onChange={handleMergeBackInOnClick} />} */}
+
                     {this.nodeIdentity.shouldShowSetAsAnabranchMergePointOption && (
-                        <NodeCheckBox disabled={this.isAnabranchType && this.isAnabranchMergePoint} label="Set as Anabranch merge point" checked={anabranchMergeChecked} onChange={handleSetAsAnabranchMergePointClick} />
+                        <NodeCheckBox
+                            disabled={this.isAnabranchType && this.isAnabranchMergePoint}
+                            label="Set as Anabranch merge point"
+                            checked={anabranchMergeChecked}
+                            onChange={handleSetAsAnabranchMergePointClick}
+                        />
                     )}
+
                     {this.nodeIdentity.shouldShowUnsetNodeTypeOption && <SinglePurposeButton buttonText="Unset Node" variant="outlined" color="primary" onClick={handleUnsetCurrentNodeType} />}
+
                     {this.nodeIdentity.shouldShowSplitMergePrimarySiblingLabel && <Typography>This is the primary sibling. Branches will merge to this node.</Typography>}
+
                     {this.nodeIdentity.shouldShowAnabranchMergepointLabel && <Typography style={{ fontWeight: "bolder" }}>This is the Anabranch Merge Node</Typography>}
                 </>
             );
         };
     }
 
-    private shouldShowResponseInPdfOption() {
-        const nodeTypesThatDoNotProvideFeedback = ["ProvideInfo"];
-        return !this.isTerminal && !nodeTypesThatDoNotProvideFeedback.includes(this.nodeType);
-    }
+    // private shouldShowResponseInPdfOption() {
+    //     const nodeTypesThatDoNotProvideFeedback = ["ProvideInfo"];
+    //     return !this.isTerminal && !nodeTypesThatDoNotProvideFeedback.includes(this.nodeType);
+    // }
 
-    private shouldShowMergeWithPrimarySiblingBranchOption() {
-        return this.isPalavyrSplitmergeMember
-        && this.isPalavyrSplitmergePrimarybranch
-        && this.nodeTypeIsSet()
-        && !this.isTerminal
-        && !this.isMultiOptionType
-        && this.isPenultimate();
-    }
+    // private shouldShowMergeWithPrimarySiblingBranchOption() {
+    //     return this.isPalavyrSplitmergeMember && this.isPalavyrSplitmergePrimarybranch && this.nodeTypeIsSet() && !this.isTerminal && !this.isMultiOptionType && this.isPenultimate();
+    // }
 
-    private nodeTypeIsSet() {
-        return !isNullOrUndefinedOrWhitespace(this.nodeType);
-    }
+    // private nodeTypeIsSet() {
+    //     return !isNullOrUndefinedOrWhitespace(this.nodeType);
+    // }
 
     private isPenultimate() {
         if (this.childNodeReferences.Empty()) return false;
 
-
         for (let index = 0; index < this.childNodeReferences.getPalavyrNodesReferences.length; index++) {
             const childNodeReference = this.childNodeReferences.getPalavyrNodesReferences[index];
             if (childNodeReference.childNodeReferences.getPalavyrNodesReferences.length !== 0) {
-                return false;// check this logic TODO:!
+                return false; // check this logic TODO:!
             }
             return true;
+        }
+    }
+}
 
+export type OnChangeBooleanCallback = (event: { target: { checked: boolean } }) => void;
+
+export class PalavyrNodeOptionals {
+    private palavyrNode: PalavyrNode;
+    constructor(node: PalavyrNode) {
+        this.palavyrNode = node;
+    }
+
+    public renderShowResponseInPdf() {
+        const shouldShowResponseInPdfOption = () => {
+            const nodeTypesThatDoNotProvideFeedback = ["ProvideInfo"];
+            return !this.palavyrNode.isTerminal && !nodeTypesThatDoNotProvideFeedback.includes(this.palavyrNode.nodeType);
+        };
+        const toggleShowResponse = (event: { target: { checked: boolean } }) => {
+            const checked = event.target.checked;
+            this.palavyrNode.shouldPresentResponse = checked;
+            this.palavyrNode.setTreeWithHistory(this.palavyrNode.palavyrLinkedList);
+        };
+
+        return () => {
+            return shouldShowResponseInPdfOption() ? <NodeCheckBox label="Show response in PDF" checked={this.palavyrNode.shouldPresentResponse} onChange={toggleShowResponse} /> : <></>;
+        };
+    }
+
+    public renderShowMergeWithPrimarySiblingBranchOption() {
+        const shouldShowMergeWithPrimarySiblingBranchOption = () => {
+            return (
+                this.palavyrNode.isPalavyrSplitmergeMember &&
+                this.palavyrNode.isPalavyrSplitmergePrimarybranch &&
+                this.nodeTypeIsSet() &&
+                !this.palavyrNode.isTerminal &&
+                !this.palavyrNode.isMultiOptionType &&
+                this.isPenultimate()
+            );
+        };
+
+        const handleMergeBackInOnClick = async (event: { target: { checked: boolean } }, setMergeBoxChecked: SetState<boolean>) => {
+            const checked = event.target.checked;
+            setMergeBoxChecked(checked);
+            if (checked) {
+                this.palavyrNode.RouteToMostRecentSplitMerge();
+            } else {
+
+                await this.palavyrNode.addDefaultChild();
+
+                // if (conversationHistoryPosition === 0) {
+                //     const childId = uuid();
+                //     const newNode = cloneDeep(node);
+                //     newNode.shouldRenderChildren = true;
+                //     newNode.nodeChildrenString = childId;
+                //     let updatedNodeList = _createAndAddNewNodes([childId], [childId], node.areaIdentifier, ["Continue"], nodeList, false, false);
+                //     // updateSingleOptionType(newNode, updatedNodeList, setNodes);
+                //     setMergeBoxChecked(false);
+                // } else {
+                //     historyTracker.stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
+                // }
+            }
+        };
+
+        return () => {
+            const [mergeBoxChecked, setMergeBoxChecked] = useState<boolean>(false);
+            return shouldShowMergeWithPrimarySiblingBranchOption() ? (
+                <NodeCheckBox label="Merge with primary sibling branch" checked={mergeBoxChecked} onChange={(event) => handleMergeBackInOnClick(event, setMergeBoxChecked)} />
+            ) : (
+                <></>
+            );
+        };
+    }
+
+    private nodeTypeIsSet() {
+        return !isNullOrUndefinedOrWhitespace(this.palavyrNode.nodeType);
+    }
+
+    private isPenultimate() {
+        if (this.palavyrNode.childNodeReferences.Empty()) return false;
+
+        for (let index = 0; index < this.palavyrNode.childNodeReferences.getPalavyrNodesReferences.length; index++) {
+            const childNodeReference = this.palavyrNode.childNodeReferences.getPalavyrNodesReferences[index];
+            if (childNodeReference.childNodeReferences.getPalavyrNodesReferences.length !== 0) {
+                return false; // check this logic TODO:!
+            }
+            return true;
         }
     }
 }

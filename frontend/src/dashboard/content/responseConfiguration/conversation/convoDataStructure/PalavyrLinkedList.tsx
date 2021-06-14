@@ -19,36 +19,43 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     private areaId: string; // areaIdentifier
     public rootNode: PalavyrNode;
     private head: ConvoNode;
-    private rerender: () => null;
+    private setTreeWithHistory: (updatedTree: PalavyrLinkedList) => void;
     private repository: PalavyrRepository = new PalavyrRepository();
     private nodeTypeOptions: NodeTypeOptions;
 
     /**
      * List object for interacting with the list. This will have methods for performing insertions, deletions, additions, subtractions, etc
      */
-    constructor(nodeList: ConvoNode[], nodeTypeOptions: NodeTypeOptions, areaId: string, rerender: () => null) {
+    constructor(nodeList: ConvoNode[], nodeTypeOptions: NodeTypeOptions, areaId: string, setTreeWithHistory: (updatedTree: PalavyrLinkedList) => void) {
         this.areaId = areaId;
         this.head = getRootNode(nodeList);
         this.nodeTypeOptions = nodeTypeOptions;
-        this.rerender = rerender;
+        this.setTreeWithHistory = setTreeWithHistory;
         this.assembleDoubleLinkedMultiBranchLinkedList(nodeList);
     }
 
     private assembleDoubleLinkedMultiBranchLinkedList(nodeList: ConvoNode[]) {
-        const headNode = this.convertToPalavyrNode(this, this.repository, this.head, nodeList, this.rerender, true);
+        const headNode = this.convertToPalavyrNode(this, this.repository, this.head, nodeList, this.setTreeWithHistory, true);
         this.rootNode = headNode;
         this.linkedListBucket.addToBucket(headNode);
         this.recursivelyAssembleLinkedList(headNode, this.head.nodeChildrenString, nodeList);
     }
 
-    private convertToPalavyrNode(container, repository, rawNode, nodeList, rerender, leftMostBranch) {
+    private convertToPalavyrNode(
+        container: PalavyrLinkedList,
+        repository: PalavyrRepository,
+        rawNode: ConvoNode,
+        nodeList: ConvoNode[],
+        setTreeWithHistory: (updatedTree: PalavyrLinkedList) => void,
+        leftMostBranch: boolean
+    ) {
         let palavyrNode: PalavyrNode;
         switch (rawNode.isImageNode) {
             case true:
-                palavyrNode = new PalavyrImageNode(container, this.nodeTypeOptions, repository, rawNode, nodeList, rerender, leftMostBranch);
+                palavyrNode = new PalavyrImageNode(container, this.nodeTypeOptions, repository, rawNode, nodeList, setTreeWithHistory, leftMostBranch);
                 break;
             case false:
-                palavyrNode = new PalavyrTextNode(container, this.nodeTypeOptions, repository, rawNode, nodeList, rerender, leftMostBranch);
+                palavyrNode = new PalavyrTextNode(container, this.nodeTypeOptions, repository, rawNode, nodeList, setTreeWithHistory, leftMostBranch);
                 break;
             default:
                 throw new Error("Node type couldn't be determined when construting the palavyr convo tree.");
@@ -62,15 +69,10 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         for (let index = 0; index < childIds.length; index++) {
             // childnodes add themselve to their parent node reference
             const childId = childIds[index];
-
             const childConvoNode = _getNodeById(childId, nodeList);
-            const newNode = this.convertToPalavyrNode(this, this.repository, childConvoNode, nodeList, this.rerender, index === 0);
 
-            // double linked
-            parentNode.childNodeReferences.addReference(newNode);
-
-            newNode.configure(parentNode);
-
+            const newNode = this.convertToPalavyrNode(this, this.repository, childConvoNode, nodeList, this.setTreeWithHistory, index === 0);
+            newNode.addNewNodeReference(newNode, parentNode);
             this.linkedListBucket.addToBucket(newNode); // I think this works since we rebuild the list on every render. Otherwise the compile method needs to call a method that will traverse the list recursively
             this.recursivelyAssembleLinkedList(newNode, childConvoNode.nodeChildrenString, nodeList);
         }

@@ -27,6 +27,10 @@ export class NodeReferences {
         return this.nodeReferences;
     }
 
+    public get Length() {
+        return this.nodeReferences.length;
+    }
+
     private joinNodeChildrenStringArray(nodeChildrenStrings: string[]) {
         return nodeChildrenStrings.join(",");
     }
@@ -51,5 +55,17 @@ export class NodeReferences {
 
     public OrderByOptionPath() {
         this.nodeReferences = sortByPropertyAlphabetical((x: PalavyrNode) => x.optionPath.toUpperCase(), this.nodeReferences);
+    }
+
+    public Clear() {
+        this.nodeReferences = [];
+    }
+
+    public getByIndex(index: number) {
+        try {
+            return this.nodeReferences[index];
+        } catch {
+            throw new Error(`Failed to find node reference index: Index: ${index} out of range ${this.Length}`)
+        }
     }
 }
