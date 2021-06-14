@@ -1,27 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { NodeIdentity, ConvoNode, Conversation, NodeTypeOptions, AlertType, NodeOption, ValueOptionDelimiter } from "@Palavyr-Types";
+import React, { useState, useEffect } from "react";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { CustomAlert } from "@common/components/customAlert/CutomAlert";
+import { isNullOrUndefinedOrWhitespace } from "@common/utils";
+import { Card, CardContent, makeStyles, Typography } from "@material-ui/core";
+import { ConvoNode, NodeTypeOptions, ValueOptionDelimiter, AlertType, NodeOption } from "@Palavyr-Types";
 import classNames from "classnames";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
-import { Card, CardContent } from "@material-ui/core";
 import { DataLogging } from "../nodes/nodeInterface/nodeDebug/DataLogging";
-import { useNodeInterfaceStyles } from "./nodeInterfaceStyles";
-import { NodeReferences } from "./NodeReferences";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { NodeHeader } from "./NodeInterfaceHeader";
-import { PalavyrLinkedList } from "./PalavyrLinkedList";
-import { _handleMergeBackInOnClick } from "../nodes/nodeInterface/nodeInterfaceCallbacks/_handleMergeBackInOnClick";
-import { _handleSetAsAnabranchMergePointClick } from "../nodes/nodeInterface/nodeInterfaceCallbacks/_handleSetAsAnabranchMergePointClick";
-import { _handleUnsetCurrentNodeType } from "../nodes/nodeInterface/nodeInterfaceCallbacks/_handleUnsetCurrentNodeType";
-import { _showResponseInPdfCheckbox } from "../nodes/nodeInterface/nodeInterfaceCallbacks/_showResponseInPdfCheckbox";
-import { SteppedLineTo } from "../treeLines/SteppedLineTo";
-
-import "./stylesPalavyrNode.css";
-import { PalavyrImageNode } from "./PalavyrImageNode";
-import { PalavyrTextNode } from "./PalavyrTextNode";
-import { PalavyrNodeOptionals } from "./PalavyrNodeOptionals";
-import { isNullOrUndefinedOrWhitespace } from "@common/utils";
-import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { CustomNodeSelect } from "../nodes/nodeInterface/nodeSelector/CustomNodeSelect";
+import { SteppedLineTo } from "../treeLines/SteppedLineTo";
+import { useNodeInterfaceStyles } from "./nodeInterfaceStyles";
+import { PalavyrImageNode } from "./PalavyrImageNode";
+import { PalavyrLinkedList } from "./PalavyrLinkedList";
+import { PalavyrNodeOptionals } from "./PalavyrNodeOptionals";
+import { PalavyrTextNode } from "./PalavyrTextNode";
+import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 
 type ComponentType = React.ComponentType<{}>;
 
@@ -73,15 +66,15 @@ export abstract class PalavyrNode implements IPalavyrNode {
     protected imageId: string | null;
 
     public isCurrency: boolean;
+
     // core
-    protected nodeIdentity: NodeIdentity;
-    public childNodeReferences: NodeReferences;
-    public parentNodeReferences: NodeReferences;
+    public childNodeReferences: NodeReferences = new NodeReferences();
+    public parentNodeReferences: NodeReferences = new NodeReferences();
 
     public isMemberOfLeftmostBranch: boolean;
 
     public rawNode: ConvoNode; // Get Rid Of This.
-    public rawNodeList: Conversation; // Get Rid of this
+    public rawNodeList: ConvoNode[]; // Get Rid of this
 
     public lineMap: LineMap = [];
 
@@ -134,9 +127,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.palavyrLinkedList = containerList;
 
         this.nodeTypeOptions = nodeTypeOptions;
-
-        this.childNodeReferences = new NodeReferences();
-        this.parentNodeReferences = new NodeReferences();
 
         this.optionPath = node.optionPath; // the value option that was used with the parent of this node.
         this.valueOptions = node.valueOptions.split(ValueOptionDelimiter); // the options available from this node, if any. I none, then "Continue" is used |peg| delimted
@@ -262,7 +252,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
             resolveOrder: 0,
             dynamicType: "",
             isImageNode: false,
-            imageId: null
+            imageId: null,
         };
         const newPalavyrNode = PalavyrNode.convertToPalavyrNode(
             this.palavyrLinkedList,
@@ -457,28 +447,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
         };
     }
 
-    // value: string;
-    // groupName: string;
-    // isAnabranchMergePoint: boolean;
-    // isAnabranchType: boolean;
-    // isCurrency: boolean; // TODO: For the future -- may wish to specify currency or number in the dynamic table
-    // isDynamicType: boolean;
-    // isMultiOptionEditable: boolean; // TODO- is this used? No...
-    // isMultiOptionType: boolean;
-    // isSplitMergeType: boolean;
-    // isTerminalType: boolean;
-    // nodeComponentType: string;
-    // pathOptions: Array<Response>;
-    // resolveOrder: number;
-    // shouldRenderChildren: boolean;
-    // shouldShowMultiOption: boolean;
-    // stringName: string | null; // TODO: this is always null - used?
-    // text: string;
-    // valueOptions: Array<string>;
-    // dynamicType: string | null;
-
-    // isImageNode: boolean;
-    // imageId: string | null;
     private convertTo(nodeOption: NodeOption) {
         this.nodeType = nodeOption.value;
         this.isCurrency = nodeOption.isCurrency;
@@ -508,8 +476,8 @@ export abstract class PalavyrNode implements IPalavyrNode {
                 nodeType: this.nodeType,
                 nodeText: this.userText,
                 checked: this.shouldPresentResponse,
-                isDecendentOfSplitMerge: this.nodeIdentity.isDecendentOfSplitMerge,
-                splitMergeRootSiblingIndex: this.nodeIdentity.splitMergeRootSiblingIndex,
+                isDecendentOfSplitMerge: this.isPalavyrSplitmergeMember,
+                splitMergeRootSiblingIndex: this.isMemberOfLeftmostBranch ? 0 : 1,
                 debugOn: showDebugData,
                 isImageNode: this.imageId !== null,
             });
@@ -518,13 +486,33 @@ export abstract class PalavyrNode implements IPalavyrNode {
                 <Card className={classNames(cls.root, this.nodeId)} variant="outlined">
                     <CardContent className={cls.card}>
                         {showDebugData && <DataLogging debugData={this.compileDebug()} nodeChildren={this.nodeChildrenString} nodeId={this.nodeId} />}
-                        <NodeHeader isRoot={this.isRoot} optionPath={this.optionPath} />
+                        {this.renderNodeHeader()({ isRoot: this.isRoot, optionPath: this.optionPath })}
                         {this.renderNodeFace()({ openEditor })}
                         {this.renderPalavyrNodeTypeSelector()()}
                         {this.renderNodeEditor()({ editorIsOpen, closeEditor })}
                         {this.renderOptionals()()}
                     </CardContent>
                 </Card>
+            );
+        };
+    }
+
+    private renderNodeHeader() {
+        const useStyles = makeStyles((theme) => ({
+            interfaceElement: {
+                paddingBottom: "1rem",
+            },
+        }));
+        interface INodeInterfaceHeader {
+            isRoot: boolean;
+            optionPath: string;
+        }
+        return ({ isRoot, optionPath }: INodeInterfaceHeader) => {
+            const cls = useStyles();
+            return (
+                <Typography className={cls.interfaceElement} variant={isRoot ? "h5" : "body1"} align="center">
+                    {isRoot ? "Begin" : optionPath === "Continue" ? optionPath : "If " + optionPath}
+                </Typography>
             );
         };
     }
@@ -645,5 +633,84 @@ export abstract class PalavyrNode implements IPalavyrNode {
                 </>
             );
         };
+    }
+}
+
+export class NodeReferences {
+    private nodeReferences: PalavyrNode[] = [];
+
+    constructor(nodeReferences?: PalavyrNode[]) {
+        if (nodeReferences) {
+            nodeReferences.forEach((ref: PalavyrNode) => {
+                this.addReference(ref);
+            });
+        }
+    }
+
+    public get nodes() {
+        return this.nodeReferences;
+    }
+
+    public get joinedReferenceString() {
+        return this.joinNodeChildrenStringArray(this.referenceStringArray);
+    }
+
+    public get referenceStringArray() {
+        return this.nodeReferences.map((x) => x.nodeId);
+    }
+
+    public get references() {
+        return this.nodeReferences;
+    }
+
+    public get Length() {
+        return this.nodeReferences.length;
+    }
+
+    private joinNodeChildrenStringArray(nodeChildrenStrings: string[]) {
+        return nodeChildrenStrings.join(",");
+    }
+
+    public contains(nodeId: string) {
+        return this.nodeReferences.filter((x: PalavyrNode) => x.nodeId === nodeId).length > 0;
+    }
+
+    public addReference(node: PalavyrNode) {
+        if (!this.contains(node.nodeId)) {
+            this.nodeReferences.push(node);
+        }
+    }
+
+    public Empty() {
+        return this.nodeReferences.length === 0;
+    }
+
+    public NotEmpty() {
+        return this.nodeReferences.length > 0;
+    }
+
+    public OrderByOptionPath() {
+        this.nodeReferences = sortByPropertyAlphabetical((x: PalavyrNode) => x.optionPath.toUpperCase(), this.nodeReferences);
+    }
+
+    public Clear() {
+        this.nodeReferences = [];
+    }
+
+    public getByIndex(index: number) {
+        try {
+            return this.nodeReferences[index];
+        } catch {
+            throw new Error(`Failed to find node reference index: Index: ${index} out of range ${this.Length}`);
+        }
+    }
+
+    public removeReference(palavyrNode: PalavyrNode) {
+        this.nodeReferences.filter((node: PalavyrNode) => node.nodeId !== palavyrNode.nodeId);
+    }
+
+    public checkIfReferenceExistsOnCondition(condition: (nodeReference: PalavyrNode) => boolean) {
+        const result = this.nodeReferences.map(condition);
+        return result.some((x) => x); // TODO: Check this works;
     }
 }

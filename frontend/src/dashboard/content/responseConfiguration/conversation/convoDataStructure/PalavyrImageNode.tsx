@@ -2,8 +2,8 @@ import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 import { PalavyrAutoComplete } from "@common/components/PalavyrAutoComplete";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
-import { Dialog, DialogTitle, DialogContent, Divider, Typography } from "@material-ui/core";
-import { FileLink, SetState } from "@Palavyr-Types";
+import { Dialog, DialogTitle, DialogContent, Typography, Divider } from "@material-ui/core";
+import { NodeTypeOptions, ConvoNode, FileLink } from "@Palavyr-Types";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import React, { useState, useCallback, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
@@ -11,11 +11,21 @@ import { Upload } from "../../uploadable/Upload";
 import { CustomImage } from "../nodes/nodeInterface/nodeEditor/imageNode/CustomImage";
 import { NodeBody } from "./NodeBody";
 import { useNodeInterfaceStyles } from "./nodeInterfaceStyles";
+import { PalavyrLinkedList } from "./PalavyrLinkedList";
 import { PalavyrNode } from "./PalavyrNode";
 
+
 export class PalavyrImageNode extends PalavyrNode {
-    constructor(containerList, nodeTypeOptions, repository, node, nodeList, rerender, leftMostBranch) {
-        super(containerList, nodeTypeOptions, repository, node, nodeList, rerender, leftMostBranch);
+    constructor(
+        containerList: PalavyrLinkedList,
+        nodeTypeOptions: NodeTypeOptions,
+        repository: PalavyrRepository,
+        node: ConvoNode,
+        nodeList: ConvoNode[],
+        setTreeWithHistory: (updatedTree: PalavyrLinkedList) => void,
+        leftmostBranch: boolean
+    ) {
+        super(containerList, nodeTypeOptions, repository, node, nodeList, setTreeWithHistory, leftmostBranch);
     }
 
     public renderNodeFace() {

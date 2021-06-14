@@ -3,7 +3,6 @@ import { Tooltip, Typography } from "@material-ui/core";
 import { SetState } from "@Palavyr-Types";
 import React, { useState } from "react";
 import { NodeCheckBox } from "../nodes/nodeInterface/NodeCheckBox";
-import { _getNodeById, _getLeftMostParentNode } from "../nodes/nodeUtils/_coreNodeUtils";
 import { PalavyrNode } from "./PalavyrNode";
 
 export class PalavyrNodeOptionals {
@@ -41,7 +40,9 @@ export class PalavyrNodeOptionals {
 
         const shouldShow = () => {
             const isChildOfAnabranchType = this.palavyrNode.parentNodeReferences.checkIfReferenceExistsOnCondition((node: PalavyrNode) => node.isPalavyrAnabranchStart);
-            return this.palavyrNode.isPalavyrSplitmergeMember && !this.palavyrNode.isTerminal && !isChildOfAnabranchType && (this.palavyrNode.isMemberOfLeftmostBranch || this.palavyrNode.isPalavyrAnabranchStart); // && decendentLevelFromAnabranch < 4; TODO
+            return (
+                this.palavyrNode.isPalavyrSplitmergeMember && !this.palavyrNode.isTerminal && !isChildOfAnabranchType && (this.palavyrNode.isMemberOfLeftmostBranch || this.palavyrNode.isPalavyrAnabranchStart)
+            ); // && decendentLevelFromAnabranch < 4; TODO
         };
 
         return () => {
@@ -59,7 +60,12 @@ export class PalavyrNodeOptionals {
 
     public renderUnsetNodeButton() {
         const shouldShow = () => {
-            return this.palavyrNode.nodeIsSet() && (!this.palavyrNode.isPalavyrAnabranchMember || this.palavyrNode.isAnabranchLocked) && !this.palavyrNode.isPalavyrSplitmergeMergePoint && !this.palavyrNode.isAnabranchLocked;
+            return (
+                this.palavyrNode.nodeIsSet() &&
+                (!this.palavyrNode.isPalavyrAnabranchMember || this.palavyrNode.isAnabranchLocked) &&
+                !this.palavyrNode.isPalavyrSplitmergeMergePoint &&
+                !this.palavyrNode.isAnabranchLocked
+            );
         };
 
         const onClick = () => {
@@ -97,7 +103,12 @@ export class PalavyrNodeOptionals {
     public renderShowMergeWithPrimarySiblingBranchOption() {
         const shouldShow = () => {
             return (
-                this.palavyrNode.isPalavyrSplitmergeMember && this.palavyrNode.isPalavyrSplitmergePrimarybranch && this.palavyrNode.nodeIsSet() && !this.palavyrNode.isTerminal && !this.palavyrNode.isMultiOptionType && this.palavyrNode.isPenultimate()
+                this.palavyrNode.isPalavyrSplitmergeMember &&
+                this.palavyrNode.isPalavyrSplitmergePrimarybranch &&
+                this.palavyrNode.nodeIsSet() &&
+                !this.palavyrNode.isTerminal &&
+                !this.palavyrNode.isMultiOptionType &&
+                this.palavyrNode.isPenultimate()
             );
         };
 

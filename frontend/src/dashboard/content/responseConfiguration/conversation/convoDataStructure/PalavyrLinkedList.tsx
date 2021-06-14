@@ -1,10 +1,11 @@
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { ConvoNode, NodeTypeOptions } from "@Palavyr-Types";
 import { getRootNode } from "../nodes/nodeUtils/commonNodeUtils";
-import { _getNodeById, _splitAndRemoveEmptyNodeChildrenString, _splitNodeChildrenString } from "../nodes/nodeUtils/_coreNodeUtils";
+import { _splitAndRemoveEmptyNodeChildrenString, _getNodeById } from "../nodes/nodeUtils/_coreNodeUtils";
 import { LinkedListBucket } from "./LinkedListBucket";
-import { PalavyrNode } from "./PalavyrNode";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { NodeReferences } from "./NodeReferences";
+import { PalavyrNode, NodeReferences } from "./PalavyrNode";
+
+
 
 interface IPalavyrLinkedList {
     traverse(): void;
@@ -92,25 +93,6 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
 
         const node = this.linkedListBucket.findById(nodeId);
         return node;
-        // const rootNode = this.rootNode;
-        // const findNodeRecursively = (parentNode: PalavyrNode) => {
-        //     for (let index = 0; index < parentNode.childNodeReferences.Length; index++) {
-        //         const childNode = parentNode.childNodeReferences.references[index];
-        //         if (childNode.nodeId === nodeId) {
-        //             return childNode;
-        //         } else {
-        //             const nodeToFind = findNodeRecursively(childNode);
-        //             if (nodeToFind !== undefined) {
-        //                 return nodeToFind;
-        //             }
-        //         }
-        //     }
-        // };
-        // const node = findNodeRecursively(rootNode);
-        // if (node === undefined) {
-        //     throw new Error("Attempting to find a node that does not exist in the tree");
-        // }
-        // return node as PalavyrNode;
     }
 
     traverse(perNodeCallback?: any): void {

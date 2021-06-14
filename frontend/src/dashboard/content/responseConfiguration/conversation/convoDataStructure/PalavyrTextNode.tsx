@@ -1,15 +1,26 @@
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from "@material-ui/core";
+import { NodeTypeOptions, ConvoNode } from "@Palavyr-Types";
 import React, { useEffect, useState } from "react";
 import { MultiChoiceOptions } from "../nodes/nodeInterface/nodeEditor/MultiChoiceOptions";
 import { NodeBody } from "./NodeBody";
 import { useNodeInterfaceStyles } from "./nodeInterfaceStyles";
+import { PalavyrLinkedList } from "./PalavyrLinkedList";
 import { PalavyrNode } from "./PalavyrNode";
 
 export class PalavyrTextNode extends PalavyrNode {
-    constructor(containerList, nodeTypeOptions, repository, rawNode, nodeList, rerender, leftMostBranch) {
-        super(containerList, nodeTypeOptions, repository, rawNode, nodeList, rerender, leftMostBranch);
+    constructor(
+        containerList: PalavyrLinkedList,
+        nodeTypeOptions: NodeTypeOptions,
+        repository: PalavyrRepository,
+        node: ConvoNode,
+        nodeList: ConvoNode[],
+        setTreeWithHistory: (updatedTree: PalavyrLinkedList) => void,
+        leftmostBranch: boolean
+    ) {
+        super(containerList, nodeTypeOptions, repository, node, nodeList, setTreeWithHistory, leftmostBranch);
     }
 
     public renderNodeFace() {
@@ -31,13 +42,11 @@ export class PalavyrTextNode extends PalavyrNode {
             const [textState, setText] = useState<string>("");
 
             const handleUpdateNode = (value: string, valueOptions: string[]) => {
-                const updatedNode = { ...this.rawNode };
-                updatedNode.text = value;
+                this.userText = value;
                 if (this.isMultiOptionType) {
-                    // updateMultiTypeOption(updatedNode, nodeList, valueOptions, setNodes);
-                } else {
-                    // updateSingleOptionType(updatedNode, nodeList, setNodes);
-                }
+                    this.valueOptions = valueOptions;
+                  }
+                this.setTreeWithHistory(this.palavyrLinkedList)
             };
 
             return (
