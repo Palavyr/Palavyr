@@ -1,12 +1,12 @@
-import { SetState } from "@Palavyr-Types";
+import { IConversationHistoryTracker, SetState } from "@Palavyr-Types";
 import { PalavyrLinkedList } from "../convoDataStructure/PalavyrLinkedList";
 import { _cleanConversationNodesWithNoChildren } from "./nodeUtils/_coreNodeUtils";
 
-type SetConversationHistory = SetState<PalavyrLinkedList[]>;
-type SetConversation = SetState<PalavyrLinkedList>;
-type SetConversationHistoryPosition = SetState<number>;
+export type SetConversationHistory = SetState<PalavyrLinkedList[]>;
+export type SetConversation = SetState<PalavyrLinkedList>;
+export type SetConversationHistoryPosition = SetState<number>;
 
-export class ConversationHistoryTracker {
+export class ConversationHistoryTracker implements IConversationHistoryTracker {
     private MaxConversationHistory = 50; // the number of times you can hit the back button
 
     setConversationHistory: SetConversationHistory;

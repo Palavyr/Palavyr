@@ -28,7 +28,6 @@ export type TableGroup<T> = {
     [itemGroup: string]: T;
 };
 
-
 // Database
 export type GroupRow = {
     id: number;
@@ -76,7 +75,8 @@ export type Responses = Array<Response>;
 
 export const ValueOptionDelimiter = "|peg|";
 
-export type ConvoNode = { // these properties are written to the database
+export type ConvoNode = {
+    // these properties are written to the database
     id?: number | undefined;
     areaIdentifier: string;
 
@@ -91,7 +91,6 @@ export type ConvoNode = { // these properties are written to the database
     IsSplitMergeMergePoint: boolean;
     isAnabranchType: boolean;
     isAnabranchMergePoint: boolean;
-
 
     nodeType: string;
     fallback: boolean;
@@ -469,8 +468,7 @@ export type PlanTypeMeta = {
 
     planType: PurchaseTypes;
     isFreePlan: boolean;
-}
-
+};
 
 export type ProductOption = {
     card: React.ReactNode;
@@ -805,3 +803,65 @@ export type AreaNameDetail = {
 export type AreaNameDetails = AreaNameDetail[];
 
 export type SnackbarPositions = "tr" | "t" | "tl" | "bl" | "b" | "br";
+
+export type EmptyComponentType = React.ComponentType<{}>;
+
+export type LineLink = {
+    from: string;
+    to: string;
+};
+export type LineMap = LineLink[];
+
+export type SplitmergeContext = {
+    splitmergeOriginId: string; // the node Id of the split merge root node
+};
+
+export type AnabranchContext = {
+    anabranchOriginId: string; // the node Id of the anabranch root node
+};
+
+export interface IDashboardContext {
+    accountTypeNeedsPassword: boolean;
+    checkAreaCount(): void;
+    areaName: string;
+    setViewName: SetState<string>;
+    currencySymbol: string;
+    setIsLoading: SetState<boolean>;
+    successText: string;
+    successOpen: boolean;
+    setSuccessOpen: SetState<boolean>;
+    setSuccessText: SetState<string>;
+    warningText: string;
+    warningOpen: boolean;
+    setWarningOpen: SetState<boolean>;
+    setWarningText: SetState<string>;
+    errorText: string;
+    errorOpen: boolean;
+    setErrorOpen: SetState<boolean>;
+    setErrorText: SetState<string>;
+    setSnackPosition: SetState<SnackbarPositions>;
+    snackPosition: SnackbarPositions;
+    unseenNotifications: number;
+    setUnseenNotifications: SetState<number>;
+    planTypeMeta: PlanTypeMeta | undefined;
+}
+
+export interface IAuthContext {
+    isActive: boolean;
+    isAuthenticated: boolean;
+}
+
+export interface IConversationHistoryTracker {
+    addConversationHistoryToQueue(dirtyConversationRecord: PalavyrLinkedList, conversationHistoryPosition: number, conversationHistory: PalavyrLinkedList[]): void;
+    stepConversationBackOneStep(conversationHistoryPosition: number, conversationHistory: PalavyrLinkedList[]): void;
+    stepConversationForwardOneStep(conversationHistoryPosition: number, conversationHistory: PalavyrLinkedList[]): void;
+}
+
+export interface IConversationTreeContext {
+    setNodes: NodeSetterWithHistory;
+    historyTracker: IConversationHistoryTracker;
+    conversationHistory: PalavyrLinkedList[];
+    conversationHistoryPosition: number;
+    nodeTypeOptions: NodeTypeOptions;
+    showDebugData: boolean;
+}

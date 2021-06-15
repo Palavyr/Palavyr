@@ -1,40 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
-import { Card, CardContent, makeStyles, Typography } from "@material-ui/core";
-import { ConvoNode, NodeTypeOptions, ValueOptionDelimiter, AlertType, NodeOption } from "@Palavyr-Types";
+import { Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Divider, makeStyles, TextField, Tooltip, Typography } from "@material-ui/core";
+import { ConvoNode, NodeTypeOptions, ValueOptionDelimiter, AlertType, NodeOption, LineMap, AnabranchContext, SplitmergeContext, LineLink, FileLink, SetState } from "@Palavyr-Types";
 import classNames from "classnames";
-import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
+import { ConversationTreeContext, DashboardContext } from "dashboard/layouts/DashboardContext";
 import { DataLogging } from "../nodes/nodeInterface/nodeDebug/DataLogging";
 import { CustomNodeSelect } from "../nodes/nodeInterface/nodeSelector/CustomNodeSelect";
 import { SteppedLineTo } from "../treeLines/SteppedLineTo";
 import { useNodeInterfaceStyles } from "./nodeInterfaceStyles";
-import { PalavyrImageNode } from "./PalavyrImageNode";
-import { PalavyrLinkedList } from "./PalavyrLinkedList";
-import { PalavyrNodeOptionals } from "./PalavyrNodeOptionals";
-import { PalavyrTextNode } from "./PalavyrTextNode";
+import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "./Contracts";
+import { NodeReferences } from "./PalavyrNodeReferences";
+import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
+import { PalavyrAutoComplete } from "@common/components/PalavyrAutoComplete";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
+import { useHistory } from "react-router-dom";
+import { Upload } from "../../uploadable/Upload";
+import { CustomImage } from "../nodes/nodeInterface/nodeEditor/imageNode/CustomImage";
+import { SaveOrCancel } from "@common/components/SaveOrCancel";
+import { MultiChoiceOptions } from "../nodes/nodeInterface/nodeEditor/MultiChoiceOptions";
+import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
+import { NodeCheckBox } from "../nodes/nodeInterface/NodeCheckBox";
 
-type ComponentType = React.ComponentType<{}>;
-
-interface IPalavyrNode {
-    createPalavyrNodeComponent(): ComponentType;
-}
-
-export type LineLink = {
-    from: string;
-    to: string;
-};
-export type LineMap = LineLink[];
-
-export type SplitmergeContext = {
-    splitmergeOriginId: string; // the node Id of the split merge root node
-};
-
-export type AnabranchContext = {
-    anabranchOriginId: string; // the node Id of the anabranch root node
-};
+import "./stylesPalavyrNode.css";
 
 export abstract class PalavyrNode implements IPalavyrNode {
     // used in widget resource
@@ -68,8 +57,8 @@ export abstract class PalavyrNode implements IPalavyrNode {
     public isCurrency: boolean;
 
     // core
-    public childNodeReferences: NodeReferences = new NodeReferences();
-    public parentNodeReferences: NodeReferences = new NodeReferences();
+    public childNodeReferences: INodeReferences = new NodeReferences();
+    public parentNodeReferences: INodeReferences = new NodeReferences();
 
     public isMemberOfLeftmostBranch: boolean;
 
@@ -78,9 +67,9 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
     public lineMap: LineMap = [];
 
-    public setTreeWithHistory: (updatedTree: PalavyrLinkedList) => void;
+    public setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
     protected repository: PalavyrRepository;
-    public palavyrLinkedList: PalavyrLinkedList; // the containing list object that this node is a member of. Used to acccess update methods
+    public palavyrLinkedList: IPalavyrLinkedList; // the containing list object that this node is a member of. Used to acccess update methods
 
     // deprecated
     protected fallback: boolean;
@@ -115,12 +104,12 @@ export abstract class PalavyrNode implements IPalavyrNode {
      **/
 
     constructor(
-        containerList: PalavyrLinkedList,
+        containerList: IPalavyrLinkedList,
         nodeTypeOptions: NodeTypeOptions,
         repository: PalavyrRepository,
         node: ConvoNode,
         nodeList: ConvoNode[],
-        setTreeWithHistory: (updatedTree: PalavyrLinkedList) => void,
+        setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
         leftmostBranch: boolean
     ) {
         this.repository = repository;
@@ -185,16 +174,17 @@ export abstract class PalavyrNode implements IPalavyrNode {
         return isNullOrUndefinedOrWhitespace(this.nodeType);
     }
 
-    public configure(parentNode: PalavyrNode) {
+    public configure(parentNode: IPalavyrNode) {
         this.parentNodeReferences.addReference(parentNode);
         this.addLine(parentNode.nodeId);
         this.configureAnabranch(parentNode);
         this.configureSplitMerge(parentNode);
     }
 
-    private configureAnabranch(parentNode: PalavyrNode) {
-        this.isPalavyrAnabranchStart = this.isAnabranchType;
-        this.isPalavyrAnabranchMember = parentNode.isAnabranchType || (parentNode.isPalavyrAnabranchMember && !parentNode.isPalavyrAnabranchEnd) || this.isAnabranchType || this.isAnabranchMergePoint;
+    private configureAnabranch(parentNode: IPalavyrNode) {
+        this.isPalavyrAnabranchStart = this.isPalavyrAnabranchStart;
+        this.isPalavyrAnabranchMember =
+            parentNode.isPalavyrAnabranchStart || (parentNode.isPalavyrAnabranchMember && !parentNode.isPalavyrAnabranchEnd) || this.isPalavyrAnabranchStart || this.isAnabranchMergePoint;
         this.isPalavyrAnabranchEnd = this.isAnabranchMergePoint;
 
         if (this.isPalavyrAnabranchStart) {
@@ -205,9 +195,9 @@ export abstract class PalavyrNode implements IPalavyrNode {
         }
     }
 
-    private configureSplitMerge(parentNode: PalavyrNode) {
-        this.isPalavyrSplitmergeStart = this.isSplitMergeType;
-        this.isPalavyrSplitmergeMember = parentNode.isSplitMergeType || (parentNode.isPalavyrSplitmergeMember && !parentNode.isPalavyrSplitmergeEnd);
+    private configureSplitMerge(parentNode: IPalavyrNode) {
+        this.isPalavyrSplitmergeStart = this.isPalavyrSplitmergeStart;
+        this.isPalavyrSplitmergeMember = parentNode.isPalavyrSplitmergeStart || (parentNode.isPalavyrSplitmergeMember && !parentNode.isPalavyrSplitmergeEnd);
         this.isPalavyrSplitmergePrimarybranch = this.isMemberOfLeftmostBranch;
         this.isPalavyrSplitmergeEnd = this.isPalavyrSplitmergeMergePoint;
 
@@ -221,7 +211,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
     public sortChildReferences() {
         // reorder parent's child refs depending on if parent is a anabranch or splitmerge type
-        if (!this.isAnabranchType && !this.isSplitMergeType) {
+        if (!this.isPalavyrAnabranchStart && !this.isPalavyrSplitmergeStart) {
             this.childNodeReferences.OrderByOptionPath();
         }
     }
@@ -267,26 +257,26 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.UpdateTree();
     }
 
-    public addNewNodeReferenceAndConfigure(newNode: PalavyrNode, parentNode: PalavyrNode) {
+    public addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode) {
         // double linked
         parentNode.childNodeReferences.addReference(newNode);
         newNode.configure(parentNode);
     }
 
-    public AddNewChildReference(newChildReference: PalavyrNode) {
+    public AddNewChildReference(newChildReference: IPalavyrNode) {
         this.childNodeReferences.addReference(newChildReference);
     }
 
     public static convertToPalavyrNode(
-        container: PalavyrLinkedList,
+        container: IPalavyrLinkedList,
         repository: PalavyrRepository,
         nodeTypeOptions: NodeTypeOptions,
         rawNode: ConvoNode,
         nodeList: ConvoNode[],
-        setTreeWithHistory: (updatedTree: PalavyrLinkedList) => void,
+        setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
         leftMostBranch: boolean
     ) {
-        let palavyrNode: PalavyrNode;
+        let palavyrNode: IPalavyrNode;
         switch (rawNode.isImageNode) {
             case true:
                 palavyrNode = new PalavyrImageNode(container, nodeTypeOptions, repository, rawNode, nodeList, setTreeWithHistory, leftMostBranch);
@@ -312,7 +302,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
         return this.childNodeReferences;
     }
 
-    public containsChildReference(node: PalavyrNode) {
+    public containsChildReference(node: IPalavyrNode) {
         return this.childNodeReferences.contains(node.nodeId);
     }
 
@@ -369,13 +359,13 @@ export abstract class PalavyrNode implements IPalavyrNode {
         return () => {
             return (
                 <>
-                    <div className={`tree-item tree-item-${this.nodeId}`}>
+                    <div className={`tree-item`}>
                         <div className="tree-block-wrap">{this.renderNodeInterface()()}</div>
                         <div className="tree-row">
                             {this.childNodeReferences.NotEmpty() &&
                                 (this.shouldRenderChildren ? (
                                     this.childNodeReferences.nodes.map(
-                                        (nextNode: PalavyrNode): React.ReactNode => {
+                                        (nextNode: IPalavyrNode): React.ReactNode => {
                                             const Node = nextNode.createPalavyrNodeComponent();
                                             return <Node key={nextNode.nodeId} />;
                                         }
@@ -389,6 +379,52 @@ export abstract class PalavyrNode implements IPalavyrNode {
                         return <SteppedLineTo key={`${line.to}-${line.from}-stepped-line`} from={line.from} to={line.to} />;
                     })}
                 </>
+            );
+        };
+    }
+
+    protected renderPalavyrNodeBody() {
+        type StyleProps = {
+            nodeText: string;
+            isImageNode: boolean;
+        };
+
+        const useStyles = makeStyles((theme) => ({
+            interfaceElement: {
+                paddingBottom: "1rem",
+            },
+            textCard: (props: StyleProps) => ({
+                border: "1px solid gray",
+                padding: "10px",
+                textAlign: "center",
+                color: props.nodeText === "Ask your question!" && !props.isImageNode ? "white" : "black",
+                background: props.nodeText === "Ask your question!" && !props.isImageNode ? "red" : "white",
+                "&:hover": {
+                    background: "lightgray",
+                    color: "black",
+                },
+            }),
+
+            editorStyle: {
+                fontSize: "12px",
+                color: "lightgray",
+            },
+        }));
+
+        interface INodeBody {
+            children: React.ReactNode;
+            openEditor(): void;
+        }
+
+        return ({ openEditor, children }: INodeBody) => {
+            const cls = useStyles();
+            return (
+                <Card elevation={0} className={classNames(cls.interfaceElement, cls.textCard)} onClick={openEditor}>
+                    {children}
+                    <Typography align="center" className={cls.editorStyle} onClick={openEditor}>
+                        Click to Edit
+                    </Typography>
+                </Card>
             );
         };
     }
@@ -521,11 +557,11 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.childNodeReferences.Clear();
         let parentReferences = this.parentNodeReferences;
 
-        const findMostRecentSplitMergeAndAssign = (parentNode: PalavyrNode) => {
+        const findMostRecentSplitMergeAndAssign = (parentNode: IPalavyrNode) => {
             let found = false;
             while (true) {
                 for (let index = 0; index < parentReferences.Length; index++) {
-                    if (parentNode.isSplitMergeType) {
+                    if (parentNode.isPalavyrSplitmergeStart) {
                         this.childNodeReferences.addReference(parentNode);
                         found = true;
                         return true;
@@ -551,24 +587,24 @@ export abstract class PalavyrNode implements IPalavyrNode {
         }
     }
 
-    private lock() {
+    public lock() {
         this.isAnabranchLocked = true;
         this.shouldDisableNodeTypeSelector = true;
     }
-    private unlock() {
+    public unlock() {
         // TODO: either make this anabranch specific or don't do; anabranch lock here. LOck means uneditable? Or just no nodeType changes?
         this.isAnabranchLocked = false;
         this.shouldDisableNodeTypeSelector = false;
     }
 
-    private setAsProvideInfo() {
+    public setAsProvideInfo() {
         this.nodeType = "ProvideInfo";
     }
 
-    public recursiveReferenceThisAnabranchOrigin(anabranchMergeNode: PalavyrNode) {
+    public recursiveReferenceThisAnabranchOrigin(anabranchMergeNode: IPalavyrNode) {
         if (!this.isAnabranchType) throw new Error("Attempting to call anabranch reference method from non-anabranch-origin node");
 
-        const recurseAndReference = (childReferences: NodeReferences) => {
+        const recurseAndReference = (childReferences: INodeReferences) => {
             for (let index = 0; index < childReferences.Length; index++) {
                 const childNode = childReferences.references[index];
                 childNode.lock();
@@ -585,15 +621,15 @@ export abstract class PalavyrNode implements IPalavyrNode {
         recurseAndReference(this.childNodeReferences);
     }
 
-    public recursiveDereferenceThisAnabranchOrigin(anabranchMergeNode: PalavyrNode) {
+    public recursiveDereferenceThisAnabranchOrigin(anabranchMergeNode: IPalavyrNode) {
         if (!this.isAnabranchType) throw new Error("Attempting to call anabranch reference method from non-anabranch-origin node");
 
-        const recurseAndDereference = (childReferences: NodeReferences) => {
+        const recurseAndDereference = (childReferences: INodeReferences) => {
             for (let index = 0; index < childReferences.Length; index++) {
                 const childNode = childReferences.references[index];
                 childNode.unlock();
 
-                const childReferencesAnabranchMerge = childNode.childNodeReferences.checkIfReferenceExistsOnCondition((x: PalavyrNode) => x.nodeId === anabranchMergeNode.nodeId);
+                const childReferencesAnabranchMerge = childNode.childNodeReferences.checkIfReferenceExistsOnCondition((x: IPalavyrNode) => x.nodeId === anabranchMergeNode.nodeId);
                 if (childReferencesAnabranchMerge && !childNode.isMemberOfLeftmostBranch) {
                     childNode.childNodeReferences.removeReference(anabranchMergeNode);
                     anabranchMergeNode.parentNodeReferences.removeReference(childNode);
@@ -636,81 +672,446 @@ export abstract class PalavyrNode implements IPalavyrNode {
     }
 }
 
-export class NodeReferences {
-    private nodeReferences: PalavyrNode[] = [];
+export class PalavyrTextNode extends PalavyrNode {
+    constructor(
+        containerList: IPalavyrLinkedList,
+        nodeTypeOptions: NodeTypeOptions,
+        repository: PalavyrRepository,
+        node: ConvoNode,
+        nodeList: ConvoNode[],
+        setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
+        leftmostBranch: boolean
+    ) {
+        super(containerList, nodeTypeOptions, repository, node, nodeList, setTreeWithHistory, leftmostBranch);
+    }
 
-    constructor(nodeReferences?: PalavyrNode[]) {
-        if (nodeReferences) {
-            nodeReferences.forEach((ref: PalavyrNode) => {
-                this.addReference(ref);
+    public renderNodeFace() {
+        const cls = useNodeInterfaceStyles();
+        return ({ openEditor }) => {
+            return this.renderPalavyrNodeBody()({
+                openEditor,
+                children: (
+                    <Typography className={cls.text} variant="body2" component="span" noWrap={false}>
+                        {this.userText}
+                    </Typography>
+                ),
             });
-        }
+        };
     }
 
-    public get nodes() {
-        return this.nodeReferences;
+    public renderNodeEditor() {
+        return ({ editorIsOpen, closeEditor }) => {
+            const [options, setOptions] = useState<Array<string>>([]);
+            const [textState, setText] = useState<string>("");
+
+            const handleUpdateNode = (value: string, valueOptions: string[]) => {
+                this.userText = value;
+                if (this.isMultiOptionType) {
+                    this.valueOptions = valueOptions;
+                }
+                this.setTreeWithHistory(this.palavyrLinkedList);
+            };
+
+            return (
+                <Dialog fullWidth open={editorIsOpen} onClose={closeEditor}>
+                    <DialogTitle>Edit a conversation node</DialogTitle>
+                    <DialogContent>{this.renderTextEditor(setText, setOptions, textState, options)()}</DialogContent>
+                    <DialogActions>
+                        <SaveOrCancel
+                            position="right"
+                            customSaveMessage="Node Text Updated"
+                            customCancelMessage="Changes cancelled"
+                            useSaveIcon={false}
+                            saveText="Update Node Text"
+                            onSave={async () => {
+                                handleUpdateNode(textState, options);
+                                closeEditor();
+                                return true;
+                            }}
+                            onCancel={closeEditor}
+                            timeout={200}
+                        />
+                    </DialogActions>
+                </Dialog>
+            );
+        };
     }
 
-    public get joinedReferenceString() {
-        return this.joinNodeChildrenStringArray(this.referenceStringArray);
+    public renderTextEditor(setText, setOptions, textState, options) {
+        return () => {
+            const [switchState, setSwitchState] = useState<boolean>(true);
+
+            useEffect(() => {
+                setText(this.userText);
+                if (this.isMultiOptionType && !isNullOrUndefinedOrWhitespace(this.valueOptions)) {
+                    setOptions(this.valueOptions);
+                }
+            }, [this]);
+
+            return (
+                <>
+                    <TextField margin="dense" value={textState} multiline rows={4} onChange={(event) => setText(event.target.value)} id="question" label="Question or Information" type="text" fullWidth />
+                    {this.renderMultiOptionInputs(setOptions, options, switchState, setSwitchState)()}
+                </>
+            );
+        };
     }
 
-    public get referenceStringArray() {
-        return this.nodeReferences.map((x) => x.nodeId);
+    public renderMultiOptionInputs(setOptions, options, switchState, setSwitchState) {
+        return () => {
+            const addMultiChoiceOptionsOnClick = () => {
+                options.push("");
+                setOptions(options);
+                setSwitchState(!switchState);
+            };
+            return (
+                <>
+                    {this.isMultiOptionType && this.shouldShowMultiOption && (
+                        <>
+                            <MultiChoiceOptions options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} addMultiChoiceOptionsOnClick={addMultiChoiceOptionsOnClick} />
+                        </>
+                    )}
+                </>
+            );
+        };
+    }
+}
+
+export class PalavyrImageNode extends PalavyrNode {
+    constructor(
+        containerList: IPalavyrLinkedList,
+        nodeTypeOptions: NodeTypeOptions,
+        repository: PalavyrRepository,
+        node: ConvoNode,
+        nodeList: ConvoNode[],
+        setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
+        leftmostBranch: boolean
+    ) {
+        super(containerList, nodeTypeOptions, repository, node, nodeList, setTreeWithHistory, leftmostBranch);
     }
 
-    public get references() {
-        return this.nodeReferences;
+    public renderNodeFace() {
+        return ({ openEditor }) => {
+            const [imageLink, setImageLink] = useState<string>("");
+            const [imageName, setImageName] = useState<string>("");
+            const [currentImageId, setCurrentImageId] = useState<string>("");
+
+            const loadImage = useCallback(async () => {
+                if (this.imageId !== null && this.imageId !== undefined) {
+                    const fileLinks = await this.repository.Configuration.Images.getImages([this.imageId]);
+                    const fileLink = fileLinks[0];
+                    if (!fileLink.isUrl) {
+                        const presignedUrl = await this.repository.Configuration.Images.getSignedUrl(fileLink.link);
+                        setImageLink(presignedUrl);
+                        setImageName(fileLink.fileName);
+                        setCurrentImageId(fileLink.fileId);
+                    }
+                }
+            }, [this.palavyrLinkedList]);
+
+            useEffect(() => {
+                loadImage();
+            }, [this.palavyrLinkedList]);
+
+            return this.renderPalavyrNodeBody()({ openEditor, children: <CustomImage imageName={imageName} imageLink={imageLink} titleVariant="body1" /> });
+        };
     }
 
-    public get Length() {
-        return this.nodeReferences.length;
+    public renderNodeEditor() {
+        return ({ editorIsOpen, closeEditor }) => {
+            const [imageLink, setImageLink] = useState<string>("");
+            const [imageName, setImageName] = useState<string>("");
+            const [currentImageId, setCurrentImageId] = useState<string>("");
+
+            const loadImage = useCallback(async () => {
+                if (this.imageId !== null && this.imageId !== undefined) {
+                    const fileLinks = await this.repository.Configuration.Images.getImages([this.imageId]);
+                    const fileLink = fileLinks[0];
+                    if (!fileLink.isUrl) {
+                        const presignedUrl = await this.repository.Configuration.Images.getSignedUrl(fileLink.link);
+                        setImageLink(presignedUrl);
+                        setImageName(fileLink.fileName);
+                        setCurrentImageId(fileLink.fileId);
+                    }
+                }
+            }, [this.palavyrLinkedList]);
+
+            useEffect(() => {
+                loadImage();
+            }, [this.palavyrLinkedList]);
+
+            return (
+                <Dialog fullWidth open={editorIsOpen} onClose={closeEditor}>
+                    <DialogTitle>Edit a conversation node</DialogTitle>
+                    <DialogContent>
+                        {this.imageId === null
+                            ? this.renderImageEditorWhenEmpty(closeEditor, currentImageId, setImageLink, setImageName)()
+                            : this.renderImageEditorWhenFull(closeEditor, imageName, imageLink, currentImageId, setImageLink, setImageName)()}
+                    </DialogContent>
+                </Dialog>
+            );
+        };
     }
 
-    private joinNodeChildrenStringArray(nodeChildrenStrings: string[]) {
-        return nodeChildrenStrings.join(",");
+    public renderImageEditorWhenEmpty(closeEditor, currentImageId, setImageLink, setImageName) {
+        return () => {
+            return (
+                <>
+                    <Typography align="center" variant="h6">
+                        Upload an image
+                    </Typography>
+                    {this.renderImageUpload(closeEditor, currentImageId, setImageLink, setImageName, false)()}
+                </>
+            );
+        };
     }
 
-    public contains(nodeId: string) {
-        return this.nodeReferences.filter((x: PalavyrNode) => x.nodeId === nodeId).length > 0;
+    public renderImageEditorWhenFull(closeEditor: () => void, imageName, imageLink, currentImageId, setImageLink, setImageName) {
+        return () => {
+            return (
+                <>
+                    <CustomImage imageName={imageName} imageLink={imageLink} />
+                    <Divider variant="fullWidth" style={{ marginBottom: "1rem" }} />
+                    <Typography align="center" variant="h6">
+                        Choose a new image
+                    </Typography>
+                    {this.renderImageUpload(closeEditor, currentImageId, setImageLink, setImageName, false)()}
+                    <Divider />
+                </>
+            );
+        };
     }
 
-    public addReference(node: PalavyrNode) {
-        if (!this.contains(node.nodeId)) {
-            this.nodeReferences.push(node);
-        }
+    public renderImageUpload(closeEditor: () => void, currentImageId, setImageLink, setImageName, initialState = false) {
+        return () => {
+            const cls = useNodeInterfaceStyles();
+            const history = useHistory();
+            const [uploadModal, setUploadModal] = useState(false);
+
+            const { setIsLoading, setSuccessOpen, setSuccessText, planTypeMeta } = useContext(DashboardContext);
+            useEffect(() => {
+                if (planTypeMeta && !planTypeMeta.allowedImageUpload) {
+                    history.push("/dashboard/please-subscribe");
+                }
+            }, [planTypeMeta]);
+
+            const toggleModal = () => {
+                setUploadModal(!uploadModal);
+            };
+
+            const fileSave = async (files: File[]) => {
+                setIsLoading(true);
+                const formData = new FormData();
+
+                let result: FileLink[];
+                if ((files.length = 1)) {
+                    formData.append("files", files[0]);
+                    result = await this.repository.Configuration.Images.saveSingleImage(formData);
+                    setSuccessText("Image Uploaded");
+                } else if (files.length > 1) {
+                    files.forEach((file: File) => {
+                        formData.append("files", file);
+                    });
+                    result = await this.repository.Configuration.Images.saveMultipleImages(formData);
+                    setSuccessText("Images Uploaded");
+                } else {
+                    return;
+                }
+
+                await this.repository.Configuration.Images.savePreExistingImage(result[0].fileId, this.nodeId);
+                setIsLoading(false);
+                setSuccessOpen(true);
+                closeEditor();
+            };
+
+            return (
+                <>
+                    <div className={cls.imageBlock}>{this.renderSelectFromExistingImages(currentImageId, setImageLink, setImageName)()}</div>
+                    <Divider />
+                    <div className={cls.imageBlock}>
+                        {planTypeMeta && planTypeMeta.allowedImageUpload && (
+                            <Upload
+                                dropzoneType="area"
+                                initialState={initialState}
+                                modalState={uploadModal}
+                                toggleModal={() => toggleModal()}
+                                handleFileSave={(files: File[]) => fileSave(files)}
+                                summary="Upload a file."
+                                buttonText="Upload"
+                                uploadDetails={<Typography>Upload an image, pdf, or other document you wish to share with your users</Typography>}
+                                acceptedFiles={["image/png", "image/jpg"]}
+                            />
+                        )}
+                    </div>
+                </>
+            );
+        };
     }
 
-    public Empty() {
-        return this.nodeReferences.length === 0;
+    public renderSelectFromExistingImages(currentImageId, setImageLink, setImageName) {
+        return () => {
+            const [options, setOptions] = useState<FileLink[] | null>(null);
+            const [label, setLabel] = useState<string>("");
+
+            const onChange = async (_: any, option: FileLink) => {
+                const convoNode = await this.repository.Configuration.Images.savePreExistingImage(option.fileId, this.nodeId);
+                setLabel(option.fileName);
+
+                this.imageId = option.fileId;
+
+                if (!option.isUrl) {
+                    const presignedUrl = await this.repository.Configuration.Images.getSignedUrl(option.link);
+                    setImageLink(presignedUrl);
+                    setImageName(option.fileName);
+                }
+                this.setTreeWithHistory(this.palavyrLinkedList);
+            };
+
+            const groupGetter = (val: FileLink) => val.fileName;
+
+            const loadOptions = useCallback(async () => {
+                const fileLinks = await this.repository.Configuration.Images.getImages();
+                const sortedOptions = sortByPropertyAlphabetical(groupGetter, fileLinks);
+                const filteredOptions = sortedOptions.filter((link: FileLink) => {
+                    return link.fileId !== currentImageId;
+                });
+                setOptions(filteredOptions);
+            }, [currentImageId]);
+
+            useEffect(() => {
+                loadOptions();
+            }, [currentImageId]);
+
+            return (
+                <PalavyrAccordian title="Select a file you've already uploaded" initialState={false}>
+                    {options && <PalavyrAutoComplete label={label} options={options} shouldDisableSelect={false} onChange={onChange} getOptionLabel={(option) => option.fileName} />}
+                </PalavyrAccordian>
+            );
+        };
+    }
+}
+
+export class PalavyrNodeOptionals {
+    private palavyrNode: IPalavyrNode;
+    constructor(node: IPalavyrNode) {
+        this.palavyrNode = node;
     }
 
-    public NotEmpty() {
-        return this.nodeReferences.length > 0;
+    public renderSplitMergeAnchorLabel() {
+        const shouldShow = this.palavyrNode.isPalavyrSplitmergeMergePoint;
+        return () => {
+            return shouldShow ? <Typography>This is the primary sibling. Branches will merge to this node.</Typography> : <></>;
+        };
     }
 
-    public OrderByOptionPath() {
-        this.nodeReferences = sortByPropertyAlphabetical((x: PalavyrNode) => x.optionPath.toUpperCase(), this.nodeReferences);
+    public renderAnabranchMergeCheckBox() {
+        const disabled = this.palavyrNode.isPalavyrAnabranchStart && this.palavyrNode.isPalavyrAnabranchEnd;
+
+        const onChange = (event: { target: { checked: boolean } }, setAnabranchMergeChecked: SetState<boolean>) => {
+            const checked = event.target.checked;
+            const origin = this.palavyrNode.anabranchContext.anabranchOriginId;
+            const anabranchOriginNode = this.palavyrNode.palavyrLinkedList.findNode(origin);
+
+            if (checked) {
+                this.palavyrNode.isPalavyrAnabranchEnd = true;
+                anabranchOriginNode.recursiveReferenceThisAnabranchOrigin(this.palavyrNode);
+                setAnabranchMergeChecked(true);
+            } else {
+                this.palavyrNode.isPalavyrAnabranchEnd = false;
+                setAnabranchMergeChecked(false);
+                anabranchOriginNode.recursiveDereferenceThisAnabranchOrigin(this.palavyrNode);
+            }
+            this.palavyrNode.UpdateTree();
+        };
+
+        const shouldShow = () => {
+            const isChildOfAnabranchType = this.palavyrNode.parentNodeReferences.checkIfReferenceExistsOnCondition((node: IPalavyrNode) => node.isPalavyrAnabranchStart);
+            return (
+                this.palavyrNode.isPalavyrSplitmergeMember && !this.palavyrNode.isTerminal && !isChildOfAnabranchType && (this.palavyrNode.isMemberOfLeftmostBranch || this.palavyrNode.isPalavyrAnabranchStart)
+            ); // && decendentLevelFromAnabranch < 4; TODO
+        };
+
+        return () => {
+            const [anabranchMergeChecked, setAnabranchMergeChecked] = useState<boolean>(false);
+
+            return shouldShow() ? (
+                <Tooltip title="This option locks nodes internal to the Anbranch. You cannot change node types when this is set.">
+                    <NodeCheckBox disabled={disabled} label="Set as Anabranch merge point" checked={anabranchMergeChecked} onChange={(event) => onChange(event, setAnabranchMergeChecked)} />
+                </Tooltip>
+            ) : (
+                <></>
+            );
+        };
     }
 
-    public Clear() {
-        this.nodeReferences = [];
+    public renderUnsetNodeButton() {
+        const shouldShow = () => {
+            return (
+                this.palavyrNode.nodeIsSet() &&
+                (!this.palavyrNode.isPalavyrAnabranchMember || this.palavyrNode.isAnabranchLocked) &&
+                !this.palavyrNode.isPalavyrSplitmergeMergePoint &&
+                !this.palavyrNode.isAnabranchLocked
+            );
+        };
+
+        const onClick = () => {
+            this.palavyrNode.removeSelf();
+            this.palavyrNode.UpdateTree();
+        };
+
+        return () => {
+            return shouldShow() ? <SinglePurposeButton buttonText="Unset Node" variant="outlined" color="primary" onClick={onClick} /> : <></>;
+        };
     }
 
-    public getByIndex(index: number) {
-        try {
-            return this.nodeReferences[index];
-        } catch {
-            throw new Error(`Failed to find node reference index: Index: ${index} out of range ${this.Length}`);
-        }
+    public renderAnabranchMergeNodeLabel() {
+        return () => {
+            return this.palavyrNode.isPalavyrAnabranchEnd ? <Typography style={{ fontWeight: "bolder" }}>This is the Anabranch Merge Node</Typography> : <></>;
+        };
     }
 
-    public removeReference(palavyrNode: PalavyrNode) {
-        this.nodeReferences.filter((node: PalavyrNode) => node.nodeId !== palavyrNode.nodeId);
+    public renderShowResponseInPdf() {
+        const shouldShow = () => {
+            const nodeTypesThatDoNotProvideFeedback = ["ProvideInfo"];
+            return !this.palavyrNode.isTerminal && !nodeTypesThatDoNotProvideFeedback.includes(this.palavyrNode.nodeType);
+        };
+        const onChange = (event: { target: { checked: boolean } }) => {
+            const checked = event.target.checked;
+            this.palavyrNode.shouldPresentResponse = checked;
+            this.palavyrNode.setTreeWithHistory(this.palavyrNode.palavyrLinkedList);
+        };
+
+        return () => {
+            return shouldShow() ? <NodeCheckBox label="Show response in PDF" checked={this.palavyrNode.shouldPresentResponse} onChange={onChange} /> : <></>;
+        };
     }
 
-    public checkIfReferenceExistsOnCondition(condition: (nodeReference: PalavyrNode) => boolean) {
-        const result = this.nodeReferences.map(condition);
-        return result.some((x) => x); // TODO: Check this works;
+    public renderShowMergeWithPrimarySiblingBranchOption() {
+        const shouldShow = () => {
+            return (
+                this.palavyrNode.isPalavyrSplitmergeMember &&
+                this.palavyrNode.isPalavyrSplitmergePrimarybranch &&
+                this.palavyrNode.nodeIsSet() &&
+                !this.palavyrNode.isTerminal &&
+                !this.palavyrNode.isMultiOptionType &&
+                this.palavyrNode.isPenultimate()
+            );
+        };
+
+        const onClick = async (event: { target: { checked: boolean } }, setMergeBoxChecked: SetState<boolean>) => {
+            const checked = event.target.checked;
+            setMergeBoxChecked(checked);
+            if (checked) {
+                this.palavyrNode.RouteToMostRecentSplitMerge();
+            } else {
+                // const thing = this.palavyrNode.parentNodeReferences.references[0]
+                await this.palavyrNode.addDefaultChild("Continue");
+            }
+        };
+
+        return () => {
+            const [mergeBoxChecked, setMergeBoxChecked] = useState<boolean>(this.palavyrNode.isPalavyrSplitmergeEnd);
+            return shouldShow() ? <NodeCheckBox label="Merge with primary sibling branch" checked={mergeBoxChecked} onChange={(event) => onClick(event, setMergeBoxChecked)} /> : <></>;
+        };
     }
 }

@@ -54,7 +54,7 @@ export const StructuredConvoTree = () => {
     const setTreeWithHistory = (updatedNodeList: PalavyrLinkedList) => {
         const freshNodeList = cloneDeep(updatedNodeList);
         historyTracker.addConversationHistoryToQueue(freshNodeList, conversationHistoryPosition, conversationHistory);
-        setLinkedNodes(linkedNodeList);
+        setLinkedNodes(freshNodeList);
     };
 
     const loadNodes = useCallback(async () => {
@@ -119,7 +119,7 @@ export const StructuredConvoTree = () => {
 
     const resetTree = async () => {
         if (linkedNodeList && planTypeMeta) {
-            const head = linkedNodeList.rootNode.compileConvoNode(areaIdentifier);
+            const head = linkedNodeList.retrieveCleanHeadNode().compileConvoNode(areaIdentifier);
             const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
             const newList = new PalavyrLinkedList([head], nodeTypeOptions, areaIdentifier, () => null);
             setTreeWithHistory(newList);

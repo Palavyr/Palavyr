@@ -39,7 +39,7 @@ export const Line = ({ x0, x1, y0, y1, borderColor, borderStyle, borderWidth, zI
         width: `${length}px`,
         zIndex: z,
         transform: `rotate(${angle}deg)`,
-        transformOrigin: "0 0",
+        transformOrigin: "0px 0px",
     };
 
     const defaultStyle = {
