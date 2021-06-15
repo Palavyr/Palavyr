@@ -32,6 +32,9 @@ export interface INodeReferences {
     getByIndex(index: number): IPalavyrNode;
     removeReference(palavyrNode: IPalavyrNode): void;
     checkIfReferenceExistsOnCondition(condition: (nodeReference: IPalavyrNode) => boolean): boolean;
+    truncateAt(index: number): void;
+    applyOptionPaths(valueOptions: string[]): void;
+    collectPathOptions(): string[];
 }
 
 export interface IPalavyrNode {

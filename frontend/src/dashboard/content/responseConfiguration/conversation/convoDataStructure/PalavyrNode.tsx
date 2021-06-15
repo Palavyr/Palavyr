@@ -24,6 +24,7 @@ import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { NodeCheckBox } from "../nodes/nodeInterface/NodeCheckBox";
 
 import "./stylesPalavyrNode.css";
+import { createDefaultNode } from "./defaultNode";
 
 export abstract class PalavyrNode implements IPalavyrNode {
     // used in widget resource
@@ -217,33 +218,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
     }
 
     public async addDefaultChild(optionPath: string) {
-        // const defaultNode = (await this.repository.Conversations.GetDefaultConversationNode()) as ConvoNode;
-        const defaultNode: ConvoNode = {
-            IsSplitMergeMergePoint: false,
-            nodeId: "",
-            nodeType: "",
-            text: "Ask your question!",
-            nodeChildrenString: "",
-            isRoot: false,
-            fallback: false,
-            isCritical: false,
-            areaIdentifier: "",
-            optionPath: optionPath,
-            valueOptions: "",
-            isMultiOptionType: false,
-            isTerminalType: false,
-            isSplitMergeType: false,
-            shouldRenderChildren: true,
-            shouldShowMultiOption: false,
-            isAnabranchMergePoint: false,
-            isAnabranchType: false,
-            nodeComponentType: "",
-            isDynamicTableNode: false,
-            resolveOrder: 0,
-            dynamicType: "",
-            isImageNode: false,
-            imageId: null,
-        };
+        const defaultNode = createDefaultNode(optionPath);
         const newPalavyrNode = PalavyrNode.convertToPalavyrNode(
             this.palavyrLinkedList,
             this.repository,
@@ -254,7 +229,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
             this.isMemberOfLeftmostBranch
         );
         this.addNewNodeReferenceAndConfigure(newPalavyrNode, this);
-        this.UpdateTree();
+        // this.UpdateTree();
     }
 
     public addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode) {
@@ -359,15 +334,17 @@ export abstract class PalavyrNode implements IPalavyrNode {
         return () => {
             return (
                 <>
-                    <div className={`tree-item`}>
-                        <div className="tree-block-wrap">{this.renderNodeInterface()()}</div>
-                        <div className="tree-row">
+                    <div className={classNames("tree-item", this.nodeId)}>
+                        <div style={{ borderColor: "2px solid black" }} className={`tree-block-wrap`}>
+                            {this.renderNodeInterface()()}
+                        </div>
+                        <div key={this.nodeId} className="tree-row">
                             {this.childNodeReferences.NotEmpty() &&
                                 (this.shouldRenderChildren ? (
                                     this.childNodeReferences.nodes.map(
-                                        (nextNode: IPalavyrNode): React.ReactNode => {
+                                        (nextNode: IPalavyrNode, index: number): React.ReactNode => {
                                             const Node = nextNode.createPalavyrNodeComponent();
-                                            return <Node key={nextNode.nodeId} />;
+                                            return <Node key={nextNode.nodeId + index.toString()} />;
                                         }
                                     )
                                 ) : (
@@ -469,8 +446,8 @@ export abstract class PalavyrNode implements IPalavyrNode {
                     return;
                 }
 
-                // changeNodeType(node, nodeList, setNodes, nodeOption, nodeIdentity, selectionCallback);
-                this.convertTo(nodeOption);
+                this.createOrTruncateChildNodes(nodeOption);
+                this.convertThisNodeTo(nodeOption);
                 this.setTreeWithHistory(this.palavyrLinkedList);
             };
 
@@ -483,7 +460,44 @@ export abstract class PalavyrNode implements IPalavyrNode {
         };
     }
 
-    private convertTo(nodeOption: NodeOption) {
+    private createOrTruncateChildNodes(nodeOption: NodeOption) {
+        //                                  3                                1         =  + 2     (we need to add 2 new default nodes)
+        //                                  1                                 3         =  -2 (we need to truncate the last two nodes)
+
+        const valueOptionDifference = nodeOption.valueOptions.length === 0 ? 0 : nodeOption.valueOptions.length - this.childNodeReferences.Length;
+
+        if (valueOptionDifference > 0) {
+            for (let index = 0; index < valueOptionDifference; index++) {
+                this.addDefaultChild("default"); // autoreferences the parent and child
+            }
+        } else if (valueOptionDifference < 0) {
+            this.childNodeReferences.truncateAt(valueOptionDifference);
+        }
+        this.updateChildNodePathOptions(nodeOption);
+    }
+
+    private updateChildNodePathOptions(nodeOption: NodeOption) {
+        if (this.isMultiOptionType) {
+            // yes/no, or mulitiopton continue/paths
+            if (nodeOption.isMultiOptionType) {
+                this.childNodeReferences.applyOptionPaths(nodeOption.valueOptions);
+            } else {
+                this.childNodeReferences.applyOptionPaths(["Continue"]);
+            }
+        } else {
+            if (nodeOption.isMultiOptionType) {
+                if (nodeOption.valueOptions.length > 0) {
+                    this.childNodeReferences.applyOptionPaths(nodeOption.valueOptions);
+                } else {
+                    this.valueOptions = this.childNodeReferences.collectPathOptions();
+                }
+            } else {
+                this.childNodeReferences.applyOptionPaths(["Continue"]);
+            }
+        }
+    }
+
+    private convertThisNodeTo(nodeOption: NodeOption) {
         this.nodeType = nodeOption.value;
         this.isCurrency = nodeOption.isCurrency;
         this.isDynamicTableNode = nodeOption.isDynamicType;
@@ -496,6 +510,10 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.shouldShowMultiOption = nodeOption.shouldShowMultiOption;
         this.valueOptions = nodeOption.valueOptions;
         this.dynamicType = nodeOption.dynamicType;
+    }
+
+    private updateChildNodeReferences(valueOptions: string[]) {
+        // need to transfer the value options to the path options;
     }
 
     abstract renderNodeEditor(): ({ editorIsOpen, closeEditor }) => JSX.Element;
@@ -519,8 +537,8 @@ export abstract class PalavyrNode implements IPalavyrNode {
             });
 
             return (
-                <Card className={classNames(cls.root, this.nodeId)} variant="outlined">
-                    <CardContent className={cls.card}>
+                <Card className={classNames(cls.root)} variant="outlined">
+                    <CardContent className={classNames(cls.card, this.nodeId)}>
                         {showDebugData && <DataLogging debugData={this.compileDebug()} nodeChildren={this.nodeChildrenString} nodeId={this.nodeId} />}
                         {this.renderNodeHeader()({ isRoot: this.isRoot, optionPath: this.optionPath })}
                         {this.renderNodeFace()({ openEditor })}
@@ -701,7 +719,7 @@ export class PalavyrTextNode extends PalavyrNode {
 
     public renderNodeEditor() {
         return ({ editorIsOpen, closeEditor }) => {
-            const [options, setOptions] = useState<Array<string>>([]);
+            const [options, setOptions] = useState<string[]>([]);
             const [textState, setText] = useState<string>("");
 
             const handleUpdateNode = (value: string, valueOptions: string[]) => {
@@ -737,16 +755,16 @@ export class PalavyrTextNode extends PalavyrNode {
         };
     }
 
-    public renderTextEditor(setText, setOptions, textState, options) {
+    public renderTextEditor(setText: SetState<string>, setOptions: SetState<string[]>, textState: string, options: string[]) {
         return () => {
             const [switchState, setSwitchState] = useState<boolean>(true);
 
             useEffect(() => {
                 setText(this.userText);
-                if (this.isMultiOptionType && !isNullOrUndefinedOrWhitespace(this.valueOptions)) {
+                if (this.isMultiOptionType){ //&& !isNullOrUndefinedOrWhitespace(this.valueOptions)) {
                     setOptions(this.valueOptions);
                 }
-            }, [this]);
+            }, [options]);
 
             return (
                 <>
@@ -757,7 +775,7 @@ export class PalavyrTextNode extends PalavyrNode {
         };
     }
 
-    public renderMultiOptionInputs(setOptions, options, switchState, setSwitchState) {
+    public renderMultiOptionInputs(setOptions: SetState<string[]>, options: string[], switchState: boolean, setSwitchState: SetState<boolean>) {
         return () => {
             const addMultiChoiceOptionsOnClick = () => {
                 options.push("");

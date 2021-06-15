@@ -290,8 +290,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
             {
                 Value = StringName;
                 Text = "Yes or No";
-                PathOptions = new List<string>() {"Yes", "No"};
-                ValueOptions = new List<string>() {"Yes", "No"};
+                PathOptions = new List<string>() {"No", "Yes"};
+                ValueOptions = new List<string>() {"No", "Yes"};
                 IsMultiOptionType = true; // set to no if we don't want to allow the node value options presented to the user to change. 
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
@@ -316,8 +316,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
             {
                 Value = StringName;
                 Text = "Yes, No, Not Sure";
-                PathOptions = new List<string>() {"Yes", "No", "Not Sure"};
-                ValueOptions = new List<string>() {"Yes", "No", "Not Sure"};
+                PathOptions = new List<string>() {"No", "Not Sure", "Yes"};
+                ValueOptions = new List<string>() {"No", "Not Sure", "Yes"};
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
@@ -341,8 +341,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
             {
                 Value = StringName;
                 Text = "Yes / Not Sure, No";
-                PathOptions = new List<string>() {"Yes / Not Sure", "No"};
-                ValueOptions = new List<string>() {"Yes / Not Sure", "No"};
+                PathOptions = new List<string>() {"No", "Yes / Not Sure"};
+                ValueOptions = new List<string>() {"No", "Yes / Not Sure"};
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
@@ -366,8 +366,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
             {
                 Text = "Yes, No / Not Sure";
                 Value = StringName;
-                PathOptions = new List<string>() {"Yes", "No / Not Sure"};
-                ValueOptions = new List<string>() {"Yes", "No / Not Sure"};
+                PathOptions = new List<string>() {"No / Not Sure", "Yes"};
+                ValueOptions = new List<string>() {"No / Not Sure", "Yes"};
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;

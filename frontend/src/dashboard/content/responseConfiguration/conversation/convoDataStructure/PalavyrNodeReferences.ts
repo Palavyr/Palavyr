@@ -11,6 +11,19 @@ export class NodeReferences implements INodeReferences {
             });
         }
     }
+    collectPathOptions(): string[] {
+       const pathOptions = this.nodeReferences.map((x: IPalavyrNode) => {
+           return x.optionPath;
+       })
+       return pathOptions;
+    }
+
+    public applyOptionPaths(valueOptions: string[]): void {
+        for (let index = 0; index < this.nodeReferences.length; index++) {
+            const node = this.nodeReferences[index];
+            node.optionPath = valueOptions[index];
+        }
+    }
 
     public get nodes() {
         return this.nodeReferences;
@@ -77,5 +90,9 @@ export class NodeReferences implements INodeReferences {
     public checkIfReferenceExistsOnCondition(condition: (nodeReference: IPalavyrNode) => boolean) {
         const result = this.nodeReferences.map(condition);
         return result.some((x) => x); // TODO: Check this works;
+    }
+
+    public truncateAt(index: number) {
+        this.nodeReferences = this.nodeReferences.slice(0, index);
     }
 }
