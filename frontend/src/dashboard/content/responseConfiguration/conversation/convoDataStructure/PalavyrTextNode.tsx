@@ -40,18 +40,22 @@ export class PalavyrTextNode extends PalavyrNode {
             const [options, setOptions] = useState<string[]>([]);
             const [text, setText] = useState<string>("");
 
-            const handleUpdateNode = (value: string, valueOptions: string[]) => {
-                this.userText = value;
-                if (this.isMultiOptionType) {
-                    this.valueOptions = valueOptions;
+            const handleUpdateNode = (userText: string, valueOptions: string[]) => {
+                this.userText = userText;
+                if (this.isMultiOptionType && this.shouldShowMultiOption) {
+                    this.createOrTruncateChildNodes(valueOptions, this.isMultiOptionType);
+                } else {
+                    this.setTreeWithHistory(this.palavyrLinkedList);
                 }
-                this.setTreeWithHistory(this.palavyrLinkedList);
             };
+
+            // isMultiOptionType // is either by path or continue, or is a dynamic type as path or continue
+            // this.shouldShowMultiOption // true: by path, false: continue
 
             return (
                 <Dialog fullWidth open={editorIsOpen} onClose={closeEditor}>
                     <DialogTitle>Edit a conversation node</DialogTitle>
-                    <DialogContent>{this.isMultiOptionType ? this.renderMultiChoiceTextEditor(text, setText, options, setOptions) : this.renderTextEditor(setText, text)()}</DialogContent>
+                    <DialogContent>{this.isMultiOptionType ? this.renderMultiChoiceTextEditor(text, setText, options, setOptions)() : this.renderTextEditor(setText, text)()}</DialogContent>
                     <DialogActions>
                         <SaveOrCancel
                             position="right"
@@ -74,27 +78,24 @@ export class PalavyrTextNode extends PalavyrNode {
     }
 
     public renderMultiChoiceTextEditor(text: string, setText: SetState<string>, options: string[], setOptions: SetState<string[]>) {
-        const [switchState, setSwitchState] = useState<boolean>(true);
-
-        useEffect(() => {
-            setText(this.userText);
-            setOptions(this.valueOptions);
-        }, [options]);
-
-        const addMultiChoiceOptionsOnClick = () => {
-            options.push("");
-            setOptions(options);
-            setSwitchState(!switchState);
-        };
         return () => {
+            const [switchState, setSwitchState] = useState<boolean>(true);
+
+            useEffect(() => {
+                setText(this.userText);
+                setOptions(this.valueOptions);
+            }, [options, this.valueOptions]);
+
+            const addMultiChoiceOptionsOnClick = () => {
+                options.push("");
+                // need to add node reference if we should be making paths (multi choice as path)
+                setOptions(options);
+                setSwitchState(!switchState);
+            };
             return (
                 <>
                     <TextField margin="dense" value={text} multiline rows={4} onChange={(event) => setText(event.target.value)} id="question" label="Question or Information" type="text" fullWidth />
-                    {this.shouldShowMultiOption && (
-                        <>
-                            <MultiChoiceOptions options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} addMultiChoiceOptionsOnClick={addMultiChoiceOptionsOnClick} />
-                        </>
-                    )}
+                    <MultiChoiceOptions options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} addMultiChoiceOptionsOnClick={addMultiChoiceOptionsOnClick} />
                 </>
             );
         };

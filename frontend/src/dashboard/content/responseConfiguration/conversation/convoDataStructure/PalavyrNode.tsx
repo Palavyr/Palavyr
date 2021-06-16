@@ -439,7 +439,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
                     return;
                 }
 
-                this.createOrTruncateChildNodes(nodeOption);
+                this.createOrTruncateChildNodes(nodeOption.valueOptions, nodeOption.isMultiOptionType);
                 this.convertThisNodeTo(nodeOption);
                 this.setTreeWithHistory(this.palavyrLinkedList);
             };
@@ -453,34 +453,34 @@ export abstract class PalavyrNode implements IPalavyrNode {
         };
     }
 
-    private createOrTruncateChildNodes(nodeOption: NodeOption) {
-        //                                  3                                1         =  + 2     (we need to add 2 new default nodes)
-        //                                  1                                 3         =  -2 (we need to truncate the last two nodes)
-
-        const valueOptionDifference = nodeOption.valueOptions.length === 0 ? 0 : nodeOption.valueOptions.length - this.childNodeReferences.Length;
+    public createOrTruncateChildNodes(valueOptions: string[], transitionTargetIsMultiOptionType: boolean) {
+        const valueOptionDifference = valueOptions.length === 0 ? 0 : valueOptions.length - this.childNodeReferences.Length;
 
         if (valueOptionDifference > 0) {
+            // add nodes
             for (let index = 0; index < valueOptionDifference; index++) {
                 this.addDefaultChild("default"); // autoreferences the parent and child
             }
         } else if (valueOptionDifference < 0) {
+            // truncate nodes
             this.childNodeReferences.truncateAt(valueOptionDifference);
         }
-        this.updateChildNodePathOptions(nodeOption);
+        this.updateChildNodePathOptions(valueOptions, transitionTargetIsMultiOptionType);
     }
 
-    private updateChildNodePathOptions(nodeOption: NodeOption) {
+    private updateChildNodePathOptions(valueOptions: string[], transitionTargetIsMultiOptionType: boolean) {
         if (this.isMultiOptionType) {
             // yes/no, or mulitiopton continue/paths
-            if (nodeOption.isMultiOptionType) {
-                this.childNodeReferences.applyOptionPaths(nodeOption.valueOptions);
+            if (transitionTargetIsMultiOptionType) {
+                const currentValueOptions = this.childNodeReferences.collectPathOptions();
+                this.childNodeReferences.applyOptionPaths(currentValueOptions);
             } else {
                 this.childNodeReferences.applyOptionPaths(["Continue"]);
             }
         } else {
-            if (nodeOption.isMultiOptionType) {
-                if (nodeOption.valueOptions.length > 0) {
-                    this.childNodeReferences.applyOptionPaths(nodeOption.valueOptions);
+            if (transitionTargetIsMultiOptionType) {
+                if (valueOptions.length > 0) {
+                    this.childNodeReferences.applyOptionPaths(valueOptions);
                 } else {
                     this.valueOptions = this.childNodeReferences.collectPathOptions();
                 }
@@ -488,6 +488,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
                 this.childNodeReferences.applyOptionPaths(["Continue"]);
             }
         }
+        this.setTreeWithHistory(this.palavyrLinkedList);
     }
 
     private convertThisNodeTo(nodeOption: NodeOption) {
@@ -504,7 +505,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.valueOptions = nodeOption.valueOptions;
         this.dynamicType = nodeOption.dynamicType;
     }
-
 
     private renderNodeInterface() {
         return () => {
