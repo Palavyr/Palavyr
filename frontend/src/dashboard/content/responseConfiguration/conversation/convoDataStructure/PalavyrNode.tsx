@@ -1,29 +1,21 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
-import { Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Divider, makeStyles, TextField, Tooltip, Typography } from "@material-ui/core";
-import { ConvoNode, NodeTypeOptions, ValueOptionDelimiter, AlertType, NodeOption, LineMap, AnabranchContext, SplitmergeContext, LineLink, FileLink, SetState } from "@Palavyr-Types";
+import { Card, CardContent, makeStyles, Typography } from "@material-ui/core";
+import { ConvoNode, NodeTypeOptions, ValueOptionDelimiter, AlertType, NodeOption, LineMap, AnabranchContext, SplitmergeContext, LineLink } from "@Palavyr-Types";
 import classNames from "classnames";
-import { ConversationTreeContext, DashboardContext } from "dashboard/layouts/DashboardContext";
+import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import { DataLogging } from "../nodes/nodeInterface/nodeDebug/DataLogging";
 import { CustomNodeSelect } from "../nodes/nodeInterface/nodeSelector/CustomNodeSelect";
 import { SteppedLineTo } from "../treeLines/SteppedLineTo";
 import { useNodeInterfaceStyles } from "./nodeInterfaceStyles";
 import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "./Contracts";
 import { NodeReferences } from "./PalavyrNodeReferences";
-import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
-import { PalavyrAutoComplete } from "@common/components/PalavyrAutoComplete";
-import { sortByPropertyAlphabetical } from "@common/utils/sorting";
-import { useHistory } from "react-router-dom";
-import { Upload } from "../../uploadable/Upload";
-import { CustomImage } from "../nodes/nodeInterface/nodeEditor/imageNode/CustomImage";
-import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { MultiChoiceOptions } from "../nodes/nodeInterface/nodeEditor/MultiChoiceOptions";
-import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
-import { NodeCheckBox } from "../nodes/nodeInterface/NodeCheckBox";
 
 import { createDefaultNode } from "./defaultNode";
+import { PalavyrNodeOptionals } from "./PalavyrNodeOptionals";
+const treelinkClassName = "tree-line-link";
 
 export abstract class PalavyrNode implements IPalavyrNode {
     // used in widget resource
@@ -158,6 +150,9 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.fallback = node.fallback;
     }
 
+    abstract renderNodeEditor(): ({ editorIsOpen, closeEditor }) => JSX.Element;
+    abstract renderNodeFace(): ({ openEditor }) => JSX.Element;
+
     public UpdateTree() {
         this.setTreeWithHistory(this.palavyrLinkedList);
     }
@@ -218,7 +213,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
     public async addDefaultChild(optionPath: string) {
         const defaultNode = createDefaultNode(optionPath);
-        const newPalavyrNode = PalavyrNode.convertToPalavyrNode(
+        const newPalavyrNode = this.palavyrLinkedList.convertToPalavyrNode(
             this.palavyrLinkedList,
             this.repository,
             this.nodeTypeOptions,
@@ -228,7 +223,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
             this.isMemberOfLeftmostBranch
         );
         this.addNewNodeReferenceAndConfigure(newPalavyrNode, this);
-        // this.UpdateTree();
     }
 
     public addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode) {
@@ -239,29 +233,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
     public AddNewChildReference(newChildReference: IPalavyrNode) {
         this.childNodeReferences.addReference(newChildReference);
-    }
-
-    public static convertToPalavyrNode(
-        container: IPalavyrLinkedList,
-        repository: PalavyrRepository,
-        nodeTypeOptions: NodeTypeOptions,
-        rawNode: ConvoNode,
-        nodeList: ConvoNode[],
-        setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
-        leftMostBranch: boolean
-    ) {
-        let palavyrNode: IPalavyrNode;
-        switch (rawNode.isImageNode) {
-            case true:
-                palavyrNode = new PalavyrImageNode(container, nodeTypeOptions, repository, rawNode, nodeList, setTreeWithHistory, leftMostBranch);
-                break;
-            case false:
-                palavyrNode = new PalavyrTextNode(container, nodeTypeOptions, repository, rawNode, nodeList, setTreeWithHistory, leftMostBranch);
-                break;
-            default:
-                throw new Error("Node type couldn't be determined when construting the palavyr convo tree.");
-        }
-        return palavyrNode;
     }
 
     public updateNodeText(newText: string) {
@@ -354,7 +325,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
             }, []);
 
             const cls = useStyles();
-            const treelinkClassName = "LineLink";
             return (
                 <>
                     <div className={classNames(treelinkClassName, cls.treeItem)}>
@@ -535,12 +505,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.dynamicType = nodeOption.dynamicType;
     }
 
-    private updateChildNodeReferences(valueOptions: string[]) {
-        // need to transfer the value options to the path options;
-    }
 
-    abstract renderNodeEditor(): ({ editorIsOpen, closeEditor }) => JSX.Element;
-    abstract renderNodeFace(): ({ openEditor }) => JSX.Element;
     private renderNodeInterface() {
         return () => {
             const { showDebugData } = React.useContext(ConversationTreeContext);
@@ -709,451 +674,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
                     {nodeOptionals.renderAnabranchMergeNodeLabel()()}
                 </>
             );
-        };
-    }
-}
-
-export class PalavyrTextNode extends PalavyrNode {
-    constructor(
-        containerList: IPalavyrLinkedList,
-        nodeTypeOptions: NodeTypeOptions,
-        repository: PalavyrRepository,
-        node: ConvoNode,
-        nodeList: ConvoNode[],
-        setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
-        leftmostBranch: boolean
-    ) {
-        super(containerList, nodeTypeOptions, repository, node, nodeList, setTreeWithHistory, leftmostBranch);
-    }
-
-    public renderNodeFace() {
-        const cls = useNodeInterfaceStyles();
-        return ({ openEditor }) => {
-            return this.renderPalavyrNodeBody()({
-                openEditor,
-                children: (
-                    <Typography className={cls.text} variant="body2" component="span" noWrap={false}>
-                        {this.userText}
-                    </Typography>
-                ),
-            });
-        };
-    }
-
-    public renderNodeEditor() {
-        return ({ editorIsOpen, closeEditor }) => {
-            const [options, setOptions] = useState<string[]>([]);
-            const [textState, setText] = useState<string>("");
-
-            const handleUpdateNode = (value: string, valueOptions: string[]) => {
-                this.userText = value;
-                if (this.isMultiOptionType) {
-                    this.valueOptions = valueOptions;
-                }
-                this.setTreeWithHistory(this.palavyrLinkedList);
-            };
-
-            return (
-                <Dialog fullWidth open={editorIsOpen} onClose={closeEditor}>
-                    <DialogTitle>Edit a conversation node</DialogTitle>
-                    <DialogContent>{this.renderTextEditor(setText, setOptions, textState, options)()}</DialogContent>
-                    <DialogActions>
-                        <SaveOrCancel
-                            position="right"
-                            customSaveMessage="Node Text Updated"
-                            customCancelMessage="Changes cancelled"
-                            useSaveIcon={false}
-                            saveText="Update Node Text"
-                            onSave={async () => {
-                                handleUpdateNode(textState, options);
-                                closeEditor();
-                                return true;
-                            }}
-                            onCancel={closeEditor}
-                            timeout={200}
-                        />
-                    </DialogActions>
-                </Dialog>
-            );
-        };
-    }
-
-    public renderTextEditor(setText: SetState<string>, setOptions: SetState<string[]>, textState: string, options: string[]) {
-        return () => {
-            const [switchState, setSwitchState] = useState<boolean>(true);
-
-            useEffect(() => {
-                setText(this.userText);
-                if (this.isMultiOptionType) {
-                    //&& !isNullOrUndefinedOrWhitespace(this.valueOptions)) {
-                    setOptions(this.valueOptions);
-                }
-            }, [options]);
-
-            return (
-                <>
-                    <TextField margin="dense" value={textState} multiline rows={4} onChange={(event) => setText(event.target.value)} id="question" label="Question or Information" type="text" fullWidth />
-                    {this.renderMultiOptionInputs(setOptions, options, switchState, setSwitchState)()}
-                </>
-            );
-        };
-    }
-
-    public renderMultiOptionInputs(setOptions: SetState<string[]>, options: string[], switchState: boolean, setSwitchState: SetState<boolean>) {
-        return () => {
-            const addMultiChoiceOptionsOnClick = () => {
-                options.push("");
-                setOptions(options);
-                setSwitchState(!switchState);
-            };
-            return (
-                <>
-                    {this.isMultiOptionType && this.shouldShowMultiOption && (
-                        <>
-                            <MultiChoiceOptions options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} addMultiChoiceOptionsOnClick={addMultiChoiceOptionsOnClick} />
-                        </>
-                    )}
-                </>
-            );
-        };
-    }
-}
-
-export class PalavyrImageNode extends PalavyrNode {
-    constructor(
-        containerList: IPalavyrLinkedList,
-        nodeTypeOptions: NodeTypeOptions,
-        repository: PalavyrRepository,
-        node: ConvoNode,
-        nodeList: ConvoNode[],
-        setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
-        leftmostBranch: boolean
-    ) {
-        super(containerList, nodeTypeOptions, repository, node, nodeList, setTreeWithHistory, leftmostBranch);
-    }
-
-    public renderNodeFace() {
-        return ({ openEditor }) => {
-            const [imageLink, setImageLink] = useState<string>("");
-            const [imageName, setImageName] = useState<string>("");
-            const [currentImageId, setCurrentImageId] = useState<string>("");
-
-            const loadImage = useCallback(async () => {
-                if (this.imageId !== null && this.imageId !== undefined) {
-                    const fileLinks = await this.repository.Configuration.Images.getImages([this.imageId]);
-                    const fileLink = fileLinks[0];
-                    if (!fileLink.isUrl) {
-                        const presignedUrl = await this.repository.Configuration.Images.getSignedUrl(fileLink.link);
-                        setImageLink(presignedUrl);
-                        setImageName(fileLink.fileName);
-                        setCurrentImageId(fileLink.fileId);
-                    }
-                }
-            }, [this.palavyrLinkedList]);
-
-            useEffect(() => {
-                loadImage();
-            }, [this.palavyrLinkedList]);
-
-            return this.renderPalavyrNodeBody()({ openEditor, children: <CustomImage imageName={imageName} imageLink={imageLink} titleVariant="body1" /> });
-        };
-    }
-
-    public renderNodeEditor() {
-        return ({ editorIsOpen, closeEditor }) => {
-            const [imageLink, setImageLink] = useState<string>("");
-            const [imageName, setImageName] = useState<string>("");
-            const [currentImageId, setCurrentImageId] = useState<string>("");
-
-            const loadImage = useCallback(async () => {
-                if (this.imageId !== null && this.imageId !== undefined) {
-                    const fileLinks = await this.repository.Configuration.Images.getImages([this.imageId]);
-                    const fileLink = fileLinks[0];
-                    if (!fileLink.isUrl) {
-                        const presignedUrl = await this.repository.Configuration.Images.getSignedUrl(fileLink.link);
-                        setImageLink(presignedUrl);
-                        setImageName(fileLink.fileName);
-                        setCurrentImageId(fileLink.fileId);
-                    }
-                }
-            }, [this.palavyrLinkedList]);
-
-            useEffect(() => {
-                loadImage();
-            }, [this.palavyrLinkedList]);
-
-            return (
-                <Dialog fullWidth open={editorIsOpen} onClose={closeEditor}>
-                    <DialogTitle>Edit a conversation node</DialogTitle>
-                    <DialogContent>
-                        {this.imageId === null
-                            ? this.renderImageEditorWhenEmpty(closeEditor, currentImageId, setImageLink, setImageName)()
-                            : this.renderImageEditorWhenFull(closeEditor, imageName, imageLink, currentImageId, setImageLink, setImageName)()}
-                    </DialogContent>
-                </Dialog>
-            );
-        };
-    }
-
-    public renderImageEditorWhenEmpty(closeEditor, currentImageId, setImageLink, setImageName) {
-        return () => {
-            return (
-                <>
-                    <Typography align="center" variant="h6">
-                        Upload an image
-                    </Typography>
-                    {this.renderImageUpload(closeEditor, currentImageId, setImageLink, setImageName, false)()}
-                </>
-            );
-        };
-    }
-
-    public renderImageEditorWhenFull(closeEditor: () => void, imageName, imageLink, currentImageId, setImageLink, setImageName) {
-        return () => {
-            return (
-                <>
-                    <CustomImage imageName={imageName} imageLink={imageLink} />
-                    <Divider variant="fullWidth" style={{ marginBottom: "1rem" }} />
-                    <Typography align="center" variant="h6">
-                        Choose a new image
-                    </Typography>
-                    {this.renderImageUpload(closeEditor, currentImageId, setImageLink, setImageName, false)()}
-                    <Divider />
-                </>
-            );
-        };
-    }
-
-    public renderImageUpload(closeEditor: () => void, currentImageId, setImageLink, setImageName, initialState = false) {
-        return () => {
-            const cls = useNodeInterfaceStyles();
-            const history = useHistory();
-            const [uploadModal, setUploadModal] = useState(false);
-
-            const { setIsLoading, setSuccessOpen, setSuccessText, planTypeMeta } = useContext(DashboardContext);
-            useEffect(() => {
-                if (planTypeMeta && !planTypeMeta.allowedImageUpload) {
-                    history.push("/dashboard/please-subscribe");
-                }
-            }, [planTypeMeta]);
-
-            const toggleModal = () => {
-                setUploadModal(!uploadModal);
-            };
-
-            const fileSave = async (files: File[]) => {
-                setIsLoading(true);
-                const formData = new FormData();
-
-                let result: FileLink[];
-                if ((files.length = 1)) {
-                    formData.append("files", files[0]);
-                    result = await this.repository.Configuration.Images.saveSingleImage(formData);
-                    setSuccessText("Image Uploaded");
-                } else if (files.length > 1) {
-                    files.forEach((file: File) => {
-                        formData.append("files", file);
-                    });
-                    result = await this.repository.Configuration.Images.saveMultipleImages(formData);
-                    setSuccessText("Images Uploaded");
-                } else {
-                    return;
-                }
-
-                await this.repository.Configuration.Images.savePreExistingImage(result[0].fileId, this.nodeId);
-                setIsLoading(false);
-                setSuccessOpen(true);
-                closeEditor();
-            };
-
-            return (
-                <>
-                    <div className={cls.imageBlock}>{this.renderSelectFromExistingImages(currentImageId, setImageLink, setImageName)()}</div>
-                    <Divider />
-                    <div className={cls.imageBlock}>
-                        {planTypeMeta && planTypeMeta.allowedImageUpload && (
-                            <Upload
-                                dropzoneType="area"
-                                initialState={initialState}
-                                modalState={uploadModal}
-                                toggleModal={() => toggleModal()}
-                                handleFileSave={(files: File[]) => fileSave(files)}
-                                summary="Upload a file."
-                                buttonText="Upload"
-                                uploadDetails={<Typography>Upload an image, pdf, or other document you wish to share with your users</Typography>}
-                                acceptedFiles={["image/png", "image/jpg"]}
-                            />
-                        )}
-                    </div>
-                </>
-            );
-        };
-    }
-
-    public renderSelectFromExistingImages(currentImageId, setImageLink, setImageName) {
-        return () => {
-            const [options, setOptions] = useState<FileLink[] | null>(null);
-            const [label, setLabel] = useState<string>("");
-
-            const onChange = async (_: any, option: FileLink) => {
-                const convoNode = await this.repository.Configuration.Images.savePreExistingImage(option.fileId, this.nodeId);
-                setLabel(option.fileName);
-
-                this.imageId = option.fileId;
-
-                if (!option.isUrl) {
-                    const presignedUrl = await this.repository.Configuration.Images.getSignedUrl(option.link);
-                    setImageLink(presignedUrl);
-                    setImageName(option.fileName);
-                }
-                this.setTreeWithHistory(this.palavyrLinkedList);
-            };
-
-            const groupGetter = (val: FileLink) => val.fileName;
-
-            const loadOptions = useCallback(async () => {
-                const fileLinks = await this.repository.Configuration.Images.getImages();
-                const sortedOptions = sortByPropertyAlphabetical(groupGetter, fileLinks);
-                const filteredOptions = sortedOptions.filter((link: FileLink) => {
-                    return link.fileId !== currentImageId;
-                });
-                setOptions(filteredOptions);
-            }, [currentImageId]);
-
-            useEffect(() => {
-                loadOptions();
-            }, [currentImageId]);
-
-            return (
-                <PalavyrAccordian title="Select a file you've already uploaded" initialState={false}>
-                    {options && <PalavyrAutoComplete label={label} options={options} shouldDisableSelect={false} onChange={onChange} getOptionLabel={(option) => option.fileName} />}
-                </PalavyrAccordian>
-            );
-        };
-    }
-}
-
-export class PalavyrNodeOptionals {
-    private palavyrNode: IPalavyrNode;
-    constructor(node: IPalavyrNode) {
-        this.palavyrNode = node;
-    }
-
-    public renderSplitMergeAnchorLabel() {
-        const shouldShow = this.palavyrNode.isPalavyrSplitmergeMergePoint;
-        return () => {
-            return shouldShow ? <Typography>This is the primary sibling. Branches will merge to this node.</Typography> : <></>;
-        };
-    }
-
-    public renderAnabranchMergeCheckBox() {
-        const disabled = this.palavyrNode.isPalavyrAnabranchStart && this.palavyrNode.isPalavyrAnabranchEnd;
-
-        const onChange = (event: { target: { checked: boolean } }, setAnabranchMergeChecked: SetState<boolean>) => {
-            const checked = event.target.checked;
-            const origin = this.palavyrNode.anabranchContext.anabranchOriginId;
-            const anabranchOriginNode = this.palavyrNode.palavyrLinkedList.findNode(origin);
-
-            if (checked) {
-                this.palavyrNode.isPalavyrAnabranchEnd = true;
-                anabranchOriginNode.recursiveReferenceThisAnabranchOrigin(this.palavyrNode);
-                setAnabranchMergeChecked(true);
-            } else {
-                this.palavyrNode.isPalavyrAnabranchEnd = false;
-                setAnabranchMergeChecked(false);
-                anabranchOriginNode.recursiveDereferenceThisAnabranchOrigin(this.palavyrNode);
-            }
-            this.palavyrNode.UpdateTree();
-        };
-
-        const shouldShow = () => {
-            const isChildOfAnabranchType = this.palavyrNode.parentNodeReferences.checkIfReferenceExistsOnCondition((node: IPalavyrNode) => node.isPalavyrAnabranchStart);
-            return (
-                this.palavyrNode.isPalavyrSplitmergeMember && !this.palavyrNode.isTerminal && !isChildOfAnabranchType && (this.palavyrNode.isMemberOfLeftmostBranch || this.palavyrNode.isPalavyrAnabranchStart)
-            ); // && decendentLevelFromAnabranch < 4; TODO
-        };
-
-        return () => {
-            const [anabranchMergeChecked, setAnabranchMergeChecked] = useState<boolean>(false);
-
-            return shouldShow() ? (
-                <Tooltip title="This option locks nodes internal to the Anbranch. You cannot change node types when this is set.">
-                    <NodeCheckBox disabled={disabled} label="Set as Anabranch merge point" checked={anabranchMergeChecked} onChange={(event) => onChange(event, setAnabranchMergeChecked)} />
-                </Tooltip>
-            ) : (
-                <></>
-            );
-        };
-    }
-
-    public renderUnsetNodeButton() {
-        const shouldShow = () => {
-            return (
-                this.palavyrNode.nodeIsSet() &&
-                (!this.palavyrNode.isPalavyrAnabranchMember || this.palavyrNode.isAnabranchLocked) &&
-                !this.palavyrNode.isPalavyrSplitmergeMergePoint &&
-                !this.palavyrNode.isAnabranchLocked
-            );
-        };
-
-        const onClick = () => {
-            this.palavyrNode.removeSelf();
-            this.palavyrNode.UpdateTree();
-        };
-
-        return () => {
-            return shouldShow() ? <SinglePurposeButton buttonText="Unset Node" variant="outlined" color="primary" onClick={onClick} /> : <></>;
-        };
-    }
-
-    public renderAnabranchMergeNodeLabel() {
-        return () => {
-            return this.palavyrNode.isPalavyrAnabranchEnd ? <Typography style={{ fontWeight: "bolder" }}>This is the Anabranch Merge Node</Typography> : <></>;
-        };
-    }
-
-    public renderShowResponseInPdf() {
-        const shouldShow = () => {
-            const nodeTypesThatDoNotProvideFeedback = ["ProvideInfo"];
-            return !this.palavyrNode.isTerminal && !nodeTypesThatDoNotProvideFeedback.includes(this.palavyrNode.nodeType);
-        };
-        const onChange = (event: { target: { checked: boolean } }) => {
-            const checked = event.target.checked;
-            this.palavyrNode.shouldPresentResponse = checked;
-            this.palavyrNode.setTreeWithHistory(this.palavyrNode.palavyrLinkedList);
-        };
-
-        return () => {
-            return shouldShow() ? <NodeCheckBox label="Show response in PDF" checked={this.palavyrNode.shouldPresentResponse} onChange={onChange} /> : <></>;
-        };
-    }
-
-    public renderShowMergeWithPrimarySiblingBranchOption() {
-        const shouldShow = () => {
-            return (
-                this.palavyrNode.isPalavyrSplitmergeMember &&
-                this.palavyrNode.isPalavyrSplitmergePrimarybranch &&
-                this.palavyrNode.nodeIsSet() &&
-                !this.palavyrNode.isTerminal &&
-                !this.palavyrNode.isMultiOptionType &&
-                this.palavyrNode.isPenultimate()
-            );
-        };
-
-        const onClick = async (event: { target: { checked: boolean } }, setMergeBoxChecked: SetState<boolean>) => {
-            const checked = event.target.checked;
-            setMergeBoxChecked(checked);
-            if (checked) {
-                this.palavyrNode.RouteToMostRecentSplitMerge();
-            } else {
-                // const thing = this.palavyrNode.parentNodeReferences.references[0]
-                await this.palavyrNode.addDefaultChild("Continue");
-            }
-        };
-
-        return () => {
-            const [mergeBoxChecked, setMergeBoxChecked] = useState<boolean>(this.palavyrNode.isPalavyrSplitmergeEnd);
-            return shouldShow() ? <NodeCheckBox label="Merge with primary sibling branch" checked={mergeBoxChecked} onChange={(event) => onClick(event, setMergeBoxChecked)} /> : <></>;
         };
     }
 }

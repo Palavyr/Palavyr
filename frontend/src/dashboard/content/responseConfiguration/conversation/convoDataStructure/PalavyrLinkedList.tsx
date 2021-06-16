@@ -5,7 +5,8 @@ import { getRootNode } from "../nodes/nodeUtils/commonNodeUtils";
 import { _splitAndRemoveEmptyNodeChildrenString, _getNodeById } from "../nodes/nodeUtils/_coreNodeUtils";
 import { ILinkedListBucket, INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "./Contracts";
 import { LinkedListBucket } from "./LinkedListBucket";
-import { PalavyrNode } from "./PalavyrNode";
+import { PalavyrImageNode } from "./PalavyrImageNode";
+import { PalavyrTextNode } from "./PalavyrTextNode";
 
 export class PalavyrLinkedList implements IPalavyrLinkedList {
     private linkedListBucket: ILinkedListBucket = new LinkedListBucket();
@@ -35,7 +36,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     }
 
     private assembleDoubleLinkedMultiBranchLinkedList(nodeList: ConvoNode[]) {
-        const headNode = PalavyrNode.convertToPalavyrNode(this, this.repository, this.nodeTypeOptions, this.head, nodeList, this.setTreeWithHistory, true);
+        const headNode = this.convertToPalavyrNode(this, this.repository, this.nodeTypeOptions, this.head, nodeList, this.setTreeWithHistory, true);
         this.rootNode = headNode;
         this.linkedListBucket.addToBucket(headNode);
         this.recursivelyAssembleLinkedList(headNode, this.head.nodeChildrenString, nodeList);
@@ -49,12 +50,35 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
             const childId = childIds[index];
             const childConvoNode = _getNodeById(childId, nodeList);
 
-            const newNode = PalavyrNode.convertToPalavyrNode(this, this.repository, this.nodeTypeOptions, childConvoNode, nodeList, this.setTreeWithHistory, index === 0);
+            const newNode = this.convertToPalavyrNode(this, this.repository, this.nodeTypeOptions, childConvoNode, nodeList, this.setTreeWithHistory, index === 0);
             newNode.addNewNodeReferenceAndConfigure(newNode, parentNode);
             this.recursivelyAssembleLinkedList(newNode, childConvoNode.nodeChildrenString, nodeList);
         }
 
         parentNode.sortChildReferences();
+    }
+
+    public convertToPalavyrNode(
+        container: IPalavyrLinkedList,
+        repository: PalavyrRepository,
+        nodeTypeOptions: NodeTypeOptions,
+        rawNode: ConvoNode,
+        nodeList: ConvoNode[],
+        setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
+        leftMostBranch: boolean
+    ) {
+        let palavyrNode: IPalavyrNode;
+        switch (rawNode.isImageNode) {
+            case true:
+                palavyrNode = new PalavyrImageNode(container, nodeTypeOptions, repository, rawNode, nodeList, setTreeWithHistory, leftMostBranch);
+                break;
+            case false:
+                palavyrNode = new PalavyrTextNode(container, nodeTypeOptions, repository, rawNode, nodeList, setTreeWithHistory, leftMostBranch);
+                break;
+            default:
+                throw new Error("Node type couldn't be determined when construting the palavyr convo tree.");
+        }
+        return palavyrNode;
     }
 
     compileToConvoNodes(): ConvoNode[] {

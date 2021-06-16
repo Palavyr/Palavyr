@@ -1,4 +1,5 @@
-import { ConvoNode, EmptyComponentType, LineMap, AnabranchContext, SplitmergeContext } from "@Palavyr-Types";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { ConvoNode, EmptyComponentType, LineMap, AnabranchContext, SplitmergeContext, NodeTypeOptions } from "@Palavyr-Types";
 
 export interface ILinkedListBucket {
     addToBucket(node: IPalavyrNode): void;
@@ -15,6 +16,15 @@ export interface IPalavyrLinkedList {
     compileToConvoNodes(): ConvoNode[];
     findNode(nodeId: string): IPalavyrNode;
     retrieveCleanHeadNode(): IPalavyrNode;
+    convertToPalavyrNode(
+        container: IPalavyrLinkedList,
+        repository: PalavyrRepository,
+        nodeTypeOptions: NodeTypeOptions,
+        rawNode: ConvoNode,
+        nodeList: ConvoNode[],
+        setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
+        leftMostBranch: boolean
+    );
 }
 
 export interface INodeReferences {

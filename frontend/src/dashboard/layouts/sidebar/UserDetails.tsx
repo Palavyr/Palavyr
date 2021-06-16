@@ -6,7 +6,6 @@ import Fade from "@material-ui/core/Fade";
 import { GeneralSettingsLoc } from "@Palavyr-Types";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Spinner } from "react-bootstrap";
 
 const useStyles = makeStyles((theme) => ({
     logwrapper: {

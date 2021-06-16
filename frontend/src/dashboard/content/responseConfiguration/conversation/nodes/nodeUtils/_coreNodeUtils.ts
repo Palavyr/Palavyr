@@ -1,7 +1,7 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { Conversation, ConvoNode, UUID, ValueOptionDelimiter } from "@Palavyr-Types";
 import { cloneDeep, findIndex } from "lodash";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 import { PalavyrLinkedList } from "../../convoDataStructure/PalavyrLinkedList";
 
 export const _splitNodeChildrenString = (nodeChildrenString: string) => {

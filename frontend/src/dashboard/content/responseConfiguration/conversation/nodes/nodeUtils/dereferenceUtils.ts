@@ -1,5 +1,5 @@
 import { ConvoNode, Conversation } from "@Palavyr-Types";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 import { _getNodeById, _splitAndRemoveEmptyNodeChildrenString, _joinNodeChildrenStringArray, _createAndAddNewNodes } from "./_coreNodeUtils";
 
 /*

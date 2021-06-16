@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, PropTypes } from "@material-ui/core";
 import { WidgetPreferences } from "@Palavyr-Types";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 import { Table, TableRow, TableCell, makeStyles, TextField } from "@material-ui/core";
 import { format } from "date-fns";
 

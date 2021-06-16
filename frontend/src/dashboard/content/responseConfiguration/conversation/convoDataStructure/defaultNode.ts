@@ -1,5 +1,5 @@
 import { ConvoNode } from "@Palavyr-Types";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 
 export const createDefaultNode = (optionPath: string): ConvoNode => ({
     IsSplitMergeMergePoint: false,

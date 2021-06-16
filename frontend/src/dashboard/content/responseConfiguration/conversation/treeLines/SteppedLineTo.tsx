@@ -116,7 +116,7 @@ export const findElementById = (id: string): HTMLElement => {
 };
 
 export const findElementByClassName = (className: string) => {
-    const elements = document.getElementsByClassName(className);
+    const elements = document.getElementsByClassName(className); // TODO: would be better if we could deliberately grab a specific element by id and use it instead
     return elements[0];
 };
 
