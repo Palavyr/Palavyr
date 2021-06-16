@@ -14,11 +14,11 @@
     position: relative;
 } */
 
-.tree-wrap {
+/* .tree-wrap { */
+    /* position: relative;
     display: flex;
     flex-direction: column;
-    align-items: "flex-start";
+    align-items: "flex-start"; */
     /* align-items: flex-center; OR flex-start / flex-end*/
     /* use this to align the tree in the middle or left or right.*/
-    position: relative;
-}
+/* } */

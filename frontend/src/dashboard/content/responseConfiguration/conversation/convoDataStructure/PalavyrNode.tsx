@@ -343,7 +343,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
             treeRow: {
                 display: "flex",
                 flexDirection: "row",
-                alignItems: "flex-start",
             },
         }));
         return () => {

@@ -17,6 +17,7 @@ import { PalavyrLinkedList } from "./PalavyrLinkedList";
 import { TreeErrorPanel } from "../MissingDynamicNodes";
 
 import "./stylesStructuredConvoTree.css";
+import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
 
 const useStyles = makeStyles(() => ({
     conversation: {
@@ -37,11 +38,8 @@ const useStyles = makeStyles(() => ({
         marginBottom: "10px",
         padding: "25px",
     },
-    treewrap: {
-        // display: "flex",
-        // flexDirection: "column",
-        // alignItems: "flex-start",
-        // position: "relative"
+    treeWrap: {
+        position: "relative",
     },
 }));
 
@@ -199,11 +197,11 @@ export const StructuredConvoTree = () => {
                     <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
                     <fieldset className={cls.fieldSet}>
                         <PalavyrErrorBoundary>
-                            {Tree !== null ? (
-                                <div className="tree-wrap">
+                            {Tree && (
+                                <div className={cls.treeWrap}>
                                     <Tree />
                                 </div>
-                            ) : null}
+                            )}
                         </PalavyrErrorBoundary>
                     </fieldset>
                 </div>
