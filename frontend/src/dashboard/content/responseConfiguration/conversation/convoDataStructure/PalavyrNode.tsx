@@ -23,7 +23,6 @@ import { MultiChoiceOptions } from "../nodes/nodeInterface/nodeEditor/MultiChoic
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { NodeCheckBox } from "../nodes/nodeInterface/NodeCheckBox";
 
-import "./stylesPalavyrNode.css";
 import { createDefaultNode } from "./defaultNode";
 
 export abstract class PalavyrNode implements IPalavyrNode {
@@ -331,16 +330,39 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
     // TODO: Would this work: https://sourceforge.net/projects/js-graph-it/ ?
     public createPalavyrNodeComponent() {
+        const useStyles = makeStyles((theme) => ({
+            treeItem: {
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                zIndex: 10,
+            },
+            treeBlockWrap: {
+                padding: "2rem 2rem 2rem 2rem",
+            },
+            treeRow: {
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "flex-start",
+            },
+        }));
         return () => {
+            const [loaded, setLoaded] = useState<boolean>(false);
+
+            useEffect(() => {
+                setLoaded(true);
+                return () => setLoaded(false);
+            }, []);
+
+            const cls = useStyles();
+            const treelinkClassName = "LineLink";
             return (
                 <>
-                    <div className={classNames("tree-item", this.nodeId)}>
-                        <div style={{ borderColor: "2px solid black" }} className={`tree-block-wrap`}>
-                            {this.renderNodeInterface()()}
-                        </div>
-                        <div key={this.nodeId} className="tree-row">
-                            {this.childNodeReferences.NotEmpty() &&
-                                (this.shouldRenderChildren ? (
+                    <div className={classNames(treelinkClassName, cls.treeItem)}>
+                        <div className={cls.treeBlockWrap}>{this.renderNodeInterface()()}</div>
+                        {this.childNodeReferences.NotEmpty() && (
+                            <div key={this.nodeId} className={cls.treeRow}>
+                                {this.shouldRenderChildren ? (
                                     this.childNodeReferences.nodes.map(
                                         (nextNode: IPalavyrNode, index: number): React.ReactNode => {
                                             const Node = nextNode.createPalavyrNodeComponent();
@@ -349,12 +371,14 @@ export abstract class PalavyrNode implements IPalavyrNode {
                                     )
                                 ) : (
                                     <></>
-                                ))}
-                        </div>
+                                )}
+                            </div>
+                        )}
                     </div>
-                    {this.lineMap.map((line: LineLink) => {
-                        return <SteppedLineTo key={`${line.to}-${line.from}-stepped-line`} from={line.from} to={line.to} />;
-                    })}
+                    {loaded &&
+                        this.lineMap.map((line: LineLink) => {
+                            return <SteppedLineTo key={line.from} from={line.from} to={line.to} treeLinkClassName={treelinkClassName} />;
+                        })}
                 </>
             );
         };
@@ -537,7 +561,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
             });
 
             return (
-                <Card className={classNames(cls.root)} variant="outlined">
+                <Card style={{ border: "5px solid black" }} id={this.nodeId} className={cls.root} variant="outlined">
                     <CardContent className={classNames(cls.card, this.nodeId)}>
                         {showDebugData && <DataLogging debugData={this.compileDebug()} nodeChildren={this.nodeChildrenString} nodeId={this.nodeId} />}
                         {this.renderNodeHeader()({ isRoot: this.isRoot, optionPath: this.optionPath })}
@@ -761,7 +785,8 @@ export class PalavyrTextNode extends PalavyrNode {
 
             useEffect(() => {
                 setText(this.userText);
-                if (this.isMultiOptionType){ //&& !isNullOrUndefinedOrWhitespace(this.valueOptions)) {
+                if (this.isMultiOptionType) {
+                    //&& !isNullOrUndefinedOrWhitespace(this.valueOptions)) {
                     setOptions(this.valueOptions);
                 }
             }, [options]);

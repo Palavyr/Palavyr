@@ -30,6 +30,19 @@ const useStyles = makeStyles(() => ({
         marginLeft: "0.7rem",
         borderRadius: "10px",
     },
+    fieldSet: {
+        position: "relative",
+        borderWidth: "1px",
+        borderStyle: "solid",
+        marginBottom: "10px",
+        padding: "25px",
+    },
+    treewrap: {
+        // display: "flex",
+        // flexDirection: "column",
+        // alignItems: "flex-start",
+        // position: "relative"
+    },
 }));
 
 export const StructuredConvoTree = () => {
@@ -184,8 +197,14 @@ export const StructuredConvoTree = () => {
             <PalavyrErrorBoundary>
                 <div className={cls.conversation}>
                     <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
-                    <fieldset className="fieldset" id="tree-test">
-                        <PalavyrErrorBoundary>{Tree !== null ? <Tree key="tree-start" /> : null}</PalavyrErrorBoundary>
+                    <fieldset className={cls.fieldSet}>
+                        <PalavyrErrorBoundary>
+                            {Tree !== null ? (
+                                <div className="tree-wrap">
+                                    <Tree />
+                                </div>
+                            ) : null}
+                        </PalavyrErrorBoundary>
                     </fieldset>
                 </div>
             </PalavyrErrorBoundary>

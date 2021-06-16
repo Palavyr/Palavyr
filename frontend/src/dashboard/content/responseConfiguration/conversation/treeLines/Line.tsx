@@ -1,6 +1,10 @@
+import { makeStyles } from "@material-ui/core";
 import React from "react";
 import { LineStyles } from "./LineTypes";
-import { defaultBorderColor, defaultBorderStyle, defaultBorderWidth } from "./LineUtils";
+
+const defaultBorderColor = "#f00";
+const defaultBorderStyle = "solid";
+const defaultBorderWidth = 1;
 
 export type LineProps = {
     x0: number;
@@ -14,7 +18,7 @@ export type LineProps = {
 };
 
 type PositionStyles = {
-    position: "absolute";
+    // position: "absolute";
     top: string;
     left: string;
     width: string;
@@ -23,7 +27,19 @@ type PositionStyles = {
     transformOrigin: string;
 };
 
+const useStyles = makeStyles(theme => ({
+    line: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        position: "absolute"
+    }
+}))
+
 export const Line = ({ x0, x1, y0, y1, borderColor, borderStyle, borderWidth, zIndex }: LineProps): React.ReactElement | null => {
+
+    const cls = useStyles();
+
     const dy = y1 - y0;
     const dx = x1 - x0;
 
@@ -33,7 +49,7 @@ export const Line = ({ x0, x1, y0, y1, borderColor, borderStyle, borderWidth, zI
     const z = zIndex ? Number(zIndex) : 1;
 
     const positionStyle: PositionStyles = {
-        position: "absolute",
+        // position: "absolute",
         top: `${y0}px`,
         left: `${x0}px`,
         width: `${length}px`,
@@ -48,7 +64,5 @@ export const Line = ({ x0, x1, y0, y1, borderColor, borderStyle, borderWidth, zI
         borderTopWidth: borderWidth ?? defaultBorderWidth,
     };
 
-    return (
-        <div style={{ ...defaultStyle, ...positionStyle }}></div>
-    );
+    return <div className={cls.line} style={{ ...defaultStyle, ...positionStyle }}></div>;
 };

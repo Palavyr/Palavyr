@@ -80,7 +80,7 @@ export const ConvoTree = () => {
         const repository = new PalavyrRepository();
 
         const nodes = await repository.Conversations.GetConversation(areaIdentifier);
-        const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier);
+        const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
 
         if (planTypeMeta) {
             const filteredTypeOptions = filterNodeTypeOptionsOnSubscription(nodeTypeOptions, planTypeMeta);

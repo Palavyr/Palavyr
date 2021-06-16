@@ -1,18 +1,18 @@
-.fieldset {
+/* .fieldset {
     position: relative;
     border-width: 1px;
     border-style: solid;
     margin-bottom: 10px;
     padding: 25px;
-}
+} */
 
-#tree-test {
+/* #tree-test {
     position: relative;
 }
 
 #tree-test .nodeInterface {
     position: relative;
-}
+} */
 
 .tree-wrap {
     display: flex;
