@@ -16,9 +16,6 @@ import { ConversationHistoryTracker } from "../nodes/ConversationHistoryTracker"
 import { PalavyrLinkedList } from "./PalavyrLinkedList";
 import { TreeErrorPanel } from "../MissingDynamicNodes";
 
-import "./stylesStructuredConvoTree.css";
-import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
-
 const useStyles = makeStyles(() => ({
     conversation: {
         position: "static",
