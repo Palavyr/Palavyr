@@ -32,7 +32,7 @@ export const MultiChoiceOption = ({option, optionIndex, options, setOptions, swi
                     }}
                 />
             </Grid>
-            <Grid item xs={3} alignContent="center">
+            <Grid item xs={3} >
                 <Button
                     onClick={() => {
                         options.splice(optionIndex, 1);

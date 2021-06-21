@@ -54,7 +54,6 @@ export interface IPalavyrNode {
     setAsProvideInfo(): void;
     nodeIsNotSet(): boolean;
     AddNewChildReference(newChildReference: IPalavyrNode): void;
-    // configure(parentNode: IPalavyrNode): void;
     sortChildReferences(): void;
     addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode): void;
     compileConvoNode(areaId: string): ConvoNode;

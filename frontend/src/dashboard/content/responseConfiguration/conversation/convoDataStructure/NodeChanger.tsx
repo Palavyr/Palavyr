@@ -48,34 +48,6 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         currentNode.UpdateTree();
     }
 
-    // Type VI
-    // Multi Node - Options Editable - Multiple Children - Continue
-
-    //  -Anabranch - Type IV -- very similary to Type IV
-    //     - Multi Children
-    //     - Multi Node
-    //     - Options Editable
-    //     - Continue
-
-    //    Actions:
-    //     - set value options to current child reference options
-
-    //    On Update:
-    //     - add value options
-    //     - add equal number of node references
-
-    private ConvertToType_VI_Node(nodeOption: NodeOption, currentNode: IPalavyrNode) {
-        if (currentNode.getValueOptions().length < 2) {
-            const defaultValueOptions = ["Left Branch", "Right Branch"];
-            this.createOrTruncateChildNodes(currentNode, defaultValueOptions);
-            currentNode.childNodeReferences.applyOptionPaths(defaultValueOptions);
-        } else {
-            this.createOrTruncateChildNodes(currentNode, currentNode.getValueOptions());
-            currentNode.childNodeReferences.applyOptionPaths(currentNode.getValueOptions());
-
-        }
-    }
-
     // Converts current node to a Type I node
     // Single Node - Option Frozen ([Terminal]) - No Children - Terminal
 
@@ -194,6 +166,33 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         // child ref choice outcome labels
         currentNode.childNodeReferences.applyOptionPaths(nodeOption.valueOptions);
     }
+
+    // Type VI
+    // Multi Node - Options Editable - Multiple Children - Continue
+
+    //  -Anabranch - Type IV -- very similary to Type IV
+    //     - Multi Children
+    //     - Multi Node
+    //     - Options Editable
+    //     - Continue
+
+    //    Actions:
+    //     - set value options to current child reference options
+
+    //    On Update:
+    //     - add value options
+    //     - add equal number of node references
+
+    private ConvertToType_VI_Node(nodeOption: NodeOption, currentNode: IPalavyrNode) {
+        if (currentNode.getValueOptions().length < 2) {
+            const defaultValueOptions = ["Left Branch", "Right Branch"];
+            this.createOrTruncateChildNodes(currentNode, defaultValueOptions);
+            currentNode.childNodeReferences.applyOptionPaths(defaultValueOptions);
+        } else {
+            this.createOrTruncateChildNodes(currentNode, currentNode.getValueOptions());
+            currentNode.childNodeReferences.applyOptionPaths(currentNode.getValueOptions());
+        }
+    };
 
     public async createOrTruncateChildNodes(currentNode: IPalavyrNode, valueOptions: string[]) {
         if (currentNode.getValueOptions().length === 0) {
