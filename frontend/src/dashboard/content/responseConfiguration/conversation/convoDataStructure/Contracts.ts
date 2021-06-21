@@ -1,5 +1,5 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { ConvoNode, EmptyComponentType, LineMap, AnabranchContext, SplitmergeContext, NodeTypeOptions } from "@Palavyr-Types";
+import { ConvoNode, EmptyComponentType, LineMap, AnabranchContext, SplitmergeContext, NodeTypeOptions, NodeTypeCode } from "@Palavyr-Types";
 
 export interface ILinkedListBucket {
     addToBucket(node: IPalavyrNode): void;
@@ -24,7 +24,7 @@ export interface IPalavyrLinkedList {
         nodeList: ConvoNode[],
         setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
         leftMostBranch: boolean
-    );
+    ): IPalavyrNode;
 }
 
 export interface INodeReferences {
@@ -54,7 +54,7 @@ export interface IPalavyrNode {
     setAsProvideInfo(): void;
     nodeIsNotSet(): boolean;
     AddNewChildReference(newChildReference: IPalavyrNode): void;
-    configure(parentNode: IPalavyrNode): void;
+    // configure(parentNode: IPalavyrNode): void;
     sortChildReferences(): void;
     addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode): void;
     compileConvoNode(areaId: string): ConvoNode;
@@ -66,24 +66,39 @@ export interface IPalavyrNode {
     nodeIsNotSet(): boolean;
     isPenultimate(): void;
     RouteToMostRecentSplitMerge(): void;
-    addDefaultChild(valueOption: string): void;
+    setValueOptions(newValueOptions: string[]): void;
+    addValueOption(newOption: string): void;
+    getValueOptions(): string[];
+    addLine(parentId: string): void;
+    setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
 
     isRoot: boolean;
     nodeId: string;
-
+    userText: string;
     isTerminal: boolean;
     shouldPresentResponse: boolean; // isCritical
     nodeType: string; // type of node - e.g. YesNo, Outer-Categories-TwoNestedCategory-fffeefb5-36f2-40cd-96c1-f1eff401393c
     isMultiOptionType: boolean;
+    isDynamicTableNode: boolean;
+    isSplitMergeType: boolean;
+    nodeComponentType: string;
+    resolveOrder: number;
+    shouldShowMultiOption: boolean;
+    dynamicType: string | null;
+
+    nodeTypeCode: NodeTypeCode;
+    nodeTypeOptions: NodeTypeOptions;
 
     nodeChildrenString: string;
+    repository: PalavyrRepository;
+
+    isAnabranchMergePoint: boolean;
 
     // the options available from this node, if any. I none, then "Continue" is used |peg| delimted
     optionPath: string; // the value option that was used with the parent of this node.
 
     // transient
     shouldRenderChildren: boolean;
-
     isCurrency: boolean;
 
     // core
@@ -97,7 +112,6 @@ export interface IPalavyrNode {
 
     lineMap: LineMap;
 
-    setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
 
     palavyrLinkedList: IPalavyrLinkedList; // the containing list object that this node is a member of. Used to acccess update methods
 

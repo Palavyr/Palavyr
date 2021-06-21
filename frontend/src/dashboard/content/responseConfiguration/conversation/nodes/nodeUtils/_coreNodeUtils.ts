@@ -1,5 +1,5 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
-import { Conversation, ConvoNode, UUID, ValueOptionDelimiter } from "@Palavyr-Types";
+import { Conversation, ConvoNode, NodeTypeCode, UUID, ValueOptionDelimiter } from "@Palavyr-Types";
 import { cloneDeep, findIndex } from "lodash";
 import { v4 as uuid } from "uuid";
 import { PalavyrLinkedList } from "../../convoDataStructure/PalavyrLinkedList";
@@ -209,7 +209,8 @@ export const _createAndAddNewNodes = (childIdsToCreate: string[], newChildNodeId
             dynamicType: "",
             isImageNode: false,
             imageId: null,
-            IsSplitMergeMergePoint: false
+            IsSplitMergeMergePoint: false,
+            nodeTypeCode: NodeTypeCode.I
         };
 
         updatedNodeList.push(newNode);

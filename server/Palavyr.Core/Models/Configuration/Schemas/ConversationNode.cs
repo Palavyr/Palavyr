@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Contracts;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
@@ -26,7 +27,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
 
         public bool IsAnabranchType { get; set; }
         public bool IsAnabranchMergePoint { get; set; }
-        
+
         public bool ShouldShowMultiOption { get; set; }
         public bool IsDynamicTableNode { get; set; }
         public bool IsMultiOptionEditable { get; set; }
@@ -42,6 +43,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public bool IsCurrency { get; set; }
         public bool Fallback { get; set; }
         public string? NodeChildrenString { get; set; } = ""; // stored as comma delimited list as string
+        public NodeTypeCode NodeTypeCode { get; set; }
 
         public ConversationNode()
         {

@@ -21,6 +21,11 @@ namespace Palavyr.Core.Models.Configuration.Constant
         /*
          * The string form name of the node type. Derived from either 'nameof(T)' or extension method: dynamicTableMeta.MakeUniqueIdentifier()
          */
+        public NodeTypeCode NodeTypeCode {get; set;}
+        
+        /*
+         * The string form name of the node type. Derived from either 'nameof(T)' or extension method: dynamicTableMeta.MakeUniqueIdentifier()
+         */
         public string Value { get; set; }
 
         /*

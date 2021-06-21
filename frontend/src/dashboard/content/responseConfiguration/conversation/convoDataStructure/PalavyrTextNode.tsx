@@ -7,6 +7,7 @@ import { MultiChoiceOptions } from "../nodes/nodeInterface/nodeEditor/MultiChoic
 import { IPalavyrLinkedList } from "./Contracts";
 import { useNodeInterfaceStyles } from "./nodeInterfaceStyles";
 import { PalavyrNode } from "./PalavyrNode";
+import { NodeUpdater } from "./NodeUpdater";
 
 export class PalavyrTextNode extends PalavyrNode {
     constructor(
@@ -36,17 +37,36 @@ export class PalavyrTextNode extends PalavyrNode {
     }
 
     public renderNodeEditor() {
+        const nodeUpdater = new NodeUpdater();
+
         return ({ editorIsOpen, closeEditor }) => {
             const [options, setOptions] = useState<string[]>([]);
             const [text, setText] = useState<string>("");
+            const [switchState, setSwitchState] = useState<boolean>(true);
+            useEffect(() => {
+                setText(this.userText);
+                const referenceOptions = this.childNodeReferences.collectPathOptions();
+                setOptions(referenceOptions);
+            }, []);
+
+            const addOptionOnClick = () => {
+                options.push("");
+                setOptions(options);
+                setSwitchState(!switchState);
+            };
 
             const handleUpdateNode = (userText: string, valueOptions: string[]) => {
-                this.userText = userText;
-                if (this.isMultiOptionType && this.shouldShowMultiOption) {
-                    this.createOrTruncateChildNodes(valueOptions, this.isMultiOptionType);
-                } else {
-                    this.setTreeWithHistory(this.palavyrLinkedList);
-                }
+
+                nodeUpdater.updateNode(this, userText, valueOptions);
+
+
+
+                // // this.userText = userText;
+                // if (this.isMultiOptionType && this.shouldShowMultiOption) {
+                //     // this.createOrTruncateChildNodes(valueOptions, this.isMultiOptionType);
+                // } else {
+                //     this.setTreeWithHistory(this.palavyrLinkedList);
+                // }
             };
 
             // isMultiOptionType // is either by path or continue, or is a dynamic type as path or continue
@@ -55,7 +75,14 @@ export class PalavyrTextNode extends PalavyrNode {
             return (
                 <Dialog fullWidth open={editorIsOpen} onClose={closeEditor}>
                     <DialogTitle>Edit a conversation node</DialogTitle>
-                    <DialogContent>{this.isMultiOptionType ? this.renderMultiChoiceTextEditor(text, setText, options, setOptions)() : this.renderTextEditor(setText, text)()}</DialogContent>
+                    <DialogContent>
+                        {editorIsOpen &&
+                            (this.isMultiOptionType
+                                ? this.shouldShowMultiOption
+                                    ? this.renderMultiChoiceTextEditor(switchState, setSwitchState, text, setText, options, setOptions, addOptionOnClick)()
+                                    : this.renderTextEditor(setText, text)()
+                                : this.renderTextEditor(setText, text)())}
+                    </DialogContent>
                     <DialogActions>
                         <SaveOrCancel
                             position="right"
@@ -77,25 +104,20 @@ export class PalavyrTextNode extends PalavyrNode {
         };
     }
 
-    public renderMultiChoiceTextEditor(text: string, setText: SetState<string>, options: string[], setOptions: SetState<string[]>) {
+    public renderMultiChoiceTextEditor(
+        switchState: boolean,
+        setSwitchState: SetState<boolean>,
+        text: string,
+        setText: SetState<string>,
+        options: string[],
+        setOptions: SetState<string[]>,
+        onClick: (text: string, options: string[]) => void
+    ) {
         return () => {
-            const [switchState, setSwitchState] = useState<boolean>(true);
-
-            useEffect(() => {
-                setText(this.userText);
-                setOptions(this.valueOptions);
-            }, [options, this.valueOptions]);
-
-            const addMultiChoiceOptionsOnClick = () => {
-                options.push("");
-                // need to add node reference if we should be making paths (multi choice as path)
-                setOptions(options);
-                setSwitchState(!switchState);
-            };
             return (
                 <>
                     <TextField margin="dense" value={text} multiline rows={4} onChange={(event) => setText(event.target.value)} id="question" label="Question or Information" type="text" fullWidth />
-                    <MultiChoiceOptions options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} addMultiChoiceOptionsOnClick={addMultiChoiceOptionsOnClick} />
+                    <MultiChoiceOptions options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} addMultiChoiceOptionsOnClick={() => onClick(text, options)} />
                 </>
             );
         };

@@ -104,6 +104,7 @@ export type ConvoNode = {
     imageId: string | null;
     resolveOrder: number;
     dynamicType: string | null;
+    nodeTypeCode: NodeTypeCode;
 };
 
 export type Conversation = Array<ConvoNode>;
@@ -398,6 +399,16 @@ export type PhoneSettingsResponse = {
     locale: string;
 };
 
+export enum NodeTypeCode {
+    I,
+    II,
+    III,
+    IV,
+    V,
+    VI,
+    VII,
+}
+
 export type NodeOption = {
     groupName: string;
     isAnabranchMergePoint: boolean;
@@ -420,6 +431,7 @@ export type NodeOption = {
     dynamicType: string | null;
     isImageNode: boolean;
     imageId: string | null;
+    nodeTypeCode: NodeTypeCode; // passed to the node changer via the nodeOptions
 };
 
 // export type NodeTypeOptions = {[index: string]: NodeOptions};

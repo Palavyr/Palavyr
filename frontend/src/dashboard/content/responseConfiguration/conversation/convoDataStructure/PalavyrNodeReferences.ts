@@ -12,13 +12,14 @@ export class NodeReferences implements INodeReferences {
         }
     }
     collectPathOptions(): string[] {
-       const pathOptions = this.nodeReferences.map((x: IPalavyrNode) => {
-           return x.optionPath;
-       })
-       return pathOptions;
+        const pathOptions = this.nodeReferences.map((x: IPalavyrNode) => {
+            return x.optionPath;
+        });
+        return pathOptions;
     }
 
     public applyOptionPaths(valueOptions: string[]): void {
+        if (valueOptions.length !== this.nodeReferences.length) throw new Error("Value options did not match number of node references");
         for (let index = 0; index < this.nodeReferences.length; index++) {
             const node = this.nodeReferences[index];
             node.optionPath = valueOptions[index];

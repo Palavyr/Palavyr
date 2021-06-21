@@ -4,6 +4,7 @@ import { SetState } from "@Palavyr-Types";
 import React, { useState } from "react";
 import { NodeCheckBox } from "../nodes/nodeInterface/NodeCheckBox";
 import { IPalavyrNode } from "./Contracts";
+import { NodeCreator } from "./NodeCreator";
 
 export class PalavyrNodeOptionals {
     private palavyrNode: IPalavyrNode;
@@ -119,7 +120,8 @@ export class PalavyrNodeOptionals {
                 this.palavyrNode.RouteToMostRecentSplitMerge();
             } else {
                 // const thing = this.palavyrNode.parentNodeReferences.references[0]
-                await this.palavyrNode.addDefaultChild("Continue");
+                const nodeCreator = new NodeCreator();
+                nodeCreator.addDefaultChild(this.palavyrNode, "Continue");
             }
         };
 
