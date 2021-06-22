@@ -14,6 +14,7 @@ export interface IPalavyrLinkedList {
     insert(): void;
     delete(): void;
     compileToConvoNodes(): ConvoNode[];
+    reconfigureTree(): void;
     findNode(nodeId: string): IPalavyrNode;
     retrieveCleanHeadNode(): IPalavyrNode;
     convertToPalavyrNode(
@@ -45,6 +46,7 @@ export interface INodeReferences {
     truncateAt(index: number): void;
     applyOptionPaths(valueOptions: string[]): void;
     collectPathOptions(): string[];
+    retrieveLeftmostReference(): IPalavyrNode | null;
 }
 
 export interface IPalavyrNode {
@@ -71,6 +73,7 @@ export interface IPalavyrNode {
     addLine(parentId: string): void;
     setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
 
+
     isRoot: boolean;
     nodeId: string;
     userText: string;
@@ -85,6 +88,8 @@ export interface IPalavyrNode {
     shouldShowMultiOption: boolean;
     dynamicType: string | null;
 
+    isImageNode: boolean;
+    isAnabranchType: boolean;
     nodeTypeCode: NodeTypeCode;
     nodeTypeOptions: NodeTypeOptions;
 

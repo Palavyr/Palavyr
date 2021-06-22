@@ -13,7 +13,14 @@ import { useNodeInterfaceStyles } from "./nodeInterfaceStyles";
 import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "./Contracts";
 import { NodeReferences } from "./PalavyrNodeReferences";
 
-import { PalavyrNodeOptionals } from "./PalavyrNodeOptionals";
+import {
+    AnabranchMergeCheckBox,
+    AnabranchMergeNodeLabel,
+    ShowMergeWithPrimarySiblingBranchOption,
+    ShowResponseInPdf,
+    SplitMergeAnchorLabel,
+    UnsetNodeButton,
+} from "./PalavyrNodeOptionals";
 import { PalavyrNodeChanger } from "./NodeChanger";
 import { NodeConfigurer } from "./NodeConfigurer";
 const treelinkClassName = "tree-line-link";
@@ -55,6 +62,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
     // core
     public childNodeReferences: INodeReferences = new NodeReferences();
     public parentNodeReferences: INodeReferences = new NodeReferences();
+    private configurer = new NodeConfigurer();
 
     public isMemberOfLeftmostBranch: boolean;
 
@@ -195,8 +203,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
     public addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode) {
         // double linked
         parentNode.childNodeReferences.addReference(newNode);
-        const configurer = new NodeConfigurer();
-        configurer.configure(newNode, parentNode);
+        this.configurer.configure(newNode, parentNode);
     }
 
     public AddNewChildReference(newChildReference: IPalavyrNode) {
@@ -254,7 +261,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
             isAnabranchMergePoint: this.isAnabranchMergePoint,
             isImageNode: this.isImageNode,
             imageId: this.imageId,
-            nodeTypeCode: this.nodeTypeCode
+            nodeTypeCode: this.nodeTypeCode,
         };
     }
 
@@ -304,7 +311,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
                                     this.childNodeReferences.nodes.map(
                                         (nextNode: IPalavyrNode, index: number): React.ReactNode => {
                                             const Node = nextNode.createPalavyrNodeComponent();
-                                            return <Node key={nextNode.nodeId + index.toString()} />;
+                                            return <Node key={[this.nodeId, nextNode.nodeId, index.toString()].join("-")} />;
                                         }
                                     )
                                 ) : (
@@ -314,8 +321,8 @@ export abstract class PalavyrNode implements IPalavyrNode {
                         )}
                     </div>
                     {loaded &&
-                        this.lineMap.map((line: LineLink) => {
-                            return <SteppedLineTo key={line.from} from={line.from} to={line.to} treeLinkClassName={treelinkClassName} />;
+                        this.lineMap.map((line: LineLink, index: number) => {
+                            return <SteppedLineTo key={[line.from, index].join("-")} from={line.from} to={line.to} treeLinkClassName={treelinkClassName} />;
                         })}
                 </>
             );
@@ -579,17 +586,16 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
     private renderOptionals() {
         const currentNode = this as IPalavyrNode;
-        const nodeOptionals = new PalavyrNodeOptionals(currentNode);
 
         return () => {
             return (
                 <>
-                    {nodeOptionals.renderShowResponseInPdf()()}
-                    {nodeOptionals.renderShowMergeWithPrimarySiblingBranchOption()()}
-                    {nodeOptionals.renderAnabranchMergeCheckBox()()}
-                    {nodeOptionals.renderUnsetNodeButton()()}
-                    {nodeOptionals.renderSplitMergeAnchorLabel()()}
-                    {nodeOptionals.renderAnabranchMergeNodeLabel()()}
+                    <ShowResponseInPdf node={currentNode} />
+                    <ShowMergeWithPrimarySiblingBranchOption node={currentNode} />
+                    <AnabranchMergeCheckBox node={currentNode} />
+                    <UnsetNodeButton node={currentNode} />
+                    <SplitMergeAnchorLabel node={currentNode} />
+                    <AnabranchMergeNodeLabel node={currentNode} />
                 </>
             );
         };

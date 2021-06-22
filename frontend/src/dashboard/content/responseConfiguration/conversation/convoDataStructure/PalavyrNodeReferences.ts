@@ -96,4 +96,11 @@ export class NodeReferences implements INodeReferences {
     public truncateAt(index: number) {
         this.nodeReferences = this.nodeReferences.slice(0, index);
     }
+
+    public retrieveLeftmostReference(): IPalavyrNode | null {
+        if (this.Length > 0) {
+            return this.nodeReferences[0];
+        }
+        return null;
+    }
 }

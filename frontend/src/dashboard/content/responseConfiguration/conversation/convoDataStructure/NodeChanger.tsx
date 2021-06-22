@@ -45,7 +45,6 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
             default:
                 throw new Error("NodeTypeCode unable to be identified. FIX THAT YO.");
         }
-        currentNode.UpdateTree();
     }
 
     // Converts current node to a Type I node
@@ -64,6 +63,8 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     private ConvertToType_I_Node(nodeOption: NodeOption, currentNode: IPalavyrNode) {
         currentNode.childNodeReferences.Clear();
         currentNode.setValueOptions(["Terminal"]);
+        currentNode.UpdateTree();
+
     }
 
     // Type II
@@ -85,6 +86,8 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         this.createOrTruncateChildNodes(currentNode, typeIIvalueOptions);
         currentNode.childNodeReferences.applyOptionPaths(typeIIvalueOptions);
         currentNode.setValueOptions(typeIIvalueOptions);
+        currentNode.UpdateTree();
+
     }
 
     // Type III
@@ -115,6 +118,8 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
             currentNode.childNodeReferences.truncateAt(1); // only take the first child node
             currentNode.childNodeReferences.applyOptionPaths(["Continue"]);
         }
+        currentNode.UpdateTree();
+
     }
 
     // Type IV
@@ -138,6 +143,8 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
 
         // child reference
         this.createOrTruncateChildNodes(currentNode, currentNode.getValueOptions());
+        currentNode.UpdateTree();
+
     }
 
     //     Type V
@@ -165,6 +172,8 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
 
         // child ref choice outcome labels
         currentNode.childNodeReferences.applyOptionPaths(nodeOption.valueOptions);
+        currentNode.UpdateTree();
+
     }
 
     // Type VI
@@ -182,7 +191,6 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     //    On Update:
     //     - add value options
     //     - add equal number of node references
-
     private ConvertToType_VI_Node(nodeOption: NodeOption, currentNode: IPalavyrNode) {
         if (currentNode.getValueOptions().length < 2) {
             const defaultValueOptions = ["Left Branch", "Right Branch"];
@@ -192,7 +200,8 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
             this.createOrTruncateChildNodes(currentNode, currentNode.getValueOptions());
             currentNode.childNodeReferences.applyOptionPaths(currentNode.getValueOptions());
         }
-    };
+        currentNode.palavyrLinkedList.reconfigureTree();
+    }
 
     public async createOrTruncateChildNodes(currentNode: IPalavyrNode, valueOptions: string[]) {
         if (currentNode.getValueOptions().length === 0) {
@@ -224,5 +233,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         currentNode.shouldRenderChildren = nodeOption.shouldRenderChildren;
         currentNode.shouldShowMultiOption = nodeOption.shouldShowMultiOption;
         currentNode.dynamicType = nodeOption.dynamicType;
+        currentNode.isAnabranchType = nodeOption.isAnabranchType;
+        currentNode.isImageNode = nodeOption.isImageNode;
     }
 }

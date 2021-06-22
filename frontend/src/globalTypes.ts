@@ -434,7 +434,6 @@ export type NodeOption = {
     nodeTypeCode: NodeTypeCode; // passed to the node changer via the nodeOptions
 };
 
-// export type NodeTypeOptions = {[index: string]: NodeOptions};
 export type NodeTypeOptions = NodeOption[];
 
 export type RequiredDetails = {
