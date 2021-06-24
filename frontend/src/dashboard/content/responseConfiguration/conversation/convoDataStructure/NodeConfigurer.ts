@@ -14,7 +14,7 @@ export class NodeConfigurer {
         rootNode.isPalavyrAnabranchStart = rootNode.isAnabranchType;
         rootNode.isPalavyrAnabranchMember = rootNode.isAnabranchType;
         rootNode.isPalavyrAnabranchEnd = false;
-        rootNode.anabranchContext = rootNode.isAnabranchType ? { anabranchOriginId: rootNode.nodeId } : {anabranchOriginId: ""};
+        rootNode.anabranchContext = rootNode.isAnabranchType ? { anabranchOriginId: rootNode.nodeId } : { anabranchOriginId: "" };
     }
 
     public configure(currentNode: IPalavyrNode, parentNode: IPalavyrNode) {
@@ -25,33 +25,37 @@ export class NodeConfigurer {
     }
 
     private configureAnabranch(currentNode: IPalavyrNode, parentNode: IPalavyrNode) {
-        // what kind of anabranch node am I?
+        // all nodes establish their own anabranch context
+        // possibly update this if parent has anabranch origin node set
+        currentNode.anabranchContext = {
+            anabranchOriginId: "",
+        };
 
-        // am I the start node?
-        currentNode.isPalavyrAnabranchStart = currentNode.isAnabranchType;
+        if (currentNode.isAnabranchType) {
+            currentNode.isPalavyrAnabranchStart = true;
+            currentNode.anabranchContext.anabranchOriginId = currentNode.nodeId;
+        } else if (parentNode.isPalavyrAnabranchMember) {
+            currentNode.anabranchContext.anabranchOriginId = parentNode.anabranchContext.anabranchOriginId;
+        } else {
+            currentNode.isPalavyrAnabranchStart = false;
+        }
 
-        // am I some member?
-        currentNode.isPalavyrAnabranchMember =
-            parentNode.isPalavyrAnabranchStart || (parentNode.isPalavyrAnabranchMember && !parentNode.isPalavyrAnabranchEnd) || currentNode.isPalavyrAnabranchStart || currentNode.isAnabranchMergePoint;
-
-        // amd I an anabranch merge point?
+        // merge points are considered endings - and this is a switch set on the node
         currentNode.isPalavyrAnabranchEnd = currentNode.isAnabranchMergePoint;
 
-        // if I'm the start, track my node Id
-        if (currentNode.isPalavyrAnabranchStart) {
-            currentNode.anabranchContext = {
-                ...parentNode.anabranchContext,
-                anabranchOriginId: currentNode.nodeId,
-            };
-        } else {
-            currentNode.anabranchContext = {
-                ...parentNode.anabranchContext,
-                anabranchOriginId: ""
-            }
-        }
+        // the current node is an anabranch member if:
+        // - the current node is anabranch type
+        // - the parent is anabranch member and the current is not the end
+        // - the parent is anabranch member and the current is the end and the current is anabranch type
+
+        currentNode.isPalavyrSplitmergeMember =
+            currentNode.isAnabranchType ||
+            (parentNode.isPalavyrAnabranchMember && !currentNode.isPalavyrAnabranchEnd) ||
+            (parentNode.isPalavyrAnabranchMember && currentNode.isPalavyrAnabranchEnd && currentNode.isPalavyrAnabranchMember);
     }
 
     private configureSplitMerge(currentNode: IPalavyrNode, parentNode: IPalavyrNode) {
+        // TODO figure this out
         currentNode.isPalavyrSplitmergeStart = currentNode.isPalavyrSplitmergeStart;
         currentNode.isPalavyrSplitmergeMember = parentNode.isPalavyrSplitmergeStart || (parentNode.isPalavyrSplitmergeMember && !parentNode.isPalavyrSplitmergeEnd);
         currentNode.isPalavyrSplitmergePrimarybranch = currentNode.isMemberOfLeftmostBranch;

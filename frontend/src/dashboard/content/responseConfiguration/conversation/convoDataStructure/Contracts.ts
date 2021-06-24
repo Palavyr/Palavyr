@@ -1,6 +1,10 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { ConvoNode, EmptyComponentType, LineMap, AnabranchContext, SplitmergeContext, NodeTypeOptions, NodeTypeCode } from "@Palavyr-Types";
 
+export interface NodeOptionalProps {
+    node: IPalavyrNode;
+}
+
 export interface ILinkedListBucket {
     addToBucket(node: IPalavyrNode): void;
     convertToConvoNodes(areaId: string): ConvoNode[];
@@ -73,7 +77,6 @@ export interface IPalavyrNode {
     addLine(parentId: string): void;
     setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
 
-
     isRoot: boolean;
     nodeId: string;
     userText: string;
@@ -115,7 +118,6 @@ export interface IPalavyrNode {
     rawNodeList: ConvoNode[]; // Get Rid of this
 
     lineMap: LineMap;
-
 
     palavyrLinkedList: IPalavyrLinkedList; // the containing list object that this node is a member of. Used to acccess update methods
 

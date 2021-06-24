@@ -13,16 +13,15 @@ import { useNodeInterfaceStyles } from "./nodeInterfaceStyles";
 import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "./Contracts";
 import { NodeReferences } from "./PalavyrNodeReferences";
 
-import {
-    AnabranchMergeCheckBox,
-    AnabranchMergeNodeLabel,
-    ShowMergeWithPrimarySiblingBranchOption,
-    ShowResponseInPdf,
-    SplitMergeAnchorLabel,
-    UnsetNodeButton,
-} from "./PalavyrNodeOptionals";
+
 import { PalavyrNodeChanger } from "./NodeChanger";
 import { NodeConfigurer } from "./NodeConfigurer";
+import { AnabranchMergeCheckBox } from "./nodeOptionals/AnabranchMergeCheckBox";
+import { AnabranchMergeNodeLabel } from "./nodeOptionals/AnabranchMergeNodeLabel";
+import { ShowMergeWithPrimarySiblingBranchOption } from "./nodeOptionals/MergeWithPrimarySiblingButton";
+import { ShowResponseInPdf } from "./nodeOptionals/ShowResponseInPdf";
+import { SplitMergeAnchorLabel } from "./nodeOptionals/SplitMergeAnchorLabel";
+import { UnsetNodeButton } from "./nodeOptionals/UnsetNodeButton";
 const treelinkClassName = "tree-line-link";
 
 export abstract class PalavyrNode implements IPalavyrNode {
