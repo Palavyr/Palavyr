@@ -235,5 +235,6 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         currentNode.dynamicType = nodeOption.dynamicType;
         currentNode.isAnabranchType = nodeOption.isAnabranchType;
         currentNode.isImageNode = nodeOption.isImageNode;
+        currentNode.dynamicType = nodeOption.dynamicType
     }
 }

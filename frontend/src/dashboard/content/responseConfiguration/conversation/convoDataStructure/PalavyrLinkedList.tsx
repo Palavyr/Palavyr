@@ -40,7 +40,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     private assembleDoubleLinkedMultiBranchLinkedList(nodeList: ConvoNode[]) {
         this.linkedListBucket.clear(); // new
         const headNode = this.convertToPalavyrNode(this, this.repository, this.nodeTypeOptions, this.head, nodeList, this.setTreeWithHistory, true);
-        this.configurer.configureRootNode(headNode);
+        this.configurer.configure(headNode);
         this.rootNode = headNode;
         this.linkedListBucket.addToBucket(headNode);
         this.recursivelyAssembleLinkedList(headNode, this.head.nodeChildrenString, nodeList);
@@ -50,7 +50,6 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         const childIds = _splitAndRemoveEmptyNodeChildrenString(nodeChildrenString);
         if (childIds.length === 0) return;
         for (let index = 0; index < childIds.length; index++) {
-
             // childnodes add themselves to their parent node reference
             const childId = childIds[index];
 
@@ -143,7 +142,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     reconfigureTree(): void {
         this.traverse((node: IPalavyrNode) => {
             if (node.isRoot) {
-                this.configurer.configureRootNode(node);
+                this.configurer.configure(node);
             } else {
                 const leftmostParent = node.parentNodeReferences.retrieveLeftmostReference();
                 this.configurer.configure(node, leftmostParent!);

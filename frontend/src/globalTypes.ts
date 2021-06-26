@@ -829,6 +829,7 @@ export type SplitmergeContext = {
 
 export type AnabranchContext = {
     anabranchOriginId: string; // the node Id of the anabranch root node
+    leftmostAnabranch: boolean;
 };
 
 export interface IDashboardContext {

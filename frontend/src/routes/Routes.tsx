@@ -32,7 +32,6 @@ import Auth from "auth/Auth";
 import { EmailConfiguration } from "dashboard/content/responseConfiguration/uploadable/emailTemplates/EmailConfiguration";
 import { ResponseConfiguration } from "dashboard/content/responseConfiguration/response/ResponseConfiguration";
 import { AttachmentConfiguration } from "dashboard/content/responseConfiguration/uploadable/attachments/AttachmentConfiguration";
-import { ConvoTree } from "dashboard/content/responseConfiguration/conversation/ConvoTree";
 import { AreaSettings } from "dashboard/content/responseConfiguration/areaSettings/AreaSettings";
 import { ConfigurationPreview } from "dashboard/content/responseConfiguration/previews/ConfigurationPreview";
 import { AreaContent } from "dashboard/content/responseConfiguration/AreaContent";

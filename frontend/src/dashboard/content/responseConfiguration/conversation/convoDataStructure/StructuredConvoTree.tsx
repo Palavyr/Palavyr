@@ -102,6 +102,10 @@ export const StructuredConvoTree = () => {
                 })();
             }
         }
+
+        return () => {
+            setTreeErrors(undefined);
+        }
         // Disabling this here because we don't want to rerender on requriedNodes change (thought that seems almost what we want, but actually isn't)
         // We compute this on the nodeList in fact, and the requiredNodes only change when we change areaIdentifier (or update the dynamic tables option on the other tab)
         // eslint-disable-next-line react-hooks/exhaustive-deps

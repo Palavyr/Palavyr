@@ -13,7 +13,6 @@ import { useNodeInterfaceStyles } from "./nodeInterfaceStyles";
 import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "./Contracts";
 import { NodeReferences } from "./PalavyrNodeReferences";
 
-
 import { PalavyrNodeChanger } from "./NodeChanger";
 import { NodeConfigurer } from "./NodeConfigurer";
 import { AnabranchMergeCheckBox } from "./nodeOptionals/AnabranchMergeCheckBox";
@@ -532,21 +531,33 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
     public recursiveReferenceThisAnabranchOrigin(anabranchMergeNode: IPalavyrNode) {
         if (!this.isAnabranchType) throw new Error("Attempting to call anabranch reference method from non-anabranch-origin node");
-
+        this.lock();
+        anabranchMergeNode.lock();
         const recurseAndReference = (childReferences: INodeReferences) => {
-            for (let index = 0; index < childReferences.Length; index++) {
-                const childNode = childReferences.references[index];
-                childNode.lock();
-                if (childNode.nodeIsNotSet()) {
-                    childNode.AddNewChildReference(anabranchMergeNode);
-                    anabranchMergeNode.parentNodeReferences.addReference(childNode);
-                    childNode.setAsProvideInfo();
+            childReferences.forEach((node: IPalavyrNode) => {
+                node.lock();
+                if (node.childNodeReferences.containsNode(anabranchMergeNode)) {
+                    // do nothing
+                    // todo - maybe we want to bail on leftmost?
                 } else {
-                    recurseAndReference(childNode.childNodeReferences);
+                    if (node.childNodeReferences.Length === 1 && node.childNodeReferences.retrieveLeftmostReference()?.nodeIsNotSet()) {
+                        node.childNodeReferences.Clear();
+                        node.AddNewChildReference(anabranchMergeNode);
+                        node.setAsProvideInfo();
+                        node.shouldRenderChildren = false;
+                        anabranchMergeNode.addLine(node.nodeId);
+                    } else if (node.nodeIsNotSet()) {
+                        node.setAsProvideInfo();
+                        node.shouldRenderChildren = false;
+                        anabranchMergeNode.addLine(node.nodeId);
+                    } else {
+                        recurseAndReference(node.childNodeReferences);
+                    }
                 }
-            }
+            });
         };
 
+        // this is te anabranch origin node
         recurseAndReference(this.childNodeReferences);
     }
 
@@ -568,7 +579,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
             }
         };
 
-        recurseAndDereference(this.childNodeReferences);
+        recurseAndDereference(anabranchMergeNode.childNodeReferences);
     }
 
     public isPenultimate() {

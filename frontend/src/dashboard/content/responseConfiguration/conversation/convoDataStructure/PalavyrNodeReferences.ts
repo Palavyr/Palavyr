@@ -54,10 +54,18 @@ export class NodeReferences implements INodeReferences {
         return this.nodeReferences.filter((x: IPalavyrNode) => x.nodeId === nodeId).length > 0;
     }
 
+    public containsNode(node: IPalavyrNode) {
+        return this.contains(node.nodeId);
+    }
+
     public addReference(node: IPalavyrNode) {
         if (!this.contains(node.nodeId)) {
             this.nodeReferences.push(node);
         }
+    }
+
+    public forEach(callBack: (node: IPalavyrNode) => void) {
+        this.nodeReferences.forEach(callBack);
     }
 
     public Empty() {
@@ -102,5 +110,11 @@ export class NodeReferences implements INodeReferences {
             return this.nodeReferences[0];
         }
         return null;
+    }
+
+    public findIndexOf(node: IPalavyrNode): number | null {
+        const index = this.nodeReferences.findIndex((x: IPalavyrNode) => x.nodeId === node.nodeId);
+        if (index === -1) return null;
+        return index;
     }
 }

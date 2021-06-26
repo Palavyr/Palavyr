@@ -51,6 +51,9 @@ export interface INodeReferences {
     applyOptionPaths(valueOptions: string[]): void;
     collectPathOptions(): string[];
     retrieveLeftmostReference(): IPalavyrNode | null;
+    findIndexOf(node: IPalavyrNode): number | null;
+    containsNode(node: IPalavyrNode): boolean;
+    forEach(callBack: (node: IPalavyrNode) => void)
 }
 
 export interface IPalavyrNode {
