@@ -16,7 +16,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     private head: ConvoNode;
     private setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
     private repository: PalavyrRepository = new PalavyrRepository();
-    private nodeTypeOptions: NodeTypeOptions;
+    public nodeTypeOptions: NodeTypeOptions;
     private configurer: NodeConfigurer = new NodeConfigurer();
 
     /**

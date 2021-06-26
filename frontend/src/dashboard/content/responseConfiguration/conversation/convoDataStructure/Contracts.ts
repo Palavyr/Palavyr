@@ -30,6 +30,7 @@ export interface IPalavyrLinkedList {
         setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
         leftMostBranch: boolean
     ): IPalavyrNode;
+    nodeTypeOptions: NodeTypeOptions;
 }
 
 export interface INodeReferences {

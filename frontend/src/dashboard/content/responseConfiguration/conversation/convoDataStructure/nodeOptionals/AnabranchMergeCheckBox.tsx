@@ -34,10 +34,15 @@ const onChange = (event: { target: { checked: boolean } }, setAnabranchMergeChec
     node.UpdateTree();
 };
 
-const shouldShow = (node: IPalavyrNode) => {
+const shouldShow = (node: IPalavyrNode, disabled: boolean) => {
     const isChildOfAnabranchType = node.parentNodeReferences.checkIfReferenceExistsOnCondition((node: IPalavyrNode) => node.isPalavyrAnabranchStart);
-    const _shouldShow = node.nodeIsSet() && !node.isPalavyrAnabranchStart && node.isPalavyrAnabranchMember && !node.isTerminal && !isChildOfAnabranchType && node.anabranchContext.leftmostAnabranch;
-    return _shouldShow;
+    const _shouldShow = node.nodeIsSet() && !node.isPalavyrAnabranchStart && node.isPalavyrAnabranchMember && !node.isTerminal && !isChildOfAnabranchType && node.anabranchContext.leftmostAnabranch && !node.isAnabranchLocked;
+
+    if (node.isAnabranchMergePoint) {
+        return true;
+    } else {
+        return _shouldShow;
+    }
 };
 
 export const AnabranchMergeCheckBox = ({ node }: NodeOptionalProps) => {
@@ -48,7 +53,7 @@ export const AnabranchMergeCheckBox = ({ node }: NodeOptionalProps) => {
         setAnabranchMergeChecked(node.isAnabranchMergePoint);
     }, []);
 
-    return shouldShow(node) ? (
+    return shouldShow(node, disabled) ? (
         <Tooltip title="This option locks nodes internal to the Anbranch. You cannot change node types when this is set.">
             <span>
                 <NodeCheckBox disabled={disabled} label="Set as Anabranch merge point" checked={anabranchMergeChecked} onChange={(event) => onChange(event, setAnabranchMergeChecked, node)} />

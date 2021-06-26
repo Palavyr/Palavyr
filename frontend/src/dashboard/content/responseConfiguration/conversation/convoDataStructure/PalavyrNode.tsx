@@ -538,7 +538,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
     }
 
     public filterUnallowedNodeOptions(forbiddenOptions: Array<NodeTypeCode>) {
-        this.nodeTypeOptions = this.nodeTypeOptions.filter((option: NodeOption) => {
+        this.nodeTypeOptions = this.palavyrLinkedList.nodeTypeOptions.filter((option: NodeOption) => {
             return !forbiddenOptions.includes(option.nodeTypeCode);
         });
     }
@@ -547,6 +547,13 @@ export abstract class PalavyrNode implements IPalavyrNode {
         if (!this.isAnabranchType) throw new Error("Attempting to call anabranch reference method from non-anabranch-origin node");
         this.lock();
         anabranchMergeNode.lock();
+        if (!anabranchMergeNode.isAnabranchType) {
+            anabranchMergeNode.anabranchContext.anabranchOriginId = "";
+            anabranchMergeNode.anabranchContext.leftmostAnabranch = false;
+        } else {
+            anabranchMergeNode.anabranchContext.anabranchOriginId = anabranchMergeNode.nodeId;
+            anabranchMergeNode.anabranchContext.leftmostAnabranch = true;
+        }
         const recurseAndReference = (childReferences: INodeReferences) => {
             childReferences.forEach((node: IPalavyrNode) => {
                 node.lock();
