@@ -1,5 +1,6 @@
 import { sortArrayOfObjects } from "@common/utils/sorting";
 import { Typography, Divider } from "@material-ui/core";
+import { LineLink } from "@Palavyr-Types";
 import { values } from "lodash";
 import React from "react";
 
@@ -13,7 +14,6 @@ interface DataProps {
     nodeChildren: string;
 }
 
-
 export const DataLogging = ({ debugData, nodeId, nodeChildren }: DataProps) => {
     return (
         <div>
@@ -22,9 +22,18 @@ export const DataLogging = ({ debugData, nodeId, nodeChildren }: DataProps) => {
                 {sortArrayOfObjects(debugData).map((item: DataItem, index: number) => {
                     let key = Object.keys(item)[0];
                     let val = Object.values(item)[0];
-                    if (typeof val === "object" && val?.hasOwnProperty("anabranchOriginId")) {
-                        val = [Object.values(val)].join(", ")
+
+                    if (key === "lineMap") {
+                        const res = val.map((x: LineLink) => {
+                            return `from:${x.from.split("-")[0]} to:${x.to.split("-")[0]}`;
+                        });
+                        val = res.join("---");
                     }
+
+                    if (typeof val === "object" && val?.hasOwnProperty("anabranchOriginId")) {
+                        val = [Object.values(val)].join(", ");
+                    }
+
                     if (typeof val === "object") return;
                     if (typeof val === "boolean") {
                         val = val.toString().toUpperCase();

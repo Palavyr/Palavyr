@@ -110,8 +110,8 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         return this.linkedListBucket;
     }
 
-    renderNodeTree() {
-        return this.rootNode.createPalavyrNodeComponent();
+    renderNodeTree(pBuffer: number) {
+        return this.rootNode.createPalavyrNodeComponent(pBuffer);
     }
 
     findNode(nodeId: string): IPalavyrNode {

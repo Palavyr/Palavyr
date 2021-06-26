@@ -64,8 +64,8 @@ export class NodeReferences implements INodeReferences {
         }
     }
 
-    public forEach(callBack: (node: IPalavyrNode) => void) {
-        this.nodeReferences.forEach(callBack);
+    public forEach(callBack: (node: IPalavyrNode, index: number) => void) {
+        this.nodeReferences.forEach((node: IPalavyrNode, index: number) => callBack(node, index));
     }
 
     public Empty() {

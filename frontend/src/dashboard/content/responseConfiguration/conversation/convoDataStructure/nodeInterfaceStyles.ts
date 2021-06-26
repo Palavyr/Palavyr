@@ -10,7 +10,7 @@ type StyleProps = {
     isImageNode: boolean;
 };
 
-export const useNodeInterfaceStyles = makeStyles(() => ({
+export const useNodeInterfaceStyles = makeStyles((theme) => ({
     root: (props: StyleProps) => ({
         minWidth: "275px",
         maxWidth: props.debugOn ? "600px" : "250px",
@@ -18,7 +18,7 @@ export const useNodeInterfaceStyles = makeStyles(() => ({
         borderColor: props.nodeType === "" ? "red" : props.isDecendentOfSplitMerge && props.splitMergeRootSiblingIndex > 0 ? "purple" : "#54585A",
         borderWidth: props.nodeType === "" ? "5px" : props.isDecendentOfSplitMerge && props.splitMergeRootSiblingIndex > 0 ? "8px" : "2px",
         borderRadius: "3px",
-        backgroundColor: "#C7ECEE",
+        backgroundColor: theme.palette.success.light,
     }),
     card: {
         display: "flex",

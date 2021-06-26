@@ -21,6 +21,7 @@ import { ShowMergeWithPrimarySiblingBranchOption } from "./nodeOptionals/MergeWi
 import { ShowResponseInPdf } from "./nodeOptionals/ShowResponseInPdf";
 import { SplitMergeAnchorLabel } from "./nodeOptionals/SplitMergeAnchorLabel";
 import { UnsetNodeButton } from "./nodeOptionals/UnsetNodeButton";
+import { NodeCreator } from "./NodeCreator";
 const treelinkClassName = "tree-line-link";
 
 export abstract class PalavyrNode implements IPalavyrNode {
@@ -61,6 +62,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
     public childNodeReferences: INodeReferences = new NodeReferences();
     public parentNodeReferences: INodeReferences = new NodeReferences();
     private configurer = new NodeConfigurer();
+    private nodeCreator: NodeCreator = new NodeCreator();
 
     public isMemberOfLeftmostBranch: boolean;
 
@@ -274,7 +276,13 @@ export abstract class PalavyrNode implements IPalavyrNode {
     }
 
     // TODO: Would this work: https://sourceforge.net/projects/js-graph-it/ ?
-    public createPalavyrNodeComponent() {
+    public createPalavyrNodeComponent(pBuffer: number) {
+        type StyleProps = {
+            buffer: number;
+        };
+        type Props = {
+            paddingBuffer: number;
+        };
         const useStyles = makeStyles((theme) => ({
             treeItem: {
                 display: "flex",
@@ -282,9 +290,9 @@ export abstract class PalavyrNode implements IPalavyrNode {
                 alignItems: "center",
                 zIndex: 10,
             },
-            treeBlockWrap: {
-                padding: "2rem 2rem 2rem 2rem",
-            },
+            treeBlockWrap: (props: StyleProps) => ({
+                padding: `${props.buffer}rem ${props.buffer}rem ${props.buffer}rem ${props.buffer}rem`,
+            }),
             treeRow: {
                 display: "flex",
                 flexDirection: "row",
@@ -298,7 +306,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
                 return () => setLoaded(false);
             }, []);
 
-            const cls = useStyles();
+            const cls = useStyles({ buffer: pBuffer });
             return (
                 <>
                     <div className={classNames(treelinkClassName, cls.treeItem)}>
@@ -308,7 +316,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
                                 {this.shouldRenderChildren ? (
                                     this.childNodeReferences.nodes.map(
                                         (nextNode: IPalavyrNode, index: number): React.ReactNode => {
-                                            const Node = nextNode.createPalavyrNodeComponent();
+                                            const Node = nextNode.createPalavyrNodeComponent(pBuffer);
                                             return <Node key={[this.nodeId, nextNode.nodeId, index.toString()].join("-")} />;
                                         }
                                     )
@@ -449,7 +457,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
             return (
                 <Card style={{ border: "5px solid black" }} id={this.nodeId} className={cls.root} variant="outlined">
                     <CardContent className={classNames(cls.card, this.nodeId)}>
-                        {showDebugData && <DataLogging debugData={this.compileDebug()} nodeChildren={this.nodeChildrenString} nodeId={this.nodeId} />}
+                        {showDebugData && <DataLogging debugData={this.compileDebug()} nodeChildren={this.childNodeReferences.joinedReferenceString} nodeId={this.nodeId} />}
                         {this.renderNodeHeader()({ isRoot: this.isRoot, optionPath: this.optionPath })}
                         {this.renderNodeFace()({ openEditor })}
                         {this.renderPalavyrNodeTypeSelector()()}
@@ -529,6 +537,12 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.nodeType = "ProvideInfo";
     }
 
+    public filterUnallowedNodeOptions(forbiddenOptions: Array<NodeTypeCode>) {
+        this.nodeTypeOptions = this.nodeTypeOptions.filter((option: NodeOption) => {
+            return !forbiddenOptions.includes(option.nodeTypeCode);
+        });
+    }
+
     public recursiveReferenceThisAnabranchOrigin(anabranchMergeNode: IPalavyrNode) {
         if (!this.isAnabranchType) throw new Error("Attempting to call anabranch reference method from non-anabranch-origin node");
         this.lock();
@@ -542,14 +556,20 @@ export abstract class PalavyrNode implements IPalavyrNode {
                 } else {
                     if (node.childNodeReferences.Length === 1 && node.childNodeReferences.retrieveLeftmostReference()?.nodeIsNotSet()) {
                         node.childNodeReferences.Clear();
-                        node.AddNewChildReference(anabranchMergeNode);
-                        node.setAsProvideInfo();
+
+                        if (!node.isTerminal) {
+                            node.AddNewChildReference(anabranchMergeNode);
+                        }
+
                         node.shouldRenderChildren = false;
                         anabranchMergeNode.addLine(node.nodeId);
+                        anabranchMergeNode.parentNodeReferences.addReference(node);
                     } else if (node.nodeIsNotSet()) {
                         node.setAsProvideInfo();
                         node.shouldRenderChildren = false;
+                        node.AddNewChildReference(anabranchMergeNode);
                         anabranchMergeNode.addLine(node.nodeId);
+                        anabranchMergeNode.parentNodeReferences.addReference(node);
                     } else {
                         recurseAndReference(node.childNodeReferences);
                     }
@@ -561,25 +581,41 @@ export abstract class PalavyrNode implements IPalavyrNode {
         recurseAndReference(this.childNodeReferences);
     }
 
-    public recursiveDereferenceThisAnabranchOrigin(anabranchMergeNode: IPalavyrNode) {
-        if (!this.isAnabranchType) throw new Error("Attempting to call anabranch reference method from non-anabranch-origin node");
+    public removeLine(toNode: IPalavyrNode) {
+        this.lineMap = this.lineMap.filter((lineLink: LineLink) => {
+            return lineLink.to !== toNode.nodeId;
+        });
+    }
+
+    public dereferenceThisAnabranchMergePoint(anabranchOriginNode: IPalavyrNode) {
+        // Assumes that this node is the anabranch merge node with the checkbox
+        if (!this.isAnabranchMergePoint) throw new Error("Attempting to call anabranch reference method from non-anabranch-merge-point node");
+
+        anabranchOriginNode.unlock();
+        this.unlock();
+        const mergeNode = this as IPalavyrNode;
 
         const recurseAndDereference = (childReferences: INodeReferences) => {
-            for (let index = 0; index < childReferences.Length; index++) {
-                const childNode = childReferences.references[index];
-                childNode.unlock();
-
-                const childReferencesAnabranchMerge = childNode.childNodeReferences.checkIfReferenceExistsOnCondition((x: IPalavyrNode) => x.nodeId === anabranchMergeNode.nodeId);
-                if (childReferencesAnabranchMerge && !childNode.isMemberOfLeftmostBranch) {
-                    childNode.childNodeReferences.removeReference(anabranchMergeNode);
-                    anabranchMergeNode.parentNodeReferences.removeReference(childNode);
+            childReferences.forEach((node: IPalavyrNode) => {
+                node.unlock();
+                if (node.childNodeReferences.containsNode(mergeNode)) {
+                    if (!node.anabranchContext.leftmostAnabranch) {
+                        node.childNodeReferences.Clear();
+                        this.nodeCreator.addDefaultChild(node, "Continue");
+                        node.shouldRenderChildren = true;
+                    }
                 } else {
-                    recurseAndDereference(childNode.childNodeReferences);
+                    node.unlock();
+                    recurseAndDereference(node.childNodeReferences);
                 }
-            }
+            });
         };
 
-        recurseAndDereference(anabranchMergeNode.childNodeReferences);
+        this.parentNodeReferences.forEach((node: IPalavyrNode, index: number) => {
+            if (index > 0) this.removeLine(node);
+        });
+
+        recurseAndDereference(anabranchOriginNode.childNodeReferences);
     }
 
     public isPenultimate() {

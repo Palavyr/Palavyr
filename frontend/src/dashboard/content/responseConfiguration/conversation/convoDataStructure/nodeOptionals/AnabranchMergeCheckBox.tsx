@@ -12,15 +12,24 @@ const onChange = (event: { target: { checked: boolean } }, setAnabranchMergeChec
 
     if (checked) {
         node.isPalavyrAnabranchEnd = true;
-        node.isAnabranchMergePoint = true
+        node.isAnabranchMergePoint = true;
         anabranchOriginNode.recursiveReferenceThisAnabranchOrigin(node);
         setAnabranchMergeChecked(true);
+        node.childNodeReferences.forEach((child: IPalavyrNode) => {
+            if (!node.isAnabranchType) {
+                child.isPalavyrAnabranchMember = false;
+            }
+        });
     } else {
+        node.dereferenceThisAnabranchMergePoint(anabranchOriginNode);
         node.isPalavyrAnabranchEnd = false;
         node.isAnabranchMergePoint = false;
-
         setAnabranchMergeChecked(false);
-        anabranchOriginNode.recursiveDereferenceThisAnabranchOrigin(node);
+        node.childNodeReferences.forEach((child: IPalavyrNode) => {
+            if (!node.isAnabranchType) {
+                child.isPalavyrAnabranchMember = true;
+            }
+        });
     }
     node.UpdateTree();
 };

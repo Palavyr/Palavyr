@@ -53,11 +53,11 @@ export interface INodeReferences {
     retrieveLeftmostReference(): IPalavyrNode | null;
     findIndexOf(node: IPalavyrNode): number | null;
     containsNode(node: IPalavyrNode): boolean;
-    forEach(callBack: (node: IPalavyrNode) => void)
+    forEach(callBack: (node: IPalavyrNode, index?: number | undefined) => void);
 }
 
 export interface IPalavyrNode {
-    createPalavyrNodeComponent(): EmptyComponentType;
+    createPalavyrNodeComponent(pBuffer: number): EmptyComponentType;
     lock(): void;
     unlock(): void;
     setAsProvideInfo(): void;
@@ -67,7 +67,7 @@ export interface IPalavyrNode {
     addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode): void;
     compileConvoNode(areaId: string): ConvoNode;
     recursiveReferenceThisAnabranchOrigin(node: IPalavyrNode): void;
-    recursiveDereferenceThisAnabranchOrigin(node: IPalavyrNode): void;
+    dereferenceThisAnabranchMergePoint(anabranchOriginNode: IPalavyrNode): void;
     UpdateTree(): void;
     removeSelf(): void;
     nodeIsSet(): boolean;
@@ -79,6 +79,8 @@ export interface IPalavyrNode {
     getValueOptions(): string[];
     addLine(parentId: string): void;
     setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
+    removeLine(toNode: IPalavyrNode): void;
+    filterUnallowedNodeOptions(forbiddenOptions: Array<NodeTypeCode>);
 
     isRoot: boolean;
     nodeId: string;

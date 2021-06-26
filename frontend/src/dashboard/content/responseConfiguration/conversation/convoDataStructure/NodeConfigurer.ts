@@ -1,3 +1,4 @@
+import { NodeTypeCode } from "@Palavyr-Types";
 import { IPalavyrNode } from "./Contracts";
 
 export class NodeConfigurer {
@@ -75,6 +76,15 @@ export class NodeConfigurer {
 
         // merge points are considered endings - and this is a switch set on the node
         currentNode.isPalavyrAnabranchEnd = currentNode.isAnabranchMergePoint;
+
+        if (currentNode.isPalavyrAnabranchMember) {
+            const notAllowedInsideAnabranch = [NodeTypeCode.VI, NodeTypeCode.VII];
+            if (currentNode.anabranchContext.leftmostAnabranch) {
+                notAllowedInsideAnabranch.push(NodeTypeCode.IV);
+                notAllowedInsideAnabranch.push(NodeTypeCode.V);
+            }
+            currentNode.filterUnallowedNodeOptions(notAllowedInsideAnabranch);
+        }
     }
 
     private configureSplitMerge(currentNode: IPalavyrNode, parentNode: IPalavyrNode) {

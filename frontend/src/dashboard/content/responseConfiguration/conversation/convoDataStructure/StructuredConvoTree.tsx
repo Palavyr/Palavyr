@@ -15,6 +15,8 @@ import PalavyrErrorBoundary from "@common/components/Errors/PalavyrErrorBoundary
 import { ConversationHistoryTracker } from "../nodes/ConversationHistoryTracker";
 import { PalavyrLinkedList } from "./PalavyrLinkedList";
 import { TreeErrorPanel } from "../MissingDynamicNodes";
+import AddIcon from "@material-ui/icons/Add";
+import RemoveIcon from "@material-ui/icons/Remove";
 
 const useStyles = makeStyles(() => ({
     conversation: {
@@ -105,7 +107,7 @@ export const StructuredConvoTree = () => {
 
         return () => {
             setTreeErrors(undefined);
-        }
+        };
         // Disabling this here because we don't want to rerender on requriedNodes change (thought that seems almost what we want, but actually isn't)
         // We compute this on the nodeList in fact, and the requiredNodes only change when we change areaIdentifier (or update the dynamic tables option on the other tab)
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -138,7 +140,8 @@ export const StructuredConvoTree = () => {
         }
     };
 
-    const Tree = linkedNodeList !== undefined ? linkedNodeList.renderNodeTree() : null;
+    const [paddingBuffer, setPaddingBuffer] = useState<number>(2);
+    const Tree = linkedNodeList !== undefined ? linkedNodeList.renderNodeTree(paddingBuffer) : null;
 
     return (
         <ConversationTreeContext.Provider value={{ nodeTypeOptions, setNodes: setTreeWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
@@ -169,6 +172,28 @@ export const StructuredConvoTree = () => {
                 >
                     Redo
                 </Button>
+
+                <Button
+                    variant="contained"
+                    className={cls.convoTreeMetaButtons}
+                    endIcon={<AddIcon />}
+                    onClick={() => {
+                        if (paddingBuffer < 10) setPaddingBuffer(paddingBuffer + 1);
+                    }}
+                >
+                    Spacing
+                </Button>
+                <Button
+                    variant="contained"
+                    className={cls.convoTreeMetaButtons}
+                    endIcon={<RemoveIcon />}
+                    onClick={() => {
+                        if (paddingBuffer > 1) setPaddingBuffer(paddingBuffer - 1);
+                    }}
+                >
+                    Spacing
+                </Button>
+
                 {isDevelopmentStage() && (
                     <>
                         <Button variant="contained" className={cls.convoTreeMetaButtons} onClick={toggleDebugData}>
