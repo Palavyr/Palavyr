@@ -10,7 +10,7 @@ export interface ILinkedListBucket {
     convertToConvoNodes(areaId: string): ConvoNode[];
     addToBucket(node: IPalavyrNode): void;
     clear(): void;
-    findById(nodeId: string): IPalavyrNode;
+    findById(nodeId: string): IPalavyrNode | null;
 }
 
 export interface IPalavyrLinkedList {
@@ -19,7 +19,7 @@ export interface IPalavyrLinkedList {
     delete(): void;
     compileToConvoNodes(): ConvoNode[];
     reconfigureTree(nodeTypeOptions: NodeTypeOptions): void;
-    findNode(nodeId: string): IPalavyrNode;
+    findNode(nodeId: string): IPalavyrNode | null;
     retrieveCleanHeadNode(): IPalavyrNode;
     convertToPalavyrNode(
         container: IPalavyrLinkedList,

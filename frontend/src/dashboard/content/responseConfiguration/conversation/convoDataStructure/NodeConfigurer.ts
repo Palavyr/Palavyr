@@ -19,6 +19,15 @@ export class NodeConfigurer {
         } else {
             throw new Error("Either make: current is root, or both current node and parent node are provided. ");
         }
+
+        if (currentNode.isAnabranchMergePoint) {
+            const origin = currentNode.anabranchContext.anabranchOriginId;
+            const anabranchOriginNode = currentNode.palavyrLinkedList.findNode(origin);
+            anabranchOriginNode.recursiveReferenceThisAnabranchOrigin(currentNode);
+            currentNode.parentNodeReferences.forEach((node, index) => {
+                currentNode.addLine(node.nodeId);
+            });
+        }
     }
 
     private configureAnabranchWhenRoot(rootNode: IPalavyrNode) {

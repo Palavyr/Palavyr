@@ -34,7 +34,7 @@ export class LinkedListBucket implements ILinkedListBucket {
 
     public findById(nodeId: string) {
         const node = this.linkedListBucket.filter((x: IPalavyrNode) => x.nodeId === nodeId);
-        if (node.length === 0) throw new Error("Attempting to find a node that does not exist in the tree");
+        if (node.length === 0) return null;//throw new Error("Attempting to find a node that does not exist in the tree");
         if (node.length > 1) throw new Error("Attempting to find a node that was somehow duplicated.");
         return node[0];
     }

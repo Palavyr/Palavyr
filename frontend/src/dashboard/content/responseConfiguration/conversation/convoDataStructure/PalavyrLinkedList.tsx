@@ -16,7 +16,6 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     private head: ConvoNode;
     private setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
     private repository: PalavyrRepository = new PalavyrRepository();
-    // public nodeTypeOptions: NodeTypeOptions;
     private configurer: NodeConfigurer = new NodeConfigurer();
 
     /**
@@ -52,13 +51,16 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
             // childnodes add themselves to their parent node reference
             const childId = childIds[index];
 
-            const childConvoNode = _getNodeById(childId, nodeList);
+            const existingNode = this.findNode(childId);
 
-            const newNode = this.convertToPalavyrNode(this, this.repository, childConvoNode, nodeList, this.setTreeWithHistory, index === 0);
-
-            newNode.addNewNodeReferenceAndConfigure(newNode, parentNode, nodeTypeOptions);
-
-            this.recursivelyAssembleLinkedList(newNode, childConvoNode.nodeChildrenString, nodeList, nodeTypeOptions);
+            if (existingNode === null) {
+                const childConvoNode = _getNodeById(childId, nodeList);
+                const newNode = this.convertToPalavyrNode(this, this.repository, childConvoNode, nodeList, this.setTreeWithHistory, index === 0);
+                newNode.addNewNodeReferenceAndConfigure(newNode, parentNode, nodeTypeOptions);
+                this.recursivelyAssembleLinkedList(newNode, childConvoNode.nodeChildrenString, nodeList, nodeTypeOptions);
+            } else {
+                existingNode.addNewNodeReferenceAndConfigure(existingNode, parentNode, nodeTypeOptions);
+            }
         }
 
         parentNode.sortChildReferences();
@@ -112,7 +114,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         return this.rootNode.createPalavyrNodeComponent(pBuffer);
     }
 
-    findNode(nodeId: string): IPalavyrNode {
+    findNode(nodeId: string): IPalavyrNode | null {
         this.linkedListBucket.clear();
 
         const compileCallback = (node: IPalavyrNode) => {
@@ -120,7 +122,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         };
         this.traverse(compileCallback);
 
-        const node = this.linkedListBucket.findById(nodeId);
+        const node = this.linkedListBucket.findById(nodeId); // could be null
         return node;
     }
 
