@@ -1,4 +1,4 @@
-import { NodeTypeCode } from "@Palavyr-Types";
+import { NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { IPalavyrNode } from "./Contracts";
 
 export class NodeConfigurer {
@@ -7,13 +7,13 @@ export class NodeConfigurer {
      */
     constructor() {}
 
-    public configure(currentNode: IPalavyrNode, parentNode: IPalavyrNode | null = null) {
+    public configure(currentNode: IPalavyrNode, parentNode: IPalavyrNode | null = null, nodeTypeOptions: NodeTypeOptions) {
         if (currentNode.isRoot) {
             this.configureAnabranchWhenRoot(currentNode);
         } else if (parentNode !== null) {
             currentNode.parentNodeReferences.addReference(parentNode);
             currentNode.addLine(parentNode.nodeId);
-            this.configureAnabranch(currentNode, parentNode);
+            this.configureAnabranch(currentNode, parentNode, nodeTypeOptions);
             // this.configureSplitMerge(currentNode, parentNode);
         } else {
             throw new Error("Either make: current is root, or both current node and parent node are provided. ");
@@ -27,7 +27,7 @@ export class NodeConfigurer {
         rootNode.anabranchContext = rootNode.isAnabranchType ? { anabranchOriginId: rootNode.nodeId, leftmostAnabranch: false } : { anabranchOriginId: "", leftmostAnabranch: false };
     }
 
-    private configureAnabranch(currentNode: IPalavyrNode, parentNode: IPalavyrNode) {
+    private configureAnabranch(currentNode: IPalavyrNode, parentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         // all nodes establish their own anabranch context
         // possibly update this if parent has anabranch origin node set
         currentNode.anabranchContext = {
@@ -83,7 +83,9 @@ export class NodeConfigurer {
                 notAllowedInsideAnabranch.push(NodeTypeCode.IV);
                 notAllowedInsideAnabranch.push(NodeTypeCode.V);
             }
-            currentNode.filterUnallowedNodeOptions(notAllowedInsideAnabranch);
+            currentNode.filterUnallowedNodeOptions(notAllowedInsideAnabranch, nodeTypeOptions);
+        } else {
+            currentNode.filterUnallowedNodeOptions([], nodeTypeOptions);
         }
     }
 

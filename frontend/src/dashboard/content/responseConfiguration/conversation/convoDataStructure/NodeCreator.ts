@@ -1,21 +1,19 @@
 import { IPalavyrNode } from "./Contracts";
-import { ConvoNode, NodeTypeCode } from "@Palavyr-Types";
+import { ConvoNode, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { v4 as uuid } from "uuid";
 
 export class NodeCreator {
-
-    public addDefaultChild(currentNode: IPalavyrNode, optionPath: string) {
+    public addDefaultChild(currentNode: IPalavyrNode, optionPath: string, nodeTypeOptions: NodeTypeOptions) {
         const defaultNode = this.createDefaultNode(optionPath);
         const newPalavyrNode = currentNode.palavyrLinkedList.convertToPalavyrNode(
             currentNode.palavyrLinkedList,
             currentNode.repository,
-            currentNode.nodeTypeOptions,
             defaultNode,
             currentNode.rawNodeList,
             currentNode.setTreeWithHistory,
             currentNode.isMemberOfLeftmostBranch
         );
-        currentNode.addNewNodeReferenceAndConfigure(newPalavyrNode, currentNode);
+        currentNode.addNewNodeReferenceAndConfigure(newPalavyrNode, currentNode, nodeTypeOptions);
     }
 
     createDefaultNode(optionPath: string): ConvoNode {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { Typography, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from "@material-ui/core";
@@ -8,18 +8,18 @@ import { IPalavyrLinkedList } from "./Contracts";
 import { useNodeInterfaceStyles } from "./nodeInterfaceStyles";
 import { PalavyrNode } from "./PalavyrNode";
 import { NodeUpdater } from "./NodeUpdater";
+import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 
 export class PalavyrTextNode extends PalavyrNode {
     constructor(
         containerList: IPalavyrLinkedList,
-        nodeTypeOptions: NodeTypeOptions,
         repository: PalavyrRepository,
         node: ConvoNode,
         nodeList: ConvoNode[],
         setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
         leftmostBranch: boolean
     ) {
-        super(containerList, nodeTypeOptions, repository, node, nodeList, setTreeWithHistory, leftmostBranch);
+        super(containerList, repository, node, nodeList, setTreeWithHistory, leftmostBranch);
     }
 
     public renderNodeFace() {
@@ -43,6 +43,8 @@ export class PalavyrTextNode extends PalavyrNode {
             const [options, setOptions] = useState<string[]>([]);
             const [text, setText] = useState<string>("");
             const [switchState, setSwitchState] = useState<boolean>(true);
+            const { nodeTypeOptions } = useContext(ConversationTreeContext);
+
             useEffect(() => {
                 setText(this.userText);
                 const referenceOptions = this.childNodeReferences.collectPathOptions();
@@ -55,8 +57,8 @@ export class PalavyrTextNode extends PalavyrNode {
                 setSwitchState(!switchState);
             };
 
-            const handleUpdateNode = (userText: string, valueOptions: string[]) => {
-                nodeUpdater.updateNode(this, userText, valueOptions);
+            const handleUpdateNode = (userText: string, valueOptions: string[], nodeTypeOptions: NodeTypeOptions) => {
+                nodeUpdater.updateNode(this, userText, valueOptions, nodeTypeOptions);
             };
 
             return (
@@ -90,7 +92,7 @@ export class PalavyrTextNode extends PalavyrNode {
                             useSaveIcon={false}
                             saveText="Update Node Text"
                             onSave={async () => {
-                                handleUpdateNode(text, options);
+                                handleUpdateNode(text, options, nodeTypeOptions);
                                 closeEditor();
                                 return true;
                             }}

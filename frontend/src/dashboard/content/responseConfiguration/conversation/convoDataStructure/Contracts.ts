@@ -18,19 +18,17 @@ export interface IPalavyrLinkedList {
     insert(): void;
     delete(): void;
     compileToConvoNodes(): ConvoNode[];
-    reconfigureTree(): void;
+    reconfigureTree(nodeTypeOptions: NodeTypeOptions): void;
     findNode(nodeId: string): IPalavyrNode;
     retrieveCleanHeadNode(): IPalavyrNode;
     convertToPalavyrNode(
         container: IPalavyrLinkedList,
         repository: PalavyrRepository,
-        nodeTypeOptions: NodeTypeOptions,
         rawNode: ConvoNode,
         nodeList: ConvoNode[],
         setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
         leftMostBranch: boolean
     ): IPalavyrNode;
-    nodeTypeOptions: NodeTypeOptions;
 }
 
 export interface INodeReferences {
@@ -65,10 +63,10 @@ export interface IPalavyrNode {
     nodeIsNotSet(): boolean;
     AddNewChildReference(newChildReference: IPalavyrNode): void;
     sortChildReferences(): void;
-    addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode): void;
+    addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions): void;
     compileConvoNode(areaId: string): ConvoNode;
     recursiveReferenceThisAnabranchOrigin(node: IPalavyrNode): void;
-    dereferenceThisAnabranchMergePoint(anabranchOriginNode: IPalavyrNode): void;
+    dereferenceThisAnabranchMergePoint(anabranchOriginNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions): void;
     UpdateTree(): void;
     removeSelf(): void;
     nodeIsSet(): boolean;
@@ -81,7 +79,7 @@ export interface IPalavyrNode {
     addLine(parentId: string): void;
     setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
     removeLine(toNode: IPalavyrNode): void;
-    filterUnallowedNodeOptions(forbiddenOptions: Array<NodeTypeCode>);
+    filterUnallowedNodeOptions(forbiddenOptions: Array<NodeTypeCode>, nodeTypeOptions: NodeTypeOptions);
 
     isRoot: boolean;
     nodeId: string;
@@ -96,11 +94,10 @@ export interface IPalavyrNode {
     resolveOrder: number;
     shouldShowMultiOption: boolean;
     dynamicType: string | null;
-
+    nodeTypeOptions: NodeTypeOptions;
     isImageNode: boolean;
     isAnabranchType: boolean;
     nodeTypeCode: NodeTypeCode;
-    nodeTypeOptions: NodeTypeOptions;
 
     nodeChildrenString: string;
     repository: PalavyrRepository;

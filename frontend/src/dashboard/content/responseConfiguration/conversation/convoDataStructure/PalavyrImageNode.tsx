@@ -17,14 +17,14 @@ import { PalavyrNode } from './PalavyrNode';
 export class PalavyrImageNode extends PalavyrNode {
     constructor(
         containerList: IPalavyrLinkedList,
-        nodeTypeOptions: NodeTypeOptions,
+        // nodeTypeOptions: NodeTypeOptions,
         repository: PalavyrRepository,
         node: ConvoNode,
         nodeList: ConvoNode[],
         setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
         leftmostBranch: boolean
     ) {
-        super(containerList, nodeTypeOptions, repository, node, nodeList, setTreeWithHistory, leftmostBranch);
+        super(containerList, repository, node, nodeList, setTreeWithHistory, leftmostBranch);
     }
 
     public renderNodeFace() {

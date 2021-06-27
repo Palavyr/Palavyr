@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
@@ -22,6 +22,7 @@ import { ShowResponseInPdf } from "./nodeOptionals/ShowResponseInPdf";
 import { SplitMergeAnchorLabel } from "./nodeOptionals/SplitMergeAnchorLabel";
 import { UnsetNodeButton } from "./nodeOptionals/UnsetNodeButton";
 import { NodeCreator } from "./NodeCreator";
+import NodeTypeOptionConfigurer from "./NodeTypeOptionConfigurer";
 const treelinkClassName = "tree-line-link";
 
 export abstract class PalavyrNode implements IPalavyrNode {
@@ -40,7 +41,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
     public nodeComponentType: string; // type of component to use in the widget - standardized list of types in the widget registry
     public dynamicType: string | null; // generic dynamic type, e.g. SelectOneFlat-3242-2342-234-2423
     public nodeChildrenString: string;
-
+    public nodeTypeOptions: NodeTypeOptions;
     public valueOptions: string[]; // the options available from this node, if any. I none, then "Continue" is used |peg| delimted
 
     public optionPath: string; // the value option that was used with the parent of this node.
@@ -77,7 +78,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
     // deprecated
     public fallback: boolean;
-    public nodeTypeOptions: NodeTypeOptions;
     public shouldDisableNodeTypeSelector: boolean;
 
     // NEW PROPERTIES TO DEAL WITH anabranch and split merge types --
@@ -109,7 +109,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
     constructor(
         containerList: IPalavyrLinkedList,
-        nodeTypeOptions: NodeTypeOptions,
         repository: PalavyrRepository,
         node: ConvoNode,
         nodeList: ConvoNode[],
@@ -118,8 +117,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
     ) {
         this.repository = repository;
         this.palavyrLinkedList = containerList;
-
-        this.nodeTypeOptions = nodeTypeOptions;
 
         this.optionPath = node.optionPath; // the value option that was used with the parent of this node.
         this.valueOptions = node.valueOptions.split(ValueOptionDelimiter); // the options available from this node, if any. I none, then "Continue" is used |peg| delimted
@@ -200,10 +197,10 @@ export abstract class PalavyrNode implements IPalavyrNode {
         }
     }
 
-    public addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode) {
+    public addNewNodeReferenceAndConfigure(newNode: IPalavyrNode, parentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         // double linked
         parentNode.childNodeReferences.addReference(newNode);
-        this.configurer.configure(newNode, parentNode);
+        this.configurer.configure(newNode, parentNode, nodeTypeOptions);
     }
 
     public AddNewChildReference(newChildReference: IPalavyrNode) {
@@ -389,15 +386,17 @@ export abstract class PalavyrNode implements IPalavyrNode {
             const [alertDetails, setAlertDetails] = useState<AlertType>();
             const [label, setLabel] = useState<string>("");
 
+            const { nodeTypeOptions } = useContext(ConversationTreeContext);
+
             useEffect(() => {
-                const currentNodeOption = this.nodeTypeOptions.filter((option: NodeOption) => option.value === this.nodeType)[0];
+                const currentNodeOption = nodeTypeOptions.filter((option: NodeOption) => option.value === this.nodeType)[0];
                 if (currentNodeOption) {
                     setLabel(currentNodeOption.text);
                 }
             }, [this.nodeType]);
 
-            const duplicateDynamicFeeNodeFound = (option: string) => {
-                const dynamicNodeTypeOptions = this.nodeTypeOptions.filter((x: NodeOption) => x.isDynamicType);
+            const duplicateDynamicFeeNodeFound = (option: string, nodeTypeOptions: NodeTypeOptions) => {
+                const dynamicNodeTypeOptions = nodeTypeOptions.filter((x: NodeOption) => x.isDynamicType);
                 if (dynamicNodeTypeOptions.length > 0) {
                     const dynamicNodeTypes = dynamicNodeTypeOptions.map((x: NodeOption) => x.value);
                     const nodeList = this.palavyrLinkedList.compileToConvoNodes(); // Write methods to handle this natively - this is a bit of a cheat atm.
@@ -413,7 +412,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
                     return;
                 }
 
-                if (duplicateDynamicFeeNodeFound(nodeOption.value)) {
+                if (duplicateDynamicFeeNodeFound(nodeOption.value, nodeTypeOptions)) {
                     setAlertDetails({
                         title: `You've already placed dynamic table ${nodeOption.text} in this conversation`,
                         message:
@@ -423,13 +422,19 @@ export abstract class PalavyrNode implements IPalavyrNode {
                     return;
                 }
 
-                const thing = this as IPalavyrNode;
-                nodeChanger.ExecuteNodeSelectorUpdate(nodeOption, thing);
+                const updatedNode = this as IPalavyrNode;
+                nodeChanger.ExecuteNodeSelectorUpdate(nodeOption, updatedNode, nodeTypeOptions);
             };
 
+            const currentNode = this as IPalavyrNode;
             return (
                 <>
-                    <CustomNodeSelect onChange={autocompleteOnChange} label={label} nodeTypeOptions={this.nodeTypeOptions} shouldDisabledNodeTypeSelector={this.shouldDisableNodeTypeSelector} />
+                    <CustomNodeSelect
+                        onChange={autocompleteOnChange}
+                        label={label}
+                        nodeTypeOptions={NodeTypeOptionConfigurer.ConfigureNodeTypeOptions(currentNode, nodeTypeOptions)}
+                        shouldDisabledNodeTypeSelector={this.shouldDisableNodeTypeSelector}
+                    />
                     {alertDetails && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />}
                 </>
             );
@@ -537,8 +542,8 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.nodeType = "ProvideInfo";
     }
 
-    public filterUnallowedNodeOptions(forbiddenOptions: Array<NodeTypeCode>) {
-        this.nodeTypeOptions = this.palavyrLinkedList.nodeTypeOptions.filter((option: NodeOption) => {
+    public filterUnallowedNodeOptions(forbiddenOptions: Array<NodeTypeCode>, nodeTypeOptions: NodeTypeOptions) {
+        this.nodeTypeOptions = nodeTypeOptions.filter((option: NodeOption) => {
             return !forbiddenOptions.includes(option.nodeTypeCode);
         });
     }
@@ -547,13 +552,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
         if (!this.isAnabranchType) throw new Error("Attempting to call anabranch reference method from non-anabranch-origin node");
         this.lock();
         anabranchMergeNode.lock();
-        if (!anabranchMergeNode.isAnabranchType) {
-            anabranchMergeNode.anabranchContext.anabranchOriginId = "";
-            anabranchMergeNode.anabranchContext.leftmostAnabranch = false;
-        } else {
-            anabranchMergeNode.anabranchContext.anabranchOriginId = anabranchMergeNode.nodeId;
-            anabranchMergeNode.anabranchContext.leftmostAnabranch = true;
-        }
+
         const recurseAndReference = (childReferences: INodeReferences) => {
             childReferences.forEach((node: IPalavyrNode) => {
                 node.lock();
@@ -594,7 +593,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
         });
     }
 
-    public dereferenceThisAnabranchMergePoint(anabranchOriginNode: IPalavyrNode) {
+    public dereferenceThisAnabranchMergePoint(anabranchOriginNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         // Assumes that this node is the anabranch merge node with the checkbox
         if (!this.isAnabranchMergePoint) throw new Error("Attempting to call anabranch reference method from non-anabranch-merge-point node");
 
@@ -608,7 +607,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
                 if (node.childNodeReferences.containsNode(mergeNode)) {
                     if (!node.anabranchContext.leftmostAnabranch) {
                         node.childNodeReferences.Clear();
-                        this.nodeCreator.addDefaultChild(node, "Continue");
+                        this.nodeCreator.addDefaultChild(node, "Continue", nodeTypeOptions);
                         node.shouldRenderChildren = true;
                     }
                 } else {

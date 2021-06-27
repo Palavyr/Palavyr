@@ -1,4 +1,4 @@
-import { NodeTypeCode } from "@Palavyr-Types";
+import { NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { IPalavyrNode } from "./Contracts";
 import { IPalavyrNodeChanger, PalavyrNodeChanger } from "./NodeChanger";
 
@@ -9,9 +9,9 @@ export class NodeUpdater {
         this.nodeChanger = new PalavyrNodeChanger();
     }
 
-    public updateNode(currentNode: IPalavyrNode, textUpdate: string, valueOptions: string[]) {
+    public updateNode(currentNode: IPalavyrNode, textUpdate: string, valueOptions: string[], nodeTypeOptions: NodeTypeOptions) {
         this.updateText(currentNode, textUpdate);
-        this.updateValueOptions(currentNode, valueOptions);
+        this.updateValueOptions(currentNode, valueOptions, nodeTypeOptions);
         currentNode.UpdateTree();
     }
 
@@ -19,7 +19,7 @@ export class NodeUpdater {
         currentNode.userText = textUpdate;
     }
 
-    private updateValueOptions(currentNode: IPalavyrNode, valueOptions: string[]) {
+    private updateValueOptions(currentNode: IPalavyrNode, valueOptions: string[], nodeTypeOptions: NodeTypeOptions) {
         switch (currentNode.nodeTypeCode) {
             case NodeTypeCode.III: // Multioption Continue
                 currentNode.setValueOptions(valueOptions);
@@ -27,7 +27,7 @@ export class NodeUpdater {
 
             case NodeTypeCode.IV: // Multioption Path
                 currentNode.setValueOptions(valueOptions);
-                this.nodeChanger.createOrTruncateChildNodes(currentNode, valueOptions);
+                this.nodeChanger.createOrTruncateChildNodes(currentNode, valueOptions, nodeTypeOptions);
                 currentNode.childNodeReferences.applyOptionPaths(valueOptions);
                 break;
 

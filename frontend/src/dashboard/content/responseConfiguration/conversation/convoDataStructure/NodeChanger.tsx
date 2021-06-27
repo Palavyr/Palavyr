@@ -1,17 +1,17 @@
-import { NodeOption, NodeTypeCode } from "@Palavyr-Types";
+import { NodeOption, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { IPalavyrNode } from "./Contracts";
 import { NodeCreator } from "./NodeCreator";
 
 export interface IPalavyrNodeChanger {
-    ExecuteNodeSelectorUpdate(nodeOption: NodeOption, currentNode: IPalavyrNode): void;
-    createOrTruncateChildNodes(currentNode: IPalavyrNode, valueOptions: string[]): void;
+    ExecuteNodeSelectorUpdate(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions): void;
+    createOrTruncateChildNodes(currentNode: IPalavyrNode, valueOptions: string[], nodeTypeOptions: NodeTypeOptions): void;
 }
 
 export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     private nodeCreator: NodeCreator = new NodeCreator();
     constructor() {}
 
-    public ExecuteNodeSelectorUpdate(nodeOption: NodeOption, currentNode: IPalavyrNode) {
+    public ExecuteNodeSelectorUpdate(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         this.resetNodeProperties(nodeOption, currentNode);
 
         switch (nodeOption.nodeTypeCode) {
@@ -20,23 +20,23 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
                 break;
 
             case NodeTypeCode.II:
-                this.ConvertToType_II_Node(nodeOption, currentNode);
+                this.ConvertToType_II_Node(nodeOption, currentNode, nodeTypeOptions);
                 break;
 
             case NodeTypeCode.III:
-                this.ConvertToType_III_Node(nodeOption, currentNode);
+                this.ConvertToType_III_Node(nodeOption, currentNode, nodeTypeOptions);
                 break;
 
             case NodeTypeCode.IV:
-                this.ConvertToType_IV_Node(nodeOption, currentNode);
+                this.ConvertToType_IV_Node(nodeOption, currentNode, nodeTypeOptions);
                 break;
 
             case NodeTypeCode.V:
-                this.ConvertToType_V_Node(nodeOption, currentNode);
+                this.ConvertToType_V_Node(nodeOption, currentNode, nodeTypeOptions);
                 break;
 
             case NodeTypeCode.VI: // anabranch
-                this.ConvertToType_VI_Node(nodeOption, currentNode);
+                this.ConvertToType_VI_Node(nodeOption, currentNode, nodeTypeOptions);
                 break;
 
             case NodeTypeCode.VII: // splitmerge
@@ -64,7 +64,6 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         currentNode.childNodeReferences.Clear();
         currentNode.setValueOptions(["Terminal"]);
         currentNode.UpdateTree();
-
     }
 
     // Type II
@@ -81,13 +80,12 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     // -- set value Option to ["Continue"]
     // -- set child ref option to "Continue"
 
-    private ConvertToType_II_Node(nodeOption: NodeOption, currentNode: IPalavyrNode) {
+    private ConvertToType_II_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         const typeIIvalueOptions = ["Continue"];
-        this.createOrTruncateChildNodes(currentNode, typeIIvalueOptions);
+        this.createOrTruncateChildNodes(currentNode, typeIIvalueOptions, nodeTypeOptions);
         currentNode.childNodeReferences.applyOptionPaths(typeIIvalueOptions);
         currentNode.setValueOptions(typeIIvalueOptions);
         currentNode.UpdateTree();
-
     }
 
     // Type III
@@ -111,15 +109,14 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     // - add value options
     // - do not add node references
 
-    private ConvertToType_III_Node(nodeOption: NodeOption, currentNode: IPalavyrNode) {
+    private ConvertToType_III_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         if (currentNode.childNodeReferences.Length === 0) {
-            this.nodeCreator.addDefaultChild(currentNode, "Continue");
+            this.nodeCreator.addDefaultChild(currentNode, "Continue", nodeTypeOptions);
         } else {
             currentNode.childNodeReferences.truncateAt(1); // only take the first child node
             currentNode.childNodeReferences.applyOptionPaths(["Continue"]);
         }
         currentNode.UpdateTree();
-
     }
 
     // Type IV
@@ -138,13 +135,12 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     //     - add value options
     //     - add equal number of node references
 
-    private ConvertToType_IV_Node(nodeOption: NodeOption, currentNode: IPalavyrNode) {
+    private ConvertToType_IV_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         // available choices - take from
 
         // child reference
-        this.createOrTruncateChildNodes(currentNode, currentNode.getValueOptions());
+        this.createOrTruncateChildNodes(currentNode, currentNode.getValueOptions(), nodeTypeOptions);
         currentNode.UpdateTree();
-
     }
 
     //     Type V
@@ -163,17 +159,16 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     //    On Update:
     //     - remove current child node references
 
-    private ConvertToType_V_Node(nodeOption: NodeOption, currentNode: IPalavyrNode) {
+    private ConvertToType_V_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         // available choices
         currentNode.setValueOptions(nodeOption.valueOptions);
 
         // child references
-        this.createOrTruncateChildNodes(currentNode, nodeOption.valueOptions);
+        this.createOrTruncateChildNodes(currentNode, nodeOption.valueOptions, nodeTypeOptions);
 
         // child ref choice outcome labels
         currentNode.childNodeReferences.applyOptionPaths(nodeOption.valueOptions);
         currentNode.UpdateTree();
-
     }
 
     // Type VI
@@ -191,27 +186,27 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     //    On Update:
     //     - add value options
     //     - add equal number of node references
-    private ConvertToType_VI_Node(nodeOption: NodeOption, currentNode: IPalavyrNode) {
+    private ConvertToType_VI_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         if (currentNode.getValueOptions().length < 2) {
             const defaultValueOptions = ["Left Branch", "Right Branch"];
-            this.createOrTruncateChildNodes(currentNode, defaultValueOptions);
+            this.createOrTruncateChildNodes(currentNode, defaultValueOptions, nodeTypeOptions);
             currentNode.childNodeReferences.applyOptionPaths(defaultValueOptions);
         } else {
-            this.createOrTruncateChildNodes(currentNode, currentNode.getValueOptions());
+            this.createOrTruncateChildNodes(currentNode, currentNode.getValueOptions(), nodeTypeOptions);
             currentNode.childNodeReferences.applyOptionPaths(currentNode.getValueOptions());
         }
-        currentNode.palavyrLinkedList.reconfigureTree();
+        currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
     }
 
-    public async createOrTruncateChildNodes(currentNode: IPalavyrNode, valueOptions: string[]) {
+    public async createOrTruncateChildNodes(currentNode: IPalavyrNode, valueOptions: string[], nodeTypeOptions: NodeTypeOptions) {
         if (currentNode.getValueOptions().length === 0) {
-            this.nodeCreator.addDefaultChild(currentNode, "Continue");
+            this.nodeCreator.addDefaultChild(currentNode, "Continue", nodeTypeOptions);
         } else {
             const valueOptionDifference = valueOptions.length === 0 ? 0 : valueOptions.length - currentNode.childNodeReferences.Length;
             if (valueOptionDifference > 0) {
                 // add nodes
                 for (let index = 0; index < valueOptionDifference; index++) {
-                    this.nodeCreator.addDefaultChild(currentNode, "Continue"); // autoreferences the parent and child
+                    this.nodeCreator.addDefaultChild(currentNode, "Continue", nodeTypeOptions); // autoreferences the parent and child
                 }
             } else if (valueOptionDifference < 0) {
                 // truncate nodes
@@ -235,6 +230,6 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         currentNode.dynamicType = nodeOption.dynamicType;
         currentNode.isAnabranchType = nodeOption.isAnabranchType;
         currentNode.isImageNode = nodeOption.isImageNode;
-        currentNode.dynamicType = nodeOption.dynamicType
+        currentNode.dynamicType = nodeOption.dynamicType;
     }
 }

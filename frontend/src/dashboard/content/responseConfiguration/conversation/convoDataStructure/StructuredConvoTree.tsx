@@ -73,7 +73,7 @@ export const StructuredConvoTree = () => {
             setRawNodeList(nodes);
 
             const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
-            const nodesLinkedList = new PalavyrLinkedList(nodes, nodeTypeOptions, areaIdentifier, setTreeWithHistory);
+            const nodesLinkedList = new PalavyrLinkedList(nodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions);
 
             setNodeTypeOptions(nodeTypeOptions);
             setLinkedNodes(nodesLinkedList);
@@ -122,7 +122,7 @@ export const StructuredConvoTree = () => {
         if (linkedNodeList && planTypeMeta) {
             const updatedConvoNodes = await repository.Conversations.ModifyConversation(linkedNodeList.compileToConvoNodes(), areaIdentifier);
             const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
-            const updatedLinkedList = new PalavyrLinkedList(updatedConvoNodes, nodeTypeOptions, areaIdentifier, setTreeWithHistory);
+            const updatedLinkedList = new PalavyrLinkedList(updatedConvoNodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions);
             historyTracker.addConversationHistoryToQueue(updatedLinkedList, conversationHistoryPosition, conversationHistory);
             setLinkedNodes(updatedLinkedList);
             return true;
@@ -135,7 +135,7 @@ export const StructuredConvoTree = () => {
         if (linkedNodeList && planTypeMeta) {
             const head = linkedNodeList.retrieveCleanHeadNode().compileConvoNode(areaIdentifier);
             const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
-            const newList = new PalavyrLinkedList([head], nodeTypeOptions, areaIdentifier, () => null);
+            const newList = new PalavyrLinkedList([head], areaIdentifier, () => null, nodeTypeOptions);
             setTreeWithHistory(newList);
         }
     };
