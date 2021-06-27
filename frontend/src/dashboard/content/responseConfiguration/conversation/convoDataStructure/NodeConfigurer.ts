@@ -23,6 +23,9 @@ export class NodeConfigurer {
         if (currentNode.isAnabranchMergePoint) {
             const origin = currentNode.anabranchContext.anabranchOriginId;
             const anabranchOriginNode = currentNode.palavyrLinkedList.findNode(origin);
+
+            if (anabranchOriginNode === null) throw new Error("anabranchOrigin Node not found.");
+
             anabranchOriginNode.recursiveReferenceThisAnabranchOrigin(currentNode);
             currentNode.parentNodeReferences.forEach((node, index) => {
                 currentNode.addLine(node.nodeId);

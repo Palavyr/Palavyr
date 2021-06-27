@@ -1,6 +1,5 @@
 import { IConversationHistoryTracker, SetState } from "@Palavyr-Types";
 import { PalavyrLinkedList } from "../convoDataStructure/PalavyrLinkedList";
-import { _cleanConversationNodesWithNoChildren } from "./nodeUtils/_coreNodeUtils";
 
 export type SetConversationHistory = SetState<PalavyrLinkedList[]>;
 export type SetConversation = SetState<PalavyrLinkedList>;
@@ -22,7 +21,7 @@ export class ConversationHistoryTracker implements IConversationHistoryTracker {
     // Maybe can set the historyPosition as internal state too.
     addConversationHistoryToQueue(dirtyConversationRecord: PalavyrLinkedList, conversationHistoryPosition: number, conversationHistory: PalavyrLinkedList[]) {
         const newPos = conversationHistoryPosition + 1;
-        const newConversationRecord = dirtyConversationRecord; // _cleanConversationNodesWithNoChildren(dirtyConversationRecord); TODO: Should be cleaned up with the linked list implementation
+        const newConversationRecord = dirtyConversationRecord;
         if (conversationHistory.length < this.MaxConversationHistory) {
             if (newPos < conversationHistory.length - 1) {
                 this.setConversationHistory([...conversationHistory.slice(0, newPos), newConversationRecord]);
@@ -48,8 +47,6 @@ export class ConversationHistoryTracker implements IConversationHistoryTracker {
         const newPosition = conversationHistoryPosition - 1;
         this.setConversationHistoryPosition(newPosition);
         const oneBack = conversationHistory[newPosition];
-        const cleanOneBack = _cleanConversationNodesWithNoChildren(oneBack);
-        // this.setNodes(cleanOneBack);
         this.setNodes(oneBack);
     }
 

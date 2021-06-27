@@ -1,8 +1,7 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { ConvoNode, NodeTypeOptions } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
-import { getRootNode } from "../nodes/nodeUtils/commonNodeUtils";
-import { _splitAndRemoveEmptyNodeChildrenString, _getNodeById } from "../nodes/nodeUtils/_coreNodeUtils";
 import { ILinkedListBucket, INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "./Contracts";
 import { LinkedListBucket } from "./LinkedListBucket";
 import { NodeConfigurer } from "./NodeConfigurer";
@@ -23,7 +22,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
      */
     constructor(nodeList: ConvoNode[], areaId: string, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, nodeTypeOptions: NodeTypeOptions) {
         this.areaId = areaId;
-        this.head = getRootNode(nodeList);
+        this.head = this.getRootNode(nodeList);
         this.setTreeWithHistory = setTreeWithHistory;
         this.assembleDoubleLinkedMultiBranchLinkedList(nodeList, nodeTypeOptions);
     }
@@ -33,6 +32,23 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         headNode.childNodeReferences.Clear();
         headNode.parentNodeReferences.Clear();
         return headNode;
+    }
+
+    private getRootNode(nodeList: ConvoNode[]) {
+        return nodeList.filter((node) => node.isRoot === true)[0];
+    }
+
+    private _getNodeById = (nodeId: string, nodeList: ConvoNode[]) => {
+        return nodeList.filter((node: ConvoNode) => node.nodeId === nodeId)[0];
+    };
+
+    private _splitAndRemoveEmptyNodeChildrenString(nodeChildrenString: string) {
+        const childrenArray = this._splitNodeChildrenString(nodeChildrenString);
+        return childrenArray.filter((childstring: string) => !isNullOrUndefinedOrWhitespace(childstring));
+    }
+
+    private _splitNodeChildrenString(nodeChildrenString: string) {
+        return nodeChildrenString.split(",");
     }
 
     private assembleDoubleLinkedMultiBranchLinkedList(nodeList: ConvoNode[], nodeTypeOptions: NodeTypeOptions) {
@@ -45,7 +61,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     }
 
     private recursivelyAssembleLinkedList(parentNode: IPalavyrNode, nodeChildrenString: string, nodeList: ConvoNode[], nodeTypeOptions: NodeTypeOptions) {
-        const childIds = _splitAndRemoveEmptyNodeChildrenString(nodeChildrenString);
+        const childIds = this._splitAndRemoveEmptyNodeChildrenString(nodeChildrenString);
         if (childIds.length === 0) return;
         for (let index = 0; index < childIds.length; index++) {
             // childnodes add themselves to their parent node reference
@@ -54,7 +70,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
             const existingNode = this.findNode(childId);
 
             if (existingNode === null) {
-                const childConvoNode = _getNodeById(childId, nodeList);
+                const childConvoNode = this._getNodeById(childId, nodeList);
                 const newNode = this.convertToPalavyrNode(this, this.repository, childConvoNode, nodeList, this.setTreeWithHistory, index === 0);
                 newNode.addNewNodeReferenceAndConfigure(newNode, parentNode, nodeTypeOptions);
                 this.recursivelyAssembleLinkedList(newNode, childConvoNode.nodeChildrenString, nodeList, nodeTypeOptions);

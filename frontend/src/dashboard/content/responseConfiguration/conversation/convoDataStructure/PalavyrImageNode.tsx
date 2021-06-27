@@ -1,23 +1,21 @@
-import { PalavyrRepository } from '@api-client/PalavyrRepository';
-import { PalavyrAccordian } from '@common/components/PalavyrAccordian';
-import { PalavyrAutoComplete } from '@common/components/PalavyrAutoComplete';
-import { sortByPropertyAlphabetical } from '@common/utils/sorting';
-import { Dialog, DialogTitle, DialogContent, Typography, Divider } from '@material-ui/core';
-import { NodeTypeOptions, ConvoNode, FileLink } from '@Palavyr-Types';
-import { DashboardContext } from 'dashboard/layouts/DashboardContext';
-import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom';
-import { Upload } from '../../uploadable/Upload';
-import { CustomImage } from '../nodes/nodeInterface/nodeEditor/imageNode/CustomImage';
-import { IPalavyrLinkedList } from './Contracts';
-import { useNodeInterfaceStyles } from './nodeInterfaceStyles';
-import { PalavyrNode } from './PalavyrNode';
-
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
+import { PalavyrAutoComplete } from "@common/components/PalavyrAutoComplete";
+import { sortByPropertyAlphabetical } from "@common/utils/sorting";
+import { Dialog, DialogTitle, DialogContent, Typography, Divider } from "@material-ui/core";
+import { ConvoNode, FileLink } from "@Palavyr-Types";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { Upload } from "../../uploadable/Upload";
+import { CustomImage } from "../nodes/nodeInterface/nodeEditor/imageNode/CustomImage";
+import { IPalavyrLinkedList } from "./Contracts";
+import { useNodeInterfaceStyles } from "./nodeInterfaceStyles";
+import { PalavyrNode } from "./PalavyrNode";
 
 export class PalavyrImageNode extends PalavyrNode {
     constructor(
         containerList: IPalavyrLinkedList,
-        // nodeTypeOptions: NodeTypeOptions,
         repository: PalavyrRepository,
         node: ConvoNode,
         nodeList: ConvoNode[],

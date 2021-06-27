@@ -12,6 +12,8 @@ const onChange = (event: { target: { checked: boolean } }, setAnabranchMergeChec
     const origin = node.anabranchContext.anabranchOriginId;
     const anabranchOriginNode = node.palavyrLinkedList.findNode(origin);
 
+    if (anabranchOriginNode === null) throw new Error("anabranchOrigin Node not found.");
+
     if (checked) {
         node.isPalavyrAnabranchEnd = true;
         node.isAnabranchMergePoint = true;
