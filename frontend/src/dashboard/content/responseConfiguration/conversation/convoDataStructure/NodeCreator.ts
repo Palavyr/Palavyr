@@ -13,6 +13,7 @@ export class NodeCreator {
             currentNode.setTreeWithHistory,
             currentNode.isMemberOfLeftmostBranch
         );
+        newPalavyrNode.setNodeTypeOptions(nodeTypeOptions);
         currentNode.addNewNodeReferenceAndConfigure(newPalavyrNode, currentNode, nodeTypeOptions);
     }
 

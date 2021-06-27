@@ -79,7 +79,7 @@ export interface IPalavyrNode {
     addLine(parentId: string): void;
     setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
     removeLine(toNode: IPalavyrNode): void;
-    filterUnallowedNodeOptions(forbiddenOptions: Array<NodeTypeCode>, nodeTypeOptions: NodeTypeOptions);
+    setNodeTypeOptions(newNodeTypeOptions: NodeTypeOptions): void;
 
     isRoot: boolean;
     nodeId: string;
@@ -94,7 +94,9 @@ export interface IPalavyrNode {
     resolveOrder: number;
     shouldShowMultiOption: boolean;
     dynamicType: string | null;
+
     nodeTypeOptions: NodeTypeOptions;
+
     isImageNode: boolean;
     isAnabranchType: boolean;
     nodeTypeCode: NodeTypeCode;

@@ -1,5 +1,6 @@
 import { NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { IPalavyrNode } from "./Contracts";
+import NodeTypeOptionConfigurer from "./NodeTypeOptionConfigurer";
 
 export class NodeConfigurer {
     /**
@@ -83,9 +84,11 @@ export class NodeConfigurer {
                 notAllowedInsideAnabranch.push(NodeTypeCode.IV);
                 notAllowedInsideAnabranch.push(NodeTypeCode.V);
             }
-            currentNode.filterUnallowedNodeOptions(notAllowedInsideAnabranch, nodeTypeOptions);
+            const options = NodeTypeOptionConfigurer.filterUnallowedNodeOptions(notAllowedInsideAnabranch, nodeTypeOptions);
+            currentNode.setNodeTypeOptions(options);
         } else {
-            currentNode.filterUnallowedNodeOptions([], nodeTypeOptions);
+            const options = NodeTypeOptionConfigurer.filterUnallowedNodeOptions([], nodeTypeOptions);
+            currentNode.setNodeTypeOptions(options);
         }
     }
 

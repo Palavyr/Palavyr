@@ -5,6 +5,7 @@ import React, { useContext, useState } from "react";
 import { useEffect } from "react";
 import { NodeCheckBox } from "../../nodes/nodeInterface/NodeCheckBox";
 import { IPalavyrNode, NodeOptionalProps } from "../Contracts";
+import NodeTypeOptionConfigurer from "../NodeTypeOptionConfigurer";
 
 const onChange = (event: { target: { checked: boolean } }, setAnabranchMergeChecked: SetState<boolean>, node: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) => {
     const checked = event.target.checked;
@@ -16,10 +17,12 @@ const onChange = (event: { target: { checked: boolean } }, setAnabranchMergeChec
         node.isAnabranchMergePoint = true;
         anabranchOriginNode.recursiveReferenceThisAnabranchOrigin(node);
         setAnabranchMergeChecked(true);
+        NodeTypeOptionConfigurer.ConfigureNodeTypeOptions(node, nodeTypeOptions);
         node.childNodeReferences.forEach((child: IPalavyrNode) => {
             if (!node.isAnabranchType) {
                 child.isPalavyrAnabranchMember = false;
             }
+            NodeTypeOptionConfigurer.RecursivelyReconfigureNodeTypeOptions(child, nodeTypeOptions);
         });
     } else {
         node.dereferenceThisAnabranchMergePoint(anabranchOriginNode, nodeTypeOptions);
@@ -30,6 +33,7 @@ const onChange = (event: { target: { checked: boolean } }, setAnabranchMergeChec
             if (!node.isAnabranchType) {
                 child.isPalavyrAnabranchMember = true;
             }
+            NodeTypeOptionConfigurer.RecursivelyReconfigureNodeTypeOptions(child, nodeTypeOptions);
         });
     }
     node.UpdateTree();

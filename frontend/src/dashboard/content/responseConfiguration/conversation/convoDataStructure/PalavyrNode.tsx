@@ -203,6 +203,10 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.configurer.configure(newNode, parentNode, nodeTypeOptions);
     }
 
+    public setNodeTypeOptions(newNodeTypeOptions: NodeTypeOptions): void {
+        this.nodeTypeOptions = newNodeTypeOptions;
+    }
+
     public AddNewChildReference(newChildReference: IPalavyrNode) {
         this.childNodeReferences.addReference(newChildReference);
     }
@@ -429,12 +433,14 @@ export abstract class PalavyrNode implements IPalavyrNode {
             const currentNode = this as IPalavyrNode;
             return (
                 <>
-                    <CustomNodeSelect
-                        onChange={autocompleteOnChange}
-                        label={label}
-                        nodeTypeOptions={NodeTypeOptionConfigurer.ConfigureNodeTypeOptions(currentNode, nodeTypeOptions)}
-                        shouldDisabledNodeTypeSelector={this.shouldDisableNodeTypeSelector}
-                    />
+                    {nodeTypeOptions && (
+                        <CustomNodeSelect
+                            onChange={autocompleteOnChange}
+                            label={label}
+                            nodeTypeOptions={NodeTypeOptionConfigurer.ConfigureNodeTypeOptions(currentNode, nodeTypeOptions)}
+                            shouldDisabledNodeTypeSelector={this.shouldDisableNodeTypeSelector}
+                        />
+                    )}
                     {alertDetails && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />}
                 </>
             );
@@ -540,12 +546,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
     public setAsProvideInfo() {
         this.nodeType = "ProvideInfo";
-    }
-
-    public filterUnallowedNodeOptions(forbiddenOptions: Array<NodeTypeCode>, nodeTypeOptions: NodeTypeOptions) {
-        this.nodeTypeOptions = nodeTypeOptions.filter((option: NodeOption) => {
-            return !forbiddenOptions.includes(option.nodeTypeCode);
-        });
     }
 
     public recursiveReferenceThisAnabranchOrigin(anabranchMergeNode: IPalavyrNode) {
