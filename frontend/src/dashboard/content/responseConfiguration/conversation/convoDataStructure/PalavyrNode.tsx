@@ -228,11 +228,14 @@ export abstract class PalavyrNode implements IPalavyrNode {
     }
 
     public addLine(parentId: string) {
-        const newLineLink: LineLink = {
-            from: this.nodeId,
-            to: parentId,
-        };
-        this.lineMap.push(newLineLink);
+        const currentToValues = this.lineMap.map((x: LineLink) => x.to);
+        if (!currentToValues.includes(parentId)) {
+            const newLineLink: LineLink = {
+                from: this.nodeId,
+                to: parentId,
+            };
+            this.lineMap.push(newLineLink);
+        }
     }
 
     public compileConvoNode(areaId: string): ConvoNode {
@@ -281,9 +284,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
         type StyleProps = {
             buffer: number;
         };
-        type Props = {
-            paddingBuffer: number;
-        };
+
         const useStyles = makeStyles((theme) => ({
             treeItem: {
                 display: "flex",

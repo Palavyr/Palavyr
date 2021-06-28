@@ -3,7 +3,6 @@ import { IPalavyrNode } from "./Contracts";
 import { IPalavyrNodeChanger, PalavyrNodeChanger } from "./NodeChanger";
 
 export class NodeUpdater {
-
     private nodeChanger: IPalavyrNodeChanger;
     constructor() {
         this.nodeChanger = new PalavyrNodeChanger();
@@ -32,12 +31,10 @@ export class NodeUpdater {
                 break;
 
             case NodeTypeCode.VI: //Anabranch
-                throw new Error("Not yet implemented")
-                break;
+                throw new Error("Not yet implemented");
 
             case NodeTypeCode.VII: // SplitMerge
-            throw new Error ("Not yet implemented")
-                break;
+                throw new Error("Not yet implemented");
 
             default:
                 break;

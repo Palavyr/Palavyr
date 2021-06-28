@@ -17,7 +17,7 @@ export interface SteppedLineToProps {
     borderStyle?: LineStyles;
     zIndex?: number;
     orientation?: "h" | "v";
-};
+}
 
 export const SteppedLineTo: React.FC<SteppedLineToProps> = ({
     from,
@@ -27,7 +27,7 @@ export const SteppedLineTo: React.FC<SteppedLineToProps> = ({
     toAnchor = "bottom",
     borderColor = "#54585A",
     borderStyle = "double",
-    zIndex = -100,
+    zIndex = -500,
     orientation = "v",
 }: SteppedLineToProps) => {
     const [sized, setSized] = useState<boolean>(false);
@@ -145,4 +145,25 @@ export const getPoints = (from: Selector, to: Selector, treeLinkClassName: strin
     const y0 = fromElementBox.top + fromElementBox.height * parsedFromAnchor.y + offsetY;
     const y1 = toElementBox.top + toElementBox.height * parsedToAnchor.y + offsetY;
     return { x0, y0, x1, y1 };
+};
+
+export type LineToProps = {
+    treeLinkClassName: string;
+    fromAnchor: Anchor;
+    toAnchor: Anchor;
+    from: Selector;
+    to: Selector;
+    borderColor?: string;
+    borderStyle?: LineStyles;
+    borderWidth?: number;
+    className?: string;
+    zIndex?: number;
+};
+
+export const LineTo: React.FC<LineToProps> = ({ treeLinkClassName, fromAnchor, toAnchor, from, to, borderColor, borderStyle, borderWidth, className, zIndex }: LineToProps) => {
+    const parsedFromAnchor = parseAnchor(fromAnchor);
+    const parsedToAnchor = parseAnchor(toAnchor);
+
+    const points = getPoints(from, to, treeLinkClassName, parsedFromAnchor, parsedToAnchor);
+    return points ? <Line {...{ ...points, ...{ zIndex, borderColor, borderStyle, borderWidth, className } }} /> : null;
 };

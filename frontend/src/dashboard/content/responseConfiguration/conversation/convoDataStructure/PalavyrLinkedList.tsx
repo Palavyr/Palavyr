@@ -10,7 +10,7 @@ import { PalavyrTextNode } from "./PalavyrTextNode";
 
 export class PalavyrLinkedList implements IPalavyrLinkedList {
     private linkedListBucket: ILinkedListBucket = new LinkedListBucket();
-    private areaId: string; // areaIdentifier
+    private areaId: string;
     public rootNode: IPalavyrNode;
     private head: ConvoNode;
     private setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;

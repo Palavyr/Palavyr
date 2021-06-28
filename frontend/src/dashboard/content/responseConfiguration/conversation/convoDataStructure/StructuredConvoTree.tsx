@@ -58,7 +58,6 @@ export const StructuredConvoTree = () => {
     const [showDebugData, setShowDebugData] = useState<boolean>(false);
 
     const [linkedNodeList, setLinkedNodes] = useState<PalavyrLinkedList>();
-    const [rawNodeList, setRawNodeList] = useState<Conversation>([]);
     const historyTracker = new ConversationHistoryTracker(setConversationHistory, setConversationHistoryPosition, setLinkedNodes);
 
     const setTreeWithHistory = (updatedNodeList: PalavyrLinkedList) => {
@@ -70,7 +69,6 @@ export const StructuredConvoTree = () => {
     const loadNodes = useCallback(async () => {
         if (planTypeMeta) {
             const nodes = await repository.Conversations.GetConversation(areaIdentifier);
-            setRawNodeList(nodes);
 
             const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
             const nodesLinkedList = new PalavyrLinkedList(nodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions);
@@ -104,7 +102,6 @@ export const StructuredConvoTree = () => {
                 })();
             }
         }
-
         return () => {
             setTreeErrors(undefined);
         };

@@ -23,16 +23,20 @@ export const DataLogging = ({ debugData, nodeId, nodeChildren }: DataProps) => {
                     let key = Object.keys(item)[0];
                     let val = Object.values(item)[0];
 
+                    if (key === "anabranchContext") {
+                        val = [Object.values(val)].join(" -- ");
+                    }
+
                     if (key === "lineMap") {
                         const res = val.map((x: LineLink) => {
                             return `from:${x.from.split("-")[0]} to:${x.to.split("-")[0]}`;
                         });
-                        val = res.join("---");
+                        val = res.join("+");
                     }
 
-                    if (typeof val === "object" && val?.hasOwnProperty("anabranchOriginId")) {
-                        val = [Object.values(val)].join(", ");
-                    }
+                    // if (typeof val === "object" && val?.hasOwnProperty("anabranchOriginId")) {
+                    //     val = [Object.values(val)].join(", ");
+                    // }
 
                     if (typeof val === "object") return;
                     if (typeof val === "boolean") {

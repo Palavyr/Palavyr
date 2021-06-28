@@ -18,7 +18,6 @@ export type LineProps = {
 };
 
 type PositionStyles = {
-    // position: "absolute";
     top: string;
     left: string;
     width: string;
@@ -49,7 +48,6 @@ export const Line = ({ x0, x1, y0, y1, borderColor, borderStyle, borderWidth, zI
     const z = zIndex ? Number(zIndex) : 1;
 
     const positionStyle: PositionStyles = {
-        // position: "absolute",
         top: `${y0}px`,
         left: `${x0}px`,
         width: `${length}px`,

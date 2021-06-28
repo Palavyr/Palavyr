@@ -43,6 +43,10 @@ export class NodeConfigurer {
     private configureAnabranch(currentNode: IPalavyrNode, parentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         // all nodes establish their own anabranch context
         // possibly update this if parent has anabranch origin node set
+        if (currentNode.nodeId == "2cf14adb-c6e5-4d92-bf3a-bf7b4e0dfc62") {
+            console.log("WOW");
+
+        }
         currentNode.anabranchContext = {
             anabranchOriginId: "",
             leftmostAnabranch: false,

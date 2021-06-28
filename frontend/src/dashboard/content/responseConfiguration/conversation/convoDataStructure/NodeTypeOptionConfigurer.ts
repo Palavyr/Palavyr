@@ -14,7 +14,9 @@ class NodeTypeOptionConfigurer {
     }
 
     public RecursivelyReconfigureNodeTypeOptions(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+
         this.ConfigureNodeTypeOptions(currentNode, nodeTypeOptions);
+
         const recurse = (childNodeReferences: INodeReferences) => {
             if (childNodeReferences.Length === 0) return;
             childNodeReferences.forEach((node: IPalavyrNode, index: number) => {

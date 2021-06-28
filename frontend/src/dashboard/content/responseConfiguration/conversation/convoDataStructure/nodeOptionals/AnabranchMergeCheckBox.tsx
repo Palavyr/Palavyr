@@ -4,41 +4,12 @@ import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import React, { useContext, useState } from "react";
 import { useEffect } from "react";
 import { NodeCheckBox } from "../../nodes/nodeInterface/NodeCheckBox";
+import AnabranchConfigurer from "../AnabranchConfigurer";
 import { IPalavyrNode, NodeOptionalProps } from "../Contracts";
-import NodeTypeOptionConfigurer from "../NodeTypeOptionConfigurer";
 
 const onChange = (event: { target: { checked: boolean } }, setAnabranchMergeChecked: SetState<boolean>, node: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) => {
     const checked = event.target.checked;
-    const origin = node.anabranchContext.anabranchOriginId;
-    const anabranchOriginNode = node.palavyrLinkedList.findNode(origin);
-
-    if (anabranchOriginNode === null) throw new Error("anabranchOrigin Node not found.");
-
-    if (checked) {
-        node.isPalavyrAnabranchEnd = true;
-        node.isAnabranchMergePoint = true;
-        anabranchOriginNode.recursiveReferenceThisAnabranchOrigin(node);
-        setAnabranchMergeChecked(true);
-        NodeTypeOptionConfigurer.ConfigureNodeTypeOptions(node, nodeTypeOptions);
-        node.childNodeReferences.forEach((child: IPalavyrNode) => {
-            if (!node.isAnabranchType) {
-                child.isPalavyrAnabranchMember = false;
-            }
-            NodeTypeOptionConfigurer.RecursivelyReconfigureNodeTypeOptions(child, nodeTypeOptions);
-        });
-    } else {
-        node.dereferenceThisAnabranchMergePoint(anabranchOriginNode, nodeTypeOptions);
-        node.isPalavyrAnabranchEnd = false;
-        node.isAnabranchMergePoint = false;
-        setAnabranchMergeChecked(false);
-        node.childNodeReferences.forEach((child: IPalavyrNode) => {
-            if (!node.isAnabranchType) {
-                child.isPalavyrAnabranchMember = true;
-            }
-            NodeTypeOptionConfigurer.RecursivelyReconfigureNodeTypeOptions(child, nodeTypeOptions);
-        });
-    }
-    node.UpdateTree();
+    AnabranchConfigurer.SetAnabranchCheckBox(checked, setAnabranchMergeChecked, node, nodeTypeOptions);
 };
 
 const shouldShow = (node: IPalavyrNode) => {
