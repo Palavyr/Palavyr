@@ -612,6 +612,9 @@ export abstract class PalavyrNode implements IPalavyrNode {
                         node.childNodeReferences.Clear();
                         this.nodeCreator.addDefaultChild(node, "Continue", nodeTypeOptions);
                         node.shouldRenderChildren = true;
+                    } else {
+                        // ignore the mergeNode in the same way as the other
+                        recurseAndDereference(node.childNodeReferences.Where((nodeRef: IPalavyrNode) => !nodeRef.Equals(mergeNode)));
                     }
                 } else {
                     node.unlock();
