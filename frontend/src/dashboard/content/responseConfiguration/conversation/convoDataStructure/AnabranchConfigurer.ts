@@ -1,21 +1,40 @@
-import { SetState, NodeTypeOptions } from "@Palavyr-Types";
-import { INodeReferences, IPalavyrNode } from "./Contracts";
+import { StayCurrentLandscapeRounded } from "@material-ui/icons";
+import { SetState, NodeTypeOptions, NodeTypeCode } from "@Palavyr-Types";
+import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "./Contracts";
 import NodeTypeOptionConfigurer from "./NodeTypeOptionConfigurer";
 
 class AnabranchConfigurer {
     constructor() {}
 
-    public RecursiveDeconfigureAnabranchChildren(currentNode: IPalavyrNode) {
+    private RecursiveDeconfigureAnabranchMergePointChildren(currentNode: IPalavyrNode) {
         const recurse = (childNodeReferences: INodeReferences) => {
             if (childNodeReferences.Length === 0) return;
-            childNodeReferences.forEach((node: IPalavyrNode, index: number) => {
-                if (node.isAnabranchType) return;
-                node.isPalavyrAnabranchMember = false;
-                recurse(node.childNodeReferences);
+            childNodeReferences.forEach((child: IPalavyrNode, index: number) => {
+                if (child.isAnabranchType) return;
+                child.isPalavyrAnabranchMember = false;
+                recurse(child.childNodeReferences);
             });
         };
 
         recurse(currentNode.childNodeReferences);
+    }
+
+    private RecursiveReConfigureAnabranchMergePointChildren(currentNode: IPalavyrNode, anabranchLeftmost: boolean) {
+        const recurse = (childNodeReferences: INodeReferences, anabranchLeftmost: boolean) => {
+            if (childNodeReferences.Length === 0) return;
+            childNodeReferences.forEach((child: IPalavyrNode, index: number) => {
+                if (child.isAnabranchType) return;
+                if (index === 0 && anabranchLeftmost) {
+                    child.anabranchContext.leftmostAnabranch = true;
+                } else {
+                    child.anabranchContext.leftmostAnabranch = false;
+                }
+                child.isPalavyrAnabranchMember = true;
+                recurse(child.childNodeReferences, index === 0);
+            });
+        };
+
+        recurse(currentNode.childNodeReferences, anabranchLeftmost);
     }
 
     public SetAnabranchCheckBox(checked: boolean, setAnabranchMergeChecked: SetState<boolean>, node: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
@@ -32,7 +51,7 @@ class AnabranchConfigurer {
             NodeTypeOptionConfigurer.ConfigureNodeTypeOptions(node, nodeTypeOptions);
             node.childNodeReferences.forEach((child: IPalavyrNode) => {
                 if (!node.isAnabranchType) {
-                    this.RecursiveDeconfigureAnabranchChildren(node);
+                    this.RecursiveDeconfigureAnabranchMergePointChildren(child);
                     child.isPalavyrAnabranchMember = false;
                     child.anabranchContext = { anabranchOriginId: "", leftmostAnabranch: false };
                 }
@@ -43,17 +62,138 @@ class AnabranchConfigurer {
             node.isPalavyrAnabranchEnd = false;
             node.isAnabranchMergePoint = false;
             setAnabranchMergeChecked(false);
-            node.childNodeReferences.forEach((child: IPalavyrNode) => {
-                if (!node.isAnabranchType) {
-                    this.RecursiveDeconfigureAnabranchChildren(node);
+            node.anabranchContext.leftmostAnabranch = true; // This is problematic probably
+            node.childNodeReferences.forEach((child: IPalavyrNode, index: number) => {
+                if (!child.isAnabranchType) {
+                    this.RecursiveReConfigureAnabranchMergePointChildren(child, index === 0);
                     child.isPalavyrAnabranchMember = true;
-                    child.anabranchContext = child.parentNodeReferences.retrieveLeftmostReference()?.anabranchContext!;
+
+                    const parentAnabranchContext = child.parentNodeReferences.retrieveLeftmostReference()!.anabranchContext;
+                    this.SetAnabranchContext(child, parentAnabranchContext.anabranchOriginId, parentAnabranchContext.leftmostAnabranch);
                 }
                 NodeTypeOptionConfigurer.RecursivelyReconfigureNodeTypeOptions(child, nodeTypeOptions);
             });
-            node.anabranchContext.leftmostAnabranch = true;
         }
         node.UpdateTree();
+    }
+
+    public configureAnabranchWhenRoot(rootNode: IPalavyrNode) {
+        rootNode.isPalavyrAnabranchStart = rootNode.isAnabranchType;
+        rootNode.isPalavyrAnabranchMember = rootNode.isAnabranchType;
+        rootNode.isPalavyrAnabranchEnd = false;
+
+        if (rootNode.isAnabranchType) {
+            this.SetAnabranchContext(rootNode, rootNode.nodeId, false);
+        } else {
+            this.SetAnabranchContext(rootNode, "", false);
+        }
+    }
+
+    public configureAnabranch(currentNode: IPalavyrNode, parentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+        // all nodes establish their own anabranch context
+        // possibly update this if parent has anabranch origin node set
+        if (currentNode.nodeId == "eadbc266-7869-472d-93b5-ac9c6e9e5cac") {
+            console.log("WOW");
+        }
+        this.SetAnabranchContext(currentNode, "", false);
+
+        // the current node is an anabranch member if:
+        // - the current node is anabranch type
+        // - the parent is anabranch member and the current is not the end
+        // - the parent is anabranch member and the current is the end and the current is anabranch type
+
+        currentNode.isPalavyrAnabranchMember =
+            currentNode.isAnabranchType ||
+            (parentNode.isPalavyrAnabranchMember && !currentNode.isPalavyrAnabranchEnd) ||
+            (parentNode.isPalavyrAnabranchMember && currentNode.isPalavyrAnabranchEnd && currentNode.isPalavyrAnabranchMember);
+
+        if (currentNode.isAnabranchType) {
+            currentNode.isPalavyrAnabranchStart = true;
+            currentNode.anabranchContext.anabranchOriginId = currentNode.nodeId;
+        } else if (parentNode.isPalavyrAnabranchMember) {
+            currentNode.anabranchContext.anabranchOriginId = parentNode.anabranchContext.anabranchOriginId;
+            currentNode.isPalavyrAnabranchStart = false;
+        } else {
+            currentNode.isPalavyrAnabranchStart = false;
+        }
+
+        if (parentNode.isPalavyrAnabranchStart) {
+            // then I need to determine if this is the leftmost child if I need to reach in to parent child references and see if this node is the
+            const index = parentNode.childNodeReferences.findIndexOf(currentNode);
+            const isLeftMost = index === 0;
+            currentNode.anabranchContext.leftmostAnabranch = isLeftMost;
+        } else if (currentNode.isPalavyrAnabranchMember) {
+            // if parents.childnoderefs is more than one, then if this is not leftmost - change
+            // otherwise original code
+            if (parentNode.childNodeReferences.Length > 1) {
+                const index = parentNode.childNodeReferences.findIndexOf(currentNode);
+                const isLeftmost = index === 0;
+                currentNode.anabranchContext.leftmostAnabranch = isLeftmost;
+            } else {
+                const parentLeftmost = parentNode.anabranchContext.leftmostAnabranch;
+                currentNode.anabranchContext.leftmostAnabranch = parentLeftmost;
+            }
+        } else if (currentNode.isPalavyrAnabranchEnd) {
+        }
+
+        // merge points are considered endings - and this is a switch set on the node
+        currentNode.isPalavyrAnabranchEnd = currentNode.isAnabranchMergePoint;
+
+        if (currentNode.isPalavyrAnabranchMember) {
+            const notAllowedInsideAnabranch = [NodeTypeCode.VI, NodeTypeCode.VII];
+            if (currentNode.anabranchContext.leftmostAnabranch) {
+                notAllowedInsideAnabranch.push(NodeTypeCode.IV);
+                notAllowedInsideAnabranch.push(NodeTypeCode.V);
+            }
+            const options = NodeTypeOptionConfigurer.filterUnallowedNodeOptions(notAllowedInsideAnabranch, nodeTypeOptions);
+            currentNode.setNodeTypeOptions(options);
+        } else {
+            const options = NodeTypeOptionConfigurer.filterUnallowedNodeOptions([], nodeTypeOptions);
+            currentNode.setNodeTypeOptions(options);
+        }
+    }
+
+    GetAnabranchOriginNode(node: IPalavyrNode) {
+        if (!node.isPalavyrAnabranchMember) throw new Error("Not an anabranch member");
+        const originId = node.anabranchContext.anabranchOriginId;
+        const anabranchOriginNode = node.palavyrLinkedList.findNode(originId);
+        if (anabranchOriginNode === null) throw new Error("anabranchOrigin Node not found.");
+
+        return anabranchOriginNode;
+    }
+
+    public SetAnabranchContext(node: IPalavyrNode, originId: string, leftMost: boolean) {
+        if (!node.anabranchContext) {
+            node.anabranchContext = { anabranchOriginId: "", leftmostAnabranch: false };
+        }
+        this.SetAnabranchOriginId(node, originId);
+        this.SetAnabranchLeftMost(node, leftMost);
+    }
+
+    public SetAnabranchOriginId(node: IPalavyrNode, originId: string) {
+        node.anabranchContext.anabranchOriginId = originId;
+    }
+
+    public SetAnabranchLeftMost(node: IPalavyrNode, leftMost: boolean) {
+        node.anabranchContext.leftmostAnabranch = leftMost;
+    }
+
+    public shouldShowAnabranchCheckBox(node: IPalavyrNode) {
+        const isChildOfAnabranchType = node.parentNodeReferences.checkIfReferenceExistsOnCondition((node: IPalavyrNode) => node.isPalavyrAnabranchStart);
+        const _shouldShow =
+            node.nodeIsSet() &&
+            !node.isPalavyrAnabranchStart &&
+            node.isPalavyrAnabranchMember &&
+            !node.isTerminal &&
+            !isChildOfAnabranchType &&
+            node.anabranchContext.leftmostAnabranch &&
+            !node.isAnabranchLocked;
+
+        if (node.isAnabranchMergePoint) {
+            return true;
+        } else {
+            return _shouldShow;
+        }
     }
 }
 

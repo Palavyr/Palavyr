@@ -55,7 +55,7 @@ export const StructuredConvoTree = () => {
 
     const [conversationHistory, setConversationHistory] = useState<PalavyrLinkedList[]>([]);
     const [conversationHistoryPosition, setConversationHistoryPosition] = useState<number>(0);
-    const [showDebugData, setShowDebugData] = useState<boolean>(false);
+    const [showDebugData, setShowDebugData] = useState<boolean>(true);
 
     const [linkedNodeList, setLinkedNodes] = useState<PalavyrLinkedList>();
     const historyTracker = new ConversationHistoryTracker(setConversationHistory, setConversationHistoryPosition, setLinkedNodes);
