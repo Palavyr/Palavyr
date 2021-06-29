@@ -40,7 +40,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
     public resolveOrder: number;
     public nodeComponentType: string; // type of component to use in the widget - standardized list of types in the widget registry
     public dynamicType: string | null; // generic dynamic type, e.g. SelectOneFlat-3242-2342-234-2423
-    public nodeChildrenString: string;
     public nodeTypeOptions: NodeTypeOptions;
     public valueOptions: string[]; // the options available from this node, if any. I none, then "Continue" is used |peg| delimted
 
@@ -135,7 +134,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.nodeComponentType = node.nodeComponentType; // type of component to use in the widget - standardized list of types in the widget registry
         this.dynamicType = node.dynamicType; // generic dynamic type, e.g. SelectOneFlat-3242-2342-234-2423
 
-        this.nodeChildrenString = this.childNodeReferences.joinedReferenceString;
         this.shouldShowMultiOption = node.shouldShowMultiOption;
 
         this.isSplitMergeType = node.isSplitMergeType;
@@ -549,6 +547,10 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.nodeType = "ProvideInfo";
     }
 
+    public Equals(otherNode: IPalavyrNode) {
+        return this.nodeId === otherNode.nodeId;
+    }
+
     public recursiveReferenceThisAnabranchOrigin(anabranchMergeNode: IPalavyrNode) {
         if (!this.isAnabranchType) throw new Error("Attempting to call anabranch reference method from non-anabranch-origin node");
         this.lock();
@@ -558,10 +560,10 @@ export abstract class PalavyrNode implements IPalavyrNode {
             childReferences.forEach((node: IPalavyrNode) => {
                 node.lock();
                 if (node.childNodeReferences.containsNode(anabranchMergeNode)) {
-                    // do nothing
-                    // todo - maybe we want to bail on leftmost?
+                    // reconfigure the siblings of the anabranchMergeNode
+                    recurseAndReference(node.childNodeReferences.Where((node: IPalavyrNode) => !node.Equals(anabranchMergeNode)));
                 } else {
-                    if (node.childNodeReferences.Length === 1 && node.childNodeReferences.retrieveLeftmostReference()?.nodeIsNotSet()) {
+                    if (node.childNodeReferences.Length === 1 && node.childNodeReferences.Single().nodeIsNotSet()) {
                         node.childNodeReferences.Clear();
 
                         if (!node.isTerminal) {

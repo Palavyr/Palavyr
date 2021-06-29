@@ -117,4 +117,15 @@ export class NodeReferences implements INodeReferences {
         if (index === -1) return null;
         return index;
     }
+
+    public Single() {
+        if (this.Length !== 1) throw new Error(`Only 1 node not present in reference list. Total found: ${this.Length}`);
+        return this.nodeReferences[0];
+    }
+
+    public Where(condition: (node: IPalavyrNode) => boolean): INodeReferences {
+        const remaining = this.nodeReferences.filter(condition);
+        const newRefs = new NodeReferences(remaining) as INodeReferences;
+        return newRefs;
+    }
 }

@@ -52,7 +52,9 @@ export interface INodeReferences {
     retrieveLeftmostReference(): IPalavyrNode | null;
     findIndexOf(node: IPalavyrNode): number | null;
     containsNode(node: IPalavyrNode): boolean;
-    forEach(callBack: (node: IPalavyrNode, index?: number | undefined) => void);
+    forEach(callBack: (node: IPalavyrNode, index?: number | undefined) => void): void;
+    Single(): IPalavyrNode;
+    Where(condition: (node: IPalavyrNode) => boolean): INodeReferences;
 }
 
 export interface IPalavyrNode {
@@ -80,6 +82,7 @@ export interface IPalavyrNode {
     setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
     removeLine(toNode: IPalavyrNode): void;
     setNodeTypeOptions(newNodeTypeOptions: NodeTypeOptions): void;
+    Equals(otherNode: IPalavyrNode);
 
     isRoot: boolean;
     nodeId: string;
@@ -101,7 +104,7 @@ export interface IPalavyrNode {
     isAnabranchType: boolean;
     nodeTypeCode: NodeTypeCode;
 
-    nodeChildrenString: string;
+    // nodeChildrenString: string;
     repository: PalavyrRepository;
 
     isAnabranchMergePoint: boolean;

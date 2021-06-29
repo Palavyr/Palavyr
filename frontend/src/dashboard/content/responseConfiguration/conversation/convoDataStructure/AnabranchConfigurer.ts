@@ -1,6 +1,5 @@
-import { StayCurrentLandscapeRounded } from "@material-ui/icons";
 import { SetState, NodeTypeOptions, NodeTypeCode } from "@Palavyr-Types";
-import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "./Contracts";
+import { INodeReferences, IPalavyrNode } from "./Contracts";
 import NodeTypeOptionConfigurer from "./NodeTypeOptionConfigurer";
 
 class AnabranchConfigurer {
@@ -9,7 +8,7 @@ class AnabranchConfigurer {
     private RecursiveDeconfigureAnabranchMergePointChildren(currentNode: IPalavyrNode) {
         const recurse = (childNodeReferences: INodeReferences) => {
             if (childNodeReferences.Length === 0) return;
-            childNodeReferences.forEach((child: IPalavyrNode, index: number) => {
+            childNodeReferences.forEach((child: IPalavyrNode) => {
                 if (child.isAnabranchType) return;
                 child.isPalavyrAnabranchMember = false;
                 recurse(child.childNodeReferences);
@@ -47,13 +46,14 @@ class AnabranchConfigurer {
             node.isPalavyrAnabranchEnd = true;
             node.isAnabranchMergePoint = true;
             anabranchOriginNode.recursiveReferenceThisAnabranchOrigin(node);
+
             setAnabranchMergeChecked(true);
             NodeTypeOptionConfigurer.ConfigureNodeTypeOptions(node, nodeTypeOptions);
             node.childNodeReferences.forEach((child: IPalavyrNode) => {
                 if (!node.isAnabranchType) {
                     this.RecursiveDeconfigureAnabranchMergePointChildren(child);
                     child.isPalavyrAnabranchMember = false;
-                    child.anabranchContext = { anabranchOriginId: "", leftmostAnabranch: false };
+                    this.SetAnabranchContext(child, "", false);
                 }
                 NodeTypeOptionConfigurer.RecursivelyReconfigureNodeTypeOptions(child, nodeTypeOptions);
             });

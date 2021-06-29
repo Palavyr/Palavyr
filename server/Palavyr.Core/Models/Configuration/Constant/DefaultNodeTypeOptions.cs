@@ -45,7 +45,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 new TakeNumberIndividuals(),
                 new SendResponse(),
                 new TooComplicated(),
-                new SplitMerge(),
+                // new SplitMerge(),
                 new Anabranch(),
                 new ShowImage(),
                 new EndWithoutEmail(),
