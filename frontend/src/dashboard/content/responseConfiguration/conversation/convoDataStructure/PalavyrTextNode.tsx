@@ -69,6 +69,7 @@ export class PalavyrTextNode extends PalavyrNode {
                             (this.isMultiOptionType ? (
                                 this.shouldShowMultiOption ? (
                                     <MultiChoiceTextEditor
+                                        locked={this.isAnabranchLocked}
                                         switchState={switchState}
                                         setSwitchState={setSwitchState}
                                         text={text}
@@ -114,12 +115,13 @@ export type MultiChoiceEditorProps = {
     options: string[];
     setOptions: SetState<string[]>;
     onClick: (text: string, options: string[]) => void;
+    locked: boolean;
 };
-export const MultiChoiceTextEditor = ({ switchState, setSwitchState, text, setText, options, setOptions, onClick }: MultiChoiceEditorProps) => {
+export const MultiChoiceTextEditor = ({ switchState, setSwitchState, text, setText, options, setOptions, onClick, locked }: MultiChoiceEditorProps) => {
     return (
         <>
             <TextField margin="dense" value={text} multiline rows={4} onChange={(event) => setText(event.target.value)} id="question" label="Question or Information" type="text" fullWidth />
-            <MultiChoiceOptions options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} addMultiChoiceOptionsOnClick={() => onClick(text, options)} />
+            <MultiChoiceOptions locked={locked} options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} addMultiChoiceOptionsOnClick={() => onClick(text, options)} />
         </>
     );
 };

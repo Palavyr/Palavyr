@@ -37,7 +37,7 @@ export class NodeCreator {
             shouldShowMultiOption: false,
             isAnabranchMergePoint: false,
             isAnabranchType: false,
-            nodeComponentType: "",
+            nodeComponentType: "ProvideInfo",
             isDynamicTableNode: false,
             resolveOrder: 0,
             dynamicType: "",

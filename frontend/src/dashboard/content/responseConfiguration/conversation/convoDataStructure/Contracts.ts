@@ -73,7 +73,6 @@ export interface IPalavyrNode {
     removeSelf(): void;
     nodeIsSet(): boolean;
     nodeIsNotSet(): boolean;
-    isPenultimate(): void;
     RouteToMostRecentSplitMerge(): void;
     setValueOptions(newValueOptions: string[]): void;
     addValueOption(newOption: string): void;

@@ -1,5 +1,5 @@
 import { SetState, NodeTypeOptions, NodeTypeCode } from "@Palavyr-Types";
-import { INodeReferences, IPalavyrNode } from "./Contracts";
+import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "./Contracts";
 import NodeTypeOptionConfigurer from "./NodeTypeOptionConfigurer";
 
 class AnabranchConfigurer {
@@ -85,16 +85,17 @@ class AnabranchConfigurer {
         if (rootNode.isAnabranchType) {
             this.SetAnabranchContext(rootNode, rootNode.nodeId, false);
         } else {
-            this.SetAnabranchContext(rootNode, "", false);
+            this.ClearAnabranchContext(rootNode);
         }
     }
 
     public configureAnabranch(currentNode: IPalavyrNode, parentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         // all nodes establish their own anabranch context
         // possibly update this if parent has anabranch origin node set
-        if (currentNode.nodeId == "eadbc266-7869-472d-93b5-ac9c6e9e5cac") {
+        if (currentNode.nodeId == "b7259fd1-4657-49db-9b6d-dea11097abc3") {
             console.log("WOW");
         }
+
         this.SetAnabranchContext(currentNode, "", false);
 
         // the current node is an anabranch member if:
@@ -164,7 +165,7 @@ class AnabranchConfigurer {
 
     public SetAnabranchContext(node: IPalavyrNode, originId: string, leftMost: boolean) {
         if (!node.anabranchContext) {
-            node.anabranchContext = { anabranchOriginId: "", leftmostAnabranch: false };
+            this.ClearAnabranchContext(node);
         }
         this.SetAnabranchOriginId(node, originId);
         this.SetAnabranchLeftMost(node, leftMost);
@@ -178,14 +179,16 @@ class AnabranchConfigurer {
         node.anabranchContext.leftmostAnabranch = leftMost;
     }
 
+    public ClearAnabranchContext(node: IPalavyrNode) {
+        node.anabranchContext = { anabranchOriginId: "", leftmostAnabranch: false };
+    }
+
     public shouldShowAnabranchCheckBox(node: IPalavyrNode) {
-        const isChildOfAnabranchType = node.parentNodeReferences.checkIfReferenceExistsOnCondition((node: IPalavyrNode) => node.isPalavyrAnabranchStart);
         const _shouldShow =
             node.nodeIsSet() &&
             !node.isPalavyrAnabranchStart &&
             node.isPalavyrAnabranchMember &&
             !node.isTerminal &&
-            !isChildOfAnabranchType &&
             node.anabranchContext.leftmostAnabranch &&
             !node.isAnabranchLocked;
 

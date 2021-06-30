@@ -18,10 +18,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
             public static string MultipleChoiceAsPath => DefaultNodeTypeOptions.MultipleChoiceAsPath.StringName;
             public static string MultipleChoiceContinue => DefaultNodeTypeOptions.MultipleChoiceContinue.StringName;
 
-            public static string SplitMerge => DefaultNodeTypeOptions.SplitMerge.StringName;
-
-            // public static string EvaluateThreshold => DefaultNodeTypeOptions.EvaluateThreshold.StringName;
-
             public static string ShowImage => DefaultNodeTypeOptions.ShowImage.StringName;
             public static string TooComplicated => DefaultNodeTypeOptions.TooComplicated.StringName;
             public static string SendResponse => DefaultNodeTypeOptions.SendResponse.StringName;
@@ -45,7 +41,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 new TakeNumberIndividuals(),
                 new SendResponse(),
                 new TooComplicated(),
-                // new SplitMerge(),
                 new Anabranch(),
                 new ShowImage(),
                 new EndWithoutEmail(),
@@ -59,8 +54,10 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public static TakeText CreateTakeText() => new TakeText();
         public static ProvideInfo CreateProvideInfo() => new ProvideInfo();
         public static MultipleChoiceContinue CreateMultipleChoiceContinue() => new MultipleChoiceContinue();
+
         public static MultipleChoiceAsPath CreateMultipleChoiceAsPath() => new MultipleChoiceAsPath();
-        public static SplitMerge CreateSplitMerge() => new SplitMerge();
+
+        // public static SplitMerge CreateSplitMerge() => new SplitMerge();
         public static Anabranch CreateAnabranch() => new Anabranch();
         public static ShowImage CreateShowImage() => new ShowImage();
 
@@ -72,7 +69,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public static SendResponse CreateSendResponse() => new SendResponse();
 
         public static Loopback CreateLoopback() => new Loopback();
-        
+
         // public static Restart CreateRestart() => new Restart();
         public static EndWithoutEmail CreateEndWithoutEmail() => new EndWithoutEmail();
 
@@ -182,32 +179,32 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        public class SplitMerge : NodeTypeOption
-        {
-            public new static string StringName => nameof(SplitMerge);
-
-            public SplitMerge()
-            {
-                Text = "Split Merge";
-                Value = StringName;
-                PathOptions = new List<string>();
-                ValueOptions = new List<string>();
-                IsMultiOptionType = true;
-                IsTerminalType = false;
-                GroupName = SplitAndMerge;
-                IsSplitMergeType = true;
-                ShouldRenderChildren = true;
-                ShouldShowMultiOption = true;
-                IsAnabranchType = false;
-                IsAnabranchMergePoint = false;
-                IsDynamicType = false;
-                NodeComponentType = NodeComponentTypes.MultipleChoiceAsPath;
-                IsCurrency = false;
-                IsMultiOptionEditable = true;
-                NodeTypeCode = NodeTypeCode.VII;
-            }
-        }
-
+        // public class SplitMerge : NodeTypeOption
+        // {
+        //     public new static string StringName => nameof(SplitMerge);
+        //
+        //     public SplitMerge()
+        //     {
+        //         Text = "Split Merge";
+        //         Value = StringName;
+        //         PathOptions = new List<string>();
+        //         ValueOptions = new List<string>();
+        //         IsMultiOptionType = true;
+        //         IsTerminalType = false;
+        //         GroupName = SplitAndMerge;
+        //         IsSplitMergeType = true;
+        //         ShouldRenderChildren = true;
+        //         ShouldShowMultiOption = true;
+        //         IsAnabranchType = false;
+        //         IsAnabranchMergePoint = false;
+        //         IsDynamicType = false;
+        //         NodeComponentType = NodeComponentTypes.MultipleChoiceAsPath;
+        //         IsCurrency = false;
+        //         IsMultiOptionEditable = true;
+        //         NodeTypeCode = NodeTypeCode.VII;
+        //     }
+        // }
+        //
 
         public class TakeCurrency : NodeTypeOption
         {
@@ -258,7 +255,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 NodeTypeCode = NodeTypeCode.II;
-
             }
         }
 
@@ -285,7 +281,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 NodeTypeCode = NodeTypeCode.II;
-
             }
         }
 
@@ -315,7 +310,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 NodeTypeCode = NodeTypeCode.V;
-
             }
         }
 
@@ -343,7 +337,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 NodeTypeCode = NodeTypeCode.V;
-
             }
         }
 
@@ -370,7 +363,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 NodeTypeCode = NodeTypeCode.V;
-
             }
         }
 
@@ -397,7 +389,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 NodeTypeCode = NodeTypeCode.V;
-
             }
         }
 
@@ -424,7 +415,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 NodeTypeCode = NodeTypeCode.II;
-
             }
         }
 
@@ -451,7 +441,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 NodeTypeCode = NodeTypeCode.II;
-
             }
         }
 
@@ -478,7 +467,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
                 NodeTypeCode = NodeTypeCode.IV;
-
             }
         }
 
@@ -505,7 +493,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
                 NodeTypeCode = NodeTypeCode.III;
-
             }
         }
 
@@ -533,7 +520,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
                 NodeTypeCode = NodeTypeCode.II;
-
             }
         }
 
@@ -560,7 +546,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
                 NodeTypeCode = NodeTypeCode.II;
-
             }
         }
     }

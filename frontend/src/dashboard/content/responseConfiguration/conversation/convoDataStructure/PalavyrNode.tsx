@@ -17,9 +17,7 @@ import { PalavyrNodeChanger } from "./NodeChanger";
 import { NodeConfigurer } from "./NodeConfigurer";
 import { AnabranchMergeCheckBox } from "./nodeOptionals/AnabranchMergeCheckBox";
 import { AnabranchMergeNodeLabel } from "./nodeOptionals/AnabranchMergeNodeLabel";
-import { ShowMergeWithPrimarySiblingBranchOption } from "./nodeOptionals/MergeWithPrimarySiblingButton";
 import { ShowResponseInPdf } from "./nodeOptionals/ShowResponseInPdf";
-import { SplitMergeAnchorLabel } from "./nodeOptionals/SplitMergeAnchorLabel";
 import { UnsetNodeButton } from "./nodeOptionals/UnsetNodeButton";
 import { NodeCreator } from "./NodeCreator";
 import NodeTypeOptionConfigurer from "./NodeTypeOptionConfigurer";
@@ -559,7 +557,10 @@ export abstract class PalavyrNode implements IPalavyrNode {
         const recurseAndReference = (childReferences: INodeReferences) => {
             childReferences.forEach((node: IPalavyrNode) => {
                 node.lock();
-                if (node.childNodeReferences.containsNode(anabranchMergeNode)) {
+                if (node.Equals(anabranchMergeNode)) {
+                    // do nothing?
+                    return;
+                } else if (node.childNodeReferences.containsNode(anabranchMergeNode)) {
                     // reconfigure the siblings of the anabranchMergeNode
                     recurseAndReference(node.childNodeReferences.Where((node: IPalavyrNode) => !node.Equals(anabranchMergeNode)));
                 } else {
@@ -607,7 +608,9 @@ export abstract class PalavyrNode implements IPalavyrNode {
         const recurseAndDereference = (childReferences: INodeReferences) => {
             childReferences.forEach((node: IPalavyrNode) => {
                 node.unlock();
-                if (node.childNodeReferences.containsNode(mergeNode)) {
+                if (node.Equals(mergeNode)) {
+                    recurseAndDereference(node.childNodeReferences);
+                } else if (node.childNodeReferences.containsNode(mergeNode)) {
                     if (!node.anabranchContext.leftmostAnabranch) {
                         node.childNodeReferences.Clear();
                         this.nodeCreator.addDefaultChild(node, "Continue", nodeTypeOptions);
@@ -630,18 +633,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
         recurseAndDereference(anabranchOriginNode.childNodeReferences);
     }
 
-    public isPenultimate() {
-        if (this.childNodeReferences.Empty()) return false;
-
-        for (let index = 0; index < this.childNodeReferences.Length; index++) {
-            const childNodeReference = this.childNodeReferences.references[index];
-            if (childNodeReference.childNodeReferences.Length !== 0) {
-                return false; // check this logic TODO:!
-            }
-            return true;
-        }
-    }
-
     private renderOptionals() {
         const currentNode = this as IPalavyrNode;
 
@@ -649,10 +640,8 @@ export abstract class PalavyrNode implements IPalavyrNode {
             return (
                 <>
                     <ShowResponseInPdf node={currentNode} />
-                    <ShowMergeWithPrimarySiblingBranchOption node={currentNode} />
                     <AnabranchMergeCheckBox node={currentNode} />
                     <UnsetNodeButton node={currentNode} />
-                    <SplitMergeAnchorLabel node={currentNode} />
                     <AnabranchMergeNodeLabel node={currentNode} />
                 </>
             );
