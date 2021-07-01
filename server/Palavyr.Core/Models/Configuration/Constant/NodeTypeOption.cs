@@ -11,6 +11,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
     {
         // Groups
         public static readonly string MultipleChoice = "Multiple Choice";
+        public static readonly string Teleport = "Teleport";
         public static readonly string InfoCollection = "Info Collection";
         public static readonly string InfoProvide = "Provide Info";
         public static readonly string CustomTables = "Custom Tables";

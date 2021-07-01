@@ -19,20 +19,18 @@ export class NodeCreator {
 
     createDefaultNode(optionPath: string): ConvoNode {
         return {
-            IsSplitMergeMergePoint: false,
+            isLoopbackAnchorType: false,
             nodeId: uuid(),
             nodeType: "",
             text: "Ask your question!",
             nodeChildrenString: "",
             isRoot: false,
-            fallback: false,
             isCritical: false,
             areaIdentifier: "",
             optionPath: optionPath,
             valueOptions: "",
             isMultiOptionType: false,
             isTerminalType: false,
-            isSplitMergeType: false,
             shouldRenderChildren: true,
             shouldShowMultiOption: false,
             isAnabranchMergePoint: false,

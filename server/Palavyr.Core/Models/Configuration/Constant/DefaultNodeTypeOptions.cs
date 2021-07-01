@@ -22,7 +22,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             public static string TooComplicated => DefaultNodeTypeOptions.TooComplicated.StringName;
             public static string SendResponse => DefaultNodeTypeOptions.SendResponse.StringName;
             public static string EndWithoutEmail => DefaultNodeTypeOptions.EndWithoutEmail.StringName;
-            public static string Loopback => DefaultNodeTypeOptions.Loopback.StringName;
+            public static string Loopback => DefaultNodeTypeOptions.LoopbackAnchor.StringName;
         }
 
         public static List<NodeTypeOption> DefaultNodeTypeOptionsList => // These get sent to the UI for user selection
@@ -44,7 +44,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 new Anabranch(),
                 new ShowImage(),
                 new EndWithoutEmail(),
-                new Loopback()
+                new LoopbackAnchor()
             };
 
         public static YesNo CreateYesNo() => new YesNo();
@@ -68,36 +68,61 @@ namespace Palavyr.Core.Models.Configuration.Constant
 
         public static SendResponse CreateSendResponse() => new SendResponse();
 
-        public static Loopback CreateLoopback() => new Loopback();
+        public static LoopbackAnchor CreateLoopback() => new LoopbackAnchor();
 
         // public static Restart CreateRestart() => new Restart();
         public static EndWithoutEmail CreateEndWithoutEmail() => new EndWithoutEmail();
 
+        public class LoopbackAnchor : NodeTypeOption
+        {
+            public new static string StringName => nameof(LoopbackAnchor);
+
+            public LoopbackAnchor()
+            {
+                Text = "Loopback Anchor";
+                Value = StringName;
+                PathOptions = new List<string>() {"Continue"};
+                ValueOptions = new List<string>() {"Continue"};
+                IsMultiOptionType = true;
+                IsTerminalType = false;
+                GroupName = Teleport;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+                IsDynamicType = false;
+                NodeComponentType = NodeComponentTypes.MultipleChoiceAsPath;
+                IsCurrency = false;
+                IsMultiOptionEditable = true;
+                NodeTypeCode = NodeTypeCode.VII;
+            }
+        }
+        
         public class Loopback : NodeTypeOption
         {
             public new static string StringName => nameof(Loopback);
 
             public Loopback()
             {
-                Text = "Loop back";
+                Text = "Loopback";
                 Value = StringName;
                 PathOptions = new List<string>() {"Continue"};
                 ValueOptions = new List<string>() {"Continue"};
                 IsMultiOptionType = false;
-                IsTerminalType = true;
-                GroupName = Terminal;
-                IsSplitMergeType = false;
+                IsTerminalType = false;
+                GroupName = Teleport;
                 ShouldRenderChildren = false;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponentType = NodeComponentTypes.EndWithoutEmail;
+                NodeComponentType = NodeComponentTypes.ProvideInfo;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 NodeTypeCode = NodeTypeCode.I;
             }
         }
+        
 
         public class EndWithoutEmail : NodeTypeOption
         {
@@ -112,7 +137,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = true;
                 GroupName = Terminal;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = false;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
@@ -138,7 +162,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoProvide;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
@@ -166,7 +189,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = SplitAndMerge;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = true;
                 IsAnabranchType = true;
@@ -192,7 +214,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
@@ -218,7 +239,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
@@ -244,7 +264,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
@@ -273,7 +292,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = true; // set to no if we don't want to allow the node value options presented to the user to change. 
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
@@ -300,7 +318,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
@@ -326,7 +343,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
@@ -352,7 +368,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
@@ -378,7 +393,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
@@ -404,7 +418,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoProvide;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
@@ -430,7 +443,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = true;
                 IsAnabranchType = false;
@@ -456,7 +468,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = true;
                 IsAnabranchType = false;
@@ -483,7 +494,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = true;
                 GroupName = Terminal;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = false;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
@@ -509,7 +519,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = true;
                 GroupName = Terminal;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = false;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;

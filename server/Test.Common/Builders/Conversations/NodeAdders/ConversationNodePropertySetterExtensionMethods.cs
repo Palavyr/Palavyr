@@ -2,22 +2,11 @@
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.DynamicTableService;
-using Palavyr.Core.Services.DynamicTableService.Compilers;
 
 namespace Test.Common.Builders.Conversations.NodeAdders
 {
     public static class ConversationNodePropertySetterExtensionMethods
     {
-        // public static void SetNodeId(this ConversationNode node, string nodeId)
-        // {
-        //     node.NodeId = nodeId;
-        // }
-
-        // public static void SetNodeType(this ConversationNode node, string nodeType)
-        // {
-        //     node.NodeType = nodeType;
-        // }
-
         public static SingleNodeReturnObject WithText(this SingleNodeReturnObject container, string nodeText)
         {
             container.PreviousNode.Text = nodeText;
@@ -89,10 +78,6 @@ namespace Test.Common.Builders.Conversations.NodeAdders
             node.ShouldRenderChildren = shouldRenderChildren;
         }
 
-        public static void SetIsSplitMergeType(this ConversationNode node, bool isSplitMergeType)
-        {
-            node.IsSplitMergeType = isSplitMergeType;
-        }
 
         public static void SetShouldShowMultiOption(this ConversationNode node, bool show)
         {

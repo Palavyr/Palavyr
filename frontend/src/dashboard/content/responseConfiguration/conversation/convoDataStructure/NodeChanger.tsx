@@ -221,7 +221,6 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         currentNode.isCurrency = nodeOption.isCurrency;
         currentNode.isDynamicTableNode = nodeOption.isDynamicType;
         currentNode.isMultiOptionType = nodeOption.isMultiOptionType;
-        currentNode.isSplitMergeType = nodeOption.isSplitMergeType;
         currentNode.isTerminal = nodeOption.isTerminalType;
         currentNode.nodeComponentType = nodeOption.nodeComponentType;
         currentNode.resolveOrder = nodeOption.resolveOrder; // IS this right?

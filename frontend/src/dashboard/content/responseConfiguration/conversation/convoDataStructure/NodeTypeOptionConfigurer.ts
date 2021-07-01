@@ -1,26 +1,27 @@
 import { NodeOption, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { INodeReferences, IPalavyrNode } from "./Contracts";
 
-// filterUnallowedNodeOptions(forbiddenOptions: Array<NodeTypeCode>, nodeTypeOptions: NodeTypeOptions);
-
 class NodeTypeOptionConfigurer {
     constructor() {}
 
     public ConfigureNodeTypeOptions(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
-        let options = nodeTypeOptions
+        let options = nodeTypeOptions;
         if (currentNode.isPalavyrAnabranchMember) {
             options = this.filterUnallowedNodeOptions([NodeTypeCode.VI, NodeTypeCode.VII], options);
         }
 
-        if (currentNode.childNodeReferences.references.map(x => x.nodeType).includes("Anabranch")) {
+        if (currentNode.childNodeReferences.references.map((x) => x.nodeType).includes("Anabranch")) {
             options = this.filterUnallowedNodeOptions([NodeTypeCode.VI], options);
+        }
+
+        if (currentNode.isLoopbackMember) {
+            options = this.filterUnallowedNodeOptions([NodeTypeCode.VII], options)
         }
 
         return options;
     }
 
     public RecursivelyReconfigureNodeTypeOptions(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
-
         this.ConfigureNodeTypeOptions(currentNode, nodeTypeOptions);
 
         const recurse = (childNodeReferences: INodeReferences) => {

@@ -3,7 +3,7 @@ import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { Card, CardContent, makeStyles, Typography } from "@material-ui/core";
-import { ConvoNode, NodeTypeOptions, ValueOptionDelimiter, AlertType, NodeOption, LineMap, AnabranchContext, SplitmergeContext, LineLink, NodeTypeCode } from "@Palavyr-Types";
+import { ConvoNode, NodeTypeOptions, ValueOptionDelimiter, AlertType, NodeOption, LineMap, AnabranchContext, LineLink, NodeTypeCode, LoopbackContext } from "@Palavyr-Types";
 import classNames from "classnames";
 import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
 import { DataLogging } from "../nodes/nodeInterface/nodeDebug/DataLogging";
@@ -45,10 +45,8 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
     // transient
     public shouldRenderChildren: boolean;
-    public isSplitMergeType: boolean;
     public shouldShowMultiOption: boolean;
-    public isAnabranchType: boolean;
-    public isAnabranchMergePoint: boolean;
+
     public isImageNode: boolean;
     public imageId: string | null;
 
@@ -73,26 +71,26 @@ export abstract class PalavyrNode implements IPalavyrNode {
     public repository: PalavyrRepository;
     public palavyrLinkedList: IPalavyrLinkedList; // the containing list object that this node is a member of. Used to acccess update methods
 
-    // deprecated
-    public fallback: boolean;
     public shouldDisableNodeTypeSelector: boolean;
 
-    // NEW PROPERTIES TO DEAL WITH anabranch and split merge types --
+    // NEW PROPERTIES TO DEAL WITH anabranch and loopback
 
     // ANA BRANCH (we get isAnabranch from the DB. We should infer the rest here when constructing the linked list)
+    public isAnabranchType: boolean;
+    public isAnabranchMergePoint: boolean;
+
     public isPalavyrAnabranchStart: boolean;
     public isPalavyrAnabranchMember: boolean;
     public isPalavyrAnabranchEnd: boolean;
     public isAnabranchLocked: boolean;
     public anabranchContext: AnabranchContext;
 
-    // SPLIT MERGE (we also get isSplitMerge from Db, so samesy - infer the rest here)
-    public isPalavyrSplitmergeStart: boolean;
-    public isPalavyrSplitmergeMember: boolean;
-    public isPalavyrSplitmergePrimarybranch: boolean;
-    public isPalavyrSplitmergeEnd: boolean;
-    public isPalavyrSplitmergeMergePoint: boolean;
-    public splitmergeContext: SplitmergeContext;
+    // LOOPBACK
+    public isLoopbackAnchorType: boolean;
+
+    public isLoopbackMember: boolean; // only nonleftmostbranch
+    public isLoopbackStart: boolean;
+    public loopbackContext: LoopbackContext;
 
     /**
      * this node type will hold a reference to the parent nodes
@@ -132,15 +130,15 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.nodeComponentType = node.nodeComponentType; // type of component to use in the widget - standardized list of types in the widget registry
         this.dynamicType = node.dynamicType; // generic dynamic type, e.g. SelectOneFlat-3242-2342-234-2423
 
-        this.shouldShowMultiOption = node.shouldShowMultiOption;
+        this.isImageNode = node.isImageNode;
 
-        this.isSplitMergeType = node.isSplitMergeType;
-        this.isPalavyrSplitmergeMergePoint = node.IsSplitMergeMergePoint;
+        this.imageId = node.imageId;
+        this.shouldShowMultiOption = node.shouldShowMultiOption;
 
         this.isAnabranchType = node.isAnabranchType;
         this.isAnabranchMergePoint = node.isAnabranchMergePoint;
-        this.isImageNode = node.isImageNode;
-        this.imageId = node.imageId;
+
+        this.isLoopbackAnchorType = node.isLoopbackAnchorType;
 
         this.isMemberOfLeftmostBranch = leftmostBranch;
 
@@ -150,9 +148,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
 
         this.isAnabranchLocked = false; // TODO set this dynamically
         this.shouldDisableNodeTypeSelector = false; // todo set this dynamically
-
-        // deprecated
-        this.fallback = node.fallback;
     }
 
     abstract renderNodeEditor(): ({ editorIsOpen, closeEditor }) => JSX.Element;
@@ -187,8 +182,8 @@ export abstract class PalavyrNode implements IPalavyrNode {
     }
 
     public sortChildReferences() {
-        // reorder parent's child refs depending on if parent is a anabranch or splitmerge type
-        if (!this.isPalavyrAnabranchStart && !this.isPalavyrSplitmergeStart) {
+        // reorder parent's child refs depending on if parent is a anabranch
+        if (!this.isPalavyrAnabranchStart) {
             this.childNodeReferences.OrderByOptionPath();
         }
     }
@@ -253,15 +248,13 @@ export abstract class PalavyrNode implements IPalavyrNode {
             isTerminalType: this.isTerminal,
             shouldRenderChildren: this.shouldRenderChildren,
             isMultiOptionType: this.isMultiOptionType,
-            fallback: this.fallback,
-            isSplitMergeType: this.isSplitMergeType,
-            IsSplitMergeMergePoint: this.isPalavyrSplitmergeMergePoint,
             shouldShowMultiOption: this.shouldShowMultiOption,
             isAnabranchType: this.isAnabranchType,
             isAnabranchMergePoint: this.isAnabranchMergePoint,
             isImageNode: this.isImageNode,
             imageId: this.imageId,
             nodeTypeCode: this.nodeTypeCode,
+            isLoopbackAnchorType: this.isLoopbackAnchorType,
         };
     }
 
@@ -456,7 +449,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
                 nodeType: this.nodeType,
                 nodeText: this.userText,
                 checked: this.shouldPresentResponse,
-                isDecendentOfSplitMerge: this.isPalavyrSplitmergeMember,
                 splitMergeRootSiblingIndex: this.isMemberOfLeftmostBranch ? 0 : 1,
                 debugOn: showDebugData,
                 isImageNode: this.imageId !== null,
@@ -495,40 +487,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
                 </Typography>
             );
         };
-    }
-
-    public RouteToMostRecentSplitMerge() {
-        this.childNodeReferences.Clear();
-        let parentReferences = this.parentNodeReferences;
-
-        const findMostRecentSplitMergeAndAssign = (parentNode: IPalavyrNode) => {
-            let found = false;
-            while (true) {
-                for (let index = 0; index < parentReferences.Length; index++) {
-                    if (parentNode.isPalavyrSplitmergeStart) {
-                        this.childNodeReferences.addReference(parentNode);
-                        found = true;
-                        return true;
-                    } else if (parentNode.isRoot) {
-                        throw new Error("Failed to find the Split Merge origin - logic error.");
-                    } else {
-                        findMostRecentSplitMergeAndAssign(parentNode);
-                    }
-                    parentNode = parentReferences.getByIndex(index);
-                }
-            }
-        };
-
-        for (let index = 0; index < parentReferences.Length; index++) {
-            const parent = parentReferences.getByIndex(index);
-            const result = findMostRecentSplitMergeAndAssign(parent);
-            if (result) {
-                console.log("UPDATED THE TREE AFTER SPLIT MERGE UPDATE");
-                this.shouldRenderChildren = false;
-                this.UpdateTree();
-                break; // early break
-            }
-        }
     }
 
     public lock() {

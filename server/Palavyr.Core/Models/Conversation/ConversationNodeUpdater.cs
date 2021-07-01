@@ -48,7 +48,6 @@ namespace Palavyr.Core.Models.Conversation
                     node.IsMultiOptionType,
                     node.IsTerminalType,
                     node.ShouldRenderChildren,
-                    node.IsSplitMergeType,
                     node.ShouldShowMultiOption,
                     node.IsAnabranchType,
                     node.IsAnabranchMergePoint,

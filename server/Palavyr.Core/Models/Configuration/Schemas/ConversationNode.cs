@@ -22,8 +22,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public bool IsTerminalType { get; set; }
         public bool ShouldRenderChildren { get; set; }
 
-        public bool IsSplitMergeType { get; set; }
-        public bool IsSplitMergeMergePoint { get; set; }
+        public bool IsLoopbackAnchorType { get; set; }
 
         public bool IsAnabranchType { get; set; }
         public bool IsAnabranchMergePoint { get; set; }
@@ -41,7 +40,6 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public string? NodeComponentType { get; set; }
         public int? ResolveOrder { get; set; }
         public bool IsCurrency { get; set; }
-        public bool Fallback { get; set; }
         public string? NodeChildrenString { get; set; } = ""; // stored as comma delimited list as string
         public NodeTypeCode NodeTypeCode { get; set; }
 
@@ -57,7 +55,6 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 {
                     NodeId = Guid.NewGuid().ToString(),
                     NodeType = "",
-                    Fallback = false,
                     Text = "Default Text from server",
                     IsRoot = true,
                     AreaIdentifier = areaIdentifier,
@@ -69,7 +66,6 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     IsMultiOptionType = false,
                     IsTerminalType = false,
                     ShouldRenderChildren = true,
-                    IsSplitMergeType = false,
                     ShouldShowMultiOption = false,
                     IsAnabranchType = false,
                     IsAnabranchMergePoint = false,
@@ -98,7 +94,6 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             bool isMultiOptionType = false,
             bool isTerminalType = false,
             bool shouldRenderChild = true,
-            bool isSplitMergeType = false,
             bool shouldShowMultiOption = false,
             bool isAnabranchType = false,
             bool isAnabranchMergePoint = false,
@@ -115,7 +110,6 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             {
                 NodeId = nodeId,
                 NodeType = nodeType,
-                Fallback = false,
                 Text = text,
                 IsRoot = isRoot,
                 AreaIdentifier = areaIdentifier,
@@ -127,7 +121,6 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 IsMultiOptionType = isMultiOptionType,
                 IsTerminalType = isTerminalType,
                 ShouldRenderChildren = shouldRenderChild,
-                IsSplitMergeType = isSplitMergeType,
                 ShouldShowMultiOption = shouldShowMultiOption,
                 IsAnabranchType = isAnabranchType,
                 IsAnabranchMergePoint = isAnabranchMergePoint,

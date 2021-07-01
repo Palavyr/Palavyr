@@ -1,5 +1,5 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { ConvoNode, EmptyComponentType, LineMap, AnabranchContext, SplitmergeContext, NodeTypeOptions, NodeTypeCode } from "@Palavyr-Types";
+import { ConvoNode, EmptyComponentType, LineMap, AnabranchContext, NodeTypeOptions, NodeTypeCode, LoopbackContext } from "@Palavyr-Types";
 
 export interface NodeOptionalProps {
     node: IPalavyrNode;
@@ -73,7 +73,6 @@ export interface IPalavyrNode {
     removeSelf(): void;
     nodeIsSet(): boolean;
     nodeIsNotSet(): boolean;
-    RouteToMostRecentSplitMerge(): void;
     setValueOptions(newValueOptions: string[]): void;
     addValueOption(newOption: string): void;
     getValueOptions(): string[];
@@ -81,7 +80,7 @@ export interface IPalavyrNode {
     setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
     removeLine(toNode: IPalavyrNode): void;
     setNodeTypeOptions(newNodeTypeOptions: NodeTypeOptions): void;
-    Equals(otherNode: IPalavyrNode);
+    Equals(otherNode: IPalavyrNode): boolean;
 
     isRoot: boolean;
     nodeId: string;
@@ -91,7 +90,6 @@ export interface IPalavyrNode {
     nodeType: string; // type of node - e.g. YesNo, Outer-Categories-TwoNestedCategory-fffeefb5-36f2-40cd-96c1-f1eff401393c
     isMultiOptionType: boolean;
     isDynamicTableNode: boolean;
-    isSplitMergeType: boolean;
     nodeComponentType: string;
     resolveOrder: number;
     shouldShowMultiOption: boolean;
@@ -100,13 +98,10 @@ export interface IPalavyrNode {
     nodeTypeOptions: NodeTypeOptions;
 
     isImageNode: boolean;
-    isAnabranchType: boolean;
     nodeTypeCode: NodeTypeCode;
 
     // nodeChildrenString: string;
     repository: PalavyrRepository;
-
-    isAnabranchMergePoint: boolean;
 
     // the options available from this node, if any. I none, then "Continue" is used |peg| delimted
     optionPath: string; // the value option that was used with the parent of this node.
@@ -129,17 +124,18 @@ export interface IPalavyrNode {
     palavyrLinkedList: IPalavyrLinkedList; // the containing list object that this node is a member of. Used to acccess update methods
 
     // ANA BRANCH (we get isAnabranch from the DB. We should infer the rest here when constructing the linked list)
+    isAnabranchType: boolean;
+    isAnabranchMergePoint: boolean;
+
     isPalavyrAnabranchStart: boolean;
     isPalavyrAnabranchMember: boolean;
     isPalavyrAnabranchEnd: boolean;
     isAnabranchLocked: boolean;
     anabranchContext: AnabranchContext;
 
-    // SPLIT MERGE (we also get isSplitMerge from Db, so samesy - infer the rest here)
-    isPalavyrSplitmergeStart: boolean;
-    isPalavyrSplitmergeMember: boolean;
-    isPalavyrSplitmergePrimarybranch: boolean;
-    isPalavyrSplitmergeEnd: boolean;
-    isPalavyrSplitmergeMergePoint: boolean;
-    splitmergeContext: SplitmergeContext;
+    // LOOPBACK
+    isLoopbackAnchorType: boolean;
+    isLoopbackStart: boolean;
+    isLoopbackMember: boolean;
+    loopbackContext: LoopbackContext;
 }

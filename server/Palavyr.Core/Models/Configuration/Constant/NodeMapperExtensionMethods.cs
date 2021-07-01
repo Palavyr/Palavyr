@@ -82,7 +82,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsAnabranchMergePoint = nodeTypeOption.IsAnabranchMergePoint,
                 IsMultiOptionEditable = nodeTypeOption.IsMultiOptionEditable,
                 ShouldShowMultiOption = nodeTypeOption.ShouldShowMultiOption,
-                IsSplitMergeType = nodeTypeOption.IsSplitMergeType,
                 IsCurrency = nodeTypeOption.IsCurrency,
                 IsCritical = isCritical
             };

@@ -87,13 +87,12 @@ export type ConvoNode = {
     text: string;
     nodeChildrenString: string;
     isCritical: boolean;
-    isSplitMergeType: boolean;
-    IsSplitMergeMergePoint: boolean;
     isAnabranchType: boolean;
     isAnabranchMergePoint: boolean;
 
+    isLoopbackAnchorType: boolean;
+
     nodeType: string;
-    fallback: boolean;
     optionPath: Response;
     valueOptions: string; // an array, but bc of the dtabase we store as a string delimited by |peg|
     shouldRenderChildren: boolean;
@@ -823,9 +822,9 @@ export type LineLink = {
 };
 export type LineMap = LineLink[];
 
-export type SplitmergeContext = {
-    splitmergeOriginId: string; // the node Id of the split merge root node
-};
+export type LoopbackContext = {
+    loopbackOriginId: string;
+}
 
 export type AnabranchContext = {
     anabranchOriginId: string; // the node Id of the anabranch root node
