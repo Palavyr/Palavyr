@@ -179,33 +179,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
             }
         }
 
-        // public class SplitMerge : NodeTypeOption
-        // {
-        //     public new static string StringName => nameof(SplitMerge);
-        //
-        //     public SplitMerge()
-        //     {
-        //         Text = "Split Merge";
-        //         Value = StringName;
-        //         PathOptions = new List<string>();
-        //         ValueOptions = new List<string>();
-        //         IsMultiOptionType = true;
-        //         IsTerminalType = false;
-        //         GroupName = SplitAndMerge;
-        //         IsSplitMergeType = true;
-        //         ShouldRenderChildren = true;
-        //         ShouldShowMultiOption = true;
-        //         IsAnabranchType = false;
-        //         IsAnabranchMergePoint = false;
-        //         IsDynamicType = false;
-        //         NodeComponentType = NodeComponentTypes.MultipleChoiceAsPath;
-        //         IsCurrency = false;
-        //         IsMultiOptionEditable = true;
-        //         NodeTypeCode = NodeTypeCode.VII;
-        //     }
-        // }
-        //
-
         public class TakeCurrency : NodeTypeOption
         {
             public new static string StringName => nameof(TakeCurrency);

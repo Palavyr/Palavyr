@@ -7,10 +7,16 @@ class NodeTypeOptionConfigurer {
     constructor() {}
 
     public ConfigureNodeTypeOptions(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+        let options = nodeTypeOptions
         if (currentNode.isPalavyrAnabranchMember) {
-            return this.filterUnallowedNodeOptions([NodeTypeCode.VI, NodeTypeCode.VII], nodeTypeOptions);
+            options = this.filterUnallowedNodeOptions([NodeTypeCode.VI, NodeTypeCode.VII], options);
         }
-        return nodeTypeOptions;
+
+        if (currentNode.childNodeReferences.references.map(x => x.nodeType).includes("Anabranch")) {
+            options = this.filterUnallowedNodeOptions([NodeTypeCode.VI], options);
+        }
+
+        return options;
     }
 
     public RecursivelyReconfigureNodeTypeOptions(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {

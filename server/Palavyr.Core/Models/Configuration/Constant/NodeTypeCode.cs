@@ -12,7 +12,5 @@
         V = 4,
         // ReSharper disable once InconsistentNaming
         VI = 5, // Anabranch
-        // ReSharper disable once InconsistentNaming
-        VII = 6, // SplitMerge
     }
 }

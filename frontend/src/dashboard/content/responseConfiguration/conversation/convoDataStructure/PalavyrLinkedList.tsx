@@ -72,6 +72,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
             if (existingNode === null) {
                 const childConvoNode = this._getNodeById(childId, nodeList);
                 const newNode = this.convertToPalavyrNode(this, this.repository, childConvoNode, nodeList, this.setTreeWithHistory, index === 0);
+
                 newNode.addNewNodeReferenceAndConfigure(newNode, parentNode, nodeTypeOptions);
                 this.recursivelyAssembleLinkedList(newNode, childConvoNode.nodeChildrenString, nodeList, nodeTypeOptions);
             } else {

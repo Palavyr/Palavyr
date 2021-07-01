@@ -1,5 +1,5 @@
 import { SetState, NodeTypeOptions, NodeTypeCode } from "@Palavyr-Types";
-import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "./Contracts";
+import { INodeReferences, IPalavyrNode } from "./Contracts";
 import NodeTypeOptionConfigurer from "./NodeTypeOptionConfigurer";
 
 class AnabranchConfigurer {
@@ -11,6 +11,7 @@ class AnabranchConfigurer {
             childNodeReferences.forEach((child: IPalavyrNode) => {
                 if (child.isAnabranchType) return;
                 child.isPalavyrAnabranchMember = false;
+                this.ClearAnabranchContext(child);
                 recurse(child.childNodeReferences);
             });
         };
@@ -19,6 +20,9 @@ class AnabranchConfigurer {
     }
 
     private RecursiveReConfigureAnabranchMergePointChildren(currentNode: IPalavyrNode, anabranchLeftmost: boolean) {
+        const parentalOriginId = currentNode.parentNodeReferences.retrieveLeftmostReference()?.anabranchContext.anabranchOriginId!;
+        this.SetAnabranchContext(currentNode, parentalOriginId, anabranchLeftmost);
+
         const recurse = (childNodeReferences: INodeReferences, anabranchLeftmost: boolean) => {
             if (childNodeReferences.Length === 0) return;
             childNodeReferences.forEach((child: IPalavyrNode, index: number) => {
@@ -29,6 +33,8 @@ class AnabranchConfigurer {
                     child.anabranchContext.leftmostAnabranch = false;
                 }
                 child.isPalavyrAnabranchMember = true;
+
+                child.anabranchContext.anabranchOriginId = child.parentNodeReferences.retrieveLeftmostReference()?.anabranchContext.anabranchOriginId!;
                 recurse(child.childNodeReferences, index === 0);
             });
         };
@@ -92,10 +98,6 @@ class AnabranchConfigurer {
     public configureAnabranch(currentNode: IPalavyrNode, parentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         // all nodes establish their own anabranch context
         // possibly update this if parent has anabranch origin node set
-        if (currentNode.nodeId == "b7259fd1-4657-49db-9b6d-dea11097abc3") {
-            console.log("WOW");
-        }
-
         this.SetAnabranchContext(currentNode, "", false);
 
         // the current node is an anabranch member if:
@@ -105,7 +107,7 @@ class AnabranchConfigurer {
 
         currentNode.isPalavyrAnabranchMember =
             currentNode.isAnabranchType ||
-            (parentNode.isPalavyrAnabranchMember && !currentNode.isPalavyrAnabranchEnd) ||
+            (parentNode.isPalavyrAnabranchMember && !parentNode.isPalavyrAnabranchEnd) ||
             (parentNode.isPalavyrAnabranchMember && currentNode.isPalavyrAnabranchEnd && currentNode.isPalavyrAnabranchMember);
 
         if (currentNode.isAnabranchType) {
@@ -134,7 +136,8 @@ class AnabranchConfigurer {
                 const parentLeftmost = parentNode.anabranchContext.leftmostAnabranch;
                 currentNode.anabranchContext.leftmostAnabranch = parentLeftmost;
             }
-        } else if (currentNode.isPalavyrAnabranchEnd) {
+        } else {
+            this.ClearAnabranchContext(currentNode);
         }
 
         // merge points are considered endings - and this is a switch set on the node
@@ -184,13 +187,7 @@ class AnabranchConfigurer {
     }
 
     public shouldShowAnabranchCheckBox(node: IPalavyrNode) {
-        const _shouldShow =
-            node.nodeIsSet() &&
-            !node.isPalavyrAnabranchStart &&
-            node.isPalavyrAnabranchMember &&
-            !node.isTerminal &&
-            node.anabranchContext.leftmostAnabranch &&
-            !node.isAnabranchLocked;
+        const _shouldShow = node.nodeIsSet() && !node.isPalavyrAnabranchStart && node.isPalavyrAnabranchMember && !node.isTerminal && node.anabranchContext.leftmostAnabranch && !node.isAnabranchLocked;
 
         if (node.isAnabranchMergePoint) {
             return true;

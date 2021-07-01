@@ -3,9 +3,6 @@ import AnabranchConfigurer from "./AnabranchConfigurer";
 import { IPalavyrNode } from "./Contracts";
 
 export class NodeConfigurer {
-    /**
-     *
-     */
 
     constructor() {}
 

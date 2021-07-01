@@ -31,10 +31,10 @@ export class NodeUpdater {
                 break;
 
             case NodeTypeCode.VI: //Anabranch
-                throw new Error("Not yet implemented");
-
-            case NodeTypeCode.VII: // SplitMerge
-                throw new Error("Not yet implemented");
+                currentNode.setValueOptions(valueOptions);
+                this.nodeChanger.createOrTruncateChildNodes(currentNode, valueOptions, nodeTypeOptions);
+                currentNode.childNodeReferences.applyOptionPaths(valueOptions);
+                break;
 
             default:
                 break;
