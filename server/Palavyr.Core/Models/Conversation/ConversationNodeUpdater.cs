@@ -57,7 +57,8 @@ namespace Palavyr.Core.Models.Conversation
                     node.ResolveOrder,
                     node.DynamicType,
                     node.IsImageNode,
-                    node.ImageId
+                    node.ImageId,
+                    node.IsLoopbackAnchorType
                 );
                 mappedTransactions.Add(mappedNode);
             }

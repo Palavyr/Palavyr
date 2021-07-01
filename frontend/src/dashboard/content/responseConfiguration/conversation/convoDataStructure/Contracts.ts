@@ -81,6 +81,7 @@ export interface IPalavyrNode {
     removeLine(toNode: IPalavyrNode): void;
     setNodeTypeOptions(newNodeTypeOptions: NodeTypeOptions): void;
     Equals(otherNode: IPalavyrNode): boolean;
+    LoopbackContextIsSet(): boolean;
 
     isRoot: boolean;
     nodeId: string;

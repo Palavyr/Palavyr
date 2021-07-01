@@ -22,8 +22,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
         /*
          * The string form name of the node type. Derived from either 'nameof(T)' or extension method: dynamicTableMeta.MakeUniqueIdentifier()
          */
-        public NodeTypeCode NodeTypeCode {get; set;}
-        
+        public NodeTypeCode NodeTypeCode { get; set; }
+
         /*
          * The string form name of the node type. Derived from either 'nameof(T)' or extension method: dynamicTableMeta.MakeUniqueIdentifier()
          */
@@ -67,7 +67,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
 
         /*
          * Whether or not its children will result in a remerge of the branch after splitting into N children (all children must remerge)
-         */ 
+         */
         public bool IsSplitMergeType { get; set; } = false;
 
         /*
@@ -116,12 +116,17 @@ namespace Palavyr.Core.Models.Configuration.Constant
          * The widget will use this to key the collection of dynamic type responses.
          */
         public string? DynamicType { get; set; }
-        
+
         /*
          * Used to indicate whether or not this node provides an image in the chat. In the dashboard, used to determine whether
          * or not to show the image upload component.
          */
         public bool IsImageNode { get; set; }
+
+        /*
+         * Used to indicate if this nodeOption is a loopback anchor.
+         */
+        public bool IsLoopbackAnchor { get; set; }
 
         public virtual string StringName => null!;
 
@@ -143,7 +148,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
             bool shouldRenderChildren = true,
             bool shouldShowMultiOption = false,
             int? resolveOrder = null,
-            string? dynamicType = null
+            string? dynamicType = null,
+            bool loopbackAnchor = false
         )
         {
             return new NodeTypeOption()
@@ -165,7 +171,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldRenderChildren = shouldRenderChildren,
                 ShouldShowMultiOption = shouldShowMultiOption,
                 ResolveOrder = resolveOrder,
-                DynamicType = dynamicType
+                DynamicType = dynamicType,
+                IsLoopbackAnchor = loopbackAnchor
             };
         }
     }

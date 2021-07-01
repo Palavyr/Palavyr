@@ -489,6 +489,13 @@ export abstract class PalavyrNode implements IPalavyrNode {
         };
     }
 
+    public LoopbackContextIsSet() {
+        if (this.loopbackContext) {
+            return this.loopbackContext.loopbackOriginId !== "";
+        }
+        else return false;
+    }
+
     public lock() {
         this.isAnabranchLocked = true;
         this.shouldDisableNodeTypeSelector = true;

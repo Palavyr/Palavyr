@@ -33,7 +33,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             };
         }
 
-        public static ConversationNode  MapNodeTypeOptionToConversationNode(
+        public static ConversationNode MapNodeTypeOptionToConversationNode(
             this NodeTypeOption nodeTypeOption,
             string nodeId,
             string text,
@@ -47,10 +47,11 @@ namespace Palavyr.Core.Models.Configuration.Constant
             bool isCritical = false,
             string? nodeComponentType = null,
             int? resolveOrder = null,
-            string? dynamicType = null
+            string? dynamicType = null,
+            bool loopbackAnchor = false
         )
         {
-            if (nodeComponentType == null && nodeTypeOption.NodeComponentType== null)
+            if (nodeComponentType == null && nodeTypeOption.NodeComponentType == null)
             {
                 throw new Exception("NodeComponent must be set for dynamic table node types"); // TODO: can I enforce this via the compiler? Rosalyn Analyzer
             }
@@ -83,7 +84,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionEditable = nodeTypeOption.IsMultiOptionEditable,
                 ShouldShowMultiOption = nodeTypeOption.ShouldShowMultiOption,
                 IsCurrency = nodeTypeOption.IsCurrency,
-                IsCritical = isCritical
+                IsCritical = isCritical,
+                IsLoopbackAnchorType = loopbackAnchor
             };
         }
     }

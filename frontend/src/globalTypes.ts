@@ -404,8 +404,9 @@ export enum NodeTypeCode {
     III,
     IV,
     V,
-    VI,
-    VII,
+    VI, // anabranch
+    VII, // loopback anchor
+    VIII // loopback terminal
 }
 
 export type NodeOption = {
@@ -431,6 +432,7 @@ export type NodeOption = {
     isImageNode: boolean;
     imageId: string | null;
     nodeTypeCode: NodeTypeCode; // passed to the node changer via the nodeOptions
+    isLoopbackAnchor: boolean;
 };
 
 export type NodeTypeOptions = NodeOption[];

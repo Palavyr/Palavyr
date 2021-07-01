@@ -1,6 +1,6 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
-import { ConvoNode, NodeTypeOptions } from "@Palavyr-Types";
+import { ConvoNode, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { ILinkedListBucket, INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "./Contracts";
 import { LinkedListBucket } from "./LinkedListBucket";
@@ -52,11 +52,11 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     }
 
     private assembleDoubleLinkedMultiBranchLinkedList(nodeList: ConvoNode[], nodeTypeOptions: NodeTypeOptions) {
-        this.linkedListBucket.clear(); // new
+        // this.linkedListBucket.clear();
         const headNode = this.convertToPalavyrNode(this, this.repository, this.head, nodeList, this.setTreeWithHistory, true);
         this.configurer.configure(headNode, null, nodeTypeOptions);
         this.rootNode = headNode;
-        this.linkedListBucket.addToBucket(headNode);
+        // this.linkedListBucket.addToBucket(headNode);
         this.recursivelyAssembleLinkedList(headNode, this.head.nodeChildrenString, nodeList, nodeTypeOptions);
     }
 
@@ -74,13 +74,23 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
                 const newNode = this.convertToPalavyrNode(this, this.repository, childConvoNode, nodeList, this.setTreeWithHistory, index === 0);
 
                 newNode.addNewNodeReferenceAndConfigure(newNode, parentNode, nodeTypeOptions);
+                if (this.guardAgainstInfiniteLoops(newNode)) return;
                 this.recursivelyAssembleLinkedList(newNode, childConvoNode.nodeChildrenString, nodeList, nodeTypeOptions);
             } else {
                 existingNode.addNewNodeReferenceAndConfigure(existingNode, parentNode, nodeTypeOptions);
+                if (this.guardAgainstInfiniteLoops(existingNode)) return;
             }
         }
 
         parentNode.sortChildReferences();
+    }
+
+    private guardAgainstInfiniteLoops(node: IPalavyrNode) {
+        if (node.nodeTypeCode === NodeTypeCode.VIII) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public convertToPalavyrNode(
@@ -144,16 +154,17 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     }
 
     traverse(perNodeCallback?: any): void {
-        const recurseTheTree = (childReferences: INodeReferences) => {
+        const recurseTheTree = (childReferences: INodeReferences, parent: IPalavyrNode) => {
             for (let index = 0; index < childReferences.Length; index++) {
                 const childNode = childReferences.references[index];
                 if (perNodeCallback) perNodeCallback(childNode);
-                recurseTheTree(childNode.childNodeReferences);
+                if (this.guardAgainstInfiniteLoops(parent)) return;
+                recurseTheTree(childNode.childNodeReferences, childNode);
             }
         };
         const headNode = this.rootNode;
         perNodeCallback(headNode);
-        recurseTheTree(headNode.childNodeReferences);
+        recurseTheTree(headNode.childNodeReferences, headNode);
     }
 
     reconfigureTree(nodeTypeOptions: NodeTypeOptions): void {
@@ -161,8 +172,8 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
             if (node.isRoot) {
                 this.configurer.configure(node, null, nodeTypeOptions);
             } else {
-                const leftmostParent = node.parentNodeReferences.retrieveLeftmostReference();
-                this.configurer.configure(node, leftmostParent!, nodeTypeOptions);
+                const leftmostParent = node.parentNodeReferences.retrieveLeftmostReference()!;
+                this.configurer.configure(node, leftmostParent, nodeTypeOptions);
             }
         });
         this.setTreeWithHistory(this);

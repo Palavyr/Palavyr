@@ -19,6 +19,10 @@
         VI = 5, // Anabranch
 
         // ReSharper disable once InconsistentNaming
-        VII = 6 // Loopback
+        VII = 6, // Loopback Anchor
+        
+        // ReSharper disable once InconsistentNaming
+        VIII = 7 // Loopback terminal
+
     }
 }

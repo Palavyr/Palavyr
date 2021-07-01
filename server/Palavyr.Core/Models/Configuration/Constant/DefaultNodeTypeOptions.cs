@@ -22,7 +22,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
             public static string TooComplicated => DefaultNodeTypeOptions.TooComplicated.StringName;
             public static string SendResponse => DefaultNodeTypeOptions.SendResponse.StringName;
             public static string EndWithoutEmail => DefaultNodeTypeOptions.EndWithoutEmail.StringName;
-            public static string Loopback => DefaultNodeTypeOptions.LoopbackAnchor.StringName;
+            public static string LoopbackAnchor => DefaultNodeTypeOptions.LoopbackAnchor.StringName;
+            
         }
 
         public static List<NodeTypeOption> DefaultNodeTypeOptionsList => // These get sent to the UI for user selection
@@ -44,7 +45,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 new Anabranch(),
                 new ShowImage(),
                 new EndWithoutEmail(),
-                new LoopbackAnchor()
+                new LoopbackAnchor(),
+                new Loopback()
             };
 
         public static YesNo CreateYesNo() => new YesNo();
@@ -57,7 +59,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
 
         public static MultipleChoiceAsPath CreateMultipleChoiceAsPath() => new MultipleChoiceAsPath();
 
-        // public static SplitMerge CreateSplitMerge() => new SplitMerge();
         public static Anabranch CreateAnabranch() => new Anabranch();
         public static ShowImage CreateShowImage() => new ShowImage();
 
@@ -68,8 +69,9 @@ namespace Palavyr.Core.Models.Configuration.Constant
 
         public static SendResponse CreateSendResponse() => new SendResponse();
 
-        public static LoopbackAnchor CreateLoopback() => new LoopbackAnchor();
-
+        public static LoopbackAnchor CreateLoopbackAnchor() => new LoopbackAnchor();
+        public static Loopback CreateLoopback() => new Loopback();
+        
         // public static Restart CreateRestart() => new Restart();
         public static EndWithoutEmail CreateEndWithoutEmail() => new EndWithoutEmail();
 
@@ -90,6 +92,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
+                IsLoopbackAnchor = true;
                 IsDynamicType = false;
                 NodeComponentType = NodeComponentTypes.MultipleChoiceAsPath;
                 IsCurrency = false;
@@ -119,7 +122,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.ProvideInfo;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
-                NodeTypeCode = NodeTypeCode.I;
+                NodeTypeCode = NodeTypeCode.VIII;
             }
         }
         
@@ -167,7 +170,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponentType = NodeComponentTypes.ShowImage; //TODO create widget component
+                NodeComponentType = NodeComponentTypes.ShowImage;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 IsImageNode = true;

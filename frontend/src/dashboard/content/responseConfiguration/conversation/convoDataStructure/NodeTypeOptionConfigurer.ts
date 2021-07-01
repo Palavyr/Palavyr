@@ -14,8 +14,10 @@ class NodeTypeOptionConfigurer {
             options = this.filterUnallowedNodeOptions([NodeTypeCode.VI], options);
         }
 
-        if (currentNode.isLoopbackMember) {
-            options = this.filterUnallowedNodeOptions([NodeTypeCode.VII], options)
+        if (currentNode.isLoopbackMember && !currentNode.isLoopbackStart) {
+            options = this.filterUnallowedNodeOptions([NodeTypeCode.VII], options);
+        } else {
+            options = this.filterUnallowedNodeOptions([NodeTypeCode.VIII], options);
         }
 
         return options;

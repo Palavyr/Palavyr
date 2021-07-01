@@ -14,6 +14,11 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     public ExecuteNodeSelectorUpdate(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         this.resetNodeProperties(nodeOption, currentNode);
 
+        if (currentNode.nodeTypeCode === NodeTypeCode.VII && currentNode.nodeTypeCode !== nodeOption.nodeTypeCode) {
+            currentNode.childNodeReferences.Clear();
+            this.nodeCreator.addDefaultChild(currentNode, "Continue", nodeTypeOptions);
+        }
+
         switch (nodeOption.nodeTypeCode) {
             case NodeTypeCode.I:
                 this.ConvertToType_I_Node(nodeOption, currentNode);
@@ -39,7 +44,12 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
                 this.ConvertToType_VI_Node(nodeOption, currentNode, nodeTypeOptions);
                 break;
 
-            case NodeTypeCode.VII: // splitmerge
+            case NodeTypeCode.VII: // loopback
+                this.ConvertToType_VII_Node(nodeOption, currentNode, nodeTypeOptions);
+                break;
+
+            case NodeTypeCode.VIII:
+                this.ConvertToType_VIII_Node(nodeOption, currentNode, nodeTypeOptions);
                 break;
 
             default:
@@ -198,6 +208,40 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
     }
 
+    // Type VII
+    // Loopback Anchor
+    private ConvertToType_VII_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+        if (currentNode.getValueOptions().length < 2) {
+            const defaultValueOptions = ["Continue", "Option 1", "Option 2"];
+            this.createOrTruncateChildNodes(currentNode, defaultValueOptions, nodeTypeOptions);
+            currentNode.childNodeReferences.applyOptionPaths(defaultValueOptions);
+        } else {
+            this.createOrTruncateChildNodes(currentNode, currentNode.getValueOptions(), nodeTypeOptions);
+            currentNode.childNodeReferences.applyOptionPaths(currentNode.getValueOptions());
+        }
+        currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions); // todo check this is correct
+    }
+
+    // Type VIII
+    // The loopback terminal
+    private ConvertToType_VIII_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+        // else its the loopback endpoint
+        const parentRef = currentNode.parentNodeReferences.retrieveLeftmostReference();
+        if (parentRef !== null && parentRef.isLoopbackMember) {
+            let originId: string;
+            if (parentRef.isLoopbackStart){
+                originId = parentRef.nodeId;
+            } else {
+                originId = parentRef.loopbackContext.loopbackOriginId;
+            }
+            const originNode = currentNode.palavyrLinkedList.findNode(originId!)!;
+            if (originNode == null) throw new Error("Could not find loopback origin node.");
+            currentNode.childNodeReferences.Clear();
+            currentNode.childNodeReferences.addReference(originNode);
+        }
+        currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
+    }
+
     public async createOrTruncateChildNodes(currentNode: IPalavyrNode, valueOptions: string[], nodeTypeOptions: NodeTypeOptions) {
         if (currentNode.getValueOptions().length === 0) {
             this.nodeCreator.addDefaultChild(currentNode, "Continue", nodeTypeOptions);
@@ -230,5 +274,6 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         currentNode.isAnabranchType = nodeOption.isAnabranchType;
         currentNode.isImageNode = nodeOption.isImageNode;
         currentNode.dynamicType = nodeOption.dynamicType;
+        currentNode.isLoopbackAnchorType = nodeOption.isLoopbackAnchor;
     }
 }

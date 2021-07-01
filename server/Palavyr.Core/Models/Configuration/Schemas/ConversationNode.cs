@@ -74,7 +74,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     IsMultiOptionEditable = false,
                     DynamicType = null,
                     IsImageNode = false,
-                    ImageId = null
+                    ImageId = null,
+                    IsLoopbackAnchorType = false
                 }
             };
         }
@@ -103,7 +104,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             int? resolveOrder = null,
             string? dynamicType = null,
             bool isImageNode = false,
-            string? imageId = null
+            string? imageId = null,
+            bool isLoopbackAnchor = false
         )
         {
             return new ConversationNode()
@@ -131,7 +133,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 NodeComponentType = nodeComponentType,
                 DynamicType = dynamicType,
                 IsImageNode = isImageNode,
-                ImageId = imageId
+                ImageId = imageId,
+                IsLoopbackAnchorType = isLoopbackAnchor
             };
         }
     }
