@@ -125,11 +125,14 @@ export class NodeReferences implements INodeReferences {
 
     public Where(condition: (node: IPalavyrNode) => boolean): INodeReferences {
         const remaining = this.nodeReferences.filter(condition);
-        const newRefs = new NodeReferences(remaining) as INodeReferences;
-        return newRefs;
+        return new NodeReferences(remaining) as INodeReferences;
     }
 
     public containsNodeType(nodeType: string) {
         return this.references.map((x) => x.nodeType).includes(nodeType);
+    }
+
+    public AllChildrenUnset(): boolean {
+        return this.references.map((x) => x.nodeIsNotSet()).every((x) => x);
     }
 }

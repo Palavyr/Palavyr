@@ -1,12 +1,9 @@
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
-import { NodeTypeCode } from "@Palavyr-Types";
 import React from "react";
 import { NodeOptionalProps } from "../Contracts";
 
 export const UnsetNodeButton = ({ node }: NodeOptionalProps) => {
-    const shouldShow =
-        (node.nodeIsSet() && (!node.isPalavyrAnabranchMember || node.isAnabranchLocked) && !node.isAnabranchLocked && (node.isTerminal || node.nodeTypeCode === NodeTypeCode.I)) ||
-        node.nodeTypeCode === NodeTypeCode.VII;
+    const shouldShow = node.nodeIsSet() && (node.isTerminal || node.childNodeReferences.AllChildrenUnset() || node.nodeType === "Loopback");
 
     const onClick = () => {
         node.removeSelf();

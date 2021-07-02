@@ -56,6 +56,7 @@ export interface INodeReferences {
     Single(): IPalavyrNode;
     Where(condition: (node: IPalavyrNode) => boolean): INodeReferences;
     containsNodeType(nodeType: string): boolean;
+    AllChildrenUnset(): boolean;
 }
 
 export interface IPalavyrNode {
