@@ -89,7 +89,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsTerminalType = false;
                 GroupName = Teleport;
                 ShouldRenderChildren = true;
-                ShouldShowMultiOption = false;
+                ShouldShowMultiOption = true;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsLoopbackAnchor = true;

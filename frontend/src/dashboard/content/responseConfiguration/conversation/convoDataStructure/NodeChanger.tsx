@@ -1,5 +1,7 @@
 import { NodeOption, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
+import AnabranchConfigurer from "./AnabranchConfigurer";
 import { IPalavyrNode } from "./Contracts";
+import { NodeConfigurer } from "./NodeConfigurer";
 import { NodeCreator } from "./NodeCreator";
 
 export interface IPalavyrNodeChanger {
@@ -12,14 +14,13 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     constructor() {}
 
     public ExecuteNodeSelectorUpdate(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
-
         if (currentNode.nodeType === "Loopback" && currentNode.nodeTypeCode !== nodeOption.nodeTypeCode) {
             currentNode.childNodeReferences.Clear();
             this.nodeCreator.addDefaultChild(currentNode, "Continue", nodeTypeOptions);
         }
 
-        if (currentNode.nodeTypeCode){
-            console.log("WOW");
+        if (currentNode.nodeTypeCode === NodeTypeCode.VI && nodeOption.nodeTypeCode !== NodeTypeCode.VI) {
+            AnabranchConfigurer.ClearAnabranchContext(currentNode);
         }
 
         this.resetNodeProperties(nodeOption, currentNode);
@@ -234,7 +235,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         const parentRef = currentNode.parentNodeReferences.retrieveLeftmostReference();
         if (parentRef !== null && parentRef.isLoopbackMember) {
             let originId: string;
-            if (parentRef.isLoopbackStart){
+            if (parentRef.isLoopbackStart) {
                 originId = parentRef.nodeId;
             } else {
                 originId = parentRef.loopbackContext.loopbackOriginId;

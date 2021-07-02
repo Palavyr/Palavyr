@@ -492,8 +492,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
     public LoopbackContextIsSet() {
         if (this.loopbackContext) {
             return this.loopbackContext.loopbackOriginId !== "";
-        }
-        else return false;
+        } else return false;
     }
 
     public lock() {
@@ -585,7 +584,10 @@ export abstract class PalavyrNode implements IPalavyrNode {
                         recurseAndDereference(node.childNodeReferences.Where((nodeRef: IPalavyrNode) => !nodeRef.Equals(mergeNode)));
                     }
                 } else {
-                    node.unlock();
+                    // node.unlock();
+                    if (node.nodeType === "Loopback") {
+                        return;
+                    }
                     recurseAndDereference(node.childNodeReferences);
                 }
             });
