@@ -52,15 +52,14 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     }
 
     private assembleDoubleLinkedMultiBranchLinkedList(nodeList: ConvoNode[], nodeTypeOptions: NodeTypeOptions) {
-        // this.linkedListBucket.clear();
         const headNode = this.convertToPalavyrNode(this, this.repository, this.head, nodeList, this.setTreeWithHistory, true);
         this.configurer.configure(headNode, null, nodeTypeOptions);
         this.rootNode = headNode;
-        // this.linkedListBucket.addToBucket(headNode);
         this.recursivelyAssembleLinkedList(headNode, this.head.nodeChildrenString, nodeList, nodeTypeOptions);
     }
 
     private recursivelyAssembleLinkedList(parentNode: IPalavyrNode, nodeChildrenString: string, nodeList: ConvoNode[], nodeTypeOptions: NodeTypeOptions) {
+        if (parentNode.parentNodeReferences.containsNodeType("Loopback")) return;
         const childIds = this._splitAndRemoveEmptyNodeChildrenString(nodeChildrenString);
         if (childIds.length === 0) return;
         for (let index = 0; index < childIds.length; index++) {
@@ -74,7 +73,6 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
                 const newNode = this.convertToPalavyrNode(this, this.repository, childConvoNode, nodeList, this.setTreeWithHistory, index === 0);
 
                 newNode.addNewNodeReferenceAndConfigure(newNode, parentNode, nodeTypeOptions);
-                if (this.guardAgainstInfiniteLoops(newNode)) return;
                 this.recursivelyAssembleLinkedList(newNode, childConvoNode.nodeChildrenString, nodeList, nodeTypeOptions);
             } else {
                 existingNode.addNewNodeReferenceAndConfigure(existingNode, parentNode, nodeTypeOptions);
@@ -86,7 +84,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     }
 
     private guardAgainstInfiniteLoops(node: IPalavyrNode) {
-        if (node.nodeTypeCode === NodeTypeCode.VIII) {
+        if (node.nodeType === "Loopback") {
             return true;
         } else {
             return false;

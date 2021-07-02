@@ -148,7 +148,7 @@ namespace Palavyr.Core.Models
                 .OrderBy(x => x.NodeId)
                 .ToList();
             var nodeChilds = nodeList
-                .Where(a => string.IsNullOrWhiteSpace(a.NodeChildrenString))
+                .Where(a => string.IsNullOrWhiteSpace(a.NodeChildrenString) && a.NodeType != "Loopback")
                 .OrderBy(x => x.NodeId)
                 .ToList();
             var result = terminals.SequenceEqual(nodeChilds);

@@ -187,7 +187,14 @@ class AnabranchConfigurer {
     }
 
     public shouldShowAnabranchCheckBox(node: IPalavyrNode) {
-        const _shouldShow = node.nodeIsSet() && !node.isPalavyrAnabranchStart && node.isPalavyrAnabranchMember && !node.isTerminal && node.anabranchContext.leftmostAnabranch && !node.isAnabranchLocked;
+        const _shouldShow =
+            node.nodeIsSet() &&
+            !node.isPalavyrAnabranchStart &&
+            node.isPalavyrAnabranchMember &&
+            !node.isTerminal &&
+            node.anabranchContext.leftmostAnabranch &&
+            !node.isAnabranchLocked &&
+            node.nodeType !== "Loopback";
 
         if (node.isAnabranchMergePoint) {
             return true;

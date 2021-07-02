@@ -12,12 +12,12 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     constructor() {}
 
     public ExecuteNodeSelectorUpdate(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
-        this.resetNodeProperties(nodeOption, currentNode);
 
-        if (currentNode.nodeTypeCode === NodeTypeCode.VII && currentNode.nodeTypeCode !== nodeOption.nodeTypeCode) {
+        if (currentNode.nodeType === "Loopback" && currentNode.nodeTypeCode !== nodeOption.nodeTypeCode) {
             currentNode.childNodeReferences.Clear();
             this.nodeCreator.addDefaultChild(currentNode, "Continue", nodeTypeOptions);
         }
+        this.resetNodeProperties(nodeOption, currentNode);
 
         switch (nodeOption.nodeTypeCode) {
             case NodeTypeCode.I:

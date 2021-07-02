@@ -80,7 +80,6 @@ export const StructuredConvoTree = () => {
             setConversationHistory([cloneDeep(nodesLinkedList)]);
         }
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier, planTypeMeta]);
 
     useEffect(() => {

@@ -55,6 +55,7 @@ export interface INodeReferences {
     forEach(callBack: (node: IPalavyrNode, index?: number | undefined) => void): void;
     Single(): IPalavyrNode;
     Where(condition: (node: IPalavyrNode) => boolean): INodeReferences;
+    containsNodeType(nodeType: string): boolean;
 }
 
 export interface IPalavyrNode {

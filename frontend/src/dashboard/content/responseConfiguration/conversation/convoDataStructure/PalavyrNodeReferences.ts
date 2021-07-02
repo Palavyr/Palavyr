@@ -128,4 +128,8 @@ export class NodeReferences implements INodeReferences {
         const newRefs = new NodeReferences(remaining) as INodeReferences;
         return newRefs;
     }
+
+    public containsNodeType(nodeType: string) {
+        return this.references.map((x) => x.nodeType).includes(nodeType);
+    }
 }

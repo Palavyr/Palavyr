@@ -20,6 +20,10 @@ class NodeTypeOptionConfigurer {
             options = this.filterUnallowedNodeOptions([NodeTypeCode.VIII], options);
         }
 
+        if (currentNode.childNodeReferences.containsNodeType("Loopback")) {
+            options = this.filterUnallowedNodeOptions([NodeTypeCode.VI], options)
+        }
+
         return options;
     }
 

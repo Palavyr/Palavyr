@@ -38,7 +38,7 @@ class LoopbackAnchorConfigurer {
         this.SetLoopbackContext(node, originId);
         const recurse = (childNodeReferences: INodeReferences, parent: IPalavyrNode) => {
             if (childNodeReferences.Length === 0) return;
-            if (parent.nodeTypeCode === NodeTypeCode.VIII) return;
+            if (parent.nodeType === "Loopback") return;
             childNodeReferences.forEach((childNode: IPalavyrNode) => {
                 this.SetLoopbackContext(childNode, originId);
                 recurse(childNode.childNodeReferences, childNode);
