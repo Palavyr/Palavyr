@@ -43,6 +43,7 @@ namespace Palavyr.Core.Models.Conversation
                     node.ValueOptions,
                     accountId,
                     node.NodeComponentType,
+                    node.NodeTypeCode,
                     node.IsRoot,
                     node.IsCritical,
                     node.IsMultiOptionType,

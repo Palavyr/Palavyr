@@ -17,6 +17,11 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
             currentNode.childNodeReferences.Clear();
             this.nodeCreator.addDefaultChild(currentNode, "Continue", nodeTypeOptions);
         }
+
+        if (currentNode.nodeTypeCode){
+            console.log("WOW");
+        }
+
         this.resetNodeProperties(nodeOption, currentNode);
 
         switch (nodeOption.nodeTypeCode) {

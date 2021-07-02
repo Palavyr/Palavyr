@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.Exceptions;
+using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Services.AmazonServices.S3Service;
@@ -202,6 +203,7 @@ namespace Palavyr.Core.Repositories
                 newNode.ValueOptions,
                 accountId,
                 newNode.NodeComponentType,
+                newNode.NodeTypeCode,
                 newNode.IsRoot,
                 newNode.IsCritical,
                 newNode.IsMultiOptionType,

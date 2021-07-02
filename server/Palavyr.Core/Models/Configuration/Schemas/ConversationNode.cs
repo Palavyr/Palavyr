@@ -90,6 +90,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             string? valueOptions,
             string accountId,
             string? nodeComponentType,
+            NodeTypeCode nodeTypeCode,
             bool isRoot = false,
             bool isCritical = true,
             bool isMultiOptionType = false,
@@ -134,7 +135,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 DynamicType = dynamicType,
                 IsImageNode = isImageNode,
                 ImageId = imageId,
-                IsLoopbackAnchorType = isLoopbackAnchor
+                IsLoopbackAnchorType = isLoopbackAnchor,
+                NodeTypeCode = nodeTypeCode
             };
         }
     }

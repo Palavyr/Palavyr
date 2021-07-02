@@ -21,7 +21,11 @@ class NodeTypeOptionConfigurer {
         }
 
         if (currentNode.childNodeReferences.containsNodeType("Loopback")) {
-            options = this.filterUnallowedNodeOptions([NodeTypeCode.VI], options)
+            options = this.filterUnallowedNodeOptions([NodeTypeCode.VI], options);
+        }
+
+        if (currentNode.parentNodeReferences.Length === 1 && currentNode.parentNodeReferences.retrieveLeftmostReference()?.isPalavyrAnabranchStart) {
+            options = this.filterUnallowedNodeOptions([NodeTypeCode.VIII], options);
         }
 
         return options;
@@ -32,8 +36,11 @@ class NodeTypeOptionConfigurer {
 
         const recurse = (childNodeReferences: INodeReferences) => {
             if (childNodeReferences.Length === 0) return;
-            childNodeReferences.forEach((node: IPalavyrNode, index: number) => {
-                this.ConfigureNodeTypeOptions(currentNode, nodeTypeOptions);
+            childNodeReferences.forEach((node: IPalavyrNode) => {
+                this.ConfigureNodeTypeOptions(node, nodeTypeOptions);
+                if (node.nodeType === "Loopback") {
+                    return;
+                }
                 recurse(node.childNodeReferences);
             });
         };
