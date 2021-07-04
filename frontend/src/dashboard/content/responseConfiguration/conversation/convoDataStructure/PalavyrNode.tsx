@@ -168,10 +168,10 @@ export abstract class PalavyrNode implements IPalavyrNode {
             this.childNodeReferences.Clear();
             this.parentNodeReferences.forEach((parentNode) => {
                 parentNode.childNodeReferences.removeReference(this);
-                this.nodeCreator.addDefaultChild([parentNode], "Continue", nodeTypeOptions, currentText);
+                this.nodeCreator.addDefaultChild([parentNode], this.optionPath, nodeTypeOptions, currentText);
+                parentNode.sortChildReferences();
             });
         }
-
         this.UpdateTree();
     }
 
