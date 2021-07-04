@@ -14,6 +14,8 @@ export interface ILinkedListBucket {
 }
 
 export interface IPalavyrLinkedList {
+    rootNode: IPalavyrNode;
+
     traverse(): void;
     insert(): void;
     delete(): void;
@@ -21,6 +23,9 @@ export interface IPalavyrLinkedList {
     reconfigureTree(nodeTypeOptions: NodeTypeOptions): void;
     findNode(nodeId: string): IPalavyrNode | null;
     retrieveCleanHeadNode(): IPalavyrNode;
+    setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
+    resetRootNode(): void;
+
     convertToPalavyrNode(
         container: IPalavyrLinkedList,
         repository: PalavyrRepository,
@@ -72,7 +77,7 @@ export interface IPalavyrNode {
     recursiveReferenceThisAnabranchOrigin(node: IPalavyrNode): void;
     dereferenceThisAnabranchMergePoint(anabranchOriginNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions): void;
     UpdateTree(): void;
-    removeSelf(): void;
+    removeSelf(nodeTypeOptions: NodeTypeOptions): void;
     nodeIsSet(): boolean;
     nodeIsNotSet(): boolean;
     setValueOptions(newValueOptions: string[]): void;

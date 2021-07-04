@@ -1,23 +1,50 @@
-import { IPalavyrNode } from "./Contracts";
+import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "./Contracts";
 import { ConvoNode, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { v4 as uuid } from "uuid";
+import { PalavyrLinkedList } from "./PalavyrLinkedList";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 
 export class NodeCreator {
-    public addDefaultChild(currentNode: IPalavyrNode, optionPath: string, nodeTypeOptions: NodeTypeOptions) {
+    public addDefaultChild(currentParentNodes: IPalavyrNode[], optionPath: string, nodeTypeOptions: NodeTypeOptions, defaultText?: string) {
+        if (currentParentNodes.length === 0) throw new Error("Attempting to add default child node to no parent nodes");
+
         const defaultNode = this.createDefaultNode(optionPath);
-        const newPalavyrNode = currentNode.palavyrLinkedList.convertToPalavyrNode(
-            currentNode.palavyrLinkedList,
-            currentNode.repository,
+        const newPalavyrNode = currentParentNodes[0].palavyrLinkedList.convertToPalavyrNode(
+            currentParentNodes[0].palavyrLinkedList,
+            currentParentNodes[0].repository,
             defaultNode,
-            currentNode.rawNodeList,
-            currentNode.setTreeWithHistory,
-            currentNode.isMemberOfLeftmostBranch
+            currentParentNodes[0].rawNodeList,
+            currentParentNodes[0].setTreeWithHistory,
+            currentParentNodes[0].isMemberOfLeftmostBranch
         );
         newPalavyrNode.setNodeTypeOptions(nodeTypeOptions);
-        currentNode.addNewNodeReferenceAndConfigure(newPalavyrNode, currentNode, nodeTypeOptions);
+
+        if (defaultText) {
+            newPalavyrNode.userText = defaultText;
+        }
+
+        currentParentNodes.forEach((parentNode) => {
+            parentNode.addNewNodeReferenceAndConfigure(newPalavyrNode, parentNode, nodeTypeOptions);
+        });
     }
 
-    createDefaultNode(optionPath: string): ConvoNode {
+    public addDefaultRootNode(
+        palavyrLinkedList: IPalavyrLinkedList,
+        repository: PalavyrRepository,
+        restOfTree: INodeReferences,
+        rawNodeList: ConvoNode[],
+        defaultText?: string
+    ) {
+        const defaultNode = this.createDefaultNode("Continue");
+        const newPalavyrNode = palavyrLinkedList.convertToPalavyrNode(palavyrLinkedList, repository, defaultNode, rawNodeList, palavyrLinkedList.setTreeWithHistory, true);
+        if (defaultText) {
+            newPalavyrNode.userText = defaultText;
+        }
+        palavyrLinkedList.rootNode = newPalavyrNode;
+        newPalavyrNode.childNodeReferences = restOfTree;
+    }
+
+    private createDefaultNode(optionPath: string): ConvoNode {
         return {
             isLoopbackAnchorType: false,
             nodeId: uuid(),

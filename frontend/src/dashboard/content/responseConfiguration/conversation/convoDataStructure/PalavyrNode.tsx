@@ -157,8 +157,22 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.setTreeWithHistory(this.palavyrLinkedList);
     }
 
-    public removeSelf() {
-        this.parentNodeReferences.removeReference(this);
+    public removeSelf(nodeTypeOptions: NodeTypeOptions) {
+        if (this.isRoot) {
+            // TODO - how to reset the root node?
+            // get the palavyr linked list, and remove the root node, and add default node as root
+            this.childNodeReferences.Clear();
+            this.palavyrLinkedList.resetRootNode();
+        } else {
+            const currentText = this.userText;
+            this.childNodeReferences.Clear();
+            this.parentNodeReferences.forEach((parentNode) => {
+                parentNode.childNodeReferences.removeReference(this);
+                this.nodeCreator.addDefaultChild([parentNode], "Continue", nodeTypeOptions, currentText);
+            });
+        }
+
+        this.UpdateTree();
     }
 
     public nodeIsSet() {
@@ -577,7 +591,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
                 } else if (node.childNodeReferences.containsNode(mergeNode)) {
                     if (!node.anabranchContext.leftmostAnabranch) {
                         node.childNodeReferences.Clear();
-                        this.nodeCreator.addDefaultChild(node, "Continue", nodeTypeOptions);
+                        this.nodeCreator.addDefaultChild([node], "Continue", nodeTypeOptions);
                         node.shouldRenderChildren = true;
                     } else {
                         // ignore the mergeNode in the same way as the other

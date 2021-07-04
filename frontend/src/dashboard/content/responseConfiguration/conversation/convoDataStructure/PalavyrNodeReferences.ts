@@ -93,7 +93,7 @@ export class NodeReferences implements INodeReferences {
     }
 
     public removeReference(palavyrNode: IPalavyrNode) {
-        this.nodeReferences.filter((node: IPalavyrNode) => node.nodeId !== palavyrNode.nodeId);
+        this.nodeReferences = this.nodeReferences.filter((node: IPalavyrNode) => node.nodeId !== palavyrNode.nodeId);
     }
 
     public checkIfReferenceExistsOnCondition(condition: (nodeReference: IPalavyrNode) => boolean) {

@@ -12,7 +12,8 @@ class AnabranchConfigurer {
                 if (child.isAnabranchType) return;
                 child.isPalavyrAnabranchMember = false;
                 this.ClearAnabranchContext(child);
-                if (child.nodeType === "Loopback") { // TODO: Assert against NodeCodeType == VIII
+                if (child.nodeType === "Loopback") {
+                    // TODO: Assert against NodeCodeType == VIII
                     return;
                 }
                 recurse(child.childNodeReferences);
@@ -208,6 +209,22 @@ class AnabranchConfigurer {
         } else {
             return _shouldShow;
         }
+    }
+
+    public recursivelyClearAnabranchContext(currentNode: IPalavyrNode) {
+        // recurse and clear anabrach context -
+        // if loopback, break. if anabranch type break;
+        this.ClearAnabranchContext(currentNode);
+        const recurse = (childNodeReferences: INodeReferences) => {
+            childNodeReferences.forEach((childNode) => {
+                if (childNode.isPalavyrAnabranchStart) return;
+                this.ClearAnabranchContext(childNode);
+                if (childNode.nodeType === "Loopback") return;
+                recurse(childNode.childNodeReferences);
+            });
+        };
+
+        recurse(currentNode.childNodeReferences);
     }
 }
 

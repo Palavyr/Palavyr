@@ -1,10 +1,11 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
-import { ConvoNode, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
+import { ConvoNode, NodeTypeOptions } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { ILinkedListBucket, INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "./Contracts";
 import { LinkedListBucket } from "./LinkedListBucket";
 import { NodeConfigurer } from "./NodeConfigurer";
+import { NodeCreator } from "./NodeCreator";
 import { PalavyrImageNode } from "./PalavyrImageNode";
 import { PalavyrTextNode } from "./PalavyrTextNode";
 
@@ -13,14 +14,17 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     private areaId: string;
     public rootNode: IPalavyrNode;
     private head: ConvoNode;
-    private setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
+    public setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
     private repository: PalavyrRepository = new PalavyrRepository();
     private configurer: NodeConfigurer = new NodeConfigurer();
+    private nodeCreator: NodeCreator = new NodeCreator();
+    private rawNodeList: ConvoNode[];
 
     /**
      * List object for interacting with the list. This will have methods for performing insertions, deletions, additions, subtractions, etc
      */
     constructor(nodeList: ConvoNode[], areaId: string, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, nodeTypeOptions: NodeTypeOptions) {
+        this.rawNodeList = nodeList;
         this.areaId = areaId;
         this.head = this.getRootNode(nodeList);
         this.setTreeWithHistory = setTreeWithHistory;
@@ -182,5 +186,10 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     }
     delete(): void {
         throw new Error("Method not implemented.");
+    }
+    resetRootNode(): void {
+        const restOfTree = this.rootNode.childNodeReferences;
+        const currentText = this.rootNode.userText;
+        this.nodeCreator.addDefaultRootNode(this, this.repository, restOfTree, this.rawNodeList, currentText);
     }
 }

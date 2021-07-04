@@ -16,7 +16,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     public ExecuteNodeSelectorUpdate(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         if (currentNode.nodeType === "Loopback" && currentNode.nodeTypeCode !== nodeOption.nodeTypeCode) {
             currentNode.childNodeReferences.Clear();
-            this.nodeCreator.addDefaultChild(currentNode, "Continue", nodeTypeOptions);
+            this.nodeCreator.addDefaultChild([currentNode], "Continue", nodeTypeOptions);
         }
 
         if (currentNode.nodeTypeCode === NodeTypeCode.VI && nodeOption.nodeTypeCode !== NodeTypeCode.VI) {
@@ -127,7 +127,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
 
     private ConvertToType_III_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         if (currentNode.childNodeReferences.Length === 0) {
-            this.nodeCreator.addDefaultChild(currentNode, "Continue", nodeTypeOptions);
+            this.nodeCreator.addDefaultChild([currentNode], "Continue", nodeTypeOptions);
         } else {
             currentNode.childNodeReferences.truncateAt(1); // only take the first child node
             currentNode.childNodeReferences.applyOptionPaths(["Continue"]);
@@ -250,13 +250,13 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
 
     public async createOrTruncateChildNodes(currentNode: IPalavyrNode, valueOptions: string[], nodeTypeOptions: NodeTypeOptions) {
         if (currentNode.getValueOptions().length === 0) {
-            this.nodeCreator.addDefaultChild(currentNode, "Continue", nodeTypeOptions);
+            this.nodeCreator.addDefaultChild([currentNode], "Continue", nodeTypeOptions);
         } else {
             const valueOptionDifference = valueOptions.length === 0 ? 0 : valueOptions.length - currentNode.childNodeReferences.Length;
             if (valueOptionDifference > 0) {
                 // add nodes
                 for (let index = 0; index < valueOptionDifference; index++) {
-                    this.nodeCreator.addDefaultChild(currentNode, "Continue", nodeTypeOptions); // autoreferences the parent and child
+                    this.nodeCreator.addDefaultChild([currentNode], "Continue", nodeTypeOptions); // autoreferences the parent and child
                 }
             } else if (valueOptionDifference < 0) {
                 // truncate nodes
