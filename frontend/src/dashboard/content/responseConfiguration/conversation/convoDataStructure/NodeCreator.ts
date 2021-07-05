@@ -1,7 +1,6 @@
 import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "./Contracts";
 import { ConvoNode, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { v4 as uuid } from "uuid";
-import { PalavyrLinkedList } from "./PalavyrLinkedList";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 
 export class NodeCreator {

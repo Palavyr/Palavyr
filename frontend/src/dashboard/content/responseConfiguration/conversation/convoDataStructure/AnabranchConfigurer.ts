@@ -72,6 +72,7 @@ class AnabranchConfigurer {
                 NodeTypeOptionConfigurer.RecursivelyReconfigureNodeTypeOptions(child, nodeTypeOptions);
             });
         } else {
+            // TODO - if we un merge anabranch, we need to also remove all the node parent references
             node.dereferenceThisAnabranchMergePoint(anabranchOriginNode, nodeTypeOptions);
             node.isPalavyrAnabranchEnd = false;
             node.isAnabranchMergePoint = false;
@@ -87,6 +88,7 @@ class AnabranchConfigurer {
                 }
                 NodeTypeOptionConfigurer.RecursivelyReconfigureNodeTypeOptions(child, nodeTypeOptions);
             });
+
         }
         node.UpdateTree();
     }

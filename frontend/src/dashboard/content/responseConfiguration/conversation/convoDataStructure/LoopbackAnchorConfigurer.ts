@@ -1,4 +1,3 @@
-import { NodeTypeCode } from "@Palavyr-Types";
 import { INodeReferences, IPalavyrNode } from "./Contracts";
 
 class LoopbackAnchorConfigurer {
@@ -35,7 +34,6 @@ class LoopbackAnchorConfigurer {
     }
 
     private RecursivelyApplyLoopbackContextFromThisNode(node: IPalavyrNode, originId: string) {
-        this.SetLoopbackContext(node, originId);
         const recurse = (childNodeReferences: INodeReferences, parent: IPalavyrNode) => {
             if (childNodeReferences.Length === 0) return;
             if (parent.nodeType === "Loopback") return;
@@ -45,11 +43,11 @@ class LoopbackAnchorConfigurer {
             });
         };
 
+        this.SetLoopbackContext(node, originId);
         recurse(node.childNodeReferences, node);
     }
 
     private RecursivelyRemoveLoopbackContextFromThisNode(node: IPalavyrNode) {
-        this.ClearLoopbackContext(node);
         const recurse = (childNodeReferences: INodeReferences) => {
             if (childNodeReferences.Length === 0) return;
             childNodeReferences.forEach((childNode: IPalavyrNode) => {
@@ -58,6 +56,7 @@ class LoopbackAnchorConfigurer {
             });
         };
 
+        this.ClearLoopbackContext(node);
         recurse(node.childNodeReferences);
     }
 

@@ -53,11 +53,6 @@ export const ChangePhoneNumber = () => {
                 onClick={handlePhoneNumberChange}
                 clearVal={true}
                 currentValue={phoneNumber}
-                useAlert
-                alertMessage={{
-                    title: "Phone Number successfully updated.",
-                    message: "",
-                }}
                 alertNode={
                     <Alert severity={phoneNumber ? "success" : "error"}>
                         <AlertTitle className={classes.titleText}>{phoneNumber ? "Phone Number" : "Please set your phone number."}</AlertTitle>

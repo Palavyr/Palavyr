@@ -21,6 +21,7 @@ import { ShowResponseInPdf } from "./nodeOptionals/ShowResponseInPdf";
 import { UnsetNodeButton } from "./nodeOptionals/UnsetNodeButton";
 import { NodeCreator } from "./NodeCreator";
 import NodeTypeOptionConfigurer from "./NodeTypeOptionConfigurer";
+import { uniqBy } from "lodash";
 const treelinkClassName = "tree-line-link";
 
 export abstract class PalavyrNode implements IPalavyrNode {
@@ -575,13 +576,14 @@ export abstract class PalavyrNode implements IPalavyrNode {
         });
     }
 
-    public dereferenceThisAnabranchMergePoint(anabranchOriginNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    public dereferenceThisAnabranchMergePoint(anabranchOriginNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions): void {
         // Assumes that this node is the anabranch merge node with the checkbox
         if (!this.isAnabranchMergePoint) throw new Error("Attempting to call anabranch reference method from non-anabranch-merge-point node");
 
         anabranchOriginNode.unlock();
         this.unlock();
         const mergeNode = this as IPalavyrNode;
+        const parentNodesToDeleteFromMergePointParentReferences: IPalavyrNode[] = [];
 
         const recurseAndDereference = (childReferences: INodeReferences) => {
             childReferences.forEach((node: IPalavyrNode) => {
@@ -590,6 +592,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
                     recurseAndDereference(node.childNodeReferences);
                 } else if (node.childNodeReferences.containsNode(mergeNode)) {
                     if (!node.anabranchContext.leftmostAnabranch) {
+                        this.parentNodeReferences.removeReference(node);
                         node.childNodeReferences.Clear();
                         this.nodeCreator.addDefaultChild([node], "Continue", nodeTypeOptions);
                         node.shouldRenderChildren = true;

@@ -218,7 +218,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     // Loopback Anchor
     private ConvertToType_VII_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         if (currentNode.getValueOptions().length < 2) {
-            const defaultValueOptions = ["Continue", "Option 1", "Option 2"];
+            const defaultValueOptions = ["Continue", "Option 1"];
             this.createOrTruncateChildNodes(currentNode, defaultValueOptions, nodeTypeOptions);
             currentNode.childNodeReferences.applyOptionPaths(defaultValueOptions);
         } else {

@@ -4,7 +4,7 @@ import React, { useContext } from "react";
 import { NodeOptionalProps } from "../Contracts";
 
 export const UnsetNodeButton = ({ node }: NodeOptionalProps) => {
-    const shouldShow = node.nodeIsSet() && (node.isTerminal || node.childNodeReferences.AllChildrenUnset() || node.nodeType === "Loopback");
+    const shouldShow = node.nodeIsSet() && (node.isTerminal || node.childNodeReferences.AllChildrenUnset() || node.nodeType === "Loopback") && !node.isPalavyrAnabranchEnd;
     const { nodeTypeOptions } = useContext(ConversationTreeContext);
     const onClick = () => {
         node.removeSelf(nodeTypeOptions);

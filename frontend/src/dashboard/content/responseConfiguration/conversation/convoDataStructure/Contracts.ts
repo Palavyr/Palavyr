@@ -47,6 +47,7 @@ export interface INodeReferences {
     Empty(): boolean;
     NotEmpty(): boolean;
     OrderByOptionPath(): void;
+    // Clear(currentNode: IPalavyrNode): void;
     Clear(): void;
     getByIndex(index: number): IPalavyrNode;
     removeReference(palavyrNode: IPalavyrNode): void;
