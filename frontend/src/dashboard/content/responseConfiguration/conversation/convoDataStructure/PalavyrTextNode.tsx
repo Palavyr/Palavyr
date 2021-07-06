@@ -15,11 +15,10 @@ export class PalavyrTextNode extends PalavyrNode {
         containerList: IPalavyrLinkedList,
         repository: PalavyrRepository,
         node: ConvoNode,
-        nodeList: ConvoNode[],
         setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
         leftmostBranch: boolean
     ) {
-        super(containerList, repository, node, nodeList, setTreeWithHistory, leftmostBranch);
+        super(containerList, repository, node, setTreeWithHistory, leftmostBranch);
     }
 
     public renderNodeFace() {

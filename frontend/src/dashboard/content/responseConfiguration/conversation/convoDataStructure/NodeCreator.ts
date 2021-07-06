@@ -12,7 +12,6 @@ export class NodeCreator {
             currentParentNodes[0].palavyrLinkedList,
             currentParentNodes[0].repository,
             defaultNode,
-            currentParentNodes[0].rawNodeList,
             currentParentNodes[0].setTreeWithHistory,
             currentParentNodes[0].isMemberOfLeftmostBranch
         );
@@ -31,11 +30,10 @@ export class NodeCreator {
         palavyrLinkedList: IPalavyrLinkedList,
         repository: PalavyrRepository,
         restOfTree: INodeReferences,
-        rawNodeList: ConvoNode[],
         defaultText?: string
     ) {
         const defaultNode = this.createDefaultNode("Continue");
-        const newPalavyrNode = palavyrLinkedList.convertToPalavyrNode(palavyrLinkedList, repository, defaultNode, rawNodeList, palavyrLinkedList.setTreeWithHistory, true);
+        const newPalavyrNode = palavyrLinkedList.convertToPalavyrNode(palavyrLinkedList, repository, defaultNode, palavyrLinkedList.setTreeWithHistory, true);
         if (defaultText) {
             newPalavyrNode.userText = defaultText;
         }

@@ -84,7 +84,8 @@ namespace Palavyr.Core.Data.Setup.SeedData.DataCreators
                     IsTerminalType = false,
                     IsDynamicTableNode = true,
                     ShouldRenderChildren = true,
-                    NodeComponentType = DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue
+                    NodeComponentType = DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
+                    NodeTypeCode = NodeTypeCode.III
                 },
                 DefaultNodeTypeOptions.CreateSendResponse().MapNodeTypeOptionToConversationNode(
                     node6Id,

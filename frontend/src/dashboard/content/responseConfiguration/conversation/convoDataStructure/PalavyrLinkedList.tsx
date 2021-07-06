@@ -1,6 +1,6 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
-import { ConvoNode, NodeTypeOptions } from "@Palavyr-Types";
+import { ConvoNode, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { ILinkedListBucket, INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "./Contracts";
 import { LinkedListBucket } from "./LinkedListBucket";
@@ -11,20 +11,18 @@ import { PalavyrTextNode } from "./PalavyrTextNode";
 
 export class PalavyrLinkedList implements IPalavyrLinkedList {
     private linkedListBucket: ILinkedListBucket = new LinkedListBucket();
-    private areaId: string;
+    public areaId: string;
     public rootNode: IPalavyrNode;
     private head: ConvoNode;
     public setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
     private repository: PalavyrRepository = new PalavyrRepository();
     private configurer: NodeConfigurer = new NodeConfigurer();
     private nodeCreator: NodeCreator = new NodeCreator();
-    private rawNodeList: ConvoNode[];
 
     /**
      * List object for interacting with the list. This will have methods for performing insertions, deletions, additions, subtractions, etc
      */
     constructor(nodeList: ConvoNode[], areaId: string, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, nodeTypeOptions: NodeTypeOptions) {
-        this.rawNodeList = nodeList;
         this.areaId = areaId;
         this.head = this.getRootNode(nodeList);
         this.setTreeWithHistory = setTreeWithHistory;
@@ -56,7 +54,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     }
 
     private assembleDoubleLinkedMultiBranchLinkedList(nodeList: ConvoNode[], nodeTypeOptions: NodeTypeOptions) {
-        const headNode = this.convertToPalavyrNode(this, this.repository, this.head, nodeList, this.setTreeWithHistory, true);
+        const headNode = this.convertToPalavyrNode(this, this.repository, this.head, this.setTreeWithHistory, true);
         this.configurer.configure(headNode, null, nodeTypeOptions);
         this.rootNode = headNode;
         this.recursivelyAssembleLinkedList(headNode, this.head.nodeChildrenString, nodeList, nodeTypeOptions);
@@ -74,7 +72,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
 
             if (existingNode === null) {
                 const childConvoNode = this._getNodeById(childId, nodeList);
-                const newNode = this.convertToPalavyrNode(this, this.repository, childConvoNode, nodeList, this.setTreeWithHistory, index === 0);
+                const newNode = this.convertToPalavyrNode(this, this.repository, childConvoNode, this.setTreeWithHistory, index === 0);
 
                 newNode.addNewNodeReferenceAndConfigure(newNode, parentNode, nodeTypeOptions);
                 this.recursivelyAssembleLinkedList(newNode, childConvoNode.nodeChildrenString, nodeList, nodeTypeOptions);
@@ -95,26 +93,27 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         }
     }
 
-    public convertToPalavyrNode(
-        container: IPalavyrLinkedList,
-        repository: PalavyrRepository,
-        rawNode: ConvoNode,
-        nodeList: ConvoNode[],
-        setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
-        leftMostBranch: boolean
-    ) {
+    public convertToPalavyrNode(container: IPalavyrLinkedList, repository: PalavyrRepository, rawNode: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftMostBranch: boolean) {
         let palavyrNode: IPalavyrNode;
         switch (rawNode.isImageNode) {
             case true:
-                palavyrNode = new PalavyrImageNode(container, repository, rawNode, nodeList, setTreeWithHistory, leftMostBranch);
+                palavyrNode = this.createImageNode(container, repository, rawNode, setTreeWithHistory, leftMostBranch);
                 break;
             case false:
-                palavyrNode = new PalavyrTextNode(container, repository, rawNode, nodeList, setTreeWithHistory, leftMostBranch);
+                palavyrNode = this.createTextNode(container, repository, rawNode, setTreeWithHistory, leftMostBranch);
                 break;
             default:
                 throw new Error("Node type couldn't be determined when construting the palavyr convo tree.");
         }
         return palavyrNode;
+    }
+
+    public createTextNode(containerList: IPalavyrLinkedList, repository: PalavyrRepository, node: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftmostBranch: boolean): IPalavyrNode {
+        return new PalavyrTextNode(containerList, repository, node, setTreeWithHistory, leftmostBranch);
+    }
+
+    public createImageNode(containerList: IPalavyrLinkedList, repository: PalavyrRepository, node: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftmostBranch: boolean): IPalavyrNode {
+        return new PalavyrImageNode(containerList, repository, node, setTreeWithHistory, leftmostBranch);
     }
 
     compileToConvoNodes(): ConvoNode[] {
@@ -190,6 +189,6 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     resetRootNode(): void {
         const restOfTree = this.rootNode.childNodeReferences;
         const currentText = this.rootNode.userText;
-        this.nodeCreator.addDefaultRootNode(this, this.repository, restOfTree, this.rawNodeList, currentText);
+        this.nodeCreator.addDefaultRootNode(this, this.repository, restOfTree, currentText);
     }
 }

@@ -406,7 +406,8 @@ export enum NodeTypeCode {
     V,
     VI, // anabranch
     VII, // loopback anchor
-    VIII // loopback terminal
+    VIII, // loopback terminal,
+    IX // image node type
 }
 
 export type NodeOption = {

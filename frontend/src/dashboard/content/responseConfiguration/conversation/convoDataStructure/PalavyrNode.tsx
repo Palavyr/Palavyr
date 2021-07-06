@@ -21,7 +21,6 @@ import { ShowResponseInPdf } from "./nodeOptionals/ShowResponseInPdf";
 import { UnsetNodeButton } from "./nodeOptionals/UnsetNodeButton";
 import { NodeCreator } from "./NodeCreator";
 import NodeTypeOptionConfigurer from "./NodeTypeOptionConfigurer";
-import { uniqBy } from "lodash";
 const treelinkClassName = "tree-line-link";
 
 export abstract class PalavyrNode implements IPalavyrNode {
@@ -62,10 +61,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
     private nodeCreator: NodeCreator = new NodeCreator();
 
     public isMemberOfLeftmostBranch: boolean;
-
-    public rawNode: ConvoNode; // Get Rid Of This.
-    public rawNodeList: ConvoNode[]; // Get Rid of this
-
     public lineMap: LineMap = [];
 
     public setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
@@ -103,14 +98,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
      * We could have no children (if not set)
      **/
 
-    constructor(
-        containerList: IPalavyrLinkedList,
-        repository: PalavyrRepository,
-        node: ConvoNode,
-        nodeList: ConvoNode[],
-        setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
-        leftmostBranch: boolean
-    ) {
+    constructor(containerList: IPalavyrLinkedList, repository: PalavyrRepository, node: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftmostBranch: boolean) {
         this.repository = repository;
         this.palavyrLinkedList = containerList;
 
@@ -128,6 +116,7 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.resolveOrder = node.resolveOrder;
         this.shouldRenderChildren = node.shouldRenderChildren;
         this.nodeType = node.nodeType; // type of node - e.g. YesNo, Outer-Categories-TwoNestedCategory-fffeefb5-36f2-40cd-96c1-f1eff401393c
+        this.nodeTypeCode = node.nodeTypeCode;
         this.nodeComponentType = node.nodeComponentType; // type of component to use in the widget - standardized list of types in the widget registry
         this.dynamicType = node.dynamicType; // generic dynamic type, e.g. SelectOneFlat-3242-2342-234-2423
 
@@ -142,9 +131,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
         this.isLoopbackAnchorType = node.isLoopbackAnchorType;
 
         this.isMemberOfLeftmostBranch = leftmostBranch;
-
-        this.rawNode = node;
-        this.rawNodeList = nodeList;
         this.setTreeWithHistory = setTreeWithHistory;
 
         this.isAnabranchLocked = false; // TODO set this dynamically

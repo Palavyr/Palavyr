@@ -174,7 +174,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 IsImageNode = true;
-                NodeTypeCode = NodeTypeCode.II;
+                NodeTypeCode = NodeTypeCode.IX;
             }
         }
 

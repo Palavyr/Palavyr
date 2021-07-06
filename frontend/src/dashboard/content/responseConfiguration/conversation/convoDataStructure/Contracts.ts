@@ -15,7 +15,7 @@ export interface ILinkedListBucket {
 
 export interface IPalavyrLinkedList {
     rootNode: IPalavyrNode;
-
+    areaId: string;
     traverse(): void;
     insert(): void;
     delete(): void;
@@ -25,15 +25,10 @@ export interface IPalavyrLinkedList {
     retrieveCleanHeadNode(): IPalavyrNode;
     setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
     resetRootNode(): void;
+    createTextNode(containerList: IPalavyrLinkedList, repository: PalavyrRepository, node: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftmostBranch: boolean): IPalavyrNode;
+    createImageNode(containerList: IPalavyrLinkedList, repository: PalavyrRepository, node: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftmostBranch: boolean): IPalavyrNode;
 
-    convertToPalavyrNode(
-        container: IPalavyrLinkedList,
-        repository: PalavyrRepository,
-        rawNode: ConvoNode,
-        nodeList: ConvoNode[],
-        setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
-        leftMostBranch: boolean
-    ): IPalavyrNode;
+    convertToPalavyrNode(container: IPalavyrLinkedList, repository: PalavyrRepository, rawNode: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftMostBranch: boolean): IPalavyrNode;
 }
 
 export interface INodeReferences {
@@ -47,7 +42,6 @@ export interface INodeReferences {
     Empty(): boolean;
     NotEmpty(): boolean;
     OrderByOptionPath(): void;
-    // Clear(currentNode: IPalavyrNode): void;
     Clear(): void;
     getByIndex(index: number): IPalavyrNode;
     removeReference(palavyrNode: IPalavyrNode): void;
@@ -124,10 +118,6 @@ export interface IPalavyrNode {
     parentNodeReferences: INodeReferences;
 
     isMemberOfLeftmostBranch: boolean;
-
-    rawNode: ConvoNode; // Get Rid Of This.
-    rawNodeList: ConvoNode[]; // Get Rid of this
-
     lineMap: LineMap;
 
     palavyrLinkedList: IPalavyrLinkedList; // the containing list object that this node is a member of. Used to acccess update methods

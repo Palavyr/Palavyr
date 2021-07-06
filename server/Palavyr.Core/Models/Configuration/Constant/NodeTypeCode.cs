@@ -22,7 +22,10 @@
         VII = 6, // Loopback Anchor
         
         // ReSharper disable once InconsistentNaming
-        VIII = 7 // Loopback terminal
+        VIII = 7, // Loopback terminal
+        
+        // ReSharper disable once InconsistentNaming
+        IX = 8 // Image Node Type
 
     }
 }

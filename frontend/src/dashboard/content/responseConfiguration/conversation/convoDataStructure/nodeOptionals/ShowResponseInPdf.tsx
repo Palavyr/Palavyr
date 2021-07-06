@@ -5,7 +5,7 @@ import { NodeOptionalProps } from "../Contracts";
 export const ShowResponseInPdf = ({ node }: NodeOptionalProps) => {
     const shouldShow = () => {
         const nodeTypesThatDoNotProvideFeedback = ["ProvideInfo"];
-        return !node.isTerminal && !nodeTypesThatDoNotProvideFeedback.includes(node.nodeType);
+        return !node.isTerminal && !nodeTypesThatDoNotProvideFeedback.includes(node.nodeType) && !node.isImageNode;
     };
     const onChange = (event: { target: { checked: boolean } }) => {
         const checked = event.target.checked;

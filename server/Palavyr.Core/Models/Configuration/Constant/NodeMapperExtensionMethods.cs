@@ -85,7 +85,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = nodeTypeOption.ShouldShowMultiOption,
                 IsCurrency = nodeTypeOption.IsCurrency,
                 IsCritical = isCritical,
-                IsLoopbackAnchorType = loopbackAnchor
+                IsLoopbackAnchorType = loopbackAnchor,
+                NodeTypeCode = nodeTypeOption.NodeTypeCode
             };
         }
     }
