@@ -66,7 +66,7 @@ import { ImageReview } from "dashboard/content/images/ImageReview";
 import { ImageReviewHelp } from "dashboard/content/help/ImageReviewHelp";
 import { PleaseSubscribe } from "dashboard/content/purchse/pleaseSubscribe/PleaseSubscribe";
 import { PleaseSubscribeHelp } from "dashboard/content/help/PleaseSubscribeHelp";
-import { StructuredConvoTree } from "dashboard/content/responseConfiguration/conversation/convoDataStructure/StructuredConvoTree";
+import { StructuredConvoTree } from "dashboard/content/responseConfiguration/conversation/PalavyrConfiguration";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {

@@ -1,5 +1,5 @@
 import { COULD_NOT_FIND_SERVER, GOOGLE_ACCOUNT_NOT_FOUND, INVALID_EMAIL, INVALID_GOOGLE_TOKEN, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, NOT_A_GOOGLE_ACCOUNT, VERIFICATION_EMAIL_SEND } from "@constants";
-import { PalavyrLinkedList } from "dashboard/content/responseConfiguration/conversation/convoDataStructure/PalavyrLinkedList";
+import { PalavyrLinkedList } from "dashboard/content/responseConfiguration/conversation/PalavyrDataStructure/PalavyrLinkedList";
 import { Dispatch, SetStateAction } from "react";
 // / <reference types="node" />
 // / <reference types="react" />
@@ -26,6 +26,17 @@ export type AnyVoidFunction = (...args: any[]) => void;
 export type SetState<T> = Dispatch<SetStateAction<T>>;
 export type TableGroup<T> = {
     [itemGroup: string]: T;
+};
+
+export type LineStyles = "solid" | "-moz-initial" | "inherit" | "initial" | "revert" | "unset" | "dashed" | "dotted" | "double" | "groove" | "hidden" | "inset" | "none" | "outset" | "ridge" | undefined;
+
+export type Anchor = "top" | "left" | "middle" | "center" | "bottom" | "right";
+export type Selector = string;
+
+export type Milliseconds = string;
+export type ParsedAnchor = {
+    x: number;
+    y: number;
 };
 
 // Database
@@ -407,7 +418,7 @@ export enum NodeTypeCode {
     VI, // anabranch
     VII, // loopback anchor
     VIII, // loopback terminal,
-    IX // image node type
+    IX, // image node type
 }
 
 export type NodeOption = {
@@ -827,7 +838,7 @@ export type LineMap = LineLink[];
 
 export type LoopbackContext = {
     loopbackOriginId: string;
-}
+};
 
 export type AnabranchContext = {
     anabranchOriginId: string; // the node Id of the anabranch root node
