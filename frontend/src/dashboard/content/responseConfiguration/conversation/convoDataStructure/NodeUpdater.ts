@@ -36,6 +36,12 @@ export class NodeUpdater {
                 currentNode.childNodeReferences.applyOptionPaths(valueOptions);
                 break;
 
+            case NodeTypeCode.VII:
+                currentNode.setValueOptions(valueOptions);
+                this.nodeChanger.createOrTruncateChildNodes(currentNode, valueOptions, nodeTypeOptions);
+                currentNode.childNodeReferences.applyOptionPaths(valueOptions);
+                break;
+
             default:
                 break;
         }

@@ -108,11 +108,23 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         return palavyrNode;
     }
 
-    public createTextNode(containerList: IPalavyrLinkedList, repository: PalavyrRepository, node: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftmostBranch: boolean): IPalavyrNode {
+    public createTextNode(
+        containerList: IPalavyrLinkedList,
+        repository: PalavyrRepository,
+        node: ConvoNode,
+        setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
+        leftmostBranch: boolean
+    ): IPalavyrNode {
         return new PalavyrTextNode(containerList, repository, node, setTreeWithHistory, leftmostBranch);
     }
 
-    public createImageNode(containerList: IPalavyrLinkedList, repository: PalavyrRepository, node: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftmostBranch: boolean): IPalavyrNode {
+    public createImageNode(
+        containerList: IPalavyrLinkedList,
+        repository: PalavyrRepository,
+        node: ConvoNode,
+        setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
+        leftmostBranch: boolean
+    ): IPalavyrNode {
         return new PalavyrImageNode(containerList, repository, node, setTreeWithHistory, leftmostBranch);
     }
 

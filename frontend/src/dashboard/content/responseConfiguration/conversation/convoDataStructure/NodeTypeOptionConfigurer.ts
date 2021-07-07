@@ -28,6 +28,19 @@ class NodeTypeOptionConfigurer {
             options = this.filterUnallowedNodeOptions([NodeTypeCode.VIII], options);
         }
 
+        if (currentNode.parentNodeReferences.Length === 1 && currentNode.parentNodeReferences.retrieveLeftmostReference()?.isLoopbackAnchorType) {
+            options = this.filterUnallowedNodeOptions([NodeTypeCode.VII], options);
+        }
+
+        if (currentNode.childNodeReferences.containsNodeType("LoopbackAnchor")) {
+            options = this.filterUnallowedNodeOptions([NodeTypeCode.VII], options);
+        }
+
+        // if we are the primary anabranch branch and a anabranch member...
+        if (currentNode.isPalavyrAnabranchMember && currentNode.anabranchContext && currentNode.anabranchContext.leftmostAnabranch && currentNode.anabranchContext.leftmostAnabranch === true) {
+            options = this.filterUnallowedNodeOptions([NodeTypeCode.I], options);
+        }
+
         return options;
     }
 

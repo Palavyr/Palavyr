@@ -505,7 +505,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.TooComplicated;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
-                NodeTypeCode = NodeTypeCode.II;
+                NodeTypeCode = NodeTypeCode.I;
             }
         }
 
@@ -530,7 +530,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeComponentType = NodeComponentTypes.SendResponse;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
-                NodeTypeCode = NodeTypeCode.II;
+                NodeTypeCode = NodeTypeCode.I;
             }
         }
     }

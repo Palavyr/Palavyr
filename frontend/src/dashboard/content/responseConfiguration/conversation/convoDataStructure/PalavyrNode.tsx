@@ -569,7 +569,6 @@ export abstract class PalavyrNode implements IPalavyrNode {
         anabranchOriginNode.unlock();
         this.unlock();
         const mergeNode = this as IPalavyrNode;
-        const parentNodesToDeleteFromMergePointParentReferences: IPalavyrNode[] = [];
 
         const recurseAndDereference = (childReferences: INodeReferences) => {
             childReferences.forEach((node: IPalavyrNode) => {

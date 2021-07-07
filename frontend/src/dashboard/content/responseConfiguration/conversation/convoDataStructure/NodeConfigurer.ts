@@ -14,6 +14,9 @@ export class NodeConfigurer {
             currentNode.parentNodeReferences.addReference(parentNode);
             if (currentNode.nodeTypeCode !== NodeTypeCode.VIII) { //
                 currentNode.addLine(parentNode.nodeId);
+            } else {
+                console.log("WOW");
+
             }
             AnabranchConfigurer.configureAnabranch(currentNode, parentNode, nodeTypeOptions);
             LoopbackAnchorConfigurer.ConfigureLoopbackAnchor(currentNode, parentNode);
