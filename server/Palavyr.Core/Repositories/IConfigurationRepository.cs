@@ -14,9 +14,12 @@ namespace Palavyr.Core.Repositories
         Task<Area> CreateAndAddNewArea(string name, string accountId, string emailAddress, bool isVerified);
         Task<List<Area>> GetAllAreasShallow(string accountId);
         Task<Area> GetAreaById(string accountId, string areaId);
-        Task<List<ConversationNode>> GetAreaConversationNodes(string accountId, string areaId);
         Task<ConversationNode> GetConversationNodeById(string nodeId);
         Task<List<ConversationNode>> GetConversationNodeByIds(List<string> nodeIds);
+        
+        Task<List<ConversationNode>> GetAreaConversationNodes(string accountId, string areaId);
+        Task<List<ConversationNode>> UpdateConversation(string accountId, string areaId, List<ConversationNode> convoUpdate, CancellationToken cancellationToken);
+        
         Task<Area> GetAreaWithConversationNodes(string accountId, string areaId);
         Task RemoveConversationNodeById(string nodeId);
         Task<List<ConversationNode>> UpdateConversationNode(string accountId, string areaId, string nodeId, ConversationNode newNode);

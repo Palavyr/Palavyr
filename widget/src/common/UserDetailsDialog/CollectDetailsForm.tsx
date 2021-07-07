@@ -11,7 +11,7 @@ import { EmailForm } from "./FormInputs/EmailForm";
 import { LocaleSelector } from "./FormInputs/LocaleSelector";
 import { PhoneForm } from "./FormInputs/PhoneForm";
 import { useSelector } from "react-redux";
-import { GlobalState, LocaleMap, LocaleMapItem } from "@Palavyr-Types";
+import { GlobalState, LocaleMap, LocaleMapItem, SetState } from "@Palavyr-Types";
 import { setRegionContext, closeUserDetails } from "@store-dispatcher";
 import { INVALID_PHONE, INVALID_EMAIL, INVALID_NAME } from "./UserDetailsCheck";
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
@@ -19,6 +19,7 @@ import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 export interface CollectDetailsFormProps {
     chatStarted: boolean;
     setChatStarted: Dispatch<SetStateAction<boolean>>;
+    setKickoff: SetState<boolean>;
 }
 
 export interface BaseFormProps {
@@ -58,7 +59,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const CollectDetailsForm = ({ chatStarted, setChatStarted }: CollectDetailsFormProps) => {
+export const CollectDetailsForm = ({ chatStarted, setChatStarted, setKickoff }: CollectDetailsFormProps) => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const client = new PalavyrWidgetRepository(secretKey);
     const userDetailsVisible = useSelector((state: GlobalState) => state.behaviorReducer.userDetailsVisible);
@@ -86,6 +87,7 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted }: CollectDetai
 
     const onFormSubmit = (e: { preventDefault: () => void }) => {
         e.preventDefault();
+        setKickoff(true);
         setChatStarted(true);
         closeUserDetails();
     };

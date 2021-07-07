@@ -216,6 +216,7 @@ export const AreaSettings = () => {
                 </Grid>
                 <Grid item xs={5}>
                     <SettingsGridRowText
+                        successText="Area Deleted"
                         alertNode={
                             <Alert className={classes.alert} severity="error">
                                 <AlertTitle>

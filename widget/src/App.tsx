@@ -15,6 +15,7 @@ export const App = () => {
     const [selectedOption, setSelectedOption] = useState<SelectedOption | null>(null);
     const [isReady, setIsReady] = useState<boolean>(false);
     const [widgetPrefs, setWidgetPrefs] = useState<WidgetPreferences>();
+    const [kickoff, setKickoff] = useState<boolean>(false);
 
     const [chatStarted, setChatStarted] = useState<boolean>(false);
 
@@ -47,8 +48,8 @@ export const App = () => {
             )}
             {isReady === true && selectedOption !== null && (
                 <>
-                    <CollectDetailsForm chatStarted={chatStarted} setChatStarted={setChatStarted} />
-                    {widgetPrefs && <Widget option={selectedOption} />}
+                    <CollectDetailsForm chatStarted={chatStarted} setChatStarted={setChatStarted} setKickoff={setKickoff} />
+                    {widgetPrefs && kickoff && <Widget option={selectedOption} />}
                 </>
             )}
             {isReady === false && (

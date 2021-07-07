@@ -7,8 +7,6 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public static class NodeComponentTypes
         {
             public static string YesNo => DefaultNodeTypeOptions.YesNo.StringName;
-            public static string TooComplicated => DefaultNodeTypeOptions.TooComplicated.StringName;
-            public static string SendResponse => DefaultNodeTypeOptions.SendResponse.StringName;
             public static string YesNoNotSure => DefaultNodeTypeOptions.YesNoNotSure.StringName;
             public static string YesNotSureCombined => DefaultNodeTypeOptions.YesNotSureCombined.StringName;
             public static string NoNotSureCombined => DefaultNodeTypeOptions.NoNotSureCombined.StringName;
@@ -19,10 +17,13 @@ namespace Palavyr.Core.Models.Configuration.Constant
             public static string ProvideInfo => DefaultNodeTypeOptions.ProvideInfo.StringName;
             public static string MultipleChoiceAsPath => DefaultNodeTypeOptions.MultipleChoiceAsPath.StringName;
             public static string MultipleChoiceContinue => DefaultNodeTypeOptions.MultipleChoiceContinue.StringName;
-            public static string SplitMerge => DefaultNodeTypeOptions.SplitMerge.StringName;
-            public static string EvaluateThreshold => DefaultNodeTypeOptions.EvaluateThreshold.StringName;
+
             public static string ShowImage => DefaultNodeTypeOptions.ShowImage.StringName;
+            public static string TooComplicated => DefaultNodeTypeOptions.TooComplicated.StringName;
+            public static string SendResponse => DefaultNodeTypeOptions.SendResponse.StringName;
             public static string EndWithoutEmail => DefaultNodeTypeOptions.EndWithoutEmail.StringName;
+            public static string LoopbackAnchor => DefaultNodeTypeOptions.LoopbackAnchor.StringName;
+            
         }
 
         public static List<NodeTypeOption> DefaultNodeTypeOptionsList => // These get sent to the UI for user selection
@@ -41,10 +42,11 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 new TakeNumberIndividuals(),
                 new SendResponse(),
                 new TooComplicated(),
-                new SplitMerge(),
                 new Anabranch(),
                 new ShowImage(),
-                new EndWithoutEmail()
+                new EndWithoutEmail(),
+                new LoopbackAnchor(),
+                new Loopback()
             };
 
         public static YesNo CreateYesNo() => new YesNo();
@@ -54,8 +56,9 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public static TakeText CreateTakeText() => new TakeText();
         public static ProvideInfo CreateProvideInfo() => new ProvideInfo();
         public static MultipleChoiceContinue CreateMultipleChoiceContinue() => new MultipleChoiceContinue();
+
         public static MultipleChoiceAsPath CreateMultipleChoiceAsPath() => new MultipleChoiceAsPath();
-        public static SplitMerge CreateSplitMerge() => new SplitMerge();
+
         public static Anabranch CreateAnabranch() => new Anabranch();
         public static ShowImage CreateShowImage() => new ShowImage();
 
@@ -63,9 +66,66 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public static TakeNumber CreateTakeNumber() => new TakeNumber();
         public static TakeNumberIndividuals CreateTakeNumberIndividuals() => new TakeNumberIndividuals();
         public static TooComplicated CreateTooComplicated() => new TooComplicated();
+
         public static SendResponse CreateSendResponse() => new SendResponse();
-        public static Restart CreateRestart() => new Restart();
+
+        public static LoopbackAnchor CreateLoopbackAnchor() => new LoopbackAnchor();
+        public static Loopback CreateLoopback() => new Loopback();
+        
+        // public static Restart CreateRestart() => new Restart();
         public static EndWithoutEmail CreateEndWithoutEmail() => new EndWithoutEmail();
+
+        public class LoopbackAnchor : NodeTypeOption
+        {
+            public new static string StringName => nameof(LoopbackAnchor);
+
+            public LoopbackAnchor()
+            {
+                Text = "Loopback Anchor";
+                Value = StringName;
+                PathOptions = new List<string>() {"Continue"};
+                ValueOptions = new List<string>() {"Continue"};
+                IsMultiOptionType = true;
+                IsTerminalType = false;
+                GroupName = Teleport;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = true;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+                IsLoopbackAnchor = true;
+                IsDynamicType = false;
+                NodeComponentType = NodeComponentTypes.MultipleChoiceAsPath;
+                IsCurrency = false;
+                IsMultiOptionEditable = true;
+                NodeTypeCode = NodeTypeCode.VII;
+            }
+        }
+        
+        public class Loopback : NodeTypeOption
+        {
+            public new static string StringName => nameof(Loopback);
+
+            public Loopback()
+            {
+                Text = "Loopback";
+                Value = StringName;
+                PathOptions = new List<string>() {"Continue"};
+                ValueOptions = new List<string>() {"Continue"};
+                IsMultiOptionType = false;
+                IsTerminalType = false;
+                GroupName = Teleport;
+                ShouldRenderChildren = false;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+                IsDynamicType = false;
+                NodeComponentType = NodeComponentTypes.ProvideInfo;
+                IsCurrency = false;
+                IsMultiOptionEditable = false;
+                NodeTypeCode = NodeTypeCode.VIII;
+            }
+        }
+        
 
         public class EndWithoutEmail : NodeTypeOption
         {
@@ -80,15 +140,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = true;
                 GroupName = Terminal;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = false;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.EndWithoutEmail; 
+                NodeComponentType = NodeComponentTypes.EndWithoutEmail;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
+                NodeTypeCode = NodeTypeCode.I;
             }
         }
 
@@ -105,44 +165,19 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoProvide;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.ShowImage; //TODO create widget component
+                NodeComponentType = NodeComponentTypes.ShowImage;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 IsImageNode = true;
+                NodeTypeCode = NodeTypeCode.IX;
             }
         }
 
-        public class EvaluateThreshold : NodeTypeOption
-        {
-            // hidden node
-            public new static string StringName => nameof(EvaluateThreshold);
-
-            public EvaluateThreshold()
-            {
-                Text = "Evaluate Threshold";
-                Value = StringName;
-                PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() {"Continue"};
-                IsMultiOptionType = true;
-                IsTerminalType = false;
-                GroupName = InfoCollection;
-                IsSplitMergeType = false;
-                ShouldRenderChildren = true;
-                ShouldShowMultiOption = false;
-                IsAnabranchType = false;
-                IsAnabranchMergePoint = false;
-                IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.MultipleChoiceAsPath;
-                IsCurrency = false;
-                IsMultiOptionEditable = true;
-            }
-        }
 
         public class Anabranch : NodeTypeOption
         {
@@ -157,43 +192,17 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = SplitAndMerge;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = true;
                 IsAnabranchType = true;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.MultipleChoiceAsPath;
+                NodeComponentType = NodeComponentTypes.MultipleChoiceAsPath;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
+                NodeTypeCode = NodeTypeCode.VI;
             }
         }
-
-        public class SplitMerge : NodeTypeOption
-        {
-            public new static string StringName => nameof(SplitMerge);
-
-            public SplitMerge()
-            {
-                Text = "Split Merge";
-                Value = StringName;
-                PathOptions = new List<string>();
-                ValueOptions = new List<string>();
-                IsMultiOptionType = true;
-                IsTerminalType = false;
-                GroupName = SplitAndMerge;
-                IsSplitMergeType = true;
-                ShouldRenderChildren = true;
-                ShouldShowMultiOption = true;
-                IsAnabranchType = false;
-                IsAnabranchMergePoint = false;
-                IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.MultipleChoiceAsPath;
-                IsCurrency = false;
-                IsMultiOptionEditable = true;
-            }
-        }
-
 
         public class TakeCurrency : NodeTypeOption
         {
@@ -208,15 +217,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.TakeCurrency;
+                NodeComponentType = NodeComponentTypes.TakeCurrency;
                 IsCurrency = true;
                 IsMultiOptionEditable = false;
+                NodeTypeCode = NodeTypeCode.II;
             }
         }
 
@@ -233,15 +242,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.TakeNumber;
+                NodeComponentType = NodeComponentTypes.TakeNumber;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
+                NodeTypeCode = NodeTypeCode.II;
             }
         }
 
@@ -258,15 +267,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.TakeNumber;
+                NodeComponentType = NodeComponentTypes.TakeNumber;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
+                NodeTypeCode = NodeTypeCode.II;
             }
         }
 
@@ -281,20 +290,20 @@ namespace Palavyr.Core.Models.Configuration.Constant
             {
                 Value = StringName;
                 Text = "Yes or No";
-                PathOptions = new List<string>() {"Yes", "No"};
-                ValueOptions = new List<string>() {"Yes", "No"};
+                PathOptions = new List<string>() {"No", "Yes"};
+                ValueOptions = new List<string>() {"No", "Yes"};
                 IsMultiOptionType = true; // set to no if we don't want to allow the node value options presented to the user to change. 
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.YesNo;
+                NodeComponentType = NodeComponentTypes.YesNo;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
+                NodeTypeCode = NodeTypeCode.V;
             }
         }
 
@@ -307,20 +316,20 @@ namespace Palavyr.Core.Models.Configuration.Constant
             {
                 Value = StringName;
                 Text = "Yes, No, Not Sure";
-                PathOptions = new List<string>() {"Yes", "No", "Not Sure"};
-                ValueOptions = new List<string>() {"Yes", "No", "Not Sure"};
+                PathOptions = new List<string>() {"No", "Not Sure", "Yes"};
+                ValueOptions = new List<string>() {"No", "Not Sure", "Yes"};
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.YesNoNotSure;
+                NodeComponentType = NodeComponentTypes.YesNoNotSure;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
+                NodeTypeCode = NodeTypeCode.V;
             }
         }
 
@@ -332,20 +341,20 @@ namespace Palavyr.Core.Models.Configuration.Constant
             {
                 Value = StringName;
                 Text = "Yes / Not Sure, No";
-                PathOptions = new List<string>() {"Yes / Not Sure", "No"};
-                ValueOptions = new List<string>() {"Yes / Not Sure", "No"};
+                PathOptions = new List<string>() {"No", "Yes / Not Sure"};
+                ValueOptions = new List<string>() {"No", "Yes / Not Sure"};
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.YesNotSureCombined;
+                NodeComponentType = NodeComponentTypes.YesNotSureCombined;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
+                NodeTypeCode = NodeTypeCode.V;
             }
         }
 
@@ -357,20 +366,20 @@ namespace Palavyr.Core.Models.Configuration.Constant
             {
                 Text = "Yes, No / Not Sure";
                 Value = StringName;
-                PathOptions = new List<string>() {"Yes", "No / Not Sure"};
-                ValueOptions = new List<string>() {"Yes", "No / Not Sure"};
+                PathOptions = new List<string>() {"No / Not Sure", "Yes"};
+                ValueOptions = new List<string>() {"No / Not Sure", "Yes"};
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.NoNotSureCombined;
+                NodeComponentType = NodeComponentTypes.NoNotSureCombined;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
+                NodeTypeCode = NodeTypeCode.V;
             }
         }
 
@@ -387,15 +396,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoCollection;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.TakeText;
+                NodeComponentType = NodeComponentTypes.TakeText;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
+                NodeTypeCode = NodeTypeCode.II;
             }
         }
 
@@ -412,15 +421,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = false;
                 GroupName = InfoProvide;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.ProvideInfo;
+                NodeComponentType = NodeComponentTypes.ProvideInfo;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
+                NodeTypeCode = NodeTypeCode.II;
             }
         }
 
@@ -437,15 +446,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = true;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.MultipleChoiceAsPath;
+                NodeComponentType = NodeComponentTypes.MultipleChoiceAsPath;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
+                NodeTypeCode = NodeTypeCode.IV;
             }
         }
 
@@ -462,15 +471,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = true;
                 IsTerminalType = false;
                 GroupName = MultipleChoice;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = true;
                 ShouldShowMultiOption = true;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.MultipleChoiceContinue;
+                NodeComponentType = NodeComponentTypes.MultipleChoiceContinue;
                 IsCurrency = false;
                 IsMultiOptionEditable = true;
+                NodeTypeCode = NodeTypeCode.III;
             }
         }
 
@@ -488,15 +497,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = true;
                 GroupName = Terminal;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = false;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.TooComplicated;
+                NodeComponentType = NodeComponentTypes.TooComplicated;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
+                NodeTypeCode = NodeTypeCode.I;
             }
         }
 
@@ -513,84 +522,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsMultiOptionType = false;
                 IsTerminalType = true;
                 GroupName = Terminal;
-                IsSplitMergeType = false;
                 ShouldRenderChildren = false;
                 ShouldShowMultiOption = false;
                 IsAnabranchType = false;
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
-                NodeComponent = NodeComponentTypes.SendResponse;
+                NodeComponentType = NodeComponentTypes.SendResponse;
                 IsMultiOptionEditable = false;
                 IsCurrency = false;
-            }
-        }
-
-        public class SendEmail : NodeTypeOption
-        {
-            public new static string StringName => nameof(SendEmail);
-
-            public SendEmail()
-            {
-                Text = "Send Email";
-                Value = StringName;
-                PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() {"Continue"};
-                IsMultiOptionType = false;
-                IsTerminalType = false;
-                IsSplitMergeType = false;
-                ShouldRenderChildren = true;
-                ShouldShowMultiOption = false;
-                IsAnabranchType = false;
-                IsAnabranchMergePoint = false;
-                IsDynamicType = false;
-                IsMultiOptionEditable = false;
-                IsCurrency = false;
-            }
-        }
-
-        public class SendTooComplicatedEmail : NodeTypeOption
-        {
-            public new static string StringName => nameof(SendTooComplicatedEmail);
-
-            public SendTooComplicatedEmail()
-            {
-                Text = "Send Too Complicated Email";
-                Value = StringName;
-                PathOptions = new List<string>() {"Continue"};
-                ValueOptions = new List<string>() {"Continue"};
-                IsMultiOptionType = false;
-                IsTerminalType = false;
-                IsSplitMergeType = false;
-                ShouldRenderChildren = true;
-                ShouldShowMultiOption = false;
-                IsAnabranchType = false;
-                IsAnabranchMergePoint = false;
-                IsDynamicType = false;
-                IsMultiOptionEditable = false;
-                IsCurrency = false;
-            }
-        }
-
-        public class Restart : NodeTypeOption
-        {
-            public new static string StringName => nameof(Restart);
-
-            public Restart()
-            {
-                Text = "Restart the Chat";
-                Value = StringName;
-                PathOptions = new List<string>() { };
-                ValueOptions = new List<string>() { };
-                IsMultiOptionType = false;
-                GroupName = Terminal;
-                IsSplitMergeType = false;
-                ShouldRenderChildren = true;
-                ShouldShowMultiOption = false;
-                IsAnabranchType = false;
-                IsAnabranchMergePoint = false;
-                IsDynamicType = false;
-                IsMultiOptionEditable = false;
-                IsCurrency = false;
+                NodeTypeCode = NodeTypeCode.I;
             }
         }
     }

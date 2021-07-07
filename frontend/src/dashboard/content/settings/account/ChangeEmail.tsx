@@ -82,8 +82,6 @@ export const ChangeEmail = () => {
                 <SettingsGridRowText
                     fullWidth
                     inputType="email"
-                    useAlert
-                    alertMessage={alertDetails}
                     alertNode={
                         <Alert severity={emailSeverity()}>
                             <AlertTitle className={classes.titleText}>{settings.isVerified ? "Primary Email Verified" : "Verify the primary email address used to send responses."}</AlertTitle>

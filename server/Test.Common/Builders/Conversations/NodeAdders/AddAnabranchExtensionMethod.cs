@@ -22,6 +22,7 @@ namespace Test.Common.Builders.Conversations.NodeAdders
                 "",
                 accountId,
                 DefaultNodeTypeOptions.Anabranch.StringName,
+                NodeTypeCode.VI,
                 false,
                 false,
                 true,

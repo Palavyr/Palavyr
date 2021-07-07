@@ -75,7 +75,7 @@ namespace Palavyr.Core.Data.Migrations.AccountsMigrations
                     b.Property<string>("Password")
                         .HasColumnType("text");
 
-                    b.Property<int>("PaymentInterval")
+                    b.Property<int?>("PaymentInterval")
                         .HasColumnType("integer");
 
                     b.Property<string>("PhoneNumber")

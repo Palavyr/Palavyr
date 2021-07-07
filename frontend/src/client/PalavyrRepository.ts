@@ -3,7 +3,6 @@ import {
     DynamicTableMeta,
     StaticTableMetas,
     StaticTableMetaTemplate,
-    Conversation,
     ConvoTableRow,
     Areas,
     Prices,
@@ -29,6 +28,7 @@ import {
     StaticTableRow,
     PlanTypeMeta,
 } from "@Palavyr-Types";
+import { filterNodeTypeOptionsOnSubscription } from "dashboard/subscriptionFilters/filterConvoNodeTypes";
 import { AxiosClient } from "./AxiosClient";
 import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./clientUtils";
 
@@ -169,17 +169,17 @@ export class PalavyrRepository {
     };
 
     public Conversations = {
-        GetConversation: async (areaIdentifier: string) => this.client.get<Conversation>(`configure-conversations/${areaIdentifier}`),
+        GetConversation: async (areaIdentifier: string) => this.client.get<ConvoNode[]>(`configure-conversations/${areaIdentifier}`),
         GetConversationNode: async (nodeId: string) => this.client.get<ConvoNode>(`configure-conversations/nodes/${nodeId}`),
-        GetNodeOptionsList: async (areaIdentifier: string) => this.client.get<NodeTypeOptions>(`configure-conversations/${areaIdentifier}/node-type-options`),
-        GetErrors: async (areaIdentifier: string, nodeList: Conversation) => this.client.post<TreeErrors, {}>(`configure-conversations/${areaIdentifier}/tree-errors`, { Transactions: nodeList }),
+        GetNodeOptionsList: async (areaIdentifier: string, planTypeMeta: PlanTypeMeta) => filterNodeTypeOptionsOnSubscription(await this.client.get<NodeTypeOptions>(`configure-conversations/${areaIdentifier}/node-type-options`), planTypeMeta),
+        GetErrors: async (areaIdentifier: string, nodeList: ConvoNode[]) => this.client.post<TreeErrors, {}>(`configure-conversations/${areaIdentifier}/tree-errors`, { Transactions: nodeList }),
 
         CheckIfIsMultiOptionType: async (nodeType: string) => this.client.get<boolean>(`configure-conversations/check-multi-option/${nodeType}`),
         CheckIfIsTerminalType: async (nodeType: string) => this.client.get<boolean>(`configure-conversations/check-terminal/${nodeType}`),
         CheckIfIsSplitMergeType: async (nodeType: string) => this.client.get<boolean>(`configure-conversations/check-is-split-merge/${nodeType}`),
 
-        ModifyConversation: async (nodelist: Conversation, areaIdentifier: string) => this.client.put<Conversation, {}>(`configure-conversations/${areaIdentifier}`, { Transactions: nodelist }),
-        ModifyConversationNode: async (nodeId: string, areaIdentifier: string, updatedNode: ConvoTableRow) => this.client.put<Conversation, {}>(`configure-conversations/${areaIdentifier}/nodes/${nodeId}`, updatedNode),
+        ModifyConversation: async (nodelist: ConvoNode[], areaIdentifier: string) => this.client.put<ConvoNode[], {}>(`configure-conversations/${areaIdentifier}`, { Transactions: nodelist }),
+        ModifyConversationNode: async (nodeId: string, areaIdentifier: string, updatedNode: ConvoTableRow) => this.client.put<ConvoNode[], {}>(`configure-conversations/${areaIdentifier}/nodes/${nodeId}`, updatedNode),
 
         // TODO: Deprecate eventually
         EnsureDBIsValid: async () => this.client.post(`configure-conversations/ensure-db-valid`),

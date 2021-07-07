@@ -2,7 +2,7 @@ import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { SetState, TableGroup } from "@Palavyr-Types";
 import { cloneDeep, findIndex, groupBy, uniq } from "lodash";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 import { CategoryNestedThresholdData, TableData } from "@Palavyr-Types";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Palavyr.Core.Models.Configuration.Constant;
@@ -21,7 +22,7 @@ namespace Palavyr.Core.Models.Nodes
             List<StaticTablesMeta> staticTablesMetas)
         {
             var allMissingNodeTypes = new List<string>();
-            
+
             if (requiredDynamicNodeTypes.Length > 0)
             {
                 var rawMissingDynamicNodeTypes = FindMissingNodes(conversationNodes.ToArray(), requiredDynamicNodeTypes);
@@ -50,18 +51,19 @@ namespace Palavyr.Core.Models.Nodes
         {
             return nodeList
                 .Where(
-                    node => node.IsTerminalType 
-                            && node.NodeType != DefaultNodeTypeOptions.TooComplicated.StringName 
+                    node => node.IsTerminalType
+                            && node.NodeType != DefaultNodeTypeOptions.TooComplicated.StringName
                             && node.NodeType != DefaultNodeTypeOptions.EndWithoutEmail.StringName)
                 .ToArray();
         }
-        
+
         public NodeTypeOption[] SearchTerminalResponseBranchesForMissingRequiredNodes(
             ConversationNode node,
             ConversationNode[] nodeList,
             NodeTypeOption[] requiredNodes // array of node type names
         )
         {
+            Console.WriteLine("SOME STUFF");
             var requiredNodesClone = new List<NodeTypeOption>(requiredNodes);
             if (requiredNodesClone.Select(x => x.Value).Contains(node.NodeType))
             {

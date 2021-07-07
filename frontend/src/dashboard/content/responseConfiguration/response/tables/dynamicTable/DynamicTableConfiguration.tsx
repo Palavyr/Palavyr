@@ -2,7 +2,7 @@ import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import React, { useState, useCallback, useEffect, Suspense, useContext } from "react";
 import { DynamicTableMetas, TableNameMap } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
-import { Typography, Button, Tooltip } from "@material-ui/core";
+import { Typography, Button } from "@material-ui/core";
 import { SingleDynamicFeeTable } from "./SingleDynamicFeeTable";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { isDevelopmentStage } from "@api-client/clientUtils";

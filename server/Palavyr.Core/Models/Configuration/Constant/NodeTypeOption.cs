@@ -11,12 +11,18 @@ namespace Palavyr.Core.Models.Configuration.Constant
     {
         // Groups
         public static readonly string MultipleChoice = "Multiple Choice";
+        public static readonly string Teleport = "Teleport";
         public static readonly string InfoCollection = "Info Collection";
         public static readonly string InfoProvide = "Provide Info";
         public static readonly string CustomTables = "Custom Tables";
         public static readonly string Terminal = "Terminal";
         public static readonly string SplitAndMerge = "Split then Merge";
         public static readonly string Other = "Other";
+
+        /*
+         * The string form name of the node type. Derived from either 'nameof(T)' or extension method: dynamicTableMeta.MakeUniqueIdentifier()
+         */
+        public NodeTypeCode NodeTypeCode { get; set; }
 
         /*
          * The string form name of the node type. Derived from either 'nameof(T)' or extension method: dynamicTableMeta.MakeUniqueIdentifier()
@@ -82,7 +88,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         /*
          * The string identifier of the node component Type
          */
-        public string NodeComponent { get; set; }
+        public string NodeComponentType { get; set; }
 
         /*
          * Whether or not the response value is currency
@@ -110,12 +116,17 @@ namespace Palavyr.Core.Models.Configuration.Constant
          * The widget will use this to key the collection of dynamic type responses.
          */
         public string? DynamicType { get; set; }
-        
+
         /*
          * Used to indicate whether or not this node provides an image in the chat. In the dashboard, used to determine whether
          * or not to show the image upload component.
          */
         public bool IsImageNode { get; set; }
+
+        /*
+         * Used to indicate if this nodeOption is a loopback anchor.
+         */
+        public bool IsLoopbackAnchor { get; set; }
 
         public virtual string StringName => null!;
 
@@ -128,7 +139,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             bool isMultiOptionType,
             bool isTerminalType,
             string groupName,
-            string nodeComponent,
+            string nodeComponentType,
             bool isMultiOptionEditable = true,
             bool isCurrency = false,
             bool isAnabranchType = false,
@@ -137,7 +148,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
             bool shouldRenderChildren = true,
             bool shouldShowMultiOption = false,
             int? resolveOrder = null,
-            string? dynamicType = null
+            string? dynamicType = null,
+            bool loopbackAnchor = false
         )
         {
             return new NodeTypeOption()
@@ -150,7 +162,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsTerminalType = isTerminalType,
                 IsDynamicType = isDynamicType,
                 GroupName = groupName,
-                NodeComponent = nodeComponent,
+                NodeComponentType = nodeComponentType,
                 IsCurrency = isCurrency,
                 IsMultiOptionEditable = isMultiOptionEditable,
                 IsAnabranchType = isAnabranchType,
@@ -159,7 +171,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldRenderChildren = shouldRenderChildren,
                 ShouldShowMultiOption = shouldShowMultiOption,
                 ResolveOrder = resolveOrder,
-                DynamicType = dynamicType
+                DynamicType = dynamicType,
+                IsLoopbackAnchor = loopbackAnchor
             };
         }
     }

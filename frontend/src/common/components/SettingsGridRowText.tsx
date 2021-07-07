@@ -2,9 +2,7 @@ import * as React from "react";
 import { Paper, Grid, TextField, makeStyles, Typography, Divider } from "@material-ui/core";
 import { useState } from "react";
 import { SinglePurposeButton } from "./SinglePurposeButton";
-import { AlertMessage } from "./SaveOrCancel";
 import NumberFormat from "react-number-format";
-import { PalavyrAlert } from "./PalavyrAlert";
 import { PalavyrSnackbar } from "./PalavyrSnackbar";
 
 export interface ISettingsGridRow {
@@ -16,9 +14,8 @@ export interface ISettingsGridRow {
     alertNode?: React.ReactNode;
     inputType?: "email" | "text" | "number" | "phone";
     fullWidth?: boolean;
-    useAlert?: boolean;
-    alertMessage?: AlertMessage;
     locale?: string;
+    successText?: string;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -41,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ locale, useAlert, alertMessage, fullWidth, inputType, alertNode, placeholder, onClick, currentValue, clearVal = false, buttonText = "Update" }: ISettingsGridRow) => {
+export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ successText, locale, fullWidth, inputType, alertNode, placeholder, onClick, currentValue, clearVal = false, buttonText = "Update" }: ISettingsGridRow) => {
     const [inputVal, setInputVal] = useState<string>();
     const [inputValStatus, setInputValStatus] = useState<string | null>(null);
     const [alertState, setAlertState] = useState<boolean>(false);
@@ -88,7 +85,15 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ locale, useAle
                                 />
                             )}
                             {inputType === "number" && null}
-                            {inputType === "phone" && <NumberFormat format={locale === "en-AU" ? "+61 (##) ####-####" : "+1 (###) ###-####"} mask="_" type="tel" onValueChange={(values) => setInputVal(values.formattedValue)} className={cls.phone} />}
+                            {inputType === "phone" && (
+                                <NumberFormat
+                                    format={locale === "en-AU" ? "+61 (##) ####-####" : "+1 (###) ###-####"}
+                                    mask="_"
+                                    type="tel"
+                                    onValueChange={(values) => setInputVal(values.formattedValue)}
+                                    className={cls.phone}
+                                />
+                            )}
                         </Grid>
                     )}
                 </Grid>
@@ -110,8 +115,8 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ locale, useAle
                         variant="outlined"
                         color="primary"
                         buttonText={buttonText}
-                        onClick={() => {
-                            const res = onClick(inputVal);
+                        onClick={async () => {
+                            const res = await onClick(inputVal);
                             if (clearVal === true) {
                                 setInputVal("");
                             }
@@ -122,7 +127,7 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ locale, useAle
                     />
                 </div>
             </Paper>
-            <PalavyrSnackbar successText="Phone Number successfully updated." successOpen={alertState} setSuccessOpen={setAlertState} />
+            <PalavyrSnackbar successText={successText} successOpen={alertState} setSuccessOpen={setAlertState} />
         </>
     );
 };

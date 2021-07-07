@@ -25,14 +25,24 @@ export const sortByPropertyNumeric = (numberPropertyGetter: (x: object) => numbe
     });
 };
 
-function compareValues<T> (valA: T, valB: T, reverse: boolean) {
+export const sortArrayOfObjects = (array: Array<Object>, reverse: boolean = false) => {
+    return array.sort((a: Object, b: Object) => {
+        const valA = Object.keys(a)[0];
+        const valB = Object.keys(b)[0];
 
+        if (valA == null || valB == null) {
+            return 0;
+        }
+        return compareValues(valA, valB, reverse);
+    });
+};
+
+function compareValues<T>(valA: T, valB: T, reverse: boolean) {
     if (valA < valB) {
         return reverse ? 1 : -1;
     }
     if (valA > valB) {
-        return  reverse ? -1 : 1;
+        return reverse ? -1 : 1;
     }
     return 0;
-
 }

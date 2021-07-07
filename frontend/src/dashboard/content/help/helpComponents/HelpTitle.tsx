@@ -8,7 +8,6 @@ export const HelpTitle = ({ title }: IHelpTitle) => {
     return (
         <>
             <Typography align="center" variant="h4">
-                {" "}
                 {title}
             </Typography>
             <Divider />

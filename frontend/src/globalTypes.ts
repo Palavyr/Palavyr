@@ -1,4 +1,5 @@
 import { COULD_NOT_FIND_SERVER, GOOGLE_ACCOUNT_NOT_FOUND, INVALID_EMAIL, INVALID_GOOGLE_TOKEN, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, NOT_A_GOOGLE_ACCOUNT, VERIFICATION_EMAIL_SEND } from "@constants";
+import { PalavyrLinkedList } from "dashboard/content/responseConfiguration/conversation/PalavyrDataStructure/PalavyrLinkedList";
 import { Dispatch, SetStateAction } from "react";
 // / <reference types="node" />
 // / <reference types="react" />
@@ -25,6 +26,17 @@ export type AnyVoidFunction = (...args: any[]) => void;
 export type SetState<T> = Dispatch<SetStateAction<T>>;
 export type TableGroup<T> = {
     [itemGroup: string]: T;
+};
+
+export type LineStyles = "solid" | "-moz-initial" | "inherit" | "initial" | "revert" | "unset" | "dashed" | "dotted" | "double" | "groove" | "hidden" | "inset" | "none" | "outset" | "ridge" | undefined;
+
+export type Anchor = "top" | "left" | "middle" | "center" | "bottom" | "right";
+export type Selector = string;
+
+export type Milliseconds = string;
+export type ParsedAnchor = {
+    x: number;
+    y: number;
 };
 
 // Database
@@ -75,30 +87,34 @@ export type Responses = Array<Response>;
 export const ValueOptionDelimiter = "|peg|";
 
 export type ConvoNode = {
+    // these properties are written to the database
+    id?: number | undefined;
+    areaIdentifier: string;
+
+    isRoot: boolean;
+    nodeId: string;
     isTerminalType: boolean;
     isMultiOptionType: boolean;
-    nodeId: string;
-    nodeType: string;
-    fallback: boolean;
     text: string;
     nodeChildrenString: string;
     isCritical: boolean;
-    isRoot: boolean;
-    areaIdentifier: string;
-    optionPath: Response;
-    valueOptions: string; // an array, but bc of the dtabase we store as a string delimited by |peg|
-    id?: number | undefined;
-    shouldRenderChildren: boolean;
-    isSplitMergeType: boolean;
-    shouldShowMultiOption: boolean;
     isAnabranchType: boolean;
     isAnabranchMergePoint: boolean;
+
+    isLoopbackAnchorType: boolean;
+
+    nodeType: string;
+    optionPath: Response;
+    valueOptions: string; // an array, but bc of the dtabase we store as a string delimited by |peg|
+    shouldRenderChildren: boolean;
+    shouldShowMultiOption: boolean;
     nodeComponentType: string;
     isDynamicTableNode: boolean;
     isImageNode: boolean;
     imageId: string | null;
     resolveOrder: number;
     dynamicType: string | null;
+    nodeTypeCode: NodeTypeCode;
 };
 
 export type Conversation = Array<ConvoNode>;
@@ -393,6 +409,18 @@ export type PhoneSettingsResponse = {
     locale: string;
 };
 
+export enum NodeTypeCode {
+    I,
+    II,
+    III,
+    IV,
+    V,
+    VI, // anabranch
+    VII, // loopback anchor
+    VIII, // loopback terminal,
+    IX, // image node type
+}
+
 export type NodeOption = {
     groupName: string;
     isAnabranchMergePoint: boolean;
@@ -403,10 +431,10 @@ export type NodeOption = {
     isMultiOptionType: boolean;
     isSplitMergeType: boolean;
     isTerminalType: boolean;
-    nodeComponent: string;
+    nodeComponentType: string;
     pathOptions: Array<Response>;
     resolveOrder: number;
-    shouldRenderChildren: boolean; // TODO: is this used?
+    shouldRenderChildren: boolean;
     shouldShowMultiOption: boolean;
     stringName: string | null; // TODO: this is always null - used?
     text: string;
@@ -415,9 +443,10 @@ export type NodeOption = {
     dynamicType: string | null;
     isImageNode: boolean;
     imageId: string | null;
+    nodeTypeCode: NodeTypeCode; // passed to the node changer via the nodeOptions
+    isLoopbackAnchor: boolean;
 };
 
-// export type NodeTypeOptions = {[index: string]: NodeOptions};
 export type NodeTypeOptions = NodeOption[];
 
 export type RequiredDetails = {
@@ -463,8 +492,7 @@ export type PlanTypeMeta = {
 
     planType: PurchaseTypes;
     isFreePlan: boolean;
-}
-
+};
 
 export type ProductOption = {
     card: React.ReactNode;
@@ -643,7 +671,7 @@ export type AnabranchMeta = {
 
 export type NodeId = string;
 
-export type NodeSetterWithHistory = (value: React.SetStateAction<Conversation>) => void;
+export type NodeSetterWithHistory = (value: React.SetStateAction<PalavyrLinkedList>) => void;
 
 export type NodeIdentity = {
     // splitmerge
@@ -799,3 +827,66 @@ export type AreaNameDetail = {
 export type AreaNameDetails = AreaNameDetail[];
 
 export type SnackbarPositions = "tr" | "t" | "tl" | "bl" | "b" | "br";
+
+export type EmptyComponentType = React.ComponentType<{}>;
+
+export type LineLink = {
+    from: string;
+    to: string;
+};
+export type LineMap = LineLink[];
+
+export type LoopbackContext = {
+    loopbackOriginId: string;
+};
+
+export type AnabranchContext = {
+    anabranchOriginId: string; // the node Id of the anabranch root node
+    leftmostAnabranch: boolean;
+};
+
+export interface IDashboardContext {
+    accountTypeNeedsPassword: boolean;
+    checkAreaCount(): void;
+    areaName: string;
+    setViewName: SetState<string>;
+    currencySymbol: string;
+    setIsLoading: SetState<boolean>;
+    successText: string;
+    successOpen: boolean;
+    setSuccessOpen: SetState<boolean>;
+    setSuccessText: SetState<string>;
+    warningText: string;
+    warningOpen: boolean;
+    setWarningOpen: SetState<boolean>;
+    setWarningText: SetState<string>;
+    errorText: string;
+    errorOpen: boolean;
+    setErrorOpen: SetState<boolean>;
+    setErrorText: SetState<string>;
+    setSnackPosition: SetState<SnackbarPositions>;
+    snackPosition: SnackbarPositions;
+    unseenNotifications: number;
+    setUnseenNotifications: SetState<number>;
+    planTypeMeta: PlanTypeMeta | undefined;
+}
+
+export interface IAuthContext {
+    isActive: boolean;
+    isAuthenticated: boolean;
+}
+
+export interface IConversationHistoryTracker {
+    addConversationHistoryToQueue(dirtyConversationRecord: PalavyrLinkedList, conversationHistoryPosition: number, conversationHistory: PalavyrLinkedList[]): void;
+    stepConversationBackOneStep(conversationHistoryPosition: number, conversationHistory: PalavyrLinkedList[]): void;
+    stepConversationForwardOneStep(conversationHistoryPosition: number, conversationHistory: PalavyrLinkedList[]): void;
+}
+
+export interface IConversationTreeContext {
+    setNodes: NodeSetterWithHistory;
+    historyTracker: IConversationHistoryTracker;
+    conversationHistory: PalavyrLinkedList[];
+    conversationHistoryPosition: number;
+    nodeTypeOptions: NodeTypeOptions;
+    showDebugData: boolean;
+}

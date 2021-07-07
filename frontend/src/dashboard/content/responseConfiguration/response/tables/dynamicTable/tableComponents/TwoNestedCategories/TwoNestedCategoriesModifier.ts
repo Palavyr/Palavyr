@@ -2,7 +2,7 @@ import { SetState, TableData, TwoNestedCategoryData } from "@Palavyr-Types";
 import { cloneDeep, findIndex, groupBy, max, uniq } from "lodash";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { TableGroup } from "@Palavyr-Types";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
 export class TwoNestedCategoriesModifier {

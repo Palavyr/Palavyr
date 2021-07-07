@@ -51,11 +51,6 @@ export const ChangeCompanyName = () => {
                 onClick={handleCompanyNameChange}
                 clearVal={true}
                 currentValue={companyName}
-                useAlert
-                alertMessage={{
-                    title: "Successfully updated",
-                    message: "",
-                }}
                 alertNode={
                     <Alert severity={companyName === "" ? "error" : "success"}>
                         <AlertTitle className={classes.titleText}>{companyName === "" ? "Please set your company name." : "Company / Business name."}</AlertTitle>

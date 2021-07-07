@@ -24,7 +24,6 @@ namespace Test.Common.Builders.Conversations
                 Text = "Root Node",
                 AreaIdentifier = areaIdentifier,
                 AccountId = accountId,
-                Fallback = false,
             };
         }
     }

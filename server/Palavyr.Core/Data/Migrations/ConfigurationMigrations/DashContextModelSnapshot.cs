@@ -98,9 +98,6 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                     b.Property<string>("DynamicType")
                         .HasColumnType("text");
 
-                    b.Property<bool>("Fallback")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("ImageId")
                         .HasColumnType("text");
 
@@ -122,6 +119,9 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                     b.Property<bool>("IsImageNode")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsLoopbackAnchorType")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsMultiOptionEditable")
                         .HasColumnType("boolean");
 
@@ -129,9 +129,6 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsRoot")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsSplitMergeType")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsTerminalType")
@@ -148,6 +145,9 @@ namespace Palavyr.Core.Data.Migrations.ConfigurationMigrations
 
                     b.Property<string>("NodeType")
                         .HasColumnType("text");
+
+                    b.Property<int>("NodeTypeCode")
+                        .HasColumnType("integer");
 
                     b.Property<string>("OptionPath")
                         .HasColumnType("text");
