@@ -88,7 +88,6 @@ class AnabranchConfigurer {
                 }
                 NodeTypeOptionConfigurer.RecursivelyReconfigureNodeTypeOptions(child, nodeTypeOptions);
             });
-
         }
         node.UpdateTree();
     }

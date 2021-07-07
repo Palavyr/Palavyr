@@ -23,14 +23,14 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         }
 
         if (currentNode.nodeTypeCode === NodeTypeCode.IX && nodeOption.nodeTypeCode !== NodeTypeCode.IX) {
-            currentNode = this.ConverFromImageNodeToTextNode(currentNode, nodeTypeOptions);
+            currentNode = this.ConvertFromImageNodeToTextNode(currentNode, nodeTypeOptions);
         }
 
         this.resetNodeProperties(nodeOption, currentNode);
 
         switch (nodeOption.nodeTypeCode) {
             case NodeTypeCode.I:
-                this.ConvertToType_I_Node(nodeOption, currentNode);
+                this.ConvertToType_I_Node(nodeOption, currentNode, nodeTypeOptions);
                 break;
 
             case NodeTypeCode.II:
@@ -68,6 +68,10 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
             default:
                 throw new Error("NodeTypeCode unable to be identified. FIX THAT YO.");
         }
+        if (currentNode.parentNodeReferences.Length === 1) {
+            const parentNode = currentNode.parentNodeReferences.retrieveLeftmostReference()!;
+            parentNode.sortChildReferences();
+        }
     }
 
     // Converts current node to a Type I node
@@ -83,10 +87,10 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     // - remove child references (no child ref actions)
     // - set value options = ["Terminal"]
 
-    private ConvertToType_I_Node(nodeOption: NodeOption, currentNode: IPalavyrNode) {
+    private ConvertToType_I_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         currentNode.childNodeReferences.Clear();
         currentNode.setValueOptions(["Terminal"]);
-        currentNode.UpdateTree();
+        currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
     }
 
     // Type II
@@ -108,7 +112,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         this.createOrTruncateChildNodes(currentNode, typeIIvalueOptions, nodeTypeOptions);
         currentNode.childNodeReferences.applyOptionPaths(typeIIvalueOptions);
         currentNode.setValueOptions(typeIIvalueOptions);
-        currentNode.UpdateTree();
+        currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
     }
 
     // Type III
@@ -139,7 +143,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
             currentNode.childNodeReferences.truncateAt(1); // only take the first child node
             currentNode.childNodeReferences.applyOptionPaths(["Continue"]);
         }
-        currentNode.UpdateTree();
+        currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
     }
 
     // Type IV
@@ -163,7 +167,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
 
         // child reference
         this.createOrTruncateChildNodes(currentNode, currentNode.getValueOptions(), nodeTypeOptions);
-        currentNode.UpdateTree();
+        currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
     }
 
     //     Type V
@@ -191,7 +195,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
 
         // child ref choice outcome labels
         currentNode.childNodeReferences.applyOptionPaths(nodeOption.valueOptions);
-        currentNode.UpdateTree();
+        currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
     }
 
     // Type VI
@@ -257,10 +261,10 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
 
     private ConvertToType_IX_Node(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         this.ConvertFromTextNodeToImageNode(currentNode, nodeTypeOptions);
-        currentNode.UpdateTree();
+        currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
     }
 
-    private ConverFromImageNodeToTextNode(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    private ConvertFromImageNodeToTextNode(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         const newTextNode = currentNode.palavyrLinkedList.createTextNode(
             currentNode.palavyrLinkedList,
             currentNode.repository,
@@ -274,6 +278,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
             parentNode.childNodeReferences.removeReference(currentNode);
             parentNode.childNodeReferences.addReference(newTextNode);
             newTextNode.addLine(parentNode.nodeId);
+            parentNode.sortChildReferences();
         });
         currentNode.childNodeReferences.forEach((childNode: IPalavyrNode) => {
             childNode.parentNodeReferences.removeReference(currentNode);
@@ -297,6 +302,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         currentNode.parentNodeReferences.forEach((parentNode: IPalavyrNode) => {
             parentNode.childNodeReferences.removeReference(currentNode);
             parentNode.childNodeReferences.addReference(newImageNode);
+            parentNode.sortChildReferences();
             newImageNode.addLine(parentNode.nodeId);
         });
         currentNode.childNodeReferences.forEach((childNode: IPalavyrNode) => {
