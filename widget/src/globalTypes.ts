@@ -1,5 +1,6 @@
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { ElementType } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 export type SecretKey = string | null;
 
@@ -7,6 +8,7 @@ export type AreaTable = {
     areaIdentifier: string;
     areaDisplayTitle: string;
 };
+export type SetState<T> = Dispatch<SetStateAction<T>>;
 
 export type WidgetNodeResource = {
     areaIdentifier: string;
