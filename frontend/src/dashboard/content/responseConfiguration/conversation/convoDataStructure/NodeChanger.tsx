@@ -23,7 +23,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         }
 
         if (currentNode.nodeTypeCode === NodeTypeCode.IX && nodeOption.nodeTypeCode !== NodeTypeCode.IX) {
-            currentNode = this.ConvertFromImageNodeToTextNode(currentNode, nodeTypeOptions);
+            currentNode = this.ConvertToTextNode(currentNode, nodeTypeOptions);
         }
 
         this.resetNodeProperties(nodeOption, currentNode);
@@ -260,35 +260,11 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     }
 
     private ConvertToType_IX_Node(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
-        this.ConvertFromTextNodeToImageNode(currentNode, nodeTypeOptions);
+        this.ConvertToImageNode(currentNode, nodeTypeOptions);
         currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
     }
 
-    private ConvertFromImageNodeToTextNode(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
-        const newTextNode = currentNode.palavyrLinkedList.createTextNode(
-            currentNode.palavyrLinkedList,
-            currentNode.repository,
-            currentNode.compileConvoNode(currentNode.palavyrLinkedList.areaId),
-            currentNode.setTreeWithHistory,
-            currentNode.isMemberOfLeftmostBranch
-        );
-        newTextNode.parentNodeReferences = currentNode.parentNodeReferences;
-        newTextNode.childNodeReferences = currentNode.childNodeReferences;
-        currentNode.parentNodeReferences.forEach((parentNode: IPalavyrNode) => {
-            parentNode.childNodeReferences.removeReference(currentNode);
-            parentNode.childNodeReferences.addReference(newTextNode);
-            newTextNode.addLine(parentNode.nodeId);
-            parentNode.sortChildReferences();
-        });
-        currentNode.childNodeReferences.forEach((childNode: IPalavyrNode) => {
-            childNode.parentNodeReferences.removeReference(currentNode);
-            childNode.parentNodeReferences.addReference(newTextNode);
-        });
-        this.createOrTruncateChildNodes(newTextNode, ["Continue"], nodeTypeOptions);
-        return newTextNode;
-    }
-
-    private ConvertFromTextNodeToImageNode(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    private ConvertToImageNode(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         const newImageNode = currentNode.palavyrLinkedList.createImageNode(
             currentNode.palavyrLinkedList,
             currentNode.repository,
@@ -311,6 +287,39 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         });
 
         this.createOrTruncateChildNodes(newImageNode, ["Continue"], nodeTypeOptions);
+        if (newImageNode.isRoot) {
+            newImageNode.palavyrLinkedList.rootNode = newImageNode;
+        }
+        newImageNode.childNodeReferences.applyOptionPaths(["Continue"]);
+    }
+
+    private ConvertToTextNode(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+        const newTextNode = currentNode.palavyrLinkedList.createTextNode(
+            currentNode.palavyrLinkedList,
+            currentNode.repository,
+            currentNode.compileConvoNode(currentNode.palavyrLinkedList.areaId),
+            currentNode.setTreeWithHistory,
+            currentNode.isMemberOfLeftmostBranch
+        );
+        newTextNode.parentNodeReferences = currentNode.parentNodeReferences;
+        newTextNode.childNodeReferences = currentNode.childNodeReferences;
+        currentNode.parentNodeReferences.forEach((parentNode: IPalavyrNode) => {
+            parentNode.childNodeReferences.removeReference(currentNode);
+            parentNode.childNodeReferences.addReference(newTextNode);
+            newTextNode.addLine(parentNode.nodeId);
+            parentNode.sortChildReferences();
+        });
+        currentNode.childNodeReferences.forEach((childNode: IPalavyrNode) => {
+            childNode.parentNodeReferences.removeReference(currentNode);
+            childNode.parentNodeReferences.addReference(newTextNode);
+        });
+        this.createOrTruncateChildNodes(newTextNode, ["Continue"], nodeTypeOptions);
+
+        if (newTextNode.isRoot) {
+            newTextNode.palavyrLinkedList.rootNode = newTextNode;
+        }
+
+        return newTextNode;
     }
 
     public async createOrTruncateChildNodes(currentNode: IPalavyrNode, valueOptions: string[], nodeTypeOptions: NodeTypeOptions) {
