@@ -132,8 +132,8 @@ export abstract class PalavyrNodeBase implements IPalavyrNode {
         this.isMemberOfLeftmostBranch = leftmostBranch;
         this.setTreeWithHistory = setTreeWithHistory;
 
-        this.isAnabranchLocked = false; // TODO set this dynamically
-        this.shouldDisableNodeTypeSelector = false; // todo set this dynamically
+        this.isAnabranchLocked = false;
+        this.shouldDisableNodeTypeSelector = false;
     }
 
     abstract renderNodeEditor(): ({ editorIsOpen, closeEditor }) => JSX.Element;
@@ -143,10 +143,8 @@ export abstract class PalavyrNodeBase implements IPalavyrNode {
         this.setTreeWithHistory(this.palavyrLinkedList);
     }
 
-    public removeSelf(nodeTypeOptions: NodeTypeOptions) {
+    public unsetSelf(nodeTypeOptions: NodeTypeOptions) {
         if (this.isRoot) {
-            // TODO - how to reset the root node?
-            // get the palavyr linked list, and remove the root node, and add default node as root
             this.childNodeReferences.Clear();
             this.palavyrLinkedList.resetRootNode();
         } else {
