@@ -22,6 +22,19 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
             AnabranchConfigurer.ClearAnabranchContext(currentNode);
         }
 
+        if (currentNode.nodeTypeCode === NodeTypeCode.VII && nodeOption.nodeTypeCode !== NodeTypeCode.VII) {
+            // this.unsetLoopbackTerminalNodes(currentNode);
+            const recurse = (childNodeReferences: INodeReferences) => {
+                childNodeReferences.forEach((childNode: IPalavyrNode) => {
+                    if (childNode.nodeType === "Loopback") {
+                        childNode.unsetSelf(nodeTypeOptions);
+                    }
+                    recurse(childNode.childNodeReferences);
+                });
+            };
+            recurse(currentNode.childNodeReferences);
+        }
+
         if (currentNode.nodeTypeCode === NodeTypeCode.IX && nodeOption.nodeTypeCode !== NodeTypeCode.IX) {
             currentNode = this.ConvertToTextNode(currentNode, nodeTypeOptions);
         }
@@ -223,15 +236,15 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
             currentNode.childNodeReferences.applyOptionPaths(currentNode.getValueOptions());
         }
 
-        // need to walk down the left most children (if there are any) and if the left most branch is a terminal
-        // type, then it needs to be deleted.
         const recurse = (childNodeReference: IPalavyrNode) => {
             if (childNodeReference.isTerminal) {
                 childNodeReference.unsetSelf(nodeTypeOptions);
                 return;
             }
             if (childNodeReference.nodeType === "Loopback") return;
-            recurse(childNodeReference.childNodeReferences.retrieveLeftmostReference()!);
+            if (childNodeReference.childNodeReferences.Length > 0) {
+                recurse(childNodeReference.childNodeReferences.retrieveLeftmostReference()!);
+            }
         };
 
         if (currentNode.childNodeReferences.Length > 0) {

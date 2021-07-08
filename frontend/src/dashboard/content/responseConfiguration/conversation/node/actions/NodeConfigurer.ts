@@ -12,11 +12,14 @@ export class NodeConfigurer {
             LoopbackAnchorConfigurer.ConfigureLoopbackAnchorWhenRoot(currentNode);
         } else if (parentNode !== null) {
             currentNode.parentNodeReferences.addReference(parentNode);
-            if (currentNode.nodeTypeCode !== NodeTypeCode.VIII) { //
-                currentNode.addLine(parentNode.nodeId);
-            } else {
-                console.log("WOW");
 
+            if (currentNode.nodeTypeCode !== NodeTypeCode.VII) {
+                currentNode.addLine(parentNode.nodeId);
+            }
+            if (currentNode.nodeTypeCode === NodeTypeCode.VII) {
+                if (parentNode.nodeTypeCode !== NodeTypeCode.VIII) {
+                    currentNode.addLine(parentNode.nodeId);
+                }
             }
             AnabranchConfigurer.configureAnabranch(currentNode, parentNode, nodeTypeOptions);
             LoopbackAnchorConfigurer.ConfigureLoopbackAnchor(currentNode, parentNode);

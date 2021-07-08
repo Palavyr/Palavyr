@@ -79,7 +79,6 @@ export const StructuredConvoTree = () => {
             setIsLoading(false);
             setConversationHistory([cloneDeep(nodesLinkedList)]);
         }
-
     }, [areaIdentifier, planTypeMeta]);
 
     useEffect(() => {
@@ -136,7 +135,7 @@ export const StructuredConvoTree = () => {
         }
     };
 
-    const [paddingBuffer, setPaddingBuffer] = useState<number>(2);
+    const [paddingBuffer, setPaddingBuffer] = useState<number>(1);
     const Tree = linkedNodeList !== undefined ? linkedNodeList.renderNodeTree(paddingBuffer) : null;
 
     return (
@@ -168,13 +167,12 @@ export const StructuredConvoTree = () => {
                 >
                     Redo
                 </Button>
-
                 <Button
                     variant="contained"
                     className={cls.convoTreeMetaButtons}
-                    endIcon={<AddIcon />}
+                    endIcon={<RemoveIcon />}
                     onClick={() => {
-                        if (paddingBuffer < 10) setPaddingBuffer(paddingBuffer + 1);
+                        if (paddingBuffer > 0.5) setPaddingBuffer(paddingBuffer - 0.5);
                     }}
                 >
                     Spacing
@@ -182,9 +180,9 @@ export const StructuredConvoTree = () => {
                 <Button
                     variant="contained"
                     className={cls.convoTreeMetaButtons}
-                    endIcon={<RemoveIcon />}
+                    endIcon={<AddIcon />}
                     onClick={() => {
-                        if (paddingBuffer > 1) setPaddingBuffer(paddingBuffer - 1);
+                        if (paddingBuffer < 10) setPaddingBuffer(paddingBuffer + 0.5);
                     }}
                 >
                     Spacing
