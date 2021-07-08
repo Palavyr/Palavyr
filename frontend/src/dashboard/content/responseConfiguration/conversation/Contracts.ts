@@ -72,7 +72,7 @@ export interface IPalavyrNode {
     recursiveReferenceThisAnabranchOrigin(node: IPalavyrNode): void;
     dereferenceThisAnabranchMergePoint(anabranchOriginNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions): void;
     UpdateTree(): void;
-    removeSelf(nodeTypeOptions: NodeTypeOptions): void;
+    unsetSelf(nodeTypeOptions: NodeTypeOptions): void;
     nodeIsSet(): boolean;
     nodeIsNotSet(): boolean;
     setValueOptions(newValueOptions: string[]): void;

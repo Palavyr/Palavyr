@@ -143,7 +143,7 @@ export abstract class PalavyrNodeBase implements IPalavyrNode {
         this.setTreeWithHistory(this.palavyrLinkedList);
     }
 
-    public removeSelf(nodeTypeOptions: NodeTypeOptions) {
+    public unsetSelf(nodeTypeOptions: NodeTypeOptions) {
         if (this.isRoot) {
             // TODO - how to reset the root node?
             // get the palavyr linked list, and remove the root node, and add default node as root

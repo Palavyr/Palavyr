@@ -1,5 +1,5 @@
 import { NodeOption, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
-import { IPalavyrNode } from "../../Contracts";
+import { INodeReferences, IPalavyrNode } from "../../Contracts";
 import AnabranchConfigurer from "./AnabranchConfigurer";
 import { NodeCreator } from "./NodeCreator";
 
@@ -30,19 +30,19 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
 
         switch (nodeOption.nodeTypeCode) {
             case NodeTypeCode.I:
-                this.ConvertToType_I_Node(nodeOption, currentNode, nodeTypeOptions);
+                this.ConvertToType_I_Node(currentNode, nodeTypeOptions);
                 break;
 
             case NodeTypeCode.II:
-                this.ConvertToType_II_Node(nodeOption, currentNode, nodeTypeOptions);
+                this.ConvertToType_II_Node(currentNode, nodeTypeOptions);
                 break;
 
             case NodeTypeCode.III:
-                this.ConvertToType_III_Node(nodeOption, currentNode, nodeTypeOptions);
+                this.ConvertToType_III_Node(currentNode, nodeTypeOptions);
                 break;
 
             case NodeTypeCode.IV:
-                this.ConvertToType_IV_Node(nodeOption, currentNode, nodeTypeOptions);
+                this.ConvertToType_IV_Node(currentNode, nodeTypeOptions);
                 break;
 
             case NodeTypeCode.V:
@@ -50,15 +50,15 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
                 break;
 
             case NodeTypeCode.VI: // anabranch
-                this.ConvertToType_VI_Node(nodeOption, currentNode, nodeTypeOptions);
+                this.ConvertToType_VI_Node(currentNode, nodeTypeOptions);
                 break;
 
             case NodeTypeCode.VII: // loopback anchor
-                this.ConvertToType_VII_Node(nodeOption, currentNode, nodeTypeOptions);
+                this.ConvertToType_VII_Node(currentNode, nodeTypeOptions);
                 break;
 
             case NodeTypeCode.VIII: // loopback point
-                this.ConvertToType_VIII_Node(nodeOption, currentNode, nodeTypeOptions);
+                this.ConvertToType_VIII_Node(currentNode, nodeTypeOptions);
                 break;
 
             case NodeTypeCode.IX: // image node
@@ -87,7 +87,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     // - remove child references (no child ref actions)
     // - set value options = ["Terminal"]
 
-    private ConvertToType_I_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    private ConvertToType_I_Node(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         currentNode.childNodeReferences.Clear();
         currentNode.setValueOptions(["Terminal"]);
         currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
@@ -107,7 +107,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     // -- set value Option to ["Continue"]
     // -- set child ref option to "Continue"
 
-    private ConvertToType_II_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    private ConvertToType_II_Node(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         const typeIIvalueOptions = ["Continue"];
         this.createOrTruncateChildNodes(currentNode, typeIIvalueOptions, nodeTypeOptions);
         currentNode.childNodeReferences.applyOptionPaths(typeIIvalueOptions);
@@ -136,7 +136,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     // - add value options
     // - do not add node references
 
-    private ConvertToType_III_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    private ConvertToType_III_Node(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         if (currentNode.childNodeReferences.Length === 0) {
             this.nodeCreator.addDefaultChild([currentNode], "Continue", nodeTypeOptions);
         } else {
@@ -162,7 +162,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     //     - add value options
     //     - add equal number of node references
 
-    private ConvertToType_IV_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    private ConvertToType_IV_Node(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         // available choices - take from
 
         // child reference
@@ -213,7 +213,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     //    On Update:
     //     - add value options
     //     - add equal number of node references
-    private ConvertToType_VI_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    private ConvertToType_VI_Node(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         if (currentNode.getValueOptions().length < 2) {
             const defaultValueOptions = ["Left Branch", "Right Branch"];
             this.createOrTruncateChildNodes(currentNode, defaultValueOptions, nodeTypeOptions);
@@ -222,12 +222,28 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
             this.createOrTruncateChildNodes(currentNode, currentNode.getValueOptions(), nodeTypeOptions);
             currentNode.childNodeReferences.applyOptionPaths(currentNode.getValueOptions());
         }
+
+        // need to walk down the left most children (if there are any) and if the left most branch is a terminal
+        // type, then it needs to be deleted.
+        const recurse = (childNodeReference: IPalavyrNode) => {
+            if (childNodeReference.isTerminal) {
+                childNodeReference.unsetSelf(nodeTypeOptions);
+                return;
+            }
+            if (childNodeReference.nodeType === "Loopback") return;
+            recurse(childNodeReference.childNodeReferences.retrieveLeftmostReference()!);
+        };
+
+        if (currentNode.childNodeReferences.Length > 0) {
+            recurse(currentNode.childNodeReferences.retrieveLeftmostReference()!);
+        }
+
         currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
     }
 
     // Type VII
     // Loopback Anchor
-    private ConvertToType_VII_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    private ConvertToType_VII_Node(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         if (currentNode.getValueOptions().length < 2) {
             const defaultValueOptions = ["Continue", "Option 1"];
             this.createOrTruncateChildNodes(currentNode, defaultValueOptions, nodeTypeOptions);
@@ -241,7 +257,7 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
 
     // Type VIII
     // The loopback terminal
-    private ConvertToType_VIII_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+    private ConvertToType_VIII_Node(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         // else its the loopback endpoint
         const parentRef = currentNode.parentNodeReferences.retrieveLeftmostReference();
         if (parentRef !== null && parentRef.isLoopbackMember) {
