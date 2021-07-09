@@ -180,8 +180,7 @@ export abstract class PalavyrNodeBase implements IPalavyrNode {
     }
 
     public sortChildReferences() {
-        // reorder parent's child refs depending on if parent is a anabranch
-        if (!this.isPalavyrAnabranchStart) {
+        if (!this.isPalavyrAnabranchStart && !this.isLoopbackAnchorType && this.nodeType !== "MultipleChoiceAsPath") {
             this.childNodeReferences.OrderByOptionPath();
         }
     }
