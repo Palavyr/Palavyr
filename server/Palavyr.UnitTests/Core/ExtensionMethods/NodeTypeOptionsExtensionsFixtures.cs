@@ -18,21 +18,22 @@ namespace PalavyrServer.UnitTests.Core.ExtensionMethods
         {
             var newNode = NodeTypeOption.Create(
                 "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
-                DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue);
+                DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCode.IV);
             NodeList.AddAdditionalNode(newNode);
             NodeList.ShouldContain(newNode);
             NodeList.Count.ShouldBe(3);
         }
+        // dynamicTableMeta.ValuesAsPaths ? NodeTypeCode.IV : NodeTypeCode.III,
 
         [Fact]
         public void AddAdditionalNode_addsNodes()
         {
             var node1 = NodeTypeOption.Create(
                 "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
-                DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue);
+                DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCode.III);
             var node2 = NodeTypeOption.Create(
                 "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
-                DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue);
+                DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCode.III);
 
             var newNodes = new List<NodeTypeOption>()
             {
@@ -52,10 +53,10 @@ namespace PalavyrServer.UnitTests.Core.ExtensionMethods
             {
                 NodeTypeOption.Create(
                     "one", "two", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
-                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue),
+                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCode.III),
                 NodeTypeOption.Create(
                     "three", "four", new List<string>(), new List<string>(), true, true, true, NodeTypeOption.MultipleChoice,
-                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue)
+                    DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue, NodeTypeCode.III)
             };
             return Task.CompletedTask;
         }

@@ -46,7 +46,7 @@ namespace Palavyr.Core.Services.DynamicTableService
                 // var dynamicTableName = dynamicTableKey.Split("-").First();
                 // var compiler = dynamicTableCompilerRetriever.RetrieveCompiler(dynamicTableName);
                 var dynamicResponseComponents = dynamicResponseComponentExtractor.ExtractDynamicTableComponents(dynamicResponse);
-                
+
                 // List<TableRow> rows;
                 // rows = await compiler.CompileToPdfTableRow(accountId, responses, dynamicTableKeys, culture);
                 var rows = await dynamicResponseComponents.Compiler.CompileToPdfTableRow(
@@ -55,7 +55,7 @@ namespace Palavyr.Core.Services.DynamicTableService
                     dynamicResponseComponents.DynamicTableKeys,
                     culture
                 );
-                
+
                 tableRows.AddRange(rows);
             }
 

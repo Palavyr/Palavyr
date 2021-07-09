@@ -140,6 +140,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
             bool isTerminalType,
             string groupName,
             string nodeComponentType,
+            NodeTypeCode nodeTypeCode,
             bool isMultiOptionEditable = true,
             bool isCurrency = false,
             bool isAnabranchType = false,
@@ -172,7 +173,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 ShouldShowMultiOption = shouldShowMultiOption,
                 ResolveOrder = resolveOrder,
                 DynamicType = dynamicType,
-                IsLoopbackAnchor = loopbackAnchor
+                IsLoopbackAnchor = loopbackAnchor,
+                NodeTypeCode = nodeTypeCode
             };
         }
     }

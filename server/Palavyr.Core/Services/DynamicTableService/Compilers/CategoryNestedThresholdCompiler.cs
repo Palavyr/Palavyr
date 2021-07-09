@@ -74,6 +74,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     false,
                     NodeTypeOption.CustomTables,
                     DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
+                    NodeTypeCode.IV,
                     resolveOrder: 0,
                     isMultiOptionEditable: false,
                     dynamicType: widgetResponseKey
@@ -93,6 +94,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     false,
                     NodeTypeOption.CustomTables,
                     DefaultNodeTypeOptions.NodeComponentTypes.TakeNumber,
+                    NodeTypeCode.III,
                     resolveOrder: 1,
                     isMultiOptionEditable: false,
                     dynamicType: widgetResponseKey // check in widget component perhaps if this is dynamic, and thresholdtype... then we can do a check against the server... bleh this is so gross. But there is no other way right now.

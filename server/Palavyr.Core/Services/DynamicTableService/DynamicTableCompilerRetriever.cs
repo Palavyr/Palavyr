@@ -1,6 +1,5 @@
 ﻿using System;
 using Autofac;
-using Palavyr.Core.Services.DynamicTableService.Compilers;
 
 namespace Palavyr.Core.Services.DynamicTableService
 {
