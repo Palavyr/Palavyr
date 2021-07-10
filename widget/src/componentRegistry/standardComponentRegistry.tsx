@@ -58,7 +58,7 @@ export class StandardComponents extends ComponentRegisteryMethods {
     public makeProvideInfo({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         const prefs = getWidgetPreferences();
-        const timeout = max([1500, node.text.length * 200])
+        const timeout = min([15000, max([1500, node.text.length * 100])])
         return () => {
             const cls = useStyles(prefs);
             useEffect(() => {

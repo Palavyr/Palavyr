@@ -70,6 +70,11 @@ namespace Palavyr.Core.Models.Nodes
                 requiredNodesClone.RemoveAt(requiredNodesClone.Select(x => x.Value).ToList().FindIndex(x => x == node.NodeType));
             }
 
+            if (requiredNodesClone.Count == 0)
+            {
+                return requiredNodesClone.ToArray();
+            }
+
             if (node.IsRoot)
             {
                 return requiredNodesClone.ToArray();
