@@ -23,7 +23,6 @@ namespace PalavyrServer.UnitTests.Core.ExtensionMethods
             NodeList.ShouldContain(newNode);
             NodeList.Count.ShouldBe(3);
         }
-        // dynamicTableMeta.ValuesAsPaths ? NodeTypeCode.IV : NodeTypeCode.III,
 
         [Fact]
         public void AddAdditionalNode_addsNodes()
