@@ -12,7 +12,7 @@ import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "common/UserDetailsDialog/ChatLoadingSpinner";
 import { uuid } from "uuidv4";
 import { CustomImage } from "common/CustomImage";
-import { max, min } from "lodash";
+import { floor, max, min } from "lodash";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {
@@ -58,7 +58,9 @@ export class StandardComponents extends ComponentRegisteryMethods {
     public makeProvideInfo({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         const prefs = getWidgetPreferences();
-        const timeout = min([15000, max([1500, node.text.length * 75])])
+
+        const typicalReadingSpeed = (node: WidgetNodeResource) => floor((node.text.length / 19) * 1000, 0);
+        const timeout = min([18000, max([2000, typicalReadingSpeed(node)])]);
         return () => {
             const cls = useStyles(prefs);
             useEffect(() => {
