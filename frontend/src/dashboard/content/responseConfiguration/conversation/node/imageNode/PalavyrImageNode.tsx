@@ -5,22 +5,17 @@ import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { Dialog, DialogTitle, DialogContent, Typography, Divider } from "@material-ui/core";
 import { ConvoNode, FileLink } from "@Palavyr-Types";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { memo, useCallback, useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Upload } from "../../../uploadable/Upload";
 import { CustomImage } from "./CustomImage";
 import { IPalavyrLinkedList } from "../../Contracts";
 import { useNodeInterfaceStyles } from "../../nodeInterfaceStyles";
 import { PalavyrNodeBase } from "../PalavyrNode";
+import { SessionStorage } from "localStorage/sessionStorage";
 
 export class PalavyrImageNode extends PalavyrNodeBase {
-    constructor(
-        containerList: IPalavyrLinkedList,
-        repository: PalavyrRepository,
-        node: ConvoNode,
-        setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
-        leftmostBranch: boolean
-    ) {
+    constructor(containerList: IPalavyrLinkedList, repository: PalavyrRepository, node: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftmostBranch: boolean) {
         super(containerList, repository, node, setTreeWithHistory, leftmostBranch);
     }
 
@@ -32,20 +27,29 @@ export class PalavyrImageNode extends PalavyrNodeBase {
 
             const loadImage = useCallback(async () => {
                 if (this.imageId !== null && this.imageId !== undefined) {
-                    const fileLinks = await this.repository.Configuration.Images.getImages([this.imageId]);
-                    const fileLink = fileLinks[0];
-                    if (!fileLink.isUrl) {
-                        const presignedUrl = await this.repository.Configuration.Images.getSignedUrl(fileLink.link);
-                        setImageLink(presignedUrl);
-                        setImageName(fileLink.fileName);
-                        setCurrentImageId(fileLink.fileId);
+                    const imageData = SessionStorage.getImageData(this.imageId);
+                    if (imageData !== null) {
+                        setImageLink(imageData.presignedUrl);
+                        setImageName(imageData.fileName);
+                        setCurrentImageId(imageData.fileId);
+                    } else {
+                        console.log(`Couldn't find the image data in session storage for: ${this.imageId}`);
+                        const fileLinks = await this.repository.Configuration.Images.getImages([this.imageId]);
+                        const fileLink = fileLinks[0];
+                        if (!fileLink.isUrl) {
+                            const presignedUrl = await this.repository.Configuration.Images.getSignedUrl(fileLink.link);
+                            setImageLink(presignedUrl);
+                            setImageName(fileLink.fileName);
+                            setCurrentImageId(fileLink.fileId);
+                            SessionStorage.setImageData(this.imageId, presignedUrl, fileLink.fileName, fileLink.fileId);
+                        }
                     }
                 }
-            }, [this.palavyrLinkedList]);
+            }, []);
 
             useEffect(() => {
                 loadImage();
-            }, [this.palavyrLinkedList]);
+            }, [this.imageId]);
 
             return this.renderPalavyrNodeBody()({ openEditor, children: <CustomImage imageName={imageName} imageLink={imageLink} titleVariant="body1" /> });
         };
@@ -59,20 +63,31 @@ export class PalavyrImageNode extends PalavyrNodeBase {
 
             const loadImage = useCallback(async () => {
                 if (this.imageId !== null && this.imageId !== undefined) {
-                    const fileLinks = await this.repository.Configuration.Images.getImages([this.imageId]);
-                    const fileLink = fileLinks[0];
-                    if (!fileLink.isUrl) {
-                        const presignedUrl = await this.repository.Configuration.Images.getSignedUrl(fileLink.link);
-                        setImageLink(presignedUrl);
-                        setImageName(fileLink.fileName);
-                        setCurrentImageId(fileLink.fileId);
+                    const imageData = SessionStorage.getImageData(this.imageId);
+
+                    if (imageData !== null) {
+                        setImageLink(imageData.presignedUrl);
+                        setImageName(imageData.fileName);
+                        setCurrentImageId(imageData.fileId);
+                    } else {
+                        const fileLinks = await this.repository.Configuration.Images.getImages([this.imageId]);
+                        const fileLink = fileLinks[0];
+                        if (!fileLink.isUrl) {
+                            const presignedUrl = await this.repository.Configuration.Images.getSignedUrl(fileLink.link);
+                            setImageLink(presignedUrl);
+                            setImageName(fileLink.fileName);
+                            setCurrentImageId(fileLink.fileId);
+                            SessionStorage.setImageData(this.imageId, presignedUrl, fileLink.fileName, fileLink.fileId);
+                        }
                     }
                 }
-            }, [this.palavyrLinkedList]);
+                // }, [this.palavyrLinkedList]);
+            }, [this.imageId]);
 
             useEffect(() => {
                 loadImage();
-            }, [this.palavyrLinkedList]);
+                // }, [this.palavyrLinkedList]);
+            }, []);
 
             return (
                 <Dialog fullWidth open={editorIsOpen} onClose={closeEditor}>
@@ -194,11 +209,19 @@ export class PalavyrImageNode extends PalavyrNodeBase {
                 this.imageId = option.fileId;
 
                 if (!option.isUrl) {
-                    const presignedUrl = await this.repository.Configuration.Images.getSignedUrl(option.link);
-                    setImageLink(presignedUrl);
-                    setImageName(option.fileName);
+                    const imageData = SessionStorage.getImageData(this.imageId);
+                    if (imageData !== null) {
+                        setImageLink(imageData.presignedUrl);
+                        setImageName(imageData.fileName);
+                    } else {
+                        const presignedUrl = await this.repository.Configuration.Images.getSignedUrl(option.link);
+                        setImageLink(presignedUrl);
+                        setImageName(option.fileName);
+                        SessionStorage.setImageData(this.imageId, presignedUrl, option.fileName, "");
+                    }
                 }
-                this.setTreeWithHistory(this.palavyrLinkedList);
+                this.UpdateTree();
+                // this.setTreeWithHistory(this.palavyrLinkedList);
             };
 
             const groupGetter = (val: FileLink) => val.fileName;

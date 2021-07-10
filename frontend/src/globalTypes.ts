@@ -28,6 +28,12 @@ export type TableGroup<T> = {
     [itemGroup: string]: T;
 };
 
+export type DeSerializedImageMeta = {
+    presignedUrl: string;
+    fileName: string;
+    fileId: string;
+};
+
 export type LineStyles = "solid" | "-moz-initial" | "inherit" | "initial" | "revert" | "unset" | "dashed" | "dotted" | "double" | "groove" | "hidden" | "inset" | "none" | "outset" | "ridge" | undefined;
 
 export type Anchor = "top" | "left" | "middle" | "center" | "bottom" | "right";

@@ -22,7 +22,7 @@ export const CustomImage = ({ imageName, imageLink, titleVariant = "h6" }: Custo
     const cls = useStyles();
     const [isLoading, setLoading] = useState<boolean>(true);
 
-    useEffect(() => {}, [imageLink, imageName]);
+    // useEffect(() => {}, [imageLink, imageName]);
 
     const onImageClick = (e) => {
         e.preventDefault();

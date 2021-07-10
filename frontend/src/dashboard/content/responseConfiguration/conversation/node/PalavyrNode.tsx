@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, memo } from "react";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";

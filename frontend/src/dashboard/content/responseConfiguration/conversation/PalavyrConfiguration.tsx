@@ -42,7 +42,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const StructuredConvoTree = () => {
+export const StructuredConvoTree = React.memo(() => {
     const repository = new PalavyrRepository();
     const cls = useStyles();
 
@@ -228,4 +228,4 @@ export const StructuredConvoTree = () => {
             </PalavyrErrorBoundary>
         </ConversationTreeContext.Provider>
     );
-};
+});

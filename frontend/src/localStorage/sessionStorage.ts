@@ -1,4 +1,4 @@
-import { RememberMe } from "@Palavyr-Types";
+import { DeSerializedImageMeta, RememberMe } from "@Palavyr-Types";
 
 class SessionStorageAccess {
     private rememberMeEmail: string = "rememberMeEmail";
@@ -13,7 +13,6 @@ class SessionStorageAccess {
 
     public GoogleLoginType: string = "google";
     public DefaultLoginType: string = "default";
-
 
     private _setItem(key: string, val: boolean | string) {
         const converted = val.toString();
@@ -136,6 +135,25 @@ class SessionStorageAccess {
 
     getGoogleImage() {
         return this._getItem(this.googleImage);
+    }
+
+    setImageData(imageId: string, presignedUrl: string, fileName: string, fileId: string) {
+        this._setItem(
+            imageId,
+            JSON.stringify({
+                presignedUrl,
+                fileName,
+                fileId,
+            })
+        );
+    }
+
+    getImageData(imageId: string): DeSerializedImageMeta | null {
+        const serialized = this._getItem(imageId);
+        if (serialized) {
+            return JSON.parse(serialized);
+        }
+        return null;
     }
 }
 

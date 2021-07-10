@@ -12,6 +12,7 @@ import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "common/UserDetailsDialog/ChatLoadingSpinner";
 import { uuid } from "uuidv4";
 import { CustomImage } from "common/CustomImage";
+import { max, min } from "lodash";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {
@@ -57,13 +58,13 @@ export class StandardComponents extends ComponentRegisteryMethods {
     public makeProvideInfo({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         const prefs = getWidgetPreferences();
-
+        const timeout = max([1500, node.text.length * 200])
         return () => {
             const cls = useStyles(prefs);
             useEffect(() => {
                 setTimeout(() => {
                     responseAction(node, child, nodeList, client, convoId, null);
-                }, 1500);
+                }, timeout);
             }, []);
 
             return (
