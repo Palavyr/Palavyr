@@ -58,7 +58,7 @@ export class StandardComponents extends ComponentRegisteryMethods {
     public makeProvideInfo({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         const prefs = getWidgetPreferences();
-        const timeout = min([15000, max([1500, node.text.length * 100])])
+        const timeout = min([15000, max([1500, node.text.length * 75])])
         return () => {
             const cls = useStyles(prefs);
             useEffect(() => {
@@ -301,6 +301,7 @@ export class StandardComponents extends ComponentRegisteryMethods {
             const cls = useStyles(prefs);
             const [loaded, setLoaded] = useState<boolean>(false);
             const [link, setLink] = useState<string>("");
+
             useEffect(() => {
                 (async () => {
                     const presignedUrl = await client.Widget.Get.NodeImage(node.nodeId);
@@ -310,7 +311,7 @@ export class StandardComponents extends ComponentRegisteryMethods {
 
                 setTimeout(() => {
                     responseAction(node, child, nodeList, client, convoId, null);
-                }, 2500);
+                }, 4500);
             }, []);
 
             return <CustomImage imageLink={link} />;
