@@ -115,7 +115,8 @@ export const StructuredConvoTree = React.memo(() => {
 
     const onSave = async () => {
         if (linkedNodeList && planTypeMeta) {
-            const updatedConvoNodes = await repository.Conversations.ModifyConversation(linkedNodeList.compileToConvoNodes(), areaIdentifier);
+            const compiledNodes = linkedNodeList.compileToConvoNodes();
+            const updatedConvoNodes = await repository.Conversations.ModifyConversation(compiledNodes, areaIdentifier);
             const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
             const updatedLinkedList = new PalavyrLinkedList(updatedConvoNodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions);
             historyTracker.addConversationHistoryToQueue(updatedLinkedList, conversationHistoryPosition, conversationHistory);

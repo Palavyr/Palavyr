@@ -78,6 +78,10 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
                 this.ConvertToType_IX_Node(currentNode, nodeTypeOptions);
                 break;
 
+            case NodeTypeCode.X:
+                this.ConvertToType_X_Node(nodeOption, currentNode, nodeTypeOptions);
+                break;
+
             default:
                 throw new Error("NodeTypeCode unable to be identified. FIX THAT YO.");
         }
@@ -176,8 +180,6 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
     //     - add equal number of node references
 
     private ConvertToType_IV_Node(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
-        // available choices - take from
-
         // child reference
         this.createOrTruncateChildNodes(currentNode, currentNode.getValueOptions(), nodeTypeOptions);
         currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
@@ -290,6 +292,12 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
 
     private ConvertToType_IX_Node(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         this.ConvertToImageNode(currentNode, nodeTypeOptions);
+        currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
+    }
+
+    private ConvertToType_X_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+        this.createOrTruncateChildNodes(currentNode, ["Continue"], nodeTypeOptions);
+        currentNode.setValueOptions(nodeOption.valueOptions);
         currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
     }
 

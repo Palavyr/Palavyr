@@ -25,7 +25,8 @@
         VIII = 7, // Loopback terminal
         
         // ReSharper disable once InconsistentNaming
-        IX = 8 // Image Node Type
+        IX = 8, // Image Node Type
 
+        X = 9 // Multioption with frozen set and not editable (used with dynamic nodes like selectone flat and nested categories 
     }
 }

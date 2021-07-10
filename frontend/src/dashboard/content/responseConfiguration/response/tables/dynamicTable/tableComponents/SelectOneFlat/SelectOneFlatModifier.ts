@@ -19,12 +19,13 @@ export class SelectOneFlatModifier {
     async addOption(tableData: SelectOneFlatData[], repository: PalavyrRepository, areaIdentifier: string, tableId: string) {
         // this is a difficult situation - we need to allow for an array of objects of various types (dynamic table types)
         const newTableTemplate = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<SelectOneFlatData>(areaIdentifier, this.tableType, tableId);
+        newTableTemplate.rowOrder = tableData.length;
         tableData.push(newTableTemplate);
         this.setTables(tableData);
     }
 
     removeOption(tableData: SelectOneFlatData[], dataIndex: number) {
-        const newRows:SelectOneFlatData[] = [];
+        const newRows: SelectOneFlatData[] = [];
         if (tableData.length > 1) {
             tableData.forEach((row, index: number) => {
                 if (index !== dataIndex) {

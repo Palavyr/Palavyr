@@ -74,7 +74,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     false,
                     NodeTypeOption.CustomTables,
                     DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
-                    NodeTypeCode.IV,
+                    NodeTypeCode.X,
                     resolveOrder: 0,
                     isMultiOptionEditable: false,
                     dynamicType: widgetResponseKey

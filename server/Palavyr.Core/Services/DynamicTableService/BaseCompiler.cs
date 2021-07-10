@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Internal;
 using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Models.Contracts;
 using Palavyr.Core.Repositories;
 
 
@@ -21,7 +23,35 @@ namespace Palavyr.Core.Services.DynamicTableService
         {
             var (accountId, areaId, tableId) = dynamicTableMeta;
             var rows = await Repository.GetAllRows(accountId, areaId, tableId);
-            return rows;
+            
+            var indexArray = new List<int> { };
+            var orderedEntities = new List<TEntity>() { };
+
+            var success = true;
+            foreach (var row in rows)
+            {
+                if (row is IOrderedRow orderedRow)
+                {
+                    indexArray.Add(orderedRow.RowOrder);
+                }
+                else
+                {
+                    success = false;
+                    break;
+                }
+            }
+
+            if (indexArray.Distinct().Count() != rows.Count) // defensive incase we forget to add rowOrder correctly...
+            {
+                return rows;
+            }
+
+            foreach (var index in indexArray)
+            {
+                orderedEntities.Add(rows[index]);
+            }
+
+            return success ? orderedEntities : rows;
         }
 
         protected string GetSingleResponseValue(DynamicResponseParts dynamicResponses, List<string> dynamicResponseIds)

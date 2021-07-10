@@ -425,6 +425,7 @@ export enum NodeTypeCode {
     VII, // loopback anchor
     VIII, // loopback terminal,
     IX, // image node type
+    X // multioption non editable, one path
 }
 
 export type NodeOption = {

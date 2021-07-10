@@ -40,6 +40,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 // only update if the node exists in the conversation
                 node.ValueOptions = valueOptionString;
             }
+
             // do not save the context changes here. Following the unit of work pattern,we collect all changes, validate, and then save/commit..
         }
 
@@ -60,7 +61,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 false,
                 NodeTypeOption.CustomTables,
                 dynamicTableMeta.ValuesAsPaths ? DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceAsPath : DefaultNodeTypeOptions.NodeComponentTypes.MultipleChoiceContinue,
-                dynamicTableMeta.ValuesAsPaths ? NodeTypeCode.IV : NodeTypeCode.III,
+                dynamicTableMeta.ValuesAsPaths ? NodeTypeCode.IV : NodeTypeCode.X,
                 shouldRenderChildren: true,
                 dynamicType: dynamicTableMeta.MakeUniqueIdentifier()
             );
