@@ -20,7 +20,7 @@ namespace Palavyr.API.Controllers.Conversation.Images
 
         [HttpPost(Route)]
         [ActionName("Decode")]
-        public async Task<FileLink> SaveSingle(
+        public async Task<FileLink[]> SaveSingle(
             [FromHeader]
             string accountId,
             [FromForm(Name = "files")]
@@ -28,7 +28,7 @@ namespace Palavyr.API.Controllers.Conversation.Images
             CancellationToken cancellationToken)
         {
             var fileLink = await imageSaver.SaveImage(accountId, imageFile, cancellationToken);
-            return fileLink;
+            return new[] {fileLink};
         }
     }
 }

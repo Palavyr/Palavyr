@@ -3,9 +3,9 @@ import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 import { PalavyrAutoComplete } from "@common/components/PalavyrAutoComplete";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { Dialog, DialogTitle, DialogContent, Typography, Divider } from "@material-ui/core";
-import { ConvoNode, FileLink } from "@Palavyr-Types";
+import { ConvoNode, FileLink, SetState } from "@Palavyr-Types";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
-import React, { memo, useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Upload } from "../../../uploadable/Upload";
 import { CustomImage } from "./CustomImage";
@@ -27,29 +27,30 @@ export class PalavyrImageNode extends PalavyrNodeBase {
 
             const loadImage = useCallback(async () => {
                 if (this.imageId !== null && this.imageId !== undefined) {
+                    const fileLinks = await this.repository.Configuration.Images.getImages([this.imageId]);
+                    const fileLink = fileLinks[0];
+                    if (!fileLink.isUrl) {
+                        const presignedUrl = await this.repository.Configuration.Images.getSignedUrl(fileLink.link);
+                        setImageLink(presignedUrl);
+                        setImageName(fileLink.fileName);
+                        setCurrentImageId(fileLink.fileId);
+                        SessionStorage.setImageData(this.imageId, presignedUrl, fileLink.fileName, fileLink.fileId);
+                    }
+                }
+            }, []);
+
+            useEffect(() => {
+                if (this.imageId !== null && this.imageId !== undefined) {
                     const imageData = SessionStorage.getImageData(this.imageId);
                     if (imageData !== null) {
                         setImageLink(imageData.presignedUrl);
                         setImageName(imageData.fileName);
                         setCurrentImageId(imageData.fileId);
                     } else {
-                        console.log(`Couldn't find the image data in session storage for: ${this.imageId}`);
-                        const fileLinks = await this.repository.Configuration.Images.getImages([this.imageId]);
-                        const fileLink = fileLinks[0];
-                        if (!fileLink.isUrl) {
-                            const presignedUrl = await this.repository.Configuration.Images.getSignedUrl(fileLink.link);
-                            setImageLink(presignedUrl);
-                            setImageName(fileLink.fileName);
-                            setCurrentImageId(fileLink.fileId);
-                            SessionStorage.setImageData(this.imageId, presignedUrl, fileLink.fileName, fileLink.fileId);
-                        }
+                        loadImage();
                     }
                 }
-            }, []);
-
-            useEffect(() => {
-                loadImage();
-            }, [this.imageId]);
+            }, [loadImage]);
 
             return this.renderPalavyrNodeBody()({ openEditor, children: <CustomImage imageName={imageName} imageLink={imageLink} titleVariant="body1" /> });
         };
@@ -63,30 +64,30 @@ export class PalavyrImageNode extends PalavyrNodeBase {
 
             const loadImage = useCallback(async () => {
                 if (this.imageId !== null && this.imageId !== undefined) {
-                    const imageData = SessionStorage.getImageData(this.imageId);
+                    const fileLinks = await this.repository.Configuration.Images.getImages([this.imageId]);
+                    const fileLink = fileLinks[0];
+                    if (!fileLink.isUrl) {
+                        console.log("WOw calling again!");
+                        const presignedUrl = await this.repository.Configuration.Images.getSignedUrl(fileLink.link);
+                        setImageLink(presignedUrl);
+                        setImageName(fileLink.fileName);
+                        setCurrentImageId(fileLink.fileId);
+                        SessionStorage.setImageData(this.imageId, presignedUrl, fileLink.fileName, fileLink.fileId);
+                    }
+                }
+            }, [this.imageId]);
 
+            useEffect(() => {
+                if (this.imageId !== null && this.imageId !== undefined) {
+                    const imageData = SessionStorage.getImageData(this.imageId);
                     if (imageData !== null) {
                         setImageLink(imageData.presignedUrl);
                         setImageName(imageData.fileName);
                         setCurrentImageId(imageData.fileId);
-                    } else {
-                        const fileLinks = await this.repository.Configuration.Images.getImages([this.imageId]);
-                        const fileLink = fileLinks[0];
-                        if (!fileLink.isUrl) {
-                            const presignedUrl = await this.repository.Configuration.Images.getSignedUrl(fileLink.link);
-                            setImageLink(presignedUrl);
-                            setImageName(fileLink.fileName);
-                            setCurrentImageId(fileLink.fileId);
-                            SessionStorage.setImageData(this.imageId, presignedUrl, fileLink.fileName, fileLink.fileId);
-                        }
                     }
+                } else {
+                    loadImage();
                 }
-                // }, [this.palavyrLinkedList]);
-            }, [this.imageId]);
-
-            useEffect(() => {
-                loadImage();
-                // }, [this.palavyrLinkedList]);
             }, []);
 
             return (
@@ -94,29 +95,43 @@ export class PalavyrImageNode extends PalavyrNodeBase {
                     <DialogTitle>Edit a conversation node</DialogTitle>
                     <DialogContent>
                         {this.imageId === null
-                            ? this.renderImageEditorWhenEmpty(closeEditor, currentImageId, setImageLink, setImageName)()
-                            : this.renderImageEditorWhenFull(closeEditor, imageName, imageLink, currentImageId, setImageLink, setImageName)()}
+                            ? this.renderImageEditorWhenEmpty()({ closeEditor, currentImageId, setImageLink, setImageName })
+                            : this.renderImageEditorWhenFull()({ closeEditor, imageName, imageLink, currentImageId, setImageLink, setImageName })}
                     </DialogContent>
                 </Dialog>
             );
         };
     }
 
-    public renderImageEditorWhenEmpty(closeEditor, currentImageId, setImageLink, setImageName) {
-        return () => {
+    public renderImageEditorWhenEmpty() {
+        interface IRenderImageEditorWhenEmptyProps {
+            closeEditor: () => void;
+            currentImageId: string;
+            setImageLink: SetState<string>;
+            setImageName: SetState<string>;
+        }
+        return ({ closeEditor, currentImageId, setImageLink, setImageName }: IRenderImageEditorWhenEmptyProps) => {
             return (
                 <>
                     <Typography align="center" variant="h6">
                         Upload an image
                     </Typography>
-                    {this.renderImageUpload(closeEditor, currentImageId, setImageLink, setImageName, false)()}
+                    {this.renderImageUpload()({ closeEditor, currentImageId, setImageLink, setImageName, initialState: false })}
                 </>
             );
         };
     }
 
-    public renderImageEditorWhenFull(closeEditor: () => void, imageName, imageLink, currentImageId, setImageLink, setImageName) {
-        return () => {
+    public renderImageEditorWhenFull() {
+        interface ImageEditorWhenFullProps {
+            closeEditor: () => void;
+            imageName: string;
+            imageLink: string;
+            currentImageId: string;
+            setImageLink: SetState<string>;
+            setImageName: SetState<string>;
+        }
+        return ({ closeEditor, imageName, imageLink, currentImageId, setImageLink, setImageName }: ImageEditorWhenFullProps) => {
             return (
                 <>
                     <CustomImage imageName={imageName} imageLink={imageLink} />
@@ -124,15 +139,22 @@ export class PalavyrImageNode extends PalavyrNodeBase {
                     <Typography align="center" variant="h6">
                         Choose a new image
                     </Typography>
-                    {this.renderImageUpload(closeEditor, currentImageId, setImageLink, setImageName, false)()}
+                    {this.renderImageUpload()({ closeEditor, currentImageId, setImageLink, setImageName, initialState: false })}
                     <Divider />
                 </>
             );
         };
     }
 
-    public renderImageUpload(closeEditor: () => void, currentImageId, setImageLink, setImageName, initialState = false) {
-        return () => {
+    public renderImageUpload() {
+        interface ImageUploadProps {
+            closeEditor: () => void;
+            currentImageId: string;
+            setImageLink: SetState<string>;
+            setImageName: SetState<string>;
+            initialState: boolean;
+        }
+        return ({ closeEditor, currentImageId, setImageLink, setImageName, initialState = false }: ImageUploadProps) => {
             const cls = useNodeInterfaceStyles();
             const history = useHistory();
             const [uploadModal, setUploadModal] = useState(false);
@@ -168,6 +190,7 @@ export class PalavyrImageNode extends PalavyrNodeBase {
                 }
 
                 await this.repository.Configuration.Images.savePreExistingImage(result[0].fileId, this.nodeId);
+                SessionStorage.clearImageFileLinks();
                 setIsLoading(false);
                 setSuccessOpen(true);
                 closeEditor();
@@ -175,7 +198,7 @@ export class PalavyrImageNode extends PalavyrNodeBase {
 
             return (
                 <>
-                    <div className={cls.imageBlock}>{this.renderSelectFromExistingImages(currentImageId, setImageLink, setImageName)()}</div>
+                    <div className={cls.imageBlock}>{this.renderSelectFromExistingImages()({ currentImageId, setImageLink, setImageName })}</div>
                     <Divider />
                     <div className={cls.imageBlock}>
                         {planTypeMeta && planTypeMeta.allowedImageUpload && (
@@ -197,13 +220,18 @@ export class PalavyrImageNode extends PalavyrNodeBase {
         };
     }
 
-    public renderSelectFromExistingImages(currentImageId, setImageLink, setImageName) {
-        return () => {
+    public renderSelectFromExistingImages() {
+        interface SelectFromExistingImagesProps {
+            currentImageId: string;
+            setImageLink: SetState<string>;
+            setImageName: SetState<string>;
+        }
+        return ({ currentImageId, setImageLink, setImageName }: SelectFromExistingImagesProps) => {
             const [options, setOptions] = useState<FileLink[] | null>(null);
             const [label, setLabel] = useState<string>("");
 
             const onChange = async (_: any, option: FileLink) => {
-                const convoNode = await this.repository.Configuration.Images.savePreExistingImage(option.fileId, this.nodeId);
+                await this.repository.Configuration.Images.savePreExistingImage(option.fileId, this.nodeId);
                 setLabel(option.fileName);
 
                 this.imageId = option.fileId;
@@ -221,23 +249,32 @@ export class PalavyrImageNode extends PalavyrNodeBase {
                     }
                 }
                 this.UpdateTree();
-                // this.setTreeWithHistory(this.palavyrLinkedList);
             };
 
             const groupGetter = (val: FileLink) => val.fileName;
 
-            const loadOptions = useCallback(async () => {
-                const fileLinks = await this.repository.Configuration.Images.getImages();
+            const setfilteredFileLinkOptions = (fileLinks: FileLink[]) => {
                 const sortedOptions = sortByPropertyAlphabetical(groupGetter, fileLinks);
                 const filteredOptions = sortedOptions.filter((link: FileLink) => {
                     return link.fileId !== currentImageId;
                 });
                 setOptions(filteredOptions);
+            };
+
+            const loadOptions = useCallback(async () => {
+                const fileLinks = await this.repository.Configuration.Images.getImages();
+                setfilteredFileLinkOptions(fileLinks);
+                SessionStorage.setFileLinks(fileLinks);
             }, [currentImageId]);
 
             useEffect(() => {
-                loadOptions();
-            }, [currentImageId]);
+                const fileLinks = SessionStorage.getFileLinks();
+                if (fileLinks === null) {
+                    loadOptions();
+                } else {
+                    setfilteredFileLinkOptions(fileLinks);
+                }
+            }, []);
 
             return (
                 <PalavyrAccordian title="Select a file you've already uploaded" initialState={false}>

@@ -4,14 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data;
-using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.AmazonServices;
 
 namespace Palavyr.API.Controllers.Conversation.Images
 {
@@ -19,16 +16,12 @@ namespace Palavyr.API.Controllers.Conversation.Images
     {
         private readonly GuidFinder guidFinder;
         private readonly DashContext dashContext;
-        private readonly ILinkCreator linkCreator;
-        private readonly IConfiguration configuration;
         private const string Route = "images";
 
-        public GetImagesController(GuidFinder guidFinder, DashContext dashContext, ILinkCreator linkCreator, IConfiguration configuration)
+        public GetImagesController(GuidFinder guidFinder, DashContext dashContext)
         {
             this.guidFinder = guidFinder;
             this.dashContext = dashContext;
-            this.linkCreator = linkCreator;
-            this.configuration = configuration;
         }
 
         [HttpGet(Route)]

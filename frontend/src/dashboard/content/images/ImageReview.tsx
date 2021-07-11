@@ -63,7 +63,17 @@ export const ImageReview = () => {
                         </Align>
                     )}
                     <div style={{ visibility: showSpinner ? "hidden" : "visible", maxWidth: "100%", margin: "1rem", display: "flex", justifyContent: "center" }}>
-                        {currentPreview && <img onClick={onImageClick} className={cls.image} key={Date.now()} src={currentPreview} onChange={() => setShowSpinner(true)} onLoadStart={() => setShowSpinner(true)} onLoad={() => setShowSpinner(false)} />}
+                        {currentPreview && (
+                            <img
+                                onClick={onImageClick}
+                                className={cls.image}
+                                key={Date.now()}
+                                src={currentPreview}
+                                onChange={() => setShowSpinner(true)}
+                                onLoadStart={() => setShowSpinner(true)}
+                                onLoad={() => setShowSpinner(false)}
+                            />
+                        )}
                     </div>
                 </Grid>
             </Grid>

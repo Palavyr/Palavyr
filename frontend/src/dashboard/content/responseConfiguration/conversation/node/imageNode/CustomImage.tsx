@@ -2,7 +2,7 @@ import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { CircularProgress, makeStyles, Typography } from "@material-ui/core";
 import { Variant } from "@material-ui/core/styles/createTypography";
 import { Align } from "dashboard/layouts/positioning/Align";
-import React, { useEffect, useState } from "react";
+import React, { memo, useState } from "react";
 
 export interface CustomImageProps {
     imageLink: string;
@@ -18,11 +18,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const CustomImage = ({ imageName, imageLink, titleVariant = "h6" }: CustomImageProps) => {
+export const CustomImage = memo(({ imageName, imageLink, titleVariant = "h6" }: CustomImageProps) => {
     const cls = useStyles();
     const [isLoading, setLoading] = useState<boolean>(true);
-
-    // useEffect(() => {}, [imageLink, imageName]);
 
     const onImageClick = (e) => {
         e.preventDefault();
@@ -46,4 +44,4 @@ export const CustomImage = ({ imageName, imageLink, titleVariant = "h6" }: Custo
             </Align>
         </>
     );
-};
+});
