@@ -120,7 +120,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         const repository = new PalavyrRepository();
 
         // todo: Deprecate this call in the future once we are confident that it is no longer needed...
-        await repository.Conversations.EnsureDBIsValid();
+        // await repository.Conversations.EnsureDBIsValid();
 
         const currentPlanType = await repository.Settings.Account.getCurrentPlan(); // TODO: Deprecate
         const currentPlanTypeMeta = await repository.Settings.Subscriptions.getCurrentPlanMeta();

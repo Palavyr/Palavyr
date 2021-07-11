@@ -36,6 +36,7 @@ class PalavyrNodeChanger implements IPalavyrNodeChanger {
 
         if (currentNode.nodeTypeCode === NodeTypeCode.IX && nodeOption.nodeTypeCode !== NodeTypeCode.IX) {
             currentNode = this.ConvertToTextNode(currentNode, nodeTypeOptions);
+            currentNode.imageId = undefined;
         }
 
         this.resetNodeProperties(nodeOption, currentNode);
@@ -289,6 +290,10 @@ class PalavyrNodeChanger implements IPalavyrNodeChanger {
         currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
     }
 
+    // Type IX
+    // The Image Type node
+    // No longer useing different derived node type.
+    // This is Node type == IX and imageId is not null (its set)
     private ConvertToType_IX_Node(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         this.ConvertToImageNode(currentNode, nodeTypeOptions);
         currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
@@ -326,6 +331,7 @@ class PalavyrNodeChanger implements IPalavyrNodeChanger {
         if (newImageNode.isRoot) {
             newImageNode.palavyrLinkedList.rootNode = newImageNode;
         }
+        newImageNode.imageId = null;
         newImageNode.childNodeReferences.applyOptionPaths(["Continue"]);
     }
 

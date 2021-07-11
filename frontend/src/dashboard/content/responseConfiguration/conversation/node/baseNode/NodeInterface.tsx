@@ -67,7 +67,7 @@ export const NodeInterface = ({
         checked: shouldPresentResponse,
         splitMergeRootSiblingIndex: isMemberOfLeftmostBranch ? 0 : 1,
         debugOn: showDebugData,
-        isImageNode: imageId !== null,
+        isImageNode: imageId !== undefined,
     });
 
     return (

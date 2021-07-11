@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const CustomImage = ({ imageId, imageName, imageLink, titleVariant = "h6" }: CustomImageProps) => {
+export const CustomImage = memo(({ imageId, imageName, imageLink, titleVariant = "h6" }: CustomImageProps) => {
     const cls = useStyles();
     const [isLoading, setLoading] = useState<boolean>(true);
     const [bounce, setBounce] = useState<boolean>(false);
@@ -32,6 +32,8 @@ export const CustomImage = ({ imageId, imageName, imageLink, titleVariant = "h6"
         setBounce(!bounce);
     }, [imageId]);
 
+    console.log(`Looking for this to change: ${imageId}`);
+    console.log(`Also This to change LINK: ${imageLink}`);
     return (
         <>
             <Typography variant={titleVariant} align="center">
@@ -49,4 +51,4 @@ export const CustomImage = ({ imageId, imageName, imageLink, titleVariant = "h6"
             </Align>
         </>
     );
-};
+});

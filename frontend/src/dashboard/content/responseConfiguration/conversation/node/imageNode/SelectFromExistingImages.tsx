@@ -14,20 +14,17 @@ export interface SelectFromExistingImagesProps {
     setImageLink: SetState<string>;
     setImageName: SetState<string>;
     setImageId: (imageId: string) => void;
-    setReload: () => void;
 }
 
-export const SelectFromExistingImages = ({ setImageId, setReload, repository, nodeId, imageId, currentImageId, setImageLink, setImageName }: SelectFromExistingImagesProps) => {
+export const SelectFromExistingImages = ({  setImageId, repository, nodeId, imageId, currentImageId, setImageLink, setImageName }: SelectFromExistingImagesProps) => {
     const [options, setOptions] = useState<FileLink[] | null>(null);
     const [label, setLabel] = useState<string>("");
 
     const onChange = async (_: any, option: FileLink) => {
         await repository.Configuration.Images.savePreExistingImage(option.fileId, nodeId);
-        setLabel(option.fileName);
-        setImageId(option.fileId);
 
-        if (!option.isUrl && imageId !== null && imageId !== undefined) {
-            const imageData = SessionStorage.getImageData(imageId);
+        if (!option.isUrl && imageId !== undefined) {
+            const imageData = SessionStorage.getImageData(option.fileId);
             if (imageData !== null) {
                 setImageLink(imageData.presignedUrl);
                 setImageName(imageData.fileName);
@@ -35,10 +32,12 @@ export const SelectFromExistingImages = ({ setImageId, setReload, repository, no
                 const presignedUrl = await repository.Configuration.Images.getSignedUrl(option.link);
                 setImageLink(presignedUrl);
                 setImageName(option.fileName);
-                SessionStorage.setImageData(imageId, presignedUrl, option.fileName, "");
+                SessionStorage.setImageData(option.fileId, presignedUrl, option.fileName, "");
             }
         }
-        setReload();
+        console.log(`Does this match current ID: ${option.fileId}`);
+        setLabel(option.fileName);
+        setImageId(option.fileId);
     };
 
     const groupGetter = (val: FileLink) => val.fileName;

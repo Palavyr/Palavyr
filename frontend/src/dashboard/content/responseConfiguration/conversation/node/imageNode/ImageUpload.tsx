@@ -15,6 +15,7 @@ interface ImageUploadProps {
     nodeId: string;
     closeEditor: () => void;
     currentImageId: string;
+    setCurrentImageId: SetState<string>;
     setImageLink: SetState<string>;
     setImageName: SetState<string>;
     initialState: boolean;
@@ -24,7 +25,20 @@ interface ImageUploadProps {
     updateTree: () => void;
 }
 
-export const ImageUpload = ({ updateTree, currentNode, nodeId, imageId, setReload, closeEditor, currentImageId, setImageLink, setImageName, repository, initialState = false }: ImageUploadProps) => {
+export const ImageUpload = ({
+    setCurrentImageId,
+    updateTree,
+    currentNode,
+    nodeId,
+    imageId,
+    setReload,
+    closeEditor,
+    currentImageId,
+    setImageLink,
+    setImageName,
+    repository,
+    initialState = false,
+}: ImageUploadProps) => {
     const cls = useNodeInterfaceStyles();
     const history = useHistory();
     const [uploadModal, setUploadModal] = useState(false);
@@ -75,11 +89,10 @@ export const ImageUpload = ({ updateTree, currentNode, nodeId, imageId, setReloa
                             nodeId={nodeId}
                             imageId={imageId}
                             repository={repository}
-                            setReload={setReload}
                             setImageId={(imageId: string) => {
                                 currentNode.imageId = imageId;
-                                setReload();
-                                updateTree();
+                                setCurrentImageId(imageId);
+                                currentNode.UpdateTree();
                             }}
                             currentImageId={currentImageId}
                             setImageLink={setImageLink}

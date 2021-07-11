@@ -50,8 +50,8 @@ export const ImageNodeEditor = ({ updateTree, currentNode, nodeId, repository, e
         } else {
             loadImage();
         }
-    }, [imageId]);
-
+    }, [loadImage]);
+    console.log(`CURRENT IMAGEID: ${currentImageId}`);
     return (
         <Dialog fullWidth open={editorIsOpen} onClose={closeEditor}>
             <DialogTitle>Edit a conversation node</DialogTitle>
@@ -68,6 +68,7 @@ export const ImageNodeEditor = ({ updateTree, currentNode, nodeId, repository, e
                     nodeId={nodeId}
                     closeEditor={closeEditor}
                     currentImageId={currentImageId}
+                    setCurrentImageId={setCurrentImageId}
                     setImageLink={setImageLink}
                     setImageName={setImageName}
                     repository={repository}

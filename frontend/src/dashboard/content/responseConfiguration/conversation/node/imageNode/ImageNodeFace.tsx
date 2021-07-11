@@ -27,7 +27,7 @@ export const ImageNodeFace = ({ openEditor, imageId, repository }: ImageNodeFace
                 SessionStorage.setImageData(imageId, presignedUrl, fileLink.fileName, fileLink.fileId);
             }
         }
-    }, []);
+    }, [imageId]);
 
     useEffect(() => {
         if (imageId !== null && imageId !== undefined) {
@@ -40,7 +40,7 @@ export const ImageNodeFace = ({ openEditor, imageId, repository }: ImageNodeFace
                 loadImage();
             }
         }
-    }, [loadImage]);
+    }, [imageId]);
 
     return (
         <PalavyrNodeBody openEditor={openEditor}>
