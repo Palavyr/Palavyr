@@ -8,7 +8,7 @@ export interface IPalavyrNodeChanger {
     createOrTruncateChildNodes(currentNode: IPalavyrNode, valueOptions: string[], nodeTypeOptions: NodeTypeOptions): void;
 }
 
-export class PalavyrNodeChanger implements IPalavyrNodeChanger {
+class PalavyrNodeChanger implements IPalavyrNodeChanger {
     private nodeCreator: NodeCreator = new NodeCreator();
     constructor() {}
 
@@ -23,7 +23,6 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         }
 
         if (currentNode.nodeTypeCode === NodeTypeCode.VII && nodeOption.nodeTypeCode !== NodeTypeCode.VII) {
-            // this.unsetLoopbackTerminalNodes(currentNode);
             const recurse = (childNodeReferences: INodeReferences) => {
                 childNodeReferences.forEach((childNode: IPalavyrNode) => {
                     if (childNode.nodeType === "Loopback") {
@@ -394,3 +393,5 @@ export class PalavyrNodeChanger implements IPalavyrNodeChanger {
         currentNode.isLoopbackAnchorType = nodeOption.isLoopbackAnchor;
     }
 }
+
+export default new PalavyrNodeChanger();

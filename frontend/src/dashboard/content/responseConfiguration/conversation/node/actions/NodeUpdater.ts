@@ -1,13 +1,8 @@
 import { NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { IPalavyrNode } from "../../Contracts";
-import { IPalavyrNodeChanger, PalavyrNodeChanger } from "./NodeChanger";
+import NodeChanger from "./NodeChanger";
 
 export class NodeUpdater {
-    private nodeChanger: IPalavyrNodeChanger;
-    constructor() {
-        this.nodeChanger = new PalavyrNodeChanger();
-    }
-
     public updateNode(currentNode: IPalavyrNode, textUpdate: string, valueOptions: string[], nodeTypeOptions: NodeTypeOptions) {
         this.updateText(currentNode, textUpdate);
         this.updateValueOptions(currentNode, valueOptions, nodeTypeOptions);
@@ -26,19 +21,19 @@ export class NodeUpdater {
 
             case NodeTypeCode.IV: // Multioption Path
                 currentNode.setValueOptions(valueOptions);
-                this.nodeChanger.createOrTruncateChildNodes(currentNode, valueOptions, nodeTypeOptions);
+                NodeChanger.createOrTruncateChildNodes(currentNode, valueOptions, nodeTypeOptions);
                 currentNode.childNodeReferences.applyOptionPaths(valueOptions);
                 break;
 
             case NodeTypeCode.VI: //Anabranch
                 currentNode.setValueOptions(valueOptions);
-                this.nodeChanger.createOrTruncateChildNodes(currentNode, valueOptions, nodeTypeOptions);
+                NodeChanger.createOrTruncateChildNodes(currentNode, valueOptions, nodeTypeOptions);
                 currentNode.childNodeReferences.applyOptionPaths(valueOptions);
                 break;
 
             case NodeTypeCode.VII:
                 currentNode.setValueOptions(valueOptions);
-                this.nodeChanger.createOrTruncateChildNodes(currentNode, valueOptions, nodeTypeOptions);
+                NodeChanger.createOrTruncateChildNodes(currentNode, valueOptions, nodeTypeOptions);
                 currentNode.childNodeReferences.applyOptionPaths(valueOptions);
                 break;
 

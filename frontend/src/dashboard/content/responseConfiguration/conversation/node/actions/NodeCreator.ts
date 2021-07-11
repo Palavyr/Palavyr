@@ -28,6 +28,7 @@ export class NodeCreator {
 
     public addDefaultRootNode(palavyrLinkedList: IPalavyrLinkedList, repository: PalavyrRepository, restOfTree: INodeReferences, defaultText?: string) {
         const defaultNode = this.createDefaultNode("Continue");
+        defaultNode.isRoot = true;
         const newPalavyrNode = palavyrLinkedList.convertToPalavyrNode(palavyrLinkedList, repository, defaultNode, palavyrLinkedList.setTreeWithHistory, true);
         if (defaultText) {
             newPalavyrNode.userText = defaultText;

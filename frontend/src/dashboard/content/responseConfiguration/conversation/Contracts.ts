@@ -97,7 +97,7 @@ export interface IPalavyrNode {
     resolveOrder: number;
     shouldShowMultiOption: boolean;
     dynamicType: string | null;
-
+    imageId: string | null;
     nodeTypeOptions: NodeTypeOptions;
 
     isImageNode: boolean;

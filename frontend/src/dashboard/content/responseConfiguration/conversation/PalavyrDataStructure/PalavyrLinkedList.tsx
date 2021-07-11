@@ -4,10 +4,9 @@ import { ConvoNode, NodeTypeOptions } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { ILinkedListBucket, INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "../Contracts";
 import { LinkedListBucket } from "./LinkedListBucket";
-import { PalavyrImageNode } from "../node/imageNode/PalavyrImageNode";
-import { PalavyrTextNode } from "../node/textNode/PalavyrTextNode";
 import { NodeConfigurer } from "../node/actions/NodeConfigurer";
 import { NodeCreator } from "../node/actions/NodeCreator";
+import { PalavyrNode } from "../node/PalavyrNode";
 
 export class PalavyrLinkedList implements IPalavyrLinkedList {
     private linkedListBucket: ILinkedListBucket = new LinkedListBucket();
@@ -94,18 +93,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     }
 
     public convertToPalavyrNode(container: IPalavyrLinkedList, repository: PalavyrRepository, rawNode: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftMostBranch: boolean) {
-        let palavyrNode: IPalavyrNode;
-        switch (rawNode.isImageNode) {
-            case true:
-                palavyrNode = this.createImageNode(container, repository, rawNode, setTreeWithHistory, leftMostBranch);
-                break;
-            case false:
-                palavyrNode = this.createTextNode(container, repository, rawNode, setTreeWithHistory, leftMostBranch);
-                break;
-            default:
-                throw new Error("Node type couldn't be determined when construting the palavyr convo tree.");
-        }
-        return palavyrNode;
+        return new PalavyrNode(container, repository, rawNode, setTreeWithHistory, leftMostBranch);
     }
 
     public createTextNode(
@@ -115,7 +103,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
         leftmostBranch: boolean
     ): IPalavyrNode {
-        return new PalavyrTextNode(containerList, repository, node, setTreeWithHistory, leftmostBranch);
+        return new PalavyrNode(containerList, repository, node, setTreeWithHistory, leftmostBranch);
     }
 
     public createImageNode(
@@ -125,7 +113,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
         leftmostBranch: boolean
     ): IPalavyrNode {
-        return new PalavyrImageNode(containerList, repository, node, setTreeWithHistory, leftmostBranch);
+        return new PalavyrNode(containerList, repository, node, setTreeWithHistory, leftmostBranch);
     }
 
     compileToConvoNodes(): ConvoNode[] {
