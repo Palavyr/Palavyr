@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -130,12 +131,12 @@ namespace Palavyr.Core.Repositories
             return conversation;
         }
 
-        public async Task<ConversationNode> GetConversationNodeById(string nodeId)
+        public async Task<ConversationNode>? GetConversationNodeById(string nodeId)
         {
             logger.LogDebug($"Retrieving Conversation Node {nodeId}");
             var result = await dashContext
                 .ConversationNodes
-                .SingleAsync(row => row.NodeId == nodeId);
+                .SingleOrDefaultAsync(row => row.NodeId == nodeId);
             return result;
         }
 

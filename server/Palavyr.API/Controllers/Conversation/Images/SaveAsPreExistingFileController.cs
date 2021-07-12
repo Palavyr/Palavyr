@@ -10,26 +10,30 @@ namespace Palavyr.API.Controllers.Conversation.Images
     {
         private readonly IConfigurationRepository repository;
         private const string Route = "images/pre-existing/{imageId}/{nodeId}";
+
         public SaveAsPreExistingFileController(IConfigurationRepository repository)
         {
             this.repository = repository;
         }
 
         [HttpPost(Route)]
-        public async Task<ConversationNode> Post(
+        public async Task Post(
             [FromHeader]
             string accountId,
             string imageId,
             string nodeId,
             CancellationToken cancellationToken
-            )
+        )
         {
             // asserts this image exists
             var image = await repository.GetImageById(imageId, cancellationToken);
             var convoNode = await repository.GetConversationNodeById(nodeId);
-            convoNode.ImageId = image.ImageId;
-            await repository.CommitChangesAsync(cancellationToken);
-            return convoNode;
+
+            if (convoNode != null)
+            {
+                convoNode.ImageId = image.ImageId;
+                await repository.CommitChangesAsync(cancellationToken);
+            }
         }
     }
 }

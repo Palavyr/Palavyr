@@ -23,7 +23,7 @@ export const SelectFromExistingImages = ({  setImageId, repository, nodeId, imag
     const onChange = async (_: any, option: FileLink) => {
         await repository.Configuration.Images.savePreExistingImage(option.fileId, nodeId);
 
-        if (!option.isUrl && imageId !== undefined) {
+        if (!option.isUrl) {
             const imageData = SessionStorage.getImageData(option.fileId);
             if (imageData !== null) {
                 setImageLink(imageData.presignedUrl);

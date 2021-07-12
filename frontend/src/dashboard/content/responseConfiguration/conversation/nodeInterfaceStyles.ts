@@ -16,9 +16,9 @@ export const useNodeInterfaceStyles = makeStyles((theme) => ({
         maxWidth: props.debugOn ? "600px" : "250px",
         minHeight: "350px",
         borderColor: props.nodeType === "" ? "red" : "#54585A",
-        borderWidth: props.nodeType === "" ? "5px" : "2px",
+        borderWidth: props.nodeType === "" ? "8px" : "2px",
         borderRadius: "3px",
-        backgroundColor: theme.palette.success.light,
+        backgroundColor: props.nodeType === "" ? theme.palette.warning.main : theme.palette.success.light,
     }),
     card: {
         display: "flex",

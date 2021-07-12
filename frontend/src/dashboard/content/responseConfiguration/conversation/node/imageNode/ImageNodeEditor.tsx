@@ -32,7 +32,7 @@ export const ImageNodeEditor = ({ currentNode, nodeId, repository, editorIsOpen,
                 SessionStorage.setImageData(imageId, presignedUrl, fileLink.fileName, fileLink.fileId);
             }
         }
-    }, [imageId]);
+    }, [currentImageId]);
 
     useEffect(() => {
         if (imageId !== null && imageId !== undefined) {
@@ -45,7 +45,7 @@ export const ImageNodeEditor = ({ currentNode, nodeId, repository, editorIsOpen,
         } else {
             loadImage();
         }
-    }, [loadImage]);
+    }, [currentImageId]);
     return (
         <Dialog fullWidth open={editorIsOpen} onClose={closeEditor}>
             <DialogTitle>Edit a conversation node</DialogTitle>

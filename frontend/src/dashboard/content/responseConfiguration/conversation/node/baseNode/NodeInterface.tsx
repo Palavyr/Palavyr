@@ -69,7 +69,7 @@ export const NodeInterface = ({
     });
 
     return (
-        <Card style={{ border: "5px solid red" }} id={nodeId} className={cls.root} variant="outlined">
+        <Card id={nodeId} className={cls.root} variant={nodeType === "" ? "outlined" : undefined}>
             <CardContent className={classNames(cls.card, nodeId)}>
                 {showDebugData && <DataLogging debugData={compileDebug(currentNode)} nodeChildren={joinedChildReferenceString} nodeId={nodeId} />}
                 <NodeHeader isRoot={isRoot} optionPath={optionPath} />

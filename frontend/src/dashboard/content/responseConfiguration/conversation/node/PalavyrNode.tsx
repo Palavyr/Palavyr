@@ -312,7 +312,6 @@ export class PalavyrNode implements IPalavyrNode {
                         recurseAndDereference(node.childNodeReferences.Where((nodeRef: IPalavyrNode) => !nodeRef.Equals(mergeNode)));
                     }
                 } else {
-                    // node.unlock();
                     if (node.nodeType === "Loopback") {
                         return;
                     }
