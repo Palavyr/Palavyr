@@ -1,5 +1,5 @@
 import { makeStyles, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
-import React from "react";
+import React, { memo } from "react";
 import { NavLink } from "react-router-dom";
 import ChatIcon from "@material-ui/icons/Chat";
 
@@ -28,7 +28,7 @@ export interface AreaLinkItemProps {
     currentPage: string;
     areaName: string;
 }
-export const AreaLinkItem = ({ areaIdentifier, isActive, disabled, currentPage, areaName }: AreaLinkItemProps) => {
+export const AreaLinkItem = memo(({ areaIdentifier, isActive, disabled, currentPage, areaName }: AreaLinkItemProps) => {
     const cls = useStyles();
 
     return (
@@ -41,4 +41,4 @@ export const AreaLinkItem = ({ areaIdentifier, isActive, disabled, currentPage, 
             </ListItem>
         </NavLink>
     );
-};
+});

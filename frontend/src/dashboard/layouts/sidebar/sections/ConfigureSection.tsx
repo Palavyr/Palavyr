@@ -38,7 +38,7 @@ export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails }
         <List>
             <SidebarSectionHeader title="Configure" onClick={() => setConfigureOpen(!configureOpen)} currentState={configureOpen} />
             <Collapse in={configureOpen} timeout="auto" unmountOnExit>
-                {sortByPropertyAlphabetical((x: AreaNameDetail) => x.areaName, areaNameDetails).map(
+                {areaNameDetails.map(
                     (x: AreaNameDetail, index: number) =>
                         planTypeMeta && (
                             <AreaLinkItem key={index} areaIdentifier={x.areaIdentifier} isActive={isActive} disabled={index >= planTypeMeta.allowedAreas} currentPage={currentPage} areaName={x.areaName} />

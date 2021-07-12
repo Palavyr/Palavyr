@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const UserDetails = () => {
+export const UserDetails = React.memo(() => {
     const cls = useStyles();
     const history = useHistory();
 
@@ -91,4 +91,4 @@ export const UserDetails = () => {
             {loading ? <CircularProgress /> : details}
         </div>
     );
-};
+});

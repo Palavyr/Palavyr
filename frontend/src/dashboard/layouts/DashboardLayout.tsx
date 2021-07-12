@@ -6,10 +6,10 @@ import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep } from "lodash";
-import { AlertType, AreaNameDetails, Areas, AreaTable, Enquiries, EnquiryRow, LocaleDefinition, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
+import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRow, LocaleDefinition, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DashboardHeader } from "./header/DashboardHeader";
-import { CircularProgress, makeStyles, Typography } from "@material-ui/core";
+import { makeStyles, Typography } from "@material-ui/core";
 import { DRAWER_WIDTH } from "@constants";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
@@ -17,10 +17,10 @@ import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
 import { DashboardContext } from "./DashboardContext";
 import { UserDetails } from "./sidebar/UserDetails";
-import { Align } from "./positioning/Align";
 import { PalavyrSnackbar } from "@common/components/PalavyrSnackbar";
 import { redirectToHomeWhenSessionNotEstablished } from "@api-client/clientUtils";
 import { SessionStorage } from "localStorage/sessionStorage";
+import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
@@ -131,7 +131,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
             areas = await repository.Area.GetAreas();
             SessionStorage.setAreas(areas);
         }
-        setAreaNameDetails(fetchSidebarInfo(areas));
+        setAreaNameDetails(sortByPropertyAlphabetical((x: AreaNameDetail) => x.areaName, fetchSidebarInfo(areas)));
 
         const cachedLocale = SessionStorage.getLocale();
         let locale: LocaleDefinition;
@@ -273,15 +273,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                     <SideBarHeader handleDrawerClose={handleDrawerClose} />
                     <UserDetails />
                     <Divider />
-                    {dashboardAreasLoading ? (
-                        <Align verticalCenter>
-                            <div style={{ paddingTop: "4rem" }}>
-                                <CircularProgress />
-                            </div>
-                        </Align>
-                    ) : (
-                        <SideBarMenu areaNameDetails={areaNameDetails} />
-                    )}
+                    <SideBarMenu areaNameDetails={areaNameDetails} />
                 </Drawer>
                 <ContentLoader isLoading={isLoading} dashboardAreasLoading={dashboardAreasLoading} open={open}>
                     {children}
