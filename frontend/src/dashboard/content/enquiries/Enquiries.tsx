@@ -11,6 +11,7 @@ import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { OsTypeToggle } from "../responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
+import { SessionStorage } from "localStorage/sessionStorage";
 
 const useStyles = makeStyles((theme) => ({
     title: {

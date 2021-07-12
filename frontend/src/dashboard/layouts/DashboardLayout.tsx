@@ -6,7 +6,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep } from "lodash";
-import { AlertType, AreaNameDetails, Areas, AreaTable, EnquiryRow, PlanType, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
+import { AlertType, AreaNameDetails, Areas, AreaTable, Enquiries, EnquiryRow, LocaleDefinition, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DashboardHeader } from "./header/DashboardHeader";
 import { CircularProgress, makeStyles, Typography } from "@material-ui/core";
@@ -20,6 +20,7 @@ import { UserDetails } from "./sidebar/UserDetails";
 import { Align } from "./positioning/Align";
 import { PalavyrSnackbar } from "@common/components/PalavyrSnackbar";
 import { redirectToHomeWhenSessionNotEstablished } from "@api-client/clientUtils";
+import { SessionStorage } from "localStorage/sessionStorage";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
@@ -76,6 +77,8 @@ interface IDashboardLayout {
     helpComponent: JSX.Element[] | JSX.Element;
 }
 
+const repository = new PalavyrRepository();
+
 export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) => {
     const history = useHistory();
     redirectToHomeWhenSessionNotEstablished(history);
@@ -93,7 +96,6 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
     const [alertState, setAlertState] = useState<boolean>(false);
 
-    const [planType, setPlanType] = useState<PlanType>();
     const [currencySymbol, setCurrencySymbol] = useState<string>("");
     const [planTypeMeta, setPlanTypeMeta] = useState<PlanTypeMeta>();
 
@@ -117,25 +119,38 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
     const loadAreas = useCallback(async () => {
         setDashboardAreasLoading(true);
-        const repository = new PalavyrRepository();
 
-        // todo: Deprecate this call in the future once we are confident that it is no longer needed...
-        // await repository.Conversations.EnsureDBIsValid();
+        const planTypeMeta = await repository.Settings.Subscriptions.getCurrentPlanMeta();
+        setPlanTypeMeta(planTypeMeta);
 
-        const currentPlanType = await repository.Settings.Account.getCurrentPlan(); // TODO: Deprecate
-        const currentPlanTypeMeta = await repository.Settings.Subscriptions.getCurrentPlanMeta();
+        const cachedAreas = SessionStorage.getAreas();
+        let areas: Areas;
+        if (cachedAreas) {
+            areas = cachedAreas;
+        } else {
+            areas = await repository.Area.GetAreas();
+            SessionStorage.setAreas(areas);
+        }
+        setAreaNameDetails(fetchSidebarInfo(areas));
 
-        setPlanType(currentPlanType.status);
-        setPlanTypeMeta(currentPlanTypeMeta);
-
-        const areas = await repository.Area.GetAreas();
-        const areaNameDetails = fetchSidebarInfo(areas);
-        setAreaNameDetails(areaNameDetails);
-
-        const locale = await repository.Settings.Account.GetLocale();
+        const cachedLocale = SessionStorage.getLocale();
+        let locale: LocaleDefinition;
+        if (cachedLocale) {
+            locale = cachedLocale;
+        } else {
+            locale = await repository.Settings.Account.GetLocale();
+            SessionStorage.setLocale(locale);
+        }
         setCurrencySymbol(locale.localeCurrencySymbol);
 
-        const needsPassword = await repository.Settings.Account.CheckNeedsPassword();
+        const cachedNeedsPassword = SessionStorage.getNeedsPassword();
+        let needsPassword: boolean;
+        if (cachedNeedsPassword) {
+            needsPassword = cachedNeedsPassword;
+        } else {
+            needsPassword = await repository.Settings.Account.CheckNeedsPassword();
+            SessionStorage.setNeedsPassword(needsPassword);
+        }
         setAccountTypeNeedsPassword(needsPassword);
 
         const enqs = await repository.Enquiries.getEnquiries();
@@ -143,7 +158,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         setUnseenNotifications(numUnseen);
 
         if (areaIdentifier) {
-            var currentView = areas.filter((x: AreaTable) => x.areaIdentifier === areaIdentifier).pop();
+            const currentView = areas.filter((x: AreaTable) => x.areaIdentifier === areaIdentifier).pop();
 
             if (currentView) {
                 setViewName(currentView.areaName);
@@ -200,7 +215,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     };
 
     const alertDetails: AlertType = {
-        title: `Maximum areas reached for your current plan (${planType})`,
+        title: `Maximum areas reached for your current plan (${planTypeMeta ? planTypeMeta.planType : ""})`,
         message:
             planTypeMeta && planTypeMeta.planType === PurchaseTypes.Free
                 ? "Thanks for using Palavyr! Please consider purchasing a subscription to increase the number of areas you can provide."
@@ -238,7 +253,14 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
             }}
         >
             <div className={cls.root}>
-                <DashboardHeader open={open} unseenNotifications={unseenNotifications} handleDrawerOpen={handleDrawerOpen} handleHelpDrawerOpen={handleHelpDrawerOpen} helpOpen={helpOpen} title={currentViewName} />
+                <DashboardHeader
+                    open={open}
+                    unseenNotifications={unseenNotifications}
+                    handleDrawerOpen={handleDrawerOpen}
+                    handleHelpDrawerOpen={handleHelpDrawerOpen}
+                    helpOpen={helpOpen}
+                    title={currentViewName}
+                />
                 <Drawer
                     className={classNames(cls.menuDrawer)}
                     variant="persistent"

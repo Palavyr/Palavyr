@@ -141,7 +141,7 @@ export const StructuredConvoTree = () => {
             <AreaConfigurationHeader
                 divider={treeErrors?.anyErrors}
                 title="Palavyr"
-                subtitle="Your Palavyr is the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
+                subtitle="This Palavyr is the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
             />
             <Align>
                 <SaveOrCancel position="right" onSave={onSave} />

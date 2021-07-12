@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
     editorStyle: {
         fontSize: "12px",
-        color: "lightgray",
+        color: "darkgray",
     },
 }));
 

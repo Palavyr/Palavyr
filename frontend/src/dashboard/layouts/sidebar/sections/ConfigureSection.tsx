@@ -40,7 +40,9 @@ export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails }
             <Collapse in={configureOpen} timeout="auto" unmountOnExit>
                 {sortByPropertyAlphabetical((x: AreaNameDetail) => x.areaName, areaNameDetails).map(
                     (x: AreaNameDetail, index: number) =>
-                        planTypeMeta && <AreaLinkItem key={index} areaIdentifier={x.areaIdentifier} isActive={isActive} index={index} numAreasAllowed={planTypeMeta.allowedAreas} currentPage={currentPage} areaName={x.areaName} />
+                        planTypeMeta && (
+                            <AreaLinkItem key={index} areaIdentifier={x.areaIdentifier} isActive={isActive} disabled={index >= planTypeMeta.allowedAreas} currentPage={currentPage} areaName={x.areaName} />
+                        )
                 )}
                 <Divider />
                 <SidebarLinkItem text="Add New Area" isActive={isActive} onClick={checkAreaCount} IconComponent={<AddCircleOutlineIcon className={cls.icon} />} />

@@ -8,6 +8,7 @@ import { useState } from "react";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { TodosAsBoolean } from "@Palavyr-Types";
 import { allClear, convertTodos } from "./OnboardingTodo/onboardingUtils";
+import { SessionStorage } from "localStorage/sessionStorage";
 
 const useStyles = makeStyles((theme) => ({
     background: {
@@ -105,6 +106,7 @@ export const WelcomeToTheDashboard = () => {
     }, []);
 
     React.useEffect(() => {
+        SessionStorage.clearEnquiries();
         loadTodos();
         setLoading(false);
     }, []);
@@ -155,7 +157,8 @@ export const WelcomeToTheDashboard = () => {
                             When you are ready to use your configured widget, simple paste the provided code into your website's html.
                         </Typography>
                         <Typography variant="body1" align="left" gutterBottom>
-                            A much more simple widget API is currently under development and will be available soon! This will save you the hassle of writing any code for your widget's behavior like popping up or out from the side!
+                            A much more simple widget API is currently under development and will be available soon! This will save you the hassle of writing any code for your widget's behavior like popping up
+                            or out from the side!
                         </Typography>
                     </Card>
                 </div>

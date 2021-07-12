@@ -29,6 +29,7 @@ import {
     PlanTypeMeta,
 } from "@Palavyr-Types";
 import { filterNodeTypeOptionsOnSubscription } from "dashboard/subscriptionFilters/filterConvoNodeTypes";
+import { SessionStorage } from "localStorage/sessionStorage";
 import { AxiosClient } from "./AxiosClient";
 import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./clientUtils";
 
@@ -71,7 +72,8 @@ export class PalavyrRepository {
 
     public Area = {
         UpdateIsEnabled: async (areaToggleStateUpdate: boolean, areaIdentifier: string) => this.client.put<boolean, {}>(`areas/${areaIdentifier}/area-toggle`, { IsEnabled: areaToggleStateUpdate }),
-        UpdateUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, areaIdentifier: string) => this.client.put<boolean, {}>(`areas/${areaIdentifier}/use-fallback-email-toggle`, { UseFallback: useAreaFallbackEmailUpdate }),
+        UpdateUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, areaIdentifier: string) =>
+            this.client.put<boolean, {}>(`areas/${areaIdentifier}/use-fallback-email-toggle`, { UseFallback: useAreaFallbackEmailUpdate }),
         GetAreas: async () => this.client.get<Areas>("areas"),
         GetArea: async (areaIdentifier: string) => this.client.get<AreaTable>(`areas/${areaIdentifier}`),
         createArea: (areaName: string) => this.client.post<AreaTable, {}>(`areas/create/`, { AreaName: areaName }), // get creates and gets new area
@@ -99,15 +101,18 @@ export class PalavyrRepository {
                 createDynamicTable: async (areaIdentifier: string) => this.client.post<DynamicTableMeta, {}>(`tables/dynamic/${areaIdentifier}`),
 
                 deleteDynamicTable: async (areaIdentifier: string, tableType: string, tableId: string) => this.client.delete(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`),
-                getDynamicTableDataTemplate: async <T>(areaIdentifier: string, tableType: string, tableId: string) => this.client.get<T>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}/template`),
+                getDynamicTableDataTemplate: async <T>(areaIdentifier: string, tableType: string, tableId: string) =>
+                    this.client.get<T>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}/template`),
                 getDynamicTableRows: async (areaIdentifier: string, tableType: string, tableId: string) => this.client.get<TableData>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`),
                 saveDynamicTable: async <T>(areaIdentifier: string, tableType: string, tableData: TableData, tableId: string, tableTag: string) =>
                     this.client.put<T, {}>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`, { TableTag: tableTag, [tableType]: tableData }),
             },
             Static: {
-                updateStaticTablesMetas: async (areaIdentifier: string, staticTablesMetas: StaticTableMetas) => this.client.put<StaticTableMetas, {}>(`response/configuration/${areaIdentifier}/static/tables/save`, staticTablesMetas),
+                updateStaticTablesMetas: async (areaIdentifier: string, staticTablesMetas: StaticTableMetas) =>
+                    this.client.put<StaticTableMetas, {}>(`response/configuration/${areaIdentifier}/static/tables/save`, staticTablesMetas),
                 getStaticTablesMetaTemplate: async (areaIdentifier: string) => this.client.get<StaticTableMetaTemplate>(`response/configuration/${areaIdentifier}/static/tables/template`),
-                getStaticTableRowTemplate: async (areaIdentifier: string, tableOrder: number) => this.client.get<StaticTableRow>(`response/configuration/${areaIdentifier}/static/tables/${tableOrder}/row/template`),
+                getStaticTableRowTemplate: async (areaIdentifier: string, tableOrder: number) =>
+                    this.client.get<StaticTableRow>(`response/configuration/${areaIdentifier}/static/tables/${tableOrder}/row/template`),
             },
         },
 
@@ -171,7 +176,8 @@ export class PalavyrRepository {
     public Conversations = {
         GetConversation: async (areaIdentifier: string) => this.client.get<ConvoNode[]>(`configure-conversations/${areaIdentifier}`),
         GetConversationNode: async (nodeId: string) => this.client.get<ConvoNode>(`configure-conversations/nodes/${nodeId}`),
-        GetNodeOptionsList: async (areaIdentifier: string, planTypeMeta: PlanTypeMeta) => filterNodeTypeOptionsOnSubscription(await this.client.get<NodeTypeOptions>(`configure-conversations/${areaIdentifier}/node-type-options`), planTypeMeta),
+        GetNodeOptionsList: async (areaIdentifier: string, planTypeMeta: PlanTypeMeta) =>
+            filterNodeTypeOptionsOnSubscription(await this.client.get<NodeTypeOptions>(`configure-conversations/${areaIdentifier}/node-type-options`), planTypeMeta),
         GetErrors: async (areaIdentifier: string, nodeList: ConvoNode[]) => this.client.post<TreeErrors, {}>(`configure-conversations/${areaIdentifier}/tree-errors`, { Transactions: nodeList }),
 
         CheckIfIsMultiOptionType: async (nodeType: string) => this.client.get<boolean>(`configure-conversations/check-multi-option/${nodeType}`),
@@ -179,7 +185,8 @@ export class PalavyrRepository {
         CheckIfIsSplitMergeType: async (nodeType: string) => this.client.get<boolean>(`configure-conversations/check-is-split-merge/${nodeType}`),
 
         ModifyConversation: async (nodelist: ConvoNode[], areaIdentifier: string) => this.client.put<ConvoNode[], {}>(`configure-conversations/${areaIdentifier}`, { Transactions: nodelist }),
-        ModifyConversationNode: async (nodeId: string, areaIdentifier: string, updatedNode: ConvoTableRow) => this.client.put<ConvoNode[], {}>(`configure-conversations/${areaIdentifier}/nodes/${nodeId}`, updatedNode),
+        ModifyConversationNode: async (nodeId: string, areaIdentifier: string, updatedNode: ConvoTableRow) =>
+            this.client.put<ConvoNode[], {}>(`configure-conversations/${areaIdentifier}/nodes/${nodeId}`, updatedNode),
 
         // TODO: Deprecate eventually
         EnsureDBIsValid: async () => this.client.post(`configure-conversations/ensure-db-valid`),
@@ -191,9 +198,26 @@ export class PalavyrRepository {
         SaveWidgetPreferences: async (prefs: WidgetPreferences) => this.client.put<WidgetPreferences, WidgetPreferences>(`widget-config/preferences`, prefs),
     };
 
+    private async GetWithCache(storageGetCall: () => any, apiGetPromise: Promise<any>, storagePutCall: (result: any) => void) {
+        const cachedValue = storageGetCall();
+        if (cachedValue) {
+            return cachedValue;
+        } else {
+            const result = await apiGetPromise;
+            storagePutCall(result);
+            return result;
+        }
+    }
+
     public Settings = {
         Subscriptions: {
-            getCurrentPlanMeta: async () => this.client.get<PlanTypeMeta>(`account/settings/current-plan-meta`),
+            getCurrentPlanMeta: async () => {
+                return await this.GetWithCache(
+                    () => SessionStorage.getCurrentPlanMeta(),
+                    this.client.get<PlanTypeMeta>(`account/settings/current-plan-meta`),
+                    (value: any) => SessionStorage.setCurrentPlanMeta(value)
+                );
+            },
         },
 
         Account: {
@@ -230,13 +254,19 @@ export class PalavyrRepository {
             CheckNeedsPassword: async () => this.client.get<boolean>(`account/needs-password`),
         },
         EmailVerification: {
-            RequestEmailVerification: async (emailAddress: string, areaIdentifier: string) => this.client.post<EmailVerificationResponse, {}>(`verification/email/${areaIdentifier}`, { EmailAddress: emailAddress }),
+            RequestEmailVerification: async (emailAddress: string, areaIdentifier: string) =>
+                this.client.post<EmailVerificationResponse, {}>(`verification/email/${areaIdentifier}`, { EmailAddress: emailAddress }),
             CheckEmailVerificationStatus: async (emailAddress: string) => this.client.post<boolean, {}>(`verification/email/status`, { EmailAddress: emailAddress }),
         },
     };
 
     public Enquiries = {
-        getEnquiries: async () => this.client.get<Enquiries>(`enquiries`),
+        getEnquiries: async () =>
+            this.GetWithCache(
+                () => SessionStorage.getEnquiries(),
+                this.client.get<Enquiries>(`enquiries`),
+                (value: any) => SessionStorage.setEnquiries(value)
+            ),
 
         getShowSeenEnquiries: async () => this.client.get<boolean>(`enquiries/show`),
         toggleShowSeenEnquiries: async () => this.client.put<boolean, {}>(`enquiries/toggle-show`),

@@ -24,17 +24,16 @@ const useStyles = makeStyles((theme) => ({
 export interface AreaLinkItemProps {
     areaIdentifier: string;
     isActive: boolean;
-    index: number;
-    numAreasAllowed: number;
+    disabled: boolean;
     currentPage: string;
     areaName: string;
 }
-export const AreaLinkItem = ({ areaIdentifier, isActive, index, numAreasAllowed, currentPage, areaName }: AreaLinkItemProps) => {
+export const AreaLinkItem = ({ areaIdentifier, isActive, disabled, currentPage, areaName }: AreaLinkItemProps) => {
     const cls = useStyles();
 
     return (
-        <NavLink key={areaIdentifier} to={!isActive || index > numAreasAllowed ? currentPage : createNavLink(areaIdentifier)} className={cls.areaNameText}>
-            <ListItem disabled={!isActive || index > numAreasAllowed} button key={areaIdentifier}>
+        <NavLink key={areaIdentifier} to={!isActive || disabled ? currentPage : createNavLink(areaIdentifier)} className={cls.areaNameText}>
+            <ListItem disabled={!isActive || disabled} button key={areaIdentifier}>
                 <ListItemIcon className={cls.icon}>
                     <ChatIcon />
                 </ListItemIcon>

@@ -3,6 +3,7 @@ import { ListItem, ListItemText, FormControlLabel, Typography, makeStyles } from
 import { IOSSwitch } from "@common/components/IOSSwitch";
 import { green, red } from "theme";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { SessionStorage } from "localStorage/sessionStorage";
 
 export interface WidgetStateSwitchProps {
     isActive: boolean;
@@ -17,18 +18,24 @@ const useStyles = makeStyles((theme) => ({
 export const WidgetStateSwitch = memo(({ isActive }: WidgetStateSwitchProps) => {
     const [widgetState, setWidgetState] = useState<boolean | undefined>();
     const cls = useStyles();
+    const repository = new PalavyrRepository();
 
     const updatewidgetState = async () => {
-        const repository = new PalavyrRepository();
         const updatedWidgetState = await repository.Configuration.WidgetState.SetWidgetState(!widgetState);
+        SessionStorage.setWidgetState(updatedWidgetState);
         setWidgetState(updatedWidgetState);
     };
 
     useEffect(() => {
-        const repository = new PalavyrRepository();
         (async () => {
-            const currentWidgetState = await repository.Configuration.WidgetState.GetWidgetState();
-            setWidgetState(currentWidgetState);
+            const cachedState = SessionStorage.getWidgetState();
+            if (cachedState) {
+                setWidgetState(cachedState);
+            } else {
+                const currentWidgetState = await repository.Configuration.WidgetState.GetWidgetState();
+                SessionStorage.setWidgetState(currentWidgetState);
+                setWidgetState(currentWidgetState);
+            }
         })();
     }, []);
 
