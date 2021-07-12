@@ -28,7 +28,6 @@ export interface NodeInterfaceProps {
     shouldDisableNodeTypeSelector: boolean;
     optionPath: string;
     repository?: PalavyrRepository;
-    updateTree: () => void;
 }
 
 const compileDebug = (currentNode: IPalavyrNode): { [key: string]: string }[] => {
@@ -53,7 +52,6 @@ export const NodeInterface = ({
     joinedChildReferenceString,
     shouldDisableNodeTypeSelector,
     optionPath,
-    updateTree,
 }: NodeInterfaceProps) => {
     const { showDebugData } = React.useContext(ConversationTreeContext);
     const repository = new PalavyrRepository();
@@ -71,14 +69,14 @@ export const NodeInterface = ({
     });
 
     return (
-        <Card style={{ border: "5px solid black" }} id={nodeId} className={cls.root} variant="outlined">
+        <Card style={{ border: "5px solid red" }} id={nodeId} className={cls.root} variant="outlined">
             <CardContent className={classNames(cls.card, nodeId)}>
                 {showDebugData && <DataLogging debugData={compileDebug(currentNode)} nodeChildren={joinedChildReferenceString} nodeId={nodeId} />}
                 <NodeHeader isRoot={isRoot} optionPath={optionPath} />
                 {currentNode.isImageNode ? <ImageNodeFace imageId={imageId} repository={repository} openEditor={openEditor} /> : <TextNodeFace openEditor={openEditor} userText={userText} />}
                 <NodeTypeSelector currentNode={currentNode} shouldDisableNodeTypeSelector={shouldDisableNodeTypeSelector} />
                 {currentNode.isImageNode ? (
-                    <ImageNodeEditor updateTree={updateTree} currentNode={currentNode} nodeId={nodeId} repository={repository} editorIsOpen={editorIsOpen} closeEditor={closeEditor} imageId={imageId} />
+                    <ImageNodeEditor currentNode={currentNode} nodeId={nodeId} repository={repository} editorIsOpen={editorIsOpen} closeEditor={closeEditor} imageId={imageId} />
                 ) : (
                     <TextNodeEditor
                         isMultiOptionType={currentNode.isMultiOptionType}

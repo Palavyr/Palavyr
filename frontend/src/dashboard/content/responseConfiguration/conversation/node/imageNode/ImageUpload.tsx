@@ -21,24 +21,9 @@ interface ImageUploadProps {
     initialState: boolean;
     repository: PalavyrRepository;
     imageId?: string;
-    setReload: () => void;
-    updateTree: () => void;
 }
 
-export const ImageUpload = ({
-    setCurrentImageId,
-    updateTree,
-    currentNode,
-    nodeId,
-    imageId,
-    setReload,
-    closeEditor,
-    currentImageId,
-    setImageLink,
-    setImageName,
-    repository,
-    initialState = false,
-}: ImageUploadProps) => {
+export const ImageUpload = ({ setCurrentImageId, currentNode, nodeId, imageId, closeEditor, currentImageId, setImageLink, setImageName, repository, initialState = false }: ImageUploadProps) => {
     const cls = useNodeInterfaceStyles();
     const history = useHistory();
     const [uploadModal, setUploadModal] = useState(false);

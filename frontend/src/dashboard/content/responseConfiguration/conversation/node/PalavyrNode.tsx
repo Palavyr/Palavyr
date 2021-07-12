@@ -1,16 +1,10 @@
-import React, { useState, useEffect } from "react";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
-import { makeStyles } from "@material-ui/core";
 import { ConvoNode, NodeTypeOptions, ValueOptionDelimiter, LineMap, AnabranchContext, LineLink, NodeTypeCode, LoopbackContext } from "@Palavyr-Types";
-import classNames from "classnames";
-import { SteppedLineTo } from "../PalavyrNodeLines/SteppedLines";
 import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "../Contracts";
 import { NodeReferences } from "./PalavyrNodeReferences";
 import { NodeConfigurer } from "./actions/NodeConfigurer";
 import { NodeCreator } from "./actions/NodeCreator";
-import { NodeInterface } from "./baseNode/NodeInterface";
-const treelinkClassName = "tree-line-link";
 
 export class PalavyrNode implements IPalavyrNode {
     // used in widget resource
@@ -102,82 +96,6 @@ export class PalavyrNode implements IPalavyrNode {
         this.setTreeWithHistory = setTreeWithHistory;
         this.isAnabranchLocked = false;
         this.shouldDisableNodeTypeSelector = false;
-    }
-
-    // public abstract renderNodeFace(openEditor: () => void, userText: string): JSX.Element | null;
-    // public abstract renderNodeEditor(editorIsOpen: boolean, closeEditor: () => void): JSX.Element | null;
-
-    // TODO: Would this work: https://sourceforge.net/projects/js-graph-it/ ?
-    public createPalavyrNodeComponent(pBuffer: number) {
-        type StyleProps = {
-            buffer: number;
-        };
-
-        const useStyles = makeStyles((theme) => ({
-            treeItem: {
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                zIndex: 10,
-            },
-            treeBlockWrap: (props: StyleProps) => ({
-                padding: `${props.buffer}rem ${props.buffer}rem ${props.buffer}rem ${props.buffer}rem`,
-            }),
-            treeRow: {
-                display: "flex",
-                flexDirection: "row",
-            },
-        }));
-        return () => {
-            const [loaded, setLoaded] = useState<boolean>(false);
-
-            useEffect(() => {
-                setLoaded(true);
-                return () => setLoaded(false);
-            }, []);
-
-            const cls = useStyles({ buffer: pBuffer });
-            return (
-                <>
-                    <div className={classNames(treelinkClassName, cls.treeItem)}>
-                        <div className={cls.treeBlockWrap}>
-                            <NodeInterface
-                                currentNode={this}
-                                isRoot={this.isRoot}
-                                nodeType={this.nodeType}
-                                userText={this.userText}
-                                shouldPresentResponse={this.shouldPresentResponse}
-                                isMemberOfLeftmostBranch={this.isMemberOfLeftmostBranch}
-                                imageId={this.imageId}
-                                nodeId={this.nodeId}
-                                joinedChildReferenceString={this.childNodeReferences.joinedReferenceString}
-                                shouldDisableNodeTypeSelector={this.shouldDisableNodeTypeSelector}
-                                optionPath={this.optionPath}
-                                updateTree={this.UpdateTree}
-                            />
-                        </div>
-                        {this.childNodeReferences.NotEmpty() && (
-                            <div key={this.nodeId} className={cls.treeRow}>
-                                {this.shouldRenderChildren ? (
-                                    this.childNodeReferences.nodes.map(
-                                        (nextNode: IPalavyrNode, index: number): React.ReactNode => {
-                                            const Node = nextNode.createPalavyrNodeComponent(pBuffer);
-                                            return <Node key={[this.nodeId, nextNode.nodeId, index.toString()].join("-")} />;
-                                        }
-                                    )
-                                ) : (
-                                    <></>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                    {loaded &&
-                        this.lineMap.map((line: LineLink, index: number) => {
-                            return <SteppedLineTo key={[line.from, index].join("-")} from={line.from} to={line.to} treeLinkClassName={treelinkClassName} />;
-                        })}
-                </>
-            );
-        };
     }
 
     public UpdateTree() {

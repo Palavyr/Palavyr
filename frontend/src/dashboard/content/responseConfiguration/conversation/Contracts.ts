@@ -27,7 +27,6 @@ export interface IPalavyrLinkedList {
     resetRootNode(): void;
     createTextNode(containerList: IPalavyrLinkedList, repository: PalavyrRepository, node: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftmostBranch: boolean): IPalavyrNode;
     createImageNode(containerList: IPalavyrLinkedList, repository: PalavyrRepository, node: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftmostBranch: boolean): IPalavyrNode;
-
     convertToPalavyrNode(container: IPalavyrLinkedList, repository: PalavyrRepository, rawNode: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftMostBranch: boolean): IPalavyrNode;
 }
 
@@ -60,7 +59,6 @@ export interface INodeReferences {
 }
 
 export interface IPalavyrNode {
-    createPalavyrNodeComponent(pBuffer: number): EmptyComponentType;
     lock(): void;
     unlock(): void;
     setAsProvideInfo(): void;
@@ -99,11 +97,10 @@ export interface IPalavyrNode {
     dynamicType: string | null;
     imageId: string | null | undefined;
     nodeTypeOptions: NodeTypeOptions;
-
+    shouldDisableNodeTypeSelector: boolean;
     isImageNode: boolean;
     nodeTypeCode: NodeTypeCode;
 
-    // nodeChildrenString: string;
     repository: PalavyrRepository;
 
     // the options available from this node, if any. I none, then "Continue" is used |peg| delimted

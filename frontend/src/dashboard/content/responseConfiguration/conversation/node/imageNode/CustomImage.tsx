@@ -32,8 +32,6 @@ export const CustomImage = memo(({ imageId, imageName, imageLink, titleVariant =
         setBounce(!bounce);
     }, [imageId]);
 
-    console.log(`Looking for this to change: ${imageId}`);
-    console.log(`Also This to change LINK: ${imageLink}`);
     return (
         <>
             <Typography variant={titleVariant} align="center">

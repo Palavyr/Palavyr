@@ -13,18 +13,13 @@ export interface ImageNodeEditorProps {
     repository: PalavyrRepository;
     editorIsOpen: boolean;
     closeEditor: () => void;
-    updateTree: () => void;
 }
 
-export const ImageNodeEditor = ({ updateTree, currentNode, nodeId, repository, editorIsOpen, closeEditor, imageId }: ImageNodeEditorProps) => {
+export const ImageNodeEditor = ({ currentNode, nodeId, repository, editorIsOpen, closeEditor, imageId }: ImageNodeEditorProps) => {
     const [imageLink, setImageLink] = useState<string>("");
     const [imageName, setImageName] = useState<string>("");
     const [currentImageId, setCurrentImageId] = useState<string>("");
-    const [bounce, setBounce] = useState<boolean>(true);
 
-    const setReload = () => {
-        setBounce(!bounce);
-    };
     const loadImage = useCallback(async () => {
         if (imageId !== null && imageId !== undefined) {
             const fileLinks = await repository.Configuration.Images.getImages([imageId]);
@@ -51,7 +46,6 @@ export const ImageNodeEditor = ({ updateTree, currentNode, nodeId, repository, e
             loadImage();
         }
     }, [loadImage]);
-    console.log(`CURRENT IMAGEID: ${currentImageId}`);
     return (
         <Dialog fullWidth open={editorIsOpen} onClose={closeEditor}>
             <DialogTitle>Edit a conversation node</DialogTitle>
@@ -63,8 +57,6 @@ export const ImageNodeEditor = ({ updateTree, currentNode, nodeId, repository, e
                 </Typography>
                 <ImageUpload
                     currentNode={currentNode}
-                    setReload={setReload}
-                    updateTree={updateTree}
                     nodeId={nodeId}
                     closeEditor={closeEditor}
                     currentImageId={currentImageId}

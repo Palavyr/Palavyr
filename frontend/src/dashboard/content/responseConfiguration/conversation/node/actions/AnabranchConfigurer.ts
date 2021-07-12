@@ -3,7 +3,6 @@ import { IPalavyrNode, INodeReferences } from "../../Contracts";
 import NodeTypeOptionConfigurer from "./NodeTypeOptionConfigurer";
 
 class AnabranchConfigurer {
-    constructor() {}
 
     private RecursiveDeconfigureAnabranchMergePointChildren(currentNode: IPalavyrNode) {
         const recurse = (childNodeReferences: INodeReferences) => {

@@ -17,6 +17,7 @@ import { PalavyrLinkedList } from "./PalavyrDataStructure/PalavyrLinkedList";
 import { TreeErrorPanel } from "./MissingDynamicNodes";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
+import { ConfigurationNode } from "./node/baseNode/ConfigurationNode";
 
 const useStyles = makeStyles(() => ({
     conversation: {
@@ -103,9 +104,6 @@ export const StructuredConvoTree = () => {
         return () => {
             setTreeErrors(undefined);
         };
-        // Disabling this here because we don't want to rerender on requriedNodes change (thought that seems almost what we want, but actually isn't)
-        // We compute this on the nodeList in fact, and the requiredNodes only change when we change areaIdentifier (or update the dynamic tables option on the other tab)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier, linkedNodeList]);
 
     const toggleDebugData = () => {
@@ -137,7 +135,6 @@ export const StructuredConvoTree = () => {
     };
 
     const [paddingBuffer, setPaddingBuffer] = useState<number>(1);
-    const Tree = linkedNodeList !== undefined ? linkedNodeList.renderNodeTree(paddingBuffer) : null;
 
     return (
         <ConversationTreeContext.Provider value={{ nodeTypeOptions, setNodes: setTreeWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
@@ -218,11 +215,7 @@ export const StructuredConvoTree = () => {
                     <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
                     <fieldset className={cls.fieldSet}>
                         <PalavyrErrorBoundary>
-                            {Tree && (
-                                <div className={cls.treeWrap}>
-                                    <Tree />
-                                </div>
-                            )}
+                            <div className={cls.treeWrap}>{linkedNodeList !== undefined && <ConfigurationNode currentNode={linkedNodeList.rootNode} pBuffer={paddingBuffer} />}</div>
                         </PalavyrErrorBoundary>
                     </fieldset>
                 </div>
