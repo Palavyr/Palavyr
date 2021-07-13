@@ -77,9 +77,8 @@ interface IDashboardLayout {
     helpComponent: JSX.Element[] | JSX.Element;
 }
 
-const repository = new PalavyrRepository();
-
 export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) => {
+    const repository = new PalavyrRepository();
     const history = useHistory();
     redirectToHomeWhenSessionNotEstablished(history);
 
