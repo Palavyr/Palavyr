@@ -49,7 +49,9 @@ export const AreaSettings = () => {
 
     const loadSettings = useCallback(async () => {
         setIsLoading(true);
-        const areaData = await repository.Area.GetArea(areaIdentifier);
+        const areas = await repository.Area.GetAreas();
+        const areaData = areas.filter((x) => x.areaIdentifier === areaIdentifier)[0];
+
         setSettings({
             emailAddress: areaData.areaSpecificEmail,
             isVerified: areaData.emailIsVerified,
@@ -61,11 +63,12 @@ export const AreaSettings = () => {
         });
         setIsEnabledState(areaData.isEnabled);
         setIsLoading(false);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
 
     useEffect(() => {
-        if (!loaded) loadSettings();
+        if (!loaded) {
+            loadSettings();
+        }
 
         setLoaded(true);
         return () => {
@@ -76,7 +79,8 @@ export const AreaSettings = () => {
     const handleAreaNameChange = async (newAreaName: string) => {
         if (newAreaName === settings.areaName) return;
         const updatedAreaName = await repository.Area.updateAreaName(areaIdentifier, newAreaName);
-        setSettings({ ...settings, areaName: updatedAreaName });
+        const updatedSettings = { ...settings, areaName: updatedAreaName };
+        setSettings(updatedSettings);
         window.location.reload(); // reloads the sidebar...
     };
 
@@ -84,7 +88,8 @@ export const AreaSettings = () => {
         if (newAreaDisplayTitle === settings.areaTitle) return;
         const updatedDisplayTitle = await repository.Area.updateDisplayTitle(areaIdentifier, newAreaDisplayTitle);
         window.location.reload();
-        setSettings({ ...settings, areaTitle: updatedDisplayTitle });
+        const updatedSettings = { ...settings, areaTitle: updatedDisplayTitle };
+        setSettings(updatedSettings);
     };
 
     const handleAreaDelete = async () => {
@@ -97,7 +102,10 @@ export const AreaSettings = () => {
         const emailVerification = await repository.Settings.EmailVerification.RequestEmailVerification(newEmailAddress, areaIdentifier);
         setAlertDetails({ title: emailVerification.title, message: emailVerification.message });
         setAlertState(true);
-        if (!(emailVerification.status === "Failed")) setSettings({ ...settings, emailAddress: newEmailAddress });
+        if (!(emailVerification.status === "Failed")) {
+            const updatedSettings = { ...settings, emailAddress: newEmailAddress };
+            setSettings(updatedSettings);
+        }
     };
 
     const emailSeverity = (): "success" | "warning" | "error" | "info" | undefined => {
@@ -178,7 +186,7 @@ export const AreaSettings = () => {
 
             <Grid container spacing={3} justify="center">
                 <Grid item xs={12}>
-                    <Alert className={classNames(classes.alert, classes.alertTitle)} style={{backgroundColor: theme.palette.warning.dark}} variant="filled" severity="warning">
+                    <Alert className={classNames(classes.alert, classes.alertTitle)} style={{ backgroundColor: theme.palette.warning.dark }} variant="filled" severity="warning">
                         <AlertTitle>
                             <Typography variant="h5">Dashboard Specific Options</Typography>
                         </AlertTitle>

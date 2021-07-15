@@ -36,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Subscribe = () => {
-    const [currentPlan, setCurrentPlan] = useState<PlanStatus | null>(null);
     const [productList, setProductList] = useState<ProductIds>();
     const { planTypeMeta } = useContext(DashboardContext);
 
@@ -56,11 +55,6 @@ export const Subscribe = () => {
         history.push(purchaseRoute);
     };
 
-    const getCurrentPlan = useCallback(async () => {
-        const plan = await repository.Settings.Account.getCurrentPlan();
-        setCurrentPlan(plan);
-    }, []);
-
     const getProducts = useCallback(async () => {
         const products = await repository.Products.getProducts();
         setProductList(products);
@@ -68,7 +62,6 @@ export const Subscribe = () => {
 
     useEffect(() => {
         getProducts();
-        getCurrentPlan();
     }, []);
 
     const orderedProductOptions: ProductOptions = [
@@ -96,7 +89,7 @@ export const Subscribe = () => {
         <>
             <AreaConfigurationHeader title="Select a subscription plan" subtitle="You won't be charged yet." divider />
             <SubscribeStepper activeStep={0} />
-            {currentPlan !== null && (
+            {planTypeMeta !== null && (
                 <div className={cls.body}>
                     <Grid container>
                         <Grid item xs={12}>
@@ -104,7 +97,7 @@ export const Subscribe = () => {
                                 {planTypeMeta &&
                                     orderedProductOptions.map((product: ProductOption, key: number) => {
                                         return (
-                                            <div onClick={() => (planTypeMeta && goToPurchase(product.purchaseType, product.productId))} className={classnames(cls.width, cls.card)}>
+                                            <div onClick={() => planTypeMeta && goToPurchase(product.purchaseType, product.productId)} className={classnames(cls.width, cls.card)}>
                                                 {product.card}
                                             </div>
                                         );

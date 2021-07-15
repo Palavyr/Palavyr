@@ -63,7 +63,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
         }
     }, [])
 
-    const success = () => {
+    const successRedirectToDashboard = () => {
         setTimeout(() => {
             setIsLoading(false);
             history.push(DASHBOARD_HOME);
@@ -98,7 +98,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
         setStatus(null);
 
         if (loginEmail && loginPassword) {
-            const successfulResponse = await Auth.login(loginEmail, loginPassword, success, error);
+            const successfulResponse = await Auth.login(loginEmail, loginPassword, successRedirectToDashboard, error);
             SessionStorage.setDefaultLoginType();
             setIsLoading(false);
             if (successfulResponse === null) {
@@ -122,7 +122,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
     const googleLogin = async (response: GoogleResponse) => {
         setIsLoading(true);
         setStatus(null);
-        var successfulResponse = await Auth.loginWithGoogle(response.tokenId, response.googleId, success, googleError);
+        var successfulResponse = await Auth.loginWithGoogle(response.tokenId, response.googleId, successRedirectToDashboard, googleError);
         if (successfulResponse === null) {
             Auth.ClearAuthentication();
             Auth.googleLogout(noop);

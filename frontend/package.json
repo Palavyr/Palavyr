@@ -40,6 +40,7 @@
     "highlight.js": "^10.1.2",
     "jquery": "^3.5.1",
     "js-cookie": "^2.2.1",
+    "jsonwebtoken": "^8.5.1",
     "less": "^3.12.2",
     "lodash": "^4.17.19",
     "material-ui-dropzone": "^3.3.1",
@@ -61,6 +62,7 @@
     "react-scroll": "^1.8.0",
     "react-spring": "^8.0.27",
     "react-stripe-checkout": "^2.6.3",
+    "react-tracking": "^8.1.0",
     "sass": "^1.26.10",
     "uuid": "^8.3.2"
   },
@@ -99,6 +101,7 @@
     "@testing-library/user-event": "^7.1.2",
     "@types/aos": "^3.0.3",
     "@types/jest": "^25.2.3",
+    "@types/jsonwebtoken": "^8.5.4",
     "@types/react-color": "^3.0.4",
     "@types/stripe": "^7.13.25",
     "@typescript-eslint/eslint-plugin": "^2.10.0",

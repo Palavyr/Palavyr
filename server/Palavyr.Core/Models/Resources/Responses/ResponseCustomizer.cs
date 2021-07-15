@@ -56,7 +56,7 @@ namespace Palavyr.Core.Models.Resources.Responses
         {
             if (string.IsNullOrWhiteSpace(account.AccountLogoUri))
             {
-                return html;
+                return html.Replace(ResponseVariableDefinition.LogoUriVariablePattern, string.Empty);
             }
             else
             {

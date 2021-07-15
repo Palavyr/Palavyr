@@ -36,7 +36,8 @@ export const EmailConfiguration = () => {
     }, []);
 
     const loadSettings = useCallback(async () => {
-        const areaData = await repository.Area.GetArea(areaIdentifier);
+        const areas = await repository.Area.GetAreas();
+        const areaData = areas.filter((x) => x.areaIdentifier === areaIdentifier)[0];
         setSettings({
             ...settings,
             useAreaFallbackEmail: areaData.useAreaFallbackEmail,
@@ -56,7 +57,9 @@ export const EmailConfiguration = () => {
     return (
         <>
             <AreaConfigurationHeader title="Email Response" subtitle="Use this editor to create an HTML email template that will be sent as the email response for this area." />
-            {useAreaFallbackEmail !== null && <OsTypeToggle controlledState={useAreaFallbackEmail} onChange={onUseAreaFallbackEmailToggle} enabledLabel="Use Area Fallback Email" disabledLabel="Use General Fallback Email" />}
+            {useAreaFallbackEmail !== null && (
+                <OsTypeToggle controlledState={useAreaFallbackEmail} onChange={onUseAreaFallbackEmailToggle} enabledLabel="Use Area Fallback Email" disabledLabel="Use General Fallback Email" />
+            )}
             {variableDetails && (
                 <EmailConfigurationComponent
                     variableDetails={variableDetails}

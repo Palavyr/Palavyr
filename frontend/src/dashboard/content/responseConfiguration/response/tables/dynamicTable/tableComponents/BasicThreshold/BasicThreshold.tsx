@@ -77,7 +77,7 @@ export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTab
             />
             <TableContainer>
                 <Table>
-                    <BasicThresholdHeader />
+                    <BasicThresholdHeader tableData={tableData} setTableData={setTableData} />
                     <BasicThresholdBody tableData={tableData} modifier={modifier} />
                 </Table>
             </TableContainer>

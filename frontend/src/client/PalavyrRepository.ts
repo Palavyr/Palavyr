@@ -30,7 +30,7 @@ import {
 } from "@Palavyr-Types";
 import { filterNodeTypeOptionsOnSubscription } from "dashboard/subscriptionFilters/filterConvoNodeTypes";
 import { SessionStorage } from "localStorage/sessionStorage";
-import { AxiosClient } from "./AxiosClient";
+import { AxiosClient, CacheIds } from "./AxiosClient";
 import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./clientUtils";
 
 export class PalavyrRepository {
@@ -45,10 +45,26 @@ export class PalavyrRepository {
         this.client = new AxiosClient("tubmcgubs", getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
     }
 
+    public AuthenticationCheck = {
+        check: async () => {
+            let result: boolean;
+            try {
+                await this.client.get<boolean>("");
+                result = true;
+            } catch {
+                result = false;
+            }
+            return result;
+        },
+    };
+
     public Purchase = {
         Customer: {
-            GetCustomerId: async () => this.client.get<string>(`payments/customer-id`),
-            GetCustomerPortal: async (customerId: string, returnUrl: string) => this.client.post<string, {}>(`payments/customer-portal`, { CustomerId: customerId, ReturnUrl: returnUrl }),
+            GetCustomerId: async () => this.client.get<string>(`payments/customer-id`, CacheIds.CustomerId),
+            GetCustomerPortal: async (customerId: string, returnUrl: string) => {
+                SessionStorage.clearCacheValue(CacheIds.CurrentPlanMeta);
+                return this.client.post<string, {}>(`payments/customer-portal`, { CustomerId: customerId, ReturnUrl: returnUrl });
+            },
         },
         Subscription: {
             CancelSubscription: async () => this.client.post<string, {}>(`products/cancel-subscription`),
@@ -74,12 +90,21 @@ export class PalavyrRepository {
         UpdateIsEnabled: async (areaToggleStateUpdate: boolean, areaIdentifier: string) => this.client.put<boolean, {}>(`areas/${areaIdentifier}/area-toggle`, { IsEnabled: areaToggleStateUpdate }),
         UpdateUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, areaIdentifier: string) =>
             this.client.put<boolean, {}>(`areas/${areaIdentifier}/use-fallback-email-toggle`, { UseFallback: useAreaFallbackEmailUpdate }),
-        GetAreas: async () => this.client.get<Areas>("areas"),
-        GetArea: async (areaIdentifier: string) => this.client.get<AreaTable>(`areas/${areaIdentifier}`),
-        createArea: (areaName: string) => this.client.post<AreaTable, {}>(`areas/create/`, { AreaName: areaName }), // get creates and gets new area
-        updateAreaName: (areaIdentifier: string, areaName: string) => this.client.put<string, {}>(`areas/update/name/${areaIdentifier}`, { AreaName: areaName }),
-        updateDisplayTitle: (areaIdentifier: string, displayTitle: string) => this.client.put<string, {}>(`areas/update/display-title/${areaIdentifier}`, { AreaDisplayTitle: displayTitle }),
-        deleteArea: (areaIdentifier: string) => this.client.delete<void>(`areas/delete/${areaIdentifier}`),
+        GetAreas: async () => this.client.get<Areas>("areas", CacheIds.Areas),
+        createArea: (areaName: string) => this.client.post<AreaTable, {}>(`areas/create/`, { AreaName: areaName }, CacheIds.Areas), // get creates and gets new area
+
+        updateAreaName: (areaIdentifier: string, areaName: string) => {
+            const result = this.client.put<string, {}>(`areas/update/name/${areaIdentifier}`, { AreaName: areaName });
+            SessionStorage.clearCacheValue(CacheIds.Areas);
+            return result;
+        },
+        updateDisplayTitle: (areaIdentifier: string, displayTitle: string) => {
+            const result = this.client.put<string, {}>(`areas/update/display-title/${areaIdentifier}`, { AreaDisplayTitle: displayTitle });
+            SessionStorage.clearCacheValue(CacheIds.Areas);
+            return result;
+        },
+
+        deleteArea: (areaIdentifier: string) => this.client.delete<void>(`areas/delete/${areaIdentifier}`, CacheIds.Areas),
         toggleSendPdfResponse: (areaIdentifier: string) => this.client.post<boolean, {}>(`area/send-pdf/${areaIdentifier}`),
     };
 
@@ -94,7 +119,7 @@ export class PalavyrRepository {
         },
         Tables: {
             Dynamic: {
-                getDynamicTableMetas: async (areaIdentifier: string) => this.client.get<DynamicTableMetas>(`tables/dynamic/type/${areaIdentifier}`),
+                getDynamicTableMetas: async (areaIdentifier: string) => this.client.get<DynamicTableMetas>(`tables/dynamic/type/${areaIdentifier}`), // todo - cache
                 getDynamicTableTypes: async () => this.client.get<TableNameMap>(`tables/dynamic/table-name-map`),
 
                 modifyDynamicTableMeta: async (dynamicTableMeta: DynamicTableMeta) => this.client.put<DynamicTableMeta, {}>(`tables/dynamic/modify`, dynamicTableMeta),
@@ -141,18 +166,18 @@ export class PalavyrRepository {
         },
 
         Attachments: {
-            fetchAttachmentLinks: async (areaIdentifier: string) => this.client.get<FileLink[]>(`attachments/${areaIdentifier}`),
-            removeAttachment: async (areaIdentifier: string, fileId: string) => this.client.delete<FileLink[]>(`attachments/${areaIdentifier}/file-link`, { data: { fileId: fileId } }),
+            fetchAttachmentLinks: async (areaIdentifier: string) => this.client.get<FileLink[]>(`attachments/${areaIdentifier}`, CacheIds.Attachments),
+            removeAttachment: async (areaIdentifier: string, fileId: string) => this.client.delete<FileLink[]>(`attachments/${areaIdentifier}/file-link`, CacheIds.Attachments, { data: { fileId: fileId } }),
 
             saveSingleAttachment: async (areaIdentifier: string, formData: FormData) =>
-                this.client.post<FileLink[], {}>(`attachments/${areaIdentifier}/save-one`, formData, {
+                this.client.post<FileLink[], {}>(`attachments/${areaIdentifier}/save-one`, formData, CacheIds.Attachments, {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "multipart/form-data",
                     },
                 }),
             saveManyAttachments: async (areaIdentifier: string, formData: FormData) =>
-                this.client.post<FileLink[], {}>(`attachments/${areaIdentifier}/save-many`, formData, {
+                this.client.post<FileLink[], {}>(`attachments/${areaIdentifier}/save-many`, formData, CacheIds.Attachments, {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "multipart/form-data",
@@ -162,31 +187,28 @@ export class PalavyrRepository {
 
         Images: {
             // Node Editor Flow
-            saveSingleImage: async (formData: FormData) => this.client.post<FileLink[], {}>(`images/save-one`, formData, { headers: this.formDataHeaders }),
+            saveSingleImage: async (formData: FormData) => this.client.post<FileLink[], {}>(`images/save-one`, formData, undefined, { headers: this.formDataHeaders }),
             saveImageUrl: async (url: string, nodeId: string) => this.client.post<FileLink[], {}>(`images/use-link/${nodeId}`, { Url: url }),
             getImages: async (imageIds?: string[]) => this.client.get<FileLink[]>(`images${imageIds !== undefined ? `?imageIds=${imageIds.join(",")}` : ""}`), // takes a querystring comma delimieted of imageIds
             savePreExistingImage: async (imageId: string, nodeId: string) => this.client.post<ConvoNode, {}>(`images/pre-existing/${imageId}/${nodeId}`),
             // DO NOT USE WITH NODE
-            saveMultipleImages: async (formData: FormData) => this.client.post<FileLink[], {}>(`images/save-many`, formData, { headers: this.formDataHeaders }),
+            saveMultipleImages: async (formData: FormData) => this.client.post<FileLink[], {}>(`images/save-many`, formData, undefined, { headers: this.formDataHeaders }),
             deleteImage: async (imageIds: string[]) => this.client.delete<FileLink[]>(`images?imageIds=${imageIds.join(",")}`), // takes a querystring command delimited of imageIds
             getSignedUrl: async (s3Key: string) => this.client.post<string, {}>(`images/link`, { s3Key: s3Key }),
         },
     };
 
     public Conversations = {
-        GetConversation: async (areaIdentifier: string) => this.client.get<ConvoNode[]>(`configure-conversations/${areaIdentifier}`),
+        GetConversation: async (areaIdentifier: string) => this.client.get<ConvoNode[]>(`configure-conversations/${areaIdentifier}`, CacheIds.PalavyrConfiguration),
         GetConversationNode: async (nodeId: string) => this.client.get<ConvoNode>(`configure-conversations/nodes/${nodeId}`),
         GetNodeOptionsList: async (areaIdentifier: string, planTypeMeta: PlanTypeMeta) =>
             filterNodeTypeOptionsOnSubscription(await this.client.get<NodeTypeOptions>(`configure-conversations/${areaIdentifier}/node-type-options`), planTypeMeta),
         GetErrors: async (areaIdentifier: string, nodeList: ConvoNode[]) => this.client.post<TreeErrors, {}>(`configure-conversations/${areaIdentifier}/tree-errors`, { Transactions: nodeList }),
 
-        CheckIfIsMultiOptionType: async (nodeType: string) => this.client.get<boolean>(`configure-conversations/check-multi-option/${nodeType}`),
-        CheckIfIsTerminalType: async (nodeType: string) => this.client.get<boolean>(`configure-conversations/check-terminal/${nodeType}`),
-        CheckIfIsSplitMergeType: async (nodeType: string) => this.client.get<boolean>(`configure-conversations/check-is-split-merge/${nodeType}`),
-
-        ModifyConversation: async (nodelist: ConvoNode[], areaIdentifier: string) => this.client.put<ConvoNode[], {}>(`configure-conversations/${areaIdentifier}`, { Transactions: nodelist }),
+        ModifyConversation: async (nodelist: ConvoNode[], areaIdentifier: string) =>
+            this.client.put<ConvoNode[], {}>(`configure-conversations/${areaIdentifier}`, { Transactions: nodelist }, CacheIds.PalavyrConfiguration),
         ModifyConversationNode: async (nodeId: string, areaIdentifier: string, updatedNode: ConvoTableRow) =>
-            this.client.put<ConvoNode[], {}>(`configure-conversations/${areaIdentifier}/nodes/${nodeId}`, updatedNode),
+            this.client.put<ConvoNode[], {}>(`configure-conversations/${areaIdentifier}/nodes/${nodeId}`, updatedNode, [CacheIds.PalavyrConfiguration, areaIdentifier].join("-") as CacheIds),
 
         // TODO: Deprecate eventually
         EnsureDBIsValid: async () => this.client.post(`configure-conversations/ensure-db-valid`),
@@ -194,30 +216,13 @@ export class PalavyrRepository {
 
     public WidgetDemo = {
         RunConversationPrecheck: async () => this.client.get<PreCheckResult>(`widget-config/demo/pre-check`),
-        GetWidetPreferences: async () => this.client.get<WidgetPreferences>(`widget-config/preferences`),
-        SaveWidgetPreferences: async (prefs: WidgetPreferences) => this.client.put<WidgetPreferences, WidgetPreferences>(`widget-config/preferences`, prefs),
+        GetWidetPreferences: async () => this.client.get<WidgetPreferences>(`widget-config/preferences`, CacheIds.WidgetPrefs),
+        SaveWidgetPreferences: async (prefs: WidgetPreferences) => this.client.put<WidgetPreferences, WidgetPreferences>(`widget-config/preferences`, prefs, CacheIds.WidgetPrefs),
     };
-
-    private async GetWithCache(storageGetCall: () => any, apiGetPromise: Promise<any>, storagePutCall: (result: any) => void) {
-        const cachedValue = storageGetCall();
-        if (cachedValue) {
-            return cachedValue;
-        } else {
-            const result = await apiGetPromise;
-            storagePutCall(result);
-            return result;
-        }
-    }
 
     public Settings = {
         Subscriptions: {
-            getCurrentPlanMeta: async () => {
-                return await this.GetWithCache(
-                    () => SessionStorage.getCurrentPlanMeta(),
-                    this.client.get<PlanTypeMeta>(`account/settings/current-plan-meta`),
-                    (value: any) => SessionStorage.setCurrentPlanMeta(value)
-                );
-            },
+            getCurrentPlanMeta: async () => this.client.get<PlanTypeMeta>(`account/settings/current-plan-meta`, CacheIds.CurrentPlanMeta),
         },
 
         Account: {
@@ -227,31 +232,28 @@ export class PalavyrRepository {
             checkIsActive: async () => this.client.get<boolean>(`account/is-active`),
 
             UpdatePassword: async (oldPassword: string, newPassword: string) => this.client.put<boolean, {}>(`account/settings/password`, { OldPassword: oldPassword, Password: newPassword }),
-            updateCompanyName: async (companyName: string) => this.client.put<string, {}>(`account/settings/company-name`, { CompanyName: companyName }),
-            updateEmail: async (newEmail: string) => this.client.put<EmailVerificationResponse, {}>(`account/settings/email`, { EmailAddress: newEmail }),
-            updateUserName: async (newUserName: string) => this.client.put<string, {}>(`account/settings/user-name/`, { UserName: newUserName }),
-            updatePhoneNumber: async (newPhoneNumber: string) => this.client.put<string, {}>(`account/settings/phone-number`, { PhoneNumber: newPhoneNumber }),
-            updateLocale: async (newLocaleId: string) => this.client.put<LocaleDefinition, {}>(`account/settings/locale`, { LocaleId: newLocaleId }),
+            updateCompanyName: async (companyName: string) => this.client.put<string, {}>(`account/settings/company-name`, { CompanyName: companyName }, CacheIds.CompanyName),
+            updateEmail: async (newEmail: string) => this.client.put<EmailVerificationResponse, {}>(`account/settings/email`, { EmailAddress: newEmail }, CacheIds.Email),
+            updatePhoneNumber: async (newPhoneNumber: string) => this.client.put<string, {}>(`account/settings/phone-number`, { PhoneNumber: newPhoneNumber }, CacheIds.PhoneNumber),
+            updateLocale: async (newLocaleId: string) => this.client.put<LocaleDefinition, {}>(`account/settings/locale`, { LocaleId: newLocaleId }, CacheIds.Locale),
             updateCompanyLogo: async (formData: FormData) =>
-                this.client.put<string, {}>(`account/settings/logo`, formData, {
+                this.client.put<string, {}>(`account/settings/logo`, formData, CacheIds.Logo, {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "multipart/form-data",
                     },
                 }),
 
-            getCompanyName: async () => this.client.get<string>(`account/settings/company-name`),
-            getEmail: async () => this.client.get<AccountEmailSettingsResponse>(`account/settings/email`),
-            getUserName: async () => this.client.get<string>(`account/settings/user-name`),
-            getPhoneNumber: async () => this.client.get<PhoneSettingsResponse>(`account/settings/phone-number`),
+            getCompanyName: async () => this.client.get<string>(`account/settings/company-name`, CacheIds.CompanyName),
+            getEmail: async () => this.client.get<AccountEmailSettingsResponse>(`account/settings/email`, CacheIds.Email),
+            getPhoneNumber: async () => this.client.get<PhoneSettingsResponse>(`account/settings/phone-number`, CacheIds.PhoneNumber),
 
-            GetLocale: async () => this.client.get<LocaleDefinition>(`account/settings/locale`),
-            getCompanyLogo: async () => this.client.get<string>(`account/settings/logo`),
-            deleteCompanyLogo: async () => this.client.delete(`account/settings/logo`),
-            getCurrentPlan: async () => this.client.get<PlanStatus>(`account/settings/current-plan`),
+            GetLocale: async () => this.client.get<LocaleDefinition>(`account/settings/locale`, CacheIds.Locale),
+            getCompanyLogo: async () => this.client.get<string>(`account/settings/logo`, CacheIds.Logo),
 
+            deleteCompanyLogo: async () => this.client.delete(`account/settings/logo`, CacheIds.Logo),
             DeleteAccount: async () => this.client.post(`account/delete-account`),
-            CheckNeedsPassword: async () => this.client.get<boolean>(`account/needs-password`),
+            CheckNeedsPassword: async () => this.client.get<boolean>(`account/needs-password`, CacheIds.NeedsPassword),
         },
         EmailVerification: {
             RequestEmailVerification: async (emailAddress: string, areaIdentifier: string) =>
@@ -261,19 +263,14 @@ export class PalavyrRepository {
     };
 
     public Enquiries = {
-        getEnquiries: async () =>
-            this.GetWithCache(
-                () => SessionStorage.getEnquiries(),
-                this.client.get<Enquiries>(`enquiries`),
-                (value: any) => SessionStorage.setEnquiries(value)
-            ),
+        getEnquiries: async () => this.client.get<Enquiries>(`enquiries`, CacheIds.Enquiries),
+        getShowSeenEnquiries: async () => this.client.get<boolean>(`enquiries/show`, CacheIds.ShowSeenQueries),
+        toggleShowSeenEnquiries: async () => this.client.put<boolean, {}>(`enquiries/toggle-show`, CacheIds.ShowSeenQueries),
 
-        getShowSeenEnquiries: async () => this.client.get<boolean>(`enquiries/show`),
-        toggleShowSeenEnquiries: async () => this.client.put<boolean, {}>(`enquiries/toggle-show`),
+        updateEnquiry: async (conversationId: string) => this.client.put<Enquiries, {}>(`enquiries/update/${conversationId}`, CacheIds.Enquiries),
+        deleteSelectedEnquiries: async (fileReferences: string[]) => this.client.put<Enquiries, {}>(`enquiries/selected`, { FileReferences: fileReferences }, CacheIds.Enquiries),
 
-        updateEnquiry: async (conversationId: string) => this.client.put<Enquiries, {}>(`enquiries/update/${conversationId}`),
-        getConversation: async (conversationId: string) => this.client.get<CompletedConversation>(`enquiries/review/${conversationId}`),
         getSignedUrl: async (fileId: string) => this.client.get<string>(`enquiries/link/${fileId}`),
-        deleteSelectedEnquiries: async (fileReferences: string[]) => this.client.put<Enquiries, {}>(`enquiries/selected`, { FileReferences: fileReferences }),
+        getConversation: async (conversationId: string) => this.client.get<CompletedConversation>(`enquiries/review/${conversationId}`, CacheIds.Conversation),
     };
 }

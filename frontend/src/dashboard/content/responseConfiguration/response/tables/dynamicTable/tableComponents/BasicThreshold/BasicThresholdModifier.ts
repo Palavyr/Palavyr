@@ -77,6 +77,7 @@ export class BasicThresholdModifier {
     }
 
     public validateTable(tableData: BasicThresholdData[]) {
+
         return true; // TODO: Validate this table
     }
 }

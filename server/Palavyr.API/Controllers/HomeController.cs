@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Palavyr.API.Controllers
 {
@@ -9,7 +8,6 @@ namespace Palavyr.API.Controllers
         {
         }
 
-        [AllowAnonymous]
         [HttpGet()]
         public string Get()
         {

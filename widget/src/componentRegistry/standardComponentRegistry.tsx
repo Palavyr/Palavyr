@@ -1,4 +1,4 @@
-import { assembleCompletedConvo, getOrderedChildNodes } from "./utils";
+import { assembleCompletedConvo, getOrderedChildNodes, MinNumeric, parseNumericResponse } from "./utils";
 import React, { useEffect, useState } from "react";
 import { Table, TableRow, TableCell, makeStyles, TextField, Typography } from "@material-ui/core";
 import { responseAction } from "./responseAction";
@@ -10,7 +10,6 @@ import { ResponseButton } from "common/ResponseButton";
 import { SingleRowSingleCell } from "common/TableCell";
 import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "common/UserDetailsDialog/ChatLoadingSpinner";
-import { uuid } from "uuidv4";
 import { CustomImage } from "common/CustomImage";
 import { floor, max, min } from "lodash";
 
@@ -45,16 +44,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export class ComponentRegisteryMethods {
-    MinNumeric: number = 0;
-
-    public parseNumericResponse(newValue: string): string {
-        const intValue = parseInt(newValue);
-        return intValue < this.MinNumeric ? this.MinNumeric.toString() : intValue.toString();
-    }
-}
-
-export class StandardComponents extends ComponentRegisteryMethods {
+export class StandardComponents {
     public makeProvideInfo({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         const prefs = getWidgetPreferences();
@@ -194,7 +184,7 @@ export class StandardComponents extends ComponentRegisteryMethods {
                                 label=""
                                 type="number"
                                 onChange={event => {
-                                    setResponse(this.parseNumericResponse(event.target.value));
+                                    setResponse(parseNumericResponse(event.target.value));
                                     setDisabled(false);
                                 }}
                             />
@@ -410,8 +400,8 @@ export class StandardComponents extends ComponentRegisteryMethods {
                                     setDisabled(false);
                                     const intValue = parseInt(event.target.value);
                                     if (!intValue) return;
-                                    if (intValue < this.MinNumeric) {
-                                        setResponse(this.MinNumeric);
+                                    if (intValue < MinNumeric) {
+                                        setResponse(MinNumeric);
                                     } else {
                                         setResponse(intValue);
                                     }
