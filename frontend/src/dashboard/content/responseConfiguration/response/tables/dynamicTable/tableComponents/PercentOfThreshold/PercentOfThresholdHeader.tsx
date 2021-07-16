@@ -33,15 +33,12 @@ export const PercentOfThresholdHeader = ({ tableData, modifier }: IPercentOfThre
             <TableRow className={classes.row}>
                 <TableCell align="center"></TableCell>
                 <TableCell align="center" className={classNames(classes.cell, classes.text)}>
-                    {" "}
                     {"If exceeds Threshold"}
                 </TableCell>
                 <TableCell align="center" className={classNames(classes.cell, classes.text)}>
-                    {" "}
                     Add or subtract
                 </TableCell>
                 <TableCell align="center" className={classNames(classes.cell, classes.text)}>
-                    {" "}
                     % of Value
                 </TableCell>
                 <TableCell align="center" className={classNames(classes.cell, classes.text)}>

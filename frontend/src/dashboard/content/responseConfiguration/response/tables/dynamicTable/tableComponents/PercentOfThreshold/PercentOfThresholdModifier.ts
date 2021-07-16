@@ -25,7 +25,7 @@ export class PercentOfThresholdModifier {
 
     async addItem(tableData: PercentOfThresholdData[], repository: PalavyrRepository, areaIdentifier: string, tableId: string) {
         const newItemInitialrow = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<PercentOfThresholdData>(areaIdentifier, this.tableType, tableId);
-
+        newItemInitialrow.itemOrder = this._getOrderedUniqItemIds(tableData).length;
         tableData.push(newItemInitialrow);
         this.setTables(tableData);
     }
