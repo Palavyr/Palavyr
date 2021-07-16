@@ -87,7 +87,11 @@ export class PalavyrRepository {
     };
 
     public Area = {
-        UpdateIsEnabled: async (areaToggleStateUpdate: boolean, areaIdentifier: string) => this.client.put<boolean, {}>(`areas/${areaIdentifier}/area-toggle`, { IsEnabled: areaToggleStateUpdate }),
+        UpdateIsEnabled: async (areaToggleStateUpdate: boolean, areaIdentifier: string) => {
+            const update = this.client.put<boolean, {}>(`areas/${areaIdentifier}/area-toggle`, { IsEnabled: areaToggleStateUpdate });
+            SessionStorage.clearCacheValue(CacheIds.Areas);
+            return update;
+        },
         UpdateUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, areaIdentifier: string) =>
             this.client.put<boolean, {}>(`areas/${areaIdentifier}/use-fallback-email-toggle`, { UseFallback: useAreaFallbackEmailUpdate }),
         GetAreas: async () => this.client.get<Areas>("areas", CacheIds.Areas),
