@@ -19,7 +19,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
         public int RowOrder { get; set; }
         public string ItemId { get; set; }
         public int ItemOrder { get; set; }
-        public string Category { get; set; }
+        public string ItemName { get; set; }
         public double Threshold { get; set; }
         public bool TriggerFallback { get; set; }
 
@@ -49,7 +49,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                 Range = range,
                 RowId = rowId,
                 RowOrder = rowOrder,
-                Category = category,
+                ItemName = category,
                 Threshold = threshold,
                 ItemId = itemId,
                 ItemOrder = itemOrder,
@@ -65,7 +65,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                 AreaIdentifier = areaIdentifier,
                 TableId = tableId,
                 ItemId = StaticGuidUtils.CreateNewId(),
-                Category = "Default Category Text",
+                ItemName = "Default Category Text",
                 Threshold = 0.0,
                 ValueMax = 0.0,
                 ValueMin = 0.0,
@@ -91,7 +91,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                         row.Range,
                         row.RowId,
                         row.RowOrder,
-                        row.Category,
+                        row.ItemName,
                         row.Threshold,
                         row.ItemId,
                         row.ItemOrder,

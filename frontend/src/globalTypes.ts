@@ -425,7 +425,7 @@ export enum NodeTypeCode {
     VII, // loopback anchor
     VIII, // loopback terminal,
     IX, // image node type
-    X // multioption non editable, one path
+    X, // multioption non editable, one path
 }
 
 export type NodeOption = {
@@ -732,6 +732,7 @@ export type PercentOfThresholdData = {
     tableId: string;
     itemId: string;
     itemName: string;
+    itemOrder: number;
     rowId: string;
     threshold: number;
     valueMin: number;
@@ -772,8 +773,8 @@ export type TwoNestedCategoryData = {
     rowOrder: number;
     itemId: string;
     itemOrder: number;
-    category: string;
-    subCategory: string;
+    itemName: string;
+    innerItemName: string;
 };
 
 export type CategoryNestedThresholdData = {
@@ -788,7 +789,7 @@ export type CategoryNestedThresholdData = {
     rowOrder: number;
     itemId: string;
     itemOrder: number;
-    category: string;
+    itemName: string;
     threshold: number;
     triggerFallback: boolean;
 };

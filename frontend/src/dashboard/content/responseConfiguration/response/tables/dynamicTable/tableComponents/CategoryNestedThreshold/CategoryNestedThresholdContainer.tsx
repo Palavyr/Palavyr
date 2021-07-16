@@ -13,7 +13,7 @@ interface CategoryNestedThresholdProps extends IDynamicTableBody {
 }
 
 export const CategoryNestedThresholdContainer = ({ tableData, modifier, tableId, areaIdentifier }: CategoryNestedThresholdProps) => {
-    const sortedByCategory = sortByPropertyNumeric(modifier.categoryIdGetter, tableData);
+    const sortedByCategory = sortByPropertyNumeric(modifier.itemOrderGetter, tableData);
 
     const orderedCategoryGroups: TableGroup<CategoryNestedThresholdData[]> = groupBy(sortedByCategory, (x) => x.itemId); // use this groupby method in the modifier.
 
@@ -21,7 +21,7 @@ export const CategoryNestedThresholdContainer = ({ tableData, modifier, tableId,
         <>
             {Object.keys(orderedCategoryGroups).map((categoryId: string, categoryIndex: number) => {
                 const sortedRows: CategoryNestedThresholdData[] = sortByPropertyNumeric(modifier.rowOrderGetter, orderedCategoryGroups[categoryId]);
-                const categoryName = sortedRows[0].category;
+                const categoryName = sortedRows[0].itemName;
                 return (
                     <CategoryNestedThresholdItemTable
                         key={categoryIndex}

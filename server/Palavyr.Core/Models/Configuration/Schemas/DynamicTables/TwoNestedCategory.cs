@@ -19,8 +19,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
         public int RowOrder { get; set; }
         public string ItemId { get; set; }
         public int ItemOrder { get; set; }
-        public string Category { get; set; }
-        public string SubCategory { get; set; }
+        public string ItemName { get; set; }
+        public string InnerItemName { get; set; }
 
         public TwoNestedCategory CreateNew(
             string accountId,
@@ -47,8 +47,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                 Range = range,
                 RowId = rowId,
                 RowOrder = rowOrder,
-                Category = category,
-                SubCategory = subCategory,
+                ItemName = category,
+                InnerItemName = subCategory,
                 ItemId = itemId,
                 ItemOrder = itemOrder
             };
@@ -62,8 +62,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                 AreaIdentifier = areaIdentifier,
                 TableId = tableId,
                 ItemId = StaticGuidUtils.CreateNewId(),
-                Category = "Default Category Text",
-                SubCategory = "",
+                ItemName = "Default Category Text",
+                InnerItemName = "",
                 ValueMax = 0.0,
                 ValueMin = 0.0,
                 Range = false,
@@ -88,8 +88,8 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                         row.Range,
                         row.RowId,
                         row.RowOrder,
-                        row.Category,
-                        row.SubCategory,
+                        row.ItemName,
+                        row.InnerItemName,
                         row.ItemId,
                         row.ItemOrder));
             }

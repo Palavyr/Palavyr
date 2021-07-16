@@ -14,14 +14,12 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
     /// The ItemId/ItemName represents this partition key.
     /// The itemName unfortunately has to be duplicated along with the itemId.
     /// </summary>
-    public class PercentOfThreshold : IComparable<PercentOfThreshold>, IOrderedTable, IDynamicTable<PercentOfThreshold>, IOrderableThreshold
+    public class PercentOfThreshold : IComparable<PercentOfThreshold>, IOrderedTable, IDynamicTable<PercentOfThreshold>, IOrderableThreshold, IMultiItem
     {
         [Key] public int? Id { get; set; }
         public string AccountId { get; set; }
         public string AreaIdentifier { get; set; }
         public string TableId { get; set; }
-        public string ItemId { get; set; }
-        public string ItemName { get; set; } // unfortunate - doesn't fit in meta, and here it will be duplicated - we don't keep a table for the subtables held by this
         public string RowId { get; set; }
         public double Threshold { get; set; }
         public double ValueMin { get; set; }
@@ -31,6 +29,10 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
         public bool PosNeg { get; set; }
         public int RowOrder { get; set; }
         public bool TriggerFallback { get; set; }
+
+        public int ItemOrder { get; set; }
+        public string ItemId { get; set; }
+        public string ItemName { get; set; } // unfortunate - doesn't fit in meta, and here it will be duplicated - we don't keep a table for the subtables held by this
 
         public static PercentOfThreshold CreateNew(
             string accountId,

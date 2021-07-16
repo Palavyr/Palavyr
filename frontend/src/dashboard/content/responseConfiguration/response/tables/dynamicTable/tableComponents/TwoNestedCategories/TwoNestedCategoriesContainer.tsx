@@ -19,7 +19,7 @@ export const TwoNestedCategoriesContainer = ({ addInnerCategory, tableData, modi
         <>
             {Object.keys(orderedOuterCategoryGroups).map((outerCategoryId: string, outerCategoryIndex: number) => {
                 const sortedRows: TwoNestedCategoryData[] = sortByPropertyNumeric(modifier.innerCategoryOrderGetter, orderedOuterCategoryGroups[outerCategoryId]);
-                const categoryName = sortedRows[0].category;
+                const categoryName = sortedRows[0].itemName;
                 return (
                     <TwoNestedCategoriesItemTable
                         key={outerCategoryIndex}

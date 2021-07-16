@@ -71,6 +71,10 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                     outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
+                    onBlur={() => {
+                        const reordered = modifier.reorderThresholdData(tableData);
+                        modifier.setTables(reordered);
+                    }}
                     onChange={(event: any, value: number) => {
                         if (value !== undefined) {
                             modifier.setThresholdValue(tableData, row.rowId, value);
@@ -180,7 +184,11 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                     <TableCell></TableCell>
                 </>
             )}
-            <TableCell>{itemLength > 1 && row.rowOrder === itemLength - 1 && <FormControlLabel label="Trigger Too Complicated" control={<Checkbox checked={row.triggerFallback} onChange={onTriggerFallbackChange} />} />}</TableCell>
+            <TableCell>
+                {itemLength > 1 && row.rowOrder === itemLength - 1 && (
+                    <FormControlLabel label="Trigger Too Complicated" control={<Checkbox checked={row.triggerFallback} onChange={onTriggerFallbackChange} />} />
+                )}
+            </TableCell>
         </TableRow>
     );
 };
