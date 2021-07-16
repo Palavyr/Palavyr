@@ -38,7 +38,7 @@ export class TwoNestedCategoriesModifier {
 
         const newOuterCategory = cloneDeep(firstCategoryRows);
         newOuterCategory.forEach((newRow: TwoNestedCategoryData) => {
-            newRow.category = "";
+            newRow.itemName = "";
             newRow.itemId = template.itemId;
             newRow.itemOrder = maxOrder;
             newRow.rowId = uuid();
@@ -58,13 +58,13 @@ export class TwoNestedCategoriesModifier {
         const newTableData: TwoNestedCategoryData[] = [...tableData];
         const nextRowOrder = Object.values(outerCategoryGroups)[0].length;
         itemIds.forEach((itemId: string) => {
-            const outerCategoryName = outerCategoryGroups[itemId][0].category;
+            const outerCategoryName = outerCategoryGroups[itemId][0].itemName;
             const newRowId = uuid();
             const templateCopy = cloneDeep(template);
             templateCopy.rowId = newRowId;
             templateCopy.itemId = itemId;
             templateCopy.rowOrder = nextRowOrder;
-            templateCopy.category = outerCategoryName;
+            templateCopy.itemName = outerCategoryName;
 
             newTableData.push(templateCopy);
         });
@@ -113,7 +113,7 @@ export class TwoNestedCategoriesModifier {
         let updated: TwoNestedCategoryData[] = [];
         itemIds.forEach((itemId: string) => {
             const group = outerCategoryGroups[itemId];
-            group[rowOrder].subCategory = newValue;
+            group[rowOrder].innerItemName = newValue;
             updated = [...updated, ...group];
         });
         this.setTables(updated);
@@ -157,7 +157,7 @@ export class TwoNestedCategoriesModifier {
         });
 
         indices.forEach((idx: number) => {
-            tableData[idx].category = newName;
+            tableData[idx].itemName = newName;
         });
         this.setTables(tableData);
     }

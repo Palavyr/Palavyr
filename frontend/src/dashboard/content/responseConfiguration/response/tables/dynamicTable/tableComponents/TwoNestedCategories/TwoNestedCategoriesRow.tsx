@@ -90,7 +90,7 @@ export const TwoNestedCategoriesRow = ({ index, shouldDisableInnerCategory, oute
                     variant="standard"
                     label="Inner Category Name"
                     type="text"
-                    value={row.subCategory}
+                    value={row.innerItemName}
                     color="primary"
                     onChange={(event: { preventDefault: () => void; target: { value: any } }) => {
                         event.preventDefault();

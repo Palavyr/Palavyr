@@ -38,8 +38,7 @@ export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableData, se
     const addRowOnClickFactory = (itemId: string) => () => modifier.addRow(tableData, repository, areaIdentifier, tableId, itemId);
 
     const onSave = async () => {
-        const reorderedData = reOrderPercentOfThresholdTableData(tableData);
-
+        const reorderedData = modifier.reorderThresholdData(tableData);
         const result = modifier.validateTable(reorderedData);
 
         if (result) {

@@ -1,10 +1,12 @@
-import { makeStyles, TableCell, TableHead, TableRow } from "@material-ui/core";
+import { Button, makeStyles, TableCell, TableHead, TableRow } from "@material-ui/core";
+import { PercentOfThresholdData } from "@Palavyr-Types";
 import classNames from "classnames";
 import React from "react";
+import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     cell: {
-        borderRight: "1px solid gray"
+        borderRight: "1px solid gray",
     },
     text: {
         fontSize: "12pt",
@@ -14,24 +16,48 @@ const useStyles = makeStyles(theme => ({
         // borderBottom: "3px solid black"
     },
     noRight: {
-        borderRight: "0px solid white"
-    }
-}))
+        borderRight: "0px solid white",
+    },
+}));
 
-export const PercentOfThresholdHeader = () => {
+export interface IPercentOfThresholdHeader {
+    tableData: PercentOfThresholdData[];
+    modifier: PercentOfThresholdModifier;
+}
+
+export const PercentOfThresholdHeader = ({ tableData, modifier }: IPercentOfThresholdHeader) => {
     const classes = useStyles();
 
     return (
         <TableHead>
             <TableRow className={classes.row}>
-                <TableCell align="center" ></TableCell>
-                <TableCell align="center" className={classNames(classes.cell, classes.text)} > {"If exceeds Threshold"}</TableCell>
-                <TableCell align="center" className={classNames(classes.cell, classes.text)} > Add or subtract</TableCell>
-                <TableCell align="center" className={classNames(classes.cell, classes.text)} > % of Value</TableCell>
-                <TableCell align="center" className={classNames(classes.cell, classes.text)} >From base Amount</TableCell>
-                <TableCell align="center" className={classNames(classes.cell, classes.text, classes.noRight)} >Max Amount (if range)</TableCell>
-                <TableCell align="center" ></TableCell>
+                <TableCell align="center"></TableCell>
+                <TableCell align="center" className={classNames(classes.cell, classes.text)}>
+                    {"If exceeds Threshold"}
+                </TableCell>
+                <TableCell align="center" className={classNames(classes.cell, classes.text)}>
+                    Add or subtract
+                </TableCell>
+                <TableCell align="center" className={classNames(classes.cell, classes.text)}>
+                    % of Value
+                </TableCell>
+                <TableCell align="center" className={classNames(classes.cell, classes.text)}>
+                    From base Amount
+                </TableCell>
+                <TableCell align="center" className={classNames(classes.cell, classes.text, classes.noRight)}>
+                    Max Amount (if range)
+                </TableCell>
+                <TableCell align="center">
+                    <Button
+                        onClick={() => {
+                            const reordered = modifier.reorderThresholdData(tableData);
+                            modifier.setTables(reordered);
+                        }}
+                    >
+                        Reorder thresholds
+                    </Button>
+                </TableCell>
             </TableRow>
         </TableHead>
-    )
-}
+    );
+};

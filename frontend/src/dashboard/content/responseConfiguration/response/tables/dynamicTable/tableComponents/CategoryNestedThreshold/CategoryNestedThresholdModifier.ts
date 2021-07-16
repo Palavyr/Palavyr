@@ -44,7 +44,7 @@ export class CategoryNestedThresholdModifier {
         template.itemOrder = uniq(categoryRows.map((x: CategoryNestedThresholdData) => x.itemOrder))[0];
         template.itemId = categoryId;
         template.rowId = uuid();
-        template.category = categoryRows[0].category;
+        template.itemName = categoryRows[0].itemName;
         tableData.push(template);
 
         this.setTables(tableData);
@@ -53,7 +53,7 @@ export class CategoryNestedThresholdModifier {
     setCategoryName(tableData: CategoryNestedThresholdData[], categoryId: string, value: string) {
         tableData.forEach((item: CategoryNestedThresholdData, index: number) => {
             if (item.itemId === categoryId) {
-                tableData[index].category = value;
+                tableData[index].itemName = value;
             }
         });
         this.setTables(tableData);
@@ -151,7 +151,7 @@ export class CategoryNestedThresholdModifier {
         return x.rowOrder;
     }
 
-    public categoryIdGetter(x: CategoryNestedThresholdData) {
+    public itemOrderGetter(x: CategoryNestedThresholdData) {
         return x.itemOrder;
     }
 
@@ -167,17 +167,17 @@ export class CategoryNestedThresholdModifier {
             const itemId = itemIds[index];
 
             const itemRows = this._getRowsByCategoryId(tableData, itemId);
-            const reorderedItem = this._reorderThresholdData(itemRows);
+            const reorderedItem = this._reorderSingleItemThresholdData(itemRows);
             reorderedData.push(...reorderedItem);
         }
 
         return reorderedData;
     }
 
-    _reorderThresholdData(itemRows: CategoryNestedThresholdData[]) {
+    _reorderSingleItemThresholdData(itemRows: CategoryNestedThresholdData[]) {
         // reorders the threshold data for a single item (category)
         const getter = (x: CategoryNestedThresholdData) => x.threshold;
-        const sortedByThreshold = sortByPropertyNumeric(getter, itemRows);
+        const sortedByThreshold = sortByPropertyNumeric(getter, itemRows) as CategoryNestedThresholdData[];
 
         const reOrdered: CategoryNestedThresholdData[] = [];
         let shouldReassignTriggerFallback = false;
@@ -197,7 +197,7 @@ export class CategoryNestedThresholdModifier {
     }
 
     _getOrderedUniqItemIds(tableData: CategoryNestedThresholdData[]) {
-        return sortByPropertyNumeric(this.categoryIdGetter, uniq(tableData.map((x: CategoryNestedThresholdData) => x.itemId)));
+        return sortByPropertyNumeric(this.itemOrderGetter, uniq(tableData.map((x: CategoryNestedThresholdData) => x.itemId)));
     }
 
     _getRowsByCategoryId(tableData: CategoryNestedThresholdData[], categoryId: string) {

@@ -1,8 +1,9 @@
 import { Dispatch, SetStateAction } from "react";
 import { PercentOfThresholdData, SetState } from "@Palavyr-Types";
-import { cloneDeep, findIndex, uniq } from "lodash";
+import { cloneDeep, findIndex, uniq, uniqBy } from "lodash";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
+import { sortByPropertyNumeric } from "@common/utils/sorting";
 
 export class PercentOfThresholdModifier {
     onClick: SetState<PercentOfThresholdData[]>;
@@ -24,7 +25,7 @@ export class PercentOfThresholdModifier {
 
     async addItem(tableData: PercentOfThresholdData[], repository: PalavyrRepository, areaIdentifier: string, tableId: string) {
         const newItemInitialrow = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<PercentOfThresholdData>(areaIdentifier, this.tableType, tableId);
-
+        newItemInitialrow.itemOrder = this._getOrderedUniqItemIds(tableData).length;
         tableData.push(newItemInitialrow);
         this.setTables(tableData);
     }
@@ -122,6 +123,54 @@ export class PercentOfThresholdModifier {
         });
 
         this.setTables(tableData);
+    }
+
+    public itemOrderGetter(x: PercentOfThresholdData) {
+        return x.itemOrder;
+    }
+
+    _getOrderedUniqItemIds(tableData: PercentOfThresholdData[]) {
+        return sortByPropertyNumeric(this.itemOrderGetter, uniq(tableData.map((x: PercentOfThresholdData) => x.itemId)));
+    }
+
+    _getRowsByItemId(tableData: PercentOfThresholdData[], itemId: string) {
+        return tableData.filter((x: PercentOfThresholdData) => x.itemId === itemId);
+    }
+
+    public reorderThresholdData(tableData: PercentOfThresholdData[]) {
+        const itemIds: string[] = this._getOrderedUniqItemIds(tableData);
+        const reOrderedData: PercentOfThresholdData[] = [];
+
+        for (let index = 0; index < itemIds.length; index++) {
+            const itemId = itemIds[index];
+            const itemRows = this._getRowsByItemId(tableData, itemId);
+            const reorderedItem = this._reorderSingleItemThresholdData(itemRows);
+            reOrderedData.push(...reorderedItem);
+        }
+        return reOrderedData;
+    }
+
+    _thresholdGetter(row: PercentOfThresholdData) {
+        return row.threshold;
+    }
+    _reorderSingleItemThresholdData(itemRows: PercentOfThresholdData[]) {
+        const sortedByThreshold = sortByPropertyNumeric(this._thresholdGetter, itemRows) as PercentOfThresholdData[];
+
+        const reOrdered: PercentOfThresholdData[] = [];
+        let shouldReassignTriggerFallback = false;
+        sortedByThreshold.forEach((row: PercentOfThresholdData, newRowNumber: number) => {
+            row.rowOrder = newRowNumber;
+            if (newRowNumber + 1 !== sortedByThreshold.length && row.triggerFallback) {
+                row.triggerFallback = false;
+                shouldReassignTriggerFallback = true;
+            }
+
+            if (newRowNumber + 1 === sortedByThreshold.length && shouldReassignTriggerFallback) {
+                row.triggerFallback = true;
+            }
+            reOrdered.push(row);
+        });
+        return reOrdered;
     }
 
     validateTable(tableData: PercentOfThresholdData[]) {

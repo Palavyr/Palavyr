@@ -38,7 +38,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         public List<string> GetCategories(List<CategoryNestedThreshold> rawRows)
         {
             var rows = rawRows.OrderBy(row => row.RowOrder).ToList();
-            var categories = rows.Select(row => row.Category).Distinct().ToList();
+            var categories = rows.Select(row => row.ItemName).Distinct().ToList();
             return categories;
         }
 
@@ -112,7 +112,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var category = GetResponseByResponseId(orderedResponseIds[0], dynamicResponse);
             var amount = GetResponseByResponseId(orderedResponseIds[1], dynamicResponse);
 
-            var itemRows = records.Where(rec => rec.Category == category);
+            var itemRows = records.Where(rec => rec.ItemName == category);
 
             var responseAmountAsDouble = double.Parse(amount);
             if (responseAmountAsDouble < 0) throw new Exception("Negative values are not allowed");
@@ -152,7 +152,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var records = await Repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
 
             var categoryThresholds = records
-                .Where(rec => rec.Category == categoryResponse);
+                .Where(rec => rec.ItemName == categoryResponse);
             var currentResponseAsDouble = double.Parse(response);
             var isTooComplicated = thresholdEvaluator.EvaluateForFallback(currentResponseAsDouble, categoryThresholds);
             return isTooComplicated;

@@ -42,13 +42,13 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var outerCategory = GetResponseByResponseId(orderedResponseIds[0], dynamicResponse);
             var innerCategory = GetResponseByResponseId(orderedResponseIds[1], dynamicResponse);
 
-            var result = records.Single(rec => rec.Category == outerCategory && rec.SubCategory == innerCategory);
+            var result = records.Single(rec => rec.ItemName == outerCategory && rec.InnerItemName == innerCategory);
             var dynamicTableMeta = await configurationRepository.GetDynamicTableMetaByTableId(result.TableId);
 
             return new List<TableRow>()
             {
                 new TableRow(
-                    dynamicTableMeta.UseTableTagAsResponseDescription ? dynamicTableMeta.TableTag : string.Join(" & ", new[] {result.Category, result.SubCategory}),
+                    dynamicTableMeta.UseTableTagAsResponseDescription ? dynamicTableMeta.TableTag : string.Join(" & ", new[] {result.ItemName, result.InnerItemName}),
                     result.ValueMin,
                     result.ValueMax,
                     false,
@@ -68,10 +68,10 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             // This table type does not facilitate multiple branches. I.e. the inner categories are all the same for all of the outer categories.
             var rows = rawRows.OrderBy(row => row.RowOrder).ToList();
 
-            var outerCategories = rows.Select(row => row.Category).Distinct().ToList();
+            var outerCategories = rows.Select(row => row.ItemName).Distinct().ToList();
 
             var itemId = rows.Select(row => row.ItemId).Distinct().First();
-            var innerCategories = rows.Where(row => row.ItemId == itemId).Select(row => row.SubCategory).ToList();
+            var innerCategories = rows.Where(row => row.ItemId == itemId).Select(row => row.InnerItemName).ToList();
 
             return new CategoryRetriever
             {

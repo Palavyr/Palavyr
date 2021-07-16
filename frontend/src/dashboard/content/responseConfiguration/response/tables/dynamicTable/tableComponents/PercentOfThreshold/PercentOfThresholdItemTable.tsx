@@ -60,7 +60,7 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
                 }}
             />
             <TableContainer className={cls.tableStyles} component={Paper}>
-                <PercentOfThresholdHeader />
+                <PercentOfThresholdHeader tableData={tableData} modifier={modifier} />
                 <TableBody>
                     {sortByPropertyNumeric(getter, itemData).map((row: PercentOfThresholdData, index: number) => {
                         row.rowOrder = index;
