@@ -93,12 +93,11 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return tableRows;
         }
 
-        public async Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)
+        public async Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents _)
         {
-            var records = await Repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
-            var orderedThresholds = records.OrderBy(x => x.Threshold);
+            var thresholds = await Repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
             var currentResponseAsDouble = double.Parse(response);
-            var isTooComplicated = thresholdEvaluator.EvaluateForFallback(currentResponseAsDouble, orderedThresholds);
+            var isTooComplicated = thresholdEvaluator.EvaluateForFallback(currentResponseAsDouble, thresholds);
             return isTooComplicated;
         }
     }

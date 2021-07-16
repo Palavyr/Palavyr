@@ -115,6 +115,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var itemRows = records.Where(rec => rec.Category == category);
 
             var responseAmountAsDouble = double.Parse(amount);
+            if (responseAmountAsDouble < 0) throw new Exception("Negative values are not allowed");
 
             var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(records.First().TableId);
             var thresholdResult = thresholdEvaluator.Evaluate(responseAmountAsDouble, itemRows);
@@ -147,10 +148,6 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var categoryResponse = dynamicResponseComponents.Responses
                 .Single(x => x.ContainsKey(categoryNode.NodeId!))
                 .Values.Single();
-
-            // var thresholdResponse = dynamicResponseComponents.Responses
-            //     .Single(x => x.ContainsKey(thresholdNode.NodeId!))
-            //     .Values.Single();
 
             var records = await Repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
 

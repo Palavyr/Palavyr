@@ -20,6 +20,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Thresholds
 
         public IOrderableThreshold Evaluate(double responseValue, IEnumerable<IOrderableThreshold> orderedThresholds)
         {
+            
             // the convo node then is responsible for adding the extra logic for min and max.
 
             var thresholdsOrderedByDescending = OrderThresholdsByDescending(orderedThresholds);
@@ -31,13 +32,8 @@ namespace Palavyr.Core.Services.DynamicTableService.Thresholds
             for (var i = 0; i < thresholdsOrderedByDescending.Count; i++)
             {
                 threshold = thresholdsOrderedByDescending[i];
-                if (responseValue <= threshold.Threshold) // I really want this to be readable.
+                if (responseValue >= threshold.Threshold) // I really want this to be readable.
                 {
-                    if (i == 0)
-                    {
-                        throw new Exception("We should never fail the first threshold at this point. The widget should catch this."); // I'll improve this when I can think of what to say here. Should probably be something handled by the error middleware.
-                    }
-
                     break;
                 }
             }
@@ -54,12 +50,12 @@ namespace Palavyr.Core.Services.DynamicTableService.Thresholds
         public bool EvaluateForFallback(double responseValue, IEnumerable<IOrderableThreshold> thresholds)
         {
             var orderedThresholds = OrderThresholdsByDescending(thresholds);
-            if (responseValue > orderedThresholds.First().Threshold)
+            if (responseValue < orderedThresholds.Last().Threshold)
             {
                 return true;
             }
 
-            if (responseValue < orderedThresholds.Last().Threshold && orderedThresholds.Last().TriggerFallback)
+            if (responseValue > orderedThresholds.First().Threshold && orderedThresholds.First().TriggerFallback)
             {
                 return true;
             }

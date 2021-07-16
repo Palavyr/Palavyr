@@ -60,7 +60,6 @@ export const responseAction = async (
             addUserMessage(response);
         }
     }
-    toggleMsgLoader();
 
     const updatePayload: ConversationUpdate = {
         ConversationId: convoId,
@@ -70,11 +69,13 @@ export const responseAction = async (
         NodeCritical: node.isCritical,
         NodeType: node.nodeType,
     };
-
-    client.Widget.Post.ReplyUpdate(updatePayload); // no need to await for this
     setTimeout(() => {
         if (callback) callback();
-        renderNextComponent(child, nodeList, client, convoId); // convoId should come from redux store in the future
         toggleMsgLoader();
+        client.Widget.Post.ReplyUpdate(updatePayload); // no need to await for this
+        setTimeout(() => {
+            renderNextComponent(child, nodeList, client, convoId); // convoId should come from redux store in the future
+            toggleMsgLoader();
+        }, 1000);
     }, random(1000, 3000, undefined));
 };

@@ -465,11 +465,11 @@ export class StandardComponents {
                                 variant="contained"
                                 disabled={disabled}
                                 onClick={async () => {
+                                    setDisabled(true);
                                     setLoading(true);
                                     const response = await sendEmail();
                                     const child = nodeList.filter((x: WidgetNodeResource) => x.nodeId === response.nextNodeId)[0];
                                     responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
-                                    setDisabled(true);
                                 }}
                             />
                         </SingleRowSingleCell>
