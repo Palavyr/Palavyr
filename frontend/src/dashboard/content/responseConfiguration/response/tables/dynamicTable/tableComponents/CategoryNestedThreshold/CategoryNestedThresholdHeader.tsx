@@ -1,6 +1,8 @@
-import { TableHead, TableRow, TableCell, makeStyles } from "@material-ui/core";
+import { TableHead, TableRow, TableCell, makeStyles, Button } from "@material-ui/core";
+import { CategoryNestedThresholdData } from "@Palavyr-Types";
 import classNames from "classnames";
 import React from "react";
+import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 
 const useStyles = makeStyles((theme) => ({
     cell: {
@@ -14,7 +16,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const CategoryNestedThresholdHeader = () => {
+export interface ICategoryNestedThresholdHeader {
+    tableData: CategoryNestedThresholdData[];
+    modifier: CategoryNestedThresholdModifier;
+}
+
+export const CategoryNestedThresholdHeader = ({ tableData, modifier }: ICategoryNestedThresholdHeader) => {
     const cls = useStyles();
 
     return (
@@ -34,7 +41,16 @@ export const CategoryNestedThresholdHeader = () => {
                 </TableCell>
                 <TableCell align="center"></TableCell>
                 <TableCell align="center">Delete</TableCell>
-                <TableCell align="center"></TableCell>
+                <TableCell align="center">
+                    <Button
+                        onClick={() => {
+                            modifier.reorderThresholdData(tableData);
+                            modifier.setTables(tableData);
+                        }}
+                    >
+                        Reorder Thresholds
+                    </Button>
+                </TableCell>
             </TableRow>
         </TableHead>
     );

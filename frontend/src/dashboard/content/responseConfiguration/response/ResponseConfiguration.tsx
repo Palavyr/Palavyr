@@ -139,8 +139,8 @@ export const ResponseConfiguration = () => {
                 <AreaConfigurationHeader divider light title="Create an introduction for your response PDF" subtitle="You can make it clear that fees are estimate only, or provide context for your client to understand their estimate." />
             </ExpandableTextBox>
 
-            <DynamicTableConfiguration title="Customized Fees" areaIdentifier={areaIdentifier}>
-                <AreaConfigurationHeader divider light title="Configure a custom fee table" subtitle="When you configure a custom fee table, it creates a corresponding palavyr node that must be included in the chat conversation." />
+            <DynamicTableConfiguration title="Pricing Strategies" areaIdentifier={areaIdentifier}>
+                <AreaConfigurationHeader divider light title="Configure a dynamic pricing strategy" subtitle="When you configure a pricing strategy, it creates a corresponding palavyr node that must be included in the chat conversation. When a client provides the corresponding information, its used to determine a fee estimate." />
             </DynamicTableConfiguration>
 
             <StaticTableConfiguration areaIdentifier={areaIdentifier} title="Static Fees" staticTables={staticTables} tableSaver={tableSaver} tableCanceler={tableCanceler} modifier={staticTablesModifier}>

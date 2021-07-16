@@ -1,6 +1,8 @@
 import React from "react";
-import { TableHead, TableRow, TableCell, makeStyles } from "@material-ui/core";
+import { TableHead, TableRow, TableCell, makeStyles, Button } from "@material-ui/core";
 import classNames from "classnames";
+import { TableData } from "@Palavyr-Types";
+import { BasicThresholdModifier } from "./BasicThresholdModifier";
 
 const useStyles = makeStyles((theme) => ({
     cell: {
@@ -18,7 +20,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const BasicThresholdHeader = () => {
+export interface IBasicThresholdHeader {
+    tableData: TableData;
+    modifier: BasicThresholdModifier;
+}
+
+export const BasicThresholdHeader = ({ tableData, modifier }: IBasicThresholdHeader) => {
     const cls = useStyles();
 
     return (
@@ -35,6 +42,16 @@ export const BasicThresholdHeader = () => {
                     Max Amount (if range)
                 </TableCell>
                 <TableCell align="center"></TableCell>
+                <TableCell align="center">
+                    <Button
+                        onClick={() => {
+                            modifier.reorderThresholdData(tableData);
+                            modifier.setTables(tableData);
+                        }}
+                    >
+                        Sort By Threshold
+                    </Button>
+                </TableCell>
             </TableRow>
         </TableHead>
     );

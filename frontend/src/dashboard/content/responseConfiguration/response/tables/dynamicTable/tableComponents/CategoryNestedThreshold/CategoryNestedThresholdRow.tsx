@@ -8,7 +8,7 @@ import { SetState } from "@Palavyr-Types";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 
 export interface CategoryNestedThresholdProps {
-    index: number;
+    rowIndex: number;
     categoryId: string;
     categoryName: string;
     categorySize: number;
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 const cellAlignment = "center";
 
-export const CategoryNestedThresholdRow = ({ index, categoryId, categoryName, categorySize, setCategoryName, tableData, row, modifier }: CategoryNestedThresholdProps) => {
+export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName, categorySize, setCategoryName, tableData, row, modifier }: CategoryNestedThresholdProps) => {
     const cls = useStyles(!row.range);
 
     const onTriggerFallbackChange = (event) => {
@@ -61,7 +61,7 @@ export const CategoryNestedThresholdRow = ({ index, categoryId, categoryName, ca
 
     const { currencySymbol } = React.useContext(DashboardContext);
     const categoryColumn =
-        index === 0 ? (
+        rowIndex === 0 ? (
             <TableCell align={cellAlignment}>
                 <TextField
                     className={cls.categoryInput}
@@ -86,6 +86,7 @@ export const CategoryNestedThresholdRow = ({ index, categoryId, categoryName, ca
             {categoryColumn}
             <TableCell align={cellAlignment}>
                 <CurrencyTextField
+                    disabled={rowIndex === 0}
                     label="Threshold"
                     variant="standard"
                     value={row.threshold}
@@ -94,6 +95,10 @@ export const CategoryNestedThresholdRow = ({ index, categoryId, categoryName, ca
                     outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
+                    onBlur={() => {
+                        modifier.reorderThresholdData(tableData);
+                        modifier.setTables(tableData);
+                    }}
                     onChange={(_: any, value: number) => {
                         if (value !== undefined) {
                             modifier.setThreshold(tableData, row.rowId, value);
@@ -176,7 +181,11 @@ export const CategoryNestedThresholdRow = ({ index, categoryId, categoryName, ca
                     </>
                 </>
             )}
-            <TableCell>{row.rowOrder === categorySize - 1 && categorySize > 1 && <FormControlLabel label="Trigger Too Complicated" control={<Checkbox checked={row.triggerFallback} onChange={onTriggerFallbackChange} />} />}</TableCell>
+            <TableCell>
+                {row.rowOrder === categorySize - 1 && categorySize > 1 && (
+                    <FormControlLabel label="Trigger Too Complicated" control={<Checkbox checked={row.triggerFallback} onChange={onTriggerFallbackChange} />} />
+                )}
+            </TableCell>
         </TableRow>
     );
 };

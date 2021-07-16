@@ -1,26 +1,31 @@
+import { History } from "history";
 import { SessionStorage } from "localStorage/sessionStorage";
+import { PalavyrRepository } from "./PalavyrRepository";
 
 /*
 This will retrieve login credental data from localsession and send it with the requestover to the server for retrieval.
 */
 export const getSessionIdFromLocalStorage = (): string => {
-    var sessionId = SessionStorage.getSessionId();
+    const sessionId = SessionStorage.getSessionId();
     return sessionId || "noIdInStorage";
 };
 
 export const getJwtTokenFromLocalStorage = (): string => {
-    var token = SessionStorage.getJwtToken();
-    if (!token) {
-        throw new Error("No token in local storage...");
-    }
+    const token = SessionStorage.getJwtToken();
     return token || "noTokenInStorage";
 };
 
-export const redirectToHomeWhenSessionNotEstablished = (history) => {
-    const result = SessionStorage.getJwtToken();
-    if (!result) {
+
+export const redirectToHomeWhenSessionNotEstablished = async (history: History<History.UnknownFacade> | string[], repository: PalavyrRepository) => {
+    const jwt_token = SessionStorage.getJwtToken();
+    if (!jwt_token) {
         history.push("/");
     }
+    const signedIn = await repository.AuthenticationCheck.check();
+    if (!signedIn) {
+        history.push("/");
+    }
+
 };
 
 export const serverUrl = process.env.API_URL as string;

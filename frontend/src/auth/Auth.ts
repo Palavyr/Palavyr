@@ -37,7 +37,7 @@ class Auth {
         return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
     }
 
-    private async processAuthenticationResponse(authenticationResponse: Credentials, callback: () => any, errorCallback: (response: Credentials) => any) {
+    private async processAuthenticationResponse(authenticationResponse: Credentials, successRedirectToDashboard: () => any, errorCallback: (response: Credentials) => any) {
         if (authenticationResponse.authenticated) {
             this.authenticated = true;
             SessionStorage.setAuthorization(authenticationResponse.sessionId, authenticationResponse.jwtToken);
@@ -49,7 +49,7 @@ class Auth {
             this.isActive = accountIsActive;
             SessionStorage.setIsActive(accountIsActive);
 
-            await callback();
+            await successRedirectToDashboard();
             return true;
         } else {
             this.authenticated = false;
@@ -70,10 +70,10 @@ class Auth {
         }
     }
 
-    async loginWithGoogle(oneTimeCode: string, tokenId: string, callback: () => void, errorCallback: (response: Credentials) => void) {
+    async loginWithGoogle(oneTimeCode: string, tokenId: string, successRedirectToDashboard: () => void, errorCallback: (response: Credentials) => void) {
         try {
             const authenticationResponse = await this.loginClient.Login.RequestLoginWithGoogleToken(oneTimeCode, tokenId);
-            return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
+            return this.processAuthenticationResponse(authenticationResponse, successRedirectToDashboard, errorCallback);
         } catch {
             console.log("Error attempting to reach the server.");
             return null;

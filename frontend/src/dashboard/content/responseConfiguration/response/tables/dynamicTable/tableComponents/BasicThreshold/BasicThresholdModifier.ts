@@ -4,6 +4,7 @@ import { SetStateAction } from "react";
 import { BasicThresholdData } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
+import { sortByPropertyNumeric } from "@common/utils/sorting";
 
 export class BasicThresholdModifier {
     onClick: Dispatch<SetStateAction<BasicThresholdData[]>>;
@@ -74,6 +75,27 @@ export class BasicThresholdModifier {
             }
         });
         this.setTables(tableData);
+    }
+
+    public reorderThresholdData(tableData: BasicThresholdData[]) {
+        const getter = (x: BasicThresholdData) => x.threshold;
+        const sortedByThreshold = sortByPropertyNumeric(getter, tableData);
+
+        const reOrdered: BasicThresholdData[] = [];
+        let shouldReassignTriggerFallback = false;
+        sortedByThreshold.forEach((row: BasicThresholdData, newRowNumber: number) => {
+            row.rowOrder = newRowNumber;
+            if (newRowNumber + 1 !== sortedByThreshold.length && row.triggerFallback) {
+                row.triggerFallback = false;
+                shouldReassignTriggerFallback = true;
+            }
+
+            if (newRowNumber + 1 === sortedByThreshold.length && shouldReassignTriggerFallback) {
+                row.triggerFallback = true;
+            }
+            reOrdered.push(row);
+        });
+        return reOrdered;
     }
 
     public validateTable(tableData: BasicThresholdData[]) {

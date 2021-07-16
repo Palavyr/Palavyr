@@ -40,7 +40,7 @@ export class CategoryNestedThresholdModifier {
         const template = await repository.Configuration.Tables.Dynamic.getDynamicTableDataTemplate<CategoryNestedThresholdData>(areaIdentifier, this.tableType, tableId);
 
         const categoryRows = this._getRowsByCategoryId(tableData, categoryId);
-        template.rowOrder = categoryRows.length;
+        template.rowOrder = 0;
         template.itemOrder = uniq(categoryRows.map((x: CategoryNestedThresholdData) => x.itemOrder))[0];
         template.itemId = categoryId;
         template.rowId = uuid();
@@ -157,6 +157,43 @@ export class CategoryNestedThresholdModifier {
 
     public validateTable(tableData: CategoryNestedThresholdData[]) {
         return true; // TODO: going to need to check things like row orders.
+    }
+
+    public reorderThresholdData(tableData: CategoryNestedThresholdData[]) {
+        // reorders all threshold data for all items (categories)
+        const itemIds: string[] = this._getOrderedUniqItemIds(tableData);
+        const reorderedData: CategoryNestedThresholdData[] = [];
+        for (let index = 0; index < itemIds.length; index++) {
+            const itemId = itemIds[index];
+
+            const itemRows = this._getRowsByCategoryId(tableData, itemId);
+            const reorderedItem = this._reorderThresholdData(itemRows);
+            reorderedData.push(...reorderedItem);
+        }
+
+        return reorderedData;
+    }
+
+    _reorderThresholdData(itemRows: CategoryNestedThresholdData[]) {
+        // reorders the threshold data for a single item (category)
+        const getter = (x: CategoryNestedThresholdData) => x.threshold;
+        const sortedByThreshold = sortByPropertyNumeric(getter, itemRows);
+
+        const reOrdered: CategoryNestedThresholdData[] = [];
+        let shouldReassignTriggerFallback = false;
+        sortedByThreshold.forEach((row: CategoryNestedThresholdData, newRowNumber: number) => {
+            row.rowOrder = newRowNumber;
+            if (newRowNumber + 1 !== sortedByThreshold.length && row.triggerFallback) {
+                row.triggerFallback = false;
+                shouldReassignTriggerFallback = true;
+            }
+
+            if (newRowNumber + 1 === sortedByThreshold.length && shouldReassignTriggerFallback) {
+                row.triggerFallback = true;
+            }
+            reOrdered.push(row);
+        });
+        return reOrdered;
     }
 
     _getOrderedUniqItemIds(tableData: CategoryNestedThresholdData[]) {

@@ -1,4 +1,4 @@
-import { assembleCompletedConvo, getOrderedChildNodes } from "./utils";
+import { assembleCompletedConvo, getOrderedChildNodes, MinNumeric, parseNumericResponse } from "./utils";
 import React, { useEffect, useState } from "react";
 import { Table, TableRow, TableCell, makeStyles, TextField, Typography } from "@material-ui/core";
 import { responseAction } from "./responseAction";
@@ -10,7 +10,6 @@ import { ResponseButton } from "common/ResponseButton";
 import { SingleRowSingleCell } from "common/TableCell";
 import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "common/UserDetailsDialog/ChatLoadingSpinner";
-import { uuid } from "uuidv4";
 import { CustomImage } from "common/CustomImage";
 import { floor, max, min } from "lodash";
 
@@ -45,16 +44,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export class ComponentRegisteryMethods {
-    MinNumeric: number = 0;
-
-    public parseNumericResponse(newValue: string): string {
-        const intValue = parseInt(newValue);
-        return intValue < this.MinNumeric ? this.MinNumeric.toString() : intValue.toString();
-    }
-}
-
-export class StandardComponents extends ComponentRegisteryMethods {
+export class StandardComponents {
     public makeProvideInfo({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         const prefs = getWidgetPreferences();
@@ -194,7 +184,7 @@ export class StandardComponents extends ComponentRegisteryMethods {
                                 label=""
                                 type="number"
                                 onChange={event => {
-                                    setResponse(this.parseNumericResponse(event.target.value));
+                                    setResponse(parseNumericResponse(event.target.value));
                                     setDisabled(false);
                                 }}
                             />
@@ -206,23 +196,6 @@ export class StandardComponents extends ComponentRegisteryMethods {
                                 prefs={prefs!}
                                 disabled={disabled}
                                 onClick={async () => {
-                                    // will need to do something like this. -- this might all go into the response action..
-
-                                    if (node.isDynamicTableNode && node.dynamicType && node.resolveOrder && node.resolveOrder > 0) {
-                                        // we have some kind of dynamic table node that may or may not
-                                        const contextProperties: ContextProperties = getContextProperties();
-                                        const dynamicResponses = contextProperties[ConvoContextProperties.dynamicResponses] as DynamicResponses;
-
-                                        // const tableId = extractDynamicTypeGuid(node.dynamicType);
-                                        const currentDynamicResponseState = dynamicResponses.filter(x => Object.keys(x)[0] === node.dynamicType)[0];
-
-                                        // send the dynamic responses, the
-                                        const tooComplicated = await client.Widget.Post.InternalCheck(node, response, currentDynamicResponseState);
-                                        if (tooComplicated) {
-                                            child = nodeList.filter(x => x.nodeType === "TooComplicated")[0];
-                                        }
-                                    }
-
                                     responseAction(node, child, nodeList, client, convoId, response);
                                     setDisabled(true);
                                     setInputDisabled(true);
@@ -410,8 +383,8 @@ export class StandardComponents extends ComponentRegisteryMethods {
                                     setDisabled(false);
                                     const intValue = parseInt(event.target.value);
                                     if (!intValue) return;
-                                    if (intValue < this.MinNumeric) {
-                                        setResponse(this.MinNumeric);
+                                    if (intValue < MinNumeric) {
+                                        setResponse(MinNumeric);
                                     } else {
                                         setResponse(intValue);
                                     }
@@ -492,11 +465,11 @@ export class StandardComponents extends ComponentRegisteryMethods {
                                 variant="contained"
                                 disabled={disabled}
                                 onClick={async () => {
+                                    setDisabled(true);
                                     setLoading(true);
                                     const response = await sendEmail();
                                     const child = nodeList.filter((x: WidgetNodeResource) => x.nodeId === response.nextNodeId)[0];
                                     responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
-                                    setDisabled(true);
                                 }}
                             />
                         </SingleRowSingleCell>

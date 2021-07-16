@@ -80,7 +80,6 @@ interface IDashboardLayout {
 export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) => {
     const repository = new PalavyrRepository();
     const history = useHistory();
-    redirectToHomeWhenSessionNotEstablished(history);
 
     const { areaIdentifier } = useParams<{ contentType: string; areaIdentifier: string }>();
 
@@ -116,40 +115,25 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
     const [unseenNotifications, setUnseenNotifications] = useState<number>(0);
 
+    useEffect(() => {
+        (async () => {
+            await redirectToHomeWhenSessionNotEstablished(history, repository);
+        })();
+    }, []);
+
     const loadAreas = useCallback(async () => {
         setDashboardAreasLoading(true);
 
         const planTypeMeta = await repository.Settings.Subscriptions.getCurrentPlanMeta();
         setPlanTypeMeta(planTypeMeta);
 
-        const cachedAreas = SessionStorage.getAreas();
-        let areas: Areas;
-        if (cachedAreas) {
-            areas = cachedAreas;
-        } else {
-            areas = await repository.Area.GetAreas();
-            SessionStorage.setAreas(areas);
-        }
+        const areas = await repository.Area.GetAreas();
         setAreaNameDetails(sortByPropertyAlphabetical((x: AreaNameDetail) => x.areaName, fetchSidebarInfo(areas)));
 
-        const cachedLocale = SessionStorage.getLocale();
-        let locale: LocaleDefinition;
-        if (cachedLocale) {
-            locale = cachedLocale;
-        } else {
-            locale = await repository.Settings.Account.GetLocale();
-            SessionStorage.setLocale(locale);
-        }
+        const locale = await repository.Settings.Account.GetLocale();
         setCurrencySymbol(locale.localeCurrencySymbol);
 
-        const cachedNeedsPassword = SessionStorage.getNeedsPassword();
-        let needsPassword: boolean;
-        if (cachedNeedsPassword) {
-            needsPassword = cachedNeedsPassword;
-        } else {
-            needsPassword = await repository.Settings.Account.CheckNeedsPassword();
-            SessionStorage.setNeedsPassword(needsPassword);
-        }
+        const needsPassword = await repository.Settings.Account.CheckNeedsPassword();
         setAccountTypeNeedsPassword(needsPassword);
 
         const enqs = await repository.Enquiries.getEnquiries();

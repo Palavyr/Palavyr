@@ -59,7 +59,7 @@ export const Enquires = () => {
         setEnquiries(enqs);
         setLoading(false);
         setIsLoading(false);
-    }, [setLoading]);
+    }, []);
 
     const numberPropertyGetter = (enquiry: EnquiryRow) => {
         return enquiry.id;
@@ -101,10 +101,10 @@ export const Enquires = () => {
                         {sortByPropertyNumeric(numberPropertyGetter, enquiries, true).map((enq: EnquiryRow, index: number) => {
                             if (!showSeen) {
                                 if (!enq.seen) {
-                                    return <EnquiriesTableRow key={index} index={enquiries.length - (index + 1)} enquiry={enq} setEnquiries={setEnquiries} />;
+                                    return <EnquiriesTableRow key={[enq.conversationId, index].join("-")} index={enquiries.length - (index + 1)} enquiry={enq} setEnquiries={setEnquiries} />;
                                 }
                             } else {
-                                return <EnquiriesTableRow key={index} index={enquiries.length - (index + 1)} enquiry={enq} setEnquiries={setEnquiries} />;
+                                return <EnquiriesTableRow key={[enq.conversationId, index].join("-")} index={enquiries.length - (index + 1)} enquiry={enq} setEnquiries={setEnquiries} />;
                             }
                         })}
                     </TableBody>

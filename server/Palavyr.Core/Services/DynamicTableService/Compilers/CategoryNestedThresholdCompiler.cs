@@ -112,13 +112,13 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var category = GetResponseByResponseId(orderedResponseIds[0], dynamicResponse);
             var amount = GetResponseByResponseId(orderedResponseIds[1], dynamicResponse);
 
-            var orderedThresholds = records
-                .Where(rec => rec.Category == category)
-                .OrderBy(x => x.Threshold);
+            var itemRows = records.Where(rec => rec.Category == category);
+
             var responseAmountAsDouble = double.Parse(amount);
+            if (responseAmountAsDouble < 0) throw new Exception("Negative values are not allowed");
 
             var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(records.First().TableId);
-            var thresholdResult = thresholdEvaluator.Evaluate(responseAmountAsDouble, orderedThresholds);
+            var thresholdResult = thresholdEvaluator.Evaluate(responseAmountAsDouble, itemRows);
             return new List<TableRow>()
             {
                 new TableRow(
@@ -134,17 +134,39 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
         public async Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)
         {
-            if (node.ResolveOrder == 0) throw new Exception("Shouldn't be doing a check on the first node");
-            var categoryResponse = dynamicResponseComponents.Responses.Single().Values.Single();
+            if (node.ResolveOrder == 0)
+            {
+                return false;
+            }
+
+            var convoNodeIds = CollectNodeIds(dynamicResponseComponents);
+
+            var convoNodes = await Repository.GetConversationNodeByIds(convoNodeIds);
+            var categoryNode = convoNodes.Single(x => x.ResolveOrder == 0);
+            // var thresholdNode = convoNodes.Single(x => x.ResolveOrder == 1);
+
+            var categoryResponse = dynamicResponseComponents.Responses
+                .Single(x => x.ContainsKey(categoryNode.NodeId!))
+                .Values.Single();
 
             var records = await Repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
 
-            var orderedThresholds = records
-                .Where(rec => rec.Category == categoryResponse)
-                .OrderBy(x => x.Threshold);
+            var categoryThresholds = records
+                .Where(rec => rec.Category == categoryResponse);
             var currentResponseAsDouble = double.Parse(response);
-            var isTooComplicated = thresholdEvaluator.EvaluateForFallback(currentResponseAsDouble, orderedThresholds);
+            var isTooComplicated = thresholdEvaluator.EvaluateForFallback(currentResponseAsDouble, categoryThresholds);
             return isTooComplicated;
+        }
+
+        List<string> CollectNodeIds(DynamicResponseComponents dynamicResponseComponents)
+        {
+            var nodeIds = new List<string>();
+            foreach (var response in dynamicResponseComponents.Responses)
+            {
+                nodeIds.AddRange(response.Keys);
+            }
+
+            return nodeIds;
         }
     }
 }

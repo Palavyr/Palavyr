@@ -63,7 +63,7 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier }: IBasic
             </TableCell>
             <TableCell align={cellAlignment}>
                 <CurrencyTextField
-                    disabled={rowIndex === 0 ? true : false}
+                    disabled={rowIndex === 0}
                     label="Threshold"
                     variant="standard"
                     value={row.threshold}
@@ -72,6 +72,10 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier }: IBasic
                     outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
+                    onBlur={() => {
+                        modifier.reorderThresholdData(tableData);
+                        modifier.setTables(tableData);
+                    }}
                     onChange={(_: any, value: number) => {
                         if (value !== undefined) {
                             modifier.setThresholdValue(tableData, row.rowId, value);
@@ -147,7 +151,11 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier }: IBasic
                     <TableCell></TableCell>
                 </>
             )}
-            <TableCell>{tableData.length > 1 && row.rowOrder === tableData.length - 1 && <FormControlLabel label="Trigger Too Complicated" control={<Checkbox checked={row.triggerFallback} onChange={onTriggerFallbackChange} />} />}</TableCell>
+            <TableCell>
+                {tableData.length > 1 && row.rowOrder === tableData.length - 1 && (
+                    <FormControlLabel label="Trigger Too Complicated" control={<Checkbox checked={row.triggerFallback} onChange={onTriggerFallbackChange} />} />
+                )}
+            </TableCell>
         </TableRow>
     );
 };

@@ -229,6 +229,17 @@ class SessionStorageAccess {
         this._setItem(this.Enquiries, "");
     }
 
+    setCacheValue(key: string, value: any) {
+        this._setItem(key, JSON.stringify(value));
+    }
+
+    getCacheValue(key: string) {
+        return this.getStoredJson(key);
+    }
+    clearCacheValue(key: string) {
+        this._setItem(key, "");
+    }
+
     private getStoredBoolean(key: string) {
         const value = this._getItem(key);
         if (value) {
