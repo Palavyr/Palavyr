@@ -50,6 +50,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 NodeTypeOption.CustomTables,
                 DefaultNodeTypeOptions.NodeComponentTypes.TakeNumber,
                 NodeTypeCode.II,
+                resolveOrder: 0,
                 dynamicType: dynamicTableMeta.MakeUniqueIdentifier() 
                 
             );

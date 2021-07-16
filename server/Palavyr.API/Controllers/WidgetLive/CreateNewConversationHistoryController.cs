@@ -33,7 +33,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             logger.LogDebug("Creating new conversation for user with apikey: {apiKey}");
             var widgetNodes = completeConversation.MapConversationToWidgetNodes();
             var newConvo = NewConversation.CreateNew(widgetNodes);
-
+            
             return newConvo;
         }
     }

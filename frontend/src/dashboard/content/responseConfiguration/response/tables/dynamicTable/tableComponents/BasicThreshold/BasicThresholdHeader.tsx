@@ -49,7 +49,7 @@ export const BasicThresholdHeader = ({ tableData, setTableData }: IBasicThreshol
                             setTableData(sortedTableData);
                         }}
                     >
-                        Reorder
+                        Sort By Threshold
                     </Button>
                 </TableCell>
             </TableRow>
