@@ -196,23 +196,6 @@ export class StandardComponents {
                                 prefs={prefs!}
                                 disabled={disabled}
                                 onClick={async () => {
-                                    // will need to do something like this. -- this might all go into the response action..
-
-                                    // if (node.isDynamicTableNode && node.dynamicType && node.resolveOrder && node.resolveOrder > 0) {
-                                    //     // we have some kind of dynamic table node that may or may not
-                                    //     const contextProperties: ContextProperties = getContextProperties();
-                                    //     const dynamicResponses = contextProperties[ConvoContextProperties.dynamicResponses] as DynamicResponses;
-
-                                    //     // const tableId = extractDynamicTypeGuid(node.dynamicType);
-                                    //     const currentDynamicResponseState = dynamicResponses.filter(x => Object.keys(x)[0] === node.dynamicType)[0];
-
-                                    //     // send the dynamic responses, the
-                                    //     const tooComplicated = await client.Widget.Post.InternalCheck(node, response, currentDynamicResponseState);
-                                    //     if (tooComplicated) {
-                                    //         child = nodeList.filter(x => x.nodeType === "TooComplicated")[0];
-                                    //     }
-                                    // }
-
                                     responseAction(node, child, nodeList, client, convoId, response);
                                     setDisabled(true);
                                     setInputDisabled(true);

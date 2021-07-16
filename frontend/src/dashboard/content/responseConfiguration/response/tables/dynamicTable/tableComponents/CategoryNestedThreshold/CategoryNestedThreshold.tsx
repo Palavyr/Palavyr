@@ -35,10 +35,18 @@ export const CategoryNestedThreshold = ({ tableId, tableTag, tableMeta, tableDat
     const modifier = new CategoryNestedThresholdModifier(setTableData);
 
     const onSave = async () => {
-        const result = modifier.validateTable(tableData);
+        const reorderedData = modifier.reorderThresholdData(tableData);
+
+        const result = modifier.validateTable(reorderedData);
 
         if (result) {
-            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable<CategoryNestedThresholdData[]>(areaIdentifier, DynamicTableTypes.CategoryNestedThreshold, tableData, tableId, tableTag);
+            const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable<CategoryNestedThresholdData[]>(
+                areaIdentifier,
+                DynamicTableTypes.CategoryNestedThreshold,
+                reorderedData,
+                tableId,
+                tableTag
+            );
             setTableData(savedData);
             return true;
         } else {

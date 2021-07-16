@@ -44,20 +44,33 @@ export const CategoryNestedThresholdItemTable = ({ categoryIndex, tableData, tab
     useEffect(() => {
         setCategoryName(categoryName);
     }, []);
-
+    const addThresholdOnClick = () => modifier.addThreshold(tableData, categoryId, repository, areaIdentifier, tableId);
     return (
         <>
             <TableContainer className={cls.tableStyles} component={Paper}>
-                {categoryIndex === 0 && <CategoryNestedThresholdHeader />}
+                {categoryIndex === 0 && <CategoryNestedThresholdHeader tableData={tableData} modifier={modifier} />}
                 <TableBody>
-                    {sortByPropertyNumeric(getter, categoryData).map((row: CategoryNestedThresholdData, index: number) => {
-                        return <CategoryNestedThresholdRow key={row.rowId} categorySize={categoryData.length} categoryId={categoryId} setCategoryName={setCategoryName} categoryName={name} index={index} tableData={tableData} row={row} modifier={modifier} />;
+                    {sortByPropertyNumeric(getter, categoryData).map((row: CategoryNestedThresholdData, rowIndex: number) => {
+                        row.rowOrder = rowIndex;
+                        return (
+                            <CategoryNestedThresholdRow
+                                key={row.rowId}
+                                categorySize={categoryData.length}
+                                categoryId={categoryId}
+                                setCategoryName={setCategoryName}
+                                categoryName={name}
+                                rowIndex={rowIndex}
+                                tableData={tableData}
+                                row={row}
+                                modifier={modifier}
+                            />
+                        );
                     })}
                 </TableBody>
             </TableContainer>
             <ItemToolbar
                 addInnerButton={
-                    <Button onClick={() => modifier.addThreshold(tableData, categoryId, repository, areaIdentifier, tableId)} color="primary" variant="contained">
+                    <Button onClick={addThresholdOnClick} color="primary" variant="contained">
                         Add Threshold
                     </Button>
                 }

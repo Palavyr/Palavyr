@@ -8,7 +8,6 @@ import { BasicThresholdHeader } from "./BasicThresholdHeader";
 import { BasicThresholdBody } from "./BasicThresholdBody";
 import { useState } from "react";
 import { Button, makeStyles, Table, TableContainer, TextField, AccordionActions } from "@material-ui/core";
-import { reOrderBasicThresholdTableData } from "./BasicThresholdUtils";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
@@ -48,9 +47,9 @@ export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTab
     const modifier = new BasicThresholdModifier(setTableData);
 
     const onSave = async () => {
-        const reorderedData = reOrderBasicThresholdTableData(tableData);
-
+        const reorderedData = modifier.reorderThresholdData(tableData);
         const result = modifier.validateTable(reorderedData);
+
         if (result) {
             const saveBasicThreshold = await repository.Configuration.Tables.Dynamic.saveDynamicTable<BasicThresholdData[]>(areaIdentifier, DynamicTableTypes.BasicThreshold, reorderedData, tableId, tableTag);
             setTableData(saveBasicThreshold);
@@ -77,7 +76,7 @@ export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTab
             />
             <TableContainer>
                 <Table>
-                    <BasicThresholdHeader tableData={tableData} setTableData={setTableData} />
+                    <BasicThresholdHeader tableData={tableData} modifier={modifier} />
                     <BasicThresholdBody tableData={tableData} modifier={modifier} />
                 </Table>
             </TableContainer>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Palavyr.Core.Models.Contracts;
 
@@ -6,25 +7,30 @@ namespace Palavyr.Core.Services.DynamicTableService.Thresholds
 {
     public interface IThresholdEvaluator
     {
-        IOrderableThreshold Evaluate(double responseValue, IOrderedEnumerable<IOrderableThreshold> orderedThresholds);
-        bool EvaluateForFallback(double responseValue, IOrderedEnumerable<IOrderableThreshold> orderedThresholds);
+        IOrderableThreshold Evaluate(double responseValue, IEnumerable<IOrderableThreshold> orderedThresholds);
+        bool EvaluateForFallback(double responseValue, IEnumerable<IOrderableThreshold> orderedThresholds);
     }
 
     public class ThresholdEvaluator : IThresholdEvaluator
     {
-        public IOrderableThreshold Evaluate(double responseValue, IOrderedEnumerable<IOrderableThreshold> orderedThresholds)
+        private List<IOrderableThreshold> OrderThresholdsByDescending(IEnumerable<IOrderableThreshold> orderedThresholds)
+        {
+            return orderedThresholds.OrderByDescending(x => x.Threshold).ToList(); // defensive. 0 cost if already sorted.
+        }
+
+        public IOrderableThreshold Evaluate(double responseValue, IEnumerable<IOrderableThreshold> orderedThresholds)
         {
             // the convo node then is responsible for adding the extra logic for min and max.
 
-            var reorderedThresholds = orderedThresholds.OrderBy(x => x.Threshold).ToList(); // defensive. 0 cost if already sorted.
-            if (!reorderedThresholds.Any()) throw new Exception("Cannot evaluate when there are no thresholds provided");
+            var thresholdsOrderedByDescending = OrderThresholdsByDescending(orderedThresholds);
+            if (!thresholdsOrderedByDescending.Any()) throw new Exception("Cannot evaluate when there are no thresholds provided");
 
             // the chat bot has already dealt with cases where we are below the first threshold (too complicated) and above the max threshold (too complicated).
             // :thinking: how do we safeguard a case where we get a below or above. This sounds like an exception scenario.
             IOrderableThreshold threshold = null;
-            for (var i = 0; i < reorderedThresholds.Count; i++)
+            for (var i = 0; i < thresholdsOrderedByDescending.Count; i++)
             {
-                threshold = reorderedThresholds[i];
+                threshold = thresholdsOrderedByDescending[i];
                 if (responseValue <= threshold.Threshold) // I really want this to be readable.
                 {
                     if (i == 0)
@@ -45,50 +51,20 @@ namespace Palavyr.Core.Services.DynamicTableService.Thresholds
             return threshold;
         }
 
-        public bool EvaluateForFallback(double responseValue, IOrderedEnumerable<IOrderableThreshold> orderedThresholds)
+        public bool EvaluateForFallback(double responseValue, IEnumerable<IOrderableThreshold> thresholds)
         {
-            var thresholds = orderedThresholds.ToList();
-            if (responseValue < thresholds.First().Threshold)
+            var orderedThresholds = OrderThresholdsByDescending(thresholds);
+            if (responseValue > orderedThresholds.First().Threshold)
             {
                 return true;
             }
 
-            if (responseValue > thresholds.Last().Threshold && thresholds.Last().TriggerFallback)
+            if (responseValue < orderedThresholds.Last().Threshold && orderedThresholds.Last().TriggerFallback)
             {
                 return true;
             }
 
             return false;
-
-            // // the convo node then is responsible for adding the extra logic for min and max.
-            //
-            // var reorderedThresholds = orderedThresholds.OrderBy(x => x.Threshold).ToList(); // defensive. 0 cost if already sorted.
-            // if (!reorderedThresholds.Any()) throw new Exception("Cannot evaluate when there are no thresholds provided");
-            //
-            // // the chat bot has already dealt with cases where we are below the first threshold (too complicated) and above the max threshold (too complicated).
-            // // :thinking: how do we safeguard a case where we get a below or above. This sounds like an exception scenario.
-            // IOrderableThreshold threshold = null;
-            // for (var i = 0; i < reorderedThresholds.Count; i++)
-            // {
-            //     threshold = reorderedThresholds[i];
-            //     if (responseValue <= threshold.Threshold) // I really want this to be readable.
-            //     {
-            //         if (i == 0)
-            //         {
-            //             return true;
-            //         }
-            //
-            //         break;
-            //     }
-            // }
-            //
-            // // the null check is for the compiler...
-            // if (threshold != null && threshold.TriggerFallback) // this should always be false
-            // {
-            //     return true;
-            // }
-            //
-            // return false;
         }
     }
 }

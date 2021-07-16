@@ -22,10 +22,10 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         private readonly IThresholdEvaluator thresholdEvaluator;
 
         public BasicThresholdCompiler(
-            IGenericDynamicTableRepository<BasicThreshold> repository, 
+            IGenericDynamicTableRepository<BasicThreshold> repository,
             IConfigurationRepository configurationRepository,
             IThresholdEvaluator thresholdEvaluator
-            ) : base(repository)
+        ) : base(repository)
         {
             this.repository = repository;
             this.configurationRepository = configurationRepository;
@@ -51,8 +51,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 DefaultNodeTypeOptions.NodeComponentTypes.TakeNumber,
                 NodeTypeCode.II,
                 resolveOrder: 0,
-                dynamicType: dynamicTableMeta.MakeUniqueIdentifier() 
-                
+                dynamicType: dynamicTableMeta.MakeUniqueIdentifier()
             );
             nodes.AddAdditionalNode(nodeTypeOption);
             return Task.CompletedTask;
@@ -71,30 +70,23 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var itemsToCreateRowsFor = allRows.Select(row => row.ItemName).Distinct();
 
             var tableRows = new List<TableRow>();
+
             foreach (var itemName in itemsToCreateRowsFor)
             {
-                // should be ordered high to low
-                var itemRows = allRows.Where(row => row.ItemName == itemName).OrderBy(row => row.Threshold).Reverse();
-
-                foreach (var threshold in itemRows)
+                var itemRows = allRows.Where(row => row.ItemName == itemName).ToList();
+                if (itemRows.Count > 0)
                 {
-                    if (responseValueAsDouble >= threshold.Threshold)
-                    {
-                        var minBaseAmount = threshold.ValueMin;
-                        var maxBaseAmount = threshold.ValueMax;
-
-                        tableRows.Add(
-                            new TableRow(
-                                dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : threshold.ItemName,
-                                minBaseAmount,
-                                maxBaseAmount,
-                                false,
-                                culture,
-                                threshold.Range
-                            )
-                        );
-                        break;
-                    }
+                    var thresholdResult = thresholdEvaluator.Evaluate(responseValueAsDouble, itemRows);
+                    tableRows.Add(
+                        new TableRow(
+                            dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : itemName,
+                            thresholdResult.ValueMin,
+                            thresholdResult.ValueMax,
+                            false,
+                            culture,
+                            thresholdResult.Range
+                        )
+                    );
                 }
             }
 
