@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Contracts;
+using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.Core.Models.Configuration.Schemas
 {
@@ -47,7 +49,20 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         {
         }
 
-        public static List<ConversationNode> CreateDefaultNode(string areaIdentifier, string accountId)
+        public void AddChildId(string newChildId, IConversationOptionSplitter splitter)
+        {
+            var childrenArray = splitter.SplitNodeChildrenString(NodeChildrenString).ToList();
+            childrenArray.Add(newChildId);
+            NodeChildrenString = splitter.JoinNodeChildrenArray(childrenArray);
+        }
+
+        public void TruncateChildIdsAt(int index, IConversationOptionSplitter splitter)
+        {
+            var childrenArray = splitter.SplitNodeChildrenString(NodeChildrenString).Take(index + 1);
+            NodeChildrenString = splitter.JoinNodeChildrenArray(childrenArray.ToList());
+        }
+
+        public static List<ConversationNode> CreateDefaultNode(string areaIdentifier, string accountId, bool isRoot = false)
         {
             return new List<ConversationNode>()
             {
@@ -56,7 +71,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     NodeId = Guid.NewGuid().ToString(),
                     NodeType = "",
                     Text = "Default Text from server",
-                    IsRoot = true,
+                    IsRoot = isRoot,
                     AreaIdentifier = areaIdentifier,
                     OptionPath = "", // Previous had this set to null...
                     NodeChildrenString = "",
@@ -78,6 +93,11 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                     IsLoopbackAnchorType = false
                 }
             };
+        }
+
+        public static List<ConversationNode> CreateDefaultRootNode(string areaIdentifier, string accountId)
+        {
+            return CreateDefaultNode(areaIdentifier, accountId, isRoot: true);
         }
 
         public static ConversationNode CreateNew(

@@ -42,7 +42,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas.DynamicTables
                 Option = "Option Placeholder",
                 ValueMin = 0.00,
                 ValueMax = 0.00,
-                Range = true,
+                Range = false,
                 TableId = tableId,
                 
             };

@@ -4,7 +4,12 @@ using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Models.Conversation
 {
-    public class OrphanRemover
+    public interface IOrphanRemover
+    {
+        List<ConversationNode> RemoveOrphanedNodes(List<ConversationNode> conversationNodes);
+    }
+
+    public class OrphanRemover : IOrphanRemover
     {
         public List<ConversationNode> RemoveOrphanedNodes(List<ConversationNode> conversationNodes)
         {

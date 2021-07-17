@@ -31,7 +31,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             this.thresholdEvaluator = thresholdEvaluator;
         }
 
-        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId)
+        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier, string accountId)
         {
             await Task.CompletedTask;
         }
@@ -66,52 +66,59 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(allRows[0].TableId);
 
             var itemIds = allRows.Select(item => item.ItemId).Distinct().ToArray();
+
+            var tableRows = new List<TableRow>();
+
             foreach (var itemId in itemIds)
             {
-                var itemThresholds = allRows.Where(item => item.ItemId == itemId).ToList();
-                itemThresholds.Sort();
-                foreach (var threshold in itemThresholds)
+                var itemThresholds = allRows.Where(item => item.ItemId == itemId);
+                var thresholdResult = (PercentOfThreshold) thresholdEvaluator.Evaluate(responseValueAsDouble, itemThresholds);
+
+                var minBaseAmount = thresholdResult.ValueMin;
+                var maxBaseAmount = thresholdResult.ValueMax;
+
+                if (thresholdResult.PosNeg)
                 {
-                    if (responseValueAsDouble >= threshold.Threshold)
-                    {
-                        var minBaseAmount = threshold.ValueMin;
-                        var maxBaseAmount = threshold.ValueMax;
-
-                        if (threshold.PosNeg)
-                        {
-                            minBaseAmount += minBaseAmount * (threshold.Modifier / 100);
-                            maxBaseAmount += maxBaseAmount * (threshold.Modifier / 100);
-                        }
-                        else
-                        {
-                            minBaseAmount -= minBaseAmount * (threshold.Modifier / 100);
-                            maxBaseAmount -= maxBaseAmount * (threshold.Modifier / 100);
-                        }
-
-
-                        return new List<TableRow>()
-                        {
-                            new TableRow(
-                                dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : threshold.ItemName,
-                                minBaseAmount,
-                                maxBaseAmount,
-                                false,
-                                culture,
-                                threshold.Range
-                            )
-                        };
-                    }
+                    minBaseAmount += minBaseAmount * (thresholdResult.Modifier / 100);
+                    maxBaseAmount += maxBaseAmount * (thresholdResult.Modifier / 100);
                 }
+                else
+                {
+                    minBaseAmount -= minBaseAmount * (thresholdResult.Modifier / 100);
+                    maxBaseAmount -= maxBaseAmount * (thresholdResult.Modifier / 100);
+                }
+
+                tableRows.Add(
+                    new TableRow(
+                        dynamicMeta.UseTableTagAsResponseDescription ? dynamicMeta.TableTag : thresholdResult.ItemName,
+                        minBaseAmount,
+                        maxBaseAmount,
+                        false,
+                        culture,
+                        thresholdResult.Range
+                    ));
             }
 
-            throw new InvalidOperationException("Provided threshold value was too high. This is a configuration error.");
+            return tableRows;
         }
 
         public async Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents _)
         {
-            var records = await Repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
             var currentResponseAsDouble = double.Parse(response);
-            var isTooComplicated = thresholdEvaluator.EvaluateForFallback(currentResponseAsDouble, records);
+            var records = await Repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
+            var uniqueItemIds = records.Select(x => x.ItemId).Distinct();
+
+            var isTooComplicated = false;
+            foreach (var itemId in uniqueItemIds)
+            {
+                var itemRecords = records.Where(x => x.ItemId == itemId);
+                var itemComplex = thresholdEvaluator.EvaluateForFallback(currentResponseAsDouble, itemRecords);
+                if (itemComplex)
+                {
+                    isTooComplicated = true;
+                }
+            }
+
             return isTooComplicated;
         }
     }

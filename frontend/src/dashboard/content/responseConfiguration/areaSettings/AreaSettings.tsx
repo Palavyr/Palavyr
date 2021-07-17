@@ -10,6 +10,8 @@ import classNames from "classnames";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { OsTypeToggle } from "./enableAreas/OsTypeToggle";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { SessionStorage } from "localStorage/sessionStorage";
+import { CacheIds } from "@api-client/AxiosClient";
 
 const useStyles = makeStyles((theme) => ({
     alert: {

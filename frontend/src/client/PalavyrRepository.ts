@@ -87,7 +87,11 @@ export class PalavyrRepository {
     };
 
     public Area = {
-        UpdateIsEnabled: async (areaToggleStateUpdate: boolean, areaIdentifier: string) => this.client.put<boolean, {}>(`areas/${areaIdentifier}/area-toggle`, { IsEnabled: areaToggleStateUpdate }),
+        UpdateIsEnabled: async (areaToggleStateUpdate: boolean, areaIdentifier: string) => {
+            const update = this.client.put<boolean, {}>(`areas/${areaIdentifier}/area-toggle`, { IsEnabled: areaToggleStateUpdate });
+            SessionStorage.clearCacheValue(CacheIds.Areas);
+            return update;
+        },
         UpdateUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, areaIdentifier: string) =>
             this.client.put<boolean, {}>(`areas/${areaIdentifier}/use-fallback-email-toggle`, { UseFallback: useAreaFallbackEmailUpdate }),
         GetAreas: async () => this.client.get<Areas>("areas", CacheIds.Areas),
@@ -120,17 +124,37 @@ export class PalavyrRepository {
         Tables: {
             Dynamic: {
                 getDynamicTableMetas: async (areaIdentifier: string) => this.client.get<DynamicTableMetas>(`tables/dynamic/type/${areaIdentifier}`), // todo - cache
+
                 getDynamicTableTypes: async () => this.client.get<TableNameMap>(`tables/dynamic/table-name-map`),
 
-                modifyDynamicTableMeta: async (dynamicTableMeta: DynamicTableMeta) => this.client.put<DynamicTableMeta, {}>(`tables/dynamic/modify`, dynamicTableMeta),
-                createDynamicTable: async (areaIdentifier: string) => this.client.post<DynamicTableMeta, {}>(`tables/dynamic/${areaIdentifier}`),
+                modifyDynamicTableMeta: async (dynamicTableMeta: DynamicTableMeta) => {
+                    const response = this.client.put<DynamicTableMeta, {}>(`tables/dynamic/modify`, dynamicTableMeta);
+                    SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, dynamicTableMeta.areaId].join("-"));
+                    return response;
+                },
 
-                deleteDynamicTable: async (areaIdentifier: string, tableType: string, tableId: string) => this.client.delete(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`),
+                createDynamicTable: async (areaIdentifier: string) => {
+                    const response = this.client.post<DynamicTableMeta, {}>(`tables/dynamic/${areaIdentifier}`);
+                    SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, areaIdentifier].join("-"));
+                    return response;
+                },
+
+                deleteDynamicTable: async (areaIdentifier: string, tableType: string, tableId: string) => {
+                    const response = this.client.delete(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`);
+                    SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, areaIdentifier].join("-"));
+                    return response;
+                },
+
                 getDynamicTableDataTemplate: async <T>(areaIdentifier: string, tableType: string, tableId: string) =>
                     this.client.get<T>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}/template`),
+
                 getDynamicTableRows: async (areaIdentifier: string, tableType: string, tableId: string) => this.client.get<TableData>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`),
-                saveDynamicTable: async <T>(areaIdentifier: string, tableType: string, tableData: TableData, tableId: string, tableTag: string) =>
-                    this.client.put<T, {}>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`, { TableTag: tableTag, [tableType]: tableData }),
+
+                saveDynamicTable: async <T>(areaIdentifier: string, tableType: string, tableData: TableData, tableId: string, tableTag: string) => {
+                    const response = this.client.put<T, {}>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`, { TableTag: tableTag, [tableType]: tableData });
+                    SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, areaIdentifier].join("-"));
+                    return response;
+                },
             },
             Static: {
                 updateStaticTablesMetas: async (areaIdentifier: string, staticTablesMetas: StaticTableMetas) =>

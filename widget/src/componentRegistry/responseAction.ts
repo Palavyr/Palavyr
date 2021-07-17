@@ -77,5 +77,5 @@ export const responseAction = async (
             renderNextComponent(child, nodeList, client, convoId); // convoId should come from redux store in the future
             toggleMsgLoader();
         }, 1000);
-    }, random(1000, 3000, undefined));
+    }, );
 };

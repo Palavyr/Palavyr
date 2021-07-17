@@ -60,7 +60,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
         public Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)
         {
-            return Task.FromResult(true);
+            return Task.FromResult(false);
         }
 
         private CategoryRetriever GetInnerAndOuterCategories(List<TwoNestedCategory> rawRows)
@@ -80,7 +80,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             };
         }
 
-        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId)
+        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier, string accountId)
         {
             var update = table.TwoNestedCategory;
 
