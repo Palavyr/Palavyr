@@ -36,8 +36,6 @@ export const GoogleLogin = ({ onSuccess, onFailure }: IGoogleLogin) => {
                     const params = {
                         onsuccess: onSuccess,
                         onfailure: onFailure,
-                        // scope: 'email profile openid',
-                        // access_type: "online",
                         width: 240,
                         height: 50,
                         longtitle: true,
