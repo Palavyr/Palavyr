@@ -231,7 +231,7 @@ export class PalavyrRepository {
 
         ModifyConversation: async (nodelist: ConvoNode[], areaIdentifier: string) =>
             this.client.put<ConvoNode[], {}>(`configure-conversations/${areaIdentifier}`, { Transactions: nodelist }, [CacheIds.PalavyrConfiguration, areaIdentifier].join("-") as CacheIds),
-        ModifyConversationNode: async (nodeId: string, areaIdentifier: string, updatedNode: ConvoTableRow) =>
+        ModifyConversationNode: async (nodeId: string, areaIdentifier: string, updatedNode: ConvoNode) =>
             this.client.put<ConvoNode[], {}>(`configure-conversations/${areaIdentifier}/nodes/${nodeId}`, updatedNode, [CacheIds.PalavyrConfiguration, areaIdentifier].join("-") as CacheIds),
 
         // TODO: Deprecate eventually

@@ -1,15 +1,15 @@
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { IPalavyrNode } from "../../Contracts";
 import NodeChanger from "./NodeChanger";
 
 export class NodeUpdater {
-    public updateNode(currentNode: IPalavyrNode, textUpdate: string, valueOptions: string[], nodeTypeOptions: NodeTypeOptions) {
-        this.updateText(currentNode, textUpdate);
+    public updateNode(currentNode: IPalavyrNode, valueOptions: string[], nodeTypeOptions: NodeTypeOptions) {
         this.updateValueOptions(currentNode, valueOptions, nodeTypeOptions);
         currentNode.UpdateTree();
     }
 
-    private updateText(currentNode: IPalavyrNode, textUpdate: string) {
+    public async updateText(currentNode: IPalavyrNode, textUpdate: string) {
         currentNode.userText = textUpdate;
     }
 
@@ -42,3 +42,5 @@ export class NodeUpdater {
         }
     }
 }
+
+export default new NodeUpdater();
