@@ -41,6 +41,11 @@ const useStyles = makeStyles(() => ({
     treeWrap: {
         position: "relative",
     },
+    floatingSave: {
+        position: "fixed",
+        right: "50px",
+        bottom: "50px",
+    },
 }));
 
 export const StructuredConvoTree = () => {
@@ -144,7 +149,7 @@ export const StructuredConvoTree = () => {
                 subtitle="This Palavyr is the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
             />
             <Align>
-                <SaveOrCancel position="right" onSave={onSave} />
+                <SaveOrCancel size="large" position="right" onSave={onSave} />
                 <Button
                     variant="contained"
                     className={cls.convoTreeMetaButtons}
@@ -213,6 +218,9 @@ export const StructuredConvoTree = () => {
             <PalavyrErrorBoundary>
                 <div className={cls.conversation}>
                     <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
+                    <div className={cls.floatingSave}>
+                        <SaveOrCancel size="large" position="right" onSave={onSave} />
+                    </div>
                     <fieldset className={cls.fieldSet}>
                         <PalavyrErrorBoundary>
                             <div className={cls.treeWrap}>{linkedNodeList !== undefined && <ConfigurationNode currentNode={linkedNodeList.rootNode} pBuffer={paddingBuffer} />}</div>

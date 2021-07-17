@@ -22,8 +22,8 @@ const useStyles = makeStyles((theme) => ({
         padding: "1rem 3rem 0rem 3rem",
     },
     gutter: {
-        height: "1.5rem"
-    }
+        height: "1.5rem",
+    },
 }));
 
 export const AreaConfigurationHeader = ({ title, subtitle, divider = false, light = false, gutterBottom = false }: IAreaConfigurationHeader) => {
