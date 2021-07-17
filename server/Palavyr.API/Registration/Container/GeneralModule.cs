@@ -42,7 +42,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<EmailVerificationStatus>().As<IEmailVerificationStatus>().InstancePerLifetimeScope();
             builder.RegisterType<LocaleDefinition>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<TestDataProvider>().AsSelf().InstancePerLifetimeScope();
-            builder.RegisterType<OrphanRemover>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<OrphanRemover>().As<IOrphanRemover>().InstancePerLifetimeScope();
             builder.RegisterType<HtmlToPdfClient>().As<IHtmlToPdfClient>().InstancePerLifetimeScope();
             builder.RegisterType<ResponseCustomizer>().As<IResponseCustomizer>();
             builder.RegisterType<ResponseHtmlBuilder>().As<IResponseHtmlBuilder>();

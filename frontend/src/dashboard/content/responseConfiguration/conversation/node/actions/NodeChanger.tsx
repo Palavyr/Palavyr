@@ -82,6 +82,11 @@ class PalavyrNodeChanger implements IPalavyrNodeChanger {
                 this.ConvertToType_X_Node(nodeOption, currentNode, nodeTypeOptions);
                 break;
 
+            // Type XI - where you have value options being supplied by the nodeOption (a pricing strategy node Option)
+            case NodeTypeCode.XI:
+                this.ConvertToType_XI_Node(nodeOption, currentNode, nodeTypeOptions);
+                break;
+
             default:
                 throw new Error("NodeTypeCode unable to be identified. FIX THAT YO.");
         }
@@ -299,9 +304,18 @@ class PalavyrNodeChanger implements IPalavyrNodeChanger {
         currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
     }
 
+    // Type X
+    //
     private ConvertToType_X_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
         this.createOrTruncateChildNodes(currentNode, ["Continue"], nodeTypeOptions);
         currentNode.setValueOptions(nodeOption.valueOptions);
+        currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
+    }
+
+    private ConvertToType_XI_Node(nodeOption: NodeOption, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
+        this.createOrTruncateChildNodes(currentNode, nodeOption.valueOptions, nodeTypeOptions);
+        currentNode.setValueOptions(nodeOption.valueOptions);
+        currentNode.childNodeReferences.applyOptionPaths(nodeOption.valueOptions);
         currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
     }
 

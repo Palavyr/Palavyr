@@ -42,7 +42,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return categories;
         }
 
-        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId)
+        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier, string accountId)
         {
             var update = table.CategoryNestedThreshold;
             var category = GetCategories(update);

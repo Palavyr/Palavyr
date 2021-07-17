@@ -9,6 +9,7 @@ namespace Palavyr.Core.Services.DynamicTableService
     {
         string JoinValueOptions(string[] options);
         string JoinValueOptions(List<string> options);
+        string JoinNodeChildrenArray(List<string> nodeChildrenParts);
         List<string> SplitValueOptions(string options);
         string GetTableIdFromDynamicNodeType(string nodeName);
         string[] SplitNodeChildrenString(string nodeChildrenString);

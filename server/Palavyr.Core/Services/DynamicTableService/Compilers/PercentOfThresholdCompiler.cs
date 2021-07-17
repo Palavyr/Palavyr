@@ -31,7 +31,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             this.thresholdEvaluator = thresholdEvaluator;
         }
 
-        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId)
+        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier, string accountId)
         {
             await Task.CompletedTask;
         }

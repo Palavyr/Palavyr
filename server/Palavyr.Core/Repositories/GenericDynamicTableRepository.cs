@@ -45,7 +45,6 @@ namespace Palavyr.Core.Repositories
                 .ToListAsync();
         }
 
-
         public async Task SaveTable(
             string accountId,
             string areaIdentifier,
@@ -54,7 +53,7 @@ namespace Palavyr.Core.Repositories
             string tableTag,
             string tableType,
             Func<DashContext, Task> updateConversationTable = null
-            )
+        )
         {
             queryExecutor.RemoveRange(await GetAllRows(accountId, areaIdentifier, tableId));
             await queryExecutor.AddRangeAsync(rowUpdates);
@@ -68,7 +67,7 @@ namespace Palavyr.Core.Repositories
             {
                 await updateConversationTable(dashContext);
             }
-            
+
             await dashContext.SaveChangesAsync(); // Need to make sure this saves changes to both tables.
         }
 
@@ -94,7 +93,7 @@ namespace Palavyr.Core.Repositories
         public async Task<List<TEntity>> GetAllRowsMatchingDynamicResponseId(string accountId, string dynamicTypeId)
         {
             var rows = await readonlyQueryExecutor
-                .Where(tableRow => tableRow.AccountId == accountId && dynamicTypeId.EndsWith(tableRow.TableId))//&& dynamicResponseId.EndsWith(tableRow.TableId)) // TODO: shhould be dynamicType?
+                .Where(tableRow => tableRow.AccountId == accountId && dynamicTypeId.EndsWith(tableRow.TableId)) //&& dynamicResponseId.EndsWith(tableRow.TableId)) // TODO: shhould be dynamicType?
                 .ToListAsync();
             return rows;
         }
@@ -102,7 +101,7 @@ namespace Palavyr.Core.Repositories
         public async Task<List<TEntity>> GetAllRowsMatchingDynamicResponseId(string dynamicTypeId)
         {
             var rows = await readonlyQueryExecutor
-                .Where(tableRow => dynamicTypeId.EndsWith(tableRow.TableId))//&& dynamicResponseId.EndsWith(tableRow.TableId)) // TODO: shhould be dynamicType?
+                .Where(tableRow => dynamicTypeId.EndsWith(tableRow.TableId)) //&& dynamicResponseId.EndsWith(tableRow.TableId)) // TODO: shhould be dynamicType?
                 .ToListAsync();
             return rows;
         }

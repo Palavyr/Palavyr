@@ -50,7 +50,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 Subject = "Thank you for reaching out!",
                 FallbackEmailTemplate = "<h2>Fallback email</h2>",
                 FallbackSubject = "Fallback Subject",
-                ConversationNodes = ConversationNode.CreateDefaultNode(areaId, accountId),
+                ConversationNodes = ConversationNode.CreateDefaultRootNode(areaId, accountId),
                 StaticTablesMetas = new List<StaticTablesMeta>(),
                 IsEnabled = false,
                 AreaDisplayTitle = areaName,

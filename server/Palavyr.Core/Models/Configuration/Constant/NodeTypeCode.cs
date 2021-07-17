@@ -27,6 +27,8 @@
         // ReSharper disable once InconsistentNaming
         IX = 8, // Image Node Type
 
-        X = 9 // Multioption with frozen set and not editable (used with dynamic nodes like selectone flat and nested categories 
+        X = 9, // Multioption with frozen set and not editable (used with dynamic nodes like selectone flat and nested categories 
+        
+        XI = 10 // Where you set the value options given by the nodeOption (pricing strategy node)
     }
 }

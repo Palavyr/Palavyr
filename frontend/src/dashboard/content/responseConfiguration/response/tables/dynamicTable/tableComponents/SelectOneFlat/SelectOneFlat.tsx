@@ -9,6 +9,9 @@ import { DynamicTableProps } from "@Palavyr-Types";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
+import { cloneDeep } from "lodash";
+import { SessionStorage } from "localStorage/sessionStorage";
+import { CacheIds } from "@api-client/AxiosClient";
 
 const useStyles = makeStyles({
     tableStyles: {
@@ -47,15 +50,16 @@ export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tab
 
     const useOptionsAsPathsOnChange = async (event: { target: { checked: boolean } }) => {
         tableMeta.valuesAsPaths = event.target.checked;
-        const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(tableMeta);
-        setTableMeta(newTableMeta);
+        setTableMeta(cloneDeep(tableMeta));
     };
 
     const onSave = async () => {
         const result = modifier.validateTable(tableData);
 
         if (result) {
+            const newTableMeta = await repository.Configuration.Tables.Dynamic.modifyDynamicTableMeta(tableMeta);
             const savedData = await repository.Configuration.Tables.Dynamic.saveDynamicTable<SelectOneFlatModifier[]>(areaIdentifier, DynamicTableTypes.SelectOneFlat, tableData, tableId, tableTag);
+            setTableMeta(newTableMeta);
             setTableData(savedData);
             return true;
         } else {

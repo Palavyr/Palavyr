@@ -9,11 +9,11 @@ namespace Palavyr.Core.Models.Conversation
     public class ConversationNodeUpdater : IConversationNodeUpdater
     {
         private readonly IConfigurationRepository configurationRepository;
-        private readonly OrphanRemover orphanRemover;
+        private readonly IOrphanRemover orphanRemover;
 
         public ConversationNodeUpdater(
             IConfigurationRepository configurationRepository,
-            OrphanRemover orphanRemover
+            IOrphanRemover orphanRemover
         )
         {
             this.configurationRepository = configurationRepository;
