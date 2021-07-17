@@ -49,7 +49,6 @@ const PurchaseInner = () => {
     const location = useLocation();
     const [priceMap, setPriceMap] = useState<PriceMap>({});
     const [priceId, setSelectedPriceId] = useState<string | number>("");
-    const [currentPrice, setCurrentPrice] = useState<number>(0);
     const stripe = useStripe();
 
     const searchParams = new URLSearchParams(location.search);

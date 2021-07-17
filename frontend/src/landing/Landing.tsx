@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { makeStyles, Typography, useTheme } from "@material-ui/core";
 import { CookieConsent } from "legal/cookies/CookieConsent";
 import { LandingPageDialogSelector } from "@landing/components/dialogSelector/LandingPageDialogSelector";
@@ -19,6 +19,7 @@ import { isDevelopmentStage, landingWidgetApiKey, widgetUrl } from "@api-client/
 import { IFrame } from "dashboard/content/demo/IFrame";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { YellowStrip } from "@common/components/YellowStrip";
+import { useLocation } from "react-router-dom";
 
 AOS.init({
     duration: 1000,
@@ -57,6 +58,17 @@ export const LandingPage = () => {
     const [dialogOpen, setDialogOpen] = useState<DialogTypes>(null);
     const [isCookieRulesDialogOpen, setIsCookieRulesDialogOpen] = useState<boolean>(false);
     const [show, setShow] = useState<boolean>(isDevelopmentStage());
+
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const googleParams = searchParams.get("access_token") as string | null;
+
+    useEffect(() => {
+        if (googleParams){
+
+        }
+    }, [])
+
 
     const openLoginDialog = useCallback(() => {
         setDialogOpen("login");
@@ -98,7 +110,14 @@ export const LandingPage = () => {
     return (
         <div className={cls.wrapper}>
             {!isCookieRulesDialogOpen && <CookieConsent handleCookieRulesDialogOpen={handleCookieRulesDialogOpen} />}
-            <LandingPageDialogSelector openLoginDialog={openLoginDialog} dialogOpen={dialogOpen} onClose={closeDialog} openTermsDialog={openTermsDialog} openRegisterDialog={openRegisterDialog} openChangePasswordDialog={openChangePasswordDialog} />
+            <LandingPageDialogSelector
+                openLoginDialog={openLoginDialog}
+                dialogOpen={dialogOpen}
+                onClose={closeDialog}
+                openTermsDialog={openTermsDialog}
+                openRegisterDialog={openRegisterDialog}
+                openChangePasswordDialog={openChangePasswordDialog}
+            />
             <CookieRules open={isCookieRulesDialogOpen} onClose={handleCookieRulesDialogClose} />
             {!show && <YellowStrip />}
             <DevStagingStrip show={show} setShow={setShow} />

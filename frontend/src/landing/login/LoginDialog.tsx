@@ -122,7 +122,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
     const googleLogin = async (response: GoogleResponse) => {
         setIsLoading(true);
         setStatus(null);
-        var successfulResponse = await Auth.loginWithGoogle(response.tokenId, response.googleId, successRedirectToDashboard, googleError);
+        const successfulResponse = await Auth.loginWithGoogle(response.tokenId, response.googleId, successRedirectToDashboard, googleError);
         if (successfulResponse === null) {
             Auth.ClearAuthentication();
             Auth.googleLogout(noop);

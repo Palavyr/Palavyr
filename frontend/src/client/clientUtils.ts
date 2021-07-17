@@ -15,7 +15,6 @@ export const getJwtTokenFromLocalStorage = (): string => {
     return token || "noTokenInStorage";
 };
 
-
 export const redirectToHomeWhenSessionNotEstablished = async (history: History<History.UnknownFacade> | string[], repository: PalavyrRepository) => {
     const jwt_token = SessionStorage.getJwtToken();
     if (!jwt_token) {
@@ -25,7 +24,6 @@ export const redirectToHomeWhenSessionNotEstablished = async (history: History<H
     if (!signedIn) {
         history.push("/");
     }
-
 };
 
 export const serverUrl = process.env.API_URL as string;
@@ -81,3 +79,6 @@ if (googleAnalyticsTrackingId === undefined) {
 }
 
 export const SPECIAL_HEADERS = {};
+
+export const googleConsentScreenUrl = (redirect_uri: string) =>
+    `https://accounts.google.com/o/oauth2/auth/oauthchooseaccount?redirect_uri=${redirect_uri}&response_type=permission%20id_token&scope=email%20profile%20openid&openid.realm&client_id=698714595911-qhafgsmmiocpq8r46fqd7an84sg4jubg.apps.googleusercontent.com&ss_domain=http%3A%2F%2Flocalhost%3A8080&fetch_basic_profile=true&gsiwebsdk=2&flowName=GeneralOAuthFlow`;

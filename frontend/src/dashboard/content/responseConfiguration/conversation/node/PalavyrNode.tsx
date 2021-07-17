@@ -61,7 +61,7 @@ export class PalavyrNode implements IPalavyrNode {
     // LOOPBACK
     public isLoopbackAnchorType: boolean;
 
-    public isLoopbackMember: boolean; // only nonleftmostbranch
+public isLoopbackMember: boolean; // only non-leftmostbranch
     public isLoopbackStart: boolean;
     public loopbackContext: LoopbackContext;
 

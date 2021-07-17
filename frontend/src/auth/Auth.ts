@@ -1,7 +1,6 @@
 import { SessionStorage } from "localStorage/sessionStorage";
 import { LoginRepository } from "@api-client/LoginRepository";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { googleOAuthClientId } from "@api-client/clientUtils";
 import { Credentials } from "@Palavyr-Types";
 import { LogoutRepository } from "@api-client/LogoutRepository";
 
@@ -104,7 +103,6 @@ class Auth {
     async googleLogout(callback: () => any) {
         try {
             window.gapi.load("auth2", () => {
-                window.gapi.auth2.init({ client_id: googleOAuthClientId, fetch_basic_profile: true });
                 window.gapi.auth2.getAuthInstance().then((auth2) => {
                     auth2.signOut().then(async () => {
                         auth2.disconnect().then(await this.logout(callback));

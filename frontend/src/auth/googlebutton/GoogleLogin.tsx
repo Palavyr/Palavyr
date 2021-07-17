@@ -1,8 +1,10 @@
-import { googleOAuthClientId } from "@api-client/clientUtils";
+import { googleConsentScreenUrl, googleOAuthClientId, webUrl } from "@api-client/clientUtils";
 import React from "react";
 import { makeStyles } from "@material-ui/core";
 import { AnyFunction } from "@Palavyr-Types";
 import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { DASHBOARD_HOME } from "@constants";
 
 const useStyles = makeStyles((theme) => ({
     loginButton: {
@@ -31,20 +33,16 @@ export const GoogleLogin = ({ onSuccess, onFailure }: IGoogleLogin) => {
 
     const initializeGoogleSignin = () => {
         window.gapi.load("auth2", () => {
-            window.gapi.auth2.init({ client_id: googleOAuthClientId, fetch_basic_profile: true }).then(() => {
-                window.gapi.load("signin2", () => {
-                    const params = {
-                        onsuccess: onSuccess,
-                        onfailure: onFailure,
-                        // scope: 'email profile openid',
-                        // access_type: "online",
-                        width: 240,
-                        height: 50,
-                        longtitle: true,
-                        theme: "dark",
-                    };
-                    window.gapi.signin2.render("googleLoginButton", params);
-                });
+            window.gapi.auth2.init({ client_id: googleOAuthClientId, fetch_basic_profile: true, ux_mode: "redirect", redirect_uri: webUrl }).then(() => {
+                const params = {
+                    onsuccess: onSuccess,
+                    onfailure: onFailure,
+                    width: 240,
+                    height: 50,
+                    longtitle: true,
+                    theme: "dark",
+                };
+                window.gapi.signin2.render("googleLoginButton", params);
             });
         });
     };
@@ -61,7 +59,7 @@ export const GoogleLogin = ({ onSuccess, onFailure }: IGoogleLogin) => {
     useEffect(() => {
         insertGapiScript();
     }, []);
-
+    const history = useHistory();
     return (
         <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
             <div id="googleLoginButton" className={classes.loginButton}></div>

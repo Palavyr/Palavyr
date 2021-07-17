@@ -53,7 +53,7 @@ export const TreeErrorPanel = ({ treeErrors }: TreeErrorProps) => {
             {outOfOrderNodes.length > 0 && (
                 <>
                     <Typography align="center" className={cls.outOfOrderText} variant="h5">
-                        Complex dynamic table nodes sometimes need to specified in a specific order, determined by the dynamic table. The following nodes need to be specified in the provided order:
+                        Pricing strategies sometimes need to specified in a specific order when one node depends on the answer provided in a prior node. The following nodes need to be reordered:
                     </Typography>
                     <div>
                         {outOfOrderNodes.map((x: string, index: number) => {

@@ -39,6 +39,7 @@ export const TextNodeEditor = ({ isMultiOptionType, shouldShowMultiOption, isAna
     };
 
     const handleUpdateNode = (userText: string, valueOptions: string[], nodeTypeOptions: NodeTypeOptions) => {
+        console.log("YES WE DID UPDATE");
         nodeUpdater.updateNode(currentNode, userText, valueOptions, nodeTypeOptions);
     };
 
