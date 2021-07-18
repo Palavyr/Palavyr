@@ -70,7 +70,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
                 {
                     NodeId = Guid.NewGuid().ToString(),
                     NodeType = "",
-                    Text = "Default Text from server",
+                    Text = "Click to add some meaningful text. Don't forget to add some personality!",
                     IsRoot = isRoot,
                     AreaIdentifier = areaIdentifier,
                     OptionPath = "", // Previous had this set to null...

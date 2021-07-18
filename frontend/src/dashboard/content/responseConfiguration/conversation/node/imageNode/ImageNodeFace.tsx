@@ -43,7 +43,7 @@ export const ImageNodeFace = ({ openEditor, imageId, repository }: ImageNodeFace
     }, [imageId]);
 
     return (
-        <PalavyrNodeBody openEditor={openEditor}>
+        <PalavyrNodeBody openEditor={openEditor} isImageNode>
             <CustomImage imageId={currentImageId} imageName={imageName} imageLink={imageLink} titleVariant="body1" />
         </PalavyrNodeBody>
     );

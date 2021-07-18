@@ -1,3 +1,4 @@
+import { DEFAULT_NODE_TEXT } from "@constants";
 import { Card, makeStyles, Typography } from "@material-ui/core";
 import classNames from "classnames";
 import React from "react";
@@ -15,11 +16,12 @@ const useStyles = makeStyles((theme) => ({
         border: "1px solid gray",
         padding: "10px",
         textAlign: "center",
-        color: props.nodeText === "Ask your question!" && !props.isImageNode ? "white" : "black",
-        background: props.nodeText === "Ask your question!" && !props.isImageNode ? "red" : "white",
+        color: props.nodeText === DEFAULT_NODE_TEXT && !props.isImageNode ? "black" : "black",
+        background: props.nodeText === DEFAULT_NODE_TEXT && !props.isImageNode ? theme.palette.warning.main : "white",
         "&:hover": {
             background: "lightgray",
             color: "black",
+            cursor: "pointer"
         },
     }),
 
@@ -31,10 +33,15 @@ const useStyles = makeStyles((theme) => ({
 
 interface PalvyrNodeBodyProps {
     children: React.ReactNode;
+    textCheck?: string;
+    isImageNode?: boolean;
     openEditor(): void;
 }
-export const PalavyrNodeBody = ({ openEditor, children }: PalvyrNodeBodyProps) => {
-    const cls = useStyles();
+export const PalavyrNodeBody = ({ openEditor, children, textCheck, isImageNode }: PalvyrNodeBodyProps) => {
+    const cls = useStyles({
+        nodeText: textCheck,
+        isImageNode,
+    });
     return (
         <Card elevation={0} className={classNames(cls.interfaceElement, cls.textCard)} onClick={openEditor}>
             {children}

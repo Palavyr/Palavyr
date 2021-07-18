@@ -140,7 +140,7 @@ export const ResponseConfiguration = () => {
             </ExpandableTextBox>
 
             <DynamicTableConfiguration title="Pricing Strategies" areaIdentifier={areaIdentifier}>
-                <AreaConfigurationHeader divider light title="Configure a dynamic pricing strategy" subtitle="When you configure a pricing strategy, it creates a corresponding palavyr node that must be included in the chat conversation. When a client provides the corresponding information, its used to determine a fee estimate." />
+                <AreaConfigurationHeader divider light title="Configure a dynamic pricing strategy" subtitle="When you configure a pricing strategy, it creates a corresponding palavyr node that must be included in the chat conversation. When a client provides the corresponding information, its used to determine a fee estimate. Some strategies produce nodes that depend on prior nodes, so these must be placed in the Palavyr in logical order." />
             </DynamicTableConfiguration>
 
             <StaticTableConfiguration areaIdentifier={areaIdentifier} title="Static Fees" staticTables={staticTables} tableSaver={tableSaver} tableCanceler={tableCanceler} modifier={staticTablesModifier}>
@@ -153,7 +153,7 @@ export const ResponseConfiguration = () => {
             </StaticTableConfiguration>
 
             <ExpandableTextBox title="Ending statement" updatableValue={epilogue} onChange={updateEpilogue} onSave={saveEpilogue}>
-                <AreaConfigurationHeader divider light title="Create an ending statement for your response PDF" subtitle="You can make it clear that fees are estimate only, or provide context for your client to understand their estimate." />
+                <AreaConfigurationHeader divider light title="Create an ending statement for your response PDF" subtitle="This section will appear at the end of the response PDF. You can make it clear that fees are estimate only, or provide context for your client to understand their estimate." />
             </ExpandableTextBox>
         </>
     );
