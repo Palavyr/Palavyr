@@ -20,26 +20,16 @@ export const ImageNodeFace = ({ openEditor, imageId, repository }: ImageNodeFace
             const fileLinks = await repository.Configuration.Images.getImages([imageId]);
             const fileLink = fileLinks[0];
             if (!fileLink.isUrl) {
-                const presignedUrl = await repository.Configuration.Images.getSignedUrl(fileLink.link);
+                const presignedUrl = await repository.Configuration.Images.getSignedUrl(fileLink.s3Key, fileLink.fileId);
                 setImageLink(presignedUrl);
                 setImageName(fileLink.fileName);
                 setCurrentImageId(fileLink.fileId);
-                SessionStorage.setImageData(imageId, presignedUrl, fileLink.fileName, fileLink.fileId);
             }
         }
     }, [imageId]);
 
     useEffect(() => {
-        if (imageId !== null && imageId !== undefined) {
-            const imageData = SessionStorage.getImageData(imageId);
-            if (imageData !== null) {
-                setImageLink(imageData.presignedUrl);
-                setImageName(imageData.fileName);
-                setCurrentImageId(imageData.fileId);
-            } else {
-                loadImage();
-            }
-        }
+        loadImage();
     }, [imageId]);
 
     return (

@@ -24,7 +24,7 @@ namespace Palavyr.Core.Common.ExtensionMethods
             var fileLinks = new List<FileLink>();
             foreach (var image in images)
             {
-                var link = image.IsUrl ? FileLink.CreateLink(image.RiskyName, image.Url, image.ImageId, true) : FileLink.CreateLink(image.RiskyName, image.S3Key, image.ImageId);
+                var link = image.IsUrl ? FileLink.CreateUrlLink(image.RiskyName, image.Url, image.ImageId) : FileLink.CreateS3Link(image.RiskyName,image.ImageId, image.S3Key);
                 fileLinks.Add(link);
             }
 
@@ -36,28 +36,28 @@ namespace Palavyr.Core.Common.ExtensionMethods
             return ToFileLinks(images.ToArray());
         }
 
-        public static FileLink[] ToFileLinks(this List<Image> images, ILinkCreator linkCreator, string bucket)
-        {
-            return ToFileLinks(images.ToArray(), linkCreator, bucket);
-        }
+        // public static FileLink[] ToFileLinks(this List<Image> images, ILinkCreator linkCreator, string bucket)
+        // {
+        //     return ToFileLinks(images.ToArray(), linkCreator, bucket);
+        // }
 
-        public static FileLink[] ToFileLinks(this Image[] images, ILinkCreator linkCreator, string bucket)
-        {
-            var fileLinks = new List<FileLink>();
-            foreach (var image in images)
-            {
-                var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(image.S3Key, bucket, DateTime.Now.AddDays(6.5));
-                var link = FileLink.CreateLink(image.RiskyName, preSignedUrl, image.ImageId);
-                fileLinks.Add(link);
-            }
+        // public static FileLink[] ToFileLinks(this Image[] images, ILinkCreator linkCreator, string bucket)
+        // {
+        //     var fileLinks = new List<FileLink>();
+        //     foreach (var image in images)
+        //     {
+        //         var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(image.S3Key, bucket, DateTime.Now.AddDays(6.5));
+        //         var link = FileLink.CreateLink(image.RiskyName, preSignedUrl, image.ImageId);
+        //         fileLinks.Add(link);
+        //     }
+        //
+        //     return fileLinks.ToArray();
+        // }
 
-            return fileLinks.ToArray();
-        }
-
-        public static FileLink[] ToFileLinks(this Image image, ILinkCreator linkCreator, string bucket)
-        {
-            return new[] {image}.ToFileLinks(linkCreator, image.ImageId);
-        }
+        // public static FileLink[] ToFileLinks(this Image image, ILinkCreator linkCreator, string bucket)
+        // {
+        //     return new[] {image}.ToFileLinks(linkCreator, image.ImageId);
+        // }
 
         public static FileLink[] ImageUrlToFileLinks(this Image image)
         {
@@ -69,7 +69,7 @@ namespace Palavyr.Core.Common.ExtensionMethods
             var fileLinks = new List<FileLink>();
             foreach (var image in images)
             {
-                var link = FileLink.CreateLink(image.RiskyName, image.Url, image.ImageId, true);
+                var link = FileLink.CreateUrlLink(image.RiskyName, image.Url, image.ImageId);
                 fileLinks.Add(link);
             }
 

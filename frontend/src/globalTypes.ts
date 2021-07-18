@@ -195,6 +195,7 @@ export type FileLink = {
     fileName: string;
     link: string;
     isUrl: boolean;
+    s3Key: string;
 };
 
 export type FileLinkReference = {

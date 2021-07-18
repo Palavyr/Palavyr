@@ -3,7 +3,6 @@ import { ListItem, ListItemText, FormControlLabel, Typography, makeStyles } from
 import { IOSSwitch } from "@common/components/IOSSwitch";
 import { green, red } from "theme";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { SessionStorage } from "localStorage/sessionStorage";
 
 export interface WidgetStateSwitchProps {
     isActive: boolean;

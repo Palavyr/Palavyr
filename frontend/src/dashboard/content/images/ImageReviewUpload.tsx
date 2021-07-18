@@ -3,7 +3,6 @@ import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { makeStyles, Typography } from "@material-ui/core";
 import { FileLink, SetState } from "@Palavyr-Types";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
-import { SessionStorage } from "localStorage/sessionStorage";
 import React, { useContext } from "react";
 import { Upload } from "../responseConfiguration/uploadable/Upload";
 

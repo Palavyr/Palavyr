@@ -27,6 +27,7 @@ export enum CacheIds {
     NeedsPassword = "NeedsPassword",
     WidgetState = "WidgetState",
     Images = "Images",
+    S3Key = "S3Key"
 }
 
 export async function DoRequest<T>(resolve: (value: T | PromiseLike<T>) => void, reject: (reason?: any) => void, request: Promise<AxiosResponse<T>>, cacheId?: CacheIds) {

@@ -6,7 +6,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep } from "lodash";
-import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRow, LocaleDefinition, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
+import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRow, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DashboardHeader } from "./header/DashboardHeader";
 import { makeStyles, Typography } from "@material-ui/core";
@@ -19,7 +19,6 @@ import { DashboardContext } from "./DashboardContext";
 import { UserDetails } from "./sidebar/UserDetails";
 import { PalavyrSnackbar } from "@common/components/PalavyrSnackbar";
 import { redirectToHomeWhenSessionNotEstablished } from "@api-client/clientUtils";
-import { SessionStorage } from "localStorage/sessionStorage";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {

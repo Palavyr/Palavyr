@@ -1,6 +1,5 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { Dialog, DialogTitle, DialogContent, Divider, Typography } from "@material-ui/core";
-import { SessionStorage } from "localStorage/sessionStorage";
+import { Dialog, DialogTitle, DialogContent, Divider, Typography, responsiveFontSizes } from "@material-ui/core";
 import React, { useCallback, useEffect, useState } from "react";
 import { IPalavyrNode } from "../../Contracts";
 import { CustomImage } from "./CustomImage";
@@ -25,26 +24,16 @@ export const ImageNodeEditor = ({ currentNode, nodeId, repository, editorIsOpen,
             const fileLinks = await repository.Configuration.Images.getImages([imageId]);
             const fileLink = fileLinks[0];
             if (!fileLink.isUrl) {
-                const presignedUrl = await repository.Configuration.Images.getSignedUrl(fileLink.link);
+                const presignedUrl = await repository.Configuration.Images.getSignedUrl(fileLink.s3Key, fileLink.fileId);
                 setImageLink(presignedUrl);
                 setImageName(fileLink.fileName);
                 setCurrentImageId(fileLink.fileId);
-                SessionStorage.setImageData(imageId, presignedUrl, fileLink.fileName, fileLink.fileId);
             }
         }
     }, [currentImageId]);
 
     useEffect(() => {
-        if (imageId !== null && imageId !== undefined) {
-            const imageData = SessionStorage.getImageData(imageId);
-            if (imageData !== null) {
-                setImageLink(imageData.presignedUrl);
-                setImageName(imageData.fileName);
-                setCurrentImageId(imageData.fileId);
-            }
-        } else {
-            loadImage();
-        }
+        loadImage();
     }, [currentImageId]);
     return (
         <Dialog fullWidth open={editorIsOpen} onClose={closeEditor}>

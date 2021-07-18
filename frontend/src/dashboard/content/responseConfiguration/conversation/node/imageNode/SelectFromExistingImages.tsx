@@ -24,18 +24,10 @@ export const SelectFromExistingImages = ({ setImageId, repository, nodeId, image
         await repository.Configuration.Images.savePreExistingImage(option.fileId, nodeId);
 
         if (!option.isUrl) {
-            const imageData = SessionStorage.getImageData(option.fileId);
-            if (imageData !== null) {
-                setImageLink(imageData.presignedUrl);
-                setImageName(imageData.fileName);
-            } else {
-                const presignedUrl = await repository.Configuration.Images.getSignedUrl(option.link);
-                setImageLink(presignedUrl);
-                setImageName(option.fileName);
-                SessionStorage.setImageData(option.fileId, presignedUrl, option.fileName, "");
-            }
+            const presignedUrl = await repository.Configuration.Images.getSignedUrl(option.s3Key, option.fileId); // need ot add an s3 key property here and use it to check the cache.
+            setImageLink(presignedUrl);
+            setImageName(option.fileName);
         }
-        console.log(`Does this match current ID: ${option.fileId}`);
         setLabel(option.fileName);
         setImageId(option.fileId);
     };

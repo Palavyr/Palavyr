@@ -10,8 +10,6 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { cloneDeep } from "lodash";
-import { SessionStorage } from "localStorage/sessionStorage";
-import { CacheIds } from "@api-client/AxiosClient";
 
 const useStyles = makeStyles({
     tableStyles: {

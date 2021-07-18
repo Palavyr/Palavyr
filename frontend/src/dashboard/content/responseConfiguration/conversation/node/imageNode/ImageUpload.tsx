@@ -3,7 +3,6 @@ import { Divider, Typography } from "@material-ui/core";
 import { FileLink, SetState } from "@Palavyr-Types";
 import { Upload } from "dashboard/content/responseConfiguration/uploadable/Upload";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
-import { SessionStorage } from "localStorage/sessionStorage";
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { IPalavyrNode } from "../../Contracts";

@@ -63,7 +63,7 @@ namespace Palavyr.Core.Services.AttachmentServices
             foreach (var meta in metas)
             {
                 var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(meta.S3Key, userDataBucket);
-                fileLinks.Add(FileLink.CreateLink(meta.RiskyName, preSignedUrl, meta.SafeFileId));
+                fileLinks.Add(FileLink.CreateUrlLink(meta.RiskyName, preSignedUrl, meta.SafeFileId));
             }
 
             return fileLinks.ToArray();

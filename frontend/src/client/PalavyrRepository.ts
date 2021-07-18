@@ -216,14 +216,45 @@ export class PalavyrRepository {
 
         Images: {
             // Node Editor Flow
-            saveSingleImage: async (formData: FormData) => this.client.post<FileLink[], {}>(`images/save-one`, formData, undefined, { headers: this.formDataHeaders }),
-            saveImageUrl: async (url: string, nodeId: string) => this.client.post<FileLink[], {}>(`images/use-link/${nodeId}`, { Url: url }),
-            getImages: async (imageIds?: string[]) => this.client.get<FileLink[]>(`images${imageIds !== undefined ? `?imageIds=${imageIds.join(",")}` : ""}`, CacheIds.Images), // takes a querystring comma delimieted of imageIds
-            savePreExistingImage: async (imageId: string, nodeId: string) => this.client.post<ConvoNode, {}>(`images/pre-existing/${imageId}/${nodeId}`, CacheIds.Images),
+            saveSingleImage: async (formData: FormData) => {
+                const result = await this.client.post<FileLink[], {}>(`images/save-one`, formData, undefined, { headers: this.formDataHeaders });
+                const currentCache = SessionStorage.getCacheValue(CacheIds.Images) as FileLink[];
+                currentCache.push(...result);
+                SessionStorage.setCacheValue(CacheIds.Images, currentCache);
+                return result;
+            },
+            // saveImageUrl: async (url: string, nodeId: string) => this.client.post<FileLink[], {}>(`images/use-link/${nodeId}`, { Url: url }),
+            getImages: async (imageIds?: string[]) => {
+                if (imageIds !== undefined && imageIds.length > 0) {
+                    // if specifying 1 image
+                    const currentCache = SessionStorage.getCacheValue(CacheIds.Images);
+                    const availableImages = currentCache.filter((x: FileLink) => imageIds.includes(x.fileId)) as FileLink[];
+                    if (availableImages.length === imageIds.length) {
+                        return Promise.resolve(availableImages);
+                    } else {
+                        return this.client.get<FileLink[]>(`images?imageIds=${imageIds.join(",")}`);
+                    }
+                } else {
+                    return this.client.get<FileLink[]>(`images`, CacheIds.Images);
+                }
+            }, // takes a querystring comma delimieted of imageIds
+            savePreExistingImage: async (imageId: string, nodeId: string) => this.client.post<ConvoNode, {}>(`images/pre-existing/${imageId}/${nodeId}`),
+
             // DO NOT USE WITH NODE
-            saveMultipleImages: async (formData: FormData) => this.client.post<FileLink[], {}>(`images/save-many`, formData, undefined, { headers: this.formDataHeaders }),
-            deleteImage: async (imageIds: string[]) => this.client.delete<FileLink[]>(`images?imageIds=${imageIds.join(",")}`), // takes a querystring command delimited of imageIds
-            getSignedUrl: async (s3Key: string) => this.client.post<string, {}>(`images/link`, { s3Key: s3Key }),
+            saveMultipleImages: async (formData: FormData) => {
+                const result = await this.client.post<FileLink[], {}>(`images/save-many`, formData, CacheIds.Images, { headers: this.formDataHeaders });
+                const currentCache = SessionStorage.getCacheValue(CacheIds.Images) as FileLink[];
+                currentCache.push(...result);
+                SessionStorage.setCacheValue(CacheIds.Images, currentCache);
+                return result;
+            },
+            deleteImage: async (imageIds: string[]) => this.client.delete<FileLink[]>(`images?imageIds=${imageIds.join(",")}`, CacheIds.Images), // takes a querystring command delimited of imageIds
+            getSignedUrl: async (s3Key: string, fileId: string) => {
+                // const cacheKey = [CacheIds.S3Key, "link", fileId].join("-");
+                return this.client.post<string, {}>(`images/link`, { s3Key: s3Key }); //, cacheKey as CacheIds);
+                // SessionStorage.setCacheValue(s3Key, signedUrl);
+                // return signedUrl;
+            },
         },
     };
 

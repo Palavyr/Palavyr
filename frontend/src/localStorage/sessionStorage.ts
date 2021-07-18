@@ -1,4 +1,4 @@
-import { Areas, DeSerializedImageMeta, Enquiries, FileLink, LocaleDefinition, PlanTypeMeta, RememberMe } from "@Palavyr-Types";
+import { DeSerializedImageMeta, RememberMe } from "@Palavyr-Types";
 
 class SessionStorageAccess {
     private rememberMeEmail: string = "rememberMeEmail";
