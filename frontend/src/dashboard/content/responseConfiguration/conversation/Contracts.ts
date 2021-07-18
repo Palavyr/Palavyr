@@ -25,9 +25,7 @@ export interface IPalavyrLinkedList {
     retrieveCleanHeadNode(): IPalavyrNode;
     setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
     resetRootNode(): void;
-    createTextNode(containerList: IPalavyrLinkedList, repository: PalavyrRepository, node: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftmostBranch: boolean): IPalavyrNode;
-    createImageNode(containerList: IPalavyrLinkedList, repository: PalavyrRepository, node: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftmostBranch: boolean): IPalavyrNode;
-    convertToPalavyrNode(container: IPalavyrLinkedList, repository: PalavyrRepository, rawNode: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftMostBranch: boolean): IPalavyrNode;
+    convertToPalavyrNode(repository: PalavyrRepository, rawNode: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftMostBranch: boolean): IPalavyrNode;
 }
 
 export interface INodeReferences {
@@ -38,6 +36,7 @@ export interface INodeReferences {
     Length: number;
     contains(nodeId: string): boolean;
     addReference(node: IPalavyrNode): void;
+    addReferences(nodes: IPalavyrNode[]): void;
     Empty(): boolean;
     NotEmpty(): boolean;
     OrderByOptionPath(): void;
@@ -56,6 +55,7 @@ export interface INodeReferences {
     Where(condition: (node: IPalavyrNode) => boolean): INodeReferences;
     containsNodeType(nodeType: string): boolean;
     AllChildrenUnset(): boolean;
+    replaceAtIndex(index: number, newNode: IPalavyrNode): void;
 }
 
 export interface IPalavyrNode {
@@ -82,6 +82,8 @@ export interface IPalavyrNode {
     setNodeTypeOptions(newNodeTypeOptions: NodeTypeOptions): void;
     Equals(otherNode: IPalavyrNode): boolean;
     LoopbackContextIsSet(): boolean;
+    InsertChildNodeLink(nodeTypeOptions: NodeTypeOptions): void;
+    DeleteCurrentNode(nodeTypeOptions: NodeTypeOptions): void;
 
     isRoot: boolean;
     nodeId: string;
@@ -100,7 +102,6 @@ export interface IPalavyrNode {
     shouldDisableNodeTypeSelector: boolean;
     isImageNode: boolean;
     nodeTypeCode: NodeTypeCode;
-
     repository: PalavyrRepository;
 
     // the options available from this node, if any. I none, then "Continue" is used |peg| delimted

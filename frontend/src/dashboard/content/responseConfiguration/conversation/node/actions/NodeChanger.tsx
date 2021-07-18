@@ -320,8 +320,7 @@ class PalavyrNodeChanger implements IPalavyrNodeChanger {
     }
 
     private ConvertToImageNode(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
-        const newImageNode = currentNode.palavyrLinkedList.createImageNode(
-            currentNode.palavyrLinkedList,
+        const newImageNode = currentNode.palavyrLinkedList.convertToPalavyrNode(
             currentNode.repository,
             currentNode.compileConvoNode(currentNode.palavyrLinkedList.areaId),
             currentNode.setTreeWithHistory,
@@ -350,8 +349,7 @@ class PalavyrNodeChanger implements IPalavyrNodeChanger {
     }
 
     private ConvertToTextNode(currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) {
-        const newTextNode = currentNode.palavyrLinkedList.createTextNode(
-            currentNode.palavyrLinkedList,
+        const newTextNode = currentNode.palavyrLinkedList.convertToPalavyrNode(
             currentNode.repository,
             currentNode.compileConvoNode(currentNode.palavyrLinkedList.areaId),
             currentNode.setTreeWithHistory,

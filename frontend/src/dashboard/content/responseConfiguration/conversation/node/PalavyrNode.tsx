@@ -30,6 +30,7 @@ export class PalavyrNode implements IPalavyrNode {
     public imageId: string | null;
     public nodeTypeCode: NodeTypeCode;
     public isCurrency: boolean;
+    public isLocked: boolean = false;
 
     // core
     public childNodeReferences: INodeReferences = new NodeReferences();
@@ -225,11 +226,13 @@ export class PalavyrNode implements IPalavyrNode {
     public lock() {
         this.isAnabranchLocked = true;
         this.shouldDisableNodeTypeSelector = true;
+        this.isLocked = true;
     }
     public unlock() {
         // TODO: either make this anabranch specific or don't do; anabranch lock here. LOck means uneditable? Or just no nodeType changes?
         this.isAnabranchLocked = false;
         this.shouldDisableNodeTypeSelector = false;
+        this.isLocked = false;
     }
 
     public setAsProvideInfo() {
@@ -325,5 +328,59 @@ export class PalavyrNode implements IPalavyrNode {
         });
 
         recurseAndDereference(anabranchOriginNode.childNodeReferences);
+    }
+
+    public InsertChildNodeLink(nodeTypeOptions: NodeTypeOptions) {
+        // creates a new default Provide Info node and attaches it to this node as a single child. All current children are attached to the new child node as children.
+        // since this is a doubly linked list, we need to re-reference
+        // - the children of this node
+        // - the children of the new inserted node
+        // - the parent of the new inserted node
+        // - the parent of this nodes children
+
+        const newNodeToInsert = this.palavyrLinkedList.convertToPalavyrNode(this.repository, this.nodeCreator.createNewDefaultChildNode(), this.setTreeWithHistory, this.isMemberOfLeftmostBranch);
+        // update the parents for all current Children
+        this.childNodeReferences.forEach((node: IPalavyrNode) => {
+            const thisIndex = node.parentNodeReferences.findIndexOf(this);
+            if (thisIndex === null) {
+                console.log("WOW NULL?");
+            }
+            if (thisIndex !== null) {
+                node.removeLine(this);
+                node.parentNodeReferences.replaceAtIndex(thisIndex, newNodeToInsert);
+                node.addLine(newNodeToInsert.nodeId);
+            }
+        });
+
+        // update the children and parent for the new node
+        newNodeToInsert.childNodeReferences.addReferences(this.childNodeReferences.references); // add  current Children
+        newNodeToInsert.addLine(this.nodeId);
+        newNodeToInsert.parentNodeReferences.addReference(this);
+
+        // update the children for this node
+        this.childNodeReferences.Clear();
+        this.childNodeReferences.addReference(newNodeToInsert);
+
+        this.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
+    }
+
+    public DeleteCurrentNode(nodeTypeOptions: NodeTypeOptions) {
+        if (this.isRoot) return;
+        if (this.childNodeReferences.Length !== 1) return;
+        if (this.parentNodeReferences.Length !== 1) return;
+        if (this.parentNodeReferences.Single().childNodeReferences.Length !== 1) return;
+
+        // reassign all parent nodes to childnode parent references (dont' for get the lines)
+        this.parentNodeReferences.Single().childNodeReferences.replaceAtIndex(0, this.childNodeReferences.Single());
+        this.removeLine(this.parentNodeReferences.Single());
+
+        // reassign all childnode references to prent childnode references
+        this.childNodeReferences.Single().parentNodeReferences.replaceAtIndex(0, this.parentNodeReferences.Single());
+        this.childNodeReferences.Single().removeLine(this);
+
+        // add line from new child to new parent
+        this.childNodeReferences.Single().addLine(this.parentNodeReferences.Single().nodeId);
+
+        this.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
     }
 }

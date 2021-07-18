@@ -10,5 +10,5 @@ export const UnsetNodeButton = ({ node }: NodeOptionalProps) => {
         node.unsetSelf(nodeTypeOptions);
     };
 
-    return shouldShow ? <SinglePurposeButton buttonText="Unset Node" variant="outlined" color="primary" onClick={onClick} /> : <></>;
+    return shouldShow ? <SinglePurposeButton size="small" buttonText="Unset Node" variant="outlined" color="primary" onClick={onClick} /> : <></>;
 };

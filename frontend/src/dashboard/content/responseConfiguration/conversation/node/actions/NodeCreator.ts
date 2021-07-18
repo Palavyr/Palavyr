@@ -2,6 +2,7 @@ import { ConvoNode, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { v4 as uuid } from "uuid";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { IPalavyrNode, IPalavyrLinkedList, INodeReferences } from "../../Contracts";
+import { DEFAULT_NODE_TEXT } from "@constants";
 
 export class NodeCreator {
     public addDefaultChild(currentParentNodes: IPalavyrNode[], optionPath: string, nodeTypeOptions: NodeTypeOptions, defaultText?: string) {
@@ -9,7 +10,6 @@ export class NodeCreator {
 
         const defaultNode = this.createDefaultNode(optionPath);
         const newPalavyrNode = currentParentNodes[0].palavyrLinkedList.convertToPalavyrNode(
-            currentParentNodes[0].palavyrLinkedList,
             currentParentNodes[0].repository,
             defaultNode,
             currentParentNodes[0].setTreeWithHistory,
@@ -29,7 +29,7 @@ export class NodeCreator {
     public addDefaultRootNode(palavyrLinkedList: IPalavyrLinkedList, repository: PalavyrRepository, restOfTree: INodeReferences, defaultText?: string) {
         const defaultNode = this.createDefaultNode("Continue");
         defaultNode.isRoot = true;
-        const newPalavyrNode = palavyrLinkedList.convertToPalavyrNode(palavyrLinkedList, repository, defaultNode, palavyrLinkedList.setTreeWithHistory, true);
+        const newPalavyrNode = palavyrLinkedList.convertToPalavyrNode(repository, defaultNode, palavyrLinkedList.setTreeWithHistory, true);
         if (defaultText) {
             newPalavyrNode.userText = defaultText;
         }
@@ -37,12 +37,16 @@ export class NodeCreator {
         newPalavyrNode.childNodeReferences = restOfTree;
     }
 
-    private createDefaultNode(optionPath: string): ConvoNode {
+    public createNewDefaultChildNode() {
+        return this.createDefaultNode("Continue", "ProvideInfo");
+    }
+
+    private createDefaultNode(optionPath: string, nodeType: string = ""): ConvoNode {
         return {
             isLoopbackAnchorType: false,
             nodeId: uuid(),
-            nodeType: "",
-            text: "Ask your question!",
+            nodeType: nodeType,
+            text: DEFAULT_NODE_TEXT,
             nodeChildrenString: "",
             isRoot: false,
             isCritical: false,

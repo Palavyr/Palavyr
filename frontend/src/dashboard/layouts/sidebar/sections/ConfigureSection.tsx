@@ -37,16 +37,16 @@ export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails }
     return (
         <List>
             <SidebarSectionHeader title="Configure" onClick={() => setConfigureOpen(!configureOpen)} currentState={configureOpen} />
+            <SidebarLinkItem text="Add New Area" isActive={isActive} onClick={checkAreaCount} IconComponent={<AddCircleOutlineIcon className={cls.icon} />} />
+            <SidebarLinkItem text="Enable / Disable Areas" isActive={isActive} onClick={enableAreasOnClick} IconComponent={<PowerSettingsNewIcon className={cls.icon} />} />
             <Collapse in={configureOpen} timeout="auto" unmountOnExit>
+                <Divider />
                 {areaNameDetails.map(
                     (x: AreaNameDetail, index: number) =>
                         planTypeMeta && (
                             <AreaLinkItem key={index} areaIdentifier={x.areaIdentifier} isActive={isActive} disabled={index >= planTypeMeta.allowedAreas} currentPage={currentPage} areaName={x.areaName} />
                         )
                 )}
-                <Divider />
-                <SidebarLinkItem text="Add New Area" isActive={isActive} onClick={checkAreaCount} IconComponent={<AddCircleOutlineIcon className={cls.icon} />} />
-                <SidebarLinkItem text="Enable / Disable Areas" isActive={isActive} onClick={enableAreasOnClick} IconComponent={<PowerSettingsNewIcon className={cls.icon} />} />
             </Collapse>
         </List>
     );

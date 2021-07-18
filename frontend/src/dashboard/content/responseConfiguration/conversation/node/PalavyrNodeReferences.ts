@@ -11,11 +11,18 @@ export class NodeReferences implements INodeReferences {
             });
         }
     }
+    addReferences(nodes: IPalavyrNode[]): void {
+        nodes.forEach((node: IPalavyrNode) => this.addReference(node));
+    }
     collectPathOptions(): string[] {
         const pathOptions = this.nodeReferences.map((x: IPalavyrNode) => {
             return x.optionPath;
         });
         return pathOptions;
+    }
+
+    replaceAtIndex(index: number, newNode: IPalavyrNode): void {
+        this.nodeReferences[index] = newNode;
     }
 
     public applyOptionPaths(valueOptions: string[]): void {

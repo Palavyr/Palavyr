@@ -65,14 +65,14 @@ export const NodeInterface = ({
         checked: shouldPresentResponse,
         splitMergeRootSiblingIndex: isMemberOfLeftmostBranch ? 0 : 1,
         debugOn: showDebugData,
-        isImageNode: imageId !== undefined,
+        // isImageNode: currentNode.isImageNode, //imageId !== undefined|| imageId === null
     });
 
     return (
         <Card id={nodeId} className={cls.root} variant={nodeType === "" ? "outlined" : undefined}>
             <CardContent className={classNames(cls.card, nodeId)}>
                 {showDebugData && <DataLogging debugData={compileDebug(currentNode)} nodeChildren={joinedChildReferenceString} nodeId={nodeId} />}
-                <NodeHeader isRoot={isRoot} optionPath={optionPath} />
+                <NodeHeader isRoot={isRoot} optionPath={optionPath} nodeId={currentNode.nodeId} />
                 {currentNode.isImageNode ? <ImageNodeFace imageId={imageId} repository={repository} openEditor={openEditor} /> : <TextNodeFace openEditor={openEditor} userText={userText} />}
                 <NodeTypeSelector currentNode={currentNode} shouldDisableNodeTypeSelector={shouldDisableNodeTypeSelector} />
                 {currentNode.isImageNode ? (

@@ -17,7 +17,7 @@ export const useNodeInterfaceStyles = makeStyles((theme) => ({
         minHeight: "350px",
         borderColor: props.nodeType === "" ? "red" : "#54585A",
         borderWidth: props.nodeType === "" ? "8px" : "2px",
-        borderRadius: "3px",
+        borderRadius: "13px",
         backgroundColor: props.nodeType === "" ? theme.palette.warning.main : theme.palette.success.light,
     }),
     card: {
@@ -36,17 +36,6 @@ export const useNodeInterfaceStyles = makeStyles((theme) => ({
     pos: {
         marginBottom: 12,
     },
-    textCard: (props: StyleProps) => ({
-        border: "1px solid gray",
-        padding: "10px",
-        textAlign: "center",
-        color: props.nodeText === "Ask your question!" && !props.isImageNode ? "white" : "black",
-        background: props.nodeText === "Ask your question!" && !props.isImageNode ? "red" : "white",
-        "&:hover": {
-            background: "lightgray",
-            color: "black",
-        },
-    }),
     text: {
         margin: ".1rem",
     },
