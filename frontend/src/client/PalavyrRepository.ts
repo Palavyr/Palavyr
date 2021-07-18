@@ -95,8 +95,13 @@ export class PalavyrRepository {
         UpdateUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, areaIdentifier: string) =>
             this.client.put<boolean, {}>(`areas/${areaIdentifier}/use-fallback-email-toggle`, { UseFallback: useAreaFallbackEmailUpdate }),
         GetAreas: async () => this.client.get<Areas>("areas", CacheIds.Areas),
-        createArea: (areaName: string) => this.client.post<AreaTable, {}>(`areas/create/`, { AreaName: areaName }, CacheIds.Areas), // get creates and gets new area
-
+        createArea: async (areaName: string) => {
+            const newArea = await this.client.post<AreaTable, {}>(`areas/create`, { AreaName: areaName });
+            const areas = SessionStorage.getCacheValue(CacheIds.Areas) as Areas;
+            areas.push(newArea);
+            SessionStorage.setCacheValue(CacheIds.Areas, areas);
+            return newArea;
+        },
         updateAreaName: (areaIdentifier: string, areaName: string) => {
             const result = this.client.put<string, {}>(`areas/update/name/${areaIdentifier}`, { AreaName: areaName });
             SessionStorage.clearCacheValue(CacheIds.Areas);
