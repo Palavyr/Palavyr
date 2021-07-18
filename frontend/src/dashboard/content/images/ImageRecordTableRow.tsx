@@ -48,7 +48,7 @@ export const ImageRecordTableRow = ({ imageRecord, setImageRecords, index, setCu
         setIsLoading(true);
         setShowSpinner(true);
         if (!fileLink.isUrl) {
-            const signedUrl = await repo.Configuration.Images.getSignedUrl(fileLink.link);
+            const signedUrl = await repo.Configuration.Images.getSignedUrl(fileLink.link, fileLink.fileId);
             setCurrentPreview(signedUrl);
         } else {
             const url = fileLink.link;

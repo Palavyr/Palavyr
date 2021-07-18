@@ -75,7 +75,7 @@ namespace Palavyr.Core.Services.AttachmentServices
 
             var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(s3AttachmentKey, userDataBucket);
 
-            var fileLink = FileLink.CreateLink(riskyFileName, preSignedUrl, safeFileName);
+            var fileLink = FileLink.CreateUrlLink(riskyFileName, preSignedUrl, safeFileName);
             return fileLink;
         }
     }

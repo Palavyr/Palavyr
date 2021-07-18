@@ -9,6 +9,7 @@ import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { TodosAsBoolean } from "@Palavyr-Types";
 import { allClear, convertTodos } from "./OnboardingTodo/onboardingUtils";
 import { SessionStorage } from "localStorage/sessionStorage";
+import { CacheIds } from "@api-client/AxiosClient";
 
 const useStyles = makeStyles((theme) => ({
     background: {
@@ -106,7 +107,7 @@ export const WelcomeToTheDashboard = () => {
     }, []);
 
     React.useEffect(() => {
-        SessionStorage.clearEnquiries();
+        SessionStorage.clearCacheValue(CacheIds.Enquiries);
         loadTodos();
         setLoading(false);
     }, []);

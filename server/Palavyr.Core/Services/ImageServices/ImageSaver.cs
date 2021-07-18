@@ -40,13 +40,13 @@ namespace Palavyr.Core.Services.ImageServices
             var newImage = Image.CreateImageRecord(imageFile.FileName, s3KeyResolver, accountId);
 
             await s3Saver.StreamObjectToS3(userDataBucket, imageFile, newImage.S3Key);
-            var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(newImage.S3Key, userDataBucket, DateTime.Now.AddDays(6.5));
+            // var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(newImage.S3Key, userDataBucket, DateTime.Now.AddDays(6.5));
 
             // add to the databases
             await dashContext.Images.AddAsync(newImage);
             await dashContext.SaveChangesAsync(cancellationToken);
 
-            return FileLink.CreateLink(imageFile.FileName, preSignedUrl, newImage.SafeName);
+            return FileLink.CreateS3Link(imageFile.FileName, newImage.ImageId, newImage.S3Key);
         }
     }
 }

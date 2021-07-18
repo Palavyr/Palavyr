@@ -95,7 +95,7 @@ namespace Palavyr.Core.Services.PdfService
             await htmlToPdfClient.GeneratePdfFromHtml(html, previewBucket, s3Key, localTempSafeFile.FileStem, Paper.CreateDefault(localTempSafeFile.FileStem));
 
             var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(s3Key, previewBucket);
-            var fileLink = FileLink.CreateLink("Preview", preSignedUrl, localTempSafeFile.FileStem);
+            var fileLink = FileLink.CreateUrlLink("Preview", preSignedUrl, localTempSafeFile.FileStem);
             return fileLink;
         }
 

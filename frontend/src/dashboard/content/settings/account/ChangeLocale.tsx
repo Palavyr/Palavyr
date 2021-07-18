@@ -6,7 +6,6 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 import { LocaleMapItem, LocaleMap } from "@Palavyr-Types";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { SettingsWrapper } from "../SettingsWrapper";
-import { SessionStorage } from "localStorage/sessionStorage";
 
 const useStyles = makeStyles((theme) => ({
     titleText: {
@@ -59,10 +58,7 @@ export const ChangeLocale = () => {
 
     const handleLocaleChange = async (event) => {
         const newLocaleId = event.target.value;
-
         const updatedLocale = await repository.Settings.Account.updateLocale(newLocaleId);
-        SessionStorage.setLocale(updatedLocale);
-
         setLocaleName(updatedLocale.localeCountry);
         setLocaleID(updatedLocale.localeId);
         setCurrencySymbol(updatedLocale.localeCurrencySymbol);

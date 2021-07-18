@@ -7,7 +7,6 @@ import { AreaTable } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DialogContent, makeStyles } from "@material-ui/core";
 import { AddOrCancel } from "@common/components/AddOrCancel";
-import { SessionStorage } from "localStorage/sessionStorage";
 
 const useStyles = makeStyles((theme) => ({
     dialog: {
@@ -35,7 +34,6 @@ export const AddNewAreaModal = ({ open, handleClose, setNewArea }: IAddNewAreaMo
     const onAdd = async () => {
         if (areaName !== "") {
             const newArea = await repository.Area.createArea(areaName);
-            SessionStorage.clearAreas();
             setNewArea(newArea);
         }
         handleClose();

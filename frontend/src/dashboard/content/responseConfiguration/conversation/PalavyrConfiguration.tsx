@@ -18,6 +18,7 @@ import { TreeErrorPanel } from "./MissingDynamicNodes";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import { ConfigurationNode } from "./node/baseNode/ConfigurationNode";
+import Fade from "react-reveal/Fade";
 
 const useStyles = makeStyles(() => ({
     conversation: {
@@ -45,7 +46,7 @@ const useStyles = makeStyles(() => ({
         position: "fixed",
         right: "50px",
         bottom: "50px",
-        zIndex : 100
+        zIndex: 100,
     },
 }));
 

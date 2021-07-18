@@ -16,7 +16,7 @@ export interface SelectFromExistingImagesProps {
     setImageId: (imageId: string) => void;
 }
 
-export const SelectFromExistingImages = ({  setImageId, repository, nodeId, imageId, currentImageId, setImageLink, setImageName }: SelectFromExistingImagesProps) => {
+export const SelectFromExistingImages = ({ setImageId, repository, nodeId, imageId, currentImageId, setImageLink, setImageName }: SelectFromExistingImagesProps) => {
     const [options, setOptions] = useState<FileLink[] | null>(null);
     const [label, setLabel] = useState<string>("");
 
@@ -24,18 +24,10 @@ export const SelectFromExistingImages = ({  setImageId, repository, nodeId, imag
         await repository.Configuration.Images.savePreExistingImage(option.fileId, nodeId);
 
         if (!option.isUrl) {
-            const imageData = SessionStorage.getImageData(option.fileId);
-            if (imageData !== null) {
-                setImageLink(imageData.presignedUrl);
-                setImageName(imageData.fileName);
-            } else {
-                const presignedUrl = await repository.Configuration.Images.getSignedUrl(option.link);
-                setImageLink(presignedUrl);
-                setImageName(option.fileName);
-                SessionStorage.setImageData(option.fileId, presignedUrl, option.fileName, "");
-            }
+            const presignedUrl = await repository.Configuration.Images.getSignedUrl(option.s3Key, option.fileId); // need ot add an s3 key property here and use it to check the cache.
+            setImageLink(presignedUrl);
+            setImageName(option.fileName);
         }
-        console.log(`Does this match current ID: ${option.fileId}`);
         setLabel(option.fileName);
         setImageId(option.fileId);
     };
@@ -53,16 +45,10 @@ export const SelectFromExistingImages = ({  setImageId, repository, nodeId, imag
     const loadOptions = useCallback(async () => {
         const fileLinks = await repository.Configuration.Images.getImages();
         setfilteredFileLinkOptions(fileLinks);
-        SessionStorage.setFileLinks(fileLinks);
     }, [currentImageId]);
 
     useEffect(() => {
-        const fileLinks = SessionStorage.getFileLinks();
-        if (fileLinks === null) {
-            loadOptions();
-        } else {
-            setfilteredFileLinkOptions(fileLinks);
-        }
+        loadOptions();
     }, []);
 
     return (

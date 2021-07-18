@@ -1,4 +1,4 @@
-import { Areas, DeSerializedImageMeta, Enquiries, FileLink, LocaleDefinition, PlanTypeMeta, RememberMe } from "@Palavyr-Types";
+import { DeSerializedImageMeta, RememberMe } from "@Palavyr-Types";
 
 class SessionStorageAccess {
     private rememberMeEmail: string = "rememberMeEmail";
@@ -10,13 +10,6 @@ class SessionStorageAccess {
     private googleImage: string = "googleImage";
     private loginType: string = "loginType";
     private active: string = "rkjh45lh435lkh";
-    private ImageFileLinks: string = "Palavyr-file-links";
-    private WidgetState: string = "Widget-State";
-    private Enquiries: string = "Enquiries";
-    private NeedsPassword: string = "NeedsPassword";
-    private Locale: string = "Locale";
-    private PlanTypeMeta: string = "PlantTypeMeta";
-    private Areas: string = "Areas";
     public GoogleLoginType: string = "google";
     public DefaultLoginType: string = "default";
 
@@ -27,6 +20,10 @@ class SessionStorageAccess {
 
     private _getItem(key: string) {
         return sessionStorage.getItem(key);
+    }
+
+    private ClearAll() {
+        sessionStorage.clear();
     }
 
     private _isSet(val: string) {
@@ -162,73 +159,6 @@ class SessionStorageAccess {
         return null;
     }
 
-    setFileLinks(fileLinks: FileLink[]) {
-        this._setItem(this.ImageFileLinks, JSON.stringify(fileLinks));
-    }
-
-    getFileLinks() {
-        return this.getStoredJson(this.ImageFileLinks) as FileLink[];
-    }
-
-    clearImageFileLinks() {
-        this._setItem(this.ImageFileLinks, "");
-    }
-
-    setWidgetState(state: boolean) {
-        this._setItem(this.WidgetState, state);
-    }
-
-    getWidgetState() {
-        return this.getStoredBoolean(this.WidgetState);
-    }
-
-    getCurrentPlanMeta() {
-        const plant = "PlanTypeMeta";
-        return this.getStoredJson(plant);
-    }
-
-    setCurrentPlanMeta(planTypeMeta: PlanTypeMeta) {
-        this._setItem(this.PlanTypeMeta, JSON.stringify(planTypeMeta));
-    }
-
-    getLocale() {
-        return this.getStoredJson(this.Locale);
-    }
-
-    setLocale(localeDefinition: LocaleDefinition) {
-        this._setItem(this.Locale, JSON.stringify(localeDefinition));
-    }
-
-    getAreas() {
-        return this.getStoredJson(this.Areas);
-    }
-
-    clearAreas() {
-        this._setItem(this.Areas, "");
-    }
-
-    setAreas(areas: Areas) {
-        this.setStoredJson(this.Areas, areas);
-    }
-
-    getNeedsPassword() {
-        return this.getStoredBoolean(this.NeedsPassword);
-    }
-    setNeedsPassword(needsPassword: boolean) {
-        this._setItem(this.NeedsPassword, needsPassword);
-    }
-
-    getEnquiries() {
-        return this.getStoredJson(this.Enquiries);
-    }
-
-    setEnquiries(enquiries: Enquiries) {
-        this.setStoredJson(this.Enquiries, enquiries);
-    }
-    clearEnquiries() {
-        this._setItem(this.Enquiries, "");
-    }
-
     setCacheValue(key: string, value: any) {
         this._setItem(key, JSON.stringify(value));
     }
@@ -240,16 +170,8 @@ class SessionStorageAccess {
         this._setItem(key, "");
     }
 
-    private getStoredBoolean(key: string) {
-        const value = this._getItem(key);
-        if (value) {
-            return value === "true";
-        }
-        return null;
-    }
-
-    private setStoredJson(key: string, value: object) {
-        this._setItem(key, JSON.stringify(value));
+    ClearAllCacheValues() {
+        this.ClearAll();
     }
 
     private getStoredJson(key: string) {

@@ -95,8 +95,13 @@ export class PalavyrRepository {
         UpdateUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, areaIdentifier: string) =>
             this.client.put<boolean, {}>(`areas/${areaIdentifier}/use-fallback-email-toggle`, { UseFallback: useAreaFallbackEmailUpdate }),
         GetAreas: async () => this.client.get<Areas>("areas", CacheIds.Areas),
-        createArea: (areaName: string) => this.client.post<AreaTable, {}>(`areas/create/`, { AreaName: areaName }, CacheIds.Areas), // get creates and gets new area
-
+        createArea: async (areaName: string) => {
+            const newArea = await this.client.post<AreaTable, {}>(`areas/create`, { AreaName: areaName });
+            const areas = SessionStorage.getCacheValue(CacheIds.Areas) as Areas;
+            areas.push(newArea);
+            SessionStorage.setCacheValue(CacheIds.Areas, areas);
+            return newArea;
+        },
         updateAreaName: (areaIdentifier: string, areaName: string) => {
             const result = this.client.put<string, {}>(`areas/update/name/${areaIdentifier}`, { AreaName: areaName });
             SessionStorage.clearCacheValue(CacheIds.Areas);
@@ -118,8 +123,8 @@ export class PalavyrRepository {
         updateEpilogue: async (areaIdentifier: string, epilogue: string) => this.client.put<string, {}>(`response/configuration/${areaIdentifier}/epilogue`, { epilogue: epilogue }),
 
         WidgetState: {
-            GetWidgetState: async () => this.client.get<boolean>(`widget-config/widget-active-state`),
-            SetWidgetState: async (updatedWidgetState: boolean) => this.client.post<boolean, {}>(`widget-config/widget-active-state?state=${updatedWidgetState}`),
+            GetWidgetState: async () => this.client.get<boolean>(`widget-config/widget-active-state`, CacheIds.WidgetState),
+            SetWidgetState: async (updatedWidgetState: boolean) => this.client.post<boolean, {}>(`widget-config/widget-active-state?state=${updatedWidgetState}`, CacheIds.WidgetState),
         },
         Tables: {
             Dynamic: {
@@ -211,14 +216,45 @@ export class PalavyrRepository {
 
         Images: {
             // Node Editor Flow
-            saveSingleImage: async (formData: FormData) => this.client.post<FileLink[], {}>(`images/save-one`, formData, undefined, { headers: this.formDataHeaders }),
-            saveImageUrl: async (url: string, nodeId: string) => this.client.post<FileLink[], {}>(`images/use-link/${nodeId}`, { Url: url }),
-            getImages: async (imageIds?: string[]) => this.client.get<FileLink[]>(`images${imageIds !== undefined ? `?imageIds=${imageIds.join(",")}` : ""}`), // takes a querystring comma delimieted of imageIds
+            saveSingleImage: async (formData: FormData) => {
+                const result = await this.client.post<FileLink[], {}>(`images/save-one`, formData, undefined, { headers: this.formDataHeaders });
+                const currentCache = SessionStorage.getCacheValue(CacheIds.Images) as FileLink[];
+                currentCache.push(...result);
+                SessionStorage.setCacheValue(CacheIds.Images, currentCache);
+                return result;
+            },
+            // saveImageUrl: async (url: string, nodeId: string) => this.client.post<FileLink[], {}>(`images/use-link/${nodeId}`, { Url: url }),
+            getImages: async (imageIds?: string[]) => {
+                if (imageIds !== undefined && imageIds.length > 0) {
+                    // if specifying 1 image
+                    const currentCache = SessionStorage.getCacheValue(CacheIds.Images);
+                    const availableImages = currentCache.filter((x: FileLink) => imageIds.includes(x.fileId)) as FileLink[];
+                    if (availableImages.length === imageIds.length) {
+                        return Promise.resolve(availableImages);
+                    } else {
+                        return this.client.get<FileLink[]>(`images?imageIds=${imageIds.join(",")}`);
+                    }
+                } else {
+                    return this.client.get<FileLink[]>(`images`, CacheIds.Images);
+                }
+            }, // takes a querystring comma delimieted of imageIds
             savePreExistingImage: async (imageId: string, nodeId: string) => this.client.post<ConvoNode, {}>(`images/pre-existing/${imageId}/${nodeId}`),
+
             // DO NOT USE WITH NODE
-            saveMultipleImages: async (formData: FormData) => this.client.post<FileLink[], {}>(`images/save-many`, formData, undefined, { headers: this.formDataHeaders }),
-            deleteImage: async (imageIds: string[]) => this.client.delete<FileLink[]>(`images?imageIds=${imageIds.join(",")}`), // takes a querystring command delimited of imageIds
-            getSignedUrl: async (s3Key: string) => this.client.post<string, {}>(`images/link`, { s3Key: s3Key }),
+            saveMultipleImages: async (formData: FormData) => {
+                const result = await this.client.post<FileLink[], {}>(`images/save-many`, formData, CacheIds.Images, { headers: this.formDataHeaders });
+                const currentCache = SessionStorage.getCacheValue(CacheIds.Images) as FileLink[];
+                currentCache.push(...result);
+                SessionStorage.setCacheValue(CacheIds.Images, currentCache);
+                return result;
+            },
+            deleteImage: async (imageIds: string[]) => this.client.delete<FileLink[]>(`images?imageIds=${imageIds.join(",")}`, CacheIds.Images), // takes a querystring command delimited of imageIds
+            getSignedUrl: async (s3Key: string, fileId: string) => {
+                // const cacheKey = [CacheIds.S3Key, "link", fileId].join("-");
+                return this.client.post<string, {}>(`images/link`, { s3Key: s3Key }); //, cacheKey as CacheIds);
+                // SessionStorage.setCacheValue(s3Key, signedUrl);
+                // return signedUrl;
+            },
         },
     };
 
@@ -276,7 +312,10 @@ export class PalavyrRepository {
             getCompanyLogo: async () => this.client.get<string>(`account/settings/logo`, CacheIds.Logo),
 
             deleteCompanyLogo: async () => this.client.delete(`account/settings/logo`, CacheIds.Logo),
-            DeleteAccount: async () => this.client.post(`account/delete-account`),
+            DeleteAccount: async () => {
+                SessionStorage.ClearAllCacheValues();
+                return this.client.post(`account/delete-account`);
+            },
             CheckNeedsPassword: async () => this.client.get<boolean>(`account/needs-password`, CacheIds.NeedsPassword),
         },
         EmailVerification: {

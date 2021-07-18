@@ -31,7 +31,8 @@ export const AttachmentListRow = ({ fileName, link, fileId, setCurrentPreview, r
             fileName,
             link,
             fileId,
-            isUrl: false
+            isUrl: false,
+            s3Key: "",
         };
         setCurrentPreview(attachmentLink);
     };
