@@ -19,7 +19,7 @@ namespace Palavyr.Core.Services.PdfService.PdfSections.Util
             Description = description;
             Min = min;
             Max = max;
-            PerIndividual = perIndividual ? "Per Person" : "";
+            PerIndividual = perIndividual ? "Per Individual" : "";
             Culture = culture;
             Range = range;
             RowValue = FormatRowValue(min, max, range);
