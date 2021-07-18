@@ -59,10 +59,7 @@ export const ChangeLocale = () => {
 
     const handleLocaleChange = async (event) => {
         const newLocaleId = event.target.value;
-
         const updatedLocale = await repository.Settings.Account.updateLocale(newLocaleId);
-        SessionStorage.setLocale(updatedLocale);
-
         setLocaleName(updatedLocale.localeCountry);
         setLocaleID(updatedLocale.localeId);
         setCurrencySymbol(updatedLocale.localeCurrencySymbol);

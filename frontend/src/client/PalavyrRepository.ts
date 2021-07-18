@@ -118,8 +118,8 @@ export class PalavyrRepository {
         updateEpilogue: async (areaIdentifier: string, epilogue: string) => this.client.put<string, {}>(`response/configuration/${areaIdentifier}/epilogue`, { epilogue: epilogue }),
 
         WidgetState: {
-            GetWidgetState: async () => this.client.get<boolean>(`widget-config/widget-active-state`),
-            SetWidgetState: async (updatedWidgetState: boolean) => this.client.post<boolean, {}>(`widget-config/widget-active-state?state=${updatedWidgetState}`),
+            GetWidgetState: async () => this.client.get<boolean>(`widget-config/widget-active-state`, CacheIds.WidgetState),
+            SetWidgetState: async (updatedWidgetState: boolean) => this.client.post<boolean, {}>(`widget-config/widget-active-state?state=${updatedWidgetState}`, CacheIds.WidgetState),
         },
         Tables: {
             Dynamic: {
@@ -213,8 +213,8 @@ export class PalavyrRepository {
             // Node Editor Flow
             saveSingleImage: async (formData: FormData) => this.client.post<FileLink[], {}>(`images/save-one`, formData, undefined, { headers: this.formDataHeaders }),
             saveImageUrl: async (url: string, nodeId: string) => this.client.post<FileLink[], {}>(`images/use-link/${nodeId}`, { Url: url }),
-            getImages: async (imageIds?: string[]) => this.client.get<FileLink[]>(`images${imageIds !== undefined ? `?imageIds=${imageIds.join(",")}` : ""}`), // takes a querystring comma delimieted of imageIds
-            savePreExistingImage: async (imageId: string, nodeId: string) => this.client.post<ConvoNode, {}>(`images/pre-existing/${imageId}/${nodeId}`),
+            getImages: async (imageIds?: string[]) => this.client.get<FileLink[]>(`images${imageIds !== undefined ? `?imageIds=${imageIds.join(",")}` : ""}`, CacheIds.Images), // takes a querystring comma delimieted of imageIds
+            savePreExistingImage: async (imageId: string, nodeId: string) => this.client.post<ConvoNode, {}>(`images/pre-existing/${imageId}/${nodeId}`, CacheIds.Images),
             // DO NOT USE WITH NODE
             saveMultipleImages: async (formData: FormData) => this.client.post<FileLink[], {}>(`images/save-many`, formData, undefined, { headers: this.formDataHeaders }),
             deleteImage: async (imageIds: string[]) => this.client.delete<FileLink[]>(`images?imageIds=${imageIds.join(",")}`), // takes a querystring command delimited of imageIds
@@ -276,7 +276,10 @@ export class PalavyrRepository {
             getCompanyLogo: async () => this.client.get<string>(`account/settings/logo`, CacheIds.Logo),
 
             deleteCompanyLogo: async () => this.client.delete(`account/settings/logo`, CacheIds.Logo),
-            DeleteAccount: async () => this.client.post(`account/delete-account`),
+            DeleteAccount: async () => {
+                SessionStorage.ClearAllCacheValues();
+                return this.client.post(`account/delete-account`);
+            },
             CheckNeedsPassword: async () => this.client.get<boolean>(`account/needs-password`, CacheIds.NeedsPassword),
         },
         EmailVerification: {

@@ -16,7 +16,7 @@ export interface SelectFromExistingImagesProps {
     setImageId: (imageId: string) => void;
 }
 
-export const SelectFromExistingImages = ({  setImageId, repository, nodeId, imageId, currentImageId, setImageLink, setImageName }: SelectFromExistingImagesProps) => {
+export const SelectFromExistingImages = ({ setImageId, repository, nodeId, imageId, currentImageId, setImageLink, setImageName }: SelectFromExistingImagesProps) => {
     const [options, setOptions] = useState<FileLink[] | null>(null);
     const [label, setLabel] = useState<string>("");
 
@@ -53,16 +53,10 @@ export const SelectFromExistingImages = ({  setImageId, repository, nodeId, imag
     const loadOptions = useCallback(async () => {
         const fileLinks = await repository.Configuration.Images.getImages();
         setfilteredFileLinkOptions(fileLinks);
-        SessionStorage.setFileLinks(fileLinks);
     }, [currentImageId]);
 
     useEffect(() => {
-        const fileLinks = SessionStorage.getFileLinks();
-        if (fileLinks === null) {
-            loadOptions();
-        } else {
-            setfilteredFileLinkOptions(fileLinks);
-        }
+        loadOptions();
     }, []);
 
     return (

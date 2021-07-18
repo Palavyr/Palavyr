@@ -22,20 +22,13 @@ export const WidgetStateSwitch = memo(({ isActive }: WidgetStateSwitchProps) => 
 
     const updatewidgetState = async () => {
         const updatedWidgetState = await repository.Configuration.WidgetState.SetWidgetState(!widgetState);
-        SessionStorage.setWidgetState(updatedWidgetState);
         setWidgetState(updatedWidgetState);
     };
 
     useEffect(() => {
         (async () => {
-            const cachedState = SessionStorage.getWidgetState();
-            if (cachedState) {
-                setWidgetState(cachedState);
-            } else {
-                const currentWidgetState = await repository.Configuration.WidgetState.GetWidgetState();
-                SessionStorage.setWidgetState(currentWidgetState);
-                setWidgetState(currentWidgetState);
-            }
+            const currentWidgetState = await repository.Configuration.WidgetState.GetWidgetState();
+            setWidgetState(currentWidgetState);
         })();
     }, []);
 

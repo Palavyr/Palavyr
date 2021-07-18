@@ -59,7 +59,6 @@ export const ImageUpload = ({ setCurrentImageId, currentNode, nodeId, imageId, c
         }
 
         await repository.Configuration.Images.savePreExistingImage(result[0].fileId, nodeId);
-        SessionStorage.clearImageFileLinks();
         setIsLoading(false);
         setSuccessOpen(true);
         closeEditor();

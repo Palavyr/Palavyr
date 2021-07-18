@@ -35,7 +35,6 @@ export const AddNewAreaModal = ({ open, handleClose, setNewArea }: IAddNewAreaMo
     const onAdd = async () => {
         if (areaName !== "") {
             const newArea = await repository.Area.createArea(areaName);
-            SessionStorage.clearAreas();
             setNewArea(newArea);
         }
         handleClose();

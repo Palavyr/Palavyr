@@ -46,8 +46,6 @@ export const ImageReviewUpload = ({ setImageRecords }: ImageReviewUploadProps) =
         const links = await repository.Configuration.Images.getImages();
         setImageRecords(links);
         setIsLoading(false);
-        SessionStorage.clearImageFileLinks();
-        SessionStorage.setFileLinks(links);
         setSuccessOpen(true);
     };
 

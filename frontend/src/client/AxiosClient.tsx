@@ -24,10 +24,10 @@ export enum CacheIds {
     Locale = "Locale",
     Logo = "Logo",
     ShowSeenQueries = "ShowSeenQueries",
-    NeedsPassword = "NeedsPassword"
-
+    NeedsPassword = "NeedsPassword",
+    WidgetState = "WidgetState",
+    Images = "Images",
 }
-
 
 export async function DoRequest<T>(resolve: (value: T | PromiseLike<T>) => void, reject: (reason?: any) => void, request: Promise<AxiosResponse<T>>, cacheId?: CacheIds) {
     if (cacheId) {
