@@ -21,7 +21,6 @@ import {
     VariableDetail,
     LocaleDefinition,
     ProductIds,
-    PlanStatus,
     TableData,
     TableNameMap,
     TreeErrors,
@@ -228,6 +227,9 @@ export class PalavyrRepository {
                 if (imageIds !== undefined && imageIds.length > 0) {
                     // if specifying 1 image
                     const currentCache = SessionStorage.getCacheValue(CacheIds.Images);
+                    if (currentCache === null) {
+                        return this.client.get<FileLink[]>(`images`, CacheIds.Images);
+                    }
                     const availableImages = currentCache.filter((x: FileLink) => imageIds.includes(x.fileId)) as FileLink[];
                     if (availableImages.length === imageIds.length) {
                         return Promise.resolve(availableImages);
