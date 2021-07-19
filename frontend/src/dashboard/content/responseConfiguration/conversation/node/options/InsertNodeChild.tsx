@@ -8,7 +8,15 @@ export interface IInsertNodeChild {
 }
 
 export const InsertNodeChild = ({ node }: IInsertNodeChild) => {
-    const shouldShow = !node.isAnabranchLocked && !node.isAnabranchLocked && !node.isPalavyrAnabranchStart && !node.isTerminal && node.nodeIsSet() && !node.isMultiOptionType;
+    const shouldShow =
+        !node.isAnabranchLocked &&
+        !node.isAnabranchLocked &&
+        !node.isPalavyrAnabranchStart &&
+        !node.isTerminal &&
+        node.nodeIsSet() &&
+        !node.isMultiOptionType &&
+        !node.isLoopbackAnchorType &&
+        node.nodeType !== "Loopback";
 
     const { nodeTypeOptions } = useContext(ConversationTreeContext);
     const onClick = () => {
