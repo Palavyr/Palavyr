@@ -74,11 +74,15 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
         public async Task<SendEmailResultResponse> SendEmail(string accountId, string areaId, EmailRequest emailRequest, CancellationToken cancellationToken)
         {
             var responses = criticalResponses.Compile(emailRequest.KeyValues);
+            logger.LogDebug("Compiled successfully");
 
             var culture = await GetCulture(accountId, cancellationToken);
             var localTempPath = temporaryPath.CreateLocalTempSafeFile(emailRequest.ConversationId);
+            logger.LogDebug("culture and localtemppath gotten");
 
             var area = await configurationRepository.GetAreaById(accountId, areaId);
+            logger.LogDebug($"{area.AreaIdentifier} found");
+
             var additionalFiles = new List<S3SDownloadRequestMeta>();
 
             if (area.SendPdfResponse)

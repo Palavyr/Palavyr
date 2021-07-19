@@ -66,6 +66,9 @@ namespace Palavyr.API.CustomMiddleware
 
                     default:
                         logger.LogError("Unknown Exception");
+                        logger.LogError($"{ex.Source}");
+                        logger.LogError($"{ex.StackTrace}");
+                        logger.LogError($"{ex.GetType().Name}");
                         logger.LogError($"{ex.Message}");
                         break;
                 }
