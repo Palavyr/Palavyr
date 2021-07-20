@@ -78,5 +78,18 @@ namespace Palavyr.Core.Services.DynamicTableService
 
             return nodes;
         }
+
+        public async Task<List<PricingStrategyValidationResult>> ValidatePricingStrategies(List<DynamicTableMeta> pricingStrategyMetas)
+        {
+            var validationResults = new List<PricingStrategyValidationResult>();
+            foreach (var pricingStrategy in pricingStrategyMetas)
+            {
+                var compiler = dynamicTableCompilerRetriever.RetrieveCompiler(pricingStrategy.TableType);
+                var validationResult =  await compiler.ValidatePricingStrategy(pricingStrategy);
+                validationResults.Add(validationResult);   
+            }
+
+            return validationResults;
+        }
     }
 }

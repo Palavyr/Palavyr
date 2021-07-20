@@ -11,27 +11,26 @@ using Palavyr.Core.Services.AuthenticationServices;
 namespace Palavyr.API.Controllers.WidgetLive
 {
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
-
     public class GetWidgetPreCheckController : PalavyrBaseController
     {
         private readonly IConfigurationRepository configurationRepository;
-        private readonly WidgetStatusUtils widgetStatusUtils;
+        private readonly IWidgetStatusChecker widgetStatusChecker;
         private ILogger<GetWidgetPreCheckController> logger;
 
         public GetWidgetPreCheckController(
             IConfigurationRepository configurationRepository,
-            WidgetStatusUtils widgetStatusUtils,
+            IWidgetStatusChecker widgetStatusChecker,
             ILogger<GetWidgetPreCheckController> logger
         )
         {
             this.configurationRepository = configurationRepository;
-            this.widgetStatusUtils = widgetStatusUtils;
+            this.widgetStatusChecker = widgetStatusChecker;
             this.logger = logger;
         }
 
         [HttpGet("widget/pre-check")]
         public async Task<PreCheckResult> Get([FromHeader] string accountId, [FromQuery] bool demo)
-        { 
+        {
             logger.LogDebug($"Was the demo query param found? {demo}");
             logger.LogDebug("Running live widget pre-check...");
             logger.LogDebug("Checking if account ID exists...");
@@ -43,7 +42,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             var widgetPrefs = await configurationRepository.GetWidgetPreferences(accountId);
             var areas = await configurationRepository.GetActiveAreasWithConvoAndDynamicAndStaticTables(accountId);
 
-            var result = await widgetStatusUtils.ExecuteWidgetStatusCheck(accountId, areas, widgetPrefs, demo, logger);
+            var result = await widgetStatusChecker.ExecuteWidgetStatusCheck(accountId, areas, widgetPrefs, demo, logger);
             logger.LogDebug($"Pre-check run successful.");
             logger.LogDebug($"Ready result:{result.IsReady}");
             logger.LogDebug($"Incomplete areas: {result.PreCheckErrors.Select(x => x.AreaName).ToList()} ");

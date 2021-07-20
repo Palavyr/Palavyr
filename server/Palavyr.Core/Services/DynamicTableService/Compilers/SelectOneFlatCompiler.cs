@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -92,6 +93,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                         var unwantedNode = conversationNodes.Single(x => x.NodeId == unwantedChildId);
                         conversationNodes.Remove(unwantedNode);
                     }
+
                     node.TruncateChildIdsAt(0, splitter);
                     var singleChild = conversationNodes.Single(x => x.NodeId == node.NodeChildrenString);
                     singleChild.OptionPath = "Continue";
@@ -150,6 +152,35 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         public Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)
         {
             return Task.FromResult(false);
+        }
+
+        public async Task<PricingStrategyValidationResult> ValidatePricingStrategy(DynamicTableMeta dynamicTableMeta)
+        {
+            var tableId = dynamicTableMeta.TableId;
+            var accountId = dynamicTableMeta.AccountId;
+            var areaId = dynamicTableMeta.AreaIdentifier;
+
+            var reasons = new List<string>();
+            var valid = true;
+
+            var table = await Repository.GetAllRows(accountId, areaId, tableId);
+            var itemNames = table.Select(x => x.Option).ToList();
+
+            if (itemNames.Count() != itemNames.Distinct().Count())
+            {
+                reasons.Add($"Duplicate threshold values found in {dynamicTableMeta.TableTag}");
+                valid = false;
+            }
+
+            if (itemNames.Any(x => string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x)))
+            {
+                reasons.Add($"One or more categories did not contain text in {dynamicTableMeta.TableTag}");
+                valid = false;
+            }
+
+            return valid
+                ? PricingStrategyValidationResult.CreateValid(dynamicTableMeta.TableTag)
+                : PricingStrategyValidationResult.CreateInvalid(dynamicTableMeta.TableTag, reasons);
         }
     }
 }
