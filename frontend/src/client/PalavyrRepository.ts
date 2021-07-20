@@ -26,6 +26,7 @@ import {
     TreeErrors,
     StaticTableRow,
     PlanTypeMeta,
+    DynamicTableData,
 } from "@Palavyr-Types";
 import { filterNodeTypeOptionsOnSubscription } from "dashboard/subscriptionFilters/filterConvoNodeTypes";
 import { SessionStorage } from "localStorage/sessionStorage";
@@ -152,7 +153,7 @@ export class PalavyrRepository {
                 getDynamicTableDataTemplate: async <T>(areaIdentifier: string, tableType: string, tableId: string) =>
                     this.client.get<T>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}/template`),
 
-                getDynamicTableRows: async (areaIdentifier: string, tableType: string, tableId: string) => this.client.get<TableData>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`),
+                getDynamicTableRows: async (areaIdentifier: string, tableType: string, tableId: string) => this.client.get<DynamicTableData>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`),
 
                 saveDynamicTable: async <T>(areaIdentifier: string, tableType: string, tableData: TableData, tableId: string, tableTag: string) => {
                     const response = this.client.put<T, {}>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`, { TableTag: tableTag, [tableType]: tableData });

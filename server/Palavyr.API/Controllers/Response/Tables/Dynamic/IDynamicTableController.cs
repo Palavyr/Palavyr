@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
-    public interface IDynamicTableController<TEntity> where TEntity : class
+    public interface IDynamicTableController<TEntity> where TEntity : class, IDynamicTable<TEntity>, new()
     {
-        Task<List<TEntity>> GetDynamicTableRows(DynamicTableRequest dynamicTableRequest);
+        Task<DynamicTableData<TEntity>> GetDynamicTableRows(DynamicTableRequest dynamicTableRequest);
 
         TEntity GetDynamicRowTemplate(DynamicTableRequest dynamicTableRequest);
 

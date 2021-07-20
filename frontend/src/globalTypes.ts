@@ -798,6 +798,11 @@ export type CategoryNestedThresholdData = {
 
 export type TableData = SelectOneFlatData[] | PercentOfThresholdData[] | BasicThresholdData[] | TwoNestedCategoryData[] | CategoryNestedThresholdData[] | any; // | SelectOneThresholdData etc
 
+export type DynamicTableData = {
+    tableRows: TableData;
+    isInUse: boolean;
+}
+
 export interface IDynamicTableBody {
     tableData: TableData;
     modifier: any;
