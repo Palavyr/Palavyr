@@ -74,7 +74,7 @@ namespace Palavyr.API.Registration.Container
 
             builder.RegisterType<NodeGetter>().AsSelf();
             builder.RegisterType<ConversationOptionSplitter>().As<IConversationOptionSplitter>().SingleInstance();
-            builder.RegisterType<WidgetStatusUtils>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<WidgetStatusChecker>().As<IWidgetStatusChecker>();
             builder.RegisterType<MissingNodeCalculator>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<RequiredNodeCalculator>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<TreeRootFinder>().AsSelf().InstancePerLifetimeScope();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
@@ -120,6 +121,44 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             }
 
             return isTooComplicated;
+        }
+
+        public async Task<PricingStrategyValidationResult> ValidatePricingStrategy(DynamicTableMeta dynamicTableMeta)
+        {
+            var tableId = dynamicTableMeta.TableId;
+            var accountId = dynamicTableMeta.AccountId;
+            var areaId = dynamicTableMeta.AreaIdentifier;
+
+            var reasons = new List<string>();
+            var valid = true;
+
+            var table = await Repository.GetAllRows(accountId, areaId, tableId);
+            var itemIds = table.Select(x => x.ItemId).Distinct();
+
+            foreach (var itemId in itemIds)
+            {
+                var thresholds = table.Where(x => x.ItemId == itemId).Select(x => x.Threshold).ToList();
+                if (thresholds.Distinct().Count() != thresholds.Count())
+                {
+                    reasons.Add($"Duplicate threshold values found in {dynamicTableMeta.TableTag}");
+                    valid = false;
+                }
+
+                if (thresholds.Any(x => x < 0))
+                {
+                    reasons.Add($"Negative threshold value found in {dynamicTableMeta.TableTag}");
+                    valid = false;
+                }
+
+                if (!valid)
+                {
+                    break;
+                }
+            }
+
+            return valid
+                ? PricingStrategyValidationResult.CreateValid(dynamicTableMeta.TableTag)
+                : PricingStrategyValidationResult.CreateInvalid(dynamicTableMeta.TableTag, reasons);
         }
     }
 }

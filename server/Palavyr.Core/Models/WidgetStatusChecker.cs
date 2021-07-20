@@ -6,20 +6,34 @@ using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Nodes;
 using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.Core.Models
 {
-    public class WidgetStatusUtils
+    public interface IWidgetStatusChecker
     {
+        Task<PreCheckResult> ExecuteWidgetStatusCheck(
+            string accountId,
+            List<Area> areas,
+            WidgetPreference widgetPreferences,
+            bool demo,
+            ILogger logger);
+    }
+
+    public class WidgetStatusChecker : IWidgetStatusChecker
+    {
+        private readonly IDynamicTableCompilerOrchestrator orchestrator;
         private readonly RequiredNodeCalculator requiredNodeCalculator;
         private readonly MissingNodeCalculator missingNodeCalculator;
         private readonly NodeOrderChecker nodeOrderChecker;
 
-        public WidgetStatusUtils(
+        public WidgetStatusChecker(
+            IDynamicTableCompilerOrchestrator orchestrator,
             RequiredNodeCalculator requiredNodeCalculator,
             MissingNodeCalculator missingNodeCalculator,
             NodeOrderChecker nodeOrderChecker)
         {
+            this.orchestrator = orchestrator;
             this.requiredNodeCalculator = requiredNodeCalculator;
             this.missingNodeCalculator = missingNodeCalculator;
             this.nodeOrderChecker = nodeOrderChecker;
@@ -65,9 +79,9 @@ namespace Palavyr.Core.Models
                 var nodesSatisfied = AllRequiredNodesSatisfied(nodeList, allRequiredNodes.ToArray(), error);
                 var dynamicNodesAreOrdered = DynamicNodesAreOrdered(nodeList, error);
                 var allImageNodesHaveImagesSet = AllImageNodesSet(nodeList, error);
-                
-                
-                var checks = new List<bool>() {nodesSet, branchesTerminate, nodesSatisfied, dynamicNodesAreOrdered, allImageNodesHaveImagesSet};
+                var allCategoricalPricingStrategiesAreUnique = await AllCategoricalPricingStrategiesAreUnique(area, error);
+
+                var checks = new List<bool>() {nodesSet, branchesTerminate, nodesSatisfied, dynamicNodesAreOrdered, allImageNodesHaveImagesSet, allCategoricalPricingStrategiesAreUnique};
 
                 isReady = checks.TrueForAll(x => x);
                 logger.LogDebug($"Checked isReady status: {isReady}");
@@ -93,7 +107,29 @@ namespace Palavyr.Core.Models
             else
             {
                 logger.LogDebug("WidgetState is false");
-                return PreCheckResult.CreateConvoResult( false, errors);
+                return PreCheckResult.CreateConvoResult(false, errors);
+            }
+        }
+
+        private async Task<bool> AllCategoricalPricingStrategiesAreUnique(Area area, PreCheckError error)
+        {
+            var pricingStrategies = area.DynamicTableMetas;
+            var results = await orchestrator.ValidatePricingStrategies(pricingStrategies);
+            if (results.Count > 0)
+            {
+                foreach (var result in results)
+                {
+                    if (!result.IsValid && result.Reasons != null)
+                    {
+                        error.Reasons.AddRange(result.Reasons);
+                    }
+                }
+
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
 

@@ -109,7 +109,7 @@ namespace Palavyr.Core.Services.PdfService
             {
                 if (tableMeta.TableType == DynamicTableTypes.CreateSelectOneFlat().TableType)
                 {
-                    var tableRows = await genericDynamicTableRepository.GetAllRows(accountId, area.AreaIdentifier);
+                    var tableRows = await genericDynamicTableRepository.GetAllRows(accountId, area.AreaIdentifier, tableMeta.TableId);
 
                     var randomTableRow = tableRows[0]; // TODO: allow this to be specified via frontend
                     const bool perPerson = false; // TODO: Allow to specify true

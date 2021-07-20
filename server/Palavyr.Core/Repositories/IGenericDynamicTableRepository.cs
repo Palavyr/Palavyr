@@ -9,7 +9,6 @@ namespace Palavyr.Core.Repositories
     public interface IGenericDynamicTableRepository<TEntity> where TEntity : class
     {
         Task<List<TEntity>> GetAllRows(string accountId, string areaIdentifier, string tableId);
-        Task<List<TEntity>> GetAllRows(string accountId, string areaIdentifier);
         
         Task SaveTable(
             string accountId,
