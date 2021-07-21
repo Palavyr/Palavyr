@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.Controllers.Response.Tables.Dynamic.TableTypes;
+using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
@@ -79,7 +80,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 
                     return false;
                 });
-            
+
             return new DynamicTableData<TEntity>
             {
                 TableRows = tableRows,
@@ -103,6 +104,9 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 
             logger.LogInformation($"Saving dynamic table: {request.TableId}");
             var (accountId, areaIdentifier, tableId) = request;
+
+            var validationResult = entityCompiler.ValidatePricingStrategyPreSave(dynamicTable);
+            if (!validationResult.IsValid) throw new DomainException("Failed to validate the pricing strategy");
 
             var mappedTableRows = workingEntity.UpdateTable(dynamicTable);
             await genericDynamicTableRepository.SaveTable(

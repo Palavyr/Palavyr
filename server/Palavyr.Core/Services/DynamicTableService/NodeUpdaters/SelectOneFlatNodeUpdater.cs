@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -94,7 +93,7 @@ namespace Palavyr.Core.Services.DynamicTableService.NodeUpdaters
             else if (numberOfIncomingOptions < currentNumberOfOptions)
             {
                 // remove nodes that don't belong anymore
-                var remainingChildrenNodeStrings = currentNodeChildrenStrings.Take(numberOfIncomingOptions).ToList();
+                var remainingChildrenNodeStrings = currentNodeChildrenStrings.Take(numberOfIncomingOptions).ToList(); // NEED TO GRAB INDICES THAT ARE MISSING INSTEAD
                 var excludedChildStrings = currentNodeChildrenStrings.Where(ncs => !remainingChildrenNodeStrings.Contains(ncs));
                 conversationNodes = conversationNodes.Where(n => !excludedChildStrings.Contains(n.NodeId)).ToList();
                 newNodeChildren = newNodeChildren.Take(numberOfIncomingOptions).ToList();

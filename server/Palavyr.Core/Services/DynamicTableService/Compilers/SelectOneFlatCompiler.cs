@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -11,7 +10,6 @@ using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
-using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.DynamicTableService.NodeUpdaters;
@@ -24,20 +22,17 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         private readonly IConfigurationRepository configurationRepository;
         private readonly IConversationOptionSplitter splitter;
         private readonly ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater;
-        private readonly IConversationNodeUpdater nodeUpdater;
 
         public SelectOneFlatCompiler(
             IGenericDynamicTableRepository<SelectOneFlat> repository,
             IConfigurationRepository configurationRepository,
             IConversationOptionSplitter splitter,
-            ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater,
-            IConversationNodeUpdater nodeUpdater
+            ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater
         ) : base(repository)
         {
             this.configurationRepository = configurationRepository;
             this.splitter = splitter;
             this.selectOneFlatNodeUpdater = selectOneFlatNodeUpdater;
-            this.nodeUpdater = nodeUpdater;
         }
 
         public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier, string accountId)
@@ -107,33 +102,44 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return Task.FromResult(false);
         }
 
-        public async Task<PricingStrategyValidationResult> ValidatePricingStrategy(DynamicTableMeta dynamicTableMeta)
+        private PricingStrategyValidationResult ValidationLogic(List<SelectOneFlat> table, string tableTag)
         {
-            var tableId = dynamicTableMeta.TableId;
-            var accountId = dynamicTableMeta.AccountId;
-            var areaId = dynamicTableMeta.AreaIdentifier;
-
             var reasons = new List<string>();
             var valid = true;
 
-            var table = await Repository.GetAllRows(accountId, areaId, tableId);
             var itemNames = table.Select(x => x.Option).ToList();
 
             if (itemNames.Count() != itemNames.Distinct().Count())
             {
-                reasons.Add($"Duplicate threshold values found in {dynamicTableMeta.TableTag}");
+                reasons.Add($"Duplicate threshold values found in {tableTag}");
                 valid = false;
             }
 
             if (itemNames.Any(x => string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x)))
             {
-                reasons.Add($"One or more categories did not contain text in {dynamicTableMeta.TableTag}");
+                reasons.Add($"One or more categories did not contain text in {tableTag}");
                 valid = false;
             }
 
             return valid
-                ? PricingStrategyValidationResult.CreateValid(dynamicTableMeta.TableTag)
-                : PricingStrategyValidationResult.CreateInvalid(dynamicTableMeta.TableTag, reasons);
+                ? PricingStrategyValidationResult.CreateValid(tableTag)
+                : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
+        }
+
+        public PricingStrategyValidationResult ValidatePricingStrategyPreSave(DynamicTable dynamicTable)
+        {
+            var table = dynamicTable.SelectOneFlat;
+            var tableTag = dynamicTable.TableTag;
+            return ValidationLogic(table, tableTag);
+        }
+
+        public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
+        {
+            var tableId = dynamicTableMeta.TableId;
+            var accountId = dynamicTableMeta.AccountId;
+            var areaId = dynamicTableMeta.AreaIdentifier;
+            var table = await Repository.GetAllRows(accountId, areaId, tableId);
+            return ValidationLogic(table, dynamicTableMeta.TableTag);
         }
     }
 }

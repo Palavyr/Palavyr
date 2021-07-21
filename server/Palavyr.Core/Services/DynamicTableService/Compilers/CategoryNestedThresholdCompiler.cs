@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Aliases;
@@ -160,23 +158,18 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return isTooComplicated;
         }
 
-        public async Task<PricingStrategyValidationResult> ValidatePricingStrategy(DynamicTableMeta dynamicTableMeta)
+        private PricingStrategyValidationResult ValidationLogic(List<CategoryNestedThreshold> table, string tableTag)
         {
-            var tableId = dynamicTableMeta.TableId;
-            var accountId = dynamicTableMeta.AccountId;
-            var areaId = dynamicTableMeta.AreaIdentifier;
-
             var reasons = new List<string>();
             var valid = true;
 
-            var table = await Repository.GetAllRows(accountId, areaId, tableId);
             var itemIds = table.Select(x => x.ItemId).Distinct().ToList();
-            
+
             var itemNames = table.Select(x => x.ItemName).Distinct().ToList();
             var numCategories = itemIds.Count();
             if (itemNames.Count() != numCategories)
             {
-                reasons.Add($"Duplicate threshold values found in {dynamicTableMeta.TableTag}");
+                reasons.Add($"Duplicate threshold values found in {tableTag}");
                 valid = false;
             }
 
@@ -191,13 +184,13 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 var thresholds = table.Where(x => x.ItemId == itemId).Select(x => x.Threshold).ToList();
                 if (thresholds.Distinct().Count() != thresholds.Count())
                 {
-                    reasons.Add($"Duplicate threshold values found in {dynamicTableMeta.TableTag}");
+                    reasons.Add($"Duplicate threshold values found in {tableTag}");
                     valid = false;
                 }
 
                 if (thresholds.Any(x => x < 0))
                 {
-                    reasons.Add($"Negative threshold value found in {dynamicTableMeta.TableTag}");
+                    reasons.Add($"Negative threshold value found in {tableTag}");
                     valid = false;
                 }
 
@@ -208,8 +201,24 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             }
 
             return valid
-                ? PricingStrategyValidationResult.CreateValid(dynamicTableMeta.TableTag)
-                : PricingStrategyValidationResult.CreateInvalid(dynamicTableMeta.TableTag, reasons);
+                ? PricingStrategyValidationResult.CreateValid(tableTag)
+                : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
+        }
+
+        public PricingStrategyValidationResult ValidatePricingStrategyPreSave(DynamicTable dynamicTable)
+        {
+            var table = dynamicTable.CategoryNestedThreshold;
+            var tableTag = dynamicTable.TableTag;
+            return ValidationLogic(table, tableTag);
+        }
+
+        public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
+        {
+            var tableId = dynamicTableMeta.TableId;
+            var accountId = dynamicTableMeta.AccountId;
+            var areaId = dynamicTableMeta.AreaIdentifier;
+            var table = await Repository.GetAllRows(accountId, areaId, tableId);
+            return ValidationLogic(table, dynamicTableMeta.TableTag);
         }
 
         List<string> CollectNodeIds(DynamicResponseComponents dynamicResponseComponents)
