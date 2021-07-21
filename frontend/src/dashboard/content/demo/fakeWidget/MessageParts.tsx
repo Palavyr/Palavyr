@@ -3,6 +3,7 @@ import { WidgetPreferences } from "@Palavyr-Types";
 import classNames from "classnames";
 import React from "react";
 import { FakeMessage } from "./fakeMessages";
+import { v4 as uuid } from "uuid";
 
 type StyleProps = {
     backgroundColor: string;
@@ -44,17 +45,23 @@ interface IWrapMessages {
 
 const MessageWrapper = ({ customPreferences, children }: IWrapMessages) => {
     const cls = useStyles({ color: customPreferences.chatFontColor, backgroundColor: customPreferences.chatBubbleColor });
-    return <Box className={classNames(cls.messageText, cls.layout)}>{children}</Box>;
+    const key = uuid();
+    return (
+        <Box key={key} component="span" className={classNames(cls.messageText, cls.layout)}>
+            {children}
+        </Box>
+    );
 };
 
 export const getComponentToRender = (message: FakeMessage, customPreferences: WidgetPreferences) => {
     const ComponentToRender = message.component;
+    const id = uuid();
     if (message.sender === "response") {
         return (
-            <MessageWrapper customPreferences={customPreferences}>
-                <ComponentToRender />
+            <MessageWrapper key={id + id} customPreferences={customPreferences}>
+                <ComponentToRender key={id} />
             </MessageWrapper>
         );
     }
-    return <ComponentToRender />;
+    return <ComponentToRender key={id} />;
 };

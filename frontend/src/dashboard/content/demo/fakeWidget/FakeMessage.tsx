@@ -4,6 +4,7 @@ import format from "date-fns/format";
 import React from "react";
 import { FakeMessage } from "./fakeMessages";
 import { getComponentToRender } from "./MessageParts";
+import { v4 as uuid } from "uuid";
 
 const useStyles = makeStyles((theme) => ({
     message: {
@@ -21,10 +22,14 @@ export interface IFakeMessageProps {
 
 export const FakeMessageComponent = ({ message, index, prefs }: IFakeMessageProps) => {
     const cls = useStyles();
+    const Component = getComponentToRender(message, prefs);
+
+    const id = uuid();
+
     return (
         <>
             <div className={cls.message} key={`${index}-${format(message.timestamp, "hh:mm")}`}>
-                {getComponentToRender(message, prefs)}
+                {Component}
             </div>
         </>
     );

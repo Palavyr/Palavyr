@@ -7,7 +7,6 @@ using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Conversation
 {
-
     public class ModifyConversationNodeController : PalavyrBaseController
     {
         private readonly IConfigurationRepository configurationRepository;
@@ -24,10 +23,14 @@ namespace Palavyr.API.Controllers.Conversation
 
         [HttpPut("configure-conversations/{areaId}/nodes/{nodeId}")]
         public async Task<List<ConversationNode>> Modify(
-            [FromHeader] string accountId,
-            [FromRoute] string nodeId,
-            [FromRoute] string areaId,
-            [FromBody] ConversationNode newNode)
+            [FromHeader]
+            string accountId,
+            [FromRoute]
+            string nodeId,
+            [FromRoute]
+            string areaId,
+            [FromBody]
+            ConversationNode newNode)
         {
             var updatedConversation = await configurationRepository.UpdateConversationNode(accountId, areaId, nodeId, newNode);
             await configurationRepository.CommitChangesAsync();

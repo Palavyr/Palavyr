@@ -57,8 +57,11 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     // only update if the node exists in the conversation
                     node.ValueOptions = valueOptionString;
                     node.NodeComponentType = DefaultNodeTypeOptions.MultipleChoiceContinue.StringName;
+
+                    var originalNumberOfChildNodes = splitter.SplitNodeChildrenString(node.NodeChildrenString).Length;
+
                     var newChildNodes = new List<ConversationNode>();
-                    for (var i = 0; i < currentSelectOneFlatUpdate.Count - 1; i++)
+                    for (var i = 0; i < currentSelectOneFlatUpdate.Count - originalNumberOfChildNodes; i++)
                     {
                         var newDefaultNode = ConversationNode.CreateDefaultNode(areaIdentifier, accountId).Single();
                         newChildNodes.Add(newDefaultNode);
@@ -67,20 +70,14 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
                     var nodeChildIds = splitter.SplitNodeChildrenString(node.NodeChildrenString);
                     if (nodeChildIds.Length != valueOptionsArray.Count) throw new Exception("We stuffed up.");
+                    conversationNodes.AddRange(newChildNodes);
 
-                    var originalChild = conversationNodes.Single(x => x.NodeId == nodeChildIds[0]);
-                    originalChild.OptionPath = valueOptionsArray[0];
-
-
-                    for (var i = 1; i < nodeChildIds.Length; i++)
+                    for (var i = 0; i < nodeChildIds.Length; i++)
                     {
-                        var nodeChildId = nodeChildIds[i];
-                        var childNode = newChildNodes.Single(x => x.NodeId == nodeChildId);
-                        var optionPath = valueOptionsArray[i];
-                        childNode.OptionPath = optionPath;
+                        var curNode = conversationNodes.Single(x => x.NodeId == nodeChildIds[i]);
+                        curNode.OptionPath = valueOptionsArray[i];
                     }
 
-                    conversationNodes.AddRange(newChildNodes);
                     await nodeUpdater.UpdateConversation(accountId, areaIdentifier, conversationNodes, CancellationToken.None);
                 }
                 else

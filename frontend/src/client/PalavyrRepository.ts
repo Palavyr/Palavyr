@@ -29,6 +29,7 @@ import {
     DynamicTableData,
 } from "@Palavyr-Types";
 import { filterNodeTypeOptionsOnSubscription } from "dashboard/subscriptionFilters/filterConvoNodeTypes";
+import { Session } from "inspector";
 import { SessionStorage } from "localStorage/sessionStorage";
 import { AxiosClient, CacheIds } from "./AxiosClient";
 import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./clientUtils";
@@ -153,7 +154,8 @@ export class PalavyrRepository {
                 getDynamicTableDataTemplate: async <T>(areaIdentifier: string, tableType: string, tableId: string) =>
                     this.client.get<T>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}/template`),
 
-                getDynamicTableRows: async (areaIdentifier: string, tableType: string, tableId: string) => this.client.get<DynamicTableData>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`),
+                getDynamicTableRows: async (areaIdentifier: string, tableType: string, tableId: string) =>
+                    this.client.get<DynamicTableData>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`),
 
                 saveDynamicTable: async <T>(areaIdentifier: string, tableType: string, tableData: TableData, tableId: string, tableTag: string) => {
                     const response = this.client.put<T, {}>(`tables/dynamic/${tableType}/area/${areaIdentifier}/table/${tableId}`, { TableTag: tableTag, [tableType]: tableData });
@@ -272,6 +274,11 @@ export class PalavyrRepository {
             this.client.put<ConvoNode[], {}>(`configure-conversations/${areaIdentifier}`, { Transactions: nodelist }, [CacheIds.PalavyrConfiguration, areaIdentifier].join("-") as CacheIds),
         ModifyConversationNode: async (nodeId: string, areaIdentifier: string, updatedNode: ConvoNode) =>
             this.client.put<ConvoNode[], {}>(`configure-conversations/${areaIdentifier}/nodes/${nodeId}`, updatedNode, [CacheIds.PalavyrConfiguration, areaIdentifier].join("-") as CacheIds),
+        ModifyConversationNodeText: async (nodeId: string, areaIdentifier: string, updatedNodeText: string) => {
+            const result = this.client.put<ConvoNode | null, {}>(`configure-conversations/${areaIdentifier}/nodes/${nodeId}/text`, { UpdatedNodeText: updatedNodeText });
+            SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, areaIdentifier].join("-"));
+            return result;
+        },
 
         // TODO: Deprecate eventually
         EnsureDBIsValid: async () => this.client.post(`configure-conversations/ensure-db-valid`),

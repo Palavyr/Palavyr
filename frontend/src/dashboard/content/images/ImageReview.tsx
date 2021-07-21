@@ -1,5 +1,5 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { CircularProgress, Grid, makeStyles, TableContainer } from "@material-ui/core";
+import { CircularProgress, Grid, makeStyles, Table, TableContainer } from "@material-ui/core";
 import { FileLink } from "@Palavyr-Types";
 import React, { useCallback, useEffect, useState } from "react";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
@@ -51,8 +51,10 @@ export const ImageReview = () => {
             <Grid container style={{ width: "100%" }}>
                 <Grid item xs={6}>
                     <TableContainer style={{ width: "100%", paddingLeft: "1rem", paddingRight: "1rem" }}>
-                        <ImageRecordTableHeader />
-                        {imageRecords && <ImageRecordTableBody imageRecords={imageRecords} setImageRecords={setImageRecords} setCurrentPreview={setCurrentPreview} setShowSpinner={setShowSpinner} />}
+                        <Table>
+                            <ImageRecordTableHeader />
+                            {imageRecords && <ImageRecordTableBody imageRecords={imageRecords} setImageRecords={setImageRecords} setCurrentPreview={setCurrentPreview} setShowSpinner={setShowSpinner} />}
+                        </Table>
                     </TableContainer>
                 </Grid>
                 <Grid item xs={6}>
