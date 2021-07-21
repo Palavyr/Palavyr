@@ -27,9 +27,12 @@ export class SelectOneFlatModifier {
     removeOption(tableData: SelectOneFlatData[], dataIndex: number) {
         const newRows: SelectOneFlatData[] = [];
         if (tableData.length > 1) {
+            let counter = 0;
             tableData.forEach((row, index: number) => {
                 if (index !== dataIndex) {
+                    row.rowOrder = counter;
                     newRows.push(row);
+                    counter++;
                 }
             });
             this.setTables(newRows);

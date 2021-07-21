@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +14,7 @@ using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Services.DynamicTableService.NodeUpdaters;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
@@ -23,17 +23,20 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
     {
         private readonly IConfigurationRepository configurationRepository;
         private readonly IConversationOptionSplitter splitter;
+        private readonly ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater;
         private readonly IConversationNodeUpdater nodeUpdater;
 
         public SelectOneFlatCompiler(
             IGenericDynamicTableRepository<SelectOneFlat> repository,
             IConfigurationRepository configurationRepository,
             IConversationOptionSplitter splitter,
+            ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater,
             IConversationNodeUpdater nodeUpdater
         ) : base(repository)
         {
             this.configurationRepository = configurationRepository;
             this.splitter = splitter;
+            this.selectOneFlatNodeUpdater = selectOneFlatNodeUpdater;
             this.nodeUpdater = nodeUpdater;
         }
 
@@ -48,54 +51,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
             if (node != null && currentSelectOneFlatUpdate != null)
             {
-                if (tableMeta.ValuesAsPaths)
-                {
-                    var valueOptionsArray = currentSelectOneFlatUpdate.Select(x => x.Option).ToList();
-                    if (splitter.SplitNodeChildrenString(node.NodeChildrenString).Length == valueOptionsArray.Count) return;
-
-                    var valueOptionString = string.Join(Delimiters.ValueOptionDelimiter, valueOptionsArray);
-                    // only update if the node exists in the conversation
-                    node.ValueOptions = valueOptionString;
-                    node.NodeComponentType = DefaultNodeTypeOptions.MultipleChoiceContinue.StringName;
-
-                    var originalNumberOfChildNodes = splitter.SplitNodeChildrenString(node.NodeChildrenString).Length;
-
-                    var newChildNodes = new List<ConversationNode>();
-                    for (var i = 0; i < currentSelectOneFlatUpdate.Count - originalNumberOfChildNodes; i++)
-                    {
-                        var newDefaultNode = ConversationNode.CreateDefaultNode(areaIdentifier, accountId).Single();
-                        newChildNodes.Add(newDefaultNode);
-                        node.AddChildId(newDefaultNode.NodeId!, splitter);
-                    }
-
-                    var nodeChildIds = splitter.SplitNodeChildrenString(node.NodeChildrenString);
-                    if (nodeChildIds.Length != valueOptionsArray.Count) throw new Exception("We stuffed up.");
-                    conversationNodes.AddRange(newChildNodes);
-
-                    for (var i = 0; i < nodeChildIds.Length; i++)
-                    {
-                        var curNode = conversationNodes.Single(x => x.NodeId == nodeChildIds[i]);
-                        curNode.OptionPath = valueOptionsArray[i];
-                    }
-
-                    await nodeUpdater.UpdateConversation(accountId, areaIdentifier, conversationNodes, CancellationToken.None);
-                }
-                else
-                {
-                    node.ValueOptions = "Continue";
-                    node.NodeComponentType = DefaultNodeTypeOptions.MultipleChoiceAsPath.StringName;
-                    var unwantedChildIds = splitter.SplitNodeChildrenString(node.NodeChildrenString)[1..];
-                    foreach (var unwantedChildId in unwantedChildIds)
-                    {
-                        var unwantedNode = conversationNodes.Single(x => x.NodeId == unwantedChildId);
-                        conversationNodes.Remove(unwantedNode);
-                    }
-
-                    node.TruncateChildIdsAt(0, splitter);
-                    var singleChild = conversationNodes.Single(x => x.NodeId == node.NodeChildrenString);
-                    singleChild.OptionPath = "Continue";
-                    await nodeUpdater.UpdateConversation(accountId, areaIdentifier, conversationNodes, CancellationToken.None);
-                }
+                await selectOneFlatNodeUpdater.UpdateConversationNode(context, currentSelectOneFlatUpdate, tableMeta, node, conversationNodes, accountId, areaIdentifier);
             }
 
             // do not save the context changes here. Following the unit of work pattern,we collect all changes, validate, and then save/commit..

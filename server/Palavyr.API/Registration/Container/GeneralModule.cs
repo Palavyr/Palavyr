@@ -21,6 +21,7 @@ using Palavyr.Core.Services.ConversationServices;
 using Palavyr.Core.Services.Deletion;
 using Palavyr.Core.Services.DynamicTableService;
 using Palavyr.Core.Services.DynamicTableService.Compilers;
+using Palavyr.Core.Services.DynamicTableService.NodeUpdaters;
 using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.EmailService.EmailResponse;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
@@ -113,6 +114,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<BusinessRules>().As<IBusinessRules>();
             builder.RegisterType<DetermineCurrentEnvironment>().As<IDetermineCurrentEnvironment>();
             builder.RegisterType<ConversationNodeUpdater>().As<IConversationNodeUpdater>();
+            builder.RegisterType<SelectOneFlatNodeUpdater>().As<ISelectOneFlatNodeUpdater>();
         }
     }
 }
