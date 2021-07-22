@@ -29,7 +29,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         }
 
         [HttpGet("area/{areaId}/table/{tableId}")]
-        public async Task<List<TEntity>> GetDynamicTableRows([FromRequest] DynamicTableRequest request)
+        public async Task<DynamicTableData<TEntity>> GetDynamicTableRows([FromRequest] DynamicTableRequest request)
         {
             return await handler.GetDynamicTableRows(request);
         }

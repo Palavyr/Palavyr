@@ -66,12 +66,12 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
                     <strong>Upgrade your subscription to add more dynamic tables</strong>
                 </Typography>
                 <Button disabled={true} startIcon={<AddBoxIcon />} variant="contained" color="primary" onClick={addDynamicTable}>
-                    <Typography>Add Dynamic Table</Typography>
+                    <Typography>Add Pricing Strategy</Typography>
                 </Button>
             </>
         ) : (
             <Button startIcon={<AddBoxIcon />} variant="contained" color="primary" onClick={addDynamicTable}>
-                <Typography>Add Dynamic Table</Typography>
+                <Typography>Add Pricing Strategy</Typography>
             </Button>
         );
 

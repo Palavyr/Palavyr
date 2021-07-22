@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Services.AmazonServices.S3Service;
@@ -131,12 +130,21 @@ namespace Palavyr.Core.Repositories
             return conversation;
         }
 
-        public async Task<ConversationNode>? GetConversationNodeById(string nodeId)
+        public async Task<ConversationNode?> GetConversationNodeById(string nodeId)
         {
             logger.LogDebug($"Retrieving Conversation Node {nodeId}");
             var result = await dashContext
                 .ConversationNodes
                 .SingleOrDefaultAsync(row => row.NodeId == nodeId);
+            return result;
+        }
+
+        public async Task<ConversationNode?> GetConversationNodeById(string nodeId, string accountId)
+        {
+            logger.LogDebug($"Retrieving Conversation Node {nodeId}");
+            var result = await dashContext
+                .ConversationNodes
+                .SingleOrDefaultAsync(row => row.NodeId == nodeId && row.AccountId == accountId);
             return result;
         }
 
@@ -182,6 +190,18 @@ namespace Palavyr.Core.Repositories
         {
             var toRemove = await GetConversationNodeById(nodeId);
             dashContext.ConversationNodes.RemoveRange(toRemove);
+        }
+
+        public async Task<ConversationNode?> UpdateConversationNodeText(string accountId, string areaId, string nodeId, string nodeTextUpdate)
+        {
+            var node = await GetConversationNodeById(nodeId, accountId);
+            if (node != null)
+            {
+                node.Text = nodeTextUpdate;
+                await CommitChangesAsync();
+            }
+
+            return node;
         }
 
         public async Task<List<ConversationNode>> UpdateConversationNode(string accountId, string areaId, string nodeId, ConversationNode newNode)

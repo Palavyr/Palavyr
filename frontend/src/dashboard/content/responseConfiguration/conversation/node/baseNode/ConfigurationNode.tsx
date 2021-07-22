@@ -44,7 +44,6 @@ export const ConfigurationNode = ({ currentNode, pBuffer }: IConfigurationNode) 
 
     const cls = useStyles({ buffer: pBuffer });
     return (
-        // <Fade>
         <>
             <div className={classNames(treelinkClassName, cls.treeItem)}>
                 <div className={cls.treeBlockWrap}>
@@ -81,6 +80,5 @@ export const ConfigurationNode = ({ currentNode, pBuffer }: IConfigurationNode) 
                     return <SteppedLineTo key={[line.from, index].join("-")} from={line.from} to={line.to} treeLinkClassName={treelinkClassName} />;
                 })}
         </>
-        // </Fade>
     );
 };

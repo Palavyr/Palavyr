@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Amazon.S3;
@@ -72,6 +73,9 @@ namespace Palavyr.API.CustomMiddleware
                         logger.LogError($"{ex.Message}");
                         break;
                 }
+
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                // await context.Response.WriteAsync(S new {Error="WOW"}, "WOW");
             }
         }
     }

@@ -84,7 +84,7 @@ export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tab
                         <FormControlLabel label="Use Options as Paths" control={<Checkbox checked={tableMeta.valuesAsPaths} onChange={useOptionsAsPathsOnChange} />} />
                     </div>
                     <div className={classes.alignRight}>
-                        <SaveOrCancel position="left" onDelete={deleteAction} onSave={onSave} onCancel={async () => window.location.reload()} />
+                        <SaveOrCancel position="right" onDelete={deleteAction} onSave={onSave} onCancel={async () => window.location.reload()} />
                     </div>
                 </div>
             </AccordionActions>

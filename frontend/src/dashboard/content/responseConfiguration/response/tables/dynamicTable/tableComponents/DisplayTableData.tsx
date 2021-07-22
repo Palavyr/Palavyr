@@ -10,9 +10,9 @@ export interface IDisplayTableData {
 export const DisplayTableData = ({ tableData, properties }: IDisplayTableData) => {
     return (
         <>
-            {isDevelopmentStage() && tableData && tableData.map((x: any) => {
+            {isDevelopmentStage() && tableData && tableData.map((x: any, index: number) => {
                 return (
-                    <div style={{ fontSize: "14pt" }}>
+                    <div key={index} style={{ fontSize: "14pt" }}>
                         <pre>{JSON.stringify(x, properties, "")}</pre>
                     </div>
                 );

@@ -60,11 +60,13 @@ export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: 
                 {widgetPreferences &&
                     rowOne(widgetPreferences).map((picker: ColorPickerType, index: number) => {
                         return (
-                            <div>
+                            <div key={index}>
                                 <Typography align="center" variant="body1" className={cls.pickerTitle} gutterBottom>
                                     {picker.name}
                                 </Typography>
-                                <SpaceEvenly>{picker.variable && <ChromePicker disableAlpha color={picker.variable} onChangeComplete={(color: { hex: React.SetStateAction<string> }) => picker.method(color.hex)} />}</SpaceEvenly>
+                                <SpaceEvenly>
+                                    {picker.variable && <ChromePicker disableAlpha color={picker.variable} onChangeComplete={(color: { hex: React.SetStateAction<string> }) => picker.method(color.hex)} />}
+                                </SpaceEvenly>
                             </div>
                         );
                     })}
@@ -73,11 +75,13 @@ export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: 
                 {widgetPreferences &&
                     rowTwo(widgetPreferences).map((picker: ColorPickerType, index: number) => {
                         return (
-                            <div>
+                            <div key={9999 - index}>
                                 <Typography align="center" variant="body1" className={cls.pickerTitle} gutterBottom>
                                     {picker.name}
                                 </Typography>
-                                <SpaceEvenly>{picker.variable && <ChromePicker disableAlpha color={picker.variable} onChangeComplete={(color: { hex: React.SetStateAction<string> }) => picker.method(color.hex)} />}</SpaceEvenly>
+                                <SpaceEvenly>
+                                    {picker.variable && <ChromePicker disableAlpha color={picker.variable} onChangeComplete={(color: { hex: React.SetStateAction<string> }) => picker.method(color.hex)} />}
+                                </SpaceEvenly>
                             </div>
                         );
                     })}

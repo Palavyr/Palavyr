@@ -71,14 +71,16 @@ export const SingleDynamicFeeTable = ({
     const [dynamicTableData, setDynamicTableData] = useState<TableData>();
     const [selection, setSelection] = useState<string>(""); // just the node type
     const [tableTag, setTableTag] = useState<string>("");
+    const [disabledSelector, setDisabledSelector] = useState<boolean>(false);
 
     const loadDynamicData = useCallback(async () => {
         setTableMeta(defaultTableMeta);
-        const tableData = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, defaultTableMeta.tableType, defaultTableMeta.tableId);
+        const { tableRows, isInUse } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, defaultTableMeta.tableType, defaultTableMeta.tableId);
 
-        setDynamicTableData(tableData);
+        setDynamicTableData(tableRows);
         setSelection(defaultTableMeta.prettyName);
         setTableTag(defaultTableMeta.tableTag);
+        setDisabledSelector(isInUse);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -89,8 +91,8 @@ export const SingleDynamicFeeTable = ({
     useEffect(() => {
         (async () => {
             if (tableMeta !== undefined) {
-                var tableDataResponse = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, tableMeta.tableType, tableMeta.tableId);
-                setDynamicTableData(tableDataResponse);
+                const { tableRows, isInUse } = await repository.Configuration.Tables.Dynamic.getDynamicTableRows(areaIdentifier, defaultTableMeta.tableType, defaultTableMeta.tableId);
+                setDynamicTableData(tableRows);
             }
         })();
         return () => {};
@@ -114,7 +116,7 @@ export const SingleDynamicFeeTable = ({
 
     const deleteAction = async () => {
         await repository.Configuration.Tables.Dynamic.deleteDynamicTable(areaIdentifier, defaultTableMeta.tableType, defaultTableMeta.tableId);
-        var newTableMetas = removeByIndex(tableMetas, tableMetaIndex);
+        const newTableMetas = removeByIndex(tableMetas, tableMetaIndex);
         setTableMetas(cloneDeep(newTableMetas));
         changeParentState(!parentState);
         setLoaded(false);
@@ -143,7 +145,13 @@ export const SingleDynamicFeeTable = ({
                             <TableBody>
                                 <TableRow>
                                     <TableCell>
-                                        <DynamicTableSelector selection={selection} handleChange={handleChange} tableOptions={availablDynamicTableOptions} />
+                                        <DynamicTableSelector
+                                            toolTipTitle={disabledSelector ? "Disabled when pricing strategy is used in the Palavyr configuration." : ""}
+                                            disabled={disabledSelector}
+                                            selection={selection}
+                                            handleChange={handleChange}
+                                            tableOptions={availablDynamicTableOptions}
+                                        />
                                     </TableCell>
                                     <TableCell></TableCell>
                                     <TableCell></TableCell>

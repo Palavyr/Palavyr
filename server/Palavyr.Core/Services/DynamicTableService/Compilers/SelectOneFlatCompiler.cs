@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +10,9 @@ using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
-using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Services.DynamicTableService.NodeUpdaters;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
@@ -23,18 +21,18 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
     {
         private readonly IConfigurationRepository configurationRepository;
         private readonly IConversationOptionSplitter splitter;
-        private readonly IConversationNodeUpdater nodeUpdater;
+        private readonly ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater;
 
         public SelectOneFlatCompiler(
             IGenericDynamicTableRepository<SelectOneFlat> repository,
             IConfigurationRepository configurationRepository,
             IConversationOptionSplitter splitter,
-            IConversationNodeUpdater nodeUpdater
+            ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater
         ) : base(repository)
         {
             this.configurationRepository = configurationRepository;
             this.splitter = splitter;
-            this.nodeUpdater = nodeUpdater;
+            this.selectOneFlatNodeUpdater = selectOneFlatNodeUpdater;
         }
 
         public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier, string accountId)
@@ -48,57 +46,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
             if (node != null && currentSelectOneFlatUpdate != null)
             {
-                if (tableMeta.ValuesAsPaths)
-                {
-                    var valueOptionsArray = currentSelectOneFlatUpdate.Select(x => x.Option).ToList();
-                    if (splitter.SplitNodeChildrenString(node.NodeChildrenString).Length == valueOptionsArray.Count) return;
-
-                    var valueOptionString = string.Join(Delimiters.ValueOptionDelimiter, valueOptionsArray);
-                    // only update if the node exists in the conversation
-                    node.ValueOptions = valueOptionString;
-                    node.NodeComponentType = DefaultNodeTypeOptions.MultipleChoiceContinue.StringName;
-                    var newChildNodes = new List<ConversationNode>();
-                    for (var i = 0; i < currentSelectOneFlatUpdate.Count - 1; i++)
-                    {
-                        var newDefaultNode = ConversationNode.CreateDefaultNode(areaIdentifier, accountId).Single();
-                        newChildNodes.Add(newDefaultNode);
-                        node.AddChildId(newDefaultNode.NodeId!, splitter);
-                    }
-
-                    var nodeChildIds = splitter.SplitNodeChildrenString(node.NodeChildrenString);
-                    if (nodeChildIds.Length != valueOptionsArray.Count) throw new Exception("We stuffed up.");
-
-                    var originalChild = conversationNodes.Single(x => x.NodeId == nodeChildIds[0]);
-                    originalChild.OptionPath = valueOptionsArray[0];
-
-
-                    for (var i = 1; i < nodeChildIds.Length; i++)
-                    {
-                        var nodeChildId = nodeChildIds[i];
-                        var childNode = newChildNodes.Single(x => x.NodeId == nodeChildId);
-                        var optionPath = valueOptionsArray[i];
-                        childNode.OptionPath = optionPath;
-                    }
-
-                    conversationNodes.AddRange(newChildNodes);
-                    await nodeUpdater.UpdateConversation(accountId, areaIdentifier, conversationNodes, CancellationToken.None);
-                }
-                else
-                {
-                    node.ValueOptions = "Continue";
-                    node.NodeComponentType = DefaultNodeTypeOptions.MultipleChoiceAsPath.StringName;
-                    var unwantedChildIds = splitter.SplitNodeChildrenString(node.NodeChildrenString)[1..];
-                    foreach (var unwantedChildId in unwantedChildIds)
-                    {
-                        var unwantedNode = conversationNodes.Single(x => x.NodeId == unwantedChildId);
-                        conversationNodes.Remove(unwantedNode);
-                    }
-
-                    node.TruncateChildIdsAt(0, splitter);
-                    var singleChild = conversationNodes.Single(x => x.NodeId == node.NodeChildrenString);
-                    singleChild.OptionPath = "Continue";
-                    await nodeUpdater.UpdateConversation(accountId, areaIdentifier, conversationNodes, CancellationToken.None);
-                }
+                await selectOneFlatNodeUpdater.UpdateConversationNode(context, currentSelectOneFlatUpdate, tableMeta, node, conversationNodes, accountId, areaIdentifier);
             }
 
             // do not save the context changes here. Following the unit of work pattern,we collect all changes, validate, and then save/commit..
@@ -154,33 +102,44 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return Task.FromResult(false);
         }
 
-        public async Task<PricingStrategyValidationResult> ValidatePricingStrategy(DynamicTableMeta dynamicTableMeta)
+        private PricingStrategyValidationResult ValidationLogic(List<SelectOneFlat> table, string tableTag)
         {
-            var tableId = dynamicTableMeta.TableId;
-            var accountId = dynamicTableMeta.AccountId;
-            var areaId = dynamicTableMeta.AreaIdentifier;
-
             var reasons = new List<string>();
             var valid = true;
 
-            var table = await Repository.GetAllRows(accountId, areaId, tableId);
             var itemNames = table.Select(x => x.Option).ToList();
 
             if (itemNames.Count() != itemNames.Distinct().Count())
             {
-                reasons.Add($"Duplicate threshold values found in {dynamicTableMeta.TableTag}");
+                reasons.Add($"Duplicate threshold values found in {tableTag}");
                 valid = false;
             }
 
             if (itemNames.Any(x => string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x)))
             {
-                reasons.Add($"One or more categories did not contain text in {dynamicTableMeta.TableTag}");
+                reasons.Add($"One or more categories did not contain text in {tableTag}");
                 valid = false;
             }
 
             return valid
-                ? PricingStrategyValidationResult.CreateValid(dynamicTableMeta.TableTag)
-                : PricingStrategyValidationResult.CreateInvalid(dynamicTableMeta.TableTag, reasons);
+                ? PricingStrategyValidationResult.CreateValid(tableTag)
+                : PricingStrategyValidationResult.CreateInvalid(tableTag, reasons);
+        }
+
+        public PricingStrategyValidationResult ValidatePricingStrategyPreSave(DynamicTable dynamicTable)
+        {
+            var table = dynamicTable.SelectOneFlat;
+            var tableTag = dynamicTable.TableTag;
+            return ValidationLogic(table, tableTag);
+        }
+
+        public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
+        {
+            var tableId = dynamicTableMeta.TableId;
+            var accountId = dynamicTableMeta.AccountId;
+            var areaId = dynamicTableMeta.AreaIdentifier;
+            var table = await Repository.GetAllRows(accountId, areaId, tableId);
+            return ValidationLogic(table, dynamicTableMeta.TableTag);
         }
     }
 }

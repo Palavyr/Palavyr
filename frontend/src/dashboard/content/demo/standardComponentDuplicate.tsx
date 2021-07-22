@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, PropTypes } from "@material-ui/core";
+import { Button, PropTypes, TableBody } from "@material-ui/core";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { v4 as uuid } from "uuid";
 import { Table, TableRow, TableCell, makeStyles, TextField } from "@material-ui/core";
@@ -123,7 +123,9 @@ export class StandardComponents {
         return () => {
             return (
                 <Table>
-                    <SingleRowSingleCell>{text}</SingleRowSingleCell>
+                    <TableBody>
+                        <SingleRowSingleCell>{text}</SingleRowSingleCell>
+                    </TableBody>
                 </Table>
             );
         };
@@ -135,16 +137,18 @@ export class StandardComponents {
             const cls = useStyles();
             return (
                 <Table>
-                    <SingleRowSingleCell>{text}</SingleRowSingleCell>
-                    {valueOptions.map((valueOption: string) => {
-                        return (
-                            <TableRow>
-                                <TableCell className={cls.tableCell}>
-                                    <ResponseButton prefs={this.prefs} disabled={false} key={valueOption + "-" + uniqId} text={valueOption} onClick={() => null} />
-                                </TableCell>
-                            </TableRow>
-                        );
-                    })}
+                    <TableBody>
+                        <SingleRowSingleCell>{text}</SingleRowSingleCell>
+                        {valueOptions.map((valueOption: string, index: number) => {
+                            return (
+                                <TableRow key={[index, uniqId].join("-")}>
+                                    <TableCell className={cls.tableCell}>
+                                        <ResponseButton prefs={this.prefs} disabled={false} key={valueOption + "-" + uniqId} text={valueOption} onClick={() => null} />
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
                 </Table>
             );
         };
@@ -155,17 +159,19 @@ export class StandardComponents {
             const cls = useStyles(this.prefs);
             return (
                 <Table>
-                    <SingleRowSingleCell>{text}</SingleRowSingleCell>
-                    <TableRow>
-                        <TableCell className={cls.root}>
-                            <TextField InputProps={{ className: cls.textField }} disabled={false} fullWidth label="" type="number" />
-                        </TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className={cls.root} align="right">
-                            <ResponseButton prefs={this.prefs} disabled={false} onClick={() => null} />
-                        </TableCell>
-                    </TableRow>
+                    <TableBody>
+                        <SingleRowSingleCell>{text}</SingleRowSingleCell>
+                        <TableRow>
+                            <TableCell className={cls.root}>
+                                <TextField InputProps={{ className: cls.textField }} disabled={false} fullWidth label="" type="number" />
+                            </TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell className={cls.root} align="right">
+                                <ResponseButton prefs={this.prefs} disabled={false} onClick={() => null} />
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
                 </Table>
             );
         };
@@ -173,9 +179,10 @@ export class StandardComponents {
 
     public makeUserMessage(text: string, timestamp: Date): React.ElementType<{}> {
         const cls = useStyles();
+        const key = uuid();
         return () => {
             return (
-                <div className={cls.userMessageContainer}>
+                <div key={key} className={cls.userMessageContainer}>
                     <div className={cls.messageText} dangerouslySetInnerHTML={{ __html: text }} />
                     <span className={cls.timestamp}>{format(timestamp, "hh:mm")}</span>
                 </div>

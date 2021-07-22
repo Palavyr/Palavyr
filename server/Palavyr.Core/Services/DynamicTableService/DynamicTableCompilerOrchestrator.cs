@@ -85,7 +85,7 @@ namespace Palavyr.Core.Services.DynamicTableService
             foreach (var pricingStrategy in pricingStrategyMetas)
             {
                 var compiler = dynamicTableCompilerRetriever.RetrieveCompiler(pricingStrategy.TableType);
-                var validationResult =  await compiler.ValidatePricingStrategy(pricingStrategy);
+                var validationResult =  await compiler.ValidatePricingStrategyPostSave(pricingStrategy);
                 validationResults.Add(validationResult);   
             }
 
