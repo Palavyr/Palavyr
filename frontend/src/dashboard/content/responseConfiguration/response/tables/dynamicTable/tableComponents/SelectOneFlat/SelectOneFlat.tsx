@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { SelectOneFlatModifier } from "./SelectOneFlatModifier";
 import { TableContainer, Paper, Table, Button, FormControlLabel, Checkbox, AccordionActions, makeStyles } from "@material-ui/core";
@@ -10,6 +10,7 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { cloneDeep } from "lodash";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles({
     tableStyles: {
@@ -41,7 +42,7 @@ const useStyles = makeStyles({
 });
 
 export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: DynamicTableProps) => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const classes = useStyles();
 
     const modifier = new SelectOneFlatModifier(setTableData);

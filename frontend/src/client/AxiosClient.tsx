@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import { ApiErrors } from "dashboard/layouts/Errors/ApiErrors";
 import { SessionStorage } from "localStorage/sessionStorage";
 import { serverUrl, SPECIAL_HEADERS } from "./clientUtils";
 
@@ -27,82 +28,94 @@ export enum CacheIds {
     NeedsPassword = "NeedsPassword",
     WidgetState = "WidgetState",
     Images = "Images",
-    S3Key = "S3Key"
-}
-
-export async function DoRequest<T>(resolve: (value: T | PromiseLike<T>) => void, reject: (reason?: any) => void, request: Promise<AxiosResponse<T>>, cacheId?: CacheIds) {
-    if (cacheId) {
-        try {
-            let result: T;
-            const cachedValue = SessionStorage.getCacheValue(cacheId);
-            if (cachedValue) {
-                result = cachedValue as T;
-            } else {
-                const response = (await request) as AxiosResponse<T>;
-                SessionStorage.setCacheValue(cacheId, response.data);
-                resolve(response.data as T);
-            }
-        } catch (response) {
-            reject(response);
-        }
-    } else {
-        try {
-            const response = (await request) as AxiosResponse<T>;
-            resolve(response.data as T);
-        } catch (response) {
-            reject(response);
-        }
-    }
+    S3Key = "S3Key",
 }
 
 export class AxiosClient implements IAxiosClient {
     private client: AxiosInstance;
+    private apiErrors: ApiErrors;
+    private action: string = "tubmcgubs";
+    private headers: any;
+    private sessionIdCallback?: () => string;
+    private authTokenCallback?: () => string;
+    public sessionId: string;
 
-    constructor(action: string, sessionIdCallback?: () => string, authTokenCallback?: () => string) {
-        let headers: any = { action: action, ...SPECIAL_HEADERS };
+    constructor(apiErrors: ApiErrors, sessionIdCallback?: () => string, authTokenCallback?: () => string) {
+        this.apiErrors = apiErrors;
+        this.sessionIdCallback = sessionIdCallback;
+        this.authTokenCallback = authTokenCallback;
+    }
 
-        if (sessionIdCallback) {
-            const sessionId = sessionIdCallback();
+    private setAuthorizationContext() {
+        let headers: any = { action: this.action, ...SPECIAL_HEADERS };
+        if (this.sessionIdCallback !== undefined) {
+            const sessionId = this.sessionIdCallback();
+            this.sessionId = sessionId;
             headers = { ...headers, sessionId: sessionId };
         }
-        if (authTokenCallback) {
-            const authToken = authTokenCallback();
+        if (this.authTokenCallback !== undefined) {
+            const authToken = this.authTokenCallback();
             headers = { ...headers, Authorization: "Bearer " + authToken }; //include space after Bearer
         }
-
         this.client = axios.create({ headers: headers });
         this.client.defaults.baseURL = serverUrl + "/api/";
     }
 
-    get<T>(url: string, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T> {
-        return new Promise<T>(async (resolve: (value: T | PromiseLike<T>) => void, reject: (reason?: any) => void) => {
-            if (cacheId) {
-                try {
-                    let result: T;
-                    const cachedValue = SessionStorage.getCacheValue(cacheId);
-                    if (cachedValue) {
-                        resolve(cachedValue as T);
-                    } else {
-                        const response = (await this.client.get(url, config)) as AxiosResponse<T>;
-                        SessionStorage.setCacheValue(cacheId, response.data);
-                        resolve(response.data as T);
-                    }
-                } catch (response) {
-                    reject(response);
-                }
-            } else {
-                try {
+    async get<T>(url: string, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T> {
+        if (cacheId) {
+            try {
+                const cachedValue = SessionStorage.getCacheValue(cacheId);
+                if (cachedValue) {
+                    return cachedValue as T;
+                } else {
                     const response = (await this.client.get(url, config)) as AxiosResponse<T>;
-                    resolve(response.data as T);
-                } catch (response) {
-                    reject(response);
+                    SessionStorage.setCacheValue(cacheId, response.data);
+                    return response.data as T;
                 }
+            } catch (response) {
+                console.log(response);
+                throw new Error(response);
             }
-        });
+        } else {
+            try {
+                const response = (await this.client.get(url, config)) as AxiosResponse<T>;
+                return response.data as T;
+            } catch (response) {
+                console.log(response);
+
+                throw new Error(response);
+            }
+        }
+
+        // return new Promise<T>(async (resolve: (value: T | PromiseLike<T>) => void, reject: (reason?: any) => void) => {
+        //     this.setAuthorizationContext();
+        //     if (cacheId) {
+        //         try {
+        //             const cachedValue = SessionStorage.getCacheValue(cacheId);
+        //             if (cachedValue) {
+        //                 resolve(cachedValue as T);
+        //             } else {
+        //                 const response = (await this.client.get(url, config)) as AxiosResponse<T>;
+        //                 SessionStorage.setCacheValue(cacheId, response.data);
+        //                 resolve(response.data as T);
+        //             }
+        //         } catch (response) {
+        //             reject(response);
+        //         }
+        //     } else {
+        //         try {
+        //             const response = (await this.client.get(url, config)) as AxiosResponse<T>;
+        //             resolve(response.data as T);
+        //         } catch (response) {
+        //             reject(response);
+        //         }
+        //     }
+        // });
     }
 
     post<T, S>(url: string, payload?: S, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T> {
         return new Promise<T>(async (resolve: (value: T | PromiseLike<T>) => void, reject: (reason?: any) => void) => {
+            this.setAuthorizationContext();
             if (cacheId) {
                 try {
                     const response = (await this.client.post(url, payload, config)) as AxiosResponse<T>;
@@ -124,6 +137,7 @@ export class AxiosClient implements IAxiosClient {
 
     put<T, S>(url: string, payload?: S, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T> {
         return new Promise<T>(async (resolve: (value: T | PromiseLike<T>) => void, reject: (reason?: any) => void) => {
+            this.setAuthorizationContext();
             if (cacheId) {
                 try {
                     const response = (await this.client.put(url, payload, config)) as AxiosResponse<T>;
@@ -145,6 +159,7 @@ export class AxiosClient implements IAxiosClient {
 
     delete<T>(url: string, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T> {
         return new Promise<T>(async (resolve: (value: T | PromiseLike<T>) => void, reject: (reason?: any) => void) => {
+            this.setAuthorizationContext();
             if (cacheId) {
                 try {
                     const response = await this.client.delete(url, config);

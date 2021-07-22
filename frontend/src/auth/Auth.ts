@@ -4,6 +4,7 @@ import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { googleOAuthClientId } from "@api-client/clientUtils";
 import { Credentials } from "@Palavyr-Types";
 import { LogoutRepository } from "@api-client/LogoutRepository";
+import { ApiErrors } from "dashboard/layouts/Errors/ApiErrors";
 
 class Auth {
     private authenticated: boolean = false;
@@ -43,7 +44,7 @@ class Auth {
             SessionStorage.setAuthorization(authenticationResponse.sessionId, authenticationResponse.jwtToken);
             SessionStorage.setEmailAddress(authenticationResponse.emailAddress);
 
-            const _client = new PalavyrRepository(); // needs to be authenticated
+            const _client = new PalavyrRepository({} as ApiErrors); // needs to be authenticated
 
             const accountIsActive = await _client.Settings.Account.checkIsActive();
             this.isActive = accountIsActive;

@@ -10,7 +10,7 @@ import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRo
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DashboardHeader } from "./header/DashboardHeader";
 import { makeStyles, Typography } from "@material-ui/core";
-import { DRAWER_WIDTH } from "@constants";
+import { defaultUrlForNewArea, DRAWER_WIDTH } from "@constants";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
@@ -20,6 +20,8 @@ import { UserDetails } from "./sidebar/UserDetails";
 import { PalavyrSnackbar } from "@common/components/PalavyrSnackbar";
 import { redirectToHomeWhenSessionNotEstablished } from "@api-client/clientUtils";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
+import { Errors } from "./Errors/ErrorPanel";
+import { ApiErrors } from "./Errors/ApiErrors";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
@@ -77,7 +79,6 @@ interface IDashboardLayout {
 }
 
 export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) => {
-    const repository = new PalavyrRepository();
     const history = useHistory();
 
     const { areaIdentifier } = useParams<{ contentType: string; areaIdentifier: string }>();
@@ -100,6 +101,8 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [dashboardAreasLoading, setDashboardAreasLoading] = useState<boolean>(false);
     const cls = useStyles(helpOpen);
 
+    const [errors, setErrors] = useState<Errors>([]);
+
     const [successOpen, setSuccessOpen] = useState<boolean>(false);
     const [successText, setSuccessText] = useState<string>("Success");
 
@@ -113,6 +116,9 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [accountTypeNeedsPassword, setAccountTypeNeedsPassword] = useState<boolean>(false);
 
     const [unseenNotifications, setUnseenNotifications] = useState<number>(0);
+
+    const apiErrors = new ApiErrors(setSuccessOpen, setSuccessText, setWarningOpen, setWarningText, setErrorOpen, setErrorText, setErrors);
+    const repository = new PalavyrRepository(apiErrors);
 
     useEffect(() => {
         (async () => {
@@ -162,8 +168,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
         newNames.push({ areaName: newArea.areaName, areaIdentifier: newArea.areaIdentifier });
         setAreaNameDetails(newNames);
-
-        history.push(`/dashboard/editor/email/${newArea.areaIdentifier}?tab=0`);
+        history.push(defaultUrlForNewArea(newArea.areaIdentifier));
     };
 
     const handleDrawerClose: () => void = () => {
@@ -232,6 +237,9 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                 unseenNotifications: unseenNotifications,
                 setUnseenNotifications: setUnseenNotifications,
                 planTypeMeta: planTypeMeta,
+                errors,
+                setErrors,
+                repository
             }}
         >
             <div className={cls.root}>

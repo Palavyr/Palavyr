@@ -7,6 +7,8 @@ import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStri
 import { yellow } from "@material-ui/core/colors";
 import { isDevelopmentStage } from "@api-client/clientUtils";
 import { YellowStrip } from "@common/components/YellowStrip";
+import { errors } from "stripe";
+import { ErrorPanel } from "./Errors/ErrorPanel";
 
 interface IContentLoader {
     open: boolean;
@@ -48,6 +50,7 @@ export const ContentLoader = ({ open, isLoading, dashboardAreasLoading, children
             {(isLoading || dashboardAreasLoading) && <LinearProgress className={cls.loading} />}
             {isDev && <DevStagingStrip show={show} setShow={setShow} />}
             {!show && <YellowStrip />}
+            <ErrorPanel />
             <div>{children}</div>
         </main>
     );

@@ -1,5 +1,7 @@
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { COULD_NOT_FIND_SERVER, GOOGLE_ACCOUNT_NOT_FOUND, INVALID_EMAIL, INVALID_GOOGLE_TOKEN, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, NOT_A_GOOGLE_ACCOUNT, VERIFICATION_EMAIL_SEND } from "@constants";
 import { PalavyrLinkedList } from "dashboard/content/responseConfiguration/conversation/PalavyrDataStructure/PalavyrLinkedList";
+import { Errors } from "dashboard/layouts/Errors/ErrorPanel";
 import { Dispatch, SetStateAction } from "react";
 // / <reference types="node" />
 // / <reference types="react" />
@@ -801,7 +803,7 @@ export type TableData = SelectOneFlatData[] | PercentOfThresholdData[] | BasicTh
 export type DynamicTableData = {
     tableRows: TableData;
     isInUse: boolean;
-}
+};
 
 export interface IDynamicTableBody {
     tableData: TableData;
@@ -884,6 +886,9 @@ export interface IDashboardContext {
     unseenNotifications: number;
     setUnseenNotifications: SetState<number>;
     planTypeMeta: PlanTypeMeta | undefined;
+    errors: Errors;
+    setErrors: SetState<Errors>;
+    repository: PalavyrRepository;
 }
 
 export interface IAuthContext {

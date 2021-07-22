@@ -71,6 +71,9 @@ namespace Palavyr.API.CustomMiddleware
                         logger.LogError($"{ex.StackTrace}");
                         logger.LogError($"{ex.GetType().Name}");
                         logger.LogError($"{ex.Message}");
+                        logger.LogError($"{ex.InnerException}");
+                        logger.LogError($"{ex.GetBaseException()}");
+                        
                         break;
                 }
 

@@ -102,7 +102,7 @@ export const SaveOrCancel = ({
                         setIsSaving(true);
                         setTimeout(async () => {
                             if (onSave) {
-                                var res = await onSave(e);
+                                const res = await onSave(e);
                                 if (res === true || res === null) {
                                     setPosition();
                                     if (warningOpen) setWarningOpen(false);
