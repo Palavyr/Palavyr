@@ -885,13 +885,14 @@ export interface IDashboardContext {
     unseenNotifications: number;
     setUnseenNotifications: SetState<number>;
     planTypeMeta: PlanTypeMeta | undefined;
-    panelErrors: string[];
-    setPanelErrors: SetState<string[]>;
+    panelErrors: ErrorResponse | null;
+    setPanelErrors: SetState<ErrorResponse | null>;
     repository: PalavyrRepository;
 }
 
-export type PanelErrors = {
-    messages: string[];
+export type ErrorResponse = {
+    message: string;
+    additionalMessages: string[];
     statusCode: number;
 };
 

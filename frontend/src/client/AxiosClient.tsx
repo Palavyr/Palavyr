@@ -1,13 +1,14 @@
+import { ErrorResponse } from "@Palavyr-Types";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { ApiErrors } from "dashboard/layouts/Errors/ApiErrors";
 import { SessionStorage } from "localStorage/sessionStorage";
 import { serverUrl, SPECIAL_HEADERS } from "./clientUtils";
 
 interface IAxiosClient {
-    get<T>(url: string, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T | undefined>;
-    post<T>(url: string, payload: T, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T | undefined>;
-    put<T>(url: string, payload: T, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T | undefined>;
-    delete<T>(url: string, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T | undefined>;
+    get<T>(url: string, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T>;
+    post<T>(url: string, payload: T, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T>;
+    put<T>(url: string, payload: T, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T>;
+    delete<T>(url: string, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T>;
 }
 
 export enum CacheIds {
@@ -32,7 +33,7 @@ export enum CacheIds {
 }
 
 export class AxiosClient implements IAxiosClient {
-    private client: AxiosInstance;
+    public client: AxiosInstance;
     private apiErrors: ApiErrors;
     private action: string = "tubmcgubs";
     private sessionIdCallback?: () => string;
@@ -49,6 +50,9 @@ export class AxiosClient implements IAxiosClient {
     }
 
     private setAuthorizationContext() {
+        try {
+            this.apiErrors.ClearErrorPanel();
+        } catch {}
         let headers: any = { action: this.action, ...SPECIAL_HEADERS };
         if (this.sessionIdCallback !== undefined) {
             const sessionId = this.sessionIdCallback();
@@ -63,7 +67,7 @@ export class AxiosClient implements IAxiosClient {
         this.client.defaults.baseURL = serverUrl + "/api/";
     }
 
-    async get<T>(url: string, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T | undefined> {
+    async get<T>(url: string, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T> {
         this.setAuthorizationContext();
         if (cacheId) {
             try {
@@ -77,6 +81,7 @@ export class AxiosClient implements IAxiosClient {
                 }
             } catch (error) {
                 this.ProcessErrorResponse(error);
+                return Promise.resolve((null as unknown) as T);
             }
         } else {
             try {
@@ -84,11 +89,12 @@ export class AxiosClient implements IAxiosClient {
                 return response.data as T;
             } catch (error) {
                 this.ProcessErrorResponse(error);
+                return Promise.resolve((null as unknown) as T);
             }
         }
     }
 
-    async post<T, S>(url: string, payload?: S, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T | undefined> {
+    async post<T, S>(url: string, payload?: S, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T> {
         this.setAuthorizationContext();
         if (cacheId) {
             try {
@@ -97,6 +103,7 @@ export class AxiosClient implements IAxiosClient {
                 return response.data as T;
             } catch (error) {
                 this.ProcessErrorResponse(error);
+                return Promise.resolve((null as unknown) as T);
             }
         } else {
             try {
@@ -104,6 +111,7 @@ export class AxiosClient implements IAxiosClient {
                 return response.data as T;
             } catch (error) {
                 this.ProcessErrorResponse(error);
+                return Promise.resolve((null as unknown) as T);
             }
         }
     }
@@ -117,6 +125,7 @@ export class AxiosClient implements IAxiosClient {
                 return response.data as T;
             } catch (error) {
                 this.ProcessErrorResponse(error);
+                return Promise.resolve((null as unknown) as T);
             }
         } else {
             try {
@@ -124,6 +133,7 @@ export class AxiosClient implements IAxiosClient {
                 return response.data as T;
             } catch (error) {
                 this.ProcessErrorResponse(error);
+                return Promise.resolve((null as unknown) as T);
             }
         }
     }
@@ -142,6 +152,7 @@ export class AxiosClient implements IAxiosClient {
                 return response.data as T;
             } catch (error) {
                 this.ProcessErrorResponse(error);
+                return Promise.resolve((null as unknown) as T);
             }
         } else {
             try {
@@ -149,6 +160,7 @@ export class AxiosClient implements IAxiosClient {
                 return response.data as T;
             } catch (error) {
                 this.ProcessErrorResponse(error);
+                return Promise.resolve((null as unknown) as T);
             }
         }
     }
@@ -156,19 +168,16 @@ export class AxiosClient implements IAxiosClient {
     private ProcessErrorResponse(rawError: { response: { data: string } }) {
         const error = this.parseError(rawError);
 
-        this.apiErrors.SetErrorSnack(error.messages[0]);
-        this.apiErrors.SetErrorPanel(error.messages);
+        try {
+            this.apiErrors.SetErrorSnack(error.message);
+            this.apiErrors.SetErrorPanel(error);
+        } catch {}
 
-        throw new Error(error.messages.join(", "));
+        throw new Error(error.message);
     }
 
     private parseError(rawError: { response: { data: string } }): ErrorResponse {
         const errorObject = JSON.parse(rawError.response.data);
-        return { messages: errorObject.Messages, statusCode: errorObject.StatusCode };
+        return { message: errorObject.Message, additionalMessages: errorObject.AdditionalMessages, statusCode: errorObject.StatusCode };
     }
 }
-
-export type ErrorResponse = {
-    messages: string[];
-    statusCode: number;
-};

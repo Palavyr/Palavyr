@@ -1,4 +1,4 @@
-import { PanelErrors, SetState } from "@Palavyr-Types";
+import { ErrorResponse, SetState } from "@Palavyr-Types";
 
 export class ApiErrors {
     private setSuccessOpen: SetState<boolean>;
@@ -7,7 +7,7 @@ export class ApiErrors {
     private setWarningText: SetState<string>;
     private setErrorOpen: SetState<boolean>;
     private setErrorText: SetState<string>;
-    private setErrors: SetState<string[]>;
+    private setErrors: SetState<ErrorResponse | null>;
 
     constructor(
         setSuccessOpen: SetState<boolean>,
@@ -16,7 +16,7 @@ export class ApiErrors {
         setWarningText: SetState<string>,
         setErrorOpen: SetState<boolean>,
         setErrorText: SetState<string>,
-        setErrors: SetState<string[]>
+        setErrors: SetState<ErrorResponse | null>
     ) {
         this.setSuccessOpen = setSuccessOpen;
         this.setSuccessText = setSuccessText;
@@ -42,7 +42,13 @@ export class ApiErrors {
         this.setErrorOpen(true);
     }
 
-    public SetErrorPanel(errors: string[]) {
-        this.setErrors(errors);
+    public SetErrorPanel(errorResponse: ErrorResponse | null) {
+        this.setErrors(errorResponse);
+    }
+
+    public ClearErrorPanel() {
+        if (this.SetErrorPanel) {
+            this.SetErrorPanel(null);
+        }
     }
 }

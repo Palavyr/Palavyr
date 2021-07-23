@@ -7,6 +7,7 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import Fade from "react-reveal/Fade";
 
 const useStyles = makeStyles((theme) => ({
     staticFees: {

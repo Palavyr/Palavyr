@@ -6,7 +6,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep } from "lodash";
-import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRow, PanelErrors, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
+import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRow, ErrorResponse, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DashboardHeader } from "./header/DashboardHeader";
 import { makeStyles, Typography } from "@material-ui/core";
@@ -101,7 +101,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [dashboardAreasLoading, setDashboardAreasLoading] = useState<boolean>(false);
     const cls = useStyles(helpOpen);
 
-    const [panelErrors, setPanelErrors] = useState<string[]>([]);
+    const [panelErrors, setPanelErrors] = useState<ErrorResponse | null>(null);
 
     const [successOpen, setSuccessOpen] = useState<boolean>(false);
     const [successText, setSuccessText] = useState<string>("Success");

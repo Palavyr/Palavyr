@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,7 +38,8 @@ namespace Palavyr.API.CustomMiddleware
             {
                 var statusCode = StatusCodes.Status500InternalServerError;
                 var message = "Bad Request";
-                
+                var additionalMessages = new string[] { };
+
                 switch (ex)
                 {
                     case StripeException stripeException:
@@ -68,6 +67,14 @@ namespace Palavyr.API.CustomMiddleware
                         logger.LogError($"{guidNotFoundException.Message}");
                         break;
 
+                    case MultiMessageDomainException multiMessageDomainException: // must come before domain exception
+                        logger.LogInformation("A domain exception was encountered.");
+                        logger.LogError($"{multiMessageDomainException.Message}");
+                        statusCode = StatusCodes.Status400BadRequest;
+                        message = multiMessageDomainException.Message;
+                        additionalMessages = multiMessageDomainException.AdditionalMessages;
+                        break;
+
                     case DomainException domainException:
                         logger.LogInformation("A domain exception was encountered.");
                         logger.LogError($"{domainException.Message}");
@@ -91,25 +98,19 @@ namespace Palavyr.API.CustomMiddleware
                     return;
                 }
 
-                await FormatErrors(context, message, statusCode);
+                await FormatErrors(context, message, additionalMessages, statusCode);
             }
         }
 
-        public async Task FormatErrors(HttpContext context, string message, int statusCode)
+        public async Task FormatErrors(HttpContext context, string message, string[] additionalMessage, int statusCode)
         {
-            // var headers = context.Response.Headers;
-
-            // context.Response.Clear();
             context.Response.ContentType = "application/json; charset=UTF-8";
             context.Response.StatusCode = statusCode;
 
-            var errorResponse = new ErrorResponse(new[] {message}, statusCode).ToString();
+            var errorResponse = new ErrorResponse(message, additionalMessage, statusCode).ToString();
 
-            // foreach (var header in headers)
-            // {
-            //     context.Response.Headers.TryAdd(header.Key, header.Value);
-            // }
-
+            // I found it very challenging to write directly to the response body with a structure I can control, so I'm clearing the lot
+            // and serializing my own structure. I'll handle this in the client error response handler
             using var writer = new JsonTextWriter(new HttpResponseStreamWriter(context.Response.Body, Encoding.UTF8))
             {
                 CloseOutput = false,
@@ -125,12 +126,14 @@ namespace Palavyr.API.CustomMiddleware
 
     public class ErrorResponse
     {
-        public string[] Messages { get; set; }
+        public string Message { get; set; }
+        public string[] AdditionalMessages { get; set; }
         public int StatusCode { get; set; }
 
-        public ErrorResponse(string[] messages, int statusCode)
+        public ErrorResponse(string messages, string[] additionalMessages, int statusCode)
         {
-            Messages = messages;
+            Message = messages;
+            AdditionalMessages = additionalMessages;
             StatusCode = statusCode;
         }
 

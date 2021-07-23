@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { ChangeEvent } from "react";
 import { dynamicTableComponentMap } from "./DynamicTableRegistry";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import Fade from "react-reveal/Fade";
 
 export interface SingleDynamicFeeTableProps {
     defaultTableMeta: DynamicTableMeta;
@@ -173,7 +174,11 @@ export const SingleDynamicFeeTable = ({
                         </Table>
                     )}
                     {tableMeta === undefined && <div>Loading...</div>}
-                    {dynamicTableData && DynamicTableComponent && <DynamicTableComponent {...metaData} />}
+                    {dynamicTableData && DynamicTableComponent && (
+                        <Fade>
+                            <DynamicTableComponent {...metaData} />
+                        </Fade>
+                    )}
                 </section>
             )}
         </>

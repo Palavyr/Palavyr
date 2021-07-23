@@ -85,14 +85,14 @@ namespace Palavyr.API.CustomMiddleware
             context.Response.Clear();
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
             context.Response.ContentType = "application/json; charset=UTF-8";
-            var serialized = new ErrorResponse(new []{message}, statusCode).ToString();
+            // var serialized = new ErrorResponse(new []{message}, statusCode).ToString();
             
             // foreach (var header in headers)
             // {
             //     context.Response.Headers.TryAdd(header.Key, header.Value);
             // }
 
-            await context.Response.WriteAsync(serialized);
+            // await context.Response.WriteAsync(serialized);
         }
     }
 }

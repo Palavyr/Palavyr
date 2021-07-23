@@ -9,6 +9,7 @@ import { isDevelopmentStage } from "@api-client/clientUtils";
 import { OsTypeToggle } from "dashboard/content/responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import Fade from "react-reveal/Fade";
 
 export interface IDynamicTable {
     title: string;
@@ -88,21 +89,23 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
 
                 {tableMetas.map((tableMeta, index) => {
                     return (
-                        <SingleDynamicFeeTable
-                            key={index}
-                            tableNumber={index}
-                            setLoaded={setLoaded}
-                            tableMetas={tableMetas}
-                            setTableMetas={setTableMetas}
-                            tableMetaIndex={index}
-                            defaultTableMeta={tableMeta}
-                            availablDynamicTableOptions={availableTables}
-                            tableNameMap={tableNameMap}
-                            parentState={parentState}
-                            changeParentState={changeParentState}
-                            areaIdentifier={areaIdentifier}
-                            showDebug={showDebug}
-                        />
+                        <Fade>
+                            <SingleDynamicFeeTable
+                                key={index}
+                                tableNumber={index}
+                                setLoaded={setLoaded}
+                                tableMetas={tableMetas}
+                                setTableMetas={setTableMetas}
+                                tableMetaIndex={index}
+                                defaultTableMeta={tableMeta}
+                                availablDynamicTableOptions={availableTables}
+                                tableNameMap={tableNameMap}
+                                parentState={parentState}
+                                changeParentState={changeParentState}
+                                areaIdentifier={areaIdentifier}
+                                showDebug={showDebug}
+                            />
+                        </Fade>
                     );
                 })}
             </Suspense>
