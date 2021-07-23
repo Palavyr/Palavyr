@@ -50,7 +50,6 @@ export const ContentLoader = ({ open, isLoading, dashboardAreasLoading, children
             {(isLoading || dashboardAreasLoading) && <LinearProgress className={cls.loading} />}
             {isDev && <DevStagingStrip show={show} setShow={setShow} />}
             {!show && <YellowStrip />}
-            <ErrorPanel />
             <div>{children}</div>
         </main>
     );

@@ -1,5 +1,4 @@
-import React from "react";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import React, { useContext } from "react";
 import { CONVERSATION_REVIEW, CONVERSATION_REVIEW_PARAMNAME } from "@constants";
 import { Checkbox, Link, makeStyles, TableRow, Typography } from "@material-ui/core";
 import { Enquiries, EnquiryRow, SetState } from "@Palavyr-Types";
@@ -11,7 +10,6 @@ import { useState } from "react";
 import { EnquiryTableRowCell } from "./EnquiriesTableRowCell";
 import { formatTimeStamp } from "./enquiriesUtils";
 import { EnquiryTimeStamp } from "./EnquiryTimeStamp";
-import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 
 export interface EnquiriesTableRowProps {
     enquiry: EnquiryRow;
@@ -42,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTableRowProps) => {
     const cls = useStyles();
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const history = useHistory();
 
     const [deleteIsWorking, setDeleteIsWorking] = useState<boolean>(false);

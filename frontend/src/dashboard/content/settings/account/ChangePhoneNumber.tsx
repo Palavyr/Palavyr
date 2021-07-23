@@ -1,10 +1,10 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useContext } from "react";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { Divider, makeStyles } from "@material-ui/core";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { SettingsWrapper } from "../SettingsWrapper";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles(() => ({
     titleText: {
@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const ChangePhoneNumber = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const classes = useStyles();
 
     const [, setLoaded] = useState<boolean>(false);
@@ -44,7 +44,10 @@ export const ChangePhoneNumber = () => {
 
     return (
         <SettingsWrapper>
-            <AreaConfigurationHeader title="Change your Primary Phone Number" subtitle="Update your primary phone number. This is the primary contact phone number provided in the response email and pdf sent to customers." />
+            <AreaConfigurationHeader
+                title="Change your Primary Phone Number"
+                subtitle="Update your primary phone number. This is the primary contact phone number provided in the response email and pdf sent to customers."
+            />
             <Divider />
             <SettingsGridRowText
                 fullWidth

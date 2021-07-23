@@ -1,46 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Amazon.S3;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Palavyr.Core.Data;
 using Palavyr.Core.Exceptions;
 using Stripe;
 
 namespace Palavyr.API.CustomMiddleware
 {
-    public class ErrorHandlingMiddleware
+    public class ErrorHandler
     {
-        private readonly RequestDelegate next;
-        private readonly ILogger<ErrorHandlingMiddleware> logger;
-        private readonly IArrayPool<char> arrayPool = new ArrayPool();
-
-        public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
+        public ErrorHandler()
         {
-            this.next = next;
-            this.logger = logger;
         }
 
-        public async Task InvokeAsync(HttpContext context, IWebHostEnvironment env, AccountsContext accountContext)
+        public async Task HandleErrors(HttpContext context, ILogger logger)
         {
-            try
+            var error = context.Features.Get<IExceptionHandlerPathFeature>();
+            if (error != null)
             {
-                logger.LogDebug("Entering error handling middleware...");
-                await next(context);
-            }
-            catch (Exception ex)
-            {
-                var statusCode = StatusCodes.Status500InternalServerError;
-                var message = "Bad Request";
-                
+                var ex = error.Error;
                 switch (ex)
                 {
                     case StripeException stripeException:
@@ -71,8 +55,6 @@ namespace Palavyr.API.CustomMiddleware
                     case DomainException domainException:
                         logger.LogInformation("A domain exception was encountered.");
                         logger.LogError($"{domainException.Message}");
-                        statusCode = StatusCodes.Status400BadRequest;
-                        message = domainException.Message;
                         break;
 
                     default:
@@ -83,6 +65,7 @@ namespace Palavyr.API.CustomMiddleware
                         logger.LogError($"{ex.Message}");
                         logger.LogError($"{ex.InnerException}");
                         logger.LogError($"{ex.GetBaseException()}");
+                        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                         break;
                 }
 
@@ -91,52 +74,25 @@ namespace Palavyr.API.CustomMiddleware
                     return;
                 }
 
-                await FormatErrors(context, message, statusCode);
+                await FormatErrors(context, ex.Message, StatusCodes.Status400BadRequest);
             }
         }
+
 
         public async Task FormatErrors(HttpContext context, string message, int statusCode)
         {
             // var headers = context.Response.Headers;
-
-            // context.Response.Clear();
+            context.Response.Clear();
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
             context.Response.ContentType = "application/json; charset=UTF-8";
-            context.Response.StatusCode = statusCode;
-
-            var errorResponse = new ErrorResponse(new[] {message}, statusCode).ToString();
-
+            var serialized = new ErrorResponse(new []{message}, statusCode).ToString();
+            
             // foreach (var header in headers)
             // {
             //     context.Response.Headers.TryAdd(header.Key, header.Value);
             // }
 
-            using var writer = new JsonTextWriter(new HttpResponseStreamWriter(context.Response.Body, Encoding.UTF8))
-            {
-                CloseOutput = false,
-                AutoCompleteOnClose = false,
-                ArrayPool = arrayPool
-            };
-
-            var serializer = JsonSerializer.Create();
-            serializer.Serialize(writer, errorResponse);
-            await writer.FlushAsync();
-        }
-    }
-
-    public class ErrorResponse
-    {
-        public string[] Messages { get; set; }
-        public int StatusCode { get; set; }
-
-        public ErrorResponse(string[] messages, int statusCode)
-        {
-            Messages = messages;
-            StatusCode = statusCode;
-        }
-
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this);
+            await context.Response.WriteAsync(serialized);
         }
     }
 }

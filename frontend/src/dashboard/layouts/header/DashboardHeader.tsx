@@ -8,6 +8,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import InfoIcon from "@material-ui/icons/Info";
 import { SpaceEvenly } from "../positioning/SpaceEvenly";
+import { ErrorPanel } from "../Errors/ErrorPanel";
 
 const drawerWidth: number = 240;
 
@@ -96,54 +97,57 @@ export const DashboardHeader = ({ unseenNotifications, open, handleDrawerOpen, t
 
     return (
         <AppBar position="absolute" className={classNames(cls.topbar, cls.appBar, { [cls.appBarShift]: open })}>
-            <Toolbar>
-                <Align float="left">
-                    <IconButton color="inherit" aria-label="open drawer" onClick={handleDrawerOpen} edge="start" className={classNames(open && cls.hide)}>
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography className={cls.name} variant="h4">
-                        Palavyr.com
-                    </Typography>
-                </Align>
-                <div style={{ flexGrow: 1 }} />
-                <Align>
-                    {title && (
-                        <SpaceEvenly vertical>
-                            <Typography display="inline" align="center" variant="h6">
-                                Current Area:
-                            </Typography>
-                            <Typography display="inline" align="center" variant="h5">
-                                {title}
-                            </Typography>
-                        </SpaceEvenly>
-                    )}
-                </Align>
-                <div style={{ flexGrow: 1 }} />
-                <div style={{ display: "flex" }}>
-                    <Align float="right">
-                        {!routesToExclude.includes(location.pathname) ? (
-                            <Tooltip title="Help about this page">
-                                <IconButton color="inherit" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(cls.icon, helpOpen && cls.hide)}>
-                                    <InfoIcon />
-                                </IconButton>
-                            </Tooltip>
-                        ) : (
-                            <div></div>
+            <>
+                <Toolbar>
+                    <Align float="left">
+                        <IconButton color="inherit" aria-label="open drawer" onClick={handleDrawerOpen} edge="start" className={classNames(open && cls.hide)}>
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography className={cls.name} variant="h4">
+                            Palavyr.com
+                        </Typography>
+                    </Align>
+                    <div style={{ flexGrow: 1 }} />
+                    <Align>
+                        {title && (
+                            <SpaceEvenly vertical>
+                                <Typography display="inline" align="center" variant="h6">
+                                    Current Area:
+                                </Typography>
+                                <Typography display="inline" align="center" variant="h5">
+                                    {title}
+                                </Typography>
+                            </SpaceEvenly>
                         )}
                     </Align>
-                    <Align float="right">
-                        <Tooltip title="Unseen enquiries">
-                            <span>
-                                <IconButton disabled={unseenNotifications === 0} onClick={() => history.push("/dashboard/enquiries")} className={cls.icon} edge="start" color="inherit">
-                                    <Badge showZero={false} badgeContent={unseenNotifications} color="secondary">
-                                        <NotificationsIcon />
-                                    </Badge>
-                                </IconButton>
-                            </span>
-                        </Tooltip>
-                    </Align>
-                </div>
-            </Toolbar>
+                    <div style={{ flexGrow: 1 }} />
+                    <div style={{ display: "flex" }}>
+                        <Align float="right">
+                            {!routesToExclude.includes(location.pathname) ? (
+                                <Tooltip title="Help about this page">
+                                    <IconButton color="inherit" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(cls.icon, helpOpen && cls.hide)}>
+                                        <InfoIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            ) : (
+                                <div></div>
+                            )}
+                        </Align>
+                        <Align float="right">
+                            <Tooltip title="Unseen enquiries">
+                                <span>
+                                    <IconButton disabled={unseenNotifications === 0} onClick={() => history.push("/dashboard/enquiries")} className={cls.icon} edge="start" color="inherit">
+                                        <Badge showZero={false} badgeContent={unseenNotifications} color="secondary">
+                                            <NotificationsIcon />
+                                        </Badge>
+                                    </IconButton>
+                                </span>
+                            </Tooltip>
+                        </Align>
+                    </div>
+                </Toolbar>
+                <ErrorPanel />
+            </>
         </AppBar>
     );
 };

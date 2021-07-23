@@ -13,7 +13,7 @@ const summary = "Upload a new PDF attachment to send with responses.";
 const uploadDetails = <div className="alert alert-info">Use this dialog to upload attachments that will be sent standard with the response for this area.</div>;
 
 export const AttachmentConfiguration = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
 
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 

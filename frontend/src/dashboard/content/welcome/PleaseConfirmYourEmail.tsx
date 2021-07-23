@@ -1,16 +1,16 @@
 import * as React from "react";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import classNames from "classnames";
 import { Card, Typography, FormControl, OutlinedInput, makeStyles, useTheme, Divider } from "@material-ui/core";
 import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import auth from "auth/Auth";
 import { SessionStorage } from "localStorage/sessionStorage";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { PalavyrSnackbar } from "@common/components/PalavyrSnackbar";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     contentRoot: {
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const PleaseConfirmYourEmail = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const [authToken, setAuthToken] = useState<string>("");
     const [, setAuthStatus] = useState<string | null>(null);
     const emailAddress = SessionStorage.getEmailAddress();

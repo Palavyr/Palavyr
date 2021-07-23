@@ -65,82 +65,115 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
     };
 
     return (
-        <div className={classes.staticFees}>
-            <TextField
-                className={classes.tableDescription}
-                multiline
-                rows={3}
-                value={staticTableMetas[staticTableMeta.tableOrder].description}
-                label="Table Description"
-                onChange={(event) => {
-                    tableModifier.setTableDescription(staticTableMetas, staticTableMeta.tableOrder, event.target.value);
-                }}
-            />
-            <Table>
-                <TableHead>
-                    <TableRow style={{ borderBottom: "1px solid black" }}>
-                        <TableCell align={cellAlignment} className={classes.headerText}></TableCell>
-                        <TableCell align={cellAlignment} className={classes.headerText}>
-                            Description
-                        </TableCell>
-                        <TableCell align={cellAlignment} className={classes.headerText}>
-                            Amount
-                        </TableCell>
-                        <TableCell align={cellAlignment} className={classes.headerText}>
-                            Max Amount (if range)
-                        </TableCell>
-                        <TableCell align={cellAlignment} className={classes.headerText}>
-                            Range
-                        </TableCell>
-                        <TableCell align={cellAlignment} className={classes.headerText}>
-                            Per Individual
-                        </TableCell>
-                        <TableCell align={cellAlignment} className={classes.headerText}></TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody style={{ borderTop: "2px solid black" }}>
-                    {staticTableMeta.staticTableRows.map((row: StaticTableRow, index: number) => (
-                        <StaticRow
-                            key={row.id}
-                            index={index}
-                            staticTableMetas={staticTableMetas}
-                            tableOrder={staticTableMeta.tableOrder}
-                            rowOrder={row.rowOrder}
-                            modifier={tableModifier}
-                            minFee={row.fee.min}
-                            maxFee={row.fee.max}
-                            rangeState={row.range}
-                            perState={row.perPerson}
-                            description={row.description}
+        <Fade>
+            <div className={classes.staticFees}>
+                <TextField
+                    className={classes.tableDescription}
+                    multiline
+                    rows={3}
+                    value={staticTableMetas[staticTableMeta.tableOrder].description}
+                    label="Table Description"
+                    onChange={(event) => {
+                        tableModifier.setTableDescription(staticTableMetas, staticTableMeta.tableOrder, event.target.value);
+                    }}
+                />
+                <Table>
+                    <TableHead>
+                        <TableRow style={{ borderBottom: "1px solid black" }}>
+                            <TableCell align={cellAlignment} className={classes.headerText}></TableCell>
+                            <TableCell align={cellAlignment} className={classes.headerText}>
+                                Description
+                            </TableCell>
+                            <TableCell align={cellAlignment} className={classes.headerText}>
+                                Amount
+                            </TableCell>
+                            <TableCell align={cellAlignment} className={classes.headerText}>
+                                Max Amount (if range)
+                            </TableCell>
+                            <TableCell align={cellAlignment} className={classes.headerText}>
+                                Range
+                            </TableCell>
+                            <TableCell align={cellAlignment} className={classes.headerText}>
+                                Per Individual
+                            </TableCell>
+                            <TableCell align={cellAlignment} className={classes.headerText}></TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody style={{ borderTop: "2px solid black" }}>
+                        {staticTableMeta.staticTableRows.map((row: StaticTableRow, index: number) => (
+                            <StaticRow
+                                key={row.id}
+                                index={index}
+                                staticTableMetas={staticTableMetas}
+                                tableOrder={staticTableMeta.tableOrder}
+                                rowOrder={row.rowOrder}
+                                modifier={tableModifier}
+                                minFee={row.fee.min}
+                                maxFee={row.fee.max}
+                                rangeState={row.range}
+                                perState={row.perPerson}
+                                description={row.description}
+                            />
+                        ))}
+                    </TableBody>
+                </Table>
+                <div className={classes.buttonWrapper}>
+                    <Button
+                        startIcon={<AddBoxIcon />}
+                        variant="contained"
+                        size="small"
+                        color="primary"
+                        className={classes.feeTableButton}
+                        onClick={() => tableModifier.addRow(staticTableMetas, staticTableMeta.tableOrder)}
+                    >
+                        Add Row
+                    </Button>
+
+                    {!tableModifier.isTableLastPosition(staticTableMetas, staticTableMeta.tableOrder) && (
+                        <Button
+                            startIcon={<ArrowDownwardIcon />}
+                            variant="contained"
+                            size="small"
+                            color="primary"
+                            className={classes.feeTableButton}
+                            onClick={() => tableModifier.moveTableDown(staticTableMetas, staticTableMeta.tableOrder)}
+                        >
+                            Shift Down
+                        </Button>
+                    )}
+
+                    {!tableModifier.isTableFirstPosition(staticTableMeta.tableOrder) && (
+                        <Button
+                            startIcon={<ArrowUpwardIcon />}
+                            variant="contained"
+                            size="small"
+                            color="primary"
+                            className={classes.feeTableButton}
+                            onClick={() => tableModifier.moveTableUp(staticTableMetas, staticTableMeta.tableOrder)}
+                        >
+                            Shift Up
+                        </Button>
+                    )}
+
+                    <Button
+                        startIcon={<DeleteOutlineIcon />}
+                        variant="contained"
+                        color="secondary"
+                        size="small"
+                        className={classes.feeTableButton}
+                        onClick={() => tableModifier.delTable(staticTableMetas, staticTableMeta.tableOrder)}
+                    >
+                        Remove Table
+                    </Button>
+
+                    {anyStaticTableRowsWithPerIndividualSet(staticTableMeta) && (
+                        <FormControlLabel
+                            label="Require num individuals"
+                            control={<Checkbox checked={staticTableMeta.perPersonInputRequired} onChange={() => tableModifier.togglePerPersonRequired(staticTableMetas, staticTableMeta.tableOrder)} />}
                         />
-                    ))}
-                </TableBody>
-            </Table>
-            <div className={classes.buttonWrapper}>
-                <Button startIcon={<AddBoxIcon />} variant="contained" size="small" color="primary" className={classes.feeTableButton} onClick={() => tableModifier.addRow(staticTableMetas, staticTableMeta.tableOrder)}>
-                    Add Row
-                </Button>
-
-                {!tableModifier.isTableLastPosition(staticTableMetas, staticTableMeta.tableOrder) && (
-                    <Button startIcon={<ArrowDownwardIcon />} variant="contained" size="small" color="primary" className={classes.feeTableButton} onClick={() => tableModifier.moveTableDown(staticTableMetas, staticTableMeta.tableOrder)}>
-                        Shift Down
-                    </Button>
-                )}
-
-                {!tableModifier.isTableFirstPosition(staticTableMeta.tableOrder) && (
-                    <Button startIcon={<ArrowUpwardIcon />} variant="contained" size="small" color="primary" className={classes.feeTableButton} onClick={() => tableModifier.moveTableUp(staticTableMetas, staticTableMeta.tableOrder)}>
-                        Shift Up
-                    </Button>
-                )}
-
-                <Button startIcon={<DeleteOutlineIcon />} variant="contained" color="secondary" size="small" className={classes.feeTableButton} onClick={() => tableModifier.delTable(staticTableMetas, staticTableMeta.tableOrder)}>
-                    Remove Table
-                </Button>
-
-                {anyStaticTableRowsWithPerIndividualSet(staticTableMeta) && (
-                    <FormControlLabel label="Require num individuals" control={<Checkbox checked={staticTableMeta.perPersonInputRequired} onChange={() => tableModifier.togglePerPersonRequired(staticTableMetas, staticTableMeta.tableOrder)} />} />
-                )}
+                    )}
+                </div>
             </div>
-        </div>
+        </Fade>
     );
 };

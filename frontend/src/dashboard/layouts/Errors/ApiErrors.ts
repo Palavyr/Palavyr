@@ -1,5 +1,4 @@
-import { SetState } from "@Palavyr-Types";
-import { Errors } from "./ErrorPanel";
+import { PanelErrors, SetState } from "@Palavyr-Types";
 
 export class ApiErrors {
     private setSuccessOpen: SetState<boolean>;
@@ -8,7 +7,7 @@ export class ApiErrors {
     private setWarningText: SetState<string>;
     private setErrorOpen: SetState<boolean>;
     private setErrorText: SetState<string>;
-    private setErrors: SetState<Errors>;
+    private setErrors: SetState<string[]>;
 
     constructor(
         setSuccessOpen: SetState<boolean>,
@@ -17,7 +16,7 @@ export class ApiErrors {
         setWarningText: SetState<string>,
         setErrorOpen: SetState<boolean>,
         setErrorText: SetState<string>,
-        setErrors: SetState<Errors>
+        setErrors: SetState<string[]>
     ) {
         this.setSuccessOpen = setSuccessOpen;
         this.setSuccessText = setSuccessText;
@@ -29,21 +28,21 @@ export class ApiErrors {
     }
 
     public SetSuccessSnack(message?: string) {
-        this.setSuccessOpen(true);
         this.setSuccessText(message ?? "Success");
+        this.setSuccessOpen(true);
     }
 
     public SetWarningSnack(message?: string) {
-        this.setWarningOpen(true);
         this.setWarningText(message ?? "Warning!");
+        this.setWarningOpen(true);
     }
 
     public SetErrorSnack(message?: string) {
+        this.setErrorText(message ?? "Error");
         this.setErrorOpen(true);
-        this.setWarningText(message ?? "Error");
     }
 
-    public SetErrorPanel(errors: Errors) {
+    public SetErrorPanel(errors: string[]) {
         this.setErrors(errors);
     }
 }

@@ -1,5 +1,4 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useContext } from "react";
 import { Enquiries, EnquiryRow } from "@Palavyr-Types";
 import { TableContainer, Paper, TableHead, TableBody, Table, makeStyles, Typography } from "@material-ui/core";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
@@ -29,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Enquires = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const cls = useStyles();
 
     const [enquiries, setEnquiries] = useState<Enquiries>([]);

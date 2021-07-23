@@ -1,5 +1,4 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useContext } from "react";
 import { Divider, List, ListItem, ListItemText, makeStyles, Typography } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { Alert, AlertTitle } from "@material-ui/lab";
@@ -7,6 +6,7 @@ import { AlertDetails } from "@Palavyr-Types";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { SettingsWrapper } from "../SettingsWrapper";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 type GeneralSettings = {
     emailAddress: string;
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ChangeEmail = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const classes = useStyles();
 
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -88,7 +88,8 @@ export const ChangeEmail = () => {
                             {settings.isVerified && (
                                 <>
                                     <Typography variant="body1" gutterBottom>
-                                        Your primary email address has already been verified. This address will be used as the 'From' address when sending email responses from your widget, unless you specify a different email in the area settings.
+                                        Your primary email address has already been verified. This address will be used as the 'From' address when sending email responses from your widget, unless you specify a
+                                        different email in the area settings.
                                     </Typography>
                                     <Typography paragraph variant="body1">
                                         You can submit a new email to be used for responses at any time. This requires responding to a verification email being sent to your email address by Amazon Web Services.
@@ -122,8 +123,8 @@ export const ChangeEmail = () => {
                                             <ListItemText>
                                                 <Typography>
                                                     <Alert severity="warning">
-                                                        When updating your response email address, it is recommended to disable the widget from your website until you have verified that your address is valid. Otherwise your end users might fail to
-                                                        receive their response PDF.
+                                                        When updating your response email address, it is recommended to disable the widget from your website until you have verified that your address is valid.
+                                                        Otherwise your end users might fail to receive their response PDF.
                                                     </Alert>
                                                 </Typography>
                                             </ListItemText>

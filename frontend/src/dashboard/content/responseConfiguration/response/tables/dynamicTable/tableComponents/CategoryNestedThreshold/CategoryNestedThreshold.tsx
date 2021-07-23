@@ -1,5 +1,4 @@
-import React from "react";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import React, { useContext } from "react";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
 import { CategoryNestedThresholdData, DynamicTableProps } from "@Palavyr-Types";
@@ -8,6 +7,7 @@ import { DisplayTableData } from "../DisplayTableData";
 import { CategoryNestedThresholdContainer } from "./CategoryNestedThresholdContainer";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const CategoryNestedThreshold = ({ tableId, tableTag, tableMeta, tableData, setTableData, areaIdentifier, deleteAction, showDebug }: Omit<DynamicTableProps, "setTableMeta">) => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const classes = useStyles();
 
     const modifier = new CategoryNestedThresholdModifier(setTableData);

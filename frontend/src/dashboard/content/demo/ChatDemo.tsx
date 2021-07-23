@@ -12,6 +12,7 @@ import { PalavyrDemoWidget } from "./DemoWidget";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { FakeWidgets } from "./fakeWidget/FakeWidgets";
 import { WidgetColorOptions } from "./ColorOptions";
+import { useContext } from "react";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ChatDemo = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
 
     const [preCheckErrors, setPreCheckErrors] = useState<PreCheckError[]>([]);
     const [apiKey, setApiKey] = useState<string>("");
@@ -88,7 +89,9 @@ export const ChatDemo = () => {
                         <Typography align="center" gutterBottom variant="h4">
                             Landing Header
                         </Typography>
-                        {widgetPreferences && <HeaderEditor setEditorState={(landingHeader: string) => setWidgetPreferences({ ...widgetPreferences, landingHeader })} initialData={widgetPreferences.landingHeader} />}
+                        {widgetPreferences && (
+                            <HeaderEditor setEditorState={(landingHeader: string) => setWidgetPreferences({ ...widgetPreferences, landingHeader })} initialData={widgetPreferences.landingHeader} />
+                        )}
                     </Grid>
                     <Grid item xs={4}>
                         {apiKey && <PalavyrDemoWidget preCheckErrors={preCheckErrors} apiKey={apiKey} iframeRefreshed={iframeRefreshed} />}

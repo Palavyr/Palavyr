@@ -12,6 +12,7 @@ import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { OsTypeToggle } from "../areaSettings/enableAreas/OsTypeToggle";
+import { useContext } from "react";
 
 const useStyles = makeStyles(() => ({
     titleText: {
@@ -53,8 +54,8 @@ export const ResponseConfiguration = () => {
     const [staticTables, setStaticTables] = useState<StaticTableMetas>([]);
     const [epilogue, setEpilogue] = useState<string>("");
 
-    const repository = new PalavyrRepository();
-    const staticTablesModifier = new StaticTablesModifier(setStaticTables);
+    const { repository } = useContext(DashboardContext);
+    const staticTablesModifier = new StaticTablesModifier(setStaticTables, repository);
     const prologueModifier = new LogueModifier(setPrologue);
     const epilogueModifier = new LogueModifier(setEpilogue);
 
@@ -133,14 +134,26 @@ export const ResponseConfiguration = () => {
     return (
         <>
             <AreaConfigurationHeader title="Your Response PDF" subtitle="Use this editor to configure the fee tables, as well as associated information, that will be sent in the response PDF for this area." />
-            {sendPdfWithResponse !== null && <OsTypeToggle controlledState={sendPdfWithResponse} onChange={onToggleSendPdfWithResponse} enabledLabel="Send response Pdf with email" disabledLabel="Do not send response Pdf with email" />}
+            {sendPdfWithResponse !== null && (
+                <OsTypeToggle controlledState={sendPdfWithResponse} onChange={onToggleSendPdfWithResponse} enabledLabel="Send response Pdf with email" disabledLabel="Do not send response Pdf with email" />
+            )}
 
             <ExpandableTextBox title="Introductory statement" updatableValue={prologue} onChange={updatePrologue} onSave={savePrologue}>
-                <AreaConfigurationHeader divider light title="Create an introduction for your response PDF" subtitle="You can make it clear that fees are estimate only, or provide context for your client to understand their estimate." />
+                <AreaConfigurationHeader
+                    divider
+                    light
+                    title="Create an introduction for your response PDF"
+                    subtitle="You can make it clear that fees are estimate only, or provide context for your client to understand their estimate."
+                />
             </ExpandableTextBox>
 
             <DynamicTableConfiguration title="Pricing Strategies" areaIdentifier={areaIdentifier}>
-                <AreaConfigurationHeader divider light title="Configure a dynamic pricing strategy" subtitle="When you configure a pricing strategy, it creates a corresponding palavyr node that must be included in the chat conversation. When a client provides the corresponding information, its used to determine a fee estimate. Some strategies produce nodes that depend on prior nodes, so these must be placed in the Palavyr in logical order." />
+                <AreaConfigurationHeader
+                    divider
+                    light
+                    title="Configure a dynamic pricing strategy"
+                    subtitle="When you configure a pricing strategy, it creates a corresponding palavyr node that must be included in the chat conversation. When a client provides the corresponding information, its used to determine a fee estimate. Some strategies produce nodes that depend on prior nodes, so these must be placed in the Palavyr in logical order."
+                />
             </DynamicTableConfiguration>
 
             <StaticTableConfiguration areaIdentifier={areaIdentifier} title="Static Fees" staticTables={staticTables} tableSaver={tableSaver} tableCanceler={tableCanceler} modifier={staticTablesModifier}>
@@ -153,7 +166,12 @@ export const ResponseConfiguration = () => {
             </StaticTableConfiguration>
 
             <ExpandableTextBox title="Ending statement" updatableValue={epilogue} onChange={updateEpilogue} onSave={saveEpilogue}>
-                <AreaConfigurationHeader divider light title="Create an ending statement for your response PDF" subtitle="This section will appear at the end of the response PDF. You can make it clear that fees are estimate only, or provide context for your client to understand their estimate." />
+                <AreaConfigurationHeader
+                    divider
+                    light
+                    title="Create an ending statement for your response PDF"
+                    subtitle="This section will appear at the end of the response PDF. You can make it clear that fees are estimate only, or provide context for your client to understand their estimate."
+                />
             </ExpandableTextBox>
         </>
     );

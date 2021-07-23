@@ -1,8 +1,8 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { Button, makeStyles, TableBody, TableContainer, Paper } from "@material-ui/core";
 import { CategoryNestedThresholdData } from "@Palavyr-Types";
-import React from "react";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import React, { useContext } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { CategoryNestedThresholdHeader } from "./CategoryNestedThresholdHeader";
@@ -39,7 +39,7 @@ export const CategoryNestedThresholdItemTable = ({ categoryIndex, tableData, tab
     const [name, setCategoryName] = useState<string>("");
 
     const cls = useStyles();
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
 
     useEffect(() => {
         setCategoryName(categoryName);

@@ -9,7 +9,7 @@ import { EmailConfigurationComponent } from "./EmailConfigurationComponent";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 
 export const EmailConfiguration = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
 
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const { setIsLoading } = useContext(DashboardContext);

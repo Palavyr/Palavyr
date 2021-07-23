@@ -15,6 +15,7 @@ namespace Palavyr.API
     {
         private readonly IConfiguration configuration;
         private readonly IWebHostEnvironment env;
+        private readonly ErrorHandler errorHandler = new ErrorHandler();
 
         public Startup(IWebHostEnvironment env, IConfiguration configuration)
         {
@@ -64,11 +65,21 @@ namespace Palavyr.API
             ILoggerFactory loggerFactory
         )
         {
-            app.UseMiddleware<ErrorHandlingMiddleware>();
-            app.UseRequestResponseLogging();
+            // var logger = loggerFactory.CreateLogger("Error Handler");
+            // app.UseRequestResponseLogging(); // THIS STUPID THING IS DISPOSING THE RESPONSE BODY!!!
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors();
+            // app.UseExceptionHandler(
+            //     errorApp =>
+            //     {
+            //         errorApp.Run(
+            //             async context =>
+            //             {
+            //                 await errorHandler.HandleErrors(context, logger);
+            //             });
+            //     });
+            app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<SetHeadersMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests

@@ -1,14 +1,14 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { Divider, makeStyles, Typography } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Auth from "auth/Auth";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { SettingsWrapper } from "../SettingsWrapper";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles(() => ({
     titleText: {
@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const DeleteAccount = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const [alertState, setAlert] = useState<boolean>(false);
     const [] = useState<boolean>(false);
     const cls = useStyles();

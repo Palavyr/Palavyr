@@ -1,6 +1,6 @@
 import { makeStyles, Theme, createStyles, Grid, FormControl, InputLabel, Input, InputAdornment, IconButton, Paper, Divider } from "@material-ui/core";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import classNames from "classnames";
@@ -8,6 +8,7 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { SettingsWrapper } from "../SettingsWrapper";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const ChangePassword = () => {
-    var client = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
 
     const [showOldPassword, setShowOldPassword] = useState<boolean>(false);
     const [oldPassword, setOldPassword] = useState<string>("");
@@ -55,7 +56,7 @@ export const ChangePassword = () => {
     const cls = useStyles();
 
     const handlePasswordChange = async (oldPassword: string, newPassword: string): Promise<boolean> => {
-        const success = await client.Settings.Account.UpdatePassword(oldPassword, newPassword);
+        const success = await repository.Settings.Account.UpdatePassword(oldPassword, newPassword);
         return success;
     };
 

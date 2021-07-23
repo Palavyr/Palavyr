@@ -1,12 +1,13 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { CircularProgress, Grid, makeStyles, Table, TableContainer } from "@material-ui/core";
 import { FileLink } from "@Palavyr-Types";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { ImageRecordTableHeader } from "./ImageRecordTableHeader";
 import { ImageRecordTableBody } from "./ImageRecordTableBody";
 import { ImageReviewUpload } from "./ImageReviewUpload";
 import { Align } from "dashboard/layouts/positioning/Align";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     image: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 export const ImageReview = () => {
     const cls = useStyles();
 
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const [imageRecords, setImageRecords] = useState<FileLink[] | null>(null);
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
 

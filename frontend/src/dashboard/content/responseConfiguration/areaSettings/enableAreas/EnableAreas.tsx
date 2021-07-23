@@ -1,10 +1,10 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@material-ui/core";
 import { AreasEnabled, AreaTable } from "@Palavyr-Types";
 import classNames from "classnames";
-import React, { useEffect, useState } from "react";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import React, { useContext, useEffect, useState } from "react";
 import { useCallback } from "react";
 import { EnableAreaRow } from "./EnableAreaRow";
 
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const EnableAreas = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const cls = useStyles();
     const [areaIds, setAreaIds] = useState<AreasEnabled[]>([]);
 

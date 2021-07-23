@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -42,7 +43,7 @@ namespace Palavyr.API.CustomMiddleware
             }
 
             await next(context);
-            
+            Console.WriteLine("On the way out!");
             
         }
     }

@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { useHistory } from "react-router-dom";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { OnboardingTodo } from "./OnboardingTodo/OnboardingTodo";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { TodosAsBoolean } from "@Palavyr-Types";
 import { allClear, convertTodos } from "./OnboardingTodo/onboardingUtils";
@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
 export const WelcomeToTheDashboard = () => {
     const cls = useStyles();
     const history = useHistory();
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
 
     const { checkAreaCount } = React.useContext(DashboardContext);
 

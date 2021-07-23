@@ -1,5 +1,4 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FileLink } from "@Palavyr-Types";
 import { makeStyles, Paper } from "@material-ui/core";
 import { useParams } from "react-router-dom";
@@ -17,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ConfigurationPreview = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const { setIsLoading } = React.useContext(DashboardContext);
 

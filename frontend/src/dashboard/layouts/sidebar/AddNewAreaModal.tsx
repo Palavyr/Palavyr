@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { AreaTable } from "@Palavyr-Types";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DialogContent, makeStyles } from "@material-ui/core";
 import { AddOrCancel } from "@common/components/AddOrCancel";
+import { DashboardContext } from "../DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     dialog: {
@@ -29,7 +29,7 @@ export interface IAddNewAreaModal {
 export const AddNewAreaModal = ({ open, handleClose, setNewArea }: IAddNewAreaModal) => {
     const [areaName, setAreaName] = useState<string>("");
     const cls = useStyles();
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
 
     const onAdd = async () => {
         if (areaName !== "") {

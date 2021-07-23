@@ -20,7 +20,7 @@ export interface ImageReviewUploadProps {
 
 export const ImageReviewUpload = ({ setImageRecords }: ImageReviewUploadProps) => {
     const cls = useStyles();
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const { setIsLoading, setSuccessText, setSuccessOpen } = useContext(DashboardContext);
 
     const fileSave = async (rawFiles: File[]) => {

@@ -17,7 +17,7 @@ export interface IDynamicTable {
 }
 
 export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: IDynamicTable) => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
 
     const [loaded, setLoaded] = useState<boolean>(false);
     const [parentState, changeParentState] = useState<boolean>(false);

@@ -14,15 +14,16 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     public rootNode: IPalavyrNode;
     private head: ConvoNode;
     public setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
-    private repository: PalavyrRepository = new PalavyrRepository();
+    private repository: PalavyrRepository;
     private configurer: NodeConfigurer = new NodeConfigurer();
     private nodeCreator: NodeCreator = new NodeCreator();
 
     /**
      * List object for interacting with the list. This will have methods for performing insertions, deletions, additions, subtractions, etc
      */
-    constructor(nodeList: ConvoNode[], areaId: string, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, nodeTypeOptions: NodeTypeOptions) {
+    constructor(nodeList: ConvoNode[], areaId: string, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, nodeTypeOptions: NodeTypeOptions, repository: PalavyrRepository) {
         this.areaId = areaId;
+        this.repository = repository;
         this.head = this.getRootNode(nodeList);
         this.setTreeWithHistory = setTreeWithHistory;
         this.assembleDoubleLinkedMultiBranchLinkedList(nodeList, nodeTypeOptions);

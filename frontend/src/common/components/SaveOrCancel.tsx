@@ -75,12 +75,12 @@ export const SaveOrCancel = ({
     customCancelMessage,
     position = "center",
     size = "small",
-    timeout = 2000,
+    timeout = 1500,
     saveText = "Save",
     cancelText = "Cancel",
     deleteText = "Delete",
     useSaveIcon = true,
-    buttonType = "button"
+    buttonType = "button",
 }: ISaveOrCancel) => {
     const cls = useStyles();
     const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -102,19 +102,23 @@ export const SaveOrCancel = ({
                         setIsSaving(true);
                         setTimeout(async () => {
                             if (onSave) {
-                                const res = await onSave(e);
-                                if (res === true || res === null) {
-                                    setPosition();
-                                    if (warningOpen) setWarningOpen(false);
-                                    setSuccessText(customSaveMessage ?? "Save Successful");
-                                    setSuccessOpen(true);
-                                } else {
-                                    setPosition();
-                                    setWarningText(customCancelMessage ?? "Cancelled");
-                                    setWarningOpen(true);
+                                try {
+                                    const res = await onSave(e);
+                                    if (res === true || res === null) {
+                                        setPosition();
+                                        if (warningOpen) setWarningOpen(false);
+                                        setSuccessText(customSaveMessage ?? "Save Successful");
+                                        setSuccessOpen(true);
+                                    } else {
+                                        setPosition();
+                                        setWarningText(customCancelMessage ?? "Cancelled");
+                                        setWarningOpen(true);
+                                    }
+                                } catch {
+                                    setIsSaving(false);
                                 }
-                                setIsSaving(false);
                             }
+                            setIsSaving(false);
                         }, timeout);
                     }}
                     size={size}

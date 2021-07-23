@@ -1,15 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { BasicThresholdData, DynamicTableProps } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { BasicThresholdHeader } from "./BasicThresholdHeader";
 import { BasicThresholdBody } from "./BasicThresholdBody";
 import { useState } from "react";
 import { Button, makeStyles, Table, TableContainer, TextField, AccordionActions } from "@material-ui/core";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles(() => ({
     alignLeft: {
@@ -41,7 +41,7 @@ const useStyles = makeStyles(() => ({
 
 export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<DynamicTableProps, "tableMeta" | "setTableMeta">) => {
     const cls = useStyles();
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const [name, setItemName] = useState<string>("");
 
     const modifier = new BasicThresholdModifier(setTableData);

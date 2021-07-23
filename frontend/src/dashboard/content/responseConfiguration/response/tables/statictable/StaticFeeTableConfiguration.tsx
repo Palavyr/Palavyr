@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tableCanceler, modifier, areaIdentifier, children }: IFeeConfiguration) => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const cls = useStyles();
 
     const { planTypeMeta } = useContext(DashboardContext);

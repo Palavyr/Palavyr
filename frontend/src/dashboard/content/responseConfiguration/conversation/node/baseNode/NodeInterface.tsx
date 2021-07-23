@@ -2,8 +2,9 @@ import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { CardContent } from "@material-ui/core";
 import { Card } from "@material-ui/core";
 import classNames from "classnames";
-import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
+import { ConversationTreeContext, DashboardContext } from "dashboard/layouts/DashboardContext";
 import React, { useState } from "react";
+import { useContext } from "react";
 import { IPalavyrNode } from "../../Contracts";
 import { useNodeInterfaceStyles } from "../../nodeInterfaceStyles";
 import { ImageNodeEditor } from "../imageNode/ImageNodeEditor";
@@ -53,8 +54,8 @@ export const NodeInterface = ({
     shouldDisableNodeTypeSelector,
     optionPath,
 }: NodeInterfaceProps) => {
-    const { showDebugData } = React.useContext(ConversationTreeContext);
-    const repository = new PalavyrRepository();
+    const { showDebugData } = useContext(ConversationTreeContext);
+    const { repository } = useContext(DashboardContext);
     const [editorIsOpen, setEditorState] = useState<boolean>(false);
     const openEditor = () => setEditorState(true);
     const closeEditor = () => setEditorState(false);

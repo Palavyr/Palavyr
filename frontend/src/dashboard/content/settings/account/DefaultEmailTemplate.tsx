@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const DefaultEmailTemplate = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const cls = useStyles();
 
     const { setIsLoading } = useContext(DashboardContext);

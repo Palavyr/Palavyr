@@ -43,7 +43,7 @@ export class PalavyrRepository {
     };
 
     constructor(apiErrors: ApiErrors) {
-        this.client = new AxiosClient(apiErrors, getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
+        this.client = new AxiosClient(apiErrors, undefined, getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
     }
 
     public AuthenticationCheck = {
@@ -299,7 +299,7 @@ export class PalavyrRepository {
             getApiKey: async () => this.client.get<string>(`account/settings/api-key`),
             confirmEmailAddress: async (authToken: string) => this.client.post<boolean, {}>(`account/confirmation/${authToken}/action/setup`),
             resendConfirmationToken: async (emailAddress: string) => this.client.post<boolean, {}>(`account/confirmation/token/resend`, { EmailAddress: emailAddress }),
-            checkIsActive: async () => this.client.get<boolean>(`account/is-active`),
+            checkIsActive: async () => await this.client.get<boolean>(`account/is-active`),
 
             UpdatePassword: async (oldPassword: string, newPassword: string) => this.client.put<boolean, {}>(`account/settings/password`, { OldPassword: oldPassword, Password: newPassword }),
             updateCompanyName: async (companyName: string) => this.client.put<string, {}>(`account/settings/company-name`, { CompanyName: companyName }, CacheIds.CompanyName),

@@ -1,8 +1,8 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useContext, useEffect, useState } from "react";
 import { ListItem, ListItemText, FormControlLabel, Typography, makeStyles } from "@material-ui/core";
 import { IOSSwitch } from "@common/components/IOSSwitch";
 import { green, red } from "theme";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { DashboardContext } from "../DashboardContext";
 
 export interface WidgetStateSwitchProps {
     isActive: boolean;
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 export const WidgetStateSwitch = memo(({ isActive }: WidgetStateSwitchProps) => {
     const [widgetState, setWidgetState] = useState<boolean | undefined>();
     const cls = useStyles();
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
 
     const updatewidgetState = async () => {
         const updatedWidgetState = await repository.Configuration.WidgetState.SetWidgetState(!widgetState);

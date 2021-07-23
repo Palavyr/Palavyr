@@ -6,7 +6,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep } from "lodash";
-import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRow, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
+import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRow, PanelErrors, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DashboardHeader } from "./header/DashboardHeader";
 import { makeStyles, Typography } from "@material-ui/core";
@@ -20,8 +20,8 @@ import { UserDetails } from "./sidebar/UserDetails";
 import { PalavyrSnackbar } from "@common/components/PalavyrSnackbar";
 import { redirectToHomeWhenSessionNotEstablished } from "@api-client/clientUtils";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
-import { Errors } from "./Errors/ErrorPanel";
 import { ApiErrors } from "./Errors/ApiErrors";
+import { ErrorPanel } from "./Errors/ErrorPanel";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
@@ -101,7 +101,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [dashboardAreasLoading, setDashboardAreasLoading] = useState<boolean>(false);
     const cls = useStyles(helpOpen);
 
-    const [errors, setErrors] = useState<Errors>([]);
+    const [panelErrors, setPanelErrors] = useState<string[]>([]);
 
     const [successOpen, setSuccessOpen] = useState<boolean>(false);
     const [successText, setSuccessText] = useState<string>("Success");
@@ -117,7 +117,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
     const [unseenNotifications, setUnseenNotifications] = useState<number>(0);
 
-    const apiErrors = new ApiErrors(setSuccessOpen, setSuccessText, setWarningOpen, setWarningText, setErrorOpen, setErrorText, setErrors);
+    const apiErrors = new ApiErrors(setSuccessOpen, setSuccessText, setWarningOpen, setWarningText, setErrorOpen, setErrorText, setPanelErrors);
     const repository = new PalavyrRepository(apiErrors);
 
     useEffect(() => {
@@ -237,9 +237,9 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                 unseenNotifications: unseenNotifications,
                 setUnseenNotifications: setUnseenNotifications,
                 planTypeMeta: planTypeMeta,
-                errors,
-                setErrors,
-                repository
+                panelErrors,
+                setPanelErrors,
+                repository,
             }}
         >
             <div className={cls.root}>

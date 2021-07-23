@@ -1,5 +1,6 @@
 import { RESET_PASSWORD_LINK } from "@constants";
 import { Credentials, ResetEmailResponse, ResetPasswordResponse, VerificationResponse } from "@Palavyr-Types";
+import { ApiErrors } from "dashboard/layouts/Errors/ApiErrors";
 import { AxiosClient } from "./AxiosClient";
 
 export class LoginRepository {
@@ -7,8 +8,8 @@ export class LoginRepository {
     private resetClient: AxiosClient;
 
     constructor() {
-        this.client = new AxiosClient("login");
-        this.resetClient = new AxiosClient("apiKeyAccess");
+        this.client = new AxiosClient({} as ApiErrors, "login");
+        this.resetClient = new AxiosClient({} as ApiErrors, "apiKeyAccess");
     }
 
     public Login = {

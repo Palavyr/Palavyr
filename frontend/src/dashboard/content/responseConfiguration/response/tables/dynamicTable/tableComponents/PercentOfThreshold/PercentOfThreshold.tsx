@@ -1,13 +1,12 @@
-import React from "react";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import React, { useContext } from "react";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
 import { DynamicTableProps, PercentOfThresholdData } from "@Palavyr-Types";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { PercentOfThresholdContainer } from "./PercentOfThresholdContainer";
-import { reOrderPercentOfThresholdTableData } from "./PercentOfThresholdUtils";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const PercentOfThreshold = ({ showDebug, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: Omit<DynamicTableProps, "tableMeta" | "setTableMeta">) => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const classes = useStyles();
 
     const modifier = new PercentOfThresholdModifier(setTableData);

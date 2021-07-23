@@ -1,5 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import React, { useState, useCallback, useEffect, useContext } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { Grid, makeStyles, Typography, useTheme } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
@@ -25,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const AreaSettings = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
     const { setIsLoading } = React.useContext(DashboardContext);
