@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AppBar, Toolbar, IconButton, Typography, makeStyles, Badge, Tooltip } from "@material-ui/core";
+import { AppBar, Toolbar, IconButton, Typography, makeStyles, Badge, Tooltip, LinearProgress } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import classNames from "classnames";
 import { Align } from "../positioning/Align";
@@ -9,6 +9,7 @@ import InfoIcon from "@material-ui/icons/Info";
 import { SpaceEvenly } from "../positioning/SpaceEvenly";
 import { ErrorPanel } from "../Errors/ErrorPanel";
 import { DASHBOARD_HEADER_TOPBAR_zINDEX } from "@constants";
+import { yellow } from "@material-ui/core/colors";
 
 const drawerWidth: number = 240;
 
@@ -19,6 +20,8 @@ interface DashboardHeaderProps {
     handleHelpDrawerOpen: () => void;
     title: string;
     unseenNotifications: number;
+    isLoading: boolean;
+    dashboardAreasLoading: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -58,6 +61,13 @@ const useStyles = makeStyles((theme) => ({
     helpIconText: {
         // paddingRight: theme.spacing(3),
     },
+    loading: {
+        backgroundColor: theme.palette.primary.dark,
+        height: "15px",
+    },
+    bar: {
+        backgroundColor: yellow[300],
+    },
 }));
 
 const baseRoutesToExclude = [
@@ -83,7 +93,7 @@ const baseRoutesToExclude = [
 
 const routesToExclude = baseRoutesToExclude.concat(baseRoutesToExclude.map((x) => x + "/"));
 
-export const DashboardHeader = ({ unseenNotifications, open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
+export const DashboardHeader = ({ isLoading, dashboardAreasLoading, unseenNotifications, open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
     const cls = useStyles();
     const [sized, setSized] = useState<boolean>(false);
     const handle = () => setSized(!sized);
@@ -146,6 +156,7 @@ export const DashboardHeader = ({ unseenNotifications, open, handleDrawerOpen, t
                         </Align>
                     </div>
                 </Toolbar>
+                {(isLoading || dashboardAreasLoading) && <LinearProgress classes={{ bar: cls.bar }} className={cls.loading} />}
                 <ErrorPanel />
             </>
         </AppBar>

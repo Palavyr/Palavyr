@@ -32,7 +32,7 @@ namespace Palavyr.API.Controllers.Conversation.Images
             // TODO: https://www.strathweb.com/2017/07/customizing-query-string-parameter-binding-in-asp-net-core-mvc/
             if (!Request.QueryString.HasValue)
             {
-                throw new DomainException("a querystring for the delete images endpoint is required");
+                throw new DomainException("Image deletion failed. No image id was provided.");
             }
 
             var ids = imageIds.Split(',');

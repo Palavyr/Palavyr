@@ -21,13 +21,12 @@ export interface ImageReviewUploadProps {
 export const ImageReviewUpload = ({ setImageRecords }: ImageReviewUploadProps) => {
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);
-    const { setIsLoading, setSuccessText, setSuccessOpen } = useContext(DashboardContext);
+    const { setSuccessText, setSuccessOpen } = useContext(DashboardContext);
 
     const fileSave = async (rawFiles: File[]) => {
         const files = rawFiles.filter((x: File) => !isNullOrUndefinedOrWhitespace(x));
         if (files.length === 0) return;
 
-        setIsLoading(true);
         const formData = new FormData();
 
         let result: FileLink[];
@@ -44,7 +43,6 @@ export const ImageReviewUpload = ({ setImageRecords }: ImageReviewUploadProps) =
         }
         const links = await repository.Configuration.Images.getImages();
         setImageRecords(links);
-        setIsLoading(false);
         setSuccessOpen(true);
     };
 

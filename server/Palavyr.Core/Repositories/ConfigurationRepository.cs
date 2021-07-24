@@ -77,7 +77,7 @@ namespace Palavyr.Core.Repositories
             var result = await s3Deleter.DeleteObjectsFromS3Async(userDataBucket, s3Keys.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray());
             if (!result)
             {
-                throw new DomainException("Could not delete files from S3!");
+                throw new DomainException("Could not delete files from the server");
             }
 
             dashContext.RemoveRange(images);

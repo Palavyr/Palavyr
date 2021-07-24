@@ -58,8 +58,6 @@ export const ResponseConfiguration = () => {
     const prologueModifier = new LogueModifier(setPrologue);
     const epilogueModifier = new LogueModifier(setEpilogue);
 
-    const { setIsLoading } = React.useContext(DashboardContext);
-
     const savePrologue = async () => {
         const _prologue_ = await repository.Configuration.updatePrologue(areaIdentifier, prologue);
         setPrologue(_prologue_);
@@ -107,14 +105,12 @@ export const ResponseConfiguration = () => {
     };
 
     const loadEstimateConfiguration = useCallback(async () => {
-        setIsLoading(true);
         const { prologue, epilogue, staticTablesMetas, sendPdfResponse } = await repository.Configuration.getEstimateConfiguration(areaIdentifier);
         setPrologue(cloneDeep(prologue));
         setEpilogue(cloneDeep(epilogue));
         setStaticTables(staticTablesMetas);
         setSendPdfWithResponse(sendPdfResponse);
         setLoaded(true);
-        setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
 

@@ -35,8 +35,7 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: "450px",
         maxHeight: "450px",
         textAlign: "center",
-        marginBottom: "1.2rem"
-
+        marginBottom: "1.2rem",
     },
     previewChip: {
         minWidth: 130,
@@ -82,7 +81,6 @@ interface ChangeLogoImageInner {
 const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInner) => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
-    const { setIsLoading } = useContext(DashboardContext);
 
     const [alertState, setAlertState] = useState<boolean>(false);
     const [companyLogo, setcompanyLogo] = useState<string>("");
@@ -106,7 +104,6 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
     };
 
     const handleFileSave = async () => {
-        setIsLoading(true);
         if (fileUpload !== null) {
             const formData = new FormData();
             formData.append("files", fileUpload[0]);
@@ -114,7 +111,6 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
             setcompanyLogo(dataUrl);
         }
         setFileUpload([]); // shouldn't this clear the chip
-        setIsLoading(false);
     };
 
     const getDropRejectMessage = (rejectedFile: File, acceptedFiles: string[], maxFileSize: number) => {
@@ -131,10 +127,8 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
     };
 
     const handleDeleteLogo = async () => {
-        setIsLoading(true);
         await repository.Settings.Account.deleteCompanyLogo();
         setcompanyLogo("");
-        setIsLoading(false);
     };
 
     useEffect(() => {

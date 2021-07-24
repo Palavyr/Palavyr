@@ -27,8 +27,6 @@ export const AreaSettings = () => {
     const { repository } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
-    const { setIsLoading } = React.useContext(DashboardContext);
-
     const [loaded, setLoaded] = useState<boolean>(false);
     const [alertState, setAlertState] = useState<boolean>(false);
     const [settings, setSettings] = useState<Partial<Settings>>({
@@ -47,7 +45,6 @@ export const AreaSettings = () => {
     const history = useHistory();
 
     const loadSettings = useCallback(async () => {
-        setIsLoading(true);
         const areas = await repository.Area.GetAreas();
         const areaData = areas.filter((x) => x.areaIdentifier === areaIdentifier)[0];
 
@@ -61,7 +58,6 @@ export const AreaSettings = () => {
             isEnabled: areaData.isEnabled,
         });
         setIsEnabledState(areaData.isEnabled);
-        setIsLoading(false);
     }, [areaIdentifier]);
 
     useEffect(() => {

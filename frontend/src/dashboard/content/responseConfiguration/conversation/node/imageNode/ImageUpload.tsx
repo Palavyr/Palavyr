@@ -27,7 +27,7 @@ export const ImageUpload = ({ setCurrentImageId, currentNode, nodeId, imageId, c
     const history = useHistory();
     const [uploadModal, setUploadModal] = useState(false);
 
-    const { setIsLoading, setSuccessOpen, setSuccessText, planTypeMeta } = useContext(DashboardContext);
+    const { setSuccessOpen, setSuccessText, planTypeMeta } = useContext(DashboardContext);
     useEffect(() => {
         if (planTypeMeta && !planTypeMeta.allowedImageUpload) {
             history.push("/dashboard/please-subscribe");
@@ -39,7 +39,6 @@ export const ImageUpload = ({ setCurrentImageId, currentNode, nodeId, imageId, c
     };
 
     const fileSave = async (files: File[]) => {
-        setIsLoading(true);
         const formData = new FormData();
 
         let result: FileLink[];
@@ -58,7 +57,6 @@ export const ImageUpload = ({ setCurrentImageId, currentNode, nodeId, imageId, c
         }
 
         await repository.Configuration.Images.savePreExistingImage(result[0].fileId, nodeId);
-        setIsLoading(false);
         setSuccessOpen(true);
         closeEditor();
     };

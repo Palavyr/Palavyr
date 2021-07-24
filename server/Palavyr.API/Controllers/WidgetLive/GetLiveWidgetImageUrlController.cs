@@ -37,7 +37,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             var image = await repository.GetImageById(convoNode.ImageId, cancellationToken);
             if (image.S3Key == null)
             {
-                throw new DomainException("We failed to set the file key for this image.");
+                throw new DomainException("Failed to set the file key for this image.");
             }
 
             var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(image.S3Key, configuration.GetUserDataBucket(), DateTime.Now.AddDays(3));

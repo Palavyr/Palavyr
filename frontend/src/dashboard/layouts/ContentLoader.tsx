@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import classNames from "classnames";
 import { makeStyles } from "@material-ui/core";
 import { DRAWER_WIDTH } from "@constants";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStrip";
 import { yellow } from "@material-ui/core/colors";
 import { isDevelopmentStage } from "@api-client/clientUtils";
@@ -10,8 +9,6 @@ import { YellowStrip } from "@common/components/YellowStrip";
 
 interface IContentLoader {
     open: boolean;
-    isLoading: boolean;
-    dashboardAreasLoading: boolean;
     children: React.ReactNode;
 }
 
@@ -38,14 +35,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const ContentLoader = ({ open, isLoading, dashboardAreasLoading, children }: IContentLoader) => {
+export const ContentLoader = ({ open, children }: IContentLoader) => {
     const cls = useStyles();
     const isDev = isDevelopmentStage();
     const [show, setShow] = useState<boolean>(isDev);
 
     return (
         <main className={classNames(cls.content, { [cls.contentShift]: open })}>
-            {(isLoading || dashboardAreasLoading) && <LinearProgress className={cls.loading} />}
             {isDev && <DevStagingStrip show={show} setShow={setShow} />}
             {!show && <YellowStrip />}
             <div>{children}</div>

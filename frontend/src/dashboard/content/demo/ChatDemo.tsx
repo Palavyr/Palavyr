@@ -33,7 +33,6 @@ export const ChatDemo = () => {
     const [iframeRefreshed, reloadIframe] = useState<boolean>(false);
     const [widgetPreferences, setWidgetPreferences] = useState<WidgetPreferences>();
 
-    const { setIsLoading } = React.useContext(DashboardContext);
     const cls = useStyles(preCheckErrors.length > 0);
 
     const loadMissingNodes = useCallback(async () => {
@@ -59,14 +58,11 @@ export const ChatDemo = () => {
     }, [loadMissingNodes]);
 
     const loadDemoWidget = useCallback(async () => {
-        setIsLoading(true);
         const key = await repository.Settings.Account.getApiKey();
         setApiKey(key);
 
         const currentWidgetPreferences = await repository.WidgetDemo.GetWidetPreferences();
         setWidgetPreferences(currentWidgetPreferences);
-
-        setIsLoading(false);
     }, []);
 
     useEffect(() => {

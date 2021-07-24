@@ -54,7 +54,7 @@ const useStyles = makeStyles(() => ({
 export const StructuredConvoTree = () => {
     const cls = useStyles();
 
-    const { setIsLoading, planTypeMeta, repository } = useContext(DashboardContext);
+    const { planTypeMeta, repository } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const [, setLoaded] = useState<boolean>(false);
 
@@ -84,13 +84,11 @@ export const StructuredConvoTree = () => {
             setNodeTypeOptions(nodeTypeOptions);
             setLinkedNodes(nodesLinkedList);
 
-            setIsLoading(false);
             setConversationHistory([cloneDeep(nodesLinkedList)]);
         }
     }, [areaIdentifier, planTypeMeta]);
 
     useEffect(() => {
-        setIsLoading(true);
         setLoaded(true);
         loadNodes();
         return () => {

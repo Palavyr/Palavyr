@@ -45,7 +45,7 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
 
     const [deleteIsWorking, setDeleteIsWorking] = useState<boolean>(false);
 
-    const { setIsLoading, setUnseenNotifications } = React.useContext(DashboardContext);
+    const { setUnseenNotifications } = React.useContext(DashboardContext);
 
     const markAsSeen = async (conversationId: string) => {
         const enquiries = await repository.Enquiries.updateEnquiry(conversationId);

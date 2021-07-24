@@ -253,6 +253,8 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                     handleHelpDrawerOpen={handleHelpDrawerOpen}
                     helpOpen={helpOpen}
                     title={currentViewName}
+                    isLoading={isLoading}
+                    dashboardAreasLoading={dashboardAreasLoading}
                 />
                 <Drawer
                     className={classNames(cls.menuDrawer)}
@@ -268,9 +270,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                     <Divider />
                     <SideBarMenu areaNameDetails={areaNameDetails} />
                 </Drawer>
-                <ContentLoader isLoading={isLoading} dashboardAreasLoading={dashboardAreasLoading} open={open}>
-                    {children}
-                </ContentLoader>
+                <ContentLoader open={open}>{children}</ContentLoader>
                 <Drawer
                     className={cls.helpDrawer}
                     variant="persistent"

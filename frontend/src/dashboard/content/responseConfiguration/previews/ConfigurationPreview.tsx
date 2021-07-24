@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
 export const ConfigurationPreview = () => {
     const { repository } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
-    const { setIsLoading } = React.useContext(DashboardContext);
 
     const [preview, setPreview] = useState<FileLink>();
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -28,12 +27,10 @@ export const ConfigurationPreview = () => {
     const loadPreview = React.useCallback(async () => {
         const fileLink = await repository.Configuration.Preview.fetchPreview(areaIdentifier);
         setPreview(fileLink);
-        setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
 
     useEffect(() => {
-        setIsLoading(true);
         loadPreview();
         setLoaded(true);
         return () => {

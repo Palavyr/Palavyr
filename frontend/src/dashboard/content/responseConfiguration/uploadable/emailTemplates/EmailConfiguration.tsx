@@ -6,13 +6,11 @@ import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHea
 import { OsTypeToggle } from "../../areaSettings/enableAreas/OsTypeToggle";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { EmailConfigurationComponent } from "./EmailConfigurationComponent";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 
 export const EmailConfiguration = () => {
     const { repository } = useContext(DashboardContext);
 
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
-    const { setIsLoading } = useContext(DashboardContext);
 
     const [loaded, setLoaded] = useState<boolean>(false);
     const [settings, setSettings] = useState<Partial<Settings>>({ useAreaFallbackEmail: false });
@@ -46,7 +44,6 @@ export const EmailConfiguration = () => {
     }, []);
 
     useEffect(() => {
-        setIsLoading(true);
         loadVariableDetails();
         loadSettings();
         return () => {

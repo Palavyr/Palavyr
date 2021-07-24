@@ -36,18 +36,15 @@ export const Enquires = () => {
 
     const [enquiries, setEnquiries] = useState<Enquiries>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const { setIsLoading } = React.useContext(DashboardContext);
     const [deleteIsLoading, setDeleteIsLoading] = useState<boolean>(false);
     const [showSeen, setShowSeen] = useState<boolean | null>(null);
 
     const deleteSelectedEnquiries = async (enquiries: Enquiries) => {
         setDeleteIsLoading(true);
-        setIsLoading(true);
         const seenEnquiries = enquiries.filter((x: EnquiryRow) => x.seen);
         const enqs = await repository.Enquiries.deleteSelectedEnquiries(seenEnquiries.map((x: EnquiryRow) => x.conversationId));
         setTimeout(() => {
             setEnquiries(enqs);
-            setIsLoading(false);
             setDeleteIsLoading(false);
         }, 1000);
     };
@@ -55,11 +52,9 @@ export const Enquires = () => {
     const loadEnquiries = useCallback(async () => {
         const show = await repository.Enquiries.getShowSeenEnquiries();
         setShowSeen(show);
-
         const enqs = await repository.Enquiries.getEnquiries();
         setEnquiries(enqs);
         setLoading(false);
-        setIsLoading(false);
     }, []);
 
     const numberPropertyGetter = (enquiry: EnquiryRow) => {
@@ -67,7 +62,6 @@ export const Enquires = () => {
     };
 
     useEffect(() => {
-        setIsLoading(true);
         loadEnquiries();
     }, [loadEnquiries]);
 

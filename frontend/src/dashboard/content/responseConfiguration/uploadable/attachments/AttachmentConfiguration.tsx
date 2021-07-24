@@ -17,7 +17,7 @@ export const AttachmentConfiguration = () => {
 
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
-    const { setIsLoading, setSuccessOpen, setSuccessText, planTypeMeta } = useContext(DashboardContext);
+    const { setSuccessOpen, setSuccessText, planTypeMeta } = useContext(DashboardContext);
 
     const [, setLoaded] = useState<boolean>(false);
     const [currentPreview, setCurrentPreview] = useState<FileLink | null>();
@@ -29,25 +29,20 @@ export const AttachmentConfiguration = () => {
     };
 
     const removeAttachment = async (fileId: string) => {
-        setIsLoading(true);
         const filelinks = await repository.Configuration.Attachments.removeAttachment(areaIdentifier, fileId);
         setAttachmentList(filelinks);
         setSuccessText("Attachment Removed");
         setSuccessOpen(true);
-        setIsLoading(false);
     };
 
     const loadAttachments = useCallback(async () => {
         const fileLinks = await repository.Configuration.Attachments.fetchAttachmentLinks(areaIdentifier);
         setAttachmentList(fileLinks);
         setLoaded(true);
-        setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
 
     useEffect(() => {
-        setIsLoading(true);
-        setIsLoading(true);
         loadAttachments();
         return () => {
             setLoaded(false);
@@ -56,7 +51,6 @@ export const AttachmentConfiguration = () => {
     }, [areaIdentifier, attachmentList.length, loadAttachments]);
 
     const handleFileSave = async (files: File[]) => {
-        setIsLoading(true);
         var formData = new FormData();
 
         if (files.length === 1) {
@@ -73,14 +67,13 @@ export const AttachmentConfiguration = () => {
             const fileLinks = [];
             setAttachmentList(fileLinks);
         }
-        setIsLoading(false);
         setSuccessText("Attachment Uploaded");
         setSuccessOpen(true);
         setCurrentPreview(null);
     };
 
     const shouldDisableUploadButton = () => {
-        return planTypeMeta && (attachmentList.length >= planTypeMeta.allowedAttachments);
+        return planTypeMeta && attachmentList.length >= planTypeMeta.allowedAttachments;
     };
 
     return (

@@ -19,7 +19,6 @@ export const DefaultEmailTemplate = () => {
     const { repository } = useContext(DashboardContext);
     const cls = useStyles();
 
-    const { setIsLoading } = useContext(DashboardContext);
     const [variableDetails, setVariableDetails] = useState<VariableDetail[]>();
 
     const loadVariableDetails = useCallback(async () => {
@@ -28,9 +27,7 @@ export const DefaultEmailTemplate = () => {
     }, []);
 
     useEffect(() => {
-        setIsLoading(true);
         loadVariableDetails();
-        setIsLoading(false);
     }, [loadVariableDetails]);
 
     return (
