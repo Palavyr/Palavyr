@@ -201,6 +201,10 @@ export class AxiosClient implements IAxiosClient {
         const error = this.parseError(rawError);
 
         try {
+            this.loaders?.stopLoadingSpinner();
+        } catch {}
+
+        try {
             this.apiErrors?.SetErrorSnack(error.message);
             this.apiErrors?.SetErrorPanel(error);
         } catch {}
