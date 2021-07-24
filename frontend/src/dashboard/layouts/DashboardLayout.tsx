@@ -22,6 +22,7 @@ import { redirectToHomeWhenSessionNotEstablished } from "@api-client/clientUtils
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { ApiErrors } from "./Errors/ApiErrors";
 import { ErrorPanel } from "./Errors/ErrorPanel";
+import { Loaders } from "@api-client/Loaders";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         width: "100%",
         top: "8px",
-        paddingBottom:"5rem"
+        paddingBottom: "5rem",
     },
     menuDrawer: {
         width: DRAWER_WIDTH,
@@ -118,8 +119,9 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
     const [unseenNotifications, setUnseenNotifications] = useState<number>(0);
 
+    const loaders = new Loaders(setIsLoading);
     const apiErrors = new ApiErrors(setSuccessOpen, setSuccessText, setWarningOpen, setWarningText, setErrorOpen, setErrorText, setPanelErrors);
-    const repository = new PalavyrRepository(apiErrors);
+    const repository = new PalavyrRepository(apiErrors, loaders);
 
     useEffect(() => {
         (async () => {

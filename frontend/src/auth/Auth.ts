@@ -44,7 +44,7 @@ class Auth {
             SessionStorage.setAuthorization(authenticationResponse.sessionId, authenticationResponse.jwtToken);
             SessionStorage.setEmailAddress(authenticationResponse.emailAddress);
 
-            const _client = new PalavyrRepository({} as ApiErrors); // needs to be authenticated
+            const _client = new PalavyrRepository(); // needs to be authenticated
 
             const accountIsActive = await _client.Settings.Account.checkIsActive();
             this.isActive = accountIsActive;

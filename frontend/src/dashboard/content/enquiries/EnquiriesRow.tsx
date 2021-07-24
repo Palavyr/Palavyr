@@ -48,43 +48,34 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
     const { setIsLoading, setUnseenNotifications } = React.useContext(DashboardContext);
 
     const markAsSeen = async (conversationId: string) => {
-        setIsLoading(true);
-        await repository.Enquiries.updateEnquiry(conversationId);
-        setIsLoading(false);
+        const enquiries = await repository.Enquiries.updateEnquiry(conversationId);
+        setEnquiries(enquiries);
     };
 
     const toggleSeenValue = async (conversationId: string) => {
-        setIsLoading(true);
         const enqs = await repository.Enquiries.updateEnquiry(conversationId);
         const numUnseen = enqs.filter((x: EnquiryRow) => !x.seen).length;
         setUnseenNotifications(numUnseen);
         setEnquiries(enqs);
-        setIsLoading(false);
     };
 
     const responseLinkOnClick = async (enquiry: EnquiryRow) => {
-        setIsLoading(true);
         markAsSeen(enquiry.conversationId);
         const signedUrl = await repository.Enquiries.getSignedUrl(enquiry.linkReference.fileReference);
         window.open(signedUrl, "_blank");
-        setIsLoading(false);
     };
 
     const convoDetailsOnClick = async (enquiry: EnquiryRow) => {
-        setIsLoading(true);
         const url = formConversationReviewPath(enquiry.conversationId);
         markAsSeen(enquiry.conversationId);
         history.push(url);
-        setIsLoading(false);
     };
 
     const deleteEnquiryOnClick = async (enquiry: EnquiryRow) => {
-        setIsLoading(true);
         setDeleteIsWorking(true);
         setTimeout(async () => {
             const enquiries = await repository.Enquiries.deleteSelectedEnquiries([enquiry.conversationId]);
             setEnquiries(enquiries);
-            setIsLoading(false);
             setDeleteIsWorking(false);
         }, 1500);
     };

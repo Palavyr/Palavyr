@@ -1,8 +1,9 @@
-import { ErrorResponse } from "@Palavyr-Types";
+import { ErrorResponse, SetState } from "@Palavyr-Types";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { ApiErrors } from "dashboard/layouts/Errors/ApiErrors";
 import { SessionStorage } from "localStorage/sessionStorage";
 import { serverUrl, SPECIAL_HEADERS } from "./clientUtils";
+import { Loaders } from "./Loaders";
 
 interface IAxiosClient {
     get<T>(url: string, cacheId?: CacheIds, config?: AxiosRequestConfig): Promise<T>;
@@ -34,14 +35,16 @@ export enum CacheIds {
 
 export class AxiosClient implements IAxiosClient {
     public client: AxiosInstance;
-    private apiErrors: ApiErrors;
+    private apiErrors?: ApiErrors;
+    private loaders?: Loaders;
     private action: string = "tubmcgubs";
     private sessionIdCallback?: () => string;
     private authTokenCallback?: () => string;
     public sessionId: string;
 
-    constructor(apiErrors: ApiErrors, action?: string, sessionIdCallback?: () => string, authTokenCallback?: () => string) {
+    constructor(apiErrors?: ApiErrors, loaders?: Loaders, action?: string, sessionIdCallback?: () => string, authTokenCallback?: () => string) {
         this.apiErrors = apiErrors;
+        this.loaders = loaders;
         this.sessionIdCallback = sessionIdCallback;
         this.authTokenCallback = authTokenCallback;
         if (action !== undefined) {
@@ -50,9 +53,9 @@ export class AxiosClient implements IAxiosClient {
     }
 
     private setAuthorizationContext() {
-        try {
+        if (this.apiErrors !== undefined) {
             this.apiErrors.ClearErrorPanel();
-        } catch {}
+        }
         let headers: any = { action: this.action, ...SPECIAL_HEADERS };
         if (this.sessionIdCallback !== undefined) {
             const sessionId = this.sessionIdCallback();
@@ -75,8 +78,10 @@ export class AxiosClient implements IAxiosClient {
                 if (cachedValue) {
                     return cachedValue as T;
                 } else {
+                    this.loaders?.startLoadingSpinner();
                     const response = (await this.client.get(url, config)) as AxiosResponse<T>;
                     SessionStorage.setCacheValue(cacheId, response.data);
+                    this.loaders?.stopLoadingSpinner();
                     return response.data as T;
                 }
             } catch (error) {
@@ -85,7 +90,10 @@ export class AxiosClient implements IAxiosClient {
             }
         } else {
             try {
+                this.loaders?.startLoadingSpinner();
                 const response = (await this.client.get(url, config)) as AxiosResponse<T>;
+                this.loaders?.stopLoadingSpinner();
+
                 return response.data as T;
             } catch (error) {
                 this.ProcessErrorResponse(error);
@@ -98,8 +106,12 @@ export class AxiosClient implements IAxiosClient {
         this.setAuthorizationContext();
         if (cacheId) {
             try {
+                this.loaders?.startLoadingSpinner();
+
                 const response = (await this.client.post(url, payload, config)) as AxiosResponse<T>;
                 SessionStorage.setCacheValue(cacheId, response.data);
+                this.loaders?.stopLoadingSpinner();
+
                 return response.data as T;
             } catch (error) {
                 this.ProcessErrorResponse(error);
@@ -107,7 +119,11 @@ export class AxiosClient implements IAxiosClient {
             }
         } else {
             try {
+                this.loaders?.startLoadingSpinner();
+
                 const response = (await this.client.post(url, payload, config)) as AxiosResponse<T>;
+                this.loaders?.stopLoadingSpinner();
+
                 return response.data as T;
             } catch (error) {
                 this.ProcessErrorResponse(error);
@@ -120,8 +136,12 @@ export class AxiosClient implements IAxiosClient {
         this.setAuthorizationContext();
         if (cacheId) {
             try {
+                this.loaders?.startLoadingSpinner();
+
                 const response = (await this.client.put(url, payload, config)) as AxiosResponse<T>;
                 SessionStorage.setCacheValue(cacheId, response.data);
+                this.loaders?.stopLoadingSpinner();
+
                 return response.data as T;
             } catch (error) {
                 this.ProcessErrorResponse(error);
@@ -129,7 +149,11 @@ export class AxiosClient implements IAxiosClient {
             }
         } else {
             try {
+                this.loaders?.startLoadingSpinner();
+
                 const response = (await this.client.put(url, payload, config)) as AxiosResponse<T>;
+                this.loaders?.stopLoadingSpinner();
+
                 return response.data as T;
             } catch (error) {
                 this.ProcessErrorResponse(error);
@@ -142,13 +166,17 @@ export class AxiosClient implements IAxiosClient {
         this.setAuthorizationContext();
         if (cacheId) {
             try {
+                this.loaders?.startLoadingSpinner();
+
                 const response = await this.client.delete(url, config);
+
                 const data = response.data as T;
                 if (data) {
                     SessionStorage.setCacheValue(cacheId, data);
                 } else {
                     SessionStorage.clearCacheValue(cacheId);
                 }
+                this.loaders?.stopLoadingSpinner();
                 return response.data as T;
             } catch (error) {
                 this.ProcessErrorResponse(error);
@@ -156,7 +184,11 @@ export class AxiosClient implements IAxiosClient {
             }
         } else {
             try {
+                this.loaders?.startLoadingSpinner();
+
                 const response = await this.client.delete(url, config);
+                this.loaders?.stopLoadingSpinner();
+
                 return response.data as T;
             } catch (error) {
                 this.ProcessErrorResponse(error);
@@ -169,8 +201,8 @@ export class AxiosClient implements IAxiosClient {
         const error = this.parseError(rawError);
 
         try {
-            this.apiErrors.SetErrorSnack(error.message);
-            this.apiErrors.SetErrorPanel(error);
+            this.apiErrors?.SetErrorSnack(error.message);
+            this.apiErrors?.SetErrorPanel(error);
         } catch {}
 
         throw new Error(error.message);

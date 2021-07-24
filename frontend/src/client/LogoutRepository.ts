@@ -1,11 +1,10 @@
 import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./clientUtils";
 import { AxiosClient } from "./AxiosClient";
-import { ApiErrors } from "dashboard/layouts/Errors/ApiErrors";
 
 export class LogoutRepository {
     private client: AxiosClient;
     constructor() {
-        this.client = new AxiosClient({} as ApiErrors, "logout", getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
+        this.client = new AxiosClient(undefined, undefined, "logout", getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
     }
 
     public Logout = {

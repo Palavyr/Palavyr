@@ -27,12 +27,14 @@ import {
     StaticTableRow,
     PlanTypeMeta,
     DynamicTableData,
+    SetState,
 } from "@Palavyr-Types";
 import { ApiErrors } from "dashboard/layouts/Errors/ApiErrors";
 import { filterNodeTypeOptionsOnSubscription } from "dashboard/subscriptionFilters/filterConvoNodeTypes";
 import { SessionStorage } from "localStorage/sessionStorage";
 import { AxiosClient, CacheIds } from "./AxiosClient";
 import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./clientUtils";
+import { Loaders } from "./Loaders";
 
 export class PalavyrRepository {
     private client: AxiosClient;
@@ -42,8 +44,8 @@ export class PalavyrRepository {
         "Content-Type": "multipart/form-data",
     };
 
-    constructor(apiErrors: ApiErrors) {
-        this.client = new AxiosClient(apiErrors, undefined, getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
+    constructor(apiErrors?: ApiErrors, loaders?: Loaders) {
+        this.client = new AxiosClient(apiErrors, loaders, undefined, getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
     }
 
     public AuthenticationCheck = {
