@@ -30,6 +30,13 @@ const useStyles = makeStyles((theme) => ({
     item: {
         padding: "0.3rem",
     },
+    ul: {
+        margin: "0",
+        padding: "0"
+    },
+    errorTitle:{
+        marginBottom: "1.2rem"
+    }
 }));
 
 export const ErrorPanel = () => {
@@ -41,34 +48,36 @@ export const ErrorPanel = () => {
             <>
                 <div className={cls.container}>
                     <Typography gutterBottom align="center" variant="h5">
-                        Errors
+                        Error
                     </Typography>
                     <div className={cls.innerContainer}>
                         <Align direction="flex-start">
                             <div className={cls.panelArea}>
                                 {panelErrors.message && (
-                                    <Typography variant="body1" align="center">
+                                    <Typography variant="body1" align="center" gutterBottom className={cls.errorTitle}>
                                         {panelErrors.message}
                                     </Typography>
                                 )}
-                                <ul>
-                                    {panelErrors.additionalMessages.map((message: string, key: number) => {
-                                        return (
-                                            <li key={key} className={cls.item}>
-                                                <Typography variant="body2">{message}</Typography>
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
+                                {panelErrors.additionalMessages.length > 0 && (
+                                    <>
+                                        <Typography align="left">{panelErrors.additionalMessages.length === 1 ? "Reason" : "Reasons"}</Typography>
+                                        <ul className={cls.ul}>
+                                            {panelErrors.additionalMessages.map((message: string, key: number) => {
+                                                return (
+                                                    <li key={key} className={cls.item}>
+                                                        <Typography variant="body2">{message}</Typography>
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                    </>
+                                )}
                             </div>
                         </Align>
                     </div>
                     <Align direction="flex-end">
                         <div className={cls.close} onClick={() => setPanelErrors(null)}>
                             <CloseIcon fontSize="large" />
-                            {/* <Typography display="block" variant="body2">
-                                Click to close
-                            </Typography> */}
                         </div>
                     </Align>
                 </div>

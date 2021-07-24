@@ -143,7 +143,6 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
             var convoNodes = await Repository.GetConversationNodeByIds(convoNodeIds);
             var categoryNode = convoNodes.Single(x => x.ResolveOrder == 0);
-            // var thresholdNode = convoNodes.Single(x => x.ResolveOrder == 1);
 
             var categoryResponse = dynamicResponseComponents.Responses
                 .Single(x => x.ContainsKey(categoryNode.NodeId!))
@@ -169,7 +168,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var numCategories = itemIds.Count();
             if (itemNames.Count() != numCategories)
             {
-                reasons.Add($"Duplicate threshold values found in {tableTag}");
+                reasons.Add($"Duplicate categories found in {tableTag}");
                 valid = false;
             }
 
