@@ -7,8 +7,6 @@ import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStri
 import { yellow } from "@material-ui/core/colors";
 import { isDevelopmentStage } from "@api-client/clientUtils";
 import { YellowStrip } from "@common/components/YellowStrip";
-import { errors } from "stripe";
-import { ErrorPanel } from "./Errors/ErrorPanel";
 
 interface IContentLoader {
     open: boolean;

@@ -9,6 +9,7 @@ import { WidgetPreferences } from "@Palavyr-Types";
 import { FakeMessage, fakeMessages } from "./fakeMessages";
 import { FakeWidgetFrame } from "./FakeWidgetFrame";
 import { FakeMessageComponent } from "./FakeMessage";
+import { CHAT_DEMO_LISTBOX_zINDEX } from "@constants";
 
 const useStyles = makeStyles((theme) => ({
     selectListBgColor: (prefs: WidgetPreferences) => ({
@@ -20,17 +21,11 @@ const useStyles = makeStyles((theme) => ({
     selectbox: {
         paddingLeft: "2rem",
         paddingRight: "2rem",
-        zIndex: 940
     },
     mainList: {
         height: "100%",
     },
-    root: {
-        "& .MuiAutocomplete-popper": {
-            backgroundColor: "black",
-            zIndex: 930,
-        },
-    },
+    root: {},
     inputLabel: (prefs: WidgetPreferences) => ({
         "& .MuiFormLabel-root": {
             color: prefs.listFontColor,
@@ -51,6 +46,12 @@ const useStyles = makeStyles((theme) => ({
         height: "2rem",
         width: "2rem",
     },
+    listbox: {
+        padding: "0rem",
+    },
+    popper: {
+        zIndex: CHAT_DEMO_LISTBOX_zINDEX
+    }
 }));
 
 export const FakeWidgets = ({ ...prefs }: WidgetPreferences) => {
@@ -63,7 +64,7 @@ export const FakeWidgets = ({ ...prefs }: WidgetPreferences) => {
                 <FakeWidgetFrame title="(Landing Screen)" prefs={prefs} header={<div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: prefs.landingHeader }} />}>
                     <Autocomplete
                         size="small"
-                        classes={{ root: cls.selectbox, paper: classNames(cls.selectListBgColor, cls.selectListFontColor) }}
+                        classes={{ popper: cls.popper, root: cls.selectbox, paper: classNames(cls.selectListBgColor, cls.selectListFontColor) }}
                         disableClearable
                         clearOnEscape
                         open={true}
@@ -71,6 +72,7 @@ export const FakeWidgets = ({ ...prefs }: WidgetPreferences) => {
                         onChange={(x) => null}
                         options={[{ x: "First Option" }, { x: "Second Option" }, { x: "Third Option" }]}
                         getOptionLabel={(option) => option.x}
+                        ListboxProps={{ className: cls.listbox }}
                         renderInput={(params: AutocompleteRenderInputParams) => (
                             <TextField
                                 {...params}

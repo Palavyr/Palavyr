@@ -47,3 +47,9 @@ export const HELP_DRAWER_WIDTH: number = 300;
 export const DEFAULT_NODE_TEXT = "Click to add some meaningful text. Don't forget to add some personality!";
 
 export const defaultUrlForNewArea = (areaIdentifier: string) => `/dashboard/editor/email/${areaIdentifier}?tab=0`;
+
+// layers
+export const ADD_NEW_AREA_DIALOG_BOX_zINDEX = 15;
+export const ADD_NEW_AREA_BACKDROP_zINDEX = 12;
+export const DASHBOARD_HEADER_TOPBAR_zINDEX = 10;
+export const CHAT_DEMO_LISTBOX_zINDEX = 5;

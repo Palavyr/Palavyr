@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         width: "100%",
         top: "8px",
+        paddingBottom:"5rem"
     },
     menuDrawer: {
         width: DRAWER_WIDTH,

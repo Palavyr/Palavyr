@@ -7,12 +7,22 @@ import { AreaTable } from "@Palavyr-Types";
 import { DialogContent, makeStyles } from "@material-ui/core";
 import { AddOrCancel } from "@common/components/AddOrCancel";
 import { DashboardContext } from "../DashboardContext";
+import { ADD_NEW_AREA_BACKDROP_zINDEX, ADD_NEW_AREA_DIALOG_BOX_zINDEX } from "@constants";
 
 const useStyles = makeStyles((theme) => ({
     dialog: {
+        zIndex: ADD_NEW_AREA_DIALOG_BOX_zINDEX,
+    },
+    backdrop: {
+        "& .MuiBackdrop-root": {
+            zIndex: ADD_NEW_AREA_BACKDROP_zINDEX,
+        },
+
         backgroundColor: theme.palette.primary.dark,
     },
-    dialogContent: {},
+    dialogContent: {
+        backgroundColor: "blue",
+    },
     dialogTitle: {},
     dialogActions: {},
     text: {
@@ -40,12 +50,12 @@ export const AddNewAreaModal = ({ open, handleClose, setNewArea }: IAddNewAreaMo
         setAreaName("");
     };
 
-    const textFieldOnChange = (event: { target: { value: React.SetStateAction<string> } }) => {
+    const textFieldOnChange = (event: { target: { value: string } }) => {
         setAreaName(event.target.value);
     };
 
     return (
-        <Dialog fullWidth classes={{ root: cls.dialog }} open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+        <Dialog BackdropProps={{ className: cls.backdrop }} fullWidth classes={{ root: cls.dialog }} open={open} onClose={handleClose}>
             <DialogTitle>Add a new Area</DialogTitle>
             <DialogContent>
                 <TextField className={cls.text} autoFocus margin="dense" value={areaName} onChange={textFieldOnChange} id="name" label="New Area Name" type="text" fullWidth />

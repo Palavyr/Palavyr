@@ -1,6 +1,5 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, ChangeEvent } from "react";
 import { StaticTableMeta, StaticTableMetas, StaticTableRow, StaticTableValidationResult } from "@Palavyr-Types";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { StaticTablesModifier } from "./tables/statictable/staticTableModifier";
 import { LogueModifier } from "./logueModifier";
 import { cloneDeep } from "lodash";
@@ -73,11 +72,13 @@ export const ResponseConfiguration = () => {
         return true;
     };
 
-    const updateEpilogue = (event: { target: { value: string } }) => {
+    const updateEpilogue = (event: ChangeEvent<HTMLInputElement>) => {
+        event.preventDefault();
         epilogueModifier.simpleUpdateState(event.target.value);
     };
 
-    const updatePrologue = (event: { target: { value: string } }) => {
+    const updatePrologue = (event: ChangeEvent<HTMLInputElement>) => {
+        event.preventDefault();
         prologueModifier.simpleUpdateState(event.target.value);
     };
 

@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { AppBar, Toolbar, IconButton, Typography, makeStyles, Badge, Tooltip } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import classNames from "classnames";
-import HelpIcon from "@material-ui/icons/Help";
 import { Align } from "../positioning/Align";
 import { useHistory, useLocation } from "react-router-dom";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import InfoIcon from "@material-ui/icons/Info";
 import { SpaceEvenly } from "../positioning/SpaceEvenly";
 import { ErrorPanel } from "../Errors/ErrorPanel";
+import { DASHBOARD_HEADER_TOPBAR_zINDEX } from "@constants";
 
 const drawerWidth: number = 240;
 
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     topbar: {
         background: theme.palette.primary.main,
         position: "fixed",
-        zIndex: 500,
+        zIndex: DASHBOARD_HEADER_TOPBAR_zINDEX,
     },
     appBar: {
         transition: theme.transitions.create(["margin", "width"], {

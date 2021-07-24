@@ -10,6 +10,7 @@ import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { OsTypeToggle } from "../responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
+import { NoDataAvailable } from "./NoDataMessage";
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -21,6 +22,8 @@ const useStyles = makeStyles((theme) => ({
     container: {
         paddingBottom: "8rem",
         marginBottom: "8rem",
+        paddingLeft: "1.5rem",
+        paddingRight: "1.5rem",
     },
     delete: {
         margin: "0.4rem",
@@ -68,18 +71,6 @@ export const Enquires = () => {
         loadEnquiries();
     }, [loadEnquiries]);
 
-    interface NoDataMessageProps {
-        text: string;
-    }
-    const NoDataAvailable = ({ text }: NoDataMessageProps) => {
-        return (
-            <div style={{ paddingTop: "3rem" }}>
-                <Typography align="center" variant="h4">
-                    {text}
-                </Typography>
-            </div>
-        );
-    };
     const anyEnquiriesSeen = enquiries.filter((x) => x.seen).length > 0;
 
     const toggleShowSeen = async () => {
