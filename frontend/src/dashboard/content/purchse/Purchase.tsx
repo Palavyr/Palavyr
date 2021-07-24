@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles, Paper } from "@material-ui/core";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { useEffect } from "react";
 import { useCallback } from "react";
 import { useState } from "react";
@@ -16,6 +15,7 @@ import { DividerWithText } from "@common/components/DividerWithText";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -43,13 +43,12 @@ export const Purchase = () => {
 };
 
 const PurchaseInner = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const cls = useStyles();
     const [prices, setPrices] = useState<Prices>([]);
     const location = useLocation();
     const [priceMap, setPriceMap] = useState<PriceMap>({});
     const [priceId, setSelectedPriceId] = useState<string | number>("");
-    const [currentPrice, setCurrentPrice] = useState<number>(0);
     const stripe = useStripe();
 
     const searchParams = new URLSearchParams(location.search);
@@ -58,7 +57,6 @@ const PurchaseInner = () => {
 
     var successUrl = `${webUrl}/dashboard/subscribe/success?session_id={CHECKOUT_SESSION_ID}`;
     var cancelUrl = `${webUrl}/dashboard/subscribe/cancelled`;
-
 
     const getProducts = useCallback(async () => {
         if (productId == null) return;
@@ -94,7 +92,11 @@ const PurchaseInner = () => {
 
     return (
         <div className={cls.container}>
-            {productId !== null && productId !== "null" ? <AreaConfigurationHeader title="Billing Frequency" subtitle="Select your preferred billing frequency. This will take to an external website (Stripe.com) for your purchase." /> : <></>}
+            {productId !== null && productId !== "null" ? (
+                <AreaConfigurationHeader title="Billing Frequency" subtitle="Select your preferred billing frequency. This will take to an external website (Stripe.com) for your purchase." />
+            ) : (
+                <></>
+            )}
             {productId !== null && productId !== "null" ? <SubscribeStepper activeStep={1} /> : <></>}
             <Align>
                 <Paper className={cls.paper}>

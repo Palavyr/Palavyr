@@ -1,5 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import React, { useState, useCallback, useEffect, useContext } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { Grid, makeStyles, Typography, useTheme } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
@@ -25,10 +24,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const AreaSettings = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
-
-    const { setIsLoading } = React.useContext(DashboardContext);
 
     const [loaded, setLoaded] = useState<boolean>(false);
     const [alertState, setAlertState] = useState<boolean>(false);
@@ -48,7 +45,6 @@ export const AreaSettings = () => {
     const history = useHistory();
 
     const loadSettings = useCallback(async () => {
-        setIsLoading(true);
         const areas = await repository.Area.GetAreas();
         const areaData = areas.filter((x) => x.areaIdentifier === areaIdentifier)[0];
 
@@ -62,7 +58,6 @@ export const AreaSettings = () => {
             isEnabled: areaData.isEnabled,
         });
         setIsEnabledState(areaData.isEnabled);
-        setIsLoading(false);
     }, [areaIdentifier]);
 
     useEffect(() => {

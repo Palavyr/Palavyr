@@ -146,7 +146,9 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
 
             <TableCell align={cellAlignment}>
                 {!modifier.isRowFirstPosition(rowOrder) && <ArrowDropUpIcon className={cls.largeicon} onClick={() => modifier.shiftRowUp(staticTableMetas, tableOrder, rowOrder)} />}
-                {!modifier.isRowLastPosition(staticTableMetas, tableOrder, rowOrder) && <ArrowDropDownIcon className={cls.largeicon} onClick={() => modifier.shiftRowDown(staticTableMetas, tableOrder, rowOrder)} />}
+                {!modifier.isRowLastPosition(staticTableMetas, tableOrder, rowOrder) && (
+                    <ArrowDropDownIcon className={cls.largeicon} onClick={() => modifier.shiftRowDown(staticTableMetas, tableOrder, rowOrder)} />
+                )}
             </TableCell>
         </TableRow>
     );

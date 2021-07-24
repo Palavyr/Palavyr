@@ -1,9 +1,8 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { makeStyles, TableCell, TableRow, Typography } from "@material-ui/core";
 import { AreasEnabled } from "@Palavyr-Types";
 import classNames from "classnames";
-import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
-import React, { useEffect, useState } from "react";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import React, { useContext, useEffect, useState } from "react";
 import { OsTypeToggle } from "./OsTypeToggle";
 
 type styleProps = {
@@ -31,7 +30,7 @@ export interface EnableAreaRowProps {
 }
 
 export const EnableAreaRow = ({ areasEnabled, rowNumber }: EnableAreaRowProps) => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const [isEnabled, setIsEnabled] = useState<boolean | null>(null);
 
     const cls = useStyles({ isEnabled });

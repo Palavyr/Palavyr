@@ -26,7 +26,7 @@ export interface EmailConfigurationComponentProps {
 }
 
 export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate, saveEmailSubject, getCurrentEmailTemplate, getCurrentEmailSubject }: EmailConfigurationComponentProps) => {
-    const { setIsLoading, planTypeMeta, setSuccessOpen, setSuccessText } = useContext(DashboardContext);
+    const { planTypeMeta, setSuccessOpen, setSuccessText } = useContext(DashboardContext);
     const cls = useEmailStyles();
 
     const fallbackFileReader = new FileReader();
@@ -85,10 +85,8 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
     }, []);
 
     useEffect(() => {
-        setIsLoading(true);
         loadTemplate();
         loadAreaSubject();
-        setIsLoading(false);
         return () => {
             setLoaded(false);
         };
@@ -111,7 +109,12 @@ export const EmailConfigurationComponent = ({ variableDetails, saveEmailTemplate
                 acceptedFiles={["text/html", "text/plain"]}
             />
             {planTypeMeta && planTypeMeta.allowedInlineEmailEditor ? (
-                <EmailEditor accordianTitle="Use an editor to craft your response email" uploadDetails={<EditorDetails key={"Editor"} variableDetails={variableDetails} />} setEmailTemplate={setEmailTemplate} emailTemplate={emailTemplate}>
+                <EmailEditor
+                    accordianTitle="Use an editor to craft your response email"
+                    uploadDetails={<EditorDetails key={"Editor"} variableDetails={variableDetails} />}
+                    setEmailTemplate={setEmailTemplate}
+                    emailTemplate={emailTemplate}
+                >
                     <div className={cls.saveOrCancel}>
                         <SaveOrCancel onSave={saveEditorData} onCancel={loadTemplate} />
                     </div>

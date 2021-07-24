@@ -1,12 +1,14 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Palavyr.Core.Data;
 using Palavyr.Core.Exceptions;
 using Stripe;
@@ -17,6 +19,7 @@ namespace Palavyr.API.CustomMiddleware
     {
         private readonly RequestDelegate next;
         private readonly ILogger<ErrorHandlingMiddleware> logger;
+        private readonly IArrayPool<char> arrayPool = new ArrayPool();
 
         public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
         {
@@ -33,6 +36,10 @@ namespace Palavyr.API.CustomMiddleware
             }
             catch (Exception ex)
             {
+                var statusCode = StatusCodes.Status500InternalServerError;
+                var message = "Bad Request";
+                var additionalMessages = new string[] { };
+
                 switch (ex)
                 {
                     case StripeException stripeException:
@@ -60,9 +67,19 @@ namespace Palavyr.API.CustomMiddleware
                         logger.LogError($"{guidNotFoundException.Message}");
                         break;
 
+                    case MultiMessageDomainException multiMessageDomainException: // must come before domain exception
+                        logger.LogInformation("A domain exception was encountered.");
+                        logger.LogError($"{multiMessageDomainException.Message}");
+                        statusCode = StatusCodes.Status400BadRequest;
+                        message = multiMessageDomainException.Message;
+                        additionalMessages = multiMessageDomainException.AdditionalMessages;
+                        break;
+
                     case DomainException domainException:
                         logger.LogInformation("A domain exception was encountered.");
                         logger.LogError($"{domainException.Message}");
+                        statusCode = StatusCodes.Status400BadRequest;
+                        message = domainException.Message;
                         break;
 
                     default:
@@ -71,12 +88,58 @@ namespace Palavyr.API.CustomMiddleware
                         logger.LogError($"{ex.StackTrace}");
                         logger.LogError($"{ex.GetType().Name}");
                         logger.LogError($"{ex.Message}");
+                        logger.LogError($"{ex.InnerException}");
+                        logger.LogError($"{ex.GetBaseException()}");
                         break;
                 }
 
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                // await context.Response.WriteAsync(S new {Error="WOW"}, "WOW");
+                if (context.Response.HasStarted)
+                {
+                    return;
+                }
+
+                await FormatErrors(context, message, additionalMessages, statusCode);
             }
+        }
+
+        public async Task FormatErrors(HttpContext context, string message, string[] additionalMessage, int statusCode)
+        {
+            context.Response.ContentType = "application/json; charset=UTF-8";
+            context.Response.StatusCode = statusCode;
+
+            var errorResponse = new ErrorResponse(message, additionalMessage, statusCode).ToString();
+
+            // I found it very challenging to write directly to the response body with a structure I can control, so I'm clearing the lot
+            // and serializing my own structure. I'll handle this in the client error response handler
+            using var writer = new JsonTextWriter(new HttpResponseStreamWriter(context.Response.Body, Encoding.UTF8))
+            {
+                CloseOutput = false,
+                AutoCompleteOnClose = false,
+                ArrayPool = arrayPool
+            };
+
+            var serializer = JsonSerializer.Create();
+            serializer.Serialize(writer, errorResponse);
+            await writer.FlushAsync();
+        }
+    }
+
+    public class ErrorResponse
+    {
+        public string Message { get; set; }
+        public string[] AdditionalMessages { get; set; }
+        public int StatusCode { get; set; }
+
+        public ErrorResponse(string messages, string[] additionalMessages, int statusCode)
+        {
+            Message = messages;
+            AdditionalMessages = additionalMessages;
+            StatusCode = statusCode;
+        }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
         }
     }
 }

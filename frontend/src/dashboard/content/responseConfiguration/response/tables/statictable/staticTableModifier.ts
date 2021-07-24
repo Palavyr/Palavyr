@@ -7,9 +7,9 @@ export class StaticTablesModifier {
     onClick: SetState<StaticTableMetas> | AnyVoidFunction;
     repository: PalavyrRepository;
 
-    constructor(onClick: SetState<StaticTableMetas> | AnyVoidFunction) {
+    constructor(onClick: SetState<StaticTableMetas> | AnyVoidFunction, repository: PalavyrRepository) {
         this.onClick = onClick;
-        this.repository = new PalavyrRepository();
+        this.repository = repository;
     }
 
     setTableMetas(newState: StaticTableMetas) {

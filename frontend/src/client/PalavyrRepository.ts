@@ -27,12 +27,14 @@ import {
     StaticTableRow,
     PlanTypeMeta,
     DynamicTableData,
+    SetState,
 } from "@Palavyr-Types";
+import { ApiErrors } from "dashboard/layouts/Errors/ApiErrors";
 import { filterNodeTypeOptionsOnSubscription } from "dashboard/subscriptionFilters/filterConvoNodeTypes";
-import { Session } from "inspector";
 import { SessionStorage } from "localStorage/sessionStorage";
 import { AxiosClient, CacheIds } from "./AxiosClient";
 import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./clientUtils";
+import { Loaders } from "./Loaders";
 
 export class PalavyrRepository {
     private client: AxiosClient;
@@ -42,8 +44,8 @@ export class PalavyrRepository {
         "Content-Type": "multipart/form-data",
     };
 
-    constructor() {
-        this.client = new AxiosClient("tubmcgubs", getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
+    constructor(apiErrors?: ApiErrors, loaders?: Loaders) {
+        this.client = new AxiosClient(apiErrors, loaders, undefined, getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
     }
 
     public AuthenticationCheck = {
@@ -299,7 +301,7 @@ export class PalavyrRepository {
             getApiKey: async () => this.client.get<string>(`account/settings/api-key`),
             confirmEmailAddress: async (authToken: string) => this.client.post<boolean, {}>(`account/confirmation/${authToken}/action/setup`),
             resendConfirmationToken: async (emailAddress: string) => this.client.post<boolean, {}>(`account/confirmation/token/resend`, { EmailAddress: emailAddress }),
-            checkIsActive: async () => this.client.get<boolean>(`account/is-active`),
+            checkIsActive: async () => await this.client.get<boolean>(`account/is-active`),
 
             UpdatePassword: async (oldPassword: string, newPassword: string) => this.client.put<boolean, {}>(`account/settings/password`, { OldPassword: oldPassword, Password: newPassword }),
             updateCompanyName: async (companyName: string) => this.client.put<string, {}>(`account/settings/company-name`, { CompanyName: companyName }, CacheIds.CompanyName),

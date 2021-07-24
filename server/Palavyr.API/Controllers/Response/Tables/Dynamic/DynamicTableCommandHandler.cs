@@ -106,7 +106,10 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
             var (accountId, areaIdentifier, tableId) = request;
 
             var validationResult = entityCompiler.ValidatePricingStrategyPreSave(dynamicTable);
-            if (!validationResult.IsValid) throw new DomainException("Failed to validate the pricing strategy");
+            if (!validationResult.IsValid)
+            {
+                throw new MultiMessageDomainException("Failed to validate the pricing strategy", validationResult.Reasons.ToArray());
+            }
 
             var mappedTableRows = workingEntity.UpdateTable(dynamicTable);
             await genericDynamicTableRepository.SaveTable(

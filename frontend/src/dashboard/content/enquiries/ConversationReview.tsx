@@ -1,11 +1,11 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@material-ui/core";
 import { CompletedConversation, ConversationUpdate } from "@Palavyr-Types";
 import classNames from "classnames";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { Align } from "dashboard/layouts/positioning/Align";
-import React from "react";
+import React, { useContext } from "react";
 import { useCallback } from "react";
 import { useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
@@ -39,7 +39,7 @@ export const ConversationReview = () => {
     const cls = useStyles();
     const history = useHistory();
 
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
 
     const [completeConversation, setCompleteConversation] = useState<CompletedConversation>([]);
 

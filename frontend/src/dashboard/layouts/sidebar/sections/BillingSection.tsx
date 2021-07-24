@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { List, Collapse, makeStyles } from "@material-ui/core";
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
@@ -6,7 +6,6 @@ import { DashboardContext } from "../../DashboardContext";
 import PaymentIcon from "@material-ui/icons/Payment";
 import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
 import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { webUrl } from "@api-client/clientUtils";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,7 +20,7 @@ export interface BillingSectionProps {
 
 export const BillingSection = memo(({ isActive }: BillingSectionProps) => {
     const [billingOpen, setBillingOpen] = useState<boolean>(false);
-    const { setViewName, planTypeMeta } = React.useContext(DashboardContext);
+    const { setViewName, planTypeMeta } = useContext(DashboardContext);
 
     const cls = useStyles();
     const history = useHistory();
@@ -32,7 +31,7 @@ export const BillingSection = memo(({ isActive }: BillingSectionProps) => {
     };
 
     const createCustomerPortalSession = async () => {
-        const repository = new PalavyrRepository();
+        const { repository } = useContext(DashboardContext);
         const returnUrl = `${webUrl}/dashboard`;
         const customerId = await repository.Purchase.Customer.GetCustomerId();
         console.log(customerId);

@@ -4,7 +4,7 @@ import { AxiosClient } from "./AxiosClient";
 export class LogoutRepository {
     private client: AxiosClient;
     constructor() {
-        this.client = new AxiosClient("logout", getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
+        this.client = new AxiosClient(undefined, undefined, "logout", getSessionIdFromLocalStorage, getJwtTokenFromLocalStorage);
     }
 
     public Logout = {

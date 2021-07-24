@@ -1,10 +1,10 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useContext } from "react";
 import { Divider, makeStyles } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { SettingsWrapper } from "../SettingsWrapper";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles(() => ({
     titleText: {
@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const ChangeCompanyName = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const classes = useStyles();
 
     const [, setLoaded] = useState<boolean>(false);

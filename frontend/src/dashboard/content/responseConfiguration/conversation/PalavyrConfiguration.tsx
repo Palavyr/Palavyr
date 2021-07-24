@@ -19,6 +19,7 @@ import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import { ConfigurationNode } from "./node/baseNode/ConfigurationNode";
 import Fade from "react-reveal/Fade";
+import { useContext } from "react";
 
 const useStyles = makeStyles(() => ({
     conversation: {
@@ -51,10 +52,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const StructuredConvoTree = () => {
-    const repository = new PalavyrRepository();
     const cls = useStyles();
 
-    const { setIsLoading, planTypeMeta } = React.useContext(DashboardContext);
+    const { planTypeMeta, repository } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const [, setLoaded] = useState<boolean>(false);
 
@@ -79,18 +79,16 @@ export const StructuredConvoTree = () => {
             const nodes = await repository.Conversations.GetConversation(areaIdentifier);
 
             const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
-            const nodesLinkedList = new PalavyrLinkedList(nodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions);
+            const nodesLinkedList = new PalavyrLinkedList(nodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions, repository);
 
             setNodeTypeOptions(nodeTypeOptions);
             setLinkedNodes(nodesLinkedList);
 
-            setIsLoading(false);
             setConversationHistory([cloneDeep(nodesLinkedList)]);
         }
     }, [areaIdentifier, planTypeMeta]);
 
     useEffect(() => {
-        setIsLoading(true);
         setLoaded(true);
         loadNodes();
         return () => {
@@ -123,7 +121,7 @@ export const StructuredConvoTree = () => {
             const compiledNodes = linkedNodeList.compileToConvoNodes();
             const updatedConvoNodes = await repository.Conversations.ModifyConversation(compiledNodes, areaIdentifier);
             const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
-            const updatedLinkedList = new PalavyrLinkedList(updatedConvoNodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions);
+            const updatedLinkedList = new PalavyrLinkedList(updatedConvoNodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions, repository);
             historyTracker.addConversationHistoryToQueue(updatedLinkedList, conversationHistoryPosition, conversationHistory);
             setLinkedNodes(updatedLinkedList);
             return true;
@@ -136,7 +134,7 @@ export const StructuredConvoTree = () => {
         if (linkedNodeList && planTypeMeta) {
             const head = linkedNodeList.retrieveCleanHeadNode().compileConvoNode(areaIdentifier);
             const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
-            const newList = new PalavyrLinkedList([head], areaIdentifier, () => null, nodeTypeOptions);
+            const newList = new PalavyrLinkedList([head], areaIdentifier, () => null, nodeTypeOptions, repository);
             setTreeWithHistory(newList);
         }
     };

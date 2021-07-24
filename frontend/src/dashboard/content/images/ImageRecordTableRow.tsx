@@ -3,7 +3,9 @@ import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircul
 import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 import { makeStyles, TableRow, TableCell, Typography, Link } from "@material-ui/core";
 import { FileLink, SetState } from "@Palavyr-Types";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import React, { useState } from "react";
+import { useContext } from "react";
 
 export interface ImageRecordTableRowProps {
     imageRecord: FileLink;
@@ -29,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ImageRecordTableRow = ({ imageRecord, setImageRecords, index, setCurrentPreview, setShowSpinner }: ImageRecordTableRowProps) => {
-    const repo = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const cls = useStyles();
     const [deleteIsWorking, setDeleteIsWorking] = useState<boolean>(false);
     const [loading, setIsLoading] = useState<boolean>(false);
@@ -39,7 +41,7 @@ export const ImageRecordTableRow = ({ imageRecord, setImageRecords, index, setCu
         // 2. Delete any convo nodes that reference this in the imageId col
         setDeleteIsWorking(true);
         const fileId = imageRecord.fileId;
-        const updatedImageRecords = await repo.Configuration.Images.deleteImage([fileId]);
+        const updatedImageRecords = await repository.Configuration.Images.deleteImage([fileId]);
         setImageRecords(updatedImageRecords);
         setDeleteIsWorking(false);
     };
@@ -48,7 +50,7 @@ export const ImageRecordTableRow = ({ imageRecord, setImageRecords, index, setCu
         setIsLoading(true);
         setShowSpinner(true);
         if (!fileLink.isUrl) {
-            const signedUrl = await repo.Configuration.Images.getSignedUrl(fileLink.link, fileLink.fileId);
+            const signedUrl = await repository.Configuration.Images.getSignedUrl(fileLink.link, fileLink.fileId);
             setCurrentPreview(signedUrl);
         } else {
             const url = fileLink.link;

@@ -1,9 +1,9 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useCallback, useState, useContext } from "react";
 import { Typography, Card, makeStyles, Divider } from "@material-ui/core";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { serverUrl, widgetUrl } from "@api-client/clientUtils";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     outerCard: {
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const GetWidget = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const [apikey, setApiKey] = useState<string>("");
     const classes = useStyles();
 

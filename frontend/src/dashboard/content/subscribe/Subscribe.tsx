@@ -40,7 +40,7 @@ export const Subscribe = () => {
     const { planTypeMeta } = useContext(DashboardContext);
 
     const cls = useStyles();
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
 
     const history = useHistory();
 

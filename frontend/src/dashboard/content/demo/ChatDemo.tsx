@@ -12,6 +12,7 @@ import { PalavyrDemoWidget } from "./DemoWidget";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { FakeWidgets } from "./fakeWidget/FakeWidgets";
 import { WidgetColorOptions } from "./ColorOptions";
+import { useContext } from "react";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -25,14 +26,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ChatDemo = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
 
     const [preCheckErrors, setPreCheckErrors] = useState<PreCheckError[]>([]);
     const [apiKey, setApiKey] = useState<string>("");
     const [iframeRefreshed, reloadIframe] = useState<boolean>(false);
     const [widgetPreferences, setWidgetPreferences] = useState<WidgetPreferences>();
 
-    const { setIsLoading } = React.useContext(DashboardContext);
     const cls = useStyles(preCheckErrors.length > 0);
 
     const loadMissingNodes = useCallback(async () => {
@@ -58,14 +58,11 @@ export const ChatDemo = () => {
     }, [loadMissingNodes]);
 
     const loadDemoWidget = useCallback(async () => {
-        setIsLoading(true);
         const key = await repository.Settings.Account.getApiKey();
         setApiKey(key);
 
         const currentWidgetPreferences = await repository.WidgetDemo.GetWidetPreferences();
         setWidgetPreferences(currentWidgetPreferences);
-
-        setIsLoading(false);
     }, []);
 
     useEffect(() => {
@@ -88,7 +85,9 @@ export const ChatDemo = () => {
                         <Typography align="center" gutterBottom variant="h4">
                             Landing Header
                         </Typography>
-                        {widgetPreferences && <HeaderEditor setEditorState={(landingHeader: string) => setWidgetPreferences({ ...widgetPreferences, landingHeader })} initialData={widgetPreferences.landingHeader} />}
+                        {widgetPreferences && (
+                            <HeaderEditor setEditorState={(landingHeader: string) => setWidgetPreferences({ ...widgetPreferences, landingHeader })} initialData={widgetPreferences.landingHeader} />
+                        )}
                     </Grid>
                     <Grid item xs={4}>
                         {apiKey && <PalavyrDemoWidget preCheckErrors={preCheckErrors} apiKey={apiKey} iframeRefreshed={iframeRefreshed} />}

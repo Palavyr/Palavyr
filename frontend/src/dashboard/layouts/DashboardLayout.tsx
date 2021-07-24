@@ -6,11 +6,11 @@ import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep } from "lodash";
-import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRow, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
+import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRow, ErrorResponse, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DashboardHeader } from "./header/DashboardHeader";
 import { makeStyles, Typography } from "@material-ui/core";
-import { DRAWER_WIDTH } from "@constants";
+import { defaultUrlForNewArea, DRAWER_WIDTH } from "@constants";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
@@ -20,6 +20,9 @@ import { UserDetails } from "./sidebar/UserDetails";
 import { PalavyrSnackbar } from "@common/components/PalavyrSnackbar";
 import { redirectToHomeWhenSessionNotEstablished } from "@api-client/clientUtils";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
+import { ApiErrors } from "./Errors/ApiErrors";
+import { ErrorPanel } from "./Errors/ErrorPanel";
+import { Loaders } from "@api-client/Loaders";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
@@ -37,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         width: "100%",
         top: "8px",
+        paddingBottom: "5rem",
     },
     menuDrawer: {
         width: DRAWER_WIDTH,
@@ -77,7 +81,6 @@ interface IDashboardLayout {
 }
 
 export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) => {
-    const repository = new PalavyrRepository();
     const history = useHistory();
 
     const { areaIdentifier } = useParams<{ contentType: string; areaIdentifier: string }>();
@@ -100,6 +103,8 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [dashboardAreasLoading, setDashboardAreasLoading] = useState<boolean>(false);
     const cls = useStyles(helpOpen);
 
+    const [panelErrors, setPanelErrors] = useState<ErrorResponse | null>(null);
+
     const [successOpen, setSuccessOpen] = useState<boolean>(false);
     const [successText, setSuccessText] = useState<string>("Success");
 
@@ -113,6 +118,10 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [accountTypeNeedsPassword, setAccountTypeNeedsPassword] = useState<boolean>(false);
 
     const [unseenNotifications, setUnseenNotifications] = useState<number>(0);
+
+    const loaders = new Loaders(setIsLoading);
+    const apiErrors = new ApiErrors(setSuccessOpen, setSuccessText, setWarningOpen, setWarningText, setErrorOpen, setErrorText, setPanelErrors);
+    const repository = new PalavyrRepository(apiErrors, loaders);
 
     useEffect(() => {
         (async () => {
@@ -162,8 +171,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
         newNames.push({ areaName: newArea.areaName, areaIdentifier: newArea.areaIdentifier });
         setAreaNameDetails(newNames);
-
-        history.push(`/dashboard/editor/email/${newArea.areaIdentifier}?tab=0`);
+        history.push(defaultUrlForNewArea(newArea.areaIdentifier));
     };
 
     const handleDrawerClose: () => void = () => {
@@ -232,6 +240,9 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                 unseenNotifications: unseenNotifications,
                 setUnseenNotifications: setUnseenNotifications,
                 planTypeMeta: planTypeMeta,
+                panelErrors,
+                setPanelErrors,
+                repository,
             }}
         >
             <div className={cls.root}>
@@ -242,6 +253,8 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                     handleHelpDrawerOpen={handleHelpDrawerOpen}
                     helpOpen={helpOpen}
                     title={currentViewName}
+                    isLoading={isLoading}
+                    dashboardAreasLoading={dashboardAreasLoading}
                 />
                 <Drawer
                     className={classNames(cls.menuDrawer)}
@@ -257,9 +270,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                     <Divider />
                     <SideBarMenu areaNameDetails={areaNameDetails} />
                 </Drawer>
-                <ContentLoader isLoading={isLoading} dashboardAreasLoading={dashboardAreasLoading} open={open}>
-                    {children}
-                </ContentLoader>
+                <ContentLoader open={open}>{children}</ContentLoader>
                 <Drawer
                     className={cls.helpDrawer}
                     variant="persistent"

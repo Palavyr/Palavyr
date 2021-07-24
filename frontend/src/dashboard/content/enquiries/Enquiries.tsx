@@ -1,5 +1,4 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useContext } from "react";
 import { Enquiries, EnquiryRow } from "@Palavyr-Types";
 import { TableContainer, Paper, TableHead, TableBody, Table, makeStyles, Typography } from "@material-ui/core";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
@@ -11,6 +10,7 @@ import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { OsTypeToggle } from "../responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
+import { NoDataAvailable } from "./NoDataMessage";
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -22,6 +22,8 @@ const useStyles = makeStyles((theme) => ({
     container: {
         paddingBottom: "8rem",
         marginBottom: "8rem",
+        paddingLeft: "1.5rem",
+        paddingRight: "1.5rem",
     },
     delete: {
         margin: "0.4rem",
@@ -29,23 +31,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Enquires = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const cls = useStyles();
 
     const [enquiries, setEnquiries] = useState<Enquiries>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const { setIsLoading } = React.useContext(DashboardContext);
     const [deleteIsLoading, setDeleteIsLoading] = useState<boolean>(false);
     const [showSeen, setShowSeen] = useState<boolean | null>(null);
 
     const deleteSelectedEnquiries = async (enquiries: Enquiries) => {
         setDeleteIsLoading(true);
-        setIsLoading(true);
         const seenEnquiries = enquiries.filter((x: EnquiryRow) => x.seen);
         const enqs = await repository.Enquiries.deleteSelectedEnquiries(seenEnquiries.map((x: EnquiryRow) => x.conversationId));
         setTimeout(() => {
             setEnquiries(enqs);
-            setIsLoading(false);
             setDeleteIsLoading(false);
         }, 1000);
     };
@@ -53,11 +52,9 @@ export const Enquires = () => {
     const loadEnquiries = useCallback(async () => {
         const show = await repository.Enquiries.getShowSeenEnquiries();
         setShowSeen(show);
-
         const enqs = await repository.Enquiries.getEnquiries();
         setEnquiries(enqs);
         setLoading(false);
-        setIsLoading(false);
     }, []);
 
     const numberPropertyGetter = (enquiry: EnquiryRow) => {
@@ -65,22 +62,9 @@ export const Enquires = () => {
     };
 
     useEffect(() => {
-        setIsLoading(true);
         loadEnquiries();
     }, [loadEnquiries]);
 
-    interface NoDataMessageProps {
-        text: string;
-    }
-    const NoDataAvailable = ({ text }: NoDataMessageProps) => {
-        return (
-            <div style={{ paddingTop: "3rem" }}>
-                <Typography align="center" variant="h4">
-                    {text}
-                </Typography>
-            </div>
-        );
-    };
     const anyEnquiriesSeen = enquiries.filter((x) => x.seen).length > 0;
 
     const toggleShowSeen = async () => {

@@ -1,5 +1,4 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FileLink } from "@Palavyr-Types";
 import { makeStyles, Paper } from "@material-ui/core";
 import { useParams } from "react-router-dom";
@@ -17,9 +16,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ConfigurationPreview = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
-    const { setIsLoading } = React.useContext(DashboardContext);
 
     const [preview, setPreview] = useState<FileLink>();
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -29,12 +27,10 @@ export const ConfigurationPreview = () => {
     const loadPreview = React.useCallback(async () => {
         const fileLink = await repository.Configuration.Preview.fetchPreview(areaIdentifier);
         setPreview(fileLink);
-        setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [areaIdentifier]);
 
     useEffect(() => {
-        setIsLoading(true);
         loadPreview();
         setLoaded(true);
         return () => {

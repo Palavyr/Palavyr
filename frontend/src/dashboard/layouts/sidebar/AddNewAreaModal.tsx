@@ -1,18 +1,28 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { AreaTable } from "@Palavyr-Types";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DialogContent, makeStyles } from "@material-ui/core";
 import { AddOrCancel } from "@common/components/AddOrCancel";
+import { DashboardContext } from "../DashboardContext";
+import { ADD_NEW_AREA_BACKDROP_zINDEX, ADD_NEW_AREA_DIALOG_BOX_zINDEX } from "@constants";
 
 const useStyles = makeStyles((theme) => ({
     dialog: {
+        zIndex: ADD_NEW_AREA_DIALOG_BOX_zINDEX,
+    },
+    backdrop: {
+        "& .MuiBackdrop-root": {
+            zIndex: ADD_NEW_AREA_BACKDROP_zINDEX,
+        },
+
         backgroundColor: theme.palette.primary.dark,
     },
-    dialogContent: {},
+    dialogContent: {
+        backgroundColor: "blue",
+    },
     dialogTitle: {},
     dialogActions: {},
     text: {
@@ -29,7 +39,7 @@ export interface IAddNewAreaModal {
 export const AddNewAreaModal = ({ open, handleClose, setNewArea }: IAddNewAreaModal) => {
     const [areaName, setAreaName] = useState<string>("");
     const cls = useStyles();
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
 
     const onAdd = async () => {
         if (areaName !== "") {
@@ -40,12 +50,12 @@ export const AddNewAreaModal = ({ open, handleClose, setNewArea }: IAddNewAreaMo
         setAreaName("");
     };
 
-    const textFieldOnChange = (event: { target: { value: React.SetStateAction<string> } }) => {
+    const textFieldOnChange = (event: { target: { value: string } }) => {
         setAreaName(event.target.value);
     };
 
     return (
-        <Dialog fullWidth classes={{ root: cls.dialog }} open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+        <Dialog BackdropProps={{ className: cls.backdrop }} fullWidth classes={{ root: cls.dialog }} open={open} onClose={handleClose}>
             <DialogTitle>Add a new Area</DialogTitle>
             <DialogContent>
                 <TextField className={cls.text} autoFocus margin="dense" value={areaName} onChange={textFieldOnChange} id="name" label="New Area Name" type="text" fullWidth />

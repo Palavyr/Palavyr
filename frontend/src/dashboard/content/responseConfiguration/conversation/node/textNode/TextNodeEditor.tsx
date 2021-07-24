@@ -1,8 +1,7 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { Dialog, DialogTitle, DialogContent, DialogActions } from "@material-ui/core";
 import { NodeTypeOptions } from "@Palavyr-Types";
-import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
+import { ConversationTreeContext, DashboardContext } from "dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
 import { INodeReferences, IPalavyrNode } from "../../Contracts";
 import NodeUpdater from "../actions/NodeUpdater";
@@ -25,7 +24,7 @@ export const TextNodeEditor = ({ isMultiOptionType, shouldShowMultiOption, isAna
     const [text, setText] = useState<string>("");
     const [switchState, setSwitchState] = useState<boolean>(true);
     const { nodeTypeOptions } = useContext(ConversationTreeContext);
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
 
     useEffect(() => {
         setText(userText);
@@ -95,3 +94,4 @@ export const TextNodeEditor = ({ isMultiOptionType, shouldShowMultiOption, isAna
         </Dialog>
     );
 };
+

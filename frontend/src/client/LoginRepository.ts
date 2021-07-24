@@ -7,8 +7,8 @@ export class LoginRepository {
     private resetClient: AxiosClient;
 
     constructor() {
-        this.client = new AxiosClient("login");
-        this.resetClient = new AxiosClient("apiKeyAccess");
+        this.client = new AxiosClient(undefined, undefined, "login");
+        this.resetClient = new AxiosClient(undefined, undefined, "apiKeyAccess");
     }
 
     public Login = {

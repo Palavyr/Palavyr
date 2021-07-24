@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Repositories;
@@ -32,7 +31,7 @@ namespace Palavyr.API.Controllers.Accounts
         }
 
         [HttpPost("configure-conversations/ensure-db-valid")]
-        public async Task<NoContentResult> Ensure(
+        public async Task Ensure(
             [FromHeader]
             string accountId,
             CancellationToken cancellationToken)
@@ -128,7 +127,6 @@ namespace Palavyr.API.Controllers.Accounts
             }
 
             await configurationRepository.CommitChangesAsync();
-            return NoContent();
         }
     }
 }

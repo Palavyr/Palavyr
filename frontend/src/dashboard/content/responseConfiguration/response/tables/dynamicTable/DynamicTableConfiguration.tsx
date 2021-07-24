@@ -9,6 +9,7 @@ import { isDevelopmentStage } from "@api-client/clientUtils";
 import { OsTypeToggle } from "dashboard/content/responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import Fade from "react-reveal/Fade";
 
 export interface IDynamicTable {
     title: string;
@@ -17,7 +18,7 @@ export interface IDynamicTable {
 }
 
 export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: IDynamicTable) => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
 
     const [loaded, setLoaded] = useState<boolean>(false);
     const [parentState, changeParentState] = useState<boolean>(false);
@@ -88,21 +89,23 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
 
                 {tableMetas.map((tableMeta, index) => {
                     return (
-                        <SingleDynamicFeeTable
-                            key={index}
-                            tableNumber={index}
-                            setLoaded={setLoaded}
-                            tableMetas={tableMetas}
-                            setTableMetas={setTableMetas}
-                            tableMetaIndex={index}
-                            defaultTableMeta={tableMeta}
-                            availablDynamicTableOptions={availableTables}
-                            tableNameMap={tableNameMap}
-                            parentState={parentState}
-                            changeParentState={changeParentState}
-                            areaIdentifier={areaIdentifier}
-                            showDebug={showDebug}
-                        />
+                        <Fade key={["Fade", index, tableMeta.tableId].join("-")}>
+                            <SingleDynamicFeeTable
+                                key={[index, tableMeta.tableId].join("-")}
+                                tableNumber={index}
+                                setLoaded={setLoaded}
+                                tableMetas={tableMetas}
+                                setTableMetas={setTableMetas}
+                                tableMetaIndex={index}
+                                defaultTableMeta={tableMeta}
+                                availablDynamicTableOptions={availableTables}
+                                tableNameMap={tableNameMap}
+                                parentState={parentState}
+                                changeParentState={changeParentState}
+                                areaIdentifier={areaIdentifier}
+                                showDebug={showDebug}
+                            />
+                        </Fade>
                     );
                 })}
             </Suspense>

@@ -64,6 +64,10 @@ const useStyles = makeStyles(() => ({
             fontSize: "10pt",
         },
     }),
+    listbox: (prefs: WidgetPreferences) => ({
+        // the dropdown menu styles
+        backgroundColor: prefs.selectListColor, // TODO: make customizable with new option
+    }),
 }));
 
 export interface DropdownListProps {
@@ -98,6 +102,7 @@ export const DropdownListOptions = ({ setSelectedOption, options }: DropdownList
                         className={classNames(cls.root, cls.autocomplete, cls.mainList, cls.selectListBgColor, cls.selectListFontColor)}
                         onChange={onChange}
                         options={opts}
+                        ListboxProps={{ className: cls.listbox }}
                         getOptionLabel={(option: SelectedOption) => option.areaDisplay}
                         renderInput={(params: AutocompleteRenderInputParams) => (
                             <TextField

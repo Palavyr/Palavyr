@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
 import { DynamicTableMeta, DynamicTableMetas, DynamicTableProps, TableData, TableNameMap } from "@Palavyr-Types";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { TextField, makeStyles, Typography, Table, TableRow, TableCell, TableBody } from "@material-ui/core";
 import { DynamicTableSelector } from "./DynamicTableSelector";
 import { removeByIndex } from "@common/utils";
@@ -10,6 +9,8 @@ import { useCallback } from "react";
 import { useEffect } from "react";
 import { ChangeEvent } from "react";
 import { dynamicTableComponentMap } from "./DynamicTableRegistry";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import Fade from "react-reveal/Fade";
 
 export interface SingleDynamicFeeTableProps {
     defaultTableMeta: DynamicTableMeta;
@@ -64,7 +65,7 @@ export const SingleDynamicFeeTable = ({
     changeParentState,
     areaIdentifier,
 }: SingleDynamicFeeTableProps) => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const classes = useStyles();
 
     const [tableMeta, setTableMeta] = useState<DynamicTableMeta | undefined>();
@@ -173,7 +174,11 @@ export const SingleDynamicFeeTable = ({
                         </Table>
                     )}
                     {tableMeta === undefined && <div>Loading...</div>}
-                    {dynamicTableData && DynamicTableComponent && <DynamicTableComponent {...metaData} />}
+                    {dynamicTableData && DynamicTableComponent && (
+                        <Fade>
+                            <DynamicTableComponent {...metaData} />
+                        </Fade>
+                    )}
                 </section>
             )}
         </>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
@@ -7,6 +7,7 @@ import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { TwoNestedCategoriesContainer } from "./TwoNestedCategoriesContainer";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, setTableData, areaIdentifier, deleteAction, showDebug }: Omit<DynamicTableProps, "setTableMeta">) => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
     const classes = useStyles();
 
     const modifier = new TwoNestedCategoriesModifier(setTableData);

@@ -1,11 +1,11 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useContext } from "react";
 import { Divider, makeStyles, MenuItem, Typography } from "@material-ui/core";
 import { SettingsGridRowList } from "@common/components/SettingsGridRowList";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { LocaleMapItem, LocaleMap } from "@Palavyr-Types";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { SettingsWrapper } from "../SettingsWrapper";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     titleText: {
@@ -27,7 +27,7 @@ const LocaleId = "LocaleId";
 const CountryName = "CountryName";
 
 export const ChangeLocale = () => {
-    const repository = new PalavyrRepository();
+    const { repository } = useContext(DashboardContext);
 
     const [, setLoaded] = useState<boolean>(false);
     const [, setLocaleID] = useState<string | undefined>();
