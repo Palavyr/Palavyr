@@ -83,7 +83,7 @@ export const SingleDynamicFeeTable = ({
         setTableTag(defaultTableMeta.tableTag);
         setDisabledSelector(isInUse);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [tableMeta]);
 
     useEffect(() => {
         loadDynamicData();

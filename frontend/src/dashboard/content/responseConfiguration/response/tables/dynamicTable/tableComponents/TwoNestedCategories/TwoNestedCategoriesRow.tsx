@@ -7,7 +7,6 @@ import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { SetState } from "@Palavyr-Types";
 
-
 export interface ITwoNestedCategoriesRow {
     index: number;
     shouldDisableInnerCategory: boolean;
@@ -33,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     },
     input: {
         margin: "0.6rem",
-        width: "55ch",
+        width: "25ch",
     },
     maxValInput: (prop: boolean) => {
         if (prop === true) {
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     },
     outerCategoryInput: {
         margin: "0.6rem",
-        width: "30ch",
+        width: "25ch",
         paddingLeft: "0.4rem",
     },
 }));
@@ -82,7 +81,6 @@ export const TwoNestedCategoriesRow = ({ index, shouldDisableInnerCategory, oute
     return (
         <TableRow>
             {outerCategoryColumn}
-
             <TableCell align={cellAlignment}>
                 <TextField
                     disabled={shouldDisableInnerCategory}
@@ -100,7 +98,6 @@ export const TwoNestedCategoriesRow = ({ index, shouldDisableInnerCategory, oute
             </TableCell>
             <TableCell align={cellAlignment}>
                 <CurrencyTextField
-                    // disabled={shouldDisableInnerCategory}
                     label="Amount"
                     variant="standard"
                     value={row.valueMin}
