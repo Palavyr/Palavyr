@@ -49,7 +49,7 @@ export const DEFAULT_NODE_TEXT = "Click to add some meaningful text. Don't forge
 export const defaultUrlForNewArea = (areaIdentifier: string) => `/dashboard/editor/email/${areaIdentifier}?tab=0`;
 
 // layers
-export const ADD_NEW_AREA_DIALOG_BOX_zINDEX = 15;
-export const ADD_NEW_AREA_BACKDROP_zINDEX = 12;
-export const DASHBOARD_HEADER_TOPBAR_zINDEX = 10;
-export const CHAT_DEMO_LISTBOX_zINDEX = 5;
+export const ADD_NEW_AREA_DIALOG_BOX_zINDEX = 150;
+export const ADD_NEW_AREA_BACKDROP_zINDEX = 120;
+export const DASHBOARD_HEADER_TOPBAR_zINDEX = 100;
+export const CHAT_DEMO_LISTBOX_zINDEX = 50;

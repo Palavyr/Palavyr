@@ -89,9 +89,9 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
 
                 {tableMetas.map((tableMeta, index) => {
                     return (
-                        <Fade>
+                        <Fade key={["Fade", index, tableMeta.tableId].join("-")}>
                             <SingleDynamicFeeTable
-                                key={index}
+                                key={[index, tableMeta.tableId].join("-")}
                                 tableNumber={index}
                                 setLoaded={setLoaded}
                                 tableMetas={tableMetas}
