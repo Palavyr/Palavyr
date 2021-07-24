@@ -26,6 +26,7 @@ import {
 import { noop } from "lodash";
 import { FormDialogContent } from "@common/components/borrowed/FormDialogContent";
 import { useEffect } from "react";
+import { GoogleLoginResponse } from "react-google-login";
 
 export type GoogleResponse = {
     tokenId: string;
@@ -56,12 +57,12 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
 
     useEffect(() => {
         const remembered = SessionStorage.getRememberMe();
-        if (remembered !== null){
-            const {emailAddress: emailAddress, password: password} = remembered;
+        if (remembered !== null) {
+            const { emailAddress: emailAddress, password: password } = remembered;
             setLoginEmail(emailAddress);
             setLoginPassword(password);
         }
-    }, [])
+    }, []);
 
     const successRedirectToDashboard = () => {
         setTimeout(() => {
@@ -123,7 +124,7 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
         setIsLoading(true);
         setStatus(null);
         var successfulResponse = await Auth.loginWithGoogle(response.tokenId, response.googleId, successRedirectToDashboard, googleError);
-        if (successfulResponse === null) {
+        if (successfulResponse === null || successfulResponse === false) {
             Auth.ClearAuthentication();
             Auth.googleLogout(noop);
             setStatus(COULD_NOT_FIND_SERVER);
@@ -147,6 +148,30 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
             SessionStorage.setGoogleLoginType();
             await googleLogin(response);
         }
+    };
+
+    const onGoogleSuccess = async (response: GoogleLoginResponse) => {
+        Auth.ClearAuthentication();
+
+        const { id_token } = response.getAuthResponse();
+        const imageURL = response.getBasicProfile().getImageUrl();
+        const googleID = response.getId();
+
+        if (response !== null) {
+            const googResponse = {
+                tokenId: id_token,
+                googleId: googleID,
+            };
+            SessionStorage.setGoogleImage(imageURL);
+            SessionStorage.setGoogleLoginType();
+            await googleLogin(googResponse);
+        }
+    };
+
+    const onGoogleFailure = (error: any) => {
+        console.log(error);
+        Auth.ClearAuthentication();
+        setIsLoading(false);
     };
 
     const responseGoogleFailure = async (authResponse: GoogleAuthResponse) => {
@@ -176,6 +201,8 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
                     setLoginEmail={setLoginEmail}
                     setLoginPassword={setLoginPassword}
                     setStatus={setStatus}
+                    onGoogleSuccess={onGoogleSuccess}
+                    onGoogleFailure={onGoogleFailure}
                 />
             }
             actions={<LoginActions isLoading={isLoading} openChangePasswordDialog={openChangePasswordDialog} />}

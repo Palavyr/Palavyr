@@ -38,7 +38,7 @@ class Auth {
         return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
     }
 
-    private async processAuthenticationResponse(authenticationResponse: Credentials, successRedirectToDashboard: () => any, errorCallback: (response: Credentials) => any) {
+    private async processAuthenticationResponse(authenticationResponse: Credentials, successRedirectToDashboard: () => any, errorCallback: (response: Credentials) => any): Promise<boolean> {
         if (authenticationResponse.authenticated) {
             this.authenticated = true;
             SessionStorage.setAuthorization(authenticationResponse.sessionId, authenticationResponse.jwtToken);
@@ -51,12 +51,12 @@ class Auth {
             SessionStorage.setIsActive(accountIsActive);
 
             await successRedirectToDashboard();
-            return true;
+            return Promise.resolve(true);
         } else {
             this.authenticated = false;
             SessionStorage.unsetAuthorization();
             errorCallback(authenticationResponse);
-            return false;
+            return Promise.resolve(false);
         }
     }
 
@@ -71,13 +71,13 @@ class Auth {
         }
     }
 
-    async loginWithGoogle(oneTimeCode: string, tokenId: string, successRedirectToDashboard: () => void, errorCallback: (response: Credentials) => void) {
+    async loginWithGoogle(oneTimeCode: string, tokenId: string, successRedirectToDashboard: () => void, errorCallback: (response: Credentials) => void): Promise<boolean | null> {
         try {
             const authenticationResponse = await this.loginClient.Login.RequestLoginWithGoogleToken(oneTimeCode, tokenId);
             return this.processAuthenticationResponse(authenticationResponse, successRedirectToDashboard, errorCallback);
         } catch {
             console.log("Error attempting to reach the server.");
-            return null;
+            return Promise.resolve(null);
         }
     }
 
@@ -122,13 +122,13 @@ class Auth {
     }
 
     PerformLogout(logoutCallback: any) {
-        const loginType = SessionStorage.getLoginType();
+        // const loginType = SessionStorage.getLoginType();
 
-        if (loginType === SessionStorage.GoogleLoginType) {
-            this.googleLogout(logoutCallback);
-        } else {
-            this.logout(logoutCallback);
-        }
+        // if (loginType === SessionStorage.GoogleLoginType) {
+        //     // this.googleLogout(logoutCallback);
+        // } else {
+        this.logout(logoutCallback);
+        // }
     }
 
     ClearAuthentication() {

@@ -3,11 +3,14 @@ import { TextField, FormControlLabel, Checkbox, Typography, makeStyles } from "@
 import { VisibilityPasswordTextField } from "./VisibilityPasswordTextField";
 import { HighlightedInformation } from "./HighlightedInformation";
 import { DividerWithText } from "../DividerWithText";
-import { GoogleLogin } from "auth/googlebutton/GoogleLogin";
+// import { GoogleLogin } from "auth/googlebutton/GoogleLogin";
 import { FormStatusTypes, GoogleAuthResponse } from "@Palavyr-Types";
 import { COULD_NOT_FIND_SERVER, GOOGLE_ACCOUNT_NOT_FOUND, INVALID_EMAIL, INVALID_GOOGLE_TOKEN, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, NOT_A_GOOGLE_ACCOUNT } from "@constants";
 import { useEffect } from "react";
 import { SessionStorage } from "localStorage/sessionStorage";
+import { GoogleLoginResponse, useGoogleLogin } from "react-google-login";
+import { googleOAuthClientId } from "@api-client/clientUtils";
+import GoogleLogin from "react-google-login";
 
 export interface IFormDialogContent {
     loginEmail: string;
@@ -20,6 +23,8 @@ export interface IFormDialogContent {
     status: FormStatusTypes;
     responseGoogleSuccess(res: GoogleAuthResponse): void;
     responseGoogleFailure(res: GoogleAuthResponse): void;
+    onGoogleSuccess(response: GoogleLoginResponse): void;
+    onGoogleFailure(error: any): void;
     rememberMe: boolean;
     setRememberMe(rememberMe: boolean): void;
 }
@@ -39,19 +44,32 @@ const useStyles = makeStyles({
     },
 });
 
-export const FormDialogContent = ({ rememberMe, setRememberMe, loginEmail, setLoginEmail, loginPassword, setLoginPassword, isPasswordVisible, setIsPasswordVisible, responseGoogleSuccess, responseGoogleFailure, setStatus, status }: IFormDialogContent) => {
+export const FormDialogContent = ({
+    rememberMe,
+    setRememberMe,
+    loginEmail,
+    setLoginEmail,
+    loginPassword,
+    setLoginPassword,
+    isPasswordVisible,
+    setIsPasswordVisible,
+    onGoogleSuccess,
+    onGoogleFailure,
+    setStatus,
+    status,
+}: IFormDialogContent) => {
     const cls = useStyles();
 
     useEffect(() => {
         const isRemembered = SessionStorage.checkIsRemembered();
         setRememberMe(isRemembered);
-    }, [])
+    }, []);
 
     return (
         <>
             <div className={cls.centeredItems}>
                 {status === COULD_NOT_FIND_SERVER && <span className={cls.errorText}>Could not find server.</span>}
-                <GoogleLogin onSuccess={responseGoogleSuccess} onFailure={responseGoogleFailure} />
+                <GoogleLogin onSuccess={onGoogleSuccess} onFailure={onGoogleFailure} clientId={googleOAuthClientId} isSignedIn={false} theme="dark" />
                 <br></br>
                 {status === INVALID_GOOGLE_TOKEN && <span className={cls.errorText}>Session Expired. Please login again.</span>}
                 {status === NOT_A_GOOGLE_ACCOUNT && <span className={cls.errorText}>Email found, but should be used with standard login form (below).</span>}
@@ -109,7 +127,11 @@ export const FormDialogContent = ({ rememberMe, setRememberMe, loginEmail, setLo
                 onVisibilityChange={setIsPasswordVisible}
                 isVisible={isPasswordVisible}
             />
-            <FormControlLabel className={cls.formControlLabel} control={<Checkbox checked={rememberMe} onClick={() => setRememberMe(!rememberMe)} color="primary" />} label={<Typography variant="body1">Remember me</Typography>} />
+            <FormControlLabel
+                className={cls.formControlLabel}
+                control={<Checkbox checked={rememberMe} onClick={() => setRememberMe(!rememberMe)} color="primary" />}
+                label={<Typography variant="body1">Remember me</Typography>}
+            />
             {status === "verificationEmailSend" ? <HighlightedInformation>We have sent instructions on how to reset your password to your email address</HighlightedInformation> : null}
         </>
     );
