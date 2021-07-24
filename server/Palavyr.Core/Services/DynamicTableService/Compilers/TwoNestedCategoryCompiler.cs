@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Aliases;
@@ -84,22 +85,18 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 valid = false;
             }
 
-            foreach (var itemId in itemIds)
+            var itemId = itemIds.First();
+            var innerItemNames = table.Where(x => x.ItemId == itemId).Select(x => x.InnerItemName).ToList();
+            if (innerItemNames.Count() != innerItemNames.Distinct().Count())
             {
-                var innerItemNames = table.Where(x => x.ItemId == itemId).Select(x => x.InnerItemName).ToList();
-                if (innerItemNames.Count() != numCategories)
-                {
-                    reasons.Add($"Duplicate inner category values found in {tableTag}");
-                    valid = false;
-                }
+                reasons.Add($"Duplicate inner category values found in {tableTag}");
+                valid = false;
+            }
 
-                if (innerItemNames.Any(x => string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x)))
-                {
-                    reasons.Add($"One or more inner categories did not contain text in {tableTag}");
-                    valid = false;
-                }
-
-                break; // all inner categories are copied across outer categories
+            if (innerItemNames.Any(x => string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x)))
+            {
+                reasons.Add($"One or more inner categories did not contain text in {tableTag}");
+                valid = false;
             }
 
             return valid
