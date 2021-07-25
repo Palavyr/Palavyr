@@ -1,3 +1,4 @@
+import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import {
     DynamicTableMetas,
     DynamicTableMeta,
@@ -277,9 +278,12 @@ export class PalavyrRepository {
         ModifyConversationNode: async (nodeId: string, areaIdentifier: string, updatedNode: ConvoNode) =>
             this.client.put<ConvoNode[], {}>(`configure-conversations/${areaIdentifier}/nodes/${nodeId}`, updatedNode, [CacheIds.PalavyrConfiguration, areaIdentifier].join("-") as CacheIds),
         ModifyConversationNodeText: async (nodeId: string, areaIdentifier: string, updatedNodeText: string) => {
-            const result = this.client.put<ConvoNode | null, {}>(`configure-conversations/${areaIdentifier}/nodes/${nodeId}/text`, { UpdatedNodeText: updatedNodeText });
+            const result = await this.client.put<ConvoNode | null, {}>(`configure-conversations/${areaIdentifier}/nodes/${nodeId}/text`, { UpdatedNodeText: updatedNodeText });
             SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, areaIdentifier].join("-"));
-            return result;
+            if (isNullOrUndefinedOrWhitespace(result)) {
+                return Promise.resolve(null);
+            }
+            return Promise.resolve(result);
         },
 
         // TODO: Deprecate eventually

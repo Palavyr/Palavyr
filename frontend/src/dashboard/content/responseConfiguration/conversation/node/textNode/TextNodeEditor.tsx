@@ -44,8 +44,8 @@ export const TextNodeEditor = ({ isMultiOptionType, shouldShowMultiOption, isAna
 
     const handleTextOnlyUpdate = async (userText: string) => {
         const areaId = currentNode.palavyrLinkedList.areaId;
-        const updatedNode = await repository.Conversations.ModifyConversationNodeText(currentNode.nodeId, areaId, userText); // Doesn't switch the node type / dynamic type, but does text BUG
-        NodeUpdater.updateText(currentNode, updatedNode !== null ? updatedNode.text : userText);
+        const updatedNode = await repository.Conversations.ModifyConversationNodeText(currentNode.nodeId, areaId, userText);
+        NodeUpdater.updateText(currentNode, updatedNode === null ? userText : updatedNode.text);
     };
 
     return (
@@ -94,4 +94,3 @@ export const TextNodeEditor = ({ isMultiOptionType, shouldShowMultiOption, isAna
         </Dialog>
     );
 };
-
