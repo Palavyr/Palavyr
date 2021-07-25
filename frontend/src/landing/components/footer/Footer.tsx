@@ -83,7 +83,7 @@ export const Footer = withWidth()(({ width }: IHaveWidth) => {
                     <Typography variant="h6" paragraph>
                         pa·​lav·​yr | \ pə-ˈla-vər
                     </Typography>
-                    <Typography paragraph>palaver noun : a long parley between persons.</Typography>
+                    <Typography paragraph>palaver noun : Talk intended to charm or beguile.</Typography>
                     <Box display="flex">
                         {socialIcons.map((socialIcon, index) => (
                             <Box key={index} mr={index !== socialIcons.length - 1 ? 1 : 0}>
