@@ -123,11 +123,14 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
     const googleLogin = async (response: GoogleResponse) => {
         setIsLoading(true);
         setStatus(null);
-        var successfulResponse = await Auth.loginWithGoogle(response.tokenId, response.googleId, successRedirectToDashboard, googleError);
-        if (successfulResponse === null || successfulResponse === false) {
+        const successfulResponse = await Auth.loginWithGoogle(response.tokenId, response.googleId, successRedirectToDashboard, googleError);
+        if (successfulResponse === null) {
             Auth.ClearAuthentication();
             Auth.googleLogout(noop);
             setStatus(COULD_NOT_FIND_SERVER);
+        } else if (successfulResponse === false) {
+            Auth.ClearAuthentication();
+            Auth.googleLogout(noop);
         }
         setIsLoading(false);
     };

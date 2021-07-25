@@ -74,6 +74,7 @@ class Auth {
     async loginWithGoogle(oneTimeCode: string, tokenId: string, successRedirectToDashboard: () => void, errorCallback: (response: Credentials) => void): Promise<boolean | null> {
         try {
             const authenticationResponse = await this.loginClient.Login.RequestLoginWithGoogleToken(oneTimeCode, tokenId);
+
             return this.processAuthenticationResponse(authenticationResponse, successRedirectToDashboard, errorCallback);
         } catch {
             console.log("Error attempting to reach the server.");
