@@ -16,12 +16,10 @@ import Drawer from "@material-ui/core/Drawer";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
 import { DashboardContext } from "./DashboardContext";
-import { UserDetails } from "./sidebar/UserDetails";
 import { PalavyrSnackbar } from "@common/components/PalavyrSnackbar";
 import { redirectToHomeWhenSessionNotEstablished } from "@api-client/clientUtils";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { ApiErrors } from "./Errors/ApiErrors";
-import { ErrorPanel } from "./Errors/ErrorPanel";
 import { Loaders } from "@api-client/Loaders";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
