@@ -38,7 +38,18 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ successText, locale, fullWidth, inputType, alertNode, placeholder, onClick, currentValue, clearVal = false, buttonText = "Update" }: ISettingsGridRow) => {
+export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({
+    successText,
+    locale,
+    fullWidth,
+    inputType,
+    alertNode,
+    placeholder,
+    onClick,
+    currentValue,
+    clearVal = false,
+    buttonText = "Update",
+}: ISettingsGridRow) => {
     const [inputVal, setInputVal] = useState<string>();
     const [inputValStatus, setInputValStatus] = useState<string | null>(null);
     const [alertState, setAlertState] = useState<boolean>(false);
@@ -101,7 +112,7 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({ successText, l
                     {currentValue && (
                         <>
                             <Typography display="inline" style={{ paddingTop: "1rem" }} variant="body1">
-                                Current value:{" "}
+                                Current value:
                             </Typography>
                             <Typography display="inline" style={{ paddingTop: "1rem", fontWeight: "bold" }}>
                                 {currentValue}

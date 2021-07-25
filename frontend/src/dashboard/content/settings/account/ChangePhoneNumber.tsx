@@ -56,9 +56,10 @@ export const ChangePhoneNumber = () => {
                 onClick={handlePhoneNumberChange}
                 clearVal={true}
                 currentValue={phoneNumber}
+                successText="Successfully updated Phone Number"
                 alertNode={
                     <Alert severity={phoneNumber ? "success" : "error"}>
-                        <AlertTitle className={classes.titleText}>{phoneNumber ? "Phone Number" : "Please set your phone number."}</AlertTitle>
+                        <AlertTitle className={classes.titleText}>{phoneNumber ? "Phone Number" : "Set your phone number."}</AlertTitle>
                         Set your company or business contact phone number. This will be used in the header of each response PDF sent via the widget.
                     </Alert>
                 }

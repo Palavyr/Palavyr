@@ -287,7 +287,7 @@ export class PalavyrRepository {
         },
 
         // TODO: Deprecate eventually
-        EnsureDBIsValid: async () => this.client.post(`configure-conversations/ensure-db-valid`),
+        // EnsureDBIsValid: async () => this.client.post(`configure-conversations/ensure-db-valid`),
     };
 
     public WidgetDemo = {
@@ -308,32 +308,32 @@ export class PalavyrRepository {
             checkIsActive: async () => await this.client.get<boolean>(`account/is-active`),
 
             UpdatePassword: async (oldPassword: string, newPassword: string) => this.client.put<boolean, {}>(`account/settings/password`, { OldPassword: oldPassword, Password: newPassword }),
-            updateCompanyName: async (companyName: string) => this.client.put<string, {}>(`account/settings/company-name`, { CompanyName: companyName }, CacheIds.CompanyName),
-            updateEmail: async (newEmail: string) => this.client.put<EmailVerificationResponse, {}>(`account/settings/email`, { EmailAddress: newEmail }, CacheIds.Email),
-            updatePhoneNumber: async (newPhoneNumber: string) => this.client.put<string, {}>(`account/settings/phone-number`, { PhoneNumber: newPhoneNumber }, CacheIds.PhoneNumber),
-            updateLocale: async (newLocaleId: string) => this.client.put<LocaleDefinition, {}>(`account/settings/locale`, { LocaleId: newLocaleId }, CacheIds.Locale),
+            updateCompanyName: async (companyName: string) => this.client.put<string, {}>(`account/settings/company-name`, { CompanyName: companyName }),
+            updateEmail: async (newEmail: string) => this.client.put<EmailVerificationResponse, {}>(`account/settings/email`, { EmailAddress: newEmail }),
+            updatePhoneNumber: async (newPhoneNumber: string) => this.client.put<string, {}>(`account/settings/phone-number`, { PhoneNumber: newPhoneNumber }),
+            updateLocale: async (newLocaleId: string) => this.client.put<LocaleDefinition, {}>(`account/settings/locale`, { LocaleId: newLocaleId }),
             updateCompanyLogo: async (formData: FormData) =>
-                this.client.put<string, {}>(`account/settings/logo`, formData, CacheIds.Logo, {
+                this.client.put<string, {}>(`account/settings/logo`, formData, undefined, {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "multipart/form-data",
                     },
                 }),
 
-            getCompanyName: async () => this.client.get<string>(`account/settings/company-name`, CacheIds.CompanyName),
-            getEmail: async () => this.client.get<AccountEmailSettingsResponse>(`account/settings/email`, CacheIds.Email),
-            getPhoneNumber: async () => this.client.get<PhoneSettingsResponse>(`account/settings/phone-number`, CacheIds.PhoneNumber),
+            getCompanyName: async () => this.client.get<string>(`account/settings/company-name`),
+            getEmail: async () => this.client.get<AccountEmailSettingsResponse>(`account/settings/email`),
+            getPhoneNumber: async () => this.client.get<PhoneSettingsResponse>(`account/settings/phone-number`),
 
-            GetLocale: async () => this.client.get<LocaleDefinition>(`account/settings/locale`, CacheIds.Locale),
-            getCompanyLogo: async () => this.client.get<string>(`account/settings/logo`, CacheIds.Logo),
+            GetLocale: async () => this.client.get<LocaleDefinition>(`account/settings/locale`),
+            getCompanyLogo: async () => this.client.get<string>(`account/settings/logo`),
 
-            deleteCompanyLogo: async () => this.client.delete(`account/settings/logo`, CacheIds.Logo),
+            deleteCompanyLogo: async () => this.client.delete(`account/settings/logo`),
             DeleteAccount: async () => {
                 const result = this.client.post(`account/delete-account`);
                 SessionStorage.ClearAllCacheValues();
                 return result;
             },
-            CheckNeedsPassword: async () => this.client.get<boolean>(`account/needs-password`, CacheIds.NeedsPassword),
+            CheckNeedsPassword: async () => this.client.get<boolean>(`account/needs-password`),
         },
         EmailVerification: {
             RequestEmailVerification: async (emailAddress: string, areaIdentifier: string) =>
