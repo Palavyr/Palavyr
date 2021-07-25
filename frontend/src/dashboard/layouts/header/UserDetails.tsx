@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     toolTipInternal: {
         backgroundColor: theme.palette.primary.light,
         maxWidgth: "none",
+        zIndex: 9999,
     },
     itemAlign: {
         display: "inline-block",
@@ -42,6 +43,11 @@ const useStyles = makeStyles((theme) => ({
     text: {
         marginLeft: "0.5rem",
         marginRight: "1rem",
+        color: theme.palette.common.black,
+    },
+    default: {
+        padding: "0.5rem",
+        display: "flex",
     },
 }));
 
@@ -58,20 +64,20 @@ export const UserDetails = React.memo(() => {
     let details: JSX.Element;
     if (googleImage && email) {
         details = (
-            <>
-                <Tooltip TransitionComponent={Fade} title={<Typography>{email}</Typography>} placement="right" classes={{ tooltip: cls.toolTipInternal }} interactive>
-                    <Align verticalCenter>
-                        <img src={googleImage} alt="" className={classNames(cls.googleImage, cls.itemAlign)} />
-                        {planTypeMeta && <Typography className={classNames(cls.text, cls.itemAlign)}>Subscription: {planTypeMeta.planType}</Typography>}
-                    </Align>
-                </Tooltip>
-            </>
+            <Align verticalCenter>
+                <img src={googleImage} alt="" className={classNames(cls.googleImage, cls.itemAlign)} />
+                {planTypeMeta && <Typography className={classNames(cls.text, cls.itemAlign)}>Subscription: {planTypeMeta.planType}</Typography>}
+            </Align>
         );
     } else if (email) {
         details = (
             <Align verticalCenter>
-                <Typography noWrap={true}>{email}</Typography>
-                {planTypeMeta && <Typography className={classNames(cls.text, cls.itemAlign)}>Subscription: {planTypeMeta.planType}</Typography>}
+                <span className={cls.default}>
+                    <Typography className={cls.text} noWrap={true}>
+                        {email}
+                    </Typography>
+                    {planTypeMeta && <Typography className={classNames(cls.text, cls.itemAlign)}>Subscription: {planTypeMeta.planType}</Typography>}
+                </span>
             </Align>
         );
     } else {
@@ -89,8 +95,10 @@ export const UserDetails = React.memo(() => {
     }, []);
 
     return (
-        <div onClick={userOnClick} className={cls.logwrapper}>
-            {loading ? <CircularProgress /> : details}
-        </div>
+        <Tooltip TransitionComponent={Fade} title={<Typography>{email}</Typography>} placement="right" classes={{ tooltip: cls.toolTipInternal }} interactive>
+            <div onClick={userOnClick} className={cls.logwrapper}>
+                {loading ? <CircularProgress /> : details}
+            </div>
+        </Tooltip>
     );
 });
