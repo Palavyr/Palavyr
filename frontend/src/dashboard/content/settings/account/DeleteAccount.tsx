@@ -25,9 +25,9 @@ export const DeleteAccount = () => {
     const history = useHistory();
 
     const handleAccountDelete = async () => {
-        Auth.ClearAuthentication();
         alert("We're sorry to see you go!");
         await repository.Settings.Account.DeleteAccount();
+        Auth.ClearAuthentication();
         history.push("/");
     };
     const alertMessage = {

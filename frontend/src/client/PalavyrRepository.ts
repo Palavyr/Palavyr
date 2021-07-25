@@ -329,8 +329,9 @@ export class PalavyrRepository {
 
             deleteCompanyLogo: async () => this.client.delete(`account/settings/logo`, CacheIds.Logo),
             DeleteAccount: async () => {
+                const result = this.client.post(`account/delete-account`);
                 SessionStorage.ClearAllCacheValues();
-                return this.client.post(`account/delete-account`);
+                return result;
             },
             CheckNeedsPassword: async () => this.client.get<boolean>(`account/needs-password`, CacheIds.NeedsPassword),
         },

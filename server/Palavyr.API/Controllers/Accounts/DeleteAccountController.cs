@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Exceptions;
 using Palavyr.Core.Repositories.Delete;
 
 namespace Palavyr.API.Controllers.Accounts
@@ -27,8 +28,16 @@ namespace Palavyr.API.Controllers.Accounts
         }
 
         [HttpPost("account/delete-account")]
-        public async Task<IActionResult> DeleteAccount([FromHeader] string accountId, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteAccount(
+            [FromHeader]
+            string accountId,
+            CancellationToken cancellationToken)
         {
+            if (accountId == null)
+            {
+                throw new DomainException("Please log out and log in again before trying to delete your account");
+            }
+
             logger.LogInformation($"Deleting details for account: {accountId}");
 
             logger.LogInformation("Deleting from the convo database...");
