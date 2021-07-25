@@ -10,6 +10,7 @@ import { SpaceEvenly } from "../positioning/SpaceEvenly";
 import { ErrorPanel } from "../Errors/ErrorPanel";
 import { DASHBOARD_HEADER_TOPBAR_zINDEX } from "@constants";
 import { yellow } from "@material-ui/core/colors";
+import { UserDetails } from "./UserDetails";
 
 const drawerWidth: number = 240;
 
@@ -38,8 +39,6 @@ const useStyles = makeStyles((theme) => ({
     },
     icon: {
         borderRadius: "10px",
-        marginRight: "2rem",
-        paddingRIght: "5rem",
         "&:hover": {
             backgroundColor: theme.palette.primary.light,
         },
@@ -67,6 +66,10 @@ const useStyles = makeStyles((theme) => ({
     },
     bar: {
         backgroundColor: yellow[300],
+    },
+    barItem: {
+        marginRight: "0.8rem",
+        marginLeft: "0.8rem",
     },
 }));
 
@@ -131,8 +134,8 @@ export const DashboardHeader = ({ isLoading, dashboardAreasLoading, unseenNotifi
                         )}
                     </Align>
                     <div style={{ flexGrow: 1 }} />
-                    <div style={{ display: "flex" }}>
-                        <Align float="right">
+                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                        <Align float="right" verticalCenter extraClassNames={cls.barItem}>
                             {!routesToExclude.includes(location.pathname) ? (
                                 <Tooltip title="Help about this page">
                                     <IconButton color="inherit" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(cls.icon, helpOpen && cls.hide)}>
@@ -143,9 +146,9 @@ export const DashboardHeader = ({ isLoading, dashboardAreasLoading, unseenNotifi
                                 <div></div>
                             )}
                         </Align>
-                        <Align float="right">
+                        <Align float="right" verticalCenter extraClassNames={cls.barItem}>
                             <Tooltip title="Unseen enquiries">
-                                <span>
+                                <span className={cls.icon}>
                                     <IconButton disabled={unseenNotifications === 0} onClick={() => history.push("/dashboard/enquiries")} className={cls.icon} edge="start" color="inherit">
                                         <Badge showZero={false} badgeContent={unseenNotifications} color="secondary">
                                             <NotificationsIcon />
@@ -153,6 +156,9 @@ export const DashboardHeader = ({ isLoading, dashboardAreasLoading, unseenNotifi
                                     </IconButton>
                                 </span>
                             </Tooltip>
+                        </Align>
+                        <Align float="right" verticalCenter extraClassNames={cls.barItem}>
+                            <UserDetails />
                         </Align>
                     </div>
                 </Toolbar>

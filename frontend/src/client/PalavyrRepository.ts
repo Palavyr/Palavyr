@@ -338,14 +338,20 @@ export class PalavyrRepository {
     };
 
     public Enquiries = {
-        getEnquiries: async () => this.client.get<Enquiries>(`enquiries`, CacheIds.Enquiries),
-        getShowSeenEnquiries: async () => this.client.get<boolean>(`enquiries/show`, CacheIds.ShowSeenQueries),
-        toggleShowSeenEnquiries: async () => this.client.put<boolean, {}>(`enquiries/toggle-show`, CacheIds.ShowSeenQueries),
+        getEnquiries: async () => this.client.get<Enquiries>(`enquiries`),
+        getShowSeenEnquiries: async () => this.client.get<boolean>(`enquiries/show`),
+        toggleShowSeenEnquiries: async () => this.client.put<boolean, {}>(`enquiries/toggle-show`),
 
-        updateEnquiry: async (conversationId: string) => this.client.put<Enquiries, {}>(`enquiries/update/${conversationId}`, CacheIds.Enquiries),
-        deleteSelectedEnquiries: async (fileReferences: string[]) => this.client.put<Enquiries, {}>(`enquiries/selected`, { FileReferences: fileReferences }, CacheIds.Enquiries),
+        updateEnquiry: async (conversationId: string) => {
+            const result = this.client.put<Enquiries, {}>(`enquiries/update/${conversationId}`);
+            return result;
+        },
+        deleteSelectedEnquiries: async (fileReferences: string[]) => {
+            const result = this.client.put<Enquiries, {}>(`enquiries/selected`, { FileReferences: fileReferences });
+            return result;
+        },
 
         getSignedUrl: async (fileId: string) => this.client.get<string>(`enquiries/link/${fileId}`),
-        getConversation: async (conversationId: string) => this.client.get<CompletedConversation>(`enquiries/review/${conversationId}`, CacheIds.Conversation),
+        getConversation: async (conversationId: string) => this.client.get<CompletedConversation>(`enquiries/review/${conversationId}`, [CacheIds.Conversation, conversationId].join("-") as CacheIds),
     };
 }

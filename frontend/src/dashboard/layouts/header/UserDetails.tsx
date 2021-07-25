@@ -6,36 +6,42 @@ import Fade from "@material-ui/core/Fade";
 import { GeneralSettingsLoc } from "@Palavyr-Types";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
+import classNames from "classnames";
+import { Align } from "../positioning/Align";
+import { TOPBAR_MAX_HEIGHT } from "@constants";
+
+const DETAILS_MAX_HEIGHT = TOPBAR_MAX_HEIGHT - 10;
 
 const useStyles = makeStyles((theme) => ({
     logwrapper: {
-        textAlign: "center",
-        paddingTop: "1rem",
-        paddingBottom: "0.7rem",
+        // padding: "0px",
+        // margin: "0px",
+        maxHeight: `${DETAILS_MAX_HEIGHT}px`,
         border: `1px solid ${theme.palette.info.main}`,
-        margin: "1rem",
+        borderRadius: "8px",
         boxShadow: theme.shadows[20],
-        borderRadius: "7px",
         backgroundColor: theme.palette.success.light,
         "&:hover": {
             backgroundColor: theme.palette.success.main,
+            cursor: "pointer",
         },
     },
     googleImage: {
         borderRadius: "50%",
-        margin: "10px",
-        height: "75px",
-        width: "75px",
-    },
-    googleImageContainer: {
-        display: "flex",
-        width: "100%",
-        justifyContent: "center",
+        maxHeight: `${DETAILS_MAX_HEIGHT}px`,
+        padding: ".5rem",
     },
     toolTipInternal: {
         backgroundColor: theme.palette.primary.light,
         maxWidgth: "none",
-        marginLeft: "2rem",
+    },
+    itemAlign: {
+        display: "inline-block",
+        verticalAlign: "middle",
+    },
+    text: {
+        marginLeft: "0.5rem",
+        marginRight: "1rem",
     },
 }));
 
@@ -53,24 +59,20 @@ export const UserDetails = React.memo(() => {
     if (googleImage && email) {
         details = (
             <>
-                <Typography>Logged in as:</Typography>
-                <Tooltip TransitionComponent={Fade} title={<Typography variant="h5">{email}</Typography>} placement="right" classes={{ tooltip: cls.toolTipInternal }} interactive>
-                    <div className={cls.googleImageContainer}>
-                        <img src={googleImage} alt="" className={cls.googleImage} />
-                    </div>
+                <Tooltip TransitionComponent={Fade} title={<Typography>{email}</Typography>} placement="right" classes={{ tooltip: cls.toolTipInternal }} interactive>
+                    <Align verticalCenter>
+                        <img src={googleImage} alt="" className={classNames(cls.googleImage, cls.itemAlign)} />
+                        {planTypeMeta && <Typography className={classNames(cls.text, cls.itemAlign)}>Subscription: {planTypeMeta.planType}</Typography>}
+                    </Align>
                 </Tooltip>
-                {planTypeMeta && <Typography variant="h6">Subscription: {planTypeMeta.planType}</Typography>}
             </>
         );
     } else if (email) {
         details = (
-            <>
-                <Typography>Logged in as:</Typography>
-                <Typography gutterBottom noWrap={false} variant="body2">
-                    {email}
-                </Typography>
-                {planTypeMeta && <Typography variant="h6">Subscription: {planTypeMeta.planType}</Typography>}
-            </>
+            <Align verticalCenter>
+                <Typography noWrap={true}>{email}</Typography>
+                {planTypeMeta && <Typography className={classNames(cls.text, cls.itemAlign)}>Subscription: {planTypeMeta.planType}</Typography>}
+            </Align>
         );
     } else {
         details = <Typography>Please Log In</Typography>;

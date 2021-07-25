@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core";
+import classNames from "classnames";
 import React from "react";
 
 type Directions = "flex-start" | "flex-end" | "center";
@@ -8,6 +9,7 @@ export interface IAlign {
     direction?: Directions;
     float?: "left" | "right";
     verticalCenter?: boolean;
+    extraClassNames?: string;
 }
 
 export type StyleProps = {
@@ -35,8 +37,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Align = ({ direction, float, children, verticalCenter }: IAlign) => {
+export const Align = ({ direction, float, children, verticalCenter, extraClassNames }: IAlign) => {
     const cls = useStyles({ direction, float, verticalCenter });
 
-    return <div className={cls.align}>{children}</div>;
+    return <div className={classNames(cls.align, extraClassNames)}>{children}</div>;
 };

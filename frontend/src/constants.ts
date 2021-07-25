@@ -53,3 +53,6 @@ export const ADD_NEW_AREA_DIALOG_BOX_zINDEX = 150;
 export const ADD_NEW_AREA_BACKDROP_zINDEX = 120;
 export const DASHBOARD_HEADER_TOPBAR_zINDEX = 100;
 export const CHAT_DEMO_LISTBOX_zINDEX = 50;
+
+// App Bar
+export const TOPBAR_MAX_HEIGHT = 64;

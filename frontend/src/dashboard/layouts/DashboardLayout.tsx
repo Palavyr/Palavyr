@@ -266,7 +266,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                     }}
                 >
                     <SideBarHeader handleDrawerClose={handleDrawerClose} />
-                    <UserDetails />
+                    {/* <UserDetails /> */}
                     <Divider />
                     <SideBarMenu areaNameDetails={areaNameDetails} />
                 </Drawer>
