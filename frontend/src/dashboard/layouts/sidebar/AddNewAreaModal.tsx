@@ -40,14 +40,17 @@ export const AddNewAreaModal = ({ open, handleClose, setNewArea }: IAddNewAreaMo
     const [areaName, setAreaName] = useState<string>("");
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);
+    const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
 
     const onAdd = async () => {
+        setButtonDisabled(true);
         if (areaName !== "") {
             const newArea = await repository.Area.createArea(areaName);
             setNewArea(newArea);
         }
         handleClose();
         setAreaName("");
+        setButtonDisabled(false);
     };
 
     const textFieldOnChange = (event: { target: { value: string } }) => {
@@ -61,7 +64,7 @@ export const AddNewAreaModal = ({ open, handleClose, setNewArea }: IAddNewAreaMo
                 <TextField className={cls.text} autoFocus margin="dense" value={areaName} onChange={textFieldOnChange} id="name" label="New Area Name" type="text" fullWidth />
             </DialogContent>
             <DialogActions>
-                <AddOrCancel onAdd={onAdd} onCancel={handleClose} addText="Add" cancelText="Cancel" />
+                <AddOrCancel disabled={buttonDisabled} onAdd={onAdd} onCancel={handleClose} addText="Add" cancelText="Cancel" />
             </DialogActions>
         </Dialog>
     );
