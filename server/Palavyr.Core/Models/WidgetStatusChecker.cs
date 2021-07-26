@@ -115,22 +115,20 @@ namespace Palavyr.Core.Models
         {
             var pricingStrategies = area.DynamicTableMetas;
             var results = await orchestrator.ValidatePricingStrategies(pricingStrategies);
+            var ready = true;
             if (results.Count > 0)
             {
                 foreach (var result in results)
                 {
                     if (!result.IsValid && result.Reasons != null)
                     {
+                        ready = false;
                         error.Reasons.AddRange(result.Reasons);
                     }
                 }
+            }
 
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return ready;
         }
 
         private bool AllImageNodesSet(ConversationNode[] nodeList, PreCheckError error)
