@@ -81,7 +81,10 @@ class PositionSwapper {
 
         this.PositionIndex = currentNodeIndex;
         if (parent.nodeType === "Anabranch" || parent.nodeType === "LoopbackAnchor") {
-            if (currentNodeIndex === 0) {
+            if (parent.childNodeReferences.Length <= 2) {
+                this.Right = false;
+                this.Left = false;
+            } else if (currentNodeIndex === 0) {
                 this.Right = false;
                 this.Left = false;
             } else if (currentNodeIndex === 1) {
