@@ -105,6 +105,7 @@ export interface IPalavyrNode {
     isImageNode: boolean;
     nodeTypeCode: NodeTypeCode;
     repository: PalavyrRepository;
+    isLocked: boolean;
 
     // the options available from this node, if any. I none, then "Continue" is used |peg| delimted
     optionPath: string; // the value option that was used with the parent of this node.
