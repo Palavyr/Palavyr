@@ -8,7 +8,8 @@ export interface PalavyrAutoCompleteProps<T> {
     shouldDisableSelect: boolean;
     onChange: (event: any, option: T) => void;
     groupby?(option: T): string;
-    getOptionLabel?(option: T): string
+    getOptionLabel?(option: T): string;
+    getOptionSelected?(option: T, value: T): boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -48,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const PalavyrAutoComplete = <T extends {}>({ label, options, shouldDisableSelect, onChange, groupby, getOptionLabel}: PalavyrAutoCompleteProps<T>) => {
+export const PalavyrAutoComplete = <T extends {}>({ label, options, shouldDisableSelect, onChange, groupby, getOptionLabel, getOptionSelected }: PalavyrAutoCompleteProps<T>) => {
     const cls = useStyles();
     return (
         <div>
@@ -58,6 +59,7 @@ export const PalavyrAutoComplete = <T extends {}>({ label, options, shouldDisabl
                     <Autocomplete
                         size="small"
                         disabled={shouldDisableSelect}
+                        getOptionSelected={getOptionSelected ? getOptionSelected : undefined}
                         disableClearable
                         clearOnEscape
                         className={cls.autocomplete}

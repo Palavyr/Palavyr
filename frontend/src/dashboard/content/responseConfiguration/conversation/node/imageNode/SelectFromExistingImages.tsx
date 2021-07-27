@@ -3,7 +3,6 @@ import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 import { PalavyrAutoComplete } from "@common/components/PalavyrAutoComplete";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { SetState, FileLink } from "@Palavyr-Types";
-import { SessionStorage } from "localStorage/sessionStorage";
 import React, { useCallback, useEffect, useState } from "react";
 
 export interface SelectFromExistingImagesProps {

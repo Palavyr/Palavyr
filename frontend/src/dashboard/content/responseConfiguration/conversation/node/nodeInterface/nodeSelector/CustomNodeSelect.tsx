@@ -22,6 +22,7 @@ export const CustomNodeSelect = ({ onChange, label, nodeTypeOptions, shouldDisab
             onChange={onChange}
             groupby={(nodeOption: NodeOption) => nodeOption.groupName}
             getOptionLabel={(option: NodeOption) => option.text}
+            getOptionSelected={(option: NodeOption, value: NodeOption) => option.value === value.value}
         />
     );
 };
