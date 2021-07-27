@@ -56,6 +56,8 @@ export interface INodeReferences {
     containsNodeType(nodeType: string): boolean;
     AllChildrenUnset(): boolean;
     replaceAtIndex(index: number, newNode: IPalavyrNode): void;
+    ShiftLeft(currentNode: IPalavyrNode): void;
+    ShiftRight(currentNode: IPalavyrNode): void;
 }
 
 export interface IPalavyrNode {

@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import { IPalavyrNode } from "../../Contracts";
 import { SteppedLineTo } from "../../PalavyrNodeLines/SteppedLines";
 import { NodeInterface } from "./NodeInterface";
-import Fade from "react-reveal/Fade";
 
 const treelinkClassName = "tree-line-link";
 

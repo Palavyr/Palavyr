@@ -142,4 +142,24 @@ export class NodeReferences implements INodeReferences {
     public AllChildrenUnset(): boolean {
         return this.references.map((x) => x.nodeIsNotSet()).every((x) => x);
     }
+
+    public ShiftLeft(currentNode: IPalavyrNode): void {
+        const currentIndex = this.findIndexOf(currentNode);
+        if (currentIndex === 0 || currentIndex === null) return;
+        const nodeToTheLeft = this.nodeReferences[currentIndex - 1];
+        const thisNode = this.nodeReferences[currentIndex];
+        this.nodeReferences[currentIndex] = nodeToTheLeft;
+        this.nodeReferences[currentIndex - 1] = thisNode;
+    }
+
+    public ShiftRight(currentNode: IPalavyrNode): void {
+        const currentIndex = this.findIndexOf(currentNode);
+        if (currentIndex === this.nodeReferences.length - 1 || currentIndex === null) return;
+
+        const nodeToTheRight = this.nodeReferences[currentIndex + 1];
+        const thisNode = this.nodeReferences[currentIndex];
+
+        this.nodeReferences[currentIndex] = nodeToTheRight;
+        this.nodeReferences[currentIndex + 1] = thisNode;
+    }
 }

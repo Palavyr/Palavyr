@@ -15,6 +15,7 @@ import { TextNodeFace } from "../textNode/TextNodeFace";
 import { NodeHeader } from "./NodeHeader";
 import { NodeOptionals } from "./NodeOptionals";
 import { NodeTypeSelector } from "./NodeTypeSelector";
+import { PositionSwitcher } from "./PositionSwitch";
 
 export interface NodeInterfaceProps {
     currentNode: IPalavyrNode;
@@ -67,9 +68,9 @@ export const NodeInterface = ({
         splitMergeRootSiblingIndex: isMemberOfLeftmostBranch ? 0 : 1,
         debugOn: showDebugData,
     });
-
     return (
         <Card id={nodeId} className={cls.root} variant={nodeType === "" ? "outlined" : undefined}>
+            <PositionSwitcher currentNode={currentNode} />
             <CardContent className={classNames(cls.card, nodeId)}>
                 {showDebugData && <DataLogging debugData={compileDebug(currentNode)} nodeChildren={joinedChildReferenceString} nodeId={nodeId} />}
                 <NodeHeader isRoot={isRoot} optionPath={optionPath} nodeId={currentNode.nodeId} />
