@@ -4,16 +4,20 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import { makeStyles } from "@material-ui/core";
 import { IPalavyrNode } from "../../Contracts";
 
-export interface IPositionSwitcher {
+export interface IPositionSwitcherProps {
     currentNode: IPalavyrNode;
 }
 
-class Positions {
+class PositionSwapper {
+    constructor(currentNode: IPalavyrNode) {
+        this.SetSwappers(currentNode);
+    }
     private left: boolean = false;
     private right: boolean = false;
     private show: boolean = true;
+    private positionIndex: number;
 
-    public dontShow() {
+    private dontShow() {
         this.show = false;
     }
 
@@ -40,40 +44,69 @@ class Positions {
     public set Right(v: boolean) {
         this.right = v;
     }
+
+    public get PositionIndex(): number {
+        return this.positionIndex;
+    }
+
+    public set PositionIndex(index: number) {
+        this.positionIndex = index;
+    }
+
+    private SetSwappers = (currentNode: IPalavyrNode): void => {
+        if (currentNode.isRoot) {
+            this.dontShow();
+            return;
+        }
+
+        if (currentNode.parentNodeReferences.Length !== 1) {
+            this.dontShow();
+            return;
+        }
+
+        const parent = currentNode.parentNodeReferences.Single();
+
+        if (!parent.isMultiOptionType) {
+            this.dontShow();
+            return;
+        }
+
+        if (parent.childNodeReferences.Length < 2) {
+            this.dontShow();
+            return;
+        }
+
+        const currentNodeIndex = parent.childNodeReferences.findIndexOf(currentNode);
+        if (currentNodeIndex === null) return;
+
+        this.PositionIndex = currentNodeIndex;
+        if (parent.nodeType === "Anabranch" || parent.nodeType === "LoopbackAnchor") {
+            if (currentNodeIndex === 0) {
+                this.Right = false;
+                this.Left = false;
+            } else if (currentNodeIndex === 1) {
+                // can only move right
+                this.Right = true;
+            } else if (currentNodeIndex === parent.childNodeReferences.Length - 1) {
+                // can only move left
+                this.Left = true;
+            } else {
+                // can move left or right
+                this.Right = true;
+                this.Left = true;
+            }
+        } else {
+            if (currentNodeIndex === 0) {
+                this.Right = true;
+            } else if (currentNodeIndex === parent.childNodeReferences.Length - 1) {
+                this.Left = true;
+            } else {
+                this.Right = true;
+                this.Left = true;
+            }
+        }
+    };
 }
-const swappers = (currentNode: IPalavyrNode): Positions => {
-    const pos = new Positions();
-    if (currentNode.isRoot) {
-        pos.dontShow();
-        return pos;
-    }
-    if (currentNode.parentNodeReferences.Length !== 1) {
-        pos.dontShow();
-        return pos;
-    }
-
-    const parent = currentNode.parentNodeReferences.Single();
-
-    if (!parent.isMultiOptionType) {
-        pos.dontShow();
-        return pos;
-    }
-    if (parent.childNodeReferences.Length < 2) {
-        pos.dontShow();
-        return pos;
-    }
-
-    const currentNodeIndex = parent.childNodeReferences.findIndexOf(currentNode);
-    if (currentNodeIndex === 0) {
-        pos.Right = true;
-    } else if (currentNodeIndex === parent.childNodeReferences.Length - 1) {
-        pos.Left = true;
-    } else {
-        pos.Right = true;
-        pos.Left = true;
-    }
-    return pos;
-};
 
 const rightArrowOnClick = (event: any, currentNode: IPalavyrNode) => {
     currentNode.parentNodeReferences.Single().childNodeReferences.ShiftRight(currentNode);
@@ -85,19 +118,15 @@ const leftArrowOnClick = (event: any, currentNode: IPalavyrNode) => {
     currentNode.UpdateTree();
 };
 
-export const PositionSwitcher = ({ currentNode }: IPositionSwitcher) => {
+export const PositionSwitcher = ({ currentNode }: IPositionSwitcherProps) => {
     const cls = useStyles();
-    const positions = swappers(currentNode);
+    const positions = new PositionSwapper(currentNode);
 
     return positions.Show ? (
         <div className={cls.arrows}>
             <span>{positions.Left && <ArrowLeftIcon onClick={(event: any) => leftArrowOnClick(event, currentNode)} className={cls.arrow} fontSize="large" />}</span>
             {/* <span>TODO: Text to indicate which position in the option list this will be</span> */}
-            {positions.Right && (
-                <span>
-                    <ArrowRightIcon onClick={(event: any) => rightArrowOnClick(event, currentNode)} className={cls.arrow} fontSize="large" />
-                </span>
-            )}
+            <span>{positions.Right && <ArrowRightIcon onClick={(event: any) => rightArrowOnClick(event, currentNode)} className={cls.arrow} fontSize="large" />}</span>
         </div>
     ) : (
         <></>
