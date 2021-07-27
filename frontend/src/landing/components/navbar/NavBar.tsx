@@ -1,21 +1,13 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, Hidden, IconButton, Button, makeStyles, Divider } from "@material-ui/core";
+import { AppBar, Toolbar, Typography, Button, makeStyles } from "@material-ui/core";
 import { menuItems } from "./NavMenuItems";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import classNames from "classnames";
-// import Logo from "../../../common/svgs/palavyrBranding/logo.svg";
-// import Logo from "../../../common/svgs/palavyrBranding/logo.svg";
-// import Logo from "../header/logo2.svg"
-// import Logo from "srclandingcomponentsheaderlogo2.svg";
+import { Align } from "dashboard/layouts/positioning/Align";
 
 export interface INavBar {
     openRegisterDialog: any;
     openLoginDialog: any;
-    handleMobileDrawerOpen: any;
-    handleMobileDrawerClose: any;
-    mobileDrawerOpen: any;
-    selectedTab: string | null;
-    setSelectedTab: any;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -51,10 +43,7 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 64,
         fontWeight: "bolder",
         color: theme.palette.success.main,
-    },
-    brandTextSmall: {
-        fontWeight: "bolder",
-        color: "black",
+        cursor: "pointer",
     },
     noDecoration: {
         textDecoration: "none !important",
@@ -64,14 +53,6 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "row",
         verticalAlign: "middle",
     },
-    logo: {
-        display: "flex",
-        flexDirection: "row",
-        height: "100%",
-        paddingRight: "1rem",
-        border: `3px solid ${theme.palette.success.main}`,
-        color: theme.palette.success.light,
-    },
     logotypography: {
         display: "flex",
         flexDirection: "row",
@@ -80,44 +61,70 @@ const useStyles = makeStyles((theme) => ({
         padding: "0.4rem",
         borderRadius: "12px",
     },
+    tutButton: {},
+    navButtons: {
+        display: "flex",
+        justifyContent: "space-evenly",
+        verticalAlign: "middle",
+    },
 }));
 
-export const NavBar = ({ openRegisterDialog, openLoginDialog, handleMobileDrawerOpen, handleMobileDrawerClose, mobileDrawerOpen, selectedTab, setSelectedTab }: INavBar) => {
+export const NavBar = ({ openRegisterDialog, openLoginDialog }: INavBar) => {
     const cls = useStyles();
+    const history = useHistory();
+
+    const redirectToTutorial = () => history.push("/tutorial");
     return (
         <AppBar position="fixed" className={cls.appBar} color="transparent" classes={{ root: cls.clear }}>
             <Toolbar className={cls.toolbar}>
                 <div className={cls.logowrap}>
-                    <div className={cls.logotypography}>
+                    <div className={cls.logotypography} onClick={() => history.push("/")}>
                         <Typography variant="body2" className={cls.brandText} display="inline">
                             Palavyr
                         </Typography>
                     </div>
                 </div>
-                <div>
-                    {menuItems(openRegisterDialog, openLoginDialog).map((element) => {
-                        if (element.link) {
+                <div className={cls.navButtons}>
+                    <Align verticalCenter>
+                        {menuItems(openRegisterDialog, openLoginDialog, redirectToTutorial).map((element) => {
+                            if (element.link) {
+                                return (
+                                    <Link key={element.name} to={element.link} className={cls.noDecoration}>
+                                        <Button disableElevation variant="contained" size="medium" className={classNames(cls.menuButtonText, cls.menuButton)}>
+                                            <Typography variant="h6" className={cls.menuButtonText}>
+                                                {element.name}
+                                            </Typography>
+                                        </Button>
+                                    </Link>
+                                );
+                            }
                             return (
-                                <Link key={element.name} to={element.link} className={cls.noDecoration} onClick={handleMobileDrawerClose}>
-                                    <Button disableElevation variant="contained" size="medium" className={classNames(cls.menuButtonText, cls.menuButton)}>
-                                        <Typography variant="h6" className={cls.menuButtonText}>
-                                            {element.name}
-                                        </Typography>
-                                    </Button>
-                                </Link>
+                                <Button disableElevation variant="contained" size="medium" onClick={element.onClick} className={classNames(cls.menuButtonText, cls.menuButton)} key={element.name}>
+                                    <Typography variant="h6" className={cls.menuButtonText}>
+                                        {element.name}
+                                    </Typography>
+                                </Button>
                             );
-                        }
-                        return (
-                            <Button disableElevation variant="contained" size="medium" onClick={element.onClick} className={classNames(cls.menuButtonText, cls.menuButton)} key={element.name}>
+                        })}
+                        <div style={{ marginRight: "1rem" }}>
+                            <Link key="Tutorial" to="/tutorial" className={cls.noDecoration}>
+                                <span className={cls.tutButton}>
+                                    <Typography variant="h6" className={cls.menuButtonText}>
+                                        Tutorial
+                                    </Typography>
+                                </span>
+                            </Link>
+                        </div>
+                        <Link key="Home" to="/" className={cls.noDecoration}>
+                            <span>
                                 <Typography variant="h6" className={cls.menuButtonText}>
-                                    {element.name}
+                                    Home
                                 </Typography>
-                            </Button>
-                        );
-                    })}
+                            </span>
+                        </Link>
+                    </Align>
                 </div>
             </Toolbar>
-            {/* <Divider light /> */}
         </AppBar>
     );
 };

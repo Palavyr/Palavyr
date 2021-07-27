@@ -34,7 +34,7 @@ import { ApiErrors } from "dashboard/layouts/Errors/ApiErrors";
 import { filterNodeTypeOptionsOnSubscription } from "dashboard/subscriptionFilters/filterConvoNodeTypes";
 import { SessionStorage } from "localStorage/sessionStorage";
 import { AxiosClient, CacheIds } from "./AxiosClient";
-import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./clientUtils";
+import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage, googleYoutubeApikey } from "./clientUtils";
 import { Loaders } from "./Loaders";
 
 export class PalavyrRepository {
@@ -359,4 +359,44 @@ export class PalavyrRepository {
         getSignedUrl: async (fileId: string) => this.client.get<string>(`enquiries/link/${fileId}`),
         getConversation: async (conversationId: string) => this.client.get<CompletedConversation>(`enquiries/review/${conversationId}`, [CacheIds.Conversation, conversationId].join("-") as CacheIds),
     };
+
+    public Youtuve = {
+        GetVideoMap: async (apiKey: string) => {
+            const youtubeClient = new AxiosClient();
+
+            const channelId = "UC6kCWe7wSw6INDtYtz-W7aA";
+            const playlistId = "PL8zxShANCblyyabbAD7EQS-isVCI3EaF_";
+
+            const exampleItem = "UEw4enhTaEFOQ2JseXlhYmJBRDdFUVMtaXNWQ0kzRWFGXy4yODlGNEE0NkRGMEEzMEQy";
+
+
+            const playlistItemsUrl = (apikey: string, playlistId: string) => ` https://www.googleapis.com/youtube/v3/playlistItems?key=${apikey}&playlistId=${playlistId}`;
+
+
+            // const playlistItemsResponse = await youtubeClient.get<YoutubePlaylistResponse>(playlistItemsUrl(googleYoutubeApikey, playlistId));
+            // const playlistIds = playlistItemsResponse.items.map((item: YoutubePlaylistItem) => item.id);
+
+            // const videoIdParam = playlistIds.join(",");
+
+            // const videoResponse = this.client.get();
+        },
+    };
 }
+
+export type YoutubePlaylistResponse = {
+    kind: string;
+    etag: string;
+    items: YoutubePlaylistItem[];
+};
+
+export type YoutubePlaylistItem = {
+    kind: string;
+    etag: string;
+    id: string;
+};
+// [
+//     {
+//         "kind": "youtube#playlistItem",
+//         "etag": "oBGEzbUO9Ii4fqpIZI997SswQLU",
+//         "id": "UEw4enhTaEFOQ2JseXlhYmJBRDdFUVMtaXNWQ0kzRWFGXy4yODlGNEE0NkRGMEEzMEQy"
+//     },

@@ -10,7 +10,7 @@ type menuItem = {
     icon?: React.ReactNode;
     onClick?(): void;
 };
-export const menuItems = (openRegisterDialog: any, openLoginDialog: any): menuItem[] => [
+export const menuItems = (openRegisterDialog: any, openLoginDialog: any, directToTutorial: any): menuItem[] => [
     // {
     //     name: "Home",
     //     link: "/",
@@ -36,4 +36,9 @@ export const menuItems = (openRegisterDialog: any, openLoginDialog: any): menuIt
         onClick: openLoginDialog,
         icon: <LockOpenIcon className="text-white" />,
     },
+    // {
+    //     name: "Tutorial",
+    //     onClick: directToTutorial,
+    //     icon: <HomeIcon />,
+    // },
 ];

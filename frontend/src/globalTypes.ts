@@ -1,7 +1,7 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { COULD_NOT_FIND_SERVER, GOOGLE_ACCOUNT_NOT_FOUND, INVALID_EMAIL, INVALID_GOOGLE_TOKEN, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, NOT_A_GOOGLE_ACCOUNT, VERIFICATION_EMAIL_SEND } from "@constants";
 import { PalavyrLinkedList } from "dashboard/content/responseConfiguration/conversation/PalavyrDataStructure/PalavyrLinkedList";
-import { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 // / <reference types="node" />
 // / <reference types="react" />
 // / <reference types="react-dom" />
@@ -59,6 +59,11 @@ export type AreaMeta = {
     areaIdentifier: string;
     groupId: string;
     areaName: string;
+};
+
+export type VideoMap = {
+    title: string;
+    iframe: string;
 };
 
 // Client

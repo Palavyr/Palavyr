@@ -67,6 +67,7 @@ import { ImageReviewHelp } from "dashboard/content/help/ImageReviewHelp";
 import { PleaseSubscribe } from "dashboard/content/purchse/pleaseSubscribe/PleaseSubscribe";
 import { PleaseSubscribeHelp } from "dashboard/content/help/PleaseSubscribeHelp";
 import { StructuredConvoTree } from "dashboard/content/responseConfiguration/conversation/PalavyrConfiguration";
+import { TutorialPage } from "@landing/tutorialPage/TutorialPage";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -89,6 +90,7 @@ export const Routes = () => {
         <Router>
             <Switch>
                 <Route exact path="/" component={LandingPage} />
+                <Route exact path="/tutorial" component={TutorialPage} />
                 <Route exact path="/privacy-policy" component={PrivacyPolicy} />
                 <Route exact path="/terms-of-service" component={TermsOfServiceDialog} />
                 <Route exact path={RESET_PASSWORD_VERIFY} component={ConfirmYourResetLink} />

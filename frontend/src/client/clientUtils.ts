@@ -37,6 +37,8 @@ export const currentEnvironment = process.env.CURRENTENV as string;
 export const softwareVersion = process.env.VERSION as string;
 export const landingWidgetApiKey = process.env.LANDING_WIDGET_APIKEY as string;
 export const googleAnalyticsTrackingId = process.env.GOOGLE_ANALYTICS_KEY as string;
+export const googleYoutubeApikey = process.env.GOOGLE_YOUTUBE_KEY as string;
+
 
 export enum Environments {
     Development,
@@ -78,6 +80,11 @@ if (landingWidgetApiKey === undefined) {
 
 if (googleAnalyticsTrackingId === undefined) {
     console.log("GOOGLE_ANALYTICS_KEY UNDEFINED");
+}
+
+
+if (googleYoutubeApikey === undefined) {
+    console.log("GOOGLE_YOUTUBE_KEY UNDEFINED");
 }
 
 export const SPECIAL_HEADERS = {};

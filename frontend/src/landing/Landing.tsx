@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { makeStyles, Typography, useTheme } from "@material-ui/core";
+import { Button, makeStyles, Typography, useTheme } from "@material-ui/core";
 import { CookieConsent } from "legal/cookies/CookieConsent";
 import { LandingPageDialogSelector } from "@landing/components/dialogSelector/LandingPageDialogSelector";
 import { CookieRules } from "legal/cookies/CookieRules";
@@ -19,6 +19,7 @@ import { isDevelopmentStage, landingWidgetApiKey, widgetUrl } from "@api-client/
 import { IFrame } from "dashboard/content/demo/IFrame";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { YellowStrip } from "@common/components/YellowStrip";
+import { TitleContent } from "./components/TitleContent";
 
 AOS.init({
     duration: 1000,
@@ -46,22 +47,35 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: "3rem",
         paddingRight: "3rem",
     },
+    primaryText: {
+        color: theme.palette.success.main,
+    },
+    secondaryText: {
+        color: theme.palette.success.dark,
+    },
+    button: {
+        width: "18rem",
+        alignSelf: "center",
+        backgroundColor: theme.palette.background.default,
+        color: theme.palette.common.black,
+        "&:hover": {
+            backgroundColor: theme.palette.success.light,
+            color: theme.palette.common.black,
+        },
+    },
 }));
 
 export const LandingPage = () => {
     const cls = useStyles();
     const theme = useTheme();
 
-    const [selectedTab, setSelectedTab] = useState<string | null>(null);
-    const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState<boolean>(false);
     const [dialogOpen, setDialogOpen] = useState<DialogTypes>(null);
     const [isCookieRulesDialogOpen, setIsCookieRulesDialogOpen] = useState<boolean>(false);
     const [show, setShow] = useState<boolean>(isDevelopmentStage());
 
     const openLoginDialog = useCallback(() => {
         setDialogOpen("login");
-        setIsMobileDrawerOpen(false);
-    }, [setDialogOpen, setIsMobileDrawerOpen]);
+    }, [setDialogOpen]);
 
     const closeDialog = useCallback(() => {
         setDialogOpen(null);
@@ -69,16 +83,7 @@ export const LandingPage = () => {
 
     const openRegisterDialog = useCallback(() => {
         setDialogOpen(REGISTER);
-        setIsMobileDrawerOpen(false);
-    }, [setDialogOpen, setIsMobileDrawerOpen]);
-
-    const handleMobileDrawerOpen = useCallback(() => {
-        setIsMobileDrawerOpen(true);
-    }, [setIsMobileDrawerOpen]);
-
-    const handleMobileDrawerClose = useCallback(() => {
-        setIsMobileDrawerOpen(false);
-    }, [setIsMobileDrawerOpen]);
+    }, [setDialogOpen]);
 
     const openChangePasswordDialog = useCallback(() => {
         setDialogOpen(CHANGE_PASSWORD);
@@ -95,22 +100,39 @@ export const LandingPage = () => {
     const handleCookieRulesDialogClose = useCallback(() => {
         setIsCookieRulesDialogOpen(false);
     }, [setIsCookieRulesDialogOpen]);
+
     return (
         <div className={cls.wrapper}>
             {!isCookieRulesDialogOpen && <CookieConsent handleCookieRulesDialogOpen={handleCookieRulesDialogOpen} />}
-            <LandingPageDialogSelector openLoginDialog={openLoginDialog} dialogOpen={dialogOpen} onClose={closeDialog} openTermsDialog={openTermsDialog} openRegisterDialog={openRegisterDialog} openChangePasswordDialog={openChangePasswordDialog} />
+            <LandingPageDialogSelector
+                openLoginDialog={openLoginDialog}
+                dialogOpen={dialogOpen}
+                onClose={closeDialog}
+                openTermsDialog={openTermsDialog}
+                openRegisterDialog={openRegisterDialog}
+                openChangePasswordDialog={openChangePasswordDialog}
+            />
             <CookieRules open={isCookieRulesDialogOpen} onClose={handleCookieRulesDialogClose} />
             {!show && <YellowStrip />}
             <DevStagingStrip show={show} setShow={setShow} />
-            <Header
-                openRegisterDialog={openRegisterDialog}
-                openLoginDialog={openLoginDialog}
-                handleMobileDrawerOpen={handleMobileDrawerOpen}
-                handleMobileDrawerClose={handleMobileDrawerClose}
-                isMobileDrawerOpen={isMobileDrawerOpen}
-                selectedTab={selectedTab}
-                setSelectedTab={setSelectedTab}
-            />
+            <Header openRegisterDialog={openRegisterDialog} openLoginDialog={openLoginDialog}>
+                <TitleContent
+                    title={
+                        <Typography align="center" variant="h2" className={cls.primaryText}>
+                            CRAFT INCREDIBLE CONVERSATIONS
+                        </Typography>
+                    }
+                    subtitle={
+                        <Typography align="center" variant="h5" className={cls.secondaryText}>
+                            Client engagement done <i>YOUR</i> way
+                        </Typography>
+                    }
+                >
+                    <Button className={cls.button} variant="contained" onClick={openRegisterDialog}>
+                        <Typography variant="h6">Create a free account</Typography>
+                    </Button>
+                </TitleContent>
+            </Header>
             <GreenStrip />
             <div className={cls.body}>
                 <TwoItemRow dataList={rowOne} />
