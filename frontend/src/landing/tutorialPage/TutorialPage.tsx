@@ -3,23 +3,19 @@ import { LandingPageDialogSelector } from "@landing/components/dialogSelector/La
 import { Header } from "@landing/components/header/Header";
 import { GreenStrip } from "@landing/components/sliver/ThinStrip";
 import { TitleContent } from "@landing/components/TitleContent";
-import { Button, CardMedia, Divider, Grid, makeStyles, Typography } from "@material-ui/core";
+import { Card, makeStyles, Typography } from "@material-ui/core";
 import { CHANGE_PASSWORD, REGISTER, TERMS_OF_SERVICE } from "@constants";
 import { DialogTypes } from "@landing/components/dialogSelector/dialogTypes";
 import { YellowStrip } from "@common/components/YellowStrip";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { googleYoutubeApikey } from "@api-client/clientUtils";
-import { VideoMap } from "@Palavyr-Types";
-import { VolumeDown } from "@material-ui/icons";
-import { Align } from "dashboard/layouts/positioning/Align";
 import { Footer } from "@landing/components/footer/Footer";
 import { Sliver } from "@landing/components/sliver/Sliver";
+import { VideoMap } from "@Palavyr-Types";
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
         backgroundColor: theme.palette.common.white,
         overflowX: "hidden",
-        // paddingBottom: "4rem",
     },
     primaryText: {
         color: theme.palette.success.main,
@@ -61,8 +57,8 @@ export const TutorialPage = () => {
 
     useEffect(() => {
         (async () => {
-            // const currentMap = await repository.Youtube.GetVideoMap(googleYoutubeApikey);
-            // setVideoMap(currentMap);
+            const currentMap = await repository.Youtube.GetVideoMap();
+            setVideoMap(currentMap);
         })();
     }, []);
 
@@ -116,13 +112,15 @@ export const TutorialPage = () => {
                 />
             </Header>
             <GreenStrip />
-            {videoMaps.map((video: VideoMap) => {
+            {videoMap.map((video: VideoMap) => {
                 return (
                     <>
                         <div className={cls.contentPadding}>
                             <VideoTitle title={video.title} />
                             <span className={cls.mediaSpan}>
-                                <CardMedia className={cls.media} component="iframe" title={video.title} src={video.iframe} allowFullScreen />
+                                <Card className={cls.media}>
+                                    <iframe style={{ height: "100%", width: "100%" }} src={createVideoUrl(video.videoId)} allowFullScreen></iframe>
+                                </Card>
                             </span>
                         </div>
                     </>
@@ -133,6 +131,8 @@ export const TutorialPage = () => {
         </div>
     );
 };
+
+const createVideoUrl = (id: string) => `https://www.youtube.com/embed/${id}`;
 
 export interface IVideoTitle {
     title: string;
@@ -145,18 +145,3 @@ export const VideoTitle = ({ title }: IVideoTitle) => {
         </Typography>
     );
 };
-
-const videoMaps: VideoMap[] = [
-    {
-        title: "An Introduction to Palavyr.com",
-        iframe: "https://www.youtube.com/embed/reYRIKIFsF4",
-    },
-    {
-        title: "Getting acquainted with the Palavyr Widget",
-        iframe: "https://www.youtube.com/embed/TyeWrDSxW0c",
-    },
-    {
-        title: "A brief tour of Palavyr.com",
-        iframe: "https://www.youtube.com/embed/2KOROWQcsHc",
-    },
-];

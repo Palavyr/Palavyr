@@ -61,11 +61,6 @@ export type AreaMeta = {
     areaName: string;
 };
 
-export type VideoMap = {
-    title: string;
-    iframe: string;
-};
-
 // Client
 export type GroupNodeType = {
     text: string;
@@ -920,3 +915,50 @@ export interface IConversationTreeContext {
     nodeTypeOptions: NodeTypeOptions;
     showDebugData: boolean;
 }
+
+export type YoutubeVideoResourcePlayer = {
+    embedHtml: string;
+    embedHeight: number;
+    embedWidth: number;
+};
+
+export type YoutubeVideoResourceSnippet = {
+    publishedAt: string;
+    channelId: string;
+    title: string;
+    description: string;
+    channelTitle: string;
+    tags: [string];
+    categoryId: string;
+    liveBroadcastContent: string;
+    defaultLanguage: string;
+    localized: {
+        title: string;
+        description: string;
+    };
+    defaultAudioLanguage: string;
+};
+
+export type YoutubePlaylistItemContentDetails = {
+    videoId: string;
+    videoPublishedAt: string;
+};
+
+export type PlaylistItemsResource = {
+    kind: string;
+    etag: string;
+    snippet: YoutubeVideoResourceSnippet;
+    contentDetails: YoutubePlaylistItemContentDetails;
+};
+
+export type YoutubePlaylistItemsResponse = {
+    kind: string;
+    etag: string;
+    items: PlaylistItemsResource[];
+};
+
+export type VideoMap = {
+    videoId: string;
+    title: string;
+    description: string;
+};

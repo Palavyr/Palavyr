@@ -28,7 +28,9 @@ import {
     StaticTableRow,
     PlanTypeMeta,
     DynamicTableData,
-    SetState,
+    YoutubePlaylistItemsResponse,
+    VideoMap,
+    PlaylistItemsResource,
 } from "@Palavyr-Types";
 import { ApiErrors } from "dashboard/layouts/Errors/ApiErrors";
 import { filterNodeTypeOptionsOnSubscription } from "dashboard/subscriptionFilters/filterConvoNodeTypes";
@@ -360,43 +362,21 @@ export class PalavyrRepository {
         getConversation: async (conversationId: string) => this.client.get<CompletedConversation>(`enquiries/review/${conversationId}`, [CacheIds.Conversation, conversationId].join("-") as CacheIds),
     };
 
-    public Youtuve = {
-        GetVideoMap: async (apiKey: string) => {
-            const youtubeClient = new AxiosClient();
-
-            const channelId = "UC6kCWe7wSw6INDtYtz-W7aA";
+    public Youtube = {
+        GetVideoMap: async () => {
             const playlistId = "PL8zxShANCblyyabbAD7EQS-isVCI3EaF_";
+            const playlistItemsUrl = (apikey: string, playlistId: string) => `https://www.googleapis.com/youtube/v3/playlistItems?key=${apikey}&part=contentDetails,snippet&playlistId=${playlistId}`;
+            const playlistItemsResponse = await fetch(playlistItemsUrl(googleYoutubeApikey, playlistId));
+            const data = await playlistItemsResponse.json();
 
-            const exampleItem = "UEw4enhTaEFOQ2JseXlhYmJBRDdFUVMtaXNWQ0kzRWFGXy4yODlGNEE0NkRGMEEzMEQy";
-
-
-            const playlistItemsUrl = (apikey: string, playlistId: string) => ` https://www.googleapis.com/youtube/v3/playlistItems?key=${apikey}&playlistId=${playlistId}`;
-
-
-            // const playlistItemsResponse = await youtubeClient.get<YoutubePlaylistResponse>(playlistItemsUrl(googleYoutubeApikey, playlistId));
-            // const playlistIds = playlistItemsResponse.items.map((item: YoutubePlaylistItem) => item.id);
-
-            // const videoIdParam = playlistIds.join(",");
-
-            // const videoResponse = this.client.get();
+            const videoMetas = data.items.map((x: PlaylistItemsResource) => {
+                return {
+                    videoId: x.contentDetails.videoId,
+                    title: x.snippet.title,
+                    description: x.snippet.description,
+                };
+            });
+            return videoMetas;
         },
     };
 }
-
-export type YoutubePlaylistResponse = {
-    kind: string;
-    etag: string;
-    items: YoutubePlaylistItem[];
-};
-
-export type YoutubePlaylistItem = {
-    kind: string;
-    etag: string;
-    id: string;
-};
-// [
-//     {
-//         "kind": "youtube#playlistItem",
-//         "etag": "oBGEzbUO9Ii4fqpIZI997SswQLU",
-//         "id": "UEw4enhTaEFOQ2JseXlhYmJBRDdFUVMtaXNWQ0kzRWFGXy4yODlGNEE0NkRGMEEzMEQy"
-//     },

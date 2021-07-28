@@ -106,19 +106,19 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog }: INavBar) => {
                                 </Button>
                             );
                         })}
-                        <div style={{ marginRight: "1rem" }}>
-                            <Link key="Tutorial" to="/tutorial" className={cls.noDecoration}>
-                                <span className={cls.tutButton}>
+                        <div style={{ marginRight: "1.5rem", marginLeft: "2rem" }}>
+                            <Link key="Home" to="/" className={cls.noDecoration}>
+                                <span>
                                     <Typography variant="h6" className={cls.menuButtonText}>
-                                        Tutorial
+                                        Home
                                     </Typography>
                                 </span>
                             </Link>
                         </div>
-                        <Link key="Home" to="/" className={cls.noDecoration}>
-                            <span>
+                        <Link key="Tutorial" to="/tutorial" className={cls.noDecoration}>
+                            <span className={cls.tutButton}>
                                 <Typography variant="h6" className={cls.menuButtonText}>
-                                    Home
+                                    Tutorial
                                 </Typography>
                             </span>
                         </Link>
