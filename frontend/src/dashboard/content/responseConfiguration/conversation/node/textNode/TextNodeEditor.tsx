@@ -49,7 +49,7 @@ export const TextNodeEditor = ({ isMultiOptionType, shouldShowMultiOption, isAna
     };
 
     return (
-        <Dialog fullWidth open={editorIsOpen} onClose={closeEditor}>
+        <Dialog fullWidth open={editorIsOpen} onClose={closeEditor} >
             <DialogTitle>Edit a conversation node</DialogTitle>
             <DialogContent>
                 {editorIsOpen &&

@@ -41,8 +41,8 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "center",
     },
     media: {
-        width: "1120px",
-        height: "630px",
+        width: "825px",
+        height: "508px",
         boxShadow: theme.shadows[10],
     },
     mediaSpan: {

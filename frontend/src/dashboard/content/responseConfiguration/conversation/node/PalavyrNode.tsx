@@ -217,10 +217,19 @@ export class PalavyrNode implements IPalavyrNode {
         };
     }
 
+    public SetLoopbackContext(anchorId: string) {
+        if (this.loopbackContext && this.loopbackContext.loopbackOriginId) {
+            this.loopbackContext.loopbackOriginId = anchorId;
+        } else {
+            this.loopbackContext = { loopbackOriginId: anchorId };
+        }
+    }
+
     public LoopbackContextIsSet() {
-        if (this.loopbackContext) {
+        if (this.loopbackContext && this.loopbackContext.loopbackOriginId !== undefined) {
             return this.loopbackContext.loopbackOriginId !== "";
-        } else return false;
+        }
+        return false;
     }
 
     public lock() {

@@ -33,9 +33,13 @@ export const SteppedLineTo: React.FC<SteppedLineToProps> = ({
     const [sized, setSized] = useState<boolean>(false);
     const handle = () => setSized(!sized);
     useEffect(() => {
-        window.addEventListener("scroll", debounce(handle, 3000));
-        window.addEventListener("resize", debounce(handle, 100));
+        let isMounted = true;
+        if (isMounted) {
+            window.addEventListener("scroll", debounce(handle, 3000));
+            window.addEventListener("resize", debounce(handle, 100));
+        }
         return () => {
+            isMounted = false;
             window.removeEventListener("resize", debounce(handle, 100));
             window.removeEventListener("scroll", debounce(handle, 3000));
         };

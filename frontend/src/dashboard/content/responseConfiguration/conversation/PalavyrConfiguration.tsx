@@ -18,7 +18,6 @@ import { TreeErrorPanel } from "./MissingDynamicNodes";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import { ConfigurationNode } from "./node/baseNode/ConfigurationNode";
-import Fade from "react-reveal/Fade";
 import { useContext } from "react";
 
 const useStyles = makeStyles(() => ({
@@ -46,7 +45,7 @@ const useStyles = makeStyles(() => ({
     floatingSave: {
         position: "fixed",
         right: "50px",
-        bottom: "50px",
+        bottom: "65px",
         zIndex: 100,
     },
 }));
@@ -124,6 +123,7 @@ export const StructuredConvoTree = () => {
             const updatedLinkedList = new PalavyrLinkedList(updatedConvoNodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions, repository);
             historyTracker.addConversationHistoryToQueue(updatedLinkedList, conversationHistoryPosition, conversationHistory);
             setLinkedNodes(updatedLinkedList);
+            window.location.reload(); // TODO: Just fix the perf problem. Clicking to many things loads too many listeners, which locks the whole browser on save.
             return true;
         } else {
             return false;

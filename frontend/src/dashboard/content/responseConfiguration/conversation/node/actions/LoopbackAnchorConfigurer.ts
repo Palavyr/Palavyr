@@ -12,6 +12,7 @@ class LoopbackAnchorConfigurer {
             currentNode.isLoopbackStart = true;
             currentNode.isLoopbackMember = true;
             currentNode.childNodeReferences.forEach((child: IPalavyrNode, index: number) => {
+                // works if the tree is already there, but not if its first being built. Lke after a save.
                 if (index > 0) {
                     this.RecursivelyApplyLoopbackContextFromThisNode(child, currentNode.nodeId);
                 }
@@ -31,6 +32,24 @@ class LoopbackAnchorConfigurer {
             currentNode.isLoopbackStart = false;
             currentNode.isLoopbackMember = false;
         }
+
+        // check if this is a terminal or unset node (some ending node) and then if there is a loopba
+
+        const leftMostParent = currentNode.parentNodeReferences.retrieveLeftmostReference();
+        if (leftMostParent) {
+            if (leftMostParent.LoopbackContextIsSet()) {
+                currentNode.SetLoopbackContext(leftMostParent.loopbackContext.loopbackOriginId);
+            }
+            if (leftMostParent.isLoopbackStart) {
+                currentNode.SetLoopbackContext(leftMostParent.nodeId);
+            }
+        }
+
+        if (currentNode.LoopbackContextIsSet()) {
+            currentNode.isLoopbackMember = true;
+        }
+
+        console.log(currentNode.LoopbackContextIsSet());
     }
 
     private RecursivelyApplyLoopbackContextFromThisNode(node: IPalavyrNode, originId: string) {

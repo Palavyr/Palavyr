@@ -86,6 +86,7 @@ export interface IPalavyrNode {
     LoopbackContextIsSet(): boolean;
     InsertChildNodeLink(nodeTypeOptions: NodeTypeOptions): void;
     DeleteCurrentNode(nodeTypeOptions: NodeTypeOptions): void;
+    SetLoopbackContext(anchorId: string): void;
 
     isRoot: boolean;
     nodeId: string;

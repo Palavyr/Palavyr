@@ -82,7 +82,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
             }
         }
 
-        parentNode.sortChildReferences();
+        // parentNode.sortChildReferences(); // HO BOY. Not sorting anymore.
     }
 
     private guardAgainstInfiniteLoops(node: IPalavyrNode) {
