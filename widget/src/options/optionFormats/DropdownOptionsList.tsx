@@ -48,6 +48,7 @@ const useStyles = makeStyles(() => ({
         color: prefs.listFontColor,
     }),
     selectbox: {
+        width: "100%",
         paddingLeft: "2rem",
         paddingRight: "2rem",
     },
@@ -96,7 +97,7 @@ export const DropdownListOptions = ({ setSelectedOption, options }: DropdownList
                     <Autocomplete
                         size="small"
                         open={true}
-                        classes={{ root: cls.selectbox, paper: classNames(cls.selectListBgColor, cls.selectListFontColor) }}
+                        classes={{ popper: cls.popper, root: cls.selectbox, paper: classNames(cls.selectListBgColor, cls.selectListFontColor) }}
                         disableClearable
                         clearOnEscape
                         className={classNames(cls.root, cls.autocomplete, cls.mainList, cls.selectListBgColor, cls.selectListFontColor)}

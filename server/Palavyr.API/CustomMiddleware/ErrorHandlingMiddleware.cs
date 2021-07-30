@@ -82,6 +82,14 @@ namespace Palavyr.API.CustomMiddleware
                         message = domainException.Message;
                         break;
 
+                    case MicroserviceException microserviceException:
+                        logger.LogInformation("A Microservice exception was encountered.");
+                        logger.LogError($"{microserviceException.Message}");
+                        statusCode = StatusCodes.Status500InternalServerError;
+                        message = microserviceException.Message;
+                        break;
+                    
+
                     default:
                         logger.LogError("Unknown Exception");
                         logger.LogError($"{ex.Source}");
@@ -90,6 +98,7 @@ namespace Palavyr.API.CustomMiddleware
                         logger.LogError($"{ex.Message}");
                         logger.LogError($"{ex.InnerException}");
                         logger.LogError($"{ex.GetBaseException()}");
+                        message = ex.Message;
                         break;
                 }
 

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Exceptions;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.PdfService.PdfServer;
 
@@ -26,6 +27,7 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IS3Retriever s3Retriever;
         private readonly IConfiguration configuration;
         private readonly int retryCount = 60; // number of half seconds
+
         public PdfServerClient(ILogger<PdfServerClient> logger, IS3Retriever s3Retriever, IConfiguration configuration)
         {
             this.logger = logger;
@@ -43,44 +45,49 @@ namespace Palavyr.Core.Services.PdfService
         {
             var host = configuration.GetPdfServerHost();
             var port = configuration.GetPdfServerPort();
+            var requestBody = SerializeRequestObject(requestObject);
+
+            HttpResponseMessage response;
             try
             {
-                var requestBody = SerializeRequestObject(requestObject);
-                var response = await httpClient.PostAsync(PdfServerConstants.PdfServiceUrl(host, port), requestBody);
-                if (response.StatusCode == HttpStatusCode.BadRequest)
-                {
-                    throw new HttpRequestException($"Unable to create PDF file: {response.RequestMessage}");
-                }
-
-                var result = JsonConvert.DeserializeObject<PdfServerResponse>(await response.Content.ReadAsStringAsync());
-
-                var count = 0;
-                var found = false;
-                while (!found)
-                {
-                    found = await s3Retriever.CheckIfFileExists(requestObject.Bucket, requestObject.Key);
-                    if (count > retryCount)
-                    {
-                        logger.LogDebug("PDF File not written correctly");
-                        throw new IOException($"Pdf file not written correctly to {result.S3Key}");
-                    }
-
-                    if (!found)
-                    {
-                        Thread.Sleep(500);
-                    }
-                    count++;
-                }
-
-                return result;
+                response = await httpClient.PostAsync(PdfServerConstants.PdfServiceUrl(host, port), requestBody);
             }
-            catch (Exception ex)
+            catch (HttpRequestException ex)
             {
                 logger.LogCritical($"Failed to convert and write the HTML to PDF using the express server.");
                 logger.LogCritical($"Attempted to use url: {PdfServerConstants.PdfServiceUrl}");
                 logger.LogCritical($"Encountered Error: {ex.Message}");
-                throw;
+                // throw;
+                throw new MicroserviceException("The PDF service was unreachable.", ex);
             }
+
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                throw new MicroserviceException($"Unable to create PDF file: {response.RequestMessage}");
+            }
+
+            var result = JsonConvert.DeserializeObject<PdfServerResponse>(await response.Content.ReadAsStringAsync());
+
+            var count = 0;
+            var found = false;
+            while (!found)
+            {
+                found = await s3Retriever.CheckIfFileExists(requestObject.Bucket, requestObject.Key);
+                if (count > retryCount)
+                {
+                    logger.LogDebug("PDF File not written correctly");
+                    throw new IOException($"Pdf file not written correctly to {result.S3Key}");
+                }
+
+                if (!found)
+                {
+                    Thread.Sleep(500);
+                }
+
+                count++;
+            }
+
+            return result;
         }
     }
 }

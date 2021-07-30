@@ -43,7 +43,7 @@ export const PricingCardBody = ({
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="SMS Notifications" value={smsNotifications} />
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Attachments per Area" value={attachmentsPerArea} />
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Static Fee Tables" value={staticFeeTables} />
-            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Dynamic Fee Tables" value={dynamicFeeTables} />
+            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Pricing Strategies" value={dynamicFeeTables} />
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Number of Areas" value={numberOfAreas} />
         </>
     );

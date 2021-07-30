@@ -48,8 +48,6 @@ class LoopbackAnchorConfigurer {
         if (currentNode.LoopbackContextIsSet()) {
             currentNode.isLoopbackMember = true;
         }
-
-        console.log(currentNode.LoopbackContextIsSet());
     }
 
     private RecursivelyApplyLoopbackContextFromThisNode(node: IPalavyrNode, originId: string) {

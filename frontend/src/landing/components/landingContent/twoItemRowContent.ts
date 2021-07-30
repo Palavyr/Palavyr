@@ -8,37 +8,37 @@ import Person from "../../../common/svgs/misc/_user.svg";
 
 export const rowOne: Array<ItemRowObject> = [
     {
-        title: "Engage potential clients",
-        text: "Collect all of the information that you need to engage, sort, and secure a potential client.",
+        title: "Seal the deal",
+        text: "Use Palavyr to engage clients and help them say yes.",
         type: Ring
     },
     {
-        title: "Reduce the time to sign",
-        text: "Reduce turnover, reduce the time to sign, and deliver timely competitive fee estimates.",
+        title: "Reduce the wait",
+        text: "Palavyr helps you deliver information to your prospective customers faster than the competition.",
         type: TimeCircle
     }
 ]
 export const rowTwo: Array<ItemRowObject> = [
     {
-        title: "Simple Integration",
-        text: "Integrate the Palavyr.com widget into your site with as little a single line of code.",
+        title: "Easy to use",
+        text: "Customers will love how easy it is to use Palavyr. And so will you.",
         type: SimpleIntegration
 
     },
     {
-        title: "Increase your capture rate",
-        text: "Anticipate your client's needs ahead of time and offer a competetive fee estimate.",
+        title: "Delight your customers",
+        text: "You create the conversation, so your chats will always have human touch.",
         type: Person
     }
 ]
 export const rowThree: Array<ItemRowObject> = [
     {
         title: "Be Transparent",
-        text: "Automate detail collection and provide transparency for your future clients.",
+        text: "Use Palavyr to deliver immediate service fee estimates, so they will know exactly what they're getting, and for how much.",
         type: Transparent
     },
     {
-        title: "Cut to the Chase",
+        title: "Trim the fat",
         text: "Review your enquiries to preemptively learn what your clients are asking about.",
         type: Saber
     }

@@ -97,6 +97,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
                         BucketName = bucket,
                         Key = key
                     });
+                
                 return true;
             }
             catch (AmazonS3Exception ex)

@@ -119,17 +119,17 @@ export const LandingPage = () => {
                 <TitleContent
                     title={
                         <Typography align="center" variant="h2" className={cls.primaryText}>
-                            CRAFT INCREDIBLE CONVERSATIONS
+                            Build Your Own Chat Bot
                         </Typography>
                     }
                     subtitle={
                         <Typography align="center" variant="h5" className={cls.secondaryText}>
-                            Client engagement done <i>YOUR</i> way
+                            And Automate the Boring Stuff!
                         </Typography>
                     }
                 >
                     <Button className={cls.button} variant="contained" onClick={openRegisterDialog}>
-                        <Typography variant="h6">Create a free account</Typography>
+                        <Typography variant="h6">Try it for free!</Typography>
                     </Button>
                 </TitleContent>
             </Header>
@@ -146,13 +146,13 @@ export const LandingPage = () => {
                 </Typography>
                 <br></br>
                 <Typography gutterBottom align="center">
-                    Palavyr is a fully configurable chat system used to automate the delivery of information about your services and fees to potential customers.
+                    Palavyr is a fully configurable automated chat system used to deliver information about your services and fees to potential customers.
                 </Typography>
                 <Typography gutterBottom align="center">
-                    You craft the chats, configure your fees, and styalize your widget, which is embedded into your website.
+                    You craft the chats, configure your pricing strategies, and styalize the widget, which is embedded into your website.
                 </Typography>
                 <Typography gutterBottom align="center">
-                    Potential customers will provide information that we use to deliver specific information about your services via email.
+                    Potential customers will use the widget to get immediate information about your services and fees.
                 </Typography>
             </div>
             <div className={cls.strip} style={{ backgroundColor: theme.palette.primary.main }}>
