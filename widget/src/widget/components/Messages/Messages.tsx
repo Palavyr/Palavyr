@@ -20,15 +20,15 @@ type Props = {
 };
 
 const useStyles = makeStyles(theme => ({
-    spacer: {
-        height: "7%",
-        width: "100%",
-        backgroundColor: "#264B94",
-        color: "white",
-    },
+    // spacer: {
+    //     height: "7%",
+    //     width: "100%",
+    //     backgroundColor: "#264B94",
+    //     color: "white",
+    // },
     face: {
-        height: "4rem"
-    }
+        height: "4rem",
+    },
 }));
 
 export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) => {
@@ -57,7 +57,6 @@ export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) =
     //   }
     // }
 
-
     const cls = useStyles();
 
     return (
@@ -72,9 +71,7 @@ export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) =
                 ))}
                 {typing && <Loader typing={typing} />}
             </div>
-            <SpaceEvenly vertical classes={cls.spacer} center>
-                <BrandingStrip />
-            </SpaceEvenly>
+            <BrandingStrip />
         </>
     );
 };

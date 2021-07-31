@@ -1,4 +1,3 @@
-import { Typography } from "@material-ui/core";
 import React from "react";
 import { useNodeInterfaceStyles } from "../../nodeInterfaceStyles";
 import { PalavyrNodeBody } from "../baseNode/PalavyrNodeBody";
@@ -15,9 +14,7 @@ export const TextNodeFace = ({ openEditor, userText }: TextNodeFaceProps) => {
     });
     return (
         <PalavyrNodeBody openEditor={openEditor} textCheck={userText} isImageNode={false}>
-            <Typography className={cls.text} variant="body2" component="span" noWrap={false}>
-                {userText}
-            </Typography>
+            <div dangerouslySetInnerHTML={{ __html: userText }}></div>
         </PalavyrNodeBody>
     );
 };

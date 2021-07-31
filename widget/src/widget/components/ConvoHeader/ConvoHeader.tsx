@@ -1,7 +1,7 @@
-import { Card, makeStyles } from "@material-ui/core";
+import { Card, makeStyles, Tooltip } from "@material-ui/core";
 import React from "react";
 import SettingsIcon from "@material-ui/icons/Settings";
-import FaceIcon from '@material-ui/icons/Face';
+import FaceIcon from "@material-ui/icons/Face";
 
 import "./style.scss";
 import { getWidgetPreferences, openUserDetails } from "@store-dispatcher";
@@ -36,8 +36,8 @@ const useStyles = makeStyles(theme => ({
         height: "2rem",
         width: "2rem",
         "&:hover": {
-            cursor: "pointer"
-        }
+            cursor: "pointer",
+        },
     }),
     headerBehavior: {
         wordWrap: "break-word",
@@ -53,7 +53,9 @@ export const ConvoHeader = ({ preferences, titleAvatar }: ConvoHeaderProps) => {
     const cls = useStyles(preferences);
     return (
         <Card className={cls.header}>
-            <FaceIcon className={cls.settingsIcon} onClick={openUserDetails} />
+            <Tooltip title="Update your contact details" placement="left">
+                <FaceIcon className={cls.settingsIcon} onClick={openUserDetails} />
+            </Tooltip>
             {titleAvatar && <img src={titleAvatar} className="avatar" alt="profile" />}
             <div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: preferences.chatHeader }} />
         </Card>

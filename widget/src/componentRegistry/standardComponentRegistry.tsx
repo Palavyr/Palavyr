@@ -11,6 +11,7 @@ import { SingleRowSingleCell } from "common/TableCell";
 import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "common/UserDetailsDialog/ChatLoadingSpinner";
 import { CustomImage } from "common/CustomImage";
+import { HtmlTextMessage } from "common/HtmlTextMessage";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {
@@ -43,13 +44,6 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-// export const computeReadingTime = (node: WidgetNodeResource) => {
-//     const typicalReadingSpeed = (node: WidgetNodeResource) => floor((node.text.length / 19) * 1000, 0);
-//     const timeout = min([18000, max([2000, typicalReadingSpeed(node)])]);
-
-//     return timeout;
-// };
-
 export class StandardComponents {
     public makeProvideInfo({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
@@ -64,9 +58,7 @@ export class StandardComponents {
             return (
                 <Table>
                     <SingleRowSingleCell>
-                        <Typography variant="body1" className={cls.textField}>
-                            {node.text}
-                        </Typography>
+                        <HtmlTextMessage message={node.text} className={cls.textField} />
                     </SingleRowSingleCell>
                 </Table>
             );
@@ -85,9 +77,7 @@ export class StandardComponents {
             return (
                 <Table>
                     <SingleRowSingleCell>
-                        <Typography variant="body1" className={cls.textField}>
-                            {node.text}
-                        </Typography>
+                        <HtmlTextMessage message={node.text} className={cls.textField} />
                     </SingleRowSingleCell>
                     {valueOptions.map((valueOption: string, index: number) => {
                         return (
@@ -124,9 +114,7 @@ export class StandardComponents {
             return (
                 <Table>
                     <SingleRowSingleCell>
-                        <Typography variant="body1" className={cls.textField}>
-                            {node.text}
-                        </Typography>
+                        <HtmlTextMessage message={node.text} className={cls.textField} />
                     </SingleRowSingleCell>
                     {children.map((child: WidgetNodeResource) => {
                         return (
@@ -168,9 +156,7 @@ export class StandardComponents {
             return (
                 <Table>
                     <SingleRowSingleCell>
-                        <Typography variant="body1" className={cls.textField}>
-                            {node.text}
-                        </Typography>
+                        <HtmlTextMessage message={node.text} className={cls.textField} />
                     </SingleRowSingleCell>
                     <TableRow>
                         <TableCell className={cls.root}>
@@ -223,9 +209,7 @@ export class StandardComponents {
                 <>
                     <Table>
                         <SingleRowSingleCell>
-                            <Typography variant="body1" className={cls.textField}>
-                                {node.text}
-                            </Typography>
+                            <HtmlTextMessage message={node.text} className={cls.textField} />
                         </SingleRowSingleCell>
                         <SingleRowSingleCell>
                             <CurrencyTextField
@@ -308,9 +292,7 @@ export class StandardComponents {
                 <>
                     <Table>
                         <SingleRowSingleCell>
-                            <Typography variant="body1" className={cls.textField}>
-                                {node.text}
-                            </Typography>
+                            <HtmlTextMessage message={node.text} className={cls.textField} />
                         </SingleRowSingleCell>{" "}
                         <SingleRowSingleCell>
                             <TextField
@@ -364,9 +346,7 @@ export class StandardComponents {
             return (
                 <Table>
                     <SingleRowSingleCell>
-                        <Typography variant="body1" className={cls.textField}>
-                            {node.text}
-                        </Typography>
+                        <HtmlTextMessage message={node.text} className={cls.textField} />
                     </SingleRowSingleCell>
                     <TableRow>
                         <TableCell className={cls.root}>
@@ -456,9 +436,7 @@ export class StandardComponents {
                 <>
                     <Table>
                         <SingleRowSingleCell>
-                            <Typography variant="body1" className={cls.textField}>
-                                {node.text}
-                            </Typography>
+                            <HtmlTextMessage message={node.text} className={cls.textField} />
                         </SingleRowSingleCell>
                         <SingleRowSingleCell align="center">
                             <ResponseButton
@@ -490,9 +468,7 @@ export class StandardComponents {
             return (
                 <Table>
                     <SingleRowSingleCell>
-                        <Typography variant="body1" className={cls.textField}>
-                            {node.text}
-                        </Typography>
+                        <HtmlTextMessage message={node.text} className={cls.textField} />
                     </SingleRowSingleCell>{" "}
                     <SingleRowSingleCell align="right">
                         <ResponseButton
@@ -522,9 +498,7 @@ export class StandardComponents {
                 <>
                     <Table>
                         <SingleRowSingleCell>
-                            <Typography variant="body1" className={cls.textField}>
-                                {node.text}
-                            </Typography>
+                            <HtmlTextMessage message={node.text} className={cls.textField} />
                         </SingleRowSingleCell>{" "}
                         <SingleRowSingleCell align="center">
                             <ResponseButton
@@ -572,10 +546,8 @@ export class StandardComponents {
                 <>
                     <Table>
                         <SingleRowSingleCell>
-                            <Typography variant="body1" className={cls.textField}>
-                                {node.text}
-                            </Typography>
-                        </SingleRowSingleCell>{" "}
+                            <HtmlTextMessage message={node.text} className={cls.textField} />
+                        </SingleRowSingleCell>
                         <SingleRowSingleCell align="center">
                             <ResponseButton
                                 prefs={prefs!}
@@ -622,9 +594,7 @@ export class StandardComponents {
             return (
                 <Table>
                     <SingleRowSingleCell>
-                        <Typography variant="body1" className={cls.textField}>
-                            {node.text}
-                        </Typography>
+                        <HtmlTextMessage message={node.text} className={cls.textField} />
                     </SingleRowSingleCell>
                 </Table>
             );

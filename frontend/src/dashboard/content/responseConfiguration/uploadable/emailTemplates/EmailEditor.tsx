@@ -1,13 +1,8 @@
 import React from "react";
 import { makeStyles, Divider } from "@material-ui/core";
-
-// TODO: SWITCHING TO https://www.youtube.com/watch?v=kykC7i9VUE4&ab_channel=DarwinTutorials
-// https://ckeditor.com/docs/ckeditor5/latest/builds/guides/integration/frameworks/react.html
-import CKEditor from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { cloneDeep } from "lodash";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 import { SetState } from "@Palavyr-Types";
+import { PalavyrHtmlTextEditor } from "@common/components/PalavyrTextEditor";
 
 export interface IEdit {
     accordianTitle: string;
@@ -33,9 +28,8 @@ const useStyles = makeStyles(() => ({
 
 export const EmailEditor = ({ accordianTitle, uploadDetails, emailTemplate, setEmailTemplate, children }: IEdit) => {
     const classes = useStyles();
-    const initData = cloneDeep(emailTemplate);
 
-    const editorConfig = {
+    const emailEditorConfig = {
         toolbar: ["heading", "|", "bold", "italic", "numberedList", "bulletedList", "|", "indent", "outdent", "|", "link", "table", "mediaEmbed", "|", "undo", "redo"],
     };
 
@@ -44,28 +38,7 @@ export const EmailEditor = ({ accordianTitle, uploadDetails, emailTemplate, setE
             <div className={classes.table}>
                 <div>{uploadDetails}</div>
                 <br></br>
-                <div className={classes.editorContainer}>
-                    <CKEditor
-                        id="editor"
-                        editor={ClassicEditor}
-                        data={initData}
-                        config={editorConfig}
-                        onInit={() => {
-                            // You can store the "editor" and use when it is needed.
-                            // console.log('Editor is ready to use!', editor);
-                        }}
-                        onChange={(event, editor) => {
-                            const data = editor.getData();
-                            setEmailTemplate(data);
-                        }}
-                        onBlur={(event, editor) => {
-                            console.log("Blur.", editor);
-                        }}
-                        onFocus={(event, editor) => {
-                            console.log("Focus.", editor);
-                        }}
-                    />
-                </div>
+                <PalavyrHtmlTextEditor editorControl={setEmailTemplate} initialData={emailTemplate} editorConfig={emailEditorConfig} />
                 <Divider />
                 {children}
             </div>

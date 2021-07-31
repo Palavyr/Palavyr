@@ -2,6 +2,7 @@ import * as React from "react";
 import { Box, makeStyles } from "@material-ui/core";
 import classNames from "classnames";
 import { WidgetPreferences } from "@Palavyr-Types";
+import format from "date-fns/format";
 
 type StyleProps = {
     backgroundColor: string;
@@ -12,11 +13,8 @@ const makeChatBodyColor = (props: StyleProps) => {
     let chatBodyStyles = {
         backgroundColor: "#F4F4F4",
         color: "white",
-        paddingLeft: "0.2rem",
-        paddingRight: "0.2rem",
-        paddingTop: "0.1rem",
         borderRadius: "10px",
-        maxWidth: "85%",
+        width: "100%",
     };
 
     if (props.backgroundColor) {
@@ -32,7 +30,14 @@ const useStyles = makeStyles(theme => ({
     messageText: (props: StyleProps) => makeChatBodyColor(props),
     layout: {
         textAlign: "left",
-        overflowX: "scroll",
+        // overflowX: "scroll",
+    },
+    wrapper: {
+        marginLeft: "0.2rem",
+        merginRight: "0.2rem",
+        marginTop: "0.1rem",
+        borderRadius: "10px",
+        maxWidth: "85%",
     },
 }));
 
@@ -44,8 +49,11 @@ export interface IWrapMessages {
 export const MessageWrapper = ({ customPreferences, children }: IWrapMessages) => {
     const cls = useStyles({ color: customPreferences.chatFontColor, backgroundColor: customPreferences.chatBubbleColor });
     return (
-        <Box className={classNames(cls.messageText, cls.layout)}>
-            {children}
-        </Box>
+        <div className={cls.wrapper}>
+            <Box className={classNames(cls.messageText, cls.layout)}>{children}</Box>
+            <span style={{ float: "left" }} className="rcw-timestamp">
+                {format(new Date(), "hh:mm")}
+            </span>
+        </div>
     );
 };

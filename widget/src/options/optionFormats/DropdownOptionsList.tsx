@@ -114,7 +114,7 @@ export const DropdownListOptions = ({ setSelectedOption, options }: DropdownList
                     />
                 )}
             </div>
-            <BrandingStrip />
+            {/* <BrandingStrip /> */}
         </Box>
     );
 };

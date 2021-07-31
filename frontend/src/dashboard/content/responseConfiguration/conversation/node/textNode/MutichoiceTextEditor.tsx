@@ -1,3 +1,4 @@
+import { PalavyrHtmlTextEditor } from "@common/components/PalavyrTextEditor";
 import { TextField } from "@material-ui/core";
 import { SetState } from "@Palavyr-Types";
 import React from "react";
@@ -16,7 +17,7 @@ export type MultiChoiceEditorProps = {
 export const MultiChoiceTextEditor = ({ switchState, setSwitchState, text, setText, options, setOptions, onClick, locked }: MultiChoiceEditorProps) => {
     return (
         <>
-            <TextField margin="dense" value={text} multiline rows={4} onChange={(event) => setText(event.target.value)} id="question" label="Question or Information" type="text" fullWidth />
+            <PalavyrHtmlTextEditor initialData={text} editorControl={setText} />
             <MultiChoiceOptions locked={locked} options={options} setOptions={setOptions} switchState={switchState} setSwitchState={setSwitchState} addMultiChoiceOptionsOnClick={() => onClick(text, options)} />
         </>
     );
