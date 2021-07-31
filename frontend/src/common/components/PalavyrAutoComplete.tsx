@@ -1,3 +1,4 @@
+import { CHAT_DEMO_LISTBOX_zINDEX } from "@constants";
 import { FormControl, FormHelperText, InputLabel, makeStyles, TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import React from "react";
@@ -47,6 +48,9 @@ const useStyles = makeStyles((theme) => ({
             wordWrap: "auto",
         },
     },
+    popper: {
+        zIndex: CHAT_DEMO_LISTBOX_zINDEX,
+    },
 }));
 
 export const PalavyrAutoComplete = <T extends {}>({ label, options, shouldDisableSelect, onChange, groupby, getOptionLabel, getOptionSelected }: PalavyrAutoCompleteProps<T>) => {
@@ -63,7 +67,7 @@ export const PalavyrAutoComplete = <T extends {}>({ label, options, shouldDisabl
                         disableClearable
                         clearOnEscape
                         className={cls.autocomplete}
-                        classes={{ root: cls.otherbox }}
+                        classes={{ root: cls.otherbox, popper: cls.popper }}
                         onChange={onChange}
                         options={options}
                         groupBy={groupby && groupby}

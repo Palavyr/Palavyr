@@ -4,14 +4,13 @@ import { Table, TableRow, TableCell, makeStyles, TextField, Typography } from "@
 import { responseAction } from "./responseAction";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import { ConvoContextProperties } from "./registry";
-import { ContextProperties, DynamicResponses, IProgressTheChat, WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
+import { IProgressTheChat, WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
 import { setNumIndividualsContext, getContextProperties, openUserDetails, getWidgetPreferences } from "@store-dispatcher";
 import { ResponseButton } from "common/ResponseButton";
 import { SingleRowSingleCell } from "common/TableCell";
 import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "common/UserDetailsDialog/ChatLoadingSpinner";
 import { CustomImage } from "common/CustomImage";
-import { floor, max, min } from "lodash";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {
@@ -44,19 +43,22 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+// export const computeReadingTime = (node: WidgetNodeResource) => {
+//     const typicalReadingSpeed = (node: WidgetNodeResource) => floor((node.text.length / 19) * 1000, 0);
+//     const timeout = min([18000, max([2000, typicalReadingSpeed(node)])]);
+
+//     return timeout;
+// };
+
 export class StandardComponents {
     public makeProvideInfo({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         const prefs = getWidgetPreferences();
 
-        const typicalReadingSpeed = (node: WidgetNodeResource) => floor((node.text.length / 19) * 1000, 0);
-        const timeout = min([18000, max([2000, typicalReadingSpeed(node)])]);
         return () => {
             const cls = useStyles(prefs);
             useEffect(() => {
-                setTimeout(() => {
-                    responseAction(node, child, nodeList, client, convoId, null);
-                }, timeout);
+                responseAction(node, child, nodeList, client, convoId, null);
             }, []);
 
             return (

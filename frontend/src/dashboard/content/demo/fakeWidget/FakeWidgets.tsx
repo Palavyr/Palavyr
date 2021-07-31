@@ -19,13 +19,12 @@ const useStyles = makeStyles((theme) => ({
         color: prefs.listFontColor,
     }),
     selectbox: {
-        paddingLeft: "2rem",
-        paddingRight: "2rem",
+        paddingLeft: "1rem",
+        paddingRight: "1rem",
     },
     mainList: {
         height: "100%",
     },
-    root: {},
     inputLabel: (prefs: WidgetPreferences) => ({
         "& .MuiFormLabel-root": {
             color: prefs.listFontColor,
@@ -68,7 +67,7 @@ export const FakeWidgets = ({ ...prefs }: WidgetPreferences) => {
                         disableClearable
                         clearOnEscape
                         open={true}
-                        className={classNames(cls.root, cls.mainList, cls.selectListBgColor, cls.selectListFontColor)}
+                        className={classNames(cls.mainList, cls.selectListBgColor, cls.selectListFontColor)}
                         onChange={(x) => null}
                         options={[{ x: "First Option" }, { x: "Second Option" }, { x: "Third Option" }]}
                         getOptionLabel={(option) => option.x}

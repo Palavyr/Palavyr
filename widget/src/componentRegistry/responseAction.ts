@@ -1,11 +1,11 @@
 import { WidgetNodeResource, ConversationUpdate, WidgetNodes, ContextProperties, DynamicResponses } from "@Palavyr-Types";
 import { addKeyValue, addUserMessage, getContextProperties, toggleMsgLoader } from "@store-dispatcher";
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
-import { random } from "lodash";
 import { ConvoContextProperties } from "./registry";
 
 import { renderNextComponent } from "./renderNextComponent";
 import { setDynamicResponse } from "./setDynamicResponse";
+import { floor, max, min } from "lodash";
 
 // if (node.isDynamicTableNode && node.dynamicType && node.resolveOrder && node.resolveOrder > 0) {
 //     // we have some kind of dynamic table node that may or may not
@@ -21,6 +21,12 @@ import { setDynamicResponse } from "./setDynamicResponse";
 //         child = nodeList.filter(x => x.nodeType === "TooComplicated")[0];
 //     }
 // }
+export const computeReadingTime = (node: WidgetNodeResource) => {
+    const typicalReadingSpeed = (node: WidgetNodeResource) => floor((node.text.length / 19) * 1000, 0);
+    const timeout = min([18000, max([2000, typicalReadingSpeed(node)])]);
+
+    return timeout;
+};
 
 export const responseAction = async (
     node: WidgetNodeResource,
@@ -69,13 +75,16 @@ export const responseAction = async (
         NodeCritical: node.isCritical,
         NodeType: node.nodeType,
     };
+
+    const timeout = computeReadingTime(child);
+    if (callback) callback();
+    client.Widget.Post.ReplyUpdate(updatePayload); // no need to await for this
+
     setTimeout(() => {
-        if (callback) callback();
         toggleMsgLoader();
-        client.Widget.Post.ReplyUpdate(updatePayload); // no need to await for this
         setTimeout(() => {
             renderNextComponent(child, nodeList, client, convoId); // convoId should come from redux store in the future
             toggleMsgLoader();
-        }, 1000);
-    }, );
+        }, timeout);
+    }, 2000);
 };

@@ -9,12 +9,6 @@ import { getWidgetPreferences, openUserDetails } from "@store-dispatcher";
 import { BrandingStrip } from "common/BrandingStrip";
 
 const useStyles = makeStyles(() => ({
-    root: {
-        "& .MuiAutocomplete-popper": {
-            backgroundColor: "black",
-            zIndex: 99999999,
-        },
-    },
     container: {
         display: "flex",
         flexDirection: "column",
@@ -48,9 +42,8 @@ const useStyles = makeStyles(() => ({
         color: prefs.listFontColor,
     }),
     selectbox: {
-        width: "100%",
-        paddingLeft: "2rem",
-        paddingRight: "2rem",
+        paddingLeft: "1rem",
+        paddingRight: "1rem",
     },
     autocomplete: {
         paddingTop: "1rem",
@@ -68,6 +61,7 @@ const useStyles = makeStyles(() => ({
     listbox: (prefs: WidgetPreferences) => ({
         // the dropdown menu styles
         backgroundColor: prefs.selectListColor, // TODO: make customizable with new option
+        padding: "0rem",
     }),
 }));
 
@@ -97,10 +91,10 @@ export const DropdownListOptions = ({ setSelectedOption, options }: DropdownList
                     <Autocomplete
                         size="small"
                         open={true}
-                        classes={{ popper: cls.popper, root: cls.selectbox, paper: classNames(cls.selectListBgColor, cls.selectListFontColor) }}
+                        classes={{ root: cls.selectbox, paper: classNames(cls.selectListBgColor, cls.selectListFontColor) }}
                         disableClearable
                         clearOnEscape
-                        className={classNames(cls.root, cls.autocomplete, cls.mainList, cls.selectListBgColor, cls.selectListFontColor)}
+                        className={classNames(cls.autocomplete, cls.mainList, cls.selectListBgColor, cls.selectListFontColor)}
                         onChange={onChange}
                         options={opts}
                         ListboxProps={{ className: cls.listbox }}
