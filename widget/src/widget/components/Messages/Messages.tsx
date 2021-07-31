@@ -1,14 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import format from "date-fns/format";
-import FaceIcon from "@material-ui/icons/Face";
 import { Loader } from "./components/Loader/Loader";
 import { WidgetPreferences, GlobalState } from "@Palavyr-Types";
 import { _markAllMessagesRead, _setBadgeCount } from "store/actions/actions";
 import { scrollToBottom } from "widget/utils/messages";
 import { getComponentToRender } from "componentRegistry/getComponentToRender";
 import { BrandingStrip } from "common/BrandingStrip";
-import { SpaceEvenly } from "common/SpaceEvenly";
 import { makeStyles } from "@material-ui/core";
 
 import "./styles.scss";
@@ -20,12 +18,6 @@ type Props = {
 };
 
 const useStyles = makeStyles(theme => ({
-    // spacer: {
-    //     height: "7%",
-    //     width: "100%",
-    //     backgroundColor: "#264B94",
-    //     color: "white",
-    // },
     face: {
         height: "4rem",
     },
