@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { INodeReferences, IPalavyrNode } from "../../Contracts";
 import NodeUpdater from "../actions/NodeUpdater";
 import { MultiChoiceTextEditor } from "./MutichoiceTextEditor";
-import { HtmlTextEditor, TextEditor } from "./TextEditor";
+import { HtmlTextEditor } from "./TextEditor";
 
 export interface TextNodeEditorProps {
     userText: string;
@@ -22,6 +22,8 @@ export interface TextNodeEditorProps {
 const useStyles = makeStyles((theme) => ({
     editor: {
         minHeight: "250px",
+        margin: "1rem",
+        zIndex: 99999
     },
 }));
 

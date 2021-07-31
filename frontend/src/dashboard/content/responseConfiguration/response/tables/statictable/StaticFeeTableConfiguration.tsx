@@ -2,7 +2,7 @@
 // can assign static tables one form id, and the variable table a different form id
 
 import React from "react";
-import { StaticTableMetas } from "@Palavyr-Types";
+import { StaticTableMeta, StaticTableMetas } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./staticTableModifier";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { Button, makeStyles, Typography } from "@material-ui/core";
@@ -12,6 +12,7 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { useContext } from "react";
+import { sortByPropertyNumeric } from "@common/utils/sorting";
 
 interface IFeeConfiguration {
     title: string;
@@ -42,10 +43,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tableCanceler, modifier, areaIdentifier, children }: IFeeConfiguration) => {
-    const { repository } = useContext(DashboardContext);
+    const { repository, planTypeMeta } = useContext(DashboardContext);
     const cls = useStyles();
-
-    const { planTypeMeta } = useContext(DashboardContext);
 
     const actions = (
         <SaveOrCancel
@@ -69,7 +68,15 @@ export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tabl
                 <Typography display="block">
                     <strong>Upgrade your subscription to add more static tables</strong>
                 </Typography>
-                <Button disabled={true} startIcon={<AddBoxIcon />} variant="contained" size="large" color="primary" className={cls.tablebutton} onClick={() => modifier.addTable(staticTables, repository, areaIdentifier)}>
+                <Button
+                    disabled={true}
+                    startIcon={<AddBoxIcon />}
+                    variant="contained"
+                    size="large"
+                    color="primary"
+                    className={cls.tablebutton}
+                    onClick={() => modifier.addTable(staticTables, repository, areaIdentifier)}
+                >
                     <Typography>Add Table</Typography>
                 </Button>
             </div>
@@ -87,11 +94,9 @@ export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tabl
                     No static fee tables configured for this area.
                 </Typography>
             )}
-            {staticTables
-                .sort((a, b) => a.tableOrder - b.tableOrder)
-                .map((table, index) => (
-                    <StaticFeeTable staticTableMetas={staticTables} staticTableMeta={table} tableModifier={modifier} key={index} />
-                ))}
+            {sortByPropertyNumeric((x: StaticTableMeta) => x.tableOrder, staticTables).map((table: StaticTableMeta, index: number) => (
+                <StaticFeeTable staticTableMetas={staticTables} staticTableMeta={table} tableModifier={modifier} key={index} />
+            ))}
             <div className={cls.buttonContainer}>{addTableButton}</div>
         </PalavyrAccordian>
     );

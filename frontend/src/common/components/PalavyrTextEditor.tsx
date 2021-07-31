@@ -10,6 +10,7 @@ import { SetState } from "@Palavyr-Types";
 const useStyles = makeStyles(() => ({
     editorContainer: {
         width: "100%",
+        zIndex: 99999,
     },
 }));
 
@@ -43,7 +44,28 @@ export const PalavyrHtmlTextEditor = ({ editorControl, initialData, editorConfig
                     editorControl(data);
                 }}
                 onBlur={(event, editor) => {
-                    console.log("Blur.", editor);
+                    const linkTextInput = document.getElementsByClassName("ck-input-text");
+                    for (let index = 0; index < linkTextInput.length; index++) {
+                        const t = linkTextInput[index] as HTMLElement;
+                        t.style.zIndex = "9996";
+                    }
+                    const linkBox = document.getElementsByClassName("ck-balloon-panel_with-arrow");
+                    for (let index = 0; index < linkBox.length; index++) {
+                        const b = linkBox[index] as HTMLElement;
+                        b.style.zIndex = "9997";
+                    }
+
+                    const form = document.getElementsByClassName("ck-link-form");
+                    for (let index = 0; index < form.length; index++) {
+                        const f = form[index] as HTMLElement;
+                        f.style.zIndex = "9998";
+                    }
+
+                    const content = document.getElementsByClassName("ck-balloon-rotator__content");
+                    for (let index = 0; index < content.length; index++) {
+                        const c = content[index] as HTMLElement;
+                        c.style.zIndex = "9999";
+                    }
                 }}
                 onFocus={(event, editor) => {
                     console.log("Focus.", editor);
