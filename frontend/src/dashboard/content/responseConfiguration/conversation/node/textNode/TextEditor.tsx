@@ -24,7 +24,7 @@ export const HtmlTextEditor = ({ initialText, text, setText }: TextEditorProps) 
     }, []);
 
     const nodeEditorConfig = {
-        toolbar: ["heading", "|", "bold", "italic", "|", "numberedList", "bulletedList", "|", "link", "table", "mediaEmbed", "|", "undo", "redo"],
+        toolbar: ["heading", "|", "bold", "italic", "|", "numberedList", "bulletedList", "|", "link", "table", "|", "undo", "redo"],
     };
 
     return <PalavyrHtmlTextEditor editorControl={setText} initialData={initialText} editorConfig={nodeEditorConfig} />;

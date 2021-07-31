@@ -4,7 +4,6 @@ import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { googleOAuthClientId } from "@api-client/clientUtils";
 import { Credentials } from "@Palavyr-Types";
 import { LogoutRepository } from "@api-client/LogoutRepository";
-import { ApiErrors } from "dashboard/layouts/Errors/ApiErrors";
 
 class Auth {
     private authenticated: boolean = false;
@@ -74,7 +73,6 @@ class Auth {
     async loginWithGoogle(oneTimeCode: string, tokenId: string, successRedirectToDashboard: () => void, errorCallback: (response: Credentials) => void): Promise<boolean | null> {
         try {
             const authenticationResponse = await this.loginClient.Login.RequestLoginWithGoogleToken(oneTimeCode, tokenId);
-
             return this.processAuthenticationResponse(authenticationResponse, successRedirectToDashboard, errorCallback);
         } catch {
             console.log("Error attempting to reach the server.");
