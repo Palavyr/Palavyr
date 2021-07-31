@@ -45,5 +45,6 @@ export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, preCheckErrors, dem
         }
     }, [iframeRefreshed]);
 
+    //https://www.thoughtco.com/targeting-links-in-frames-3468670
     return <iframe id="chatDemoIframe" title={demo ? "demo" : "widget"} className={cls.frame} src={url}></iframe>;
 };

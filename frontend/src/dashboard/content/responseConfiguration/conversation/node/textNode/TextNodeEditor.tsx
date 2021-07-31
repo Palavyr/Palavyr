@@ -1,12 +1,12 @@
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { Dialog, DialogTitle, DialogContent, DialogActions } from "@material-ui/core";
+import { Dialog, DialogTitle, DialogContent, DialogActions, makeStyles } from "@material-ui/core";
 import { NodeTypeOptions } from "@Palavyr-Types";
 import { ConversationTreeContext, DashboardContext } from "dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
 import { INodeReferences, IPalavyrNode } from "../../Contracts";
 import NodeUpdater from "../actions/NodeUpdater";
 import { MultiChoiceTextEditor } from "./MutichoiceTextEditor";
-import { TextEditor } from "./TextEditor";
+import { HtmlTextEditor } from "./TextEditor";
 
 export interface TextNodeEditorProps {
     userText: string;
@@ -19,12 +19,22 @@ export interface TextNodeEditorProps {
     isAnabranchLocked: boolean;
 }
 
+const useStyles = makeStyles((theme) => ({
+    editor: {
+        minHeight: "250px",
+        margin: "1rem",
+        zIndex: 99999,
+    },
+}));
+
 export const TextNodeEditor = ({ isMultiOptionType, shouldShowMultiOption, isAnabranchLocked, currentNode, childNodeReferences, userText, editorIsOpen, closeEditor }: TextNodeEditorProps) => {
     const [options, setOptions] = useState<string[]>([]);
     const [text, setText] = useState<string>("");
     const [switchState, setSwitchState] = useState<boolean>(true);
     const { nodeTypeOptions } = useContext(ConversationTreeContext);
     const { repository } = useContext(DashboardContext);
+
+    const cls = useStyles();
 
     useEffect(() => {
         setText(userText);
@@ -48,10 +58,11 @@ export const TextNodeEditor = ({ isMultiOptionType, shouldShowMultiOption, isAna
         NodeUpdater.updateText(currentNode, updatedNode === null ? userText : updatedNode.text);
     };
 
+    // MUST use  disableEnforceFocus with the Dialog component to facilitate the CKEditor (HTMLTextEditor)
     return (
-        <Dialog fullWidth open={editorIsOpen} onClose={closeEditor} >
+        <Dialog fullWidth open={editorIsOpen} onClose={closeEditor} disableEnforceFocus>
             <DialogTitle>Edit a conversation node</DialogTitle>
-            <DialogContent>
+            <DialogContent className={cls.editor}>
                 {editorIsOpen &&
                     (isMultiOptionType ? (
                         shouldShowMultiOption ? (
@@ -66,10 +77,10 @@ export const TextNodeEditor = ({ isMultiOptionType, shouldShowMultiOption, isAna
                                 onClick={addOptionOnClick}
                             />
                         ) : (
-                            <TextEditor initialText={userText} setText={setText} text={text} />
+                            <HtmlTextEditor initialText={userText} setText={setText} text={text} />
                         )
                     ) : (
-                        <TextEditor initialText={userText} setText={setText} text={text} />
+                        <HtmlTextEditor initialText={userText} setText={setText} text={text} />
                     ))}
             </DialogContent>
             <DialogActions>

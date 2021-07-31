@@ -49,7 +49,7 @@ export interface IStaticFeeTable {
 
 // we can produce a list of these components depending on the
 export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifier }: IStaticFeeTable) => {
-    const classes = useStyles();
+    const cls = useStyles();
     const cellAlignment = "center";
 
     const anyStaticTableRowsWithPerIndividualSet = (staticTableMeta: StaticTableMeta) => {
@@ -67,11 +67,11 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
 
     return (
         <Fade>
-            <div className={classes.staticFees}>
+            <div className={cls.staticFees}>
                 <TextField
-                    className={classes.tableDescription}
+                    className={cls.tableDescription}
                     multiline
-                    rows={3}
+                    rows={2}
                     value={staticTableMetas[staticTableMeta.tableOrder].description}
                     label="Table Description"
                     onChange={(event) => {
@@ -81,23 +81,23 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                 <Table>
                     <TableHead>
                         <TableRow style={{ borderBottom: "1px solid black" }}>
-                            <TableCell align={cellAlignment} className={classes.headerText}></TableCell>
-                            <TableCell align={cellAlignment} className={classes.headerText}>
+                            <TableCell align={cellAlignment} className={cls.headerText}></TableCell>
+                            <TableCell align={cellAlignment} className={cls.headerText}>
                                 Description
                             </TableCell>
-                            <TableCell align={cellAlignment} className={classes.headerText}>
+                            <TableCell align={cellAlignment} className={cls.headerText}>
                                 Amount
                             </TableCell>
-                            <TableCell align={cellAlignment} className={classes.headerText}>
+                            <TableCell align={cellAlignment} className={cls.headerText}>
                                 Max Amount (if range)
                             </TableCell>
-                            <TableCell align={cellAlignment} className={classes.headerText}>
+                            <TableCell align={cellAlignment} className={cls.headerText}>
                                 Range
                             </TableCell>
-                            <TableCell align={cellAlignment} className={classes.headerText}>
+                            <TableCell align={cellAlignment} className={cls.headerText}>
                                 Per Individual
                             </TableCell>
-                            <TableCell align={cellAlignment} className={classes.headerText}></TableCell>
+                            <TableCell align={cellAlignment} className={cls.headerText}></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody style={{ borderTop: "2px solid black" }}>
@@ -118,13 +118,13 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                         ))}
                     </TableBody>
                 </Table>
-                <div className={classes.buttonWrapper}>
+                <div className={cls.buttonWrapper}>
                     <Button
                         startIcon={<AddBoxIcon />}
                         variant="contained"
                         size="small"
                         color="primary"
-                        className={classes.feeTableButton}
+                        className={cls.feeTableButton}
                         onClick={() => tableModifier.addRow(staticTableMetas, staticTableMeta.tableOrder)}
                     >
                         Add Row
@@ -136,7 +136,7 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                             variant="contained"
                             size="small"
                             color="primary"
-                            className={classes.feeTableButton}
+                            className={cls.feeTableButton}
                             onClick={() => tableModifier.moveTableDown(staticTableMetas, staticTableMeta.tableOrder)}
                         >
                             Shift Down
@@ -149,7 +149,7 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                             variant="contained"
                             size="small"
                             color="primary"
-                            className={classes.feeTableButton}
+                            className={cls.feeTableButton}
                             onClick={() => tableModifier.moveTableUp(staticTableMetas, staticTableMeta.tableOrder)}
                         >
                             Shift Up
@@ -161,12 +161,11 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                         variant="contained"
                         color="secondary"
                         size="small"
-                        className={classes.feeTableButton}
+                        className={cls.feeTableButton}
                         onClick={() => tableModifier.delTable(staticTableMetas, staticTableMeta.tableOrder)}
                     >
                         Remove Table
                     </Button>
-
                     {anyStaticTableRowsWithPerIndividualSet(staticTableMeta) && (
                         <FormControlLabel
                             label="Require num individuals"
