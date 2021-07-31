@@ -40,32 +40,32 @@ export const PalavyrHtmlTextEditor = ({ editorControl, initialData, editorConfig
                     // console.log('Editor is ready to use!', editor);
                 }}
                 onChange={(event, editor) => {
-                    const data = editor.getData();
+                    let data: string = editor.getData();
+                    if (data.includes("href")) {
+                        const splitted = data.split("href");
+                        const newData: string[] = [];
+                        for (let index = 0; index < splitted.length; index++) {
+                            const element = splitted[index];
+                            if (index % 2 === 0) {
+                                const targetAdded = [element, `target="_blank"`].join("");
+                                newData.push(targetAdded);
+                            } else {
+                                newData.push(element);
+                            }
+                        }
+                        data = newData.join(" href");
+                    }
                     editorControl(data);
                 }}
                 onBlur={(event, editor) => {
-                    const linkTextInput = document.getElementsByClassName("ck-input-text");
-                    for (let index = 0; index < linkTextInput.length; index++) {
-                        const t = linkTextInput[index] as HTMLElement;
-                        t.style.zIndex = "9996";
-                    }
-                    const linkBox = document.getElementsByClassName("ck-balloon-panel_with-arrow");
-                    for (let index = 0; index < linkBox.length; index++) {
-                        const b = linkBox[index] as HTMLElement;
-                        b.style.zIndex = "9997";
-                    }
-
-                    const form = document.getElementsByClassName("ck-link-form");
-                    for (let index = 0; index < form.length; index++) {
-                        const f = form[index] as HTMLElement;
-                        f.style.zIndex = "9998";
-                    }
-
-                    const content = document.getElementsByClassName("ck-balloon-rotator__content");
-                    for (let index = 0; index < content.length; index++) {
-                        const c = content[index] as HTMLElement;
-                        c.style.zIndex = "9999";
-                    }
+                    const classNames = ["ck-balloon-panel"];
+                    classNames.forEach((x: string, level: number) => {
+                        const rot = document.getElementsByClassName(x);
+                        for (let index = 0; index < rot.length; index++) {
+                            const r = rot[index] as HTMLElement;
+                            r.style.zIndex = `999${level}`;
+                        }
+                    });
                 }}
                 onFocus={(event, editor) => {
                     console.log("Focus.", editor);

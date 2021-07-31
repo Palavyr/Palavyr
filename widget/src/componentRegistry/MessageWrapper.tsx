@@ -38,6 +38,7 @@ const useStyles = makeStyles(theme => ({
         marginTop: "0.1rem",
         borderRadius: "10px",
         maxWidth: "85%",
+        minWidth: "45%",
     },
 }));
 

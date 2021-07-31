@@ -22,5 +22,10 @@ export const HtmlTextEditor = ({ initialText, text, setText }: TextEditorProps) 
             setText(initialText);
         }
     }, []);
-    return <PalavyrHtmlTextEditor editorControl={setText} initialData={initialText} />;
+
+    const nodeEditorConfig = {
+        toolbar: ["heading", "|", "bold", "italic", "|", "numberedList", "bulletedList", "|", "link", "table", "mediaEmbed", "|", "undo", "redo"],
+    };
+
+    return <PalavyrHtmlTextEditor editorControl={setText} initialData={initialText} editorConfig={nodeEditorConfig} />;
 };

@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     editor: {
         minHeight: "250px",
         margin: "1rem",
-        zIndex: 99999
+        zIndex: 99999,
     },
 }));
 
@@ -58,8 +58,9 @@ export const TextNodeEditor = ({ isMultiOptionType, shouldShowMultiOption, isAna
         NodeUpdater.updateText(currentNode, updatedNode === null ? userText : updatedNode.text);
     };
 
+    // MUST use  disableEnforceFocus with the Dialog component to facilitate the CKEditor (HTMLTextEditor)
     return (
-        <Dialog fullWidth open={editorIsOpen} onClose={closeEditor}>
+        <Dialog fullWidth open={editorIsOpen} onClose={closeEditor} disableEnforceFocus>
             <DialogTitle>Edit a conversation node</DialogTitle>
             <DialogContent className={cls.editor}>
                 {editorIsOpen &&
