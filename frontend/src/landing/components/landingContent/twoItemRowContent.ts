@@ -14,7 +14,7 @@ export const rowOne: Array<ItemRowObject> = [
     },
     {
         title: "Delight your customers",
-        text: "You create the conversation, so your chats will always have human touch.",
+        text: "You create the conversation, so your chats will always have that human touch.",
         type: Person,
     },
 ];
