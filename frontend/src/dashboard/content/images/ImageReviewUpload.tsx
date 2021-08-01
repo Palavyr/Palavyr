@@ -16,9 +16,10 @@ const useStyles = makeStyles((theme) => ({
 
 export interface ImageReviewUploadProps {
     setImageRecords: SetState<FileLink[]>;
+    numImages: number
 }
 
-export const ImageReviewUpload = ({ setImageRecords }: ImageReviewUploadProps) => {
+export const ImageReviewUpload = ({ setImageRecords, numImages }: ImageReviewUploadProps) => {
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);
     const { setSuccessText, setSuccessOpen } = useContext(DashboardContext);
@@ -50,7 +51,7 @@ export const ImageReviewUpload = ({ setImageRecords }: ImageReviewUploadProps) =
         <div className={cls.imageBlock}>
             <Upload
                 dropzoneType="area"
-                initialState={false}
+                initialState={numImages === 0}
                 handleFileSave={fileSave}
                 summary="Upload a file"
                 buttonText="Upload"

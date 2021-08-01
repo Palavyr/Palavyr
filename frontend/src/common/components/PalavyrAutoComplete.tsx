@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     popper: {
-        zIndex: CHAT_DEMO_LISTBOX_zINDEX,
+        zIndex: CHAT_DEMO_LISTBOX_zINDEX + 1300,
     },
 }));
 

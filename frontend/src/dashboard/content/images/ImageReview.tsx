@@ -48,7 +48,7 @@ export const ImageReview = () => {
             <div>
                 <AreaConfigurationHeader title="Review the images you've uploaded" subtitle="Add or remove stored images. These are accessible within the Palavy designer." />
             </div>
-            <ImageReviewUpload setImageRecords={setImageRecords} />
+            <ImageReviewUpload setImageRecords={setImageRecords} numImages={imageRecords === undefined || imageRecords === null ? 1 : imageRecords.length} />
             <Grid container style={{ width: "100%" }}>
                 <Grid item xs={6}>
                     <TableContainer style={{ width: "100%", paddingLeft: "1rem", paddingRight: "1rem" }}>
