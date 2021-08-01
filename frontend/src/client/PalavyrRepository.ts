@@ -129,8 +129,8 @@ export class PalavyrRepository {
         updateEpilogue: async (areaIdentifier: string, epilogue: string) => this.client.put<string, {}>(`response/configuration/${areaIdentifier}/epilogue`, { epilogue: epilogue }),
 
         WidgetState: {
-            GetWidgetState: async () => this.client.get<boolean>(`widget-config/widget-active-state`, CacheIds.WidgetState),
-            SetWidgetState: async (updatedWidgetState: boolean) => this.client.post<boolean, {}>(`widget-config/widget-active-state?state=${updatedWidgetState}`, CacheIds.WidgetState),
+            GetWidgetState: async () => this.client.get<boolean>(`widget-config/widget-active-state`),
+            SetWidgetState: async (updatedWidgetState: boolean) => this.client.post<boolean, {}>(`widget-config/widget-active-state?state=${updatedWidgetState}`),
         },
         Tables: {
             Dynamic: {
