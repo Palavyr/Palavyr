@@ -12,7 +12,7 @@ export const DeployedWith = () => {
                 <DividerWithText
                     textComponent={
                         <Typography style={{ flexGrow: 1, transform: "translate(0px, 7px) scale(1)" }} align="center">
-                            Deployed regularly with
+                            Deployed with
                         </Typography>
                     }
                 />
