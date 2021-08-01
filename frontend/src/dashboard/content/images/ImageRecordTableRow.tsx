@@ -49,8 +49,8 @@ export const ImageRecordTableRow = ({ imageRecord, setImageRecords, index, setCu
     const responseLinkOnClick = async (fileLink: FileLink) => {
         setIsLoading(true);
         setShowSpinner(true);
-        if (!fileLink.isUrl) {
-            const signedUrl = await repository.Configuration.Images.getSignedUrl(fileLink.link, fileLink.fileId);
+        if (!fileLink.isUrl) { // TODO: Always going to be s3 now, so remove this URL nonsense. Links are handled natively via the html nature of the chat text
+            const signedUrl = await repository.Configuration.Images.getSignedUrl(fileLink.s3Key, fileLink.fileId);
             setCurrentPreview(signedUrl);
         } else {
             const url = fileLink.link;

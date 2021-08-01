@@ -259,12 +259,7 @@ export class PalavyrRepository {
                 return result;
             },
             deleteImage: async (imageIds: string[]) => this.client.delete<FileLink[]>(`images?imageIds=${imageIds.join(",")}`, CacheIds.Images), // takes a querystring command delimited of imageIds
-            getSignedUrl: async (s3Key: string, fileId: string) => {
-                // const cacheKey = [CacheIds.S3Key, "link", fileId].join("-");
-                return this.client.post<string, {}>(`images/link`, { s3Key: s3Key }); //, cacheKey as CacheIds);
-                // SessionStorage.setCacheValue(s3Key, signedUrl);
-                // return signedUrl;
-            },
+            getSignedUrl: async (s3Key: string, fileId: string) => this.client.post<string, {}>(`images/link`, { s3Key: s3Key }),
         },
     };
 

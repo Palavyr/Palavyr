@@ -1,5 +1,4 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { SessionStorage } from "localStorage/sessionStorage";
 import React, { useCallback, useEffect, useState } from "react";
 import { PalavyrNodeBody } from "../baseNode/PalavyrNodeBody";
 import { CustomImage } from "./CustomImage";
