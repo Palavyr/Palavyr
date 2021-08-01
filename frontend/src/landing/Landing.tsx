@@ -124,7 +124,7 @@ export const LandingPage = () => {
                     }
                     subtitle={
                         <Typography align="center" variant="h5" className={cls.secondaryText}>
-                            And Automate the Boring Stuff!
+                            And create your own customer support specialist!
                         </Typography>
                     }
                 >

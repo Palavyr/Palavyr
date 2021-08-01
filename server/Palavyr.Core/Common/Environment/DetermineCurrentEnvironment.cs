@@ -9,6 +9,8 @@ namespace Palavyr.Core.Common.Environment
         bool IsStaging();
         bool IsProduction();
         string GetCurrentEnvironment();
+
+        public string Environment { get; set; }
     }
 
     public class DetermineCurrentEnvironment : IDetermineCurrentEnvironment
@@ -46,6 +48,11 @@ namespace Palavyr.Core.Common.Environment
             var currentEnv = configuration.GetCurrentEnvironment();
             return currentEnv;
         }
-        
+
+        public string Environment
+        {
+            get => GetCurrentEnvironment();
+            set => GetCurrentEnvironment();
+        }
     }
 }

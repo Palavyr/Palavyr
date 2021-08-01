@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.API.Registration.Configuration;
 using Palavyr.API.Registration.Container;
+using Palavyr.Core.Services.AccountServices;
 
 namespace Palavyr.API
 {
@@ -65,6 +66,8 @@ namespace Palavyr.API
             ILoggerFactory loggerFactory
         )
         {
+            PalavyrAccessChecker.AssertEnvironmentsDoNoOverlap();
+            
             // var logger = loggerFactory.CreateLogger("Error Handler");
             // app.UseRequestResponseLogging(); // THIS STUPID THING IS DISPOSING THE RESPONSE BODY!!!
             app.UseHttpsRedirection();

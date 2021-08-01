@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Data.CompanyData;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AuthenticationServices;
@@ -45,10 +44,6 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             var logger = Substitute.For<ILogger<AuthService>>();
             var authService = Substitute.For<IAuthService>();
             var newAccountUtils = Substitute.For<INewAccountUtils>();
-            var guidUtils = Substitute.For<IGuidUtils>();
-            var emailClient = Substitute.For<ISesEmail>();
-            var requestVerification = Substitute.For<IRequestEmailVerification>();
-            var verifyLogger = Substitute.For<ILogger<EmailVerificationService>>();
             var customerService = Container.GetService<StripeCustomerService>();
             var emailVerificationStatus = Substitute.For<IEmailVerificationStatus>();
             emailVerificationStatus.CheckVerificationStatus(testEmail).Returns(false);
@@ -61,11 +56,8 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             };
             authService.ValidateGoogleTokenId(googleCredentials.OneTimeCode).Returns(fakePayload);
             newAccountUtils.GetNewAccountId().Returns(testAccount);
-            emailVerificationStatus.CheckVerificationStatus(testEmail).Returns(false);
-
-            requestVerification.VerifyEmailAddressAsync(testEmail).Returns(false);
-            var allowedUsers = Substitute.For<IAllowedUsers>();
-            allowedUsers.IsEmailAllowedToCreateAccount(testEmail).ReturnsForAnyArgs(true);
+            var registrationMaker = Substitute.For<IAccountRegistrationMaker>();
+            registrationMaker.TryRegisterAccountAndSendEmailVerificationToken(testAccount, "123", testEmail, CancellationToken.None).ReturnsForAnyArgs(false);
 
             var accountSetupService = new AccountSetupService(
                 DashContext,
@@ -74,10 +66,9 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
                 logger,
                 authService,
                 jwtService,
-                new EmailVerificationService(AccountsContext, verifyLogger, customerService, requestVerification, emailClient, guidUtils, emailVerificationStatus),
                 customerService,
                 new GuidUtils(),
-                allowedUsers
+                registrationMaker
             );
 
             var result = await accountSetupService.CreateNewAccountViaGoogleAsync(googleCredentials, CancellationToken.None);

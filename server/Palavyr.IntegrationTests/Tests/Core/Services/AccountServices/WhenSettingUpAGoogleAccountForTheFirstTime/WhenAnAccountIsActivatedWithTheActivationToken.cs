@@ -6,8 +6,8 @@ using Google.Apis.Auth;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Data.CompanyData;
 using Palavyr.Core.Data.Setup.WelcomeEmail;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Services.AccountServices;
@@ -79,11 +79,12 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             var customerService = Container.GetService<StripeCustomerService>();
             var emailVerificationStatus = Substitute.For<IEmailVerificationStatus>();
             emailVerificationStatus.CheckVerificationStatus(testEmail).Returns(true);
-            var allowedUsers = Substitute.For<IAllowedUsers>();
-            allowedUsers.IsEmailAllowedToCreateAccount(testEmail).ReturnsForAnyArgs(true);
-
             var emailVerificationService = new EmailVerificationService(AccountsContext, verifyLogger, customerService, requestVerification, emailClient, guidUtils, emailVerificationStatus);
-            
+
+            var accessChecker = Substitute.For<IPalavyrAccessChecker>();
+            var accessLogger = Substitute.For<ILogger<AccountRegistrationMaker>>();
+
+            var registrationMaker = new AccountRegistrationMaker(accessLogger, AccountsContext, DashContext, emailVerificationService, accessChecker);
             var accountSetupService = new AccountSetupService(
                 DashContext,
                 AccountsContext,
@@ -91,10 +92,9 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
                 logger,
                 authService,
                 jwtService,
-                emailVerificationService,
                 customerService,
                 new GuidUtils(),
-                allowedUsers
+                registrationMaker
             );
 
             await accountSetupService.CreateNewAccountViaGoogleAsync(googleCredentials, CancellationToken.None);

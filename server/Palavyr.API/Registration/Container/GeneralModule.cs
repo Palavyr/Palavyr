@@ -5,7 +5,6 @@ using Palavyr.API.Controllers.Testing;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Data.CompanyData;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Nodes;
@@ -39,7 +38,8 @@ namespace Palavyr.API.Registration.Container
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<AllowedUsers>().As<IAllowedUsers>().SingleInstance();
+            builder.RegisterType<AccountRegistrationMaker>().As<IAccountRegistrationMaker>();
+            builder.RegisterType<PalavyrAccessChecker>().As<IPalavyrAccessChecker>();
             builder.RegisterType<EmailVerificationStatus>().As<IEmailVerificationStatus>().InstancePerLifetimeScope();
             builder.RegisterType<LocaleDefinition>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<TestDataProvider>().AsSelf().InstancePerLifetimeScope();

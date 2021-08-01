@@ -10,36 +10,35 @@ export const rowOne: Array<ItemRowObject> = [
     {
         title: "Seal the deal",
         text: "Use Palavyr to engage clients and help them say yes.",
-        type: Ring
-    },
-    {
-        title: "Reduce the wait",
-        text: "Palavyr helps you deliver information to your prospective customers faster than the competition.",
-        type: TimeCircle
-    }
-]
-export const rowTwo: Array<ItemRowObject> = [
-    {
-        title: "Easy to use",
-        text: "Customers will love how easy it is to use Palavyr. And so will you.",
-        type: SimpleIntegration
-
+        type: Ring,
     },
     {
         title: "Delight your customers",
         text: "You create the conversation, so your chats will always have human touch.",
-        type: Person
-    }
-]
+        type: Person,
+    },
+];
+export const rowTwo: Array<ItemRowObject> = [
+    {
+        title: "Easy to use",
+        text: "Customers will love how easy it is to use Palavyr. And so will you.",
+        type: SimpleIntegration,
+    },
+    {
+        title: "Reduce the wait",
+        text: "Palavyr helps you deliver information to your prospective customers faster than the competition.",
+        type: TimeCircle,
+    },
+];
 export const rowThree: Array<ItemRowObject> = [
     {
         title: "Be Transparent",
         text: "Use Palavyr to deliver immediate service fee estimates, so they will know exactly what they're getting, and for how much.",
-        type: Transparent
+        type: Transparent,
     },
     {
         title: "Trim the fat",
         text: "Review your enquiries to preemptively learn what your clients are asking about.",
-        type: Saber
-    }
-]
+        type: Saber,
+    },
+];

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Data.CompanyData;
 using Palavyr.Core.Data.Setup.WelcomeEmail;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Services.AccountServices;
@@ -52,8 +51,6 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             var newAccountUtils = Substitute.For<INewAccountUtils>();
             var guidUtils = Substitute.For<IGuidUtils>();
             var emailClient = Substitute.For<ISesEmail>();
-            var requestVerification = Substitute.For<IRequestEmailVerification>();
-            var verifyLogger = Substitute.For<ILogger<EmailVerificationService>>();
             var customerService = Container.GetService<StripeCustomerService>();
             var emailVerificationStatus = Substitute.For<IEmailVerificationStatus>();
             emailVerificationStatus.CheckVerificationStatus(testEmail).Returns(true);
@@ -72,8 +69,8 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             authService.ValidateGoogleTokenId(googleCredentials.OneTimeCode).ReturnsNull();
             newAccountUtils.GetNewAccountId().Returns(testAccount);
 
-            var allowedUsers = Substitute.For<IAllowedUsers>();
-            allowedUsers.IsEmailAllowedToCreateAccount(testEmail).ReturnsForAnyArgs(true);
+            var registrationMaker = Substitute.For<IAccountRegistrationMaker>();
+            registrationMaker.TryRegisterAccountAndSendEmailVerificationToken(testAccount, "123", testEmail, CancellationToken.None).ReturnsForAnyArgs(true);
 
             var accountSetupService = new AccountSetupService(
                 DashContext,
@@ -82,10 +79,9 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
                 logger,
                 authService,
                 jwtService,
-                new EmailVerificationService(AccountsContext, verifyLogger, customerService, requestVerification, emailClient, guidUtils, emailVerificationStatus),
                 customerService,
                 new GuidUtils(),
-                allowedUsers
+                registrationMaker
             );
 
             var result = await accountSetupService.CreateNewAccountViaGoogleAsync(googleCredentials, CancellationToken.None);

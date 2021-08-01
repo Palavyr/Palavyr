@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Data.CompanyData;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Services.AccountServices;
@@ -54,11 +53,13 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             var authService = Substitute.For<IAuthService>();
             var newAccountUtils = Substitute.For<INewAccountUtils>();
             var guidFinder = new GuidFinder();
+
             authService.ValidateGoogleTokenId(googleCredentials.OneTimeCode).Returns(fakePayload);
             newAccountUtils.GetNewAccountId().Returns(testAccount);
             var customerService = Container.GetService<StripeCustomerService>();
-            var allowedUsers = Substitute.For<IAllowedUsers>();
-            allowedUsers.IsEmailAllowedToCreateAccount(testEmail).ReturnsForAnyArgs(true);
+
+            var registrationMaker = Substitute.For<IAccountRegistrationMaker>();
+            registrationMaker.TryRegisterAccountAndSendEmailVerificationToken(testAccount, "123", testEmail, CancellationToken.None).ReturnsForAnyArgs(true);
 
             var accountSetupService = new AccountSetupService(
                 DashContext,
@@ -67,10 +68,9 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
                 logger,
                 authService,
                 jwtService,
-                emailVerificationService,
                 customerService,
                 new GuidUtils(),
-                allowedUsers
+                registrationMaker
             );
             emailVerificationService.SendConfirmationTokenEmail(testEmail, testAccount, CancellationToken.None).Returns(true);
             jwtService.GenerateJwtTokenAfterAuthentication(testEmail).Returns(jwtToken);

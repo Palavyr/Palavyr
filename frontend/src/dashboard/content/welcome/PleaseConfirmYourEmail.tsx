@@ -57,18 +57,22 @@ export const PleaseConfirmYourEmail = () => {
             setErrorOpen(true);
             return false;
         }
-        const emailConfirmed = await repository.Settings.Account.confirmEmailAddress(authToken);
-        setTimeout(() => {
-            if (emailConfirmed === true) {
-                setSuccessOpen(true);
-                auth.SetIsActive();
-                window.location.reload();
-            } else {
-                setWarningOpen(true);
-                setAuthStatus("CodeNotVerified");
-            }
+        try {
+            const emailConfirmed = await repository.Settings.Account.confirmEmailAddress(authToken);
+            setTimeout(() => {
+                if (emailConfirmed === true) {
+                    setSuccessOpen(true);
+                    auth.SetIsActive();
+                    window.location.reload();
+                } else {
+                    setWarningOpen(true);
+                    setAuthStatus("CodeNotVerified");
+                }
+                setIsLoading(false);
+            }, 1300);
+        } catch {
             setIsLoading(false);
-        }, 1300);
+        }
     };
 
     const resendAuthToken = async () => {
@@ -96,7 +100,13 @@ export const PleaseConfirmYourEmail = () => {
                     <Align>
                         <Card className={cls.card}>
                             <FormControl fullWidth className={cls.margin} variant="outlined">
-                                <OutlinedInput className={cls.outlinedInput} placeholder="Paste your confirmation code here" value={authToken} id="outlined-adornment-confirmation-code" onChange={outlinedInputOnChange} />
+                                <OutlinedInput
+                                    className={cls.outlinedInput}
+                                    placeholder="Paste your confirmation code here"
+                                    value={authToken}
+                                    id="outlined-adornment-confirmation-code"
+                                    onChange={outlinedInputOnChange}
+                                />
                                 <br />
                                 <Align direction="flex-end">
                                     <ColoredButton type="submit" variant="contained" color="primary" disabled={isLoading} onClick={confirmAccount}>

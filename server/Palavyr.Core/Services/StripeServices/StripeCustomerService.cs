@@ -5,8 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.Environment;
-using Palavyr.Core.Data.CompanyData;
+// using Palavyr.Core.Data.CompanyData;
 using Palavyr.Core.Exceptions;
+using Palavyr.Core.Services.AccountServices;
 using Stripe;
 
 namespace Palavyr.Core.Services.StripeServices
@@ -15,7 +16,10 @@ namespace Palavyr.Core.Services.StripeServices
     {
         private readonly ILogger<StripeCustomerService> logger;
         private readonly IDetermineCurrentEnvironment determineCurrentEnvironment;
-        private readonly IAllowedUsers allowedUsers;
+
+        private readonly IPalavyrAccessChecker accessChecker;
+
+        // private readonly IAllowedUsers allowedUsers;
         private bool IsTest => StripeConfiguration.ApiKey.ToLowerInvariant().Contains("test");
 
         private CustomerService customerService;
@@ -23,12 +27,14 @@ namespace Palavyr.Core.Services.StripeServices
         public StripeCustomerService(
             ILogger<StripeCustomerService> logger,
             IDetermineCurrentEnvironment determineCurrentEnvironment,
-            IAllowedUsers allowedUsers
+            IPalavyrAccessChecker accessChecker
+            // IAllowedUsers allowedUsers
         )
         {
             this.logger = logger;
             this.determineCurrentEnvironment = determineCurrentEnvironment;
-            this.allowedUsers = allowedUsers;
+            this.accessChecker = accessChecker;
+            // this.allowedUsers = allowedUsers;
             var stripeClient = new StripeClient(StripeConfiguration.ApiKey);
             this.customerService = new CustomerService(stripeClient);
         }
@@ -45,13 +51,27 @@ namespace Palavyr.Core.Services.StripeServices
 
         public async Task DeleteSingleLiveStripeCustomer(string stripeCustomerId)
         {
-            try
+            if (IsTest)
             {
-                await customerService.DeleteAsync(stripeCustomerId);
+                try
+                {
+                    await customerService.DeleteAsync(stripeCustomerId);
+                }
+                catch
+                {
+                    logger.LogError("This customer ID doesn't exist anymore. It was probably deleted already manually.");
+                }
             }
-            catch (StripeException stripeException)
+            else
             {
-                throw new DomainException($"The stripe customer ID was not found in Stripe: {stripeCustomerId}. {stripeException.Message}");
+                try
+                {
+                    await customerService.DeleteAsync(stripeCustomerId);
+                }
+                catch (StripeException stripeException)
+                {
+                    throw new DomainException($"The stripe customer ID was not found in Stripe: {stripeCustomerId}. {stripeException.Message}");
+                }
             }
         }
 
@@ -82,7 +102,7 @@ namespace Palavyr.Core.Services.StripeServices
             foreach (var customerId in customerIds)
             {
                 var customer = await customerService.GetAsync(customerId, new CustomerGetOptions());
-                if (allowedUsers.IsATestStripeEmail(customer.Email))
+                if (accessChecker.IsATestStripeEmail(customer.Email))
                 {
                     await customerService.DeleteAsync(customer.Id);
                 }
