@@ -149,7 +149,7 @@ export const LandingPage = () => {
                     Palavyr is a fully configurable automated chat system used to deliver information about your services and fees to potential customers.
                 </Typography>
                 <Typography gutterBottom align="center">
-                    You craft the chats, configure your pricing strategies, and styalize the widget, which is embedded into your website.
+                    You craft the chats, configure your pricing strategies, and stylize the widget (which is embedded into your website).
                 </Typography>
                 <Typography gutterBottom align="center">
                     Potential customers will use the widget to get immediate information about your services and fees.
