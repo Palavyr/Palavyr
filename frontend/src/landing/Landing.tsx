@@ -123,13 +123,13 @@ export const LandingPage = () => {
                         </Typography>
                     }
                     subtitle={
-                        <Typography align="center" variant="h5" className={cls.secondaryText}>
-                            And create your own customer support specialist!
+                        <Typography display="inline" align="center" variant="h5" className={cls.secondaryText}>
+                            No Programing Required!
                         </Typography>
                     }
                 >
                     <Button className={cls.button} variant="contained" onClick={openRegisterDialog}>
-                        <Typography variant="h6">Try it for free!</Typography>
+                        <Typography variant="h6">Create a FREE account</Typography>
                     </Button>
                 </TitleContent>
             </Header>

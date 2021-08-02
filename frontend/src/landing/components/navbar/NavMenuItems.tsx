@@ -26,15 +26,15 @@ export const menuItems = (openRegisterDialog: any, openLoginDialog: any, directT
     //     link: "/docs",
     //     icon: <BookIcon className="text-white" />
     // },
+    // {
+    //     name: "Login",
+    //     onClick: openLoginDialog,
+    //     icon: <LockOpenIcon className="text-white" />,
+    // },
     {
         name: "Register",
         onClick: openRegisterDialog,
         icon: <HowToRegIcon className="text-white" />,
-    },
-    {
-        name: "Login",
-        onClick: openLoginDialog,
-        icon: <LockOpenIcon className="text-white" />,
     },
     // {
     //     name: "Tutorial",

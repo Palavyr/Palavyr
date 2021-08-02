@@ -26,12 +26,18 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         justifyContent: "space-between",
     },
-    menuButton: {
+    newAccountButton: {
+        color: theme.palette.common.white,
         backgroundColor: theme.palette.success.dark,
         marginRight: "1rem",
         "&:hover": {
+            color: theme.palette.success.dark,
             backgroundColor: theme.palette.common.white,
         },
+    },
+    loginButton: {
+        marginRight: "1rem",
+        border: "0px",
     },
     menuButtonText: {
         color: theme.palette.common.white,
@@ -61,7 +67,6 @@ const useStyles = makeStyles((theme) => ({
         padding: "0.4rem",
         borderRadius: "12px",
     },
-    tutButton: {},
     navButtons: {
         display: "flex",
         justifyContent: "space-evenly",
@@ -86,27 +91,15 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog }: INavBar) => {
                 </div>
                 <div className={cls.navButtons}>
                     <Align verticalCenter>
-                        {menuItems(openRegisterDialog, openLoginDialog, redirectToTutorial).map((element) => {
-                            if (element.link) {
-                                return (
-                                    <Link key={element.name} to={element.link} className={cls.noDecoration}>
-                                        <Button disableElevation variant="contained" size="medium" className={classNames(cls.menuButtonText, cls.menuButton)}>
-                                            <Typography variant="h6" className={cls.menuButtonText}>
-                                                {element.name}
-                                            </Typography>
-                                        </Button>
-                                    </Link>
-                                );
-                            }
-                            return (
-                                <Button disableElevation variant="contained" size="medium" onClick={element.onClick} className={classNames(cls.menuButtonText, cls.menuButton)} key={element.name}>
-                                    <Typography variant="h6" className={cls.menuButtonText}>
-                                        {element.name}
-                                    </Typography>
-                                </Button>
-                            );
-                        })}
-                        <div style={{ marginRight: "1.5rem", marginLeft: "2rem" }}>
+                        <Button disableElevation variant="outlined" size="small" onClick={openLoginDialog} className={classNames(cls.menuButtonText, cls.loginButton)} key="Login">
+                            <Typography variant="h6" className={cls.menuButtonText}>
+                                Login
+                            </Typography>
+                        </Button>
+                        <Button disableElevation variant="contained" size="medium" onClick={openRegisterDialog} className={cls.newAccountButton} key="Register">
+                            <Typography variant="h6">New Account</Typography>
+                        </Button>
+                        <div style={{ marginRight: "1.5rem" }}>
                             <Link key="Home" to="/" className={cls.noDecoration}>
                                 <span>
                                     <Typography variant="h6" className={cls.menuButtonText}>
@@ -116,7 +109,7 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog }: INavBar) => {
                             </Link>
                         </div>
                         <Link key="Tutorial" to="/tutorial" className={cls.noDecoration}>
-                            <span className={cls.tutButton}>
+                            <span>
                                 <Typography variant="h6" className={cls.menuButtonText}>
                                     Tutorial
                                 </Typography>
