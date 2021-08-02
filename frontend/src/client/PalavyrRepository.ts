@@ -282,7 +282,6 @@ export class PalavyrRepository {
             }
             return Promise.resolve(result);
         },
-
         // TODO: Deprecate eventually
         // EnsureDBIsValid: async () => this.client.post(`configure-conversations/ensure-db-valid`),
     };
