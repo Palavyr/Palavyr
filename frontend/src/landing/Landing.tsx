@@ -20,6 +20,7 @@ import { IFrame } from "dashboard/content/demo/IFrame";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { YellowStrip } from "@common/components/YellowStrip";
 import { TitleContent } from "./components/TitleContent";
+import { BottomStrip } from "./components/footer/BottomStrip";
 
 AOS.init({
     duration: 1000,
@@ -124,7 +125,7 @@ export const LandingPage = () => {
                     }
                     subtitle={
                         <Typography display="inline" align="center" variant="h5" className={cls.secondaryText}>
-                            No Programing Required!
+                            No Programing Required
                         </Typography>
                     }
                 >
@@ -166,7 +167,8 @@ export const LandingPage = () => {
             <GreenStrip />
             <PricingSection />
             <Sliver />
-            <Footer />
+            <Footer openLoginDialog={openLoginDialog} openRegisterDialog={openRegisterDialog} openTermsDialog={openTermsDialog}/>
+            <BottomStrip />
         </div>
     );
 };

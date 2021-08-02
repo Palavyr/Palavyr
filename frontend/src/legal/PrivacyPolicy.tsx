@@ -1,5 +1,5 @@
-import React from 'react'
+import React from "react";
 
 export const PrivacyPolicy = () => {
-    return(<div>Privacy Policy TO DO</div>)
-}
+    return <div>Privacy Policy TO DO</div>;
+};

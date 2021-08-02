@@ -21,7 +21,7 @@ export const rowOne: Array<ItemRowObject> = [
 export const rowTwo: Array<ItemRowObject> = [
     {
         title: "Easy to use",
-        text: "Customers will love how easy it is to use Palavyr. And so will you.",
+        text: "Your customers will love how easy it is to use Palavyr. And so will you.",
         type: SimpleIntegration,
     },
     {
