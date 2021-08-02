@@ -2,7 +2,6 @@ import React from "react";
 
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { makeStyles, useTheme, Dialog, DialogTitle, DialogContent, Typography, DialogActions, Button } from "@material-ui/core";
-import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 
 export interface ITermsOfServiceDialog {
     onClose: any;
@@ -19,11 +18,7 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: theme.spacing(2),
         paddingRight: theme.spacing(2),
     },
-    backIcon: {
-        // marginRight: theme.spacing(1),
-        // color: "white",
-        // backgroundColor: "#3e5f82",
-    },
+
     backButton: {},
 }));
 
@@ -387,13 +382,16 @@ export const TermsOfServiceDialog = ({ onClose }: ITermsOfServiceDialog) => {
                     nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
         </Typography> */}
                 <Typography>
-                    A digital copy of these terms can be found at <a href="https://www.termsandconditionsgenerator.com/live.php?token=vLs9X3tLNJpcdLzUDFtEbGXnXmo41VxE" />
+                    A digital copy of these terms can be found{" "}
+                    <a target="_blank" href="https://www.termsandconditionsgenerator.com/live.php?token=vLs9X3tLNJpcdLzUDFtEbGXnXmo41VxE">
+                        here
+                    </a>
                 </Typography>
             </DialogContent>
             <DialogActions className={classes.dialogActions}>
                 {/* <ColoredButton classes={classes.backButton} onClick={onClose} variant="contained" color="secondary"> */}
                 <Button onClick={onClose} variant="outlined">
-                    <ArrowBackIcon onClick={onClose} className={classes.backIcon} />
+                    <ArrowBackIcon onClick={onClose} />
                     Back
                 </Button>
                 {/* </ColoredButton> */}

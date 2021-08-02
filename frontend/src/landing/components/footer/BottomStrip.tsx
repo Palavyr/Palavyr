@@ -1,14 +1,11 @@
 import React from "react";
 import { socialIcons } from "./SocialIcons";
-import { Grid, Box, IconButton, makeStyles } from "@material-ui/core";
-import { Align } from "dashboard/layouts/positioning/Align";
+import { Box, IconButton, makeStyles, Typography } from "@material-ui/core";
+import { FooterWrapper } from "./FooterWrapper";
+import OctopusLogo from "./octopusLogo.svg";
+import classNames from "classnames";
 
 const useStylesBottom = makeStyles((theme) => ({
-    bottom: {
-        height: "100px",
-        backgroundColor: "#0D1C27",
-        padding: " 2rem",
-    },
     socialIcon: {
         fill: theme.palette.common.white,
         backgroundColor: "#33383b",
@@ -17,20 +14,30 @@ const useStylesBottom = makeStyles((theme) => ({
             backgroundColor: theme.palette.primary.light,
         },
     },
+    icons: {
+        display: "flex",
+    },
+    headRoom: {
+        marginTop: "1rem",
+    },
 }));
 
 export const BottomStrip = () => {
     const cls = useStylesBottom();
 
     return (
-        <div className={cls.bottom}>
-            <Align >
-                {/* <Grid container>
-                    <Grid item xs={6} md={6} lg={4}> */}
-                <Box display="flex">© Palavyr.com 2021</Box>
-                {/* </Grid> */}
-                {/* <Grid item xs={6} md={6} lg={4}>
-                        <Box display="flex"> */}
+        <FooterWrapper backgroundColor="#0D1C27">
+            <div className={cls.headRoom}>
+                <Typography gutterBottom display="inline">
+                    info.palavyr@gmail.com
+                </Typography>
+                <Typography>© Palavyr.com 2021</Typography>
+            </div>
+            <span className={classNames(cls.icons, cls.headRoom)}>
+                <div style={{ display: "inline-block", marginRight: "2rem" }}>
+                    <Typography align="center">Deployed with</Typography>
+                    <OctopusLogo style={{ cursor: "pointer" }} onClick={() => window.open("https://www.octopus.com", "_blank")} />
+                </div>
                 {socialIcons.map((socialIcon, index) => (
                     <Box key={index} mr={index !== socialIcons.length - 1 ? 1 : 0}>
                         <IconButton aria-label={socialIcon.label} className={cls.socialIcon} href={socialIcon.href}>
@@ -38,10 +45,7 @@ export const BottomStrip = () => {
                         </IconButton>
                     </Box>
                 ))}
-                {/* </Box>
-                    </Grid>
-                </Grid> */}
-            </Align>
-        </div>
+            </span>
+        </FooterWrapper>
     );
 };

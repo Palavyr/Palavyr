@@ -1,6 +1,5 @@
 import React from "react";
 import { AppBar, Toolbar, Typography, Button, makeStyles } from "@material-ui/core";
-import { menuItems } from "./NavMenuItems";
 import { Link, useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { Align } from "dashboard/layouts/positioning/Align";

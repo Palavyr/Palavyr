@@ -11,6 +11,7 @@ import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { Footer } from "@landing/components/footer/Footer";
 import { Sliver } from "@landing/components/sliver/Sliver";
 import { VideoMap } from "@Palavyr-Types";
+import { BottomStrip } from "@landing/components/footer/BottomStrip";
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -127,7 +128,8 @@ export const TutorialPage = () => {
                 );
             })}
             <Sliver />
-            <Footer />
+            <Footer openLoginDialog={openLoginDialog} openRegisterDialog={openRegisterDialog} openTermsDialog={openTermsDialog} />
+            <BottomStrip />
         </div>
     );
 };
