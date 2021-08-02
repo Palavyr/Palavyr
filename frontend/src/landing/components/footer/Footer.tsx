@@ -4,8 +4,10 @@ import { IHaveWidth } from "@Palavyr-Types";
 import transitions from "@material-ui/core/styles/transitions";
 import { FooterWrapper } from "./FooterWrapper";
 import { Link, useHistory } from "react-router-dom";
-import classNames from "classnames";
 import { BrandName } from "@landing/branding/BrandName";
+import { FooterListTitle } from "./FooterListTitle";
+import { FooterListItem } from "./FooterListItem";
+import { FooterUList } from "./FooterUList";
 
 const useStyles = makeStyles((theme) => ({
     // link: {
@@ -27,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     },
     items: {
         marginTop: "3rem",
-        marginBottom: "3rem",
+        marginBottom: "2rem",
         width: "100%",
         display: "flex",
         justifyContent: "space-around",
@@ -67,49 +69,35 @@ export const Footer = withWidth()(({ width, openLoginDialog, openRegisterDialog,
                 <Typography variant="h6">The no-code platform for building chatbots</Typography>
             </div>
             <div className={cls.items}>
-                <ul>
-                    <li>
-                        <Typography display="block" variant="h5">
-                            Website
-                        </Typography>
-                    </li>
-                    <li>
-                        <Typography variant="body1" onClick={openLoginDialog} className={cls.menuButtonText}>
-                            Login
-                        </Typography>
-                    </li>
-                    <li>
-                        <Typography variant="body1" onClick={openRegisterDialog} className={cls.menuButtonText}>
-                            Create new account
-                        </Typography>
-                    </li>
-                </ul>
-                <ul>
-                    <li>
-                        <Typography variant="h5">Learn Palavyr</Typography>
-                    </li>
-                    <li>
+                <FooterUList>
+                    <FooterListTitle>Website</FooterListTitle>
+                    <FooterListItem onClick={openLoginDialog}>Login</FooterListItem>
+                    <FooterListItem onClick={openRegisterDialog}>Create new account</FooterListItem>
+                </FooterUList>
+
+                <FooterUList>
+                    <FooterListTitle>Learn Palavyr</FooterListTitle>
+                    <FooterListItem>
                         <Link key="Tutorial" to="/tutorial" className={cls.noDecoration}>
                             <Typography variant="body1" className={cls.menuButtonText}>
                                 Tutorial Series
                             </Typography>
                         </Link>
-                    </li>
-                </ul>
-                <ul>
-                    <li>
-                        <Typography variant="h5">Company</Typography>
-                    </li>
-                    <li>Team</li>
-                    <li>Our Story</li>
-                    <li>Blog</li>
-                    <li>
+                    </FooterListItem>
+                </FooterUList>
+
+                <FooterUList>
+                    <FooterListTitle>Company</FooterListTitle>
+                    <FooterListItem>Team</FooterListItem>
+                    <FooterListItem>Our Story</FooterListItem>
+                    <FooterListItem>Blog</FooterListItem>
+                    <FooterListItem>
                         <Typography variant="body1" onClick={openTermsDialog} className={cls.menuButtonText}>
                             Terms of Use
                         </Typography>
-                    </li>
-                    <li>Privacy Policy</li>
-                </ul>
+                    </FooterListItem>
+                    <FooterListItem>Privacy Policy</FooterListItem>
+                </FooterUList>
             </div>
         </FooterWrapper>
     );
