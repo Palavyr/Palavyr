@@ -3,6 +3,7 @@ import { AppBar, Toolbar, Typography, Button, makeStyles } from "@material-ui/co
 import { Link, useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { Align } from "dashboard/layouts/positioning/Align";
+import { BrandName } from "@landing/branding/BrandName";
 
 export interface INavBar {
     openRegisterDialog: any;
@@ -44,27 +45,9 @@ const useStyles = makeStyles((theme) => ({
             color: theme.palette.success.main,
         },
     },
-    brandText: {
-        fontSize: 64,
-        fontWeight: "bolder",
-        color: theme.palette.success.main,
-        cursor: "pointer",
-    },
+
     noDecoration: {
         textDecoration: "none !important",
-    },
-    logowrap: {
-        display: "flex",
-        flexDirection: "row",
-        verticalAlign: "middle",
-    },
-    logotypography: {
-        display: "flex",
-        flexDirection: "row",
-        verticalAlign: "middle",
-        border: `3px solid ${theme.palette.success.light}`,
-        padding: "0.4rem",
-        borderRadius: "12px",
     },
     navButtons: {
         display: "flex",
@@ -81,13 +64,7 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog }: INavBar) => {
     return (
         <AppBar position="fixed" className={cls.appBar} color="transparent" classes={{ root: cls.clear }}>
             <Toolbar className={cls.toolbar}>
-                <div className={cls.logowrap}>
-                    <div className={cls.logotypography} onClick={() => history.push("/")}>
-                        <Typography variant="body2" className={cls.brandText} display="inline">
-                            Palavyr
-                        </Typography>
-                    </div>
-                </div>
+                <BrandName />
                 <div className={cls.navButtons}>
                     <Align verticalCenter>
                         <Button disableElevation variant="outlined" size="small" onClick={openLoginDialog} className={classNames(cls.menuButtonText, cls.loginButton)} key="Login">

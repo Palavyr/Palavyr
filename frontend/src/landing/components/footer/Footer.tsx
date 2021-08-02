@@ -5,6 +5,7 @@ import transitions from "@material-ui/core/styles/transitions";
 import { FooterWrapper } from "./FooterWrapper";
 import { Link, useHistory } from "react-router-dom";
 import classNames from "classnames";
+import { BrandName } from "@landing/branding/BrandName";
 
 const useStyles = makeStyles((theme) => ({
     // link: {
@@ -62,9 +63,7 @@ export const Footer = withWidth()(({ width, openLoginDialog, openRegisterDialog,
     return (
         <FooterWrapper backgroundColor={theme.palette.primary.main}>
             <div className={cls.title2}>
-                <Typography display="inline" variant="h3">
-                    Palavyr
-                </Typography>
+                <BrandName />
                 <Typography variant="h6">The no-code platform for building chatbots</Typography>
             </div>
             <div className={cls.items}>
