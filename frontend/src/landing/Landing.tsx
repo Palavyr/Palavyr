@@ -20,6 +20,7 @@ import { IFrame } from "dashboard/content/demo/IFrame";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { YellowStrip } from "@common/components/YellowStrip";
 import { TitleContent } from "./components/TitleContent";
+import { BottomStrip } from "./components/footer/BottomStrip";
 
 AOS.init({
     duration: 1000,
@@ -167,6 +168,7 @@ export const LandingPage = () => {
             <PricingSection />
             <Sliver />
             <Footer />
+            <BottomStrip />
         </div>
     );
 };
