@@ -2,12 +2,12 @@ import React, { useState, useCallback, Fragment } from "react";
 
 import { RegisterDialog } from "@landing/register/RegisterDialog";
 import { DialogTypes } from "./dialogTypes";
-import { TermsOfServiceDialog } from "legal/TermsOfService";
 import { LoginDialog } from "@landing/login/LoginDialog";
 import { ChangePasswordDialog } from "@common/components/borrowed/ChangePasswordDialog";
 import { ModalBackdrop } from "@common/components/borrowed/ModalBackdrop";
 import { FormStatusTypes } from "@Palavyr-Types";
 import { CHANGE_PASSWORD, LOGIN, REGISTER, TERMS_OF_SERVICE } from "@constants";
+import { TermsOfServiceDialog } from "legal/terms-of-use/TermsOfServiceDialog";
 
 export interface ILandingPageDialogSelector {
     dialogOpen: DialogTypes;

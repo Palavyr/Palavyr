@@ -50,8 +50,6 @@ import { ChangeImageLogoHelp } from "dashboard/content/help/ChangeImageLogoHelp"
 import { SettingsContent } from "dashboard/content/settings/SettingsContent";
 import { DeleteAccount } from "dashboard/content/settings/account/DeleteAccount";
 import { DeleteAccountHelp } from "dashboard/content/help/DeleteAccountHelp";
-import { TermsOfServiceDialog } from "legal/TermsOfService";
-import { PrivacyPolicy } from "legal/PrivacyPolicy";
 import { ConversationReview } from "dashboard/content/enquiries/ConversationReview";
 import { ConversationReviewHelp } from "dashboard/content/help/ConversationReviewHelp";
 import { ConfirmYourResetLink } from "@landing/components/passwordReset/ConfirmYourResetLink";
@@ -68,6 +66,8 @@ import { PleaseSubscribe } from "dashboard/content/purchse/pleaseSubscribe/Pleas
 import { PleaseSubscribeHelp } from "dashboard/content/help/PleaseSubscribeHelp";
 import { StructuredConvoTree } from "dashboard/content/responseConfiguration/conversation/PalavyrConfiguration";
 import { TutorialPage } from "@landing/tutorialPage/TutorialPage";
+import { TermsOfUsePage } from "legal/terms-of-use/TermsOfUsePage";
+import { PrivacyPolicyPage } from "legal/privacy-policy/PrivacyPolicy";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -91,8 +91,8 @@ export const Routes = () => {
             <Switch>
                 <Route exact path="/" component={LandingPage} />
                 <Route exact path="/tutorial" component={TutorialPage} />
-                <Route exact path="/privacy-policy" component={PrivacyPolicy} />
-                <Route exact path="/terms-of-service" component={TermsOfServiceDialog} />
+                <Route exact path="/privacy-policy" component={PrivacyPolicyPage} />
+                <Route exact path="/terms-of-use" component={TermsOfUsePage} />
                 <Route exact path={RESET_PASSWORD_VERIFY} component={ConfirmYourResetLink} />
                 <Route exact path={RESET_PASSWORD_FORM} component={RenderPasswordDialog} />
                 <Route exact path={RESET_PASSWORD_SUCCESS} component={RenderResetSuccess} />

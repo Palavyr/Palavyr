@@ -10,17 +10,14 @@ namespace Palavyr.API.Controllers.Conversation.Images
     {
         private readonly IConfiguration configuration;
         private readonly ILinkCreator linkCreator;
-        private readonly IS3KeyResolver s3KeyResolver;
 
         public GetImageFileLinkController(
             IConfiguration configuration,
-            ILinkCreator linkCreator,
-            IS3KeyResolver s3KeyResolver
+            ILinkCreator linkCreator
         )
         {
             this.configuration = configuration;
             this.linkCreator = linkCreator;
-            this.s3KeyResolver = s3KeyResolver;
         }
 
         [HttpPost("images/link")]

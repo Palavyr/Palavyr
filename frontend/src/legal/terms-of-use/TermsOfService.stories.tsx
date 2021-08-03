@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Meta } from '@storybook/react/types-6-0';
-import { TermsOfServiceDialog, ITermsOfServiceDialog } from './TermsOfService';
+import { TermsOfServiceDialog, ITermsOfServiceDialog } from './TermsOfServiceDialog';
 
 
 export default {

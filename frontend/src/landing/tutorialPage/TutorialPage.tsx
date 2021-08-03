@@ -1,17 +1,9 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { LandingPageDialogSelector } from "@landing/components/dialogSelector/LandingPageDialogSelector";
-import { Header } from "@landing/components/header/Header";
-import { GreenStrip } from "@landing/components/sliver/ThinStrip";
+import React, { useState, useEffect } from "react";
 import { TitleContent } from "@landing/components/TitleContent";
 import { Card, makeStyles, Typography } from "@material-ui/core";
-import { CHANGE_PASSWORD, REGISTER, TERMS_OF_SERVICE } from "@constants";
-import { DialogTypes } from "@landing/components/dialogSelector/dialogTypes";
-import { YellowStrip } from "@common/components/YellowStrip";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { Footer } from "@landing/components/footer/Footer";
-import { Sliver } from "@landing/components/sliver/Sliver";
 import { VideoMap } from "@Palavyr-Types";
-import { BottomStrip } from "@landing/components/footer/BottomStrip";
+import { LandingWrapper } from "@landing/components/LandingWrapper";
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -65,40 +57,9 @@ export const TutorialPage = () => {
 
     const cls = useStyles();
 
-    const [dialogOpen, setDialogOpen] = useState<DialogTypes>(null);
-
-    const openLoginDialog = useCallback(() => {
-        setDialogOpen("login");
-    }, [setDialogOpen]);
-
-    const closeDialog = useCallback(() => {
-        setDialogOpen(null);
-    }, [setDialogOpen]);
-
-    const openRegisterDialog = useCallback(() => {
-        setDialogOpen(REGISTER);
-    }, [setDialogOpen]);
-
-    const openChangePasswordDialog = useCallback(() => {
-        setDialogOpen(CHANGE_PASSWORD);
-    }, [setDialogOpen]);
-
-    const openTermsDialog = useCallback(() => {
-        setDialogOpen(TERMS_OF_SERVICE);
-    }, [setDialogOpen]);
-
     return (
-        <div className={cls.wrapper}>
-            <LandingPageDialogSelector
-                openLoginDialog={openLoginDialog}
-                dialogOpen={dialogOpen}
-                onClose={closeDialog}
-                openTermsDialog={openTermsDialog}
-                openRegisterDialog={openRegisterDialog}
-                openChangePasswordDialog={openChangePasswordDialog}
-            />
-            <YellowStrip />
-            <Header openRegisterDialog={openRegisterDialog} openLoginDialog={openLoginDialog}>
+        <LandingWrapper
+            TitleContent={
                 <TitleContent
                     title={
                         <Typography align="center" variant="h2" className={cls.primaryText}>
@@ -111,26 +72,26 @@ export const TutorialPage = () => {
                         </Typography>
                     }
                 />
-            </Header>
-            <GreenStrip />
-            {videoMap.map((video: VideoMap) => {
-                return (
-                    <>
-                        <div className={cls.contentPadding}>
-                            <VideoTitle title={video.title} />
-                            <span className={cls.mediaSpan}>
-                                <Card className={cls.media}>
-                                    <iframe style={{ height: "100%", width: "100%" }} src={createVideoUrl(video.videoId)} allowFullScreen></iframe>
-                                </Card>
-                            </span>
-                        </div>
-                    </>
-                );
-            })}
-            <Sliver />
-            <Footer openLoginDialog={openLoginDialog} openRegisterDialog={openRegisterDialog} openTermsDialog={openTermsDialog} />
-            <BottomStrip />
-        </div>
+            }
+            MainContent={
+                <>
+                    {videoMap.map((video: VideoMap) => {
+                        return (
+                            <>
+                                <div className={cls.contentPadding}>
+                                    <VideoTitle title={video.title} />
+                                    <span className={cls.mediaSpan}>
+                                        <Card className={cls.media}>
+                                            <iframe style={{ height: "100%", width: "100%" }} src={createVideoUrl(video.videoId)} allowFullScreen></iframe>
+                                        </Card>
+                                    </span>
+                                </div>
+                            </>
+                        );
+                    })}
+                </>
+            }
+        ></LandingWrapper>
     );
 };
 
