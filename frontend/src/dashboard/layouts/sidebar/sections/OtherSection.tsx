@@ -51,7 +51,7 @@ export const OtherSection = memo(({ isActive }: OtherSectionProps) => {
         <List>
             <SidebarSectionHeader title="Other" onClick={() => setOtherOpen(!otherOpen)} currentState={otherOpen} />
             <Collapse in={otherOpen} timeout="auto" unmountOnExit>
-                <SidebarLinkItem text="Get Started" isActive={isActive} onClick={getStartedOnClick} IconComponent={<PlayArrowIcon className={cls.icon} />} />
+                <SidebarLinkItem text="Quick Start Guide" isActive={isActive} onClick={getStartedOnClick} IconComponent={<PlayArrowIcon className={cls.icon} />} />
                 <SidebarLinkItem text="Settings" isActive={isActive} onClick={generalSettingsOnClick} IconComponent={<SettingsIcon className={cls.icon} />} />
                 <SidebarLinkItem text="Get Widget" isActive={isActive} onClick={getWidgetOnClick} IconComponent={<GetAppIcon className={cls.icon} />} />
             </Collapse>

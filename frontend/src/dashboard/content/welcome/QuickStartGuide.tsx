@@ -4,12 +4,13 @@ import classNames from "classnames";
 import { useHistory } from "react-router-dom";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { OnboardingTodo } from "./OnboardingTodo/OnboardingTodo";
-import { useContext, useState } from "react";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { useContext, useEffect, useState } from "react";
 import { TodosAsBoolean } from "@Palavyr-Types";
 import { allClear, convertTodos } from "./OnboardingTodo/onboardingUtils";
 import { SessionStorage } from "localStorage/sessionStorage";
 import { CacheIds } from "@api-client/AxiosClient";
+import { Steps, Hints } from "intro.js-react";
+import { IntroSteps } from "./IntroSteps";
 
 const useStyles = makeStyles((theme) => ({
     background: {
@@ -76,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const WelcomeToTheDashboard = () => {
+export const QuickStartGuide = () => {
     const cls = useStyles();
     const history = useHistory();
     const { repository } = useContext(DashboardContext);
@@ -106,7 +107,7 @@ export const WelcomeToTheDashboard = () => {
         setTodos(todosAsBoolean);
     }, []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         SessionStorage.clearCacheValue(CacheIds.Enquiries);
         loadTodos();
         setLoading(false);
@@ -118,33 +119,27 @@ export const WelcomeToTheDashboard = () => {
                 {todos && !allClear(todos) && <OnboardingTodo todos={todos} />}
                 <Divider />
                 <div className={cls.headCard}>
-                    <div style={{ borderBottom: "2px solid black", width: "50%" }}>
+                    <div className={classNames("quick-start-guide")} style={{ borderBottom: "2px solid black", width: "50%" }}>
                         <Typography variant="h3" style={{ paddingTop: "2rem", paddingBottom: "2rem" }}>
-                            Getting Started
+                            Quick Start Guide
                         </Typography>
                         <Typography style={{ paddingTop: "2rem", paddingBottom: "2rem" }}>Follow the steps to learn about how Palavyr works and what you should do to get started.</Typography>
                     </div>
                 </div>
-                <div className={cls.sectionDiv}>
+                <div className={classNames(cls.sectionDiv)}>
                     <Card className={classNames(cls.card, cls.highlight, cls.clickable)} onClick={() => checkAreaCount()}>
                         <Typography gutterBottom variant="h4">
-                            Click to create your first area
+                            1. Click to create your first area
                         </Typography>
                         <Typography variant="body1" align="left" gutterBottom>
                             You can check out the default area to see how you might use Palavyr. Be sure to disable or delete this area before you go live with the widget.
-                        </Typography>
-                        <Typography variant="body1" align="left" gutterBottom>
-                            Each area has two names - a secret name you will set for the dashboard, and a public name that will be presented in the widget. These are set in the area-specific settings.
                         </Typography>
                     </Card>
                 </div>
                 <div className={cls.sectionDiv}>
                     <Card className={cls.card}>
                         <Typography gutterBottom variant="h4">
-                            Configure your new area
-                        </Typography>
-                        <Typography align="left" gutterBottom>
-                            Configuring an area consists of providing an email template, configuring your fees, information, and attachments, and finally configuring a Palavyr (i.e. a chat conversation).
+                            2. Configure your new area
                         </Typography>
                         <Typography align="left">In your area, follow the tabs in the order they are provided (from left to right). At the end, you can preview your response PDF.</Typography>
                     </Card>
@@ -152,14 +147,10 @@ export const WelcomeToTheDashboard = () => {
                 <div className={cls.sectionDiv}>
                     <Card className={classNames(cls.card, cls.highlight, cls.clickable)} onClick={() => history.push("/dashboard/getwidget")}>
                         <Typography gutterBottom variant="h4">
-                            Add the widget to your site
+                            3. Add the widget to your site
                         </Typography>
                         <Typography variant="body1" align="left" gutterBottom>
                             When you are ready to use your configured widget, simple paste the provided code into your website's html.
-                        </Typography>
-                        <Typography variant="body1" align="left" gutterBottom>
-                            A much more simple widget API is currently under development and will be available soon! This will save you the hassle of writing any code for your widget's behavior like popping up
-                            or out from the side!
                         </Typography>
                     </Card>
                 </div>

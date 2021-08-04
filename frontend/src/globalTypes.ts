@@ -888,6 +888,7 @@ export interface IDashboardContext {
     panelErrors: ErrorResponse | null;
     setPanelErrors: SetState<ErrorResponse | null>;
     repository: PalavyrRepository;
+    areaNameDetails: AreaNameDetails;
 }
 
 export type ErrorResponse = {

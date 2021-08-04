@@ -9,7 +9,7 @@ import { Subscribe } from "dashboard/content/subscribe/Subscribe";
 import { SubscribeHelp } from "dashboard/content/help/SubscribeHelp";
 import { Enquires } from "dashboard/content/enquiries/Enquiries";
 import { GetWidget } from "dashboard/content/getWidget/GetWidget";
-import { WelcomeToTheDashboard } from "dashboard/content/welcome/WelcomeToTheDashboard";
+import { QuickStartGuide } from "dashboard/content/welcome/QuickStartGuide";
 import { ConversationHelp } from "dashboard/content/help/ConversationHelp";
 import { EmailHelp } from "dashboard/content/help/EmailHelp";
 import { ResponseConfigurationHelp } from "dashboard/content/help/ResponseConfigurationHelp";
@@ -24,7 +24,7 @@ import { GetWidgetHelp } from "dashboard/content/help/GetWidgetHelp";
 import { EnquiriesHelp } from "dashboard/content/help/EnquiriesHelp";
 import { PurchaseHelp } from "dashboard/content/help/PurchaseHelp";
 import { SuccessHelp } from "dashboard/content/help/SuccessHelp";
-import { WelcomeToTheDashboardHelp } from "dashboard/content/help/WelcomeToTheDashboardHelp";
+import { QuickStartGuideHelp } from "dashboard/content/help/QuickStartGuideHelp";
 import { CancelHelp } from "dashboard/content/help/CancelHelp";
 import { PleaseConfirmYourEmailHelp } from "dashboard/content/help/PleaseConfirmYourEmailHelp";
 import { AuthContext } from "dashboard/layouts/DashboardContext";
@@ -68,6 +68,8 @@ import { StructuredConvoTree } from "dashboard/content/responseConfiguration/con
 import { TutorialPage } from "@landing/tutorialPage/TutorialPage";
 import { TermsOfUsePage } from "legal/terms-of-use/TermsOfUsePage";
 import { PrivacyPolicyPage } from "legal/privacy-policy/PrivacyPolicy";
+import { DataDashboard } from "dashboard/content/dataDashboard/DataDashboard";
+import { DataDashboardHelp } from "dashboard/content/help/DataDashboardHelp";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -97,8 +99,10 @@ export const Routes = () => {
                 <Route exact path={RESET_PASSWORD_FORM} component={RenderPasswordDialog} />
                 <Route exact path={RESET_PASSWORD_SUCCESS} component={RenderResetSuccess} />
 
-                <ProtectedRoute exact path="/dashboard" component={withLayout(WelcomeToTheDashboard, <WelcomeToTheDashboardHelp />)} />
-                <ProtectedRoute exact path="/dashboard/welcome" component={withLayout(WelcomeToTheDashboard, <WelcomeToTheDashboardHelp />)} />
+                <ProtectedRoute exact path="/dashboard" component={withLayout(QuickStartGuide, <QuickStartGuideHelp />)} />
+                <ProtectedRoute exact path="/dashboard/welcome" component={withLayout(QuickStartGuide, <QuickStartGuideHelp />)} />
+
+                <ProtectedRoute exact path="/dashboard/data" component={withLayout(DataDashboard, <DataDashboardHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/email/:areaIdentifier" component={withLayout(withAreaTabs(<EmailConfiguration />), <EmailHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/response/:areaIdentifier" component={withLayout(withAreaTabs(<ResponseConfiguration />), <ResponseConfigurationHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/attachments/:areaIdentifier" component={withLayout(withAreaTabs(<AttachmentConfiguration />), <AttachmentsHelp />)} />

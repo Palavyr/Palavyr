@@ -6,7 +6,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
-const { TypeScriptLoaderRule, BabelLoaderRule, StylesLoader, URLLoaderRule, SVGRLoader } = require("./webpack/rules");
+const { TypeScriptLoaderRule, BabelLoaderRule, StylesLoader, URLLoaderRule, SVGRLoader, ScssLoaderRule } = require("./webpack/rules");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 
@@ -55,6 +55,7 @@ module.exports = (ENV) => {
                 SVGRLoader(),
                 BabelLoaderRule(), // IN USE
                 URLLoaderRule(), // IN USE
+                ScssLoaderRule()
                 //new rule here
             ],
         },

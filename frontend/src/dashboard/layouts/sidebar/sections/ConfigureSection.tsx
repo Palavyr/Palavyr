@@ -9,6 +9,8 @@ import { useHistory } from "react-router-dom";
 import { AreaLinkItem } from "./sectionComponents/AreaLinkItem";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { AreaNameDetail, AreaNameDetails } from "@Palavyr-Types";
+import BarChartIcon from "@material-ui/icons/BarChart";
+import TrendingUpIcon from "@material-ui/icons/TrendingUp";
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -34,8 +36,14 @@ export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails }
         history.push("/dashboard/set-areas");
     };
 
+    const dashboardOnClick = () => {
+        setViewName("Data Dashboard");
+        history.push("/dashboard/data");
+    };
+
     return (
         <List>
+            <SidebarLinkItem text="Dashboard" isActive={isActive} onClick={dashboardOnClick} IconComponent={<TrendingUpIcon className={cls.icon} />} />
             <SidebarSectionHeader title="Configure" onClick={() => setConfigureOpen(!configureOpen)} currentState={configureOpen} />
             <SidebarLinkItem text="Add New Area" isActive={isActive} onClick={checkAreaCount} IconComponent={<AddCircleOutlineIcon className={cls.icon} />} />
             <SidebarLinkItem text="Enable / Disable Areas" isActive={isActive} onClick={enableAreasOnClick} IconComponent={<PowerSettingsNewIcon className={cls.icon} />} />
