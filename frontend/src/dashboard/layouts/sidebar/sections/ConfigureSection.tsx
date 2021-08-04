@@ -11,6 +11,7 @@ import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { AreaNameDetail, AreaNameDetails } from "@Palavyr-Types";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import TrendingUpIcon from "@material-ui/icons/TrendingUp";
+import TrendingUp from "@material-ui/icons/TrendingUp";
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -43,7 +44,9 @@ export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails }
 
     return (
         <List>
-            <SidebarLinkItem text="Dashboard" isActive={isActive} onClick={dashboardOnClick} IconComponent={<TrendingUpIcon className={cls.icon} />} />
+            <SidebarLinkItem text="Activity" primaryTypographyProps={{ variant: "h5" }} isActive={isActive} onClick={dashboardOnClick}>
+                <TrendingUpIcon />
+            </SidebarLinkItem>
             <SidebarSectionHeader title="Configure" onClick={() => setConfigureOpen(!configureOpen)} currentState={configureOpen} />
             <SidebarLinkItem text="Add New Area" isActive={isActive} onClick={checkAreaCount} IconComponent={<AddCircleOutlineIcon className={cls.icon} />} />
             <SidebarLinkItem text="Enable / Disable Areas" isActive={isActive} onClick={enableAreasOnClick} IconComponent={<PowerSettingsNewIcon className={cls.icon} />} />

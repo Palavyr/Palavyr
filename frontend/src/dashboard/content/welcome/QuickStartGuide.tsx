@@ -9,8 +9,6 @@ import { TodosAsBoolean } from "@Palavyr-Types";
 import { allClear, convertTodos } from "./OnboardingTodo/onboardingUtils";
 import { SessionStorage } from "localStorage/sessionStorage";
 import { CacheIds } from "@api-client/AxiosClient";
-import { Steps, Hints } from "intro.js-react";
-import { IntroSteps } from "./IntroSteps";
 
 const useStyles = makeStyles((theme) => ({
     background: {

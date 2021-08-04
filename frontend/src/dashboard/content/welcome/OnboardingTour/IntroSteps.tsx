@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const IntroSteps = () => {
-    const [stepsEnabled, setStepsEnabled] = useState<boolean>(true);
+    const [stepsEnabled, setStepsEnabled] = useState<boolean>(false);
     const [currentStep, setCurrentStep] = useState<number>(1);
     const cls = useStyles();
     const theme = useTheme();

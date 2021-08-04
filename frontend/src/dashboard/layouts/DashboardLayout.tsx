@@ -21,7 +21,7 @@ import { redirectToHomeWhenSessionNotEstablished } from "@api-client/clientUtils
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { ApiErrors } from "./Errors/ApiErrors";
 import { Loaders } from "@api-client/Loaders";
-import { IntroSteps } from "dashboard/content/welcome/IntroSteps";
+import { IntroSteps } from "dashboard/content/welcome/OnboardingTour/IntroSteps";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {

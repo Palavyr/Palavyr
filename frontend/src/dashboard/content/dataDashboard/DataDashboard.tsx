@@ -1,4 +1,4 @@
-import { makeStyles, Grid, Card, Typography } from "@material-ui/core";
+import { makeStyles, Grid, Card } from "@material-ui/core";
 import React from "react";
 import { EnquiryRadarPlot } from "./EnquiryRadarPlot";
 
@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme) => ({
     },
     plotCard: {
         margin: "2rem",
+        padding: "2rem",
     },
 }));
 
@@ -19,9 +20,6 @@ export const DataDashboard = () => {
             <Grid>
                 <Grid>
                     <Card className={cls.plotCard} style={{ width: "500px", height: "500px" }}>
-                        <Typography align="center" gutterBottom>
-                            Radar Chart - Enquiries by Area
-                        </Typography>
                         <EnquiryRadarPlot />
                     </Card>
                 </Grid>
