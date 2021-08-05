@@ -13,6 +13,7 @@ import { AreaSettingsLoc, SetState } from "@Palavyr-Types";
 import { editorTourSteps } from "../welcome/OnboardingTour/tours/editorTour";
 import { IntroSteps } from "../welcome/OnboardingTour/IntroSteps";
 import classNames from "classnames";
+import Cookies from "js-cookie";
 
 export interface IAreaContent {
     children: JSX.Element[] | JSX.Element;
@@ -76,9 +77,24 @@ export const AreaContentInner = ({ setLoaded, children }: IAreaContentInner) => 
         history.push("/dashboard/confirm");
     }
 
+    const [editorTour, setEditorTour] = useState<boolean>(false);
+
+    useEffect(() => {
+        console.log(Cookies.get("editor-tour-cookie"));
+        if (Cookies.get("editor-tour-cookie") === undefined) {
+            setEditorTour(true);
+        }
+    }, []);
+
+    const editorTourOnBlur = () => {
+        Cookies.set("editor-tour-cookie", "", {
+            expires: 9999,
+        });
+    };
+
     return (
         <div className={cls.root}>
-            <IntroSteps initialize={true} steps={editorTourSteps} />
+            {editorTour && <IntroSteps initialize={editorTour} onBlur={editorTourOnBlur} steps={editorTourSteps} />}
             <AppBar position="static" className={cls.appbar}>
                 <Tabs className={"editor-tabs-tour"} centered value={tab}>
                     <Tab

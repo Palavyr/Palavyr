@@ -1,15 +1,15 @@
 import * as React from "react";
 import { makeStyles, Divider } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
-import { OnboardingTodo } from "./OnboardingTodo/OnboardingTodo";
+import { OnboardingTodo } from "../OnboardingTodo/OnboardingTodo";
 import { useContext, useEffect, useState } from "react";
 import { TodosAsBoolean } from "@Palavyr-Types";
-import { allClear, convertTodos } from "./OnboardingTodo/onboardingUtils";
+import { allClear, convertTodos } from "../OnboardingTodo/onboardingUtils";
 import { SessionStorage } from "localStorage/sessionStorage";
 import { CacheIds } from "@api-client/AxiosClient";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
-import { QuickStartCard } from "./quickStartGuide/QuickStartCard";
+import { QuickStartCard } from "./QuickStartCard";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     background: {
@@ -54,9 +54,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const QuickStartGuide = () => {
-    const { repository } = useContext(DashboardContext);
-
-    const { checkAreaCount } = React.useContext(DashboardContext);
+    const { repository, checkAreaCount } = useContext(DashboardContext);
+    const history = useHistory();
 
     const [todos, setTodos] = useState<TodosAsBoolean>();
     const [loading, setLoading] = useState<boolean>(true);
@@ -87,26 +86,25 @@ export const QuickStartGuide = () => {
         setLoading(false);
     }, []);
 
+    const sendToGetWidgetPage = () => {
+        history.push("/dashboard/getwidget");
+    };
+
     return (
         <>
             {todos && !allClear(todos) && <OnboardingTodo todos={todos} />}
             <Divider />
-            <AreaConfigurationHeader title="Quick Start Guide" subtitle="Follow the steps to learn about how Palavyr works and what you should do to get started" />
+            <AreaConfigurationHeader title="Quick Start Guide" subtitle="Follow the steps to learn about how Palavyr works and what you should do to get started." />
             <QuickStartCard
                 title="1. Click to create your first area"
                 content="You can check out the default area to see how you might use Palavyr. Be sure to disable or delete this area before you go live with the widget."
-                checkAreaCount={checkAreaCount}
+                onClick={checkAreaCount}
             />
-            <QuickStartCard
-                title="2. Configure your new area"
-                content="In your area, follow the tabs in the order they are provided (from left to right). At the end, you can preview your response PDF."
-                checkAreaCount={checkAreaCount}
-            />
-
+            <QuickStartCard title="2. Configure your new area" content="In your area, follow the tabs in the order they are provided (from left to right). At the end, you can preview your response PDF." />
             <QuickStartCard
                 title="3. Add the widget to your site"
-                content="When you are ready to use your configured widget, simple paste the provided code into your website's html."
-                checkAreaCount={checkAreaCount}
+                content="When you are ready to use your configured widget, simply paste the provided code into your website's html."
+                onClick={sendToGetWidgetPage}
             />
         </>
     );

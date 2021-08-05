@@ -23,6 +23,7 @@ import { ApiErrors } from "./Errors/ApiErrors";
 import { Loaders } from "@api-client/Loaders";
 import { IntroSteps } from "dashboard/content/welcome/OnboardingTour/IntroSteps";
 import { welcomeTourSteps } from "dashboard/content/welcome/OnboardingTour/tours/welcomeTour";
+import Cookies from "js-cookie";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
@@ -214,9 +215,23 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         linktext: "Subscriptions",
     };
 
+    const [welcomeTourActive, setWelcomeTourActive] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (Cookies.get("welcome-tour-cookie") === undefined) {
+            setWelcomeTourActive(true);
+        }
+    }, []);
+
+    const welcomeTourOnBlur = () => {
+        Cookies.set("welcome-tour-cookie", "", {
+            expires: 9999,
+        });
+    };
+
     return (
         <>
-            <IntroSteps initialize={false} steps={welcomeTourSteps} />
+            {welcomeTourActive && <IntroSteps initialize={welcomeTourActive} steps={welcomeTourSteps} onBlur={welcomeTourOnBlur} />}
             <DashboardContext.Provider
                 value={{
                     accountTypeNeedsPassword,

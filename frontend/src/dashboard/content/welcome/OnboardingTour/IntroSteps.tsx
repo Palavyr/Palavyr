@@ -7,6 +7,7 @@ import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 export interface IIntroSteps {
     steps: ReactourStep[];
     initialize: boolean;
+    onBlur(): void;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -17,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const IntroSteps = ({ steps, initialize = true }: IIntroSteps) => {
+export const IntroSteps = ({ steps, onBlur, initialize = true }: IIntroSteps) => {
     const [stepsEnabled, setStepsEnabled] = useState<boolean>(false);
     const [currentStep, setCurrentStep] = useState<number>(1);
     const cls = useStyles();
@@ -31,6 +32,7 @@ export const IntroSteps = ({ steps, initialize = true }: IIntroSteps) => {
     return (
         <Fade>
             <Tour
+                onBeforeClose={onBlur}
                 getCurrentStep={(curr) => setCurrentStep(curr)}
                 className={cls.tour}
                 accentColor={theme.palette.primary.light}

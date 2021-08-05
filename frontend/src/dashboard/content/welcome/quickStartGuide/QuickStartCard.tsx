@@ -33,14 +33,14 @@ const useStyles = makeStyles((theme) => ({
 export interface QuickStartCardProps {
     title: string;
     content: string;
-    checkAreaCount(): void;
+    onClick?(): void;
 }
 
-export const QuickStartCard = ({ title, content, checkAreaCount }: QuickStartCardProps) => {
+export const QuickStartCard = ({ title, content, onClick = () => null }: QuickStartCardProps) => {
     const cls = useStyles();
     return (
         <div className={cls.sectionDiv}>
-            <Card className={classNames(cls.card, cls.highlight, cls.clickable)} onClick={() => checkAreaCount()}>
+            <Card className={classNames(cls.card, cls.highlight, cls.clickable)} onClick={() => onClick()}>
                 <Typography align="center" gutterBottom variant="h4">
                     {title}
                     <Divider variant="middle" />

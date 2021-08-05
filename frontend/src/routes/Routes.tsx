@@ -9,7 +9,7 @@ import { Subscribe } from "dashboard/content/subscribe/Subscribe";
 import { SubscribeHelp } from "dashboard/content/help/SubscribeHelp";
 import { Enquires } from "dashboard/content/enquiries/Enquiries";
 import { GetWidget } from "dashboard/content/getWidget/GetWidget";
-import { QuickStartGuide } from "dashboard/content/welcome/QuickStartGuide";
+import { QuickStartGuide } from "dashboard/content/welcome/quickStartGuide/QuickStartGuide";
 import { ConversationHelp } from "dashboard/content/help/ConversationHelp";
 import { EmailHelp } from "dashboard/content/help/EmailHelp";
 import { ResponseConfigurationHelp } from "dashboard/content/help/ResponseConfigurationHelp";

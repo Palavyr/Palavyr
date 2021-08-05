@@ -20,7 +20,7 @@ export const editorTourSteps: ReactourStep[] = [
         selector: ".response-editor-tab-tour",
     },
     {
-        content: <TourText>If you need to send attachments with this area, you can upload them here. These will automatically be sent with the email.</TourText>,
+        content: <TourText>If you need to send attachments with this area, you can upload them here. These will automatically be sent with the email. Again, this is optional.</TourText>,
         selector: ".attachments-editor-tab-tour",
     },
     {
@@ -28,19 +28,11 @@ export const editorTourSteps: ReactourStep[] = [
         selector: ".conversation-editor-tab-tour",
     },
     {
-        content: <TourText>The conversation editor is where you will design what your chat bot will say and what questions it will ask.</TourText>,
+        content: <TourText>The settings tab is where you can change the name of your area, set the sender email, as well as delete the area if you wish.</TourText>,
         selector: ".settings-tab-tour",
     },
     {
-        content: <TourText>When you've design your area, you can preview the response PDF before it gets sent out. Please note that some of the data used in the preview is fake data.</TourText>,
+        content: <TourText>When you've finished designing your area, you can preview the response PDF. Please note that some of the data used in the preview is fake data.</TourText>,
         selector: ".preview-tab-tour",
     },
-    // {
-    //     content: <TourText></TourText>,
-    //     selector: "."
-    // },
-    // {
-    //     content: <TourText></TourText>,
-    //     selector: "."
-    // },
 ];
