@@ -12,6 +12,7 @@ import { AreaNameDetail, AreaNameDetails } from "@Palavyr-Types";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import TrendingUpIcon from "@material-ui/icons/TrendingUp";
 import TrendingUp from "@material-ui/icons/TrendingUp";
+import classNames from "classnames";
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -37,20 +38,18 @@ export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails }
         history.push("/dashboard/set-areas");
     };
 
-    const dashboardOnClick = () => {
-        setViewName("Data Dashboard");
-        history.push("/dashboard/data");
-    };
-
     return (
-        <List>
-            <SidebarLinkItem text="Activity" primaryTypographyProps={{ variant: "h5" }} isActive={isActive} onClick={dashboardOnClick}>
-                <TrendingUpIcon />
-            </SidebarLinkItem>
+        <List className={classNames("configure-tour")}>
             <SidebarSectionHeader title="Configure" onClick={() => setConfigureOpen(!configureOpen)} currentState={configureOpen} />
-            <SidebarLinkItem text="Add New Area" isActive={isActive} onClick={checkAreaCount} IconComponent={<AddCircleOutlineIcon className={cls.icon} />} />
-            <SidebarLinkItem text="Enable / Disable Areas" isActive={isActive} onClick={enableAreasOnClick} IconComponent={<PowerSettingsNewIcon className={cls.icon} />} />
-            <Collapse in={configureOpen} timeout="auto" unmountOnExit>
+            <SidebarLinkItem className={"add-new-area-tour"} text="Add New Area" isActive={isActive} onClick={checkAreaCount} IconComponent={<AddCircleOutlineIcon className={cls.icon} />} />
+            <SidebarLinkItem
+                className={"enable-disable-area-tour"}
+                text="Enable / Disable Areas"
+                isActive={isActive}
+                onClick={enableAreasOnClick}
+                IconComponent={<PowerSettingsNewIcon className={cls.icon} />}
+            />
+            <Collapse className={"configure-your-area-tour"} in={configureOpen} timeout="auto" unmountOnExit>
                 <Divider />
                 {areaNameDetails.map(
                     (x: AreaNameDetail, index: number) =>

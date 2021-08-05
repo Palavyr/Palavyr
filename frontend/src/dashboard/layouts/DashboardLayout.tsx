@@ -5,7 +5,7 @@ import { SideBarMenu } from "./sidebar/SideBarMenu";
 import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
-import { cloneDeep } from "lodash";
+import { cloneDeep, truncate } from "lodash";
 import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRow, ErrorResponse, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DashboardHeader } from "./header/DashboardHeader";
@@ -22,6 +22,7 @@ import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { ApiErrors } from "./Errors/ApiErrors";
 import { Loaders } from "@api-client/Loaders";
 import { IntroSteps } from "dashboard/content/welcome/OnboardingTour/IntroSteps";
+import { welcomeTourSteps } from "dashboard/content/welcome/OnboardingTour/tours/welcomeTour";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
@@ -215,7 +216,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
     return (
         <>
-            <IntroSteps />
+            <IntroSteps initialize={false} steps={welcomeTourSteps} />
             <DashboardContext.Provider
                 value={{
                     accountTypeNeedsPassword,
@@ -259,7 +260,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
                         dashboardAreasLoading={dashboardAreasLoading}
                     />
                     <Drawer
-                        className={classNames(cls.menuDrawer)}
+                        className={classNames(cls.menuDrawer, "sidebar-tour")}
                         variant="persistent"
                         anchor="left"
                         open={open}

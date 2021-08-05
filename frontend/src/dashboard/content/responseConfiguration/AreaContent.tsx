@@ -10,6 +10,9 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
 import { AuthContext } from "dashboard/layouts/DashboardContext";
 import { AreaSettingsLoc, SetState } from "@Palavyr-Types";
+import { editorTourSteps } from "../welcome/OnboardingTour/tours/editorTour";
+import { IntroSteps } from "../welcome/OnboardingTour/IntroSteps";
+import classNames from "classnames";
 
 export interface IAreaContent {
     children: JSX.Element[] | JSX.Element;
@@ -75,14 +78,51 @@ export const AreaContentInner = ({ setLoaded, children }: IAreaContentInner) => 
 
     return (
         <div className={cls.root}>
+            <IntroSteps initialize={true} steps={editorTourSteps} />
             <AppBar position="static" className={cls.appbar}>
-                <Tabs centered value={tab} aria-label="simple tabs example">
-                    <Tab onClick={() => sendTo(AreaSettingsLoc.email)} className={cls.tabtext} icon={<SubjectIcon className={cls.icon} />} label="1. Email" {...areaTabProps(0)} />
-                    <Tab onClick={() => sendTo(AreaSettingsLoc.response)} className={cls.tabtext} icon={<FilterFramesIcon className={cls.icon} />} label="2. Response" {...areaTabProps(1)} />
-                    <Tab onClick={() => sendTo(AreaSettingsLoc.attachments)} className={cls.tabtext} icon={<PictureAsPdfIcon className={cls.icon} />} label="3. Attachments" {...areaTabProps(2)} />
-                    <Tab onClick={() => sendTo(AreaSettingsLoc.conversation)} className={cls.tabtext} icon={<AccountTreeIcon className={cls.icon} />} label="4. Conversation" {...areaTabProps(3)} />
-                    <Tab onClick={() => sendTo(AreaSettingsLoc.settings)} className={cls.tabtext} icon={<SettingsApplicationsIcon className={cls.icon} />} label="5. Settings" {...areaTabProps(4)} />
-                    <Tab onClick={() => sendTo(AreaSettingsLoc.preview)} className={cls.tabtext} icon={<VisibilityIcon className={cls.icon} />} label="6. Preview" {...areaTabProps(5)} />
+                <Tabs className={"editor-tabs-tour"} centered value={tab}>
+                    <Tab
+                        className={classNames("email-editor-tab-tour", cls.tabtext)}
+                        onClick={() => sendTo(AreaSettingsLoc.email)}
+                        icon={<SubjectIcon className={cls.icon} />}
+                        label="1. Email"
+                        {...areaTabProps(0)}
+                    />
+                    <Tab
+                        className={classNames("response-editor-tab-tour", cls.tabtext)}
+                        onClick={() => sendTo(AreaSettingsLoc.response)}
+                        icon={<FilterFramesIcon className={cls.icon} />}
+                        label="2. Response"
+                        {...areaTabProps(1)}
+                    />
+                    <Tab
+                        className={classNames("attachments-editor-tab-tour", cls.tabtext)}
+                        onClick={() => sendTo(AreaSettingsLoc.attachments)}
+                        icon={<PictureAsPdfIcon className={cls.icon} />}
+                        label="3. Attachments"
+                        {...areaTabProps(2)}
+                    />
+                    <Tab
+                        className={classNames("conversation-editor-tab-tour", cls.tabtext)}
+                        onClick={() => sendTo(AreaSettingsLoc.conversation)}
+                        icon={<AccountTreeIcon className={cls.icon} />}
+                        label="4. Conversation"
+                        {...areaTabProps(3)}
+                    />
+                    <Tab
+                        className={classNames("settings-tab-tour", cls.tabtext)}
+                        onClick={() => sendTo(AreaSettingsLoc.settings)}
+                        icon={<SettingsApplicationsIcon className={cls.icon} />}
+                        label="5. Settings"
+                        {...areaTabProps(4)}
+                    />
+                    <Tab
+                        className={classNames("preview-tab-tour", cls.tabtext)}
+                        onClick={() => sendTo(AreaSettingsLoc.preview)}
+                        icon={<VisibilityIcon className={cls.icon} />}
+                        label="6. Preview"
+                        {...areaTabProps(5)}
+                    />
                 </Tabs>
             </AppBar>
             {children}

@@ -148,7 +148,7 @@ export const DashboardHeader = ({ isLoading, dashboardAreasLoading, unseenNotifi
                         </Align>
                         <Align float="right" verticalCenter extraClassNames={cls.barItem}>
                             <Tooltip title="Unseen enquiries">
-                                <span className={cls.icon}>
+                                <span className={classNames(cls.icon, "check-enquiries-badge-sidebar-tour")}>
                                     <IconButton disabled={unseenNotifications === 0} onClick={() => history.push("/dashboard/enquiries")} className={cls.icon} edge="start" color="inherit">
                                         <Badge showZero={false} badgeContent={unseenNotifications} color="secondary">
                                             <NotificationsIcon />

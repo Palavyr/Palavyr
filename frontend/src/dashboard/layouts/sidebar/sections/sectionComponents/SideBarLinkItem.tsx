@@ -9,11 +9,12 @@ export interface SidebarLinkItemProps {
     children?: React.ReactNode;
     disabled?: boolean;
     primaryTypographyProps?: TypographyProps;
+    className?: string;
 }
 
-export const SidebarLinkItem = ({ text, isActive, onClick, IconComponent, children, disabled, primaryTypographyProps = { variant: "body2" } }: SidebarLinkItemProps) => {
+export const SidebarLinkItem = ({ text, isActive, className = "", onClick, IconComponent, children, disabled, primaryTypographyProps = { variant: "body2" } }: SidebarLinkItemProps) => {
     return (
-        <ListItem disabled={!isActive || disabled} button key={text} onClick={onClick}>
+        <ListItem className={className} disabled={!isActive || disabled} button key={text} onClick={onClick}>
             {IconComponent && <ListItemIcon onClick={onClick}>{IconComponent}</ListItemIcon>}
             <ListItemText primary={text} primaryTypographyProps={primaryTypographyProps} />
             {children && children}

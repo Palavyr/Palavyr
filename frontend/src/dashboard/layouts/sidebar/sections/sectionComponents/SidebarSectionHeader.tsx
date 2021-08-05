@@ -7,6 +7,7 @@ export interface SidebarSectionHeaderProps {
     onClick(): void;
     currentState: boolean;
     title: string;
+    className?: string;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -14,10 +15,10 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "center",
     },
 }));
-export const SidebarSectionHeader = ({ title, onClick, currentState }: SidebarSectionHeaderProps) => {
+export const SidebarSectionHeader = ({ title, onClick, currentState, className = "" }: SidebarSectionHeaderProps) => {
     const cls = useStyles();
     return (
-        <ListItem button onClick={onClick}>
+        <ListItem className={className} button onClick={onClick}>
             <ListItemText style={{ textAlign: "center" }} primary={title} onClick={onClick} primaryTypographyProps={{ variant: "h4" }} />
             {currentState ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </ListItem>

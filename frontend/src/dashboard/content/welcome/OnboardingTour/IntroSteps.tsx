@@ -1,44 +1,32 @@
-import { Button, makeStyles, Typography, useTheme } from "@material-ui/core";
-import React, { useState } from "react";
+import { makeStyles, Typography, useTheme } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
 import Tour, { ReactourStep } from "reactour";
 import Fade from "react-reveal/Fade";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 
-export interface IIntroSteps {}
+export interface IIntroSteps {
+    steps: ReactourStep[];
+    initialize: boolean;
+}
 
 const useStyles = makeStyles((theme) => ({
     tour: {
         backgroundColor: theme.palette.common.white,
+        padding: "2.2rem",
+        borderRadius: "12px",
     },
 }));
 
-export const IntroSteps = () => {
+export const IntroSteps = ({ steps, initialize = true }: IIntroSteps) => {
     const [stepsEnabled, setStepsEnabled] = useState<boolean>(false);
     const [currentStep, setCurrentStep] = useState<number>(1);
     const cls = useStyles();
     const theme = useTheme();
 
-    const steps: ReactourStep[] = [
-        {
-            content: "Welcome to Palavyr.com! I hope you are as excited as we are to build a brand-spanking-new chatbot!",
-        },
-        {
-            content: <Typography>This guided tour will show you around to get your oriented.</Typography>,
-        },
-        {
-            selector: ".widget-state-switch",
-            content: (
-                <Typography>
-                    "Firstly, this toggle indicates the status of your live chatbot (not the demo!). A disabled widget won't show any area options. Click to enable when you're ready to show your widget to the
-                    world!"
-                </Typography>
-            ),
-        },
-        {
-            selector: ".quick-start-guide",
-            content: "This is the first stop yo",
-        },
-    ];
+    useEffect(() => {
+        setStepsEnabled(initialize);
+    }, []);
+
     //https://github.com/elrumordelaluz/reactour
     return (
         <Fade>
@@ -54,9 +42,13 @@ export const IntroSteps = () => {
                 maskSpace={5}
                 startAt={0} // set to 1 after cookie is set and they reopen
             >
-                <Typography variant="h6" gutterBottom>
-                    The Palavyr Guided Tour
-                </Typography>
+                {currentStep === 0 ? (
+                    <Typography align="center" variant="h6" gutterBottom>
+                        The Palavyr Guided Tour
+                    </Typography>
+                ) : (
+                    <></>
+                )}
             </Tour>
         </Fade>
     );

@@ -6,6 +6,7 @@ import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHea
 import { OsTypeToggle } from "../../areaSettings/enableAreas/OsTypeToggle";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { EmailConfigurationComponent } from "./EmailConfigurationComponent";
+import { IntroSteps } from "dashboard/content/welcome/OnboardingTour/IntroSteps";
 
 export const EmailConfiguration = () => {
     const { repository } = useContext(DashboardContext);
