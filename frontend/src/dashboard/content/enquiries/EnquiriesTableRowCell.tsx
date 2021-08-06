@@ -4,6 +4,7 @@ import React from "react";
 const useStyles = makeStyles((theme) => ({
     tableCell: {
         textAlign: "center",
+        fontSize: "6pt",
     },
 }));
 export interface EnquiryTableRowCellProps {

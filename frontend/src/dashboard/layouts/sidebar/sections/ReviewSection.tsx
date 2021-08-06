@@ -46,7 +46,7 @@ export const ReviewSection = memo(({ isActive }: ReviewSectionProps) => {
 
     const dashboardOnClick = () => {
         setViewName("Data Dashboard");
-        history.push("/dashboard/data");
+        history.push("/dashboard/activity");
     };
 
     return (

@@ -30,7 +30,7 @@ export const PASSWORDS_DONT_MATCH = "passwordsDontMatch";
 export const PASSWORD_TOO_SHORT = "passwordTooShort";
 
 // PATHS
-export const DASHBOARD_HOME = "/dashboard";
+export const DASHBOARD_HOME = "/dashboard/activity";
 export const CONVERSATION_REVIEW = "/dashboard/enquiries/conversation";
 export const CONVERSATION_REVIEW_PARAMNAME = "conversationId";
 export const RESET_PASSWORD_VERIFY = `/reset-my-password`;

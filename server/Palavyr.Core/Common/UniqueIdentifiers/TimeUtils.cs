@@ -18,7 +18,7 @@ namespace Palavyr.Core.Common.UniqueIdentifiers
 
         public static TimeUtils CreateTimeStamp()
         {
-            var secondPrecision = DateTime.Now.ToString(DateTimeFormat);
+            var secondPrecision = DateTime.Now.ToString();
             var dayPrecision = secondPrecision.Split("--").First();
             
             return new TimeUtils(dayPrecision, secondPrecision);

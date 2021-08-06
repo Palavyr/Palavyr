@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
@@ -93,7 +92,7 @@ namespace Palavyr.Core.Services.ConversationServices
                 Id = conversation.Id,
                 ConversationId = conversation.ConversationId,
                 LinkReference = linkReference,
-                TimeStamp = conversation.TimeStamp.ToString(TimeUtils.DateTimeFormat),
+                TimeStamp = conversation.TimeStamp.ToString(),//.ToString(TimeUtils.DateTimeFormat),
                 AccountId = conversation.AccountId,
                 AreaName = conversation.AreaName,
                 EmailTemplateUsed = conversation.EmailTemplateUsed,

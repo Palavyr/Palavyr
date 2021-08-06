@@ -68,8 +68,8 @@ import { StructuredConvoTree } from "dashboard/content/responseConfiguration/con
 import { TutorialPage } from "@landing/tutorialPage/TutorialPage";
 import { TermsOfUsePage } from "legal/terms-of-use/TermsOfUsePage";
 import { PrivacyPolicyPage } from "legal/privacy-policy/PrivacyPolicy";
-import { DataDashboard } from "dashboard/content/dataDashboard/DataDashboard";
-import { DataDashboardHelp } from "dashboard/content/help/DataDashboardHelp";
+import { ActivityDashboardPage } from "dashboard/content/activityDashboard/components/ActivityDashboardPage";
+import { ActivityDashboardHelp } from "dashboard/content/help/DataDashboardHelp";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -102,7 +102,7 @@ export const Routes = () => {
                 <ProtectedRoute exact path="/dashboard" component={withLayout(QuickStartGuide, <QuickStartGuideHelp />)} />
                 <ProtectedRoute exact path="/dashboard/welcome" component={withLayout(QuickStartGuide, <QuickStartGuideHelp />)} />
 
-                <ProtectedRoute exact path="/dashboard/data" component={withLayout(DataDashboard, <DataDashboardHelp />)} />
+                <ProtectedRoute exact path="/dashboard/activity" component={withLayout(ActivityDashboardPage, <ActivityDashboardHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/email/:areaIdentifier" component={withLayout(withAreaTabs(<EmailConfiguration />), <EmailHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/response/:areaIdentifier" component={withLayout(withAreaTabs(<ResponseConfiguration />), <ResponseConfigurationHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/attachments/:areaIdentifier" component={withLayout(withAreaTabs(<AttachmentConfiguration />), <AttachmentsHelp />)} />
