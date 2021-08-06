@@ -1,5 +1,5 @@
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
-import { makeStyles, Grid, Card, Hidden } from "@material-ui/core";
+import { makeStyles, Grid } from "@material-ui/core";
 import React from "react";
 import { DailyEnquiriesWeekly } from "../DailyEnquiriesWeekly";
 import { EnquiryActivity } from "../EnquiryActivity";

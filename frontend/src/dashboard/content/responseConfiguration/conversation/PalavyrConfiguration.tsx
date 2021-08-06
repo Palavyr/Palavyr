@@ -144,8 +144,8 @@ export const StructuredConvoTree = () => {
         <ConversationTreeContext.Provider value={{ nodeTypeOptions, setNodes: setTreeWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
             <AreaConfigurationHeader
                 divider={treeErrors?.anyErrors}
-                title="Palavyr"
-                subtitle="This Palavyr is the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
+                title="Chat Editor"
+                subtitle="Use this editor to create the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
             />
             <Align>
                 <SaveOrCancel size="large" position="right" onSave={onSave} />
