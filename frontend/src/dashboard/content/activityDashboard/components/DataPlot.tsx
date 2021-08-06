@@ -56,11 +56,7 @@ export const DataPlot = ({ title, subtitle = "", hasData, loadingSpinner, childr
     ) : (
         <Fade>
             <Card className={cls.plotCard}>
-                <AreaConfigurationHeader title={title} subtitle={subtitle} light />
-                {/* <Typography variant="h6" align="center" gutterBottom>
-                    {title}
-                </Typography> */}
-                <Divider />
+                <AreaConfigurationHeader title={title} subtitle={subtitle} light divider/>
                 {hasData ? children : <NoActivityComponent />}
             </Card>
         </Fade>

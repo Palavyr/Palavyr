@@ -2,9 +2,8 @@ import { AreaNameDetail, AreaNameDetails, Enquiries, EnquiryRow } from "@Palavyr
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useStyles } from "../demo/ColorOptions";
-import { Chart, Point, ChartConfiguration } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { DataPlot, EnquiryOptions } from "./components/DataPlot";
+import { DataPlot } from "./components/DataPlot";
 import { uniqBy } from "lodash";
 
 type EnqDataSet = {
@@ -44,10 +43,6 @@ const calcualateDailEnquiryByDay = (areaDetails: AreaNameDetails, enquiries: Enq
             legend: {
                 position: "top",
             },
-            // title: {
-            //     display: true,
-            //     text: "Chart.js Line Chart",
-            // },
         },
     };
 
@@ -107,7 +102,12 @@ export const DailyEnquiriesWeekly = () => {
     }, [loadEnquiries]);
 
     return (
-        <DataPlot title="Daily Activity" subtitle="Learn how much daily activity each area is seeings" hasData={data !== undefined && data && data && data.labels.length > 0} loadingSpinner={loadingspinner}>
+        <DataPlot
+            title="Daily Activity"
+            subtitle="Learn about the daily activity of your widget, broken down by area"
+            hasData={data !== undefined && data && data && data.labels.length > 0}
+            loadingSpinner={loadingspinner}
+        >
             <Line data={data} options={options} />
         </DataPlot>
     );
