@@ -3,6 +3,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core";
+import classNames from "classnames";
 
 interface SideBarHeaderProps {
     handleDrawerClose: () => void;
@@ -43,7 +44,7 @@ export const SideBarHeader = memo(({ handleDrawerClose, children, side = "left",
 
     return (
         <div className={cls.drawerHeader}>
-            <IconButton className={cls.button} onClick={() => handleDrawerClose()}>
+            <IconButton className={classNames(cls.button, "menu-collapse-tour")} onClick={() => handleDrawerClose()}>
                 {children}
                 {side === "left" ? <ChevronLeftIcon className={cls.icon} /> : <ChevronRightIcon className={cls.icon} />}
             </IconButton>

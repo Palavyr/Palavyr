@@ -8,6 +8,7 @@ import { BillingSection } from "./sections/BillingSection";
 import { WidgetStateSwitch } from "./WidgetStateSwitch";
 import { OtherSection } from "./sections/OtherSection";
 import { AreaNameDetails } from "@Palavyr-Types";
+import classNames from "classnames";
 
 export interface ISideBarMenu {
     areaNameDetails: AreaNameDetails;
@@ -29,7 +30,7 @@ export const SideBarMenu = memo(({ areaNameDetails }: ISideBarMenu) => {
     const cls = useStyles();
 
     return (
-        <div className={cls.sidebarlist}>
+        <div className={classNames(cls.sidebarlist)}>
             <WidgetStateSwitch isActive={isActive} />
             <ConfigureSection currentPage={currentPage} areaNameDetails={areaNameDetails} isActive={isActive} />
             <Divider />

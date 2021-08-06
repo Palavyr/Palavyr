@@ -121,13 +121,7 @@ class Auth {
     }
 
     PerformLogout(logoutCallback: any) {
-        // const loginType = SessionStorage.getLoginType();
-
-        // if (loginType === SessionStorage.GoogleLoginType) {
-        //     // this.googleLogout(logoutCallback);
-        // } else {
         this.logout(logoutCallback);
-        // }
     }
 
     ClearAuthentication() {

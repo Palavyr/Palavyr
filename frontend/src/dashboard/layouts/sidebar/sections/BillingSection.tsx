@@ -42,7 +42,7 @@ export const BillingSection = memo(({ isActive }: BillingSectionProps) => {
 
     return (
         <List>
-            <SidebarSectionHeader title="Billing" onClick={() => setBillingOpen(!billingOpen)} currentState={billingOpen} />
+            <SidebarSectionHeader className={"billing-sidebar-tour"} title="Billing" onClick={() => setBillingOpen(!billingOpen)} currentState={billingOpen} />
             <Collapse in={billingOpen} timeout="auto" unmountOnExit>
                 {(planTypeMeta && planTypeMeta.isFreePlan) && (
                     <SidebarLinkItem text="Subscribe" isActive={isActive} onClick={subscribeOnClick} IconComponent={<SubscriptionsIcon className={cls.icon} />} />

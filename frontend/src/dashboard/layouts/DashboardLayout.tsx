@@ -5,7 +5,7 @@ import { SideBarMenu } from "./sidebar/SideBarMenu";
 import { useParams, useHistory } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
-import { cloneDeep } from "lodash";
+import { cloneDeep, truncate } from "lodash";
 import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRow, ErrorResponse, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DashboardHeader } from "./header/DashboardHeader";
@@ -21,6 +21,9 @@ import { redirectToHomeWhenSessionNotEstablished } from "@api-client/clientUtils
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { ApiErrors } from "./Errors/ApiErrors";
 import { Loaders } from "@api-client/Loaders";
+import { IntroSteps } from "dashboard/content/welcome/OnboardingTour/IntroSteps";
+import { welcomeTourSteps } from "dashboard/content/welcome/OnboardingTour/tours/welcomeTour";
+import Cookies from "js-cookie";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
@@ -212,84 +215,101 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
         linktext: "Subscriptions",
     };
 
+    const [welcomeTourActive, setWelcomeTourActive] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (Cookies.get("welcome-tour-cookie") === undefined) {
+            setWelcomeTourActive(true);
+        }
+    }, []);
+
+    const welcomeTourOnBlur = () => {
+        Cookies.set("welcome-tour-cookie", "", {
+            expires: 9999,
+        });
+    };
+
     return (
-        <DashboardContext.Provider
-            value={{
-                accountTypeNeedsPassword,
-                successOpen,
-                setSuccessOpen,
-                successText,
-                setSuccessText,
-                warningOpen,
-                setWarningOpen,
-                warningText,
-                setWarningText,
-                errorOpen,
-                errorText,
-                setErrorOpen,
-                setErrorText,
-                snackPosition,
-                setSnackPosition,
-                setIsLoading: setIsLoading,
-                currencySymbol: currencySymbol,
-                checkAreaCount,
-                areaName: currentViewName,
-                setViewName: setViewName,
-                unseenNotifications: unseenNotifications,
-                setUnseenNotifications: setUnseenNotifications,
-                planTypeMeta: planTypeMeta,
-                panelErrors,
-                setPanelErrors,
-                repository,
-            }}
-        >
-            <div className={cls.root}>
-                <DashboardHeader
-                    open={open}
-                    unseenNotifications={unseenNotifications}
-                    handleDrawerOpen={handleDrawerOpen}
-                    handleHelpDrawerOpen={handleHelpDrawerOpen}
-                    helpOpen={helpOpen}
-                    title={currentViewName}
-                    isLoading={isLoading}
-                    dashboardAreasLoading={dashboardAreasLoading}
-                />
-                <Drawer
-                    className={classNames(cls.menuDrawer)}
-                    variant="persistent"
-                    anchor="left"
-                    open={open}
-                    classes={{
-                        paper: cls.menuDrawerPaper,
-                    }}
-                >
-                    <SideBarHeader handleDrawerClose={handleDrawerClose} />
-                    {/* <UserDetails /> */}
-                    <Divider />
-                    <SideBarMenu areaNameDetails={areaNameDetails} />
-                </Drawer>
-                <ContentLoader open={open}>{children}</ContentLoader>
-                <Drawer
-                    className={cls.helpDrawer}
-                    variant="persistent"
-                    anchor="right"
-                    open={helpOpen}
-                    classes={{
-                        paper: cls.helpDrawerPaper,
-                    }}
-                >
-                    <SideBarHeader handleDrawerClose={handleHelpDrawerClose} side="right" roundTop>
-                        <Typography className={cls.helpDrawerHeaderText}>Close</Typography>
-                    </SideBarHeader>
-                    <Divider />
-                    {helpComponent}
-                </Drawer>
-                {planTypeMeta && (areaNameDetails.length < planTypeMeta.allowedAreas ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
-                <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
-            </div>
-            {successOpen && <PalavyrSnackbar position={snackPosition} successText={successText} successOpen={successOpen} setSuccessOpen={setSuccessOpen} />}
-            {warningOpen && <PalavyrSnackbar position={snackPosition} warningText={warningText} warningOpen={warningOpen} setWarningOpen={setWarningOpen} />}
-            {errorOpen && <PalavyrSnackbar position={snackPosition} errorText={errorText} errorOpen={errorOpen} setErrorOpen={setErrorOpen} />}
-        </DashboardContext.Provider>
+        <>
+            {welcomeTourActive && <IntroSteps initialize={welcomeTourActive} steps={welcomeTourSteps} onBlur={welcomeTourOnBlur} />}
+            <DashboardContext.Provider
+                value={{
+                    accountTypeNeedsPassword,
+                    successOpen,
+                    setSuccessOpen,
+                    successText,
+                    setSuccessText,
+                    warningOpen,
+                    setWarningOpen,
+                    warningText,
+                    setWarningText,
+                    errorOpen,
+                    errorText,
+                    setErrorOpen,
+                    setErrorText,
+                    snackPosition,
+                    setSnackPosition,
+                    setIsLoading: setIsLoading,
+                    currencySymbol: currencySymbol,
+                    checkAreaCount,
+                    areaName: currentViewName,
+                    areaNameDetails: areaNameDetails,
+                    setViewName: setViewName,
+                    unseenNotifications: unseenNotifications,
+                    setUnseenNotifications: setUnseenNotifications,
+                    planTypeMeta: planTypeMeta,
+                    panelErrors,
+                    setPanelErrors,
+                    repository,
+                }}
+            >
+                <div className={cls.root}>
+                    <DashboardHeader
+                        open={open}
+                        unseenNotifications={unseenNotifications}
+                        handleDrawerOpen={handleDrawerOpen}
+                        handleHelpDrawerOpen={handleHelpDrawerOpen}
+                        helpOpen={helpOpen}
+                        title={currentViewName}
+                        isLoading={isLoading}
+                        dashboardAreasLoading={dashboardAreasLoading}
+                    />
+                    <Drawer
+                        className={classNames(cls.menuDrawer, "sidebar-tour")}
+                        variant="persistent"
+                        anchor="left"
+                        open={open}
+                        classes={{
+                            paper: cls.menuDrawerPaper,
+                        }}
+                    >
+                        <SideBarHeader handleDrawerClose={handleDrawerClose} />
+                        <Divider />
+                        <SideBarMenu areaNameDetails={areaNameDetails} />
+                    </Drawer>
+                    <ContentLoader open={open}>{children}</ContentLoader>
+                    <Drawer
+                        className={cls.helpDrawer}
+                        variant="persistent"
+                        anchor="right"
+                        open={helpOpen}
+                        classes={{
+                            paper: cls.helpDrawerPaper,
+                        }}
+                    >
+                        <SideBarHeader handleDrawerClose={handleHelpDrawerClose} side="right" roundTop>
+                            <Typography className={cls.helpDrawerHeaderText}>Close</Typography>
+                        </SideBarHeader>
+                        <Divider />
+                        {helpComponent}
+                    </Drawer>
+                    {planTypeMeta && (areaNameDetails.length < planTypeMeta.allowedAreas ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
+                    <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
+                </div>
+                {successOpen && <PalavyrSnackbar position={snackPosition} successText={successText} successOpen={successOpen} setSuccessOpen={setSuccessOpen} />}
+                {warningOpen && <PalavyrSnackbar position={snackPosition} warningText={warningText} warningOpen={warningOpen} setWarningOpen={setWarningOpen} />}
+                {errorOpen && <PalavyrSnackbar position={snackPosition} errorText={errorText} errorOpen={errorOpen} setErrorOpen={setErrorOpen} />}
+            </DashboardContext.Provider>
+        </>
     );
 };

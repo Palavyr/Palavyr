@@ -8,6 +8,9 @@ import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
 import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
 import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+import BarChartIcon from "@material-ui/icons/BarChart";
+import TrendingUpIcon from "@material-ui/icons/TrendingUp";
+import TrendingUp from "@material-ui/icons/TrendingUp";
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -41,17 +44,30 @@ export const ReviewSection = memo(({ isActive }: ReviewSectionProps) => {
         history.push("/dashboard/images");
     };
 
+    const dashboardOnClick = () => {
+        setViewName("Data Dashboard");
+        history.push("/dashboard/activity");
+    };
+
     return (
-        <List>
+        <List className={"review-sidebar-tour"}>
             <SidebarSectionHeader title="Review" onClick={() => setReviewOpen(!reviewOpen)} currentState={reviewOpen} />
             <Collapse in={reviewOpen} timeout="auto" unmountOnExit>
-                <SidebarLinkItem text="Check Enquiries" isActive={isActive} onClick={enquiriesOnClick} IconComponent={<InboxIcon className={cls.icon} />}>
-                    <Badge showZero={false} badgeContent={unseenNotifications} color="secondary">
+                <SidebarLinkItem className={"activity-sidebar-tour"} text="Activity" isActive={isActive} onClick={dashboardOnClick} IconComponent={<TrendingUpIcon className={cls.icon} />} />
+                <SidebarLinkItem className={"check-enquiries-sidebar-tour"} text="Check Enquiries" isActive={isActive} onClick={enquiriesOnClick} IconComponent={<InboxIcon className={cls.icon} />}>
+                    <Badge className={"check-enquiries-badge-sidebar-tour"} showZero={false} badgeContent={unseenNotifications} color="secondary">
                         <NotificationsIcon fontSize="small" />
                     </Badge>
                 </SidebarLinkItem>
-                <SidebarLinkItem text="Chat Demo" isActive={isActive} onClick={chatDemoOnClick} IconComponent={<CompareIcon className={cls.icon} />} />
-                <SidebarLinkItem disabled={planTypeMeta && !planTypeMeta.allowedImageUpload} text="Uploads" isActive={isActive} onClick={imagesReviewOnClick} IconComponent={<PhotoLibraryIcon className={cls.icon} />} />
+                <SidebarLinkItem className={"chat-demo-link-tour"} text="Chat Demo" isActive={isActive} onClick={chatDemoOnClick} IconComponent={<CompareIcon className={cls.icon} />} />
+                <SidebarLinkItem
+                    className={"uploads-sidebar-tour"}
+                    disabled={planTypeMeta && !planTypeMeta.allowedImageUpload}
+                    text="Uploads"
+                    isActive={isActive}
+                    onClick={imagesReviewOnClick}
+                    IconComponent={<PhotoLibraryIcon className={cls.icon} />}
+                />
             </Collapse>
         </List>
     );

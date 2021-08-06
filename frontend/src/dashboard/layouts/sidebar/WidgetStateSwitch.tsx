@@ -34,7 +34,7 @@ export const WidgetStateSwitch = memo(({ isActive }: WidgetStateSwitchProps) => 
     const Switch = <IOSSwitch disabled={!isActive || widgetState === undefined} checked={widgetState === undefined ? true : widgetState ? true : false} onChange={updatewidgetState} name="Active" />;
 
     return (
-        <ListItem style={{ backgroundColor: widgetState === undefined ? "gray" : widgetState ? green : red }} disabled={!isActive}>
+        <ListItem className="widget-state-switch" style={{ backgroundColor: widgetState === undefined ? "gray" : widgetState ? green : red }} disabled={!isActive}>
             <ListItemText>
                 <Typography className={cls.text} variant="h6">
                     Widget

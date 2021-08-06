@@ -8,7 +8,7 @@ import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
 import { useState } from "react";
 import { EnquiryTableRowCell } from "./EnquiriesTableRowCell";
-import { formatTimeStamp } from "./enquiriesUtils";
+import { formatLegitTimeStamp } from "./enquiriesUtils";
 import { EnquiryTimeStamp } from "./EnquiryTimeStamp";
 
 export interface EnquiriesTableRowProps {
@@ -80,38 +80,38 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
         }, 1500);
     };
 
-    const { formattedDate, formattedTime } = formatTimeStamp(enquiry.timeStamp);
+    const { formattedDate, formattedTime } = formatLegitTimeStamp(enquiry.timeStamp);
 
     return (
         <TableRow style={{ backgroundColor: enquiry.seen ? "white" : "lightgray", fontWeight: enquiry.seen ? "normal" : "bold" }} key={enquiry.conversationId}>
             <EnquiryTableRowCell>
-                <Typography variant="caption">{index + 1}</Typography>
+                <Typography>{index + 1}</Typography>
             </EnquiryTableRowCell>
             <EnquiryTableRowCell>
-                <Typography variant="caption">{enquiry.name}</Typography>
+                <Typography>{enquiry.name}</Typography>
             </EnquiryTableRowCell>
             <EnquiryTableRowCell>
-                <Typography variant="caption">{enquiry.email}</Typography>
+                <Typography>{enquiry.email}</Typography>
             </EnquiryTableRowCell>
             <EnquiryTableRowCell>
-                <Typography variant="caption">{enquiry.phoneNumber}</Typography>
+                <Typography>{enquiry.phoneNumber}</Typography>
             </EnquiryTableRowCell>
             <EnquiryTableRowCell>
                 <Link className={cls.link} onClick={() => convoDetailsOnClick(enquiry)}>
-                    <Typography variant="caption">History</Typography>
+                    <Typography>History</Typography>
                 </Link>
             </EnquiryTableRowCell>
             <EnquiryTableRowCell>
                 {enquiry.hasResponse ? (
                     <Link className={cls.link} onClick={() => responseLinkOnClick(enquiry)}>
-                        <Typography variant="caption">PDF</Typography>
+                        <Typography>PDF</Typography>
                     </Link>
                 ) : (
                     <Typography variant="body2">N/A</Typography>
                 )}
             </EnquiryTableRowCell>
             <EnquiryTableRowCell>
-                <Typography variant="caption">{enquiry.areaName}</Typography>
+                <Typography>{enquiry.areaName}</Typography>
             </EnquiryTableRowCell>
             <EnquiryTableRowCell>
                 <EnquiryTimeStamp formattedDate={formattedDate} formattedTime={formattedTime} />
@@ -126,7 +126,7 @@ export const EnquiriesTableRow = ({ enquiry, setEnquiries, index }: EnquiriesTab
             </EnquiryTableRowCell>
             <EnquiryTableRowCell>
                 <ColoredButton classes={cls.delete} variant="outlined" color="primary" onClick={() => deleteEnquiryOnClick(enquiry)}>
-                    <Typography variant="caption"> Delete</Typography>
+                    <Typography> Delete</Typography>
                     {deleteIsWorking && <ButtonCircularProgress />}
                 </ColoredButton>
             </EnquiryTableRowCell>

@@ -52,6 +52,20 @@ export class StandardComponents {
         return () => {
             const cls = useStyles(prefs);
             useEffect(() => {
+                (async () => {
+                    if (node.nodeType === "TooComplicated") {
+                        const contextProperties = getContextProperties();
+
+                        const areaId = node.areaIdentifier;
+                        const name = contextProperties[ConvoContextProperties.name];
+                        const phone = contextProperties[ConvoContextProperties.phoneNumber];
+                        const email = contextProperties[ConvoContextProperties.emailAddress];
+                        const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
+
+                        await client.Widget.Post.CompletedConversation(completeConvo);
+                    }
+                })();
+
                 responseAction(node, child, nodeList, client, convoId, null);
             }, []);
 

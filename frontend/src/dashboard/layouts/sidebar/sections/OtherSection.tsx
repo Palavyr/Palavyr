@@ -49,11 +49,11 @@ export const OtherSection = memo(({ isActive }: OtherSectionProps) => {
 
     return (
         <List>
-            <SidebarSectionHeader title="Other" onClick={() => setOtherOpen(!otherOpen)} currentState={otherOpen} />
+            <SidebarSectionHeader className={"other-sidebar-tour"} title="Other" onClick={() => setOtherOpen(!otherOpen)} currentState={otherOpen} />
             <Collapse in={otherOpen} timeout="auto" unmountOnExit>
-                <SidebarLinkItem text="Get Started" isActive={isActive} onClick={getStartedOnClick} IconComponent={<PlayArrowIcon className={cls.icon} />} />
-                <SidebarLinkItem text="Settings" isActive={isActive} onClick={generalSettingsOnClick} IconComponent={<SettingsIcon className={cls.icon} />} />
-                <SidebarLinkItem text="Get Widget" isActive={isActive} onClick={getWidgetOnClick} IconComponent={<GetAppIcon className={cls.icon} />} />
+                <SidebarLinkItem className={"settings-sidebar-tour"} text="Settings" isActive={isActive} onClick={generalSettingsOnClick} IconComponent={<SettingsIcon className={cls.icon} />} />
+                <SidebarLinkItem className={"get-widget-sidebar-tour"} text="Get Widget" isActive={isActive} onClick={getWidgetOnClick} IconComponent={<GetAppIcon className={cls.icon} />} />
+                <SidebarLinkItem className={"quick-start-sidebar-tour"} text="Quick Start Guide" isActive={isActive} onClick={getStartedOnClick} IconComponent={<PlayArrowIcon className={cls.icon} />} />
             </Collapse>
             <GoogleLogout
                 onLogoutSuccess={logoutOnClick}

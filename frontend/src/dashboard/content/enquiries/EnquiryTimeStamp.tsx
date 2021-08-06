@@ -10,10 +10,10 @@ export const EnquiryTimeStamp = ({ formattedDate, formattedTime }: EnquiryTimeSt
     return (
         <>
             <Typography display="block" variant="caption">
-                {formattedDate}
+                {formattedTime}
             </Typography>
             <Typography display="block" variant="caption">
-                {formattedTime}
+                {formattedDate}
             </Typography>
         </>
     );

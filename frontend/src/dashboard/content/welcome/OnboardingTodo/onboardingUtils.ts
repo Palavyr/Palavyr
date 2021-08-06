@@ -19,7 +19,7 @@ export const convertTodos = (todos: Todos) => {
 export const allClear = (convertedTodos: TodosAsBoolean | undefined) => {
     if (convertedTodos === undefined) return false;
     const res = Object.keys(convertedTodos)
-        .filter((x: string) => x !== "emailAddress")
+        .filter((x: string) => x !== "emailAddress" && x !== "awaitingVerification")
         .map((todoKey: string) => {
             return convertedTodos[todoKey];
         });

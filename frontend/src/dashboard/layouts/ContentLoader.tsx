@@ -42,7 +42,7 @@ export const ContentLoader = ({ open, children }: IContentLoader) => {
 
     return (
         <main className={classNames(cls.content, { [cls.contentShift]: open })}>
-            {isDev && <DevStagingStrip show={show} setShow={setShow} />}
+            {/* {isDev && <DevStagingStrip show={show} setShow={setShow} />} */}
             {!show && <YellowStrip />}
             <div>{children}</div>
         </main>
