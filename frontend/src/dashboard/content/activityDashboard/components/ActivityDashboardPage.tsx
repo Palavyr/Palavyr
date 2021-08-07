@@ -5,12 +5,13 @@ import { DailyEnquiriesWeekly } from "../DailyEnquiriesWeekly";
 import { EnquiryActivity } from "../EnquiryActivity";
 
 const useStyles = makeStyles((theme) => ({
-    title: {
-        padding: "1rem",
+    squareGridItem: {
+        // height: "400px",
+        // width: "400px",
     },
-    plotCard: {
-        margin: "2rem",
-        padding: "2rem",
+    rectangleGridItem: {
+        // height: "300px",
+        // width: "600px",
     },
 }));
 
@@ -19,20 +20,23 @@ export const ActivityDashboardPage = () => {
 
     return (
         <>
-            <AreaConfigurationHeader title="Widget Activity Dashboard" subtitle="Review the activity of your chatbot" />
+            <AreaConfigurationHeader
+                divider
+                title="Widget Activity Dashboard"
+                subtitle="Review the activity of your chatbot! This page is early release, but we've made a couple plots availble as a sneak peak for you!"
+            />
             <Grid container>
-                <Grid item xs={3}></Grid>
-                <Grid item justify="center" xs={6}>
+                <Grid item xs={4}></Grid>
+                <Grid item justify="center" xs={4} className={cls.squareGridItem}>
                     <EnquiryActivity />
                 </Grid>
+                <Grid item xs={4}></Grid>
+
                 <Grid item xs={3}></Grid>
-
-                <Grid item xs={2}></Grid>
-
-                <Grid item justify="center" xs={8}>
+                <Grid item justify="center" xs={6} className={cls.rectangleGridItem}>
                     <DailyEnquiriesWeekly />
                 </Grid>
-                <Grid item xs={2}></Grid>
+                <Grid item xs={3}></Grid>
             </Grid>
         </>
     );

@@ -12,7 +12,7 @@ export const NoActivityComponent = () => {
     return (
         <span className={cls.fallback}>
             <Typography align="center" gutterBottom>
-                Things seems a little quite with the widget...
+                No data... yet! You'll see plots here once there is some usage data to report.
             </Typography>
         </span>
     );

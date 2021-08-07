@@ -32,7 +32,7 @@ export const TodoCard = ({ link, text }: TodoCardProps) => {
     const history = useHistory();
 
     return (
-        <Card className={cls.card} onClick={() => history.push(link)}>
+        <Card className={cls.card} onClick={() => window.open(link)}>
             <Typography className={cls.text} variant="h5">
                 {text}
             </Typography>

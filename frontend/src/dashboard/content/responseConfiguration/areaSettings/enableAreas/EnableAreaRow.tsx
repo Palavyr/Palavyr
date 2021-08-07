@@ -15,12 +15,11 @@ const useStyles = makeStyles((theme) => ({
     },
     cell: {
         textAlign: "left",
-        // display: "flex",
         flexDirection: "column",
         justifyContent: "center",
     },
     row: (props: styleProps) => ({
-        backgroundColor: props.isEnabled ? theme.palette.success.light : theme.palette.error.light,
+        backgroundColor: props.isEnabled ? theme.palette.success.light : "grey",
     }),
 }));
 

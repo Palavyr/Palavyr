@@ -11,6 +11,8 @@ const useStyles = makeStyles((theme) => ({
     },
     plotCard: {
         margin: "2rem",
+        padding: "2rem",
+        borderRadius: "12px",
     },
     fallback: {
         margin: "2rem",
@@ -56,7 +58,7 @@ export const DataPlot = ({ title, subtitle = "", hasData, loadingSpinner, childr
     ) : (
         <Fade>
             <Card className={cls.plotCard}>
-                <AreaConfigurationHeader title={title} subtitle={subtitle} light divider/>
+                <AreaConfigurationHeader title={title} subtitle={subtitle} light divider />
                 {hasData ? children : <NoActivityComponent />}
             </Card>
         </Fade>

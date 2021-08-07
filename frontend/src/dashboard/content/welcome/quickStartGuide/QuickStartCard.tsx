@@ -1,7 +1,6 @@
-import { Divider, makeStyles, Typography } from "@material-ui/core";
+import { Card, Divider, makeStyles, Typography } from "@material-ui/core";
 import classNames from "classnames";
 import React from "react";
-import { Card } from "react-bootstrap";
 
 const useStyles = makeStyles((theme) => ({
     sectionDiv: {

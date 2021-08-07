@@ -56,3 +56,9 @@ export const CHAT_DEMO_LISTBOX_zINDEX = 50;
 
 // App Bar
 export const TOPBAR_MAX_HEIGHT = 64;
+
+// cookie names
+export const WELCOME_TOUR_COOKIE_NAME = "welcome-tour-cookie";
+export const EDITOR_TOUR_COOKIE_NAME = "editor-tour-cookie";
+
+export const ALL_COOKIE_NAMES = [WELCOME_TOUR_COOKIE_NAME, EDITOR_TOUR_COOKIE_NAME];

@@ -4,6 +4,9 @@ import { AreaNameDetails, Enquiries } from "@Palavyr-Types";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { Radar } from "react-chartjs-2";
 import { DataPlot } from "./components/DataPlot";
+import { getRandomColor } from "./DailyEnquiriesWeekly";
+import colorLib from "@kurkle/color";
+import { sum } from "lodash";
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -20,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 export type Dataset = {
     data: number[];
     label: string;
+    backgroundColor: string;
 };
 export type DataSets = Dataset[];
 
@@ -42,6 +46,11 @@ export interface DataPlotProps {
     children: React.ReactNode;
 }
 
+export const transparentize = (value, opacity) => {
+    var alpha = opacity === undefined ? 0.5 : 1 - opacity;
+    return colorLib(value).alpha(alpha).rgbString();
+};
+
 const calculateRadarData = (areaDetails: AreaNameDetails, enquiries: Enquiries) => {
     const areas = areaDetails.map((x) => x.areaName);
     const enquiryAreas = enquiries.map((x) => x.areaName);
@@ -54,14 +63,15 @@ const calculateRadarData = (areaDetails: AreaNameDetails, enquiries: Enquiries) 
 
     const enquiryData: EnquiryData = {
         labels: areas,
-        datasets: [{ label: "Enquiries", data: counts }],
+        datasets: [{ label: "Enquiries", data: counts, backgroundColor: transparentize(getRandomColor("tobyface"), 0.5) }],
     };
-    const enquiryOptions: EnquiryOptions = {
+    const enquiryOptions = {
         elements: {
             line: {
                 borderWidth: 3,
             },
         },
+        scales: {},
     };
     return { enquiryData, enquiryOptions };
 };
@@ -88,7 +98,12 @@ export const EnquiryActivity = () => {
     }, [loadEnquiries]);
 
     return (
-        <DataPlot title="Activity Per Area" subtitle="Learn which areas are seeing the most amount of traffic" hasData={data !== undefined && data && data.labels && data.labels.length > 0} loadingSpinner={loadingspinner}>
+        <DataPlot
+            title="Activity Per Area"
+            subtitle="Learn which areas are seeing the most amount of traffic"
+            hasData={data !== undefined && data && data.labels && data.labels.length > 0 && data.datasets && data.datasets.length > 0 && sum(data.datasets[0].data) > 0}
+            loadingSpinner={loadingspinner}
+        >
             <Radar data={data} options={options} />
         </DataPlot>
     );

@@ -3,8 +3,9 @@ import { makeStyles, Typography } from "@material-ui/core";
 import { TodosAsBoolean } from "@Palavyr-Types";
 import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
 import { TodoCard } from "./TodoCard";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
     list: {
         textAlign: "left",
     },
@@ -13,6 +14,13 @@ const useStyles = makeStyles(() => ({
     },
     body: {
         textAlign: "center",
+    },
+    sectionDiv: {
+        width: "100%",
+        display: "flex",
+        textAlign: "center",
+        justifyContent: "center",
+        background: theme.palette.background.default,
     },
 }));
 
@@ -23,21 +31,23 @@ export const OnboardingTodo = ({ todos }: OnboardingTodoProps) => {
     const cls = useStyles();
 
     return (
-        <div style={{ display: "inline-block" }}>
-            <Typography align="center" display="inline" gutterBottom variant="h4">
-                Quick Start To Do list
-            </Typography>
-            <SpaceEvenly vertical center>
-                {!todos?.isVerified && (
-                    <TodoCard
-                        link="/dashboard/settings/email?tab=1"
-                        text={`Set your default email: ${todos?.emailAddress} - ${todos?.awaitingVerification ? "Check your email to verify you address" : "Trigger an email verification in your settings."}`}
-                    />
-                )}
-                {!todos?.name && <TodoCard link="/dashboard/settings/companyName?tab=2" text="Set your company name" />}
-                {!todos?.phoneNumber && <TodoCard link="/dashboard/settings/phoneNumber?tab=3" text="Set your default contact phone number" />}
-                {!todos?.logoUri && <TodoCard link="/dashboard/settings/companyLogo?tab=4" text="Set your company logo" />}
-            </SpaceEvenly>
-        </div>
+        <>
+            <AreaConfigurationHeader title="Quick Start To Do List" subtitle="Don't forget to set these important settings" />
+            <div className={cls.sectionDiv}>
+                <SpaceEvenly vertical center>
+                    {!todos?.isVerified && (
+                        <TodoCard
+                            link="/dashboard/settings/email?tab=1"
+                            text={`Set your default email: ${todos?.emailAddress} - ${
+                                todos?.awaitingVerification ? "Check your email to verify you address" : "Trigger an email verification in your settings."
+                            }`}
+                        />
+                    )}
+                    {!todos?.name && <TodoCard link="/dashboard/settings/companyName?tab=2" text="Set your company name" />}
+                    {!todos?.phoneNumber && <TodoCard link="/dashboard/settings/phoneNumber?tab=3" text="Set your default contact phone number" />}
+                    {!todos?.logoUri && <TodoCard link="/dashboard/settings/companyLogo?tab=4" text="Set your company logo" />}
+                </SpaceEvenly>
+            </div>
+        </>
     );
 };

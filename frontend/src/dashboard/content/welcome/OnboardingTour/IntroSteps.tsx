@@ -1,8 +1,11 @@
 import { makeStyles, Typography, useTheme } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Tour, { ReactourStep } from "reactour";
 import Fade from "react-reveal/Fade";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import { AuthContext } from "dashboard/layouts/DashboardContext";
 
 export interface IIntroSteps {
     steps: ReactourStep[];
@@ -19,20 +22,31 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const IntroSteps = ({ steps, onBlur, initialize = true }: IIntroSteps) => {
+    const { isActive } = useContext(AuthContext);
+
     const [stepsEnabled, setStepsEnabled] = useState<boolean>(false);
     const [currentStep, setCurrentStep] = useState<number>(1);
     const cls = useStyles();
     const theme = useTheme();
 
+    const disableBody = (target) => disableBodyScroll(target);
+    const enableBody = (target) => enableBodyScroll(target);
+
     useEffect(() => {
-        setStepsEnabled(initialize);
+        if (isActive) {
+            setStepsEnabled(initialize);
+        }
     }, []);
 
     //https://github.com/elrumordelaluz/reactour
     return (
         <Fade>
             <Tour
-                onBeforeClose={onBlur}
+                onAfterOpen={disableBody}
+                onBeforeClose={(target) => {
+                    enableBody(target);
+                    onBlur();
+                }}
                 getCurrentStep={(curr) => setCurrentStep(curr)}
                 className={cls.tour}
                 accentColor={theme.palette.primary.light}
