@@ -889,6 +889,7 @@ export interface IDashboardContext {
     setPanelErrors: SetState<ErrorResponse | null>;
     repository: PalavyrRepository;
     areaNameDetails: AreaNameDetails;
+    reRenderDashboard(): void;
 }
 
 export type ErrorResponse = {

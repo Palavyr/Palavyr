@@ -10,7 +10,7 @@ import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRo
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DashboardHeader } from "./header/DashboardHeader";
 import { makeStyles, Typography } from "@material-ui/core";
-import { defaultUrlForNewArea, DRAWER_WIDTH } from "@constants";
+import { defaultUrlForNewArea, DRAWER_WIDTH, WELCOME_TOUR_COOKIE_NAME } from "@constants";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
@@ -120,9 +120,15 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
     const [unseenNotifications, setUnseenNotifications] = useState<number>(0);
 
+    const [genericRerender, setGenericRerender] = useState<boolean>(true);
+
     const loaders = new Loaders(setIsLoading);
     const apiErrors = new ApiErrors(setSuccessOpen, setSuccessText, setWarningOpen, setWarningText, setErrorOpen, setErrorText, setPanelErrors);
     const repository = new PalavyrRepository(apiErrors, loaders);
+
+    const reRenderDashboard = () => {
+        setGenericRerender(!genericRerender);
+    };
 
     useEffect(() => {
         (async () => {
@@ -218,13 +224,13 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     const [welcomeTourActive, setWelcomeTourActive] = useState<boolean>(false);
 
     useEffect(() => {
-        if (Cookies.get("welcome-tour-cookie") === undefined) {
+        if (Cookies.get(WELCOME_TOUR_COOKIE_NAME) === undefined) {
             setWelcomeTourActive(true);
         }
     }, []);
 
     const welcomeTourOnBlur = () => {
-        Cookies.set("welcome-tour-cookie", "", {
+        Cookies.set(WELCOME_TOUR_COOKIE_NAME, "", {
             expires: 9999,
         });
     };
@@ -234,6 +240,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
             {welcomeTourActive && <IntroSteps initialize={welcomeTourActive} steps={welcomeTourSteps} onBlur={welcomeTourOnBlur} />}
             <DashboardContext.Provider
                 value={{
+                    reRenderDashboard,
                     accountTypeNeedsPassword,
                     successOpen,
                     setSuccessOpen,

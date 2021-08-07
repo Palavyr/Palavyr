@@ -4,6 +4,7 @@ import { AreaNameDetails, Enquiries } from "@Palavyr-Types";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { Radar } from "react-chartjs-2";
 import { DataPlot } from "./components/DataPlot";
+import { getRandomColor } from "./DailyEnquiriesWeekly";
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -20,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
 export type Dataset = {
     data: number[];
     label: string;
+    backgroundColor: string;
 };
 export type DataSets = Dataset[];
 
@@ -33,6 +35,14 @@ export type EnquiryOptions = {
         line: {
             borderWidth: number;
         };
+    };
+    scales: {
+        // y: {
+        //     ticks: {
+        //         beginAtZero: boolean;
+        //         callback: any;
+        //     };
+        // };
     };
 };
 
@@ -51,16 +61,29 @@ const calculateRadarData = (areaDetails: AreaNameDetails, enquiries: Enquiries) 
         const singleArea = enquiryAreas.filter((x: string) => x === area);
         counts.push(singleArea.length);
     });
+    // backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.5),
 
     const enquiryData: EnquiryData = {
         labels: areas,
-        datasets: [{ label: "Enquiries", data: counts }],
+        datasets: [{ label: "Enquiries", data: counts, backgroundColor: transparentize(getRandomColor("Enqui"), 0.5)}],
     };
-    const enquiryOptions: EnquiryOptions = {
+    const enquiryOptions = {
         elements: {
             line: {
                 borderWidth: 3,
             },
+        },
+        scales: {
+            // y: {
+            //     ticks: {
+            //         beginAtZero: true,
+            //         callback: function (value) {
+            //             if (value % 1 === 0) {
+            //                 return value;
+            //             }
+            //         },
+            //     },
+            // },
         },
     };
     return { enquiryData, enquiryOptions };
@@ -88,7 +111,12 @@ export const EnquiryActivity = () => {
     }, [loadEnquiries]);
 
     return (
-        <DataPlot title="Activity Per Area" subtitle="Learn which areas are seeing the most amount of traffic" hasData={data !== undefined && data && data.labels && data.labels.length > 0} loadingSpinner={loadingspinner}>
+        <DataPlot
+            title="Activity Per Area"
+            subtitle="Learn which areas are seeing the most amount of traffic"
+            hasData={data !== undefined && data && data.labels && data.labels.length > 0}
+            loadingSpinner={loadingspinner}
+        >
             <Radar data={data} options={options} />
         </DataPlot>
     );

@@ -14,6 +14,7 @@ import { editorTourSteps } from "../welcome/OnboardingTour/tours/editorTour";
 import { IntroSteps } from "../welcome/OnboardingTour/IntroSteps";
 import classNames from "classnames";
 import Cookies from "js-cookie";
+import { EDITOR_TOUR_COOKIE_NAME } from "@constants";
 
 export interface IAreaContent {
     children: JSX.Element[] | JSX.Element;
@@ -80,14 +81,14 @@ export const AreaContentInner = ({ setLoaded, children }: IAreaContentInner) => 
     const [editorTour, setEditorTour] = useState<boolean>(false);
 
     useEffect(() => {
-        console.log(Cookies.get("editor-tour-cookie"));
-        if (Cookies.get("editor-tour-cookie") === undefined) {
+        console.log(Cookies.get(EDITOR_TOUR_COOKIE_NAME));
+        if (Cookies.get(EDITOR_TOUR_COOKIE_NAME) === undefined) {
             setEditorTour(true);
         }
     }, []);
 
     const editorTourOnBlur = () => {
-        Cookies.set("editor-tour-cookie", "", {
+        Cookies.set(EDITOR_TOUR_COOKIE_NAME, "", {
             expires: 9999,
         });
     };

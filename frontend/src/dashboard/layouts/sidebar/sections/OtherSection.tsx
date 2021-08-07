@@ -12,6 +12,7 @@ import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
 import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
 import { GoogleLogout } from "react-google-login";
 import { googleOAuthClientId } from "@api-client/clientUtils";
+import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -45,6 +46,11 @@ export const OtherSection = memo(({ isActive }: OtherSectionProps) => {
         history.push("/dashboard/getwidget");
     };
 
+    const takeToursOnClick = () => {
+        setViewName("Palavyr Product Tours");
+        history.push("/dashboard/tour")
+    }
+
     const logoutOnClick = () => Auth.PerformLogout(() => history.push("/"));
 
     return (
@@ -54,6 +60,7 @@ export const OtherSection = memo(({ isActive }: OtherSectionProps) => {
                 <SidebarLinkItem className={"settings-sidebar-tour"} text="Settings" isActive={isActive} onClick={generalSettingsOnClick} IconComponent={<SettingsIcon className={cls.icon} />} />
                 <SidebarLinkItem className={"get-widget-sidebar-tour"} text="Get Widget" isActive={isActive} onClick={getWidgetOnClick} IconComponent={<GetAppIcon className={cls.icon} />} />
                 <SidebarLinkItem className={"quick-start-sidebar-tour"} text="Quick Start Guide" isActive={isActive} onClick={getStartedOnClick} IconComponent={<PlayArrowIcon className={cls.icon} />} />
+                <SidebarLinkItem className={"take-tours-sidebard-tour"} text="Palavyr Tours" isActive={isActive} onClick={takeToursOnClick} IconComponent={<EmojiPeopleIcon className={cls.icon} />} />
             </Collapse>
             <GoogleLogout
                 onLogoutSuccess={logoutOnClick}

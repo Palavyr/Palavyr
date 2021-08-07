@@ -4,7 +4,6 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useStyles } from "../demo/ColorOptions";
 import { Line } from "react-chartjs-2";
 import { DataPlot } from "./components/DataPlot";
-import { uniqBy } from "lodash";
 import seedrandom from "seedrandom";
 
 type EnqDataSet = {
@@ -77,6 +76,18 @@ const calcualateDailEnquiryByDay = (areaDetails: AreaNameDetails, enquiries: Enq
         plugins: {
             legend: {
                 position: "top",
+            },
+        },
+        scales: {
+            y: {
+                ticks: {
+                    beginAtZero: true,
+                    callback: function (value) {
+                        if (value % 1 === 0) {
+                            return value;
+                        }
+                    },
+                },
             },
         },
     };

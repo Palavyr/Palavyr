@@ -70,6 +70,8 @@ import { TermsOfUsePage } from "legal/terms-of-use/TermsOfUsePage";
 import { PrivacyPolicyPage } from "legal/privacy-policy/PrivacyPolicy";
 import { ActivityDashboardPage } from "dashboard/content/activityDashboard/components/ActivityDashboardPage";
 import { ActivityDashboardHelp } from "dashboard/content/help/DataDashboardHelp";
+import { ToursPage } from "dashboard/content/welcome/OnboardingTour/tours/ToursPage";
+import { ToursPageHelp } from "dashboard/content/help/ToursPageHelp";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -101,6 +103,7 @@ export const Routes = () => {
 
                 <ProtectedRoute exact path="/dashboard" component={withLayout(QuickStartGuide, <QuickStartGuideHelp />)} />
                 <ProtectedRoute exact path="/dashboard/welcome" component={withLayout(QuickStartGuide, <QuickStartGuideHelp />)} />
+                <ProtectedRoute exact path="/dashboard/tour" component={withLayout(ToursPage, <ToursPageHelp />)} />
 
                 <ProtectedRoute exact path="/dashboard/activity" component={withLayout(ActivityDashboardPage, <ActivityDashboardHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/email/:areaIdentifier" component={withLayout(withAreaTabs(<EmailConfiguration />), <EmailHelp />)} />

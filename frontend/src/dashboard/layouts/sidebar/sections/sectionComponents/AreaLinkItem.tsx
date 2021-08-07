@@ -3,7 +3,7 @@ import React, { memo } from "react";
 import { NavLink } from "react-router-dom";
 import ChatIcon from "@material-ui/icons/Chat";
 
-const createNavLink = (areaIdentifier: string) => {
+export const createNavLink = (areaIdentifier: string) => {
     return `/dashboard/editor/email/${areaIdentifier}?tab=${0}`;
 };
 
