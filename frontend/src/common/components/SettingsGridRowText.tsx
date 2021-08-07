@@ -112,7 +112,7 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({
                     {currentValue && (
                         <>
                             <Typography display="inline" style={{ paddingTop: "1rem" }} variant="body1">
-                                Current value:
+                                Current:{" "}
                             </Typography>
                             <Typography display="inline" style={{ paddingTop: "1rem", fontWeight: "bold" }}>
                                 {currentValue}

@@ -4,6 +4,8 @@ import Tour, { ReactourStep } from "reactour";
 import Fade from "react-reveal/Fade";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+
 export interface IIntroSteps {
     steps: ReactourStep[];
     initialize: boolean;
@@ -24,6 +26,9 @@ export const IntroSteps = ({ steps, onBlur, initialize = true }: IIntroSteps) =>
     const cls = useStyles();
     const theme = useTheme();
 
+    const disableBody = (target) => disableBodyScroll(target);
+    const enableBody = (target) => enableBodyScroll(target);
+
     useEffect(() => {
         setStepsEnabled(initialize);
     }, []);
@@ -32,7 +37,11 @@ export const IntroSteps = ({ steps, onBlur, initialize = true }: IIntroSteps) =>
     return (
         <Fade>
             <Tour
-                onBeforeClose={onBlur}
+                onAfterOpen={disableBody}
+                onBeforeClose={(target) => {
+                    enableBody(target);
+                    onBlur();
+                }}
                 getCurrentStep={(curr) => setCurrentStep(curr)}
                 className={cls.tour}
                 accentColor={theme.palette.primary.light}

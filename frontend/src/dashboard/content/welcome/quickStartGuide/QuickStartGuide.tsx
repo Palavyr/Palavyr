@@ -92,9 +92,10 @@ export const QuickStartGuide = () => {
 
     return (
         <>
+
             {todos && !allClear(todos) && <OnboardingTodo todos={todos} />}
             <Divider />
-            <AreaConfigurationHeader title="Quick Start Guide" subtitle="Follow the steps to learn about how Palavyr works and what you should do to get started." />
+            <AreaConfigurationHeader divider title="Quick Start Guide" subtitle="Follow the steps to learn about how Palavyr works and what you should do to get started." />
             <QuickStartCard
                 title="1. Click to create your first area"
                 content="You can check out the default area to see how you might use Palavyr. Be sure to disable or delete this area before you go live with the widget."

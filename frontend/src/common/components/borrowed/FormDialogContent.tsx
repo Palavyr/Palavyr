@@ -71,7 +71,7 @@ export const FormDialogContent = ({
                 <GoogleLogin onSuccess={onGoogleSuccess} onFailure={onGoogleFailure} clientId={googleOAuthClientId} isSignedIn={false} theme="dark" />
                 <br></br>
                 {status === COULD_NOT_FIND_SERVER && <span className={cls.errorText}>Could not find server.</span>}
-                {status === INVALID_GOOGLE_TOKEN && <span className={cls.errorText}>Session Expired. Please login again.</span>}
+                {status === INVALID_GOOGLE_TOKEN && <span className={cls.errorText}>Session Expired. Please wait a few minutes, and then try to log in again.</span>}
                 {status === NOT_A_GOOGLE_ACCOUNT && <span className={cls.errorText}>Email found, but should be used with standard login form (below).</span>}
                 {status === GOOGLE_ACCOUNT_NOT_FOUND && <span className={cls.errorText}>No account with this email address was found.</span>}
             </div>
