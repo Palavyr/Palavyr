@@ -130,6 +130,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
                     await GoogleJsonWebSignature.ValidateAsync(
                         oneTimeCode,
                         new GoogleJsonWebSignature.ValidationSettings());
+                if (result == null) logger.LogError("RESULT WAS NULL");
                 return result;
             }
             catch (InvalidJwtException)

@@ -54,7 +54,7 @@ class Auth {
         } else {
             this.authenticated = false;
             SessionStorage.unsetAuthorization();
-            errorCallback(authenticationResponse);
+            await errorCallback(authenticationResponse);
             return Promise.resolve(false);
         }
     }

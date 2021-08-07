@@ -10,12 +10,14 @@ export const NOT_A_GOOGLE_ACCOUNT = "notAGoogleAccount";
 export const GOOGLE_ACCOUNT_NOT_FOUND = "googleAccountNotFound";
 
 export const COULD_NOT_FIND_SERVER = "couldNotFindServer";
+export const ACCOUNT_ALREADY_EXISTS = "accountAlreadyExists";
 
 // server responses (TODO: Redesign to pass server message errors directly instead of via state switch)
 export const COULD_NOT_VALIDATE_GOOGLE_TOKEN = "Could not validate the Google Authentication token";
 export const GOOGLE_EMAIL_USED_WITH_DIFFERENT_ACCOUNT_TYPE = "Google Email is currently used with different account type.";
 export const COULD_NOT_FIND_ACCOUNT_WITH_GOOGLE = "Could not find Account with Google";
 export const DEFAULT_EMAIL_USED_WITH_DIFFERENT_ACCOUNT_TYPE = "Default Email is currently used with different account type.";
+export const ACCOUNT_ALREADY_EXISTS_MESSAGE = "This account already exists";
 
 export const COULD_NOT_FIND_ACCOUNT = "Could not find Account";
 export const PASSWORD_DOES_NOT_MATCH = "Password does not match.";

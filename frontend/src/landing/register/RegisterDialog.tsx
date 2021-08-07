@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 import GoogleLogin, { GoogleLoginResponse } from "react-google-login";
 import { DividerWithText } from "@common/components/DividerWithText";
 import { googleOAuthClientId } from "@api-client/clientUtils";
-import { INVALID_EMAIL, PASSWORDS_DONT_MATCH } from "@constants";
+import { ACCOUNT_ALREADY_EXISTS, ACCOUNT_ALREADY_EXISTS_MESSAGE, INVALID_EMAIL, PASSWORDS_DONT_MATCH } from "@constants";
 import Auth from "auth/Auth";
 
 const useStyles = makeStyles((theme) => ({
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export type RegisterFormStatusTypes = "passwordsDontMatch" | "passwordTooShort" | "invalidEmail" | null;
+export type RegisterFormStatusTypes = "passwordsDontMatch" | "passwordTooShort" | "invalidEmail" | typeof ACCOUNT_ALREADY_EXISTS | null;
 
 export interface IRegisterDialog {
     setStatus: (status: RegisterFormStatusTypes) => void;
@@ -66,7 +66,7 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
     };
 
     const defaultError = (response) => {
-        alert("Error registering: " + response);
+        setStatus(ACCOUNT_ALREADY_EXISTS);
     };
 
     const register = useCallback(() => {
@@ -93,7 +93,7 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
         setTimeout(async () => {
             setIsLoading(false);
             if (registerEmail !== null && registerPassword !== null) {
-                var res = await Auth.register(registerEmail.value, registerPassword.value, defaultSuccess, defaultError);
+                const res = await Auth.register(registerEmail.value, registerPassword.value, defaultSuccess, defaultError);
             }
         }, 1500);
     }, [setIsLoading, setStatus, setHasTermsOfServiceError, registerPasswordRef, registerPasswordRepeatRef, registerTermsCheckboxRef]);
@@ -177,12 +177,17 @@ export const RegisterDialog = ({ onClose, openTermsDialog, status, setStatus }: 
             hideBackdrop
             content={
                 <>
-                    <div className={classes.googlebutton}>
+                    {/* <div className={classes.googlebutton}>
                         <GoogleLogin theme="dark" clientId={googleOAuthClientId} buttonText="Sign up with Google" onSuccess={responseGoogleSuccess} onFailure={responseGoogleFailure} />
                     </div>
                     <br></br>
                     <DividerWithText text={"OR"} />
-                    <br></br>
+                    <br></br> */}
+                    {status === ACCOUNT_ALREADY_EXISTS && (
+                        <Typography align="center" style={{ color: "red" }}>
+                            {ACCOUNT_ALREADY_EXISTS_MESSAGE}
+                        </Typography>
+                    )}
                     <TextField
                         variant="outlined"
                         margin="normal"
