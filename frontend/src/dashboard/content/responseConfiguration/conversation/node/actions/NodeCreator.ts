@@ -46,7 +46,7 @@ export class NodeCreator {
             isLoopbackAnchorType: false,
             nodeId: uuid(),
             nodeType: nodeType,
-            text: DEFAULT_NODE_TEXT,
+            text: DEFAULT_NODE_TEXT(),
             nodeChildrenString: "",
             isRoot: false,
             isCritical: false,

@@ -46,7 +46,8 @@ export const DRAWER_WIDTH: number = 240;
 export const HELP_DRAWER_WIDTH: number = 300;
 
 // Palavyr Configuration Node
-export const DEFAULT_NODE_TEXT = "Click to add some meaningful text. Don't forget to add some personality!";
+export const DEFAULT_NODE_TEXT_LIST = ["Add some meaningful text.", "Asking questions periodically is a good way to keep your customers engaged."];
+export const DEFAULT_NODE_TEXT = () => (Math.ceil(Math.random()) % 2 == 0 ? DEFAULT_NODE_TEXT_LIST[0] : DEFAULT_NODE_TEXT_LIST[1]);
 
 export const defaultUrlForNewArea = (areaIdentifier: string) => `/dashboard/editor/email/${areaIdentifier}?tab=0`;
 
