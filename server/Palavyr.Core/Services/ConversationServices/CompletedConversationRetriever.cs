@@ -92,7 +92,7 @@ namespace Palavyr.Core.Services.ConversationServices
                 Id = conversation.Id,
                 ConversationId = conversation.ConversationId,
                 LinkReference = linkReference,
-                TimeStamp = conversation.TimeStamp.ToString(),//.ToString(TimeUtils.DateTimeFormat),
+                TimeStamp = conversation.TimeStamp.ToString(),
                 AccountId = conversation.AccountId,
                 AreaName = conversation.AreaName,
                 EmailTemplateUsed = conversation.EmailTemplateUsed,

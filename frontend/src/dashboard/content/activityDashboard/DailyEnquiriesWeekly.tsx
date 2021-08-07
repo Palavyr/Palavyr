@@ -5,6 +5,7 @@ import { useStyles } from "../demo/ColorOptions";
 import { Line } from "react-chartjs-2";
 import { DataPlot } from "./components/DataPlot";
 import seedrandom from "seedrandom";
+import { sum } from "lodash";
 
 type EnqDataSet = {
     label: string;
@@ -26,14 +27,14 @@ export const getRandomColor = (seed: number | string) => {
 };
 
 const calcualateDailEnquiryByDay = (areaDetails: AreaNameDetails, enquiries: Enquiries) => {
-    const dates = enquiries.map((x) => {
-        const date = new Date(Date.parse(x.timeStamp));
-        date.toLocaleDateString();
-        return {
-            date,
-            dateString: date.toDateString(),
-        };
-    });
+    // const dates = enquiries.map((x) => {
+    //     const date = new Date(Date.parse(x.timeStamp));
+    //     date.toLocaleDateString();
+    //     return {
+    //         date,
+    //         dateString: date.toDateString(),
+    //     };
+    // });
 
     // const uniqueDates = uniqBy(dates, (x) => x.dateString).sort((a, b) => a.date.getTime() - b.date.getTime());
 
@@ -149,9 +150,9 @@ export const DailyEnquiriesWeekly = () => {
 
     return (
         <DataPlot
-            title="7 Days of Daily Activity"
+            title="Activity over the last 7 days"
             subtitle="Learn about the daily activity of your widget, broken down by area"
-            hasData={data !== undefined && data && data && data.labels.length > 0}
+            hasData={data !== undefined && data && data && sum(data.datasets.map(x => sum(x.data))) > 0}
             loadingSpinner={loadingspinner}
         >
             <Line data={data} options={options} />

@@ -9,6 +9,8 @@ import Auth from "auth/Auth";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { SettingsWrapper } from "../SettingsWrapper";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import Cookies from "js-cookie";
+import { ALL_COOKIE_NAMES } from "@constants";
 
 const useStyles = makeStyles(() => ({
     titleText: {
@@ -28,6 +30,7 @@ export const DeleteAccount = () => {
         alert("We're sorry to see you go!");
         await repository.Settings.Account.DeleteAccount();
         Auth.ClearAuthentication();
+        ALL_COOKIE_NAMES.forEach((x: string) => Cookies.remove(x))
         history.push("/");
     };
     const alertMessage = {

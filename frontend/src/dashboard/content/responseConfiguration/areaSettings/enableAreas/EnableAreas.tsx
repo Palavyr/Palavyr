@@ -19,13 +19,14 @@ const useStyles = makeStyles((theme) => ({
     container: {
         display: "flex",
         justifyContent: "center",
+        borderRadius: "15px",
     },
     center: {
         textAlign: "center",
     },
     header: {
         backgroundColor: theme.palette.secondary.light,
-    }
+    },
 }));
 
 export const EnableAreas = () => {
@@ -51,7 +52,10 @@ export const EnableAreas = () => {
 
     return (
         <>
-            <AreaConfigurationHeader title="Enable or disable your Areas" subtitle="Use these toggles to enable or disable your configured areas. If an area is disabled, it will not appear in your chat widget." />
+            <AreaConfigurationHeader
+                title="Enable or disable your Areas"
+                subtitle="Use these toggles to enable or disable your configured areas. If an area is disabled, it will not appear in your chat widget."
+            />
             <TableContainer className={cls.container}>
                 <Table component={Paper} className={cls.paper}>
                     <TableHead>

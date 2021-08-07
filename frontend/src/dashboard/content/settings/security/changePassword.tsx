@@ -1,5 +1,4 @@
 import { makeStyles, Theme, createStyles, Grid, FormControl, InputLabel, Input, InputAdornment, IconButton, Paper, Divider } from "@material-ui/core";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import React, { useContext, useState } from "react";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
