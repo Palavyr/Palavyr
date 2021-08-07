@@ -66,7 +66,7 @@ export const FormDialogContent = ({
 
     return (
         <>
-            {/* <div className={cls.centeredItems}>
+            <div className={cls.centeredItems}>
                 <GoogleLogin onSuccess={async (response: GoogleLoginResponse) => await onGoogleSuccess(response)} onFailure={onGoogleFailure} clientId={googleOAuthClientId} isSignedIn={false} theme="dark" />
                 <br></br>
                 {status === COULD_NOT_FIND_SERVER && <span className={cls.errorText}>Could not find server.</span>}
@@ -77,7 +77,7 @@ export const FormDialogContent = ({
             <br></br>
             <DividerWithText text="OR" />
             <br></br>
-            <div className={cls.centeredItems}>{status === NOT_A_DEFAULT_ACCOUNT && <span className={cls.errorText}>Email found, but is associated with google login (above).</span>}</div> */}
+            <div className={cls.centeredItems}>{status === NOT_A_DEFAULT_ACCOUNT && <span className={cls.errorText}>Email found, but is associated with google login (above).</span>}</div>
             <TextField
                 variant="outlined"
                 margin="normal"

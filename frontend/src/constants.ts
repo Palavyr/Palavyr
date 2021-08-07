@@ -62,5 +62,7 @@ export const TOPBAR_MAX_HEIGHT = 64;
 // cookie names
 export const WELCOME_TOUR_COOKIE_NAME = "welcome-tour-cookie";
 export const EDITOR_TOUR_COOKIE_NAME = "editor-tour-cookie";
+export const REMEMBER_ME_EMAIL_COOKIE_NAME = "remember-me-email-cookie";
+export const REMEMBER_ME_PASSWORD_COOKIE_NAME = "remember-me-password-cookie";
 
-export const ALL_COOKIE_NAMES = [WELCOME_TOUR_COOKIE_NAME, EDITOR_TOUR_COOKIE_NAME];
+export const ALL_COOKIE_NAMES = [WELCOME_TOUR_COOKIE_NAME, EDITOR_TOUR_COOKIE_NAME, REMEMBER_ME_EMAIL_COOKIE_NAME, REMEMBER_ME_PASSWORD_COOKIE_NAME];

@@ -22,11 +22,15 @@ import {
     NOT_A_DEFAULT_ACCOUNT,
     NOT_A_GOOGLE_ACCOUNT,
     PASSWORD_DOES_NOT_MATCH,
+    REMEMBER_ME_COOKIE_NAME,
+    REMEMBER_ME_EMAIL_COOKIE_NAME,
+    REMEMBER_ME_PASSWORD_COOKIE_NAME,
 } from "@constants";
 import { noop } from "lodash";
 import { FormDialogContent } from "@common/components/borrowed/FormDialogContent";
 import { useEffect } from "react";
 import { GoogleLoginResponse } from "react-google-login";
+import Cookies from "js-cookie";
 
 export type GoogleResponse = {
     tokenId: string;
@@ -56,10 +60,11 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
     const history = useHistory();
 
     useEffect(() => {
-        const remembered = SessionStorage.getRememberMe();
-        if (remembered !== null) {
-            const { emailAddress: emailAddress, password: password } = remembered;
-            setLoginEmail(emailAddress);
+        const email = Cookies.get(REMEMBER_ME_EMAIL_COOKIE_NAME);
+        const password = Cookies.get(REMEMBER_ME_PASSWORD_COOKIE_NAME);
+
+        if (email && password) {
+            setLoginEmail(email);
             setLoginPassword(password);
         }
     }, []);
@@ -112,9 +117,13 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
         e.preventDefault();
 
         if (rememberMe && loginEmail && loginPassword) {
-            SessionStorage.setRememberMe(loginEmail, loginPassword);
+            Cookies.set(REMEMBER_ME_EMAIL_COOKIE_NAME, loginEmail);
+            Cookies.set(REMEMBER_ME_PASSWORD_COOKIE_NAME, loginPassword);
+            // SessionStorage.setRememberMe(loginEmail, loginPassword);
         } else {
-            SessionStorage.unsetRememberMe();
+            Cookies.remove(REMEMBER_ME_COOKIE_NAME);
+            Cookies.remove(REMEMBER_ME_COOKIE_NAME);
+            // SessionStorage.unsetRememberMe();
         }
 
         await login();
