@@ -25,7 +25,7 @@ class Auth {
     async register(email: string, password: string, callback: () => any, errorCallback: (response) => any) {
         try {
             const authenticationResponse = await this.loginClient.Account.registerNewAccount(email, password);
-            return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
+            return await this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
         } catch {
             console.log("Error trying to reach the server.");
             return null;
@@ -34,7 +34,7 @@ class Auth {
 
     async registerWithGoogle(oneTimeCode: string, tokenId: string, callback: () => void, errorCallback: (response) => void) {
         const authenticationResponse = await this.loginClient.Account.registerNewAccountWithGoogle(oneTimeCode, tokenId);
-        return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
+        return await this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
     }
 
     private async processAuthenticationResponse(authenticationResponse: Credentials, successRedirectToDashboard: () => any, errorCallback: (response: Credentials) => any): Promise<boolean> {
@@ -63,7 +63,7 @@ class Auth {
         if (email === null || password === null) return false;
         try {
             const authenticationResponse = await this.loginClient.Login.RequestLogin(email, password);
-            return this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
+            return await this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
         } catch {
             console.log("Error attempting to reach the server.");
             return null;
@@ -73,7 +73,7 @@ class Auth {
     async loginWithGoogle(oneTimeCode: string, tokenId: string, successRedirectToDashboard: () => void, errorCallback: (response: Credentials) => void): Promise<boolean | null> {
         try {
             const authenticationResponse = await this.loginClient.Login.RequestLoginWithGoogleToken(oneTimeCode, tokenId);
-            return this.processAuthenticationResponse(authenticationResponse, successRedirectToDashboard, errorCallback);
+            return await this.processAuthenticationResponse(authenticationResponse, successRedirectToDashboard, errorCallback);
         } catch {
             console.log("Error attempting to reach the server.");
             return Promise.resolve(null);

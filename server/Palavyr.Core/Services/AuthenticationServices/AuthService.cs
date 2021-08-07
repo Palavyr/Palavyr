@@ -165,6 +165,9 @@ namespace Palavyr.Core.Services.AuthenticationServices
             var payload = await ValidateGoogleTokenId(credentialRequest.OneTimeCode);
             if (payload == null)
             {
+                logger.LogError(CouldNotValidateGoogleAuthToken);
+                logger.LogError($"OneTimeCode: {credentialRequest.OneTimeCode}");
+                
                 return AccountReturn.Return(null, CouldNotValidateGoogleAuthToken);
             }
 
