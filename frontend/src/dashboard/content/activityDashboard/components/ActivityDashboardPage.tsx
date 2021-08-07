@@ -26,17 +26,17 @@ export const ActivityDashboardPage = () => {
                 subtitle="Review the activity of your chatbot! This page is early release, but we've made a couple plots availble as a sneak peak for you!"
             />
             <Grid container>
-                <Grid item xs={4}></Grid>
-                <Grid item justify="center" xs={4} className={cls.squareGridItem}>
+                <Grid item xs={2}></Grid>
+                <Grid item justify="center" xs={8} className={cls.squareGridItem}>
                     <EnquiryActivity />
                 </Grid>
-                <Grid item xs={4}></Grid>
+                <Grid item xs={2}></Grid>
 
-                <Grid item xs={3}></Grid>
-                <Grid item justify="center" xs={6} className={cls.rectangleGridItem}>
+                <Grid item xs={2}></Grid>
+                <Grid item justify="center" xs={8} className={cls.rectangleGridItem}>
                     <DailyEnquiriesWeekly />
                 </Grid>
-                <Grid item xs={3}></Grid>
+                <Grid item xs={2}></Grid>
             </Grid>
         </>
     );
