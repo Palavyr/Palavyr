@@ -22,7 +22,6 @@ import {
     NOT_A_DEFAULT_ACCOUNT,
     NOT_A_GOOGLE_ACCOUNT,
     PASSWORD_DOES_NOT_MATCH,
-    REMEMBER_ME_COOKIE_NAME,
     REMEMBER_ME_EMAIL_COOKIE_NAME,
     REMEMBER_ME_PASSWORD_COOKIE_NAME,
 } from "@constants";
@@ -119,11 +118,9 @@ export const LoginDialog = ({ status, setStatus, onClose, openChangePasswordDial
         if (rememberMe && loginEmail && loginPassword) {
             Cookies.set(REMEMBER_ME_EMAIL_COOKIE_NAME, loginEmail);
             Cookies.set(REMEMBER_ME_PASSWORD_COOKIE_NAME, loginPassword);
-            // SessionStorage.setRememberMe(loginEmail, loginPassword);
         } else {
-            Cookies.remove(REMEMBER_ME_COOKIE_NAME);
-            Cookies.remove(REMEMBER_ME_COOKIE_NAME);
-            // SessionStorage.unsetRememberMe();
+            Cookies.remove(REMEMBER_ME_EMAIL_COOKIE_NAME);
+            Cookies.remove(REMEMBER_ME_PASSWORD_COOKIE_NAME);
         }
 
         await login();
