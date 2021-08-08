@@ -72,6 +72,9 @@ import { ActivityDashboardPage } from "dashboard/content/activityDashboard/compo
 import { ActivityDashboardHelp } from "dashboard/content/help/DataDashboardHelp";
 import { ToursPage } from "dashboard/content/welcome/OnboardingTour/tours/ToursPage";
 import { ToursPageHelp } from "dashboard/content/help/ToursPageHelp";
+import { BlogPage } from "@landing/blog/BlogPage";
+import { blogPosts } from "@landing/blog/blogPosts";
+import { BlogRoutes } from "@landing/blog/BlogRoutes";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -100,6 +103,7 @@ export const Routes = () => {
                 <Route exact path={RESET_PASSWORD_VERIFY} component={ConfirmYourResetLink} />
                 <Route exact path={RESET_PASSWORD_FORM} component={RenderPasswordDialog} />
                 <Route exact path={RESET_PASSWORD_SUCCESS} component={RenderResetSuccess} />
+                <BlogRoutes blogPosts={blogPosts} />
 
                 <ProtectedRoute exact path="/dashboard" component={withLayout(QuickStartGuide, <QuickStartGuideHelp />)} />
                 <ProtectedRoute exact path="/dashboard/welcome" component={withLayout(QuickStartGuide, <QuickStartGuideHelp />)} />
