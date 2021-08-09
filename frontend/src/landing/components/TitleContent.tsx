@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme) => ({
         boxShadow: "0 0 white",
         background: "none",
         border: "none",
-        paddingTop: "2rem",
+        paddingTop: "1rem",
         paddingBottom: "2rem",
         minWidth: "60%",
     },

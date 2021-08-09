@@ -974,3 +974,8 @@ export type BlogPostRecord = {
     content: React.ReactNode;
 };
 export type BlogPosts = BlogPostRecord[];
+
+export type BlogPostRouteMeta = BlogPostRecord & {
+    url: string;
+    params: string;
+};

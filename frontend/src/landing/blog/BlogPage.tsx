@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import classNames from "classnames";
 import { Grid, Box, isWidthUp, makeStyles, withWidth, GridSize } from "@material-ui/core";
-import BlogCard from "./components/BlogCard";
-import { BlogPostRecord } from "@Palavyr-Types";
-import { BlogPostRouteMeta } from "./BlogRoutes";
+import { BlogCard } from "./components/BlogCard";
 import { Breakpoint } from "@material-ui/core/styles/createBreakpoints";
+import { LandingWrapper } from "@landing/components/LandingWrapper";
+import { BlogTitleHeaderContent } from "@landing/branding/headerTitleContent/BlogHeaderTitleContent";
+import { BlogPostRouteMeta } from "@Palavyr-Types";
 
 const useStyles = makeStyles((theme) => ({
     blogContentWrapper: {
@@ -19,9 +20,16 @@ const useStyles = makeStyles((theme) => ({
     },
     wrapper: {
         minHeight: "60vh",
+        padding: "2rem",
     },
     noDecoration: {
         textDecoration: "none !important",
+    },
+    primaryText: {
+        color: theme.palette.success.main,
+    },
+    secondaryText: {
+        color: theme.palette.success.dark,
     },
 }));
 
@@ -42,7 +50,7 @@ export const getVerticalBlogPosts = (width: Breakpoint, blogPosts: BlogPostRoute
     blogPosts.forEach((blogPost: BlogPostRouteMeta, index: number) => {
         gridRows[index % rows].push(
             <Grid key={blogPost.id} item xs={12}>
-                <Box mb={3}>
+                <Box mb={4}>
                     <BlogCard src={blogPost.src} title={blogPost.title} snippet={blogPost.snippet} date={blogPost.date} url={blogPost.url} />
                 </Box>
             </Grid>
@@ -55,24 +63,26 @@ export const getVerticalBlogPosts = (width: Breakpoint, blogPosts: BlogPostRoute
     ));
 };
 
-export interface BlogProps {
+export interface BlogPageProps {
     width: Breakpoint;
     blogPosts: BlogPostRouteMeta[];
 }
 
-export const BlogPage = withWidth()(({ width, blogPosts }: BlogProps) => {
+export const BlogPage = withWidth()(({ width, blogPosts }: BlogPageProps
+) => {
     const cls = useStyles();
-    // useEffect(() => {
-    //     selectBlog();
-    // }, [selectBlog]);
-
     return (
-        <Box display="flex" justifyContent="center" className={classNames(cls.wrapper, "lg-p-top")}>
-            <div className={cls.blogContentWrapper}>
-                <Grid container spacing={3}>
-                    {getVerticalBlogPosts(width, blogPosts)}
-                </Grid>
-            </div>
-        </Box>
+        <LandingWrapper
+            TitleContent={<BlogTitleHeaderContent />}
+            MainContent={
+                <Box display="flex" justifyContent="center" className={classNames(cls.wrapper)}>
+                    <div className={cls.blogContentWrapper}>
+                        <Grid container spacing={3}>
+                            {getVerticalBlogPosts(width, blogPosts)}
+                        </Grid>
+                    </div>
+                </Box>
+            }
+        />
     );
 });

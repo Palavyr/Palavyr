@@ -89,10 +89,18 @@ export const Footer = withWidth()(({ width, openLoginDialog, openRegisterDialog,
                 <FooterUList>
                     <FooterListTitle>Company</FooterListTitle>
                     <FooterListItem>Team</FooterListItem>
-                    <FooterListItem>Our Story</FooterListItem>
+                    <FooterListItem>
+                        <Link key="Our Story" to="/our-story" className={cls.noDecoration}>
+                            <Typography variant="body1" className={cls.menuButtonText}>
+                                Our Story
+                            </Typography>
+                        </Link>
+                    </FooterListItem>
                     <FooterListItem>
                         <Link key="Blog" to="/blog" className={cls.noDecoration}>
-                            Blog
+                            <Typography variant="body1" className={cls.menuButtonText}>
+                                Blog
+                            </Typography>
                         </Link>
                     </FooterListItem>
                     <FooterListItem>
