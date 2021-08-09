@@ -87,11 +87,17 @@ export const BlogPost = ({ date, title, src, content, otherArticles }: BlogPostP
                                 <Typography variant="h6" paragraph>
                                     Other articles
                                 </Typography>
-                                {otherArticles.map((blogPost) => (
-                                    <Box key={blogPost.id} mb={3}>
-                                        <BlogCard title={blogPost.title} src={blogPost.src} snippet={blogPost.snippet} date={blogPost.date} url={`${blogPost.url}${blogPost.params}`} />
-                                    </Box>
-                                ))}
+                                {otherArticles.length > 0 ? (
+                                    <>
+                                        {otherArticles.map((blogPost) => (
+                                            <Box key={blogPost.id} mb={3}>
+                                                <BlogCard title={blogPost.title} src={blogPost.src} snippet={blogPost.snippet} date={blogPost.date} url={`${blogPost.url}${blogPost.params}`} />
+                                            </Box>
+                                        ))}
+                                    </>
+                                ) : (
+                                    <Typography>No other articles yet</Typography>
+                                )}
                             </Grid>
                         </Grid>
                     </div>

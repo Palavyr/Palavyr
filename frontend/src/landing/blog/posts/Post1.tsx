@@ -1,14 +1,8 @@
 import { TitleCopy } from "@landing/ourStory/components/OurStoryContent";
 import { Typography } from "@material-ui/core";
 import React from "react";
+import { BlogCopy } from "../components/BlogCopy";
 
-const BlogCopy = (props) => {
-    return (
-        <Typography variant="body2" gutterBottom style={{ paddingBottom: "1rem" }}>
-            {props.children}
-        </Typography>
-    );
-};
 export const Post1 = (
     <>
         <TitleCopy variant="h6" paragraph>

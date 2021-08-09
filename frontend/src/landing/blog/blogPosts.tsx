@@ -12,12 +12,12 @@ export const blogPosts: BlogPosts = [
         snippet: "Palavyr Kicks off in 2021!",
         content: Post1,
     },
-    {
-        title: "What problem does Palavyr solve?",
-        id: 2,
-        date: 1628477895,
-        src: `${webUrl}/public/blogImages/post2/blogPost2.jpg`,
-        snippet: "We often get asked the question: What problem does Palavyr actually solve? And we have a great answer.",
-        content: Post2,
-    },
+    // {
+    //     title: "What problem does Palavyr solve?",
+    //     id: 2,
+    //     date: 1628477895,
+    //     src: `${webUrl}/public/blogImages/post2/blogPost2.jpg`,
+    //     snippet: "We often get asked the question: What problem does Palavyr actually solve? And we have a great answer.",
+    //     content: Post2,
+    // },
 ];

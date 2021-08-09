@@ -77,6 +77,7 @@ import { BlogPostRecord, BlogPostRouteMeta } from "@Palavyr-Types";
 import { BlogPost } from "@landing/blog/components/BlogPost";
 import { BlogPage } from "@landing/blog/BlogPage";
 import { OurStoryPage } from "@landing/ourStory/OutStoryPage";
+import { OurTeamPage } from "@landing/ourTeam/OurTeamPage";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -134,7 +135,7 @@ export const Routes = () => {
                 <Route exact path="/privacy-policy" component={PrivacyPolicyPage} />
                 <Route exact path="/terms-of-use" component={TermsOfUsePage} />
                 <Route exact path="/our-story" component={OurStoryPage} />
-
+                <Route exact path="/team" component={OurTeamPage} />
                 <Route exact path={RESET_PASSWORD_VERIFY} component={ConfirmYourResetLink} />
                 <Route exact path={RESET_PASSWORD_FORM} component={RenderPasswordDialog} />
                 <Route exact path={RESET_PASSWORD_SUCCESS} component={RenderResetSuccess} />

@@ -23,9 +23,7 @@ export const LangingPageTitleContent = ({}: LandingPageTitleContentProps) => {
     const cls = useStyles();
     return (
         <TitleContent title={<TitleTypography>Build Your Own Chat Bot</TitleTypography>} subtitle={<SubtitleTypography>No Programing Required</SubtitleTypography>}>
-            {/* <Button className={cls.button} variant="contained" onClick={openRegisterDialog}>
-                <Typography variant="h6">Create a FREE account</Typography>
-            </Button> */}
+
         </TitleContent>
     );
 };

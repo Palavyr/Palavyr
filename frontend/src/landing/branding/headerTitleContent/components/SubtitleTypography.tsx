@@ -14,7 +14,7 @@ export interface SubtitleTypographyProps {
 export const SubtitleTypography = ({ children }: SubtitleTypographyProps) => {
     const cls = useStyles();
     return (
-        <Typography align="center" variant="h6" className={cls.secondaryText}>
+        <Typography align="center" variant="h5" className={cls.secondaryText}>
             {children}
         </Typography>
     );

@@ -27,6 +27,18 @@ export const OurStoryContent = () => {
             </Typography>
             <Typography paragraph>So who are we?</Typography>
             <Typography paragraph> We're the folks who created Palavyr. And that makes us your new best friends.</Typography>
+            <br></br>
+            <TitleCopy>Palavyr Origins</TitleCopy>
+            <Typography paragraph>
+                Palavyr was founded in late 2020 by a software engineer who was tired of visiting websites that made it difficult to find specific information about what a company did and how much things cost.
+                After many frustrating online experiences with companies that included law firms, cleaning services, and home repair and maintenance services (and many more) he decided to embark on a quest to
+                create a system that would allow businesses to provide straight forward ways to access common information and learn how much things might cost.
+            </Typography>
+            <TitleCopy>Where we come from</TitleCopy>
+            <Typography paragraph>
+                Palavyr is owned an operated out of Melbourne, Australia by an American who lives there with his Aussie wife and soon-to-be-born son. The ulterior motive for creating is to support his family so
+                that his son might have a bright future, and he and his wife a comfortable retirement.
+            </Typography>
         </>
     );
 };
