@@ -417,15 +417,15 @@ export const PrivacyPolicyContent = () => {
             <h4>
                 <span>Registration and authentication</span>
             </h4>
-            <h4>
-                <span>
-                    By registering or authenticating, Users allow Palavyr.com to identify them and give them access to dedicated services.
-                    <br />
-                    Depending on what is described below, third parties may provide registration and authentication services. In this case, Palavyr.com will be able to access some Data, stored by these
-                    third-party services, for registration or identification purposes.
-                    <br />
-                </span>
-            </h4>
+
+            <span>
+                By registering or authenticating, Users allow Palavyr.com to identify them and give them access to dedicated services.
+                <br />
+                Depending on what is described below, third parties may provide registration and authentication services. In this case, Palavyr.com will be able to access some Data, stored by these third-party
+                services, for registration or identification purposes.
+                <br />
+            </span>
+
             <h5>
                 <span>Google</span>
                 <span>&nbsp;</span>
