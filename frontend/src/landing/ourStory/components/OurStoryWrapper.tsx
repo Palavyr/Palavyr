@@ -46,7 +46,7 @@ export const OurStoryWrapper = ({ children }: OurStoryWrapperProps) => {
                                     <b>Palavyr wants to make your world a better place</b>
                                 </Typography>
                             </Box>
-                            <ZoomImage className={cls.img} src={""} alt="" />
+                            <ZoomImage className={cls.img} imgSrc={""} alt="" />
                             <Box p={3}>
                                 {children}
                                 <Box pt={5}>

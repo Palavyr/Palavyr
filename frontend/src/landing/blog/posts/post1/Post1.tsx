@@ -1,7 +1,6 @@
-import { TitleCopy } from "@landing/ourStory/components/OurStoryContent";
-import { Typography } from "@material-ui/core";
+import { TitleCopy } from "@common/components/typography/TitleCopy";
 import React from "react";
-import { BlogCopy } from "../components/BlogCopy";
+import { BlogCopy } from "../../components/BlogCopy";
 
 export const Post1 = (
     <>

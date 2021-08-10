@@ -147,7 +147,7 @@ export const Routes = () => {
                             key={post.url}
                             exact
                             path={post.url}
-                            render={() => <BlogPost date={post.date} title={post.title} src={post.url} content={post.content} otherArticles={blogPostRouteMetas.filter((m) => m.id !== post.id)} />}
+                            render={() => <BlogPost date={post.date} title={post.title} url={post.url} img={post.src} content={post.content} otherArticles={blogPostRouteMetas.filter((m) => m.id !== post.id)} />}
                         />
                     );
                 })}

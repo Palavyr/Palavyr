@@ -38,11 +38,12 @@ const useStyles = makeStyles((theme) => ({
 export interface BlogPostProps {
     date: number;
     title: string;
-    src: string;
+    url: string;
+    img: string;
     content: React.ReactNode;
     otherArticles: BlogPostRouteMeta[];
 }
-export const BlogPost = ({ date, title, src, content, otherArticles }: BlogPostProps) => {
+export const BlogPost = ({ date, title, url, img, content, otherArticles }: BlogPostProps) => {
     const cls = useStyles();
     useEffect(() => {
         document.title = `Palavyr - ${title}`;
@@ -68,7 +69,7 @@ export const BlogPost = ({ date, title, src, content, otherArticles }: BlogPostP
                                             })}
                                         </Typography>
                                     </Box>
-                                    <ZoomImage className={cls.img} src={src} alt="" />
+                                    <ZoomImage className={cls.img} imgSrc={img} alt="" />
                                     <Box p={3}>
                                         {content}
                                         <Box pt={2}>

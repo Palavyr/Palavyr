@@ -1,13 +1,6 @@
+import { TitleCopy } from "@common/components/typography/TitleCopy";
 import { Typography } from "@material-ui/core";
 import React from "react";
-
-export const TitleCopy = (props) => {
-    return (
-        <Typography variant="h6" paragraph>
-            {props.children}
-        </Typography>
-    );
-};
 
 export const OurStoryContent = () => {
     return (

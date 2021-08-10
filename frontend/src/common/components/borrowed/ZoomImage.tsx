@@ -40,16 +40,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
 export interface IZoomImage {
     alt: string;
-    src: string;
-    className: string;
+    imgSrc: string;
+    className?: string;
 }
 
-export const ZoomImage = ({ alt, src, className }: IZoomImage) => {
-
-    const classes = useStyles();
+export const ZoomImage = ({ alt, imgSrc, className = "" }: IZoomImage) => {
+    const cls = useStyles();
 
     const [zoomedIn, setZoomedIn] = useState(false);
     const [scrollbarSize, setScrollbarSize] = useState(null);
@@ -82,28 +80,15 @@ export const ZoomImage = ({ alt, src, className }: IZoomImage) => {
             <ScrollbarSize onChange={setScrollbarSize}></ScrollbarSize>
             {zoomedIn && (
                 <Portal>
-                    <Backdrop
-                        open={zoomedIn}
-                        className={classes.backdrop}
-                        onClick={zoomOut}
-                    ></Backdrop>
-                    <div onClick={zoomOut} className={classes.portalImgWrapper}>
-                        <div className={classes.portalImgInnerWrapper}>
-                            <img
-                                alt={alt}
-                                src={src}
-                                className={classes.portalImg}
-                            ></img>
+                    <Backdrop open={zoomedIn} className={cls.backdrop} onClick={zoomOut}></Backdrop>
+                    <div onClick={zoomOut} className={cls.portalImgWrapper}>
+                        <div className={cls.portalImgInnerWrapper}>
+                            <img alt={alt} src={imgSrc} className={cls.portalImg}></img>
                         </div>
                     </div>
                 </Portal>
             )}
-            <img
-                alt={alt}
-                src={src}
-                onClick={zoomIn}
-                className={classNames(className, classes.zoomedOutImage)}
-            ></img>
+            <img alt={alt} src={imgSrc} onClick={zoomIn} className={classNames(className, cls.zoomedOutImage)}></img>
         </Fragment>
     );
-}
+};

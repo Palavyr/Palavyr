@@ -1,9 +1,12 @@
 import React, { useEffect, useCallback, useState, useContext } from "react";
 import { Typography, Card, makeStyles, Divider } from "@material-ui/core";
 import { serverUrl, widgetUrl } from "@api-client/clientUtils";
-import { Align } from "dashboard/layouts/positioning/Align";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { ZoomImage } from "@common/components/borrowed/ZoomImage";
+import Styles from "./minimalStyles.png";
+import Precheck from "./precheck.png";
+import { LineSpacer } from "@common/components/typography/LineSpacer";
 
 const useStyles = makeStyles((theme) => ({
     outerCard: {
@@ -11,12 +14,16 @@ const useStyles = makeStyles((theme) => ({
         padding: "3rem",
         textAlign: "center",
     },
+    img: {
+        height: "300px",
+        borderRadius: "15px",
+    },
 }));
 
 export const GetWidget = () => {
     const { repository } = useContext(DashboardContext);
     const [apikey, setApiKey] = useState<string>("");
-    const classes = useStyles();
+    const cls = useStyles();
 
     const loadApiKey = useCallback(async () => {
         const key = await repository.Settings.Account.getApiKey();
@@ -31,7 +38,7 @@ export const GetWidget = () => {
     return (
         <>
             <AreaConfigurationHeader title="Get the Widget" subtitle="Use the following code snippets to integrate the widget into your side. We are currently working on a widget api, so stay tuned!" />
-            <Card className={classes.outerCard}>
+            <Card className={cls.outerCard}>
                 <Typography gutterBottom variant="h5">
                     Add the configured widget to your website
                 </Typography>
@@ -39,23 +46,24 @@ export const GetWidget = () => {
                     To add the widget to your website, simply paste the following code into your website's html and apply custom styling:
                 </Typography>
                 {apikey !== "" && (
-                    <Typography style={{cursor: "pointer"}} onClick={() => window.open(`${widgetUrl}/widget?key=${apikey}`, "_blank")} component="pre" paragraph>
+                    <Typography style={{ cursor: "pointer" }} onClick={() => window.open(`${widgetUrl}/widget?key=${apikey}`, "_blank")} component="pre" paragraph>
                         <strong>
                             &lt;iframe src="{widgetUrl}/widget?key={apikey}" /&gt;
                         </strong>
                     </Typography>
                 )}
-                <Typography>
-                    <p>Minimal Style Recommendation</p>
-                    <pre>height: "500px", width: "380px",</pre>
-                </Typography>
+                <Typography gutterBottom>Minimal Style Recommendation</Typography>
+                <ZoomImage alt="min styles" imgSrc={Styles} className={cls.img} />
             </Card>
-            <Card className={classes.outerCard}>
+            <Card className={cls.outerCard}>
                 <Typography gutterBottom variant="h5">
                     Check if your widget is enabled before loading (This feature is currently disabled during Alpha testing )
                 </Typography>
                 <Typography paragraph>
-                    <p>You may wish to perform a precheck on your widget before you attempt to load it in your website. Doing so will help guard against accidental loading of your widget when it is in an incomplete state.</p>
+                    <p>
+                        You may wish to perform a precheck on your widget before you attempt to load it in your website. Doing so will help guard against accidental loading of your widget when it is in an
+                        incomplete state.
+                    </p>
                     <p>To do this, send a request to the following url:</p>
                     <strong>
                         {serverUrl}/api/widget/widget-precheck?key={apikey}
@@ -68,33 +76,8 @@ export const GetWidget = () => {
                     </p>
                 </Typography>
                 <Divider />
-                <Align direction="center">
-                    <Typography align="left">
-                        <p>
-                            <strong>Example pre-check request</strong>
-                        </p>
-                        <pre>
-                            {`
-                    <script>
-                        var iframeId = "id-of-your-iframe-container-element";
-                        var url = ${serverUrl}/api/widget/widget-precheck?key=${apikey}
-                        fetch(
-                            url,
-                            {
-                                method: "GET",
-                                headers: { action: "widgetAccess" },
-                            }
-                        )
-                        .then((response) => response.json())
-                        .then((result) => {
-                            if (!result.isReady) document.getElementById(iframeId).innerHTML = "";
-                        })
-                        .catch((error) => console.error("Error:", error);
-                    </script>
-                        `}
-                        </pre>
-                    </Typography>
-                </Align>
+                <LineSpacer numLines={2} />
+                <ZoomImage alt="precheck" imgSrc={Precheck} className={cls.img} />
             </Card>
         </>
     );
