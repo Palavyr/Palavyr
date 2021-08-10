@@ -10,6 +10,7 @@ import { IFrame } from "dashboard/content/demo/IFrame";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { LandingWrapper } from "./components/LandingWrapper";
 import { LangingPageTitleContent } from "./branding/headerTitleContent/LandingPageTitleContent";
+import { LineSpacer } from "@common/components/typography/LineSpacer";
 
 AOS.init({
     duration: 1000,
@@ -75,14 +76,12 @@ export const LandingPage = () => {
                             What is Palavyr?
                         </Typography>
                         <br></br>
-                        <Typography gutterBottom align="center">
-                            Palavyr is a fully configurable automated chat system used to deliver information about your services and fees to potential customers.
+                        <Typography variant="h5" gutterBottom align="center">
+                            Palavyr is a no-code chat bot building platform used to build chatbots that say what you want them to say.
                         </Typography>
-                        <Typography gutterBottom align="center">
+                        <LineSpacer numLines={1} />
+                        <Typography variant="h5" gutterBottom align="center">
                             You craft the chats, configure your pricing strategies, and stylize the widget (which is embedded into your website).
-                        </Typography>
-                        <Typography gutterBottom align="center">
-                            Potential customers can then use the widget to get immediate information about your services and fees.
                         </Typography>
                     </div>
                     <div className={cls.strip} style={{ backgroundColor: theme.palette.primary.main }}>

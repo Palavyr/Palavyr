@@ -72,7 +72,7 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog }: INavBar) => {
                             </Typography>
                         </Button>
                         <Button disableElevation variant="contained" size="medium" onClick={openRegisterDialog} className={cls.newAccountButton} key="Register">
-                            <Typography variant="h6">New Account</Typography>
+                            <Typography variant="h6">Try For Free</Typography>
                         </Button>
                         <div style={{ marginRight: "1.5rem" }}>
                             <Link key="Home" to="/" className={cls.noDecoration}>

@@ -21,9 +21,5 @@ export interface LandingPageTitleContentProps {}
 
 export const LangingPageTitleContent = ({}: LandingPageTitleContentProps) => {
     const cls = useStyles();
-    return (
-        <TitleContent title={<TitleTypography>Build Your Own Chat Bot</TitleTypography>} subtitle={<SubtitleTypography>No Programing Required</SubtitleTypography>}>
-
-        </TitleContent>
-    );
+    return <TitleContent title={<TitleTypography>Build Your Own Chat Bot</TitleTypography>} subtitle={<SubtitleTypography>No Programing Required</SubtitleTypography>}></TitleContent>;
 };
