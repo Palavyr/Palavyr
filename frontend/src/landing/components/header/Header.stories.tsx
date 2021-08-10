@@ -10,10 +10,10 @@ export default {
 } as Meta;
 
 
-const Template = (args: IHaveWidth) => <Header {...args} />;
+// const Template = (args: IHaveWidth) => <Header {...args} />;
 
-export const Primary = Template.bind({});
-Primary.args = {
-    width: "100px"
-}
+// export const Primary = Template.bind({});
+// Primary.args = {
+//     width: "100px"
+// }
 

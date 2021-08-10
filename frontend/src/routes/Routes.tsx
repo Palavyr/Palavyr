@@ -72,6 +72,12 @@ import { ActivityDashboardPage } from "dashboard/content/activityDashboard/compo
 import { ActivityDashboardHelp } from "dashboard/content/help/DataDashboardHelp";
 import { ToursPage } from "dashboard/content/welcome/OnboardingTour/tours/ToursPage";
 import { ToursPageHelp } from "dashboard/content/help/ToursPageHelp";
+import { blogPosts } from "@landing/blog/blogPosts";
+import { BlogPostRecord, BlogPostRouteMeta } from "@Palavyr-Types";
+import { BlogPost } from "@landing/blog/components/BlogPost";
+import { BlogPage } from "@landing/blog/BlogPage";
+import { OurStoryPage } from "@landing/ourStory/OutStoryPage";
+import { OurTeamPage } from "@landing/ourTeam/OurTeamPage";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -89,7 +95,38 @@ const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Elem
 const withAreaTabs = (ContentComponent: JSX.Element[] | JSX.Element): (() => JSX.Element) => () => <AreaContent>{ContentComponent}</AreaContent>;
 const withSettingsTabs = (ContentComponent: JSX.Element[] | JSX.Element): (() => JSX.Element) => () => <SettingsContent>{ContentComponent}</SettingsContent>;
 
+const convertTitleToUriCompatible = (rawTitle: string) => {
+    let title = rawTitle;
+    title = title.toLowerCase();
+    /* Remove unwanted characters, only accept alphanumeric and space */
+    title = title.replace(/[^A-Za-z0-9 ]/g, "");
+    /* Replace multi spaces with a single space */
+    title = title.replace(/\s{2,}/g, " ");
+    /* Replace space with a '-' symbol */
+    title = title.replace(/\s/g, "-");
+    return title;
+};
+
+const createPostUrl = (title: string) => {
+    return `/blog/post/${title}`;
+};
+
+const createPostParam = (id: number) => {
+    return `?id=${id}`;
+};
+
 export const Routes = () => {
+    const blogPostRouteMetas: BlogPostRouteMeta[] = blogPosts.map((blogPost) => {
+        const titleSlug = convertTitleToUriCompatible(blogPost.title);
+        const url = createPostUrl(titleSlug);
+        const params = createPostParam(blogPost.id);
+
+        return {
+            ...blogPost,
+            url,
+            params,
+        };
+    });
     return (
         <Router>
             <Switch>
@@ -97,9 +134,24 @@ export const Routes = () => {
                 <Route exact path="/tutorial" component={TutorialPage} />
                 <Route exact path="/privacy-policy" component={PrivacyPolicyPage} />
                 <Route exact path="/terms-of-use" component={TermsOfUsePage} />
+                <Route exact path="/our-story" component={OurStoryPage} />
+                <Route exact path="/team" component={OurTeamPage} />
                 <Route exact path={RESET_PASSWORD_VERIFY} component={ConfirmYourResetLink} />
                 <Route exact path={RESET_PASSWORD_FORM} component={RenderPasswordDialog} />
                 <Route exact path={RESET_PASSWORD_SUCCESS} component={RenderResetSuccess} />
+
+                {blogPostRouteMetas.map((post: BlogPostRouteMeta) => {
+                    console.log(post.url);
+                    return (
+                        <Route
+                            key={post.url}
+                            exact
+                            path={post.url}
+                            render={() => <BlogPost date={post.date} title={post.title} src={post.url} content={post.content} otherArticles={blogPostRouteMetas.filter((m) => m.id !== post.id)} />}
+                        />
+                    );
+                })}
+                <Route exact path="/blog" render={() => <BlogPage blogPosts={blogPostRouteMetas} />} />
 
                 <ProtectedRoute exact path="/dashboard" component={withLayout(QuickStartGuide, <QuickStartGuideHelp />)} />
                 <ProtectedRoute exact path="/dashboard/welcome" component={withLayout(QuickStartGuide, <QuickStartGuideHelp />)} />

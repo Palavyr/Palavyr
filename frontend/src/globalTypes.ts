@@ -964,3 +964,18 @@ export type VideoMap = {
     title: string;
     description: string;
 };
+
+export type BlogPostRecord = {
+    title: string;
+    id: number;
+    date: number;
+    src: string; // an image src uri
+    snippet: string; // short description
+    content: React.ReactNode;
+};
+export type BlogPosts = BlogPostRecord[];
+
+export type BlogPostRouteMeta = BlogPostRecord & {
+    url: string;
+    params: string;
+};

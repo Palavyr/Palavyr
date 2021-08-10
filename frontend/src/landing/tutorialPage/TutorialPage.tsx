@@ -4,6 +4,8 @@ import { Card, makeStyles, Typography } from "@material-ui/core";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { VideoMap } from "@Palavyr-Types";
 import { LandingWrapper } from "@landing/components/LandingWrapper";
+import { TitleTypography } from "@landing/branding/headerTitleContent/components/TitleTypography";
+import { SubtitleTypography } from "@landing/branding/headerTitleContent/components/SubtitleTypography";
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -59,20 +61,7 @@ export const TutorialPage = () => {
 
     return (
         <LandingWrapper
-            TitleContent={
-                <TitleContent
-                    title={
-                        <Typography align="center" variant="h2" className={cls.primaryText}>
-                            Palavyr Getting Started Tutorial series
-                        </Typography>
-                    }
-                    subtitle={
-                        <Typography align="center" variant="h6" className={cls.secondaryText}>
-                            We are adding more tutorials regularly, so subscribe to our channel to receive updates!
-                        </Typography>
-                    }
-                />
-            }
+            TitleContent={<TitleContent title={<TitleTypography>Palavyr Getting Started Tutorial series</TitleTypography>} />}
             MainContent={
                 <>
                     {videoMap.map((video: VideoMap) => {

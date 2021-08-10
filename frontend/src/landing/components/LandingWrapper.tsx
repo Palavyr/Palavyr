@@ -1,16 +1,13 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import { LandingPageDialogSelector } from "@landing/components/dialogSelector/LandingPageDialogSelector";
 import { Header } from "@landing/components/header/Header";
 import { GreenStrip } from "@landing/components/sliver/ThinStrip";
-import { TitleContent } from "@landing/components/TitleContent";
-import { Card, makeStyles, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import { CHANGE_PASSWORD, REGISTER, TERMS_OF_SERVICE } from "@constants";
 import { DialogTypes } from "@landing/components/dialogSelector/dialogTypes";
 import { YellowStrip } from "@common/components/YellowStrip";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { Footer } from "@landing/components/footer/Footer";
 import { Sliver } from "@landing/components/sliver/Sliver";
-import { VideoMap } from "@Palavyr-Types";
 import { BottomStrip } from "@landing/components/footer/BottomStrip";
 
 const useStyles = makeStyles((theme) => ({
@@ -53,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export interface ILandingWrapper {
-    TitleContent: React.ReactNode;
+    TitleContent?: React.ReactNode; // | ((openRegisterDialog: () => void) => void);
     MainContent: React.ReactNode;
 }
 
@@ -95,18 +92,6 @@ export const LandingWrapper = ({ TitleContent, MainContent }: ILandingWrapper) =
             <YellowStrip />
             <Header openRegisterDialog={openRegisterDialog} openLoginDialog={openLoginDialog}>
                 {TitleContent}
-                {/* <TitleContent
-                    title={
-                        <Typography align="center" variant="h2" className={cls.primaryText}>
-                            Palavyr Getting Started Tutorial series
-                        </Typography>
-                    }
-                    subtitle={
-                        <Typography align="center" variant="h6" className={cls.secondaryText}>
-                            We are adding more tutorials regularly, so subscribe to our channel to receive updates!
-                        </Typography>
-                    }
-                /> */}
             </Header>
             <GreenStrip />
             {MainContent}

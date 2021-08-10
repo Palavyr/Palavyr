@@ -60,7 +60,6 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog }: INavBar) => {
     const cls = useStyles();
     const history = useHistory();
 
-    const redirectToTutorial = () => history.push("/tutorial");
     return (
         <AppBar position="fixed" className={cls.appBar} color="transparent" classes={{ root: cls.clear }}>
             <Toolbar className={cls.toolbar}>
@@ -84,10 +83,19 @@ export const NavBar = ({ openRegisterDialog, openLoginDialog }: INavBar) => {
                                 </span>
                             </Link>
                         </div>
-                        <Link key="Tutorial" to="/tutorial" className={cls.noDecoration}>
+                        <div style={{ marginRight: "1.5rem" }}>
+                            <Link key="Tutorial" to="/tutorial" className={cls.noDecoration}>
+                                <span>
+                                    <Typography variant="h6" className={cls.menuButtonText}>
+                                        Tutorial
+                                    </Typography>
+                                </span>
+                            </Link>
+                        </div>
+                        <Link key="Blog" to="/blog" className={cls.noDecoration}>
                             <span>
                                 <Typography variant="h6" className={cls.menuButtonText}>
-                                    Tutorial
+                                    Blog
                                 </Typography>
                             </span>
                         </Link>
