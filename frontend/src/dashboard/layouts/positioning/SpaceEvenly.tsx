@@ -2,8 +2,8 @@ import React from "react";
 import { makeStyles } from "@material-ui/core";
 
 type StyleProps = {
-    vertical: boolean;
-    center: boolean;
+    vertical?: boolean;
+    center?: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({

@@ -558,20 +558,20 @@ export type IncompleteArea = {
 export type IncompleteAreas = IncompleteArea[];
 
 export type WidgetPreferences = {
-    selectListColor: string;
-    headerColor: string;
-    fontFamily: string;
-    landingHeader: string;
-    chatHeader: string;
-    placeholder: string;
-    listFontColor: string;
-    headerFontColor: string;
-    optionsHeaderColor: string;
-    optionsHeaderFontColor: string;
-    chatFontColor: string;
-    chatBubbleColor: string;
-    buttonColor: string;
-    buttonFontColor: string;
+    selectListColor?: string;
+    headerColor?: string;
+    fontFamily?: string;
+    landingHeader?: string;
+    chatHeader?: string;
+    placeholder?: string;
+    listFontColor?: string;
+    headerFontColor?: string;
+    optionsHeaderColor?: string;
+    optionsHeaderFontColor?: string;
+    chatFontColor?: string;
+    chatBubbleColor?: string;
+    buttonColor?: string;
+    buttonFontColor?: string;
 };
 
 export type VariableDetail = {

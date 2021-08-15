@@ -3,9 +3,12 @@ import { Button, Checkbox, FormControlLabel, makeStyles, TableCell, TableRow, Ty
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { TableData, BasicThresholdData } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
-import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 
+type StyleProps = {
+    isTrue: boolean;
+}
 const useStyles = makeStyles((theme) => ({
     number: {
         border: "1px solid lightgray",
@@ -22,8 +25,8 @@ const useStyles = makeStyles((theme) => ({
         margin: "0.6rem",
         width: "55ch",
     },
-    maxValInput: (prop: boolean) => {
-        if (prop === true) {
+    maxValInput: (props: StyleProps) => {
+        if (props.isTrue === true) {
             return {
                 display: "none",
             };
@@ -43,7 +46,7 @@ interface IBasicThresholdRow {
 const cellAlignment = "center";
 
 export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier }: IBasicThresholdRow) => {
-    const cls = useStyles();
+    const cls = useStyles({isTrue: !row.range});
 
     const onTriggerFallbackChange = (event) => {
         modifier.checkTriggerFallbackChange(tableData, row, event.target.checked);

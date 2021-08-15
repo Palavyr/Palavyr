@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { OsTypeToggle } from "./OsTypeToggle";
 
 type styleProps = {
-    isEnabled: boolean;
+    isEnabled?: boolean | null;
 };
 
 const useStyles = makeStyles((theme) => ({

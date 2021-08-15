@@ -16,7 +16,7 @@ export const getJwtTokenFromLocalStorage = (): string => {
 };
 
 
-export const redirectToHomeWhenSessionNotEstablished = async (history: History<History.UnknownFacade> | string[], repository: PalavyrRepository) => {
+export const redirectToHomeWhenSessionNotEstablished = async (history: History<unknown> | string[], repository: PalavyrRepository) => {
     const jwt_token = SessionStorage.getJwtToken();
     if (!jwt_token) {
         history.push("/");

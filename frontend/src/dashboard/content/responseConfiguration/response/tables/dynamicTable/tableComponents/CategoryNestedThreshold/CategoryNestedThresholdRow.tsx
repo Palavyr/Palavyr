@@ -1,11 +1,11 @@
 import React from "react";
 import { TableRow, TableCell, Button, makeStyles, TextField, FormControlLabel, Checkbox, Typography } from "@material-ui/core";
-import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { CategoryNestedThresholdData, TableData } from "@Palavyr-Types";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { SetState } from "@Palavyr-Types";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
+import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 
 export interface CategoryNestedThresholdProps {
     rowIndex: number;
@@ -18,7 +18,10 @@ export interface CategoryNestedThresholdProps {
     modifier: CategoryNestedThresholdModifier;
 }
 
-const useStyles = makeStyles((theme) => ({
+type StyleProps = {
+    isTrue: boolean;
+};
+const useStyles = makeStyles(theme => ({
     number: {
         border: "1px solid lightgray",
         padding: "1.2rem",
@@ -34,8 +37,8 @@ const useStyles = makeStyles((theme) => ({
         margin: "0.6rem",
         width: "55ch",
     },
-    maxValInput: (prop: boolean) => {
-        if (prop === true) {
+    maxValInput: (props: StyleProps) => {
+        if (props.isTrue === true) {
             return {
                 display: "none",
             };
@@ -53,9 +56,9 @@ const useStyles = makeStyles((theme) => ({
 const cellAlignment = "center";
 
 export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName, categorySize, setCategoryName, tableData, row, modifier }: CategoryNestedThresholdProps) => {
-    const cls = useStyles(!row.range);
+    const cls = useStyles({ isTrue: !row.range });
 
-    const onTriggerFallbackChange = (event) => {
+    const onTriggerFallbackChange = event => {
         modifier.checkTriggerFallbackChange(tableData, row, categoryId, event.target.checked);
     };
 

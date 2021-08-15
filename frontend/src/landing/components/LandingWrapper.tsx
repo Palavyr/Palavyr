@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export interface ILandingWrapper {
-    TitleContent?: React.ReactNode; // | ((openRegisterDialog: () => void) => void);
+    TitleContent?: React.ReactNode;
     MainContent: React.ReactNode;
 }
 
@@ -58,6 +58,7 @@ export const LandingWrapper = ({ TitleContent, MainContent }: ILandingWrapper) =
     const cls = useStyles();
 
     const [dialogOpen, setDialogOpen] = useState<DialogTypes>(null);
+    const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
     const openLoginDialog = useCallback(() => {
         setDialogOpen("login");
@@ -79,6 +80,14 @@ export const LandingWrapper = ({ TitleContent, MainContent }: ILandingWrapper) =
         setDialogOpen(TERMS_OF_SERVICE);
     }, [setDialogOpen]);
 
+    const handleMobileDrawerOpen = useCallback(() => {
+        setIsMobileDrawerOpen(true);
+    }, [setIsMobileDrawerOpen]);
+
+    const handleMobileDrawerClose = useCallback(() => {
+        setIsMobileDrawerOpen(false);
+    }, [setIsMobileDrawerOpen]);
+
     return (
         <div className={cls.wrapper}>
             <LandingPageDialogSelector
@@ -90,7 +99,13 @@ export const LandingWrapper = ({ TitleContent, MainContent }: ILandingWrapper) =
                 openChangePasswordDialog={openChangePasswordDialog}
             />
             <YellowStrip />
-            <Header openRegisterDialog={openRegisterDialog} openLoginDialog={openLoginDialog}>
+            <Header
+                openRegisterDialog={openRegisterDialog}
+                openLoginDialog={openLoginDialog}
+                handleMobileDrawerOpen={handleMobileDrawerOpen}
+                handleMobileDrawerClose={handleMobileDrawerClose}
+                mobileDrawerOpen={isMobileDrawerOpen}
+            >
                 {TitleContent}
             </Header>
             <GreenStrip />

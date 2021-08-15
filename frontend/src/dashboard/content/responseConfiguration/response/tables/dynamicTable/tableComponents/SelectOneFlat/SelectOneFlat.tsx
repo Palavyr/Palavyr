@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { SelectOneFlatModifier } from "./SelectOneFlatModifier";
 import { TableContainer, Paper, Table, Button, FormControlLabel, Checkbox, AccordionActions, makeStyles } from "@material-ui/core";
 import { SelectOneFlatHeader } from "./SelectOneFlatHeader";

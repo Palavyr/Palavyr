@@ -9,7 +9,7 @@ export interface TextNodeFaceProps {
 
 export const TextNodeFace = ({ openEditor, userText }: TextNodeFaceProps) => {
     const cls = useNodeInterfaceStyles({
-        userText,
+        nodeText: userText,
         isImageNode: false,
     });
     return (

@@ -9,7 +9,7 @@ import { cloneDeep, truncate } from "lodash";
 import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRow, ErrorResponse, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { DashboardHeader } from "./header/DashboardHeader";
-import { makeStyles, Typography } from "@material-ui/core";
+import { makeStyles, Theme, Typography } from "@material-ui/core";
 import { defaultUrlForNewArea, DRAWER_WIDTH, WELCOME_TOUR_COOKIE_NAME } from "@constants";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
@@ -35,7 +35,11 @@ const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     return areaNameDetails;
 };
 
-const useStyles = makeStyles((theme) => ({
+type StyleProps = {
+    helpOpen: boolean;
+};
+
+const useStyles = makeStyles((theme: Theme) => ({
     root: {
         position: "absolute", // Required - finalized
         display: "flex",
@@ -47,10 +51,10 @@ const useStyles = makeStyles((theme) => ({
         width: DRAWER_WIDTH,
         flexShrink: 0,
     },
-    helpDrawer: (helpOpen: boolean) => {
+    helpDrawer: (props: StyleProps) => {
         return {
             zIndex: 99999,
-            width: helpOpen ? DRAWER_WIDTH + 300 : 0,
+            width: props.helpOpen ? DRAWER_WIDTH + 300 : 0,
             flexShrink: 0,
         };
     },
@@ -102,7 +106,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [dashboardAreasLoading, setDashboardAreasLoading] = useState<boolean>(false);
-    const cls = useStyles(helpOpen);
+    const cls = useStyles({ helpOpen });
 
     const [panelErrors, setPanelErrors] = useState<ErrorResponse | null>(null);
 

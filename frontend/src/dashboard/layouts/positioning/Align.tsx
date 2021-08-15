@@ -13,9 +13,9 @@ export interface IAlign {
 }
 
 export type StyleProps = {
-    direction: Directions;
-    float: "left" | "right";
-    verticalCenter: boolean;
+    direction?: Directions;
+    float?: "left" | "right";
+    verticalCenter?: boolean;
 };
 
 const useStyles = makeStyles((theme) => ({

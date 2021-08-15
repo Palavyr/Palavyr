@@ -6,9 +6,9 @@ import { ChromePicker } from "react-color";
 
 export type ColorPickerType = {
     method: SetState<string>;
-    name: string;
-    variable: string;
-    disable: boolean;
+    name?: string;
+    variable?: string;
+    disable?: boolean;
 };
 
 export interface WidgetColorOptionsProps {
@@ -16,7 +16,7 @@ export interface WidgetColorOptionsProps {
     setWidgetPreferences: SetState<WidgetPreferences>;
 }
 
-export const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles(theme => ({
     gridList: {
         width: "100%",
         height: "100%",

@@ -6,8 +6,8 @@ import { FakeMessage } from "./fakeMessages";
 import { v4 as uuid } from "uuid";
 
 type StyleProps = {
-    backgroundColor: string;
-    color: string;
+    backgroundColor?: string;
+    color?: string;
 };
 
 const makeChatBodyColor = (props: StyleProps) => {
@@ -30,7 +30,7 @@ const makeChatBodyColor = (props: StyleProps) => {
     return chatBodyStyles;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     messageText: (props: StyleProps) => makeChatBodyColor(props),
     layout: {
         textAlign: "left",

@@ -1,10 +1,10 @@
 import React from "react";
 import { TableRow, TableCell, Button, makeStyles, FormControlLabel, Checkbox, Typography } from "@material-ui/core";
-import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { PercentOfThresholdData, TableData } from "@Palavyr-Types";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 
 export interface IPercentOfThresholdRow {
     tableData: TableData;
@@ -15,7 +15,10 @@ export interface IPercentOfThresholdRow {
     baseValue: boolean;
 }
 
-const useStyles = makeStyles((theme) => ({
+type StyleProps = {
+    isTrue: boolean;
+};
+const useStyles = makeStyles(theme => ({
     number: {
         border: "1px solid lightgray",
         padding: "1.2rem",
@@ -31,8 +34,8 @@ const useStyles = makeStyles((theme) => ({
         margin: "0.6rem",
         width: "55ch",
     },
-    maxValInput: (prop: boolean) => {
-        if (prop === true) {
+    maxValInput: (props: StyleProps) => {
+        if (props.isTrue === true) {
             return {
                 display: "none",
             };
@@ -45,9 +48,9 @@ const useStyles = makeStyles((theme) => ({
 const cellAlignment = "center";
 
 export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, modifier, baseValue }: IPercentOfThresholdRow) => {
-    const classes = useStyles(!row.range);
+    const classes = useStyles({ isTrue: !row.range });
 
-    const onTriggerFallbackChange = (event) => {
+    const onTriggerFallbackChange = event => {
         modifier.checkTriggerFallbackChange(tableData, itemData, row, event.target.checked);
     };
 

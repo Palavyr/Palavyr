@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core";
-import React from "react";
+import React, { useEffect } from "react";
 import { NavBar } from "../navbar/NavBar";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,14 +26,24 @@ const useStyles = makeStyles((theme) => ({
 interface IHeader {
     openRegisterDialog: any;
     openLoginDialog: any;
+    handleMobileDrawerOpen: any;
+    handleMobileDrawerClose: any;
+    mobileDrawerOpen: any;
     children?: React.ReactNode;
 }
 
-export const Header = ({ openRegisterDialog, openLoginDialog, children }: IHeader) => {
+export const Header = ({ openRegisterDialog, openLoginDialog, handleMobileDrawerOpen, handleMobileDrawerClose, mobileDrawerOpen, children }: IHeader) => {
     const cls = useStyles();
+
     return (
         <div className={cls.container}>
-            <NavBar openRegisterDialog={openRegisterDialog} openLoginDialog={openLoginDialog} />
+            <NavBar
+                openRegisterDialog={openRegisterDialog}
+                openLoginDialog={openLoginDialog}
+                handleMobileDrawerOpen={handleMobileDrawerOpen}
+                handleMobileDrawerClose={handleMobileDrawerClose}
+                mobileDrawerOpen={mobileDrawerOpen}
+            />
             {children}
         </div>
     );

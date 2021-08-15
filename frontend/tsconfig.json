@@ -18,6 +18,7 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "allowJs": true,
+        "checkJs": false,
         "noUnusedLocals": false,
         "strictPropertyInitialization": false,
         "lib": ["dom", "dom.iterable", "esnext"],

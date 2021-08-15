@@ -22,4 +22,12 @@ export const blogPosts: BlogPosts = [
         snippet: "After you've spent a lot of hard work getting your chat bot ready, its time to put it in your website. But how?",
         content: Post2,
     },
+    // {
+    //     title: "You can give specific pricing estimates with Palavyr",
+    //     id: 3,
+    //     date:1628677152,
+    //     src: Post3Img,
+    //     snippet: "One of the biggest problems complex businesses need to solve is communication. How do you communicate what you do and how much you charge? You can do that with Palavyr.",
+    //     content: Post3
+    // }
 ];

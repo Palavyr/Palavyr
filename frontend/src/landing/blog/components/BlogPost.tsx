@@ -10,7 +10,7 @@ import { LandingWrapper } from "@landing/components/LandingWrapper";
 import { BlogTitleHeaderContent } from "@landing/branding/headerTitleContent/BlogHeaderTitleContent";
 import { BlogPostRouteMeta } from "@Palavyr-Types";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     blogContentWrapper: {
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
     },
     card: {
         boxShadow: theme.shadows[4],
+        width: "100%"
     },
 }));
 
@@ -90,7 +91,7 @@ export const BlogPost = ({ date, title, url, img, content, otherArticles }: Blog
                                 </Typography>
                                 {otherArticles.length > 0 ? (
                                     <>
-                                        {otherArticles.map((blogPost) => (
+                                        {otherArticles.map(blogPost => (
                                             <Box key={blogPost.id} mb={3}>
                                                 <BlogCard title={blogPost.title} src={blogPost.src} snippet={blogPost.snippet} date={blogPost.date} url={`${blogPost.url}${blogPost.params}`} />
                                             </Box>

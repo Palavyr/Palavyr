@@ -5,7 +5,7 @@ import { v4 as uuid } from "uuid";
 import { Table, TableRow, TableCell, makeStyles, TextField } from "@material-ui/core";
 import { format } from "date-fns";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     row: {
         width: "100%",
     },
@@ -95,7 +95,7 @@ export const ResponseButton = ({ prefs, disabled = false, variant = "outlined", 
 };
 
 export const NoBorderTableCell = ({ align, children }: IHaveNoBorder) => {
-    const cls = useStyles();
+    const cls = useStyles({});
     return (
         <TableCell align={align} className={cls.cell}>
             {children}
@@ -104,7 +104,7 @@ export const NoBorderTableCell = ({ align, children }: IHaveNoBorder) => {
 };
 
 export const SingleRowSingleCell = ({ align, children }: IHaveNoBorder) => {
-    const cls = useStyles();
+    const cls = useStyles({});
     return (
         <TableRow className={cls.row}>
             <NoBorderTableCell align={align}>{children}</NoBorderTableCell>
@@ -134,7 +134,7 @@ export class StandardComponents {
     makeMultipleChoiceContinueButtons(text: string, valueOptions: string[]): React.ElementType<{}> {
         const uniqId = uuid();
         return () => {
-            const cls = useStyles();
+            const cls = useStyles({});
             return (
                 <Table>
                     <TableBody>
@@ -178,7 +178,7 @@ export class StandardComponents {
     }
 
     public makeUserMessage(text: string, timestamp: Date): React.ElementType<{}> {
-        const cls = useStyles();
+        const cls = useStyles({});
         const key = uuid();
         return () => {
             return (

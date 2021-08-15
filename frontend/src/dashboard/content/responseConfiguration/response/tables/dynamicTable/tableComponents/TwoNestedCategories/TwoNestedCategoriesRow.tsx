@@ -1,11 +1,11 @@
 import React from "react";
 import { TableRow, TableCell, Button, makeStyles, TextField } from "@material-ui/core";
-import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { TableData, TwoNestedCategoryData } from "@Palavyr-Types";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { SetState } from "@Palavyr-Types";
+import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 
 export interface ITwoNestedCategoriesRow {
     index: number;
@@ -18,7 +18,10 @@ export interface ITwoNestedCategoriesRow {
     modifier: TwoNestedCategoriesModifier;
 }
 
-const useStyles = makeStyles((theme) => ({
+type StyleProps = {
+    isTrue: boolean;
+};
+const useStyles = makeStyles(theme => ({
     number: {
         border: "1px solid lightgray",
         padding: "1.2rem",
@@ -34,8 +37,8 @@ const useStyles = makeStyles((theme) => ({
         margin: "0.6rem",
         width: "25ch",
     },
-    maxValInput: (prop: boolean) => {
-        if (prop === true) {
+    maxValInput: (props: StyleProps) => {
+        if (props.isTrue === true) {
             return {
                 display: "none",
             };
@@ -53,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 const cellAlignment = "center";
 
 export const TwoNestedCategoriesRow = ({ index, shouldDisableInnerCategory, outerCategoryId, outerCategoryName, setOuterCategoryName, tableData, row, modifier }: ITwoNestedCategoriesRow) => {
-    const cls = useStyles(!row.range);
+    const cls = useStyles({ isTrue: !row.range });
 
     const { currencySymbol } = React.useContext(DashboardContext);
 

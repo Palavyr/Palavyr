@@ -60,7 +60,7 @@ export const FakeWidgets = ({ ...prefs }: WidgetPreferences) => {
     return (
         <div>
             <SpaceEvenly center>
-                <FakeWidgetFrame title="(Landing Screen)" prefs={prefs} header={<div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: prefs.landingHeader }} />}>
+                <FakeWidgetFrame title="(Landing Screen)" prefs={prefs} header={<div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: prefs.landingHeader ?? "" }} />}>
                     <Autocomplete
                         size="small"
                         classes={{ popper: cls.popper, root: cls.selectbox, paper: classNames(cls.selectListBgColor, cls.selectListFontColor) }}
@@ -91,7 +91,7 @@ export const FakeWidgets = ({ ...prefs }: WidgetPreferences) => {
                     header={
                         <>
                             <SettingsIcon className={cls.settingsIcon} onClick={() => null} />
-                            <div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: prefs.chatHeader }} />
+                            <div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: prefs.chatHeader ?? "" }} />
                         </>
                     }
                 >

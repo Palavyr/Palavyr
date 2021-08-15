@@ -6,23 +6,10 @@ import { Routes } from "@public-routes";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "@common/components/Errors/ErrorFallback";
 import RouteChangeTracker from "googleAnalytics/RouteChangeTracker";
-import { isDevelopmentStage } from "@api-client/clientUtils";
+
+
 
 const App = () => {
-    React.useEffect(() => {
-        if (!isDevelopmentStage()) {
-            const script = document.createElement("script");
-            script.async = true;
-            script.text = "";
-            document.body.appendChild(script);
-
-            // window.dataLayer = window.dataLayer || [];
-            // function g
-
-
-        }
-    }, []);
-
     return (
         <ErrorBoundary FallbackComponent={ErrorFallback}>
             <BrowserRouter>

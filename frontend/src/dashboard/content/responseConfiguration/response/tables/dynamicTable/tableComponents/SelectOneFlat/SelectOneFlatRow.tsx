@@ -1,14 +1,13 @@
 import React from "react";
 import { SelectOneFlatModifier } from "./SelectOneFlatModifier";
 import { TableRow, TableCell, Button, TextField, makeStyles } from "@material-ui/core";
-import CurrencyTextField from '@unicef/material-ui-currency-textfield'
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from "@material-ui/icons/Delete";
 import { SelectOneFlatData, TableData } from "@Palavyr-Types";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import RemoveIcon from '@material-ui/icons/Remove';
-
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import RemoveIcon from "@material-ui/icons/Remove";
+import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 
 export interface ISelectOneFlatRow {
     dataIndex: number;
@@ -17,6 +16,9 @@ export interface ISelectOneFlatRow {
     modifier: SelectOneFlatModifier;
 }
 
+type StyleProps = {
+    isTrue: boolean;
+};
 const useStyles = makeStyles(theme => ({
     number: {
         border: "1px solid lightgray",
@@ -24,30 +26,28 @@ const useStyles = makeStyles(theme => ({
         fontSize: `${theme.typography.fontSize}`,
         font: `${theme.typography.fontFamily}`,
         background: `${theme.palette.background.paper}`,
-        outline: "none"
+        outline: "none",
     },
     deleteIcon: {
         borderRadius: "5px",
     },
     input: {
         margin: "0.6rem",
-        width: "30ch"
+        width: "30ch",
     },
-    maxValInput: (prop: boolean) => {
-        if (prop === true) {
+    maxValInput: (props: StyleProps) => {
+        if (props.isTrue === true) {
             return {
                 display: "none",
-            }
+            };
         } else {
-            return {}
+            return {};
         }
-    }
-}))
-
+    },
+}));
 
 export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelectOneFlatRow) => {
-
-    const classes = useStyles(!row.range);
+    const cls = useStyles({ isTrue: !row.range });
     const cellAlignment = "center";
     const key = dataIndex.toString() + row.tableId.toString();
 
@@ -56,26 +56,21 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
     return (
         <TableRow key={key}>
             <TableCell align={cellAlignment}>
-                <Button
-                    size="small"
-                    className={classes.deleteIcon}
-                    startIcon={<DeleteIcon />}
-                    onClick={() => modifier.removeOption(tableData, dataIndex)}
-                >
+                <Button size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeOption(tableData, dataIndex)}>
                     Delete
                 </Button>
             </TableCell>
             <TableCell align={cellAlignment}>
                 <TextField
-                    className={classes.input}
+                    className={cls.input}
                     variant="standard"
                     label="Option"
                     type="text"
                     value={row.option}
                     color="primary"
-                    onChange={(event) => {
+                    onChange={event => {
                         event.preventDefault();
-                        modifier.setOptionText(tableData, dataIndex, event.target.value)
+                        modifier.setOptionText(tableData, dataIndex, event.target.value);
                     }}
                 />
             </TableCell>
@@ -89,33 +84,36 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
                     outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(event: any, value: number ) => {
-                        if (value !== undefined) { modifier.setOptionValue(tableData, dataIndex, value) }
+                    onChange={(event: any, value: number) => {
+                        if (value !== undefined) {
+                            modifier.setOptionValue(tableData, dataIndex, value);
+                        }
                     }}
                 />
-
             </TableCell>
             <TableCell align={cellAlignment}>
                 <CurrencyTextField
-                    className={classes.maxValInput}
+                    className={cls.maxValInput}
                     label="Amount"
                     variant="standard"
                     disabled={!row.range}
-                    value={row.range ? row.valueMax : 0.00}
+                    value={row.range ? row.valueMax : 0.0}
                     currencySymbol={currencySymbol}
                     minimumValue="0"
                     outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(event: any, value: number ) => {
-                        if (value !== undefined) { modifier.setOptionMaxValue(tableData, dataIndex, value) }
+                    onChange={(event: any, value: number) => {
+                        if (value !== undefined) {
+                            modifier.setOptionMaxValue(tableData, dataIndex, value);
+                        }
                     }}
                 />
             </TableCell>
             <TableCell align={cellAlignment}>
                 <Button
                     startIcon={row.range ? <ChevronLeftIcon /> : <RemoveIcon />}
-                    endIcon={ row.range ? <ChevronRightIcon /> : null}
+                    endIcon={row.range ? <ChevronRightIcon /> : null}
                     variant="contained"
                     style={{ width: "18ch" }}
                     color={row.range ? "primary" : "secondary"}
@@ -127,5 +125,5 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
                 </Button>
             </TableCell>
         </TableRow>
-    )
-}
+    );
+};

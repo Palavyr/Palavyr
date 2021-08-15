@@ -1,6 +1,5 @@
 import { PreCheckError, WidgetPreferences } from "@Palavyr-Types";
 import React, { useState, useCallback, useEffect } from "react";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { Grid, Paper, Typography, makeStyles, Divider } from "@material-ui/core";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { HeaderEditor } from "./HeaderEditor";

@@ -1,24 +1,27 @@
-
 /// Example working pdf url
 /// http://localhost:5000/user-1/abc-123/attachments/PaulGradie_medicare_exemption_base_ms015-1807en-f-Partial.pdf
 ///
 
-import { FileLink } from "@Palavyr-Types"
-import React from "react"
-import { Paper, Divider, makeStyles } from "@material-ui/core"
+import { FileLink } from "@Palavyr-Types";
+import React from "react";
+import { Paper, Divider, makeStyles, Theme } from "@material-ui/core";
 
 interface IAttachmentPreview {
     preview: FileLink;
 }
 
-const useStyles = makeStyles(() => ({
-    divStyle: (preview: boolean) => ({
+type StyleProps = {
+    preview: boolean;
+};
+
+const useStyles = makeStyles((theme: Theme) => ({
+    divStyle: (props: StyleProps) => ({
         alignContent: "center",
         padding: "2.5rem",
-        height: preview ? "1200px" : "0px",
+        height: props.preview ? "1200px" : "0px",
         backgroundColor: "#C7ECEE",
         background: "#C7ECEE",
-        borderRadius: "0px"
+        borderRadius: "0px",
     }),
 
     paper: {
@@ -28,13 +31,12 @@ const useStyles = makeStyles(() => ({
         paddingTop: "2.5rem",
         paddingBottom: ".5rem",
         borderRadius: "0px",
-        paddingLeft: "2.5rem"
-    }
-}))
+        paddingLeft: "2.5rem",
+    },
+}));
 
 export const AttachmentPreview = ({ preview }: IAttachmentPreview) => {
-
-    const classes = useStyles(preview ? true : false);
+    const classes = useStyles({ preview: preview ? true : false });
 
     return (
         <>
@@ -44,15 +46,8 @@ export const AttachmentPreview = ({ preview }: IAttachmentPreview) => {
             </Paper>
             <Divider />
             <Paper id="dashpaper" className={classes.divStyle}>
-                <object
-                    data={preview.link}
-                    type="application/pdf"
-                    width="100%"
-                    height="100%"
-                    aria-label="preview"
-                >
-                </object>
+                <object data={preview.link} type="application/pdf" width="100%" height="100%" aria-label="preview"></object>
             </Paper>
         </>
-    )
-}
+    );
+};

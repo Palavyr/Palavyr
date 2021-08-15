@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core";
+import { Hidden, makeStyles } from "@material-ui/core";
 import { Free, Lyte, Premium, Pro } from "./Cards";
 
 const useStyles = makeStyles((theme) => ({
@@ -15,25 +15,42 @@ const useStyles = makeStyles((theme) => ({
     width: {
         width: "28%",
     },
+    bodySmall: {
+        display: "felx",
+        flexDirection: "column",
+        margin: "0.5rem",
+    },
 }));
 
 export const PricingSection = () => {
     const cls = useStyles();
 
     return (
-        <section className={cls.body}>
-            <div data-aos="fade-down" data-aos-delay="100" className={cls.width}>
-                <Free />
-            </div>
-            <div data-aos="fade-down" data-aos-delay="300" className={cls.width}>
-                <Lyte />
-            </div>
-            <div data-aos="fade-down" data-aos-delay="500" className={cls.width}>
-                <Premium />
-            </div>
-            <div data-aos="fade-down" data-aos-delay="700" className={cls.width}>
-                <Pro />
-            </div>
-        </section>
+        <>
+            <Hidden smDown>
+                <section className={cls.body}>
+                    <div data-aos="fade-down" data-aos-delay="100" className={cls.width}>
+                        <Free />
+                    </div>
+                    <div data-aos="fade-down" data-aos-delay="300" className={cls.width}>
+                        <Lyte />
+                    </div>
+                    <div data-aos="fade-down" data-aos-delay="500" className={cls.width}>
+                        <Premium />
+                    </div>
+                    <div data-aos="fade-down" data-aos-delay="700" className={cls.width}>
+                        <Pro />
+                    </div>
+                </section>
+            </Hidden>
+            <Hidden mdUp>
+                <section className={cls.bodySmall}>
+                    <Free />
+                    <Lyte />
+                    <Premium />
+                    <Pro />
+                </section>
+            </Hidden>
+        </>
     );
 };

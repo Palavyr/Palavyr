@@ -4,7 +4,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { cloneDeep } from "lodash";
 
 interface IEditor {
-    initialData: string;
+    initialData?: string;
     setEditorState: (data: string) => void;
     label?: string;
 }

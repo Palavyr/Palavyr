@@ -1,14 +1,14 @@
-import { DEFAULT_NODE_TEXT, DEFAULT_NODE_TEXT_LIST } from "@constants";
+import { DEFAULT_NODE_TEXT_LIST } from "@constants";
 import { Card, makeStyles, Typography } from "@material-ui/core";
 import classNames from "classnames";
 import React from "react";
 
 type StyleProps = {
-    nodeText: string;
-    isImageNode: boolean;
+    nodeText?: string;
+    isImageNode?: boolean;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     interfaceElement: {
         paddingBottom: "1rem",
     },
@@ -16,8 +16,8 @@ const useStyles = makeStyles((theme) => ({
         border: "1px solid gray",
         padding: "10px",
         textAlign: "center",
-        color: DEFAULT_NODE_TEXT_LIST.includes(props.nodeText) && !props.isImageNode ? "black" : "black",
-        background: DEFAULT_NODE_TEXT_LIST.includes(props.nodeText) && !props.isImageNode ? theme.palette.warning.main : "white",
+        color: DEFAULT_NODE_TEXT_LIST.includes(props.nodeText ?? "") && !props.isImageNode ? "black" : "black",
+        background: DEFAULT_NODE_TEXT_LIST.includes(props.nodeText ?? "") && !props.isImageNode ? theme.palette.warning.main : "white",
         "&:hover": {
             background: "lightgray",
             color: "black",

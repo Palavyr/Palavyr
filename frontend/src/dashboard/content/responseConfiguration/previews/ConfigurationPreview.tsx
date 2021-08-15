@@ -7,12 +7,15 @@ import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { Align } from "dashboard/layouts/positioning/Align";
 
-const useStyles = makeStyles((theme) => ({
-    paper: (preview: boolean) => ({
+type StyleProps = {
+    preview: boolean;
+};
+const useStyles = makeStyles(theme => ({
+    paper: (props: StyleProps) => ({
         backgroundColor: theme.palette.secondary.light,
         alignContent: "center",
         padding: "2.5rem",
-        height: preview ? "1200px" : "0px",
+        height: props.preview ? "1200px" : "0px",
         borderRadius: "0px",
     }),
     buttonWrap: {
@@ -25,7 +28,7 @@ export const ConfigurationPreview = () => {
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
     const [preview, setPreview] = useState<FileLink>();
-    const cls = useStyles(preview ? true : false);
+    const cls = useStyles({ preview: preview ? true : false });
 
     const loadPreview = React.useCallback(async () => {
         const fileLink = await repository.Configuration.Preview.fetchPreview(areaIdentifier);

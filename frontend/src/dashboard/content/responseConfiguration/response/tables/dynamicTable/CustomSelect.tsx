@@ -2,10 +2,10 @@ import React from "react";
 import { makeStyles, FormControl, InputLabel, Select, MenuItem, FormHelperText, Tooltip } from "@material-ui/core";
 
 type StyleProps = {
-    align: "center" | "left" | "right";
-    width: number;
-    minWidth: number;
-    maxWidth: number;
+    align?: "center" | "left" | "right";
+    width?: number;
+    minWidth?: number;
+    maxWidth?: number;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 
 export interface ISelect {
     onChange: (event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>) => void;
-    option: string;
+    option?: string;
     options: Array<string>;
     align?: "left" | "center" | "right";
     width?: string;

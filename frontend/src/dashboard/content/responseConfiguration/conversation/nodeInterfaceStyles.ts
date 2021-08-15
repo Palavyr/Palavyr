@@ -1,16 +1,16 @@
 import { makeStyles } from "@material-ui/core";
 
 type StyleProps = {
-    nodeText: string;
-    nodeType: string;
-    checked: boolean;
-    isDecendentOfSplitMerge: boolean;
-    splitMergeRootSiblingIndex: number;
-    debugOn: boolean;
-    isImageNode: boolean;
+    nodeText?: string;
+    nodeType?: string;
+    checked?: boolean;
+    isDecendentOfSplitMerge?: boolean;
+    splitMergeRootSiblingIndex?: number;
+    debugOn?: boolean;
+    isImageNode?: boolean;
 };
 
-export const useNodeInterfaceStyles = makeStyles((theme) => ({
+export const useNodeInterfaceStyles = makeStyles(theme => ({
     root: (props: StyleProps) => ({
         minWidth: "275px",
         maxWidth: props.debugOn ? "600px" : "250px",

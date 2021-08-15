@@ -8,7 +8,7 @@ export interface IFooterListTitle {
 export const FooterListTitle = ({ children }: IFooterListTitle) => {
     return (
         <li>
-            <Typography display="block" variant="h5">
+            <Typography display="block" variant="h4">
                 {children}
             </Typography>
         </li>

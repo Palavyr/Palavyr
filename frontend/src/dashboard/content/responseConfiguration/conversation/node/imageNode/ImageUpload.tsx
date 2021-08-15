@@ -23,7 +23,7 @@ interface ImageUploadProps {
 }
 
 export const ImageUpload = ({ setCurrentImageId, currentNode, nodeId, imageId, closeEditor, currentImageId, setImageLink, setImageName, repository, initialState = false }: ImageUploadProps) => {
-    const cls = useNodeInterfaceStyles();
+    const cls = useNodeInterfaceStyles({});
     const history = useHistory();
     const [uploadModal, setUploadModal] = useState(false);
 
