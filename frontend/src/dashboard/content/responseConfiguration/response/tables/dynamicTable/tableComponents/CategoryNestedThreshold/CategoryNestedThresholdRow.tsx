@@ -6,6 +6,8 @@ import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { SetState } from "@Palavyr-Types";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
+import { valuesIn } from "lodash";
+import { NumberFormatValues } from "react-number-format";
 
 export interface CategoryNestedThresholdProps {
     rowIndex: number;
@@ -91,20 +93,17 @@ export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName,
                 <CurrencyTextField
                     disabled={rowIndex === 0}
                     label="Threshold"
-                    variant="standard"
                     value={row.threshold}
                     currencySymbol={currencySymbol}
-                    minimumValue="0"
-                    outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
                     onBlur={() => {
                         modifier.reorderThresholdData(tableData);
                         modifier.setTables(tableData);
                     }}
-                    onChange={(_: any, value: number) => {
-                        if (value !== undefined) {
-                            modifier.setThreshold(tableData, row.rowId, value);
+                    onValueChange={(values: NumberFormatValues) => {
+                        if (values.floatValue !== undefined) {
+                            modifier.setThreshold(tableData, row.rowId, values.floatValue);
                         }
                     }}
                 />
@@ -115,16 +114,13 @@ export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName,
                         {!row.triggerFallback && (
                             <CurrencyTextField
                                 label="Amount"
-                                variant="standard"
                                 value={row.valueMin}
                                 currencySymbol={currencySymbol}
-                                minimumValue="0"
-                                outputFormat="number"
                                 decimalCharacter="."
                                 digitGroupSeparator=","
-                                onChange={(_: any, value: number) => {
-                                    if (value !== undefined) {
-                                        modifier.setValueMin(tableData, row.rowId, value);
+                                onValueChange={(values: NumberFormatValues) => {
+                                    if (values.floatValue !== undefined) {
+                                        modifier.setValueMin(tableData, row.rowId, values.floatValue);
                                     }
                                 }}
                             />
@@ -135,17 +131,14 @@ export const CategoryNestedThresholdRow = ({ rowIndex, categoryId, categoryName,
                             <CurrencyTextField
                                 className={cls.maxValInput}
                                 label="Amount"
-                                variant="standard"
                                 disabled={!row.range}
                                 value={row.range ? row.valueMax : 0.0}
                                 currencySymbol={currencySymbol}
-                                minimumValue="0"
-                                outputFormat="number"
                                 decimalCharacter="."
                                 digitGroupSeparator=","
-                                onChange={(_: any, value: number) => {
-                                    if (value !== undefined) {
-                                        modifier.setValueMax(tableData, row.rowId, value);
+                                onValueChange={(values: NumberFormatValues) => {
+                                    if (values.floatValue !== undefined) {
+                                        modifier.setValueMax(tableData, row.rowId, values.floatValue);
                                     }
                                 }}
                             />

@@ -12,13 +12,14 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
+import { NumberFormatValues } from "react-number-format";
 
 type styleProp = {
     index: number;
     rangeState: boolean;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     tableInputs: {
         margin: "0.6rem",
     },
@@ -77,7 +78,7 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
                     value={description}
                     label="Description"
                     color="primary"
-                    onChange={(event) => {
+                    onChange={event => {
                         modifier.setRowDescription(staticTableMetas, tableOrder, rowOrder, event.target.value);
                     }}
                 />
@@ -85,16 +86,13 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
             <TableCell align={cellAlignment}>
                 <CurrencyTextField
                     label="Amount"
-                    variant="standard"
                     value={minFee}
                     currencySymbol={currencySymbol}
-                    minimumValue="0"
-                    outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(event: any, value: number) => {
-                        if (value !== undefined) {
-                            modifier.setFeeMin(staticTableMetas, tableOrder, rowOrder, value);
+                    onValueChange={(values: NumberFormatValues) => {
+                        if (values.floatValue !== undefined) {
+                            modifier.setFeeMin(staticTableMetas, tableOrder, rowOrder, values.floatValue);
                         }
                     }}
                 />
@@ -103,17 +101,14 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
                 <CurrencyTextField
                     className={cls.maxValInput}
                     label="Amount"
-                    variant="standard"
                     disabled={!rangeState}
                     value={maxFee}
                     currencySymbol={currencySymbol}
-                    minimumValue="0"
-                    outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(event: any, value: number) => {
-                        if (value !== undefined) {
-                            modifier.setFeeMax(staticTableMetas, tableOrder, rowOrder, value);
+                    onValueChange={(values: NumberFormatValues) => {
+                        if (values.floatValue !== undefined) {
+                            modifier.setFeeMax(staticTableMetas, tableOrder, rowOrder, values.floatValue);
                         }
                     }}
                 />
@@ -143,7 +138,6 @@ export const StaticRow = ({ index, staticTableMetas, tableOrder, rowOrder, modif
                     {perState ? "Per Individual" : "Static Fee"}
                 </Button>
             </TableCell>
-
             <TableCell align={cellAlignment}>
                 {!modifier.isRowFirstPosition(rowOrder) && <ArrowDropUpIcon className={cls.largeicon} onClick={() => modifier.shiftRowUp(staticTableMetas, tableOrder, rowOrder)} />}
                 {!modifier.isRowLastPosition(staticTableMetas, tableOrder, rowOrder) && (

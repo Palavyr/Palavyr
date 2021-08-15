@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 
 import { SideBarHeader } from "./sidebar/SideBarHeader";
 import { SideBarMenu } from "./sidebar/SideBarMenu";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, useLocation } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep, truncate } from "lodash";
@@ -24,6 +24,9 @@ import { Loaders } from "@api-client/Loaders";
 import { IntroSteps } from "dashboard/content/welcome/OnboardingTour/IntroSteps";
 import { welcomeTourSteps } from "dashboard/content/welcome/OnboardingTour/tours/welcomeTour";
 import Cookies from "js-cookie";
+import { TestTrack } from "googleAnalytics/G4AExample";
+import { useGA4React } from "ga-4-react";
+import { GA4ReactResolveInterface } from "ga-4-react/dist/models/gtagModels";
 
 const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
@@ -83,11 +86,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface IDashboardLayout {
     children: JSX.Element[] | JSX.Element;
     helpComponent: JSX.Element[] | JSX.Element;
+    ga4?: GA4ReactResolveInterface;
 }
 
-export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) => {
+export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayout) => {
     const history = useHistory();
-
+    const location = useLocation();
     const { areaIdentifier } = useParams<{ contentType: string; areaIdentifier: string }>();
 
     const [areaNameDetails, setAreaNameDetails] = useState<AreaNameDetails>([]);
@@ -141,6 +145,7 @@ export const DashboardLayout = ({ helpComponent, children }: IDashboardLayout) =
     }, []);
 
     const loadAreas = useCallback(async () => {
+        ga4?.pageview(location.pathname);
         setDashboardAreasLoading(true);
 
         const planTypeMeta = await repository.Settings.Subscriptions.getCurrentPlanMeta();

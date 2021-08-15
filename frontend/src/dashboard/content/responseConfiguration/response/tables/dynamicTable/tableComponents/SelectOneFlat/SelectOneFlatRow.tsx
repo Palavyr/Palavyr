@@ -8,6 +8,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import RemoveIcon from "@material-ui/icons/Remove";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
+import { NumberFormatValues } from "react-number-format";
 
 export interface ISelectOneFlatRow {
     dataIndex: number;
@@ -77,16 +78,13 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
             <TableCell align={cellAlignment}>
                 <CurrencyTextField
                     label="Amount"
-                    variant="standard"
                     value={row.valueMin}
                     currencySymbol={currencySymbol}
-                    minimumValue="0"
-                    outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(event: any, value: number) => {
-                        if (value !== undefined) {
-                            modifier.setOptionValue(tableData, dataIndex, value);
+                    onValueChange={(values: NumberFormatValues) => {
+                        if (values.floatValue !== undefined) {
+                            modifier.setOptionValue(tableData, dataIndex, values.floatValue);
                         }
                     }}
                 />
@@ -95,17 +93,14 @@ export const SelectOneFlatRow = ({ dataIndex, tableData, row, modifier }: ISelec
                 <CurrencyTextField
                     className={cls.maxValInput}
                     label="Amount"
-                    variant="standard"
                     disabled={!row.range}
                     value={row.range ? row.valueMax : 0.0}
                     currencySymbol={currencySymbol}
-                    minimumValue="0"
-                    outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
-                    onChange={(event: any, value: number) => {
-                        if (value !== undefined) {
-                            modifier.setOptionMaxValue(tableData, dataIndex, value);
+                    onValueChange={(values: NumberFormatValues) => {
+                        if (values.floatValue !== undefined) {
+                            modifier.setOptionMaxValue(tableData, dataIndex, values.floatValue);
                         }
                     }}
                 />

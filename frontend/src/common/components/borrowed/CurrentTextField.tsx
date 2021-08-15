@@ -1,44 +1,51 @@
-import React, { useEffect, useRef, useState } from "react";
-import CurrencyFormat from "react-number-format";
+import { TextField } from "@material-ui/core";
+import React from "react";
+import CurrencyFormat, { NumberFormatValues } from "react-number-format";
 
 export interface CurrencyTextFieldProps {
+    label: string;
     currencySymbol: string;
     value?: number | string;
-    type?: "text" | "number";
-    variant: "standard";
-    textAlign?: "right" | "left" | "center";
     maximumValue?: string | number;
-    minimumValue: string | number;
+    minimumValue?: string | number;
     className?: string;
-    label: string;
     disabled?: boolean;
     decimalCharacter: string;
     digitGroupSeparator: string;
-    onChange: any;
-    outputFormat: string;
     onBlur?(): void;
-
+    onValueChange?: (values: NumberFormatValues) => void;
 }
 
-export const CurrencyTextField = ({ className, label, variant, disabled, value, currencySymbol, minimumValue, outputFormat, decimalCharacter, digitGroupSeparator, onChange }: CurrencyTextFieldProps) => {
-    // const [currentValue, setCurrentValue] = useState<string | number>();
-    // useEffect(() => {
-    //     if (value) {
-    //         setCurrentValue(value);
-    //     }
-    // }, []);
-
+export const CurrencyTextField = ({
+    className,
+    label,
+    disabled,
+    value,
+    currencySymbol,
+    minimumValue = 0,
+    maximumValue = 99999999999,
+    decimalCharacter,
+    digitGroupSeparator,
+    onValueChange,
+}: CurrencyTextFieldProps) => {
     return (
         <CurrencyFormat
-            onChange={onChange}
-            // className={className}
-            // min={minimumValue}
-            // disabled={disabled}
+            fixedDecimalScale={true}
+            className={className}
+            min={minimumValue}
+            max={maximumValue}
+            disabled={disabled}
             value={value}
-            displayType="text"
             decimalSeparator={decimalCharacter}
             thousandSeparator={digitGroupSeparator}
             prefix={currencySymbol}
+            allowLeadingZeros={false}
+            allowNegative={false}
+            allowEmptyFormatting={false}
+            customInput={TextField}
+            decimalScale={2}
+            isNumericString={true}
+            onValueChange={onValueChange}
         />
     );
 };

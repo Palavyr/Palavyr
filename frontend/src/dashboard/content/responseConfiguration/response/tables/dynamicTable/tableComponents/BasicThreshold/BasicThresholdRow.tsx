@@ -5,11 +5,12 @@ import { TableData, BasicThresholdData } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
+import { NumberFormatValues } from "react-number-format";
 
 type StyleProps = {
     isTrue: boolean;
-}
-const useStyles = makeStyles((theme) => ({
+};
+const useStyles = makeStyles(theme => ({
     number: {
         border: "1px solid lightgray",
         padding: "1.2rem",
@@ -46,9 +47,9 @@ interface IBasicThresholdRow {
 const cellAlignment = "center";
 
 export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier }: IBasicThresholdRow) => {
-    const cls = useStyles({isTrue: !row.range});
+    const cls = useStyles({ isTrue: !row.range });
 
-    const onTriggerFallbackChange = (event) => {
+    const onTriggerFallbackChange = event => {
         modifier.checkTriggerFallbackChange(tableData, row, event.target.checked);
     };
 
@@ -68,20 +69,18 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier }: IBasic
                 <CurrencyTextField
                     disabled={rowIndex === 0}
                     label="Threshold"
-                    variant="standard"
                     value={row.threshold}
                     currencySymbol={currencySymbol}
                     minimumValue="0"
-                    outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
                     onBlur={() => {
                         modifier.reorderThresholdData(tableData);
                         modifier.setTables(tableData);
                     }}
-                    onChange={(_: any, value: number) => {
-                        if (value !== undefined) {
-                            modifier.setThresholdValue(tableData, row.rowId, value);
+                    onValueChange={(values: NumberFormatValues) => {
+                        if (values.floatValue !== undefined) {
+                            modifier.setThresholdValue(tableData, row.rowId, values.floatValue);
                         }
                     }}
                 />
@@ -92,16 +91,13 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier }: IBasic
                         {!row.triggerFallback && (
                             <CurrencyTextField
                                 label="Amount"
-                                variant="standard"
                                 value={row.valueMin}
                                 currencySymbol={currencySymbol}
-                                minimumValue="0"
-                                outputFormat="number"
                                 decimalCharacter="."
                                 digitGroupSeparator=","
-                                onChange={(_: any, value: number) => {
-                                    if (value !== undefined) {
-                                        modifier.setValueMin(tableData, row.rowId, value);
+                                onValueChange={(values: NumberFormatValues) => {
+                                    if (values.floatValue !== undefined) {
+                                        modifier.setValueMin(tableData, row.rowId, values.floatValue);
                                     }
                                 }}
                             />
@@ -112,17 +108,15 @@ export const BasicThresholdRow = ({ rowIndex, tableData, row, modifier }: IBasic
                             <CurrencyTextField
                                 className={cls.maxValInput}
                                 label={row.range ? "Amount" : "Not used"}
-                                variant="standard"
                                 disabled={!row.range}
                                 value={row.range ? row.valueMax : 0.0}
                                 currencySymbol={currencySymbol}
                                 minimumValue="0"
-                                outputFormat="number"
                                 decimalCharacter="."
                                 digitGroupSeparator=","
-                                onChange={(_: any, value: number) => {
-                                    if (value !== undefined) {
-                                        modifier.setValueMax(tableData, row.rowId, value);
+                                onValueChange={(values: NumberFormatValues) => {
+                                    if (values.floatValue !== undefined) {
+                                        modifier.setValueMax(tableData, row.rowId, values.floatValue);
                                     }
                                 }}
                             />

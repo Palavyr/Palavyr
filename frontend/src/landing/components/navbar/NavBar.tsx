@@ -135,7 +135,7 @@ export const NavBar = memo(({ openRegisterDialog, openLoginDialog, handleMobileD
                     </Toolbar>
                 </AppBar>
             </Hidden>
-            <NavigationDrawer anchor="right" open={mobileDrawerOpen} onClose={handleMobileDrawerClose} openRegisterDialog={openRegisterDialog} openLoginDialog={openRegisterDialog} />
+            <NavigationDrawer anchor="right" open={mobileDrawerOpen} onClose={handleMobileDrawerClose} openRegisterDialog={openRegisterDialog} openLoginDialog={openLoginDialog} />
         </>
     );
 });

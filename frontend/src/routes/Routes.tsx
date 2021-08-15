@@ -73,18 +73,21 @@ import { ActivityDashboardHelp } from "dashboard/content/help/DataDashboardHelp"
 import { ToursPage } from "dashboard/content/welcome/OnboardingTour/tours/ToursPage";
 import { ToursPageHelp } from "dashboard/content/help/ToursPageHelp";
 import { blogPosts } from "@landing/blog/blogPosts";
-import { BlogPostRecord, BlogPostRouteMeta } from "@Palavyr-Types";
+import { BlogPostRouteMeta } from "@Palavyr-Types";
 import { BlogPost } from "@landing/blog/components/BlogPost";
 import { BlogPage } from "@landing/blog/BlogPage";
 import { OurStoryPage } from "@landing/ourStory/OutStoryPage";
 import { OurTeamPage } from "@landing/ourTeam/OurTeamPage";
+import { GA4R } from "ga-4-react";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
         return (
             <AuthContext.Provider value={{ isActive: Auth.accountIsActive, isAuthenticated: Auth.accountIsAuthenticated }}>
                 <DashboardLayout helpComponent={helpComponent}>
-                    <ContentComponent />
+                    <GA4R code="G-9RFNBGK7HW">
+                        <ContentComponent />
+                    </GA4R>
                 </DashboardLayout>
             </AuthContext.Provider>
         );
@@ -116,7 +119,7 @@ const createPostParam = (id: number) => {
 };
 
 export const Routes = () => {
-    const blogPostRouteMetas: BlogPostRouteMeta[] = blogPosts.map((blogPost) => {
+    const blogPostRouteMetas: BlogPostRouteMeta[] = blogPosts.map(blogPost => {
         const titleSlug = convertTitleToUriCompatible(blogPost.title);
         const url = createPostUrl(titleSlug);
         const params = createPostParam(blogPost.id);
@@ -147,7 +150,7 @@ export const Routes = () => {
                             key={post.url}
                             exact
                             path={post.url}
-                            render={() => <BlogPost date={post.date} title={post.title} url={post.url} img={post.src} content={post.content} otherArticles={blogPostRouteMetas.filter((m) => m.id !== post.id)} />}
+                            render={() => <BlogPost date={post.date} title={post.title} url={post.url} img={post.src} content={post.content} otherArticles={blogPostRouteMetas.filter(m => m.id !== post.id)} />}
                         />
                     );
                 })}

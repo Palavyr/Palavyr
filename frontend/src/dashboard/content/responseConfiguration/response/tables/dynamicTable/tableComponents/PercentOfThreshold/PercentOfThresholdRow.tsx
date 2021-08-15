@@ -5,6 +5,7 @@ import { PercentOfThresholdData, TableData } from "@Palavyr-Types";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
+import { NumberFormatValues } from "react-number-format";
 
 export interface IPercentOfThresholdRow {
     tableData: TableData;
@@ -67,20 +68,17 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                 <CurrencyTextField
                     disabled={baseValue}
                     label="Threshold"
-                    variant="standard"
                     value={row.threshold}
                     currencySymbol={currencySymbol}
-                    minimumValue="0"
-                    outputFormat="number"
                     decimalCharacter="."
                     digitGroupSeparator=","
                     onBlur={() => {
                         const reordered = modifier.reorderThresholdData(tableData);
                         modifier.setTables(reordered);
                     }}
-                    onChange={(event: any, value: number) => {
-                        if (value !== undefined) {
-                            modifier.setThresholdValue(tableData, row.rowId, value);
+                    onValueChange={(values: NumberFormatValues) => {
+                        if (values.floatValue !== undefined) {
+                            modifier.setThresholdValue(tableData, row.rowId, values.floatValue);
                         }
                     }}
                 />
@@ -105,16 +103,13 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                         {!row.triggerFallback && (
                             <CurrencyTextField
                                 label="(5% is 0.05)"
-                                variant="standard"
                                 value={row.modifier}
                                 currencySymbol="%"
-                                minimumValue="0"
-                                outputFormat="number"
                                 decimalCharacter="."
                                 digitGroupSeparator=","
-                                onChange={(event: any, value: number) => {
-                                    if (value !== undefined) {
-                                        modifier.setPercentToModify(tableData, row.rowId, value);
+                                onValueChange={(values: NumberFormatValues) => {
+                                    if (values.floatValue !== undefined) {
+                                        modifier.setPercentToModify(tableData, row.rowId, values.floatValue);
                                     }
                                 }}
                             />
@@ -124,16 +119,13 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                         {!row.triggerFallback && (
                             <CurrencyTextField
                                 label="Amount"
-                                variant="standard"
                                 value={row.valueMin}
                                 currencySymbol={currencySymbol}
-                                minimumValue="0"
-                                outputFormat="number"
                                 decimalCharacter="."
                                 digitGroupSeparator=","
-                                onChange={(_: any, value: number) => {
-                                    if (value !== undefined) {
-                                        modifier.setValueMin(tableData, row.rowId, value);
+                                onValueChange={(values: NumberFormatValues) => {
+                                    if (values.floatValue !== undefined) {
+                                        modifier.setValueMin(tableData, row.rowId, values.floatValue);
                                     }
                                 }}
                             />
@@ -144,17 +136,14 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                             <CurrencyTextField
                                 className={classes.maxValInput}
                                 label="Amount"
-                                variant="standard"
                                 disabled={!row.range}
                                 value={row.range ? row.valueMax : 0.0}
                                 currencySymbol={currencySymbol}
-                                minimumValue="0"
-                                outputFormat="number"
                                 decimalCharacter="."
                                 digitGroupSeparator=","
-                                onChange={(_: any, value: number) => {
-                                    if (value !== undefined) {
-                                        modifier.setValueMax(tableData, row.rowId, value);
+                                onValueChange={(values: NumberFormatValues) => {
+                                    if (values.floatValue !== undefined) {
+                                        modifier.setValueMax(tableData, row.rowId, values.floatValue);
                                     }
                                 }}
                             />

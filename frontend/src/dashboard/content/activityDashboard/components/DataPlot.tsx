@@ -1,11 +1,10 @@
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
-import { makeStyles, CircularProgress, Typography, Divider, Card } from "@material-ui/core";
+import { makeStyles, CircularProgress, Card, Fade } from "@material-ui/core";
 import { Align } from "dashboard/layouts/positioning/Align";
 import React from "react";
-import { Fade } from "react-bootstrap";
 import { NoActivityComponent } from "./NoActivityComponent";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     title: {
         padding: "1rem",
     },
