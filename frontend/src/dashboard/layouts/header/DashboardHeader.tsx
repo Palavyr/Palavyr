@@ -8,11 +8,9 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import InfoIcon from "@material-ui/icons/Info";
 import { SpaceEvenly } from "../positioning/SpaceEvenly";
 import { ErrorPanel } from "../Errors/ErrorPanel";
-import { DASHBOARD_HEADER_TOPBAR_zINDEX } from "@constants";
+import { DASHBOARD_HEADER_TOPBAR_zINDEX, DRAWER_WIDTH } from "@constants";
 import { yellow } from "@material-ui/core/colors";
 import { UserDetails } from "./UserDetails";
-
-const drawerWidth: number = 240;
 
 interface DashboardHeaderProps {
     open: boolean;
@@ -25,7 +23,7 @@ interface DashboardHeaderProps {
     dashboardAreasLoading: boolean;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     topbar: {
         background: theme.palette.primary.main,
         position: "fixed",
@@ -44,8 +42,8 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     appBarShift: {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: drawerWidth,
+        width: `calc(100% - ${DRAWER_WIDTH}px)`,
+        marginLeft: DRAWER_WIDTH,
         transition: theme.transitions.create(["margin", "width"], {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
@@ -94,7 +92,7 @@ const baseRoutesToExclude = [
     "/dashboard/images",
 ];
 
-const routesToExclude = baseRoutesToExclude.concat(baseRoutesToExclude.map((x) => x + "/"));
+const routesToExclude = baseRoutesToExclude.concat(baseRoutesToExclude.map(x => x + "/"));
 
 export const DashboardHeader = ({ isLoading, dashboardAreasLoading, unseenNotifications, open, handleDrawerOpen, title, handleHelpDrawerOpen, helpOpen }: DashboardHeaderProps) => {
     const cls = useStyles();

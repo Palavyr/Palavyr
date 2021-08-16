@@ -12,7 +12,7 @@ type StyleProps = {
     buffer: number;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     treeItem: {
         display: "flex",
         flexDirection: "column",
@@ -79,5 +79,29 @@ export const ConfigurationNode = ({ currentNode, pBuffer }: IConfigurationNode) 
                     return <SteppedLineTo key={[line.from, index].join("-")} from={line.from} to={line.to} treeLinkClassName={treelinkClassName} />;
                 })}
         </>
+    );
+};
+
+type NodeFlowInterfaceProps = {
+    data: any;
+};
+export const NodeFlowInterface = ({ data }: NodeFlowInterfaceProps) => {
+    const currentNode = data.currentNode;
+    return (
+        <div style={{ width: "100%" }}>
+            <NodeInterface
+                currentNode={currentNode}
+                isRoot={currentNode.isRoot}
+                nodeType={currentNode.nodeType}
+                userText={currentNode.userText}
+                shouldPresentResponse={currentNode.shouldPresentResponse}
+                isMemberOfLeftmostBranch={currentNode.isMemberOfLeftmostBranch}
+                imageId={currentNode.imageId}
+                nodeId={currentNode.nodeId}
+                joinedChildReferenceString={currentNode.childNodeReferences.joinedReferenceString}
+                shouldDisableNodeTypeSelector={currentNode.shouldDisableNodeTypeSelector}
+                optionPath={currentNode.optionPath}
+            />
+        </div>
     );
 };

@@ -26,6 +26,7 @@ export interface IPalavyrLinkedList {
     setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
     resetRootNode(): void;
     convertToPalavyrNode(repository: PalavyrRepository, rawNode: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftMostBranch: boolean): IPalavyrNode;
+    compileToNodeFlow(): any;
 }
 
 export interface INodeReferences {

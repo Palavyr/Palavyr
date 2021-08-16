@@ -46,7 +46,7 @@ export const LangingPageTitleContent = ({  }: LandingPageTitleContentProps) => {
                         <BorrowedCarousel timeout={1050}>{items.map(x => x)}</BorrowedCarousel>
                     </>
                 }
-                subtitle={<SubtitleTypography>No Programing Required</SubtitleTypography>}
+                subtitle={<SubtitleTypography>Simple. No programing required</SubtitleTypography>}
             ></TitleContent>
             ;
         </Fade>

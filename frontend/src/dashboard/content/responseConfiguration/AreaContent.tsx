@@ -81,7 +81,6 @@ export const AreaContentInner = ({ setLoaded, children }: IAreaContentInner) => 
     const [editorTour, setEditorTour] = useState<boolean>(false);
 
     useEffect(() => {
-        console.log(Cookies.get(EDITOR_TOUR_COOKIE_NAME));
         if (Cookies.get(EDITOR_TOUR_COOKIE_NAME) === undefined) {
             setEditorTour(true);
         }

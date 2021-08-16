@@ -1,12 +1,10 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { NodeTypeOptions, TreeErrors } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
-import { Button, Divider, makeStyles } from "@material-ui/core";
+import { Button, makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { ConversationTreeContext, DashboardContext } from "dashboard/layouts/DashboardContext";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { Align } from "dashboard/layouts/positioning/Align";
 import UndoIcon from "@material-ui/icons/Undo";
 import RedoIcon from "@material-ui/icons/Redo";
 import { isDevelopmentStage } from "@api-client/clientUtils";
@@ -19,16 +17,19 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import { ConfigurationNode } from "./node/baseNode/ConfigurationNode";
 import { useContext } from "react";
 
+import "./PalavyrNodeLines/reactflowStyles.css";
+
 const useStyles = makeStyles(() => ({
     conversation: {
         position: "static",
         overflow: "auto",
+        height: "100%",
+        width: "100%",
     },
     treeErrorContainer: {
         margin: "0.5rem 0rem 1rem 2rem",
     },
     convoTreeMetaButtons: {
-        marginLeft: "0.7rem",
         borderRadius: "10px",
     },
     fieldSet: {
@@ -40,12 +41,20 @@ const useStyles = makeStyles(() => ({
     },
     treeWrap: {
         position: "relative",
+        height: "100%",
     },
+
     floatingSave: {
         position: "fixed",
-        right: "50px",
-        bottom: "65px",
-        zIndex: 100,
+        textAlign: "center",
+        top: 150,
+        height: 500,
+        right: 25,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-evenly",
+        alignItems: "center",
+        zIndex: 99999,
     },
 }));
 
@@ -142,14 +151,23 @@ export const StructuredConvoTree = () => {
 
     return (
         <ConversationTreeContext.Provider value={{ nodeTypeOptions, setNodes: setTreeWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
-            <AreaConfigurationHeader
-                divider={treeErrors?.anyErrors}
-                title="Chat Editor"
-                subtitle="Use this editor to create the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
-            />
-            <Align>
+            {/* <AreaConfigurationHeader
+            divider={treeErrors?.anyErrors}
+            title="Chat Editor"
+            subtitle="Use this editor to create the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
+        /> */}
+            <PalavyrErrorBoundary>
+                <div className={cls.conversation}>
+                    <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
+                </div>
+                <PalavyrErrorBoundary>
+                    <div id={"palavyr-tree"} className={cls.treeWrap}>{linkedNodeList !== undefined && <ConfigurationNode currentNode={linkedNodeList.rootNode} pBuffer={paddingBuffer} />}</div>
+                </PalavyrErrorBoundary>
+            </PalavyrErrorBoundary>
+            <div className={cls.floatingSave}>
                 <SaveOrCancel size="large" position="right" onSave={onSave} />
                 <Button
+                    size="small"
                     variant="contained"
                     className={cls.convoTreeMetaButtons}
                     startIcon={<UndoIcon />}
@@ -160,6 +178,7 @@ export const StructuredConvoTree = () => {
                     Undo
                 </Button>
                 <Button
+                    size="small"
                     variant="contained"
                     className={cls.convoTreeMetaButtons}
                     endIcon={<RedoIcon />}
@@ -170,6 +189,7 @@ export const StructuredConvoTree = () => {
                     Redo
                 </Button>
                 <Button
+                    size="small"
                     variant="contained"
                     className={cls.convoTreeMetaButtons}
                     endIcon={<RemoveIcon />}
@@ -180,6 +200,7 @@ export const StructuredConvoTree = () => {
                     Spacing
                 </Button>
                 <Button
+                    size="small"
                     variant="contained"
                     className={cls.convoTreeMetaButtons}
                     endIcon={<AddIcon />}
@@ -192,41 +213,15 @@ export const StructuredConvoTree = () => {
 
                 {isDevelopmentStage() && (
                     <>
-                        <Button variant="contained" className={cls.convoTreeMetaButtons} onClick={toggleDebugData}>
+                        <Button size="small" variant="contained" className={cls.convoTreeMetaButtons} onClick={toggleDebugData}>
                             Toggle Debug Data
                         </Button>
-                        <Button variant="contained" className={cls.convoTreeMetaButtons} onClick={resetTree}>
+                        <Button size="small" variant="contained" className={cls.convoTreeMetaButtons} onClick={resetTree}>
                             Reset Tree
                         </Button>
                     </>
                 )}
-            </Align>
-            {isDevelopmentStage() && (
-                <>
-                    {showDebugData &&
-                        conversationHistory.map((convo: PalavyrLinkedList, index: number) => {
-                            return (
-                                <div key={index}>
-                                    <Divider />
-                                    {convo.compileToConvoNodes().map((x) => " | " + x.nodeType)}
-                                </div>
-                            );
-                        })}
-                </>
-            )}
-            <PalavyrErrorBoundary>
-                <div className={cls.conversation}>
-                    <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
-                    <div className={cls.floatingSave}>
-                        <SaveOrCancel size="large" position="right" onSave={onSave} />
-                    </div>
-                    <fieldset className={cls.fieldSet}>
-                        <PalavyrErrorBoundary>
-                            <div className={cls.treeWrap}>{linkedNodeList !== undefined && <ConfigurationNode currentNode={linkedNodeList.rootNode} pBuffer={paddingBuffer} />}</div>
-                        </PalavyrErrorBoundary>
-                    </fieldset>
-                </div>
-            </PalavyrErrorBoundary>
+            </div>
         </ConversationTreeContext.Provider>
     );
 };

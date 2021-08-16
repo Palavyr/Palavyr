@@ -144,7 +144,6 @@ export const Routes = () => {
                 <Route exact path={RESET_PASSWORD_SUCCESS} component={RenderResetSuccess} />
 
                 {blogPostRouteMetas.map((post: BlogPostRouteMeta) => {
-                    console.log(post.url);
                     return (
                         <Route
                             key={post.url}

@@ -37,7 +37,7 @@ export const AreaLinkItem = memo(({ areaIdentifier, isActive, disabled, currentP
                 <ListItemIcon className={cls.icon}>
                     <ChatIcon />
                 </ListItemIcon>
-                <ListItemText primary={areaName} primaryTypographyProps={{ className: cls.sidebarText }} />
+                <ListItemText primary={areaName} primaryTypographyProps={{ className: cls.sidebarText, noWrap: true }} />
             </ListItem>
         </NavLink>
     );
