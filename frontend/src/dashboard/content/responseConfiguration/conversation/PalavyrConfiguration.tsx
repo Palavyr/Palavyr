@@ -16,8 +16,7 @@ import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import { ConfigurationNode } from "./node/baseNode/ConfigurationNode";
 import { useContext } from "react";
-
-import "./PalavyrNodeLines/reactflowStyles.css";
+import { PalavyrFlow } from "./PalavyrFlow/PalavyrFlow";
 
 const useStyles = makeStyles(() => ({
     conversation: {
@@ -47,6 +46,9 @@ const useStyles = makeStyles(() => ({
     floatingSave: {
         position: "fixed",
         textAlign: "center",
+        // border: "1px solid black",
+        borderRadius: "15px",
+        padding: "0.5rem",
         top: 150,
         height: 500,
         right: 25,
@@ -54,14 +56,14 @@ const useStyles = makeStyles(() => ({
         flexDirection: "column",
         justifyContent: "space-evenly",
         alignItems: "center",
-        zIndex: 99999,
+        backgroundColor: "rgba(189, 195, 204, 0.29)",
     },
 }));
 
 export const StructuredConvoTree = () => {
     const cls = useStyles();
 
-    const { planTypeMeta, repository } = useContext(DashboardContext);
+    const { planTypeMeta, repository, handleDrawerOpen, handleDrawerClose } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const [, setLoaded] = useState<boolean>(false);
 
@@ -74,6 +76,8 @@ export const StructuredConvoTree = () => {
 
     const [linkedNodeList, setLinkedNodes] = useState<PalavyrLinkedList>();
     const historyTracker = new ConversationHistoryTracker(setConversationHistory, setConversationHistoryPosition, setLinkedNodes);
+
+    const [elements, setElements] = useState<any>();
 
     const setTreeWithHistory = (updatedNodeList: PalavyrLinkedList) => {
         const freshNodeList = cloneDeep(updatedNodeList);
@@ -91,11 +95,13 @@ export const StructuredConvoTree = () => {
             setNodeTypeOptions(nodeTypeOptions);
             setLinkedNodes(nodesLinkedList);
 
+            setElements(nodesLinkedList.compileToNodeFlow());
             setConversationHistory([cloneDeep(nodesLinkedList)]);
         }
     }, [areaIdentifier, planTypeMeta]);
 
     useEffect(() => {
+        handleDrawerClose();
         setLoaded(true);
         loadNodes();
         return () => {
@@ -131,7 +137,7 @@ export const StructuredConvoTree = () => {
             const updatedLinkedList = new PalavyrLinkedList(updatedConvoNodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions, repository);
             historyTracker.addConversationHistoryToQueue(updatedLinkedList, conversationHistoryPosition, conversationHistory);
             setLinkedNodes(updatedLinkedList);
-            window.location.reload(); // TODO: Just fix the perf problem. Clicking to many things loads too many listeners, which locks the whole browser on save.
+            // window.location.reload(); // TODO: Just fix the perf problem. Clicking to many things loads too many listeners, which locks the whole browser on save.
             return true;
         } else {
             return false;
@@ -148,7 +154,9 @@ export const StructuredConvoTree = () => {
     };
 
     const [paddingBuffer, setPaddingBuffer] = useState<number>(1);
-
+    window.onbeforeunload = () => {
+        alert("Are you sure youw ant to lave");
+    };
     return (
         <ConversationTreeContext.Provider value={{ nodeTypeOptions, setNodes: setTreeWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
             {/* <AreaConfigurationHeader
@@ -161,7 +169,10 @@ export const StructuredConvoTree = () => {
                     <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
                 </div>
                 <PalavyrErrorBoundary>
-                    <div id={"palavyr-tree"} className={cls.treeWrap}>{linkedNodeList !== undefined && <ConfigurationNode currentNode={linkedNodeList.rootNode} pBuffer={paddingBuffer} />}</div>
+                    <div className={cls.treeWrap} style={{ width: "100%", height: "80vh" }}>
+                        {linkedNodeList !== undefined && <PalavyrFlow initialElements={elements} />}
+                        {/* {linkedNodeList !== undefined && <ConfigurationNode currentNode={linkedNodeList.rootNode} pBuffer={paddingBuffer} />} */}
+                    </div>
                 </PalavyrErrorBoundary>
             </PalavyrErrorBoundary>
             <div className={cls.floatingSave}>

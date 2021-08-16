@@ -97,7 +97,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     const [areaNameDetails, setAreaNameDetails] = useState<AreaNameDetails>([]);
     const [, setLoaded] = useState<boolean>(false);
 
-    const [open, setOpen] = useState<boolean>(true);
+    const [menuDrawerOpen, setMenuDrawerOpen] = useState<boolean>(true);
     const [helpOpen, setHelpOpen] = useState<boolean>(false);
 
     const [modalState, setModalState] = useState<boolean>(false);
@@ -191,11 +191,11 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     };
 
     const handleDrawerClose: () => void = () => {
-        setOpen(false);
+        setMenuDrawerOpen(false);
     };
 
     const handleDrawerOpen: () => void = () => {
-        setOpen(true);
+        setMenuDrawerOpen(true);
     };
 
     const handleHelpDrawerOpen: () => void = () => {
@@ -277,11 +277,13 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
                     panelErrors,
                     setPanelErrors,
                     repository,
+                    handleDrawerClose,
+                    handleDrawerOpen
                 }}
             >
                 <div className={cls.root}>
                     <DashboardHeader
-                        open={open}
+                        open={menuDrawerOpen}
                         unseenNotifications={unseenNotifications}
                         handleDrawerOpen={handleDrawerOpen}
                         handleHelpDrawerOpen={handleHelpDrawerOpen}
@@ -294,7 +296,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
                         className={classNames(cls.menuDrawer, "sidebar-tour")}
                         variant="persistent"
                         anchor="left"
-                        open={open}
+                        open={menuDrawerOpen}
                         classes={{
                             paper: cls.menuDrawerPaper,
                         }}
@@ -303,7 +305,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
                         <Divider />
                         <SideBarMenu areaNameDetails={areaNameDetails} />
                     </Drawer>
-                    <ContentLoader open={open}>{children}</ContentLoader>
+                    <ContentLoader open={menuDrawerOpen}>{children}</ContentLoader>
                     <Drawer
                         className={cls.helpDrawer}
                         variant="persistent"

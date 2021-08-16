@@ -171,33 +171,30 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     }
 
     compileToNodeFlow() {
-        const nodeElements: FlowNode[] = [];
+        const nodeElements: Partial<FlowNode>[] = [];
         const edgeElements: Edge[] = [];
-
-        let x = 0;
-        let y = 0;
-
-        let depth = 0;
 
         const nodeFlowCallback = (node: IPalavyrNode, index: number) => {
             //convert node into Handle
             nodeElements.push({
                 id: node.nodeId,
-                type: "input",
+                type: "nodeflowinterface",
                 data: { label: node.optionPath, currentNode: node },
-                position: { x: x + depth * index, y: y + depth * index },
-                sourcePosition: "right" as Position,
+                sourcePosition: "top" as Position,
+                targetPosition: "bottom" as Position,
             });
 
             // create all edges
             node.parentNodeReferences.forEach((parent: IPalavyrNode) => {
                 edgeElements.push({
                     id: `${parent.nodeId}-${node.nodeId}`,
-                    source: node.nodeId,
-                    target: parent.nodeId,
-                    sourceHandle: "b",
+                    source: parent.nodeId,
+                    target: node.nodeId,
+                    type: "smoothstep",
+                    sourceHandle: `a`,
+                    targetHandle: `b`,
                     animated: true,
-                    style: { stroke: "#fff" },
+                    style: { stroke: "white", strokeWidth: 4 },
                 });
             });
         };

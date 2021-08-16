@@ -890,6 +890,9 @@ export interface IDashboardContext {
     repository: PalavyrRepository;
     areaNameDetails: AreaNameDetails;
     reRenderDashboard(): void;
+    handleDrawerOpen(): void;
+    handleDrawerClose(): void;
+
 }
 
 export type ErrorResponse = {

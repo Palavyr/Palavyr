@@ -1,9 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
-import ReactFlow from "react-flow-renderer";
-import { NodeFlowInterface } from "../node/baseNode/ConfigurationNode";
+import ReactFlow, { ConnectionLineType, Controls, isNode, MiniMap, Position, ReactFlowProvider } from "react-flow-renderer";
+import { NodeFlowInterface } from "./FlowNodeInterface";
+import dagre from "dagre";
+import { IPalavyrLinkedList } from "../Contracts";
+
+const dagreGraph = new dagre.graphlib.Graph();
+dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 export interface PalavyrFlowProps {
-    elements: any;
+    // linkedNodeList: IPalavyrLinkedList;
+    initialElements: any;
 }
 
 const initBgColor = "#1A192B";
@@ -11,11 +17,57 @@ const initBgColor = "#1A192B";
 const connectionLineStyle = { stroke: "#fff" };
 const snapGrid: [number, number] = [20, 20];
 const nodeTypes = {
-    selectorNode: NodeFlowInterface,
+    nodeflowinterface: NodeFlowInterface,
 };
 
-export const PalavyrFlow = ({ elements }: PalavyrFlowProps) => {
+const nodeWidth = 200;
+const nodeHeight = 275;
+
+const getLayoutedElements = (elements, direction = "TB") => {
+    const isHorizontal = direction === "LR";
+    dagreGraph.setGraph({ rankdir: direction });
+
+    elements.forEach(el => {
+        if (isNode(el)) {
+            dagreGraph.setNode(el.id, { width: nodeWidth + 100, height: nodeHeight + 150 });
+        } else {
+            dagreGraph.setEdge(el.source, el.target);
+        }
+    });
+
+    dagre.layout(dagreGraph);
+
+    const mapped = elements.map(el => {
+        if (isNode(el)) {
+            const nodeWithPosition = dagreGraph.node(el.id);
+            el.targetPosition = isHorizontal ? Position.Left : Position.Top;
+            el.sourcePosition = isHorizontal ? Position.Right : Position.Bottom;
+
+            // unfortunately we need this little hack to pass a slightly different position
+            // to notify react flow about the change. Moreover we are shifting the dagre node position
+            // (anchor=center center) to the top left so it matches the react flow node anchor point (top left).
+            el.position = {
+                x: nodeWithPosition.x - nodeWidth / 2 + Math.random() / 1000,
+                y: nodeWithPosition.y - nodeHeight / 2,
+            };
+        }
+
+        return el;
+    });
+    return mapped;
+};
+
+export const PalavyrFlow = ({ initialElements }: PalavyrFlowProps) => {
     const [reactflowInstance, setReactflowInstance] = useState<any>(null);
+    const [elements, setElements] = useState<any>();
+
+    useEffect(() => {
+        if (initialElements) {
+            const flowElements = initialElements;
+            const flowWithLayout = getLayoutedElements(flowElements, "TB");
+            setElements(flowWithLayout);
+        }
+    }, [initialElements]);
 
     const onLoad = useCallback(
         rfi => {
@@ -24,31 +76,53 @@ export const PalavyrFlow = ({ elements }: PalavyrFlowProps) => {
                 console.log("flow loaded:", rfi);
             }
         },
-        [reactflowInstance]
+        [reactflowInstance, initialElements]
     );
 
     useEffect(() => {
         if (reactflowInstance && elements && elements.length > 0) {
             reactflowInstance.fitView();
         }
-    }, [reactflowInstance]);
+    }, [reactflowInstance, initialElements]);
 
-    return (
-        <ReactFlow
-            elements={elements}
-            //   onElementClick={onElementClick}
-            //   onElementsRemove={onElementsRemove}
-            //   onConnect={onConnect}
-            // onNodeDragStop={onNodeDragStop}
-            style={{ background: initBgColor }}
-            onLoad={onLoad}
-            nodeTypes={nodeTypes}
-            connectionLineStyle={connectionLineStyle}
-            snapToGrid={true}
-            snapGrid={snapGrid}
-            defaultZoom={1.5}
-        >
-            {/* <Background gap={4} size={1} color="white" /> */}
-        </ReactFlow>
+    const onLayout = useCallback(
+        direction => {
+            const withNewLayout = getLayoutedElements(elements, direction);
+            setElements(withNewLayout);
+        },
+        [initialElements]
+    );
+    const initBgColor = "#1A192B";
+    return elements ? (
+        <ReactFlowProvider>
+            <ReactFlow
+                elements={elements}
+                style={{ background: initBgColor }}
+                onLoad={onLoad}
+                nodeTypes={nodeTypes}
+                connectionLineType={ConnectionLineType.SmoothStep}
+                connectionLineStyle={connectionLineStyle}
+                snapToGrid={true}
+                snapGrid={snapGrid}
+                defaultZoom={1}
+            >
+                <MiniMap
+                    nodeStrokeColor={n => {
+                        if (n.type === "input") return "#0041d0";
+                        if (n.type === "nodeflowinterface") return initBgColor;
+                        if (n.type === "output") return "#ff0072";
+                        return "gray";
+                    }}
+                    nodeColor={n => {
+                        if (n.type === "nodeflowinterface") return initBgColor;
+                        return "#fff";
+                    }}
+                />
+                <Controls />
+                {/* <Background gap={4} size={1} color="white" /> */}
+            </ReactFlow>
+        </ReactFlowProvider>
+    ) : (
+        <></>
     );
 };
