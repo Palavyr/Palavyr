@@ -892,7 +892,7 @@ export interface IDashboardContext {
     reRenderDashboard(): void;
     handleDrawerOpen(): void;
     handleDrawerClose(): void;
-
+    menuOpen: boolean;
 }
 
 export type ErrorResponse = {

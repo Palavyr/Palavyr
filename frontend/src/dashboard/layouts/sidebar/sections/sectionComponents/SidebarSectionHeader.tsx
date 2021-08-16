@@ -7,19 +7,20 @@ export interface SidebarSectionHeaderProps {
     onClick(): void;
     currentState: boolean;
     title: string;
+    menuOpen: boolean;
     className?: string;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     listItemText: {
         textAlign: "center",
     },
 }));
-export const SidebarSectionHeader = ({ title, onClick, currentState, className = "" }: SidebarSectionHeaderProps) => {
+export const SidebarSectionHeader = ({ title, onClick, currentState, menuOpen, className = "" }: SidebarSectionHeaderProps) => {
     const cls = useStyles();
     return (
         <ListItem className={className} button onClick={onClick}>
-            <ListItemText style={{ textAlign: "center" }} primary={title} onClick={onClick} primaryTypographyProps={{ variant: "h4" }} />
+            {menuOpen && <ListItemText style={{ textAlign: "center" }} primary={title} onClick={onClick} primaryTypographyProps={{ variant: "h4" }} />}
             {currentState ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </ListItem>
     );

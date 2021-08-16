@@ -27,7 +27,7 @@ export const LangingPageTitleContent = ({  }: LandingPageTitleContentProps) => {
             <TitleTypography>Chat Bot</TitleTypography>
         </Fade>,
         <Fade bottom>
-            <TitleTypography>Personal Assistant</TitleTypography>
+            <TitleTypography>Personal Concierge</TitleTypography>
         </Fade>,
         <Fade bottom>
             <TitleTypography>Engagement Tool</TitleTypography>

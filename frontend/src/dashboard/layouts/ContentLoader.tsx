@@ -12,23 +12,19 @@ interface IContentLoader {
     children: React.ReactNode;
 }
 
-const useStyles = makeStyles((theme) => ({
-    content: {
-        position: "relative",
-        flexGrow: 1,
-        top: theme.mixins.toolbar.minHeight,
-        transition: theme.transitions.create("margin", {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        marginLeft: -DRAWER_WIDTH,
+const useStyles = makeStyles(theme => ({
+    toolbar: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-end",
+        padding: theme.spacing(0, 1),
+        // necessary for content to be below app bar
+        ...theme.mixins.toolbar,
     },
-    contentShift: {
-        transition: theme.transitions.create("margin", {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginLeft: 0,
+    content: {
+        flexGrow: 1,
+
+        // padding: theme.spacing(3),
     },
     loading: {
         backgroundColor: yellow[300],
@@ -41,7 +37,8 @@ export const ContentLoader = ({ open, children }: IContentLoader) => {
     const [show, setShow] = useState<boolean>(isDev);
 
     return (
-        <main className={classNames(cls.content, { [cls.contentShift]: open })}>
+        <main className={cls.content}>
+            <div className={cls.toolbar} />
             {/* {isDev && <DevStagingStrip show={show} setShow={setShow} />} */}
             {!show && <YellowStrip />}
             <div>{children}</div>

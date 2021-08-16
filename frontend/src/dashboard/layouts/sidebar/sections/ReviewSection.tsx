@@ -8,11 +8,9 @@ import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
 import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
 import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import BarChartIcon from "@material-ui/icons/BarChart";
 import TrendingUpIcon from "@material-ui/icons/TrendingUp";
-import TrendingUp from "@material-ui/icons/TrendingUp";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     icon: {
         color: theme.palette.secondary.light,
     },
@@ -20,9 +18,10 @@ const useStyles = makeStyles((theme) => ({
 
 export interface ReviewSectionProps {
     isActive: boolean;
+    menuOpen: boolean;
 }
 
-export const ReviewSection = memo(({ isActive }: ReviewSectionProps) => {
+export const ReviewSection = memo(({ isActive, menuOpen }: ReviewSectionProps) => {
     const [reviewOpen, setReviewOpen] = useState<boolean>(true);
     const { setViewName, unseenNotifications, planTypeMeta } = React.useContext(DashboardContext);
 
@@ -51,7 +50,7 @@ export const ReviewSection = memo(({ isActive }: ReviewSectionProps) => {
 
     return (
         <List className={"review-sidebar-tour"}>
-            <SidebarSectionHeader title="Review" onClick={() => setReviewOpen(!reviewOpen)} currentState={reviewOpen} />
+            <SidebarSectionHeader menuOpen={menuOpen} title="Review" onClick={() => setReviewOpen(!reviewOpen)} currentState={reviewOpen} />
             <Collapse in={reviewOpen} timeout="auto" unmountOnExit>
                 <SidebarLinkItem className={"activity-sidebar-tour"} text="Activity" isActive={isActive} onClick={dashboardOnClick} IconComponent={<TrendingUpIcon className={cls.icon} />} />
                 <SidebarLinkItem className={"check-enquiries-sidebar-tour"} text="Check Enquiries" isActive={isActive} onClick={enquiriesOnClick} IconComponent={<InboxIcon className={cls.icon} />}>

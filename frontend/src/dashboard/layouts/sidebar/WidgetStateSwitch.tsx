@@ -3,18 +3,20 @@ import { ListItem, ListItemText, FormControlLabel, Typography, makeStyles } from
 import { IOSSwitch } from "@common/components/IOSSwitch";
 import { green, red } from "theme";
 import { DashboardContext } from "../DashboardContext";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 export interface WidgetStateSwitchProps {
     isActive: boolean;
+    menuOpen: boolean;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     text: {
         color: "black",
     },
 }));
 
-export const WidgetStateSwitch = memo(({ isActive }: WidgetStateSwitchProps) => {
+export const WidgetStateSwitch = memo(({ isActive, menuOpen }: WidgetStateSwitchProps) => {
     const [widgetState, setWidgetState] = useState<boolean | undefined>();
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);
@@ -36,11 +38,17 @@ export const WidgetStateSwitch = memo(({ isActive }: WidgetStateSwitchProps) => 
     return (
         <ListItem className="widget-state-switch" style={{ backgroundColor: widgetState === undefined ? "gray" : widgetState ? green : red }} disabled={!isActive}>
             <ListItemText>
-                <Typography className={cls.text} variant="h6">
-                    Widget
-                </Typography>
+                {menuOpen && (
+                    <PalavyrText className={cls.text} variant="h6">
+                        Widget
+                    </PalavyrText>
+                )}
             </ListItemText>
-            <FormControlLabel control={Switch} className={cls.text} label={widgetState === undefined ? "loading..." : widgetState ? "Enabled" : "Disabled"} />
+            <FormControlLabel
+                control={Switch}
+                className={cls.text}
+                label={menuOpen && (widgetState === undefined ? <PalavyrText>loading...</PalavyrText> : widgetState ? <PalavyrText>Enabled</PalavyrText> : <PalavyrText>Disabled</PalavyrText>)}
+            />
         </ListItem>
     );
 });

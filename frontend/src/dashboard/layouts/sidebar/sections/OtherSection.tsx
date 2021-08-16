@@ -14,7 +14,7 @@ import { GoogleLogout } from "react-google-login";
 import { googleOAuthClientId } from "@api-client/clientUtils";
 import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     icon: {
         color: theme.palette.secondary.light,
     },
@@ -22,9 +22,10 @@ const useStyles = makeStyles((theme) => ({
 
 export interface OtherSectionProps {
     isActive: boolean;
+    menuOpen: boolean;
 }
 
-export const OtherSection = memo(({ isActive }: OtherSectionProps) => {
+export const OtherSection = memo(({ isActive, menuOpen }: OtherSectionProps) => {
     const [otherOpen, setOtherOpen] = useState<boolean>(true);
     const { setViewName } = React.useContext(DashboardContext);
 
@@ -48,14 +49,14 @@ export const OtherSection = memo(({ isActive }: OtherSectionProps) => {
 
     const takeToursOnClick = () => {
         setViewName("Palavyr Product Tours");
-        history.push("/dashboard/tour")
-    }
+        history.push("/dashboard/tour");
+    };
 
     const logoutOnClick = () => Auth.PerformLogout(() => history.push("/"));
 
     return (
         <List>
-            <SidebarSectionHeader className={"other-sidebar-tour"} title="Other" onClick={() => setOtherOpen(!otherOpen)} currentState={otherOpen} />
+            <SidebarSectionHeader menuOpen={menuOpen} className={"other-sidebar-tour"} title="Other" onClick={() => setOtherOpen(!otherOpen)} currentState={otherOpen} />
             <Collapse in={otherOpen} timeout="auto" unmountOnExit>
                 <SidebarLinkItem className={"settings-sidebar-tour"} text="Settings" isActive={isActive} onClick={generalSettingsOnClick} IconComponent={<SettingsIcon className={cls.icon} />} />
                 <SidebarLinkItem className={"get-widget-sidebar-tour"} text="Get Widget" isActive={isActive} onClick={getWidgetOnClick} IconComponent={<GetAppIcon className={cls.icon} />} />
@@ -65,7 +66,7 @@ export const OtherSection = memo(({ isActive }: OtherSectionProps) => {
             <GoogleLogout
                 onLogoutSuccess={logoutOnClick}
                 clientId={googleOAuthClientId}
-                render={(renderProps) => {
+                render={renderProps => {
                     return <SidebarLinkItem text="Logout" isActive={true} onClick={renderProps.onClick} disabled={renderProps.disabled} IconComponent={<ExitToAppIcon className={cls.icon} />} />;
                 }}
             />

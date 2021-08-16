@@ -1,20 +1,23 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { makeStyles, useTheme, Theme } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import { DashboardHeader } from "./header/DashboardHeader";
 
-import { SideBarHeader } from "./sidebar/SideBarHeader";
 import { SideBarMenu } from "./sidebar/SideBarMenu";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 import { ContentLoader } from "./ContentLoader";
 import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
-import { cloneDeep, truncate } from "lodash";
+import { cloneDeep } from "lodash";
 import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRow, ErrorResponse, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { DashboardHeader } from "./header/DashboardHeader";
-import { makeStyles, Theme, Typography } from "@material-ui/core";
-import { defaultUrlForNewArea, DRAWER_WIDTH, WELCOME_TOUR_COOKIE_NAME } from "@constants";
-import Divider from "@material-ui/core/Divider";
-import Drawer from "@material-ui/core/Drawer";
+import { defaultUrlForNewArea, DRAWER_WIDTH, MENU_DRAWER_STATE_COOKIE_NAME, WELCOME_TOUR_COOKIE_NAME } from "@constants";
+
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
-import classNames from "classnames";
 import { DashboardContext } from "./DashboardContext";
 import { PalavyrSnackbar } from "@common/components/PalavyrSnackbar";
 import { redirectToHomeWhenSessionNotEstablished } from "@api-client/clientUtils";
@@ -24,11 +27,11 @@ import { Loaders } from "@api-client/Loaders";
 import { IntroSteps } from "dashboard/content/welcome/OnboardingTour/IntroSteps";
 import { welcomeTourSteps } from "dashboard/content/welcome/OnboardingTour/tours/welcomeTour";
 import Cookies from "js-cookie";
-import { TestTrack } from "googleAnalytics/G4AExample";
-import { useGA4React } from "ga-4-react";
 import { GA4ReactResolveInterface } from "ga-4-react/dist/models/gtagModels";
+import classNames from "classnames";
+import { Typography } from "@material-ui/core";
 
-const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
+ const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
         return {
             areaIdentifier: x.areaIdentifier,
@@ -42,13 +45,56 @@ type StyleProps = {
     helpOpen: boolean;
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
+
+
+const useStyles = makeStyles((theme: Theme) =>({
+
     root: {
-        position: "absolute", // Required - finalized
         display: "flex",
-        width: "100%",
-        top: "8px",
-        paddingBottom: "5rem",
+
+    },
+    menuButton: {
+        marginRight: 36,
+    },
+    hide: {
+        display: "none",
+    },
+    drawer: {
+        width: DRAWER_WIDTH,
+        flexShrink: 0,
+        whiteSpace: "nowrap",
+        backgroundColor: theme.palette.primary.main,
+    },
+    drawerOpen: {
+        width: DRAWER_WIDTH,
+        transition: theme.transitions.create("width", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
+    drawerClose: {
+        transition: theme.transitions.create("width", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        overflowX: "hidden",
+        width: theme.spacing(7) + 1,
+        [theme.breakpoints.up("sm")]: {
+            width: theme.spacing(9) + 1,
+        },
+    },
+    toolbar: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-end",
+        padding: theme.spacing(0, 1),
+        // necessary for content to be below app bar
+        ...theme.mixins.toolbar,
+    },
+
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
     },
     menuDrawer: {
         width: DRAWER_WIDTH,
@@ -61,16 +107,9 @@ const useStyles = makeStyles((theme: Theme) => ({
             flexShrink: 0,
         };
     },
-    helpDrawerHeader: {
-        display: "flex",
-        alignItems: "center",
-        padding: theme.spacing(0, 1),
-        justifyContent: "flex-end",
-        ...theme.mixins.toolbar,
-    },
     menuDrawerPaper: {
         width: DRAWER_WIDTH,
-        backgroundColor: theme.palette.primary.light,
+        // backgroundColor: theme.palette.primary.main,
     },
     helpDrawerPaper: {
         width: DRAWER_WIDTH + 300,
@@ -81,6 +120,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     helpDrawerHeaderText: {
         color: theme.palette.common.white,
     },
+    name: {
+        color: theme.palette.success.main,
+    },
 }));
 
 interface IDashboardLayout {
@@ -90,6 +132,9 @@ interface IDashboardLayout {
 }
 
 export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayout) => {
+
+    const theme = useTheme();
+
     const history = useHistory();
     const location = useLocation();
     const { areaIdentifier } = useParams<{ contentType: string; areaIdentifier: string }>();
@@ -97,7 +142,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     const [areaNameDetails, setAreaNameDetails] = useState<AreaNameDetails>([]);
     const [, setLoaded] = useState<boolean>(false);
 
-    const [menuDrawerOpen, setMenuDrawerOpen] = useState<boolean>(true);
+    const [menuOpen, setMenuOpen] = useState<boolean>(false);
     const [helpOpen, setHelpOpen] = useState<boolean>(false);
 
     const [modalState, setModalState] = useState<boolean>(false);
@@ -175,6 +220,15 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     }, [areaIdentifier]);
 
     useEffect(() => {
+        const menuStateString = Cookies.get(MENU_DRAWER_STATE_COOKIE_NAME)
+        if (menuStateString !== undefined){
+            if (menuStateString === "true"){
+                setMenuOpen(true);
+            } else if (menuStateString === "false") {
+                setMenuOpen(false);
+            }
+        }
+
         loadAreas();
         setLoaded(true);
         return () => {
@@ -191,11 +245,13 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     };
 
     const handleDrawerClose: () => void = () => {
-        setMenuDrawerOpen(false);
+        Cookies.set(MENU_DRAWER_STATE_COOKIE_NAME, "false")
+        setMenuOpen(false);
     };
 
     const handleDrawerOpen: () => void = () => {
-        setMenuDrawerOpen(true);
+        Cookies.set(MENU_DRAWER_STATE_COOKIE_NAME, "false")
+        setMenuOpen(true);
     };
 
     const handleHelpDrawerOpen: () => void = () => {
@@ -245,89 +301,97 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     };
 
     return (
-        <>
-            {welcomeTourActive && <IntroSteps initialize={welcomeTourActive} steps={welcomeTourSteps} onBlur={welcomeTourOnBlur} />}
-            <DashboardContext.Provider
-                value={{
-                    reRenderDashboard,
-                    accountTypeNeedsPassword,
-                    successOpen,
-                    setSuccessOpen,
-                    successText,
-                    setSuccessText,
-                    warningOpen,
-                    setWarningOpen,
-                    warningText,
-                    setWarningText,
-                    errorOpen,
-                    errorText,
-                    setErrorOpen,
-                    setErrorText,
-                    snackPosition,
-                    setSnackPosition,
-                    setIsLoading: setIsLoading,
-                    currencySymbol: currencySymbol,
-                    checkAreaCount,
-                    areaName: currentViewName,
-                    areaNameDetails: areaNameDetails,
-                    setViewName: setViewName,
-                    unseenNotifications: unseenNotifications,
-                    setUnseenNotifications: setUnseenNotifications,
-                    planTypeMeta: planTypeMeta,
-                    panelErrors,
-                    setPanelErrors,
-                    repository,
-                    handleDrawerClose,
-                    handleDrawerOpen
-                }}
-            >
-                <div className={cls.root}>
-                    <DashboardHeader
-                        open={menuDrawerOpen}
-                        unseenNotifications={unseenNotifications}
-                        handleDrawerOpen={handleDrawerOpen}
-                        handleHelpDrawerOpen={handleHelpDrawerOpen}
-                        helpOpen={helpOpen}
-                        title={currentViewName}
-                        isLoading={isLoading}
-                        dashboardAreasLoading={dashboardAreasLoading}
-                    />
-                    <Drawer
-                        className={classNames(cls.menuDrawer, "sidebar-tour")}
-                        variant="persistent"
-                        anchor="left"
-                        open={menuDrawerOpen}
-                        classes={{
-                            paper: cls.menuDrawerPaper,
-                        }}
-                    >
-                        <SideBarHeader handleDrawerClose={handleDrawerClose} />
-                        <Divider />
-                        <SideBarMenu areaNameDetails={areaNameDetails} />
-                    </Drawer>
-                    <ContentLoader open={menuDrawerOpen}>{children}</ContentLoader>
-                    <Drawer
-                        className={cls.helpDrawer}
-                        variant="persistent"
-                        anchor="right"
-                        open={helpOpen}
-                        classes={{
-                            paper: cls.helpDrawerPaper,
-                        }}
-                    >
-                        <SideBarHeader handleDrawerClose={handleHelpDrawerClose} side="right" roundTop>
-                            <Typography className={cls.helpDrawerHeaderText}>Close</Typography>
-                        </SideBarHeader>
-                        <Divider />
-                        {helpComponent}
-                    </Drawer>
-                    {planTypeMeta && (areaNameDetails.length < planTypeMeta.allowedAreas ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
-                    <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
+    <>
+        {welcomeTourActive && <IntroSteps initialize={welcomeTourActive} steps={welcomeTourSteps} onBlur={welcomeTourOnBlur} />}
+        <DashboardContext.Provider
+            value={{
+                reRenderDashboard,
+                accountTypeNeedsPassword,
+                successOpen,
+                setSuccessOpen,
+                successText,
+                setSuccessText,
+                warningOpen,
+                setWarningOpen,
+                warningText,
+                setWarningText,
+                errorOpen,
+                errorText,
+                setErrorOpen,
+                setErrorText,
+                snackPosition,
+                setSnackPosition,
+                setIsLoading: setIsLoading,
+                currencySymbol: currencySymbol,
+                checkAreaCount,
+                areaName: currentViewName,
+                areaNameDetails: areaNameDetails,
+                setViewName: setViewName,
+                unseenNotifications: unseenNotifications,
+                setUnseenNotifications: setUnseenNotifications,
+                planTypeMeta: planTypeMeta,
+                panelErrors,
+                setPanelErrors,
+                repository,
+                handleDrawerClose,
+                handleDrawerOpen,
+                menuOpen
+            }}
+        >
+            <div className={cls.root}>
+                <CssBaseline />
+                <DashboardHeader
+                    open={menuOpen}
+                    unseenNotifications={unseenNotifications}
+                    handleDrawerOpen={handleDrawerOpen}
+                    handleHelpDrawerOpen={handleHelpDrawerOpen}
+                    helpOpen={helpOpen}
+                    title={currentViewName}
+                    isLoading={isLoading}
+                    dashboardAreasLoading={dashboardAreasLoading}
+                />
+                <Drawer
+                    variant="permanent"
+                    className={classNames(cls.drawer, {
+                        [cls.drawerOpen]: menuOpen,
+                        [cls.drawerClose]: !menuOpen,
+                    })}
+                    classes={{
+                        paper: classNames({
+                            [cls.drawerOpen]: menuOpen,
+                            [cls.drawerClose]: !menuOpen,
+                        }),
+                    }}
+                >
+                <div className={classNames(cls.toolbar, cls.menuDrawerPaper)}>
+                    <Typography className={cls.name} variant="h4">
+                        Palavyr.com
+                    </Typography>
+                    <IconButton onClick={handleDrawerClose}>{theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}</IconButton>
                 </div>
+                <Divider />
+                <SideBarMenu areaNameDetails={areaNameDetails} menuOpen={menuOpen} />
+                </Drawer>
+                <ContentLoader open={menuOpen}>{children}</ContentLoader>
+                <Drawer
+                    className={cls.helpDrawer}
+                    variant="persistent"
+                    anchor="right"
+                    open={helpOpen}
+                    classes={{
+                        paper: cls.helpDrawerPaper,
+                    }}
+                >
+                    <Divider />
+                    {helpComponent}
+                </Drawer>
+                {planTypeMeta && (areaNameDetails.length < planTypeMeta.allowedAreas ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
+                <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
                 {successOpen && <PalavyrSnackbar position={snackPosition} successText={successText} successOpen={successOpen} setSuccessOpen={setSuccessOpen} />}
                 {warningOpen && <PalavyrSnackbar position={snackPosition} warningText={warningText} warningOpen={warningOpen} setWarningOpen={setWarningOpen} />}
                 {errorOpen && <PalavyrSnackbar position={snackPosition} errorText={errorText} errorOpen={errorOpen} setErrorOpen={setErrorOpen} />}
-            </DashboardContext.Provider>
-        </>
-    );
+            </div>
+        </DashboardContext.Provider>
+    </>
+    )
 };

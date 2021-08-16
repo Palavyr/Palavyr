@@ -1,16 +1,10 @@
-import { makeStyles, Theme, Typography } from "@material-ui/core";
+import { makeStyles, Theme, Typography, TypographyProps } from "@material-ui/core";
 import React from "react";
 
-export interface PalavyrText {
-    text: string;
+export interface PalavyrText extends TypographyProps {
+    children: React.ReactNode | string | number;
 }
 
-const useStyles = makeStyles((theme: Theme) => {
-    type: {
-        fontSize: "12px"
-    }
-})
-
-export const PalavyrText = ({ text }) => {
-    return <Typography>{text}</Typography>;
+export const PalavyrText = ({ children, ...rest }) => {
+    return <Typography {...rest}>{children}</Typography>;
 };

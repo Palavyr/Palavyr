@@ -24,37 +24,46 @@ interface DashboardHeaderProps {
 }
 
 const useStyles = makeStyles(theme => ({
-    topbar: {
-        background: theme.palette.primary.main,
-        position: "fixed",
-        zIndex: DASHBOARD_HEADER_TOPBAR_zINDEX,
-    },
-    appBar: {
-        transition: theme.transitions.create(["margin", "width"], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-    },
+    //     topbar: {
+    //         background: theme.palette.primary.main,
+    //         position: "fixed",
+    //         zIndex: DASHBOARD_HEADER_TOPBAR_zINDEX,
+    //     },
+    //     appBar: {
+    //         zIndex: theme.zIndex.drawer + 1,
+    //         transition: theme.transitions.create(['width', 'margin'], {
+    //           easing: theme.transitions.easing.sharp,
+    //           duration: theme.transitions.duration.leavingScreen,
+    //         }),
+    //       },
+    //       appBarShift: {
+    //         marginLeft: DRAWER_WIDTH,
+    //         width: `calc(100% - ${DRAWER_WIDTH}px)`,
+    //         transition: theme.transitions.create(['width', 'margin'], {
+    //           easing: theme.transitions.easing.sharp,
+    //           duration: theme.transitions.duration.enteringScreen,
+    //         }),
+    //       },
+    //       toolbar: {
+    //         display: 'flex',
+    //         alignItems: 'center',
+    //         justifyContent: 'flex-end',
+    //         padding: theme.spacing(0, 1),
+    //         // necessary for content to be below app bar
+    //         ...theme.mixins.toolbar,
+    //       },
     icon: {
         borderRadius: "10px",
         "&:hover": {
             backgroundColor: theme.palette.primary.light,
         },
     },
-    appBarShift: {
-        width: `calc(100% - ${DRAWER_WIDTH}px)`,
-        marginLeft: DRAWER_WIDTH,
-        transition: theme.transitions.create(["margin", "width"], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    hide: {
-        display: "none",
-    },
-    name: {
-        color: theme.palette.success.main,
-    },
+    //     hide: {
+    //         display: "none",
+    //     },
+    // name: {
+    //     color: theme.palette.success.main,
+    // },
     helpIconText: {
         // paddingRight: theme.spacing(3),
     },
@@ -68,6 +77,28 @@ const useStyles = makeStyles(theme => ({
     barItem: {
         marginRight: "0.8rem",
         marginLeft: "0.8rem",
+    },
+
+    hide: {
+        display: "none",
+    },
+    appBar: {
+        zIndex: theme.zIndex.drawer + 1,
+        transition: theme.transitions.create(["width", "margin"], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+    },
+    appBarShift: {
+        marginLeft: DRAWER_WIDTH,
+        width: `calc(100% - ${DRAWER_WIDTH}px)`,
+        transition: theme.transitions.create(["width", "margin"], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
+    menuButton: {
+        marginRight: 36,
     },
 }));
 
@@ -107,62 +138,74 @@ export const DashboardHeader = ({ isLoading, dashboardAreasLoading, unseenNotifi
     }, [sized]);
 
     return (
-        <AppBar position="absolute" className={classNames(cls.topbar, cls.appBar, { [cls.appBarShift]: open })}>
-            <>
-                <Toolbar>
-                    <Align float="left">
-                        <IconButton color="inherit" aria-label="open drawer" onClick={handleDrawerOpen} edge="start" className={classNames(open && cls.hide)}>
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography className={cls.name} variant="h4">
-                            Palavyr.com
-                        </Typography>
-                    </Align>
-                    <div style={{ flexGrow: 1 }} />
-                    <Align>
-                        {title && (
-                            <SpaceEvenly vertical>
-                                <Typography display="inline" align="center" variant="h6">
-                                    Current Area:
-                                </Typography>
-                                <Typography display="inline" align="center" variant="h5">
-                                    {title}
-                                </Typography>
-                            </SpaceEvenly>
+        <AppBar
+            position="fixed"
+            className={classNames(cls.appBar, {
+                [cls.appBarShift]: open,
+            })}
+        >
+            <Toolbar>
+                <IconButton
+                    color="inherit"
+                    aria-label="open drawer"
+                    onClick={handleDrawerOpen}
+                    edge="start"
+                    className={classNames(cls.menuButton, {
+                        [cls.hide]: open,
+                    })}
+                >
+                    <MenuIcon />
+                </IconButton>
+
+                {/* <Align float="left">
+                    <Typography className={cls.name} variant="h4">
+                        Palavyr.com
+                    </Typography>
+                </Align> */}
+                <div style={{ flexGrow: 1 }} />
+                <Align>
+                    {title && (
+                        <SpaceEvenly vertical>
+                            <Typography display="inline" align="center" variant="h6">
+                                Current Area:
+                            </Typography>
+                            <Typography display="inline" align="center" variant="h5">
+                                {title}
+                            </Typography>
+                        </SpaceEvenly>
+                    )}
+                </Align>
+                <div style={{ flexGrow: 1 }} />
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <Align float="right" verticalCenter extraClassNames={cls.barItem}>
+                        {!routesToExclude.includes(location.pathname) ? (
+                            <Tooltip title="Help about this page">
+                                <IconButton color="inherit" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(cls.icon, helpOpen && cls.hide)}>
+                                    <InfoIcon />
+                                </IconButton>
+                            </Tooltip>
+                        ) : (
+                            <div></div>
                         )}
                     </Align>
-                    <div style={{ flexGrow: 1 }} />
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <Align float="right" verticalCenter extraClassNames={cls.barItem}>
-                            {!routesToExclude.includes(location.pathname) ? (
-                                <Tooltip title="Help about this page">
-                                    <IconButton color="inherit" onClick={() => handleHelpDrawerOpen()} edge="end" className={classNames(cls.icon, helpOpen && cls.hide)}>
-                                        <InfoIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            ) : (
-                                <div></div>
-                            )}
-                        </Align>
-                        <Align float="right" verticalCenter extraClassNames={cls.barItem}>
-                            <Tooltip title="Unseen enquiries">
-                                <span className={classNames(cls.icon, "check-enquiries-badge-sidebar-tour")}>
-                                    <IconButton disabled={unseenNotifications === 0} onClick={() => history.push("/dashboard/enquiries")} className={cls.icon} edge="start" color="inherit">
-                                        <Badge showZero={false} badgeContent={unseenNotifications} color="secondary">
-                                            <NotificationsIcon />
-                                        </Badge>
-                                    </IconButton>
-                                </span>
-                            </Tooltip>
-                        </Align>
-                        <Align float="right" verticalCenter extraClassNames={cls.barItem}>
-                            <UserDetails />
-                        </Align>
-                    </div>
-                </Toolbar>
-                {(isLoading || dashboardAreasLoading) && <LinearProgress classes={{ bar: cls.bar }} className={cls.loading} />}
-                <ErrorPanel />
-            </>
+                    <Align float="right" verticalCenter extraClassNames={cls.barItem}>
+                        <Tooltip title="Unseen enquiries">
+                            <span className={classNames(cls.icon, "check-enquiries-badge-sidebar-tour")}>
+                                <IconButton disabled={unseenNotifications === 0} onClick={() => history.push("/dashboard/enquiries")} className={cls.icon} edge="start" color="inherit">
+                                    <Badge showZero={false} badgeContent={unseenNotifications} color="secondary">
+                                        <NotificationsIcon />
+                                    </Badge>
+                                </IconButton>
+                            </span>
+                        </Tooltip>
+                    </Align>
+                    <Align float="right" verticalCenter extraClassNames={cls.barItem}>
+                        <UserDetails />
+                    </Align>
+                </div>
+            </Toolbar>
+            {(isLoading || dashboardAreasLoading) && <LinearProgress classes={{ bar: cls.bar }} className={cls.loading} />}
+            <ErrorPanel />
         </AppBar>
     );
 };

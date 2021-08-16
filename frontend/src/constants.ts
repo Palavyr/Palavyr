@@ -42,7 +42,7 @@ export const RESET_PASSWORD_SUCCESS = "/reset-success";
 export const PURCHASE_ROUTE = "/dashboard/subscribe/purchase";
 
 // Dashboard style
-export const DRAWER_WIDTH: number = 200;
+export const DRAWER_WIDTH: number = 240;
 export const HELP_DRAWER_WIDTH: number = 300;
 
 // Palavyr Configuration Node
@@ -65,5 +65,6 @@ export const WELCOME_TOUR_COOKIE_NAME = "welcome-tour-cookie";
 export const EDITOR_TOUR_COOKIE_NAME = "editor-tour-cookie";
 export const REMEMBER_ME_EMAIL_COOKIE_NAME = "remember-me-email-cookie";
 export const REMEMBER_ME_PASSWORD_COOKIE_NAME = "remember-me-password-cookie";
+export const MENU_DRAWER_STATE_COOKIE_NAME = "menu-drawer-state-cookie";
 
 export const ALL_COOKIE_NAMES = [WELCOME_TOUR_COOKIE_NAME, EDITOR_TOUR_COOKIE_NAME, REMEMBER_ME_EMAIL_COOKIE_NAME, REMEMBER_ME_PASSWORD_COOKIE_NAME];

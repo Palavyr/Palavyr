@@ -18,7 +18,7 @@ export interface ISettingsGridRow {
     successText?: string;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     row: {
         paddingTop: "1rem",
         paddingBottom: "1rem",
@@ -26,6 +26,8 @@ const useStyles = makeStyles((theme) => ({
     },
     paper: {
         backgroundColor: theme.palette.secondary.light,
+        // backgroundColor: theme.palette.primary.light,
+        // color: theme.palette.common.white,
         padding: "2rem",
         margin: "1rem",
         width: "100%",
@@ -70,7 +72,7 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({
                                     variant="standard"
                                     fullWidth={fullWidth}
                                     label={placeholder}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                         setInputVal(e.target.value);
                                     }}
                                     value={inputVal}
@@ -85,7 +87,7 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({
                                     value={inputVal}
                                     autoComplete="off"
                                     type="email"
-                                    onChange={(e) => {
+                                    onChange={e => {
                                         setInputVal(e.target.value);
                                         if (inputValStatus === "invalidEmail") {
                                             setInputValStatus(null);
@@ -101,7 +103,7 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({
                                     format={locale === "en-AU" ? "+61 (##) ####-####" : "+1 (###) ###-####"}
                                     mask="_"
                                     type="tel"
-                                    onValueChange={(values) => setInputVal(values.formattedValue)}
+                                    onValueChange={values => setInputVal(values.formattedValue)}
                                     className={cls.phone}
                                 />
                             )}
