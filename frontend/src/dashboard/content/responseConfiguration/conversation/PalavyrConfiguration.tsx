@@ -1,28 +1,39 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { NodeTypeOptions, TreeErrors } from "@Palavyr-Types";
+import { Action, NodeTypeOptions, TreeErrors } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { Button, makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { ConversationTreeContext, DashboardContext } from "dashboard/layouts/DashboardContext";
-import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import UndoIcon from "@material-ui/icons/Undo";
-import RedoIcon from "@material-ui/icons/Redo";
-import { isDevelopmentStage } from "@api-client/clientUtils";
 import PalavyrErrorBoundary from "@common/components/Errors/PalavyrErrorBoundary";
 import { ConversationHistoryTracker } from "./node/ConversationHistoryTracker";
 import { PalavyrLinkedList } from "./PalavyrDataStructure/PalavyrLinkedList";
 import { TreeErrorPanel } from "./MissingDynamicNodes";
-import AddIcon from "@material-ui/icons/Add";
-import RemoveIcon from "@material-ui/icons/Remove";
 import { ConfigurationNode } from "./node/baseNode/ConfigurationNode";
 import { useContext } from "react";
 import { PalavyrFlow } from "./PalavyrFlow/PalavyrFlow";
 import $ from "jquery";
-import { MAIN_CONTENT_DIV_ID } from "@constants";
+import { MAIN_CONTENT_DIV_ID, USE_NEW_EDITOR_COOKIE_NAME } from "@constants";
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import Cookies from "js-cookie";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { SaveOrCancel } from "@common/components/SaveOrCancel";
+import UndoIcon from "@material-ui/icons/Undo";
+import RedoIcon from "@material-ui/icons/Redo";
+import { isDevelopmentStage } from "@api-client/clientUtils";
+import AddIcon from "@material-ui/icons/Add";
+import RemoveIcon from "@material-ui/icons/Remove";
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
-type StyleProps = {
-    flowHeight: number;
-};
+import FileCopyIcon from "@material-ui/icons/FileCopyOutlined";
+import SaveIcon from "@material-ui/icons/Save";
+import PrintIcon from "@material-ui/icons/Print";
+import ShareIcon from "@material-ui/icons/Share";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import { PalavyrSpeedDial } from "@common/components/speedDial/PalavyrDial";
+import BugReportIcon from '@material-ui/icons/BugReport';
+import RotateLeftIcon from '@material-ui/icons/RotateLeft';
+
+const MAIN_DIV = `#${MAIN_CONTENT_DIV_ID}`
 
 const useStyles = makeStyles(theme => ({
     conversation: {
@@ -42,34 +53,38 @@ const useStyles = makeStyles(theme => ({
         marginBottom: "10px",
         padding: "25px",
     },
-    wrap: {
-        // height: `calc(100% - ${64 + 48}px)`,
-    },
-    treeWrap: (props: StyleProps) => ({
+
+    newTreeWrap: {
         height: "93vh",
         marginTop: "-15px",
         display: "flex",
         flexDirection: "column",
         flexGrow: 1,
-    }),
+    },
+    treeWrap: {
+        position: "relative"
+    },
     floatingSave: {
         position: "fixed",
         textAlign: "center",
-        borderRadius: "15px",
-        padding: "0.5rem",
-        top: 150,
-        height: 500,
+        // borderRadius: "15px",
+        // padding: "0.5rem",
+        top: 200,
+        // height: 500,
         right: 25,
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-evenly",
-        alignItems: "center",
-        backgroundColor: "rgba(189, 195, 204, 0.29)",
+        justifyContent: "flex-end",
+        alignItems: "right",
+        // backgroundColor: "rgba(189, 195, 204, 0.29)",
+        zIndex: 99999
     },
 }));
 
 export const StructuredConvoTree = () => {
-    const { planTypeMeta, repository, handleDrawerOpen, handleDrawerClose } = useContext(DashboardContext);
+
+    const cls = useStyles();
+    const { planTypeMeta, repository, handleDrawerClose } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const [, setLoaded] = useState<boolean>(false);
 
@@ -83,7 +98,16 @@ export const StructuredConvoTree = () => {
     const [linkedNodeList, setLinkedNodes] = useState<PalavyrLinkedList>();
     const historyTracker = new ConversationHistoryTracker(setConversationHistory, setConversationHistoryPosition, setLinkedNodes);
 
-    const [elements, setElements] = useState<any>();
+    const [useNewEditor, setUseNewEditor] = useState<boolean>(true);
+    const [paddingBuffer, setPaddingBuffer] = useState<number>(1);
+
+    window.onbeforeunload = (e) => disableBodyScroll($(MAIN_DIV);
+
+    const toggleUseNewEditor = () => {
+        const newSettings = !useNewEditor;
+        Cookies.set(USE_NEW_EDITOR_COOKIE_NAME, newSettings ? 'true' : 'false')
+        setUseNewEditor(newSettings);
+    }
 
     const setTreeWithHistory = (updatedNodeList: PalavyrLinkedList) => {
         const freshNodeList = cloneDeep(updatedNodeList);
@@ -101,25 +125,38 @@ export const StructuredConvoTree = () => {
             setNodeTypeOptions(nodeTypeOptions);
             setLinkedNodes(nodesLinkedList);
 
-            setElements(nodesLinkedList.compileToNodeFlow());
             setConversationHistory([cloneDeep(nodesLinkedList)]);
         }
     }, [areaIdentifier, planTypeMeta]);
 
-    const [flowHeight, setFlowHeight] = useState<number>(0);
-    const cls = useStyles({ flowHeight: flowHeight ?? 600 });
+    useEffect(() => {
+
+        if (useNewEditor) {
+            disableBodyScroll($(MAIN_DIV));
+        } else {
+            enableBodyScroll($(MAIN_DIV))
+        }
+    }, [useNewEditor])
 
     useEffect(() => {
 
+        if (useNewEditor) {
+            disableBodyScroll($(MAIN_DIV));
+        }
+        const curEditor = Cookies.get(USE_NEW_EDITOR_COOKIE_NAME)
+        if (curEditor !== undefined) {
+            if (curEditor === "true") {
+                setUseNewEditor(true);
+            } else if (curEditor === 'false') {
+                setUseNewEditor(false);
+            }
+        }
         handleDrawerClose();
         setLoaded(true);
         loadNodes();
-        const mainDivHeight = $(`#${MAIN_CONTENT_DIV_ID}`).height() as number;
-        console.log(mainDivHeight);
-        if (mainDivHeight) {
-            setFlowHeight(mainDivHeight);
-        }
+
         return () => {
+
             setLoaded(false);
         };
     }, [areaIdentifier, loadNodes]);
@@ -168,93 +205,70 @@ export const StructuredConvoTree = () => {
         }
     };
 
-    const [paddingBuffer, setPaddingBuffer] = useState<number>(1);
-    window.onbeforeunload = () => {
-        alert("Are you sure youw ant to lave");
-    };
+
+
+    let actions: Action[] = [
+        { icon: <SaveIcon />, name: "Save", onClick: onSave},
+
+        { icon: <UndoIcon />, name: "Undo", onClick: () => {
+            historyTracker.stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
+        } },
+        { icon: <RedoIcon />, name: "Redo", onClick:  () => {
+            historyTracker.stepConversationForwardOneStep(conversationHistoryPosition, conversationHistory);
+        }},
+        { icon: <RemoveIcon />, name: "Spacing -",onClick:  () => {
+            if (paddingBuffer > 0.5) setPaddingBuffer(paddingBuffer - 0.5);
+        }},
+        { icon: <AddIcon />, name: "Spacing +", onClick: () => {
+            if (paddingBuffer < 10) setPaddingBuffer(paddingBuffer + 0.5);
+        } },
+        { icon: <NavigateNextIcon />, name: "Switch Editor", onClick: toggleUseNewEditor },
+    ];
+
+    if (isDevelopmentStage()) {
+        const additionalActions: Action[] = [
+            { icon: <BugReportIcon />, name: "Debug", onClick: toggleDebugData},
+            { icon: <RotateLeftIcon />, name: "Reset Tree", onClick: resetTree},
+
+        ]
+        actions =  [...actions, ...additionalActions]
+    }
+
 
     return (
-        <div className={cls.wrap}>
-        <ConversationTreeContext.Provider value={{ nodeTypeOptions, setNodes: setTreeWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
-            {/* <AreaConfigurationHeader
-            divider={treeErrors?.anyErrors}
-            title="Chat Editor"
-            subtitle="Use this editor to create the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
-        /> */}
-
-            <PalavyrErrorBoundary>
+        <div>
+            <ConversationTreeContext.Provider value={{ nodeTypeOptions, setNodes: setTreeWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
+                {!useNewEditor && <AreaConfigurationHeader
+                    divider={treeErrors?.anyErrors}
+                    title="Chat Editor"
+                    subtitle="Use this editor to create the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
+                />}
                 <div className={cls.conversation}>
                     <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
                 </div>
                 <PalavyrErrorBoundary>
                     {
-                    <div className={cls.treeWrap}>
-                        {linkedNodeList !== undefined && <PalavyrFlow initialElements={linkedNodeList.compileToNodeFlow()} />}
-                        {/* {linkedNodeList !== undefined && <ConfigurationNode currentNode={linkedNodeList.rootNode} pBuffer={paddingBuffer} />} */}
-                    </div>
+                        linkedNodeList !== undefined && (useNewEditor ? (
+                            <div className={cls.newTreeWrap}>
+                                <PalavyrFlow initialElements={linkedNodeList.compileToNodeFlow()} />
+                            </div>
+                        ) : (
+                            <div className={cls.treeWrap}>
+                                <ConfigurationNode currentNode={linkedNodeList.rootNode} pBuffer={paddingBuffer} />
+                            </div>
+
+                        )
+                        )
                     }
+
                 </PalavyrErrorBoundary>
-            </PalavyrErrorBoundary>
-            <div className={cls.floatingSave}>
-                <SaveOrCancel size="large" position="right" onSave={onSave} />
-                <Button
-                    size="small"
-                    variant="contained"
-                    className={cls.convoTreeMetaButtons}
-                    startIcon={<UndoIcon />}
-                    onClick={() => {
-                        historyTracker.stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
-                    }}
-                >
-                    Undo
-                </Button>
-                <Button
-                    size="small"
-                    variant="contained"
-                    className={cls.convoTreeMetaButtons}
-                    endIcon={<RedoIcon />}
-                    onClick={() => {
-                        historyTracker.stepConversationForwardOneStep(conversationHistoryPosition, conversationHistory);
-                    }}
-                >
-                    Redo
-                </Button>
-                <Button
-                    size="small"
-                    variant="contained"
-                    className={cls.convoTreeMetaButtons}
-                    endIcon={<RemoveIcon />}
-                    onClick={() => {
-                        if (paddingBuffer > 0.5) setPaddingBuffer(paddingBuffer - 0.5);
-                    }}
-                >
-                    Spacing
-                </Button>
-                <Button
-                    size="small"
-                    variant="contained"
-                    className={cls.convoTreeMetaButtons}
-                    endIcon={<AddIcon />}
-                    onClick={() => {
-                        if (paddingBuffer < 10) setPaddingBuffer(paddingBuffer + 0.5);
-                    }}
-                >
-                    Spacing
-                </Button>
-
-                {isDevelopmentStage() && (
-                    <>
-                        <Button size="small" variant="contained" className={cls.convoTreeMetaButtons} onClick={toggleDebugData}>
-                            Toggle Debug Data
-                        </Button>
-                        <Button size="small" variant="contained" className={cls.convoTreeMetaButtons} onClick={resetTree}>
-                            Reset Tree
-                        </Button>
-                    </>
-                )}
-            </div>
-        </ConversationTreeContext.Provider>
+                <div className={cls.floatingSave}>
+                    <PalavyrSpeedDial actions={actions} />
+                </div>
+            </ConversationTreeContext.Provider>
         </div>
-
     );
 };
+
+
+

@@ -3,13 +3,13 @@ import ReactFlow, { Background, ConnectionLineType, Controls, isNode, MiniMap, P
 import { NodeFlowInterface } from "./FlowNodeInterface";
 import dagre from "dagre";
 import { makeStyles } from "@material-ui/core";
+import { cloneDeep } from "lodash";
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 export interface PalavyrFlowProps {
-    // linkedNodeList: IPalavyrLinkedList;
-    initialElements: any;
+    initialElements: any[];
 }
 
 const initBgColor = "#1A192B";
@@ -35,7 +35,7 @@ const getLayoutedElements = (elements, direction = "TB") => {
         }
     });
 
-    dagre.layout(dagreGraph);
+    dagre.layout(dagreGraph, { ranker: "longest-path" });
 
     const mapped = elements.map(el => {
         if (isNode(el)) {
@@ -69,8 +69,8 @@ export const PalavyrFlow = ({ initialElements }: PalavyrFlowProps) => {
 
     useEffect(() => {
         if (initialElements) {
-            const flowElements = initialElements;
-            const flowWithLayout = getLayoutedElements(flowElements, "TB");
+            const flowElements = cloneDeep(initialElements);
+            const flowWithLayout = getLayoutedElements(flowElements);
             setElements(flowWithLayout);
         }
     }, [initialElements]);
@@ -79,7 +79,6 @@ export const PalavyrFlow = ({ initialElements }: PalavyrFlowProps) => {
         rfi => {
             if (!reactflowInstance) {
                 setReactflowInstance(rfi);
-                console.log("flow loaded:", rfi);
             }
         },
         [reactflowInstance, initialElements]
@@ -87,17 +86,10 @@ export const PalavyrFlow = ({ initialElements }: PalavyrFlowProps) => {
 
     useEffect(() => {
         if (reactflowInstance) {
-            reactflowInstance.fitView({ padding: 5.0 });
+            reactflowInstance.fitView({ padding: 1.0 });
         }
     }, [reactflowInstance]);
 
-    // const onLayout = useCallback(
-    //     direction => {
-    //         const withNewLayout = getLayoutedElements(elements, direction);
-    //         setElements(withNewLayout);
-    //     },
-    //     [initialElements]
-    // );
     const initBgColor = "#1A192B";
     return elements ? (
         <ReactFlowProvider>
@@ -106,7 +98,7 @@ export const PalavyrFlow = ({ initialElements }: PalavyrFlowProps) => {
                 style={{ background: initBgColor }}
                 onLoad={onLoad}
                 nodeTypes={nodeTypes}
-                connectionLineType={ConnectionLineType.SmoothStep}
+                connectionLineType={ConnectionLineType.Bezier}
                 connectionLineStyle={connectionLineStyle}
                 snapToGrid={true}
                 snapGrid={snapGrid}
@@ -114,7 +106,7 @@ export const PalavyrFlow = ({ initialElements }: PalavyrFlowProps) => {
             >
                 <ConfigurationMinimap />
                 <Controls className={cls.controls} />
-                <Background gap={25} size={1} color="green" />
+                <Background gap={50} size={1} color="green" />
             </ReactFlow>
         </ReactFlowProvider>
     ) : (

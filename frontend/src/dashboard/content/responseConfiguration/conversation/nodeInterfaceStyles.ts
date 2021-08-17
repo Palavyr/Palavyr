@@ -12,9 +12,9 @@ type StyleProps = {
 
 export const useNodeInterfaceStyles = makeStyles(theme => ({
     root: (props: StyleProps) => ({
-        minWidth: "200px",
+        minWidth: "275px",
         maxWidth: props.debugOn ? "600px" : "250px",
-        minHeight: "275px",
+        minHeight: "350px",
         borderColor: props.nodeType === "" ? "red" : "#54585A",
         borderWidth: props.nodeType === "" ? "8px" : "2px",
         borderRadius: "13px",

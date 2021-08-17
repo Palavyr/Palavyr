@@ -381,6 +381,12 @@ export enum GeneralSettingsLoc {
     password,
 }
 
+export type Action = {
+    icon: React.ReactNode;
+    name: string;
+    onClick(): void;
+};
+
 export type Credentials = {
     jwtToken: string;
     apiKey: string;

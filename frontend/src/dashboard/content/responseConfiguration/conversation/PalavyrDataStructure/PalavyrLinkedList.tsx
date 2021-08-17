@@ -175,6 +175,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         const edgeElements: Edge[] = [];
 
         const nodeFlowCallback = (node: IPalavyrNode, index: number) => {
+
             //convert node into Handle
             nodeElements.push({
                 id: node.nodeId,
