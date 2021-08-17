@@ -1,5 +1,8 @@
 import { webUrl } from "@api-client/clientUtils";
 
+// Options
+export const SUPPORTED_FONTS = ["Architects Daughter"];
+
 // Auth error states
 export const INVALID_EMAIL = "invalidEmail";
 export const INVALID_PASSWORD = "invalidPassword";

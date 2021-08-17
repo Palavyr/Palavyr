@@ -24,52 +24,18 @@ interface DashboardHeaderProps {
 }
 
 const useStyles = makeStyles(theme => ({
-    //     topbar: {
-    //         background: theme.palette.primary.main,
-    //         position: "fixed",
-    //         zIndex: DASHBOARD_HEADER_TOPBAR_zINDEX,
-    //     },
-    //     appBar: {
-    //         zIndex: theme.zIndex.drawer + 1,
-    //         transition: theme.transitions.create(['width', 'margin'], {
-    //           easing: theme.transitions.easing.sharp,
-    //           duration: theme.transitions.duration.leavingScreen,
-    //         }),
-    //       },
-    //       appBarShift: {
-    //         marginLeft: DRAWER_WIDTH,
-    //         width: `calc(100% - ${DRAWER_WIDTH}px)`,
-    //         transition: theme.transitions.create(['width', 'margin'], {
-    //           easing: theme.transitions.easing.sharp,
-    //           duration: theme.transitions.duration.enteringScreen,
-    //         }),
-    //       },
-    //       toolbar: {
-    //         display: 'flex',
-    //         alignItems: 'center',
-    //         justifyContent: 'flex-end',
-    //         padding: theme.spacing(0, 1),
-    //         // necessary for content to be below app bar
-    //         ...theme.mixins.toolbar,
-    //       },
     icon: {
         borderRadius: "10px",
         "&:hover": {
             backgroundColor: theme.palette.primary.light,
         },
     },
-    //     hide: {
-    //         display: "none",
-    //     },
-    // name: {
-    //     color: theme.palette.success.main,
-    // },
     helpIconText: {
         // paddingRight: theme.spacing(3),
     },
     loading: {
         backgroundColor: theme.palette.primary.dark,
-        height: "15px",
+        height: "8px",
     },
     bar: {
         backgroundColor: yellow[300],
@@ -121,6 +87,7 @@ const baseRoutesToExclude = [
     "/dashboard/confirm",
     "/dashboard/getwidget",
     "/dashboard/images",
+    "/dashboard/activity",
 ];
 
 const routesToExclude = baseRoutesToExclude.concat(baseRoutesToExclude.map(x => x + "/"));
@@ -156,12 +123,6 @@ export const DashboardHeader = ({ isLoading, dashboardAreasLoading, unseenNotifi
                 >
                     <MenuIcon />
                 </IconButton>
-
-                {/* <Align float="left">
-                    <Typography className={cls.name} variant="h4">
-                        Palavyr.com
-                    </Typography>
-                </Align> */}
                 <div style={{ flexGrow: 1 }} />
                 <Align>
                     {title && (

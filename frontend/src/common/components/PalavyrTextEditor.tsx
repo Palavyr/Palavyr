@@ -2,7 +2,7 @@
 // https://ckeditor.com/docs/ckeditor5/latest/builds/guides/integration/frameworks/react.html
 import React from "react";
 import { makeStyles } from "@material-ui/core";
-import CKEditor from "@ckeditor/ckeditor5-react";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { cloneDeep } from "lodash";
 import { SetState } from "@Palavyr-Types";

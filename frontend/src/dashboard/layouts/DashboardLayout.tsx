@@ -109,7 +109,7 @@ const useStyles = makeStyles((theme: Theme) =>({
     },
     menuDrawerPaper: {
         width: DRAWER_WIDTH,
-        // backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.main,
     },
     helpDrawerPaper: {
         width: DRAWER_WIDTH + 300,
@@ -123,6 +123,10 @@ const useStyles = makeStyles((theme: Theme) =>({
     name: {
         color: theme.palette.success.main,
     },
+    drawerFiller: {
+        backgroundColor: theme.palette.primary.main,
+        flexGrow: 1
+    }
 }));
 
 interface IDashboardLayout {
@@ -142,7 +146,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     const [areaNameDetails, setAreaNameDetails] = useState<AreaNameDetails>([]);
     const [, setLoaded] = useState<boolean>(false);
 
-    const [menuOpen, setMenuOpen] = useState<boolean>(false);
+    const [menuOpen, setMenuOpen] = useState<boolean>(true);
     const [helpOpen, setHelpOpen] = useState<boolean>(false);
 
     const [modalState, setModalState] = useState<boolean>(false);
@@ -250,7 +254,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     };
 
     const handleDrawerOpen: () => void = () => {
-        Cookies.set(MENU_DRAWER_STATE_COOKIE_NAME, "false")
+        Cookies.set(MENU_DRAWER_STATE_COOKIE_NAME, "true")
         setMenuOpen(true);
     };
 
@@ -367,10 +371,11 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
                     <Typography className={cls.name} variant="h4">
                         Palavyr.com
                     </Typography>
-                    <IconButton onClick={handleDrawerClose}>{theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}</IconButton>
+                    <IconButton onClick={handleDrawerClose}>{theme.direction === "rtl" ? <ChevronRightIcon style={{color: "white"}} /> : <ChevronLeftIcon style={{color: "white"}}  />}</IconButton>
                 </div>
                 <Divider />
                 <SideBarMenu areaNameDetails={areaNameDetails} menuOpen={menuOpen} />
+                <div className={cls.drawerFiller}></div>
                 </Drawer>
                 <ContentLoader open={menuOpen}>{children}</ContentLoader>
                 <Drawer
@@ -382,6 +387,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
                         paper: cls.helpDrawerPaper,
                     }}
                 >
+                    <IconButton onClick={handleHelpDrawerClose}>{theme.direction === "rtl" ? <ChevronLeftIcon /> : <ChevronRightIcon />}</IconButton>
                     <Divider />
                     {helpComponent}
                 </Drawer>

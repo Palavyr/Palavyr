@@ -9,6 +9,7 @@ import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
 import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import TrendingUpIcon from "@material-ui/icons/TrendingUp";
+import BrushIcon from '@material-ui/icons/Brush';
 
 const useStyles = makeStyles(theme => ({
     icon: {
@@ -48,6 +49,11 @@ export const ReviewSection = memo(({ isActive, menuOpen }: ReviewSectionProps) =
         history.push("/dashboard/activity");
     };
 
+    const designerOnClick = () => {
+        setViewName("Widget Designer");
+        history.push("/dashboard/designer")
+    }
+
     return (
         <List className={"review-sidebar-tour"}>
             <SidebarSectionHeader menuOpen={menuOpen} title="Review" onClick={() => setReviewOpen(!reviewOpen)} currentState={reviewOpen} />
@@ -58,6 +64,8 @@ export const ReviewSection = memo(({ isActive, menuOpen }: ReviewSectionProps) =
                         <NotificationsIcon fontSize="small" />
                     </Badge>
                 </SidebarLinkItem>
+
+                <SidebarLinkItem className={"chat-designer-link-tour"} text="Chat Designer" isActive={isActive} onClick={designerOnClick} IconComponent={<BrushIcon className={cls.icon} />} />
                 <SidebarLinkItem className={"chat-demo-link-tour"} text="Chat Demo" isActive={isActive} onClick={chatDemoOnClick} IconComponent={<CompareIcon className={cls.icon} />} />
                 <SidebarLinkItem
                     className={"uploads-sidebar-tour"}

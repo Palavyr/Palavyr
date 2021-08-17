@@ -10,6 +10,7 @@ import { FakeMessage, fakeMessages } from "./fakeMessages";
 import { FakeWidgetFrame } from "./FakeWidgetFrame";
 import { FakeMessageComponent } from "./FakeMessage";
 import { CHAT_DEMO_LISTBOX_zINDEX } from "@constants";
+import { LineSpacer } from "@common/components/typography/LineSpacer";
 
 const useStyles = makeStyles((theme) => ({
     selectListBgColor: (prefs: WidgetPreferences) => ({
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
         padding: "0rem",
     },
     popper: {
-        zIndex: CHAT_DEMO_LISTBOX_zINDEX
+        zIndex: 1200
     }
 }));
 
@@ -57,9 +58,8 @@ export const FakeWidgets = ({ ...prefs }: WidgetPreferences) => {
     const cls = useStyles(prefs);
     const reg = new StandardComponents(prefs);
 
-    return (
-        <div>
-            <SpaceEvenly center>
+    return (<>
+    <LineSpacer numLines={2} />
                 <FakeWidgetFrame title="(Landing Screen)" prefs={prefs} header={<div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: prefs.landingHeader ?? "" }} />}>
                     <Autocomplete
                         size="small"
@@ -99,7 +99,7 @@ export const FakeWidgets = ({ ...prefs }: WidgetPreferences) => {
                         <FakeMessageComponent key={index} message={message} prefs={prefs} index={index} />
                     ))}
                 </FakeWidgetFrame>
-            </SpaceEvenly>
-        </div>
+
+                </>
     );
 };

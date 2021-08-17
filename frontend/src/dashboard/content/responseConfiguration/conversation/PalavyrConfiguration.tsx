@@ -168,12 +168,12 @@ export const StructuredConvoTree = () => {
                 <div className={cls.conversation}>
                     <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
                 </div>
-                <PalavyrErrorBoundary>
-                    <div className={cls.treeWrap} style={{ width: "100%", height: "80vh" }}>
-                        {linkedNodeList !== undefined && <PalavyrFlow initialElements={elements} />}
-                        {/* {linkedNodeList !== undefined && <ConfigurationNode currentNode={linkedNodeList.rootNode} pBuffer={paddingBuffer} />} */}
-                    </div>
-                </PalavyrErrorBoundary>
+                {/* <PalavyrErrorBoundary> */}
+                {/* <div className={cls.treeWrap} style={{ width: "100%", height: "80vh" }}> */}
+                {linkedNodeList !== undefined && <PalavyrFlow initialElements={linkedNodeList.compileToNodeFlow()} />}
+                {/* {linkedNodeList !== undefined && <ConfigurationNode currentNode={linkedNodeList.rootNode} pBuffer={paddingBuffer} />} */}
+                {/* </div> */}
+                {/* </PalavyrErrorBoundary> */}
             </PalavyrErrorBoundary>
             <div className={cls.floatingSave}>
                 <SaveOrCancel size="large" position="right" onSave={onSave} />

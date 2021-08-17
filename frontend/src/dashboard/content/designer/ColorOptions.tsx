@@ -1,8 +1,10 @@
 import React from "react";
-import { makeStyles, Typography } from "@material-ui/core";
+import { Hidden, makeStyles } from "@material-ui/core";
 import { SetState, WidgetPreferences } from "@Palavyr-Types";
 import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
-import { ChromePicker } from "react-color";
+import { BlockPicker } from "react-color";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
+import { LineSpacer } from "@common/components/typography/LineSpacer";
 
 export type ColorPickerType = {
     method: SetState<string>;
@@ -18,8 +20,6 @@ export interface WidgetColorOptionsProps {
 
 export const useStyles = makeStyles(theme => ({
     gridList: {
-        width: "100%",
-        height: "100%",
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
@@ -53,7 +53,6 @@ export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: 
             { name: "Chat Button Font Color", variable: widgetPreferences.buttonFontColor, method: (buttonFontColor: string) => setWidgetPreferences({ ...widgetPreferences, buttonFontColor }), disable: true },
         ];
     };
-
     return (
         <>
             <div className={cls.gridList}>
@@ -61,11 +60,21 @@ export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: 
                     rowOne(widgetPreferences).map((picker: ColorPickerType, index: number) => {
                         return (
                             <div key={index}>
-                                <Typography align="center" variant="body1" className={cls.pickerTitle} gutterBottom>
+                                <PalavyrText align="center" variant="body1" className={cls.pickerTitle} gutterBottom>
                                     {picker.name}
-                                </Typography>
+                                </PalavyrText>
+                                <LineSpacer />
                                 <SpaceEvenly>
-                                    {picker.variable && <ChromePicker disableAlpha color={picker.variable} onChangeComplete={(color: { hex: React.SetStateAction<string> }) => picker.method(color.hex)} />}
+                                    {picker.variable && (
+                                        <>
+                                            <Hidden lgUp>
+                                                <BlockPicker color={picker.variable} width={"110px"} onChangeComplete={({ hex }) => picker.method(hex)} />
+                                            </Hidden>
+                                            <Hidden mdDown>
+                                                <BlockPicker color={picker.variable} onChangeComplete={({ hex }) => picker.method(hex)} />
+                                            </Hidden>
+                                        </>
+                                    )}
                                 </SpaceEvenly>
                             </div>
                         );
@@ -76,11 +85,21 @@ export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: 
                     rowTwo(widgetPreferences).map((picker: ColorPickerType, index: number) => {
                         return (
                             <div key={9999 - index}>
-                                <Typography align="center" variant="body1" className={cls.pickerTitle} gutterBottom>
+                                <PalavyrText align="center" variant="body1" className={cls.pickerTitle} gutterBottom>
                                     {picker.name}
-                                </Typography>
+                                </PalavyrText>
+                                <LineSpacer />
                                 <SpaceEvenly>
-                                    {picker.variable && <ChromePicker disableAlpha color={picker.variable} onChangeComplete={(color: { hex: React.SetStateAction<string> }) => picker.method(color.hex)} />}
+                                    {picker.variable && (
+                                        <>
+                                            <Hidden lgUp>
+                                                <BlockPicker color={picker.variable} width={"110px"} onChangeComplete={({ hex }) => picker.method(hex)} />
+                                            </Hidden>
+                                            <Hidden mdDown>
+                                                <BlockPicker color={picker.variable} onChangeComplete={({ hex }) => picker.method(hex)} />
+                                            </Hidden>
+                                        </>
+                                    )}
                                 </SpaceEvenly>
                             </div>
                         );

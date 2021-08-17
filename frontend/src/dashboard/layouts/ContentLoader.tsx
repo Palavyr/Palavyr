@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     },
     content: {
         flexGrow: 1,
-
+        width: "100%",
         // padding: theme.spacing(3),
     },
     loading: {
@@ -41,7 +41,7 @@ export const ContentLoader = ({ open, children }: IContentLoader) => {
             <div className={cls.toolbar} />
             {/* {isDev && <DevStagingStrip show={show} setShow={setShow} />} */}
             {!show && <YellowStrip />}
-            <div>{children}</div>
+            <div style={{ width: "100%" }}>{children}</div>
         </main>
     );
 };

@@ -94,35 +94,43 @@ export const PalavyrFlow = ({ initialElements }: PalavyrFlowProps) => {
     );
     const initBgColor = "#1A192B";
     return elements ? (
-        <ReactFlowProvider>
-            <ReactFlow
-                elements={elements}
-                style={{ background: initBgColor }}
-                onLoad={onLoad}
-                nodeTypes={nodeTypes}
-                connectionLineType={ConnectionLineType.SmoothStep}
-                connectionLineStyle={connectionLineStyle}
-                snapToGrid={true}
-                snapGrid={snapGrid}
-                defaultZoom={1}
-            >
-                <MiniMap
-                    nodeStrokeColor={n => {
-                        if (n.type === "input") return "#0041d0";
-                        if (n.type === "nodeflowinterface") return initBgColor;
-                        if (n.type === "output") return "#ff0072";
-                        return "gray";
-                    }}
-                    nodeColor={n => {
-                        if (n.type === "nodeflowinterface") return initBgColor;
-                        return "#fff";
-                    }}
-                />
-                <Controls />
-                {/* <Background gap={4} size={1} color="white" /> */}
-            </ReactFlow>
-        </ReactFlowProvider>
+        <div style={{ width: "100%", height: 500 }}>
+            <ReactFlowProvider>
+                <ReactFlow
+                    elements={elements}
+                    style={{ background: initBgColor }}
+                    onLoad={onLoad}
+                    nodeTypes={nodeTypes}
+                    connectionLineType={ConnectionLineType.SmoothStep}
+                    connectionLineStyle={connectionLineStyle}
+                    snapToGrid={true}
+                    snapGrid={snapGrid}
+                    defaultZoom={1}
+                >
+                    <ConfigurationMinimap />
+                    <Controls />
+                    {/* <Background gap={4} size={1} color="white" /> */}
+                </ReactFlow>
+            </ReactFlowProvider>
+        </div>
     ) : (
         <></>
+    );
+};
+
+export const ConfigurationMinimap = () => {
+    return (
+        <MiniMap
+            nodeStrokeColor={n => {
+                if (n.type === "input") return "#0041d0";
+                if (n.type === "nodeflowinterface") return initBgColor;
+                if (n.type === "output") return "#ff0072";
+                return "gray";
+            }}
+            nodeColor={n => {
+                if (n.type === "nodeflowinterface") return initBgColor;
+                return "#fff";
+            }}
+        />
     );
 };

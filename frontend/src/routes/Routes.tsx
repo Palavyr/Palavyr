@@ -19,7 +19,7 @@ import { PreviewHelp } from "dashboard/content/help/PreviewHelp";
 import { PleaseConfirmYourEmail } from "dashboard/content/welcome/PleaseConfirmYourEmail";
 import { Purchase } from "dashboard/content/purchse/Purchase";
 import { ChatDemoHelp } from "dashboard/content/help/ChatDemoHelp";
-import { ChatDemo } from "dashboard/content/demo/ChatDemo";
+import { ChatDemoPage } from "dashboard/content/demo/ChatDemo";
 import { GetWidgetHelp } from "dashboard/content/help/GetWidgetHelp";
 import { EnquiriesHelp } from "dashboard/content/help/EnquiriesHelp";
 import { PurchaseHelp } from "dashboard/content/help/PurchaseHelp";
@@ -79,6 +79,7 @@ import { BlogPage } from "@landing/blog/BlogPage";
 import { OurStoryPage } from "@landing/ourStory/OutStoryPage";
 import { OurTeamPage } from "@landing/ourTeam/OurTeamPage";
 import { GA4R } from "ga-4-react";
+import { WidgetDesignerPage } from "dashboard/content/designer/WidgetDesigner";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -178,7 +179,9 @@ export const Routes = () => {
                 <ProtectedRoute exact path="/dashboard/settings/default_email_template" component={withLayout(withSettingsTabs(<DefaultEmailTemplate />), <DefaultEmailTemplateHelp />)} />
                 <ProtectedRoute exact path="/dashboard/settings/deleteaccount" component={withLayout(withSettingsTabs(<DeleteAccount />), <DeleteAccountHelp />)} />
 
-                <ProtectedRoute exact path="/dashboard/demo/" component={withLayout(ChatDemo, <ChatDemoHelp />)} />
+                <ProtectedRoute exact path="/dashboard/demo" component={withLayout(ChatDemoPage, <ChatDemoHelp />)} />
+                <ProtectedRoute exact path="/dashboard/designer" component={withLayout(WidgetDesignerPage, <ChatDemoHelp />)} />
+
                 <ProtectedRoute exact path="/dashboard/getWidget" component={withLayout(GetWidget, <GetWidgetHelp />)} />
                 <ProtectedRoute exact path="/dashboard/enquiries" component={withLayout(Enquires, <EnquiriesHelp />)} />
                 <ProtectedRoute exact path="/dashboard/enquiries/conversation" component={withLayout(ConversationReview, <ConversationReviewHelp />)} />
