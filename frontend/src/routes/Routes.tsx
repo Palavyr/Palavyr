@@ -7,7 +7,7 @@ import { Success } from "dashboard/content/purchse/success/Success";
 import { Cancel } from "dashboard/content/purchse/cancel/Cancel";
 import { Subscribe } from "dashboard/content/subscribe/Subscribe";
 import { SubscribeHelp } from "dashboard/content/help/SubscribeHelp";
-import { Enquires } from "dashboard/content/enquiries/Enquiries";
+import { EnquiresPage } from "dashboard/content/enquiries/EnquiriesPage";
 import { GetWidget } from "dashboard/content/getWidget/GetWidget";
 import { QuickStartGuide } from "dashboard/content/welcome/quickStartGuide/QuickStartGuide";
 import { ConversationHelp } from "dashboard/content/help/ConversationHelp";
@@ -162,11 +162,11 @@ export const Routes = () => {
 
                 <ProtectedRoute exact path="/dashboard/activity" component={withLayout(ActivityDashboardPage, <ActivityDashboardHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/email/:areaIdentifier" component={withLayout(withAreaTabs(<EmailConfiguration />), <EmailHelp />)} />
-                <ProtectedRoute exact path="/dashboard/editor/response/:areaIdentifier" component={withLayout(withAreaTabs(<ResponseConfiguration />), <ResponseConfigurationHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/pricing/:areaIdentifier" component={withLayout(withAreaTabs(<ResponseConfiguration />), <ResponseConfigurationHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/attachments/:areaIdentifier" component={withLayout(withAreaTabs(<AttachmentConfiguration />), <AttachmentsHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/conversation/:areaIdentifier" component={withLayout(withAreaTabs(<StructuredConvoTree />), <ConversationHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/settings/:areaIdentifier" component={withLayout(withAreaTabs(<AreaSettings />), <AreaSettingsHelp />)} />
-                <ProtectedRoute exact path="/dashboard/editor/preview/:areaIdentifier" component={withLayout(withAreaTabs(<ConfigurationPreview />), <PreviewHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/pricingpreview/:areaIdentifier" component={withLayout(withAreaTabs(<ConfigurationPreview />), <PreviewHelp />)} />
 
                 <ProtectedRoute exact path="/dashboard/set-areas" component={withLayout(EnableAreas, <SetAreasHelp />)} />
 
@@ -183,7 +183,7 @@ export const Routes = () => {
                 <ProtectedRoute exact path="/dashboard/designer" component={withLayout(WidgetDesignerPage, <ChatDemoHelp />)} />
 
                 <ProtectedRoute exact path="/dashboard/getWidget" component={withLayout(GetWidget, <GetWidgetHelp />)} />
-                <ProtectedRoute exact path="/dashboard/enquiries" component={withLayout(Enquires, <EnquiriesHelp />)} />
+                <ProtectedRoute exact path="/dashboard/enquiries" component={withLayout(EnquiresPage, <EnquiriesHelp />)} />
                 <ProtectedRoute exact path="/dashboard/enquiries/conversation" component={withLayout(ConversationReview, <ConversationReviewHelp />)} />
                 <ProtectedRoute exact path="/dashboard/images" component={withLayout(ImageReview, <ImageReviewHelp />)} />
 

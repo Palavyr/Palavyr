@@ -49,7 +49,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const WidgetDesignerPage = () => {
-    const { repository } = useContext(DashboardContext);
+    const { repository, setViewName } = useContext(DashboardContext);
+    setViewName("Widget Designer");
 
     const cls = useStyles();
     const [widgetPreferences, setWidgetPreferences] = useState<WidgetPreferences>();

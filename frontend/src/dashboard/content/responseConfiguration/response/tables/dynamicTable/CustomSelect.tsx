@@ -58,12 +58,13 @@ export interface ISelect {
     helperText?: string;
     disabled?: boolean;
     toolTipTitle?: string;
+    styles?: any;
 }
 
-export const CustomSelect = ({ toolTipTitle, disabled, onChange, option, options, align, minWidth, maxWidth, fullWidth, inputLabel, helperText }: ISelect) => {
+export const CustomSelect = ({ toolTipTitle, disabled, onChange, option, options, align, minWidth, maxWidth, fullWidth, inputLabel, helperText, styles }: ISelect) => {
     const cls = useStyles({ minWidth, maxWidth, align });
     return (
-        <FormControl fullWidth={fullWidth} className={cls.formControl}>
+        <FormControl fullWidth={fullWidth} className={cls.formControl} style={styles}>
             <InputLabel className={cls.label}>{inputLabel}</InputLabel>
             <Tooltip className={cls.toolTip} title={toolTipTitle ?? ""} arrow placement="top-start">
                 <Select disabled={disabled} className={cls.selectbox} value={option} onChange={onChange}>

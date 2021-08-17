@@ -37,7 +37,8 @@ const useStyles = makeStyles((theme) => ({
 
 export const Subscribe = () => {
     const [productList, setProductList] = useState<ProductIds>();
-    const { planTypeMeta } = useContext(DashboardContext);
+    const { planTypeMeta, setViewName } = useContext(DashboardContext);
+    setViewName("Subscriptions");
 
     const cls = useStyles();
     const { repository } = useContext(DashboardContext);

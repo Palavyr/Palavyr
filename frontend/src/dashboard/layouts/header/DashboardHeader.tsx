@@ -49,6 +49,7 @@ const useStyles = makeStyles(theme => ({
         display: "none",
     },
     appBar: {
+        boxShadow: "none",
         zIndex: theme.zIndex.drawer + 1,
         transition: theme.transitions.create(["width", "margin"], {
             easing: theme.transitions.easing.sharp,
@@ -123,17 +124,14 @@ export const DashboardHeader = ({ isLoading, dashboardAreasLoading, unseenNotifi
                 >
                     <MenuIcon />
                 </IconButton>
-                <div style={{ flexGrow: 1 }} />
-                <Align>
+                {/* <div style={{ flexGrow: 1 }} /> */}
+                <Align direction="flex-start">
                     {title && (
-                        <SpaceEvenly vertical>
-                            <Typography display="inline" align="center" variant="h6">
-                                Current Area:
-                            </Typography>
-                            <Typography display="inline" align="center" variant="h5">
+                        <>
+                            <Typography align="left" variant="h5">
                                 {title}
                             </Typography>
-                        </SpaceEvenly>
+                        </>
                     )}
                 </Align>
                 <div style={{ flexGrow: 1 }} />

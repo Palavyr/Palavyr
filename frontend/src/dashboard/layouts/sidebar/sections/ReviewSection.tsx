@@ -9,7 +9,7 @@ import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
 import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import TrendingUpIcon from "@material-ui/icons/TrendingUp";
-import BrushIcon from '@material-ui/icons/Brush';
+import BrushIcon from "@material-ui/icons/Brush";
 
 const useStyles = makeStyles(theme => ({
     icon: {
@@ -24,35 +24,30 @@ export interface ReviewSectionProps {
 
 export const ReviewSection = memo(({ isActive, menuOpen }: ReviewSectionProps) => {
     const [reviewOpen, setReviewOpen] = useState<boolean>(true);
-    const { setViewName, unseenNotifications, planTypeMeta } = React.useContext(DashboardContext);
+    const { unseenNotifications, planTypeMeta } = React.useContext(DashboardContext);
 
     const cls = useStyles();
     const history = useHistory();
 
     const enquiriesOnClick = () => {
-        setViewName("Enquiries");
         history.push("/dashboard/enquiries");
     };
 
     const chatDemoOnClick = () => {
-        setViewName("Widget Demo");
         history.push("/dashboard/demo");
     };
 
     const imagesReviewOnClick = () => {
-        setViewName("Images");
         history.push("/dashboard/images");
     };
 
     const dashboardOnClick = () => {
-        setViewName("Data Dashboard");
         history.push("/dashboard/activity");
     };
 
     const designerOnClick = () => {
-        setViewName("Widget Designer");
-        history.push("/dashboard/designer")
-    }
+        history.push("/dashboard/designer");
+    };
 
     return (
         <List className={"review-sidebar-tour"}>

@@ -21,6 +21,7 @@ export const FontSelector = ({ widgetPreferences, setWidgetPreferences }: FontSe
             <Align>
                 {widgetPreferences && (
                     <CustomSelect
+                        styles={{ borderRadius: "20px" }}
                         option={widgetPreferences.fontFamily}
                         options={SUPPORTED_FONTS}
                         width="50%"

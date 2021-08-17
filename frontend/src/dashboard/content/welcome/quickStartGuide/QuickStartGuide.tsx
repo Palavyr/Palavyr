@@ -54,8 +54,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const QuickStartGuide = () => {
-    const { repository, checkAreaCount } = useContext(DashboardContext);
+    const { repository, checkAreaCount, setViewName } = useContext(DashboardContext);
     const history = useHistory();
+    setViewName("Welcome!");
+
 
     const [todos, setTodos] = useState<TodosAsBoolean>();
     const [loading, setLoading] = useState<boolean>(true);

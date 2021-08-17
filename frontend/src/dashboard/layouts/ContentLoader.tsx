@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import classNames from "classnames";
 import { makeStyles } from "@material-ui/core";
-import { DRAWER_WIDTH } from "@constants";
+import { DRAWER_WIDTH, MAIN_CONTENT_DIV_ID } from "@constants";
 import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStrip";
 import { yellow } from "@material-ui/core/colors";
 import { isDevelopmentStage } from "@api-client/clientUtils";
@@ -23,8 +23,7 @@ const useStyles = makeStyles(theme => ({
     },
     content: {
         flexGrow: 1,
-        width: "100%",
-        // padding: theme.spacing(3),
+        paddingBottom: theme.spacing(5),
     },
     loading: {
         backgroundColor: yellow[300],
@@ -37,11 +36,11 @@ export const ContentLoader = ({ open, children }: IContentLoader) => {
     const [show, setShow] = useState<boolean>(isDev);
 
     return (
-        <main className={cls.content}>
+        <main id={MAIN_CONTENT_DIV_ID} className={cls.content}>
             <div className={cls.toolbar} />
             {/* {isDev && <DevStagingStrip show={show} setShow={setShow} />} */}
             {!show && <YellowStrip />}
-            <div style={{ width: "100%" }}>{children}</div>
+            {children}
         </main>
     );
 };

@@ -1,4 +1,3 @@
-import { Typography } from "@material-ui/core";
 import React from "react";
 import { ReactourStep } from "reactour";
 import { TourText } from "./TourText";

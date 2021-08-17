@@ -45,8 +45,6 @@ type StyleProps = {
     helpOpen: boolean;
 };
 
-
-
 const useStyles = makeStyles((theme: Theme) =>({
 
     root: {
@@ -146,7 +144,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     const [areaNameDetails, setAreaNameDetails] = useState<AreaNameDetails>([]);
     const [, setLoaded] = useState<boolean>(false);
 
-    const [menuOpen, setMenuOpen] = useState<boolean>(true);
+    const [menuOpen, setMenuOpen] = useState<boolean>(false);
     const [helpOpen, setHelpOpen] = useState<boolean>(false);
 
     const [modalState, setModalState] = useState<boolean>(false);

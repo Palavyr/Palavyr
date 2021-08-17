@@ -8,7 +8,6 @@ type NodeFlowInterfaceProps = {
 export const NodeFlowInterface = ({ data }: NodeFlowInterfaceProps) => {
     const currentNode = data.currentNode;
     return (
-        // <div style={{ width: "100%" }}>
         <>
             <NodeInterface
                 currentNode={currentNode}
@@ -23,8 +22,8 @@ export const NodeFlowInterface = ({ data }: NodeFlowInterfaceProps) => {
                 shouldDisableNodeTypeSelector={currentNode.shouldDisableNodeTypeSelector}
                 optionPath={currentNode.optionPath}
             />
-            <Handle id={`b`} type="source" position={Position.Bottom} />
-            <Handle id={`a`} type="target" position={Position.Top} /></>
-        // </div>
+            <Handle style={{ border: "0px", background: "none" }} id={`b`} type="source" position={Position.Bottom} />
+            <Handle style={{ border: "0px", background: "none" }} id={`a`} type="target" position={Position.Top} />
+        </>
     );
 };

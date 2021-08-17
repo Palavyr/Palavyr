@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import ReactFlow, { ConnectionLineType, Controls, isNode, MiniMap, Position, ReactFlowProvider } from "react-flow-renderer";
+import ReactFlow, { Background, ConnectionLineType, Controls, isNode, MiniMap, Position, ReactFlowProvider } from "react-flow-renderer";
 import { NodeFlowInterface } from "./FlowNodeInterface";
 import dagre from "dagre";
-import { IPalavyrLinkedList } from "../Contracts";
+import { makeStyles } from "@material-ui/core";
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -57,9 +57,15 @@ const getLayoutedElements = (elements, direction = "TB") => {
     return mapped;
 };
 
+const useStyles = makeStyles(theme => ({
+    minimap: { marginBottom: "4rem", marginRight: "2rem" },
+    controls: { marginBottom: "4rem" },
+}));
+
 export const PalavyrFlow = ({ initialElements }: PalavyrFlowProps) => {
     const [reactflowInstance, setReactflowInstance] = useState<any>(null);
     const [elements, setElements] = useState<any>();
+    const cls = useStyles();
 
     useEffect(() => {
         if (initialElements) {
@@ -80,47 +86,47 @@ export const PalavyrFlow = ({ initialElements }: PalavyrFlowProps) => {
     );
 
     useEffect(() => {
-        if (reactflowInstance && elements && elements.length > 0) {
-            reactflowInstance.fitView();
+        if (reactflowInstance) {
+            reactflowInstance.fitView({ padding: 5.0 });
         }
-    }, [reactflowInstance, initialElements]);
+    }, [reactflowInstance]);
 
-    const onLayout = useCallback(
-        direction => {
-            const withNewLayout = getLayoutedElements(elements, direction);
-            setElements(withNewLayout);
-        },
-        [initialElements]
-    );
+    // const onLayout = useCallback(
+    //     direction => {
+    //         const withNewLayout = getLayoutedElements(elements, direction);
+    //         setElements(withNewLayout);
+    //     },
+    //     [initialElements]
+    // );
     const initBgColor = "#1A192B";
     return elements ? (
-        <div style={{ width: "100%", height: 500 }}>
-            <ReactFlowProvider>
-                <ReactFlow
-                    elements={elements}
-                    style={{ background: initBgColor }}
-                    onLoad={onLoad}
-                    nodeTypes={nodeTypes}
-                    connectionLineType={ConnectionLineType.SmoothStep}
-                    connectionLineStyle={connectionLineStyle}
-                    snapToGrid={true}
-                    snapGrid={snapGrid}
-                    defaultZoom={1}
-                >
-                    <ConfigurationMinimap />
-                    <Controls />
-                    {/* <Background gap={4} size={1} color="white" /> */}
-                </ReactFlow>
-            </ReactFlowProvider>
-        </div>
+        <ReactFlowProvider>
+            <ReactFlow
+                elements={elements}
+                style={{ background: initBgColor }}
+                onLoad={onLoad}
+                nodeTypes={nodeTypes}
+                connectionLineType={ConnectionLineType.SmoothStep}
+                connectionLineStyle={connectionLineStyle}
+                snapToGrid={true}
+                snapGrid={snapGrid}
+                defaultZoom={0.5}
+            >
+                <ConfigurationMinimap />
+                <Controls className={cls.controls} />
+                <Background gap={25} size={1} color="green" />
+            </ReactFlow>
+        </ReactFlowProvider>
     ) : (
         <></>
     );
 };
 
 export const ConfigurationMinimap = () => {
+    const cls = useStyles();
     return (
         <MiniMap
+            className={cls.minimap}
             nodeStrokeColor={n => {
                 if (n.type === "input") return "#0041d0";
                 if (n.type === "nodeflowinterface") return initBgColor;

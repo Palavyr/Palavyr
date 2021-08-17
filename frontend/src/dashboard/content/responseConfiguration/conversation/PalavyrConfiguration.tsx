@@ -17,13 +17,17 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import { ConfigurationNode } from "./node/baseNode/ConfigurationNode";
 import { useContext } from "react";
 import { PalavyrFlow } from "./PalavyrFlow/PalavyrFlow";
+import $ from "jquery";
+import { MAIN_CONTENT_DIV_ID } from "@constants";
 
-const useStyles = makeStyles(() => ({
+type StyleProps = {
+    flowHeight: number;
+};
+
+const useStyles = makeStyles(theme => ({
     conversation: {
         position: "static",
         overflow: "auto",
-        height: "100%",
-        width: "100%",
     },
     treeErrorContainer: {
         margin: "0.5rem 0rem 1rem 2rem",
@@ -38,15 +42,19 @@ const useStyles = makeStyles(() => ({
         marginBottom: "10px",
         padding: "25px",
     },
-    treeWrap: {
-        position: "relative",
-        height: "100%",
+    wrap: {
+        // height: `calc(100% - ${64 + 48}px)`,
     },
-
+    treeWrap: (props: StyleProps) => ({
+        height: "93vh",
+        marginTop: "-15px",
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
+    }),
     floatingSave: {
         position: "fixed",
         textAlign: "center",
-        // border: "1px solid black",
         borderRadius: "15px",
         padding: "0.5rem",
         top: 150,
@@ -61,8 +69,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const StructuredConvoTree = () => {
-    const cls = useStyles();
-
     const { planTypeMeta, repository, handleDrawerOpen, handleDrawerClose } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const [, setLoaded] = useState<boolean>(false);
@@ -100,10 +106,19 @@ export const StructuredConvoTree = () => {
         }
     }, [areaIdentifier, planTypeMeta]);
 
+    const [flowHeight, setFlowHeight] = useState<number>(0);
+    const cls = useStyles({ flowHeight: flowHeight ?? 600 });
+
     useEffect(() => {
+
         handleDrawerClose();
         setLoaded(true);
         loadNodes();
+        const mainDivHeight = $(`#${MAIN_CONTENT_DIV_ID}`).height() as number;
+        console.log(mainDivHeight);
+        if (mainDivHeight) {
+            setFlowHeight(mainDivHeight);
+        }
         return () => {
             setLoaded(false);
         };
@@ -157,23 +172,28 @@ export const StructuredConvoTree = () => {
     window.onbeforeunload = () => {
         alert("Are you sure youw ant to lave");
     };
+
     return (
+        <div className={cls.wrap}>
         <ConversationTreeContext.Provider value={{ nodeTypeOptions, setNodes: setTreeWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
             {/* <AreaConfigurationHeader
             divider={treeErrors?.anyErrors}
             title="Chat Editor"
             subtitle="Use this editor to create the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
         /> */}
+
             <PalavyrErrorBoundary>
                 <div className={cls.conversation}>
                     <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
                 </div>
-                {/* <PalavyrErrorBoundary> */}
-                {/* <div className={cls.treeWrap} style={{ width: "100%", height: "80vh" }}> */}
-                {linkedNodeList !== undefined && <PalavyrFlow initialElements={linkedNodeList.compileToNodeFlow()} />}
-                {/* {linkedNodeList !== undefined && <ConfigurationNode currentNode={linkedNodeList.rootNode} pBuffer={paddingBuffer} />} */}
-                {/* </div> */}
-                {/* </PalavyrErrorBoundary> */}
+                <PalavyrErrorBoundary>
+                    {
+                    <div className={cls.treeWrap}>
+                        {linkedNodeList !== undefined && <PalavyrFlow initialElements={linkedNodeList.compileToNodeFlow()} />}
+                        {/* {linkedNodeList !== undefined && <ConfigurationNode currentNode={linkedNodeList.rootNode} pBuffer={paddingBuffer} />} */}
+                    </div>
+                    }
+                </PalavyrErrorBoundary>
             </PalavyrErrorBoundary>
             <div className={cls.floatingSave}>
                 <SaveOrCancel size="large" position="right" onSave={onSave} />
@@ -234,5 +254,7 @@ export const StructuredConvoTree = () => {
                 )}
             </div>
         </ConversationTreeContext.Provider>
+        </div>
+
     );
 };

@@ -27,7 +27,6 @@ export const BillingSection = memo(({ isActive, menuOpen }: BillingSectionProps)
     const history = useHistory();
 
     const subscribeOnClick = () => {
-        setViewName("Subscriptions");
         history.push("/dashboard/subscribe");
     };
 

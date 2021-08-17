@@ -3,6 +3,9 @@ import { webUrl } from "@api-client/clientUtils";
 // Options
 export const SUPPORTED_FONTS = ["Architects Daughter"];
 
+// IDs
+export const MAIN_CONTENT_DIV_ID = "main-content-div";
+
 // Auth error states
 export const INVALID_EMAIL = "invalidEmail";
 export const INVALID_PASSWORD = "invalidPassword";

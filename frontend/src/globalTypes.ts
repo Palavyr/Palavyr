@@ -381,15 +381,6 @@ export enum GeneralSettingsLoc {
     password,
 }
 
-export enum AreaSettingsLoc {
-    email,
-    response,
-    attachments,
-    conversation,
-    settings,
-    preview,
-}
-
 export type Credentials = {
     jwtToken: string;
     apiKey: string;

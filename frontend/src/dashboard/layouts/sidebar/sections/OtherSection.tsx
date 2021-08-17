@@ -33,7 +33,6 @@ export const OtherSection = memo(({ isActive, menuOpen }: OtherSectionProps) => 
     const history = useHistory();
 
     const getStartedOnClick = () => {
-        setViewName("Welcome!");
         history.push("/dashboard/welcome");
     };
 

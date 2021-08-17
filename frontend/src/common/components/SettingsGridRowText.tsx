@@ -25,7 +25,9 @@ const useStyles = makeStyles(theme => ({
         margin: "0rem",
     },
     paper: {
-        backgroundColor: theme.palette.secondary.light,
+        backgroundColor: "rgb(0, 0, 0 ,0)", //theme.palette.secondary.light,
+        border :"0px",
+        boxShadow: "none",
         // backgroundColor: theme.palette.primary.light,
         // color: theme.palette.common.white,
         padding: "2rem",
@@ -122,7 +124,7 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({
                         </>
                     )}
                 </Grid>
-                <Divider />
+                {/* <Divider /> */}
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                     <SinglePurposeButton
                         variant="outlined"
