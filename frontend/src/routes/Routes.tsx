@@ -81,7 +81,6 @@ import { OurTeamPage } from "@landing/ourTeam/OurTeamPage";
 import { GA4R } from "ga-4-react";
 import { WidgetDesignerPage } from "dashboard/content/designer/WidgetDesigner";
 
-
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
         return (

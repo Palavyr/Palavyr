@@ -21,15 +21,11 @@ import RedoIcon from "@material-ui/icons/Redo";
 import { isDevelopmentStage } from "@api-client/clientUtils";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-
 import SaveIcon from "@material-ui/icons/Save";
 import { PalavyrSpeedDial } from "@common/components/speedDial/PalavyrDial";
 import BugReportIcon from "@material-ui/icons/BugReport";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
-import AutorenewIcon from "@material-ui/icons/Autorenew";
-import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
-import smoothScrollTop from "@landing/blog/components/utils/smoothScroll";
+import scrollToTop from "@common/utils/scrollToTop";
 
 const MAIN_DIV = `#${MAIN_CONTENT_DIV_ID}`;
 
@@ -128,16 +124,13 @@ export const StructuredConvoTree = () => {
 
     useEffect(() => {
         if (useNewEditor) {
-            disableBodyScroll($(MAIN_DIV));
+            window.scrollTo(0, 0);
         } else {
             enableBodyScroll($(MAIN_DIV));
         }
     }, [useNewEditor]);
 
     useEffect(() => {
-        if (useNewEditor) {
-            disableBodyScroll($(MAIN_DIV));
-        }
         const curEditor = Cookies.get(USE_NEW_EDITOR_COOKIE_NAME);
         if (curEditor !== undefined) {
             if (curEditor === "true") {
