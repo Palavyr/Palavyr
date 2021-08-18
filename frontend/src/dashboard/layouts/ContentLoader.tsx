@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import classNames from "classnames";
 import { makeStyles } from "@material-ui/core";
-import { DRAWER_WIDTH } from "@constants";
+import { DRAWER_WIDTH, MAIN_CONTENT_DIV_ID } from "@constants";
 import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStrip";
 import { yellow } from "@material-ui/core/colors";
 import { isDevelopmentStage } from "@api-client/clientUtils";
@@ -12,23 +12,18 @@ interface IContentLoader {
     children: React.ReactNode;
 }
 
-const useStyles = makeStyles((theme) => ({
-    content: {
-        position: "relative",
-        flexGrow: 1,
-        top: theme.mixins.toolbar.minHeight,
-        transition: theme.transitions.create("margin", {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        marginLeft: -DRAWER_WIDTH,
+const useStyles = makeStyles(theme => ({
+    toolbar: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-end",
+        padding: theme.spacing(0, 1),
+        // necessary for content to be below app bar
+        ...theme.mixins.toolbar,
     },
-    contentShift: {
-        transition: theme.transitions.create("margin", {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginLeft: 0,
+    content: {
+        flexGrow: 1,
+        paddingBottom: theme.spacing(5),
     },
     loading: {
         backgroundColor: yellow[300],
@@ -41,10 +36,11 @@ export const ContentLoader = ({ open, children }: IContentLoader) => {
     const [show, setShow] = useState<boolean>(isDev);
 
     return (
-        <main className={classNames(cls.content, { [cls.contentShift]: open })}>
+        <main id={MAIN_CONTENT_DIV_ID} className={cls.content}>
+            <div className={cls.toolbar} />
             {/* {isDev && <DevStagingStrip show={show} setShow={setShow} />} */}
             {!show && <YellowStrip />}
-            <div>{children}</div>
+            {children}
         </main>
     );
 };

@@ -381,14 +381,11 @@ export enum GeneralSettingsLoc {
     password,
 }
 
-export enum AreaSettingsLoc {
-    email,
-    response,
-    attachments,
-    conversation,
-    settings,
-    preview,
-}
+export type Action = {
+    icon: React.ReactNode;
+    name: string;
+    onClick(): void;
+};
 
 export type Credentials = {
     jwtToken: string;
@@ -890,6 +887,9 @@ export interface IDashboardContext {
     repository: PalavyrRepository;
     areaNameDetails: AreaNameDetails;
     reRenderDashboard(): void;
+    handleDrawerOpen(): void;
+    handleDrawerClose(): void;
+    menuOpen: boolean;
 }
 
 export type ErrorResponse = {

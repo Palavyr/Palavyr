@@ -12,7 +12,7 @@ type StyleProps = {
     buffer: number;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     treeItem: {
         display: "flex",
         flexDirection: "column",
@@ -81,3 +81,4 @@ export const ConfigurationNode = ({ currentNode, pBuffer }: IConfigurationNode) 
         </>
     );
 };
+

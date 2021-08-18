@@ -2,22 +2,26 @@ import { makeStyles, ListItem, ListItemIcon, ListItemText } from "@material-ui/c
 import React, { memo } from "react";
 import { NavLink } from "react-router-dom";
 import ChatIcon from "@material-ui/icons/Chat";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 export const createNavLink = (areaIdentifier: string) => {
-    return `/dashboard/editor/email/${areaIdentifier}?tab=${0}`;
+    return `/dashboard/editor/pricing/${areaIdentifier}?tab=${0}`;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     icon: {
         color: theme.palette.secondary.light,
+    },
+    areaListItem: {
+        backgroundColor: theme.palette.secondary.dark,
     },
     areaNameText: {
         color: theme.palette.common.white,
         textDecoration: "none",
     },
     sidebarText: {
-        fontWeight: "normal",
-        fontSize: "14px",
+        // fontWeight: "normal",
+        // fontSize: "14px",
     },
 }));
 
@@ -33,11 +37,11 @@ export const AreaLinkItem = memo(({ areaIdentifier, isActive, disabled, currentP
 
     return (
         <NavLink key={areaIdentifier} to={!isActive || disabled ? currentPage : createNavLink(areaIdentifier)} className={cls.areaNameText}>
-            <ListItem disabled={!isActive || disabled} button key={areaIdentifier}>
+            <ListItem className={cls.areaListItem} disabled={!isActive || disabled} button key={areaIdentifier}>
                 <ListItemIcon className={cls.icon}>
                     <ChatIcon />
                 </ListItemIcon>
-                <ListItemText primary={areaName} primaryTypographyProps={{ className: cls.sidebarText }} />
+                <ListItemText primary={areaName} primaryTypographyProps={{ component: PalavyrText, className: cls.sidebarText, noWrap: true }} />
             </ListItem>
         </NavLink>
     );

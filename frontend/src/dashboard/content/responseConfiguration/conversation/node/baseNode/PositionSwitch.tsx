@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import { makeStyles } from "@material-ui/core";
 import { IPalavyrNode } from "../../Contracts";
+import { ConversationTreeContext, DashboardContext } from "dashboard/layouts/DashboardContext";
+import { NodeTypeOptions } from "@Palavyr-Types";
 
 export interface IPositionSwitcherProps {
     currentNode: IPalavyrNode;
@@ -111,32 +113,35 @@ class PositionSwapper {
     };
 }
 
-const rightArrowOnClick = (event: any, currentNode: IPalavyrNode) => {
+const rightArrowOnClick = (event: any, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) => {
     currentNode.parentNodeReferences.Single().childNodeReferences.ShiftRight(currentNode);
-    currentNode.UpdateTree();
+    // currentNode.UpdateTree();
+    currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
 };
 
-const leftArrowOnClick = (event: any, currentNode: IPalavyrNode) => {
+const leftArrowOnClick = (event: any, currentNode: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) => {
     currentNode.parentNodeReferences.Single().childNodeReferences.ShiftLeft(currentNode);
-    currentNode.UpdateTree();
+    // currentNode.UpdateTree();
+    currentNode.palavyrLinkedList.reconfigureTree(nodeTypeOptions);
 };
 
 export const PositionSwitcher = ({ currentNode }: IPositionSwitcherProps) => {
     const cls = useStyles();
     const positions = new PositionSwapper(currentNode);
+    const { nodeTypeOptions } = useContext(ConversationTreeContext);
 
     return positions.Show ? (
         <div className={cls.arrows}>
-            <span>{positions.Left && <ArrowLeftIcon onClick={(event: any) => leftArrowOnClick(event, currentNode)} className={cls.arrow} fontSize="large" />}</span>
+            <span>{positions.Left && <ArrowLeftIcon onClick={(event: any) => leftArrowOnClick(event, currentNode, nodeTypeOptions)} className={cls.arrow} fontSize="large" />}</span>
             {/* <span>TODO: Text to indicate which position in the option list this will be</span> */}
-            <span>{positions.Right && <ArrowRightIcon onClick={(event: any) => rightArrowOnClick(event, currentNode)} className={cls.arrow} fontSize="large" />}</span>
+            <span>{positions.Right && <ArrowRightIcon onClick={(event: any) => rightArrowOnClick(event, currentNode, nodeTypeOptions)} className={cls.arrow} fontSize="large" />}</span>
         </div>
     ) : (
         <></>
     );
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     arrows: {
         display: "flex",
         justifyContent: "space-between",

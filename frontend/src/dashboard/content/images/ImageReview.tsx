@@ -9,7 +9,7 @@ import { ImageReviewUpload } from "./ImageReviewUpload";
 import { Align } from "dashboard/layouts/positioning/Align";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     image: {
         height: "100%",
         width: "100%",
@@ -23,7 +23,9 @@ const useStyles = makeStyles((theme) => ({
 export const ImageReview = () => {
     const cls = useStyles();
 
-    const { repository } = useContext(DashboardContext);
+    const { repository, setViewName } = useContext(DashboardContext);
+    setViewName("Images");
+
     const [imageRecords, setImageRecords] = useState<FileLink[] | null>(null);
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
@@ -38,7 +40,7 @@ export const ImageReview = () => {
         loadImageRecords();
     }, []);
 
-    const onImageClick = (e) => {
+    const onImageClick = e => {
         e.preventDefault();
         window.open(currentPreview, "_blank");
     };

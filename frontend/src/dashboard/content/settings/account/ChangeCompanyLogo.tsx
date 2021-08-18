@@ -14,10 +14,12 @@ import * as React from "react";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { SettingsWrapper } from "../SettingsWrapper";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     paper: {
-        backgroundColor: theme.palette.secondary.light,
-        padding: "2rem",
+        backgroundColor: "rgb(0, 0, 0 ,0)", //theme.palette.secondary.light,
+        border: "0px",
+        boxShadow: "none",
+         padding: "2rem",
         margin: "1rem",
         width: "100%",
         display: "inline-block",
@@ -145,7 +147,7 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
     return (
         <SettingsWrapper>
             <AreaConfigurationHeader title="Change your company logo" subtitle="Update your company logo. This is used in the response email and pdf sent to customers." />
-            <Divider />
+            {/* <Divider /> */}
             <Paper className={cls.paper}>
                 <Alert style={{ marginBottom: "1.4rem" }} severity={companyLogo === "" ? "error" : "success"}>
                     <AlertTitle>

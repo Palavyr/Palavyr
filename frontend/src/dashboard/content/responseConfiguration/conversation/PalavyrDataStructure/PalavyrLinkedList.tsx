@@ -7,6 +7,7 @@ import { LinkedListBucket } from "./LinkedListBucket";
 import { NodeConfigurer } from "../node/actions/NodeConfigurer";
 import { NodeCreator } from "../node/actions/NodeCreator";
 import { PalavyrNode } from "../node/PalavyrNode";
+import { Edge, ElementId, HandleType, Node as FlowNode, Position } from "react-flow-renderer";
 
 export class PalavyrLinkedList implements IPalavyrLinkedList {
     private linkedListBucket: ILinkedListBucket = new LinkedListBucket();
@@ -37,7 +38,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     }
 
     private getRootNode(nodeList: ConvoNode[]) {
-        return nodeList.filter((node) => node.isRoot === true)[0];
+        return nodeList.filter(node => node.isRoot === true)[0];
     }
 
     private _getNodeById = (nodeId: string, nodeList: ConvoNode[]) => {
@@ -167,5 +168,38 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         const restOfTree = this.rootNode.childNodeReferences;
         const currentText = this.rootNode.userText;
         this.nodeCreator.addDefaultRootNode(this, this.repository, restOfTree, currentText);
+    }
+
+    compileToNodeFlow() {
+        const nodeElements: Partial<FlowNode>[] = [];
+        const edgeElements: Edge[] = [];
+        console.log("Compiled to flow");
+        const nodeFlowCallback = (node: IPalavyrNode, index: number) => {
+            //convert node into Handle
+            nodeElements.push({
+                id: node.nodeId,
+                type: "nodeflowinterface",
+                data: { label: node.optionPath, currentNode: node },
+                sourcePosition: "top" as Position,
+                targetPosition: "bottom" as Position,
+            });
+
+            // create all edges
+            node.parentNodeReferences.forEach((parent: IPalavyrNode) => {
+                edgeElements.push({
+                    id: `${parent.nodeId}-${node.nodeId}`,
+                    source: parent.nodeId,
+                    target: node.nodeId,
+                    type: "smoothstep",
+                    sourceHandle: `a`,
+                    targetHandle: `b`,
+                    animated: true,
+                    style: { stroke: "white", strokeWidth: 2, background: "repeating-linear-gradient(to right,red 0,red 10px,transparent 10px,transparent 12px)" },
+                });
+            });
+        };
+        this.traverse((node: IPalavyrNode, index: number) => nodeFlowCallback(node, index));
+        const nodeFlowElements = [...nodeElements, ...edgeElements];
+        return nodeFlowElements;
     }
 }

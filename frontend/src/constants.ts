@@ -1,5 +1,11 @@
 import { webUrl } from "@api-client/clientUtils";
 
+// Options
+export const SUPPORTED_FONTS = ["Architects Daughter"];
+
+// IDs
+export const MAIN_CONTENT_DIV_ID = "main-content-div";
+
 // Auth error states
 export const INVALID_EMAIL = "invalidEmail";
 export const INVALID_PASSWORD = "invalidPassword";
@@ -65,5 +71,7 @@ export const WELCOME_TOUR_COOKIE_NAME = "welcome-tour-cookie";
 export const EDITOR_TOUR_COOKIE_NAME = "editor-tour-cookie";
 export const REMEMBER_ME_EMAIL_COOKIE_NAME = "remember-me-email-cookie";
 export const REMEMBER_ME_PASSWORD_COOKIE_NAME = "remember-me-password-cookie";
+export const MENU_DRAWER_STATE_COOKIE_NAME = "menu-drawer-state-cookie";
+export const USE_NEW_EDITOR_COOKIE_NAME = "use-new-editor";
 
-export const ALL_COOKIE_NAMES = [WELCOME_TOUR_COOKIE_NAME, EDITOR_TOUR_COOKIE_NAME, REMEMBER_ME_EMAIL_COOKIE_NAME, REMEMBER_ME_PASSWORD_COOKIE_NAME];
+export const ALL_COOKIE_NAMES = [WELCOME_TOUR_COOKIE_NAME, EDITOR_TOUR_COOKIE_NAME, REMEMBER_ME_EMAIL_COOKIE_NAME, REMEMBER_ME_PASSWORD_COOKIE_NAME, MENU_DRAWER_STATE_COOKIE_NAME, USE_NEW_EDITOR_COOKIE_NAME];

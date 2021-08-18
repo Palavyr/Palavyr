@@ -1,4 +1,5 @@
 import { IConversationHistoryTracker, SetState } from "@Palavyr-Types";
+import { cloneDeep } from "lodash";
 import { PalavyrLinkedList } from "../PalavyrDataStructure/PalavyrLinkedList";
 
 export type SetConversationHistory = SetState<PalavyrLinkedList[]>;
@@ -47,13 +48,13 @@ export class ConversationHistoryTracker implements IConversationHistoryTracker {
         const newPosition = conversationHistoryPosition - 1;
         this.setConversationHistoryPosition(newPosition);
         const oneBack = conversationHistory[newPosition];
-        this.setNodes(oneBack);
+        this.setNodes(cloneDeep(oneBack));
     }
 
     stepConversationForwardOneStep(conversationHistoryPosition: number, conversationHistory: PalavyrLinkedList[]) {
         const newPosition = conversationHistoryPosition + 1;
         if (newPosition <= conversationHistory.length - 1) {
-            this.setNodes(conversationHistory[newPosition]);
+            this.setNodes(cloneDeep(conversationHistory[newPosition]));
             this.setConversationHistoryPosition(newPosition);
         } else {
             alert("Currently at the end of the history.");

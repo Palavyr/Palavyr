@@ -68,6 +68,7 @@ export const NodeInterface = ({
         splitMergeRootSiblingIndex: isMemberOfLeftmostBranch ? 0 : 1,
         debugOn: showDebugData,
     });
+
     return (
         <Card id={nodeId} className={cls.root} variant={nodeType === "" ? "outlined" : undefined}>
             <PositionSwitcher currentNode={currentNode} />

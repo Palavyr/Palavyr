@@ -1,4 +1,5 @@
-import { createMuiTheme, responsiveFontSizes, Theme } from "@material-ui/core";
+import { responsiveFontSizes, Theme } from "@material-ui/core";
+import { createTheme } from "@material-ui/core/styles";
 
 const palette = {
     background: { default: "#F2F2F2" },
@@ -7,7 +8,7 @@ const palette = {
     },
     secondary: {
         main: "#507FE0",
-        light: "#A9D7EE"
+        light: "#A9D7EE",
     },
     error: {
         main: "#E6070C",
@@ -37,39 +38,59 @@ const typography = {
     fontFamily: ["'Poppins'", "'Rubik'", "'Kanit'"].join(","),
     h1: {
         fontFamily: "Kanit",
+        fontWeight: 400,
+        fontSize: "3.052rem",
     },
     h2: {
         fontFamily: "Kanit",
+        fontSize: "2.441rem",
+        fontWeight: 400,
     },
     h3: {
         fontFamily: "Kanit",
+        fontSize: "1.953rem",
+        fontWeight: 400,
     },
     h4: {
         fontFamily: "Kanit",
+        fontSize: "1.563rem",
+        fontWeight: 400,
     },
     h5: {
         fontFamily: "Kanit",
+        fontSize: "1.25rem",
+        fontWeight: 400,
     },
     h6: {
         fontFamily: "Kanit",
+        fontSize: "1rem",
+        fontWeight: 400,
     },
     subtitle1: {
         fontFamily: "Poppins",
+        fontSize: "0.8",
+        fontWeight: 400,
     },
     subtitle2: {
         fontFamily: "Poppins",
+        fontSize: "0.64rem",
+        fontWeight: 400,
     },
     body1: {
         fontFamily: "Poppins",
+        fontSize: ".8rem",
+        fontWeight: 400,
     },
     body2: {
         fontFamily: "Poppins",
+        fontSize: "0.7rem",
     },
     button: {
         fontFamily: "Poppins",
     },
     caption: {
         fontFamily: "Poppins",
+        fontSize: "0.6rem",
     },
     overline: {
         fontFamily: "Poppins",
@@ -108,7 +129,7 @@ const breakpoints = {
     },
 };
 
-const theme: Theme = createMuiTheme({
+const theme: Theme = createTheme({
     palette,
     typography,
     breakpoints,

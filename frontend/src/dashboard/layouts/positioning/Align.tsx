@@ -10,12 +10,14 @@ export interface IAlign {
     float?: "left" | "right";
     verticalCenter?: boolean;
     extraClassNames?: string;
+    orientation?: "row" | "column";
 }
 
 export type StyleProps = {
     direction?: Directions;
     float?: "left" | "right";
     verticalCenter?: boolean;
+    orientation?: "row" | "column";
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -23,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
         let styles = {};
         styles = {
             display: "flex",
+            flexDirection: props.orientation,
             justifyContent: props.direction ?? "center",
         };
         if (props.float) {
@@ -37,8 +40,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Align = ({ direction, float, children, verticalCenter, extraClassNames }: IAlign) => {
-    const cls = useStyles({ direction, float, verticalCenter });
+export const Align = ({ direction, float, orientation = "row", children, verticalCenter, extraClassNames }: IAlign) => {
+    const cls = useStyles({ direction, float, verticalCenter, orientation});
 
     return <div className={classNames(cls.align, extraClassNames)}>{children}</div>;
 };

@@ -1,25 +1,38 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { NodeTypeOptions, TreeErrors } from "@Palavyr-Types";
+import { Action, NodeTypeOptions, TreeErrors } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
-import { Button, Divider, makeStyles } from "@material-ui/core";
+import { Button, makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { ConversationTreeContext, DashboardContext } from "dashboard/layouts/DashboardContext";
-import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { Align } from "dashboard/layouts/positioning/Align";
-import UndoIcon from "@material-ui/icons/Undo";
-import RedoIcon from "@material-ui/icons/Redo";
-import { isDevelopmentStage } from "@api-client/clientUtils";
 import PalavyrErrorBoundary from "@common/components/Errors/PalavyrErrorBoundary";
 import { ConversationHistoryTracker } from "./node/ConversationHistoryTracker";
 import { PalavyrLinkedList } from "./PalavyrDataStructure/PalavyrLinkedList";
 import { TreeErrorPanel } from "./MissingDynamicNodes";
-import AddIcon from "@material-ui/icons/Add";
-import RemoveIcon from "@material-ui/icons/Remove";
 import { ConfigurationNode } from "./node/baseNode/ConfigurationNode";
 import { useContext } from "react";
+import { PalavyrFlow } from "./PalavyrFlow/PalavyrFlow";
+import $ from "jquery";
+import { MAIN_CONTENT_DIV_ID, USE_NEW_EDITOR_COOKIE_NAME } from "@constants";
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import Cookies from "js-cookie";
+import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import UndoIcon from "@material-ui/icons/Undo";
+import RedoIcon from "@material-ui/icons/Redo";
+import { isDevelopmentStage } from "@api-client/clientUtils";
+import AddIcon from "@material-ui/icons/Add";
+import RemoveIcon from "@material-ui/icons/Remove";
+import SaveIcon from "@material-ui/icons/Save";
+import { PalavyrSpeedDial } from "@common/components/speedDial/PalavyrDial";
+import BugReportIcon from "@material-ui/icons/BugReport";
+import RotateLeftIcon from "@material-ui/icons/RotateLeft";
+import scrollToTop from "@common/utils/scrollToTop";
 
-const useStyles = makeStyles(() => ({
+const MAIN_DIV = `#${MAIN_CONTENT_DIV_ID}`;
+
+type StyleProps = {
+    useNewEditor: boolean;
+};
+const useStyles = makeStyles(theme => ({
     conversation: {
         position: "static",
         overflow: "auto",
@@ -28,7 +41,6 @@ const useStyles = makeStyles(() => ({
         margin: "0.5rem 0rem 1rem 2rem",
     },
     convoTreeMetaButtons: {
-        marginLeft: "0.7rem",
         borderRadius: "10px",
     },
     fieldSet: {
@@ -38,21 +50,32 @@ const useStyles = makeStyles(() => ({
         marginBottom: "10px",
         padding: "25px",
     },
+    newTreeWrap: {
+        height: "93vh",
+        marginTop: "-15px",
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
+    },
     treeWrap: {
         position: "relative",
     },
-    floatingSave: {
+    floatingSave: (props: StyleProps) => ({
         position: "fixed",
-        right: "50px",
-        bottom: "65px",
-        zIndex: 100,
+        bottom: props.useNewEditor ? 190 : 50,
+        right: 27,
+        zIndex: 99999,
+    }),
+    toggle: {
+        position: "fixed",
+        top: "120px",
+        right: "15px",
+        zIndex: 99999,
     },
 }));
 
 export const StructuredConvoTree = () => {
-    const cls = useStyles();
-
-    const { planTypeMeta, repository } = useContext(DashboardContext);
+    const { planTypeMeta, repository, handleDrawerClose } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const [, setLoaded] = useState<boolean>(false);
 
@@ -65,6 +88,19 @@ export const StructuredConvoTree = () => {
 
     const [linkedNodeList, setLinkedNodes] = useState<PalavyrLinkedList>();
     const historyTracker = new ConversationHistoryTracker(setConversationHistory, setConversationHistoryPosition, setLinkedNodes);
+
+    const [useNewEditor, setUseNewEditor] = useState<boolean>(true);
+    const [paddingBuffer, setPaddingBuffer] = useState<number>(1);
+
+    const cls = useStyles({ useNewEditor });
+
+    window.onbeforeunload = e => enableBodyScroll($(MAIN_DIV));
+
+    const toggleUseNewEditor = () => {
+        const newSettings = !useNewEditor;
+        Cookies.set(USE_NEW_EDITOR_COOKIE_NAME, newSettings ? "true" : "false");
+        setUseNewEditor(newSettings);
+    };
 
     const setTreeWithHistory = (updatedNodeList: PalavyrLinkedList) => {
         const freshNodeList = cloneDeep(updatedNodeList);
@@ -87,8 +123,27 @@ export const StructuredConvoTree = () => {
     }, [areaIdentifier, planTypeMeta]);
 
     useEffect(() => {
+        if (useNewEditor) {
+            window.scrollTo(0, 0);
+        } else {
+            enableBodyScroll($(MAIN_DIV));
+        }
+    }, [useNewEditor]);
+
+    useEffect(() => {
+        const curEditor = Cookies.get(USE_NEW_EDITOR_COOKIE_NAME);
+        if (curEditor !== undefined) {
+            if (curEditor === "true") {
+                setUseNewEditor(true);
+            } else if (curEditor === "false") {
+                setUseNewEditor(false);
+            }
+        }
+
+        handleDrawerClose();
         setLoaded(true);
         loadNodes();
+
         return () => {
             setLoaded(false);
         };
@@ -122,7 +177,7 @@ export const StructuredConvoTree = () => {
             const updatedLinkedList = new PalavyrLinkedList(updatedConvoNodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions, repository);
             historyTracker.addConversationHistoryToQueue(updatedLinkedList, conversationHistoryPosition, conversationHistory);
             setLinkedNodes(updatedLinkedList);
-            window.location.reload(); // TODO: Just fix the perf problem. Clicking to many things loads too many listeners, which locks the whole browser on save.
+            // window.location.reload(); // TODO: Just fix the perf problem. Clicking to many things loads too many listeners, which locks the whole browser on save.
             return true;
         } else {
             return false;
@@ -138,95 +193,93 @@ export const StructuredConvoTree = () => {
         }
     };
 
-    const [paddingBuffer, setPaddingBuffer] = useState<number>(1);
+    const stepBack = () => {
+        historyTracker.stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
+    };
+
+    const stepForward = () => {
+        historyTracker.stepConversationForwardOneStep(conversationHistoryPosition, conversationHistory);
+    };
+
+    let actions: Action[] = [
+        { icon: <SaveIcon />, name: "Save", onClick: onSave },
+        {
+            icon: <RedoIcon />,
+            name: "Redo",
+            onClick: stepForward,
+        },
+        {
+            icon: <UndoIcon />,
+            name: "Undo",
+            onClick: stepBack,
+        },
+    ];
+
+    if (!useNewEditor) {
+        const additionalEditorActions: Action[] = [
+            {
+                icon: <RemoveIcon />,
+                name: "Spacing -",
+                onClick: () => {
+                    if (paddingBuffer > 0.5) setPaddingBuffer(paddingBuffer - 0.5);
+                },
+            },
+            {
+                icon: <AddIcon />,
+                name: "Spacing +",
+                onClick: () => {
+                    if (paddingBuffer < 10) setPaddingBuffer(paddingBuffer + 0.5);
+                },
+            },
+        ];
+        actions = [...actions, ...additionalEditorActions];
+    }
+
+    if (isDevelopmentStage()) {
+        const additionalActions: Action[] = [{ icon: <BugReportIcon />, name: "Debug", onClick: toggleDebugData }, { icon: <RotateLeftIcon />, name: "Reset Tree", onClick: resetTree }];
+        actions = [...actions, ...additionalActions];
+    }
 
     return (
-        <ConversationTreeContext.Provider value={{ nodeTypeOptions, setNodes: setTreeWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
-            <AreaConfigurationHeader
-                divider={treeErrors?.anyErrors}
-                title="Chat Editor"
-                subtitle="Use this editor to create the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
-            />
-            <Align>
-                <SaveOrCancel size="large" position="right" onSave={onSave} />
-                <Button
-                    variant="contained"
-                    className={cls.convoTreeMetaButtons}
-                    startIcon={<UndoIcon />}
-                    onClick={() => {
-                        historyTracker.stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
-                    }}
-                >
-                    Undo
-                </Button>
-                <Button
-                    variant="contained"
-                    className={cls.convoTreeMetaButtons}
-                    endIcon={<RedoIcon />}
-                    onClick={() => {
-                        historyTracker.stepConversationForwardOneStep(conversationHistoryPosition, conversationHistory);
-                    }}
-                >
-                    Redo
-                </Button>
-                <Button
-                    variant="contained"
-                    className={cls.convoTreeMetaButtons}
-                    endIcon={<RemoveIcon />}
-                    onClick={() => {
-                        if (paddingBuffer > 0.5) setPaddingBuffer(paddingBuffer - 0.5);
-                    }}
-                >
-                    Spacing
-                </Button>
-                <Button
-                    variant="contained"
-                    className={cls.convoTreeMetaButtons}
-                    endIcon={<AddIcon />}
-                    onClick={() => {
-                        if (paddingBuffer < 10) setPaddingBuffer(paddingBuffer + 0.5);
-                    }}
-                >
-                    Spacing
-                </Button>
-
-                {isDevelopmentStage() && (
-                    <>
-                        <Button variant="contained" className={cls.convoTreeMetaButtons} onClick={toggleDebugData}>
-                            Toggle Debug Data
-                        </Button>
-                        <Button variant="contained" className={cls.convoTreeMetaButtons} onClick={resetTree}>
-                            Reset Tree
-                        </Button>
-                    </>
+        <div>
+            <ConversationTreeContext.Provider value={{ nodeTypeOptions, setNodes: setTreeWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
+                {!useNewEditor && treeErrors && (
+                    <AreaConfigurationHeader
+                        divider={treeErrors.anyErrors}
+                        title="Chat Editor"
+                        subtitle="Use this editor to create the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
+                    />
                 )}
-            </Align>
-            {isDevelopmentStage() && (
-                <>
-                    {showDebugData &&
-                        conversationHistory.map((convo: PalavyrLinkedList, index: number) => {
-                            return (
-                                <div key={index}>
-                                    <Divider />
-                                    {convo.compileToConvoNodes().map((x) => " | " + x.nodeType)}
-                                </div>
-                            );
-                        })}
-                </>
-            )}
-            <PalavyrErrorBoundary>
                 <div className={cls.conversation}>
                     <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
-                    <div className={cls.floatingSave}>
-                        <SaveOrCancel size="large" position="right" onSave={onSave} />
-                    </div>
-                    <fieldset className={cls.fieldSet}>
-                        <PalavyrErrorBoundary>
-                            <div className={cls.treeWrap}>{linkedNodeList !== undefined && <ConfigurationNode currentNode={linkedNodeList.rootNode} pBuffer={paddingBuffer} />}</div>
-                        </PalavyrErrorBoundary>
-                    </fieldset>
                 </div>
-            </PalavyrErrorBoundary>
-        </ConversationTreeContext.Provider>
+                <div className={cls.toggle}>
+                    {useNewEditor ? (
+                        <Button size="small" variant="contained" color="primary" onClick={toggleUseNewEditor}>
+                            Use Classic Editor
+                        </Button>
+                    ) : (
+                        <Button size="small" variant="contained" color="primary" onClick={toggleUseNewEditor}>
+                            Use Cool New Editor
+                        </Button>
+                    )}
+                </div>
+                <div className={cls.floatingSave}>
+                    <PalavyrSpeedDial actions={actions} />
+                </div>
+                <PalavyrErrorBoundary>
+                    {linkedNodeList !== undefined &&
+                        (useNewEditor ? (
+                            <div className={cls.newTreeWrap}>
+                                <PalavyrFlow initialElements={linkedNodeList.compileToNodeFlow()} />
+                            </div>
+                        ) : (
+                            <div className={cls.treeWrap}>
+                                <ConfigurationNode currentNode={linkedNodeList.rootNode} pBuffer={paddingBuffer} />
+                            </div>
+                        ))}
+                </PalavyrErrorBoundary>
+            </ConversationTreeContext.Provider>
+        </div>
     );
 };

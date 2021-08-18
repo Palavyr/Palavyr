@@ -8,7 +8,7 @@ import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
 import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
 import { webUrl } from "@api-client/clientUtils";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     icon: {
         color: theme.palette.secondary.light,
     },
@@ -16,9 +16,10 @@ const useStyles = makeStyles((theme) => ({
 
 export interface BillingSectionProps {
     isActive: boolean;
+    menuOpen: boolean;
 }
 
-export const BillingSection = memo(({ isActive }: BillingSectionProps) => {
+export const BillingSection = memo(({ isActive, menuOpen }: BillingSectionProps) => {
     const [billingOpen, setBillingOpen] = useState<boolean>(false);
     const { setViewName, planTypeMeta } = useContext(DashboardContext);
 
@@ -26,7 +27,6 @@ export const BillingSection = memo(({ isActive }: BillingSectionProps) => {
     const history = useHistory();
 
     const subscribeOnClick = () => {
-        setViewName("Subscriptions");
         history.push("/dashboard/subscribe");
     };
 
@@ -42,18 +42,11 @@ export const BillingSection = memo(({ isActive }: BillingSectionProps) => {
 
     return (
         <List>
-            <SidebarSectionHeader className={"billing-sidebar-tour"} title="Billing" onClick={() => setBillingOpen(!billingOpen)} currentState={billingOpen} />
+            <SidebarSectionHeader menuOpen={menuOpen} className={"billing-sidebar-tour"} title="Billing" onClick={() => setBillingOpen(!billingOpen)} currentState={billingOpen} />
             <Collapse in={billingOpen} timeout="auto" unmountOnExit>
-                {(planTypeMeta && planTypeMeta.isFreePlan) && (
-                    <SidebarLinkItem text="Subscribe" isActive={isActive} onClick={subscribeOnClick} IconComponent={<SubscriptionsIcon className={cls.icon} />} />
-                )}
-                {(planTypeMeta && !planTypeMeta.isFreePlan) && (
-                    <SidebarLinkItem
-                        text="Manage"
-                        isActive={isActive || !planTypeMeta.isFreePlan}
-                        onClick={createCustomerPortalSession}
-                        IconComponent={<PaymentIcon className={cls.icon} />}
-                    />
+                {planTypeMeta && planTypeMeta.isFreePlan && <SidebarLinkItem text="Subscribe" isActive={isActive} onClick={subscribeOnClick} IconComponent={<SubscriptionsIcon className={cls.icon} />} />}
+                {planTypeMeta && !planTypeMeta.isFreePlan && (
+                    <SidebarLinkItem text="Manage" isActive={isActive || !planTypeMeta.isFreePlan} onClick={createCustomerPortalSession} IconComponent={<PaymentIcon className={cls.icon} />} />
                 )}
             </Collapse>
         </List>

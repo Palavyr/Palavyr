@@ -7,14 +7,10 @@ import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { useHistory } from "react-router-dom";
 import { AreaLinkItem } from "./sectionComponents/AreaLinkItem";
-import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { AreaNameDetail, AreaNameDetails } from "@Palavyr-Types";
-import BarChartIcon from "@material-ui/icons/BarChart";
-import TrendingUpIcon from "@material-ui/icons/TrendingUp";
-import TrendingUp from "@material-ui/icons/TrendingUp";
 import classNames from "classnames";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     icon: {
         color: theme.palette.secondary.light,
     },
@@ -24,9 +20,10 @@ export interface ConfigureSectionProps {
     isActive: boolean;
     currentPage: string;
     areaNameDetails: AreaNameDetails;
+    menuOpen: boolean;
 }
 
-export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails }: ConfigureSectionProps) => {
+export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails, menuOpen }: ConfigureSectionProps) => {
     const [configureOpen, setConfigureOpen] = useState<boolean>(true);
     const { checkAreaCount, setViewName, planTypeMeta } = React.useContext(DashboardContext);
 
@@ -34,13 +31,12 @@ export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails }
     const cls = useStyles();
 
     const enableAreasOnClick = () => {
-        setViewName("Enable / Disable Areas");
         history.push("/dashboard/set-areas");
     };
 
     return (
         <List className={classNames("configure-tour")}>
-            <SidebarSectionHeader title="Configure" onClick={() => setConfigureOpen(!configureOpen)} currentState={configureOpen} />
+            <SidebarSectionHeader menuOpen={menuOpen} title="Configure" onClick={() => setConfigureOpen(!configureOpen)} currentState={configureOpen} />
             <SidebarLinkItem className={"add-new-area-tour"} text="Add New Area" isActive={isActive} onClick={checkAreaCount} IconComponent={<AddCircleOutlineIcon className={cls.icon} />} />
             <SidebarLinkItem
                 className={"enable-disable-area-tour"}

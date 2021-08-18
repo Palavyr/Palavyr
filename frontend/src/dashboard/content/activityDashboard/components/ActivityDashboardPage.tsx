@@ -1,10 +1,11 @@
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { makeStyles, Grid } from "@material-ui/core";
+import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import React from "react";
 import { DailyEnquiriesWeekly } from "../DailyEnquiriesWeekly";
 import { EnquiryActivity } from "../EnquiryActivity";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     squareGridItem: {
         // height: "400px",
         // width: "400px",
@@ -17,6 +18,8 @@ const useStyles = makeStyles((theme) => ({
 
 export const ActivityDashboardPage = () => {
     const cls = useStyles();
+    const { setViewName } = React.useContext(DashboardContext);
+    setViewName("Data Dashboard");
 
     return (
         <>

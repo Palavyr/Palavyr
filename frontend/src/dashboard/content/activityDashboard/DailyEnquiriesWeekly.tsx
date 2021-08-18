@@ -1,7 +1,7 @@
 import { AreaNameDetail, AreaNameDetails, Enquiries, EnquiryRow } from "@Palavyr-Types";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { useStyles } from "../demo/ColorOptions";
+import { useStyles } from "../designer/ColorOptions";
 import { Line } from "react-chartjs-2";
 import { DataPlot } from "./components/DataPlot";
 import seedrandom from "seedrandom";

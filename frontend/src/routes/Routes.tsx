@@ -7,7 +7,7 @@ import { Success } from "dashboard/content/purchse/success/Success";
 import { Cancel } from "dashboard/content/purchse/cancel/Cancel";
 import { Subscribe } from "dashboard/content/subscribe/Subscribe";
 import { SubscribeHelp } from "dashboard/content/help/SubscribeHelp";
-import { Enquires } from "dashboard/content/enquiries/Enquiries";
+import { EnquiresPage } from "dashboard/content/enquiries/EnquiriesPage";
 import { GetWidget } from "dashboard/content/getWidget/GetWidget";
 import { QuickStartGuide } from "dashboard/content/welcome/quickStartGuide/QuickStartGuide";
 import { ConversationHelp } from "dashboard/content/help/ConversationHelp";
@@ -19,7 +19,7 @@ import { PreviewHelp } from "dashboard/content/help/PreviewHelp";
 import { PleaseConfirmYourEmail } from "dashboard/content/welcome/PleaseConfirmYourEmail";
 import { Purchase } from "dashboard/content/purchse/Purchase";
 import { ChatDemoHelp } from "dashboard/content/help/ChatDemoHelp";
-import { ChatDemo } from "dashboard/content/demo/ChatDemo";
+import { ChatDemoPage } from "dashboard/content/demo/ChatDemo";
 import { GetWidgetHelp } from "dashboard/content/help/GetWidgetHelp";
 import { EnquiriesHelp } from "dashboard/content/help/EnquiriesHelp";
 import { PurchaseHelp } from "dashboard/content/help/PurchaseHelp";
@@ -53,7 +53,7 @@ import { DeleteAccountHelp } from "dashboard/content/help/DeleteAccountHelp";
 import { ConversationReview } from "dashboard/content/enquiries/ConversationReview";
 import { ConversationReviewHelp } from "dashboard/content/help/ConversationReviewHelp";
 import { ConfirmYourResetLink } from "@landing/components/passwordReset/ConfirmYourResetLink";
-import { RESET_PASSWORD_FORM, RESET_PASSWORD_VERIFY, RESET_PASSWORD_SUCCESS } from "@constants";
+import { RESET_PASSWORD_FORM, RESET_PASSWORD_VERIFY, RESET_PASSWORD_SUCCESS, MAIN_CONTENT_DIV_ID } from "@constants";
 import { RenderPasswordDialog } from "@landing/components/passwordReset/SubmitNewPassword";
 import { RenderResetSuccess } from "@landing/components/passwordReset/PasswordResetSuccess";
 import { EnableAreas } from "dashboard/content/responseConfiguration/areaSettings/enableAreas/EnableAreas";
@@ -79,6 +79,7 @@ import { BlogPage } from "@landing/blog/BlogPage";
 import { OurStoryPage } from "@landing/ourStory/OutStoryPage";
 import { OurTeamPage } from "@landing/ourTeam/OurTeamPage";
 import { GA4R } from "ga-4-react";
+import { WidgetDesignerPage } from "dashboard/content/designer/WidgetDesigner";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -144,7 +145,6 @@ export const Routes = () => {
                 <Route exact path={RESET_PASSWORD_SUCCESS} component={RenderResetSuccess} />
 
                 {blogPostRouteMetas.map((post: BlogPostRouteMeta) => {
-                    console.log(post.url);
                     return (
                         <Route
                             key={post.url}
@@ -162,11 +162,11 @@ export const Routes = () => {
 
                 <ProtectedRoute exact path="/dashboard/activity" component={withLayout(ActivityDashboardPage, <ActivityDashboardHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/email/:areaIdentifier" component={withLayout(withAreaTabs(<EmailConfiguration />), <EmailHelp />)} />
-                <ProtectedRoute exact path="/dashboard/editor/response/:areaIdentifier" component={withLayout(withAreaTabs(<ResponseConfiguration />), <ResponseConfigurationHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/pricing/:areaIdentifier" component={withLayout(withAreaTabs(<ResponseConfiguration />), <ResponseConfigurationHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/attachments/:areaIdentifier" component={withLayout(withAreaTabs(<AttachmentConfiguration />), <AttachmentsHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/conversation/:areaIdentifier" component={withLayout(withAreaTabs(<StructuredConvoTree />), <ConversationHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/settings/:areaIdentifier" component={withLayout(withAreaTabs(<AreaSettings />), <AreaSettingsHelp />)} />
-                <ProtectedRoute exact path="/dashboard/editor/preview/:areaIdentifier" component={withLayout(withAreaTabs(<ConfigurationPreview />), <PreviewHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/pricingpreview/:areaIdentifier" component={withLayout(withAreaTabs(<ConfigurationPreview />), <PreviewHelp />)} />
 
                 <ProtectedRoute exact path="/dashboard/set-areas" component={withLayout(EnableAreas, <SetAreasHelp />)} />
 
@@ -179,9 +179,11 @@ export const Routes = () => {
                 <ProtectedRoute exact path="/dashboard/settings/default_email_template" component={withLayout(withSettingsTabs(<DefaultEmailTemplate />), <DefaultEmailTemplateHelp />)} />
                 <ProtectedRoute exact path="/dashboard/settings/deleteaccount" component={withLayout(withSettingsTabs(<DeleteAccount />), <DeleteAccountHelp />)} />
 
-                <ProtectedRoute exact path="/dashboard/demo/" component={withLayout(ChatDemo, <ChatDemoHelp />)} />
+                <ProtectedRoute exact path="/dashboard/demo" component={withLayout(ChatDemoPage, <ChatDemoHelp />)} />
+                <ProtectedRoute exact path="/dashboard/designer" component={withLayout(WidgetDesignerPage, <ChatDemoHelp />)} />
+
                 <ProtectedRoute exact path="/dashboard/getWidget" component={withLayout(GetWidget, <GetWidgetHelp />)} />
-                <ProtectedRoute exact path="/dashboard/enquiries" component={withLayout(Enquires, <EnquiriesHelp />)} />
+                <ProtectedRoute exact path="/dashboard/enquiries" component={withLayout(EnquiresPage, <EnquiriesHelp />)} />
                 <ProtectedRoute exact path="/dashboard/enquiries/conversation" component={withLayout(ConversationReview, <ConversationReviewHelp />)} />
                 <ProtectedRoute exact path="/dashboard/images" component={withLayout(ImageReview, <ImageReviewHelp />)} />
 

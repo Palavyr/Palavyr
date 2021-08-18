@@ -3,7 +3,7 @@ import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { makeStyles, Typography } from "@material-ui/core";
 import { Align } from "dashboard/layouts/positioning/Align";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     customizetext: {
         paddingTop: "1.8rem",
     },
@@ -17,7 +17,7 @@ export const ChatDemoHeader = () => {
     return (
         <>
             <Typography gutterBottom align="center" variant="h4" className={cls.customizetext}>
-                Customize your widget
+                Try out your widget
             </Typography>
             <Align>
                 <SinglePurposeButton classes={cls.button} variant="outlined" color="primary" buttonText="Reload" onClick={() => window.location.reload()} />

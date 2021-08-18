@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useContext } from "react";
 import { Enquiries, EnquiryRow } from "@Palavyr-Types";
-import { TableContainer, Paper, TableHead, TableBody, Table, makeStyles, Typography } from "@material-ui/core";
+import { TableContainer, Paper, TableHead, TableBody, Table, makeStyles } from "@material-ui/core";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { EnquiriesTableRow } from "./EnquiriesRow";
@@ -12,7 +12,7 @@ import { Align } from "dashboard/layouts/positioning/Align";
 import { OsTypeToggle } from "../responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
 import { NoDataAvailable } from "./NoDataMessage";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     title: {
         padding: "1rem",
     },
@@ -30,8 +30,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Enquires = () => {
-    const { repository } = useContext(DashboardContext);
+export const EnquiresPage = () => {
+    const { repository, setViewName } = useContext(DashboardContext);
+    setViewName("Enquiries");
     const cls = useStyles();
 
     const [enquiries, setEnquiries] = useState<Enquiries>([]);
@@ -65,7 +66,7 @@ export const Enquires = () => {
         loadEnquiries();
     }, [loadEnquiries]);
 
-    const anyEnquiriesSeen = enquiries.filter((x) => x.seen).length > 0;
+    const anyEnquiriesSeen = enquiries.filter(x => x.seen).length > 0;
 
     const toggleShowSeen = async () => {
         const result = await repository.Enquiries.toggleShowSeenEnquiries();

@@ -19,7 +19,10 @@ const useStyles = makeStyles((theme) => ({
         margin: "1rem",
     },
     paper: {
-        backgroundColor: theme.palette.secondary.light,
+        backgroundColor: "rgb(0, 0, 0 ,0)",
+        border :"0px",
+        boxShadow: "none",
+
         padding: "2rem",
         margin: "1rem",
         width: "100%",
@@ -58,7 +61,7 @@ export const SettingsGridRowList: React.FC<ISettingsGridRow> = ({ onChange, moda
                         </Select>
                     </FormControl>
                 </Grid>
-                <Divider />
+                {/* <Divider /> */}
                 <Grid className={classes.row}>
                     {currentValue && (
                         <>

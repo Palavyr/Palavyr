@@ -23,7 +23,9 @@ const useStyles = makeStyles((theme: Theme) =>
             marginTop: theme.spacing(3),
         },
         paper: {
-            backgroundColor: theme.palette.secondary.light,
+            backgroundColor: "rgb(0, 0, 0 ,0)", //theme.palette.secondary.light,
+            border: "0px",
+            boxShadow: "none",
             padding: "2rem",
             margin: "2rem",
         },
@@ -82,10 +84,10 @@ export const ChangePassword = () => {
                                 id="standard-adornment-password-old"
                                 type={showOldPassword ? "text" : "password"}
                                 value={oldPassword}
-                                onChange={(e) => setOldPassword(e.target.value)}
+                                onChange={e => setOldPassword(e.target.value)}
                                 endAdornment={
                                     <InputAdornment position="end">
-                                        <IconButton aria-label="toggle password visibility" onClick={() => setShowOldPassword(!showOldPassword)} onMouseDown={(e) => e.preventDefault()}>
+                                        <IconButton aria-label="toggle password visibility" onClick={() => setShowOldPassword(!showOldPassword)} onMouseDown={e => e.preventDefault()}>
                                             {showOldPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                                         </IconButton>
                                     </InputAdornment>
@@ -100,10 +102,10 @@ export const ChangePassword = () => {
                                 id="standard-adornment-password-new"
                                 type={showNewPassword ? "text" : "password"}
                                 value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
+                                onChange={e => setNewPassword(e.target.value)}
                                 endAdornment={
                                     <InputAdornment position="end">
-                                        <IconButton aria-label="toggle password visibility" onClick={() => setShowNewPassword(!showNewPassword)} onMouseDown={(e) => e.preventDefault()}>
+                                        <IconButton aria-label="toggle password visibility" onClick={() => setShowNewPassword(!showNewPassword)} onMouseDown={e => e.preventDefault()}>
                                             {showNewPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                                         </IconButton>
                                     </InputAdornment>
@@ -118,10 +120,10 @@ export const ChangePassword = () => {
                                 id="standard-adornment-password-confirm"
                                 type={showNewPasswordCopy ? "text" : "password"}
                                 value={newPasswordCopy}
-                                onChange={(e) => setNewPasswordCopy(e.target.value)}
+                                onChange={e => setNewPasswordCopy(e.target.value)}
                                 endAdornment={
                                     <InputAdornment position="end">
-                                        <IconButton aria-label="toggle password visibility" onClick={() => setShowNewPasswordCopy(!showNewPassword)} onMouseDown={(e) => e.preventDefault()}>
+                                        <IconButton aria-label="toggle password visibility" onClick={() => setShowNewPasswordCopy(!showNewPassword)} onMouseDown={e => e.preventDefault()}>
                                             {showNewPasswordCopy ? <VisibilityIcon /> : <VisibilityOffIcon />}
                                         </IconButton>
                                     </InputAdornment>

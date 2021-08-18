@@ -15,7 +15,7 @@ export interface TitleTypographyProps {
 export const TitleTypography = ({ children, display = "inline" }: TitleTypographyProps) => {
     const cls = useStyles();
     return (
-        <Typography display={display} align="center" variant="h2" className={cls.primaryText}>
+        <Typography display={display} align="center" variant="h1" className={cls.primaryText}>
             {children}
         </Typography>
     );
