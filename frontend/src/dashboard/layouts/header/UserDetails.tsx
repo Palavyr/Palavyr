@@ -85,7 +85,7 @@ export const UserDetails = React.memo(() => {
     }
     const userOnClick = () => {
         setViewName("General Settings");
-        history.push(`/dashboard/settings/password?tab=${GeneralSettingsLoc.password}`);
+        history.push(`/dashboard/settings/email?tab=${GeneralSettingsLoc.email}`);
     };
 
     useEffect(() => {

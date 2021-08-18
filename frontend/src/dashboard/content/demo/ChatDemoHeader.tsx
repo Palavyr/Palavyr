@@ -7,9 +7,7 @@ const useStyles = makeStyles(theme => ({
     customizetext: {
         paddingTop: "1.8rem",
     },
-    button: {
-        marginBottom: "1rem",
-    },
+
 }));
 
 export const ChatDemoHeader = () => {
@@ -19,9 +17,6 @@ export const ChatDemoHeader = () => {
             <Typography gutterBottom align="center" variant="h4" className={cls.customizetext}>
                 Try out your widget
             </Typography>
-            <Align>
-                <SinglePurposeButton classes={cls.button} variant="outlined" color="primary" buttonText="Reload" onClick={() => window.location.reload()} />
-            </Align>
         </>
     );
 };
