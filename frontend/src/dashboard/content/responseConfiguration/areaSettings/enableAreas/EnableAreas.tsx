@@ -8,9 +8,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { useCallback } from "react";
 import { EnableAreaRow } from "./EnableAreaRow";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     paper: {
-        backgroundColor: theme.palette.secondary.light,
+        // backgroundColor: theme.palette.secondary.light,
+        backgroundColor: "rgb(0, 0, 0 ,0)", //theme.palette.secondary.light,
+        border: "0px",
+        boxShadow: "none",
         color: "black",
         padding: "2rem",
         margin: "2rem",
@@ -30,7 +33,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const EnableAreas = () => {
-    const { repository } = useContext(DashboardContext);
+    const { repository, setViewName } = useContext(DashboardContext);
+    setViewName("Enable / Disable Areas");
+
     const cls = useStyles();
     const [areaIds, setAreaIds] = useState<AreasEnabled[]>([]);
 

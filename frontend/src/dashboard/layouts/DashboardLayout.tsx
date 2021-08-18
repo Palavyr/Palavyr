@@ -15,7 +15,7 @@ import { AddNewAreaModal } from "./sidebar/AddNewAreaModal";
 import { cloneDeep } from "lodash";
 import { AlertType, AreaNameDetail, AreaNameDetails, Areas, AreaTable, EnquiryRow, ErrorResponse, PlanTypeMeta, PurchaseTypes, SnackbarPositions } from "@Palavyr-Types";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { defaultUrlForNewArea, DRAWER_WIDTH, MENU_DRAWER_STATE_COOKIE_NAME, WELCOME_TOUR_COOKIE_NAME } from "@constants";
+import { defaultUrlForNewArea, DRAWER_WIDTH, MAIN_CONTENT_DIV_ID, MENU_DRAWER_STATE_COOKIE_NAME, WELCOME_TOUR_COOKIE_NAME } from "@constants";
 
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { DashboardContext } from "./DashboardContext";
@@ -30,8 +30,10 @@ import Cookies from "js-cookie";
 import { GA4ReactResolveInterface } from "ga-4-react/dist/models/gtagModels";
 import classNames from "classnames";
 import { Typography } from "@material-ui/core";
+import { enableBodyScroll } from "body-scroll-lock";
+import $ from "jquery";
 
- const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
+const fetchSidebarInfo = (areaData: Areas): AreaNameDetails => {
     const areaNameDetails = areaData.map((x: AreaTable) => {
         return {
             areaIdentifier: x.areaIdentifier,
@@ -230,7 +232,8 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
                 setMenuOpen(false);
             }
         }
-
+        const MAIN_DIV = `#${MAIN_CONTENT_DIV_ID}`;
+        enableBodyScroll($(MAIN_DIV));
         loadAreas();
         setLoaded(true);
         return () => {

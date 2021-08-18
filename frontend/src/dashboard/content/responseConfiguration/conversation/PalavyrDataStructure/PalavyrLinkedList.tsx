@@ -173,9 +173,8 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     compileToNodeFlow() {
         const nodeElements: Partial<FlowNode>[] = [];
         const edgeElements: Edge[] = [];
-
+        console.log("Compiled to flow");
         const nodeFlowCallback = (node: IPalavyrNode, index: number) => {
-
             //convert node into Handle
             nodeElements.push({
                 id: node.nodeId,
@@ -195,7 +194,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
                     sourceHandle: `a`,
                     targetHandle: `b`,
                     animated: true,
-                    style: { stroke: "white", strokeWidth: 4 },
+                    style: { stroke: "white", strokeWidth: 2, background: "repeating-linear-gradient(to right,red 0,red 10px,transparent 10px,transparent 12px)" },
                 });
             });
         };

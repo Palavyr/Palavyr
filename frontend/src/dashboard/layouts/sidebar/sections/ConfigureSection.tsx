@@ -31,7 +31,6 @@ export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails, 
     const cls = useStyles();
 
     const enableAreasOnClick = () => {
-        setViewName("Enable / Disable Areas");
         history.push("/dashboard/set-areas");
     };
 

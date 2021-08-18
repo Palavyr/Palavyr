@@ -5,9 +5,6 @@ import dagre from "dagre";
 import { makeStyles } from "@material-ui/core";
 import { cloneDeep } from "lodash";
 
-const dagreGraph = new dagre.graphlib.Graph();
-dagreGraph.setDefaultEdgeLabel(() => ({}));
-
 export interface PalavyrFlowProps {
     initialElements: any[];
 }
@@ -24,6 +21,9 @@ const nodeWidth = 200;
 const nodeHeight = 275;
 
 const getLayoutedElements = (elements, direction = "TB") => {
+    const dagreGraph = new dagre.graphlib.Graph();
+    dagreGraph.setDefaultEdgeLabel(() => ({}));
+
     const isHorizontal = direction === "LR";
     dagreGraph.setGraph({ rankdir: direction });
 
@@ -86,10 +86,9 @@ export const PalavyrFlow = ({ initialElements }: PalavyrFlowProps) => {
 
     useEffect(() => {
         if (reactflowInstance) {
-            reactflowInstance.fitView({ padding: 1.0 });
+            reactflowInstance.fitView({ paddingTop: 1.0 });
         }
     }, [reactflowInstance]);
-
     const initBgColor = "#1A192B";
     return elements ? (
         <ReactFlowProvider>
@@ -102,7 +101,7 @@ export const PalavyrFlow = ({ initialElements }: PalavyrFlowProps) => {
                 connectionLineStyle={connectionLineStyle}
                 snapToGrid={true}
                 snapGrid={snapGrid}
-                defaultZoom={0.5}
+                defaultZoom={1}
             >
                 <ConfigurationMinimap />
                 <Controls className={cls.controls} />
@@ -119,11 +118,13 @@ export const ConfigurationMinimap = () => {
     return (
         <MiniMap
             className={cls.minimap}
+
             nodeStrokeColor={n => {
-                if (n.type === "input") return "#0041d0";
-                if (n.type === "nodeflowinterface") return initBgColor;
-                if (n.type === "output") return "#ff0072";
-                return "gray";
+                return "black";
+                // if (n.type === "input") return "#0041d0";
+                // if (n.type === "nodeflowinterface") return initBgColor;
+                // if (n.type === "output") return "#ff0072";
+                // return "gray";
             }}
             nodeColor={n => {
                 if (n.type === "nodeflowinterface") return initBgColor;

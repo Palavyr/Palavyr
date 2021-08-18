@@ -9,7 +9,7 @@ type styleProps = {
     isEnabled?: boolean | null;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     center: {
         textAlign: "center",
     },
@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
     row: (props: styleProps) => ({
         backgroundColor: props.isEnabled ? theme.palette.success.light : "grey",
     }),
+    wide: {
+        minWidth: "150px",
+    },
 }));
 
 export interface EnableAreaRowProps {
@@ -51,8 +54,8 @@ export const EnableAreaRow = ({ areasEnabled, rowNumber }: EnableAreaRowProps) =
             <TableCell className={cls.cell}>
                 <Typography variant="h6">{areasEnabled.areaName}</Typography>
             </TableCell>
-            <TableCell className={cls.cell}>
-                <OsTypeToggle controlledState={isEnabled === true} onChange={onToggleChange} enabledLabel="Area Enabled" disabledLabel="Area Disabled" />
+            <TableCell className={classNames(cls.cell, cls.wide)}>
+                <OsTypeToggle controlledState={isEnabled === true} onChange={onToggleChange} enabledLabel="Enabled" disabledLabel="Disabled" />
             </TableCell>
         </TableRow>
     );

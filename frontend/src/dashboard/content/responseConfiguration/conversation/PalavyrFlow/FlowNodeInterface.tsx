@@ -23,7 +23,7 @@ export const NodeFlowInterface = ({ data }: NodeFlowInterfaceProps) => {
                 optionPath={currentNode.optionPath}
             />
             <Handle style={{ border: "0px", background: "none" }} id={`b`} type="source" position={Position.Bottom} />
-            <Handle style={{ border: "0px", background: "none" }} id={`a`} type="target" position={Position.Top} />
+            <Handle style={{ border: "0px", background: "none" }} id={`a`}  type="target" position={Position.Top} />
         </>
     );
 };

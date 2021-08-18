@@ -28,7 +28,7 @@ export interface PalavyrSpeedDialProps {
 
 export const PalavyrSpeedDial = ({ actions }: PalavyrSpeedDialProps) => {
     const cls = useStyles();
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = React.useState(false);
     const [hidden, setHidden] = React.useState(false);
 
     const handleVisibility = () => {
@@ -45,11 +45,9 @@ export const PalavyrSpeedDial = ({ actions }: PalavyrSpeedDialProps) => {
 
     return (
         <div className={cls.root}>
-            <Button onClick={handleVisibility}>Show Configuration Options</Button>
-            <Backdrop open={open} />
             <SpeedDial direction={"left"} ariaLabel="palavyr-speed-dial" className={cls.speedDial} hidden={hidden} icon={<SpeedDialIcon />} onClose={handleClose} onOpen={handleOpen} open={open}>
                 {actions.map(action => (
-                    <SpeedDialAction key={action.name} icon={action.icon} tooltipTitle={action.name} tooltipOpen onClick={action.onClick} />
+                    <SpeedDialAction key={action.name} icon={action.icon} tooltipTitle={action.name} tooltipPlacement="top" onClick={action.onClick} />
                 ))}
             </SpeedDial>
         </div>
