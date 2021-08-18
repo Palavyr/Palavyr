@@ -1,6 +1,7 @@
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
-import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@material-ui/core";
+import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@material-ui/core";
 import { AreasEnabled, AreaTable } from "@Palavyr-Types";
 import classNames from "classnames";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
@@ -10,8 +11,7 @@ import { EnableAreaRow } from "./EnableAreaRow";
 
 const useStyles = makeStyles(theme => ({
     paper: {
-        // backgroundColor: theme.palette.secondary.light,
-        backgroundColor: "rgb(0, 0, 0 ,0)", //theme.palette.secondary.light,
+        backgroundColor: "rgb(0, 0, 0 ,0)",
         border: "0px",
         boxShadow: "none",
         color: "black",
@@ -28,8 +28,10 @@ const useStyles = makeStyles(theme => ({
         textAlign: "center",
     },
     header: {
-        backgroundColor: theme.palette.secondary.light,
+        backgroundColor: theme.palette.primary.light,
+        color: theme.palette.common.white,
     },
+
 }));
 
 export const EnableAreas = () => {
@@ -64,13 +66,17 @@ export const EnableAreas = () => {
             <TableContainer className={cls.container}>
                 <Table component={Paper} className={cls.paper}>
                     <TableHead>
-                        <TableRow className={cls.header}>
+                        <TableRow className={classNames(cls.header)}>
                             <TableCell></TableCell>
                             <TableCell className={classNames(cls.center)}>
-                                <Typography variant="h4">Area Name</Typography>
+                                <PalavyrText className={cls.header} variant="h4">
+                                    Area Name
+                                </PalavyrText>
                             </TableCell>
                             <TableCell className={classNames(cls.center)}>
-                                <Typography variant="h4">Status</Typography>
+                                <PalavyrText className={cls.header} variant="h4">
+                                    Status
+                                </PalavyrText>
                             </TableCell>
                         </TableRow>
                     </TableHead>

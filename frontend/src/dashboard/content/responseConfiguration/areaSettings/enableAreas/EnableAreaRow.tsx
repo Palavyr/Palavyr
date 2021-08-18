@@ -19,7 +19,8 @@ const useStyles = makeStyles(theme => ({
         justifyContent: "center",
     },
     row: (props: styleProps) => ({
-        backgroundColor: props.isEnabled ? theme.palette.success.light : "grey",
+        backgroundColor: props.isEnabled ? theme.palette.success.light : theme.palette.grey[300],
+        borderTop: `10px solid ${theme.palette.background.default}`,
     }),
     wide: {
         minWidth: "150px",

@@ -7,11 +7,16 @@ import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { PalavyrDemoWidget } from "./DemoWidget";
 
 import { useContext } from "react";
+import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
+import { Align } from "dashboard/layouts/positioning/Align";
 
 const useStyles = makeStyles(theme => ({
     paper: {
         padding: theme.spacing(5),
         marginTop: theme.spacing(3),
+    },
+    button: {
+        marginBottom: "1rem",
     },
 }));
 
@@ -58,6 +63,9 @@ export const ChatDemoPage = () => {
                     {apiKey && <PalavyrDemoWidget preCheckErrors={preCheckErrors} apiKey={apiKey} iframeRefreshed={iframeRefreshed} />}
                 </Grid>
             </Grid>
+            <Align>
+                <SinglePurposeButton classes={cls.button} variant="outlined" color="primary" buttonText="Reload" onClick={() => window.location.reload()} />
+            </Align>
         </Paper>
     );
 };
