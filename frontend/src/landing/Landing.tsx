@@ -11,12 +11,15 @@ import { Align } from "dashboard/layouts/positioning/Align";
 import { LandingWrapper } from "./components/LandingWrapper";
 import { LangingPageTitleContent } from "./branding/headerTitleContent/LandingPageTitleContent";
 import { LineSpacer } from "@common/components/typography/LineSpacer";
+import { LandingSpotlight } from "./components/ConversationDesignerCallout/ConversationDesignerCallout";
+import LandingImageOne from "./landingImages/nodes-3.gif";
+import LandingImageTwo from "./landingImages/nodes-4.gif";
 
 AOS.init({
     duration: 1000,
 });
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     wrapper: {
         backgroundColor: theme.palette.common.white,
         overflowX: "hidden",
@@ -92,6 +95,10 @@ export const LandingPage = () => {
                             <IFrame widgetUrl={widgetUrl} apiKey={landingWidgetApiKey} iframeRefreshed={true} preCheckErrors={[]} demo={false} shadow={true} />
                         </Align>
                     </div>
+                    <GreenStrip />
+                    <LandingSpotlight text="Intuitive Conversation Design" imgSrc={LandingImageOne} />
+                    <GreenStrip />
+                    <LandingSpotlight text="Transparent Pricing Strategies" imgSrc={LandingImageTwo} />
                     <GreenStrip />
                     <PricingSection />
                 </>

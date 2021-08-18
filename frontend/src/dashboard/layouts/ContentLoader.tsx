@@ -39,7 +39,6 @@ export const ContentLoader = ({ open, children }: IContentLoader) => {
         <main id={MAIN_CONTENT_DIV_ID} className={cls.content}>
             <div className={cls.toolbar} />
             {/* {isDev && <DevStagingStrip show={show} setShow={setShow} />} */}
-            {!show && <YellowStrip />}
             {children}
         </main>
     );
