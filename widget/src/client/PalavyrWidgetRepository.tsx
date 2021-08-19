@@ -1,6 +1,6 @@
 import {
     AreaTable,
-    CompleteConverationDetails,
+    CompleteConverationDetails as ConvoRecord,
     ConversationUpdate,
     DynamicResponse,
     KeyValues,
@@ -31,7 +31,7 @@ export class PalavyrWidgetRepository {
         areas: (secretKey: SecretKey) => `widget/areas?key=${secretKey}`,
         newConvo: (secretKey: SecretKey, areaId: string) => `widget/${areaId}/create?key=${secretKey}`,
         replyUpdate: (secretKey: SecretKey) => `widget/conversation?key=${secretKey}`,
-        completeConvo: (secretKey: SecretKey) => `widget/complete?key=${secretKey}`,
+        updateConvoRecord: (secretKey: SecretKey) => `widget/record?key=${secretKey}`,
         confirmationEmail: (secretKey: SecretKey, areaIdentifier: string) => `widget/area/${areaIdentifier}/email/send?key=${secretKey}`,
         fallbackEmail: (secretKey: SecretKey, areaIdentifier: string) => `widget/area/${areaIdentifier}/email/fallback/send?key=${secretKey}`,
         internalCheck: (secretKey: SecretKey) => `widget/internal-check?key=${secretKey}`,
@@ -56,7 +56,7 @@ export class PalavyrWidgetRepository {
                     CurrentDynamicResponseState: currentDynamicResponseState,
                 }),
             ReplyUpdate: async (update: ConversationUpdate) => this.client.post(this.Routes.replyUpdate(this.secretKey), update),
-            CompletedConversation: async (completeConvo: CompleteConverationDetails) => this.client.post(this.Routes.completeConvo(this.secretKey), completeConvo),
+            UpdateConvoRecord: async (updatedConvoRecord: Partial<ConvoRecord>) => this.client.post(this.Routes.updateConvoRecord(this.secretKey), updatedConvoRecord),
         },
 
         Send: {

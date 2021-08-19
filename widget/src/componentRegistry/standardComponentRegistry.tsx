@@ -434,7 +434,7 @@ export class StandardComponents {
             const response = await client.Widget.Send.ConfirmationEmail(areaId, email, name, phone, numIndividuals, dynamicResponses, keyvalues, convoId);
             if (response.result) {
                 const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
-                await client.Widget.Post.CompletedConversation(completeConvo);
+                await client.Widget.Post.UpdateConvoRecord(completeConvo);
             }
             return response;
         };
@@ -549,7 +549,7 @@ export class StandardComponents {
                 const response = await client.Widget.Send.FallbackEmail(areaId, email, name, phone, convoId);
                 if (response.result) {
                     const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone, true);
-                    await client.Widget.Post.CompletedConversation(completeConvo);
+                    await client.Widget.Post.UpdateConvoRecord(completeConvo);
                 }
                 return response;
             };

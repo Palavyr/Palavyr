@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Palavyr.Core.Data;
@@ -9,9 +10,10 @@ using Palavyr.Core.Data;
 namespace Palavyr.Core.Data.Migrations.ConvoMigrations
 {
     [DbContext(typeof(ConvoContext))]
-    partial class ConvoContextModelSnapshot : ModelSnapshot
+    [Migration("20210819144335_RenameConvoTablesAndAddIsDeleted")]
+    partial class RenameConvoTablesAndAddIsDeleted
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,9 +83,6 @@ namespace Palavyr.Core.Data.Migrations.ConvoMigrations
                         .HasColumnType("text");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsFallback")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")

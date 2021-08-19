@@ -12,9 +12,10 @@ import { LocaleSelector } from "./FormInputs/LocaleSelector";
 import { PhoneForm } from "./FormInputs/PhoneForm";
 import { useSelector } from "react-redux";
 import { GlobalState, LocaleMap, LocaleMapItem, SetState } from "@Palavyr-Types";
-import { setRegionContext, closeUserDetails } from "@store-dispatcher";
+import { setRegionContext, closeUserDetails, getContextProperties } from "@store-dispatcher";
 import { INVALID_PHONE, INVALID_EMAIL, INVALID_NAME } from "./UserDetailsCheck";
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
+import { ConvoContextProperties } from "componentRegistry/registry";
 
 export interface CollectDetailsFormProps {
     chatStarted: boolean;
@@ -85,10 +86,22 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, setKickoff }: 
         setRegionContext(newOption.localeId);
     };
 
-    const onFormSubmit = (e: { preventDefault: () => void }) => {
+    const onFormSubmit = async (e: { preventDefault: () => void }) => {
         e.preventDefault();
         setKickoff(true);
         setChatStarted(true);
+
+        const contextProperties = getContextProperties();
+
+        const name = contextProperties[ConvoContextProperties.name];
+        const phone = contextProperties[ConvoContextProperties.phoneNumber];
+        const email = contextProperties[ConvoContextProperties.emailAddress];
+
+        await client.Widget.Post.UpdateConvoRecord({
+            Name: name,
+            PhoneNumber: phone,
+            Email: email,
+        });
         closeUserDetails();
     };
 
