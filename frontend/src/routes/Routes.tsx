@@ -86,9 +86,9 @@ const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Elem
         return (
             <AuthContext.Provider value={{ isActive: Auth.accountIsActive, isAuthenticated: Auth.accountIsAuthenticated }}>
                 <DashboardLayout helpComponent={helpComponent}>
-                    {/* <GA4R code="G-9RFNBGK7HW"> */}
-                    <ContentComponent />
-                    {/* </GA4R> */}
+                    <GA4R code="G-9RFNBGK7HW">
+                        <ContentComponent />
+                    </GA4R>
                 </DashboardLayout>
             </AuthContext.Provider>
         );
