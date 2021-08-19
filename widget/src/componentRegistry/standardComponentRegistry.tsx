@@ -60,9 +60,6 @@ export class StandardComponents {
                         const name = contextProperties[ConvoContextProperties.name];
                         const phone = contextProperties[ConvoContextProperties.phoneNumber];
                         const email = contextProperties[ConvoContextProperties.emailAddress];
-                        const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
-
-                        await client.Widget.Post.CompletedConversation(completeConvo);
                     }
                 })();
 
@@ -551,7 +548,7 @@ export class StandardComponents {
 
                 const response = await client.Widget.Send.FallbackEmail(areaId, email, name, phone, convoId);
                 if (response.result) {
-                    const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
+                    const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone, true);
                     await client.Widget.Post.CompletedConversation(completeConvo);
                 }
                 return response;
@@ -599,8 +596,6 @@ export class StandardComponents {
 
             useEffect(() => {
                 setTimeout(async () => {
-                    const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone, false);
-                    await client.Widget.Post.CompletedConversation(completeConvo);
                     responseAction(node, child, nodeList, client, convoId, null);
                 }, 1500);
             }, []);

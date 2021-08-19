@@ -14,7 +14,7 @@ namespace Palavyr.Core.Services.ConversationServices
     public interface ICompletedConversationRetriever
     {
         Task<Enquiry[]> RetrieveCompletedConversations(string accountId);
-        Enquiry MapEnquiryToResponse(CompletedConversation conversation, string accountId);
+        Enquiry MapConvoWithEmailToResponse(ConversationRecord conversationRecord, string accountId);
     }
 
     public class CompletedConversationRetriever : ICompletedConversationRetriever
@@ -31,35 +31,37 @@ namespace Palavyr.Core.Services.ConversationServices
             this.logger = logger;
         }
 
+        // Completed means that we've reached the end - the user let all of the messages play out
+        // A subset of these will have emails
         public async Task<Enquiry[]> RetrieveCompletedConversations(string accountId)
         {
-            var completedConversations = await convoContext
-                .CompletedConversations
+            var conversationRecords = await convoContext
+                .ConversationRecords
                 .Where(row => row.AccountId == accountId)
                 .ToListAsync();
 
-            if (completedConversations.Count() == 0)
+            if (conversationRecords.Count() == 0)
             {
                 return new List<Enquiry>().ToArray();
             }
 
-            return FormatEnquiresForDashboard(completedConversations, accountId);
+            return FormatEnquiresForDashboard(conversationRecords, accountId);
         }
 
-        private Enquiry[] FormatEnquiresForDashboard(List<CompletedConversation> completedConversation, string accountId)
+        private Enquiry[] FormatEnquiresForDashboard(List<ConversationRecord> conversationRecords, string accountId)
         {
             var enquiries = new List<Enquiry>();
 
-            foreach (var completedConvo in completedConversation)
+            foreach (var conversationRecord in conversationRecords)
             {
                 try
                 {
-                    var completeEnquiry = MapEnquiryToResponse(completedConvo, accountId);
+                    var completeEnquiry = MapConvoWithEmailToResponse(conversationRecord, accountId);
                     enquiries.Add(completeEnquiry);
                 }
                 catch (Exception ex)
                 {
-                    logger.LogDebug($"Couldn't find the file: {completedConvo.ResponsePdfId}");
+                    logger.LogDebug($"Couldn't find the file: {conversationRecord.ResponsePdfId}");
                     logger.LogDebug($"Message: {ex.Message}");
                 }
             }
@@ -67,12 +69,12 @@ namespace Palavyr.Core.Services.ConversationServices
             return enquiries.ToArray();
         }
 
-        public Enquiry MapEnquiryToResponse(CompletedConversation conversation, string accountId)
+        public Enquiry MapConvoWithEmailToResponse(ConversationRecord conversationRecord, string accountId)
         {
-            var fileId = conversation.ResponsePdfId;
+            var fileId = conversationRecord.ResponsePdfId;
             FileLinkReference? linkReference;
             if (!string.IsNullOrEmpty(fileId))
-            { 
+            {
                 linkReference = FileLinkReference.CreateLink("Response PDF", fileId, fileId + ".pdf");
             }
             else
@@ -81,25 +83,25 @@ namespace Palavyr.Core.Services.ConversationServices
             }
 
             var hasResponse = linkReference != null;
-            var enquiry = BindToEnquiry(conversation, linkReference, hasResponse);
+            var enquiry = BindToEnquiry(conversationRecord, linkReference, hasResponse);
             return enquiry;
         }
 
-        private static Enquiry BindToEnquiry(CompletedConversation conversation, FileLinkReference? linkReference, bool hasResponse)
+        private static Enquiry BindToEnquiry(ConversationRecord conversationRecord, FileLinkReference? linkReference, bool hasResponse)
         {
             return new Enquiry
             {
-                Id = conversation.Id,
-                ConversationId = conversation.ConversationId,
+                Id = conversationRecord.Id,
+                ConversationId = conversationRecord.ConversationId,
                 LinkReference = linkReference,
-                TimeStamp = conversation.TimeStamp.ToString(),
-                AccountId = conversation.AccountId,
-                AreaName = conversation.AreaName,
-                EmailTemplateUsed = conversation.EmailTemplateUsed,
-                Seen = conversation.Seen,
-                Name = conversation.Name,
-                Email = conversation.Email,
-                PhoneNumber = conversation.PhoneNumber,
+                TimeStamp = conversationRecord.TimeStamp.ToString(),
+                AccountId = conversationRecord.AccountId,
+                AreaName = conversationRecord.AreaName,
+                EmailTemplateUsed = conversationRecord.EmailTemplateUsed,
+                Seen = conversationRecord.Seen,
+                Name = conversationRecord.Name,
+                Email = conversationRecord.Email,
+                PhoneNumber = conversationRecord.PhoneNumber,
                 HasResponse = hasResponse
             };
         }

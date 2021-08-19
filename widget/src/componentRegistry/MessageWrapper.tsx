@@ -30,7 +30,6 @@ const useStyles = makeStyles(theme => ({
     messageText: (props: StyleProps) => makeChatBodyColor(props),
     layout: {
         textAlign: "left",
-        // overflowX: "scroll",
     },
     wrapper: {
         marginLeft: "0.2rem",

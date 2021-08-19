@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { useHistory } from "react-router-dom";
 import { Divider, makeStyles } from "@material-ui/core";
-import { AuthContext } from "../DashboardContext";
+import { AuthContext, DashboardContext } from "../DashboardContext";
 import { ConfigureSection } from "./sections/ConfigureSection";
 import { ReviewSection } from "./sections/ReviewSection";
 import { BillingSection } from "./sections/BillingSection";
@@ -26,7 +26,6 @@ const useStyles = makeStyles(theme => ({
 export const SideBarMenu = memo(({ areaNameDetails, menuOpen }: ISideBarMenu) => {
     const history = useHistory();
     const { isActive } = React.useContext(AuthContext);
-
     const currentPage = history.location.pathname + history.location.search;
     const cls = useStyles();
 

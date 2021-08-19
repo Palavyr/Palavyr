@@ -44,9 +44,25 @@ export const BillingSection = memo(({ isActive, menuOpen }: BillingSectionProps)
         <List>
             <SidebarSectionHeader menuOpen={menuOpen} className={"billing-sidebar-tour"} title="Billing" onClick={() => setBillingOpen(!billingOpen)} currentState={billingOpen} />
             <Collapse in={billingOpen} timeout="auto" unmountOnExit>
-                {planTypeMeta && planTypeMeta.isFreePlan && <SidebarLinkItem text="Subscribe" isActive={isActive} onClick={subscribeOnClick} IconComponent={<SubscriptionsIcon className={cls.icon} />} />}
+                {planTypeMeta && planTypeMeta.isFreePlan && (
+                    <SidebarLinkItem
+                        toolTipText="Purchase A Subscription"
+                        menuOpen={menuOpen}
+                        text="Subscribe"
+                        isActive={isActive}
+                        onClick={subscribeOnClick}
+                        IconComponent={<SubscriptionsIcon className={cls.icon} />}
+                    />
+                )}
                 {planTypeMeta && !planTypeMeta.isFreePlan && (
-                    <SidebarLinkItem text="Manage" isActive={isActive || !planTypeMeta.isFreePlan} onClick={createCustomerPortalSession} IconComponent={<PaymentIcon className={cls.icon} />} />
+                    <SidebarLinkItem
+                        toolTipText="Manage Your Subscription"
+                        menuOpen={menuOpen}
+                        text="Manage"
+                        isActive={isActive || !planTypeMeta.isFreePlan}
+                        onClick={createCustomerPortalSession}
+                        IconComponent={<PaymentIcon className={cls.icon} />}
+                    />
                 )}
             </Collapse>
         </List>

@@ -5,7 +5,7 @@ namespace Palavyr.Core.Data.Setup.SeedData
 {
     public class DevSeedData : BaseSeedData
     {
-        public List<CompletedConversation> CompleteConversations { get; set; } = new List<CompletedConversation>();
+        public List<ConversationRecord> CompleteConversations { get; set; } = new List<ConversationRecord>();
 
         public DevSeedData(string accountId, string defaultEmail) : base(accountId, defaultEmail)
         {

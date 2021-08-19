@@ -9,6 +9,7 @@ using Palavyr.Core.Data;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 
 namespace Palavyr.Core.Repositories

@@ -78,6 +78,7 @@ export type CompleteConverationDetails = {
     Email: string;
     PhoneNumber: string;
     HasResponse: boolean;
+    Fallback: boolean;
 };
 
 export type PreCheckResult = {

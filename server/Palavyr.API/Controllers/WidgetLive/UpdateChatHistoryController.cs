@@ -20,10 +20,10 @@ namespace Palavyr.API.Controllers.WidgetLive
         }
 
         [HttpPost("widget/conversation")]
-        public async Task<IActionResult> Modify([FromHeader] string accountId, ConversationUpdate update)
+        public async Task<IActionResult> Modify([FromHeader] string accountId, ConversationHistory history)
         {
-            var conversationUpdate = update.CreateFromPartial(accountId);
-            convoContext.Conversations.Add(conversationUpdate);
+            var conversationUpdate = history.CreateFromPartial(accountId);
+            convoContext.ConversationHistories.Add(conversationUpdate);
             await convoContext.SaveChangesAsync();
             return NoContent();
         }

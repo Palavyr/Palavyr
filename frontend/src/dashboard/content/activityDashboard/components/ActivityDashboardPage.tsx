@@ -11,7 +11,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import { ActivityCards } from "../AreaActivityCards.tsx/ActivityCards";
+import { IntentActivityCards } from "../IntentActivityCards.tsx/IntentActivityCards";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -74,13 +74,13 @@ export const ActivityDashboardPage = () => {
             />
             <AppBar position="static" color="default">
                 <Tabs centered value={value} onChange={handleChange} indicatorColor="primary" textColor="primary" variant="scrollable" scrollButtons="auto" aria-label="scrollable auto tabs example">
-                    <Tab label="Area Insights" {...a11yProps(0)} />
-                    <Tab label="Enqiuiry Activity" {...a11yProps(1)} />
+                    <Tab label="Intent Insights" {...a11yProps(0)} />
+                    <Tab label="Enquiry Activity" {...a11yProps(1)} />
                     <Tab label="Weekly Activity" {...a11yProps(2)} />
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                <ActivityCards />
+                <IntentActivityCards />
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <EnquiryActivity />

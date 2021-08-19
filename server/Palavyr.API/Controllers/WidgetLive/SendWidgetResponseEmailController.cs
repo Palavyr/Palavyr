@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AuthenticationServices;
 using Palavyr.Core.Services.EmailService.EmailResponse;
 
@@ -11,12 +12,15 @@ namespace Palavyr.API.Controllers.WidgetLive
 {
     public class SendWidgetResponseEmailController : PalavyrBaseController
     {
+        private readonly IConvoHistoryRepository convoRepository;
         private readonly IResponseEmailSender responseEmailSender;
 
         public SendWidgetResponseEmailController(
+            IConvoHistoryRepository convoRepository,
             IResponseEmailSender responseEmailSender
         )
         {
+            this.convoRepository = convoRepository;
             this.responseEmailSender = responseEmailSender;
         }
 
@@ -32,12 +36,17 @@ namespace Palavyr.API.Controllers.WidgetLive
             CancellationToken cancellationToken
         )
         {
+            var convoRecord = await convoRepository.GetConversationRecordById(emailRequest.ConversationId);
+            var updatedRecord = convoRecord.ApplyEmailRequest(emailRequest);
+            await convoRepository.UpdateConversationRecord(updatedRecord);
+
             var resultResponse = await responseEmailSender.SendEmail(
                 accountId,
                 areaId,
                 emailRequest,
                 cancellationToken
             );
+            await convoRepository.CommitChangesAsync();
             return resultResponse;
         }
     }

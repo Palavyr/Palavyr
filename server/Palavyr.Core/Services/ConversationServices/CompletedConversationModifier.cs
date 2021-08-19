@@ -23,7 +23,7 @@ namespace Palavyr.Core.Services.ConversationServices
 
         public async Task<Enquiry[]> ModifyCompletedConversation(string accountId, string conversationId)
         {
-            var convo = await convoContext.CompletedConversations.SingleOrDefaultAsync(row => row.AccountId == accountId && row.ConversationId == conversationId);
+            var convo = await convoContext.ConversationRecords.SingleOrDefaultAsync(row => row.AccountId == accountId && row.ConversationId == conversationId);
             convo.Seen = !convo.Seen;
             await convoContext.SaveChangesAsync();
 

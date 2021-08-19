@@ -10,7 +10,7 @@ import { Footer } from "@landing/components/footer/Footer";
 import { Sliver } from "@landing/components/sliver/Sliver";
 import { BottomStrip } from "@landing/components/footer/BottomStrip";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     wrapper: {
         backgroundColor: theme.palette.common.white,
         overflowX: "hidden",

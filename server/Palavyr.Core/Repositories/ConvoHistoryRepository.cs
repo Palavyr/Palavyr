@@ -1,6 +1,9 @@
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
+using Palavyr.Core.Models.Conversation.Schemas;
 
 namespace Palavyr.Core.Repositories
 {
@@ -14,10 +17,26 @@ namespace Palavyr.Core.Repositories
             this.convoContext = convoContext;
             this.logger = logger;
         }
-        
+
         public async Task CommitChangesAsync()
         {
             await convoContext.SaveChangesAsync();
+        }
+
+        public async Task CreateNewConversationRecord(ConversationRecord newConversationRecord)
+        {
+            await convoContext.ConversationRecords.AddAsync(newConversationRecord);
+        }
+
+        public async Task<ConversationRecord> GetConversationRecordById(string conversationId)
+        {
+            return await convoContext.ConversationRecords.SingleAsync(x => x.ConversationId == conversationId);
+        }
+
+        public async Task<ConversationRecord> UpdateConversationRecord(ConversationRecord newConversationRecord)
+        {
+            var updatedRecord = convoContext.Update(newConversationRecord);
+            return updatedRecord.Entity;
         }
     }
 }

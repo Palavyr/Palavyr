@@ -17,7 +17,7 @@ export const getOrderedChildNodes = (childrenIDs: string, nodeList: WidgetNodes)
     return children;
 };
 
-export const assembleCompletedConvo = (conversationId: string, areaIdentifier: string, name: string, email: string, PhoneNumber: string, hasResponse: boolean = true): CompleteConverationDetails => {
+export const assembleCompletedConvo = (conversationId: string, areaIdentifier: string, name: string, email: string, PhoneNumber: string, hasResponse: boolean = true, fallback: boolean = false): CompleteConverationDetails => {
     return {
         ConversationId: conversationId,
         AreaIdentifier: areaIdentifier,
@@ -25,6 +25,7 @@ export const assembleCompletedConvo = (conversationId: string, areaIdentifier: s
         Email: email,
         PhoneNumber: PhoneNumber,
         HasResponse: hasResponse,
+        Fallback: fallback
     };
 };
 

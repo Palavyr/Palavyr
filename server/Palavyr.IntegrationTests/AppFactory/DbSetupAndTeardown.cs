@@ -41,11 +41,11 @@ namespace Palavyr.IntegrationTests.AppFactory
 
         public static void ResetConvoContext(this ConvoContext convoContext)
         {
-            var convos = convoContext.Conversations.ToArray();
-            var completed = convoContext.CompletedConversations.ToArray();
+            var convos = convoContext.ConversationHistories.ToArray();
+            var completed = convoContext.ConversationRecords.ToArray();
 
-            convoContext.Conversations.RemoveRange(convos);
-            convoContext.CompletedConversations.RemoveRange(completed);
+            convoContext.ConversationHistories.RemoveRange(convos);
+            convoContext.ConversationRecords.RemoveRange(completed);
         }
 
         public static void ResetDashDb(this DashContext dashContext)

@@ -11,6 +11,7 @@ namespace Palavyr.Core.Models.Resources.Requests
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public bool HasResponse { get; set; }
+        public bool Fallback { get; set; }
         
         public CompleteConversation() { }
         
@@ -45,7 +46,7 @@ namespace Palavyr.Core.Models.Resources.Requests
                 phone);
         }
 
-        public static CompletedConversation BindReceiverToSchemaType(
+        public static ConversationRecord BindReceiverToSchemaType(
             string conversationId, 
             string accountId, 
             string areaName, 
@@ -53,11 +54,13 @@ namespace Palavyr.Core.Models.Resources.Requests
             string name, 
             string email, 
             string phoneNumber,
-            bool hasResponse)
+            bool hasResponse,
+            bool fallback,
+            string areaIdentifier)
         {
             var timeStamp = DateTime.Now;
 
-            var completedConversation = CompletedConversation.CreateNew(
+            var completedConversation = ConversationRecord.CreateNew(
                 conversationId,
                 hasResponse ? conversationId : "",
                 timeStamp,
@@ -67,7 +70,8 @@ namespace Palavyr.Core.Models.Resources.Requests
                 false,
                 name,
                 email,
-                phoneNumber);
+                phoneNumber,
+                areaIdentifier);
             return completedConversation;
         }
     }

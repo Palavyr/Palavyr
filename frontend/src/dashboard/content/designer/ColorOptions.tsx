@@ -18,7 +18,7 @@ export interface WidgetColorOptionsProps {
     setWidgetPreferences: SetState<WidgetPreferences>;
 }
 
-export const useStyles = makeStyles(theme => ({
+export const widgetStyles = makeStyles(theme => ({
     gridList: {
         display: "flex",
         flexDirection: "row",
@@ -34,7 +34,7 @@ export const useStyles = makeStyles(theme => ({
 }));
 
 export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: WidgetColorOptionsProps) => {
-    const cls = useStyles();
+    const cls = widgetStyles();
 
     const rowOne = (widgetPreferences: WidgetPreferences): ColorPickerType[] => {
         return [

@@ -1,7 +1,7 @@
 import { AreaNameDetail, AreaNameDetails, Enquiries, EnquiryRow } from "@Palavyr-Types";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { useStyles } from "../designer/ColorOptions";
+import { widgetStyles } from "../designer/ColorOptions";
 import { Line } from "react-chartjs-2";
 import { DataPlot } from "./components/DataPlot";
 import seedrandom from "seedrandom";
@@ -123,7 +123,7 @@ type PlotData = {
 
 export const DailyEnquiriesWeekly = () => {
     const { repository, areaNameDetails } = useContext(DashboardContext);
-    const cls = useStyles();
+    const cls = widgetStyles();
 
     const [data, setData] = useState<PlotData>();
     const [options, setOptions] = useState<EnqDatasetOptions>();
@@ -148,11 +148,24 @@ export const DailyEnquiriesWeekly = () => {
         loadEnquiries();
     }, [loadEnquiries]);
 
+    const hasData = () => {
+        if (data === undefined) return false;
+        const sumAllData = data => {
+            const r: number[] = [];
+            data.datasets.forEach(x => {
+                r.push(sum(x.data));
+            });
+            return sum(r);
+        };
+
+        return data.labels && data.labels.length > 0 && data.datasets && data.datasets.length > 0 && sumAllData(data) > 0;
+    };
+
     return (
         <DataPlot
             title="Activity over the last 7 days"
             subtitle="Learn about the daily activity of your widget, broken down by area"
-            hasData={data !== undefined && data && data.datasets.length > 0} /*&& sum(data.datasets.map(x => sum(x.data))) > 0 */
+            hasData={hasData} /*&& sum(data.datasets.map(x => sum(x.data))) > 0 */
             loadingSpinner={loadingspinner}
         >
             <Line data={data} options={options} />

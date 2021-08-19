@@ -53,16 +53,50 @@ export const ReviewSection = memo(({ isActive, menuOpen }: ReviewSectionProps) =
         <List className={"review-sidebar-tour"}>
             <SidebarSectionHeader menuOpen={menuOpen} title="Review" onClick={() => setReviewOpen(!reviewOpen)} currentState={reviewOpen} />
             <Collapse in={reviewOpen} timeout="auto" unmountOnExit>
-                <SidebarLinkItem className={"activity-sidebar-tour"} text="Activity" isActive={isActive} onClick={dashboardOnClick} IconComponent={<TrendingUpIcon className={cls.icon} />} />
-                <SidebarLinkItem className={"check-enquiries-sidebar-tour"} text="Check Enquiries" isActive={isActive} onClick={enquiriesOnClick} IconComponent={<InboxIcon className={cls.icon} />}>
+                <SidebarLinkItem
+                    toolTipText="Chat bot activity"
+                    menuOpen={menuOpen}
+                    className={"activity-sidebar-tour"}
+                    text="Activity"
+                    isActive={isActive}
+                    onClick={dashboardOnClick}
+                    IconComponent={<TrendingUpIcon className={cls.icon} />}
+                />
+                <SidebarLinkItem
+                    toolTipText="Enquiries"
+                    menuOpen={menuOpen}
+                    className={"check-enquiries-sidebar-tour"}
+                    text="Enquiries"
+                    isActive={isActive}
+                    onClick={enquiriesOnClick}
+                    IconComponent={<InboxIcon className={cls.icon} />}
+                >
                     <Badge className={"check-enquiries-badge-sidebar-tour"} showZero={false} badgeContent={unseenNotifications} color="secondary">
                         <NotificationsIcon fontSize="small" />
                     </Badge>
                 </SidebarLinkItem>
 
-                <SidebarLinkItem className={"chat-designer-link-tour"} text="Chat Designer" isActive={isActive} onClick={designerOnClick} IconComponent={<BrushIcon className={cls.icon} />} />
-                <SidebarLinkItem className={"chat-demo-link-tour"} text="Chat Demo" isActive={isActive} onClick={chatDemoOnClick} IconComponent={<CompareIcon className={cls.icon} />} />
                 <SidebarLinkItem
+                    toolTipText="Widget Designer"
+                    menuOpen={menuOpen}
+                    className={"chat-designer-link-tour"}
+                    text="Chat Designer"
+                    isActive={isActive}
+                    onClick={designerOnClick}
+                    IconComponent={<BrushIcon className={cls.icon} />}
+                />
+                <SidebarLinkItem
+                    toolTipText="Chat Bot Demo"
+                    menuOpen={menuOpen}
+                    className={"chat-demo-link-tour"}
+                    text="Chat Bot Demo"
+                    isActive={isActive}
+                    onClick={chatDemoOnClick}
+                    IconComponent={<CompareIcon className={cls.icon} />}
+                />
+                <SidebarLinkItem
+                    toolTipText="Image Uploads"
+                    menuOpen={menuOpen}
                     className={"uploads-sidebar-tour"}
                     disabled={planTypeMeta && !planTypeMeta.allowedImageUpload}
                     text="Uploads"

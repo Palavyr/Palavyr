@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 
 namespace Palavyr.Core.Repositories
