@@ -6,19 +6,11 @@ import { cloneDeep } from "lodash";
 import { ExpandableTextBox } from "@common/components/ExpandableTextBox";
 import { DynamicTableConfiguration } from "./tables/dynamicTable/DynamicTableConfiguration";
 import { StaticTableConfiguration } from "./tables/statictable/StaticFeeTableConfiguration";
-import { makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { OsTypeToggle } from "../areaSettings/enableAreas/OsTypeToggle";
 import { useContext } from "react";
-
-const useStyles = makeStyles(() => ({
-    titleText: {
-        textAlign: "center",
-        fontWeight: "bold",
-    },
-}));
 
 const getStaticTableValidationResult = (staticTables: StaticTableMetas): StaticTableValidationResult => {
     let validationResult = true;
@@ -81,9 +73,9 @@ export const ResponseConfiguration = () => {
     };
 
     const tableSaver = async () => {
-        staticTables.forEach((table) => {
+        staticTables.forEach(table => {
             table.id = null;
-            table.staticTableRows.forEach((row) => {
+            table.staticTableRows.forEach(row => {
                 row.id = null;
                 row.fee.id = null;
             });

@@ -120,10 +120,6 @@ export const ConfigurationMinimap = () => {
             className={cls.minimap}
             nodeStrokeColor={n => {
                 return "black";
-                // if (n.type === "input") return "#0041d0";
-                // if (n.type === "nodeflowinterface") return initBgColor;
-                // if (n.type === "output") return "#ff0072";
-                // return "gray";
             }}
             nodeColor={n => {
                 if (n.type === "nodeflowinterface") return initBgColor;

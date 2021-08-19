@@ -12,8 +12,10 @@ import { LandingWrapper } from "./components/LandingWrapper";
 import { LangingPageTitleContent } from "./branding/headerTitleContent/LandingPageTitleContent";
 import { LineSpacer } from "@common/components/typography/LineSpacer";
 import { LandingSpotlight } from "./components/ConversationDesignerCallout/ConversationDesignerCallout";
-import LandingImageOne from "./landingImages/nodes-3.gif";
+import LandingImageOne from "./landingImages/editor-1.gif";
 import LandingImageTwo from "./landingImages/nodes-4.gif";
+import DesignerOne from "./landingImages/designer-1.gif";
+import FineControlOne from "./landingImages/finecontrol-1.gif";
 
 AOS.init({
     duration: 1000,
@@ -99,6 +101,10 @@ export const LandingPage = () => {
                     <LandingSpotlight text="Intuitive Conversation Design" imgSrc={LandingImageOne} />
                     <GreenStrip />
                     <LandingSpotlight text="Transparent Pricing Strategies" imgSrc={LandingImageTwo} />
+                    <GreenStrip />
+                    <LandingSpotlight text="Branding Customization" imgSrc={DesignerOne} />
+                    <GreenStrip />
+                    <LandingSpotlight text="Fine Grain Control" imgSrc={FineControlOne} />
                     <GreenStrip />
                     <PricingSection />
                 </>

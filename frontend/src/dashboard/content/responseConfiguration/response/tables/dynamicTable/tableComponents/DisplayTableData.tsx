@@ -1,4 +1,5 @@
 import { isDevelopmentStage } from "@api-client/clientUtils";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { TableData } from "@Palavyr-Types";
 import React from "react";
 
@@ -10,13 +11,17 @@ export interface IDisplayTableData {
 export const DisplayTableData = ({ tableData, properties }: IDisplayTableData) => {
     return (
         <>
-            {isDevelopmentStage() && tableData && tableData.map((x: any, index: number) => {
-                return (
-                    <div key={index} style={{ fontSize: "14pt" }}>
-                        <pre>{JSON.stringify(x, properties, "")}</pre>
-                    </div>
-                );
-            })}
+            {isDevelopmentStage() &&
+                tableData &&
+                tableData.map((x: any, index: number) => {
+                    return (
+                        <div key={index} style={{ position: "inherit",  fontSize: "14pt" }}>
+                            <PalavyrText noWrap component="pre">
+                                {JSON.stringify(x, properties, "")}
+                            </PalavyrText>
+                        </div>
+                    );
+                })}
         </>
     );
 };
