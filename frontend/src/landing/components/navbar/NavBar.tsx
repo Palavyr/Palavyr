@@ -84,6 +84,7 @@ export const NavBar = memo(({ openRegisterDialog, openLoginDialog, handleMobileD
                     <Align>
                         <BrandName />
                     </Align>
+
                     <div>
                         <IconButton className={cls.menuButton} onClick={handleMobileDrawerOpen} aria-label="Open Navigation">
                             <MenuIcon className={cls.menuButton} color="primary" />

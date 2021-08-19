@@ -1,4 +1,3 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { IPalavyrNode } from "../../Contracts";
 import NodeChanger from "./NodeChanger";
@@ -9,8 +8,11 @@ export class NodeUpdater {
         currentNode.UpdateTree();
     }
 
-    public async updateText(currentNode: IPalavyrNode, textUpdate: string) {
+    public async updateText(currentNode: IPalavyrNode, textUpdate: string, useNewEditor: boolean) {
         currentNode.userText = textUpdate;
+        if (useNewEditor) {
+            currentNode.UpdateTree();
+        }
     }
 
     private updateValueOptions(currentNode: IPalavyrNode, valueOptions: string[], nodeTypeOptions: NodeTypeOptions) {

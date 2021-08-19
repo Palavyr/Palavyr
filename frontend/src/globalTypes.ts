@@ -916,7 +916,7 @@ export interface IConversationTreeContext {
     conversationHistoryPosition: number;
     nodeTypeOptions: NodeTypeOptions;
     showDebugData: boolean;
-}
+    useNewEditor: boolean;}
 
 export type YoutubeVideoResourcePlayer = {
     embedHtml: string;

@@ -17,8 +17,8 @@ const nodeTypes = {
     nodeflowinterface: NodeFlowInterface,
 };
 
-const nodeWidth = 200;
-const nodeHeight = 275;
+const nodeWidth = 400;
+const nodeHeight = 375;
 
 const getLayoutedElements = (elements, direction = "TB") => {
     const dagreGraph = new dagre.graphlib.Graph();
@@ -118,13 +118,8 @@ export const ConfigurationMinimap = () => {
     return (
         <MiniMap
             className={cls.minimap}
-
             nodeStrokeColor={n => {
                 return "black";
-                // if (n.type === "input") return "#0041d0";
-                // if (n.type === "nodeflowinterface") return initBgColor;
-                // if (n.type === "output") return "#ff0072";
-                // return "gray";
             }}
             nodeColor={n => {
                 if (n.type === "nodeflowinterface") return initBgColor;

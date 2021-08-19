@@ -25,7 +25,6 @@ import SaveIcon from "@material-ui/icons/Save";
 import { PalavyrSpeedDial } from "@common/components/speedDial/PalavyrDial";
 import BugReportIcon from "@material-ui/icons/BugReport";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
-import scrollToTop from "@common/utils/scrollToTop";
 
 const MAIN_DIV = `#${MAIN_CONTENT_DIV_ID}`;
 
@@ -242,7 +241,7 @@ export const StructuredConvoTree = () => {
 
     return (
         <div>
-            <ConversationTreeContext.Provider value={{ nodeTypeOptions, setNodes: setTreeWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData }}>
+            <ConversationTreeContext.Provider value={{ nodeTypeOptions, setNodes: setTreeWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData, useNewEditor }}>
                 {!useNewEditor && treeErrors && (
                     <AreaConfigurationHeader
                         divider={treeErrors.anyErrors}
@@ -271,7 +270,7 @@ export const StructuredConvoTree = () => {
                     {linkedNodeList !== undefined &&
                         (useNewEditor ? (
                             <div className={cls.newTreeWrap}>
-                                <PalavyrFlow initialElements={linkedNodeList.compileToNodeFlow()} />
+                                <PalavyrFlow initialElements={cloneDeep(linkedNodeList.compileToNodeFlow())} />
                             </div>
                         ) : (
                             <div className={cls.treeWrap}>

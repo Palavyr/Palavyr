@@ -48,18 +48,20 @@ export interface DataPlotProps {
 export const DataPlot = ({ title, subtitle = "", hasData, loadingSpinner, children }: DataPlotProps) => {
     const cls = useStyles();
 
-    return loadingSpinner ? (
-        <span className={cls.fallback}>
-            <Align>
-                <CircularProgress />
-            </Align>
-        </span>
-    ) : (
-        <Fade>
-            <Card className={cls.plotCard}>
-                <AreaConfigurationHeader title={title} subtitle={subtitle} light divider />
-                {hasData ? children : <NoActivityComponent />}
-            </Card>
-        </Fade>
+    // return loadingSpinner ? (
+    //     <span className={cls.fallback}>
+    //         <Align>
+    //             <CircularProgress />
+    //         </Align>
+    //     </span>
+    // ) : (
+    //     <Fade>
+    return (
+        <Card className={cls.plotCard}>
+            <AreaConfigurationHeader title={title} subtitle={subtitle} light divider />
+            {hasData ? children : <NoActivityComponent />}
+        </Card>
     );
+    // </Fade>
+    // );
 };

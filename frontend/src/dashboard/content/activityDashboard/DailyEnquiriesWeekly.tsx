@@ -53,8 +53,8 @@ const calcualateDailEnquiryByDay = (areaDetails: AreaNameDetails, enquiries: Enq
         const areaDataResult: number[] = [];
         const areaName = detail.areaName;
         const areaEnquiries = enquiries.filter((enq: EnquiryRow) => enq.areaName === areaName);
-        lastSevenDays.forEach((previousDate) => {
-            const enquiriesOnDateInArea = areaEnquiries.filter((enq) => {
+        lastSevenDays.forEach(previousDate => {
+            const enquiriesOnDateInArea = areaEnquiries.filter(enq => {
                 const timeStampDate = new Date(Date.parse(enq.timeStamp)).toDateString();
                 const isEqual = previousDate.toDateString() === timeStampDate;
                 return isEqual;
@@ -83,7 +83,7 @@ const calcualateDailEnquiryByDay = (areaDetails: AreaNameDetails, enquiries: Enq
             y: {
                 ticks: {
                     beginAtZero: true,
-                    callback: function (value) {
+                    callback: function(value) {
                         if (value % 1 === 0) {
                             return value;
                         }
@@ -134,7 +134,7 @@ export const DailyEnquiriesWeekly = () => {
         const { enquiryData, enquiryOptions, lastSevenDays } = calcualateDailEnquiryByDay(areaNameDetails, enquiries);
 
         const plotdata: PlotData = {
-            labels: lastSevenDays.map((x) => x.toDateString()),
+            labels: lastSevenDays.map(x => x.toDateString()),
             datasets: enquiryData,
         };
 
@@ -152,7 +152,7 @@ export const DailyEnquiriesWeekly = () => {
         <DataPlot
             title="Activity over the last 7 days"
             subtitle="Learn about the daily activity of your widget, broken down by area"
-            hasData={data !== undefined && data && data && sum(data.datasets.map(x => sum(x.data))) > 0}
+            hasData={data !== undefined && data && data.datasets.length > 0} /*&& sum(data.datasets.map(x => sum(x.data))) > 0 */
             loadingSpinner={loadingspinner}
         >
             <Line data={data} options={options} />

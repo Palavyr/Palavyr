@@ -8,7 +8,7 @@ import { getRandomColor } from "./DailyEnquiriesWeekly";
 import colorLib from "@kurkle/color";
 import { sum } from "lodash";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     title: {
         padding: "1rem",
     },
@@ -48,15 +48,17 @@ export interface DataPlotProps {
 
 export const transparentize = (value, opacity) => {
     var alpha = opacity === undefined ? 0.5 : 1 - opacity;
-    return colorLib(value).alpha(alpha).rgbString();
+    return colorLib(value)
+        .alpha(alpha)
+        .rgbString();
 };
 
 const calculateRadarData = (areaDetails: AreaNameDetails, enquiries: Enquiries) => {
-    const areas = areaDetails.map((x) => x.areaName);
-    const enquiryAreas = enquiries.map((x) => x.areaName);
+    const areas = areaDetails.map(x => x.areaName);
+    const enquiryAreas = enquiries.map(x => x.areaName);
 
     const counts: number[] = [];
-    areas.forEach((area) => {
+    areas.forEach(area => {
         const singleArea = enquiryAreas.filter((x: string) => x === area);
         counts.push(singleArea.length);
     });
@@ -101,7 +103,7 @@ export const EnquiryActivity = () => {
         <DataPlot
             title="Activity Per Area"
             subtitle="Learn which areas are seeing the most amount of traffic"
-            hasData={data !== undefined && data && data.labels && data.labels.length > 0 && data.datasets && data.datasets.length > 0 && sum(data.datasets[0].data) > 0}
+            hasData={data !== undefined && data && data.labels && data.labels.length > 0 && data.datasets && data.datasets.length > 0 /*&& sum(data.datasets[0].data) > 0 */}
             loadingSpinner={loadingspinner}
         >
             <Radar data={data} options={options} />

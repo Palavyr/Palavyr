@@ -22,11 +22,9 @@ const useStyles = makeStyles(theme => ({
         ...theme.mixins.toolbar,
     },
     content: {
+        width: "100vw",
         flexGrow: 1,
         paddingBottom: theme.spacing(5),
-    },
-    loading: {
-        backgroundColor: yellow[300],
     },
 }));
 
@@ -36,10 +34,9 @@ export const ContentLoader = ({ open, children }: IContentLoader) => {
     const [show, setShow] = useState<boolean>(isDev);
 
     return (
-        <main id={MAIN_CONTENT_DIV_ID} className={cls.content}>
+        <main className={cls.content}>
             <div className={cls.toolbar} />
             {/* {isDev && <DevStagingStrip show={show} setShow={setShow} />} */}
-            {!show && <YellowStrip />}
             {children}
         </main>
     );

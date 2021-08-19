@@ -31,7 +31,7 @@ export const TextNodeEditor = ({ isMultiOptionType, shouldShowMultiOption, isAna
     const [options, setOptions] = useState<string[]>([]);
     const [text, setText] = useState<string>("");
     const [switchState, setSwitchState] = useState<boolean>(true);
-    const { nodeTypeOptions } = useContext(ConversationTreeContext);
+    const { nodeTypeOptions, useNewEditor } = useContext(ConversationTreeContext);
     const { repository } = useContext(DashboardContext);
 
     const cls = useStyles();
@@ -55,7 +55,7 @@ export const TextNodeEditor = ({ isMultiOptionType, shouldShowMultiOption, isAna
     const handleTextOnlyUpdate = async (userText: string) => {
         const areaId = currentNode.palavyrLinkedList.areaId;
         const updatedNode = await repository.Conversations.ModifyConversationNodeText(currentNode.nodeId, areaId, userText);
-        NodeUpdater.updateText(currentNode, updatedNode === null ? userText : updatedNode.text);
+        NodeUpdater.updateText(currentNode, updatedNode === null ? userText : updatedNode.text, useNewEditor);
     };
 
     // MUST use  disableEnforceFocus with the Dialog component to facilitate the CKEditor (HTMLTextEditor)
