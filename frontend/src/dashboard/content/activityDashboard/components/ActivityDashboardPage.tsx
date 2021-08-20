@@ -72,8 +72,8 @@ export const ActivityDashboardPage = () => {
                 title="Widget Activity Dashboard"
                 subtitle="Review the activity of your chatbot! This page is early release, but we've made a couple plots availble as a sneak peak for you!"
             />
-            <AppBar position="static" color="default">
-                <Tabs centered value={value} onChange={handleChange} indicatorColor="primary" textColor="primary" variant="scrollable" scrollButtons="auto" aria-label="scrollable auto tabs example">
+            <AppBar style={{boxShadow: "none"}} position="static" color="default">
+                <Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary" variant="scrollable" scrollButtons="auto" aria-label="scrollable auto tabs example">
                     <Tab label="Intent Insights" {...a11yProps(0)} />
                     <Tab label="Enquiry Activity" {...a11yProps(1)} />
                     <Tab label="Weekly Activity" {...a11yProps(2)} />

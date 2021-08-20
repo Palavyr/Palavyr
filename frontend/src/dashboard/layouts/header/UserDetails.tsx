@@ -12,14 +12,12 @@ import { TOPBAR_MAX_HEIGHT } from "@constants";
 
 const DETAILS_MAX_HEIGHT = TOPBAR_MAX_HEIGHT - 10;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     logwrapper: {
-        // padding: "0px",
-        // margin: "0px",
         maxHeight: `${DETAILS_MAX_HEIGHT}px`,
         border: `1px solid ${theme.palette.info.main}`,
         borderRadius: "8px",
-        boxShadow: theme.shadows[20],
+        boxShadow: theme.shadows[0],
         backgroundColor: theme.palette.success.light,
         "&:hover": {
             backgroundColor: theme.palette.success.main,
