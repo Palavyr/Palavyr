@@ -71,14 +71,15 @@ export type ConversationUpdate = {
     NodeType: string;
 };
 
-export type CompleteConverationDetails = {
+export type ConversationRecordUpdate = {
     ConversationId: string;
     AreaIdentifier: string;
     Name: string;
     Email: string;
     PhoneNumber: string;
-    HasResponse: boolean;
     Fallback: boolean;
+    Locale: string;
+    IsComplete: boolean;
 };
 
 export type PreCheckResult = {
@@ -91,22 +92,18 @@ export type SendEmailResultResponse = {
     result: boolean;
 };
 
-export type LocaleDefinition = {
-    localeId: string;
-    localeCountry: string;
+export type LocaleResource = {
+    name: string;
+    displayName: string;
+    currencySymbol: string;
     supportedLocales: string[];
+    phoneFormat: string;
+    numberDecimalSeparator: string;
+
     localeMap: LocaleMap;
-    localeCurrencySymbol: string;
-    localePhonePattern: string;
 };
 
-export type LocaleMapItem = {
-    localeId: string;
-    countryName: string;
-    phonePattern: string;
-    currencySymbol: string;
-};
-export type LocaleMap = LocaleMapItem[];
+export type LocaleMap = LocaleResource[];
 
 export interface IProgressTheChat {
     node: WidgetNodeResource;

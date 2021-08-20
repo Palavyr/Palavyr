@@ -38,5 +38,21 @@ namespace Palavyr.Core.Repositories
             var updatedRecord = convoContext.Update(newConversationRecord);
             return updatedRecord.Entity;
         }
+
+        public async Task<ConversationRecord[]> GetAllConversationRecords(string accountId)
+        {
+            return await convoContext
+                .ConversationRecords
+                .Where(row => row.AccountId == accountId)
+                .ToArrayAsync();
+        }
+
+        public async Task<ConversationHistory[]> GetConversationById(string conversationId)
+        {
+            return await convoContext
+                .ConversationHistories
+                .Where(x => x.ConversationId == conversationId)
+                .ToArrayAsync();
+        }
     }
 }

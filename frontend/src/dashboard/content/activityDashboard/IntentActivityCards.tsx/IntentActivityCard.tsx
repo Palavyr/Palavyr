@@ -11,33 +11,57 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import AnimatedLines from "../images/animated-lines.gif";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
+import { EnquiryActivtyResource } from "@Palavyr-Types";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     root: {
         maxWidth: 345,
         margin: "1rem",
-        marginLeft: "2rem",
-        marginRight: "2rem",
     },
     paper: {},
     infoContainer: {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-around",
+        alignItems: "flex-end",
     },
-    info: {
+    info: {},
+    sepBar: {
+        height: "2rem",
+        border: `1px solid ${theme.palette.grey[400]}`,
+        borderRadius: "50%",
+        textAlign: "center",
+        margin: "0.2rem",
     },
-});
+    table: {},
+    header: {},
+    row: {},
+}));
 
 export interface ActivityCardProps {
-    areaName: string;
-    count: number;
-    completed: number;
-    emails: number;
+    activityResource: EnquiryActivtyResource;
     onClick?(): void;
 }
 
-export const IntentActivityCard = ({ areaName, count, completed, emails, onClick }: ActivityCardProps) => {
+type MiniTableProps = {
+    header: React.ReactNode;
+    content: React.ReactNode;
+};
+const MiniTable = (props: MiniTableProps) => {
+    const cls = useStyles();
+    return (
+        <table className={cls.table}>
+            <th className={cls.header}>
+                <PalavyrText align="center">{props.header}</PalavyrText>
+            </th>
+            <tr className={cls.row}>
+                <PalavyrText align="center">{props.content}</PalavyrText>
+            </tr>
+        </table>
+    );
+};
+
+export const IntentActivityCard = ({ activityResource, onClick }: ActivityCardProps) => {
     const cls = useStyles();
     return (
         <PalavyrCard className={cls.root}>
@@ -45,24 +69,23 @@ export const IntentActivityCard = ({ areaName, count, completed, emails, onClick
                 <CardMedia component="img" alt="AnimatedLines" height="140" image={AnimatedLines} title="Animated Lines" />
                 <CardContent>
                     <PalavyrText align="center" gutterBottom variant="h5" component="h2">
-                        {areaName}
+                        {activityResource.intentName}
                     </PalavyrText>
                 </CardContent>
             </CardActionArea>
             <CardActions className={cls.infoContainer}>
-                <div className={cls.info}>
-                    <PalavyrText align="center" display="block">Total</PalavyrText>
-                    <PalavyrText align="center" display="block">{count}</PalavyrText>
-                </div>
-                <div className={cls.info}>
-                    <PalavyrText align="center" display="block">Emails</PalavyrText>
-                    <PalavyrText align="center" display="block">{emails}</PalavyrText>
-                </div>
-                <div className={cls.info}>
-                    <PalavyrText align="center" display="block">Completed</PalavyrText>
-                    <PalavyrText align="center" display="block">{completed}</PalavyrText>
-                </div>
+                <MiniTable header="Started" content={activityResource.numRecords} />
+                <div className={cls.sepBar} />
+                <MiniTable header="Emails Sent" content={activityResource.sentEmailCount} />
+                <div className={cls.sepBar} />
+                <MiniTable header="Finished" content={activityResource.completed} />
+                <div className={cls.sepBar} />
+                <MiniTable header="Avg. Completion" content={activityResource.averageIntentCompletion === -1 ? "N/A" : formatAsPercent(activityResource.averageIntentCompletion)} />
             </CardActions>
         </PalavyrCard>
     );
+};
+
+const formatAsPercent = (x: number) => {
+    return `${x.toFixed(2)}%`;
 };

@@ -9,15 +9,15 @@ namespace Palavyr.API.Controllers.Enquiries
     public class DeleteEnquiryController : PalavyrBaseController
     {
         private readonly IEnquiryDeleter enquiryDeleter;
-        private readonly ICompletedConversationRetriever completedConversationRetriever;
+        private readonly IConversationRecordRetriever conversationRecordRetriever;
 
         public DeleteEnquiryController(
             IEnquiryDeleter enquiryDeleter,
-            ICompletedConversationRetriever completedConversationRetriever
+            IConversationRecordRetriever conversationRecordRetriever
         )
         {
             this.enquiryDeleter = enquiryDeleter;
-            this.completedConversationRetriever = completedConversationRetriever;
+            this.conversationRecordRetriever = conversationRecordRetriever;
         }
 
         [HttpPut("enquiries/selected")]
@@ -27,7 +27,7 @@ namespace Palavyr.API.Controllers.Enquiries
             CancellationToken cancellationToken)
         {
             await enquiryDeleter.DeleteEnquiries(accountId, request.FileReferences, cancellationToken);
-            return await completedConversationRetriever.RetrieveCompletedConversations(accountId);
+            return await conversationRecordRetriever.RetrieveConversationRecords(accountId);
         }
     }
 

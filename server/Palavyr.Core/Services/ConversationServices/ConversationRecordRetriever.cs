@@ -3,42 +3,40 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Repositories;
 
 namespace Palavyr.Core.Services.ConversationServices
 {
-    public interface ICompletedConversationRetriever
+    public interface IConversationRecordRetriever
     {
-        Task<Enquiry[]> RetrieveCompletedConversations(string accountId);
+        Task<Enquiry[]> RetrieveConversationRecords(string accountId);
         Enquiry MapConvoWithEmailToResponse(ConversationRecord conversationRecord, string accountId);
     }
 
-    public class CompletedConversationRetriever : ICompletedConversationRetriever
+    public class ConversationRecordRecordRetriever : IConversationRecordRetriever
     {
-        private readonly ConvoContext convoContext;
-        private readonly ILogger<ICompletedConversationRetriever> logger;
+        private readonly IConvoHistoryRepository convoHistoryRepository;
+        private readonly ILogger<IConversationRecordRetriever> logger;
 
-        public CompletedConversationRetriever(
-            ConvoContext convoContext,
-            ILogger<ICompletedConversationRetriever> logger
+        public ConversationRecordRecordRetriever(
+            IConvoHistoryRepository convoHistoryRepository,
+            ILogger<IConversationRecordRetriever> logger
         )
         {
-            this.convoContext = convoContext;
+            this.convoHistoryRepository = convoHistoryRepository;
             this.logger = logger;
         }
 
         // Completed means that we've reached the end - the user let all of the messages play out
         // A subset of these will have emails
-        public async Task<Enquiry[]> RetrieveCompletedConversations(string accountId)
+        public async Task<Enquiry[]> RetrieveConversationRecords(string accountId)
         {
-            var conversationRecords = await convoContext
-                .ConversationRecords
-                .Where(row => row.AccountId == accountId)
-                .ToListAsync();
+            var conversationRecords = await convoHistoryRepository.GetAllConversationRecords(accountId);
+
 
             if (conversationRecords.Count() == 0)
             {
@@ -48,7 +46,7 @@ namespace Palavyr.Core.Services.ConversationServices
             return FormatEnquiresForDashboard(conversationRecords, accountId);
         }
 
-        private Enquiry[] FormatEnquiresForDashboard(List<ConversationRecord> conversationRecords, string accountId)
+        private Enquiry[] FormatEnquiresForDashboard(ConversationRecord[] conversationRecords, string accountId)
         {
             var enquiries = new List<Enquiry>();
 

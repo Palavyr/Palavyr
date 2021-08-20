@@ -11,7 +11,7 @@ import { EmailForm } from "./FormInputs/EmailForm";
 import { LocaleSelector } from "./FormInputs/LocaleSelector";
 import { PhoneForm } from "./FormInputs/PhoneForm";
 import { useSelector } from "react-redux";
-import { GlobalState, LocaleMap, LocaleMapItem, SetState } from "@Palavyr-Types";
+import { GlobalState, LocaleMap, LocaleResource, SetState } from "@Palavyr-Types";
 import { setRegionContext, closeUserDetails, getContextProperties } from "@store-dispatcher";
 import { INVALID_PHONE, INVALID_EMAIL, INVALID_NAME } from "./UserDetailsCheck";
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
@@ -72,18 +72,18 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, setKickoff }: 
     useEffect(() => {
         (async () => {
             const locale = await client.Widget.Get.Locale();
-            setphonePattern(locale.localePhonePattern);
+            setphonePattern(locale.phoneFormat);
             setOptions(locale.localeMap);
-            setRegionContext(locale.localeId);
+            setRegionContext(locale.name);
         })();
     }, []);
 
     const cls = useStyles();
     const [status, setStatus] = useState<string | null>(null);
 
-    const onChange = (event: any, newOption: LocaleMapItem) => {
-        setphonePattern(newOption.phonePattern);
-        setRegionContext(newOption.localeId);
+    const onChange = (event: any, newOption: LocaleResource) => {
+        setphonePattern(newOption.phoneFormat);
+        setRegionContext(newOption.name);
     };
 
     const onFormSubmit = async (e: { preventDefault: () => void }) => {
@@ -96,11 +96,14 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, setKickoff }: 
         const name = contextProperties[ConvoContextProperties.name];
         const phone = contextProperties[ConvoContextProperties.phoneNumber];
         const email = contextProperties[ConvoContextProperties.emailAddress];
+        const locale = contextProperties[ConvoContextProperties.region];
 
         await client.Widget.Post.UpdateConvoRecord({
             Name: name,
             PhoneNumber: phone,
             Email: email,
+            Locale: locale,
+
         });
         closeUserDetails();
     };

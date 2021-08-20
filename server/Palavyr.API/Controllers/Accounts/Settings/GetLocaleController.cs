@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,31 +15,43 @@ namespace Palavyr.API.Controllers.Accounts.Settings
     {
         private AccountsContext accountsContext;
         private ILogger<GetLocaleController> logger;
-        private readonly LocaleDefinition localeDefinition;
+        private readonly LocaleDefinitions localeDefinitions;
 
-        public GetLocaleController(AccountsContext accountsContext, ILogger<GetLocaleController> logger, LocaleDefinition localeDefinition)
+        public GetLocaleController(AccountsContext accountsContext, ILogger<GetLocaleController> logger, LocaleDefinitions localeDefinitions)
         {
             this.logger = logger;
-            this.localeDefinition = localeDefinition;
+            this.localeDefinitions = localeDefinitions;
             this.accountsContext = accountsContext;
         }
 
 
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
         [HttpGet("account/settings/locale/widget")]
-        public async Task<LocaleDefinition> GetForWidget([FromHeader] string accountId)
+        public async Task<LocaleResource> GetForWidget([FromHeader] string accountId)
         {
             var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
-            var localeMeta = localeDefinition.Parse(account.Locale);
+            var localeMeta = localeDefinitions.Parse(account.Locale);
             return localeMeta;
         }
 
         [HttpGet("account/settings/locale")]
-        public async Task<LocaleDefinition> Get([FromHeader] string accountId)
+        public async Task<LocaleResponse> Get([FromHeader] string accountId)
         {
             var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
-            var localeMeta = localeDefinition.Parse(account.Locale);
-            return localeMeta;
+            var localeMeta = localeDefinitions.Parse(account.Locale);
+            var culture = new CultureInfo(localeMeta.Name);
+            
+            return new LocaleResponse
+            {
+                CurrentLocale = localeMeta,
+                LocaleMap = culture.CreateLocaleMap()
+            };
         }
+    }
+
+    public class LocaleResponse
+    {
+        public LocaleResource CurrentLocale { get; set; }
+        public LocaleResource[] LocaleMap { get; set; }
     }
 }

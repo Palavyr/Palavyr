@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core";
+import { EnquiryActivtyResource } from "@Palavyr-Types";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { createNavLink } from "dashboard/layouts/sidebar/sections/sectionComponents/AreaLinkItem";
 import React, { useCallback, useContext, useEffect, useState } from "react";
@@ -22,27 +23,13 @@ type Meta = {
 
 export const IntentActivityCards = () => {
     const { repository } = useContext(DashboardContext);
-    const [meta, setMeta] = useState<Meta[]>([]);
+    const [activity, setActivity] = useState<EnquiryActivtyResource[]>([]);
     const cls = useStyles();
     const history = useHistory();
 
     const loadEnquiries = useCallback(async () => {
-        const areas = await repository.Area.GetAreas();
-        const enquiries = await repository.Enquiries.getEnquiries();
-
-        const me: Meta[] = [];
-        areas.forEach(area => {
-            const filteredForSingleArea = enquiries.filter(area2 => area2.areaName === area.areaDisplayTitle);
-
-            me.push({
-                areaName: area.areaName,
-                count: filteredForSingleArea.length,
-                areaId: area.areaIdentifier,
-                completed: 24,
-                emails: 0,
-            });
-        });
-        setMeta(me);
+        const enquiryActivy = await repository.Enquiries.getEnquiryInsights();
+        setActivity(enquiryActivy);
     }, []);
 
     useEffect(() => {
@@ -51,8 +38,8 @@ export const IntentActivityCards = () => {
 
     return (
         <div className={cls.container}>
-            {meta.map(m => {
-                return <IntentActivityCard areaName={m.areaName} count={m.count} completed={m.completed} emails={m.emails} onClick={() => history.push(createNavLink(m.areaId))} />;
+            {activity.map((a: EnquiryActivtyResource, index: number) => {
+                return <IntentActivityCard key={index} activityResource={a} onClick={() => history.push(createNavLink(a.intentIdentifier))} />;
             })}
         </div>
     );

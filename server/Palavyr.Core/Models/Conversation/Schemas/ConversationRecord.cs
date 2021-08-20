@@ -22,6 +22,9 @@ namespace Palavyr.Core.Models.Conversation.Schemas
         public string AreaIdentifier { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsFallback { get; set; }
+        public string Locale { get; set; } // TODO: Correct This
+        public bool IsComplete { get; set; }
+        
         public static ConversationRecord CreateDefault(string conversationId, string accountId, string areaName, string areaIdentifier)
         {
             return new ConversationRecord

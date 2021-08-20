@@ -11,6 +11,8 @@ namespace Palavyr.Core.Repositories
 
         Task<ConversationRecord> GetConversationRecordById(string conversationId);
         Task<ConversationRecord> UpdateConversationRecord(ConversationRecord newConversationRecord);
+        Task<ConversationRecord[]> GetAllConversationRecords(string accountId);
+        Task<ConversationHistory[]> GetConversationById(string conversationId);
 
     }
 }
