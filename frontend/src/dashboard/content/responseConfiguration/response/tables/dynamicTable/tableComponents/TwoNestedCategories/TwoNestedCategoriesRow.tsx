@@ -24,7 +24,7 @@ type StyleProps = {
 };
 const useStyles = makeStyles(theme => ({
     number: {
-        border: "1px solid lightgray",
+        // border: "1px solid lightgray",
         padding: "1.2rem",
         fontSize: `${theme.typography.fontSize}`,
         font: `${theme.typography.fontFamily}`,

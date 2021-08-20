@@ -11,12 +11,19 @@ import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { cloneDeep } from "lodash";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     tableStyles: {
         width: "100%",
         padding: ".3rem",
         backgroundColor: "transparent",
-        borderTop: "1px solid gray",
+        border: "none",
+        borderTop: `4px solid ${theme.palette.primary.main}`,
+        borderBottom: `4px solid ${theme.palette.primary.main}`,
+        boxShadow: "none",
+    },
+    table: {
+        border: "none",
+        boxShadow: "none",
     },
     alignLeft: {
         position: "relative",
@@ -38,11 +45,11 @@ const useStyles = makeStyles({
     add: {
         marginRight: "0.4rem",
     },
-});
+}));
 
 export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tableTag, tableData, setTableData, areaIdentifier, deleteAction }: DynamicTableProps) => {
     const { repository } = useContext(DashboardContext);
-    const classes = useStyles();
+    const cls = useStyles();
 
     const modifier = new SelectOneFlatModifier(setTableData);
 
@@ -69,21 +76,21 @@ export const SelectOneFlat = ({ showDebug, tableMeta, setTableMeta, tableId, tab
 
     return (
         <>
-            <TableContainer className={classes.tableStyles} component={Paper}>
-                <Table>
+            <TableContainer className={cls.tableStyles} component={Paper}>
+                <Table className={cls.table}>
                     <SelectOneFlatHeader />
                     <SelectOneFlatBody tableData={tableData} modifier={modifier} />
                 </Table>
             </TableContainer>
             <AccordionActions>
-                <div className={classes.trayWrapper}>
-                    <div className={classes.alignLeft}>
-                        <Button startIcon={<AddBoxIcon />} className={classes.add} onClick={addOptionOnClick} color="primary" variant="contained">
+                <div className={cls.trayWrapper}>
+                    <div className={cls.alignLeft}>
+                        <Button startIcon={<AddBoxIcon />} className={cls.add} onClick={addOptionOnClick} color="primary" variant="contained">
                             Add Option
                         </Button>
                         <FormControlLabel label="Use Options as Paths" control={<Checkbox checked={tableMeta.valuesAsPaths} onChange={useOptionsAsPathsOnChange} />} />
                     </div>
-                    <div className={classes.alignRight}>
+                    <div className={cls.alignRight}>
                         <SaveOrCancel position="right" onDelete={deleteAction} onSave={onSave} onCancel={async () => window.location.reload()} />
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { DynamicTableMeta, DynamicTableMetas, DynamicTableProps, TableData, TableNameMap } from "@Palavyr-Types";
-import { TextField, makeStyles, Typography, Table, TableRow, TableCell, TableBody } from "@material-ui/core";
+import { TextField, makeStyles, Typography, Table, TableRow, TableCell, TableBody, Box } from "@material-ui/core";
 import { DynamicTableSelector } from "./DynamicTableSelector";
 import { removeByIndex } from "@common/utils";
 import { cloneDeep } from "lodash";
@@ -11,6 +11,7 @@ import { ChangeEvent } from "react";
 import { dynamicTableComponentMap } from "./DynamicTableRegistry";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import Fade from "react-reveal/Fade";
+import { TextInput } from "@common/components/TextField/TextInput";
 
 export interface SingleDynamicFeeTableProps {
     defaultTableMeta: DynamicTableMeta;
@@ -27,7 +28,7 @@ export interface SingleDynamicFeeTableProps {
     showDebug: boolean;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     headerCol: {
         textAlign: "center",
         fontSize: "16pt",
@@ -38,17 +39,29 @@ const useStyles = makeStyles((theme) => ({
     header: {
         paddingTop: ".3rem",
         paddingBottom: ".3rem",
+        backgroundColor: theme.palette.secondary.light,
     },
     section: {
-        border: `1px solid ${theme.palette.common.black}`,
+        border: "none",
         margin: "1.2rem",
-        borderRadius: "5px",
+        padding: "0.5rem",
+        borderRadius: "15px",
         background: theme.palette.secondary.light,
+        boxShadow: "none",
     },
     table: {
         border: "none",
         background: theme.palette.secondary.light,
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        borderRadius: "10%",
     },
+    textinput: {
+        margin: "0.9rem",
+        width: "50ch",
+    },
+    selector: {},
 }));
 
 export const SingleDynamicFeeTable = ({
@@ -66,7 +79,7 @@ export const SingleDynamicFeeTable = ({
     areaIdentifier,
 }: SingleDynamicFeeTableProps) => {
     const { repository } = useContext(DashboardContext);
-    const classes = useStyles();
+    const cls = useStyles();
 
     const [tableMeta, setTableMeta] = useState<DynamicTableMeta | undefined>();
     const [dynamicTableData, setDynamicTableData] = useState<TableData>();
@@ -128,57 +141,41 @@ export const SingleDynamicFeeTable = ({
         setTableMeta: setTableMeta,
         tableMeta: tableMeta,
         tableTag: tableTag,
-        tableId: tableMeta?.tableId,
+        tableId: tableMeta.tableId,
         tableData: dynamicTableData,
         setTableData: setDynamicTableData,
         areaIdentifier: areaIdentifier,
         deleteAction: deleteAction,
     };
 
-    const DynamicTableComponent = tableMeta?.tableType && dynamicTableComponentMap[tableMeta?.tableType];
+    const DynamicTableComponent = tableMeta && tableMeta.tableType && dynamicTableComponentMap[tableMeta.tableType];
 
     return (
         <>
             {metaData && (
-                <section className={classes.section}>
+                <section className={cls.section}>
                     {tableMeta && (
-                        <Table className={classes.table}>
-                            <TableBody>
-                                <TableRow>
-                                    <TableCell>
-                                        <DynamicTableSelector
-                                            toolTipTitle={disabledSelector ? "Disabled when pricing strategy is used in the Palavyr configuration." : ""}
-                                            disabled={disabledSelector}
-                                            selection={selection}
-                                            handleChange={handleChange}
-                                            tableOptions={availablDynamicTableOptions}
-                                        />
-                                    </TableCell>
-                                    <TableCell></TableCell>
-                                    <TableCell></TableCell>
-                                    <TableCell align="center">
-                                        <TextField
-                                            style={{ fontSize: "12pt" }}
-                                            fullWidth
-                                            label="Short table description (2 or 3 words)"
-                                            value={tableTag}
-                                            onChange={(e) => {
-                                                e.preventDefault();
-                                                setTableTag(e.target.value);
-                                            }}
-                                        />
-                                        <Typography className={classes.headerCol}>Custom fee: {tableNumber + 1}</Typography>
-                                    </TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
+                        <Box className={cls.table}>
+                            <DynamicTableSelector
+                                toolTipTitle={disabledSelector ? "Disabled when pricing strategy is used in the Palavyr configuration." : ""}
+                                disabled={disabledSelector}
+                                selection={selection}
+                                handleChange={handleChange}
+                                tableOptions={availablDynamicTableOptions}
+                            />
+                            <TextInput
+                                className={cls.textinput}
+                                label="Short table description (2 or 3 words)"
+                                value={tableTag}
+                                onChange={e => {
+                                    e.preventDefault();
+                                    setTableTag(e.target.value);
+                                }}
+                            />
+                        </Box>
                     )}
                     {tableMeta === undefined && <div>Loading...</div>}
-                    {dynamicTableData && DynamicTableComponent && (
-                        <Fade>
-                            <DynamicTableComponent {...metaData} />
-                        </Fade>
-                    )}
+                    {dynamicTableData && DynamicTableComponent && <DynamicTableComponent {...metaData} />}
                 </section>
             )}
         </>

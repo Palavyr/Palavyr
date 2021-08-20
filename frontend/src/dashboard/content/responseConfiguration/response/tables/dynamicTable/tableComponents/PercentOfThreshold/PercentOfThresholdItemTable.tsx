@@ -7,6 +7,9 @@ import { PercentOfThresholdData } from "@Palavyr-Types";
 import { PercentOfThresholdHeader } from "./PercentOfThresholdHeader";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { PercentOfThresholdRow } from "./PercentOfThresholdRow";
+import { TextInput } from "@common/components/TextField/TextInput";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
+import { Align } from "dashboard/layouts/positioning/Align";
 
 interface IPercentOfThreshold {
     tableData: PercentOfThresholdData[];
@@ -17,14 +20,19 @@ interface IPercentOfThreshold {
     addRowOnClick(): void;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     input: {
         margin: "0.6rem",
-        width: "30ch",
+        width: "50ch",
+        paddingLeft: "0.4rem",
+    },
+    inputPropsCls: {
         paddingLeft: "0.4rem",
     },
     tableStyles: {
         background: "transparent",
+        boxShadow: "none",
+        paddingBottom: "0.6rem",
     },
 }));
 
@@ -47,21 +55,24 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
 
     return (
         <>
-            <TextField
-                className={cls.input}
-                variant="standard"
-                type="text"
-                value={itemName}
-                color="primary"
-                onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
-                    event.preventDefault();
-                    modifier.setItemName(tableData, itemId, event.target.value);
-                    setItemName(event.target.value);
-                }}
-            />
+            <Align direction="flex-start">
+                <TextInput
+                    className={cls.input}
+                    label="Name to use in PDF fee table"
+                    variant="standard"
+                    type="text"
+                    value={itemName}
+                    InputLabelProps={{ className: cls.inputPropsCls }}
+                    onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
+                        event.preventDefault();
+                        modifier.setItemName(tableData, itemId, event.target.value);
+                        setItemName(event.target.value);
+                    }}
+                />
+            </Align>
             <TableContainer className={cls.tableStyles} component={Paper}>
                 <PercentOfThresholdHeader tableData={tableData} modifier={modifier} />
-                <TableBody>
+                <TableBody className={cls.tableStyles}>
                     {sortByPropertyNumeric(getter, itemData).map((row: PercentOfThresholdData, index: number) => {
                         row.rowOrder = index;
                         const itemLength = itemData.length;
@@ -84,7 +95,7 @@ export const PercentOfThresholdItemToolbar = ({ addRowOnClick, removeItem, itemI
     return (
         <>
             <br></br>
-            <div style={{ marginBottom: "1rem" }}>
+            <div style={{ marginBottom: "1rem", paddingBottom: "1rem" }}>
                 <div style={{ float: "left", marginLeft: "1rem" }}>
                     <Button variant="contained" style={{ width: "25ch" }} color="primary" onClick={addRowOnClick}>
                         Add Threshold

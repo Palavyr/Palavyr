@@ -10,7 +10,6 @@ import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        borderTop: "3px solid red",
     },
     tableStyles: {
         background: "transparent",

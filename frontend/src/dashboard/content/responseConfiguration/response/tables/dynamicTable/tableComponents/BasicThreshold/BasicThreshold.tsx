@@ -10,8 +10,10 @@ import { Button, makeStyles, Table, TableContainer, TextField, AccordionActions 
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { TextInput } from "@common/components/TextField/TextInput";
+import { Align } from "dashboard/layouts/positioning/Align";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
     alignLeft: {
         position: "relative",
         top: "50%",
@@ -35,6 +37,13 @@ const useStyles = makeStyles(() => ({
     input: {
         margin: "0.6rem",
         width: "30ch",
+        paddingLeft: "0.4rem",
+    },
+    container: {
+        borderTop: `4px solid ${theme.palette.primary.main}`,
+        borderBottom: `4px solid ${theme.palette.primary.main}`,
+    },
+    inputPropsCls: {
         paddingLeft: "0.4rem",
     },
 }));
@@ -62,24 +71,30 @@ export const BasicThreshold = ({ showDebug, tableId, tableTag, tableData, setTab
 
     return (
         <>
-            <TextField
-                className={cls.input}
-                variant="standard"
-                type="text"
-                value={tableData[0].itemName}
-                color="primary"
-                onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
-                    event.preventDefault();
-                    modifier.setItemName(tableData, event.target.value);
-                    setItemName(event.target.value);
-                }}
-            />
-            <TableContainer>
-                <Table>
-                    <BasicThresholdHeader tableData={tableData} modifier={modifier} />
-                    <BasicThresholdBody tableData={tableData} modifier={modifier} />
-                </Table>
-            </TableContainer>
+            <div className={cls.container}>
+                <Align direction="flex-start">
+                    <TextInput
+                        className={cls.input}
+                        variant="standard"
+                        label="Name to use in PDF fee table"
+                        type="text"
+                        value={tableData[0].itemName}
+                        InputLabelProps={{ className: cls.inputPropsCls }}
+                        color="primary"
+                        onChange={(event: { preventDefault: () => void; target: { value: string } }) => {
+                            event.preventDefault();
+                            modifier.setItemName(tableData, event.target.value);
+                            setItemName(event.target.value);
+                        }}
+                    />
+                </Align>
+                <TableContainer>
+                    <Table>
+                        <BasicThresholdHeader tableData={tableData} modifier={modifier} />
+                        <BasicThresholdBody tableData={tableData} modifier={modifier} />
+                    </Table>
+                </TableContainer>
+            </div>
             <AccordionActions>
                 <div className={cls.trayWrapper}>
                     <div className={cls.alignLeft}>

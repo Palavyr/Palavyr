@@ -1,6 +1,6 @@
+import { makeStyles } from "@material-ui/core";
 import React from "react";
 import { CustomSelect } from "./CustomSelect";
-import { Tooltip } from "@material-ui/core";
 
 export interface IDynamicTableSelector {
     selection: string;
@@ -10,17 +10,21 @@ export interface IDynamicTableSelector {
     toolTipTitle?: string;
 }
 
-const selectStyle = {
-    marginLeft: "1rem",
-    marginRight: "1rem",
-    marginBottom: "0rem",
-    marginTop: "0.2rem",
-};
+
+const useStyles = makeStyles(theme => ({
+    selector: {
+        marginLeft: "1rem",
+        marginRight: "1rem",
+        marginBottom: "0.3rem",
+        // marginTop: "0.2rem",
+    },
+}));
 
 export const DynamicTableSelector = ({ toolTipTitle, disabled, selection, handleChange, tableOptions }: IDynamicTableSelector) => {
+    const cls = useStyles();
     return (
-        <div style={selectStyle}>
-            <CustomSelect toolTipTitle={toolTipTitle} disabled={disabled} onChange={handleChange} option={selection} options={tableOptions} minWidth={120} helperText="Select table type" />
+        <div className={cls.selector}>
+            <CustomSelect toolTipTitle={toolTipTitle} disabled={disabled} onChange={handleChange} option={selection} options={tableOptions} minWidth={120} helperText="Select Pricing Strategy" />
         </div>
     );
 };

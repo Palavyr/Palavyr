@@ -4,15 +4,15 @@ import classNames from "classnames";
 import React from "react";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     cell: {
-        borderRight: "1px solid gray",
+        borderRight: `1px solid ${theme.palette.common.white}`,
     },
     text: {
         fontSize: "16pt",
     },
     noRight: {
-        borderRight: "0px solid white",
+        borderRight: `0px solid ${theme.palette.common.white}`,
     },
 }));
 

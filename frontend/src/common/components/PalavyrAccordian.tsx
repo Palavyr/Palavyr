@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
         width: "100%",
     },
     accordianHead: {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.dark,
         color: theme.palette.getContrastText(theme.palette.primary.main),
     },
     accordianDetailsContainer: {

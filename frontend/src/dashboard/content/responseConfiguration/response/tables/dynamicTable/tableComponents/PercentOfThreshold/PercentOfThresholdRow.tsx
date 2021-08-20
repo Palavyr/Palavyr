@@ -44,12 +44,16 @@ const useStyles = makeStyles(theme => ({
             return {};
         }
     },
+    tableRow: {
+        boxShadow: "none",
+        border: "0px solid black"
+    },
 }));
 
 const cellAlignment = "center";
 
 export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, modifier, baseValue }: IPercentOfThresholdRow) => {
-    const classes = useStyles({ isTrue: !row.range });
+    const cls = useStyles({ isTrue: !row.range });
 
     const onTriggerFallbackChange = event => {
         modifier.checkTriggerFallbackChange(tableData, itemData, row, event.target.checked);
@@ -58,9 +62,9 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
     const { currencySymbol } = React.useContext(DashboardContext);
 
     return (
-        <TableRow>
+        <TableRow className={cls.tableRow}>
             <TableCell align={cellAlignment}>
-                <Button size="small" className={classes.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeRow(tableData, row.rowId)}>
+                <Button size="small" className={cls.deleteIcon} startIcon={<DeleteIcon />} onClick={() => modifier.removeRow(tableData, row.rowId)}>
                     Delete
                 </Button>
             </TableCell>
@@ -134,7 +138,7 @@ export const PercentOfThresholdRow = ({ tableData, itemData, itemLength, row, mo
                     <TableCell align={cellAlignment}>
                         {!row.triggerFallback && (
                             <CurrencyTextField
-                                className={classes.maxValInput}
+                                className={cls.maxValInput}
                                 label="Amount"
                                 disabled={!row.range}
                                 value={row.range ? row.valueMax : 0.0}

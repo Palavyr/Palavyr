@@ -18,7 +18,7 @@ interface ITwoNestedCategoriesItemTable {
     addInnerCategory(): void;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     input: {
         margin: "0.6rem",
         width: "30ch",
@@ -26,6 +26,8 @@ const useStyles = makeStyles((theme) => ({
     },
     tableStyles: {
         background: "transparent",
+        boxShadow: "none",
+        border: "none",
     },
 }));
 
@@ -97,7 +99,7 @@ export const ItemToolbar = ({ deleteButton, addInnerButton }: IItemToolbar) => {
     return (
         <>
             <br></br>
-            <div style={{ marginBottom: "1rem" }}>
+            <div style={{ marginBottom: "1rem", paddingBottom: "0.3rem" }}>
                 <div style={{ float: "left", marginLeft: "1rem" }}>{addInnerButton}</div>
                 <div style={{ float: "right", marginRight: "1rem" }}>{deleteButton}</div>
             </div>

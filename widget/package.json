@@ -31,6 +31,7 @@
     "react-number-format": "^4.4.1",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
+    "react-select": "^4.3.1",
     "react-window": "^1.8.5",
     "redux": "^4.0.5",
     "uuidv4": "^6.2.2"
@@ -133,6 +134,7 @@
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
     "@types/react-redux": "^7.1.7",
+    "@types/react-select": "^4.0.17",
     "@typescript-eslint/eslint-plugin": "^2.23.0",
     "@typescript-eslint/parser": "^2.10.0",
     "autoprefixer": "^8.2.0",

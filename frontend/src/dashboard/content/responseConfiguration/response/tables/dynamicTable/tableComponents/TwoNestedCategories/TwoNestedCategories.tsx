@@ -9,7 +9,7 @@ import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     root: {
         borderTop: "3px solid red",
     },
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, setTableData, areaIdentifier, deleteAction, showDebug }: Omit<DynamicTableProps, "setTableMeta">) => {
     const { repository } = useContext(DashboardContext);
-    const classes = useStyles();
+    const cls = useStyles();
 
     const modifier = new TwoNestedCategoriesModifier(setTableData);
 
@@ -53,13 +53,13 @@ export const TwoNestedCategories = ({ tableId, tableTag, tableMeta, tableData, s
         <>
             <TwoNestedCategoriesContainer addInnerCategory={addInnerCategory} tableData={tableData} modifier={modifier} />
             <AccordionActions>
-                <div className={classes.trayWrapper}>
-                    <div className={classes.alignLeft}>
-                        <Button className={classes.add} onClick={addOuterCategory} color="primary" variant="contained">
+                <div className={cls.trayWrapper}>
+                    <div className={cls.alignLeft}>
+                        <Button className={cls.add} onClick={addOuterCategory} color="primary" variant="contained">
                             Add Outer Category
                         </Button>
                     </div>
-                    <div className={classes.alignRight}>
+                    <div className={cls.alignRight}>
                         <SaveOrCancel onDelete={deleteAction} onSave={onSave} onCancel={async () => window.location.reload()} />
                     </div>
                 </div>
