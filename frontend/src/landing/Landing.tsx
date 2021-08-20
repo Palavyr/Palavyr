@@ -105,7 +105,7 @@ export const LandingPage = () => {
                     <GreenStrip />
                     <LandingSpotlight text="Transparent Pricing Strategies" imgSrc={PricingImageOne} />
                     <GreenStrip />
-                    <LandingSpotlight text="Branding Customization" imgSrc={DesignerOne} />
+                    <LandingSpotlight text="Brand Customization" imgSrc={DesignerOne} />
                     <GreenStrip />
                     <LandingSpotlight text="Fine Grain Control" imgSrc={FineControlOne} className={cls.borderClip} />
                     <GreenStrip />

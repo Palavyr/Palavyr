@@ -5,5 +5,5 @@ export interface IFooterList {
 }
 
 export const FooterUList = ({ children }: IFooterList) => {
-    return <ul>{children}</ul>;
+    return <ul style={{ textAlign: "center" }}>{children}</ul>;
 };

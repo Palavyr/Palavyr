@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { Grid, makeStyles } from "@material-ui/core";
 import { EnquiryActivtyResource } from "@Palavyr-Types";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { createNavLink } from "dashboard/layouts/sidebar/sections/sectionComponents/AreaLinkItem";
@@ -37,10 +37,10 @@ export const IntentActivityCards = () => {
     }, [loadEnquiries]);
 
     return (
-        <div className={cls.container}>
+        <Grid container>
             {activity.map((a: EnquiryActivtyResource, index: number) => {
-                return <IntentActivityCard key={index} activityResource={a} onClick={() => history.push(createNavLink(a.intentIdentifier))} />;
+                return <Grid item>{activity && activity[0] && <IntentActivityCard key={index} activityResource={activity[0]} onClick={() => history.push(createNavLink(a.intentIdentifier))} />}</Grid>;
             })}
-        </div>
+        </Grid>
     );
 };

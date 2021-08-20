@@ -90,7 +90,7 @@ export const Footer = withWidth()(({ width, openLoginDialog, openRegisterDialog,
                 <div className={cls.items}>
                     <FooterUList>
                         <FooterListTitle>Website</FooterListTitle>
-                        <FooterListItem onClick={openLoginDialog}>Login</FooterListItem>
+                        <FooterListItem onClick={openLoginDialog}>Log in</FooterListItem>
                         <FooterListItem onClick={openRegisterDialog}>Create new account</FooterListItem>
                     </FooterUList>
 
@@ -104,10 +104,16 @@ export const Footer = withWidth()(({ width, openLoginDialog, openRegisterDialog,
                             </Link>
                         </FooterListItem>
                     </FooterUList>
-
                     <FooterUList>
                         <FooterListTitle>Company</FooterListTitle>
                         <FooterListItem>
+                            <FooterListItem>
+                                <Link key="Blog" to="/blog" className={cls.noDecoration}>
+                                    <Typography variant="body1" className={cls.menuButtonText}>
+                                        Blog
+                                    </Typography>
+                                </Link>
+                            </FooterListItem>
                             <Link key="Team" to="/team" className={cls.noDecoration}>
                                 <Typography variant="body1" className={cls.menuButtonText}>
                                     Team
@@ -118,13 +124,6 @@ export const Footer = withWidth()(({ width, openLoginDialog, openRegisterDialog,
                             <Link key="Our Story" to="/our-story" className={cls.noDecoration}>
                                 <Typography variant="body1" className={cls.menuButtonText}>
                                     Our Story
-                                </Typography>
-                            </Link>
-                        </FooterListItem>
-                        <FooterListItem>
-                            <Link key="Blog" to="/blog" className={cls.noDecoration}>
-                                <Typography variant="body1" className={cls.menuButtonText}>
-                                    Blog
                                 </Typography>
                             </Link>
                         </FooterListItem>
@@ -159,11 +158,18 @@ export const Footer = withWidth()(({ width, openLoginDialog, openRegisterDialog,
                         <FooterUList>
                             <FooterListTitle>Website</FooterListTitle>
                             <FooterListItem onClick={openLoginDialog}>Login</FooterListItem>
-                            <FooterListItem onClick={openRegisterDialog}>Create new account</FooterListItem>
+                            <FooterListItem onClick={openRegisterDialog}>Create Free account</FooterListItem>
                         </FooterUList>
                         <LineSpacer numLines={1} />
                         <FooterUList>
                             <FooterListTitle>Learn</FooterListTitle>
+                            <FooterListItem>
+                                <Link key="Blog" to="/blog" className={cls.noDecoration}>
+                                    <Typography variant="body1" className={cls.menuButtonText}>
+                                        Blog
+                                    </Typography>
+                                </Link>
+                            </FooterListItem>
                             <FooterListItem>
                                 <Link key="Tutorial" to="/tutorial" className={cls.noDecoration}>
                                     <Typography variant="body1" className={cls.menuButtonText}>
@@ -176,13 +182,6 @@ export const Footer = withWidth()(({ width, openLoginDialog, openRegisterDialog,
                         <FooterUList>
                             <FooterListTitle>Company</FooterListTitle>
                             <FooterListItem>
-                                <Link key="Team" to="/team" className={cls.noDecoration}>
-                                    <Typography variant="body1" className={cls.menuButtonText}>
-                                        Team
-                                    </Typography>
-                                </Link>
-                            </FooterListItem>
-                            <FooterListItem>
                                 <Link key="Our Story" to="/our-story" className={cls.noDecoration}>
                                     <Typography variant="body1" className={cls.menuButtonText}>
                                         Our Story
@@ -190,9 +189,9 @@ export const Footer = withWidth()(({ width, openLoginDialog, openRegisterDialog,
                                 </Link>
                             </FooterListItem>
                             <FooterListItem>
-                                <Link key="Blog" to="/blog" className={cls.noDecoration}>
+                                <Link key="Team" to="/team" className={cls.noDecoration}>
                                     <Typography variant="body1" className={cls.menuButtonText}>
-                                        Blog
+                                        Team
                                     </Typography>
                                 </Link>
                             </FooterListItem>
