@@ -145,7 +145,7 @@ namespace Palavyr.API.Controllers.Accounts.Develop
             await dashContext.DynamicTableMetas.AddRangeAsync(data.DefaultDynamicTableMetas);
             await dashContext.SaveChangesAsync();
 
-            await convoContext.CompletedConversations.AddRangeAsync(data.CompleteConversations);
+            await convoContext.ConversationRecords.AddRangeAsync(data.CompleteConversations);
             await convoContext.SaveChangesAsync();
         }
 
@@ -168,8 +168,8 @@ namespace Palavyr.API.Controllers.Accounts.Develop
             dashContext.DynamicTableMetas.RemoveRange(dashContext.DynamicTableMetas);
             await dashContext.SaveChangesAsync();
 
-            convoContext.Conversations.RemoveRange(convoContext.Conversations);
-            convoContext.CompletedConversations.RemoveRange(convoContext.CompletedConversations);
+            convoContext.ConversationHistories.RemoveRange(convoContext.ConversationHistories);
+            convoContext.ConversationRecords.RemoveRange(convoContext.ConversationRecords);
             await convoContext.SaveChangesAsync();
         }
     }

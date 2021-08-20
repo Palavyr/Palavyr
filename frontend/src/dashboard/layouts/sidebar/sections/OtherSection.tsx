@@ -57,16 +57,58 @@ export const OtherSection = memo(({ isActive, menuOpen }: OtherSectionProps) => 
         <List>
             <SidebarSectionHeader menuOpen={menuOpen} className={"other-sidebar-tour"} title="Other" onClick={() => setOtherOpen(!otherOpen)} currentState={otherOpen} />
             <Collapse in={otherOpen} timeout="auto" unmountOnExit>
-                <SidebarLinkItem className={"settings-sidebar-tour"} text="Settings" isActive={isActive} onClick={generalSettingsOnClick} IconComponent={<SettingsIcon className={cls.icon} />} />
-                <SidebarLinkItem className={"get-widget-sidebar-tour"} text="Get Widget" isActive={isActive} onClick={getWidgetOnClick} IconComponent={<GetAppIcon className={cls.icon} />} />
-                <SidebarLinkItem className={"quick-start-sidebar-tour"} text="Quick Start Guide" isActive={isActive} onClick={getStartedOnClick} IconComponent={<PlayArrowIcon className={cls.icon} />} />
-                <SidebarLinkItem className={"take-tours-sidebard-tour"} text="Palavyr Tours" isActive={isActive} onClick={takeToursOnClick} IconComponent={<EmojiPeopleIcon className={cls.icon} />} />
+                <SidebarLinkItem
+                    toolTipText=" General Settings"
+                    menuOpen={menuOpen}
+                    className={"settings-sidebar-tour"}
+                    text="Settings"
+                    isActive={isActive}
+                    onClick={generalSettingsOnClick}
+                    IconComponent={<SettingsIcon className={cls.icon} />}
+                />
+                <SidebarLinkItem
+                    toolTipText="How To Get The Widget"
+                    menuOpen={menuOpen}
+                    className={"get-widget-sidebar-tour"}
+                    text="Get The Widget"
+                    isActive={isActive}
+                    onClick={getWidgetOnClick}
+                    IconComponent={<GetAppIcon className={cls.icon} />}
+                />
+                <SidebarLinkItem
+                    toolTipText="Quick Start Guide"
+                    menuOpen={menuOpen}
+                    className={"quick-start-sidebar-tour"}
+                    text="Quick Start Guide"
+                    isActive={isActive}
+                    onClick={getStartedOnClick}
+                    IconComponent={<PlayArrowIcon className={cls.icon} />}
+                />
+                <SidebarLinkItem
+                    toolTipText="Palavyr Tours"
+                    menuOpen={menuOpen}
+                    className={"take-tours-sidebard-tour"}
+                    text="Palavyr Tours"
+                    isActive={isActive}
+                    onClick={takeToursOnClick}
+                    IconComponent={<EmojiPeopleIcon className={cls.icon} />}
+                />
             </Collapse>
             <GoogleLogout
                 onLogoutSuccess={logoutOnClick}
                 clientId={googleOAuthClientId}
                 render={renderProps => {
-                    return <SidebarLinkItem text="Logout" isActive={true} onClick={renderProps.onClick} disabled={renderProps.disabled} IconComponent={<ExitToAppIcon className={cls.icon} />} />;
+                    return (
+                        <SidebarLinkItem
+                            toolTipText="Log out"
+                            menuOpen={menuOpen}
+                            text="Log out"
+                            isActive={true}
+                            onClick={renderProps.onClick}
+                            disabled={renderProps.disabled}
+                            IconComponent={<ExitToAppIcon className={cls.icon} />}
+                        />
+                    );
                 }}
             />
         </List>

@@ -13,21 +13,21 @@ namespace Palavyr.Core.Services.ConversationServices
     public class CompletedConversationModifier : ICompletedConversationModifier
     {
         private readonly ConvoContext convoContext;
-        private readonly ICompletedConversationRetriever completedConversationRetriever;
+        private readonly IConversationRecordRetriever conversationRecordRetriever;
 
-        public CompletedConversationModifier(ConvoContext convoContext, ICompletedConversationRetriever completedConversationRetriever)
+        public CompletedConversationModifier(ConvoContext convoContext, IConversationRecordRetriever conversationRecordRetriever)
         {
             this.convoContext = convoContext;
-            this.completedConversationRetriever = completedConversationRetriever;
+            this.conversationRecordRetriever = conversationRecordRetriever;
         }
 
         public async Task<Enquiry[]> ModifyCompletedConversation(string accountId, string conversationId)
         {
-            var convo = await convoContext.CompletedConversations.SingleOrDefaultAsync(row => row.AccountId == accountId && row.ConversationId == conversationId);
+            var convo = await convoContext.ConversationRecords.SingleOrDefaultAsync(row => row.AccountId == accountId && row.ConversationId == conversationId);
             convo.Seen = !convo.Seen;
             await convoContext.SaveChangesAsync();
 
-            return await completedConversationRetriever.RetrieveCompletedConversations(accountId);
+            return await conversationRecordRetriever.RetrieveConversationRecords(accountId);
         }
     }
 }

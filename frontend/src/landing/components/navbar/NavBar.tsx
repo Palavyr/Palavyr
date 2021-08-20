@@ -98,9 +98,9 @@ export const NavBar = memo(({ openRegisterDialog, openLoginDialog, handleMobileD
                         <BrandName />
                         <div className={cls.navButtons}>
                             <Align verticalCenter>
-                                <Button disableElevation variant="outlined" size="small" onClick={openLoginDialog} className={classNames(cls.menuButtonText, cls.loginButton)} key="Login">
+                                <Button disableElevation variant="outlined" size="small" onClick={openLoginDialog} className={classNames(cls.menuButtonText, cls.loginButton)} key="Log In">
                                     <Typography variant="h6" className={cls.menuButtonText}>
-                                        Login
+                                        Log In
                                     </Typography>
                                 </Button>
                                 <Button disableElevation variant="contained" size="medium" onClick={openRegisterDialog} className={cls.newAccountButton} key="Register">

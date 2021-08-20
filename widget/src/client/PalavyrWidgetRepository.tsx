@@ -1,10 +1,10 @@
 import {
     AreaTable,
-    CompleteConverationDetails,
+    ConversationRecordUpdate as ConvoRecord,
     ConversationUpdate,
     DynamicResponse,
     KeyValues,
-    LocaleDefinition,
+    LocaleResource,
     NewConversation,
     PreCheckResult,
     SecretKey,
@@ -30,8 +30,8 @@ export class PalavyrWidgetRepository {
         locale: (secretKey: SecretKey) => `account/settings/locale/widget?key=${secretKey}`,
         areas: (secretKey: SecretKey) => `widget/areas?key=${secretKey}`,
         newConvo: (secretKey: SecretKey, areaId: string) => `widget/${areaId}/create?key=${secretKey}`,
-        replyUpdate: (secretKey: SecretKey) => `widget/conversation?key=${secretKey}`,
-        completeConvo: (secretKey: SecretKey) => `widget/complete?key=${secretKey}`,
+        updateConvoHistory: (secretKey: SecretKey) => `widget/conversation?key=${secretKey}`,
+        updateConvoRecord: (secretKey: SecretKey) => `widget/record?key=${secretKey}`,
         confirmationEmail: (secretKey: SecretKey, areaIdentifier: string) => `widget/area/${areaIdentifier}/email/send?key=${secretKey}`,
         fallbackEmail: (secretKey: SecretKey, areaIdentifier: string) => `widget/area/${areaIdentifier}/email/fallback/send?key=${secretKey}`,
         internalCheck: (secretKey: SecretKey) => `widget/internal-check?key=${secretKey}`,
@@ -42,7 +42,7 @@ export class PalavyrWidgetRepository {
         Get: {
             PreCheck: async (isDemo: boolean) => this.client.get<PreCheckResult>(this.Routes.precheck(this.secretKey, isDemo)),
             WidgetPreferences: async () => this.client.get<WidgetPreferences>(this.Routes.widgetPreferences(this.secretKey)),
-            Locale: async () => this.client.get<LocaleDefinition>(this.Routes.locale(this.secretKey)),
+            Locale: async () => this.client.get<LocaleResource>(this.Routes.locale(this.secretKey)),
             Areas: async () => this.client.get<Array<AreaTable>>(this.Routes.areas(this.secretKey)),
             NewConversation: async (areaId: string) => this.client.get<NewConversation>(this.Routes.newConvo(this.secretKey, areaId)),
             NodeImage: async (nodeId: string) => this.client.get<string>(this.Routes.nodeImage(this.secretKey, nodeId)),
@@ -55,8 +55,8 @@ export class PalavyrWidgetRepository {
                     Response: response,
                     CurrentDynamicResponseState: currentDynamicResponseState,
                 }),
-            ReplyUpdate: async (update: ConversationUpdate) => this.client.post(this.Routes.replyUpdate(this.secretKey), update),
-            CompletedConversation: async (completeConvo: CompleteConverationDetails) => this.client.post(this.Routes.completeConvo(this.secretKey), completeConvo),
+            UpdateConvoHistory: async (update: ConversationUpdate) => this.client.post(this.Routes.updateConvoHistory(this.secretKey), update),
+            UpdateConvoRecord: async (updatedConvoRecord: Partial<ConvoRecord>) => this.client.post(this.Routes.updateConvoRecord(this.secretKey), updatedConvoRecord),
         },
 
         Send: {

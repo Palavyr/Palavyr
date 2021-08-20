@@ -41,6 +41,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
         private readonly IS3Saver s3Saver;
         private readonly IConfiguration configuration;
         private readonly IS3KeyResolver s3KeyResolver;
+        private readonly ILocaleDefinitions localeDefinitions;
 
         public ResponseEmailSender(
             ILogger<ResponseEmailSender> logger,
@@ -54,7 +55,8 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             ISesEmail client,
             IS3Saver s3Saver,
             IConfiguration configuration,
-            IS3KeyResolver s3KeyResolver
+            IS3KeyResolver s3KeyResolver,
+            ILocaleDefinitions localeDefinitions
         )
         {
             this.logger = logger;
@@ -69,6 +71,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             this.s3Saver = s3Saver;
             this.configuration = configuration;
             this.s3KeyResolver = s3KeyResolver;
+            this.localeDefinitions = localeDefinitions;
         }
 
         public async Task<SendEmailResultResponse> SendEmail(string accountId, string areaId, EmailRequest emailRequest, CancellationToken cancellationToken)
@@ -165,7 +168,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
         private async Task<CultureInfo> GetCulture(string accountId, CancellationToken cancellationToken)
         {
             var account = await accountRepository.GetAccount(accountId, cancellationToken);
-            var locale = account.Locale ?? LocaleDefinition.DefaultCountryId;
+            var locale = account.Locale ?? localeDefinitions.DefaultLocale.Name;
             return new CultureInfo(locale);
         }
 

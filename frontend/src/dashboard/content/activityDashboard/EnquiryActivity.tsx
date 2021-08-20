@@ -99,11 +99,25 @@ export const EnquiryActivity = () => {
         loadEnquiries();
     }, [loadEnquiries]);
 
+    const hasData = () => {
+        if (data === undefined) return false;
+
+        const sumAllData = data => {
+            const r: number[] = [];
+            data.datasets.forEach(x => {
+                r.push(sum(x.data));
+            });
+            return sum(r);
+        };
+
+        return data.labels && data.labels.length > 0 && data.datasets && data.datasets.length > 0 && sumAllData(data) > 0;
+    };
+
     return (
         <DataPlot
             title="Activity Per Area"
             subtitle="Learn which areas are seeing the most amount of traffic"
-            hasData={data !== undefined && data && data.labels && data.labels.length > 0 && data.datasets && data.datasets.length > 0 /*&& sum(data.datasets[0].data) > 0 */}
+            hasData={hasData} //{ /*&& sum(data.datasets[0].data) > 0 */}
             loadingSpinner={loadingspinner}
         >
             <Radar data={data} options={options} />

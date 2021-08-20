@@ -6,8 +6,8 @@ namespace Palavyr.Core.Data
     public class ConvoContext : DbContext
     {
         public ConvoContext(DbContextOptions<ConvoContext> options) : base(options) { }
-        public DbSet<ConversationUpdate> Conversations { get; set; }
-        public DbSet<CompletedConversation> CompletedConversations { get; set; }
+        public DbSet<ConversationHistory> ConversationHistories { get; set; }
+        public DbSet<ConversationRecord> ConversationRecords { get; set; }
         
     }
 }

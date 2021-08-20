@@ -1,12 +1,16 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using Palavyr.Core.Models.Configuration.Constant;
 
 namespace Palavyr.Core.Models.Conversation.Schemas
 {
-    public class ConversationUpdate
+    // TODO: Rename to ConversationHistory
+    public class ConversationHistory
     {
         [Key]
         public int? Id { get; set; }
+
         public string ConversationId { get; set; }
         public string Prompt { get; set; }
         public string UserResponse { get; set; }
@@ -14,13 +18,18 @@ namespace Palavyr.Core.Models.Conversation.Schemas
         public bool NodeCritical { get; set; }
         public string NodeType { get; set; }
         public DateTime TimeStamp { get; set; }
-        public bool IsCompleted { get; set; }
         public string AccountId { get; set; }
 
-        public static ConversationUpdate CreateNew(string conversationId, string prompt, string userResponse,
-            string nodeId, bool nodeCritical, string nodeType, string accountId)
+        public static ConversationHistory CreateNew(
+            string conversationId,
+            string prompt,
+            string userResponse,
+            string nodeId,
+            bool nodeCritical,
+            string nodeType,
+            string accountId)
         {
-            return new ConversationUpdate
+            return new ConversationHistory
             {
                 ConversationId = conversationId,
                 Prompt = prompt,
@@ -29,14 +38,13 @@ namespace Palavyr.Core.Models.Conversation.Schemas
                 NodeCritical = nodeCritical,
                 NodeType = nodeType,
                 TimeStamp = DateTime.UtcNow,
-                IsCompleted = false,
                 AccountId = accountId
             };
         }
 
-        public ConversationUpdate CreateFromPartial(string accountId)
+        public ConversationHistory CreateFromPartial(string accountId)
         {
-            return new ConversationUpdate
+            return new ConversationHistory
             {
                 ConversationId = ConversationId,
                 Prompt = Prompt,
@@ -45,7 +53,6 @@ namespace Palavyr.Core.Models.Conversation.Schemas
                 NodeCritical = NodeCritical,
                 NodeType = NodeType,
                 TimeStamp = DateTime.UtcNow,
-                IsCompleted = false,
                 AccountId = accountId
             };
         }

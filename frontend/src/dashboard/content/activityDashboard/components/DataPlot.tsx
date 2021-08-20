@@ -1,5 +1,5 @@
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
-import { makeStyles, CircularProgress, Card, Fade } from "@material-ui/core";
+import { makeStyles, CircularProgress, Card } from "@material-ui/core";
 import { Align } from "dashboard/layouts/positioning/Align";
 import React from "react";
 import { NoActivityComponent } from "./NoActivityComponent";
@@ -38,7 +38,7 @@ export type EnquiryOptions = {
 };
 
 export interface DataPlotProps {
-    hasData: boolean;
+    hasData(): boolean;
     loadingSpinner: boolean;
     children: React.ReactNode;
     title: string;
@@ -48,20 +48,16 @@ export interface DataPlotProps {
 export const DataPlot = ({ title, subtitle = "", hasData, loadingSpinner, children }: DataPlotProps) => {
     const cls = useStyles();
 
-    // return loadingSpinner ? (
-    //     <span className={cls.fallback}>
-    //         <Align>
-    //             <CircularProgress />
-    //         </Align>
-    //     </span>
-    // ) : (
-    //     <Fade>
-    return (
+    return loadingSpinner ? (
+        <span className={cls.fallback}>
+            <Align>
+                <CircularProgress />
+            </Align>
+        </span>
+    ) : (
         <Card className={cls.plotCard}>
             <AreaConfigurationHeader title={title} subtitle={subtitle} light divider />
-            {hasData ? children : <NoActivityComponent />}
+            {hasData() ? children : <NoActivityComponent />}
         </Card>
     );
-    // </Fade>
-    // );
 };

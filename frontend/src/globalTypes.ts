@@ -2,6 +2,7 @@ import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { COULD_NOT_FIND_SERVER, GOOGLE_ACCOUNT_NOT_FOUND, INVALID_EMAIL, INVALID_GOOGLE_TOKEN, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, NOT_A_GOOGLE_ACCOUNT, VERIFICATION_EMAIL_SEND } from "@constants";
 import { PalavyrLinkedList } from "dashboard/content/responseConfiguration/conversation/PalavyrDataStructure/PalavyrLinkedList";
 import React, { Dispatch, SetStateAction } from "react";
+import internal from "stream";
 // / <reference types="node" />
 // / <reference types="react" />
 // / <reference types="react-dom" />
@@ -218,9 +219,20 @@ export type EnquiryRow = {
     email: string;
     phoneNumber: string;
     hasResponse: boolean;
+    areaIdentifier: string;
 };
 
 export type Enquiries = EnquiryRow[];
+
+export type EnquiryActivtyResource = {
+    intentName: string;
+    numRecords: number;
+    intentIdentifier: string;
+    completed: number;
+    sentEmailCount: number;
+    averageIntentCompletion: number;
+    intentCompletePerIntent: number[];
+};
 
 export type DynamicTableMeta = {
     id: number;
@@ -618,22 +630,22 @@ export type AreasEnabled = {
 
 export type ToggleStateChanger = Dispatch<SetStateAction<boolean | null>>;
 
-export type LocaleDefinition = {
-    localeId: string;
-    localeCountry: string;
-    supportedLocales: string[];
-    localeMap: LocaleMap;
-    localeCurrencySymbol: string;
-    localePhonePattern: string;
+export type LocaleResponse = {
+    currentLocale: LocaleResource;
+    localeMap: LocaleResource[];
 };
 
-export type LocaleMapItem = {
-    localeId: string;
-    countryName: string;
-    phonePattern: string;
+export type LocaleResource = {
+    name: string;
+    displayName: string;
     currencySymbol: string;
+    supportedLocales: string[];
+    phoneFormat: string;
+    numberDecimalSeparator: string;
+    localeMap: LocaleMap;
 };
-export type LocaleMap = LocaleMapItem[];
+
+export type LocaleMap = LocaleResource[];
 
 export type ProductIds = {
     freeProductId: string;
@@ -916,7 +928,8 @@ export interface IConversationTreeContext {
     conversationHistoryPosition: number;
     nodeTypeOptions: NodeTypeOptions;
     showDebugData: boolean;
-    useNewEditor: boolean;}
+    useNewEditor: boolean;
+}
 
 export type YoutubeVideoResourcePlayer = {
     embedHtml: string;

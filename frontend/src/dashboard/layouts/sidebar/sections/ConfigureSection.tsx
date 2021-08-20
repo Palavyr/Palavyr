@@ -2,7 +2,7 @@ import React, { memo, useState } from "react";
 import { DashboardContext } from "../../DashboardContext";
 import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
 import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
-import { List, Collapse, Divider, makeStyles } from "@material-ui/core";
+import { List, Collapse, Divider, makeStyles, Tooltip } from "@material-ui/core";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { useHistory } from "react-router-dom";
@@ -25,7 +25,7 @@ export interface ConfigureSectionProps {
 
 export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails, menuOpen }: ConfigureSectionProps) => {
     const [configureOpen, setConfigureOpen] = useState<boolean>(true);
-    const { checkAreaCount, setViewName, planTypeMeta } = React.useContext(DashboardContext);
+    const { checkAreaCount, planTypeMeta } = React.useContext(DashboardContext);
 
     const history = useHistory();
     const cls = useStyles();
@@ -37,8 +37,18 @@ export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails, 
     return (
         <List className={classNames("configure-tour")}>
             <SidebarSectionHeader menuOpen={menuOpen} title="Configure" onClick={() => setConfigureOpen(!configureOpen)} currentState={configureOpen} />
-            <SidebarLinkItem className={"add-new-area-tour"} text="Add New Area" isActive={isActive} onClick={checkAreaCount} IconComponent={<AddCircleOutlineIcon className={cls.icon} />} />
             <SidebarLinkItem
+                toolTipText="Add New Intent"
+                menuOpen={menuOpen}
+                className={"add-new-area-tour"}
+                text="Add New Area"
+                isActive={isActive}
+                onClick={checkAreaCount}
+                IconComponent={<AddCircleOutlineIcon className={cls.icon} />}
+            />
+            <SidebarLinkItem
+                toolTipText="Enable / Disable Intents"
+                menuOpen={menuOpen}
                 className={"enable-disable-area-tour"}
                 text="Enable / Disable Areas"
                 isActive={isActive}
@@ -50,7 +60,15 @@ export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails, 
                 {areaNameDetails.map(
                     (x: AreaNameDetail, index: number) =>
                         planTypeMeta && (
-                            <AreaLinkItem key={index} areaIdentifier={x.areaIdentifier} isActive={isActive} disabled={index >= planTypeMeta.allowedAreas} currentPage={currentPage} areaName={x.areaName} />
+                            <AreaLinkItem
+                                key={index}
+                                menuOpen={menuOpen}
+                                areaIdentifier={x.areaIdentifier}
+                                isActive={isActive}
+                                disabled={index >= planTypeMeta.allowedAreas}
+                                currentPage={currentPage}
+                                areaName={x.areaName}
+                            />
                         )
                 )}
             </Collapse>

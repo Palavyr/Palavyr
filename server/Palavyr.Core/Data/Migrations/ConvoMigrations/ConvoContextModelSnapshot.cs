@@ -19,49 +19,7 @@ namespace Palavyr.Core.Data.Migrations.ConvoMigrations
                 .HasAnnotation("ProductVersion", "3.1.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("Palavyr.Core.Models.Conversation.Schemas.CompletedConversation", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("AccountId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("AreaName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ConversationId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
-                    b.Property<string>("EmailTemplateUsed")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ResponsePdfId")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("Seen")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CompletedConversations");
-                });
-
-            modelBuilder.Entity("Palavyr.Core.Models.Conversation.Schemas.ConversationUpdate", b =>
+            modelBuilder.Entity("Palavyr.Core.Models.Conversation.Schemas.ConversationHistory", b =>
                 {
                     b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
@@ -73,9 +31,6 @@ namespace Palavyr.Core.Data.Migrations.ConvoMigrations
 
                     b.Property<string>("ConversationId")
                         .HasColumnType("text");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("boolean");
 
                     b.Property<bool>("NodeCritical")
                         .HasColumnType("boolean");
@@ -97,7 +52,64 @@ namespace Palavyr.Core.Data.Migrations.ConvoMigrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Conversations");
+                    b.ToTable("ConversationHistories");
+                });
+
+            modelBuilder.Entity("Palavyr.Core.Models.Conversation.Schemas.ConversationRecord", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("AccountId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AreaIdentifier")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AreaName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ConversationId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("EmailTemplateUsed")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsComplete")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsFallback")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Locale")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ResponsePdfId")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Seen")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConversationRecords");
                 });
 #pragma warning restore 612, 618
         }

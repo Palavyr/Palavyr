@@ -3,23 +3,26 @@ using Palavyr.Core.Models.Conversation.Schemas;
 
 namespace Palavyr.Core.Models.Resources.Requests
 {
-    public class CompleteConversation
+    public class ConversationRecordUpdate
     {
         public string ConversationId { get; set; }
         public string AreaIdentifier { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public bool HasResponse { get; set; }
+        public string Locale { get; set; }
+        public bool Fallback { get; set; }
+        public bool IsComplete { get; set; }
         
-        public CompleteConversation() { }
+        public ConversationRecordUpdate() { }
         
-        private CompleteConversation(
+        private ConversationRecordUpdate(
             string conversationId,
             string areaIdentifier,
             string name,
             string email,
-            string phone
+            string phone,
+            string locale
         )
         {
             ConversationId = conversationId;
@@ -27,25 +30,28 @@ namespace Palavyr.Core.Models.Resources.Requests
             Name = name;
             Email = email;
             PhoneNumber = phone;
+            Locale = locale;
         }
 
-        public static CompleteConversation CreateNew(
+        public static ConversationRecordUpdate CreateNew(
             string conversationId,
             string areaIdentifier,
             string name,
             string email,
-            string phone
+            string phone,
+            string locale
         )
         {
-            return new CompleteConversation(
+            return new ConversationRecordUpdate(
                 conversationId, 
                 areaIdentifier,
                 name,
                 email,
-                phone);
+                phone,
+                locale);
         }
 
-        public static CompletedConversation BindReceiverToSchemaType(
+        public static ConversationRecord BindReceiverToSchemaType(
             string conversationId, 
             string accountId, 
             string areaName, 
@@ -53,11 +59,13 @@ namespace Palavyr.Core.Models.Resources.Requests
             string name, 
             string email, 
             string phoneNumber,
-            bool hasResponse)
+            bool hasResponse,
+            bool fallback,
+            string areaIdentifier)
         {
             var timeStamp = DateTime.Now;
 
-            var completedConversation = CompletedConversation.CreateNew(
+            var completedConversation = ConversationRecord.CreateNew(
                 conversationId,
                 hasResponse ? conversationId : "",
                 timeStamp,
@@ -67,7 +75,8 @@ namespace Palavyr.Core.Models.Resources.Requests
                 false,
                 name,
                 email,
-                phoneNumber);
+                phoneNumber,
+                areaIdentifier);
             return completedConversation;
         }
     }

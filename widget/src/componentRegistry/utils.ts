@@ -1,4 +1,4 @@
-import { CompleteConverationDetails, WidgetNodeResource, WidgetNodes } from "@Palavyr-Types";
+import { ConversationRecordUpdate, WidgetNodeResource, WidgetNodes } from "@Palavyr-Types";
 
 export const MinNumeric: number = 0;
 
@@ -17,14 +17,15 @@ export const getOrderedChildNodes = (childrenIDs: string, nodeList: WidgetNodes)
     return children;
 };
 
-export const assembleCompletedConvo = (conversationId: string, areaIdentifier: string, name: string, email: string, PhoneNumber: string, hasResponse: boolean = true): CompleteConverationDetails => {
+export const assembleEmailRecordData = (conversationId: string, areaIdentifier: string, name: string, email: string, PhoneNumber: string, locale: string, fallback: boolean = false): Partial<ConversationRecordUpdate> => {
     return {
         ConversationId: conversationId,
         AreaIdentifier: areaIdentifier,
         Name: name,
         Email: email,
         PhoneNumber: PhoneNumber,
-        HasResponse: hasResponse,
+        Fallback: fallback,
+        Locale: locale
     };
 };
 

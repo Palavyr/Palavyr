@@ -9,21 +9,21 @@ namespace Palavyr.API.Controllers.Enquiries
     public class GetEnquiriesController : PalavyrBaseController
     {
         private readonly ILogger<GetEnquiriesController> logger;
-        private readonly ICompletedConversationRetriever completedConversationRetriever;
+        private readonly IConversationRecordRetriever conversationRecordRetriever;
 
         public GetEnquiriesController(
             ILogger<GetEnquiriesController> logger,
-            ICompletedConversationRetriever completedConversationRetriever
+            IConversationRecordRetriever conversationRecordRetriever
         )
         {
             this.logger = logger;
-            this.completedConversationRetriever = completedConversationRetriever;
+            this.conversationRecordRetriever = conversationRecordRetriever;
         }
 
         [HttpGet("enquiries")]
         public async Task<Enquiry[]> Get([FromHeader] string accountId)
         {
-            return await completedConversationRetriever.RetrieveCompletedConversations(accountId);
+            return await conversationRecordRetriever.RetrieveConversationRecords(accountId);
         }
     }
 }

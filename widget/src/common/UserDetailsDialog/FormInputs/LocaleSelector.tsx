@@ -1,12 +1,12 @@
 import { makeStyles, TextField } from "@material-ui/core";
 import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
-import { LocaleMap, LocaleMapItem } from "@Palavyr-Types";
+import { LocaleMap, LocaleResource } from "@Palavyr-Types";
 import { sortByPropertyAlphabetical } from "common/sorting";
 import React from "react";
 
 export interface LocaleSelectorProps {
     options: LocaleMap;
-    onChange(event: any, newOption: LocaleMapItem): void;
+    onChange(event: any, newOption: LocaleResource): void;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const LocaleSelector = ({ options, onChange }: LocaleSelectorProps) => {
-    const sortGetter = (opt: LocaleMapItem) => opt.countryName;
+    const sortGetter = (opt: LocaleResource) => opt.displayName;
     const opts = sortByPropertyAlphabetical(sortGetter, options);
     const cls = useStyles();
 
@@ -38,7 +38,7 @@ export const LocaleSelector = ({ options, onChange }: LocaleSelectorProps) => {
                 clearOnEscape
                 onChange={onChange}
                 options={opts}
-                getOptionLabel={(option: LocaleMapItem) => option.countryName}
+                getOptionLabel={(option: LocaleResource) => option.displayName}
                 renderInput={(params: AutocompleteRenderInputParams) => (
                     <TextField
                         {...params}

@@ -5,7 +5,7 @@ import { Align } from "../positioning/Align";
 import Fade from "react-reveal/Fade";
 import CloseIcon from "@material-ui/icons/Close";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     container: {
         width: "100%",
         paddingTop: "0.8rem",
@@ -32,11 +32,11 @@ const useStyles = makeStyles((theme) => ({
     },
     ul: {
         margin: "0",
-        padding: "0"
+        padding: "0",
     },
-    errorTitle:{
-        marginBottom: "1.2rem"
-    }
+    errorTitle: {
+        marginBottom: "1.2rem",
+    },
 }));
 
 export const ErrorPanel = () => {
@@ -58,7 +58,7 @@ export const ErrorPanel = () => {
                                         {panelErrors.message}
                                     </Typography>
                                 )}
-                                {panelErrors.additionalMessages.length > 0 && (
+                                {panelErrors && panelErrors.additionalMessages && panelErrors.additionalMessages.length > 0 && (
                                     <>
                                         <Typography align="left">{panelErrors.additionalMessages.length === 1 ? "Reason" : "Reasons"}</Typography>
                                         <ul className={cls.ul}>

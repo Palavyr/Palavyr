@@ -204,7 +204,7 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
         setAreaNameDetails(sortByPropertyAlphabetical((x: AreaNameDetail) => x.areaName, fetchSidebarInfo(areas)));
 
         const locale = await repository.Settings.Account.GetLocale();
-        setCurrencySymbol(locale.localeCurrencySymbol);
+        setCurrencySymbol(locale.currentLocale.currencySymbol);
 
         const needsPassword = await repository.Settings.Account.CheckNeedsPassword();
         setAccountTypeNeedsPassword(needsPassword);

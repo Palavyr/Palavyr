@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core";
 import React from "react";
 import { useHistory } from "react-router-dom";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     outer: {
         margin: "3rem",
         padding: "3rem",
@@ -22,7 +22,7 @@ export const Cancel = () => {
                 buttonText="Return to Dashboard"
                 disabled={false}
                 onClick={() => {
-                    history.push("/dashboard");
+                    history.push("/dashboard/activity");
                 }}
             />
         </div>

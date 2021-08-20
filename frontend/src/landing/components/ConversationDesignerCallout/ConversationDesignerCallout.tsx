@@ -8,13 +8,10 @@ import React from "react";
 export interface ConversationDesignerCalloutProps {
     text: string;
     imgSrc: string;
+    className?: string;
 }
 
 const useStyles = makeStyles(theme => ({
-    image1: {
-        height: "400px",
-        borderRadius: "25px",
-    },
     paper: {
         padding: "1rem",
         borderRadius: "25px",
@@ -22,7 +19,9 @@ const useStyles = makeStyles(theme => ({
     },
     img: {
         width: "100%",
-        padding: "0.5rem",
+        paddingTop: "0.5rem",
+        paddingRight: "0.5rem",
+        paddingLeft: "0.5rem",
         borderRadius: "50px",
     },
     container: {
@@ -34,14 +33,31 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const LandingSpotlight = ({ text, imgSrc }: ConversationDesignerCalloutProps) => {
+export const LandingSpotlight = ({ text, imgSrc, className }: ConversationDesignerCalloutProps) => {
     const cls = useStyles();
     return (
         <div className={cls.container}>
             <PalavyrText className={cls.text} align="center" variant="h1">
                 {text}
             </PalavyrText>
-            <ZoomImage alt="alt" imgSrc={imgSrc} className={cls.img} />
+            <ZoomImage alt="alt" imgSrc={imgSrc} className={classNames(cls.img, className || "")} />
+        </div>
+    );
+};
+
+export interface ComponentLandingSpotlightProps {
+    text: string | React.ReactNode;
+    children: React.ReactNode;
+}
+
+export const ComponentLandingSpotlight = ({ text, children }: ComponentLandingSpotlightProps) => {
+    const cls = useStyles();
+    return (
+        <div className={cls.container}>
+            <PalavyrText className={cls.text} align="center" variant="h1">
+                {text}
+            </PalavyrText>
+            {children}
         </div>
     );
 };

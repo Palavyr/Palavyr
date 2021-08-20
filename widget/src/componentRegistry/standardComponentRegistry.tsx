@@ -1,4 +1,4 @@
-import { assembleCompletedConvo, getOrderedChildNodes, MinNumeric, parseNumericResponse } from "./utils";
+import { assembleEmailRecordData, getOrderedChildNodes, MinNumeric, parseNumericResponse } from "./utils";
 import React, { useEffect, useState } from "react";
 import { Table, TableRow, TableCell, makeStyles, TextField, Typography } from "@material-ui/core";
 import { responseAction } from "./responseAction";
@@ -52,20 +52,6 @@ export class StandardComponents {
         return () => {
             const cls = useStyles(prefs);
             useEffect(() => {
-                (async () => {
-                    if (node.nodeType === "TooComplicated") {
-                        const contextProperties = getContextProperties();
-
-                        const areaId = node.areaIdentifier;
-                        const name = contextProperties[ConvoContextProperties.name];
-                        const phone = contextProperties[ConvoContextProperties.phoneNumber];
-                        const email = contextProperties[ConvoContextProperties.emailAddress];
-                        const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
-
-                        await client.Widget.Post.CompletedConversation(completeConvo);
-                    }
-                })();
-
                 responseAction(node, child, nodeList, client, convoId, null);
             }, []);
 
@@ -418,6 +404,7 @@ export class StandardComponents {
             const email = contextProperties[ConvoContextProperties.emailAddress];
             const name = contextProperties[ConvoContextProperties.name];
             const phone = contextProperties[ConvoContextProperties.phoneNumber];
+            const locale = contextProperties[ConvoContextProperties.region];
 
             let numIndividuals = contextProperties[ConvoContextProperties.numIndividuals];
             let dynamicResponses = contextProperties[ConvoContextProperties.dynamicResponses];
@@ -436,8 +423,8 @@ export class StandardComponents {
 
             const response = await client.Widget.Send.ConfirmationEmail(areaId, email, name, phone, numIndividuals, dynamicResponses, keyvalues, convoId);
             if (response.result) {
-                const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
-                await client.Widget.Post.CompletedConversation(completeConvo);
+                const completeConvo = assembleEmailRecordData(convoId, areaId, name, email, phone, locale);
+                await client.Widget.Post.UpdateConvoRecord(completeConvo);
             }
             return response;
         };
@@ -479,6 +466,13 @@ export class StandardComponents {
 
         return () => {
             const cls = useStyles(prefs);
+
+            useEffect(() => {
+                // TODO: send final record update and set isComplete to true
+                (async () => {
+                    await client.Widget.Post.UpdateConvoRecord({ IsComplete: true });
+                })();
+            }, []);
             return (
                 <Table>
                     <SingleRowSingleCell>
@@ -508,6 +502,7 @@ export class StandardComponents {
         return () => {
             const [loading, setLoading] = useState<boolean>(false);
             const cls = useStyles(prefs);
+
             return (
                 <>
                     <Table>
@@ -548,11 +543,12 @@ export class StandardComponents {
                 const email = contextProperties[ConvoContextProperties.emailAddress];
                 const name = contextProperties[ConvoContextProperties.name];
                 const phone = contextProperties[ConvoContextProperties.phoneNumber];
+                const locale = contextProperties[ConvoContextProperties.region];
 
                 const response = await client.Widget.Send.FallbackEmail(areaId, email, name, phone, convoId);
                 if (response.result) {
-                    const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone);
-                    await client.Widget.Post.CompletedConversation(completeConvo);
+                    const completeConvo = assembleEmailRecordData(convoId, areaId, name, email, phone, locale, true);
+                    await client.Widget.Post.UpdateConvoRecord(completeConvo);
                 }
                 return response;
             };
@@ -599,8 +595,6 @@ export class StandardComponents {
 
             useEffect(() => {
                 setTimeout(async () => {
-                    const completeConvo = assembleCompletedConvo(convoId, areaId, name, email, phone, false);
-                    await client.Widget.Post.CompletedConversation(completeConvo);
                     responseAction(node, child, nodeList, client, convoId, null);
                 }, 1500);
             }, []);

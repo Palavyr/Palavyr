@@ -24,15 +24,15 @@ namespace Palavyr.Core.Repositories.Delete
         public void DeleteAllConversationRecordsByAccount(string accountId)
         {
             logger.LogCritical($"Deleting conversations records from {accountId}");
-            var allConvoRecords = convoContext.Conversations.Where(row => row.AccountId == accountId);
-            convoContext.Conversations.RemoveRange(allConvoRecords);
+            var allConvoRecords = convoContext.ConversationHistories.Where(row => row.AccountId == accountId);
+            convoContext.ConversationHistories.RemoveRange(allConvoRecords);
         }
 
         public void DeleteAllCompletedConversationsByAccount(string accountId)
         {
             logger.LogCritical($"Deleting completed conversations from {accountId}");
-            var allCompleted = convoContext.CompletedConversations.Where(row => row.AccountId == accountId);
-            convoContext.CompletedConversations.RemoveRange(allCompleted);
+            var allCompleted = convoContext.ConversationRecords.Where(row => row.AccountId == accountId);
+            convoContext.ConversationRecords.RemoveRange(allCompleted);
         }
     }
 }

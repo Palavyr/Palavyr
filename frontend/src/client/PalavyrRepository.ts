@@ -20,7 +20,7 @@ import {
     PreCheckResult,
     WidgetPreferences,
     VariableDetail,
-    LocaleDefinition,
+    LocaleResource,
     ProductIds,
     TableData,
     TableNameMap,
@@ -31,6 +31,8 @@ import {
     YoutubePlaylistItemsResponse,
     VideoMap,
     PlaylistItemsResource,
+    EnquiryActivtyResource,
+    LocaleResponse,
 } from "@Palavyr-Types";
 import { ApiErrors } from "dashboard/layouts/Errors/ApiErrors";
 import { filterNodeTypeOptionsOnSubscription } from "dashboard/subscriptionFilters/filterConvoNodeTypes";
@@ -307,7 +309,7 @@ export class PalavyrRepository {
             updateCompanyName: async (companyName: string) => this.client.put<string, {}>(`account/settings/company-name`, { CompanyName: companyName }),
             updateEmail: async (newEmail: string) => this.client.put<EmailVerificationResponse, {}>(`account/settings/email`, { EmailAddress: newEmail }),
             updatePhoneNumber: async (newPhoneNumber: string) => this.client.put<string, {}>(`account/settings/phone-number`, { PhoneNumber: newPhoneNumber }),
-            updateLocale: async (newLocaleId: string) => this.client.put<LocaleDefinition, {}>(`account/settings/locale`, { LocaleId: newLocaleId }),
+            updateLocale: async (newLocaleId: string) => this.client.put<LocaleResponse, {}>(`account/settings/locale`, { LocaleId: newLocaleId }),
             updateCompanyLogo: async (formData: FormData) =>
                 this.client.put<string, {}>(`account/settings/logo`, formData, undefined, {
                     headers: {
@@ -320,7 +322,7 @@ export class PalavyrRepository {
             getEmail: async () => this.client.get<AccountEmailSettingsResponse>(`account/settings/email`),
             getPhoneNumber: async () => this.client.get<PhoneSettingsResponse>(`account/settings/phone-number`),
 
-            GetLocale: async () => this.client.get<LocaleDefinition>(`account/settings/locale`),
+            GetLocale: async () => this.client.get<LocaleResponse>(`account/settings/locale`),
             getCompanyLogo: async () => this.client.get<string>(`account/settings/logo`),
 
             deleteCompanyLogo: async () => this.client.delete(`account/settings/logo`),
@@ -354,6 +356,8 @@ export class PalavyrRepository {
 
         getSignedUrl: async (fileId: string) => this.client.get<string>(`enquiries/link/${fileId}`),
         getConversation: async (conversationId: string) => this.client.get<CompletedConversation>(`enquiries/review/${conversationId}`, [CacheIds.Conversation, conversationId].join("-") as CacheIds),
+
+        getEnquiryInsights: async () => this.client.get<EnquiryActivtyResource[]>('enquiry-insights'),
     };
 
     public Youtube = {

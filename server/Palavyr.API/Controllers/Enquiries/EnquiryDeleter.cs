@@ -67,8 +67,8 @@ namespace Palavyr.API.Controllers.Enquiries
 
         public void TrackDeleteFromDb(string conversationId)
         {
-            var rowsToDelete = convoContext.CompletedConversations.Where(x => x.ConversationId == conversationId);
-            convoContext.CompletedConversations.RemoveRange(rowsToDelete);
+            var rowsToDelete = convoContext.ConversationRecords.Where(x => x.ConversationId == conversationId);
+            convoContext.ConversationRecords.RemoveRange(rowsToDelete);
         }
     }
 }

@@ -2,12 +2,12 @@ import React, { useCallback, useState, useEffect, useContext } from "react";
 import { Divider, makeStyles, MenuItem, Typography } from "@material-ui/core";
 import { SettingsGridRowList } from "@common/components/SettingsGridRowList";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { LocaleMapItem, LocaleMap } from "@Palavyr-Types";
+import { LocaleMap, LocaleResource } from "@Palavyr-Types";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { SettingsWrapper } from "../SettingsWrapper";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     titleText: {
         fontWeight: "bold",
     },
@@ -39,12 +39,11 @@ export const ChangeLocale = () => {
     const classes = useStyles();
 
     const loadLocale = useCallback(async () => {
-        const locale = await repository.Settings.Account.GetLocale();
-
-        setLocaleID(locale.localeId);
-        setLocaleName(locale.localeCountry);
-        setCurrencySymbol(locale.localeCurrencySymbol);
-        setLocaleMap(locale.localeMap);
+        const { currentLocale: locale, localeMap } = await repository.Settings.Account.GetLocale();
+        setLocaleID(locale.name);
+        setLocaleName(locale.displayName);
+        setCurrencySymbol(locale.currencySymbol);
+        setLocaleMap(localeMap);
     }, []);
 
     useEffect(() => {
@@ -56,40 +55,44 @@ export const ChangeLocale = () => {
         };
     }, [loadLocale]);
 
-    const handleLocaleChange = async (event) => {
+    const handleLocaleChange = async event => {
         const newLocaleId = event.target.value;
-        const updatedLocale = await repository.Settings.Account.updateLocale(newLocaleId);
-        setLocaleName(updatedLocale.localeCountry);
-        setLocaleID(updatedLocale.localeId);
-        setCurrencySymbol(updatedLocale.localeCurrencySymbol);
+        const { currentLocale: updatedLocale, localeMap } = await repository.Settings.Account.updateLocale(newLocaleId);
+        setLocaleName(updatedLocale.displayName);
+        setLocaleID(updatedLocale.name);
+        setCurrencySymbol(updatedLocale.currencySymbol);
         setAlert(true);
     };
 
     return (
-        <SettingsWrapper>
-            <AreaConfigurationHeader title="Change your locale" subtitle="The locale affects the currency symbol used." />
-            <Divider />
-            <SettingsGridRowList
-                onChange={handleLocaleChange}
-                currentValue={localeName + " - " + currencySymbol}
-                menuName="Select your locale"
-                menu={localeMap.map((localeItem: LocaleMapItem, index: number) => (
-                    <MenuItem key={localeItem.localeId + index.toString()} value={localeItem.localeId}>
-                        {localeItem.countryName}
-                    </MenuItem>
-                ))}
-                useModal
-                modalMessage="Locale successfully updated."
-                alertNode={
-                    <Alert>
-                        <AlertTitle className={classes.titleText}>Set your Locale</AlertTitle>
-                        <Typography>This will be used to determine the following properties of your estimates:</Typography>
-                        <ul>
-                            <li>Currency Symbol</li>
-                        </ul>
-                    </Alert>
-                }
-            />
-        </SettingsWrapper>
+        <>
+            {localeMap && (
+                <SettingsWrapper>
+                    <AreaConfigurationHeader title="Change your locale" subtitle="The locale affects the currency symbol used." />
+                    <Divider />
+                    <SettingsGridRowList
+                        onChange={handleLocaleChange}
+                        currentValue={localeName + " - " + currencySymbol}
+                        menuName="Select your locale"
+                        menu={localeMap.map((localeItem: LocaleResource, index: number) => (
+                            <MenuItem key={localeItem.name + index.toString()} value={localeItem.name}>
+                                {localeItem.displayName}
+                            </MenuItem>
+                        ))}
+                        useModal
+                        modalMessage="Locale successfully updated."
+                        alertNode={
+                            <Alert>
+                                <AlertTitle className={classes.titleText}>Set your Locale</AlertTitle>
+                                <Typography>This will be used to determine the following properties of your estimates:</Typography>
+                                <ul>
+                                    <li>Currency Symbol</li>
+                                </ul>
+                            </Alert>
+                        }
+                    />
+                </SettingsWrapper>
+            )}
+        </>
     );
 };

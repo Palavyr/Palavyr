@@ -64,7 +64,7 @@ export const responseAction = async (
 
     const timeout = computeReadingTime(child);
     if (callback) callback();
-    client.Widget.Post.ReplyUpdate(updatePayload); // no need to await for this
+    client.Widget.Post.UpdateConvoHistory(updatePayload); // no need to await for this
 
     setTimeout(() => {
         toggleMsgLoader();

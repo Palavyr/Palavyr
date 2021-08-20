@@ -2,6 +2,7 @@ using Autofac;
 using Palavyr.API.Controllers.Enquiries;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.API.Controllers.Testing;
+using Palavyr.API.Controllers.WidgetLive;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
@@ -41,7 +42,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<AccountRegistrationMaker>().As<IAccountRegistrationMaker>();
             builder.RegisterType<PalavyrAccessChecker>().As<IPalavyrAccessChecker>();
             builder.RegisterType<EmailVerificationStatus>().As<IEmailVerificationStatus>().InstancePerLifetimeScope();
-            builder.RegisterType<LocaleDefinition>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<LocaleDefinitions>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<TestDataProvider>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<OrphanRemover>().As<IOrphanRemover>().InstancePerLifetimeScope();
             builder.RegisterType<HtmlToPdfClient>().As<IHtmlToPdfClient>().InstancePerLifetimeScope();
@@ -100,7 +101,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<S3Retriever>().As<IS3Retriever>();
             builder.RegisterType<AreaDeleter>().As<IAreaDeleter>();
             builder.RegisterType<EnquiryDeleter>().As<IEnquiryDeleter>();
-            builder.RegisterType<CompletedConversationRetriever>().As<ICompletedConversationRetriever>();
+            builder.RegisterType<ConversationRecordRecordRetriever>().As<IConversationRecordRetriever>();
             builder.RegisterType<CompletedConversationModifier>().As<ICompletedConversationModifier>();
             builder.RegisterType<RemoveStaleSessions>().As<IRemoveStaleSessions>();
             builder.RegisterType<SafeFileNameCreator>().AsSelf();
@@ -115,6 +116,9 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<DetermineCurrentEnvironment>().As<IDetermineCurrentEnvironment>();
             builder.RegisterType<ConversationNodeUpdater>().As<IConversationNodeUpdater>();
             builder.RegisterType<SelectOneFlatNodeUpdater>().As<ISelectOneFlatNodeUpdater>();
+            builder.RegisterType<UpdateConversationRecordHandler>().As<IUpdateConversationRecordHandler>();
+            builder.RegisterType<LocaleDefinitions>().As<ILocaleDefinitions>();
+            builder.RegisterType<EnquiryInsightComputer>().As<IEnquiryInsightComputer>();
         }
     }
 }

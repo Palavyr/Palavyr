@@ -1,5 +1,5 @@
 import React, { memo, useContext, useEffect, useState } from "react";
-import { ListItem, ListItemText, FormControlLabel, Typography, makeStyles } from "@material-ui/core";
+import { ListItem, ListItemText, FormControlLabel, Typography, makeStyles, Tooltip } from "@material-ui/core";
 import { IOSSwitch } from "@common/components/IOSSwitch";
 import { DashboardContext } from "../DashboardContext";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
@@ -54,7 +54,7 @@ export const WidgetStateSwitch = memo(({ isActive, menuOpen }: WidgetStateSwitch
                 )}
             </ListItemText>
             <FormControlLabel
-                control={Switch}
+                control={menuOpen ? Switch : <Tooltip title="Widget On / Off toggle">{Switch}</Tooltip>}
                 className={cls.text}
                 label={menuOpen && (widgetState === undefined ? <PalavyrText>loading...</PalavyrText> : widgetState ? <PalavyrText>Enabled</PalavyrText> : <PalavyrText>Disabled</PalavyrText>)}
             />
