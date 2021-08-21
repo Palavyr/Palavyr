@@ -10,6 +10,7 @@ import { PercentOfThresholdRow } from "./PercentOfThresholdRow";
 import { TextInput } from "@common/components/TextField/TextInput";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { Align } from "dashboard/layouts/positioning/Align";
+import { SaveBar } from "../../components/SaveBar";
 
 interface IPercentOfThreshold {
     tableData: PercentOfThresholdData[];
@@ -80,35 +81,18 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
                     })}
                 </TableBody>
             </TableContainer>
-            <PercentOfThresholdItemToolbar addRowOnClick={addRowOnClick} removeItem={removeItem} itemId={itemId} />
-        </>
-    );
-};
-
-interface IPercentOfThresholdToolbar {
-    addRowOnClick(): void;
-    removeItem(itemId: string): void;
-    itemId: string;
-}
-
-export const PercentOfThresholdItemToolbar = ({ addRowOnClick, removeItem, itemId }: IPercentOfThresholdToolbar) => {
-    return (
-        <>
-            <br></br>
-            <div style={{ marginBottom: "1rem", paddingBottom: "1rem" }}>
-                <div style={{ float: "left", marginLeft: "1rem" }}>
+            <SaveBar
+                addInnerButton={
                     <Button variant="contained" style={{ width: "25ch" }} color="primary" onClick={addRowOnClick}>
                         Add Threshold
                     </Button>
-                </div>
-                <div style={{ float: "right", marginRight: "1rem" }}>
+                }
+                deleteButton={
                     <Button variant="contained" style={{ width: "18ch" }} color="primary" onClick={() => removeItem(itemId)}>
                         Delete Item
                     </Button>
-                </div>
-            </div>
-            <br></br>
-            <hr></hr>
+                }
+            />
         </>
     );
 };

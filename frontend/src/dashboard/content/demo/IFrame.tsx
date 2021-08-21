@@ -6,7 +6,7 @@ type StyleProps = {
     errors: boolean;
     shadow: boolean;
 };
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     frame: (props: StyleProps) => ({
         marginTop: props.errors ? "0rem" : "2rem",
         marginBottom: props.errors ? "0rem" : "2rem",
@@ -32,6 +32,7 @@ type Iframe = HTMLElement & {
     src: string;
 };
 
+//https://www.thoughtco.com/targeting-links-in-frames-3468670
 export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, preCheckErrors, demo = true, shadow = false }: IIframe) => {
     const [state, setState] = useState<boolean | null>(null);
     const cls = useStyles({ errors: preCheckErrors.length > 0, shadow });
@@ -45,6 +46,5 @@ export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, preCheckErrors, dem
         }
     }, [iframeRefreshed]);
 
-    //https://www.thoughtco.com/targeting-links-in-frames-3468670
     return <iframe id="chatDemoIframe" title={demo ? "demo" : "widget"} className={cls.frame} src={url}></iframe>;
 };

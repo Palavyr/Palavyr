@@ -1,3 +1,4 @@
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { Button, makeStyles, TableCell, TableHead, TableRow } from "@material-ui/core";
 import { PercentOfThresholdData } from "@Palavyr-Types";
 import classNames from "classnames";
@@ -18,9 +19,7 @@ const useStyles = makeStyles(theme => ({
     noRight: {
         borderRight: "0px solid white",
     },
-    button: {
-
-    }
+    button: {},
 }));
 
 export interface IPercentOfThresholdHeader {
@@ -30,25 +29,26 @@ export interface IPercentOfThresholdHeader {
 
 export const PercentOfThresholdHeader = ({ tableData, modifier }: IPercentOfThresholdHeader) => {
     const cls = useStyles();
+    const headerVariant = "h5";
 
     return (
         <TableHead>
             <TableRow className={cls.row}>
                 <TableCell align="center"></TableCell>
-                <TableCell align="center" className={classNames(cls.cell, cls.text)}>
-                    If exceeds Threshold
+                <TableCell align="center" className={classNames(cls.cell)}>
+                    <PalavyrText variant={headerVariant}>If exceeds</PalavyrText>
                 </TableCell>
-                <TableCell align="center" className={classNames(cls.cell, cls.text)}>
-                    Add or subtract
+                <TableCell align="center" className={classNames(cls.cell)}>
+                    <PalavyrText variant={headerVariant}>Add or subtract</PalavyrText>
                 </TableCell>
-                <TableCell align="center" className={classNames(cls.cell, cls.text)}>
-                    % of Value
+                <TableCell align="center" className={classNames(cls.cell)}>
+                    <PalavyrText variant={headerVariant}>% of</PalavyrText>
                 </TableCell>
-                <TableCell align="center" className={classNames(cls.cell, cls.text)}>
-                    From base Amount
+                <TableCell align="center" className={classNames(cls.cell)}>
+                    <PalavyrText variant={headerVariant}>From Base Amount</PalavyrText>
                 </TableCell>
-                <TableCell align="center" className={classNames(cls.cell, cls.text)}>
-                    Max Amount (if range)
+                <TableCell align="center" className={classNames(cls.cell)}>
+                    <PalavyrText variant={headerVariant}>Max Amount</PalavyrText>
                 </TableCell>
                 <TableCell align="center">
                     <Button
@@ -58,7 +58,7 @@ export const PercentOfThresholdHeader = ({ tableData, modifier }: IPercentOfThre
                             modifier.setTables(reordered);
                         }}
                     >
-                        Reorder thresholds
+                        <PalavyrText variant="body1">Reorder thresholds</PalavyrText>
                     </Button>
                 </TableCell>
             </TableRow>

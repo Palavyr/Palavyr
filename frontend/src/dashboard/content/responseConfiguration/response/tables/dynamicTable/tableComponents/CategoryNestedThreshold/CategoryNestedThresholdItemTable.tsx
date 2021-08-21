@@ -5,6 +5,7 @@ import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
+import { SaveBar } from "../../components/SaveBar";
 import { CategoryNestedThresholdHeader } from "./CategoryNestedThresholdHeader";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 import { CategoryNestedThresholdRow } from "./CategoryNestedThresholdRow";
@@ -74,7 +75,7 @@ export const CategoryNestedThresholdItemTable = ({ categoryIndex, tableData, tab
                     })}
                 </TableBody>
             </TableContainer>
-            <ItemToolbar
+            <SaveBar
                 addInnerButton={
                     <Button onClick={addThresholdOnClick} color="primary" variant="contained">
                         Add Threshold
@@ -90,21 +91,4 @@ export const CategoryNestedThresholdItemTable = ({ categoryIndex, tableData, tab
     );
 };
 
-interface IItemToolbar {
-    deleteButton: JSX.Element;
-    addInnerButton: JSX.Element;
-}
 
-export const ItemToolbar = ({ deleteButton, addInnerButton }: IItemToolbar) => {
-    return (
-        <>
-            <br></br>
-            <div style={{ marginBottom: "1rem", paddingBottom: "1rem"}}>
-                <div style={{ float: "left", marginLeft: "1rem" }}>{addInnerButton}</div>
-                <div style={{ float: "right", marginRight: "1rem" }}>{deleteButton}</div>
-            </div>
-            <br></br>
-            <hr></hr>
-        </>
-    );
-};

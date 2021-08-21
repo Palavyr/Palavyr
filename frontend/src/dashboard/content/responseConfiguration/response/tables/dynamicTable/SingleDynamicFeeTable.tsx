@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
     section: {
         border: "none",
         margin: "1.2rem",
-        padding: "0.5rem",
+        // padding: "0.5rem",
         borderRadius: "15px",
         background: theme.palette.secondary.light,
         boxShadow: "none",
@@ -55,7 +55,7 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
-        borderRadius: "10%",
+        borderRadius: "10px",
     },
     textinput: {
         margin: "0.9rem",

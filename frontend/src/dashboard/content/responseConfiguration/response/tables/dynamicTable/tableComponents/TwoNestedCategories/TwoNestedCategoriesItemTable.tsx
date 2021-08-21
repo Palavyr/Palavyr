@@ -4,6 +4,7 @@ import { TwoNestedCategoryData } from "@Palavyr-Types";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
+import { SaveBar } from "../../components/SaveBar";
 import { TwoNestedCategoriesHeader } from "./TwoNestedCategoriesHeader";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { TwoNestedCategoriesRow } from "./TwoNestedCategoriesRow";
@@ -27,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     tableStyles: {
         background: "transparent",
         boxShadow: "none",
-        border: "none",
+        border: "0px solid black",
     },
 }));
 
@@ -70,7 +71,7 @@ export const TwoNestedCategoriesItemTable = ({ outerCategoryIndex, tableData, ou
                     })}
                 </TableBody>
             </TableContainer>
-            <ItemToolbar
+            <SaveBar
                 addInnerButton={
                     outerCategoryIndex === 0 ? (
                         <Button onClick={addInnerCategory} color="primary" variant="contained">
@@ -90,21 +91,4 @@ export const TwoNestedCategoriesItemTable = ({ outerCategoryIndex, tableData, ou
     );
 };
 
-interface IItemToolbar {
-    deleteButton: JSX.Element;
-    addInnerButton: JSX.Element;
-}
 
-export const ItemToolbar = ({ deleteButton, addInnerButton }: IItemToolbar) => {
-    return (
-        <>
-            <br></br>
-            <div style={{ marginBottom: "1rem", paddingBottom: "0.3rem" }}>
-                <div style={{ float: "left", marginLeft: "1rem" }}>{addInnerButton}</div>
-                <div style={{ float: "right", marginRight: "1rem" }}>{deleteButton}</div>
-            </div>
-            <br></br>
-            <hr></hr>
-        </>
-    );
-};

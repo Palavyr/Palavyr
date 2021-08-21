@@ -14,7 +14,6 @@ import { DashboardContext } from "dashboard/layouts/DashboardContext";
 const useStyles = makeStyles(theme => ({
     tableStyles: {
         width: "100%",
-        padding: ".3rem",
         backgroundColor: "transparent",
         border: "none",
         borderTop: `4px solid ${theme.palette.primary.main}`,

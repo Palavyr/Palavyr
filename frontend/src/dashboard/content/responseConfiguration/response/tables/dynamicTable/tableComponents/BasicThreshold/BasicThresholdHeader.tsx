@@ -3,6 +3,7 @@ import { TableHead, TableRow, TableCell, makeStyles, Button } from "@material-ui
 import classNames from "classnames";
 import { TableData } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 const useStyles = makeStyles(theme => ({
     cell: {
@@ -27,19 +28,19 @@ export interface IBasicThresholdHeader {
 
 export const BasicThresholdHeader = ({ tableData, modifier }: IBasicThresholdHeader) => {
     const cls = useStyles();
-
+    const variantHeader = "h5";
     return (
         <TableHead>
             <TableRow className={cls.row}>
                 <TableCell align="center"></TableCell>
-                <TableCell align="center" className={classNames(cls.cell, cls.text)}>
-                    Threshold
+                <TableCell align="center" className={classNames(cls.cell)}>
+                    <PalavyrText variant={variantHeader}>Threshold</PalavyrText>
                 </TableCell>
-                <TableCell align="center" className={classNames(cls.cell, cls.text)}>
-                    Amount
+                <TableCell align="center" className={classNames(cls.cell)}>
+                    <PalavyrText variant={variantHeader}>Amount</PalavyrText>
                 </TableCell>
-                <TableCell align="center" className={classNames(cls.cell, cls.text, cls.noRight)}>
-                    Max Amount (if range)
+                <TableCell align="center" className={classNames(cls.cell, cls.noRight)}>
+                    <PalavyrText variant={variantHeader}> Max Amount</PalavyrText>
                 </TableCell>
                 <TableCell align="center"></TableCell>
                 <TableCell align="center">
@@ -49,7 +50,7 @@ export const BasicThresholdHeader = ({ tableData, modifier }: IBasicThresholdHea
                             modifier.setTables(tableData);
                         }}
                     >
-                        Sort By Threshold
+                        <PalavyrText variant={variantHeader}>Sort By Threshold</PalavyrText>
                     </Button>
                 </TableCell>
             </TableRow>
