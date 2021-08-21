@@ -12,9 +12,10 @@ import { useSelector } from "react-redux";
 import cn from "classnames";
 
 import "./style.scss";
-import { isWidgetOpened, toggleWidget } from "@store-dispatcher";
+import { getContextProperties, isWidgetOpened, toggleWidget } from "@store-dispatcher";
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { _openFullscreenPreview } from "@store-actions";
+import { ConvoContextProperties } from "componentRegistry/registry";
 
 export interface WidgetProps {
     option: SelectedOption;
@@ -31,8 +32,24 @@ export const Widget = ({ option }: WidgetProps) => {
         const nodes = newConversation.conversationNodes;
         const convoId = newConversation.conversationId;
 
-        const rootNode = getRootNode(nodes);
 
+        const contextProperties = getContextProperties();
+
+        const name = contextProperties[ConvoContextProperties.name];
+        const phone = contextProperties[ConvoContextProperties.phoneNumber];
+        const email = contextProperties[ConvoContextProperties.emailAddress];
+        const locale = contextProperties[ConvoContextProperties.region];
+
+        await client.Widget.Post.UpdateConvoRecord({
+            Name: name,
+            PhoneNumber: phone,
+            Email: email,
+            Locale: locale,
+            ConversationId: convoId
+        });
+
+
+        const rootNode = getRootNode(nodes);
         renderNextComponent(rootNode, nodes, client, convoId);
     };
 

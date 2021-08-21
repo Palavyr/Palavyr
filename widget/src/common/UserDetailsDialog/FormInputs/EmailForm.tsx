@@ -1,5 +1,6 @@
 import { TextField } from "@material-ui/core";
 import { getNameContext, getEmailAddressContext, setPhoneContext, setEmailAddressContext } from "@store-dispatcher";
+import { TextInput } from "common/number/TextInput";
 import React, { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -11,7 +12,6 @@ export interface EmailFormProps extends BaseFormProps {
 }
 
 export const EmailForm = ({ status, setStatus, setDetailsSet }: EmailFormProps) => {
-
     const checkUserDetailsAreSet = () => {
         const name = getNameContext();
         const emailAddress = getEmailAddressContext();
@@ -32,10 +32,10 @@ export const EmailForm = ({ status, setStatus, setDetailsSet }: EmailFormProps) 
     const [emailState, setEmailState] = useState<string>("");
     useEffect(() => {
         setEmailState(getEmailAddressContext());
-    }, [])
+    }, []);
 
     return (
-        <TextField
+        <TextInput
             margin="normal"
             error={status === INVALID_EMAIL}
             required

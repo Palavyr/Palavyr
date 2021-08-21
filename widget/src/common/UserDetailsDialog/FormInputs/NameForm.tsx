@@ -3,6 +3,7 @@ import { makeStyles, TextField } from "@material-ui/core";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserName, INVALID_NAME } from "../UserDetailsCheck";
 import { getNameContext, setNameContext } from "@store-dispatcher";
+import { TextInput } from "common/number/TextInput";
 
 export interface NameFormProps extends BaseFormProps {}
 
@@ -24,9 +25,9 @@ export const NameForm = ({ status, setStatus }: NameFormProps) => {
     }, []);
 
     return (
-        <TextField
-            InputProps={{ className: cls.input }}
-            InputLabelProps={{ className: cls.label }}
+        <TextInput
+            inputPropsClassName={cls.input}
+            inputLabelPropsClassName={cls.label}
             margin="normal"
             error={status === INVALID_NAME}
             required

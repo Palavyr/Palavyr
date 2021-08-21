@@ -10,7 +10,7 @@ import { PercentOfThresholdRow } from "./PercentOfThresholdRow";
 import { TextInput } from "@common/components/TextField/TextInput";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { Align } from "dashboard/layouts/positioning/Align";
-import { SaveBar } from "../../components/SaveBar";
+import { ButtonBar } from "../../components/SaveBar";
 
 interface IPercentOfThreshold {
     tableData: PercentOfThresholdData[];
@@ -81,7 +81,7 @@ export const PercentOfThresholdItemTable = ({ tableData, itemData, itemName, ite
                     })}
                 </TableBody>
             </TableContainer>
-            <SaveBar
+            <ButtonBar
                 addInnerButton={
                     <Button variant="contained" style={{ width: "25ch" }} color="primary" onClick={addRowOnClick}>
                         Add Threshold

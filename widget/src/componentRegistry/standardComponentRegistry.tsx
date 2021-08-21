@@ -1,8 +1,7 @@
 import { assembleEmailRecordData, getOrderedChildNodes, MinNumeric, parseNumericResponse } from "./utils";
 import React, { useEffect, useState } from "react";
-import { Table, TableRow, TableCell, makeStyles, TextField, Typography } from "@material-ui/core";
+import { Table, TableRow, TableCell, makeStyles } from "@material-ui/core";
 import { responseAction } from "./responseAction";
-import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import { ConvoContextProperties } from "./registry";
 import { IProgressTheChat, WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
 import { setNumIndividualsContext, getContextProperties, openUserDetails, getWidgetPreferences } from "@store-dispatcher";
@@ -12,6 +11,9 @@ import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "common/UserDetailsDialog/ChatLoadingSpinner";
 import { CustomImage } from "common/CustomImage";
 import { HtmlTextMessage } from "common/HtmlTextMessage";
+import { CurrencyTextField } from "common/numbers/CurrencyTextField";
+import { NumberFormatValues } from "react-number-format";
+import { TextInput } from "common/number/TextInput";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {
@@ -24,6 +26,7 @@ const useStyles = makeStyles(theme => ({
         borderBottom: "none",
     },
     textField: (prefs: WidgetPreferences) => ({
+        textDecoration: "none",
         color: prefs.chatFontColor,
         borderColor: theme.palette.getContrastText(prefs.chatBubbleColor ?? "black"),
     }),
@@ -143,7 +146,6 @@ export class StandardComponents {
     }
 
     public makeTakeNumber({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
-        // With numbers, we have the potential for exceeding some minimum or maximum value.
         let child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         const prefs = getWidgetPreferences();
 
@@ -160,17 +162,10 @@ export class StandardComponents {
                     </SingleRowSingleCell>
                     <TableRow>
                         <TableCell className={cls.root}>
-                            <TextField
-                                InputProps={{
-                                    className: cls.textField,
-                                }}
-                                InputLabelProps={{
-                                    className: cls.textLabel,
-                                }}
-                                disabled={inputDisabled}
-                                fullWidth
+                            <TextInput
                                 label=""
-                                type="number"
+                                inputPropsClassName={cls.textField}
+                                inputLabelPropsClassName={cls.textLabel}
                                 onChange={event => {
                                     setResponse(parseNumericResponse(event.target.value));
                                     setDisabled(false);
@@ -229,9 +224,9 @@ export class StandardComponents {
                                 outputFormat="number"
                                 decimalCharacter="."
                                 digitGroupSeparator=","
-                                onChange={(event: any, value: number) => {
-                                    if (value !== undefined) {
-                                        setResponse(value);
+                                onValueChange={(values: NumberFormatValues) => {
+                                    if (values.floatValue !== undefined) {
+                                        setResponse(values.floatValue);
                                         setDisabled(false);
                                     }
                                 }}
@@ -295,18 +290,10 @@ export class StandardComponents {
                             <HtmlTextMessage message={node.text} className={cls.textField} />
                         </SingleRowSingleCell>{" "}
                         <SingleRowSingleCell>
-                            <TextField
-                                InputProps={{
-                                    className: cls.textField,
-                                }}
-                                InputLabelProps={{
-                                    className: cls.textLabel,
-                                }}
-                                fullWidth
-                                multiline
+                            <TextInput
+                                inputPropsClassName={cls.textField}
+                                inputLabelPropsClassName={cls.textLabel}
                                 disabled={inputDisabled}
-                                label="Write here..."
-                                type="text"
                                 onChange={event => {
                                     setResponse(event.target.value);
                                     setDisabled(false);
@@ -350,13 +337,9 @@ export class StandardComponents {
                     </SingleRowSingleCell>
                     <TableRow>
                         <TableCell className={cls.root}>
-                            <TextField
-                                InputProps={{
-                                    className: cls.textField,
-                                }}
-                                InputLabelProps={{
-                                    className: cls.textLabel,
-                                }}
+                            <TextInput
+                                inputPropsClassName={cls.textField}
+                                inputLabelPropsClassName={cls.textLabel}
                                 disabled={inputDisabled}
                                 label=""
                                 value={response}
@@ -468,9 +451,8 @@ export class StandardComponents {
             const cls = useStyles(prefs);
 
             useEffect(() => {
-                // TODO: send final record update and set isComplete to true
                 (async () => {
-                    await client.Widget.Post.UpdateConvoRecord({ IsComplete: true });
+                    await client.Widget.Post.UpdateConvoRecord({ IsComplete: true, ConversationId: convoId });
                 })();
             }, []);
             return (
@@ -483,9 +465,6 @@ export class StandardComponents {
                             prefs={prefs!}
                             text="restart"
                             onClick={() => {
-                                // setSelectedOption(null);
-                                // dropMessages();
-                                // TODO: can reset the widget gby dumping messages and by putting seSelectedOption into redux and setting to null
                                 window.location.reload();
                             }}
                         />
@@ -586,13 +565,6 @@ export class StandardComponents {
 
         return () => {
             const cls = useStyles(prefs);
-            const contextProperties = getContextProperties();
-
-            const areaId = nodeList[0].areaIdentifier;
-            const email = contextProperties[ConvoContextProperties.emailAddress];
-            const name = contextProperties[ConvoContextProperties.name];
-            const phone = contextProperties[ConvoContextProperties.phoneNumber];
-
             useEffect(() => {
                 setTimeout(async () => {
                     responseAction(node, child, nodeList, client, convoId, null);

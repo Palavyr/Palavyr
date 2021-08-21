@@ -52,6 +52,9 @@ const useStyles = makeStyles(() => ({
         maxHeight: "97%",
         height: "97%",
     },
+    paper: {
+        boxShadow: "none",
+    },
     inputLabel: (prefs: WidgetPreferences) => ({
         "& .MuiFormLabel-root": {
             color: prefs.listFontColor,
@@ -62,7 +65,11 @@ const useStyles = makeStyles(() => ({
         // the dropdown menu styles
         backgroundColor: prefs.selectListColor, // TODO: make customizable with new option
         padding: "0rem",
+        boxShadow: "none",
     }),
+    popper: {
+        boxShadow: "none",
+    },
 }));
 
 export interface DropdownListProps {
@@ -91,7 +98,7 @@ export const DropdownListOptions = ({ setSelectedOption, options }: DropdownList
                     <Autocomplete
                         size="small"
                         open={true}
-                        classes={{ root: cls.selectbox, paper: classNames(cls.selectListBgColor, cls.selectListFontColor) }}
+                        classes={{ popper: cls.popper, root: cls.selectbox, paper: classNames(cls.paper, cls.selectListBgColor, cls.selectListFontColor) }}
                         disableClearable
                         clearOnEscape
                         className={classNames(cls.autocomplete, cls.mainList, cls.selectListBgColor, cls.selectListFontColor)}
@@ -108,6 +115,11 @@ export const DropdownListOptions = ({ setSelectedOption, options }: DropdownList
                                 inputProps={{
                                     ...params.inputProps,
                                     autoComplete: "new-password",
+                                }}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    disableUnderline: true,
+                                    style: { borderBottom: "1px solid black" },
                                 }}
                             />
                         )}

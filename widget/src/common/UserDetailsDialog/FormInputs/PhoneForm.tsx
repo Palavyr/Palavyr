@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
     phone: {
         width: "100%",
         marginTop: "2.3rem",
-        borderRadius: 4,
+        // borderRadius: 4,
         position: "relative",
         backgroundColor: "transparent",
         border: "none",

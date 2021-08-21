@@ -30,10 +30,7 @@ namespace Palavyr.API.Controllers.WidgetLive
 
         public async Task UpdateConversationRecord(string accountId, ConversationRecordUpdate convo)
         {
-            logger.LogDebug("Adding completed conversation to the database.");
-            var area = await configurationRepository.GetAreaById(accountId, convo.AreaIdentifier);
-
-            var emailTemplateUsed = area.EmailTemplate;
+            var areaId = convo.AreaIdentifier;
             var email = convo.Email;
             var name = convo.Name;
             var phone = convo.PhoneNumber;
@@ -42,22 +39,23 @@ namespace Palavyr.API.Controllers.WidgetLive
 
             var record = await convoHistoryRepository.GetConversationRecordById(convo.ConversationId);
 
-            if (emailTemplateUsed != null)
+            if (!string.IsNullOrEmpty(areaId)) // we set this already when we create the convo, but here we use it to indicate if we've sent an email.
             {
-                record.EmailTemplateUsed = emailTemplateUsed;
+                var area = await configurationRepository.GetAreaById(accountId, convo.AreaIdentifier);
+                record.EmailTemplateUsed = area.EmailTemplate;
             }
 
-            if (email != null)
+            if (!string.IsNullOrEmpty(email))
             {
                 record.Email = email;
             }
 
-            if (name != null)
+            if (!string.IsNullOrEmpty(name))
             {
                 record.Name = name;
             }
 
-            if (phone != null)
+            if (!string.IsNullOrEmpty(phone))
             {
                 record.PhoneNumber = phone;
             }
@@ -72,8 +70,8 @@ namespace Palavyr.API.Controllers.WidgetLive
                 record.IsComplete = isComplete;
             }
 
-
             await configurationRepository.CommitChangesAsync();
+            await convoHistoryRepository.CommitChangesAsync();
         }
     }
 }

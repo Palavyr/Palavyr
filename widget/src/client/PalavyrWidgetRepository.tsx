@@ -5,6 +5,7 @@ import {
     DynamicResponse,
     KeyValues,
     LocaleResource,
+    LocaleResponse,
     NewConversation,
     PreCheckResult,
     SecretKey,
@@ -42,7 +43,7 @@ export class PalavyrWidgetRepository {
         Get: {
             PreCheck: async (isDemo: boolean) => this.client.get<PreCheckResult>(this.Routes.precheck(this.secretKey, isDemo)),
             WidgetPreferences: async () => this.client.get<WidgetPreferences>(this.Routes.widgetPreferences(this.secretKey)),
-            Locale: async () => this.client.get<LocaleResource>(this.Routes.locale(this.secretKey)),
+            Locale: async () => this.client.get<LocaleResponse>(this.Routes.locale(this.secretKey)),
             Areas: async () => this.client.get<Array<AreaTable>>(this.Routes.areas(this.secretKey)),
             NewConversation: async (areaId: string) => this.client.get<NewConversation>(this.Routes.newConvo(this.secretKey, areaId)),
             NodeImage: async (nodeId: string) => this.client.get<string>(this.Routes.nodeImage(this.secretKey, nodeId)),

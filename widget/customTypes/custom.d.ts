@@ -1,7 +1,7 @@
-declare module '@unicef/material-ui-currency-textfield' {
-    const noTypesYet: any;
-    export default noTypesYet;
-}
+// declare module '@unicef/material-ui-currency-textfield' {
+//     const noTypesYet: any;
+//     export default noTypesYet;
+// }
 
 declare module '*.svg' {
   const content: React.FunctionComponent<React.SVGAttributes<SVGElement>>;

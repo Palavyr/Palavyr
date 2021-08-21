@@ -29,7 +29,7 @@ export const Loader = ({ typing }: Props) => {
 
     return (
         <div className={cn("loader", { active: typing })}>
-            <Box boxShadow={1} className={cls.loaderContainer}>
+            <Box boxShadow={0} className={cls.loaderContainer}>
                 <span className={cn("loader-dots", cls.dotColor)}></span>
                 <span className={cn("loader-dots", cls.dotColor)}></span>
                 <span className={cn("loader-dots", cls.dotColor)}></span>

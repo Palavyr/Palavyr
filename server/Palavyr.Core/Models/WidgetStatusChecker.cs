@@ -177,21 +177,33 @@ namespace Palavyr.Core.Models
 
         private bool AllBranchesTerminate(ConversationNode[] nodeList, PreCheckError error)
         {
-            var terminals = nodeList
-                .Where(t => t.IsTerminalType)
-                .OrderBy(x => x.NodeId)
-                .ToList();
-            var nodeChilds = nodeList
+            // TODO: This is really fucking weird that I wrote this. Why would all Terminal Nodes ever want, need or simple be equal to nodeChilds
+
+            // var allTerminalNodes = nodeList
+            //     .Where(t => t.IsTerminalType)
+            //     .OrderBy(x => x.NodeId)
+            //     .ToList();
+            // var nodeChilds = nodeList
+            //     .Where(a => string.IsNullOrWhiteSpace(a.NodeChildrenString) && a.NodeType != "Loopback")
+            //     .OrderBy(x => x.NodeId)
+            //     .ToList();
+            // var sequencesAreEqual = allTerminalNodes.SequenceEqual(nodeChilds);
+            // if (!sequencesAreEqual)
+            // {
+            //     error.Reasons.Add("All branches do not terminate.");
+            // }
+
+            var hangingNodes = nodeList
                 .Where(a => string.IsNullOrWhiteSpace(a.NodeChildrenString) && a.NodeType != "Loopback")
                 .OrderBy(x => x.NodeId)
                 .ToList();
-            var result = terminals.SequenceEqual(nodeChilds);
-            if (!result)
+            var noHangingNodes = hangingNodes.Count == 0;
+            if (noHangingNodes)
             {
-                error.Reasons.Add("All branches do not terminate.");
+                return noHangingNodes;
             }
 
-            return result;
+            return false;
         }
 
         private bool AllRequiredNodesSatisfied(ConversationNode[] nodeList, NodeTypeOption[] requiredNodes, PreCheckError error)

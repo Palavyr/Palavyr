@@ -10,7 +10,6 @@ using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-
     public class GetLocaleController : PalavyrBaseController
     {
         private AccountsContext accountsContext;
@@ -27,20 +26,32 @@ namespace Palavyr.API.Controllers.Accounts.Settings
 
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
         [HttpGet("account/settings/locale/widget")]
-        public async Task<LocaleResource> GetForWidget([FromHeader] string accountId)
+        public async Task<LocaleResponse> GetForWidget(
+            [FromHeader]
+            string accountId)
         {
-            var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
-            var localeMeta = localeDefinitions.Parse(account.Locale);
-            return localeMeta;
+            // var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
+            // var localeMeta = localeDefinitions.Parse(account.Locale);
+            // return localeMeta;
+            var localeResponse = await GetLocaleResponse(accountId);
+            return localeResponse;
         }
 
         [HttpGet("account/settings/locale")]
-        public async Task<LocaleResponse> Get([FromHeader] string accountId)
+        public async Task<LocaleResponse> Get(
+            [FromHeader]
+            string accountId)
+        {
+            var localeResponse = await GetLocaleResponse(accountId);
+            return localeResponse;
+        }
+
+        private async Task<LocaleResponse> GetLocaleResponse(string accountId)
         {
             var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
             var localeMeta = localeDefinitions.Parse(account.Locale);
             var culture = new CultureInfo(localeMeta.Name);
-            
+
             return new LocaleResponse
             {
                 CurrentLocale = localeMeta,

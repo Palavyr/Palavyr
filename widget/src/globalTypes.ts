@@ -105,6 +105,11 @@ export type LocaleResource = {
 
 export type LocaleMap = LocaleResource[];
 
+export type LocaleResponse = {
+    currentLocale: LocaleResource;
+    localeMap: LocaleResource[];
+};
+
 export interface IProgressTheChat {
     node: WidgetNodeResource;
     nodeList: WidgetNodes;

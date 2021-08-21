@@ -19,8 +19,8 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.common.white,
     },
     paper: {
-        backgroundColor: theme.palette.common.white
-    }
+        backgroundColor: theme.palette.common.white,
+    },
 }));
 
 export const LocaleSelector = ({ options, onChange }: LocaleSelectorProps) => {
@@ -32,7 +32,7 @@ export const LocaleSelector = ({ options, onChange }: LocaleSelectorProps) => {
         options && (
             <Autocomplete
                 size="small"
-                classes={{root: cls.root, paper: cls.paper}}
+                classes={{ root: cls.root, paper: cls.paper }}
                 className={cls.root}
                 disableClearable
                 clearOnEscape
@@ -47,6 +47,11 @@ export const LocaleSelector = ({ options, onChange }: LocaleSelectorProps) => {
                         inputProps={{
                             ...params.inputProps,
                             autoComplete: "new-password",
+                        }}
+                        InputProps={{
+                            ...params.InputProps,
+                            disableUnderline: true,
+                            style: { borderBottom: "1px solid black" },
                         }}
                         SelectProps={{
                             className: cls.select,

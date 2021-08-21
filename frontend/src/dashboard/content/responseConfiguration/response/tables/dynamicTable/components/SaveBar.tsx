@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const SaveBar = ({ deleteButton, addInnerButton }: SaveBarProps) => {
+export const ButtonBar = ({ deleteButton, addInnerButton }: SaveBarProps) => {
     const cls = useStyles();
     return (
         <div className={cls.savebar}>

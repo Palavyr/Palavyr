@@ -2,7 +2,7 @@ import { Card, makeStyles, Tooltip } from "@material-ui/core";
 import React from "react";
 import SettingsIcon from "@material-ui/icons/Settings";
 import FaceIcon from "@material-ui/icons/Face";
-
+import ReplayIcon from "@material-ui/icons/Replay";
 import "./style.scss";
 import { getWidgetPreferences, openUserDetails } from "@store-dispatcher";
 import { WidgetPreferences } from "@Palavyr-Types";
@@ -39,6 +39,17 @@ const useStyles = makeStyles(theme => ({
             cursor: "pointer",
         },
     }),
+    replayIcon: {
+        color: theme.palette.common.white,
+        position: "fixed",
+        right: "5px",
+        bottom: "5px",
+        height: "1.2rem",
+        width: "1.2rem",
+        "&:hover": {
+            cursor: "pointer",
+        },
+    },
     headerBehavior: {
         wordWrap: "break-word",
         padding: "1rem",
@@ -55,6 +66,9 @@ export const ConvoHeader = ({ preferences, titleAvatar }: ConvoHeaderProps) => {
         <Card className={cls.header}>
             <Tooltip title="Update your contact details" placement="left">
                 <FaceIcon className={cls.settingsIcon} onClick={openUserDetails} />
+            </Tooltip>
+            <Tooltip title="Restart this chat" placement="left">
+                <ReplayIcon className={cls.replayIcon} onClick={() => window.location.reload()} />
             </Tooltip>
             {titleAvatar && <img src={titleAvatar} className="avatar" alt="profile" />}
             <div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: preferences.chatHeader }} />

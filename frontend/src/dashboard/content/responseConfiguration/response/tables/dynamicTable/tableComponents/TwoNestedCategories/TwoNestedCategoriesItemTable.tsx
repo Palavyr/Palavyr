@@ -4,7 +4,7 @@ import { TwoNestedCategoryData } from "@Palavyr-Types";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { SaveBar } from "../../components/SaveBar";
+import { ButtonBar } from "../../components/SaveBar";
 import { TwoNestedCategoriesHeader } from "./TwoNestedCategoriesHeader";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { TwoNestedCategoriesRow } from "./TwoNestedCategoriesRow";
@@ -71,7 +71,7 @@ export const TwoNestedCategoriesItemTable = ({ outerCategoryIndex, tableData, ou
                     })}
                 </TableBody>
             </TableContainer>
-            <SaveBar
+            <ButtonBar
                 addInnerButton={
                     outerCategoryIndex === 0 ? (
                         <Button onClick={addInnerCategory} color="primary" variant="contained">
