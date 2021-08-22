@@ -44,6 +44,8 @@ namespace Palavyr.Core.Models.Conversation.Schemas
 
         public ConversationHistory CreateFromPartial(string accountId)
         {
+            var timeStamp = DateTime.UtcNow;
+            
             return new ConversationHistory
             {
                 ConversationId = ConversationId,
@@ -52,7 +54,7 @@ namespace Palavyr.Core.Models.Conversation.Schemas
                 NodeId = NodeId,
                 NodeCritical = NodeCritical,
                 NodeType = NodeType,
-                TimeStamp = DateTime.UtcNow,
+                TimeStamp = timeStamp,
                 AccountId = accountId
             };
         }

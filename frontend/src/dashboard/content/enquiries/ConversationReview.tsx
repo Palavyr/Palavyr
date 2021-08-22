@@ -12,7 +12,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { formatLegitTimeStamp } from "./enquiriesUtils";
 import { EnquiryTimeStamp } from "./EnquiryTimeStamp";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     headerCell: {
         fontWeight: "bold",
         fontSize: "16pt",

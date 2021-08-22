@@ -1,19 +1,18 @@
 import { assembleEmailRecordData, getOrderedChildNodes, MinNumeric, parseNumericResponse } from "./utils";
 import React, { useEffect, useState } from "react";
-import { Table, TableRow, TableCell, makeStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import { responseAction } from "./responseAction";
 import { ConvoContextProperties } from "./registry";
 import { IProgressTheChat, WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
 import { setNumIndividualsContext, getContextProperties, openUserDetails, getWidgetPreferences } from "@store-dispatcher";
 import { ResponseButton } from "common/ResponseButton";
-import { SingleRowSingleCell } from "common/TableCell";
 import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "common/UserDetailsDialog/ChatLoadingSpinner";
 import { CustomImage } from "common/CustomImage";
-import { HtmlTextMessage } from "common/HtmlTextMessage";
 import { CurrencyTextField } from "common/numbers/CurrencyTextField";
 import { NumberFormatValues } from "react-number-format";
 import { TextInput } from "common/number/TextInput";
+import { BotResponse } from "./BotResponse";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {
@@ -50,44 +49,30 @@ const useStyles = makeStyles(theme => ({
 export class StandardComponents {
     public makeProvideInfo({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
-        const prefs = getWidgetPreferences();
-
         return () => {
-            const cls = useStyles(prefs);
             useEffect(() => {
                 responseAction(node, child, nodeList, client, convoId, null);
             }, []);
 
-            return (
-                <Table>
-                    <SingleRowSingleCell>
-                        <HtmlTextMessage message={node.text} className={cls.textField} />
-                    </SingleRowSingleCell>
-                </Table>
-            );
+            return <BotResponse message={node.text} />;
         };
     }
 
     public makeMultipleChoiceContinueButtons({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0]; // only one should exist
         const valueOptions = splitValueOptionsByDelimiter(node.valueOptions);
-        const prefs = getWidgetPreferences();
 
         return () => {
-            const cls = useStyles(prefs);
             const [disabled, setDisabled] = useState<boolean>(false);
-
             return (
-                <Table>
-                    <SingleRowSingleCell>
-                        <HtmlTextMessage message={node.text} className={cls.textField} />
-                    </SingleRowSingleCell>
-                    {valueOptions.map((valueOption: string, index: number) => {
-                        return (
-                            <TableRow>
-                                <TableCell className={cls.tableCell}>
+                <BotResponse
+                    message={node.text}
+                    buttons={
+                        <div style={{ display: "flex", flexDirection: "row", width: "100%", justifyContent: "flex-start" }}>
+                            {valueOptions.map((valueOption: string, index: number) => {
+                                return (
                                     <ResponseButton
-                                        prefs={prefs!}
+                                        prefs={getWidgetPreferences()!}
                                         disabled={disabled}
                                         key={valueOption + "-" + index}
                                         text={valueOption}
@@ -97,11 +82,11 @@ export class StandardComponents {
                                             setDisabled(true);
                                         }}
                                     />
-                                </TableCell>
-                            </TableRow>
-                        );
-                    })}
-                </Table>
+                                );
+                            })}
+                        </div>
+                    }
+                />
             );
         };
     }
@@ -111,36 +96,34 @@ export class StandardComponents {
         const prefs = getWidgetPreferences();
 
         return () => {
-            const cls = useStyles(prefs);
             const [disabled, setDisabled] = useState<boolean>(false);
-
             return (
-                <Table>
-                    <SingleRowSingleCell>
-                        <HtmlTextMessage message={node.text} className={cls.textField} />
-                    </SingleRowSingleCell>
-                    {children.map((child: WidgetNodeResource) => {
-                        return (
-                            <TableRow>
-                                <TableCell className={cls.tableCell}>
-                                    {child.optionPath && (
-                                        <ResponseButton
-                                            prefs={prefs!}
-                                            disabled={disabled}
-                                            key={child.nodeId}
-                                            text={child.optionPath}
-                                            onClick={() => {
-                                                var response = child.optionPath;
-                                                responseAction(node, child, nodeList, client, convoId, response);
-                                                setDisabled(true);
-                                            }}
-                                        />
-                                    )}
-                                </TableCell>
-                            </TableRow>
-                        );
-                    })}
-                </Table>
+                <BotResponse
+                    message={node.text}
+                    buttons={
+                        <>
+                            {children.map((child: WidgetNodeResource) => {
+                                return (
+                                    <>
+                                        {child.optionPath && (
+                                            <ResponseButton
+                                                prefs={prefs!}
+                                                disabled={disabled}
+                                                key={child.nodeId}
+                                                text={child.optionPath}
+                                                onClick={() => {
+                                                    var response = child.optionPath;
+                                                    responseAction(node, child, nodeList, client, convoId, response);
+                                                    setDisabled(true);
+                                                }}
+                                            />
+                                        )}
+                                    </>
+                                );
+                            })}
+                        </>
+                    }
+                />
             );
         };
     }
@@ -156,37 +139,31 @@ export class StandardComponents {
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
 
             return (
-                <Table>
-                    <SingleRowSingleCell>
-                        <HtmlTextMessage message={node.text} className={cls.textField} />
-                    </SingleRowSingleCell>
-                    <TableRow>
-                        <TableCell className={cls.root}>
-                            <TextInput
-                                label=""
-                                inputPropsClassName={cls.textField}
-                                inputLabelPropsClassName={cls.textLabel}
-                                onChange={event => {
-                                    setResponse(parseNumericResponse(event.target.value));
-                                    setDisabled(false);
-                                }}
-                            />
-                        </TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className={cls.root} align="right">
-                            <ResponseButton
-                                prefs={prefs!}
-                                disabled={disabled}
-                                onClick={async () => {
-                                    responseAction(node, child, nodeList, client, convoId, response);
-                                    setDisabled(true);
-                                    setInputDisabled(true);
-                                }}
-                            />
-                        </TableCell>
-                    </TableRow>
-                </Table>
+                <BotResponse
+                    message={node.text}
+                    input={
+                        <TextInput
+                            label=""
+                            inputPropsClassName={cls.textField}
+                            inputLabelPropsClassName={cls.textLabel}
+                            onChange={event => {
+                                setResponse(parseNumericResponse(event.target.value));
+                                setDisabled(false);
+                            }}
+                        />
+                    }
+                    button={
+                        <ResponseButton
+                            prefs={prefs!}
+                            disabled={disabled}
+                            onClick={async () => {
+                                responseAction(node, child, nodeList, client, convoId, response);
+                                setDisabled(true);
+                                setInputDisabled(true);
+                            }}
+                        />
+                    }
+                />
             );
         };
     }
@@ -196,55 +173,51 @@ export class StandardComponents {
         const prefs = getWidgetPreferences();
 
         return () => {
-            const cls = useStyles(prefs);
+            const cls = useStyles({ ...prefs });
             const [response, setResponse] = useState<number>(0);
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
             return (
-                <>
-                    <Table>
-                        <SingleRowSingleCell>
-                            <HtmlTextMessage message={node.text} className={cls.textField} />
-                        </SingleRowSingleCell>
-                        <SingleRowSingleCell>
-                            <CurrencyTextField
-                                InputProps={{
-                                    className: cls.textField,
-                                }}
-                                InputLabelProps={{
-                                    className: cls.textLabel,
-                                }}
-                                className={cls.tableCell}
-                                label="Amount"
-                                disabled={inputDisabled}
-                                variant="standard"
-                                value={response}
-                                currencySymbol="$"
-                                minimumValue="0"
-                                outputFormat="number"
-                                decimalCharacter="."
-                                digitGroupSeparator=","
-                                onValueChange={(values: NumberFormatValues) => {
-                                    if (values.floatValue !== undefined) {
-                                        setResponse(values.floatValue);
-                                        setDisabled(false);
-                                    }
-                                }}
-                            />
-                        </SingleRowSingleCell>
-                        <SingleRowSingleCell align="right">
-                            <ResponseButton
-                                prefs={prefs!}
-                                disabled={disabled}
-                                onClick={() => {
-                                    responseAction(node, child, nodeList, client, convoId, response.toString());
-                                    setDisabled(true);
-                                    setInputDisabled(true);
-                                }}
-                            />
-                        </SingleRowSingleCell>
-                    </Table>
-                </>
+                <BotResponse
+                    message={node.text}
+                    input={
+                        <CurrencyTextField
+                            InputProps={{
+                                className: cls.textField,
+                            }}
+                            InputLabelProps={{
+                                className: cls.textLabel,
+                            }}
+                            className={cls.tableCell}
+                            label="Amount"
+                            disabled={inputDisabled}
+                            variant="standard"
+                            value={response}
+                            currencySymbol="$"
+                            minimumValue="0"
+                            outputFormat="number"
+                            decimalCharacter="."
+                            digitGroupSeparator=","
+                            onValueChange={(values: NumberFormatValues) => {
+                                if (values.floatValue !== undefined) {
+                                    setResponse(values.floatValue);
+                                    setDisabled(false);
+                                }
+                            }}
+                        />
+                    }
+                    button={
+                        <ResponseButton
+                            prefs={prefs!}
+                            disabled={disabled}
+                            onClick={() => {
+                                responseAction(node, child, nodeList, client, convoId, response.toString());
+                                setDisabled(true);
+                                setInputDisabled(true);
+                            }}
+                        />
+                    }
+                />
             );
         };
     }
@@ -284,37 +257,33 @@ export class StandardComponents {
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
             const cls = useStyles(prefs);
             return (
-                <>
-                    <Table>
-                        <SingleRowSingleCell>
-                            <HtmlTextMessage message={node.text} className={cls.textField} />
-                        </SingleRowSingleCell>{" "}
-                        <SingleRowSingleCell>
-                            <TextInput
-                                inputPropsClassName={cls.textField}
-                                inputLabelPropsClassName={cls.textLabel}
-                                disabled={inputDisabled}
-                                onChange={event => {
-                                    setResponse(event.target.value);
-                                    setDisabled(false);
-                                }}
-                            />
-                        </SingleRowSingleCell>
-                        <SingleRowSingleCell align="right">
-                            <ResponseButton
-                                prefs={prefs!}
-                                disabled={disabled || response === ""}
-                                text="Submit"
-                                onClick={() => {
-                                    setResponse(response);
-                                    responseAction(node, child, nodeList, client, convoId, response);
-                                    setDisabled(true);
-                                    setInputDisabled(true);
-                                }}
-                            />
-                        </SingleRowSingleCell>
-                    </Table>
-                </>
+                <BotResponse
+                    message={node.text}
+                    input={
+                        <TextInput
+                            inputPropsClassName={cls.textField}
+                            inputLabelPropsClassName={cls.textLabel}
+                            disabled={inputDisabled}
+                            onChange={event => {
+                                setResponse(event.target.value);
+                                setDisabled(false);
+                            }}
+                        />
+                    }
+                    button={
+                        <ResponseButton
+                            prefs={prefs!}
+                            disabled={disabled || response === ""}
+                            text="Submit"
+                            onClick={() => {
+                                setResponse(response);
+                                responseAction(node, child, nodeList, client, convoId, response);
+                                setDisabled(true);
+                                setInputDisabled(true);
+                            }}
+                        />
+                    }
+                />
             );
         };
     }
@@ -331,49 +300,43 @@ export class StandardComponents {
             const cls = useStyles(prefs);
 
             return (
-                <Table>
-                    <SingleRowSingleCell>
-                        <HtmlTextMessage message={node.text} className={cls.textField} />
-                    </SingleRowSingleCell>
-                    <TableRow>
-                        <TableCell className={cls.root}>
-                            <TextInput
-                                inputPropsClassName={cls.textField}
-                                inputLabelPropsClassName={cls.textLabel}
-                                disabled={inputDisabled}
-                                label=""
-                                value={response}
-                                type="number"
-                                onChange={event => {
-                                    setDisabled(false);
-                                    const intValue = parseInt(event.target.value);
-                                    if (!intValue) return;
-                                    if (intValue < MinNumeric) {
-                                        setResponse(MinNumeric);
-                                    } else {
-                                        setResponse(intValue);
-                                    }
-                                }}
-                            />
-                        </TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className={cls.root} align="right">
-                            <ResponseButton
-                                prefs={prefs!}
-                                disabled={disabled}
-                                onClick={() => {
-                                    if (response) {
-                                        responseAction(node, child, nodeList, client, convoId, response.toString());
-                                        setNumIndividualsContext(response);
-                                        setDisabled(true);
-                                        setInputDisabled(true);
-                                    }
-                                }}
-                            />
-                        </TableCell>
-                    </TableRow>
-                </Table>
+                <BotResponse
+                    message={node.text}
+                    input={
+                        <TextInput
+                            inputPropsClassName={cls.textField}
+                            inputLabelPropsClassName={cls.textLabel}
+                            disabled={inputDisabled}
+                            label=""
+                            value={response}
+                            type="number"
+                            onChange={event => {
+                                setDisabled(false);
+                                const intValue = parseInt(event.target.value);
+                                if (!intValue) return;
+                                if (intValue < MinNumeric) {
+                                    setResponse(MinNumeric);
+                                } else {
+                                    setResponse(intValue);
+                                }
+                            }}
+                        />
+                    }
+                    button={
+                        <ResponseButton
+                            prefs={prefs!}
+                            disabled={disabled}
+                            onClick={() => {
+                                if (response) {
+                                    responseAction(node, child, nodeList, client, convoId, response.toString());
+                                    setNumIndividualsContext(response);
+                                    setDisabled(true);
+                                    setInputDisabled(true);
+                                }
+                            }}
+                        />
+                    }
+                />
             );
         };
     }
@@ -418,11 +381,9 @@ export class StandardComponents {
             const [loading, setLoading] = useState<boolean>(false);
             return (
                 <>
-                    <Table>
-                        <SingleRowSingleCell>
-                            <HtmlTextMessage message={node.text} className={cls.textField} />
-                        </SingleRowSingleCell>
-                        <SingleRowSingleCell align="center">
+                    <BotResponse
+                        message={node.text}
+                        button={
                             <ResponseButton
                                 prefs={prefs!}
                                 text="Send my email"
@@ -436,8 +397,8 @@ export class StandardComponents {
                                     responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
                                 }}
                             />
-                        </SingleRowSingleCell>
-                    </Table>
+                        }
+                    />
                     <ChatLoadingSpinner loading={loading} />
                 </>
             );
@@ -455,22 +416,7 @@ export class StandardComponents {
                     await client.Widget.Post.UpdateConvoRecord({ IsComplete: true, ConversationId: convoId });
                 })();
             }, []);
-            return (
-                <Table>
-                    <SingleRowSingleCell>
-                        <HtmlTextMessage message={node.text} className={cls.textField} />
-                    </SingleRowSingleCell>{" "}
-                    <SingleRowSingleCell align="right">
-                        <ResponseButton
-                            prefs={prefs!}
-                            text="restart"
-                            onClick={() => {
-                                window.location.reload();
-                            }}
-                        />
-                    </SingleRowSingleCell>
-                </Table>
-            );
+            return <BotResponse message={node.text} />;
         };
     }
 
@@ -484,23 +430,23 @@ export class StandardComponents {
 
             return (
                 <>
-                    <Table>
-                        <SingleRowSingleCell>
-                            <HtmlTextMessage message={node.text} className={cls.textField} />
-                        </SingleRowSingleCell>{" "}
-                        <SingleRowSingleCell align="center">
-                            <ResponseButton
-                                prefs={prefs!}
-                                text="Send my email"
-                                variant="contained"
-                                onClick={async () => {
-                                    setLoading(true);
-                                    responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
-                                }}
-                            />
-                            <ResponseButton prefs={prefs!} text="Check your details" variant="contained" onClick={() => openUserDetails()} />
-                        </SingleRowSingleCell>
-                    </Table>
+                    <BotResponse
+                        message={node.text}
+                        button={
+                            <>
+                                <ResponseButton
+                                    prefs={prefs!}
+                                    text="Send my email"
+                                    variant="contained"
+                                    onClick={async () => {
+                                        setLoading(true);
+                                        responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
+                                    }}
+                                />
+                                <ResponseButton prefs={prefs!} text="Check your details" variant="contained" onClick={() => openUserDetails()} />
+                            </>
+                        }
+                    />
                     <ChatLoadingSpinner loading={loading} />
                 </>
             );
@@ -533,11 +479,9 @@ export class StandardComponents {
             };
             return (
                 <>
-                    <Table>
-                        <SingleRowSingleCell>
-                            <HtmlTextMessage message={node.text} className={cls.textField} />
-                        </SingleRowSingleCell>
-                        <SingleRowSingleCell align="center">
+                    <BotResponse
+                        message={node.text}
+                        button={
                             <ResponseButton
                                 prefs={prefs!}
                                 text="Send my email"
@@ -551,8 +495,8 @@ export class StandardComponents {
                                     setDisabled(true);
                                 }}
                             />
-                        </SingleRowSingleCell>
-                    </Table>
+                        }
+                    />
                     <ChatLoadingSpinner loading={loading} />
                 </>
             );
@@ -571,13 +515,7 @@ export class StandardComponents {
                 }, 1500);
             }, []);
 
-            return (
-                <Table>
-                    <SingleRowSingleCell>
-                        <HtmlTextMessage message={node.text} className={cls.textField} />
-                    </SingleRowSingleCell>
-                </Table>
-            );
+            return <BotResponse message={node.text} />;
         };
     }
 }

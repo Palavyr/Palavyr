@@ -23,6 +23,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="AsyncFixer" Version="1.5.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.0" />
         <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.0.1" />
         <PackageReference Include="Konscious.Security.Cryptography.Argon2" Version="1.2.1" />

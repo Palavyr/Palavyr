@@ -7,11 +7,22 @@ import { renderNextComponent } from "./renderNextComponent";
 import { setDynamicResponse } from "./setDynamicResponse";
 import { floor, max, min } from "lodash";
 
+const WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN = 22;
+
 export const computeReadingTime = (node: WidgetNodeResource) => {
-    const typicalReadingSpeed = (node: WidgetNodeResource) => floor((node.text.length / 19) * 1000, 0);
+    const typicalReadingSpeed = (node: WidgetNodeResource) => floor((node.text.length / WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN) * 1000, 0);
     const timeout = min([18000, max([2000, typicalReadingSpeed(node)])]);
 
     return timeout;
+};
+
+const stripHtml = html => {
+    // Create a new div element
+    let temp = document.createElement("div");
+    // Set HTML content using provider
+    temp.innerHTML = html;
+    // Get the text property of the element (browser support)
+    return temp.textContent || temp.innerText || "";
 };
 
 export const responseAction = async (
@@ -55,7 +66,7 @@ export const responseAction = async (
 
     const updatePayload: ConversationUpdate = {
         ConversationId: convoId,
-        Prompt: node.text,
+        Prompt: stripHtml(node.text),
         UserResponse: response,
         NodeId: node.nodeId,
         NodeCritical: node.isCritical,
@@ -64,7 +75,7 @@ export const responseAction = async (
 
     const timeout = computeReadingTime(child);
     if (callback) callback();
-    client.Widget.Post.UpdateConvoHistory(updatePayload); // no need to await for this
+    await client.Widget.Post.UpdateConvoHistory(updatePayload); // no need to await for this
 
     setTimeout(() => {
         toggleMsgLoader();

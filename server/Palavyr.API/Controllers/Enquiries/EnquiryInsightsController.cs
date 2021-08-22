@@ -34,7 +34,7 @@ namespace Palavyr.API.Controllers.Enquiries
         public int NumRecords { get; set; }
         public int SentEmailCount { get; set; }
         public int Completed { get; set; }
-        public long AverageIntentCompletion { get; set; }
-        public List<long> IntentCompletePerIntent { get; set; }
+        public double AverageIntentCompletion { get; set; }
+        public List<double> IntentCompletePerIntent { get; set; }
     }
 }

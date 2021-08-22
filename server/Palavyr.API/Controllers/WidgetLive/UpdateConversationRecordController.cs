@@ -27,7 +27,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             string accountId,
             ConversationRecordUpdate convo)
         {
-            updateHandler.UpdateConversationRecord(accountId, convo);
+            await updateHandler.UpdateConversationRecord(accountId, convo);
             return NoContent();
         }
     }

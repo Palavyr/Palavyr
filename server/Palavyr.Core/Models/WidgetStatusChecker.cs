@@ -192,9 +192,13 @@ namespace Palavyr.Core.Models
             // {
             //     error.Reasons.Add("All branches do not terminate.");
             // }
+            var terminalTypes = DefaultNodeTypeOptions
+                .DefaultNodeTypeOptionsList
+                .Where(x => x.IsTerminalType || x.Value == nameof(DefaultNodeTypeOptions.Loopback))
+                .Select(x => x.Value).ToList();
 
             var hangingNodes = nodeList
-                .Where(a => string.IsNullOrWhiteSpace(a.NodeChildrenString) && a.NodeType != "Loopback")
+                .Where(a => string.IsNullOrWhiteSpace(a.NodeChildrenString) && !terminalTypes.Contains(a.NodeType) )// a.NodeType != "Loopback")
                 .OrderBy(x => x.NodeId)
                 .ToList();
             var noHangingNodes = hangingNodes.Count == 0;

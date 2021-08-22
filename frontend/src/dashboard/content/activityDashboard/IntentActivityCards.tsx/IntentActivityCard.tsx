@@ -1,14 +1,11 @@
 import { makeStyles } from "@material-ui/core";
 import { PalavyrCard } from "material/surface/PalavyrCard";
-import React, { useEffect, useState } from "react";
+import React, {  } from "react";
 
-import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
 import AnimatedLines from "../images/animated-lines.gif";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { EnquiryActivtyResource } from "@Palavyr-Types";
@@ -28,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     info: {},
     sepBar: {
         height: "2rem",
-        border: `1px solid ${theme.palette.grey[400]}`,
+        borderLeft: `1px solid ${theme.palette.grey[400]}`,
         borderRadius: "50%",
         textAlign: "center",
         margin: "0.2rem",
@@ -87,5 +84,5 @@ export const IntentActivityCard = ({ activityResource, onClick }: ActivityCardPr
 };
 
 const formatAsPercent = (x: number) => {
-    return `${x.toFixed(2)}%`;
+    return `${(x * 100).toFixed(2)}%`;
 };

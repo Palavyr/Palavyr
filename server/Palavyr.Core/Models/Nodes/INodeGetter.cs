@@ -7,7 +7,13 @@ using Palavyr.Core.Services.DynamicTableService.Compilers;
 
 namespace Palavyr.Core.Models.Nodes
 {
-    public class NodeGetter
+    public interface INodeGetter
+    {
+        ConversationNode GetAnyParentNode(ConversationNode[] nodeList, ConversationNode curNode);
+        ConversationNode[] GetParentNodes(ConversationNode[] nodeList, ConversationNode[] curNodes);
+    }
+
+    public class NodeGetter : INodeGetter
     {
         private readonly IConversationOptionSplitter splitter;
 

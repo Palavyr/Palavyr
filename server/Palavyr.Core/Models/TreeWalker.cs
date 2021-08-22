@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.DynamicTableService;
 
@@ -31,5 +32,21 @@ namespace Palavyr.Core.Models
 
             return count;
         }
+
+        // public int GetLengthOfLongestTerminatingPath(ConversationNode[] nodeList, ConversationNode[] terminatingNodes)
+        // {
+        //     var listOfBranchLenghts = new List<int>();
+        //     foreach (var terminalNode in terminatingNodes)
+        //     {
+        //         var branchLength = ComputeBranchLength(terminalNode, nodeList);
+        //     }
+        //
+        //     return listOfBranchLenghts.Max();
+        // }
+        //
+        // private int ComputeBranchLength(ConversationNode terminalNode, ConversationNode[] nodeList)
+        // {
+        //     
+        // }
     }
 }

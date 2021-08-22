@@ -13,13 +13,18 @@ import { Align } from "dashboard/layouts/positioning/Align";
 const useStyles = makeStyles(theme => ({
     paper: {
         padding: theme.spacing(5),
-        marginTop: theme.spacing(3),
+        marginTop: theme.spacing(1),
         background: "none",
         border: "none",
-        boxShadow: "none"
+        boxShadow: "none",
     },
     button: {
         marginBottom: "1rem",
+    },
+    reloadButton: {
+        position: "fixed",
+        top: "50%",
+        right: "2rem",
     },
 }));
 
@@ -66,9 +71,9 @@ export const ChatDemoPage = () => {
                     {apiKey && <PalavyrDemoWidget preCheckErrors={preCheckErrors} apiKey={apiKey} iframeRefreshed={iframeRefreshed} />}
                 </Grid>
             </Grid>
-            <Align>
+            <div className={cls.reloadButton}>
                 <SinglePurposeButton classes={cls.button} variant="outlined" color="primary" buttonText="Reload" onClick={() => window.location.reload()} />
-            </Align>
+            </div>
         </Paper>
     );
 };

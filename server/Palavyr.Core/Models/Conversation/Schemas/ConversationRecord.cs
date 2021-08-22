@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Resources.Requests;
 
 namespace Palavyr.Core.Models.Conversation.Schemas
@@ -32,7 +33,8 @@ namespace Palavyr.Core.Models.Conversation.Schemas
                 ConversationId = conversationId,
                 AccountId = accountId,
                 AreaName = areaName,
-                AreaIdentifier = areaIdentifier
+                AreaIdentifier = areaIdentifier,
+                TimeStamp = TimeUtils.CreateNewTimeStamp()
             };
         }
 

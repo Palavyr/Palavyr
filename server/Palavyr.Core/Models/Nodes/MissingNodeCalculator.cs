@@ -8,9 +8,9 @@ namespace Palavyr.Core.Models.Nodes
 {
     public class MissingNodeCalculator
     {
-        private readonly NodeGetter nodeGetter;
+        private readonly INodeGetter nodeGetter;
 
-        public MissingNodeCalculator(NodeGetter nodeGetter)
+        public MissingNodeCalculator(INodeGetter nodeGetter)
         {
             this.nodeGetter = nodeGetter;
         }
@@ -63,7 +63,6 @@ namespace Palavyr.Core.Models.Nodes
             NodeTypeOption[] requiredNodes // array of node type names
         )
         {
-            Console.WriteLine("SOME STUFF");
             var requiredNodesClone = new List<NodeTypeOption>(requiredNodes);
             if (requiredNodesClone.Select(x => x.Value).Contains(node.NodeType))
             {

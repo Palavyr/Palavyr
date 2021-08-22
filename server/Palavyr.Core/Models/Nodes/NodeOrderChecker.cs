@@ -8,10 +8,10 @@ namespace Palavyr.Core.Models.Nodes
 {
     public class NodeOrderChecker
     {
-        private readonly NodeGetter nodeGetter;
+        private readonly INodeGetter nodeGetter;
         private readonly GuidFinder guidFinder;
 
-        public NodeOrderChecker(NodeGetter nodeGetter, GuidFinder guidFinder)
+        public NodeOrderChecker(INodeGetter nodeGetter, GuidFinder guidFinder)
         {
             this.nodeGetter = nodeGetter;
             this.guidFinder = guidFinder;

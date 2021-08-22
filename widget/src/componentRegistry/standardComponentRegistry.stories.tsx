@@ -86,7 +86,7 @@ export const AllComponents: Story = () => {
             {allComponents.map(Component => (
                 <>
                     <Component />
-                    <div style={{ height: "1rem", backgroundColor: "black" }}></div>
+                    <div style={{ height: "1rem" }}></div>
                 </>
             ))}
         </div>

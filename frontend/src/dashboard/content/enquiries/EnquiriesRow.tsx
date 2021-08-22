@@ -21,7 +21,7 @@ const formConversationReviewPath = (conversationId: string) => {
     return CONVERSATION_REVIEW + `?${CONVERSATION_REVIEW_PARAMNAME}=${conversationId}`;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     headerRow: {
         borderBottom: theme.palette.common.black,
     },

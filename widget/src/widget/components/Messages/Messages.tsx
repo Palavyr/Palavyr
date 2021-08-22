@@ -10,6 +10,7 @@ import { BrandingStrip } from "common/BrandingStrip";
 import { makeStyles } from "@material-ui/core";
 
 import "./styles.scss";
+import classNames from "classnames";
 
 type Props = {
     showTimeStamp: boolean;
@@ -21,6 +22,9 @@ const useStyles = makeStyles(theme => ({
     face: {
         height: "4rem",
     },
+    messageTube: (prefs: WidgetPreferences) => ({
+        backgroundColor: prefs.chatBubbleColor,
+    }),
 }));
 
 export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) => {
@@ -49,13 +53,13 @@ export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) =
     //   }
     // }
 
-    const cls = useStyles();
+    const cls = useStyles({ ...preferences });
 
     return (
         <>
-            <div id="messages" className="rcw-messages-container" ref={messageRef} style={{ paddingBottom: "2rem" }}>
+            <div id="messages" className={classNames("rcw-messages-container", cls.messageTube)} ref={messageRef} style={{ paddingBottom: "2rem" }}>
                 {messages?.map((message, index) => (
-                    <div className="rcw-message" key={`${index}-${format(message.timestamp, "hh:mm")}`}>
+                    <div className={classNames("rcw-message", cls.messageTube)} key={`${index}-${format(message.timestamp, "hh:mm")}`}>
                         {/* {profileAvatar  && message.showAvatar && <img src={profileAvatar} className="rcw-avatar" alt="profile" />} */}
                         {/* <FaceIcon className={cls.face} /> */}
                         {getComponentToRender(message, preferences, showTimeStamp)}

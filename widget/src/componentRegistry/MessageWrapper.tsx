@@ -2,7 +2,6 @@ import * as React from "react";
 import { Box, makeStyles } from "@material-ui/core";
 import classNames from "classnames";
 import { WidgetPreferences } from "@Palavyr-Types";
-import format from "date-fns/format";
 
 type StyleProps = {
     backgroundColor: string;
@@ -32,12 +31,18 @@ const useStyles = makeStyles(theme => ({
         textAlign: "left",
     },
     wrapper: {
-        marginLeft: "0.2rem",
-        merginRight: "0.2rem",
+        // marginLeft: "0.2rem",
+        merginRight: "0.4rem",
         marginTop: "0.1rem",
         borderRadius: "10px",
-        maxWidth: "85%",
-        minWidth: "45%",
+        // maxWidth: "85%",
+        // minWidth: "45%",
+    },
+    timeStamp: {
+        fontSize: "9px",
+        marginTop: "0px",
+        borderTop: "1px solid black",
+        float: "left",
     },
 }));
 
@@ -51,9 +56,6 @@ export const MessageWrapper = ({ customPreferences, children }: IWrapMessages) =
     return (
         <div className={cls.wrapper}>
             <Box className={classNames(cls.messageText, cls.layout)}>{children}</Box>
-            <span style={{ float: "left" }} className="rcw-timestamp">
-                {format(new Date(), "hh:mm")}
-            </span>
         </div>
     );
 };

@@ -12,7 +12,7 @@ namespace PalavyrServer.UnitTests.Core.Models.Nodes
     [Trait("Node Getter", "Conversations")]
     public class NodeGetterFixture : IUnitTestFixture, IAsyncLifetime
     {
-        private NodeGetter nodeGetter;
+        private INodeGetter nodeGetter;
 
         public Task InitializeAsync()
         {

@@ -8,6 +8,18 @@ import markdownItLinkAttributes from "markdown-it-link-attributes";
 
 import "./styles.scss";
 import { IMessage } from "@Palavyr-Types";
+import { makeStyles } from "@material-ui/core";
+import classNames from "classnames";
+
+const useStyles = makeStyles(theme => ({
+    timeStamp: {
+        fontSize: "9px",
+        // marginTop: "0.6rem",
+        borderTop: "1px solid black",
+        float: "right",
+        background: "none",
+    },
+}));
 
 export type MessageProps = {
     message: IMessage;
@@ -24,10 +36,11 @@ export const Message = ({ message, showTimeStamp = true }: MessageProps) => {
         .use(markdownItLinkAttributes, { attrs: { target: "_blank", rel: "noopener" } })
         .render(message.text);
 
+    const cls = useStyles();
     return (
         <div className={`rcw-${message.sender}`}>
-            <div className="rcw-message-text" dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
-            {showTimeStamp && <span className="rcw-timestamp">{format(message.timestamp, "hh:mm")}</span>}
+            <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
+            {showTimeStamp && <span className={classNames("rcw-timestamp", cls.timeStamp)}>{format(message.timestamp, "hh:mm")}</span>}
         </div>
     );
 };

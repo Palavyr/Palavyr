@@ -81,7 +81,7 @@ namespace Palavyr.Core.Services.PdfService
 
                 if (!found)
                 {
-                    Thread.Sleep(500);
+                    Task.Delay(500);
                 }
 
                 count++;

@@ -10,6 +10,7 @@ import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import TrendingUpIcon from "@material-ui/icons/TrendingUp";
 import BrushIcon from "@material-ui/icons/Brush";
+import MotorcycleIcon from "@material-ui/icons/Motorcycle";
 
 const useStyles = makeStyles(theme => ({
     icon: {
@@ -92,7 +93,7 @@ export const ReviewSection = memo(({ isActive, menuOpen }: ReviewSectionProps) =
                     text="Chat Bot Demo"
                     isActive={isActive}
                     onClick={chatDemoOnClick}
-                    IconComponent={<CompareIcon className={cls.icon} />}
+                    IconComponent={<MotorcycleIcon className={cls.icon} />}
                 />
                 <SidebarLinkItem
                     toolTipText="Image Uploads"

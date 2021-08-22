@@ -74,7 +74,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<S3Saver>().As<IS3Saver>();
             builder.RegisterType<S3Deleter>().As<IS3Deleter>();
 
-            builder.RegisterType<NodeGetter>().AsSelf();
+            builder.RegisterType<INodeGetter>().AsSelf();
             builder.RegisterType<ConversationOptionSplitter>().As<IConversationOptionSplitter>().SingleInstance();
             builder.RegisterType<WidgetStatusChecker>().As<IWidgetStatusChecker>();
             builder.RegisterType<MissingNodeCalculator>().AsSelf().InstancePerLifetimeScope();
@@ -119,6 +119,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<UpdateConversationRecordHandler>().As<IUpdateConversationRecordHandler>();
             builder.RegisterType<LocaleDefinitions>().As<ILocaleDefinitions>();
             builder.RegisterType<EnquiryInsightComputer>().As<IEnquiryInsightComputer>();
+            builder.RegisterType<NodeGetter>().As<INodeGetter>();
+            builder.RegisterType<NodeBranchLengthCalculator>().As<INodeBranchLengthCalculator>();
         }
     }
 }

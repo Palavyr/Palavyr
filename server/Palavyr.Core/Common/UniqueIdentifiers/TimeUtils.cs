@@ -5,8 +5,6 @@ namespace Palavyr.Core.Common.UniqueIdentifiers
 {
     public class TimeUtils
     {
-        public const string DateTimeFormat = "yyyy-dd-M--HH-mm-ss"; // e.g. 2020-09-16--12-34-10
-
         public string SecondPrecision { get; }
         public string DayPrecision { get; }
 
@@ -16,12 +14,9 @@ namespace Palavyr.Core.Common.UniqueIdentifiers
             SecondPrecision = secondPrecision;
         }
 
-        public static TimeUtils CreateTimeStamp()
+        public static DateTime CreateNewTimeStamp()
         {
-            var secondPrecision = DateTime.Now.ToString();
-            var dayPrecision = secondPrecision.Split("--").First();
-            
-            return new TimeUtils(dayPrecision, secondPrecision);
+            return new DateTime();
         }
     }
 }

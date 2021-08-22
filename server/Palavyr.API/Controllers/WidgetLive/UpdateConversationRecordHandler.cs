@@ -72,6 +72,8 @@ namespace Palavyr.API.Controllers.WidgetLive
 
             await configurationRepository.CommitChangesAsync();
             await convoHistoryRepository.CommitChangesAsync();
+            
+            ;
         }
     }
 }

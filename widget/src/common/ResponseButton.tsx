@@ -14,10 +14,13 @@ export interface IResponseButton {
 const useStyles = makeStyles(theme => ({
     button: (prefs: WidgetPreferences) => ({
         color: prefs.buttonFontColor,
+        borderRadius: "0px",
         backgroundColor: prefs.buttonColor,
         marginBottom: "0.4rem",
         transion: "all ease-in-out 0.2s",
         border: "none",
+        marginRight: "0.3rem",
+
         "&:hover": {
             color: prefs.buttonFontColor,
             backgroundColor: prefs.buttonColor,

@@ -1,22 +1,20 @@
 import React from "react";
-import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
-import { makeStyles, Typography } from "@material-ui/core";
-import { Align } from "dashboard/layouts/positioning/Align";
+import { makeStyles } from "@material-ui/core";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 const useStyles = makeStyles(theme => ({
     customizetext: {
-        paddingTop: "1.8rem",
+        paddingTop: "1.rem",
     },
-
 }));
 
 export const ChatDemoHeader = () => {
     const cls = useStyles();
     return (
         <>
-            <Typography gutterBottom align="center" variant="h4" className={cls.customizetext}>
+            <PalavyrText gutterBottom align="center" variant="h4" className={cls.customizetext}>
                 Try out your widget
-            </Typography>
+            </PalavyrText>
         </>
     );
 };

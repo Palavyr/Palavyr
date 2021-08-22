@@ -32,7 +32,6 @@ export const Widget = ({ option }: WidgetProps) => {
         const nodes = newConversation.conversationNodes;
         const convoId = newConversation.conversationId;
 
-
         const contextProperties = getContextProperties();
 
         const name = contextProperties[ConvoContextProperties.name];
