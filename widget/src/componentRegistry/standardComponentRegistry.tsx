@@ -1,10 +1,10 @@
 import { assembleEmailRecordData, getOrderedChildNodes, MinNumeric, parseNumericResponse } from "./utils";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core";
 import { responseAction } from "./responseAction";
 import { ConvoContextProperties } from "./registry";
 import { IProgressTheChat, WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
-import { setNumIndividualsContext, getContextProperties, openUserDetails, getWidgetPreferences } from "@store-dispatcher";
+import { setNumIndividualsContext, getContextProperties, openUserDetails } from "@store-dispatcher";
 import { ResponseButton } from "common/ResponseButton";
 import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "common/UserDetailsDialog/ChatLoadingSpinner";
@@ -13,6 +13,7 @@ import { CurrencyTextField } from "common/numbers/CurrencyTextField";
 import { NumberFormatValues } from "react-number-format";
 import { TextInput } from "common/number/TextInput";
 import { BotResponse } from "./BotResponse";
+import { WidgetContext } from "widget/context/WidgetContext";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {
@@ -72,7 +73,6 @@ export class StandardComponents {
                             {valueOptions.map((valueOption: string, index: number) => {
                                 return (
                                     <ResponseButton
-                                        prefs={getWidgetPreferences()!}
                                         disabled={disabled}
                                         key={valueOption + "-" + index}
                                         text={valueOption}
@@ -93,7 +93,6 @@ export class StandardComponents {
 
     public makeMultipleChoiceAsPathButtons({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const children = getOrderedChildNodes(node.nodeChildrenString, nodeList);
-        const prefs = getWidgetPreferences();
 
         return () => {
             const [disabled, setDisabled] = useState<boolean>(false);
@@ -107,7 +106,6 @@ export class StandardComponents {
                                     <>
                                         {child.optionPath && (
                                             <ResponseButton
-                                                prefs={prefs!}
                                                 disabled={disabled}
                                                 key={child.nodeId}
                                                 text={child.optionPath}
@@ -130,14 +128,12 @@ export class StandardComponents {
 
     public makeTakeNumber({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         let child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
-        const prefs = getWidgetPreferences();
 
         return () => {
-            const cls = useStyles(prefs);
             const [response, setResponse] = useState<string>("");
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
-
+            const cls = useStyles();
             return (
                 <BotResponse
                     message={node.text}
@@ -154,7 +150,6 @@ export class StandardComponents {
                     }
                     button={
                         <ResponseButton
-                            prefs={prefs!}
                             disabled={disabled}
                             onClick={async () => {
                                 responseAction(node, child, nodeList, client, convoId, response);
@@ -170,10 +165,10 @@ export class StandardComponents {
 
     makeTakeCurrency({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
-        const prefs = getWidgetPreferences();
 
         return () => {
-            const cls = useStyles({ ...prefs });
+            const { preferences } = useContext(WidgetContext);
+            const cls = useStyles(preferences);
             const [response, setResponse] = useState<number>(0);
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
@@ -208,7 +203,6 @@ export class StandardComponents {
                     }
                     button={
                         <ResponseButton
-                            prefs={prefs!}
                             disabled={disabled}
                             onClick={() => {
                                 responseAction(node, child, nodeList, client, convoId, response.toString());
@@ -224,10 +218,8 @@ export class StandardComponents {
 
     makeShowImage({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
-        const prefs = getWidgetPreferences();
 
         return () => {
-            const cls = useStyles(prefs);
             const [loaded, setLoaded] = useState<boolean>(false);
             const [link, setLink] = useState<string>("");
 
@@ -249,13 +241,12 @@ export class StandardComponents {
 
     makeTakeText({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
-        const prefs = getWidgetPreferences();
 
         return () => {
             const [response, setResponse] = useState<string>("");
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
-            const cls = useStyles(prefs);
+            const cls = useStyles();
             return (
                 <BotResponse
                     message={node.text}
@@ -272,7 +263,6 @@ export class StandardComponents {
                     }
                     button={
                         <ResponseButton
-                            prefs={prefs!}
                             disabled={disabled || response === ""}
                             text="Submit"
                             onClick={() => {
@@ -290,15 +280,12 @@ export class StandardComponents {
 
     makeTakeNumberIndividuals({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
-        const prefs = getWidgetPreferences();
 
         return () => {
             const [response, setResponse] = useState<number | null>(null);
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
-
-            const cls = useStyles(prefs);
-
+            const cls = useStyles();
             return (
                 <BotResponse
                     message={node.text}
@@ -324,7 +311,6 @@ export class StandardComponents {
                     }
                     button={
                         <ResponseButton
-                            prefs={prefs!}
                             disabled={disabled}
                             onClick={() => {
                                 if (response) {
@@ -343,7 +329,6 @@ export class StandardComponents {
 
     makeSendEmail({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const areaId = nodeList[0].areaIdentifier;
-        const prefs = getWidgetPreferences();
 
         const sendEmail = async () => {
             const contextProperties = getContextProperties();
@@ -376,7 +361,6 @@ export class StandardComponents {
         };
 
         return () => {
-            const cls = useStyles(prefs);
             const [disabled, setDisabled] = useState<boolean>(false);
             const [loading, setLoading] = useState<boolean>(false);
             return (
@@ -385,7 +369,6 @@ export class StandardComponents {
                         message={node.text}
                         button={
                             <ResponseButton
-                                prefs={prefs!}
                                 text="Send my email"
                                 variant="contained"
                                 disabled={disabled}
@@ -406,11 +389,7 @@ export class StandardComponents {
     }
 
     makeRestart({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
-        const prefs = getWidgetPreferences();
-
         return () => {
-            const cls = useStyles(prefs);
-
             useEffect(() => {
                 (async () => {
                     await client.Widget.Post.UpdateConvoRecord({ IsComplete: true, ConversationId: convoId });
@@ -422,11 +401,9 @@ export class StandardComponents {
 
     makeSendEmailFailedFirstAttempt = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
-        const prefs = getWidgetPreferences();
 
         return () => {
             const [loading, setLoading] = useState<boolean>(false);
-            const cls = useStyles(prefs);
 
             return (
                 <>
@@ -435,7 +412,6 @@ export class StandardComponents {
                         button={
                             <>
                                 <ResponseButton
-                                    prefs={prefs!}
                                     text="Send my email"
                                     variant="contained"
                                     onClick={async () => {
@@ -443,7 +419,7 @@ export class StandardComponents {
                                         responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
                                     }}
                                 />
-                                <ResponseButton prefs={prefs!} text="Check your details" variant="contained" onClick={() => openUserDetails()} />
+                                <ResponseButton text="Check your details" variant="contained" onClick={() => openUserDetails()} />
                             </>
                         }
                     />
@@ -455,10 +431,8 @@ export class StandardComponents {
 
     makeSendFallbackEmail({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const areaId = nodeList[0].areaIdentifier;
-        const prefs = getWidgetPreferences();
 
         return () => {
-            const cls = useStyles(prefs);
             const [disabled, setDisabled] = useState<boolean>(false);
             const [loading, setLoading] = useState<boolean>(false);
 
@@ -483,7 +457,6 @@ export class StandardComponents {
                         message={node.text}
                         button={
                             <ResponseButton
-                                prefs={prefs!}
                                 text="Send my email"
                                 variant="contained"
                                 disabled={disabled}
@@ -505,10 +478,8 @@ export class StandardComponents {
 
     makeEndWithoutEmail({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
-        const prefs = getWidgetPreferences();
 
         return () => {
-            const cls = useStyles(prefs);
             useEffect(() => {
                 setTimeout(async () => {
                     responseAction(node, child, nodeList, client, convoId, null);

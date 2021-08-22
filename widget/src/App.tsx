@@ -8,13 +8,14 @@ import { useSelector } from "react-redux";
 import { GlobalState, SelectedOption, WidgetPreferences } from "@Palavyr-Types";
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { setWidgetPreferences } from "@store-dispatcher";
+import { WidgetContext } from "widget/context/WidgetContext";
 
 export const App = () => {
     const userDetailsVisible = useSelector((state: GlobalState) => state.behaviorReducer.userDetailsVisible);
 
     const [selectedOption, setSelectedOption] = useState<SelectedOption | null>(null);
     const [isReady, setIsReady] = useState<boolean>(false);
-    const [widgetPrefs, setWidgetPrefs] = useState<WidgetPreferences>();
+    const [preferences, setWidgetPrefs] = useState<WidgetPreferences>();
     const [kickoff, setKickoff] = useState<boolean>(false);
 
     const [chatStarted, setChatStarted] = useState<boolean>(false);
@@ -41,21 +42,25 @@ export const App = () => {
 
     return (
         <>
-            {isReady === true && selectedOption === null && widgetPrefs && !userDetailsVisible && (
-                <>
-                    <OptionSelector setSelectedOption={setSelectedOption} />
-                </>
-            )}
-            {isReady === true && selectedOption !== null && (
-                <>
-                    <CollectDetailsForm chatStarted={chatStarted} setChatStarted={setChatStarted} setKickoff={setKickoff} />
-                    {widgetPrefs && kickoff && <Widget option={selectedOption} />}
-                </>
-            )}
-            {isReady === false && (
-                <div style={{ textAlign: "center", paddingTop: "3rem" }}>
-                    <span>Not ready</span>
-                </div>
+            {preferences && (
+                <WidgetContext.Provider value={{ preferences }}>
+                    {isReady === true && selectedOption === null && preferences && !userDetailsVisible && (
+                        <>
+                            <OptionSelector setSelectedOption={setSelectedOption} />
+                        </>
+                    )}
+                    {isReady === true && selectedOption !== null && (
+                        <>
+                            <CollectDetailsForm chatStarted={chatStarted} setChatStarted={setChatStarted} setKickoff={setKickoff} />
+                            {preferences && kickoff && <Widget option={selectedOption} />}
+                        </>
+                    )}
+                    {isReady === false && (
+                        <div style={{ textAlign: "center", paddingTop: "3rem" }}>
+                            <span>Not ready</span>
+                        </div>
+                    )}
+                </WidgetContext.Provider>
             )}
         </>
     );

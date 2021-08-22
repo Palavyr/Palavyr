@@ -5,8 +5,10 @@ import { makeStyles, Card, Box, TextField } from "@material-ui/core";
 import Autocomplete, { AutocompleteRenderInputParams } from "@material-ui/lab/Autocomplete";
 import classNames from "classnames";
 import { sortByPropertyAlphabetical } from "common/sorting";
-import { getWidgetPreferences, openUserDetails } from "@store-dispatcher";
+import { openUserDetails } from "@store-dispatcher";
 import { BrandingStrip } from "common/BrandingStrip";
+import { WidgetContext } from "widget/context/WidgetContext";
+import { useContext } from "react";
 
 const useStyles = makeStyles(() => ({
     container: {
@@ -80,7 +82,8 @@ export interface DropdownListProps {
 export const DropdownListOptions = ({ setSelectedOption, options }: DropdownListProps) => {
     const history = useHistory();
     var secretKey = new URLSearchParams(useLocation().search).get("key");
-    var preferences = getWidgetPreferences();
+
+    const { preferences } = useContext(WidgetContext);
     const cls = useStyles(preferences);
 
     const onChange = (event: any, newOption: SelectedOption) => {
@@ -126,7 +129,6 @@ export const DropdownListOptions = ({ setSelectedOption, options }: DropdownList
                     />
                 )}
             </div>
-            {/* <BrandingStrip /> */}
         </Box>
     );
 };

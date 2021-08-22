@@ -1,14 +1,13 @@
 import { Card, makeStyles, Tooltip } from "@material-ui/core";
-import React from "react";
-import SettingsIcon from "@material-ui/icons/Settings";
+import React, { useContext } from "react";
 import FaceIcon from "@material-ui/icons/Face";
 import ReplayIcon from "@material-ui/icons/Replay";
 import "./style.scss";
-import { getWidgetPreferences, openUserDetails } from "@store-dispatcher";
+import { openUserDetails } from "@store-dispatcher";
 import { WidgetPreferences } from "@Palavyr-Types";
+import { WidgetContext } from "widget/context/WidgetContext";
 
 export interface ConvoHeaderProps {
-    preferences: WidgetPreferences;
     titleAvatar?: string;
 }
 
@@ -60,7 +59,8 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const ConvoHeader = ({ preferences, titleAvatar }: ConvoHeaderProps) => {
+export const ConvoHeader = ({ titleAvatar }: ConvoHeaderProps) => {
+    const { preferences } = useContext(WidgetContext);
     const cls = useStyles(preferences);
     return (
         <Card className={cls.header}>

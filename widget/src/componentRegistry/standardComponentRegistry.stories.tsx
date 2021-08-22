@@ -6,7 +6,6 @@ import { ConfigureMockClient } from "test/testUtils/ConfigureMockClient";
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { convoA } from "@test-data/conversationNodes";
 import { MessageWrapper } from "componentRegistry/MessageWrapper";
-import { widgetPreferences } from "@test-data/widgetPreferences";
 
 const registry = new StandardComponents();
 
@@ -25,7 +24,7 @@ export default {
     decorators: [
         Story => (
             <div style={{ border: "1px solid lightgray", position: "static", width: "350px" }}>
-                <MessageWrapper customPreferences={widgetPreferences}>
+                <MessageWrapper >
                     <Story />
                 </MessageWrapper>
             </div>

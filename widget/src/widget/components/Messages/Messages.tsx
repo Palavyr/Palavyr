@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import format from "date-fns/format";
 import { Loader } from "./components/Loader/Loader";
@@ -11,11 +11,11 @@ import { makeStyles } from "@material-ui/core";
 
 import "./styles.scss";
 import classNames from "classnames";
+import { WidgetContext } from "widget/context/WidgetContext";
 
 type Props = {
     showTimeStamp: boolean;
     profileAvatar?: string;
-    preferences: WidgetPreferences;
 };
 
 const useStyles = makeStyles(theme => ({
@@ -27,7 +27,9 @@ const useStyles = makeStyles(theme => ({
     }),
 }));
 
-export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) => {
+export const Messages = ({ profileAvatar, showTimeStamp }: Props) => {
+    const { preferences } = useContext(WidgetContext);
+
     const dispatch = useDispatch();
     const { messages, typing, showChat, badgeCount } = useSelector((state: GlobalState) => ({
         messages: state.messagesReducer.messages,
@@ -62,7 +64,7 @@ export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) =
                     <div className={classNames("rcw-message", cls.messageTube)} key={`${index}-${format(message.timestamp, "hh:mm")}`}>
                         {/* {profileAvatar  && message.showAvatar && <img src={profileAvatar} className="rcw-avatar" alt="profile" />} */}
                         {/* <FaceIcon className={cls.face} /> */}
-                        {getComponentToRender(message, preferences, showTimeStamp)}
+                        {getComponentToRender(message, showTimeStamp)}
                     </div>
                 ))}
                 {typing && <Loader typing={typing} />}

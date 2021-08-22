@@ -1,10 +1,11 @@
 import * as React from "react";
 import { Button, makeStyles, PropTypes } from "@material-ui/core";
 import { WidgetPreferences } from "@Palavyr-Types";
+import { useContext } from "react";
+import { WidgetContext } from "widget/context/WidgetContext";
 
 export interface IResponseButton {
     onClick: any;
-    prefs: WidgetPreferences;
     disabled?: boolean;
     text?: string;
     color?: PropTypes.Color;
@@ -35,8 +36,10 @@ const useStyles = makeStyles(theme => ({
     }),
 }));
 
-export const ResponseButton = ({ onClick, prefs, disabled = false, variant = "outlined", text = "Submit" }: IResponseButton) => {
-    const cls = useStyles(prefs);
+export const ResponseButton = ({ onClick, disabled = false, variant = "outlined", text = "Submit" }: IResponseButton) => {
+    const { preferences } = useContext(WidgetContext);
+
+    const cls = useStyles(preferences);
     return (
         <Button disableElevation focusVisibleClassName={cls.buttonFocus} className={cls.button} disabled={disabled} variant={variant} size="small" onClick={onClick}>
             {text}
