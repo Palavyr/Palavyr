@@ -1,6 +1,6 @@
 import React from "react";
 import format from "date-fns/format";
-import { Box, Grid, makeStyles, Table } from "@material-ui/core";
+import { makeStyles, Table } from "@material-ui/core";
 import classNames from "classnames";
 import { HtmlTextMessage } from "common/HtmlTextMessage";
 import { SingleRowSingleCell } from "common/TableCell";

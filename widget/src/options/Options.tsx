@@ -9,6 +9,7 @@ import { BrandingStrip } from "common/BrandingStrip";
 
 interface IOptionSelector {
     setSelectedOption: (option: SelectedOption) => void;
+    options: SelectedOption[];
 }
 
 const useStyles = makeStyles(theme => ({
@@ -21,28 +22,27 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const OptionSelector = ({ setSelectedOption }: IOptionSelector) => {
-    var secretKey = new URLSearchParams(useLocation().search).get("key");
-    const Client = new PalavyrWidgetRepository(secretKey);
+export const OptionSelector = ({ options, setSelectedOption }: IOptionSelector) => {
+
     const cls = useStyles();
 
-    const [, setUseGroups] = useState<boolean>();
-    const [options, setOptions] = useState<Array<SelectedOption>>();
+    // const [, setUseGroups] = useState<boolean>();
+    // const [options, setOptions] = useState<Array<SelectedOption>>();
 
-    const loadAreas = useCallback(async () => {
-        setUseGroups(false);
+    // const loadAreas = useCallback(async () => {
+    //     setUseGroups(false);
 
-        var areas = await Client.Widget.Get.Areas();
-        var options = areas.map((area: AreaTable) => {
-            return { areaDisplay: area.areaDisplayTitle, areaId: area.areaIdentifier };
-        });
+    //     var areas = await Client.Widget.Get.Areas();
+    //     var options = areas.map((area: AreaTable) => {
+    //         return { areaDisplay: area.areaDisplayTitle, areaId: area.areaIdentifier };
+    //     });
 
-        setOptions(options);
-    }, []);
+    //     setOptions(options);
+    // }, []);
 
-    useEffect(() => {
-        loadAreas();
-    }, [loadAreas]);
+    // useEffect(() => {
+    //     loadAreas();
+    // }, [loadAreas]);
 
     return (
         <>

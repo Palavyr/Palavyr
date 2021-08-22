@@ -6,7 +6,6 @@ import Autocomplete, { AutocompleteRenderInputParams } from "@material-ui/lab/Au
 import classNames from "classnames";
 import { sortByPropertyAlphabetical } from "common/sorting";
 import { openUserDetails } from "@store-dispatcher";
-import { BrandingStrip } from "common/BrandingStrip";
 import { WidgetContext } from "widget/context/WidgetContext";
 import { useContext } from "react";
 

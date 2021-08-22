@@ -1,9 +1,9 @@
 import * as React from "react";
 
-import { getRootNode } from "../componentRegistry/utils";
+import { getRootNode } from "./componentRegistry/utils";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import { renderNextComponent } from "componentRegistry/renderNextComponent";
+import { renderNextComponent } from "widget/componentRegistry/renderNextComponent";
 import { GlobalState, SelectedOption } from "@Palavyr-Types";
 import { useDispatch } from "react-redux";
 import { Conversation } from "./components/Conversation/Conversation";
@@ -15,7 +15,7 @@ import "./style.scss";
 import { getContextProperties, isWidgetOpened, toggleWidget } from "@store-dispatcher";
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { _openFullscreenPreview } from "@store-actions";
-import { ConvoContextProperties } from "componentRegistry/registry";
+import { ConvoContextProperties } from "widget/componentRegistry/registry";
 
 export interface WidgetProps {
     option: SelectedOption;

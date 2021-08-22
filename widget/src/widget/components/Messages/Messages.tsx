@@ -5,7 +5,7 @@ import { Loader } from "./components/Loader/Loader";
 import { WidgetPreferences, GlobalState } from "@Palavyr-Types";
 import { _markAllMessagesRead, _setBadgeCount } from "store/actions/actions";
 import { scrollToBottom } from "widget/utils/messages";
-import { getComponentToRender } from "componentRegistry/getComponentToRender";
+import { getComponentToRender } from "widget/componentRegistry/getComponentToRender";
 import { BrandingStrip } from "common/BrandingStrip";
 import { makeStyles } from "@material-ui/core";
 

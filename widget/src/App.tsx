@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import { Widget } from "./widget/Widget";
 import { CollectDetailsForm } from "./common/UserDetailsDialog/CollectDetailsForm";
 import { useSelector } from "react-redux";
-import { GlobalState, SelectedOption, WidgetPreferences } from "@Palavyr-Types";
+import { AreaTable, GlobalState, SelectedOption, WidgetPreferences } from "@Palavyr-Types";
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { setWidgetPreferences } from "@store-dispatcher";
 import { WidgetContext } from "widget/context/WidgetContext";
@@ -23,32 +23,43 @@ export const App = () => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const isDemo = new URLSearchParams(useLocation().search).get("demo");
 
-    const client = new PalavyrWidgetRepository(secretKey);
+    const Client = new PalavyrWidgetRepository(secretKey);
 
     const runAppPrecheck = useCallback(async () => {
-        const preCheckResult = await client.Widget.Get.PreCheck(isDemo === "true" ? true : false);
+        const preCheckResult = await Client.Widget.Get.PreCheck(isDemo === "true" ? true : false);
         setIsReady(preCheckResult.isReady);
         if (preCheckResult.isReady) {
-            const prefs = await client.Widget.Get.WidgetPreferences();
+            const prefs = await Client.Widget.Get.WidgetPreferences();
             setWidgetPrefs(prefs);
             setWidgetPreferences(prefs);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const [options, setOptions] = useState<Array<SelectedOption>>();
+    const [, setUseGroups] = useState<boolean>();
+
+    const loadAreas = useCallback(async () => {
+        setUseGroups(false);
+
+        var areas = await Client.Widget.Get.Areas();
+        var options = areas.map((area: AreaTable) => {
+            return { areaDisplay: area.areaDisplayTitle, areaId: area.areaIdentifier };
+        });
+
+        setOptions(options);
+    }, []);
+
     useEffect(() => {
         runAppPrecheck();
-    }, [runAppPrecheck]);
+        loadAreas();
+    }, [runAppPrecheck, loadAreas]);
 
     return (
         <>
             {preferences && (
                 <WidgetContext.Provider value={{ preferences }}>
-                    {isReady === true && selectedOption === null && preferences && !userDetailsVisible && (
-                        <>
-                            <OptionSelector setSelectedOption={setSelectedOption} />
-                        </>
-                    )}
+                    {isReady === true && selectedOption === null && preferences && !userDetailsVisible && <>{options && <OptionSelector options={options} setSelectedOption={setSelectedOption} />}</>}
                     {isReady === true && selectedOption !== null && (
                         <>
                             <CollectDetailsForm chatStarted={chatStarted} setChatStarted={setChatStarted} setKickoff={setKickoff} />
