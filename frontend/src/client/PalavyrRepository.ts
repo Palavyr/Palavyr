@@ -270,7 +270,10 @@ export class PalavyrRepository {
         GetConversationNode: async (nodeId: string) => this.client.get<ConvoNode>(`configure-conversations/nodes/${nodeId}`),
         GetNodeOptionsList: async (areaIdentifier: string, planTypeMeta: PlanTypeMeta) =>
             filterNodeTypeOptionsOnSubscription(await this.client.get<NodeTypeOptions>(`configure-conversations/${areaIdentifier}/node-type-options`), planTypeMeta),
+        GetIntroNodeOptionsList: async () => this.client.get<NodeTypeOptions>(`configure-intro/{introId}/node-type-options`),
+
         GetErrors: async (areaIdentifier: string, nodeList: ConvoNode[]) => this.client.post<TreeErrors, {}>(`configure-conversations/${areaIdentifier}/tree-errors`, { Transactions: nodeList }),
+        GetIntroErrors: async (introId: string, nodeList: ConvoNode[]) => this.client.post<TreeErrors, {}>(`configure-conversations/intro/${introId}/tree-errors`, { Transactions: nodeList }),
 
         ModifyConversation: async (nodelist: ConvoNode[], areaIdentifier: string) =>
             this.client.put<ConvoNode[], {}>(`configure-conversations/${areaIdentifier}`, { Transactions: nodelist }, [CacheIds.PalavyrConfiguration, areaIdentifier].join("-") as CacheIds),
@@ -325,6 +328,10 @@ export class PalavyrRepository {
             GetLocale: async () => this.client.get<LocaleResponse>(`account/settings/locale`),
             getCompanyLogo: async () => this.client.get<string>(`account/settings/logo`),
 
+            getIntroductionId: async () => this.client.get<string>(`account/settings/intro-id`),
+            updateIntroduction: async (introId: string, update: ConvoNode[]) =>
+                this.client.post<ConvoNode[], {}>(`account/settings/intro-id`, { Transactions: update }, [CacheIds.PalavyrConfiguration, introId].join("-") as CacheIds),
+
             deleteCompanyLogo: async () => this.client.delete(`account/settings/logo`),
             DeleteAccount: async () => {
                 const result = this.client.post(`account/delete-account`);
@@ -357,7 +364,7 @@ export class PalavyrRepository {
         getSignedUrl: async (fileId: string) => this.client.get<string>(`enquiries/link/${fileId}`),
         getConversation: async (conversationId: string) => this.client.get<CompletedConversation>(`enquiries/review/${conversationId}`, [CacheIds.Conversation, conversationId].join("-") as CacheIds),
 
-        getEnquiryInsights: async () => this.client.get<EnquiryActivtyResource[]>('enquiry-insights'),
+        getEnquiryInsights: async () => this.client.get<EnquiryActivtyResource[]>("enquiry-insights"),
     };
 
     public Youtube = {

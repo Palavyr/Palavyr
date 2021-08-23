@@ -5,6 +5,6 @@ namespace Palavyr.Core.Services.AccountServices
 {
     public interface IAccountRegistrationMaker
     {
-        Task<bool> TryRegisterAccountAndSendEmailVerificationToken(string accountId, string apiKey, string emailAddress, CancellationToken cancellationToken);
+        Task<bool> TryRegisterAccountAndSendEmailVerificationToken(string accountId, string apiKey, string emailAddress, string introId, CancellationToken cancellationToken);
     }
 }

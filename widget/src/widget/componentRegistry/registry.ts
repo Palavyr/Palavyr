@@ -25,6 +25,10 @@ export const ComponentRegistry: Registry = {
     SendTooComplicatedEmail: components.makeSendFallbackEmail,
     Restart: components.makeRestart,
     EndWithoutEmail: components.makeEndWithoutEmail,
+
+    Selection: components.makeSelectOptions,
+    // Selection: components.makeCollectDetails
+    // CollectDetails: components.makeCollectDetails,
 };
 
 export const ConvoContextProperties = {

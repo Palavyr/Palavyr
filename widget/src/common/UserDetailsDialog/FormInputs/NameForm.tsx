@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles, TextField } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserName, INVALID_NAME } from "../UserDetailsCheck";
 import { getNameContext, setNameContext } from "@store-dispatcher";
 import { TextInput } from "common/number/TextInput";
 
-export interface NameFormProps extends BaseFormProps {}
+export interface NameFormProps extends BaseFormProps {
+    disabled: boolean;
+}
 
 const useStyles = makeStyles(theme => ({
     input: {
@@ -16,7 +18,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const NameForm = ({ status, setStatus }: NameFormProps) => {
+export const NameForm = ({ status, setStatus, disabled }: NameFormProps) => {
     const [nameState, setNameState] = useState<string>("");
     const cls = useStyles();
 
@@ -26,6 +28,7 @@ export const NameForm = ({ status, setStatus }: NameFormProps) => {
 
     return (
         <TextInput
+            disabled={disabled}
             inputPropsClassName={cls.input}
             inputLabelPropsClassName={cls.label}
             margin="normal"

@@ -9,9 +9,10 @@ import { checkUserEmail, checkUserName, INVALID_EMAIL, INVALID_PHONE } from "../
 
 export interface EmailFormProps extends BaseFormProps {
     setDetailsSet: Dispatch<SetStateAction<boolean>>;
+    disabled: boolean;
 }
 
-export const EmailForm = ({ status, setStatus, setDetailsSet }: EmailFormProps) => {
+export const EmailForm = ({ status, setStatus, setDetailsSet, disabled }: EmailFormProps) => {
     const checkUserDetailsAreSet = () => {
         const name = getNameContext();
         const emailAddress = getEmailAddressContext();
@@ -36,6 +37,7 @@ export const EmailForm = ({ status, setStatus, setDetailsSet }: EmailFormProps) 
 
     return (
         <TextInput
+            disabled={disabled}
             margin="normal"
             error={status === INVALID_EMAIL}
             required

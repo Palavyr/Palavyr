@@ -36,5 +36,13 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 
             return fullNodeTypeOptionsList.ToArray();
         }
+        
+        [HttpGet("configure-intro/{introId}/node-type-options")]
+        public async Task<NodeTypeOption[]> GetIntro([FromHeader] string accountId, [FromRoute] string introId)
+        {
+            var introOptionList = DefaultNodeTypeOptions.IntroNodeOptionList;
+            return introOptionList.ToArray();
+        }        
+        
     }
 }

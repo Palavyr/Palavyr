@@ -8,8 +8,9 @@ import { makeStyles } from "@material-ui/core";
 import { BrandingStrip } from "common/BrandingStrip";
 
 interface IOptionSelector {
-    setSelectedOption: (option: SelectedOption) => void;
     options: SelectedOption[];
+    onChange(event: any, newOption: SelectedOption): void;
+    disabled: boolean;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -22,32 +23,13 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const OptionSelector = ({ options, setSelectedOption }: IOptionSelector) => {
-
+export const OptionSelector = ({ disabled, options, onChange }: IOptionSelector) => {
     const cls = useStyles();
-
-    // const [, setUseGroups] = useState<boolean>();
-    // const [options, setOptions] = useState<Array<SelectedOption>>();
-
-    // const loadAreas = useCallback(async () => {
-    //     setUseGroups(false);
-
-    //     var areas = await Client.Widget.Get.Areas();
-    //     var options = areas.map((area: AreaTable) => {
-    //         return { areaDisplay: area.areaDisplayTitle, areaId: area.areaIdentifier };
-    //     });
-
-    //     setOptions(options);
-    // }, []);
-
-    // useEffect(() => {
-    //     loadAreas();
-    // }, [loadAreas]);
 
     return (
         <>
             <div className={cls.optionsContainer}>
-                {options && <DropdownListOptions options={options} setSelectedOption={setSelectedOption} />}
+                {options && <DropdownListOptions disabled={disabled} onChange={onChange} options={options} />}
                 <BrandingStrip />
             </div>
         </>

@@ -64,18 +64,20 @@ export const responseAction = async (
         }
     }
 
-    const updatePayload: ConversationUpdate = {
-        ConversationId: convoId,
-        Prompt: stripHtml(node.text),
-        UserResponse: response,
-        NodeId: node.nodeId,
-        NodeCritical: node.isCritical,
-        NodeType: node.nodeType,
-    };
-
     const timeout = computeReadingTime(child);
     if (callback) callback();
-    await client.Widget.Post.UpdateConvoHistory(updatePayload); // no need to await for this
+
+    if (convoId !== null) {
+        const updatePayload: ConversationUpdate = {
+            ConversationId: convoId,
+            Prompt: stripHtml(node.text),
+            UserResponse: response,
+            NodeId: node.nodeId,
+            NodeCritical: node.isCritical,
+            NodeType: node.nodeType,
+        };
+        await client.Widget.Post.UpdateConvoHistory(updatePayload); // no need to await for this
+    }
 
     setTimeout(() => {
         toggleMsgLoader();

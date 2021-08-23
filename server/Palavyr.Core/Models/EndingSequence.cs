@@ -14,6 +14,20 @@ namespace Palavyr.Core.Models
         public static readonly string FallbackEmailSuccessfulNodeId = "FallbackEmailSuccessfulNodeId";
         public static readonly string FallbackEmailFailedNodeId = "FallbackEmailFailedNodeId";
 
+
+        public static ConversationNode[] CleanTheIntroConvoEnding(ConversationNode[] introSequence)
+        {
+            foreach (var introSeqElement in introSequence)
+            {
+                if (introSeqElement.NodeType == DefaultNodeTypeOptions.Selection.StringName)
+                {
+                    introSeqElement.NodeChildrenString = "Transition-Selection";
+                }
+            }
+
+            return introSequence;
+        }
+
         public static List<ConversationNode> AttachEndingSequenceToNodeList(List<ConversationNode> nodeList, string areaId, string accountId)
         {
             var mayWeSendAnEmailId = StaticGuidUtils.CreateNewId();

@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models;
+using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Nodes;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
@@ -35,9 +37,12 @@ namespace Palavyr.API.Controllers.Conversation
 
         [HttpPost("configure-conversations/{areaId}/tree-errors")]
         public async Task<TreeErrorsResponse> Get(
-            [FromRoute] string areaId,
-            [FromHeader] string accountId,
-            [FromBody] ConversationNodeDto currentNodes)
+            [FromRoute]
+            string areaId,
+            [FromHeader]
+            string accountId,
+            [FromBody]
+            ConversationNodeDto currentNodes)
         {
             var area = await configurationRepository.GetAreaComplete(accountId, areaId);
 
@@ -48,6 +53,24 @@ namespace Palavyr.API.Controllers.Conversation
             var allMissingNodeTypeNames = missingNodeCalculator.CalculateMissingNodes(requiredDynamicNodeTypes.ToArray(), currentNodes.Transactions, dynamicTableMetas, staticTableMetas);
             var nodeOrderCheckResult = nodeOrderChecker.AllDynamicTypesAreOrderedCorrectlyByResolveOrder(currentNodes.Transactions.ToArray());
             return new TreeErrorsResponse(allMissingNodeTypeNames, nodeOrderCheckResult.ConcatenatedNodeTypes.ToArray());
+        }
+
+        [HttpPost("configure-conversations/intro/{introId}/tree-errors")]
+        public async Task<TreeErrorsResponse> GetIntro(
+            [FromRoute]
+            string introId,
+            [FromHeader]
+            string accountId,
+            [FromBody]
+            ConversationNodeDto currentNodes)
+        {
+            var missingNodes = new List<string> { };
+            if (!currentNodes.Transactions.Select(x => x.NodeType).Contains(DefaultNodeTypeOptions.Selection.StringName))
+            {
+                missingNodes.Add("Selection");
+            }
+
+            return new TreeErrorsResponse(missingNodes.ToArray(), new string[] { });
         }
     }
 }

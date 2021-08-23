@@ -12,13 +12,14 @@ const useStyles = makeStyles(theme => ({
         fontSize: "9px",
         marginTop: "0.6rem",
         marginBottom: "0.6rem",
-        borderTop: "1px solid black",
+        borderTop: "1px dashed grey",
         float: "left",
         background: "none",
     },
     container: {
         display: "flex",
         background: "none",
+        width: "100%",
     },
     marker: {
         position: "relative",
@@ -32,6 +33,7 @@ const useStyles = makeStyles(theme => ({
         padding: "0px",
         marginLeft: "0.5rem",
         background: "none",
+        width: "100%",
     },
     marginTop: {
         marginTop: "1rem",
@@ -78,7 +80,7 @@ export const BotResponse = ({ message, input, button, buttons }: BotResponseProp
                 {buttons && (
                     <Fade bottom>
                         <div className={classNames(cls.marginTop)} style={{ marginRight: "0.3rem", width: "100%" }}>
-                            <div style={{ flexWrap: "wrap", display: "flex", flexDirection: "row", width: "100%", justifyContent: "space-evently" }}>{buttons}</div>
+                            <div style={{ flexWrap: "wrap", display: "flex", flexDirection: "row", width: "100%", justifyContent: "left" }}>{buttons}</div>
                         </div>
                     </Fade>
                 )}

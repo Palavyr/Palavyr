@@ -35,6 +35,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
         {
             var testAccount = "Test-account-123";
             var jwtToken = "jwt-token";
+            var introId = "24323";
 
             var googleCredentials = new GoogleRegistrationDetails()
             {
@@ -59,7 +60,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             var customerService = Container.GetService<StripeCustomerService>();
 
             var registrationMaker = Substitute.For<IAccountRegistrationMaker>();
-            registrationMaker.TryRegisterAccountAndSendEmailVerificationToken(testAccount, "123", testEmail, CancellationToken.None).ReturnsForAnyArgs(true);
+            registrationMaker.TryRegisterAccountAndSendEmailVerificationToken(testAccount, "123", testEmail, introId, CancellationToken.None).ReturnsForAnyArgs(true);
 
             var accountSetupService = new AccountSetupService(
                 DashContext,

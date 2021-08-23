@@ -27,6 +27,7 @@ export const Widget = ({ option }: WidgetProps) => {
     const client = new PalavyrWidgetRepository(secretKey);
     const dispatch = useDispatch();
 
+    // this thing
     const initializeConvo = async () => {
         const newConversation = await client.Widget.Get.NewConversation(option.areaId);
         const nodes = newConversation.conversationNodes;

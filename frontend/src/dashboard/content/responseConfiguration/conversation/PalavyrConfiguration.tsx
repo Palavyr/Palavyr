@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Action, NodeTypeOptions, TreeErrors } from "@Palavyr-Types";
+import { Action, ConvoNode, NodeTypeOptions, SetState, TreeErrors } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { Button, makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
@@ -25,6 +25,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import { PalavyrSpeedDial } from "@common/components/speedDial/PalavyrDial";
 import BugReportIcon from "@material-ui/icons/BugReport";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
 
 const MAIN_DIV = `#${MAIN_CONTENT_DIV_ID}`;
 
@@ -55,6 +56,7 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexDirection: "column",
         flexGrow: 1,
+        position: "relative",
     },
     treeWrap: {
         position: "relative",
@@ -62,7 +64,7 @@ const useStyles = makeStyles(theme => ({
     floatingSave: (props: StyleProps) => ({
         position: "fixed",
         bottom: props.useNewEditor ? 190 : 50,
-        right: 27,
+        right: 10,
         zIndex: 99999,
     }),
     toggle: {
@@ -73,7 +75,35 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const StructuredConvoTree = () => {
+// if (nodeList.length > 0) {
+//     (async () => {
+//         const treeErrors = await repository.Conversations.GetErrors(areaIdentifier, nodeList);
+//         setTreeErrors(treeErrors);
+//     })();
+// }
+
+export const ConversationConfigurationPage = () => {
+    const errorCheckCallback = async (setTreeErrors: SetState<TreeErrors>, repository: PalavyrRepository, areaIdentifier: string, nodeList: ConvoNode[]) => {
+        const treeErrors = await repository.Conversations.GetErrors(areaIdentifier, nodeList);
+        setTreeErrors(treeErrors);
+    };
+    return <StructuredConvoTree isIntroduction={false} errorCheckCallback={errorCheckCallback} />;
+};
+
+export const IntroConversationConfigurationPage = () => {
+    const errorCheckCallback = async (setTreeErrors: SetState<TreeErrors>, repository: PalavyrRepository, areaIdentifier: string, nodeList: ConvoNode[]) => {
+        const treeErrors = await repository.Conversations.GetIntroErrors(areaIdentifier, nodeList);
+        setTreeErrors(treeErrors);
+    };
+    return <StructuredConvoTree isIntroduction={true} errorCheckCallback={errorCheckCallback} />;
+};
+
+interface StructuredConvoTreeProps {
+    isIntroduction: boolean;
+    errorCheckCallback(setTreeErrors: SetState<TreeErrors>, repository: PalavyrRepository, areaIdentifier: string, nodeList: ConvoNode[]): Promise<void>;
+}
+export const StructuredConvoTree = ({ isIntroduction = false, errorCheckCallback }: StructuredConvoTreeProps) => {
+    disableBodyScroll($`#${MAIN_CONTENT_DIV_ID}`);
     const { planTypeMeta, repository, handleDrawerClose } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const [, setLoaded] = useState<boolean>(false);
@@ -111,9 +141,14 @@ export const StructuredConvoTree = () => {
         if (planTypeMeta) {
             const nodes = await repository.Conversations.GetConversation(areaIdentifier);
 
-            const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
-            const nodesLinkedList = new PalavyrLinkedList(nodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions, repository);
+            let nodeTypeOptions: NodeTypeOptions;
+            if (isIntroduction) {
+                nodeTypeOptions = await repository.Conversations.GetIntroNodeOptionsList();
+            } else {
+                nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
+            }
 
+            const nodesLinkedList = new PalavyrLinkedList(nodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions, repository);
             setNodeTypeOptions(nodeTypeOptions);
             setLinkedNodes(nodesLinkedList);
 
@@ -153,8 +188,7 @@ export const StructuredConvoTree = () => {
             const nodeList = linkedNodeList.compileToConvoNodes();
             if (nodeList.length > 0) {
                 (async () => {
-                    const treeErrors = await repository.Conversations.GetErrors(areaIdentifier, nodeList);
-                    setTreeErrors(treeErrors);
+                    await errorCheckCallback(setTreeErrors, repository, areaIdentifier, nodeList);
                 })();
             }
         }
@@ -169,17 +203,34 @@ export const StructuredConvoTree = () => {
     };
 
     const onSave = async () => {
-        if (linkedNodeList && planTypeMeta) {
-            const compiledNodes = linkedNodeList.compileToConvoNodes();
-            const updatedConvoNodes = await repository.Conversations.ModifyConversation(compiledNodes, areaIdentifier);
-            const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
-            const updatedLinkedList = new PalavyrLinkedList(updatedConvoNodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions, repository);
-            historyTracker.addConversationHistoryToQueue(updatedLinkedList, conversationHistoryPosition, conversationHistory);
-            setLinkedNodes(updatedLinkedList);
-            // window.location.reload(); // TODO: Just fix the perf problem. Clicking to many things loads too many listeners, which locks the whole browser on save.
-            return true;
+        if (isIntroduction) {
+            if (linkedNodeList && planTypeMeta) {
+                const compiledNodes = linkedNodeList.compileToConvoNodes();
+                const updatedConvoNodes = await repository.Settings.Account.updateIntroduction(areaIdentifier, compiledNodes);
+                let nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
+                nodeTypeOptions = nodeTypeOptions.filter(x => x.value === "ProvideInfo");
+
+                const updatedLinkedList = new PalavyrLinkedList(updatedConvoNodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions, repository);
+                historyTracker.addConversationHistoryToQueue(updatedLinkedList, conversationHistoryPosition, conversationHistory);
+                setLinkedNodes(updatedLinkedList);
+                // window.location.reload(); // TODO: Just fix the perf problem. Clicking to many things loads too many listeners, which locks the whole browser on save.
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return false;
+            if (linkedNodeList && planTypeMeta) {
+                const compiledNodes = linkedNodeList.compileToConvoNodes();
+                const updatedConvoNodes = await repository.Conversations.ModifyConversation(compiledNodes, areaIdentifier);
+                const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
+                const updatedLinkedList = new PalavyrLinkedList(updatedConvoNodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions, repository);
+                historyTracker.addConversationHistoryToQueue(updatedLinkedList, conversationHistoryPosition, conversationHistory);
+                setLinkedNodes(updatedLinkedList);
+                // window.location.reload(); // TODO: Just fix the perf problem. Clicking to many things loads too many listeners, which locks the whole browser on save.
+                return true;
+            } else {
+                return false;
+            }
         }
     };
 

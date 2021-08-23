@@ -28,31 +28,31 @@ export interface BaseFormProps {
 }
 
 const useStyles = makeStyles(theme => ({
-    baseDialog: {
+    baseDialogCollectionForm: {
         zIndex: 9999,
         position: "absolute",
     },
-    dialogBackground: {
-        backgroundColor: theme.palette.common.white,
+    dialogBackgroundCollectionForm: {
+        backgroundColor: "rgba(255, 255, 255, 50)",
         zIndex: 9999,
     },
-    dialogPaper: {
+    dialogPaperCollectionForm: {
         zIndex: 9999,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         paddingBottom: theme.spacing(3),
         maxWidth: 420,
-        backgroundColor: theme.palette.common.white,
+        backgroundColor: "rgba(255, 255, 255, 50)",
     },
-    dialogPaperScrollPaper: {
+    dialogPaperScrollPaperCollectionForm: {
         maxHeight: "none",
     },
-    dialogContent: {
+    dialogContentCollectionForm: {
         paddingTop: 0,
         paddingBottom: 0,
     },
-    button: {
+    buttonCollectionForm: {
         margin: "0.5rem",
         textAlign: "center",
         marginTop: "1.3rem",
@@ -100,35 +100,64 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, setKickoff }: 
     return (
         <Dialog
             open={userDetailsVisible}
-            className={cls.baseDialog}
+            className={cls.baseDialogCollectionForm}
             classes={{
-                root: cls.dialogBackground,
-                paper: cls.dialogPaper,
-                paperScrollPaper: cls.dialogPaperScrollPaper,
+                root: cls.dialogBackgroundCollectionForm,
+                paper: cls.dialogPaperCollectionForm,
+                paperScrollPaper: cls.dialogPaperScrollPaperCollectionForm,
             }}
             disableBackdropClick
             hideBackdrop={false}
             disableEscapeKeyDown
         >
-            <UserDetailsTitle title="Provide your contact details" />
-            <DialogContent className={cls.dialogContent}>
-                <form onSubmit={onFormSubmit}>
-                    <NameForm {...formProps} />
-                    <EmailForm {...formProps} setDetailsSet={setDetailsSet} />
-                    <PhoneForm {...formProps} phonePattern={phonePattern} />
-                    <LocaleSelector options={options} onChange={onChange} />
-                    <div style={{ display: "flex", justifyContent: "center" }}>
+            {/* <UserDetailsTitle title="Provide your contact details" /> */}
+            <DialogContent className={cls.dialogContentCollectionForm}>
+                <ContactForm
+                    disabled={false}
+                    localeOptions={options}
+                    onFormSubmit={onFormSubmit}
+                    formProps={{ ...formProps }}
+                    setDetailsSet={setDetailsSet}
+                    phonePattern={phonePattern}
+                    onChange={onChange}
+                    detailsSet={detailsSet}
+                    submitButton={
                         <Button
                             disabled={status === INVALID_PHONE || status === INVALID_EMAIL || status === INVALID_NAME}
-                            className={cls.button}
+                            className={cls.buttonCollectionForm}
                             endIcon={detailsSet && <CheckCircleOutlineIcon />}
                             type="submit"
                         >
                             <Typography variant="h5">{chatStarted ? "Continue" : "Begin"}</Typography>
                         </Button>
-                    </div>
-                </form>
+                    }
+                />
             </DialogContent>
         </Dialog>
+    );
+};
+
+export interface ContactFormProps {
+    onFormSubmit(e: { preventDefault: () => void }): void;
+    formProps: any;
+    setDetailsSet: any;
+    phonePattern: any;
+    onChange: any;
+    detailsSet: boolean;
+    localeOptions: any;
+    submitButton: React.ReactNode;
+    disabled: boolean;
+}
+
+export const ContactForm = ({ disabled, onFormSubmit, submitButton, localeOptions, formProps, setDetailsSet, phonePattern, onChange, detailsSet }: ContactFormProps) => {
+    const cls = useStyles();
+    return (
+        <form onSubmit={onFormSubmit}>
+            <NameForm {...formProps} disabled={disabled} />
+            <EmailForm {...formProps} setDetailsSet={setDetailsSet} disabled={disabled} />
+            <PhoneForm {...formProps} phonePattern={phonePattern} disabled={disabled} />
+            <LocaleSelector options={localeOptions} onChange={onChange} disabled={disabled} />
+            <div style={{ display: "flex", justifyContent: "center" }}>{submitButton}</div>
+        </form>
     );
 };

@@ -48,5 +48,9 @@ namespace Palavyr.Core.Repositories
         // maintenance methods to delete
         Task<List<DynamicTableMeta>> GetAllDynamicTableMetas();
         Task<List<ConversationNode>> GetAllConversationNodes();
+
+        Task CreateIntroductionSequence(List<ConversationNode> newConversation, CancellationToken cancellationToken);
+        Task<ConversationNode[]> UpdateIntroductionSequence(string introId, List<ConversationNode> update, CancellationToken cancellationToken);
+        Task<ConversationNode[]> GetIntroductionSequence(string introId, CancellationToken cancellationToken);
     }
 }

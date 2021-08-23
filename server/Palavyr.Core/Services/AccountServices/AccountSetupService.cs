@@ -92,7 +92,8 @@ namespace Palavyr.Core.Services.AccountServices
                 throw new DomainException($"A customer with this email address already exists {payload.Email}.");
             }
 
-            var ok = await accountRegistrationMaker.TryRegisterAccountAndSendEmailVerificationToken(accountId, apiKey, payload.Email, cancellationToken);
+            var introId = account.IntroductionId;
+            var ok = await accountRegistrationMaker.TryRegisterAccountAndSendEmailVerificationToken(accountId, apiKey, payload.Email, introId, cancellationToken);
             logger.LogDebug("Send Email result was " + (ok ? "OK" : " a FAIL"));
 
             if (!ok) return Credentials.CreateUnauthenticatedResponse(EmailAddressNotFound);
@@ -142,7 +143,9 @@ namespace Palavyr.Core.Services.AccountServices
             );
             logger.LogDebug("Adding new account via DEFAULT...");
             await accountsContext.Accounts.AddAsync(account);
-            var ok = await accountRegistrationMaker.TryRegisterAccountAndSendEmailVerificationToken(accountId, apiKey, newAccountDetails.EmailAddress, cancellationToken);
+
+            var introId = account.IntroductionId;
+            var ok = await accountRegistrationMaker.TryRegisterAccountAndSendEmailVerificationToken(accountId, apiKey, newAccountDetails.EmailAddress,  introId, cancellationToken);
             logger.LogDebug("Send Email result was " + (ok ? "OK" : " a FAIL"));
 
             if (!ok) return Credentials.CreateUnauthenticatedResponse(EmailAddressNotFound);

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Data.Migrations.ConvoMigrations;
 using Palavyr.Core.Data.Setup.SeedData.DataCreators;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
@@ -11,20 +12,27 @@ namespace Palavyr.Core.Data.Setup.SeedData
         public List<Area> Areas { get; set; }
         public WidgetPreference WidgetPreference { get; set; }
         public List<ConversationNode> DefaultConversationNodes { get; set; }
+        public List<ConversationNode> IntroductionConversationNodes { get; set; }
+        
         public List<DynamicTableMeta> DefaultDynamicTableMetas { get; set; } = new List<DynamicTableMeta>();
         public readonly List<SelectOneFlat> DefaultDynamicTables = new List<SelectOneFlat>();
+        
 
         public const string AreaName = "Buying a Cavvy";
         private const string TableTag = "Cavvy Types";
         public string EmailTemplate => CreateEmailTemplate.Create();
 
 
-        protected BaseSeedData(string accountId, string defaultEmail)
+        protected BaseSeedData(string accountId, string defaultEmail, string introId)
         {
             var areaIdentifier = StaticGuidUtils.CreateNewId();
             var dynamicTableId = StaticGuidUtils.CreateNewId();
 
             DefaultConversationNodes = CreateDefaultConversation.CreateDefault(accountId, areaIdentifier, dynamicTableId);
+
+            IntroductionConversationNodes = ConversationNode.CreateDefaultRootNode(introId, accountId);
+                
+                
             DefaultDynamicTables = CreateDefaultDynamicTable.CreateDefaultTable(TableTag, accountId, areaIdentifier, dynamicTableId);
             DefaultDynamicTableMetas = CreateDefaultDynamicTable.CreateDefaultMeta(TableTag, accountId, dynamicTableId, areaIdentifier);
             WidgetPreference = WidgetPreference.CreateDefault(accountId);

@@ -1,4 +1,4 @@
 import * as React from 'react';
 
 
-export const dummyFailComponent = () => <span>Incomplete Conversation - please complete configuration</span>
+export const dummyFailComponent = () => <span>Hmm... I seem to have lost the plot. My appologies.</span>

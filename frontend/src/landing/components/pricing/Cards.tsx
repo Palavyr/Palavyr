@@ -11,9 +11,14 @@ import FreeBreakfastIcon from "@material-ui/icons/FreeBreakfast";
 import CardMembershipIcon from "@material-ui/icons/CardMembership";
 import { PricingCardBody } from "./PricingCardBody";
 import AllInclusiveIcon from "@material-ui/icons/AllInclusive";
-import WhatshotIcon from '@material-ui/icons/Whatshot';
+import WhatshotIcon from "@material-ui/icons/Whatshot";
+import Filter1Icon from "@material-ui/icons/Filter1";
+import Filter2Icon from "@material-ui/icons/Filter2";
+import Filter4Icon from "@material-ui/icons/Filter4";
+import Filter8Icon from "@material-ui/icons/Filter8";
+import ExposureZeroIcon from "@material-ui/icons/ExposureZero";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     yes: {
         color: green,
     },
@@ -79,10 +84,10 @@ export const Free = () => {
             emailNotifications={crossIcon()}
             inlineEmailEditor={crossIcon()}
             smsNotifications={crossIcon()}
-            attachmentsPerArea="0"
-            staticFeeTables="1"
-            dynamicFeeTables="1"
-            numberOfAreas="2"
+            attachmentsPerArea={<ExposureZeroIcon />}
+            staticFeeTables={<Filter1Icon />}
+            dynamicFeeTables={<Filter1Icon />}
+            numberOfAreas={<Filter2Icon />}
         />
     );
 
@@ -109,10 +114,10 @@ export const Lyte = ({ priceInfo, showYearly }: PriceInfoProps) => {
             emailNotifications={crossIcon()}
             inlineEmailEditor={crossIcon()}
             smsNotifications={crossIcon()}
-            attachmentsPerArea="0"
-            staticFeeTables="2"
-            dynamicFeeTables="2"
-            numberOfAreas="4"
+            attachmentsPerArea={<ExposureZeroIcon />}
+            staticFeeTables={<Filter2Icon />}
+            dynamicFeeTables={<Filter2Icon />}
+            numberOfAreas={<Filter4Icon />}
         />
     );
     return (
@@ -135,10 +140,10 @@ export const Premium = ({ priceInfo, showYearly }: PriceInfoProps) => {
             emailNotifications={checkIcon()}
             inlineEmailEditor={checkIcon()}
             smsNotifications={crossIcon()}
-            attachmentsPerArea="2"
-            staticFeeTables="2"
-            dynamicFeeTables="2"
-            numberOfAreas="8"
+            attachmentsPerArea={<Filter2Icon />}
+            staticFeeTables={<Filter2Icon />}
+            dynamicFeeTables={<Filter2Icon />}
+            numberOfAreas={<Filter8Icon />}
             rowStyle={{ borderBottom: "2px solid black" }}
             textStyle={{ color: "black" }}
         />

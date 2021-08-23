@@ -23,8 +23,16 @@ namespace Palavyr.Core.Models.Configuration.Constant
             public static string SendResponse => DefaultNodeTypeOptions.SendResponse.StringName;
             public static string EndWithoutEmail => DefaultNodeTypeOptions.EndWithoutEmail.StringName;
             public static string LoopbackAnchor => DefaultNodeTypeOptions.LoopbackAnchor.StringName;
-            
+
+            public static string Selection => DefaultNodeTypeOptions.Selection.StringName;
         }
+
+        public static List<NodeTypeOption> IntroNodeOptionList =>
+            new List<NodeTypeOption>()
+            {
+                new ProvideInfo(),
+                new Selection()
+            };
 
         public static List<NodeTypeOption> DefaultNodeTypeOptionsList => // These get sent to the UI for user selection
             new List<NodeTypeOption>()
@@ -71,9 +79,10 @@ namespace Palavyr.Core.Models.Configuration.Constant
 
         public static LoopbackAnchor CreateLoopbackAnchor() => new LoopbackAnchor();
         public static Loopback CreateLoopback() => new Loopback();
-        
+
         // public static Restart CreateRestart() => new Restart();
         public static EndWithoutEmail CreateEndWithoutEmail() => new EndWithoutEmail();
+
 
         public class LoopbackAnchor : NodeTypeOption
         {
@@ -100,7 +109,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeTypeCode = NodeTypeCode.VII;
             }
         }
-        
+
         public class Loopback : NodeTypeOption
         {
             public new static string StringName => nameof(Loopback);
@@ -125,7 +134,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeTypeCode = NodeTypeCode.VIII;
             }
         }
-        
+
 
         public class EndWithoutEmail : NodeTypeOption
         {
@@ -405,6 +414,31 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 NodeTypeCode = NodeTypeCode.II;
+            }
+        }
+
+        public class Selection : NodeTypeOption
+        {
+            public new static string StringName => nameof(Selection);
+
+            public Selection()
+            {
+                Text = "Selection";
+                Value = StringName;
+                PathOptions = new List<string>() {"Continue"};
+                ValueOptions = new List<string>() {"Continue"};
+                IsMultiOptionType = false;
+                IsTerminalType = true;
+                GroupName = Terminal;
+                ShouldRenderChildren = false;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+                IsDynamicType = false;
+                NodeComponentType = NodeComponentTypes.Selection;
+                IsCurrency = false;
+                IsMultiOptionEditable = false;
+                NodeTypeCode = NodeTypeCode.I;
             }
         }
 

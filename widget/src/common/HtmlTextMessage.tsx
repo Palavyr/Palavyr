@@ -9,10 +9,9 @@ import classNames from "classnames";
 
 const useStyles = makeStyles(theme => ({
     outer: {
-        fontSize: "16px",
     },
     inner: {
-        fontSize: "18px",
+        fontSize: "15px",
     },
 }));
 export interface IHtmlTextMessage {
@@ -21,14 +20,6 @@ export interface IHtmlTextMessage {
     className: string;
 }
 export const HtmlTextMessage = ({ message, className, showTimeStamp = true }: IHtmlTextMessage) => {
-    // const sanitizedHTML = markdownIt()
-    //     .use(markdownItClass, {
-    //         img: ["rcw-message-img"],
-    //     })
-    //     .use(markdownItSup)
-    //     .use(markdownItSanitizer)
-    //     .use(markdownItLinkAttributes, { attrs: { target: "_blank", rel: "noopener" } })
-    //     .render(message);
     const cls = useStyles();
 
     return (

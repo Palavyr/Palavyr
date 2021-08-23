@@ -7,6 +7,7 @@ import React from "react";
 export interface LocaleSelectorProps {
     options: LocaleMap;
     onChange(event: any, newOption: LocaleResource): void;
+    disabled: boolean;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -23,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const LocaleSelector = ({ options, onChange }: LocaleSelectorProps) => {
+export const LocaleSelector = ({ options, onChange, disabled }: LocaleSelectorProps) => {
     const sortGetter = (opt: LocaleResource) => opt.displayName;
     const opts = sortByPropertyAlphabetical(sortGetter, options);
     const cls = useStyles();
@@ -31,6 +32,7 @@ export const LocaleSelector = ({ options, onChange }: LocaleSelectorProps) => {
     return (
         options && (
             <Autocomplete
+                disabled={disabled}
                 size="small"
                 classes={{ root: cls.root, paper: cls.paper }}
                 className={cls.root}
@@ -42,6 +44,7 @@ export const LocaleSelector = ({ options, onChange }: LocaleSelectorProps) => {
                 renderInput={(params: AutocompleteRenderInputParams) => (
                     <TextField
                         {...params}
+                        disabled={disabled}
                         id="field1"
                         label="Select your locale..."
                         inputProps={{

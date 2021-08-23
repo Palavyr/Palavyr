@@ -1,10 +1,10 @@
-import { assembleEmailRecordData, getOrderedChildNodes, MinNumeric, parseNumericResponse } from "./utils";
+import { assembleEmailRecordData, getOrderedChildNodes, getRootNode, MinNumeric, parseNumericResponse } from "./utils";
 import React, { useContext, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core";
 import { responseAction } from "./responseAction";
 import { ConvoContextProperties } from "./registry";
-import { IProgressTheChat, WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
-import { setNumIndividualsContext, getContextProperties, openUserDetails } from "@store-dispatcher";
+import { AreaTable, GlobalState, IProgressTheChat, LocaleMap, LocaleResource, SelectedOption, WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
+import { setNumIndividualsContext, getContextProperties, openUserDetails, setRegionContext } from "@store-dispatcher";
 import { ResponseButton } from "common/ResponseButton";
 import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "common/UserDetailsDialog/ChatLoadingSpinner";
@@ -14,6 +14,12 @@ import { NumberFormatValues } from "react-number-format";
 import { TextInput } from "common/number/TextInput";
 import { BotResponse } from "./BotResponse";
 import { WidgetContext } from "widget/context/WidgetContext";
+import { useLocation } from "react-router-dom";
+import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
+import { useSelector } from "react-redux";
+import { useCallback } from "react";
+import { renderNextComponent } from "./renderNextComponent";
+import { ChoiceList } from "options/optionFormats/ChoiceList";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {
@@ -48,6 +54,102 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export class StandardComponents {
+    public makeSelectOptions({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+        return () => {
+            const [selectedOption, setSelectedOption] = useState<SelectedOption | null>(null);
+            const [options, setOptions] = useState<Array<SelectedOption>>();
+            const [disabled, setDisabled] = useState<boolean>(false);
+            const [open, setOpen] = useState<boolean>(false);
+
+            const loadAreas = useCallback(async () => {
+                var areas = await client.Widget.Get.Areas();
+                var options = areas.map((area: AreaTable) => {
+                    return { areaDisplay: area.areaDisplayTitle, areaId: area.areaIdentifier };
+                });
+
+                setOptions(options);
+            }, []);
+
+            useEffect(() => {
+                loadAreas();
+            }, [loadAreas]);
+
+            const onChange = async (event: any, newOption: SelectedOption) => {
+                const newConversation = await client.Widget.Get.NewConversation(newOption.areaId);
+                const nodes = newConversation.conversationNodes;
+                const convoId = newConversation.conversationId;
+                const rootNode = getRootNode(nodes);
+                setDisabled(true);
+                renderNextComponent(rootNode, nodes, client, convoId);
+            };
+
+            return (
+                <BotResponse
+                    message={node.text}
+                    input={
+                        <div style={{ marginTop: "2rem", marginBottom: "2rem", width: "100%" }}>
+                            <ChoiceList disabled={disabled} onChange={onChange} setOpen={setOpen} options={options} open={open} />
+                        </div>
+                    }
+                />
+            );
+        };
+    }
+
+    public makeCollectDetails({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+        return () => {
+            const secretKey = new URLSearchParams(useLocation().search).get("key");
+            const client = new PalavyrWidgetRepository(secretKey);
+            const userDetailsVisible = useSelector((state: GlobalState) => state.behaviorReducer.userDetailsVisible);
+
+            const [options, setOptions] = useState<LocaleMap>([]);
+            const [phonePattern, setphonePattern] = useState<string>("");
+            const [detailsSet, setDetailsSet] = useState<boolean>(false);
+            const [disabled, setDisabled] = useState<boolean>(false);
+            useEffect(() => {
+                (async () => {
+                    const { currentLocale: locale, localeMap } = await client.Widget.Get.Locale();
+                    setphonePattern(locale.phoneFormat);
+                    setOptions(localeMap);
+                    setRegionContext(locale.name);
+                })();
+            }, []);
+
+            const cls = useStyles();
+            const [status, setStatus] = useState<string | null>(null);
+
+            const onChange = (event: any, newOption: LocaleResource) => {
+                setphonePattern(newOption.phoneFormat);
+                setRegionContext(newOption.name);
+                setDisabled(true);
+            };
+
+            const onFormSubmit = async (e: { preventDefault: () => void }) => {
+                e.preventDefault();
+            };
+
+            return (
+                <>WOW</>
+                // <BotResponse
+                //     message={node.text}
+                //     input={
+                //         <ContactForm
+                //             disabled={disabled}
+                //             localeOptions={options}
+                //             onFormSubmit={onFormSubmit}
+                //             formProps={{ status, setStatus }}
+                //             setDetailsSet={setDetailsSet}
+                //             phonePattern={phonePattern}
+                //             onChange={onChange}
+                //             detailsSet={detailsSet}
+                //             submitButton={<Button disabled={disabled}>Choose</Button>}
+                //         />
+                //     }
+                // />
+            );
+        };
+    }
+
     public makeProvideInfo({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         return () => {

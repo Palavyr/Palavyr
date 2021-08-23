@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
     timeStamp: {
         fontSize: "9px",
         marginTop: "0px",
-        borderTop: "1px solid black",
+        borderTop: "1px solid grey",
         float: "left",
     },
 }));
