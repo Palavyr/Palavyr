@@ -42,11 +42,6 @@ const useStyles = makeStyles(() => ({
         padding: "0rem",
         boxShadow: "none",
     }),
-    popper: {
-        // boxShadow: "none",
-        // backgroundColor: "white",
-        // border: "2px dashed black",
-    },
 }));
 
 export interface ChoiceListProps {
@@ -62,14 +57,6 @@ export const ChoiceList = ({ options, disabled, onChange, setOpen = null, open =
     const [label, setLabel] = useState<string>("What can I help you with today?");
     const [loading, setLoading] = useState<boolean>(false);
 
-    // const ListBoxComponent = ({ children }: { children: React.ReactNode }) => {
-    //     return (
-    //         <ul role="listbox" style={{ border: "1px solid black" }}>
-    //             {children}
-    //         </ul>
-    //     );
-    // };
-
     const PopperComponent = ({ children, ...rest }: { children: React.ReactNode } & PopperProps) => {
         return (
             <Popper style={{ boxShadow: "none", backgroundColor: "green" }} {...rest}>
@@ -81,7 +68,7 @@ export const ChoiceList = ({ options, disabled, onChange, setOpen = null, open =
     const PaperComponent = ({ children, ...rest }: { children: React.ReactNode } & PaperProps) => {
         return (
             <Fade>
-                <Paper style={{ boxShadow: "none", backgroundColor: "white", margin: "0px", padding: "0px" }} {...rest}>
+                <Paper style={{ boxShadow: "none", backgroundColor: "white", margin: "0px", padding: "0px", marginTop: "0.3rem" }} {...rest}>
                     {children}
                 </Paper>
             </Fade>
@@ -96,13 +83,15 @@ export const ChoiceList = ({ options, disabled, onChange, setOpen = null, open =
                     size="small"
                     open={open !== undefined ? open : true}
                     loading={loading}
-                    classes={{ popper: cls.popper, root: cls.selectbox, listbox: cls.selectbox, paper: classNames(cls.paper, cls.selectListBgColor, cls.selectListFontColor) }}
+                    classes={{ root: cls.selectbox, listbox: cls.selectbox, paper: classNames(cls.paper, cls.selectListBgColor, cls.selectListFontColor) }}
                     clearOnEscape
                     onOpen={() => {
                         if (setOpen) setOpen(true);
+                        setLoading(false);
                     }}
                     onClose={() => {
                         if (setOpen) setOpen(false);
+                        setLoading(false);
                     }}
                     getOptionSelected={(option: SelectedOption, value: SelectedOption) => option.areaId === value.areaId}
                     onChange={onChange}
@@ -118,8 +107,12 @@ export const ChoiceList = ({ options, disabled, onChange, setOpen = null, open =
                             label={label}
                             disabled={disabled}
                             onChange={e => {
-                                setLabel(e.target.value);
-                                if (setOpen !== null) setOpen(true);
+                                setLoading(true);
+                                setTimeout(() => {
+                                    setLabel(e.target.value);
+                                    if (setOpen !== null) setOpen(true);
+                                    setLoading(false);
+                                }, 1500);
                             }}
                             inputProps={{
                                 ...params.inputProps,
