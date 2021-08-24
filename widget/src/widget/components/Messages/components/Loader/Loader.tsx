@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import cn from "classnames";
 
 import "./styles.scss";
 import { Box, makeStyles } from "@material-ui/core";
-import { getWidgetPreferences } from "@store-dispatcher";
 import { WidgetPreferences } from "@Palavyr-Types";
+import { WidgetContext } from "widget/context/WidgetContext";
 
 type Props = {
     typing: boolean;
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const Loader = ({ typing }: Props) => {
-    const preferences = getWidgetPreferences();
+    const { preferences } = useContext(WidgetContext);
     const cls = useStyles(preferences);
 
     return (

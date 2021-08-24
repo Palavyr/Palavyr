@@ -64,7 +64,7 @@ import { ImageReview } from "dashboard/content/images/ImageReview";
 import { ImageReviewHelp } from "dashboard/content/help/ImageReviewHelp";
 import { PleaseSubscribe } from "dashboard/content/purchse/pleaseSubscribe/PleaseSubscribe";
 import { PleaseSubscribeHelp } from "dashboard/content/help/PleaseSubscribeHelp";
-import { StructuredConvoTree } from "dashboard/content/responseConfiguration/conversation/PalavyrConfiguration";
+import { ConversationConfigurationPage, IntroConversationConfigurationPage, StructuredConvoTree } from "dashboard/content/responseConfiguration/conversation/PalavyrConfiguration";
 import { TutorialPage } from "@landing/tutorialPage/TutorialPage";
 import { TermsOfUsePage } from "legal/terms-of-use/TermsOfUsePage";
 import { PrivacyPolicyPage } from "legal/privacy-policy/PrivacyPolicy";
@@ -164,7 +164,10 @@ export const Routes = () => {
                 <ProtectedRoute exact path="/dashboard/editor/email/:areaIdentifier" component={withLayout(withAreaTabs(<EmailConfiguration />), <EmailHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/pricing/:areaIdentifier" component={withLayout(withAreaTabs(<ResponseConfiguration />), <ResponseConfigurationHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/attachments/:areaIdentifier" component={withLayout(withAreaTabs(<AttachmentConfiguration />), <AttachmentsHelp />)} />
-                <ProtectedRoute exact path="/dashboard/editor/conversation/:areaIdentifier" component={withLayout(withAreaTabs(<StructuredConvoTree />), <ConversationHelp />)} />
+
+                <ProtectedRoute exact path="/dashboard/editor/conversation/:areaIdentifier" component={withLayout(withAreaTabs(<ConversationConfigurationPage />), <ConversationHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/conversation/intro/:areaIdentifier" component={withLayout(IntroConversationConfigurationPage, <ConversationHelp />)} />
+
                 <ProtectedRoute exact path="/dashboard/editor/settings/:areaIdentifier" component={withLayout(withAreaTabs(<AreaSettings />), <AreaSettingsHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/pricingpreview/:areaIdentifier" component={withLayout(withAreaTabs(<ConfigurationPreview />), <PreviewHelp />)} />
 

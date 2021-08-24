@@ -32,12 +32,12 @@ namespace Palavyr.Core.Services.AccountServices
         }
 
 
-        public async Task<bool> TryRegisterAccountAndSendEmailVerificationToken(string accountId, string apiKey, string emailAddress, CancellationToken cancellationToken)
+        public async Task<bool> TryRegisterAccountAndSendEmailVerificationToken(string accountId, string apiKey, string emailAddress, string introId, CancellationToken cancellationToken)
         {
             accessChecker.CheckAccountAccess(emailAddress);
 
             await CreateNewSubscription(accountId, apiKey);
-            await InstallSeedData(accountId, emailAddress);
+            await InstallSeedData(accountId, emailAddress, introId);
 
             var result = await emailVerificationService.SendConfirmationTokenEmail(emailAddress, accountId, cancellationToken);
             return result;
@@ -53,14 +53,15 @@ namespace Palavyr.Core.Services.AccountServices
             await accountsContext.Subscriptions.AddAsync(newSubscription);
         }
 
-        private async Task InstallSeedData(string accountId, string emailAddress)
+        private async Task InstallSeedData(string accountId, string emailAddress, string introId)
         {
             logger.LogDebug("Install new account seed data.");
-            var seedData = new SeedData(accountId, emailAddress);
+            var seedData = new SeedData(accountId, emailAddress, introId);
             await dashContext.Areas.AddRangeAsync(seedData.Areas);
             await dashContext.WidgetPreferences.AddAsync(seedData.WidgetPreference);
             await dashContext.SelectOneFlats.AddRangeAsync(seedData.DefaultDynamicTables);
             await dashContext.DynamicTableMetas.AddRangeAsync(seedData.DefaultDynamicTableMetas);
+            await dashContext.ConversationNodes.AddRangeAsync(seedData.IntroductionConversationNodes);
         }
     }
 }

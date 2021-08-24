@@ -11,9 +11,9 @@ namespace Test.Common.ExtensionsMethods
             return new ConversationOptionSplitter(new GuidFinder());
         }
 
-        public static INodeGetter GetNodeGetter(this ITestBase _)
+        public static NodeGetter GetNodeGetter(this ITestBase _)
         {
-            return new INodeGetter(new ConversationOptionSplitter(new GuidFinder()));
+            return new NodeGetter(new ConversationOptionSplitter(new GuidFinder()));
         }
 
         public static GuidFinder GetGuidFinder(this ITestBase _)

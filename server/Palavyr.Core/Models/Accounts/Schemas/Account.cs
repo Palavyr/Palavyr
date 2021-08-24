@@ -2,13 +2,16 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.Core.Models.Accounts.Schemas
 {
     public class Account
     {
-        [Key] public int? Id { get; set; }
+        [Key]
+        public int? Id { get; set; }
+
         public string? Password { get; set; }
         public string EmailAddress { get; set; }
         public bool DefaultEmailIsVerified { get; set; }
@@ -29,10 +32,12 @@ namespace Palavyr.Core.Models.Accounts.Schemas
         public bool HasUpgraded { get; set; }
         public string? StripeCustomerId { get; set; }
         public DateTime CurrentPeriodEnd { get; set; }
+        public string IntroductionId { get; set; }
 
         public bool ShowSeenEnquiries { get; set; }
 
-        [NotMapped] public readonly string DefaultLocale = "en-AU";
+        [NotMapped]
+        public readonly string DefaultLocale = "en-AU";
 
         public class PlanTypes
         {
@@ -96,6 +101,7 @@ namespace Palavyr.Core.Models.Accounts.Schemas
             PaymentInterval = paymentInterval;
             HasUpgraded = hasUpgraded;
             StripeCustomerId = null;
+            IntroductionId = new GuidUtils().CreateNewId();
         }
 
         public static Account CreateGoogleAccount(
@@ -103,6 +109,7 @@ namespace Palavyr.Core.Models.Accounts.Schemas
             string emailAddress,
             string accountId)
         {
+            var introId = new GuidUtils().CreateNewId();
             return new Account
             {
                 EmailAddress = emailAddress,
@@ -117,10 +124,11 @@ namespace Palavyr.Core.Models.Accounts.Schemas
                 PaymentInterval = PaymentIntervalEnum.Null,
                 GeneralFallbackSubject = "",
                 GeneralFallbackEmailTemplate = "",
-                CreationDate = DateTime.Now
+                CreationDate = DateTime.Now,
+                IntroductionId = introId
             };
         }
-        
+
         public static Account CreateAccount(
             string emailAddress,
             string password,

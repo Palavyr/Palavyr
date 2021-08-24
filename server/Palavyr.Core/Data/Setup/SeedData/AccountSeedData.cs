@@ -2,7 +2,7 @@
 {
     public class SeedData : BaseSeedData
     {
-        public SeedData(string accountId, string defaultEmail) : base(accountId, defaultEmail)
+        public SeedData(string accountId, string defaultEmail, string introId) : base(accountId, defaultEmail, introId)
         {
         }
     }

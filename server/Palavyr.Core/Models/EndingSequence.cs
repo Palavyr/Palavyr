@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -13,6 +14,16 @@ namespace Palavyr.Core.Models
 
         public static readonly string FallbackEmailSuccessfulNodeId = "FallbackEmailSuccessfulNodeId";
         public static readonly string FallbackEmailFailedNodeId = "FallbackEmailFailedNodeId";
+
+
+        public static ConversationNode[] CleanTheIntroConvoEnding(ConversationNode[] introSequence)
+        {
+            
+            var terminalIntroNode = introSequence.SingleOrDefault(x => x.IsTerminalType);
+            terminalIntroNode.NodeChildrenString = "Transition-Selection";
+            
+            return introSequence;
+        }
 
         public static List<ConversationNode> AttachEndingSequenceToNodeList(List<ConversationNode> nodeList, string areaId, string accountId)
         {
@@ -44,7 +55,7 @@ namespace Palavyr.Core.Models
             var sendEmail = ConversationNode.CreateNew(
                 sendEmailId,
                 InternalNodeTypeOptions.SendEmail.StringName,
-                "Wait just a moment while I send you a confirmation email with some information",
+                "To receive a confirmation email please click on the button below.",
                 areaId,
                 nodeChildrenString: "Placeholder", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
                 DefaultNodeTypeOptions.YesNo.Yes,

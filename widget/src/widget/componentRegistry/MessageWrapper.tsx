@@ -2,6 +2,7 @@ import * as React from "react";
 import { Box, makeStyles } from "@material-ui/core";
 import classNames from "classnames";
 import { WidgetPreferences } from "@Palavyr-Types";
+import { WidgetContext } from "widget/context/WidgetContext";
 
 type StyleProps = {
     backgroundColor: string;
@@ -31,28 +32,25 @@ const useStyles = makeStyles(theme => ({
         textAlign: "left",
     },
     wrapper: {
-        // marginLeft: "0.2rem",
         merginRight: "0.4rem",
         marginTop: "0.1rem",
         borderRadius: "10px",
-        // maxWidth: "85%",
-        // minWidth: "45%",
     },
     timeStamp: {
         fontSize: "9px",
         marginTop: "0px",
-        borderTop: "1px solid black",
+        borderTop: "1px solid grey",
         float: "left",
     },
 }));
 
 export interface IWrapMessages {
-    customPreferences: WidgetPreferences;
     children: React.ReactNode;
 }
 
-export const MessageWrapper = ({ customPreferences, children }: IWrapMessages) => {
-    const cls = useStyles({ color: customPreferences.chatFontColor, backgroundColor: customPreferences.chatBubbleColor });
+export const MessageWrapper = ({ children }: IWrapMessages) => {
+    const { preferences } = React.useContext(WidgetContext);
+    const cls = useStyles({ color: preferences.chatFontColor, backgroundColor: preferences.chatBubbleColor });
     return (
         <div className={cls.wrapper}>
             <Box className={classNames(cls.messageText, cls.layout)}>{children}</Box>

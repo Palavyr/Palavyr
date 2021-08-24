@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Nodes;
 using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.Core.Models
@@ -26,17 +28,23 @@ namespace Palavyr.Core.Models
         private readonly RequiredNodeCalculator requiredNodeCalculator;
         private readonly MissingNodeCalculator missingNodeCalculator;
         private readonly NodeOrderChecker nodeOrderChecker;
+        private readonly IAccountRepository accountRepository;
+        private readonly IConfigurationRepository configurationRepository;
 
         public WidgetStatusChecker(
             IDynamicTableCompilerOrchestrator orchestrator,
             RequiredNodeCalculator requiredNodeCalculator,
             MissingNodeCalculator missingNodeCalculator,
-            NodeOrderChecker nodeOrderChecker)
+            NodeOrderChecker nodeOrderChecker,
+            IAccountRepository accountRepository,
+            IConfigurationRepository configurationRepository)
         {
             this.orchestrator = orchestrator;
             this.requiredNodeCalculator = requiredNodeCalculator;
             this.missingNodeCalculator = missingNodeCalculator;
             this.nodeOrderChecker = nodeOrderChecker;
+            this.accountRepository = accountRepository;
+            this.configurationRepository = configurationRepository;
         }
 
         public async Task<PreCheckResult> ExecuteWidgetStatusCheck(
@@ -52,16 +60,30 @@ namespace Palavyr.Core.Models
             // user may simply wish to collect 'num individuals'
 
             logger.LogDebug("Collected areas.... running pre-check");
-            var result = await StatusCheck(areas, widgetState, demo, logger);
+            var result = await StatusCheck(accountId, areas, widgetState, demo, logger);
             return result;
         }
 
-        private async Task<PreCheckResult> StatusCheck(List<Area> areas, bool widgetState, bool demo, ILogger logger)
+        private async Task<PreCheckResult> StatusCheck(string accountId, List<Area> areas, bool widgetState, bool demo, ILogger logger)
         {
             logger.LogDebug("Attempting RunConversationsPreCheck...");
 
-            var isReady = true;
+
             var errors = new List<PreCheckError>();
+            var isReady = true;
+
+            var introError = new PreCheckError()
+            {
+                AreaName = "Introduction Sequence"
+            };
+
+            var allRequiredIntroNodesArePresent = await AllIntroRequiredIntroNodesArePresent(accountId, introError);
+            if (!allRequiredIntroNodesArePresent)
+            {
+                isReady = false;
+                errors.Add(introError);
+            }
+
             foreach (var area in areas)
             {
                 var error = new PreCheckError()
@@ -81,15 +103,19 @@ namespace Palavyr.Core.Models
                 var allImageNodesHaveImagesSet = AllImageNodesSet(nodeList, error);
                 var allCategoricalPricingStrategiesAreUnique = await AllCategoricalPricingStrategiesAreUnique(area, error);
 
+
                 var checks = new List<bool>() {nodesSet, branchesTerminate, nodesSatisfied, dynamicNodesAreOrdered, allImageNodesHaveImagesSet, allCategoricalPricingStrategiesAreUnique};
 
-                isReady = checks.TrueForAll(x => x);
-                logger.LogDebug($"Checked isReady status: {isReady}");
-                if (isReady) continue;
+                var areaChecksPassed = checks.TrueForAll(x => x);
+                if (!areaChecksPassed)
+                {
+                    isReady = false;
+                    errors.Add(error);
+                    logger.LogDebug($"Area not currently ready: {area.AreaName}");
+                }
 
-                logger.LogDebug($"Area not currently ready: {area.AreaName}");
-                errors.Add(error);
             }
+
 
             logger.LogDebug("Pre-check Complete. Returning result.");
             if (demo)
@@ -109,6 +135,28 @@ namespace Palavyr.Core.Models
                 logger.LogDebug("WidgetState is false");
                 return PreCheckResult.CreateConvoResult(false, errors);
             }
+        }
+
+        private async Task<bool> AllIntroRequiredIntroNodesArePresent(string accountId, PreCheckError error)
+        {
+            var isReady = true;
+            var account = await accountRepository.GetAccount(accountId, CancellationToken.None);
+            var introId = account.IntroductionId;
+
+            var introSequence = await configurationRepository.GetIntroductionSequence(introId, CancellationToken.None);
+            if (!introSequence.Select(x => x.NodeType).Contains(DefaultNodeTypeOptions.Selection.StringName))
+            {
+                isReady = false;
+                error.Reasons.Add($"Missing {DefaultNodeTypeOptions.CreateSelection().Text}");
+            }
+
+            if (!introSequence.Select(x => x.NodeType).Contains(DefaultNodeTypeOptions.CollectDetails.StringName))
+            {
+                isReady = false;
+                error.Reasons.Add($"Missing {DefaultNodeTypeOptions.CreateCollectDetails().Text}");
+            }
+
+            return isReady;
         }
 
         private async Task<bool> AllCategoricalPricingStrategiesAreUnique(Area area, PreCheckError error)
@@ -198,7 +246,7 @@ namespace Palavyr.Core.Models
                 .Select(x => x.Value).ToList();
 
             var hangingNodes = nodeList
-                .Where(a => string.IsNullOrWhiteSpace(a.NodeChildrenString) && !terminalTypes.Contains(a.NodeType) )// a.NodeType != "Loopback")
+                .Where(a => string.IsNullOrWhiteSpace(a.NodeChildrenString) && !terminalTypes.Contains(a.NodeType)) // a.NodeType != "Loopback")
                 .OrderBy(x => x.NodeId)
                 .ToList();
             var noHangingNodes = hangingNodes.Count == 0;

@@ -1,14 +1,17 @@
 import * as React from "react";
 import { Button, makeStyles, PropTypes } from "@material-ui/core";
 import { WidgetPreferences } from "@Palavyr-Types";
+import { useContext } from "react";
+import { WidgetContext } from "widget/context/WidgetContext";
 
 export interface IResponseButton {
-    onClick: any;
-    prefs: WidgetPreferences;
+    onClick?(): void;
+    onSubmit?(e: { preventDefault: () => void }): void;
     disabled?: boolean;
     text?: string;
     color?: PropTypes.Color;
     variant?: "outlined" | "contained";
+    type?: "button" | "submit"
 }
 
 const useStyles = makeStyles(theme => ({
@@ -35,10 +38,12 @@ const useStyles = makeStyles(theme => ({
     }),
 }));
 
-export const ResponseButton = ({ onClick, prefs, disabled = false, variant = "outlined", text = "Submit" }: IResponseButton) => {
-    const cls = useStyles(prefs);
+export const ResponseButton = ({ onClick, onSubmit, disabled = false, variant = "outlined", text = "Submit", type = "button" }: IResponseButton) => {
+    const { preferences } = useContext(WidgetContext);
+
+    const cls = useStyles(preferences);
     return (
-        <Button disableElevation focusVisibleClassName={cls.buttonFocus} className={cls.button} disabled={disabled} variant={variant} size="small" onClick={onClick}>
+        <Button type={type} disableElevation focusVisibleClassName={cls.buttonFocus} className={cls.button} disabled={disabled} variant={variant} size="small" onClick={onClick} onSubmit={onSubmit}>
             {text}
         </Button>
     );

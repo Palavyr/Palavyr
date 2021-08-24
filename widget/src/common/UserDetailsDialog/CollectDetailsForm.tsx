@@ -12,13 +12,13 @@ import { LocaleSelector } from "./FormInputs/LocaleSelector";
 import { PhoneForm } from "./FormInputs/PhoneForm";
 import { useSelector } from "react-redux";
 import { GlobalState, LocaleMap, LocaleResource, SetState } from "@Palavyr-Types";
-import { setRegionContext, closeUserDetails } from "@store-dispatcher";
+import { setRegionContext, closeUserDetails, getNameContext, getEmailAddressContext, getPhoneContext, getRegionContext } from "@store-dispatcher";
 import { INVALID_PHONE, INVALID_EMAIL, INVALID_NAME } from "./UserDetailsCheck";
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
+import { WidgetContext } from "widget/context/WidgetContext";
+import { useContext } from "react";
 
 export interface CollectDetailsFormProps {
-    chatStarted: boolean;
-    setChatStarted: Dispatch<SetStateAction<boolean>>;
     setKickoff: SetState<boolean>;
 }
 
@@ -28,38 +28,38 @@ export interface BaseFormProps {
 }
 
 const useStyles = makeStyles(theme => ({
-    baseDialog: {
+    baseDialogCollectionForm: {
         zIndex: 9999,
         position: "absolute",
     },
-    dialogBackground: {
-        backgroundColor: theme.palette.common.white,
+    dialogBackgroundCollectionForm: {
+        backgroundColor: "rgba(255, 255, 255, 50)",
         zIndex: 9999,
     },
-    dialogPaper: {
+    dialogPaperCollectionForm: {
         zIndex: 9999,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         paddingBottom: theme.spacing(3),
         maxWidth: 420,
-        backgroundColor: theme.palette.common.white,
+        backgroundColor: "rgba(255, 255, 255, 50)",
     },
-    dialogPaperScrollPaper: {
+    dialogPaperScrollPaperCollectionForm: {
         maxHeight: "none",
     },
-    dialogContent: {
+    dialogContentCollectionForm: {
         paddingTop: 0,
         paddingBottom: 0,
     },
-    button: {
+    buttonCollectionForm: {
         margin: "0.5rem",
         textAlign: "center",
         marginTop: "1.3rem",
     },
 }));
 
-export const CollectDetailsForm = ({ chatStarted, setChatStarted, setKickoff }: CollectDetailsFormProps) => {
+export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const client = new PalavyrWidgetRepository(secretKey);
     const userDetailsVisible = useSelector((state: GlobalState) => state.behaviorReducer.userDetailsVisible);
@@ -67,6 +67,8 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, setKickoff }: 
     const [options, setOptions] = useState<LocaleMap>([]);
     const [phonePattern, setphonePattern] = useState<string>("");
     const [detailsSet, setDetailsSet] = useState<boolean>(false);
+
+    const { chatStarted, setChatStarted, convoId } = useContext(WidgetContext);
 
     useEffect(() => {
         (async () => {
@@ -89,6 +91,15 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, setKickoff }: 
         e.preventDefault();
         setKickoff(true);
         setChatStarted(true);
+
+        const name = getNameContext();
+        const email = getEmailAddressContext();
+        const phone = getPhoneContext();
+        const locale = getRegionContext();
+
+        if (convoId) {
+            await client.Widget.Post.UpdateConvoRecord({ Name: name, Email: email, PhoneNumber: phone, Locale: locale, ConversationId: convoId });
+        }
         closeUserDetails();
     };
 
@@ -100,35 +111,82 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, setKickoff }: 
     return (
         <Dialog
             open={userDetailsVisible}
-            className={cls.baseDialog}
+            className={cls.baseDialogCollectionForm}
             classes={{
-                root: cls.dialogBackground,
-                paper: cls.dialogPaper,
-                paperScrollPaper: cls.dialogPaperScrollPaper,
+                root: cls.dialogBackgroundCollectionForm,
+                paper: cls.dialogPaperCollectionForm,
+                paperScrollPaper: cls.dialogPaperScrollPaperCollectionForm,
             }}
             disableBackdropClick
             hideBackdrop={false}
             disableEscapeKeyDown
         >
-            <UserDetailsTitle title="Provide your contact details" />
-            <DialogContent className={cls.dialogContent}>
-                <form onSubmit={onFormSubmit}>
-                    <NameForm {...formProps} />
-                    <EmailForm {...formProps} setDetailsSet={setDetailsSet} />
-                    <PhoneForm {...formProps} phonePattern={phonePattern} />
-                    <LocaleSelector options={options} onChange={onChange} />
-                    <div style={{ display: "flex", justifyContent: "center" }}>
+            <UserDetailsTitle title="Update your Contact Details" />
+            <DialogContent className={cls.dialogContentCollectionForm}>
+                <ContactForm
+                    disabled={false}
+                    localeOptions={options}
+                    onFormSubmit={onFormSubmit}
+                    formProps={{ ...formProps }}
+                    setDetailsSet={setDetailsSet}
+                    phonePattern={phonePattern}
+                    onChange={onChange}
+                    detailsSet={detailsSet}
+                    submitButton={
                         <Button
                             disabled={status === INVALID_PHONE || status === INVALID_EMAIL || status === INVALID_NAME}
-                            className={cls.button}
+                            className={cls.buttonCollectionForm}
                             endIcon={detailsSet && <CheckCircleOutlineIcon />}
                             type="submit"
                         >
                             <Typography variant="h5">{chatStarted ? "Continue" : "Begin"}</Typography>
                         </Button>
-                    </div>
-                </form>
+                    }
+                />
             </DialogContent>
         </Dialog>
+    );
+};
+
+export interface ContactFormProps {
+    onFormSubmit(e: { preventDefault: () => void }): void;
+    formProps: any;
+    setDetailsSet: any;
+    phonePattern: any;
+    onChange: any;
+    detailsSet: boolean;
+    localeOptions: any;
+    submitButton: React.ReactNode;
+    disabled: boolean;
+}
+
+export const ContactForm = ({ disabled, onFormSubmit, submitButton, localeOptions, formProps, setDetailsSet, phonePattern, onChange, detailsSet }: ContactFormProps) => {
+    const cls = useStyles();
+    return (
+        <form onSubmit={onFormSubmit}>
+            <NameForm {...formProps} disabled={disabled} />
+            <EmailForm {...formProps} setDetailsSet={setDetailsSet} disabled={disabled} />
+            <PhoneForm {...formProps} phonePattern={phonePattern} disabled={disabled} />
+            <LocaleSelector options={localeOptions} onChange={onChange} disabled={disabled} />
+            <div style={{ display: "flex", justifyContent: "center" }}>{submitButton}</div>
+        </form>
+    );
+};
+
+export interface MiniContactFormProps {
+    onFormSubmit(e: { preventDefault: () => void }): void;
+    formProps: any;
+    setDetailsSet: SetState<boolean>;
+    submitButton: React.ReactNode;
+    disabled: boolean;
+}
+export const MiniContactForm = ({ disabled, onFormSubmit, setDetailsSet, submitButton, formProps }: MiniContactFormProps) => {
+    const cls = useStyles();
+    return (
+        <form onSubmit={onFormSubmit}>
+            <NameForm {...formProps} disabled={disabled} />
+            <EmailForm {...formProps} setDetailsSet={setDetailsSet} disabled={disabled} />
+            <div style={{ display: "flex", justifyContent: "right" }}>{submitButton}</div>
+        </form>
     );
 };

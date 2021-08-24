@@ -39,7 +39,7 @@ export const IntentActivityCards = () => {
     return (
         <Grid container>
             {activity.map((a: EnquiryActivtyResource, index: number) => {
-                return <Grid item>{activity && activity[0] && <IntentActivityCard key={index} activityResource={activity[0]} onClick={() => history.push(createNavLink(a.intentIdentifier))} />}</Grid>;
+                return <Grid item>{a && <IntentActivityCard key={index} activityResource={a} onClick={() => history.push(createNavLink(a.intentIdentifier))} />}</Grid>;
             })}
         </Grid>
     );

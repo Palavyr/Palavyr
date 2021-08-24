@@ -1,5 +1,6 @@
 import {
     AreaTable,
+    ConversationRecordUpdate,
     ConversationRecordUpdate as ConvoRecord,
     ConversationUpdate,
     DynamicResponse,
@@ -11,6 +12,7 @@ import {
     SecretKey,
     SendEmailResultResponse,
     WidgetNodeResource,
+    WidgetNodes,
     WidgetPreferences,
 } from "@Palavyr-Types";
 import { AxiosClient } from "./AxiosClient";
@@ -37,6 +39,7 @@ export class PalavyrWidgetRepository {
         fallbackEmail: (secretKey: SecretKey, areaIdentifier: string) => `widget/area/${areaIdentifier}/email/fallback/send?key=${secretKey}`,
         internalCheck: (secretKey: SecretKey) => `widget/internal-check?key=${secretKey}`,
         nodeImage: (secretKey: SecretKey, nodeId: string) => `widget/node-image/${nodeId}?key=${secretKey}`,
+        getIntroSequence: (secretKey: SecretKey) => `account/settings/intro-sequence?key=${secretKey}`,
     };
 
     public Widget = {
@@ -45,8 +48,10 @@ export class PalavyrWidgetRepository {
             WidgetPreferences: async () => this.client.get<WidgetPreferences>(this.Routes.widgetPreferences(this.secretKey)),
             Locale: async () => this.client.get<LocaleResponse>(this.Routes.locale(this.secretKey)),
             Areas: async () => this.client.get<Array<AreaTable>>(this.Routes.areas(this.secretKey)),
-            NewConversation: async (areaId: string) => this.client.get<NewConversation>(this.Routes.newConvo(this.secretKey, areaId)),
+            NewConversation: async (areaId: string, recordUpdateDto: Partial<ConversationRecordUpdate>) =>
+                this.client.post<NewConversation, {}>(this.Routes.newConvo(this.secretKey, areaId), recordUpdateDto),
             NodeImage: async (nodeId: string) => this.client.get<string>(this.Routes.nodeImage(this.secretKey, nodeId)),
+            IntroSequence: async () => this.client.get<WidgetNodes>(this.Routes.getIntroSequence(this.secretKey)),
         },
 
         Post: {

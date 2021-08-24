@@ -1,12 +1,12 @@
 import * as React from "react";
 import { SelectedOption, WidgetPreferences } from "../../globalTypes";
 import { useHistory, useLocation } from "react-router-dom";
-import { makeStyles, Card, Box, TextField } from "@material-ui/core";
-import Autocomplete, { AutocompleteRenderInputParams } from "@material-ui/lab/Autocomplete";
-import classNames from "classnames";
+import { makeStyles, Card, Box } from "@material-ui/core";
 import { sortByPropertyAlphabetical } from "common/sorting";
-import { getWidgetPreferences, openUserDetails } from "@store-dispatcher";
-import { BrandingStrip } from "common/BrandingStrip";
+import { WidgetContext } from "widget/context/WidgetContext";
+import { useContext } from "react";
+import { ChoiceList } from "./ChoiceList";
+import classNames from "classnames";
 
 const useStyles = makeStyles(() => ({
     container: {
@@ -46,7 +46,7 @@ const useStyles = makeStyles(() => ({
         paddingRight: "1rem",
     },
     autocomplete: {
-        paddingTop: "1rem",
+        paddingTop: "0rem",
     },
     mainList: {
         maxHeight: "97%",
@@ -69,64 +69,32 @@ const useStyles = makeStyles(() => ({
     }),
     popper: {
         boxShadow: "none",
+        backgroundColor: "white",
+        border: "2px dashed black",
     },
 }));
 
 export interface DropdownListProps {
-    setSelectedOption: (option: SelectedOption) => void;
     options: SelectedOption[];
+    onChange(event: any, newOption: SelectedOption): void;
+    disabled: boolean;
 }
 
-export const DropdownListOptions = ({ setSelectedOption, options }: DropdownListProps) => {
+export const DropdownListOptions = ({ disabled, options, onChange }: DropdownListProps) => {
     const history = useHistory();
     var secretKey = new URLSearchParams(useLocation().search).get("key");
-    var preferences = getWidgetPreferences();
+
+    const { preferences } = useContext(WidgetContext);
     const cls = useStyles(preferences);
 
-    const onChange = (event: any, newOption: SelectedOption) => {
-        setSelectedOption(newOption);
-        history.push(`/widget?key=${secretKey}`);
-        openUserDetails();
-    };
     const sortGetter = (opt: SelectedOption) => opt.areaDisplay;
     const opts = sortByPropertyAlphabetical(sortGetter, options);
     return (
         <Box height="100%" className={cls.container}>
             <Card className={cls.header}>{preferences && <div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: preferences.landingHeader }} />}</Card>
             <div className={classNames(cls.selectListBgColor, cls.selectListFontColor, cls.mainList)}>
-                {options && (
-                    <Autocomplete
-                        size="small"
-                        open={true}
-                        classes={{ popper: cls.popper, root: cls.selectbox, paper: classNames(cls.paper, cls.selectListBgColor, cls.selectListFontColor) }}
-                        disableClearable
-                        clearOnEscape
-                        className={classNames(cls.autocomplete, cls.mainList, cls.selectListBgColor, cls.selectListFontColor)}
-                        onChange={onChange}
-                        options={opts}
-                        ListboxProps={{ className: cls.listbox }}
-                        getOptionLabel={(option: SelectedOption) => option.areaDisplay}
-                        renderInput={(params: AutocompleteRenderInputParams) => (
-                            <TextField
-                                {...params}
-                                id="field1"
-                                className={cls.inputLabel}
-                                label="What can I help you with today?"
-                                inputProps={{
-                                    ...params.inputProps,
-                                    autoComplete: "new-password",
-                                }}
-                                InputProps={{
-                                    ...params.InputProps,
-                                    disableUnderline: true,
-                                    style: { borderBottom: "1px solid black" },
-                                }}
-                            />
-                        )}
-                    />
-                )}
+                <ChoiceList setOpen={null} options={opts} disabled={disabled} onChange={onChange} />
             </div>
-            {/* <BrandingStrip /> */}
         </Box>
     );
 };

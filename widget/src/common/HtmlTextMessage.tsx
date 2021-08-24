@@ -6,13 +6,13 @@ import markdownItClass from "@toycode/markdown-it-class";
 import markdownItLinkAttributes from "markdown-it-link-attributes";
 import { makeStyles } from "@material-ui/core";
 import classNames from "classnames";
+import { getNameContext } from "@store-dispatcher";
 
 const useStyles = makeStyles(theme => ({
     outer: {
-        fontSize: "16px",
     },
     inner: {
-        fontSize: "18px",
+        fontSize: "15px",
     },
 }));
 export interface IHtmlTextMessage {
@@ -21,19 +21,11 @@ export interface IHtmlTextMessage {
     className: string;
 }
 export const HtmlTextMessage = ({ message, className, showTimeStamp = true }: IHtmlTextMessage) => {
-    // const sanitizedHTML = markdownIt()
-    //     .use(markdownItClass, {
-    //         img: ["rcw-message-img"],
-    //     })
-    //     .use(markdownItSup)
-    //     .use(markdownItSanitizer)
-    //     .use(markdownItLinkAttributes, { attrs: { target: "_blank", rel: "noopener" } })
-    //     .render(message);
     const cls = useStyles();
 
     return (
         <div className={classNames(cls.outer, className)}>
-            <div className={classNames(cls.inner, "rcw-message-text")} dangerouslySetInnerHTML={{ __html: message }} />
+            <div className={classNames(cls.inner, "rcw-message-text")} dangerouslySetInnerHTML={{ __html: message.replace("{%name%}", getNameContext()).replace("{%Name%}", getNameContext()) }} />
         </div>
     );
 };

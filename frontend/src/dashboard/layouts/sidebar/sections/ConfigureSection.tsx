@@ -9,6 +9,7 @@ import { useHistory } from "react-router-dom";
 import { AreaLinkItem } from "./sectionComponents/AreaLinkItem";
 import { AreaNameDetail, AreaNameDetails } from "@Palavyr-Types";
 import classNames from "classnames";
+import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 
 const useStyles = makeStyles(theme => ({
     icon: {
@@ -25,7 +26,7 @@ export interface ConfigureSectionProps {
 
 export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails, menuOpen }: ConfigureSectionProps) => {
     const [configureOpen, setConfigureOpen] = useState<boolean>(true);
-    const { checkAreaCount, planTypeMeta } = React.useContext(DashboardContext);
+    const { checkAreaCount, planTypeMeta, repository } = React.useContext(DashboardContext);
 
     const history = useHistory();
     const cls = useStyles();
@@ -34,11 +35,25 @@ export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails, 
         history.push("/dashboard/set-areas");
     };
 
+    const pushToIntro = async () => {
+        const introductionId = await repository.Settings.Account.getIntroductionId();
+        history.push(`/dashboard/editor/conversation/intro/${introductionId}`);
+    };
+
     return (
         <List className={classNames("configure-tour")}>
             <SidebarSectionHeader menuOpen={menuOpen} title="Configure" onClick={() => setConfigureOpen(!configureOpen)} currentState={configureOpen} />
             <SidebarLinkItem
-                toolTipText="Add New Intent"
+                toolTipText="Introduction Sequence"
+                menuOpen={menuOpen}
+                className={"intro-sequence-tour"}
+                text="Intro"
+                isActive={isActive}
+                onClick={pushToIntro}
+                IconComponent={<InsertEmoticonIcon className={cls.icon} />}
+            />
+            <SidebarLinkItem
+                toolTipText="Add New Area"
                 menuOpen={menuOpen}
                 className={"add-new-area-tour"}
                 text="Add New Area"
@@ -47,7 +62,7 @@ export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails, 
                 IconComponent={<AddCircleOutlineIcon className={cls.icon} />}
             />
             <SidebarLinkItem
-                toolTipText="Enable / Disable Intents"
+                toolTipText="Enable / Disable Areas"
                 menuOpen={menuOpen}
                 className={"enable-disable-area-tour"}
                 text="Enable / Disable Areas"

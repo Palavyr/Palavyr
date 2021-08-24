@@ -1,21 +1,21 @@
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import format from "date-fns/format";
 import { Loader } from "./components/Loader/Loader";
 import { WidgetPreferences, GlobalState } from "@Palavyr-Types";
 import { _markAllMessagesRead, _setBadgeCount } from "store/actions/actions";
 import { scrollToBottom } from "widget/utils/messages";
-import { getComponentToRender } from "componentRegistry/getComponentToRender";
+import { getComponentToRender } from "widget/componentRegistry/getComponentToRender";
 import { BrandingStrip } from "common/BrandingStrip";
 import { makeStyles } from "@material-ui/core";
 
 import "./styles.scss";
 import classNames from "classnames";
+import { WidgetContext } from "widget/context/WidgetContext";
 
 type Props = {
     showTimeStamp: boolean;
     profileAvatar?: string;
-    preferences: WidgetPreferences;
 };
 
 const useStyles = makeStyles(theme => ({
@@ -27,7 +27,9 @@ const useStyles = makeStyles(theme => ({
     }),
 }));
 
-export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) => {
+export const Messages = ({ profileAvatar, showTimeStamp }: Props) => {
+    const { preferences } = useContext(WidgetContext);
+
     const dispatch = useDispatch();
     const { messages, typing, showChat, badgeCount } = useSelector((state: GlobalState) => ({
         messages: state.messagesReducer.messages,
@@ -36,7 +38,6 @@ export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) =
         showChat: state.behaviorReducer.showChat,
     }));
 
-    const messageRef = useRef<HTMLDivElement | null>(null);
     useEffect(() => {
         scrollToBottom(messageRef.current);
         // if (showChat && badgeCount) dispatch(_markAllMessagesRead());
@@ -44,6 +45,7 @@ export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) =
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [messages, badgeCount, showChat, typing]);
 
+    const messageRef = useRef<HTMLDivElement | null>(null);
     // Can make the avatar only appear on the message with the current index. So
     // TODO: Fix this function or change to move the avatar to last message from response
     // const shouldRenderAvatar = (message: Message, index: number) => {
@@ -62,7 +64,7 @@ export const Messages = ({ preferences, profileAvatar, showTimeStamp }: Props) =
                     <div className={classNames("rcw-message", cls.messageTube)} key={`${index}-${format(message.timestamp, "hh:mm")}`}>
                         {/* {profileAvatar  && message.showAvatar && <img src={profileAvatar} className="rcw-avatar" alt="profile" />} */}
                         {/* <FaceIcon className={cls.face} /> */}
-                        {getComponentToRender(message, preferences, showTimeStamp)}
+                        {getComponentToRender(message, showTimeStamp)}
                     </div>
                 ))}
                 {typing && <Loader typing={typing} />}

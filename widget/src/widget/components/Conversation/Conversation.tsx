@@ -5,7 +5,6 @@ import { Messages } from "../Messages/Messages";
 
 import "./style.scss";
 import { ConvoHeader } from "../ConvoHeader/ConvoHeader";
-import { getWidgetPreferences } from "@store-dispatcher";
 
 type ConversationProps = {
     className: string;
@@ -15,11 +14,10 @@ type ConversationProps = {
 };
 
 export const Conversation = ({ className, profileAvatar, titleAvatar, showTimeStamp }: ConversationProps) => {
-    const preferences = getWidgetPreferences();
-    return preferences ? (
+    return (
         <div className={cn("rcw-conversation-container", className)} aria-live="polite">
-            <ConvoHeader titleAvatar={titleAvatar} preferences={preferences} />
-            <Messages profileAvatar={profileAvatar} showTimeStamp={showTimeStamp} preferences={preferences} />
+            <ConvoHeader titleAvatar={titleAvatar} />
+            <Messages profileAvatar={profileAvatar} showTimeStamp={showTimeStamp} />
         </div>
-    ) : null;
+    );
 };

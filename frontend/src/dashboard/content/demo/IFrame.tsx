@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
     frame: (props: StyleProps) => ({
         marginTop: props.errors ? "0rem" : "2rem",
         marginBottom: props.errors ? "0rem" : "2rem",
-        height: "560px",
+        height: "660px",
         width: "420px",
         borderRadius: "9px",
         border: "0px",

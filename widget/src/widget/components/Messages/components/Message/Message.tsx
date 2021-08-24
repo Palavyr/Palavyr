@@ -14,8 +14,7 @@ import classNames from "classnames";
 const useStyles = makeStyles(theme => ({
     timeStamp: {
         fontSize: "9px",
-        // marginTop: "0.6rem",
-        borderTop: "1px solid black",
+        borderTop: "1px dashed gray",
         float: "right",
         background: "none",
     },
@@ -26,6 +25,7 @@ export type MessageProps = {
     showTimeStamp: boolean;
 };
 
+// User Uses this message component
 export const Message = ({ message, showTimeStamp = true }: MessageProps) => {
     const sanitizedHTML = markdownIt()
         .use(markdownItClass, {

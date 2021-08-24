@@ -11,6 +11,7 @@ import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircul
 import { Align } from "dashboard/layouts/positioning/Align";
 import { OsTypeToggle } from "../responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
 import { NoDataAvailable } from "./NoDataMessage";
+import { cloneDeep } from "lodash";
 
 const useStyles = makeStyles(theme => ({
     title: {
@@ -39,6 +40,23 @@ export const EnquiresPage = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [deleteIsLoading, setDeleteIsLoading] = useState<boolean>(false);
     const [showSeen, setShowSeen] = useState<boolean | null>(null);
+
+    // SELECT ALL checkbox control
+    const [checked, setChecked] = useState<boolean>(false);
+    const [disabled, setDisabled] = useState<boolean>(false);
+    const onChange = async () => {
+        enquiries.forEach(x => {
+            x.seen = !checked;
+        });
+
+        if (checked) {
+            await repository.Enquiries.SelectAll();
+        } else {
+            await repository.Enquiries.UnselectAll();
+        }
+        setEnquiries(cloneDeep(enquiries));
+        setChecked(!checked);
+    };
 
     const deleteSelectedEnquiries = async (enquiries: Enquiries) => {
         setDeleteIsLoading(true);
@@ -79,7 +97,7 @@ export const EnquiresPage = () => {
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
-                        <EnquiriesHeader />
+                        <EnquiriesHeader checked={checked} onChange={onChange} disabled={disabled} />
                     </TableHead>
                     <TableBody>
                         {sortByPropertyNumeric(numberPropertyGetter, enquiries, true).map((enq: EnquiryRow, index: number) => {

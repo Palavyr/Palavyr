@@ -9,7 +9,7 @@ export const renderNextComponent = (
     node: WidgetNodeResource,
     nodeList: WidgetNodes,
     client: PalavyrWidgetRepository,
-    convoId: string,
+    convoId: string | null,
 ) => {
     //TODO: make this impossible by geting the configuration right
 

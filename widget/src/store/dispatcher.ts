@@ -120,9 +120,9 @@ export function setDynamicResponses(dynamicResponseObject: DynamicResponses) {
     PalavyrWidgetStore.dispatch(actions._setDynamicResponses(dynamicResponseObject));
 }
 
-export function getWidgetPreferences() {
-    return getContextProperties().widgetPreferences;
-}
+// export function getWidgetPreferences() {
+//     return getContextProperties().widgetPreferences;
+// }
 
 export function getContextProperties(): ContextProperties {
     const context = PalavyrWidgetStore.getState().contextReducer as ContextProperties;
