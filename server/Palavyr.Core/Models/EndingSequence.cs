@@ -55,7 +55,7 @@ namespace Palavyr.Core.Models
             var sendEmail = ConversationNode.CreateNew(
                 sendEmailId,
                 InternalNodeTypeOptions.SendEmail.StringName,
-                "To receive a confirmation email please click on the button below",
+                "To receive a confirmation email please click on the button below.",
                 areaId,
                 nodeChildrenString: "Placeholder", // The node child here is not set because we send the email and provide the ID of the next node dynamically depending on the email send result. (SendWdigetResonseEmailController)
                 DefaultNodeTypeOptions.YesNo.Yes,

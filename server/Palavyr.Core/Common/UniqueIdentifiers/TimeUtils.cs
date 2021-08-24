@@ -16,7 +16,7 @@ namespace Palavyr.Core.Common.UniqueIdentifiers
 
         public static DateTime CreateNewTimeStamp()
         {
-            return new DateTime();
+            return DateTime.UtcNow;
         }
     }
 }

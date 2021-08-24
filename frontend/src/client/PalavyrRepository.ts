@@ -365,6 +365,9 @@ export class PalavyrRepository {
         getConversation: async (conversationId: string) => this.client.get<CompletedConversation>(`enquiries/review/${conversationId}`, [CacheIds.Conversation, conversationId].join("-") as CacheIds),
 
         getEnquiryInsights: async () => this.client.get<EnquiryActivtyResource[]>("enquiry-insights"),
+
+        UnselectAll: async () => this.client.post(`enquiries/selectall`),
+        SelectAll: async () => this.client.post(`enquiries/unselectall`),
     };
 
     public Youtube = {

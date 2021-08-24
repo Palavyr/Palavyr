@@ -12,7 +12,7 @@ import { LocaleSelector } from "./FormInputs/LocaleSelector";
 import { PhoneForm } from "./FormInputs/PhoneForm";
 import { useSelector } from "react-redux";
 import { GlobalState, LocaleMap, LocaleResource, SetState } from "@Palavyr-Types";
-import { setRegionContext, closeUserDetails } from "@store-dispatcher";
+import { setRegionContext, closeUserDetails, getNameContext, getEmailAddressContext, getPhoneContext } from "@store-dispatcher";
 import { INVALID_PHONE, INVALID_EMAIL, INVALID_NAME } from "./UserDetailsCheck";
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 
@@ -89,6 +89,7 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, setKickoff }: 
         e.preventDefault();
         setKickoff(true);
         setChatStarted(true);
+        await client.Widget.Post.UpdateConvoRecord({ Name: getNameContext(), Email: getEmailAddressContext(), PhoneNumber: getPhoneContext(), Locale: getRegionContext() });
         closeUserDetails();
     };
 

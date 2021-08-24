@@ -4,7 +4,7 @@ import { Button, makeStyles } from "@material-ui/core";
 import { responseAction } from "./responseAction";
 import { ConvoContextProperties } from "./registry";
 import { AreaTable, GlobalState, IProgressTheChat, LocaleMap, LocaleResource, SelectedOption, WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
-import { setNumIndividualsContext, getContextProperties, openUserDetails, setRegionContext } from "@store-dispatcher";
+import { setNumIndividualsContext, getContextProperties, openUserDetails, setRegionContext, getNameContext, getEmailAddressContext } from "@store-dispatcher";
 import { ResponseButton } from "common/ResponseButton";
 import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "common/UserDetailsDialog/ChatLoadingSpinner";
@@ -76,8 +76,8 @@ export class StandardComponents {
                 loadAreas();
             }, [loadAreas]);
 
-            const onChange = async (event: any, newOption: SelectedOption) => {
-                const newConversation = await client.Widget.Get.NewConversation(newOption.areaId);
+            const onChange = async (_: any, newOption: SelectedOption) => {
+                const newConversation = await client.Widget.Get.NewConversation(newOption.areaId, { Name: getNameContext(), Email: getEmailAddressContext() });
                 const nodes = newConversation.conversationNodes;
                 const convoId = newConversation.conversationId;
                 const rootNode = getRootNode(nodes);

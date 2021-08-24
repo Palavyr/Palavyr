@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Conversation.Schemas;
+using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AuthenticationServices;
 
@@ -27,12 +28,15 @@ namespace Palavyr.API.Controllers.WidgetLive
             this.logger = logger;
         }
 
-        [HttpGet("widget/{areaId}/create")]
+        [HttpPost("widget/{areaId}/create")]
         public async Task<NewConversation> Create(
             [FromHeader]
             string accountId,
             [FromRoute]
-            string areaId)
+            string areaId,
+            [FromBody]
+            ConversationRecordUpdate recordUpdate
+        )
         {
             logger.LogDebug("Fetching nodes...");
             var standardNodes = await configurationRepository.GetAreaConversationNodes(accountId, areaId);
@@ -45,6 +49,17 @@ namespace Palavyr.API.Controllers.WidgetLive
 
             var area = await configurationRepository.GetAreaById(accountId, areaId);
             var newConversationRecord = ConversationRecord.CreateDefault(newConvo.ConversationId, accountId, area.AreaName, areaId);
+
+            if (!string.IsNullOrEmpty(recordUpdate.Email))
+            {
+                newConversationRecord.Email = recordUpdate.Email;
+            }
+
+            if (!string.IsNullOrEmpty(recordUpdate.Name))
+            {
+                newConversationRecord.Name = recordUpdate.Name;
+            }
+
             await convoRepository.CreateNewConversationRecord(newConversationRecord);
 
             await convoRepository.CommitChangesAsync();
