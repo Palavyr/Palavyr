@@ -12,6 +12,7 @@ export interface NameFormProps extends BaseFormProps {
 const useStyles = makeStyles(theme => ({
     input: {
         color: theme.palette.common.black,
+        borderBottom: "1px solid gray"
     },
     label: {
         color: theme.palette.common.black,

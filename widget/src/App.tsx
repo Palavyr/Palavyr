@@ -4,14 +4,14 @@ import { useLocation } from "react-router-dom";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { WidgetContext } from "widget/context/WidgetContext";
-import { SmoothWidget } from "widget/smoothWidget/SmoothWidget";
 import { CollectDetailsForm } from "common/UserDetailsDialog/CollectDetailsForm";
+import { SmoothWidget } from "widget/smoothWidget/SmoothWidget";
 
 export const App = () => {
     // const [kickoff, setKickoff] = useState<boolean>(false);
-    // const [chatStarted, setChatStarted] = useState<boolean>(false);
+    const [chatStarted, setChatStarted] = useState<boolean>(false);
     // const userDetailsVisible = useSelector((state: GlobalState) => state.behaviorReducer.userDetailsVisible);
-
+    const [convoId, setConvoId] = useState<string | null>(null);
     const [isReady, setIsReady] = useState<boolean>(false);
     const [preferences, setWidgetPrefs] = useState<WidgetPreferences>();
 
@@ -74,10 +74,10 @@ export const App = () => {
     return (
         <>
             {preferences ? (
-                <WidgetContext.Provider value={{ preferences }}>
+                <WidgetContext.Provider value={{ preferences, chatStarted, setChatStarted, setConvoId, convoId }}>
                     {isReady ? (
                         <>
-                            <CollectDetailsForm chatStarted={true} setChatStarted={() => null} setKickoff={() => null} />
+                            <CollectDetailsForm setKickoff={() => null} />
                             <SmoothWidget />
                         </>
                     ) : (

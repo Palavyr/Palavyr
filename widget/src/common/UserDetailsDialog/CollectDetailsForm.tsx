@@ -12,13 +12,13 @@ import { LocaleSelector } from "./FormInputs/LocaleSelector";
 import { PhoneForm } from "./FormInputs/PhoneForm";
 import { useSelector } from "react-redux";
 import { GlobalState, LocaleMap, LocaleResource, SetState } from "@Palavyr-Types";
-import { setRegionContext, closeUserDetails, getNameContext, getEmailAddressContext, getPhoneContext } from "@store-dispatcher";
+import { setRegionContext, closeUserDetails, getNameContext, getEmailAddressContext, getPhoneContext, getRegionContext } from "@store-dispatcher";
 import { INVALID_PHONE, INVALID_EMAIL, INVALID_NAME } from "./UserDetailsCheck";
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
+import { WidgetContext } from "widget/context/WidgetContext";
+import { useContext } from "react";
 
 export interface CollectDetailsFormProps {
-    chatStarted: boolean;
-    setChatStarted: Dispatch<SetStateAction<boolean>>;
     setKickoff: SetState<boolean>;
 }
 
@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const CollectDetailsForm = ({ chatStarted, setChatStarted, setKickoff }: CollectDetailsFormProps) => {
+export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const client = new PalavyrWidgetRepository(secretKey);
     const userDetailsVisible = useSelector((state: GlobalState) => state.behaviorReducer.userDetailsVisible);
@@ -67,6 +67,8 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, setKickoff }: 
     const [options, setOptions] = useState<LocaleMap>([]);
     const [phonePattern, setphonePattern] = useState<string>("");
     const [detailsSet, setDetailsSet] = useState<boolean>(false);
+
+    const { chatStarted, setChatStarted, convoId } = useContext(WidgetContext);
 
     useEffect(() => {
         (async () => {
@@ -89,7 +91,15 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, setKickoff }: 
         e.preventDefault();
         setKickoff(true);
         setChatStarted(true);
-        await client.Widget.Post.UpdateConvoRecord({ Name: getNameContext(), Email: getEmailAddressContext(), PhoneNumber: getPhoneContext(), Locale: getRegionContext() });
+
+        const name = getNameContext();
+        const email = getEmailAddressContext();
+        const phone = getPhoneContext();
+        const locale = getRegionContext();
+
+        if (convoId) {
+            await client.Widget.Post.UpdateConvoRecord({ Name: name, Email: email, PhoneNumber: phone, Locale: locale, ConversationId: convoId });
+        }
         closeUserDetails();
     };
 

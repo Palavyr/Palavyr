@@ -102,6 +102,8 @@ export class StandardComponents {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
+            const { setChatStarted, setConvoId } = useContext(WidgetContext);
+
             const [disabled, setDisabled] = useState<boolean>(false);
 
             const [status, setStatus] = useState<string | null>(null);
@@ -110,6 +112,8 @@ export class StandardComponents {
             const onFormSubmit = (e: { preventDefault: () => void }) => {
                 e.preventDefault();
                 setDisabled(true);
+                setChatStarted(true);
+                setConvoId(convoId);
                 responseAction(node, child, nodeList, client, convoId, null);
             };
 

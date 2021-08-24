@@ -1,11 +1,12 @@
-import { Card, makeStyles, Tooltip } from "@material-ui/core";
-import React, { useContext } from "react";
+import { Card, Fade, makeStyles, Tooltip } from "@material-ui/core";
+import React, { RefObject, useContext, useEffect, useRef, useState } from "react";
 import FaceIcon from "@material-ui/icons/Face";
 import ReplayIcon from "@material-ui/icons/Replay";
 import "./style.scss";
 import { openUserDetails } from "@store-dispatcher";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "widget/context/WidgetContext";
+import { useHover } from "./ConvoHeaderUtils";
 
 export interface ConvoHeaderProps {
     titleAvatar?: string;
@@ -60,13 +61,44 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const ConvoHeader = ({ titleAvatar }: ConvoHeaderProps) => {
-    const { preferences } = useContext(WidgetContext);
+    const [tipOpen, setTipOpen] = useState<boolean>(false);
+    const ref = useRef<HTMLDivElement>(null);
+
+    const { preferences, chatStarted } = useContext(WidgetContext);
+    useEffect(() => {
+        if (chatStarted) {
+            setTipOpen(true);
+            setTimeout(() => {
+                setTipOpen(false);
+            }, 3000);
+        }
+
+        if (ref && ref.current) {
+            ref.current.addEventListener("mouseover", () => {
+                setTipOpen(true);
+            });
+            ref.current.addEventListener("mouseout", () => {
+                setTipOpen(false);
+            });
+        }
+        return () => {
+            if (ref && ref.current) {
+                ref.current.removeEventListener("mouseover", () => setTipOpen(false));
+                ref.current.removeEventListener("mouseout", () => setTipOpen(false));
+            }
+        };
+    }, [chatStarted]);
+
     const cls = useStyles(preferences);
     return (
         <Card className={cls.header}>
-            <Tooltip title="Update your contact details" placement="left">
-                <FaceIcon className={cls.settingsIcon} onClick={openUserDetails} />
-            </Tooltip>
+            {chatStarted && (
+                <Fade in>
+                    <Tooltip open={tipOpen} title="Update your contact details" placement="left">
+                        <FaceIcon ref={ref as any} className={cls.settingsIcon} onClick={openUserDetails} />
+                    </Tooltip>
+                </Fade>
+            )}
             <Tooltip title="Restart this chat" placement="left">
                 <ReplayIcon className={cls.replayIcon} onClick={() => window.location.reload()} />
             </Tooltip>

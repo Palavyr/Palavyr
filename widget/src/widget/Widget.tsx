@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 import cn from "classnames";
 
 import "./style.scss";
-import { getContextProperties, isWidgetOpened, toggleWidget } from "@store-dispatcher";
+import { getContextProperties, getEmailAddressContext, getNameContext, getPhoneContext, getRegionContext, isWidgetOpened, toggleWidget } from "@store-dispatcher";
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { _openFullscreenPreview } from "@store-actions";
 import { ConvoContextProperties } from "widget/componentRegistry/registry";
@@ -29,7 +29,12 @@ export const Widget = ({ option }: WidgetProps) => {
 
     // this thing
     const initializeConvo = async () => {
-        const newConversation = await client.Widget.Get.NewConversation(option.areaId);
+        const newConversation = await client.Widget.Get.NewConversation(option.areaId, {
+            Name: getNameContext(),
+            Email: getEmailAddressContext(),
+            Locale: getRegionContext(),
+            PhoneNumber: getPhoneContext(),
+        });
         const nodes = newConversation.conversationNodes;
         const convoId = newConversation.conversationId;
 
@@ -45,9 +50,8 @@ export const Widget = ({ option }: WidgetProps) => {
             PhoneNumber: phone,
             Email: email,
             Locale: locale,
-            ConversationId: convoId
+            ConversationId: convoId,
         });
-
 
         const rootNode = getRootNode(nodes);
         renderNextComponent(rootNode, nodes, client, convoId);
