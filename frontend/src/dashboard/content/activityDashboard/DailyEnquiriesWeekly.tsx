@@ -74,6 +74,7 @@ const calcualateDailEnquiryByDay = (areaDetails: AreaNameDetails, enquiries: Enq
 
     const enquiryOptions = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: "top",

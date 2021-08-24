@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect, useCallback } from "react";
-import { makeStyles } from "@material-ui/core";
 import { AreaNameDetails, Enquiries } from "@Palavyr-Types";
 import { DashboardContext } from "dashboard/layouts/DashboardContext";
 import { Radar } from "react-chartjs-2";
@@ -7,18 +6,6 @@ import { DataPlot } from "./components/DataPlot";
 import { getRandomColor } from "./DailyEnquiriesWeekly";
 import colorLib from "@kurkle/color";
 import { sum } from "lodash";
-
-const useStyles = makeStyles(theme => ({
-    title: {
-        padding: "1rem",
-    },
-    plotCard: {
-        margin: "2rem",
-    },
-    fallback: {
-        margin: "2rem",
-    },
-}));
 
 export type Dataset = {
     data: number[];
@@ -74,13 +61,20 @@ const calculateRadarData = (areaDetails: AreaNameDetails, enquiries: Enquiries) 
             },
         },
         scales: {},
+        maintainAspectRatio: false,
+        responsive: true,
+
+        plugins: {
+            legend: {
+                position: "top",
+            },
+        },
     };
     return { enquiryData, enquiryOptions };
 };
 
 export const EnquiryActivity = () => {
     const { repository, areaNameDetails } = useContext(DashboardContext);
-    const cls = useStyles();
 
     const [data, setData] = useState<EnquiryData>();
     const [options, setOptions] = useState<EnquiryOptions>();

@@ -42,14 +42,11 @@ function a11yProps(index: any) {
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        flexGrow: 1,
         width: "100%",
-        height: "100vh",
+        height: "50%",
         backgroundColor: theme.palette.background.default,
     },
 }));
-
-
 
 export const ActivityDashboardPage = () => {
     const { setViewName } = React.useContext(DashboardContext);
@@ -59,7 +56,7 @@ export const ActivityDashboardPage = () => {
     }, []);
 
     const cls = useStyles();
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = React.useState(1);
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue);
@@ -69,25 +66,36 @@ export const ActivityDashboardPage = () => {
         <div className={cls.root}>
             <AreaConfigurationHeader
                 divider
+                light
                 title="Widget Activity Dashboard"
                 subtitle="Review the activity of your chatbot! This page is early release, but we've made a couple plots availble as a sneak peak for you!"
             />
-            <AppBar style={{boxShadow: "none"}} position="static" color="default">
+            <AppBar style={{ boxShadow: "none" }} position="static" color="default">
                 <Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary" variant="scrollable" scrollButtons="auto" aria-label="scrollable auto tabs example">
                     <Tab label="Intent Insights" {...a11yProps(0)} />
                     <Tab label="Enquiry Activity" {...a11yProps(1)} />
                     <Tab label="Weekly Activity" {...a11yProps(2)} />
                 </Tabs>
             </AppBar>
-            <TabPanel value={value} index={0}>
-                <IntentActivityCards />
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-                <EnquiryActivity />
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-                <DailyEnquiriesWeekly />
-            </TabPanel>
+
+                <ActivityTabPanel value={value} index={0}>
+                    <IntentActivityCards />
+                </ActivityTabPanel>
+                <ActivityTabPanel value={value} index={1}>
+                    <EnquiryActivity />
+                </ActivityTabPanel>
+                <ActivityTabPanel value={value} index={2}>
+                    <DailyEnquiriesWeekly />
+                </ActivityTabPanel>
+
         </div>
+    );
+};
+
+const ActivityTabPanel = ({ children, value, index }) => {
+    return (
+        <TabPanel value={value} index={index}>
+            <div style={{ height: "500px" }}>{children}</div>
+        </TabPanel>
     );
 };

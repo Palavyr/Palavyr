@@ -4,20 +4,6 @@ import { Align } from "dashboard/layouts/positioning/Align";
 import React from "react";
 import { NoActivityComponent } from "./NoActivityComponent";
 
-const useStyles = makeStyles(theme => ({
-    title: {
-        padding: "1rem",
-    },
-    plotCard: {
-        margin: "2rem",
-        padding: "2rem",
-        borderRadius: "12px",
-    },
-    fallback: {
-        margin: "2rem",
-    },
-}));
-
 export type Dataset = {
     data: number[];
     label: string;
@@ -45,6 +31,23 @@ export interface DataPlotProps {
     subtitle?: string;
 }
 
+const useStyles = makeStyles(theme => ({
+    title: {
+        padding: "1rem",
+    },
+    plotCard: {
+        margin: "2rem",
+        padding: "2rem",
+        borderRadius: "12px",
+        border: "1px solid black",
+        backgroundColor: theme.palette.common.white,
+        boxShadow: theme.shadows[10],
+    },
+    fallback: {
+        margin: "2rem",
+    },
+}));
+
 export const DataPlot = ({ title, subtitle = "", hasData, loadingSpinner, children }: DataPlotProps) => {
     const cls = useStyles();
 
@@ -55,9 +58,9 @@ export const DataPlot = ({ title, subtitle = "", hasData, loadingSpinner, childr
             </Align>
         </span>
     ) : (
-        <Card className={cls.plotCard}>
+        <>
             <AreaConfigurationHeader title={title} subtitle={subtitle} light divider />
             {hasData() ? children : <NoActivityComponent />}
-        </Card>
+        </>
     );
 };

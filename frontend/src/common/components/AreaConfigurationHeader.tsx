@@ -12,10 +12,9 @@ type StyleProps = {
     light: boolean;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     container: (props: StyleProps) => ({
-        backgroundColor: props.light ? "white" : theme.palette.background.default,
-        width: "100%",
+        backgroundColor: /*props.light ? "white" :*/ theme.palette.background.default,
         paddingTop: "1.2rem",
     }),
     subtitle: {
