@@ -1,6 +1,6 @@
 import { assembleEmailRecordData, getOrderedChildNodes, getRootNode, MinNumeric, parseNumericResponse } from "./utils";
 import React, { useContext, useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core";
+import { Button, makeStyles } from "@material-ui/core";
 import { responseAction } from "./responseAction";
 import { ConvoContextProperties } from "./registry";
 import { AreaTable, GlobalState, IProgressTheChat, LocaleMap, LocaleResource, SelectedOption, WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
@@ -20,6 +20,8 @@ import { useSelector } from "react-redux";
 import { useCallback } from "react";
 import { renderNextComponent } from "./renderNextComponent";
 import { ChoiceList } from "options/optionFormats/ChoiceList";
+import { ContactForm, MiniContactForm } from "common/UserDetailsDialog/CollectDetailsForm";
+import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {
@@ -34,12 +36,12 @@ const useStyles = makeStyles(theme => ({
     textField: (prefs: WidgetPreferences) => ({
         textDecoration: "none",
         color: prefs.chatFontColor,
-        borderColor: theme.palette.getContrastText(prefs.chatBubbleColor ?? "black"),
+        borderColor: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : "black",
     }),
     textLabel: (prefs: WidgetPreferences) => ({
-        color: theme.palette.getContrastText(prefs.chatBubbleColor ?? "black"),
+        color: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : "black",
         "&:focus": {
-            color: theme.palette.getContrastText(prefs.chatBubbleColor ?? "black"),
+            color: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : "black",
         },
     }),
     image: {
@@ -97,55 +99,33 @@ export class StandardComponents {
     }
 
     public makeCollectDetails({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+        const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
+
         return () => {
-            const secretKey = new URLSearchParams(useLocation().search).get("key");
-            const client = new PalavyrWidgetRepository(secretKey);
-            const userDetailsVisible = useSelector((state: GlobalState) => state.behaviorReducer.userDetailsVisible);
-
-            const [options, setOptions] = useState<LocaleMap>([]);
-            const [phonePattern, setphonePattern] = useState<string>("");
-            const [detailsSet, setDetailsSet] = useState<boolean>(false);
             const [disabled, setDisabled] = useState<boolean>(false);
-            useEffect(() => {
-                (async () => {
-                    const { currentLocale: locale, localeMap } = await client.Widget.Get.Locale();
-                    setphonePattern(locale.phoneFormat);
-                    setOptions(localeMap);
-                    setRegionContext(locale.name);
-                })();
-            }, []);
 
-            const cls = useStyles();
             const [status, setStatus] = useState<string | null>(null);
+            const [detailsSet, setDetailsSet] = useState<boolean>(false);
 
-            const onChange = (event: any, newOption: LocaleResource) => {
-                setphonePattern(newOption.phoneFormat);
-                setRegionContext(newOption.name);
-                setDisabled(true);
-            };
-
-            const onFormSubmit = async (e: { preventDefault: () => void }) => {
+            const onFormSubmit = (e: { preventDefault: () => void }) => {
                 e.preventDefault();
+                setDisabled(true);
+                responseAction(node, child, nodeList, client, convoId, null);
             };
 
             return (
-                <>WOW</>
-                // <BotResponse
-                //     message={node.text}
-                //     input={
-                //         <ContactForm
-                //             disabled={disabled}
-                //             localeOptions={options}
-                //             onFormSubmit={onFormSubmit}
-                //             formProps={{ status, setStatus }}
-                //             setDetailsSet={setDetailsSet}
-                //             phonePattern={phonePattern}
-                //             onChange={onChange}
-                //             detailsSet={detailsSet}
-                //             submitButton={<Button disabled={disabled}>Choose</Button>}
-                //         />
-                //     }
-                // />
+                <BotResponse
+                    message={node.text}
+                    input={
+                        <MiniContactForm
+                            disabled={disabled}
+                            onFormSubmit={onFormSubmit}
+                            setDetailsSet={setDetailsSet}
+                            formProps={{ status, setStatus }}
+                            submitButton={<ResponseButton disabled={disabled} onSubmit={onFormSubmit} type="submit" />}
+                        />
+                    }
+                />
             );
         };
     }

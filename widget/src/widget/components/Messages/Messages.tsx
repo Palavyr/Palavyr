@@ -38,7 +38,6 @@ export const Messages = ({ profileAvatar, showTimeStamp }: Props) => {
         showChat: state.behaviorReducer.showChat,
     }));
 
-    const messageRef = useRef<HTMLDivElement | null>(null);
     useEffect(() => {
         scrollToBottom(messageRef.current);
         // if (showChat && badgeCount) dispatch(_markAllMessagesRead());
@@ -46,6 +45,7 @@ export const Messages = ({ profileAvatar, showTimeStamp }: Props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [messages, badgeCount, showChat, typing]);
 
+    const messageRef = useRef<HTMLDivElement | null>(null);
     // Can make the avatar only appear on the message with the current index. So
     // TODO: Fix this function or change to move the avatar to last message from response
     // const shouldRenderAvatar = (message: Message, index: number) => {

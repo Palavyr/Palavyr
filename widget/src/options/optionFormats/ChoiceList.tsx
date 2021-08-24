@@ -1,10 +1,10 @@
-import { PopperProps, Popper, TextField, CircularProgress, makeStyles, Paper, PaperProps } from "@material-ui/core";
+import { PopperProps, Popper, TextField, CircularProgress, makeStyles, Paper, PaperProps, Fade } from "@material-ui/core";
 import { Autocomplete, AutocompleteRenderInputParams } from "@material-ui/lab";
 import { SelectedOption, SetState, WidgetPreferences } from "@Palavyr-Types";
 import classNames from "classnames";
 import React, { useContext, useState } from "react";
 import { WidgetContext } from "widget/context/WidgetContext";
-import Fade from "react-reveal/Fade";
+// import Fade from "react-reveal/Fade";
 
 const useStyles = makeStyles(() => ({
     selectListBgColor: (prefs: WidgetPreferences) => ({
@@ -67,7 +67,7 @@ export const ChoiceList = ({ options, disabled, onChange, setOpen = null, open =
 
     const PaperComponent = ({ children, ...rest }: { children: React.ReactNode } & PaperProps) => {
         return (
-            <Fade>
+            <Fade in>
                 <Paper style={{ boxShadow: "none", backgroundColor: "white", margin: "0px", padding: "0px", marginTop: "0.3rem" }} {...rest}>
                     {children}
                 </Paper>

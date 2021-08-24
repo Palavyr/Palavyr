@@ -66,7 +66,7 @@ export const scrollWithSlowMotion = (target: any, scrollStart: any, scroll: numb
         let stepScroll = sinEaseOut(timestamp - start, 0, scroll, MESSAGE_BOX_SCROLL_DURATION);
         let total = scrollStart + stepScroll;
         target.scrollTop = total;
-        if (total < scrollStart + scroll) {
+        if (total < scrollStart + scroll + 100) { // I ADDED 100 HERE TO TRY AND MAKE THIS SCROLL TO THE BOTTOM WITH AUTOCOMPLETE
             raf(step);
         }
     };

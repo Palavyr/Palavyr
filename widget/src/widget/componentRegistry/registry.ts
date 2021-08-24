@@ -28,7 +28,7 @@ export const ComponentRegistry: Registry = {
 
     Selection: components.makeSelectOptions,
     // Selection: components.makeCollectDetails
-    // CollectDetails: components.makeCollectDetails,
+    CollectDetails: components.makeCollectDetails,
 };
 
 export const ConvoContextProperties = {

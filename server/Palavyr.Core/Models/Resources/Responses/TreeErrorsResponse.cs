@@ -1,4 +1,5 @@
-﻿namespace Palavyr.Core.Models.Resources.Responses
+﻿#nullable enable
+namespace Palavyr.Core.Models.Resources.Responses
 {
     public class TreeErrorsResponse
     {
@@ -6,10 +7,10 @@
         public string[] OutOfOrder { get; set; }
         public bool AnyErrors { get; set; }
 
-        public TreeErrorsResponse(string[] missingNodes, string[] outOfOrder)
+        public TreeErrorsResponse(string[] missingNodes, string[]? outOfOrder)
         {
             MissingNodes = missingNodes;
-            OutOfOrder = outOfOrder;
+            OutOfOrder = outOfOrder ?? new string[] { };
             AnyErrors = MissingNodes.Length > 0 || OutOfOrder.Length > 0;
         }
     }

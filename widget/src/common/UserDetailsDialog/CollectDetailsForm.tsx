@@ -110,7 +110,7 @@ export const CollectDetailsForm = ({ chatStarted, setChatStarted, setKickoff }: 
             hideBackdrop={false}
             disableEscapeKeyDown
         >
-            {/* <UserDetailsTitle title="Provide your contact details" /> */}
+            <UserDetailsTitle title="Update your Contact Details" />
             <DialogContent className={cls.dialogContentCollectionForm}>
                 <ContactForm
                     disabled={false}
@@ -158,6 +158,24 @@ export const ContactForm = ({ disabled, onFormSubmit, submitButton, localeOption
             <PhoneForm {...formProps} phonePattern={phonePattern} disabled={disabled} />
             <LocaleSelector options={localeOptions} onChange={onChange} disabled={disabled} />
             <div style={{ display: "flex", justifyContent: "center" }}>{submitButton}</div>
+        </form>
+    );
+};
+
+export interface MiniContactFormProps {
+    onFormSubmit(e: { preventDefault: () => void }): void;
+    formProps: any;
+    setDetailsSet: SetState<boolean>;
+    submitButton: React.ReactNode;
+    disabled: boolean;
+}
+export const MiniContactForm = ({ disabled, onFormSubmit, setDetailsSet, submitButton, formProps }: MiniContactFormProps) => {
+    const cls = useStyles();
+    return (
+        <form onSubmit={onFormSubmit}>
+            <NameForm {...formProps} disabled={disabled} />
+            <EmailForm {...formProps} setDetailsSet={setDetailsSet} disabled={disabled} />
+            <div style={{ display: "flex", justifyContent: "right" }}>{submitButton}</div>
         </form>
     );
 };

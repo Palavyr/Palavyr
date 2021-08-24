@@ -17,8 +17,8 @@ const nodeTypes = {
     nodeflowinterface: NodeFlowInterface,
 };
 
-const nodeWidth = 400;
-const nodeHeight = 375;
+const nodeWidth = 600;
+const nodeHeight = 300;
 
 const getLayoutedElements = (elements, direction = "TB") => {
     const dagreGraph = new dagre.graphlib.Graph();

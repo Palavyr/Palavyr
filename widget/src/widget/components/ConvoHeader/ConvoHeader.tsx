@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
         textAlign: "center",
         borderRadius: "0px",
         display: "flex",
-        padding: "15px 0 25px",
+        // padding: "15px 0 25px",
     },
     settingsIcon: (props: WidgetPreferences) => ({
         color: theme.palette.getContrastText(props.headerColor),
@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
         color: theme.palette.common.white,
         position: "fixed",
         right: "5px",
-        bottom: "5px",
+        bottom: "8px",
         height: "1.2rem",
         width: "1.2rem",
         "&:hover": {

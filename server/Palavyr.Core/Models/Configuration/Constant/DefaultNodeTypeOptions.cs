@@ -25,12 +25,14 @@ namespace Palavyr.Core.Models.Configuration.Constant
             public static string LoopbackAnchor => DefaultNodeTypeOptions.LoopbackAnchor.StringName;
 
             public static string Selection => DefaultNodeTypeOptions.Selection.StringName;
+            public static string CollectDetails => DefaultNodeTypeOptions.CollectDetails.StringName;
         }
 
         public static List<NodeTypeOption> IntroNodeOptionList =>
             new List<NodeTypeOption>()
             {
                 new ProvideInfo(),
+                new CollectDetails(),
                 new Selection()
             };
 
@@ -82,6 +84,9 @@ namespace Palavyr.Core.Models.Configuration.Constant
 
         // public static Restart CreateRestart() => new Restart();
         public static EndWithoutEmail CreateEndWithoutEmail() => new EndWithoutEmail();
+
+        public static Selection CreateSelection() => new Selection();
+        public static CollectDetails CreateCollectDetails() => new CollectDetails();
 
 
         public class LoopbackAnchor : NodeTypeOption
@@ -411,6 +416,32 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 IsAnabranchMergePoint = false;
                 IsDynamicType = false;
                 NodeComponentType = NodeComponentTypes.TakeText;
+                IsCurrency = false;
+                IsMultiOptionEditable = false;
+                NodeTypeCode = NodeTypeCode.II;
+            }
+        }
+
+
+        public class CollectDetails : NodeTypeOption
+        {
+            public new static string StringName => nameof(CollectDetails);
+
+            public CollectDetails()
+            {
+                Text = "Collect Details";
+                Value = StringName;
+                PathOptions = new List<string>() {"Continue"};
+                ValueOptions = new List<string>() {"Continue"};
+                IsMultiOptionType = false;
+                IsTerminalType = false;
+                GroupName = InfoCollection;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+                IsDynamicType = false;
+                NodeComponentType = NodeComponentTypes.CollectDetails;
                 IsCurrency = false;
                 IsMultiOptionEditable = false;
                 NodeTypeCode = NodeTypeCode.II;

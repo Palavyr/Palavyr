@@ -5,11 +5,13 @@ import { useContext } from "react";
 import { WidgetContext } from "widget/context/WidgetContext";
 
 export interface IResponseButton {
-    onClick: any;
+    onClick?(): void;
+    onSubmit?(e: { preventDefault: () => void }): void;
     disabled?: boolean;
     text?: string;
     color?: PropTypes.Color;
     variant?: "outlined" | "contained";
+    type?: "button" | "submit"
 }
 
 const useStyles = makeStyles(theme => ({
@@ -36,12 +38,12 @@ const useStyles = makeStyles(theme => ({
     }),
 }));
 
-export const ResponseButton = ({ onClick, disabled = false, variant = "outlined", text = "Submit" }: IResponseButton) => {
+export const ResponseButton = ({ onClick, onSubmit, disabled = false, variant = "outlined", text = "Submit", type = "button" }: IResponseButton) => {
     const { preferences } = useContext(WidgetContext);
 
     const cls = useStyles(preferences);
     return (
-        <Button disableElevation focusVisibleClassName={cls.buttonFocus} className={cls.button} disabled={disabled} variant={variant} size="small" onClick={onClick}>
+        <Button type={type} disableElevation focusVisibleClassName={cls.buttonFocus} className={cls.button} disabled={disabled} variant={variant} size="small" onClick={onClick} onSubmit={onSubmit}>
             {text}
         </Button>
     );

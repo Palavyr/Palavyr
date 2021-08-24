@@ -30,38 +30,40 @@ export const LocaleSelector = ({ options, onChange, disabled }: LocaleSelectorPr
     const cls = useStyles();
 
     return (
-        options && (
-            <Autocomplete
-                disabled={disabled}
-                size="small"
-                classes={{ root: cls.root, paper: cls.paper }}
-                className={cls.root}
-                disableClearable
-                clearOnEscape
-                onChange={onChange}
-                options={opts}
-                getOptionLabel={(option: LocaleResource) => option.displayName}
-                renderInput={(params: AutocompleteRenderInputParams) => (
-                    <TextField
-                        {...params}
-                        disabled={disabled}
-                        id="field1"
-                        label="Select your locale..."
-                        inputProps={{
-                            ...params.inputProps,
-                            autoComplete: "new-password",
-                        }}
-                        InputProps={{
-                            ...params.InputProps,
-                            disableUnderline: true,
-                            style: { borderBottom: "1px solid black" },
-                        }}
-                        SelectProps={{
-                            className: cls.select,
-                        }}
-                    />
-                )}
-            />
-        )
+        <>
+            {options && (
+                <Autocomplete
+                    disabled={disabled}
+                    size="small"
+                    classes={{ root: cls.root, paper: cls.paper }}
+                    className={cls.root}
+                    disableClearable
+                    clearOnEscape
+                    onChange={onChange}
+                    options={opts}
+                    getOptionLabel={(option: LocaleResource) => option.displayName}
+                    renderInput={(params: AutocompleteRenderInputParams) => (
+                        <TextField
+                            {...params}
+                            disabled={disabled}
+                            id="field1"
+                            label="Select your locale..."
+                            inputProps={{
+                                ...params.inputProps,
+                                autoComplete: "new-password",
+                            }}
+                            InputProps={{
+                                ...params.InputProps,
+                                disableUnderline: true,
+                                style: { borderBottom: "1px solid black" },
+                            }}
+                            SelectProps={{
+                                className: cls.select,
+                            }}
+                        />
+                    )}
+                />
+            )}
+        </>
     );
 };

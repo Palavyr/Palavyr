@@ -67,7 +67,12 @@ namespace Palavyr.API.Controllers.Conversation
             var missingNodes = new List<string> { };
             if (!currentNodes.Transactions.Select(x => x.NodeType).Contains(DefaultNodeTypeOptions.Selection.StringName))
             {
-                missingNodes.Add("Selection");
+                missingNodes.Add(DefaultNodeTypeOptions.Selection.StringName);
+            }
+
+            if (!currentNodes.Transactions.Select(x => x.NodeType).Contains(DefaultNodeTypeOptions.CollectDetails.StringName))
+            {
+                missingNodes.Add(DefaultNodeTypeOptions.CollectDetails.StringName);
             }
 
             return new TreeErrorsResponse(missingNodes.ToArray(), new string[] { });
