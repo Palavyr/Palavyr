@@ -14,7 +14,7 @@ type StyleProps = {
 
 const useStyles = makeStyles(theme => ({
     container: (props: StyleProps) => ({
-        backgroundColor: /*props.light ? "white" :*/ theme.palette.background.default,
+        backgroundColor: theme.palette.background.default,
         paddingTop: "1.2rem",
     }),
     subtitle: {
