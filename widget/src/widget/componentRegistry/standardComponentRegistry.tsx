@@ -82,8 +82,29 @@ export class StandardComponents {
                 const convoId = newConversation.conversationId;
                 const rootNode = getRootNode(nodes);
                 setDisabled(true);
+
+                // take the name and email adress contexts and send them to the server to check if they are valid. If NOT:
+
+                // renderThatDoesntCheckOutResponse(node, messageResponse, nodeList, client, convoId)
+                // renderNextComponent()
+                //
+                //
+
                 renderNextComponent(rootNode, nodes, client, convoId);
             };
+
+            // const renderThatDoesntCheckOUtResponse = (node, messageResponse, nodeList, client, convoId) => {
+
+            //     useEffect(() => {
+            //         setTimeout(() => {
+            //             renderNextComponent(node, nodeList, client, convoId)
+            //         }, 1500);
+
+
+
+            //     })
+            //     return <BotResponse message={`That doesn't quite check out. Could you try that again?${messageResponse}`} />
+            // }
 
             return (
                 <BotResponse

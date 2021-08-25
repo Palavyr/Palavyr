@@ -1,6 +1,4 @@
 import * as React from "react";
-import cn from "classnames";
-
 import "./style.scss";
 import { ConvoHeader } from "../components/ConvoHeader/ConvoHeader";
 import { makeStyles } from "@material-ui/core";
@@ -12,6 +10,7 @@ const useStyles = makeStyles(theme => ({
         height: "100%",
         display: "flex",
         flexDirection: "column",
+        boxShadow: theme.shadows[10],
     },
 }));
 

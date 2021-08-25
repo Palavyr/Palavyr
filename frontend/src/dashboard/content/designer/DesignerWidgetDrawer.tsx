@@ -4,26 +4,26 @@ import React from "react";
 import { WidgetContext } from "./fakeWidgetNew/components/context/WidgetContext";
 import { SmoothWidget } from "./fakeWidgetNew/components/widgets/SmoothWidget";
 
-const drawerWidth = 440;
+const drawerWidth = 400;
 
 const useStyles = makeStyles(theme => ({
     drawer: {
         width: drawerWidth,
-        flexShrink: 0,
+        // flexShrink: 0,
+        overflowY: "hidden",
     },
-    drawerRoot: { height: "100%", borderLeft: "5px solid grey" },
+    drawerRoot: { borderLeft: "5px solid grey" },
 
     drawerPaper: {
         width: drawerWidth,
-        height: "100%",
         borderLeft: `5px solid ${theme.palette.primary.main}`,
     },
     // necessary for content to be below app bar
     toolbar: theme.mixins.toolbar,
     widget: {
         padding: "1rem",
-        height: "100%",
         width: "100%",
+        height: "90%"
     },
     drawerRight: { height: "100%" },
 }));

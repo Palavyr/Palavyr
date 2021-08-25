@@ -15,15 +15,10 @@ const useStyles = makeStyles(() => ({
     selectbox: {
         margin: "0px",
         padding: "0px",
-
-        // paddingLeft: "1rem",
-        // paddingRight: "1rem",
     },
     autocomplete: {
         padding: "0px",
         margin: "0px",
-
-        // paddingTop: "0rem",
     },
 
     paper: {
@@ -105,6 +100,7 @@ export const ChoiceList = ({ options, disabled, onChange, setOpen = null, open =
                             className={cls.inputLabel}
                             label={label}
                             disabled={disabled}
+                            value={"What is Palavyr?"}
                             onChange={e => {
                                 setLoading(true);
                                 setTimeout(() => {

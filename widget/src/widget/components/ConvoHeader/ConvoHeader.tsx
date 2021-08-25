@@ -12,13 +12,23 @@ export interface ConvoHeaderProps {
 }
 
 const useStyles = makeStyles(theme => ({
+    headerHTML: {
+        textAlign: "left",
+        wordWrap: "break-word",
+        padding: "1rem",
+        paddingBottom: "2rem",
+        width: "100%",
+        wordBreak: "normal",
+        minHeight: "60px",
+    },
     header: (props: WidgetPreferences) => ({
         backgroundColor: props.headerColor,
         color: props.headerFontColor,
-        textAlign: "center",
+        textAlign: "left",
         minWidth: 275,
         wordWrap: "break-word",
         borderRadius: "0px",
+        zIndex: 9999
     }),
     flexProperty: {
         flexDirection: "column",
@@ -48,14 +58,6 @@ const useStyles = makeStyles(theme => ({
         "&:hover": {
             cursor: "pointer",
         },
-    },
-    headerBehavior: {
-        wordWrap: "break-word",
-        padding: "1rem",
-        paddingBottom: "2rem",
-        width: "100%",
-        wordBreak: "normal",
-        minHeight: "10%",
     },
 }));
 
@@ -102,7 +104,7 @@ export const ConvoHeader = ({ titleAvatar }: ConvoHeaderProps) => {
                 <ReplayIcon className={cls.replayIcon} onClick={() => window.location.reload()} />
             </Tooltip>
             {titleAvatar && <img src={titleAvatar} className="avatar" alt="profile" />}
-            <div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: preferences.chatHeader }} />
+            <div className={cls.headerHTML} dangerouslySetInnerHTML={{ __html: preferences.chatHeader }} />
         </Card>
     );
 };

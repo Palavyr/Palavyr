@@ -1035,13 +1035,6 @@ export type Registry = {
     [key: string]: any;
 };
 
-export interface IProgressTheChat {
-    node: any;
-    nodeList: any;
-    client: any;
-    convoId: any;
-}
-
 export type WidgetNodeResource = {
     areaIdentifier: string;
     nodeId: string;

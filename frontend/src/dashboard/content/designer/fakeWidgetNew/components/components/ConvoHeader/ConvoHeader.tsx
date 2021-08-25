@@ -13,8 +13,10 @@ const useStyles = makeStyles(theme => ({
     header: (props: WidgetPreferences) => ({
         backgroundColor: props.headerColor,
         color: props.headerFontColor,
-        textAlign: "center",
+        textAlign: "left",
         minWidth: 275,
+        zIndex: 99999,
+        // minHeight: 100,
         wordWrap: "break-word",
         borderRadius: "0px",
     }),
@@ -39,12 +41,16 @@ const useStyles = makeStyles(theme => ({
     }),
 
     headerBehavior: {
+        textAlign: "left",
         wordWrap: "break-word",
-        padding: "1rem",
-        paddingBottom: "2rem",
+        padding: "0rem",
+        paddingBottom: "0rem",
         width: "100%",
         wordBreak: "normal",
-        minHeight: "10%",
+        minHeight: "60px",
+    },
+    paper: {
+        boxShadow: "none",
     },
 }));
 
@@ -79,7 +85,7 @@ export const ConvoHeader = ({ titleAvatar }: ConvoHeaderProps) => {
 
     const cls = useStyles(preferences);
     return (
-        <Card className={cls.header}>
+        <Card className={cls.header} classes={{ root: cls.paper }}>
             <Fade in>
                 <Tooltip open={tipOpen} title="Update your contact details" placement="left">
                     <FaceIcon ref={ref as any} className={cls.settingsIcon} />

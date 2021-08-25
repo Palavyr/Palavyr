@@ -2,7 +2,7 @@ import { IMessage, WidgetNodeResource } from "@Palavyr-Types";
 import { StandardComponents } from "./components/componentRegistry/standardComponentRegistry";
 import { Message } from "./components/components/Messages/components/Message/Message";
 
-const createUserMessage = (text: string): IMessage => {
+export const createUserMessage = (text: string): IMessage => {
     return {
         text,
         type: "user",
@@ -16,7 +16,7 @@ const createUserMessage = (text: string): IMessage => {
     };
 };
 
-const createBotMessage = (text: string, componentFunc): IMessage => {
+export const createBotMessage = (text: string, componentFunc): IMessage => {
     const node: Partial<WidgetNodeResource> = {
         text: text,
     };
@@ -33,6 +33,4 @@ const createBotMessage = (text: string, componentFunc): IMessage => {
         props: undefined,
     };
 };
-const registry = new StandardComponents();
 
-export const fakeMessages: IMessage[] = [createBotMessage("Welcome to Palavyr.com", registry.makeProvideInfo)];

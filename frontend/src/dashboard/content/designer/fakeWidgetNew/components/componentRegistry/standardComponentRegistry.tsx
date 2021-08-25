@@ -1,6 +1,6 @@
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { makeStyles } from "@material-ui/core";
-import { WidgetPreferences, SelectedOption, IProgressTheChat, WidgetNodeResource } from "@Palavyr-Types";
+import { WidgetPreferences, SelectedOption, WidgetNodeResource } from "@Palavyr-Types";
 import React, { useState, useCallback, useEffect, useContext } from "react";
 import { NumberFormatValues } from "react-number-format";
 import { BotResponse } from "../BotResponse/BotResponse";
@@ -25,9 +25,11 @@ const useStyles = makeStyles(theme => ({
     textField: (prefs: WidgetPreferences) => ({
         textDecoration: "none",
         color: prefs.chatFontColor,
+        width: "80%",
         borderColor: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : "black",
     }),
     textLabel: (prefs: WidgetPreferences) => ({
+        width: "60ch",
         color: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : "black",
         "&:focus": {
             color: prefs.chatBubbleColor ? theme.palette.getContrastText(prefs.chatBubbleColor) : "black",
@@ -45,7 +47,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export class StandardComponents {
-    public makeSelectOptions({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    public makeSelectOptions(text: string): React.ElementType<{}> {
         return () => {
             const [options, setOptions] = useState<Array<SelectedOption>>();
             const [disabled, setDisabled] = useState<boolean>(false);
@@ -62,19 +64,21 @@ export class StandardComponents {
             const onChange = async (_: any, newOption: SelectedOption) => {};
 
             return (
-                <BotResponse
-                    message={node.text}
-                    input={
-                        <div style={{ marginTop: "2rem", marginBottom: "2rem", width: "100%" }}>
-                            <ChoiceList disabled={disabled} onChange={onChange} setOpen={setOpen} options={options} open={open} />
-                        </div>
-                    }
-                />
+                <div style={{ width: "100%" }}>
+                    <BotResponse
+                        message={text}
+                        input={
+                            <div style={{ marginTop: "2rem", marginBottom: "2rem", width: "100%" }}>
+                                <ChoiceList disabled={disabled} onChange={onChange} setOpen={setOpen} options={options} open={open} />
+                            </div>
+                        }
+                    />
+                </div>
             );
         };
     }
 
-    public makeCollectDetails({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    public makeCollectDetails(text: string): React.ElementType<{}> {
         return () => {
             const [disabled, setDisabled] = useState<boolean>(true);
 
@@ -87,7 +91,7 @@ export class StandardComponents {
 
             return (
                 <BotResponse
-                    message={node.text}
+                    message={text}
                     input={
                         <MiniContactForm
                             disabled={disabled}
@@ -102,18 +106,18 @@ export class StandardComponents {
         };
     }
 
-    public makeProvideInfo({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    public makeProvideInfo(text: string): React.ElementType<{}> {
         return () => {
-            return <>{node && <BotResponse message={node.text} />}</>;
+            return <BotResponse message={text} />;
         };
     }
 
-    public makeMultipleChoiceContinueButtons({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    public makeMultipleChoiceContinueButtons(text: string): React.ElementType<{}> {
         return () => {
             const [disabled, setDisabled] = useState<boolean>(false);
             return (
                 <BotResponse
-                    message={node.text}
+                    message={text}
                     buttons={
                         <div style={{ display: "flex", flexDirection: "row", width: "100%", justifyContent: "flex-start" }}>
                             {["One", "Two", "Three"].map((valueOption: string, index: number) => {
@@ -126,13 +130,13 @@ export class StandardComponents {
         };
     }
 
-    public makeMultipleChoiceAsPathButtons({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    public makeMultipleChoiceAsPathButtons(text: string): React.ElementType<{}> {
         return () => {
             const [disabled, setDisabled] = useState<boolean>(false);
             const children: Partial<WidgetNodeResource>[] = [{ nodeId: "1", optionPath: "Option 1" }, { nodeId: "2", optionPath: "Option 2" }, { nodeId: "3", optionPath: "Option 3" }];
             return (
                 <BotResponse
-                    message={node.text}
+                    message={text}
                     buttons={
                         <>
                             {children.map((child: WidgetNodeResource) => {
@@ -145,7 +149,7 @@ export class StandardComponents {
         };
     }
 
-    public makeTakeNumber({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    public makeTakeNumber(text: string): React.ElementType<{}> {
         return () => {
             const [disabled, setDisabled] = useState<boolean>(true);
 
@@ -153,7 +157,7 @@ export class StandardComponents {
             const cls = useStyles(preferences);
             return (
                 <BotResponse
-                    message={node.text}
+                    message={text}
                     input={
                         <TextInput
                             label=""
@@ -170,7 +174,7 @@ export class StandardComponents {
         };
     }
 
-    makeTakeCurrency({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    makeTakeCurrency(text: string): React.ElementType<{}> {
         return () => {
             const { preferences } = useContext(WidgetContext);
             const cls = useStyles(preferences);
@@ -179,7 +183,7 @@ export class StandardComponents {
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
             return (
                 <BotResponse
-                    message={node.text}
+                    message={text}
                     input={
                         <CurrencyTextField
                             InputProps={{
@@ -212,14 +216,14 @@ export class StandardComponents {
         };
     }
 
-    makeShowImage({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    makeShowImage(text: string): React.ElementType<{}> {
         return () => {
             const [link, setLink] = useState<string>("");
             return <CustomImage imageLink={link} />;
         };
     }
 
-    makeTakeText({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    makeTakeText(text: string): React.ElementType<{}> {
         return () => {
             const [response, setResponse] = useState<string>("");
             const [disabled, setDisabled] = useState<boolean>(true);
@@ -229,9 +233,10 @@ export class StandardComponents {
             const cls = useStyles(preferences);
             return (
                 <BotResponse
-                    message={node.text}
+                    message={text}
                     input={
                         <TextInput
+                            fullWidth
                             inputPropsClassName={cls.textField}
                             inputLabelPropsClassName={cls.textLabel}
                             disabled={inputDisabled}
@@ -247,7 +252,7 @@ export class StandardComponents {
         };
     }
 
-    makeTakeNumberIndividuals({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    makeTakeNumberIndividuals(text: string): React.ElementType<{}> {
         return () => {
             const [response, setResponse] = useState<number | null>(null);
             const [disabled, setDisabled] = useState<boolean>(true);
@@ -256,7 +261,7 @@ export class StandardComponents {
             const cls = useStyles(preferences);
             return (
                 <BotResponse
-                    message={node.text}
+                    message={text}
                     input={
                         <TextInput
                             inputPropsClassName={cls.textField}
@@ -283,33 +288,33 @@ export class StandardComponents {
         };
     }
 
-    makeSendEmail({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    makeSendEmail(text: string): React.ElementType<{}> {
         return () => {
             const [disabled, setDisabled] = useState<boolean>(false);
             const [loading, setLoading] = useState<boolean>(false);
             return (
                 <>
-                    <BotResponse message={node.text} button={<ResponseButton text="Send my email" variant="contained" disabled={disabled} />} />
+                    <BotResponse message={text} button={<ResponseButton text="Send my email" variant="contained" disabled={disabled} />} />
                     <ChatLoadingSpinner loading={loading} />
                 </>
             );
         };
     }
 
-    makeRestart({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    makeRestart(text: string): React.ElementType<{}> {
         return () => {
-            return <BotResponse message={node.text} />;
+            return <BotResponse message={text} />;
         };
     }
 
-    makeSendEmailFailedFirstAttempt = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
+    makeSendEmailFailedFirstAttempt = (text: string) => {
         return () => {
             const [loading, setLoading] = useState<boolean>(false);
 
             return (
                 <>
                     <BotResponse
-                        message={node.text}
+                        message={text}
                         button={
                             <>
                                 <ResponseButton text="Send my email" variant="contained" />
@@ -323,23 +328,23 @@ export class StandardComponents {
         };
     };
 
-    makeSendFallbackEmail({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    makeSendFallbackEmail(text: string): React.ElementType<{}> {
         return () => {
             const [disabled, setDisabled] = useState<boolean>(false);
             const [loading, setLoading] = useState<boolean>(false);
 
             return (
                 <>
-                    <BotResponse message={node.text} button={<ResponseButton text="Send my email" variant="contained" disabled={disabled} />} />
+                    <BotResponse message={text} button={<ResponseButton text="Send my email" variant="contained" disabled={disabled} />} />
                     <ChatLoadingSpinner loading={loading} />
                 </>
             );
         };
     }
 
-    makeEndWithoutEmail({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    makeEndWithoutEmail(text: string): React.ElementType<{}> {
         return () => {
-            return <BotResponse message={node.text} />;
+            return <BotResponse message={text} />;
         };
     }
 }

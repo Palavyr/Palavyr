@@ -1,6 +1,5 @@
-import { makeStyles, Tooltip, Typography } from "@material-ui/core";
+import { makeStyles, Typography } from "@material-ui/core";
 import React from "react";
-import { SpaceEvenly } from "./SpaceEvenly";
 import ReplayIcon from "@material-ui/icons/Replay";
 
 const useStyles = makeStyles(theme => ({
@@ -39,7 +38,7 @@ export const BrandingStrip = () => {
     const cls = useStyles();
     return (
         <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }} className={cls.spacer}>
-            <div style={{ height: "100%", alignItems: "center", display: "flex" }}>
+            <div style={{  alignItems: "center", display: "flex" }}>
                 <Typography className={cls.wrapper} variant="caption">
                     Crafted with{" "}
                     <strong className={cls.brand} onClick={() => window.open("https://www.palavyr.com")}>

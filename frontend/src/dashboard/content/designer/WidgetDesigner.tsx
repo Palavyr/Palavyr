@@ -82,8 +82,8 @@ export const WidgetDesignerPage = () => {
                         </div>
                         <ColorSelectors widgetPreferences={widgetPreferences} setWidgetPreferences={setWidgetPreferences} />
                         <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
-                            <FontSelector widgetPreferences={widgetPreferences} setWidgetPreferences={setWidgetPreferences} />
                             <DesignChatHeader widgetPreferences={widgetPreferences} setWidgetPreferences={setWidgetPreferences} />
+                            <FontSelector widgetPreferences={widgetPreferences} setWidgetPreferences={setWidgetPreferences} />
                         </div>
                     </div>
                     <DesignerWidgetDrawer widgetPreferences={widgetPreferences} />

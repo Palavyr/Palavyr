@@ -35,14 +35,8 @@ const useStyles = makeStyles(theme => ({
     title: {
         padding: "1rem",
     },
-    plotCard: {
-        margin: "2rem",
-        padding: "2rem",
-        borderRadius: "12px",
-        border: "1px solid black",
-        backgroundColor: theme.palette.common.white,
-        boxShadow: theme.shadows[10],
-    },
+    plotCard: {},
+
     fallback: {
         margin: "2rem",
     },
@@ -59,8 +53,10 @@ export const DataPlot = ({ title, subtitle = "", hasData, loadingSpinner, childr
         </span>
     ) : (
         <>
+            <div style={{ height: "2rem" }}></div>
             <AreaConfigurationHeader title={title} subtitle={subtitle} light divider />
             {hasData() ? children : <NoActivityComponent />}
+            <div style={{ height: "4rem" }}></div>
         </>
     );
 };

@@ -10,6 +10,7 @@ import "./styles.scss";
 import { IMessage } from "@Palavyr-Types";
 import { makeStyles } from "@material-ui/core";
 import classNames from "classnames";
+import { createUserMessage } from "dashboard/content/designer/fakeWidgetNew/fakeMessages";
 
 const useStyles = makeStyles(theme => ({
     timeStamp: {
@@ -21,12 +22,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export type MessageProps = {
-    message: IMessage;
-    showTimeStamp: boolean;
+    text: string;
+    style: any;
 };
 
 // User Uses this message component
-export const Message = ({ message, showTimeStamp = true }: MessageProps) => {
+export const Message = ({ text, style }: MessageProps) => {
+    const message: IMessage = createUserMessage(text);
+
     const sanitizedHTML = markdownIt()
         .use(markdownItClass, {
             img: ["rcw-message-img"],
@@ -38,9 +41,9 @@ export const Message = ({ message, showTimeStamp = true }: MessageProps) => {
 
     const cls = useStyles();
     return (
-        <div className={`rcw-${message.sender}`}>
+        <div className={`rcw-client`}>
             <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
-            {showTimeStamp && <span className={classNames("rcw-timestamp", cls.timeStamp)}>{format(message.timestamp, "hh:mm")}</span>}
+            {true && <span style={style} className={classNames("rcw-timestamp", cls.timeStamp)}>{format(message.timestamp, "hh:mm")}</span>}
         </div>
     );
 };

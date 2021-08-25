@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
     },
     wrapper: {
         merginRight: "0.4rem",
-        marginTop: "0.1rem",
+        marginTop: "0.3rem",
         borderRadius: "10px",
     },
     timeStamp: {

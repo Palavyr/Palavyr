@@ -1,11 +1,11 @@
 import { makeStyles, TextField } from "@material-ui/core";
 import classNames from "classnames";
-import React from "react";
+import React, { useEffect } from "react";
 import CurrencyFormat, { NumberFormatProps, NumberFormatValues } from "react-number-format";
 
 const useStyles = makeStyles(theme => ({
     styles: {
-        padding: "40px",
+        // padding: "40px",
     },
 }));
 export interface CurrencyTextFieldProps extends NumberFormatProps {
@@ -36,6 +36,7 @@ export const CurrencyTextField = ({
     ...rest
 }: CurrencyTextFieldProps) => {
     const cls = useStyles();
+
     return (
         <CurrencyFormat
             fixedDecimalScale={true}
