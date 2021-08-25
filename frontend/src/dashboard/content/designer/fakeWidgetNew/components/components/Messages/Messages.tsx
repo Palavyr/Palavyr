@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     },
     messageTube: (prefs: WidgetPreferences) => ({
         backgroundColor: prefs.chatBubbleColor,
-        height: "100%",
+        // heightd: "100%",
     }),
     messages: (prefs: WidgetPreferences) => ({
         backgroundColor: prefs.chatBubbleColor,

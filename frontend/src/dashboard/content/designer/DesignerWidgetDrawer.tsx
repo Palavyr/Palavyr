@@ -11,20 +11,19 @@ const useStyles = makeStyles(theme => ({
         width: drawerWidth,
         flexShrink: 0,
     },
-    drawerRoot: { height: "100%" },
+    drawerRoot: { height: "100%", borderLeft: "5px solid grey" },
 
     drawerPaper: {
         width: drawerWidth,
         height: "100%",
+        borderLeft: `5px solid ${theme.palette.primary.main}`,
     },
     // necessary for content to be below app bar
     toolbar: theme.mixins.toolbar,
     widget: {
-        height: "100%",
-        width: "400px",
-        display: "flex",
-        flexDirection: "column",
         padding: "1rem",
+        height: "100%",
+        width: "100%",
     },
     drawerRight: { height: "100%" },
 }));
@@ -41,8 +40,8 @@ export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawer
             variant="permanent"
             classes={{
                 paperAnchorDockedRight: cls.drawerRight,
-                // root: cls.drawerRoot,
-                // paper: cls.drawerPaper,
+                root: cls.drawerRoot,
+                paper: cls.drawerPaper,
             }}
             anchor="right"
         >
