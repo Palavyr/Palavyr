@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "sideEffects": [
-    "**/*.css"
+    "**/*.css",
+    "**/*.scss",
+    "**/*.sass"
   ],
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^29.1.0",
@@ -57,7 +59,12 @@
     "reactour": "^1.18.6",
     "seedrandom": "^3.0.5",
     "styled-components": "^4.0.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "markdown-it": "^8.4.1",
+    "markdown-it-link-attributes": "^2.1.0",
+    "markdown-it-sanitizer": "^0.4.3",
+    "markdown-it-sup": "^1.0.0",
+    "@toycode/markdown-it-class": "^1.2.3"
   },
   "scripts": {
     "start": "npm install --no-save && webpack-dev-server --open --config webpack.config.dev.js --hot --progress --env.development",
@@ -117,6 +124,7 @@
     "@typescript-eslint/parser": "^2.10.0",
     "@webpack-cli/init": "^0.3.0",
     "axios-mock-adapter": "^1.18.2",
+    "autoprefixer": "^8.2.0",
     "babel-eslint": "10.1.0",
     "babel-jest": "^24.9.0",
     "babel-plugin-named-asset-import": "^0.3.6",

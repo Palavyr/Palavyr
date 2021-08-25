@@ -18,12 +18,12 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const DesignHeaders = ({ ...preferences }: DesignHeadersProps) => {
+export const DesignHeaders = ({ widgetPreferences }: DesignHeadersProps) => {
     const cls = useStyles();
     return (
         <div className={cls.wrapper}>
-            <DesignLandingHeader {...preferences} />
-            <DesignChatHeader {...preferences} />
+            {/* <DesignLandingHeader {...preferences} /> */}
+            <DesignChatHeader widgetPreferences={widgetPreferences} />
         </div>
     );
 };

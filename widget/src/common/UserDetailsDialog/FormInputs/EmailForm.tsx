@@ -1,6 +1,6 @@
 import { TextField } from "@material-ui/core";
 import { getNameContext, getEmailAddressContext, setPhoneContext, setEmailAddressContext } from "@store-dispatcher";
-import { TextInput } from "common/number/TextInput";
+import { TextInput } from "widget/BotResponse/number/TextInput";
 import React, { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import { useEffect } from "react";

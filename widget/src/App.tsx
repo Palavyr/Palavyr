@@ -5,7 +5,7 @@ import { WidgetPreferences } from "@Palavyr-Types";
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { WidgetContext } from "widget/context/WidgetContext";
 import { CollectDetailsForm } from "common/UserDetailsDialog/CollectDetailsForm";
-import { SmoothWidget } from "widget/smoothWidget/SmoothWidget";
+import { SmoothWidget } from "widget/widgets/SmoothWidget";
 
 export const App = () => {
     // const [kickoff, setKickoff] = useState<boolean>(false);

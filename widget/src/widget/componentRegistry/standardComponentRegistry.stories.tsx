@@ -5,7 +5,7 @@ import { WidgetNodeResource, WidgetNodes } from "@Palavyr-Types";
 import { ConfigureMockClient } from "test/testUtils/ConfigureMockClient";
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { convoA } from "@test-data/conversationNodes";
-import { MessageWrapper } from "widget/componentRegistry/MessageWrapper";
+import { MessageWrapper } from "widget/BotResponse/utils/MessageWrapper";
 
 const registry = new StandardComponents();
 

@@ -1,27 +1,27 @@
-import { assembleEmailRecordData, getOrderedChildNodes, getRootNode, MinNumeric, parseNumericResponse } from "./utils";
+import { assembleEmailRecordData, getOrderedChildNodes, getRootNode, MinNumeric, parseNumericResponse } from "../BotResponse/utils/utils";
 import React, { useContext, useEffect, useState } from "react";
 import { Button, makeStyles } from "@material-ui/core";
-import { responseAction } from "./responseAction";
+import { responseAction } from "../BotResponse/utils/responseAction";
 import { ConvoContextProperties } from "./registry";
 import { AreaTable, GlobalState, IProgressTheChat, LocaleMap, LocaleResource, SelectedOption, WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
 import { setNumIndividualsContext, getContextProperties, openUserDetails, setRegionContext, getNameContext, getEmailAddressContext } from "@store-dispatcher";
-import { ResponseButton } from "common/ResponseButton";
+import { ResponseButton } from "widget/BotResponse/ResponseButton";
 import { splitValueOptionsByDelimiter } from "widget/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "common/UserDetailsDialog/ChatLoadingSpinner";
-import { CustomImage } from "common/CustomImage";
-import { CurrencyTextField } from "common/numbers/CurrencyTextField";
+import { CustomImage } from "widget/BotResponse/CustomImage";
 import { NumberFormatValues } from "react-number-format";
-import { TextInput } from "common/number/TextInput";
-import { BotResponse } from "./BotResponse";
+import { TextInput } from "widget/BotResponse/number/TextInput";
+import { BotResponse } from "../BotResponse/BotResponse";
 import { WidgetContext } from "widget/context/WidgetContext";
 import { useLocation } from "react-router-dom";
 import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { useSelector } from "react-redux";
 import { useCallback } from "react";
-import { renderNextComponent } from "./renderNextComponent";
-import { ChoiceList } from "options/optionFormats/ChoiceList";
+import { renderNextComponent } from "../BotResponse/utils/renderNextComponent";
+import { ChoiceList } from "widget/BotResponse/optionFormats/ChoiceList";
 import { ContactForm, MiniContactForm } from "common/UserDetailsDialog/CollectDetailsForm";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
+import { CurrencyTextField } from "widget/BotResponse/numbers/CurrencyTextField";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {

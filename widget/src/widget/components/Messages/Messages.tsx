@@ -5,8 +5,8 @@ import { Loader } from "./components/Loader/Loader";
 import { WidgetPreferences, GlobalState } from "@Palavyr-Types";
 import { _markAllMessagesRead, _setBadgeCount } from "store/actions/actions";
 import { scrollToBottom } from "widget/utils/messages";
-import { getComponentToRender } from "widget/componentRegistry/getComponentToRender";
-import { BrandingStrip } from "common/BrandingStrip";
+import { getComponentToRender } from "widget/BotResponse/utils/getComponentToRender";
+import { BrandingStrip } from "widget/components/Footer/BrandingStrip";
 import { makeStyles } from "@material-ui/core";
 
 import "./styles.scss";
@@ -69,7 +69,6 @@ export const Messages = ({ profileAvatar, showTimeStamp }: Props) => {
                 ))}
                 {typing && <Loader typing={typing} />}
             </div>
-            <BrandingStrip />
         </>
     );
 };

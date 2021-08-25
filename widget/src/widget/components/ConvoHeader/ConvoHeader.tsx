@@ -6,7 +6,6 @@ import "./style.scss";
 import { openUserDetails } from "@store-dispatcher";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "widget/context/WidgetContext";
-import { useHover } from "./ConvoHeaderUtils";
 
 export interface ConvoHeaderProps {
     titleAvatar?: string;
