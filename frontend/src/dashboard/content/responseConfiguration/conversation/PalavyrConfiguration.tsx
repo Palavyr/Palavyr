@@ -103,7 +103,6 @@ interface StructuredConvoTreeProps {
     errorCheckCallback(setTreeErrors: SetState<TreeErrors>, repository: PalavyrRepository, areaIdentifier: string, nodeList: ConvoNode[]): Promise<void>;
 }
 export const StructuredConvoTree = ({ isIntroduction = false, errorCheckCallback }: StructuredConvoTreeProps) => {
-    disableBodyScroll($`#${MAIN_CONTENT_DIV_ID}`);
     const { planTypeMeta, repository, handleDrawerClose } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const [, setLoaded] = useState<boolean>(false);
@@ -126,6 +125,13 @@ export const StructuredConvoTree = ({ isIntroduction = false, errorCheckCallback
     window.onbeforeunload = e => enableBodyScroll($(MAIN_DIV));
 
     const toggleUseNewEditor = () => {
+
+        if (useNewEditor) {
+            enableBodyScroll($`#${MAIN_CONTENT_DIV_ID}`);
+        } else {
+            disableBodyScroll($`#${MAIN_CONTENT_DIV_ID}`);
+        }
+
         const newSettings = !useNewEditor;
         Cookies.set(USE_NEW_EDITOR_COOKIE_NAME, newSettings ? "true" : "false");
         setUseNewEditor(newSettings);
