@@ -15,17 +15,7 @@ const useStyles = makeStyles(theme => ({
         boxShadow: theme.shadows[2],
         // borderRadius: "15px"
     },
-    // sucessUpperCell: {
-    //     // paddingTop: "1rem",
-    //     // paddingBottom: "2rem",
-    //     // borderTop: "4px solid black",
-    //     // borderBottom: "4px solid black",
-    //     backgroundColor: theme.palette.success.light,
-    //     marginBottom: "3rem",
-    //     boxShadow: theme.shadows[4],
-    //     justifyItems: "center",
-    //     // borderRadius: "15px"
-    // },
+
     table: {
         border: "0px solid grey",
     },
