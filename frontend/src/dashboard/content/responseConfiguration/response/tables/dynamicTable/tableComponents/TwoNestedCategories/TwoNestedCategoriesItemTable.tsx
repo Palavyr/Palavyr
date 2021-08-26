@@ -82,7 +82,7 @@ export const TwoNestedCategoriesItemTable = ({ outerCategoryIndex, tableData, ou
                     )
                 }
                 deleteButton={
-                    <Button variant="contained" style={{ width: "38ch" }} color="primary" onClick={() => removeOuterCategory(outerCategoryId)}>
+                    <Button variant="contained" style={{ width: "38ch"}} color="primary" onClick={() => removeOuterCategory(outerCategoryId)}>
                         Delete Outer Category
                     </Button>
                 }

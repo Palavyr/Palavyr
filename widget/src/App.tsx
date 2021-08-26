@@ -6,6 +6,7 @@ import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
 import { WidgetContext } from "widget/context/WidgetContext";
 import { CollectDetailsForm } from "common/UserDetailsDialog/CollectDetailsForm";
 import { SmoothWidget } from "widget/widgets/SmoothWidget";
+import { toggleUserDetails } from "@store-dispatcher";
 
 export const App = () => {
     // const [kickoff, setKickoff] = useState<boolean>(false);

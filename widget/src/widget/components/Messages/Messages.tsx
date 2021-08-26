@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 export const Messages = ({ profileAvatar, showTimeStamp }: Props) => {
     const { preferences } = useContext(WidgetContext);
 
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const { messages, typing, showChat, badgeCount } = useSelector((state: GlobalState) => ({
         messages: state.messagesReducer.messages,
         badgeCount: state.messagesReducer.badgeCount,

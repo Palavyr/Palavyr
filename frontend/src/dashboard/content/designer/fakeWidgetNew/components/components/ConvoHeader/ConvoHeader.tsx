@@ -15,8 +15,7 @@ const useStyles = makeStyles(theme => ({
         color: props.headerFontColor,
         textAlign: "left",
         minWidth: 275,
-        zIndex: 99999,
-        // minHeight: 100,
+        // zIndex: 99999,
         wordWrap: "break-word",
         borderRadius: "0px",
     }),
@@ -25,7 +24,6 @@ const useStyles = makeStyles(theme => ({
         textAlign: "center",
         borderRadius: "0px",
         display: "flex",
-        // padding: "15px 0 25px",
     },
     settingsIcon: (props: WidgetPreferences) => ({
         color: theme.palette.getContrastText(props.headerColor),
@@ -35,12 +33,14 @@ const useStyles = makeStyles(theme => ({
         margin: "0.2rem",
         height: "2rem",
         width: "2rem",
+
         "&:hover": {
             cursor: "pointer",
         },
     }),
 
     headerBehavior: {
+        boxShadow: "none",
         textAlign: "left",
         wordWrap: "break-word",
         padding: "0rem",
