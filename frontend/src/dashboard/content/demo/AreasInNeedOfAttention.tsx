@@ -27,14 +27,14 @@ const useStyles = makeStyles(theme => ({
     //     // borderRadius: "15px"
     // },
     table: {
-        border: "opx solid grey",
+        border: "0px solid grey",
     },
     tablegrid: {
         paddingRight: "20%",
         paddingLeft: "20%",
     },
     cell: {
-        borderBottom: "1px solid gray",
+        borderBottom: "0px solid gray",
     },
 }));
 
