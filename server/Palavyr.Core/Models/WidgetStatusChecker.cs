@@ -31,6 +31,9 @@ namespace Palavyr.Core.Models
         private readonly IAccountRepository accountRepository;
         private readonly IConfigurationRepository configurationRepository;
 
+        private readonly string introSequenceName = "Introduction Sequence";
+        private readonly string generalName = "General";
+
         public WidgetStatusChecker(
             IDynamicTableCompilerOrchestrator orchestrator,
             RequiredNodeCalculator requiredNodeCalculator,
@@ -74,16 +77,23 @@ namespace Palavyr.Core.Models
 
             var introError = new PreCheckError()
             {
-                AreaName = "Introduction Sequence"
+                AreaName = introSequenceName
+            };
+
+            var generalError = new PreCheckError
+            {
+                AreaName = generalName
             };
 
             var allRequiredIntroNodesArePresent = await AllIntroRequiredIntroNodesArePresent(accountId, introError);
             if (!allRequiredIntroNodesArePresent)
             {
                 isReady = false;
-                errors.Add(introError);
+                introError.Reasons.Add("The introduction sequence has not been completed.");
+                // errors.Add(introError);
             }
 
+            var numberOfEnabledIntents = 0;
             foreach (var area in areas)
             {
                 var error = new PreCheckError()
@@ -103,7 +113,6 @@ namespace Palavyr.Core.Models
                 var allImageNodesHaveImagesSet = AllImageNodesSet(nodeList, error);
                 var allCategoricalPricingStrategiesAreUnique = await AllCategoricalPricingStrategiesAreUnique(area, error);
 
-
                 var checks = new List<bool>() {nodesSet, branchesTerminate, nodesSatisfied, dynamicNodesAreOrdered, allImageNodesHaveImagesSet, allCategoricalPricingStrategiesAreUnique};
 
                 var areaChecksPassed = checks.TrueForAll(x => x);
@@ -114,8 +123,34 @@ namespace Palavyr.Core.Models
                     logger.LogDebug($"Area not currently ready: {area.AreaName}");
                 }
 
+                if (area.IsEnabled)
+                {
+                    numberOfEnabledIntents++;
+                }
             }
 
+            if (!(numberOfEnabledIntents >= 1))
+            {
+                isReady = false;
+                generalError.Reasons.Add("At least 1 intent must be enabled.");
+            }
+
+            if (introError.Reasons.Count > 0)
+            {
+                errors.Insert(0, introError);
+            }
+
+            if (generalError.Reasons.Count > 0)
+            {
+                if (introError.Reasons.Count > 0)
+                {
+                    errors.Insert(1, generalError);
+                }
+                else
+                {
+                    errors.Insert(0, generalError);
+                }
+            }
 
             logger.LogDebug("Pre-check Complete. Returning result.");
             if (demo)
@@ -136,6 +171,7 @@ namespace Palavyr.Core.Models
                 return PreCheckResult.CreateConvoResult(false, errors);
             }
         }
+
 
         private async Task<bool> AllIntroRequiredIntroNodesArePresent(string accountId, PreCheckError error)
         {

@@ -64,7 +64,7 @@ export const ChatDemoPage = () => {
 
     return (
         <Paper className={cls.paper}>
-            {preCheckErrors.length > 0 && <AreasInNeedOfAttention preCheckErrors={preCheckErrors} />}
+            <AreasInNeedOfAttention preCheckErrors={preCheckErrors} />
             <ChatDemoHeader />
             <Grid container alignItems="center" justify="center">
                 <Grid item xs={4}>
