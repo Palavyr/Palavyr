@@ -8,7 +8,6 @@ import { ColorSelectors } from "./colors/ColorSelectors";
 import { DesignerWidgetDrawer } from "./DesignerWidgetDrawer";
 import { FontSelector } from "./fonts/FontSelector";
 import { DesignChatHeader } from "./headers/ChatHeader";
-import { DesignHeaders } from "./headers/DesignHeaders";
 
 const drawerWidth = 440;
 

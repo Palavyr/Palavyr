@@ -22,10 +22,14 @@ const useStyles = makeStyles(theme => ({
         paddingTop: "0.5rem",
         paddingRight: "0.5rem",
         paddingLeft: "0.5rem",
-        borderRadius: "50px",
+        borderRadius: "15px",
     },
     container: {
+        paddingLeft: "5%",
+        paddingRight: "5%",
         backgroundColor: theme.palette.background.default,
+        paddingBottom: "4rem",
+        boxShadow: theme.shadows[2]
     },
     text: {
         paddingTop: "15rem",

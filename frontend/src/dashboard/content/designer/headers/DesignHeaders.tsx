@@ -23,7 +23,7 @@ export const DesignHeaders = ({ widgetPreferences }: DesignHeadersProps) => {
     return (
         <div className={cls.wrapper}>
             {/* <DesignLandingHeader {...preferences} /> */}
-            <DesignChatHeader widgetPreferences={widgetPreferences} />
+            {/* <DesignChatHeader widgetPreferences={widgetPreferences} /> */}
         </div>
     );
 };

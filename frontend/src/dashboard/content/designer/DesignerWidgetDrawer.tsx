@@ -16,16 +16,18 @@ const useStyles = makeStyles(theme => ({
 
     drawerPaper: {
         width: drawerWidth,
-        borderLeft: `5px solid ${theme.palette.primary.main}`,
+        backgroundColor: theme.palette.background.default,
+        // borderLeft: `5px solid ${theme.palette.primary.main}`,
     },
     // necessary for content to be below app bar
     toolbar: theme.mixins.toolbar,
     widget: {
         padding: "1rem",
         width: "100%",
-        height: "90%"
+        height: "90%",
+        background: "none",
     },
-    drawerRight: { height: "100%" },
+    drawerRight: { height: "100%", backgroundColor: theme.palette.background.default },
 }));
 
 export interface DesignerWidgetDrawerProps {

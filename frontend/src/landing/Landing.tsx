@@ -73,15 +73,15 @@ export const LandingPage = () => {
             TitleContent={<LangingPageTitleContent />}
             MainContent={
                 <>
-                    <div className={cls.body}>
+                    {/* <div className={cls.body}>
                         <TwoItemRow dataList={rowOne} />
                         <TwoItemRow dataList={rowTwo} />
                         <TwoItemRow dataList={rowThree} />
-                    </div>
-                    <GreenStrip />
-                    <div className={cls.strip} style={{ backgroundColor: theme.palette.primary.main, color: theme.palette.common.white }}>
+                    </div> */}
+                    {/* <GreenStrip /> */}
+                    {/* <div className={cls.strip} style={{ backgroundColor: theme.palette.primary.main, color: theme.palette.common.white }}>
                         <Typography gutterBottom align="center" variant="h2">
-                            What is Palavyr?
+                            Elegant
                         </Typography>
                         <br></br>
                         <Typography variant="h5" gutterBottom align="center">
@@ -92,15 +92,19 @@ export const LandingPage = () => {
                             You craft the chats, configure your pricing strategies, and stylize the widget (which is embedded into your website).
                         </Typography>
                     </div>
-                    <div className={cls.strip} style={{ backgroundColor: theme.palette.primary.main }}>
-                        <Typography align="center" variant="h3" style={{ color: theme.palette.common.white }}>
-                            Try it out!
-                        </Typography>
-                        <Align>
-                            <IFrame widgetUrl={widgetUrl} apiKey={landingWidgetApiKey} iframeRefreshed={true} preCheckErrors={[]} demo={false} shadow={true} />
-                        </Align>
-                    </div>
+                    <GreenStrip /> */}
+                    <ComponentLandingSpotlight text="Elegent and Classic">
+                        {/* <div className={cls.strip} style={{ backgroundColor: theme.palette.primary.light }}> */}
+                            {/* <Typography align="center" variant="h3" style={{ color: theme.palette.common.white }}>
+                                Try it out!
+                            </Typography> */}
+                            <Align>
+                                <IFrame widgetUrl={widgetUrl} apiKey={landingWidgetApiKey} iframeRefreshed={true} preCheckErrors={[]} demo={false} shadow={true} />
+                            </Align>
+                        {/* </div>   */}
+                    </ComponentLandingSpotlight>
                     <GreenStrip />
+
                     <LandingSpotlight text="Intuitive Conversation Design" imgSrc={LandingImageOne} />
                     <GreenStrip />
                     <LandingSpotlight text="Transparent Pricing Strategies" imgSrc={PricingImageOne} />
