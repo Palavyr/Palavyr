@@ -1,5 +1,6 @@
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const autoprefixer = require("autoprefixer");
 
 const TypeScriptLoaderRule = () => {
     return {
@@ -133,9 +134,43 @@ const ScssLoaderRule = () => {
             // Creates `style` nodes from JS strings
             "style-loader",
             // Translates CSS into CommonJS
-            "css-loader",
+            // "css-loader",
             // Compiles Sass to CSS
-            "sass-loader",
+            // "sass-loader",
+        ],
+    };
+};
+
+const WidgetSassRule = () => {
+    return {
+        test: /\.scss$/,
+        exclude: /node_modules/,
+        use: [
+            {
+                loader: "style-loader",
+            },
+            "css-loader",
+            {
+                loader: "postcss-loader",
+                options: {
+                    ident: "postcss",
+                    plugins: () => [
+                        require("postcss-flexbugs-fixes"), // eslint-disable-line
+                        autoprefixer({
+                            browsers: [">1%", "last 4 versions", "Firefox ESR", "not ie <9"],
+                            flexbox: "no-2009",
+                        }),
+                    ],
+                },
+            },
+            {
+                loader: "sass-loader",
+                options: {
+                    sassOptions: {
+                        includePaths: ["src/dashboard/content/designer/fakeWidgetNew/components/scss/", "**/*"],
+                    },
+                },
+            },
         ],
     };
 };
@@ -153,4 +188,5 @@ module.exports = {
     URLLoaderRule,
     MUILoaderRule,
     ScssLoaderRule,
+    WidgetSassRule,
 };

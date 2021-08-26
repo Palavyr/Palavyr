@@ -40,19 +40,21 @@ export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: 
         return [
             { name: "Header Color", variable: widgetPreferences.headerColor, method: (headerColor: string) => setWidgetPreferences({ ...widgetPreferences, headerColor }), disable: true },
             { name: "Header Font Color", variable: widgetPreferences.headerFontColor, method: (headerFontColor: string) => setWidgetPreferences({ ...widgetPreferences, headerFontColor }), disable: true },
-            { name: "Options List Color", variable: widgetPreferences.selectListColor, method: (selectListColor: string) => setWidgetPreferences({ ...widgetPreferences, selectListColor }), disable: true },
+            // { name: "Options List Color", variable: widgetPreferences.selectListColor, method: (selectListColor: string) => setWidgetPreferences({ ...widgetPreferences, selectListColor }), disable: true },
             { name: "Options List Font Color", variable: widgetPreferences.listFontColor, method: (listFontColor: string) => setWidgetPreferences({ ...widgetPreferences, listFontColor }), disable: true },
         ];
     };
 
     const rowTwo = (widgetPreferences: WidgetPreferences): ColorPickerType[] => {
         return [
-            { name: "Chat Bubble Color", variable: widgetPreferences.chatBubbleColor, method: (chatBubbleColor: string) => setWidgetPreferences({ ...widgetPreferences, chatBubbleColor }), disable: true },
-            { name: "Chat Bubble Font Color", variable: widgetPreferences.chatFontColor, method: (chatFontColor: string) => setWidgetPreferences({ ...widgetPreferences, chatFontColor }), disable: true },
-            { name: "Chat Button Color", variable: widgetPreferences.buttonColor, method: (buttonColor: string) => setWidgetPreferences({ ...widgetPreferences, buttonColor }), disable: true },
-            { name: "Chat Button Font Color", variable: widgetPreferences.buttonFontColor, method: (buttonFontColor: string) => setWidgetPreferences({ ...widgetPreferences, buttonFontColor }), disable: true },
+            { name: "Background Color", variable: widgetPreferences.chatBubbleColor, method: (chatBubbleColor: string) => setWidgetPreferences({ ...widgetPreferences, chatBubbleColor }), disable: true },
+            { name: "Text Color", variable: widgetPreferences.chatFontColor, method: (chatFontColor: string) => setWidgetPreferences({ ...widgetPreferences, chatFontColor }), disable: true },
+            { name: "Button Color", variable: widgetPreferences.buttonColor, method: (buttonColor: string) => setWidgetPreferences({ ...widgetPreferences, buttonColor }), disable: true },
+            { name: "Button Font Color", variable: widgetPreferences.buttonFontColor, method: (buttonFontColor: string) => setWidgetPreferences({ ...widgetPreferences, buttonFontColor }), disable: true },
         ];
     };
+
+    const colors = ["#000000", "#264653", "#2A9D8F", "#E9C46A", "#F4A261", "#E9C46A", "#118AB2", "#83C5BE", "#FFE8D6",  "#FFDDD2", "#E29578", "#006D77", "#FFFFFF", "#F1FAEE", "#EDF6F9", "#FDFFB6"];
     return (
         <>
             <div className={cls.gridList}>
@@ -68,10 +70,10 @@ export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: 
                                     {picker.variable && (
                                         <>
                                             <Hidden lgUp>
-                                                <BlockPicker color={picker.variable} width={"110px"} onChangeComplete={({ hex }) => picker.method(hex)} />
+                                                <BlockPicker colors={colors} color={picker.variable} width={"110px"} onChangeComplete={({ hex }) => picker.method(hex)} />
                                             </Hidden>
                                             <Hidden mdDown>
-                                                <BlockPicker color={picker.variable} onChangeComplete={({ hex }) => picker.method(hex)} />
+                                                <BlockPicker colors={colors} color={picker.variable} width={"150px"} onChangeComplete={({ hex }) => picker.method(hex)} />
                                             </Hidden>
                                         </>
                                     )}
@@ -93,10 +95,10 @@ export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: 
                                     {picker.variable && (
                                         <>
                                             <Hidden lgUp>
-                                                <BlockPicker color={picker.variable} width={"110px"} onChangeComplete={({ hex }) => picker.method(hex)} />
+                                                <BlockPicker colors={colors} color={picker.variable} width={"110px"} onChangeComplete={({ hex }) => picker.method(hex)} />
                                             </Hidden>
                                             <Hidden mdDown>
-                                                <BlockPicker color={picker.variable} onChangeComplete={({ hex }) => picker.method(hex)} />
+                                                <BlockPicker colors={colors} color={picker.variable} width={"150px"} onChangeComplete={({ hex }) => picker.method(hex)} />
                                             </Hidden>
                                         </>
                                     )}

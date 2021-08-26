@@ -1,11 +1,8 @@
 import * as React from "react";
-import { useLocation } from "react-router-dom";
-import { useState, useCallback, useEffect } from "react";
-import { DropdownListOptions } from "./optionFormats/DropdownOptionsList";
-import { SelectedOption, WidgetPreferences, AreaTable } from "@Palavyr-Types";
-import { PalavyrWidgetRepository } from "client/PalavyrWidgetRepository";
+import { DropdownListOptions } from "../widget/BotResponse/optionFormats/DropdownOptionsList";
+import { SelectedOption } from "@Palavyr-Types";
 import { makeStyles } from "@material-ui/core";
-import { BrandingStrip } from "common/BrandingStrip";
+import { BrandingStrip } from "widget/components/Footer/BrandingStrip";
 
 interface IOptionSelector {
     options: SelectedOption[];

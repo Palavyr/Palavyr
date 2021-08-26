@@ -29,15 +29,14 @@ export interface BaseFormProps {
 
 const useStyles = makeStyles(theme => ({
     baseDialogCollectionForm: {
-        zIndex: 9999,
         position: "absolute",
     },
     dialogBackgroundCollectionForm: {
-        backgroundColor: "rgba(255, 255, 255, 50)",
-        zIndex: 9999,
+        backgroundColor: "rgba(255, 255, 255, 30)",
+        // zIndex: 9999,
     },
     dialogPaperCollectionForm: {
-        zIndex: 9999,
+        // zIndex: 9999,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -110,7 +109,7 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
 
     return (
         <Dialog
-            open={userDetailsVisible}
+            open={userDetailsVisible && chatStarted}
             className={cls.baseDialogCollectionForm}
             classes={{
                 root: cls.dialogBackgroundCollectionForm,

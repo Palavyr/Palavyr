@@ -21,8 +21,8 @@ export const ButtonBar = ({ deleteButton, addInnerButton }: SaveBarProps) => {
     const cls = useStyles();
     return (
         <div className={cls.savebar}>
-            {addInnerButton}
-            {deleteButton}
+            <div style={{ float: "left" }}>{addInnerButton}</div>
+            <div style={{ float: "right" }}>{deleteButton}</div>
         </div>
     );
 };

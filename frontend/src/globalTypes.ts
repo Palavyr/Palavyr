@@ -1,7 +1,7 @@
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
 import { COULD_NOT_FIND_SERVER, GOOGLE_ACCOUNT_NOT_FOUND, INVALID_EMAIL, INVALID_GOOGLE_TOKEN, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, NOT_A_GOOGLE_ACCOUNT, VERIFICATION_EMAIL_SEND } from "@constants";
 import { PalavyrLinkedList } from "dashboard/content/responseConfiguration/conversation/PalavyrDataStructure/PalavyrLinkedList";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, ElementType, SetStateAction } from "react";
 import internal from "stream";
 // / <reference types="node" />
 // / <reference types="react" />
@@ -567,20 +567,20 @@ export type IncompleteArea = {
 export type IncompleteAreas = IncompleteArea[];
 
 export type WidgetPreferences = {
-    selectListColor?: string;
-    headerColor?: string;
-    fontFamily?: string;
-    landingHeader?: string;
-    chatHeader?: string;
-    placeholder?: string;
-    listFontColor?: string;
-    headerFontColor?: string;
-    optionsHeaderColor?: string;
-    optionsHeaderFontColor?: string;
-    chatFontColor?: string;
-    chatBubbleColor?: string;
-    buttonColor?: string;
-    buttonFontColor?: string;
+    selectListColor: string;
+    headerColor: string;
+    fontFamily: string;
+    landingHeader: string;
+    chatHeader: string;
+    placeholder: string;
+    listFontColor: string;
+    headerFontColor: string;
+    optionsHeaderColor: string;
+    optionsHeaderFontColor: string;
+    chatFontColor: string;
+    chatBubbleColor: string;
+    buttonColor: string;
+    buttonFontColor: string;
 };
 
 export type VariableDetail = {
@@ -991,4 +991,62 @@ export type BlogPosts = BlogPostRecord[];
 export type BlogPostRouteMeta = BlogPostRecord & {
     url: string;
     params: string;
+};
+
+/////////////////////////////////////////////////////////////
+////////////// WIDGET DIRECT COPY FOR NOW ////////////////////
+export type SelectedOption = {
+    areaDisplay: string;
+    areaId: string;
+};
+
+type BaseMessage = {
+    type: string;
+    component: ElementType;
+    sender: string;
+    showAvatar: boolean;
+    timestamp: Date;
+    unread: boolean;
+    customId?: string;
+    props?: any;
+};
+
+export interface IMessage extends BaseMessage {
+    text: string;
+}
+
+export interface Link extends BaseMessage {
+    title: string;
+    link: string;
+    target: string;
+}
+
+export interface LinkParams {
+    link: string;
+    title: string;
+    target?: string;
+}
+
+export interface CustomCompMessage extends BaseMessage {
+    props: any;
+}
+
+export type Registry = {
+    [key: string]: any;
+};
+
+export type WidgetNodeResource = {
+    areaIdentifier: string;
+    nodeId: string;
+    text: string;
+    nodeType: string;
+    nodeChildrenString: string;
+    isRoot: boolean;
+    isCritical: boolean;
+    optionPath: string | null;
+    valueOptions: string; // needs to be split by ","
+    nodeComponentType: string;
+    isDynamicTableNode: boolean;
+    dynamicType: string | null;
+    resolveOrder: number | null;
 };

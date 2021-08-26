@@ -42,10 +42,10 @@ export const WidgetStateSwitch = memo(({ isActive, menuOpen }: WidgetStateSwitch
         })();
     }, []);
 
-    const Switch = <IOSSwitch disabled={!isActive || widgetState === undefined} checked={widgetState === undefined ? true : widgetState ? true : false} onChange={updatewidgetState} name="Active" />;
+    const Switch = <IOSSwitch className="widget-state-switch" disabled={!isActive || widgetState === undefined} checked={widgetState === undefined ? true : widgetState ? true : false} onChange={updatewidgetState} name="Active" />;
 
     return (
-        <ListItem className={classNames("widget-state-switch", cls.item)} disabled={!isActive}>
+        <ListItem className={classNames(cls.item)} disabled={!isActive}>
             <ListItemText>
                 {menuOpen && (
                     <PalavyrText className={cls.text} variant="h6">

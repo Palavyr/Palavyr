@@ -82,8 +82,12 @@ export const welcomeTourSteps: ReactourStep[] = [
         position: "top",
     },
     {
+        selector: ".widget-designer-tour",
+        content: <TourText>The widget designer lets you customize the widget to keep on brand</TourText>,
+    },
+    {
         selector: ".chat-demo-link-tour",
-        content: <TourText>Review your chatbot configuration before you go live, and customize it to keep on brand.</TourText>,
+        content: <TourText>Review your chatbot configuration before you go live.</TourText>,
     },
     {
         selector: ".uploads-sidebar-tour",
@@ -103,7 +107,11 @@ export const welcomeTourSteps: ReactourStep[] = [
     },
     {
         selector: ".quick-start-sidebar-tour",
-        content: <TourText>Finally, click here if you need to come to review the quick start guide.</TourText>,
+        content: <TourText>Click here if you need to come to review the quick start guide.</TourText>,
+    },
+    {
+        selector: ".take-tours-sidebard-tour",
+        content: <TourText>Finally, if you want to see this or any other tour again, you can them here.</TourText>,
     },
     {
         selector: ".quick-start-guide-tour",

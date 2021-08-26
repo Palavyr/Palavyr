@@ -12,7 +12,7 @@ export interface LocaleSelectorProps {
 
 const useStyles = makeStyles(theme => ({
     select: {
-        zIndex: 99999,
+        // zIndex: 99999,
         backgroundColor: theme.palette.common.white,
     },
     root: {

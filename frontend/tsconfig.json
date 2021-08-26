@@ -32,7 +32,9 @@
             "@public-routes": ["routes/Routes.tsx"],
             "@protected-routes": ["routes/ProtectedRoute.tsx"],
             "@landing/*": ["landing/*"],
-            "@constants": ["constants.ts"]
+            "@constants": ["constants.ts"],
+
+            "@scss/*": ["dashboard/content/designer/fakeWidgetNew/components/scss/*"]
         }
     },
     "include": ["src/**/*", "src/**/*.d.ts", "customTypes/*.d.ts"],

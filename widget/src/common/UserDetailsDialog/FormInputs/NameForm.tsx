@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserName, INVALID_NAME } from "../UserDetailsCheck";
 import { getNameContext, setNameContext } from "@store-dispatcher";
-import { TextInput } from "common/number/TextInput";
+import { TextInput } from "widget/BotResponse/number/TextInput";
 
 export interface NameFormProps extends BaseFormProps {
     disabled: boolean;
