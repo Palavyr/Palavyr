@@ -67,7 +67,7 @@ export const BrandingStrip = () => {
                 </Typography>
             </div>
             <div style={{ height: "100%", alignItems: "center", display: "flex" }}>
-                <ReplayIcon classes={{ root: cls.iconRoot }} className={cls.replayIcon} />
+                <ReplayIcon classes={{ root: cls.iconRoot }} className={cls.replayIcon} onClick={() => window.location.reload()} />
             </div>
         </div>
     );

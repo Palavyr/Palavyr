@@ -43,6 +43,7 @@
     "material-ui-dropzone": "^3.3.1",
     "react": "^16.8.6",
     "react-app-polyfill": "^1.0.6",
+    "react-awesome-loaders": "^0.1.37",
     "react-chartjs-2": "^3.0.4",
     "react-color": "^2.18.1",
     "react-dom": "^16.8.6",

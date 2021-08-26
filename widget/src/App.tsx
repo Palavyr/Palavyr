@@ -7,13 +7,16 @@ import { WidgetContext } from "widget/context/WidgetContext";
 import { CollectDetailsForm } from "common/UserDetailsDialog/CollectDetailsForm";
 import { SmoothWidget } from "widget/widgets/SmoothWidget";
 import { toggleUserDetails } from "@store-dispatcher";
+import { BookLoaderComponent, BoxesLoaderComponent } from "widget/components/Loaders/BoxLoader";
+import { SpaceEvenly } from "widget/components/Footer/SpaceEvenly";
+import { Fade } from "@material-ui/core";
 
 export const App = () => {
     // const [kickoff, setKickoff] = useState<boolean>(false);
     const [chatStarted, setChatStarted] = useState<boolean>(false);
     // const userDetailsVisible = useSelector((state: GlobalState) => state.behaviorReducer.userDetailsVisible);
     const [convoId, setConvoId] = useState<string | null>(null);
-    const [isReady, setIsReady] = useState<boolean>(false);
+    const [isReady, setIsReady] = useState<boolean | null>(null);
     const [preferences, setWidgetPrefs] = useState<WidgetPreferences>();
 
     const secretKey = new URLSearchParams(useLocation().search).get("key");
@@ -23,7 +26,6 @@ export const App = () => {
 
     const runAppPrecheck = useCallback(async () => {
         const preCheckResult = await Client.Widget.Get.PreCheck(isDemo === "true" ? true : false);
-        setIsReady(preCheckResult.isReady);
 
         if (preCheckResult.isReady) {
             const prefs = await Client.Widget.Get.WidgetPreferences();
@@ -31,6 +33,9 @@ export const App = () => {
             // toggleUserDetails();
             // setWidgetPreferences(prefs);
         }
+        setTimeout(() => {
+            setIsReady(preCheckResult.isReady);
+        }, 5000);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -74,7 +79,7 @@ export const App = () => {
 
     return (
         <>
-            {preferences ? (
+            {preferences && (
                 <WidgetContext.Provider value={{ preferences, chatStarted, setChatStarted, setConvoId, convoId }}>
                     {isReady ? (
                         <>
@@ -85,9 +90,14 @@ export const App = () => {
                         <NotReady />
                     )}
                 </WidgetContext.Provider>
-            ) : (
-                <NotReady />
             )}
+            {/* {isReady === null && (
+                <SpaceEvenly vertical>
+                    <div style={{ height: "100%", width: "100%", display: "flex", justifyContent: "center", justifyItems: "center" }}>
+                        <BookLoaderComponent />
+                    </div>
+                </SpaceEvenly>
+            )} */}
         </>
 
         // <>
