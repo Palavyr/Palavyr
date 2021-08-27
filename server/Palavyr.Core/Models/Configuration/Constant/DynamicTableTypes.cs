@@ -34,7 +34,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         {
             public CategoryNestedThreshold()
             {
-                PrettyName = "Category Nested Threshold";
+                PrettyName = "Category with Nested Threshold";
                 TableType = nameof(CategoryNestedThreshold);
             }
         }
@@ -53,7 +53,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         {
             public SelectOneFlat()
             {
-                PrettyName = "Select One Flat";
+                PrettyName = "Simple Select One Option";
                 TableType = nameof(SelectOneFlat);
             }
         }
@@ -71,7 +71,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         {
             public BasicThreshold()
             {
-                PrettyName = "Basic Threshold";
+                PrettyName = "Simple Threshold";
                 TableType = nameof(BasicThreshold);
             }
         }

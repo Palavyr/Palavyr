@@ -14,7 +14,7 @@ import { LineSpacer } from "@common/components/typography/LineSpacer";
 import { ComponentLandingSpotlight, LandingSpotlight } from "./components/ConversationDesignerCallout/ConversationDesignerCallout";
 import LandingImageOne from "./landingImages/editor-1.gif";
 import PricingImageOne from "./landingImages/pricing-1.gif";
-import DesignerOne from "./landingImages/designer-1.gif";
+import DesignerOne from "./landingImages/designer-2.gif";
 import FineControlOne from "./landingImages/finecontrol-1.gif";
 
 AOS.init({
