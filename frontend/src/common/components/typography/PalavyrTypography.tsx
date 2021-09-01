@@ -1,7 +1,7 @@
 import { makeStyles, Theme, Typography, TypographyProps } from "@material-ui/core";
 import React from "react";
 
-export interface PalavyrText extends TypographyProps {
+export interface PalavyrTextProps extends TypographyProps {
     children: React.ReactNode | string | number;
 }
 
