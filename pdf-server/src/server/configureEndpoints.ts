@@ -14,6 +14,7 @@ import { Application, Request, Response, NextFunction } from 'express';
 import { pathToPhantom, pathToScript } from 'utils/pathUtils';
 import { ReadStream } from 'fs';
 
+
 export const configureEndpoints = (app: Application) => {
     ///
     /// This enpoint is very simple -- it receives a string and writes to a provided path.

@@ -12,7 +12,7 @@ module.exports = (ENV) => {
 
     return {
         entry: {
-            'palavyr-pdf': './src/app.ts',
+            'palavyr-pdf': './src/start_app.ts',
         },
         // https://stackoverflow.com/questions/31102035/how-can-i-use-webpack-with-express (target: 'Node' in webpack)
         target: 'node',
