@@ -11,9 +11,6 @@ module.exports = (ENV) => {
     console.log('Building in.... ' + envPath);
 
     return {
-        entry: {
-            'palavyr-pdf': './src/start_app.ts',
-        },
         // https://stackoverflow.com/questions/31102035/how-can-i-use-webpack-with-express (target: 'Node' in webpack)
         target: 'node',
         plugins: [

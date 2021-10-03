@@ -3,14 +3,14 @@
 ## Installation and startup
 
 To install node module dependencies, run the following command in this directory:
-    
+
     npm install
 
 To start the server, run:
 
-    npm start  
+    npm start
 
-This will start the pdf server on port 5600, unless the process.env.PORT variable is set and specifies something different.  
+This will start the pdf server on port 5600, unless the process.env.PORT variable is set and specifies something different.
 
 
 ## Description
@@ -23,7 +23,7 @@ It has but a single route:
 
     /create-pdf
 
-This route takes a payload that contains a file path, identifier, and html string, and converts & saves it to pdf on disk. If the path provided is valid, the converter will automatically create the necessary path on disk (including directories and subdirectories). 
+This route takes a payload that contains a file path, identifier, and html string, and converts & saves it to pdf on disk. If the path provided is valid, the converter will automatically create the necessary path on disk (including directories and subdirectories).
 
 ##### Valid Paths
 
@@ -48,14 +48,19 @@ The endpoint expects a payload object this is defined as:
 1. Define a body object
 
 ```
-    $Body = @{
-        html = '<h1>WOW</h1>'
-        path = 'C:\Temp\Test.pdf'
-        id = '234-234-234'
-    }
+$Body - ${
+    Bucket = "dev-palavyr-previews"
+    Key = "test-file"
+    Html = "<h1>WOW</h1>"
+    Id = "abc234"
+    Region = "us-east-1"
+    AccessKey = "access-key"
+    SecretKey = "secret-key"
+    Paper = ""
+}
 ```
 
-2. Invoke a web request
+1. Invoke a web request
 
 ```
     Invoke-WebRequest -URI http://localhost:5603/create-pdf -Body $Body -Method Post

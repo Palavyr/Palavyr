@@ -1,5 +1,5 @@
 import { S3Client } from '@aws-sdk/client-s3';
-import { configureUpload, createPutRequest, unpackRequest } from 'http/request';
+import { configureUpload, createPutRequest, unpackRequest } from '../http/request';
 import {
     FAIL_TO_STREAM_MESSAGE,
     sendResponse,
@@ -7,13 +7,12 @@ import {
     SUCCESS_MESSAGE,
     FAILED_TO_UPLOAD_MESSAGE,
     createSuccessResponseBody,
-} from 'http/responses';
-import { logDebug, logTrace } from 'logging/logging';
-import PdfGenerator from 'pdf/pdfGenerator';
+} from '../http/responses';
+import { logDebug, logTrace } from '../logging/logging';
+import PdfGenerator from '../pdf/pdfGenerator';
 import { Application, Request, Response, NextFunction } from 'express';
-import { pathToPhantom, pathToScript } from 'utils/pathUtils';
+import { pathToPhantom, pathToScript } from '../utils/pathUtils';
 import { ReadStream } from 'fs';
-
 
 export const configureEndpoints = (app: Application) => {
     ///
@@ -49,5 +48,11 @@ export const configureEndpoints = (app: Application) => {
             }
         });
     });
+
+    app.get('/health-check', (request: Request, response: Response, next: NextFunction) => {
+        logTrace('Healthy!');
+        sendResponse(response, 200, SUCCESS_MESSAGE, null);
+    });
+
     return app;
 };

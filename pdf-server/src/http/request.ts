@@ -17,7 +17,7 @@ export const unpackRequest = (req: Request): RequestBody => {
                 accessKeyId: req.body.AccessKey,
             },
         },
-        paper: req.body.Paper,
+        paper: req.body.Paper, // TODO: provide defaults
     };
 };
 

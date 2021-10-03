@@ -1,15 +1,15 @@
-import { logDebug } from 'logging/logging';
+import { logDebug } from '../logging/logging';
 import path, { sep } from 'path';
 
 const resolvePathToPhantom = () => {
     const localPath = path.join(resolveCurrentDirectory(), 'phantomjs.exe');
-    logDebug('PhantomPath: ' + localPath);
+    // logDebug('PhantomPath: ' + localPath);
     return localPath;
 };
 
 const resolvePathToScript = () => {
     const localPath = path.join(resolveCurrentDirectory(), 'create_script.js');
-    logDebug('Script path: ' + localPath);
+    // logDebug('Script path: ' + localPath);
     return localPath;
 };
 

@@ -1,4 +1,4 @@
-import { isDevelopmentStage } from 'config/currentEnvironment';
+import { isDevelopmentStage } from '../config/currentEnvironment';
 
 export const logDebug = (content: any) => {
     if (isDevelopmentStage()) {

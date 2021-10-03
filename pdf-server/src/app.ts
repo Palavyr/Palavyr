@@ -1,13 +1,8 @@
-import { port } from 'http/port';
-import { configureEndpoints } from 'server/configureEndpoints';
-import { createServer } from 'server/createServer';
-// import { startServer } from 'server/startServer';
-
+import { port } from './http/port';
+import { configureEndpoints } from './server/configureEndpoints';
+import { createServer } from './server/createServer';
 
 const app = createServer(port);
 configureEndpoints(app);
-
-// startServer(app, port);
-// module.exports.handler = serverless(app);
 
 export default app;

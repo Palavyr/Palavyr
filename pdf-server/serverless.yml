@@ -1,0 +1,40 @@
+service: palavyr-pdf-service
+app: palavyr-pdf-service
+org: palavyr
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+frameworkVersion: '2'
+
+provider:
+    name: aws
+    runtime: nodejs12.x
+    lambdaHashingVersion: 20201221
+
+    # you can overwrite defaults here
+    stage: dev
+    region: us-east-1
+
+plugins:
+    - serverless-webpack
+    - serverless-offline
+
+package:
+    individually: true
+    patterns:
+        - assets/**
+
+functions:
+    pdf:
+        handler: lambda.handler
+        events:
+            - http:
+                  path: /{proxy+}
+                  method: any
+
+custom:
+    webpack:
+        webpackConfig: webpack.serverless.js
+
+    serverless-offline:
+        httpPort: 5603

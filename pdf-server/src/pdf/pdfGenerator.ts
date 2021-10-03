@@ -2,7 +2,7 @@ import { unlink, createReadStream, ReadStream } from 'fs';
 import { spawn } from 'child_process';
 import assert from 'assert';
 import { FileInfo } from '@Palavyr-Types';
-import { logDebug } from 'logging/logging';
+import { logDebug } from '../logging/logging';
 
 /* This code is 'borrowed' and refactored from https://github.com/marcbachmann/node-html-pdf
  * phantomjs version 1.8.1 and later should work.
@@ -59,7 +59,7 @@ class PdfGenerator {
                 logDebug('Attempting to create the read stream');
                 var stream = createReadStream(res!.filename);
             } catch (error) {
-                return callback(error);
+                return callback(error as Error);
             }
 
             logDebug('Setting stream Success function');
