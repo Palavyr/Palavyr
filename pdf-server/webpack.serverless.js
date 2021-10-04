@@ -19,8 +19,11 @@ module.exports = {
         new ForkTsCheckerWebpackPlugin(),
         new CopyPlugin({
             patterns: [
-                { from: './assets/create_script.js', to: './create_script.js' },
-                { from: './assets/phantomjs.exe', to: './phantomjs.exe' },
+                { from: './assets/create_script.js', to: './' },
+                { from: './assets/phantomjs-windows.exe', to: './' },
+                { from: './assets/phantomjs-linux', to: './' },
+                { from: './fonts', to: './fonts' },
+                { from: './so', to: './' },
             ],
         }),
     ],

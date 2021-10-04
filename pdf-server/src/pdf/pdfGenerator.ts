@@ -75,6 +75,7 @@ class PdfGenerator {
     }
 
     exec(callback: (error: Error | null, res?: FileInfo) => void) {
+
         logDebug('Execution method inside toStream called...');
         const child = spawn(this.pathToPhantom, [...this.phantomArgs, this.pathToScript]);
         logDebug('Child process spawned...');

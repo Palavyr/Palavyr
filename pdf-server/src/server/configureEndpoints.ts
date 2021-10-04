@@ -7,6 +7,7 @@ import {
     SUCCESS_MESSAGE,
     FAILED_TO_UPLOAD_MESSAGE,
     createSuccessResponseBody,
+    HEALTH_CHECK_MESSAGE,
 } from '../http/responses';
 import { logDebug, logTrace } from '../logging/logging';
 import PdfGenerator from '../pdf/pdfGenerator';
@@ -51,7 +52,7 @@ export const configureEndpoints = (app: Application) => {
 
     app.get('/health-check', (request: Request, response: Response, next: NextFunction) => {
         logTrace('Healthy!');
-        sendResponse(response, 200, SUCCESS_MESSAGE, null);
+        sendResponse(response, 200, HEALTH_CHECK_MESSAGE, "Successfull Health Check");
     });
 
     return app;

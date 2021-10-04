@@ -21,6 +21,7 @@ module.exports = (ENV) => {
                 patterns: [
                     { from: './assets/create_script.js', to: './create_script.js' },
                     { from: './assets/phantomjs.exe', to: './phantomjs.exe' },
+                    { from: './assets/phantomjs-linux', to: './phantomjs-linux'}
                 ],
             }),
         ],
