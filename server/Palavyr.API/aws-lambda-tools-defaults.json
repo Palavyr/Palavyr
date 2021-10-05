@@ -1,8 +1,0 @@
-
-{
-    "region" : "us-east-1",
-    "profile" : "default",
-    "s3-bucket" : "palavyr-server-lambda",
-    "template"  : "serverless.template",
-    "stack-name" : "DemoStack"
-}
