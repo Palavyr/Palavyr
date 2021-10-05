@@ -1,8 +1,13 @@
-import { logDebug } from 'logging/logging';
+import { logDebug } from '../logging/logging';
 import path, { sep } from 'path';
 
+const windowsExecutable = 'phantomjs-windows.exe';
+const linuxExecutable = 'phantomjs-linux';
+
 const resolvePathToPhantom = () => {
-    const localPath = path.join(resolveCurrentDirectory(), 'phantomjs.exe');
+    const isWindows = process.platform.startsWith('win');
+    logDebug('OS: ' + isWindows ? 'windows' : 'linux');
+    const localPath = path.join(resolveCurrentDirectory(), isWindows ? windowsExecutable : linuxExecutable);
     logDebug('PhantomPath: ' + localPath);
     return localPath;
 };

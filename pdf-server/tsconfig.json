@@ -26,5 +26,5 @@
             "@Palavyr-Types": ["globalTypes.ts"]
         }
     },
-    "include": ["src/**/*"] //, "assets/pdf_a4_portrait.js"]
+    "include": ["src/**/*", "lambda.js"]
 }
