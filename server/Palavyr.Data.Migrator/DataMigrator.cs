@@ -1,11 +1,24 @@
 ﻿using System;
 using System.Reflection;
+using Amazon.Lambda.Core;
 using DbUp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Palavyr.Data.Migrator
 {
+    // On Lambda, Program.Main is **not** executed. Instead, Lambda loads this DLL
+    // into its own app and uses the following class to translate from the Lambda
+    // protocol to the standard ASP.Net Core web host and middleware pipeline.
+    public class MigratorLambdaHandler
+    {
+        public int MigratorHandler(object input, ILambdaContext context)
+        {
+            return DataMigrator.Main(new string[] { });
+        }
+    }
+
+
     public class DataMigrator
     {
         private const string AccountConfigKey = "AccountsContextPostgres";
@@ -21,8 +34,8 @@ namespace Palavyr.Data.Migrator
 
         private static ILogger<DataMigrator> Logger { get; set; }
 
-        static int Main(string[] args)
-        { 
+        public static int Main(string[] args)
+        {
             var loggerFactory = LoggerFactory.Create(
                 builder =>
                 {
