@@ -5,6 +5,8 @@
         <StartupObject>Palavyr.API.Program</StartupObject>
         <UserSecretsId>c9137c3e-9ca5-4416-b421-63fd6712e942</UserSecretsId>
         <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+      <AWSProjectType>Lambda</AWSProjectType>
+
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,6 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="6.0.3" />
         <PackageReference Include="AsyncFixer" Version="1.5.1">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

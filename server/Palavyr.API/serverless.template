@@ -1,0 +1,64 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Transform": "AWS::Serverless-2016-10-31",
+    "Description": "Palavyr Server on Lambda configuration",
+    "Parameters": {},
+    "Resources": {
+        "PalavyrServerFunction": {
+            "Type": "AWS::Serverless::Function",
+            "Properties": {
+                "Handler": "Palavyr.API::Palavyr.API.LambdaFunction::FunctionHandlerAsync",
+                "Runtime": "dotnetcore3.1",
+                "CodeUri": "",
+                "Description": "Serverless function for Palavyr Server",
+                "MemorySize": 256,
+                "Timeout": 30,
+                "Role": null,
+                "Policies": [
+                    "AWSLambda_FullAccess"
+                ],
+                "Events": {
+                    "ProxyResource": {
+                        "Type": "Api",
+                        "Properties": {
+                            "Path": "/{proxy+}",
+                            "Method": "ANY"
+                        }
+                    }
+                }
+            }
+        },
+        "PDFServerFunction": {
+            "Type": "AWS::Serverless::Function",
+            "Properties": {
+                "Handler": "Palavyr.API::Palavyr.API.LambdaEntrypoint::FunctionHandlerAsync",
+                "Runtime": "dotnetcore3.1",
+                "CodeUri": "",
+                "Description": "Serverless function for Palavyr Server",
+                "MemorySize": 256,
+                "Timeout": 30,
+                "Role": null,
+                "Policies": [
+                    "AWSLambda_FullAccess"
+                ],
+                "Events": {
+                    "ProxyResource": {
+                        "Type": "Api",
+                        "Properties": {
+                            "Path": "/{proxy+}",
+                            "Method": "ANY"
+                        }
+                    }
+                }
+            }
+        },
+    },
+    "Outputs": {
+        "ApiURL": {
+            "Description": "API endpoint URL for #{Stage} environment",
+            "Value": {
+                "Fn::Sub": "https://${ServerlessRestApi}.execute-api.#{AWS:Region}.amazonaws.com/#{Stage}/"
+            }
+        }
+    }
+}
