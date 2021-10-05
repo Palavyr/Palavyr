@@ -1,4 +1,4 @@
-service: palavyr-pdf-service
+service: PalavyrServerless
 app: palavyr-pdf-server
 org: paulegradie
 
@@ -10,7 +10,6 @@ provider:
     lambdaHashingVersion: 20201221
 
     # you can overwrite defaults here
-    stage: dev
     region: us-east-1
 
 plugins:
@@ -24,7 +23,7 @@ package:
         - assets/**
 
 functions:
-    pdf:
+    Pdf-Server:
         handler: lambda.handler
         events:
             - http:

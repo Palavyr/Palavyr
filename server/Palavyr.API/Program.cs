@@ -1,3 +1,4 @@
+using Amazon.Lambda.AspNetCoreServer;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -35,6 +36,18 @@ namespace Palavyr.API
                     })
                 .UseNLog();
             return host;
+        }
+    }
+
+
+    // On Lambda, Program.Main is **not** executed. Instead, Lambda loads this DLL
+    // into its own app and uses the following class to translate from the Lambda
+    // protocol to the standard ASP.Net Core web host and middleware pipeline.
+    public class LambdaHandler : APIGatewayHttpApiV2ProxyFunction<Startup>
+    {
+        protected override IHostBuilder CreateHostBuilder()
+        {
+            return Program.CreateHostBuilder(null);
         }
     }
 }

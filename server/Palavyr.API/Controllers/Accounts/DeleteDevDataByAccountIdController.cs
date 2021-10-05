@@ -38,20 +38,20 @@ namespace Palavyr.API.Controllers.Accounts
             {
                 throw new DomainException("Deleting any data is not allowed in production");
             }
-            
+
             if (devKey != "secretTobyface")
             {
                 logger.LogDebug("This is an attempt to Refresh database data.");
                 return;
             }
-            
+
             logger.LogInformation($"Deleting details for account: {accountId}");
 
             logger.LogInformation("Deleting from the convo database...");
             convoDeleter.DeleteAccount(accountId);
 
             logger.LogInformation("Deleting from the dash database...");
-            dashDeleter.DeleteAccount(accountId);
+            await dashDeleter.DeleteAccount(accountId);
 
             logger.LogDebug("Deleting from the Accounts database...");
             await accountDeleter.DeleteAccount(accountId, cancellationToken);

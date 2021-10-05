@@ -64,6 +64,7 @@ namespace Palavyr.API.Controllers.Conversation
             [FromBody]
             ConversationNodeDto currentNodes)
         {
+            await Task.CompletedTask;
             var missingNodes = new List<string> { };
             if (!currentNodes.Transactions.Select(x => x.NodeType).Contains(DefaultNodeTypeOptions.Selection.StringName))
             {
