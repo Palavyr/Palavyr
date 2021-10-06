@@ -17,19 +17,22 @@ namespace Palavyr.API
         {
             CreateHostBuilder(args).Build().Run();
         }
-        
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var host = ConfigureHost(Host.CreateDefaultBuilder(args));
-            return host;
+            return ConfigureHost(Host.CreateDefaultBuilder(args));
+        }
+
+        public static void ConfigureWebHost(IWebHostBuilder builder)
+        {
+            builder.UseStartup<Startup>();
         }
 
         public static IHostBuilder ConfigureHost(IHostBuilder builder)
         {
             builder
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
+                .ConfigureWebHostDefaults(webBuilder => ConfigureWebHost(webBuilder))
                 .ConfigureLogging(
                     (hostingContext, logging) =>
                     {
@@ -45,7 +48,6 @@ namespace Palavyr.API
                 .UseNLog();
             return builder;
         }
-        
     }
     //For ASP.NET Core 3.1 the pattern shifted to use the more generic host builder, IHostBuilder
     //https://aws.amazon.com/blogs/developer/one-month-update-to-net-core-3-1-lambda/
@@ -54,11 +56,17 @@ namespace Palavyr.API
     // On Lambda, Program.Main is **not** executed. Instead, Lambda loads this DLL
     // into its own app and uses the following class to translate from the Lambda
     // protocol to the standard ASP.Net Core web host and middleware pipeline.
-    public class LambdaHandler :  Amazon.Lambda.AspNetCoreServer.APIGatewayProxyFunction
+    public class LambdaHandler : Amazon.Lambda.AspNetCoreServer.APIGatewayProxyFunction
     {
         protected override void Init(IHostBuilder builder)
         {
             Program.ConfigureHost(builder);
+        }
+
+        protected override void Init(IWebHostBuilder builder)
+        {
+            Program.ConfigureWebHost(builder);
+            builder.UseLambdaServer();
         }
     }
 }
