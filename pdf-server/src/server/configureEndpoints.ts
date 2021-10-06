@@ -51,7 +51,7 @@ export const configureEndpoints = (app: Application) => {
     });
 
     app.get('/health-check', (request: Request, response: Response, next: NextFunction) => {
-        logTrace('Healthy!');
+        logTrace('Very Healthy!');
         sendResponse(response, 200, HEALTH_CHECK_MESSAGE, "Successfull Health Check");
     });
 
