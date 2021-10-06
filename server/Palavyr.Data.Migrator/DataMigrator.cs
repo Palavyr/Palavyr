@@ -5,6 +5,9 @@ using DbUp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
+[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
+
+
 namespace Palavyr.Data.Migrator
 {
     // On Lambda, Program.Main is **not** executed. Instead, Lambda loads this DLL
@@ -14,6 +17,7 @@ namespace Palavyr.Data.Migrator
     {
         public int MigratorHandler(object input, ILambdaContext context)
         {
+            Console.WriteLine(input.ToString(), context.ToString());
             return DataMigrator.Main(new string[] { });
         }
     }

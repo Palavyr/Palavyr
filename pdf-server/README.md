@@ -6,7 +6,7 @@ To install node module dependencies, run the following command in this directory
 
     npm install
 
-To start the server, run:
+To start the server using serverless, run:
 
     npm start
 
