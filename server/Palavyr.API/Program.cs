@@ -1,4 +1,3 @@
-using Amazon.Lambda.AspNetCoreServer;
 using Amazon.Lambda.Core;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
@@ -18,11 +17,17 @@ namespace Palavyr.API
         {
             CreateHostBuilder(args).Build().Run();
         }
+        
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var host = Host
-                .CreateDefaultBuilder(args)
+            var host = ConfigureHost(Host.CreateDefaultBuilder(args));
+            return host;
+        }
+
+        public static IHostBuilder ConfigureHost(IHostBuilder builder)
+        {
+            builder
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
                 .ConfigureLogging(
@@ -38,19 +43,22 @@ namespace Palavyr.API
                         logging.AddSeq();
                     })
                 .UseNLog();
-            return host;
+            return builder;
         }
+        
     }
+    //For ASP.NET Core 3.1 the pattern shifted to use the more generic host builder, IHostBuilder
+    //https://aws.amazon.com/blogs/developer/one-month-update-to-net-core-3-1-lambda/
 
 
     // On Lambda, Program.Main is **not** executed. Instead, Lambda loads this DLL
     // into its own app and uses the following class to translate from the Lambda
     // protocol to the standard ASP.Net Core web host and middleware pipeline.
-    public class LambdaHandler : APIGatewayHttpApiV2ProxyFunction<Startup>
+    public class LambdaHandler :  Amazon.Lambda.AspNetCoreServer.APIGatewayProxyFunction
     {
-        protected override IHostBuilder CreateHostBuilder()
+        protected override void Init(IHostBuilder builder)
         {
-            return Program.CreateHostBuilder(null);
+            Program.ConfigureHost(builder);
         }
     }
 }

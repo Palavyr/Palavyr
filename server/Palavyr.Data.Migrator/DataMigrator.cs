@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Amazon.Lambda.AspNetCoreServer;
 using Amazon.Lambda.Core;
 using DbUp;
 using Microsoft.Extensions.Configuration;
