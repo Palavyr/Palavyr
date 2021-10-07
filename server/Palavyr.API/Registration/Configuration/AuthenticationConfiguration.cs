@@ -37,34 +37,34 @@ namespace Palavyr.API.Registration.Configuration
 
             var key = configuration[ApplicationConstants.ConfigSections.JwtSecretKey] ?? throw new ArgumentNullException("Configuration[\"JWTSecretKey\"]");
             services
-                .AddAuthentication("Bearer")
-                    // o =>
-                    // {
-                    //     o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    //     o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                    // })
-                // .AddJwtBearer("Bearer",
-                //     opt =>
-                //     {
-                //         opt.RequireHttpsMetadata = false;
-                //         opt.SaveToken = true;
-                //         opt.TokenValidationParameters = new TokenValidationParameters
-                //         {
-                //             ValidateIssuerSigningKey = true,
-                //             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
-                //             ValidateIssuer = false,
-                //             ValidateAudience = false,
-                //             // ValidateIssuer = true,
-                //             // ValidIssuer = jwtTokenConfig.Issuer,
-                //             // ValidateIssuerSigningKey = true,
-                //             // IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtTokenConfig.Secret)),
-                //             // IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
-                //             // ValidAudience = jwtTokenConfig.Audience,
-                //             // ValidateAudience = true,
-                //             // ValidateLifetime = true,
-                //             // ClockSkew = TimeSpan.FromMinutes(1)
-                //         };
-                //     })
+                .AddAuthentication(
+                    o =>
+                    {
+                        o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                        o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    })
+                .AddJwtBearer("Bearer",
+                    opt =>
+                    {
+                        opt.RequireHttpsMetadata = false;
+                        opt.SaveToken = true;
+                        opt.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                            ValidateIssuer = false,
+                            ValidateAudience = false,
+                            // ValidateIssuer = true,
+                            // ValidIssuer = jwtTokenConfig.Issuer,
+                            // ValidateIssuerSigningKey = true,
+                            // IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtTokenConfig.Secret)),
+                            // IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                            // ValidAudience = jwtTokenConfig.Audience,
+                            // ValidateAudience = true,
+                            // ValidateLifetime = true,
+                            // ClockSkew = TimeSpan.FromMinutes(1)
+                        };
+                    })
                 .AddScheme<ApiKeyAuthSchemeOptions, ApiKeyAuthenticationHandler>(
                     AuthenticationSchemeNames.ApiKeyScheme,
                     op => { });

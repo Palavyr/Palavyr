@@ -20,19 +20,10 @@ namespace Palavyr.API
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            return ConfigureHost(Host.CreateDefaultBuilder(args));
-        }
-
-        public static void ConfigureWebHost(IWebHostBuilder builder)
-        {
-            builder.UseStartup<Startup>();
-        }
-
-        public static IHostBuilder ConfigureHost(IHostBuilder builder)
-        {
-            builder
+            var host = Host
+                .CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureWebHostDefaults(webBuilder => ConfigureWebHost(webBuilder))
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
                 .ConfigureLogging(
                     (hostingContext, logging) =>
                     {
@@ -46,7 +37,7 @@ namespace Palavyr.API
                         logging.AddSeq();
                     })
                 .UseNLog();
-            return builder;
+            return host;
         }
     }
     //For ASP.NET Core 3.1 the pattern shifted to use the more generic host builder, IHostBuilder
@@ -60,13 +51,27 @@ namespace Palavyr.API
     {
         protected override void Init(IHostBuilder builder)
         {
-            Program.ConfigureHost(builder);
+            builder
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureLogging(
+                    (hostingContext, logging) =>
+                    {
+                        logging.ClearProviders();
+                        logging.AddConfiguration(hostingContext.Configuration.GetSection(ApplicationConstants.ConfigSections.LoggingSection));
+                        logging.SetMinimumLevel(LogLevel.Trace);
+                        logging.AddConsole();
+                        logging.AddDebug();
+                        logging.AddEventSourceLogger();
+                        logging.AddNLog();
+                        logging.AddSeq();
+                    })
+                .UseNLog();
+            ;
         }
 
         protected override void Init(IWebHostBuilder builder)
         {
-            Program.ConfigureWebHost(builder);
-            builder.UseLambdaServer();
+            builder.UseStartup<Startup>();
         }
     }
 }
