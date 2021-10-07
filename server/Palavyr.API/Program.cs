@@ -66,7 +66,6 @@ namespace Palavyr.API
                         logging.AddSeq();
                     })
                 .UseNLog();
-            ;
         }
 
         protected override void Init(IWebHostBuilder builder)
