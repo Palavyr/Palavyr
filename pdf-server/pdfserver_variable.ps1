@@ -1,7 +1,7 @@
 
 $tempDir = "templambda";
 $packageFile = "palavyr.pdfserver.zip"
-$unpackedSettings = ".\${tempDir}\palavyr-pdf.server.js"
+$unpackedSettings = ".\${tempDir}\lambda.js"
 # unzip the package
 Expand-Archive $packageFile -DestinationPath $tempDir -Force
 
