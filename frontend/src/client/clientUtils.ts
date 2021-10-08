@@ -15,7 +15,6 @@ export const getJwtTokenFromLocalStorage = (): string => {
     return token || "noTokenInStorage";
 };
 
-
 export const redirectToHomeWhenSessionNotEstablished = async (history: History<unknown> | string[], repository: PalavyrRepository) => {
     const jwt_token = SessionStorage.getJwtToken();
     if (!jwt_token) {
@@ -25,7 +24,6 @@ export const redirectToHomeWhenSessionNotEstablished = async (history: History<u
     if (!signedIn) {
         history.push("/");
     }
-
 };
 
 export const serverUrl = process.env.API_URL as string;
@@ -39,6 +37,16 @@ export const landingWidgetApiKey = process.env.LANDING_WIDGET_APIKEY as string;
 export const googleAnalyticsTrackingId = process.env.GOOGLE_ANALYTICS_KEY as string;
 export const googleYoutubeApikey = process.env.GOOGLE_YOUTUBE_KEY as string;
 
+console.log(serverUrl);
+console.log(webUrl);
+console.log(widgetUrl);
+console.log(googleOAuthClientId);
+console.log(stripeKey);
+console.log(currentEnvironment);
+console.log(softwareVersion);
+console.log(landingWidgetApiKey);
+console.log(googleAnalyticsTrackingId);
+console.log(googleYoutubeApikey);
 
 export enum Environments {
     Development,
@@ -81,7 +89,6 @@ if (landingWidgetApiKey === undefined) {
 if (googleAnalyticsTrackingId === undefined) {
     console.log("GOOGLE_ANALYTICS_KEY UNDEFINED");
 }
-
 
 if (googleYoutubeApikey === undefined) {
     console.log("GOOGLE_YOUTUBE_KEY UNDEFINED");
