@@ -1,6 +1,6 @@
 
 $tempDir = "templambda";
-$packageFile = "AWS.Lambda.Package.zip"
+$packageFile = "palavyr.pdfserver.zip"
 $unpackedSettings = ".\${tempDir}\palavyr-pdf.server.js"
 # unzip the package
 Expand-Archive $packageFile -DestinationPath $tempDir -Force
