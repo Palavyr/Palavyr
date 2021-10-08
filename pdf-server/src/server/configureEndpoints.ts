@@ -28,6 +28,7 @@ export const configureEndpoints = (app: Application) => {
             if (error) {
                 logDebug(error);
                 logDebug(FAIL_TO_STREAM_MESSAGE);
+
                 sendResponse(response, 400, FAIL_TO_STREAM_MESSAGE, createEmptyResponseBody());
                 return;
             } else {
@@ -52,7 +53,7 @@ export const configureEndpoints = (app: Application) => {
 
     app.get('/health-check', (request: Request, response: Response, next: NextFunction) => {
         logTrace('Very Healthy!');
-        sendResponse(response, 200, HEALTH_CHECK_MESSAGE, "Successfull Health Check");
+        sendResponse(response, 200, HEALTH_CHECK_MESSAGE, 'Successfull Health Check');
     });
 
     return app;
