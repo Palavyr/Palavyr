@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using Amazon.Lambda.AspNetCoreServer;
 using Amazon.Lambda.Core;
 using DbUp;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +17,6 @@ namespace Palavyr.Data.Migrator
     {
         public int MigratorHandler(object input, ILambdaContext context)
         {
-            Console.WriteLine(input.ToString(), context.ToString());
             return DataMigrator.Main(new string[] { });
         }
     }

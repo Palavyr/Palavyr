@@ -7,7 +7,7 @@
     "start": "serverless offline",
     "deploy": "serverless deploy",
     "remove": "serverless remove",
-    "webpack": "npm install --no-save && set NODE_ENV=development && npx webpack --config webpack.development.js &&  node dist/main.server.js",
+    "webpack": "npm install --no-save && set NODE_ENV=development && npx webpack --config webpack.development.js &&  node dist/palavyr-pdf.server.js",
     "dev": "nodemon ./start_app.ts",
     "build": "set NODE_ENV=production && npx webpack --config webpack.serverless.js",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -10,7 +10,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 module.exports = {
     // https://stackoverflow.com/questions/31102035/how-can-i-use-webpack-with-express (target: 'Node' in webpack)
     target: 'node',
-    entry: slsw.lib.entries,
+    entry: './lambda',
     mode: 'none',
     devtool: 'inline-source-map',
     plugins: [

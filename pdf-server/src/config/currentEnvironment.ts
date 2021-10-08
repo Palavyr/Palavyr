@@ -2,9 +2,13 @@ import { logDebug } from '../logging/logging';
 
 const isWindows = process.platform.startsWith('win');
 if (isWindows) {
-    process.env.NODE_ENV = 'development';
+    if (process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'production') {
+        process.env.NODE_ENV = 'development';
+    }
 } else {
-    process.env.NODE_ENV = 'production';
+    if (process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'production') {
+        process.env.NODE_ENV = 'production';
+    }
 }
 
 export const currentEnvironment = process.env.NODE_ENV as string;
