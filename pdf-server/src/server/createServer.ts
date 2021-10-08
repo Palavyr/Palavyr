@@ -9,4 +9,3 @@ export const createServer = (port: string) => {
     logTrace('starting PDF service on port: ' + port);
     return app;
 };
-
