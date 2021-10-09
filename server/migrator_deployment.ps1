@@ -6,13 +6,13 @@ $functionHandler = "Palavyr.Data.Migrator::Palavyr.Data.Migrator.MigratorLambdaH
 $functionMemorySize = "512"
 $functionDescription = "Migrator app for the palavyr server serverless RDS aurora postgres DB"
 $regionName = "#{AWS:Region}"
+$functionTimeout = "900"
 
 
 $functionVPCSubnetId = $OctopusParameters["AWS.Lambda.VPCSubnetIds"]
 $functionVPCSecurityGroupId = $OctopusParameters["AWS.Lambda.VPCSecurityGroupIds"]
 $functionEnvironmentVariables = $OctopusParameters["AWS.Lambda.EnvironmentVariables"]
 $functionEnvironmentVariablesKey = $OctopusParameters["AWS.Lambda.EnvironmentVariablesKey"]
-$functionTimeout = $OctopusParameters["AWS.Lambda.FunctionTimeout"]
 $functionTags = $OctopusParameters["AWS.Lambda.Tags"]
 $functionFileSystemConfig = $OctopusParameters["AWS.Lambda.FileSystemConfig"]
 $functionDeadLetterConfig = $OctopusParameters["AWS.Lambda.DeadLetterConfig"]
