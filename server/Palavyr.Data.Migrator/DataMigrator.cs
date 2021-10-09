@@ -46,7 +46,7 @@ namespace Palavyr.Data.Migrator
                     builder
                         .AddFilter("Microsoft", LogLevel.Warning)
                         .AddFilter("System", LogLevel.Warning)
-                        .AddFilter("Palavyr.Data.Migrator.DataMigrator", LogLevel.Debug)
+                        .AddFilter("Palavyr.Data.Migrator.DataMigrator", LogLevel.Debug);
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
                         builder.AddConsole().AddEventLog();
