@@ -55,10 +55,12 @@ namespace Palavyr.Data.Migrator
             Logger = loggerFactory.CreateLogger<DataMigrator>();
             Logger.LogDebug("This is the first thing that happens. A TEST.");
             var assembly = Assembly.GetExecutingAssembly();
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.migrator.json", true)
-                .AddUserSecrets(assembly, true)
-                .Build();
+            var configurationBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.migrator.json", true);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                configurationBuilder.AddUserSecrets(assembly, true);
+            }
+            var configuration = configurationBuilder.Build();
 
             Logger.LogInformation("This is a test of the logging system.");
             var env = configuration.GetValue<string>(Environment);
