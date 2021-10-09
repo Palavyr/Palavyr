@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Amazon.Lambda.Core;
 using DbUp;
 using Microsoft.Extensions.Configuration;
@@ -46,8 +47,10 @@ namespace Palavyr.Data.Migrator
                         .AddFilter("Microsoft", LogLevel.Warning)
                         .AddFilter("System", LogLevel.Warning)
                         .AddFilter("Palavyr.Data.Migrator.DataMigrator", LogLevel.Debug)
-                        .AddConsole()
-                        .AddEventLog();
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    {
+                        builder.AddConsole().AddEventLog();
+                    }
                 });
             Logger = loggerFactory.CreateLogger<DataMigrator>();
             Logger.LogDebug("This is the first thing that happens. A TEST.");

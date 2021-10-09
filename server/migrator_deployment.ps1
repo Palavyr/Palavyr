@@ -1,9 +1,13 @@
-$functionName = $OctopusParameters["AWS.Lambda.FunctionName"]
-$functionRole = $OctopusParameters["AWS.Lambda.FunctionRole"]
-$functionRunTime = $OctopusParameters["AWS.Lambda.Runtime"]
-$functionHandler = $OctopusParameters["AWS.Lambda.FunctionHandler"]
-$functionMemorySize = $OctopusParameters["AWS.Lambda.MemorySize"]
-$functionDescription = $OctopusParameters["AWS.Lambda.Description"]
+$functionName = "${AWSFunctionName}-Migrator"
+$functionRole = "arn:aws:iam::306885252482:role/service-role/PalavyrServerless"
+$functionRunTime = "dotnetcore3.1"
+$functionHandler = "Palavyr.Data.Migrator::Palavyr.Data.Migrator.MigratorLambdaHandler::MigratorHander"
+
+$functionMemorySize = "512"
+$functionDescription = "Migrator app for the palavyr server serverless RDS aurora postgres DB"
+$regionName = "#{AWS:Region}"
+
+
 $functionVPCSubnetId = $OctopusParameters["AWS.Lambda.VPCSubnetIds"]
 $functionVPCSecurityGroupId = $OctopusParameters["AWS.Lambda.VPCSecurityGroupIds"]
 $functionEnvironmentVariables = $OctopusParameters["AWS.Lambda.EnvironmentVariables"]
@@ -14,17 +18,16 @@ $functionFileSystemConfig = $OctopusParameters["AWS.Lambda.FileSystemConfig"]
 $functionDeadLetterConfig = $OctopusParameters["AWS.Lambda.DeadLetterConfig"]
 $functionTracingConfig = $OctopusParameters["AWS.Lambda.TracingConfig"]
 
-$regionName = $OctopusParameters["AWS.Lambda.Region"]
-$newArchiveFileName = $OctopusParameters["Octopus.Action.Package[AWS.Lambda.Package].PackageFilePath"]
 
 ###########################################
 ############ VAR SUB ##############
 ###########################################
+$newArchiveFileName = $OctopusParameters["Octopus.Action.Package[palavyr.server.windows].PackageFilePath"]
 
 
 
 $tempDir = "templambda";
-$packageFile = "AWS.Lambda.Package.zip"
+$packageFile = "palavyr.server.windows.zip"
 $unpackedSettings = ".\${tempDir}\appsettings.migrator.json"
 # unzip the package
 Expand-Archive $packageFile -DestinationPath $tempDir -Force
@@ -49,9 +52,6 @@ ConvertTo-Json $config -Depth 100 | Out-File $unpackedSettings -Force
 Compress-Archive "${tempDir}/*" -DestinationPath $packageFile -Force
 
 Remove-Item "${tempDir}" -Force -Recurse
-
-
-
 
 
 
