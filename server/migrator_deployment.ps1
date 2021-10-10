@@ -2,15 +2,13 @@ $functionName = "${AWSFunctionName}-Migrator"
 $functionRole = "arn:aws:iam::306885252482:role/service-role/PalavyrServerless"
 $functionRunTime = "dotnetcore3.1"
 $functionHandler = "Palavyr.Data.Migrator::Palavyr.Data.Migrator.MigratorLambdaHandler::MigratorHander"
-
 $functionMemorySize = "512"
 $functionDescription = "Migrator app for the palavyr server serverless RDS aurora postgres DB"
 $regionName = "#{AWS:Region}"
 $functionTimeout = "900"
+$functionVPCSecurityGroupId = "sg-06541546adc6b38ca"
+# $functionVPCSubnetId = "subnet-28107574"
 
-
-$functionVPCSubnetId = $OctopusParameters["AWS.Lambda.VPCSubnetIds"]
-$functionVPCSecurityGroupId = $OctopusParameters["AWS.Lambda.VPCSecurityGroupIds"]
 $functionEnvironmentVariables = $OctopusParameters["AWS.Lambda.EnvironmentVariables"]
 $functionEnvironmentVariablesKey = $OctopusParameters["AWS.Lambda.EnvironmentVariablesKey"]
 $functionTags = $OctopusParameters["AWS.Lambda.Tags"]
