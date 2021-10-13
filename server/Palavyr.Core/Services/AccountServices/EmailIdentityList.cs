@@ -13,7 +13,8 @@ namespace Palavyr.Core.Services.AccountServices
         {
             "ana.gradie@gmail.com",
             "anasadeghi15@gmail.com",
-            "palavyr.demo@gmail.com" // allowed in staging and prod
+            "palavyr.demo@gmail.com", // allowed in staging and prod,
+            "pkstarstorm05@gmail.com"
         };
     }
 }
