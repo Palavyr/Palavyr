@@ -71,6 +71,7 @@ namespace Palavyr.API
             // var logger = loggerFactory.CreateLogger("Error Handler");
             // app.UseRequestResponseLogging(); // THIS STUPID THING IS DISPOSING THE RESPONSE BODY!!!
             app.UseHttpsRedirection();
+            
             app.UseRouting();
             app.UseCors();
             // app.UseExceptionHandler(

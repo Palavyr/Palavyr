@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +15,11 @@ namespace Palavyr.API.CustomMiddleware
         private readonly RequestDelegate next;
         private ILogger<SetHeadersMiddleware> logger;
 
+        private Dictionary<string, string> ResponseHeaders = new Dictionary<string, string>
+        {
+            {"Access-Control-Allow-Origin", "*"}
+        };
+
         public SetHeadersMiddleware(RequestDelegate next, ILogger<SetHeadersMiddleware> logger)
         {
             this.next = next;
@@ -22,7 +28,6 @@ namespace Palavyr.API.CustomMiddleware
 
         public async Task InvokeAsync(HttpContext context, IWebHostEnvironment env, AccountsContext accountContext)
         {
-            
             logger.LogDebug("Settings magic string headers...");
             var action = context.Request.Headers[ApplicationConstants.MagicUrlStrings.Action].ToString();
 
@@ -42,9 +47,21 @@ namespace Palavyr.API.CustomMiddleware
                 }
             }
 
+            context.Response.OnCompleted(
+                async o =>
+                {
+                    if (o is HttpContext ctx)
+                    {
+                        foreach (var (key, value) in ResponseHeaders)
+                        {
+                            context.Request.Headers[key] = value;
+                            logger.LogDebug($"Adding Header: {key} with value: {value}");
+                        }
+                    }
+                }, context);
+
             await next(context);
             Console.WriteLine("On the way out!");
-            
         }
     }
 }
