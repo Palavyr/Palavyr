@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
@@ -24,6 +25,12 @@ namespace Palavyr.API.Registration.Container
         {
             var accessKey = configuration.GetAccessKey();
             var secretKey = configuration.GetSecretKey();
+
+            Console.WriteLine("====================================");
+            Console.WriteLine($"Access Key: {accessKey}");
+            Console.WriteLine($"Secret Key: {string.Join("", secretKey.ToCharArray().Take(4).ToArray())}");
+            Console.WriteLine("====================================");
+            
             var credentials = new BasicAWSCredentials(accessKey, secretKey);
 
             var s3Config = new AmazonS3Config()
