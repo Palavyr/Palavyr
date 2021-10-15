@@ -36,7 +36,7 @@ namespace Palavyr.API.Registration.Container
 
             var sesConfig = new AmazonSimpleEmailServiceConfig()
             {
-                Timeout = TimeSpan.FromSeconds(10),
+                Timeout = TimeSpan.FromSeconds(100),
                 RetryMode = RequestRetryMode.Standard,
                 MaxErrorRetry = 5,
                 RegionEndpoint = RegionEndpoint.USEast1
