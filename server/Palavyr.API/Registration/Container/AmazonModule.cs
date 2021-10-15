@@ -6,6 +6,7 @@ using Amazon.S3;
 using Amazon.SimpleEmail;
 using Autofac;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
 
 //https://stackoverflow.com/questions/59200028/registering-more-amazons3client-with-configurations-on-autofac
@@ -15,7 +16,7 @@ namespace Palavyr.API.Registration.Container
     public class AmazonModule : Module
     {
         private readonly IConfiguration configuration;
-        
+
         public AmazonModule(IConfiguration configuration)
         {
             this.configuration = configuration;
@@ -26,11 +27,15 @@ namespace Palavyr.API.Registration.Container
             var accessKey = configuration.GetAccessKey();
             var secretKey = configuration.GetSecretKey();
 
-            Console.WriteLine("====================================");
-            Console.WriteLine($"Access Key: {accessKey}");
-            Console.WriteLine($"Secret Key: {string.Join("", secretKey.ToCharArray().Take(4).ToArray())}");
-            Console.WriteLine("====================================");
-            
+            var loggerFactory = new LoggerFactory();
+            var logger = loggerFactory.CreateLogger<AmazonModule>();
+            logger.LogDebug("LOGGING!");
+
+            logger.LogDebug("====================================");
+            logger.LogDebug($"Access Key: {accessKey}");
+            logger.LogDebug($"Secret Key: {string.Join("", secretKey.ToCharArray().Take(4).ToArray())}");
+            logger.LogDebug("====================================");
+
             var credentials = new BasicAWSCredentials(accessKey, secretKey);
 
             var s3Config = new AmazonS3Config()
