@@ -58,7 +58,8 @@ namespace Palavyr.API.Registration.Container
                 Timeout = TimeSpan.FromSeconds(100),
                 RetryMode = RequestRetryMode.Standard,
                 MaxErrorRetry = 5,
-                RegionEndpoint = RegionEndpoint.USEast1
+                RegionEndpoint = RegionEndpoint.USEast1,
+                ProxyHost = "vpce-028bc32d41974d1e2-xc1wrzd7.email-smtp.us-east-1.vpce.amazonaws.com"
             };
 
             base.Load(builder);
