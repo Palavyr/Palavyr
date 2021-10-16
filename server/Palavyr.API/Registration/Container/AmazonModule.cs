@@ -27,14 +27,21 @@ namespace Palavyr.API.Registration.Container
             var accessKey = configuration.GetAccessKey();
             var secretKey = configuration.GetSecretKey();
 
-            var loggerFactory = new LoggerFactory();
+            var loggerFactory = new LoggerFactory().AddLambdaLogger();
             var logger = loggerFactory.CreateLogger<AmazonModule>();
             logger.LogDebug("LOGGING!");
 
             logger.LogDebug("====================================");
+            Console.WriteLine("====================================");
+
             logger.LogDebug($"Access Key: {accessKey}");
             logger.LogDebug($"Secret Key: {string.Join("", secretKey.ToCharArray().Take(4).ToArray())}");
+
+            Console.WriteLine($"Access Key: {accessKey}");
+            Console.WriteLine($"Secret Key: {string.Join("", secretKey.ToCharArray().Take(4).ToArray())}");
+
             logger.LogDebug("====================================");
+            Console.WriteLine("====================================");
 
             var credentials = new BasicAWSCredentials(accessKey, secretKey);
 
