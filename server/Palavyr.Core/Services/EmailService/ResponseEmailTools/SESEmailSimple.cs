@@ -73,7 +73,7 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
             {
                 try
                 {
-                    smtpEmailClient.SendSmtpEmail(
+                    await smtpEmailClient.SendSmtpEmail(
                         fromAddress,
                         toAddress,
                         subject,
