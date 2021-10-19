@@ -41,7 +41,8 @@ namespace Palavyr.Core.Services.EmailService.SmtpEmail
 
             // if (determineCurrentOperatingSystem.IsWindows())
             // {
-            HOST = "email-smtp.us-east-1.amazonaws.com";
+            // HOST = "email-smtp.us-east-1.amazonaws.com";
+            HOST = "vpce-0020313e0bb2eb5d9-unsdfj2g.email-smtp.us-east-1.vpce.amazonaws.com";
             // }
             // else
             // {
