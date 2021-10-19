@@ -108,3 +108,9 @@ dotnet user-secrets set AWS:SmtpUsername $smtpUsername --project $api
 dotnet user-secrets set AWS:SmtpPassword $smtpPass --project $api
 
 # Clear-Host
+
+
+
+
+
+
