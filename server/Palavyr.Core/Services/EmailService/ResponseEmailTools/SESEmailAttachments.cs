@@ -68,6 +68,7 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
         {
             if (determineCurrentOperatingSystem.IsWindows())
             {
+                logger.LogDebug("Emailing from windows -- using raw ses");
                 var message = GetMessage(
                     fromAddressLabel,
                     fromAddress,
@@ -102,6 +103,7 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
 
             if (determineCurrentOperatingSystem.IsLinux())
             {
+                logger.LogDebug("Emailing from linux -- using smtp");
                 try
                 {
                     await smtpEmailClient.SendSmtpEmailWithAttachments(
