@@ -5,6 +5,16 @@ namespace Palavyr.Core.Common.ExtensionMethods
 {
     public static class ConfigurationExtensionMethods
     {
+        public static string GetSmtpUsername(this IConfiguration configuration)
+        {
+            return configuration.GetSection(ApplicationConstants.ConfigSections.SmtpUsername).Value;
+        }
+
+        public static string GetSmtpPassword(this IConfiguration configuration)
+        {
+            return configuration.GetSection(ApplicationConstants.ConfigSections.SmtpPassword).Value;
+        }
+ 
         public static string GetUserDataBucket(this IConfiguration configuration)
         {
             return configuration.GetSection(ApplicationConstants.ConfigSections.UserDataSection).Value;

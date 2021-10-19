@@ -121,6 +121,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<EnquiryInsightComputer>().As<IEnquiryInsightComputer>();
             builder.RegisterType<NodeGetter>().As<INodeGetter>();
             builder.RegisterType<NodeBranchLengthCalculator>().As<INodeBranchLengthCalculator>();
+
+            builder.RegisterType<DetermineCurrentOperatingSystem>().As<IDetermineCurrentOperatingSystem>();
         }
     }
 }

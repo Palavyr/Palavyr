@@ -1,4 +1,14 @@
-param([string]$pass = "0987654321", [string]$user = "postgres", [string]$awsProfile = "palavyr", [string] $secretKey = "", [string] $accessKey = "", [string] $region = "", [string] $stripeKey = "")
+param(
+    [string]$pass = "0987654321",
+    [string]$user = "postgres",
+    [string]$awsProfile = "palavyr",
+    [string] $secretKey = "",
+    [string] $accessKey = "",
+    [string] $region = "",
+    [string] $stripeKey = "",
+    [string] $smtpUsername = "",
+    [string] $smtpPass = ""
+    )
 
 ### sets the secret password used to connect to the postgres DB in DEV.
 
@@ -84,5 +94,17 @@ if ($stripeKey -eq "") {
 }
 dotnet user-secrets set Stripe:SecretKey $stripeKey --project $api
 dotnet user-secrets set Stripe:SecretKey $stripeKey --project $integrationTests
+
+### SMTP
+if ($smtpUsername -eq "") {
+    $smtpUsername = (Get-Item -Path Env:PalavyrSmptUsername).Value
+}
+
+if ($smtpPass -eq "") {
+    $smtpPass = (Get-Item -Path Env:PalavyrSmptPass).Value
+}
+
+dotnet user-secrets set AWS:SmtpUsername $smtpUsername --project $api
+dotnet user-secrets set AWS:SmtpPassword $smtpPass --project $api
 
 # Clear-Host

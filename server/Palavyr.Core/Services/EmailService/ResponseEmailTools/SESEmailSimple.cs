@@ -24,7 +24,7 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
                 }
             };
         }
-        
+
         /// <summary>
         /// Send an email without attachments.
         /// </summary>
@@ -36,7 +36,6 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
         /// <returns>bool - success is true, fail is false</returns>
         public async Task<bool> SendEmail(string fromAddress, string toAddress, string subject, string htmlBody, string textBody)
         {
-            
             var sendRequest = new SendEmailRequest()
             {
                 Source = fromAddress,
@@ -52,19 +51,47 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
             };
 
             logger.LogDebug("Trying to send email...");
-            try
+
+            if (determineCurrentOperatingSystem.IsWindows())
             {
-                await EmailClient.SendEmailAsync(sendRequest);
-                logger.LogDebug("Email send was successful!");
-                return true;
+                try
+                {
+                    await EmailClient.SendEmailAsync(sendRequest);
+                    logger.LogDebug("SES Email send was successful!");
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    logger.LogDebug("SES Email was not sent. ");
+                    logger.LogDebug($"Error: {ex.Message}");
+                    //TODO: If this errors, then we need to send a response that the email couldn't be sent, and then record the email in the bounceback DB.
+                    return false;
+                }
             }
-            catch (Exception ex)
+
+            if (determineCurrentOperatingSystem.IsLinux()) // Is Lambda
             {
-                logger.LogDebug("Email was not sent. ");
-                logger.LogDebug($"Error: {ex.Message}");
-                //TODO: If this errors, then we need to send a response that the email couldn't be sent, and then record the email in the bounceback DB.
-                return false;
+                try
+                {
+                    smtpEmailClient.SendSmtpEmail(
+                        fromAddress,
+                        toAddress,
+                        subject,
+                        htmlBody
+                    );
+                    logger.LogDebug("SMTP Email send was successful!");
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    logger.LogDebug("SMTP Email was not sent. ");
+                    logger.LogDebug($"Error: {ex.Message}");
+                    //TODO: If this errors, then we need to send a response that the email couldn't be sent, and then record the email in the bounceback DB.
+                    return false;
+                }
             }
+
+            throw new Exception("OS Not supported for sending emails");
         }
     }
 }

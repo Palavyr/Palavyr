@@ -32,6 +32,9 @@
             public const string PdfServerHost = "Pdf.Server.Host";
             public const string PdfServerPort = "Pdf.Server.Port";
 
+            public const string SmtpUsername = "AWS:SmtpUsername";
+            public const string SmtpPassword = "AWS:SmtpPassword";
+            
             public const string CurrentEnvironment = "Palavyr.Server.Environment";
         }
     }

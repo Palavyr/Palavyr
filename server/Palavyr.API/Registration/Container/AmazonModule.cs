@@ -8,6 +8,7 @@ using Autofac;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Services.EmailService.SmtpEmail;
 
 //https://stackoverflow.com/questions/59200028/registering-more-amazons3client-with-configurations-on-autofac
 
@@ -59,7 +60,6 @@ namespace Palavyr.API.Registration.Container
                 RetryMode = RequestRetryMode.Standard,
                 MaxErrorRetry = 5,
                 RegionEndpoint = RegionEndpoint.USEast1,
-                ProxyHost = "vpce-028bc32d41974d1e2-xc1wrzd7.email-smtp.us-east-1.vpce.amazonaws.com"
             };
 
             base.Load(builder);
@@ -72,6 +72,8 @@ namespace Palavyr.API.Registration.Container
                     context => { return new AmazonSimpleEmailServiceClient(credentials, sesConfig); })
                 .As<IAmazonSimpleEmailService>()
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<SmtpEmailClient>().As<ISmtpEmailClient>();
         }
     }
 }
