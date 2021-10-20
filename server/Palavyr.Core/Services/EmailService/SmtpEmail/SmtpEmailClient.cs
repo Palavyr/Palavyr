@@ -49,7 +49,7 @@ namespace Palavyr.Core.Services.EmailService.SmtpEmail
             //     HOST = "vpce-0020313e0bb2eb5d9-unsdfj2g.email-smtp.us-east-1.vpce.amazonaws.com";
             // }
             // PORT = 587;
-            PORT = 465;
+            PORT = 2465;
 
             smtpClient = new SmtpClient(HOST, PORT);
             smtpClient.Credentials = new NetworkCredential(SMTP_USERNAME, SMTP_PASSWORD);

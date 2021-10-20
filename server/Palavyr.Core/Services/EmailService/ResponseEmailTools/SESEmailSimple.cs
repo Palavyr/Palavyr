@@ -54,6 +54,8 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
 
             if (determineCurrentOperatingSystem.IsWindows())
             {
+                logger.LogDebug("Emailing from windows -- using raw ses");
+
                 try
                 {
                     await EmailClient.SendEmailAsync(sendRequest);
@@ -71,8 +73,12 @@ namespace Palavyr.Core.Services.EmailService.ResponseEmailTools
 
             if (determineCurrentOperatingSystem.IsLinux()) // Is Lambda
             {
+                logger.LogDebug("Emailing from linux -- using smtp");
+
                 try
                 {
+                    logger.LogDebug("TRYING");
+
                     await smtpEmailClient.SendSmtpEmail(
                         fromAddress,
                         toAddress,
