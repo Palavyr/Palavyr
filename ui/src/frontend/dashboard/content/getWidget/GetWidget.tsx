@@ -1,8 +1,8 @@
 import React, { useEffect, useCallback, useState, useContext } from "react";
 import { Typography, Card, makeStyles, Divider } from "@material-ui/core";
-import { serverUrl, widgetUrl } from "@api-client/clientUtils";
+import { serverUrl, widgetUrl } from "@common/client/clientUtils";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { ZoomImage } from "@common/components/borrowed/ZoomImage";
 import Styles from "./minimalStyles.png";
 import Precheck from "./precheck.png";

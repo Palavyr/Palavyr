@@ -3,9 +3,9 @@ import { FileLink } from "@Palavyr-Types";
 import { makeStyles, Paper } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
-import { Align } from "dashboard/layouts/positioning/Align";
+import { Align } from "frontend/dashboard/layouts/positioning/Align";
 
 type StyleProps = {
     preview: boolean;

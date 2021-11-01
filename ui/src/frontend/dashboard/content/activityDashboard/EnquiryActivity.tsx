@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect, useCallback } from "react";
 import { AreaNameDetails, Enquiries } from "@Palavyr-Types";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { Radar } from "react-chartjs-2";
 import { DataPlot } from "./components/DataPlot";
 import { getRandomColor } from "./DailyEnquiriesWeekly";

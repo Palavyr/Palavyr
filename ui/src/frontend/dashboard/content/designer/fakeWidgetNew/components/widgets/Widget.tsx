@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import cn from "classnames";
 
 import { getContextProperties, getEmailAddressContext, getNameContext, getPhoneContext, getRegionContext, isWidgetOpened, toggleWidget } from "@store-dispatcher";
-import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
+import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { _openFullscreenPreview } from "@store-actions";
 import { ConvoContextProperties } from "widget/componentRegistry/registry";
 import "./style.scss";

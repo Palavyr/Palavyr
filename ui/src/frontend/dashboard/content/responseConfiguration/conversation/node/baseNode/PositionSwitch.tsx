@@ -3,7 +3,7 @@ import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import { makeStyles } from "@material-ui/core";
 import { IPalavyrNode } from "../../Contracts";
-import { ConversationTreeContext, DashboardContext } from "dashboard/layouts/DashboardContext";
+import { ConversationTreeContext, DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { NodeTypeOptions } from "@Palavyr-Types";
 
 export interface IPositionSwitcherProps {

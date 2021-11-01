@@ -3,7 +3,7 @@ import { makeStyles, Paper, useTheme } from "@material-ui/core";
 import { PricingCard } from "./PricingCard";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import NotInterestedIcon from "@material-ui/icons/NotInterested";
-import { green, red } from "theme";
+import { green, red } from "frontend/theme";
 import classnames from "classnames";
 import { PricingCardHeader } from "./PricingCardHeader";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";

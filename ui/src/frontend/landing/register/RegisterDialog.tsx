@@ -6,9 +6,9 @@ import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircul
 import { useHistory } from "react-router-dom";
 import GoogleLogin, { GoogleLoginResponse } from "react-google-login";
 import { DividerWithText } from "@common/components/DividerWithText";
-import { googleOAuthClientId } from "@api-client/clientUtils";
+import { googleOAuthClientId } from "@common/client/clientUtils";
 import { ACCOUNT_ALREADY_EXISTS, ACCOUNT_ALREADY_EXISTS_MESSAGE, INVALID_EMAIL, PASSWORDS_DONT_MATCH } from "@constants";
-import Auth from "auth/Auth";
+import Auth from "@auth/Auth";
 
 const useStyles = makeStyles((theme) => ({
     link: {

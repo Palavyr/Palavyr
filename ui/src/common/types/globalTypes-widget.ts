@@ -1,4 +1,4 @@
-import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
+import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { ElementType } from "react";
 import { Dispatch, SetStateAction } from "react";
 

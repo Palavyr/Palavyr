@@ -1,4 +1,4 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { CircularProgress, Grid, makeStyles, Table, TableContainer } from "@material-ui/core";
 import { FileLink } from "@Palavyr-Types";
 import React, { useCallback, useContext, useEffect, useState } from "react";
@@ -6,8 +6,8 @@ import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHea
 import { ImageRecordTableHeader } from "./ImageRecordTableHeader";
 import { ImageRecordTableBody } from "./ImageRecordTableBody";
 import { ImageReviewUpload } from "./ImageReviewUpload";
-import { Align } from "dashboard/layouts/positioning/Align";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles(theme => ({
     image: {

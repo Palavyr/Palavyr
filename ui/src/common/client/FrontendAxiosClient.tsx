@@ -1,7 +1,7 @@
 import { ErrorResponse, SetState } from "@Palavyr-Types";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-import { ApiErrors } from "dashboard/layouts/Errors/ApiErrors";
-import { SessionStorage } from "localStorage/sessionStorage";
+import { ApiErrors } from "frontend/dashboard/layouts/Errors/ApiErrors";
+import { SessionStorage } from "@localStorage/sessionStorage";
 import { serverUrl, SPECIAL_HEADERS } from "./clientUtils";
 import { Loaders } from "./Loaders";
 

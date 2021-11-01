@@ -1,16 +1,16 @@
 import * as React from "react";
 import { Grid, makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { SubscribeStepper } from "../purchse/SubscribeStepper";
 import { PurchaseTypes, ProductOptions, ProductOption, ProductIds, PlanStatus } from "@Palavyr-Types";
 import { PURCHASE_ROUTE } from "@constants";
 import { Lyte, Premium, Pro } from "@landing/components/pricing/Cards";
-import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
+import { SpaceEvenly } from "frontend/dashboard/layouts/positioning/SpaceEvenly";
 import classnames from "classnames";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     body: {

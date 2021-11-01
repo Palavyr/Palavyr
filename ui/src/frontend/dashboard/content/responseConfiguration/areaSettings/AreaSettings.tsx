@@ -8,7 +8,7 @@ import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { OsTypeToggle } from "./enableAreas/OsTypeToggle";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     alert: {

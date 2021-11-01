@@ -1,9 +1,9 @@
 import { Tooltip } from "@material-ui/core";
 import { NodeTypeOptions, SetState } from "@Palavyr-Types";
-import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
+import { ConversationTreeContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useState } from "react";
 import { useEffect } from "react";
-import { PalavyrCheckbox } from "../../../../../../common/components/PalavyrCheckBox";
+import { PalavyrCheckbox } from "@common/components/PalavyrCheckBox";
 import { IPalavyrNode, NodeOptionalProps } from "../../Contracts";
 import AnabranchConfigurer from "../actions/AnabranchConfigurer";
 

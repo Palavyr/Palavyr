@@ -9,7 +9,7 @@ import { useCallback } from "react";
 import { useEffect } from "react";
 import { ChangeEvent } from "react";
 import { dynamicTableComponentMap } from "./DynamicTableRegistry";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import Fade from "react-reveal/Fade";
 import { TextInput } from "@common/components/TextField/TextInput";
 

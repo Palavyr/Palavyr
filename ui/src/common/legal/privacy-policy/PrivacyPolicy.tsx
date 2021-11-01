@@ -1,7 +1,7 @@
 import { LandingWrapper } from "@landing/components/LandingWrapper";
 import { TitleContent } from "@landing/components/TitleContent";
 import { makeStyles, Paper, Typography } from "@material-ui/core";
-import { Align } from "dashboard/layouts/positioning/Align";
+import { Align } from "frontend/dashboard/layouts/positioning/Align";
 import React from "react";
 import { PrivacyPolicyContent } from "./PrivacyPolicyContent";
 

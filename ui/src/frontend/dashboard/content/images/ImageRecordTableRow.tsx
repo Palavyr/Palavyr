@@ -1,9 +1,9 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
 import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 import { makeStyles, TableRow, TableCell, Typography, Link } from "@material-ui/core";
 import { FileLink, SetState } from "@Palavyr-Types";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useState } from "react";
 import { useContext } from "react";
 

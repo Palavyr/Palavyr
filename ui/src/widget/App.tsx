@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState, useCallback, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { WidgetPreferences } from "@Palavyr-Types";
-import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
+import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { WidgetContext } from "widget/context/WidgetContext";
 import { CollectDetailsForm } from "common/UserDetailsDialog/CollectDetailsForm";
 import { SmoothWidget } from "widget/widgets/SmoothWidget";

@@ -1,4 +1,4 @@
-import { webUrl } from "@api-client/clientUtils";
+import { webUrl } from "@common/client/clientUtils";
 
 // Options
 export const SUPPORTED_FONTS = ["Architects Daughter"];

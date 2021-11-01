@@ -4,7 +4,7 @@ import React from "react";
 import { LinkButton } from "./LinkButton";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import { useContext } from "react";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 interface IAttachmentTableRow {
     fileName: string;

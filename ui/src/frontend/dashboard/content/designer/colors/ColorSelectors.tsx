@@ -1,7 +1,7 @@
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { makeStyles } from "@material-ui/core";
 import { SetState, WidgetPreferences } from "@Palavyr-Types";
-import { Align } from "dashboard/layouts/positioning/Align";
+import { Align } from "frontend/dashboard/layouts/positioning/Align";
 import React from "react";
 import { WidgetColorOptions } from "../ColorOptions";
 

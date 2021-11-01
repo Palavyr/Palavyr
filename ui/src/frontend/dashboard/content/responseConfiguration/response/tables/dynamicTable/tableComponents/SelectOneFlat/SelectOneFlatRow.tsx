@@ -3,7 +3,7 @@ import { SelectOneFlatModifier } from "./SelectOneFlatModifier";
 import { TableRow, TableCell, Button, TextField, makeStyles } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { SelectOneFlatData, TableData } from "@Palavyr-Types";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import RemoveIcon from "@material-ui/icons/Remove";

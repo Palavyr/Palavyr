@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { CONVERSATION_REVIEW, CONVERSATION_REVIEW_PARAMNAME } from "@constants";
 import { Checkbox, Link, makeStyles, TableRow, Typography } from "@material-ui/core";
 import { Enquiries, EnquiryRow, SetState } from "@Palavyr-Types";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { useHistory } from "react-router-dom";
 import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";

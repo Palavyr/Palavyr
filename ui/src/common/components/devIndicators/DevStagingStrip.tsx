@@ -1,4 +1,4 @@
-import { currentEnvironment, softwareVersion } from "@api-client/clientUtils";
+import { currentEnvironment, softwareVersion } from "@common/client/clientUtils";
 import { makeStyles, Typography } from "@material-ui/core";
 import { SetState } from "@Palavyr-Types";
 import React from "react";

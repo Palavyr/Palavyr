@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 
 import { useSelector } from "react-redux";
 import cn from "classnames";
-import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
+import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { _openFullscreenPreview } from "@store-actions";
 import { getRootNode } from "widget/BotResponse/utils/utils";
 import { Conversation } from "widget/components/Conversation/Conversation";

@@ -1,5 +1,5 @@
 import { AreaNameDetail, AreaNameDetails, Enquiries, EnquiryRow } from "@Palavyr-Types";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { widgetStyles } from "../designer/ColorOptions";
 import { Line } from "react-chartjs-2";

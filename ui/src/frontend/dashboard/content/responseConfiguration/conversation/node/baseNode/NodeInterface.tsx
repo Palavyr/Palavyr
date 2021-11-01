@@ -1,8 +1,8 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { CardContent } from "@material-ui/core";
 import { Card } from "@material-ui/core";
 import classNames from "classnames";
-import { ConversationTreeContext, DashboardContext } from "dashboard/layouts/DashboardContext";
+import { ConversationTreeContext, DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useState } from "react";
 import { useContext } from "react";
 import { IPalavyrNode } from "../../Contracts";

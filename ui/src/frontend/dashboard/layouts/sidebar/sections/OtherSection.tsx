@@ -1,7 +1,7 @@
 import React, { memo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { List, Collapse, makeStyles } from "@material-ui/core";
-import Auth from "auth/Auth";
+import Auth from "@auth/Auth";
 import SettingsIcon from "@material-ui/icons/Settings";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
@@ -11,7 +11,7 @@ import { DashboardContext } from "../../DashboardContext";
 import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
 import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
 import { GoogleLogout } from "react-google-login";
-import { googleOAuthClientId } from "@api-client/clientUtils";
+import { googleOAuthClientId } from "@common/client/clientUtils";
 import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
 
 const useStyles = makeStyles(theme => ({

@@ -1,9 +1,9 @@
 import { History } from "history";
-import { SessionStorage } from "localStorage/sessionStorage";
+import { SessionStorage } from "@localStorage/sessionStorage";
 import { PalavyrRepository } from "./PalavyrRepository";
 
 /*
-This will retrieve login credental data from localsession and send it with the requestover to the server for retrieval.
+    This will retrieve login credental data from localsession and send it with the requestover to the server for retrieval.
 */
 export const getSessionIdFromLocalStorage = (): string => {
     const sessionId = SessionStorage.getSessionId();
@@ -26,8 +26,8 @@ export const redirectToHomeWhenSessionNotEstablished = async (history: History<u
     }
 };
 
-export const serverUrl = process.env.API_URL as string;
 export const webUrl = process.env.WEB_URL as string;
+export const serverUrl = process.env.API_URL as string;
 export const widgetUrl = process.env.WIDGET_URL as string;
 export const googleOAuthClientId = process.env.GOOGLE_OAUTH as string;
 export const stripeKey = process.env.STRIPE_KEY as string;

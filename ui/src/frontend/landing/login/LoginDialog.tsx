@@ -1,12 +1,12 @@
 import React from "react";
-import Auth from "auth/Auth";
+import Auth from "@auth/Auth";
 import { FormDialog } from "@common/components/borrowed/FormDialog";
 import { LoginActions } from "@landing/login/LoginActions";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import { Credentials, FormStatusTypes, GoogleAuthResponse } from "@Palavyr-Types";
-import { SessionStorage } from "localStorage/sessionStorage";
+import { SessionStorage } from "@localStorage/sessionStorage";
 import {
     COULD_NOT_FIND_ACCOUNT,
     COULD_NOT_FIND_ACCOUNT_WITH_GOOGLE,

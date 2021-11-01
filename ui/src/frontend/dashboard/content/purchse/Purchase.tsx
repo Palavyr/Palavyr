@@ -7,15 +7,15 @@ import { useLocation } from "react-router-dom";
 import { Interval, Price, PriceMap, Prices } from "@Palavyr-Types";
 import { Elements, useStripe } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { stripeKey, webUrl } from "@api-client/clientUtils";
+import { stripeKey, webUrl } from "@common/client/clientUtils";
 import { SubscribeStepper } from "./SubscribeStepper";
 import { FrequencyCard } from "./FrequencyCard";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { DividerWithText } from "@common/components/DividerWithText";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
-import { Align } from "dashboard/layouts/positioning/Align";
-import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { SpaceEvenly } from "frontend/dashboard/layouts/positioning/SpaceEvenly";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     container: {

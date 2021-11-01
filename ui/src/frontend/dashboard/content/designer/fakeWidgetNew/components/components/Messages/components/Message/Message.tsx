@@ -10,7 +10,7 @@ import "./styles.scss";
 import { IMessage } from "@Palavyr-Types";
 import { makeStyles } from "@material-ui/core";
 import classNames from "classnames";
-import { createUserMessage } from "dashboard/content/designer/fakeWidgetNew/fakeMessages";
+import { createUserMessage } from "frontend/dashboard/content/designer/fakeWidgetNew/fakeMessages";
 
 const useStyles = makeStyles(theme => ({
     timeStamp: {

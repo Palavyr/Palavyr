@@ -1,11 +1,11 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { makeStyles } from "@material-ui/core";
 import { VariableDetail } from "@Palavyr-Types";
-import { EmailConfigurationComponent } from "dashboard/content/responseConfiguration/uploadable/emailTemplates/EmailConfigurationComponent";
-import { Align } from "dashboard/layouts/positioning/Align";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { EmailConfigurationComponent } from "frontend/dashboard/content/responseConfiguration/uploadable/emailTemplates/EmailConfigurationComponent";
+import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles(() => ({
     root: {

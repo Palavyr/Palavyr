@@ -1,7 +1,7 @@
 
 import { WidgetNodeResource, WidgetNodes } from "@Palavyr-Types";
 import { renderCustomComponent } from "@store-dispatcher";
-import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
+import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { dummyFailComponent } from "../../componentRegistry/DummyComponentDev";
 import { ComponentRegistry } from "../../componentRegistry/registry";
 

@@ -1,6 +1,6 @@
 import { WidgetNodeResource, ConversationUpdate, WidgetNodes, ContextProperties, DynamicResponses } from "@Palavyr-Types";
 import { addKeyValue, addUserMessage, getContextProperties, toggleMsgLoader } from "@store-dispatcher";
-import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
+import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 
 import { floor, max, min } from "lodash";
 import { ConvoContextProperties } from "widget/componentRegistry/registry";

@@ -1,6 +1,6 @@
-import { isDevelopmentStage } from "@api-client/clientUtils";
+import { isDevelopmentStage } from "@common/client/clientUtils";
 import { makeStyles, Typography } from "@material-ui/core";
-import { Align } from "dashboard/layouts/positioning/Align";
+import { Align } from "frontend/dashboard/layouts/positioning/Align";
 import React from "react";
 import { SinglePurposeButton } from "../SinglePurposeButton";
 

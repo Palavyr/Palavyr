@@ -8,7 +8,7 @@ import { DynamicTableConfiguration } from "./tables/dynamicTable/DynamicTableCon
 import { StaticTableConfiguration } from "./tables/statictable/StaticFeeTableConfiguration";
 import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { OsTypeToggle } from "../areaSettings/enableAreas/OsTypeToggle";
 import { useContext } from "react";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Hidden, makeStyles } from "@material-ui/core";
 import { SetState, WidgetPreferences } from "@Palavyr-Types";
-import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
+import { SpaceEvenly } from "frontend/dashboard/layouts/positioning/SpaceEvenly";
 import { BlockPicker } from "react-color";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { LineSpacer } from "@common/components/typography/LineSpacer";

@@ -4,7 +4,7 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 import { Divider, makeStyles } from "@material-ui/core";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { SettingsWrapper } from "../SettingsWrapper";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles(() => ({
     titleText: {

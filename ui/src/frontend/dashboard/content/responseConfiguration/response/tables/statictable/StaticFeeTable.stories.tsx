@@ -3,7 +3,7 @@ import { Meta } from "@storybook/react/types-6-0";
 import { StaticFeeTable, IStaticFeeTable } from "./StaticFeeTable";
 import { StaticTablesModifier } from "./staticTableModifier";
 import { MockStaticTablesMetas, MockStaticTablesMeta } from "test/dummyNodeData/dummyTables";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 
 export default {
     title: "Dashboard/Tables/StaticFeeTable",

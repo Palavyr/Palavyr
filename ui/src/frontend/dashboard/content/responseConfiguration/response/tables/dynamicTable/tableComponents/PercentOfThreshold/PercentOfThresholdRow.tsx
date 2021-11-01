@@ -3,7 +3,7 @@ import { TableRow, TableCell, Button, makeStyles, FormControlLabel, Checkbox, Ty
 import DeleteIcon from "@material-ui/icons/Delete";
 import { PercentOfThresholdData, TableData } from "@Palavyr-Types";
 import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";
 

@@ -3,7 +3,7 @@ import { Action, ConvoNode, NodeTypeOptions, SetState, TreeErrors } from "@Palav
 import { cloneDeep } from "lodash";
 import { Button, makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
-import { ConversationTreeContext, DashboardContext } from "dashboard/layouts/DashboardContext";
+import { ConversationTreeContext, DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import PalavyrErrorBoundary from "@common/components/Errors/PalavyrErrorBoundary";
 import { ConversationHistoryTracker } from "./node/ConversationHistoryTracker";
 import { PalavyrLinkedList } from "./PalavyrDataStructure/PalavyrLinkedList";
@@ -18,14 +18,14 @@ import Cookies from "js-cookie";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import UndoIcon from "@material-ui/icons/Undo";
 import RedoIcon from "@material-ui/icons/Redo";
-import { isDevelopmentStage } from "@api-client/clientUtils";
+import { isDevelopmentStage } from "@common/client/clientUtils";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import SaveIcon from "@material-ui/icons/Save";
 import { PalavyrSpeedDial } from "@common/components/speedDial/PalavyrDial";
 import BugReportIcon from "@material-ui/icons/BugReport";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 
 const MAIN_DIV = `#${MAIN_CONTENT_DIV_ID}`;
 

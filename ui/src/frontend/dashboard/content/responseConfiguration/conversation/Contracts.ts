@@ -1,4 +1,4 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { ConvoNode, EmptyComponentType, LineMap, AnabranchContext, NodeTypeOptions, NodeTypeCode, LoopbackContext } from "@Palavyr-Types";
 
 export interface NodeOptionalProps {

@@ -1,6 +1,6 @@
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { AlertType, NodeOption, NodeTypeOptions, ConvoNode } from "@Palavyr-Types";
-import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
+import { ConversationTreeContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
 import { IPalavyrNode } from "../../Contracts";
 import NodeChanger from "../actions/NodeChanger";

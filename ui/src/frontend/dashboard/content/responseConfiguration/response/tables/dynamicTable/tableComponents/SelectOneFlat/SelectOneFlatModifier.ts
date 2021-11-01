@@ -1,6 +1,6 @@
 import { SelectOneFlatData, SetState } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 
 export class SelectOneFlatModifier {

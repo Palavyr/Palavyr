@@ -1,4 +1,4 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import React, { useCallback, useEffect, useState } from "react";
 import { PalavyrNodeBody } from "../baseNode/PalavyrNodeBody";
 import { CustomImage } from "./CustomImage";

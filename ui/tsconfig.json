@@ -24,9 +24,11 @@
         "lib": ["dom", "dom.iterable", "esnext"],
         "baseUrl": "src",
         "paths": {
-            "@Palavyr-Types": ["common/types/globalTypes-widget.ts", "common/types/globalTypes-frontend.ts"],
-            "@api-client/*": ["frontend/client/*", "widget/client/*"],
+            "@Palavyr-Types": ["common/types/global.ts"], //["common/types/globalTypes-widget.ts", "common/types/globalTypes-frontend.ts"],
+            "@api-client/*": ["common/client/*"],
             "@common/*": ["common/*"],
+            "@material/*": ["common/components/material/*"],
+            "@legal/*": ["common/legal/*"],
 
             "@components/*": ["frontend/components/*"],
             "@conversation/*": ["frontend/dashboard/layouts/content/responseConfiguration/conversation/*"],
@@ -35,13 +37,15 @@
             "@landing/*": ["frontend/landing/*"],
             "@constants": ["frontend/constants.ts"],
             "@frontend": ["frontend/*"],
-
+            "@localStorage/*": ["frontend/localStorage/*"],
+            "@dashboard/*": ["frontend/dashboard/*"],
 
             "@scss/*": ["frontend/dashboard/content/designer/fakeWidgetNew/components/scss/*", "widget/scss/*"],
-
+            "@auth/*": ["frontend/auth/*"],
             "@store-actions": ["widget/store/actions/actions"],
             "@store-dispatcher": ["widget/store/dispatcher"],
-            "@test-data/*": ["widget/test/data/*"]
+            "@test-data/*": ["widget/test/data/*"],
+
         }
     },
     "include": ["src/**/*", "src/**/*.d.ts", "customTypes/*.d.ts"],

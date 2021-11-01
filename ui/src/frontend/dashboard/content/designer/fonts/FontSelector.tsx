@@ -1,8 +1,8 @@
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { SUPPORTED_FONTS } from "@constants";
 import { SetState, WidgetPreferences } from "@Palavyr-Types";
-import { CustomSelect } from "dashboard/content/responseConfiguration/response/tables/dynamicTable/CustomSelect";
-import { Align } from "dashboard/layouts/positioning/Align";
+import { CustomSelect } from "frontend/dashboard/content/responseConfiguration/response/tables/dynamicTable/CustomSelect";
+import { Align } from "frontend/dashboard/layouts/positioning/Align";
 import React from "react";
 
 export interface FontSelector {

@@ -7,7 +7,7 @@ import { ChangePasswordDialog } from "@common/components/borrowed/ChangePassword
 import { ModalBackdrop } from "@common/components/borrowed/ModalBackdrop";
 import { FormStatusTypes } from "@Palavyr-Types";
 import { CHANGE_PASSWORD, LOGIN, REGISTER, TERMS_OF_SERVICE } from "@constants";
-import { TermsOfServiceDialog } from "legal/terms-of-use/TermsOfServiceDialog";
+import { TermsOfServiceDialog } from "@legal/terms-of-use/TermsOfServiceDialog";
 
 export interface ILandingPageDialogSelector {
     dialogOpen: DialogTypes;

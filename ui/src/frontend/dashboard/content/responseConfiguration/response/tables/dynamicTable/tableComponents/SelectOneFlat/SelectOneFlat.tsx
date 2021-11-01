@@ -9,7 +9,7 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { cloneDeep } from "lodash";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles(theme => ({
     tableStyles: {

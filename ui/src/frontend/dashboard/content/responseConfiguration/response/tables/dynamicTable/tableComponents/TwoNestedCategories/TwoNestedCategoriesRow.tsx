@@ -3,7 +3,7 @@ import { TableRow, TableCell, Button, makeStyles, TextField } from "@material-ui
 import DeleteIcon from "@material-ui/icons/Delete";
 import { TableData, TwoNestedCategoryData } from "@Palavyr-Types";
 import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { SetState } from "@Palavyr-Types";
 import { CurrencyTextField } from "@common/components/borrowed/CurrentTextField";
 import { NumberFormatValues } from "react-number-format";

@@ -1,5 +1,5 @@
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
-import { ConversationTreeContext } from "dashboard/layouts/DashboardContext";
+import { ConversationTreeContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext } from "react";
 import { NodeOptionalProps } from "../../Contracts";
 

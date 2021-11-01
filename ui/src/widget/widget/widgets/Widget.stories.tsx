@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Meta, Story } from "@storybook/react";
 import { Widget, WidgetProps } from "./Widget";
 import { getSelectedOption, options } from "@test-data/options";
-import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
+import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { ConfigureMockClient } from "test/testUtils/ConfigureMockClient";
 import { newConversation } from "@test-data/newConversation";
 import { addResponseMessage, addUserMessage, closeUserDetails, dropMessages, toggleWidget } from "@store-dispatcher";

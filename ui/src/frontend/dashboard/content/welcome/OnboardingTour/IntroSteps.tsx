@@ -5,7 +5,7 @@ import Fade from "react-reveal/Fade";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
-import { AuthContext } from "dashboard/layouts/DashboardContext";
+import { AuthContext } from "frontend/dashboard/layouts/DashboardContext";
 
 export interface IIntroSteps {
     steps: ReactourStep[];

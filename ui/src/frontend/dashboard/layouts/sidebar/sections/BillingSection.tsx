@@ -6,7 +6,7 @@ import { DashboardContext } from "../../DashboardContext";
 import PaymentIcon from "@material-ui/icons/Payment";
 import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
 import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
-import { webUrl } from "@api-client/clientUtils";
+import { webUrl } from "@common/client/clientUtils";
 
 const useStyles = makeStyles(theme => ({
     icon: {

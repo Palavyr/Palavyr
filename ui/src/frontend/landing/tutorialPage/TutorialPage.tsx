@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { TitleContent } from "@landing/components/TitleContent";
 import { Card, makeStyles, Typography } from "@material-ui/core";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { VideoMap } from "@Palavyr-Types";
 import { LandingWrapper } from "@landing/components/LandingWrapper";
 import { TitleTypography } from "@landing/branding/headerTitleContent/components/TitleTypography";

@@ -1,4 +1,4 @@
-import { googleOAuthClientId } from "@api-client/clientUtils";
+import { googleOAuthClientId } from "@common/client/clientUtils";
 import React from "react";
 import { makeStyles } from "@material-ui/core";
 import { AnyFunction } from "@Palavyr-Types";

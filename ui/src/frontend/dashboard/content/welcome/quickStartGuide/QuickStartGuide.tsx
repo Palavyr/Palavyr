@@ -1,12 +1,12 @@
 import * as React from "react";
 import { makeStyles, Divider } from "@material-ui/core";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { OnboardingTodo } from "../OnboardingTodo/OnboardingTodo";
 import { useContext, useEffect, useState } from "react";
 import { TodosAsBoolean } from "@Palavyr-Types";
 import { allClear, convertTodos } from "../OnboardingTodo/onboardingUtils";
-import { SessionStorage } from "localStorage/sessionStorage";
-import { CacheIds } from "@api-client/AxiosClient";
+import { SessionStorage } from "@localStorage/sessionStorage";
+import { CacheIds } from "@api-client/FrontendAxiosClient";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { QuickStartCard } from "./QuickStartCard";
 import { useHistory } from "react-router-dom";

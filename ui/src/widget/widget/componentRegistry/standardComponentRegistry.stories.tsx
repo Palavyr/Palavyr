@@ -3,7 +3,7 @@ import { Meta, Story } from "@storybook/react";
 import { StandardComponents } from "./standardComponentRegistry";
 import { WidgetNodeResource, WidgetNodes } from "@Palavyr-Types";
 import { ConfigureMockClient } from "../../test/testUtils/ConfigureMockClient";
-import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
+import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { convoA } from "@test-data/conversationNodes";
 import { MessageWrapper } from "../BotResponse/utils/MessageWrapper";
 

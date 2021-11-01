@@ -1,7 +1,7 @@
 import { Grid, makeStyles } from "@material-ui/core";
 import { EnquiryActivtyResource } from "@Palavyr-Types";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
-import { createNavLink } from "dashboard/layouts/sidebar/sections/sectionComponents/AreaLinkItem";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
+import { createNavLink } from "frontend/dashboard/layouts/sidebar/sections/sectionComponents/AreaLinkItem";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { IntentActivityCard } from "./IntentActivityCard";

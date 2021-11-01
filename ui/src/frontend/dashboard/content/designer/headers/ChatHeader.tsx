@@ -1,6 +1,6 @@
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { SetState, WidgetPreferences } from "@Palavyr-Types";
-import { HeaderEditor } from "dashboard/content/demo/HeaderEditor";
+import { HeaderEditor } from "frontend/dashboard/content/demo/HeaderEditor";
 import React from "react";
 
 export interface DesignChatHeaderProps {

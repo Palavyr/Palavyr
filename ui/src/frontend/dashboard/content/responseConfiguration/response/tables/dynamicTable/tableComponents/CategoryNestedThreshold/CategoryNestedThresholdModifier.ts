@@ -1,4 +1,4 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { SetState, TableGroup } from "@Palavyr-Types";
 import { cloneDeep, findIndex, groupBy, uniq } from "lodash";

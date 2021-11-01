@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Checkbox, FormControlLabel, makeStyles, TableCell, TableRow, Typography } from "@material-ui/core";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { TableData, BasicThresholdData } from "@Palavyr-Types";
 import { BasicThresholdModifier } from "./BasicThresholdModifier";
 import DeleteIcon from "@material-ui/icons/Delete";

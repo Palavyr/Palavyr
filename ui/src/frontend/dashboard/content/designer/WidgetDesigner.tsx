@@ -1,8 +1,8 @@
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { makeStyles } from "@material-ui/core";
 import { WidgetPreferences } from "@Palavyr-Types";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
-import { Align } from "dashboard/layouts/positioning/Align";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
+import { Align } from "frontend/dashboard/layouts/positioning/Align";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ColorSelectors } from "./colors/ColorSelectors";
 import { DesignerWidgetDrawer } from "./DesignerWidgetDrawer";

@@ -1,9 +1,9 @@
-import { SessionStorage } from "localStorage/sessionStorage";
-import { LoginRepository } from "@api-client/LoginRepository";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
-import { googleOAuthClientId } from "@api-client/clientUtils";
+import { SessionStorage } from "@localStorage/sessionStorage";
+import { LoginRepository } from "@common/client/LoginRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
+import { googleOAuthClientId } from "@common/client/clientUtils";
 import { Credentials } from "@Palavyr-Types";
-import { LogoutRepository } from "@api-client/LogoutRepository";
+import { LogoutRepository } from "@common/client/LogoutRepository";
 
 class Auth {
     private authenticated: boolean = false;

@@ -1,6 +1,6 @@
 import { StaticTableMetas, StaticTableRows, StaticTableRow, StaticTableMeta, AnyVoidFunction, SetState } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { v4 as uuid } from "uuid";
 
 export class StaticTablesModifier {

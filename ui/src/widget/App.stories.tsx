@@ -2,7 +2,7 @@ import * as React from "react";
 import { App } from "./App";
 import { Meta } from "@storybook/react";
 
-import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
+import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { ConfigureMockClient } from "test/testUtils/ConfigureMockClient";
 import { precheckResult } from "@test-data/preCheckResults";
 import { widgetPreferences } from "@test-data/widgetPreferences";

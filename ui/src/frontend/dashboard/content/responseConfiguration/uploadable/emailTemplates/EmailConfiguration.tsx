@@ -4,9 +4,9 @@ import { useParams } from "react-router-dom";
 import { Settings, VariableDetail } from "@Palavyr-Types";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { OsTypeToggle } from "../../areaSettings/enableAreas/OsTypeToggle";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { EmailConfigurationComponent } from "./EmailConfigurationComponent";
-import { IntroSteps } from "dashboard/content/welcome/OnboardingTour/IntroSteps";
+import { IntroSteps } from "frontend/dashboard/content/welcome/OnboardingTour/IntroSteps";
 
 export const EmailConfiguration = () => {
     const { repository } = useContext(DashboardContext);

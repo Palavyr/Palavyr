@@ -1,6 +1,6 @@
 import { SetState, TableData, TwoNestedCategoryData } from "@Palavyr-Types";
 import { cloneDeep, findIndex, groupBy, max, uniq } from "lodash";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { TableGroup } from "@Palavyr-Types";
 import { v4 as uuid } from "uuid";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";

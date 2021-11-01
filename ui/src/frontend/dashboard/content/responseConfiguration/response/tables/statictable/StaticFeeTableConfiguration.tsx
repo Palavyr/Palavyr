@@ -4,13 +4,13 @@
 import React from "react";
 import { StaticTableMeta, StaticTableMetas } from "@Palavyr-Types";
 import { StaticTablesModifier } from "./staticTableModifier";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { Button, makeStyles, Typography } from "@material-ui/core";
 import { StaticFeeTable } from "./StaticFeeTable";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { useContext } from "react";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 

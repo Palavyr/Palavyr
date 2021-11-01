@@ -1,6 +1,6 @@
+import React from "react";
 import { makeStyles } from "@material-ui/core";
-import { PalavyrCard } from "material/surface/PalavyrCard";
-import React, {  } from "react";
+import { PalavyrCard } from "@material/surface/PalavyrCard";
 
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";

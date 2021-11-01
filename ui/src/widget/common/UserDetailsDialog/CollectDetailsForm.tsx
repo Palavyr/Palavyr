@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 import { GlobalState, LocaleMap, LocaleResource, SetState } from "@Palavyr-Types";
 import { setRegionContext, closeUserDetails, getNameContext, getEmailAddressContext, getPhoneContext, getRegionContext } from "@store-dispatcher";
 import { INVALID_PHONE, INVALID_EMAIL, INVALID_NAME } from "./UserDetailsCheck";
-import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
+import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { WidgetContext } from "widget/context/WidgetContext";
 import { useContext } from "react";
 

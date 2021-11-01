@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { PercentOfThresholdData, SetState } from "@Palavyr-Types";
 import { cloneDeep, findIndex, uniq, uniqBy } from "lodash";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 

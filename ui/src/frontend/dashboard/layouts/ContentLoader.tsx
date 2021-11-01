@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core";
 import { DRAWER_WIDTH, MAIN_CONTENT_DIV_ID } from "@constants";
 import { DevStagingStrip } from "@common/components/devIndicators/DevStagingStrip";
 import { yellow } from "@material-ui/core/colors";
-import { isDevelopmentStage } from "@api-client/clientUtils";
+import { isDevelopmentStage } from "@common/client/clientUtils";
 import { YellowStrip } from "@common/components/YellowStrip";
 
 interface IContentLoader {

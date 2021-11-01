@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import { serverUrl } from "./clientUtils";
+import { serverUrl } from "@common/client/clientUtils";
 
 interface IAxiosClient {
     get<T>(url: string, config: AxiosRequestConfig): Promise<T>;

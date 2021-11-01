@@ -34,10 +34,10 @@ import {
     EnquiryActivtyResource,
     LocaleResponse,
 } from "@Palavyr-Types";
-import { ApiErrors } from "dashboard/layouts/Errors/ApiErrors";
-import { filterNodeTypeOptionsOnSubscription } from "dashboard/subscriptionFilters/filterConvoNodeTypes";
-import { SessionStorage } from "localStorage/sessionStorage";
-import { AxiosClient, CacheIds } from "./AxiosClient";
+import { ApiErrors } from "frontend/dashboard/layouts/Errors/ApiErrors";
+import { filterNodeTypeOptionsOnSubscription } from "frontend/dashboard/subscriptionFilters/filterConvoNodeTypes";
+import { SessionStorage } from "@localStorage/sessionStorage";
+import { AxiosClient, CacheIds } from "./FrontendAxiosClient";
 import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage, googleYoutubeApikey } from "./clientUtils";
 import { Loaders } from "./Loaders";
 

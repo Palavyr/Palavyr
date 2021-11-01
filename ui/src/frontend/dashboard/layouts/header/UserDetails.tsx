@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CircularProgress, makeStyles, Tooltip, Typography } from "@material-ui/core";
-import { SessionStorage } from "localStorage/sessionStorage";
+import { SessionStorage } from "@localStorage/sessionStorage";
 import { DashboardContext } from "../DashboardContext";
 import Fade from "@material-ui/core/Fade";
 import { GeneralSettingsLoc } from "@Palavyr-Types";

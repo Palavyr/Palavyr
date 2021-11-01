@@ -1,4 +1,4 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { PalavyrAlert } from "@common/components/PalavyrAlert";
 import { getAnchorOrigin } from "@common/components/PalavyrSnackbar";
@@ -6,9 +6,9 @@ import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { Divider, makeStyles, Paper, Typography } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { SetState } from "@Palavyr-Types";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
-import { Align } from "dashboard/layouts/positioning/Align";
-import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
+import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { SpaceEvenly } from "frontend/dashboard/layouts/positioning/SpaceEvenly";
 import { DropzoneArea } from "material-ui-dropzone";
 import * as React from "react";
 import { useCallback, useContext, useEffect, useState } from "react";

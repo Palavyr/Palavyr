@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { FileLink } from "@Palavyr-Types";
 import { Upload } from "../Upload";
 import { AttachmentList } from "./AttachmentList";
 import { AttachmentPreview } from "./AttachmentPreview";
 import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { useContext } from "react";
 
 const summary = "Upload a new PDF attachment to send with responses.";

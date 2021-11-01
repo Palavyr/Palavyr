@@ -1,6 +1,6 @@
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { makeStyles, CircularProgress, Card } from "@material-ui/core";
-import { Align } from "dashboard/layouts/positioning/Align";
+import { Align } from "frontend/dashboard/layouts/positioning/Align";
 import React from "react";
 import { NoActivityComponent } from "./NoActivityComponent";
 

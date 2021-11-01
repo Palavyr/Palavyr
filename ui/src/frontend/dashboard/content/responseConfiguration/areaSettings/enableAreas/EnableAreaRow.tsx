@@ -1,7 +1,7 @@
 import { makeStyles, TableCell, TableRow, Typography } from "@material-ui/core";
 import { AreasEnabled } from "@Palavyr-Types";
 import classNames from "classnames";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
 import { OsTypeToggle } from "./OsTypeToggle";
 

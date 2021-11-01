@@ -3,12 +3,12 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Grid, Paper, makeStyles } from "@material-ui/core";
 import { AreasInNeedOfAttention } from "./AreasInNeedOfAttention";
 import { ChatDemoHeader } from "./ChatDemoHeader";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { PalavyrDemoWidget } from "./DemoWidget";
 
 import { useContext } from "react";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
-import { Align } from "dashboard/layouts/positioning/Align";
+import { Align } from "frontend/dashboard/layouts/positioning/Align";
 
 const useStyles = makeStyles(theme => ({
     paper: {

@@ -6,7 +6,7 @@ import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { PercentOfThresholdContainer } from "./PercentOfThresholdContainer";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     root: {

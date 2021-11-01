@@ -9,9 +9,9 @@ import { useState } from "react";
 import { Button, makeStyles, Table, TableContainer, TextField, AccordionActions } from "@material-ui/core";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { TextInput } from "@common/components/TextField/TextInput";
-import { Align } from "dashboard/layouts/positioning/Align";
+import { Align } from "frontend/dashboard/layouts/positioning/Align";
 
 const useStyles = makeStyles(theme => ({
     alignLeft: {

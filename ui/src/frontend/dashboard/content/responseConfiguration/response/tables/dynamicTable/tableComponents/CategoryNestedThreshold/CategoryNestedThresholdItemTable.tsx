@@ -1,7 +1,7 @@
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { Button, makeStyles, TableBody, TableContainer, Paper } from "@material-ui/core";
 import { CategoryNestedThresholdData } from "@Palavyr-Types";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext } from "react";
 import { useState } from "react";
 import { useEffect } from "react";

@@ -6,9 +6,9 @@ import { DividerWithText } from "../DividerWithText";
 import { FormStatusTypes, GoogleAuthResponse } from "@Palavyr-Types";
 import { COULD_NOT_FIND_SERVER, GOOGLE_ACCOUNT_NOT_FOUND, INVALID_EMAIL, INVALID_GOOGLE_TOKEN, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, NOT_A_GOOGLE_ACCOUNT } from "@constants";
 import { useEffect } from "react";
-import { SessionStorage } from "localStorage/sessionStorage";
+import { SessionStorage } from "@localStorage/sessionStorage";
 import { GoogleLoginResponse, useGoogleLogin } from "react-google-login";
-import { googleOAuthClientId } from "@api-client/clientUtils";
+import { googleOAuthClientId } from "@common/client/clientUtils";
 import GoogleLogin from "react-google-login";
 
 export interface IFormDialogContent {

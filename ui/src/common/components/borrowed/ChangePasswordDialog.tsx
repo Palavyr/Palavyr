@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { makeStyles, Dialog, DialogContent, Typography, TextField, DialogActions, Button } from "@material-ui/core";
 import { ButtonCircularProgress } from "./ButtonCircularProgress";
-import { LoginRepository } from "@api-client/LoginRepository";
+import { LoginRepository } from "@common/client/LoginRepository";
 import { VERIFICATION_EMAIL_SEND } from "@constants";
 import { useEffect } from "react";
 

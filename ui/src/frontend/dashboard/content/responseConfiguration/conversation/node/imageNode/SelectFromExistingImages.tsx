@@ -1,4 +1,4 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
 import { PalavyrAutoComplete } from "@common/components/PalavyrAutoComplete";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";

@@ -5,10 +5,10 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 import React, { useContext } from "react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import Auth from "auth/Auth";
+import Auth from "@auth/Auth";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { SettingsWrapper } from "../SettingsWrapper";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import Cookies from "js-cookie";
 import { ALL_COOKIE_NAMES } from "@constants";
 

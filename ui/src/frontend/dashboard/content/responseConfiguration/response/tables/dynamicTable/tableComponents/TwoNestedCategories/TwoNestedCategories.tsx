@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { AccordionActions, Button, makeStyles } from "@material-ui/core";
 import { DynamicTableProps, TwoNestedCategoryData } from "@Palavyr-Types";
@@ -7,7 +7,7 @@ import { TwoNestedCategoriesModifier } from "./TwoNestedCategoriesModifier";
 import { TwoNestedCategoriesContainer } from "./TwoNestedCategoriesContainer";
 import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles(theme => ({
     root: {

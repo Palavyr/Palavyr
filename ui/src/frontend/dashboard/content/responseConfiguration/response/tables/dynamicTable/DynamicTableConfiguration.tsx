@@ -1,14 +1,14 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import React, { useState, useCallback, useEffect, Suspense, useContext } from "react";
 import { DynamicTableMetas, TableNameMap } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { Typography, Button } from "@material-ui/core";
 import { SingleDynamicFeeTable } from "./SingleDynamicFeeTable";
 import AddBoxIcon from "@material-ui/icons/AddBox";
-import { isDevelopmentStage } from "@api-client/clientUtils";
-import { OsTypeToggle } from "dashboard/content/responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
+import { isDevelopmentStage } from "@common/client/clientUtils";
+import { OsTypeToggle } from "frontend/dashboard/content/responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
 import { PalavyrAccordian } from "@common/components/PalavyrAccordian";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import Fade from "react-reveal/Fade";
 
 export interface IDynamicTable {

@@ -1,11 +1,11 @@
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { EDITOR_TOUR_COOKIE_NAME, WELCOME_TOUR_COOKIE_NAME } from "@constants";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext } from "react";
 import { QuickStartCard } from "../../quickStartGuide/QuickStartCard";
 import Cookies from "js-cookie";
 import { useHistory, useLocation } from "react-router-dom";
-import { createNavLink } from "dashboard/layouts/sidebar/sections/sectionComponents/AreaLinkItem";
+import { createNavLink } from "frontend/dashboard/layouts/sidebar/sections/sectionComponents/AreaLinkItem";
 
 export const ToursPage = () => {
     const { reRenderDashboard, areaNameDetails } = useContext(DashboardContext);

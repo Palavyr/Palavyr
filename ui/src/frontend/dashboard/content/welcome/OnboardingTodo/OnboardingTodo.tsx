@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles, Typography } from "@material-ui/core";
 import { TodosAsBoolean } from "@Palavyr-Types";
-import { SpaceEvenly } from "dashboard/layouts/positioning/SpaceEvenly";
+import { SpaceEvenly } from "frontend/dashboard/layouts/positioning/SpaceEvenly";
 import { TodoCard } from "./TodoCard";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 

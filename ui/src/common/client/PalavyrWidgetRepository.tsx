@@ -15,7 +15,7 @@ import {
     WidgetNodes,
     WidgetPreferences,
 } from "@Palavyr-Types";
-import { AxiosClient } from "./AxiosClient";
+import { AxiosClient } from "./WidgetAxiosClient";
 
 export class PalavyrWidgetRepository {
     private client: AxiosClient;

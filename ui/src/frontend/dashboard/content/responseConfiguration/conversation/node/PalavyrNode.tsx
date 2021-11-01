@@ -1,4 +1,4 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { ConvoNode, NodeTypeOptions, ValueOptionDelimiter, LineMap, AnabranchContext, LineLink, NodeTypeCode, LoopbackContext } from "@Palavyr-Types";
 import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "../Contracts";

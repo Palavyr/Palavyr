@@ -5,7 +5,7 @@ import { StaticTablesModifier } from "./staticTableModifier";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import RemoveIcon from "@material-ui/icons/Remove";

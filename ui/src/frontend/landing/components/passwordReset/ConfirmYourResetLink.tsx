@@ -1,4 +1,4 @@
-import { LoginRepository } from "@api-client/LoginRepository";
+import { LoginRepository } from "@common/client/LoginRepository";
 import { RESET_PASSWORD_FORM } from "@constants";
 import { Typography } from "@material-ui/core";
 import React, { useEffect } from "react";

@@ -1,8 +1,8 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { Divider, Typography } from "@material-ui/core";
 import { FileLink, SetState } from "@Palavyr-Types";
-import { Upload } from "dashboard/content/responseConfiguration/uploadable/Upload";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { Upload } from "frontend/dashboard/content/responseConfiguration/uploadable/Upload";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { IPalavyrNode } from "../../Contracts";

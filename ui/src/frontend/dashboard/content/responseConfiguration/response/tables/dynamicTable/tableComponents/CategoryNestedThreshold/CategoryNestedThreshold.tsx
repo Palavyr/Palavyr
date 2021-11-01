@@ -7,7 +7,7 @@ import { DisplayTableData } from "../DisplayTableData";
 import { CategoryNestedThresholdContainer } from "./CategoryNestedThresholdContainer";
 import { CategoryNestedThresholdModifier } from "./CategoryNestedThresholdModifier";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
     root: {

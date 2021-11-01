@@ -1,6 +1,6 @@
 import { ConvoNode, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { v4 as uuid } from "uuid";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { IPalavyrNode, IPalavyrLinkedList, INodeReferences } from "../../Contracts";
 import { DEFAULT_NODE_TEXT } from "@constants";
 

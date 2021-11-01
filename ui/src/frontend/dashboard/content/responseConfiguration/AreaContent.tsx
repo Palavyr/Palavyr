@@ -8,7 +8,7 @@ import SubjectIcon from "@material-ui/icons/Subject";
 import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
-import { AuthContext } from "dashboard/layouts/DashboardContext";
+import { AuthContext } from "frontend/dashboard/layouts/DashboardContext";
 import { SetState } from "@Palavyr-Types";
 import { editorTourSteps } from "../welcome/OnboardingTour/tours/editorTour";
 import { IntroSteps } from "../welcome/OnboardingTour/IntroSteps";

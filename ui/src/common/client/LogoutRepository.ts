@@ -1,5 +1,5 @@
 import { getJwtTokenFromLocalStorage, getSessionIdFromLocalStorage } from "./clientUtils";
-import { AxiosClient } from "./AxiosClient";
+import { AxiosClient } from "./FrontendAxiosClient";
 
 export class LogoutRepository {
     private client: AxiosClient;

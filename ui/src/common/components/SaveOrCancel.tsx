@@ -5,7 +5,7 @@ import classNames from "classnames";
 import SaveIcon from "@material-ui/icons/Save";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { SnackbarPositions } from "@Palavyr-Types";
 
 export type AlertMessage = {

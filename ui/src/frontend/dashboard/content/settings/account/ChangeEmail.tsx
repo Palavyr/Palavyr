@@ -6,7 +6,7 @@ import { AlertDetails } from "@Palavyr-Types";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { SettingsWrapper } from "../SettingsWrapper";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 type GeneralSettings = {
     emailAddress: string;

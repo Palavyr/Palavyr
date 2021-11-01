@@ -1,4 +1,4 @@
-import { isDevelopmentStage } from "@api-client/clientUtils";
+import { isDevelopmentStage } from "@common/client/clientUtils";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { TableData } from "@Palavyr-Types";
 import React from "react";

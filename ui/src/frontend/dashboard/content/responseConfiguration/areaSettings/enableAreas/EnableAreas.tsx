@@ -4,7 +4,7 @@ import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@material-ui/core";
 import { AreasEnabled, AreaTable } from "@Palavyr-Types";
 import classNames from "classnames";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
 import { useCallback } from "react";
 import { EnableAreaRow } from "./EnableAreaRow";

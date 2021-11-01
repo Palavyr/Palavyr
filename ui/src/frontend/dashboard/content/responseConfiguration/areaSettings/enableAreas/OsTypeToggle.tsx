@@ -1,6 +1,6 @@
 import { IOSSwitch } from '@common/components/IOSSwitch'
 import { FormControlLabel } from '@material-ui/core'
-import { Align } from 'dashboard/layouts/positioning/Align'
+import { Align } from '@dashboard/layouts/positioning/Align'
 import React from 'react'
 
 interface ToggleProps {

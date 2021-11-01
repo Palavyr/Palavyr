@@ -1,7 +1,7 @@
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { Dialog, DialogTitle, DialogContent, DialogActions, makeStyles } from "@material-ui/core";
 import { NodeTypeOptions } from "@Palavyr-Types";
-import { ConversationTreeContext, DashboardContext } from "dashboard/layouts/DashboardContext";
+import { ConversationTreeContext, DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
 import { INodeReferences, IPalavyrNode } from "../../Contracts";
 import NodeUpdater from "../actions/NodeUpdater";

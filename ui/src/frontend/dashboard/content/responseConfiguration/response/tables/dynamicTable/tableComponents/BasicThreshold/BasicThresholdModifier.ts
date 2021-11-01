@@ -2,7 +2,7 @@ import { cloneDeep, findIndex } from "lodash";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
 import { BasicThresholdData } from "@Palavyr-Types";
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { sortByPropertyNumeric } from "@common/utils/sorting";
 

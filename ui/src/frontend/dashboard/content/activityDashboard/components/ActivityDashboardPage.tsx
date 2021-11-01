@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { makeStyles, Grid } from "@material-ui/core";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { DailyEnquiriesWeekly } from "../DailyEnquiriesWeekly";
 import { EnquiryActivity } from "../EnquiryActivity";
 

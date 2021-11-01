@@ -1,8 +1,8 @@
-import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { makeStyles, Typography } from "@material-ui/core";
 import { FileLink, SetState } from "@Palavyr-Types";
-import { DashboardContext } from "dashboard/layouts/DashboardContext";
+import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext } from "react";
 import { Upload } from "../responseConfiguration/uploadable/Upload";
 
