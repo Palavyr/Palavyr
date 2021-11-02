@@ -6,7 +6,6 @@ using Google.Apis.Auth;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data.Setup.WelcomeEmail;
 using Palavyr.Core.Models.Resources.Requests;
@@ -115,6 +114,9 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             // confirm that only one account exists with this email address on stripe
             var customers = await customerService.ListCustomers(CancellationToken.None);
             customers.Where(x => x.Id == account.StripeCustomerId).Count().ShouldBe(1);
+
+            var cleanup = Container.GetService<IRequestEmailVerification>();
+            await cleanup.DeleteEmailIdentityAsync(testEmail);
         }
     }
 }

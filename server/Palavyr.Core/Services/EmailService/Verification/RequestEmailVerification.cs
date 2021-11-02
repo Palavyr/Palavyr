@@ -10,7 +10,7 @@ namespace Palavyr.Core.Services.EmailService.Verification
     public interface IRequestEmailVerification
     {
         public Task<bool> VerifyEmailAddressAsync(string emailAddress);
-
+        public Task<bool> DeleteEmailIdentityAsync(string emailAddress);
     }
     
     public class RequestEmailVerification : IRequestEmailVerification
@@ -44,6 +44,27 @@ namespace Palavyr.Core.Services.EmailService.Verification
                 result = false;
             }
             logger.LogDebug($"Email verification sent: {result.ToString()}");
+            return result;
+        }
+
+        public async Task<bool> DeleteEmailIdentityAsync(string emailAddress)
+        {
+            var deletionRequest = new DeleteIdentityRequest()
+            {
+                Identity = emailAddress
+            };
+            bool result;
+            try
+            {
+                var response = await sesClient.DeleteIdentityAsync(deletionRequest);
+                result = response.HttpStatusCode == HttpStatusCode.OK;
+            }
+            catch (Exception ex)
+            {
+                logger.LogDebug($"Exception: {ex.Message}");
+                result = false;
+            }
+            logger.LogDebug($"Identity deletion request sent: {result.ToString()}");
             return result;
         }
     }
