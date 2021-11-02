@@ -14,10 +14,10 @@ The Frontend and the Widget are both served as a static websites from S3 buckets
 
 ## TODO
 
+   - I recently tore down the Palavyr infra on AWS to save money and try to redesign things to work in serverless (aws lambda). It would be great if we could get things working 100% serverless to save on operating costs. Otherwise, figuring out a better EC2 situation would be good (staging and prod from a sincle server.) Figure out how to run fully in serverless (for cheap) or figure out how to run staging and prod on a single ec2 instance. Load balancer provides ssl.
    -  We should use something like localstack in dev. (It spins up aws services locally in a dev environment) Doing so gets us around having to use aws during development.
    -  Extract the duplicated code in the chat bot desiger and replace it with the newly integrated widget code base. A nuanced refactor job.
    -  Get someone to sponsor the project or pay for the product. That would be cool. No pressure though. At the very least this is a really fun project to work on for funzies.
-
 
 
 # Setup Guide
