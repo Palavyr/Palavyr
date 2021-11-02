@@ -79,7 +79,7 @@
   },
   "scripts": {
     "start": "npm install --no-save && webpack-dev-server --open --config frontend-webpack.config.dev.js --hot --progress --env.development",
-    "build": "webpack --config webpack.config.prod.js --env.production",
+    "build": "webpack --config frontend-webpack.config.prod.js --env.production",
     "test": "jest --coverage",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
