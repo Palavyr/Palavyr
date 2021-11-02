@@ -12,6 +12,7 @@ using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AuthenticationServices;
+using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
@@ -100,6 +101,9 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             account.PlanType.ShouldBe(Account.PlanTypeEnum.Free);
             account.ShowSeenEnquiries.ShouldBeFalse();
             account.StripeCustomerId.ShouldBeNull();
+            
+            var cleanup = Container.GetService<IRequestEmailVerification>();
+            await cleanup.DeleteEmailIdentityAsync(testEmail);
         }
     }
 }

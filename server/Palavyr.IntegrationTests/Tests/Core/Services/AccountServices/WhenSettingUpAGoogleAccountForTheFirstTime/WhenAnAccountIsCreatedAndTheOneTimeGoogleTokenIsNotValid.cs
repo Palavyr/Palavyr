@@ -88,6 +88,9 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             var result = await accountSetupService.CreateNewAccountViaGoogleAsync(googleCredentials, CancellationToken.None);
             result.Authenticated.ShouldBeFalse();
             result.Message.ShouldBe("Could not validate the Google Authentication token");
+            
+            var cleanup = Container.GetService<IRequestEmailVerification>();
+            await cleanup.DeleteEmailIdentityAsync(testEmail);
         }
     }
 }
