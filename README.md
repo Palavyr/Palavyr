@@ -72,6 +72,14 @@ There are two stages - Staging and Production.
 
 Each component sites behind a staging subdomain which is deployed to first before packages are deployed to production. Staging deployments are automatic, whereas production deployments require manual intervention. Staging deployments can be broken, however at no point should production deployments be broken! These deployments are sacred! Only releases validated in staging shall pass!
 
+
+## TEMPORARY NOTICE
+
+- the build server needs to be reconfigured. This currently runs on my desktop, which pushes packages to octopus deploy. Octopus deploy also may need to be reconfigured. It is currently configured to deploy to aws lambda - however I struggled to get a lambda instance to connect to an external SES endpoint for sending emails via an smtp server. AWS Support was useless resolving this issue so once that is resolved, the app will run in serverless.
+
+
+I
+
 ### Build
 
 Team city has been configured to build each component. Currently, Team City is configured on Paul's Regex desktop and pings github ever 10 seconds to look for changes (this should probably be brought up to around 60 seconds...). There are 3 build agents installed on the machine. The following are the basic steps to install a new build agent
@@ -158,6 +166,8 @@ For details on how to write a code-first migration using EF Core, see the [Serve
 
 # Development startup
 
+## TODO - actually write the clean setup script.
+
 To begin development, run `cleanSetup.ps1` followed by `startServices.ps1`. This will retrieve and install all of the dependencies for development, and then start the necessary services. The API server should be started using a configuration from either Jetbrains Rider or Visual Studio 2019 - however if you intend to only develop on the frontend, you can provide an optional flag to `startServices.ps1 `.
 
     ./startService.ps1 -runServer
@@ -173,6 +183,9 @@ To manually refresh the database, you can use curl:
 
 
 # Staging and Production Servers
+
+## Currently Offline
+We also don't need to worry about ssl certificates. This is handled now by the load balancers and cloudfront.
 
 **This section will outline, in more or less order, of how to configure a windows server**
 
