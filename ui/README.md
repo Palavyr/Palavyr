@@ -1,9 +1,17 @@
-# Configuration Manager FrontEnd
+# Palavyr Chat Bot Designer and Customer Widget
 
-The Frontend for the configuration manager is where users can configure their conversations, as well as the responses that are sent. Users can configure decision trees, provide detailed or itemized fee estimates, and configure the emails that sent in reponse to a successful convrsation.
+The Frontend for the configuration manager is where users can configure their conversations, as well as the responses that are sent once a customer completes their enquiry via the widget. Users can configure decision trees, provide detailed or itemized fee estimates, and configure the emails that are sent in reponse to a successful convrsation.
 
 Count Lines: https://github.com/AlDanial/cloc/releases/tag/1.88
-# Setup and dev
+
+
+### Project Organization
+
+Both the Chat Bot Designer and the customer facing widget are built from this project. There are a lot of types that need to be shared somehow between the widget and the designer, so instead of pulling those types out into a separate project (yikes) I decided to instead merge the designer and widget projects together. You'll notice that there are two separate sets of webpack configuration - this allows you to specify two entry points for each project. Webpack will take of sorting out which dependencies need to be bundled.
+
+Two sepearate sets of run and build commands are present in `package.json`.
+
+# Setup
 
 The frontend requires [node.js](https://nodejs.org/en/) and npm to install. With this, you can run:
 
@@ -11,9 +19,21 @@ The frontend requires [node.js](https://nodejs.org/en/) and npm to install. With
 
 This will install dependencies needed.
 
-The frontend has a custom webpack configuration that works well with storybook. To start the webpack dev server, run:
+
+To start the Chat Bot Designer website, you can run:
 
     npm start
+
+To start the Widget, you can run (open a new tab in your terminal):
+
+    npm run start-widget
+
+For the designer to run correctly, you will also need the pdf server to be running. That server is housed in a public repo:
+
+    https://github.com/Palavyr/PalavyrPdfServer
+
+Clone this repo, and start the server as a local microservice.
+
 
 Alternatively, if you'd like to start all services together including this one, navigate up one directory and run:
 
@@ -21,7 +41,6 @@ Alternatively, if you'd like to start all services together including this one, 
 
 This will run the frontend and express server.
 
-The front end webpack server runs on port 8080.
 
 
 ## Checking the production build
@@ -44,76 +63,9 @@ For compatibility with react router and webpack, ensure that both the target and
 
 # Storybook
 
-Storybook is currently used to visually test the components. Soon jest testing will be implemented. To run storybook, do:
+Storybook is currently used to visually test some of the components. Soon jest testing will be implemented. To run storybook, do:
 
     npm run storybook
 
 Testing is currently scant and needs to soon become a major focus.
 
-# Viewing SVGs on windows
-https://github.com/tibold/svg-explorer-extension/releases
-
-
-
-### S3 bucket settings
-
-### CORS policy:
-
-<?xml version="1.0" encoding="UTF-8"?>
-<CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-<CORSRule>
-    <AllowedOrigin>*</AllowedOrigin>
-    <AllowedMethod>GET</AllowedMethod>
-    <AllowedMethod>POST</AllowedMethod>
-    <AllowedMethod>PUT</AllowedMethod>
-    <MaxAgeSeconds>25000</MaxAgeSeconds>
-    <AllowedHeader>*</AllowedHeader>
-</CORSRule>
-</CORSConfiguration>
-
-
-
-### Permissions bucket policy
-
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "PublicReadGetObject",
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::widget.palavyr.com/*"
-        }
-    ]
-}
-
-
-### JWT Bearer Auth with SSL ONLY
-
-https://devblogs.microsoft.com/aspnet/jwt-validation-and-authorization-in-asp-net-core/
-https://www.thecodebuzz.com/create-generate-jwt-token-asp-net-core-example/
-
-
-GREAT video on jwt
-https://www.youtube.com/watch?v=vWkPdurauaA&ab_channel=DotNetCoreCentral
-
-https://www.youtube.com/watch?v=vWkPdurauaA&ab_channel=DotNetCoreCentral
-https://docs.microsoft.com/en-us/aspnet/core/security/authentication/samples?view=aspnetcore-3.1
-https://stackoverflow.com/questions/47809437/how-to-access-current-httpcontext-in-asp-net-core-2-custom-policy-based-authoriz
-
-https://referbruv.com/blog/posts/implementing-custom-authentication-scheme-and-handler-in-aspnet-core-3x
-https://www.c-sharpcorner.com/article/asp-net-core-web-api-creating-and-validating-jwt-json-web-token/
-https://docs.microsoft.com/en-us/aspnet/core/security/authorization/simple?view=aspnetcore-3.1
-https://docs.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-3.1
-https://docs.microsoft.com/en-us/aspnet/core/security/authorization/limitingidentitybyscheme?view=aspnetcore-3.1
-
-https://medium.com/mickeysden/react-and-google-oauth-with-net-core-backend-4faaba25ead0
-https://stackoverflow.com/questions/58758198/does-addjwtbearer-do-what-i-think-it-does
-https://medium.com/@M3rken/asp-net-core-supporting-multiple-authorization-route-branching-cad3ab632410
-https://developers.google.com/identity/sign-in/web/server-side-flow#python
-https://wildermuth.com/2018/04/10/Using-JwtBearer-Authentication-in-an-API-only-ASP-NET-Core-Project
-https://stackoverflow.com/questions/40988238/sending-the-bearer-token-with-axios
-
-## Dependency injection full
-https://auth0.com/blog/dependency-injection-in-dotnet-core/

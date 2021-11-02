@@ -58,6 +58,7 @@ namespace Palavyr.Data.Migrator
             var configurationBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.migrator.json", true);
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
+                // a os specific call for compatibility with AWS Lambda
                 configurationBuilder.AddUserSecrets(assembly, true);
             }
             var configuration = configurationBuilder.Build();

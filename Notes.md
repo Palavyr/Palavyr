@@ -122,11 +122,11 @@ curl -H "Origin: https://localhost/" -H "Access-Control-Request-Method: POST" -H
 
 ################################################# LINUX ########################################################
 
-## Super user in pgadmin 
+## Super user in pgadmin
 https://chartio.com/learn/postgresql/create-a-user-with-pgadmin/
 
 
-### IT IS VERY IMPORTANT THAT YOU DO NOT RUN THE SERVER USING SUDO - THIS WILL OVERRIDE ALL ENVIRONMENTAL VARIABLES 
+### IT IS VERY IMPORTANT THAT YOU DO NOT RUN THE SERVER USING SUDO - THIS WILL OVERRIDE ALL ENVIRONMENTAL VARIABLES
 
 ### IIS Is locknig a file... heres what you can do
 https://stackoverflow.com/questions/49660923/why-is-iis-worker-process-locking-a-file
@@ -165,7 +165,7 @@ sudo /opt/octopus/tentacle/Tentacle service --install --start --instance "palavy
 ### Running kestrel as a service
 https://swimburger.net/blog/dotnet/how-to-run-aspnet-core-as-a-service-on-linux
 
-Once the service config is installed to 
+Once the service config is installed to
 
     /etc/systemd/system/PalavyrServer.service
 
@@ -183,7 +183,7 @@ To enable automatic restart of the service in event of a crash:
 
 
 
-#### Getting postgres to work and also attaching to postgres on EC2 from local 
+#### Getting postgres to work and also attaching to postgres on EC2 from local
 https://www.shubhamdipt.com/blog/postgresql-on-ec2-ubuntu-in-aws/
 
     sudo apt-get update && sudo apt-get -y upgrade
@@ -206,7 +206,7 @@ https://www.shubhamdipt.com/blog/postgresql-on-ec2-ubuntu-in-aws/
 
     # Change line 59 to listen to external requests:
     listen_address='*'
-    
+
     # save file​
 
     # Restart postgres server
@@ -222,13 +222,13 @@ I was able to get a free certificate from zero SSL - it came in three parts (ca_
 
 I converted this to a .pfx using openssl.exe from
 
-command: 
+command:
     pkcs12 -export -out C:\Users\paule\code\palavyr\server.palavyr.com\ready_certificate.pfx -inkey C:\Users\paule\code\palavyr\server.palavyr.com\private.key -in C:\Users\paule\code\palavyr\server.palavyr.com\certificate.crt
 
 This gave me a cert that i stored in ocotpus deploy. There is a password. hint: ducks are rub. how many days of christmas.
 
 
-    
+
 ################## OLD MANUAL Database Migrations ##############################################
 
 
@@ -422,3 +422,74 @@ At the beginning of our dockerfile, we can add:
 
     FROM microsoft/iis:10.0.14393.206
     SHELL ["powershell"]
+
+
+
+
+# Viewing SVGs on windows
+https://github.com/tibold/svg-explorer-extension/releases
+
+
+
+### S3 bucket settings
+
+### CORS policy:
+
+<?xml version="1.0" encoding="UTF-8"?>
+<CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+<CORSRule>
+    <AllowedOrigin>*</AllowedOrigin>
+    <AllowedMethod>GET</AllowedMethod>
+    <AllowedMethod>POST</AllowedMethod>
+    <AllowedMethod>PUT</AllowedMethod>
+    <MaxAgeSeconds>25000</MaxAgeSeconds>
+    <AllowedHeader>*</AllowedHeader>
+</CORSRule>
+</CORSConfiguration>
+
+
+
+### Permissions bucket policy
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::widget.palavyr.com/*"
+        }
+    ]
+}
+
+
+### JWT Bearer Auth with SSL ONLY
+
+https://devblogs.microsoft.com/aspnet/jwt-validation-and-authorization-in-asp-net-core/
+https://www.thecodebuzz.com/create-generate-jwt-token-asp-net-core-example/
+
+
+GREAT video on jwt
+https://www.youtube.com/watch?v=vWkPdurauaA&ab_channel=DotNetCoreCentral
+
+https://www.youtube.com/watch?v=vWkPdurauaA&ab_channel=DotNetCoreCentral
+https://docs.microsoft.com/en-us/aspnet/core/security/authentication/samples?view=aspnetcore-3.1
+https://stackoverflow.com/questions/47809437/how-to-access-current-httpcontext-in-asp-net-core-2-custom-policy-based-authoriz
+
+https://referbruv.com/blog/posts/implementing-custom-authentication-scheme-and-handler-in-aspnet-core-3x
+https://www.c-sharpcorner.com/article/asp-net-core-web-api-creating-and-validating-jwt-json-web-token/
+https://docs.microsoft.com/en-us/aspnet/core/security/authorization/simple?view=aspnetcore-3.1
+https://docs.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-3.1
+https://docs.microsoft.com/en-us/aspnet/core/security/authorization/limitingidentitybyscheme?view=aspnetcore-3.1
+
+https://medium.com/mickeysden/react-and-google-oauth-with-net-core-backend-4faaba25ead0
+https://stackoverflow.com/questions/58758198/does-addjwtbearer-do-what-i-think-it-does
+https://medium.com/@M3rken/asp-net-core-supporting-multiple-authorization-route-branching-cad3ab632410
+https://developers.google.com/identity/sign-in/web/server-side-flow#python
+https://wildermuth.com/2018/04/10/Using-JwtBearer-Authentication-in-an-API-only-ASP-NET-Core-Project
+https://stackoverflow.com/questions/40988238/sending-the-bearer-token-with-axios
+
+## Dependency injection full
+https://auth0.com/blog/dependency-injection-in-dotnet-core/

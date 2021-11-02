@@ -2,16 +2,69 @@
 
 The Palavyr Configuration Manager project includes 4 subprojects:
 
-1. [Frontend](./frontend/README.md)
-2. [PDF-server](./pdf-server/README.md)
-3. [Server](./server/README.md)
-4. [Widget](./widget/README.md)
+1. [Server](./server/README.md)
+2. [Website](./frontend/README.md) // customers will use this to design and program the widget
+3. [Widget](./widget/README.md) // customers will use this with their customers
 
 For information on each component follow the links above.
 
 # Overview
 
-The Frontend and the Widget are both served as a static websites from an S3 buckets. The frontend is used to configure the chat widget conversations as well as email responses. Each of these sit behind AWS CloudFront which provides SSL certificates DNS is provided by Route53. The frontend and Widget connect to the same API, which uses postgres as a database. Essentially, The frontend is used to configure conversation nodes. These nodes are stored in the database via the API. The widget will then request a node set and execute a conversation.
+The Frontend and the Widget are both served as a static websites from S3 buckets. The frontend is used to configure the chat widget conversations as well as email responses. Each of these sit behind AWS CloudFront which provides SSL certificates DNS is provided by Route53. The frontend and Widget connect to the same API, which uses postgres as a database. Essentially, The frontend is used to configure conversation nodes. These nodes are stored in the database via the API. The widget will then request a node set and execute a conversation.
+
+## TODO
+
+   -  We should use something like localstack in dev. (It spins up aws services locally in a dev environment) Doing so gets us around having to use aws during development.
+   -  Extract the duplicated code in the chat bot desiger and replace it with the newly integrated widget code base. A nuanced refactor job.
+   -  Get someone to sponsor the project or pay for the product. That would be cool. No pressure though. At the very least this is a really fun project to work on for funzies.
+
+
+
+# Setup Guide
+
+Follow this guide to get set up with development.
+
+
+1. Download and install postgres 14
+
+    https://www.postgresql.org/download/windows/
+
+
+2. Use the download to create a postgres server - use default settings
+
+
+3. Clone PalavyrPdfServer to user/code
+
+    `git clone git@github.com:Palavyr/PalavyrPdfServer.git`
+
+4. Build and Start the pdf server by using
+
+   `npm start` (to use serverless offline) OR `npm run start-ui` (to use a webpack build and dev server).
+
+5. Clone ConfigurationManager to user/code
+
+    `git clone git@github.com:Palavyr/Configuration-Manager.git`
+
+6. Step in to ConfigurationManager/server/utilities and run
+
+        `./SetDevelopmentalSecrets.ps1`
+
+7. Start the DB migrator
+
+    `dotnet run --project Palavyr.Data.Migrator`
+
+8.  Build the server (in an IDE or using `dotnet build`)
+
+9.  Run the server (via IDE or using `dotnet run --project Palavyr.API`)
+
+10. Step into ConfigurationManager/ui and build and run both the widget and the website using `npm start`, and in a separate window using `npm run start-widget`
+
+11. Navigate to `localhost:8080` and create an account to begin developing
+
+Thanks for your interest in contributing!
+
+
+
 
 ### Stages
 

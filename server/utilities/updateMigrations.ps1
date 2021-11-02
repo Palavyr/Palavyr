@@ -53,7 +53,7 @@ Write-Host "ONLY RUN THIS IN DEV TO PRODUCE MIGRATION SCRIPTS!!"
 # If you've applied changes to the tables, you can manually delete columns.
 
 ############################################################
-##Fucnctions
+##Funcctions
 function CheckDirForExistingVersions($path) {
     if (Test-Path $path) {
         $files = Get-ChildItem $path
