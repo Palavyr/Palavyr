@@ -8,7 +8,7 @@ import { PalavyrDemoWidget } from "./DemoWidget";
 
 import { useContext } from "react";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
-import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { Align } from "@common/positioning/Align";
 
 const useStyles = makeStyles(theme => ({
     paper: {

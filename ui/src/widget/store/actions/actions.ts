@@ -53,7 +53,6 @@ import {
     WidgetPreferences,
     SET_WIDGETPREFERENCES_CONTEXT,
 } from "@Palavyr-Types";
-import { widgetPreferences } from "@test-data/widgetPreferences";
 
 import { ElementType } from "react";
 

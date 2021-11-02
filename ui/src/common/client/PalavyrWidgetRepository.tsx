@@ -2,7 +2,7 @@ import {
     AreaTable,
     ConversationRecordUpdate,
     ConversationRecordUpdate as ConvoRecord,
-    ConversationUpdate,
+    WidgetConversationUpdate,
     DynamicResponse,
     KeyValues,
     LocaleResource,
@@ -61,7 +61,7 @@ export class PalavyrWidgetRepository {
                     Response: response,
                     CurrentDynamicResponseState: currentDynamicResponseState,
                 }),
-            UpdateConvoHistory: async (update: ConversationUpdate) => this.client.post(this.Routes.updateConvoHistory(this.secretKey), update),
+            UpdateConvoHistory: async (update: WidgetConversationUpdate) => this.client.post(this.Routes.updateConvoHistory(this.secretKey), update),
             UpdateConvoRecord: async (updatedConvoRecord: Partial<ConvoRecord>) => this.client.post(this.Routes.updateConvoRecord(this.secretKey), updatedConvoRecord),
         },
 

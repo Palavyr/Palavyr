@@ -7,7 +7,7 @@ import AOS from "aos";
 import { GreenStrip } from "./components/sliver/ThinStrip";
 import { landingWidgetApiKey, widgetUrl } from "@common/client/clientUtils";
 import { IFrame } from "frontend/dashboard/content/demo/IFrame";
-import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { Align } from "@common/positioning/Align";
 import { LandingWrapper } from "./components/LandingWrapper";
 import { LangingPageTitleContent } from "./branding/headerTitleContent/LandingPageTitleContent";
 import { LineSpacer } from "@common/components/typography/LineSpacer";

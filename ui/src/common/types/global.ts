@@ -4,7 +4,6 @@ import { PalavyrLinkedList } from "frontend/dashboard/content/responseConfigurat
 import React, { Dispatch, ElementType, SetStateAction } from "react";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 
-
 // / <reference types="node" />
 // / <reference types="react" />
 // / <reference types="react-dom" />
@@ -88,11 +87,11 @@ export type ConvoTableRow = {
     isCritical: boolean;
     isRoot: boolean;
     areaIdentifier: string;
-    optionPath: Response;
+    optionPath: ConvoBuilderResponse;
 };
 
-export type Response = "Yes" | "No" | "Not Sure" | "Ok" | "Backstop" | "Yes / Not Sure" | "No / Not Sure" | "Continue" | null | any;
-export type Responses = Array<Response>;
+export type ConvoBuilderResponse = "Yes" | "No" | "Not Sure" | "Ok" | "Backstop" | "Yes / Not Sure" | "No / Not Sure" | "Continue" | null | any;
+export type Responses = Array<ConvoBuilderResponse>;
 
 export const ValueOptionDelimiter = "|peg|";
 
@@ -114,7 +113,7 @@ export type ConvoNode = {
     isLoopbackAnchorType: boolean;
 
     nodeType: string;
-    optionPath: Response;
+    optionPath: ConvoBuilderResponse;
     valueOptions: string; // an array, but bc of the dtabase we store as a string delimited by |peg|
     shouldRenderChildren: boolean;
     shouldShowMultiOption: boolean;
@@ -568,22 +567,6 @@ export type IncompleteArea = {
 
 export type IncompleteAreas = IncompleteArea[];
 
-export type WidgetPreferences = {
-    selectListColor: string;
-    headerColor: string;
-    fontFamily: string;
-    landingHeader: string;
-    chatHeader: string;
-    placeholder: string;
-    listFontColor: string;
-    headerFontColor: string;
-    optionsHeaderColor: string;
-    optionsHeaderFontColor: string;
-    chatFontColor: string;
-    chatBubbleColor: string;
-    buttonColor: string;
-    buttonFontColor: string;
-};
 
 export type VariableDetail = {
     name: string;
@@ -1002,8 +985,6 @@ export type BlogPostRouteMeta = BlogPostRecord & {
 //     areaId: string;
 // };
 
-
-
 // export interface IMessage extends BaseMessage {
 //     text: string;
 // }
@@ -1044,13 +1025,11 @@ export type BlogPostRouteMeta = BlogPostRecord & {
 //     resolveOrder: number | null;
 // };
 
-
 ////////////////// Widget
-
 
 export type SecretKey = string | null;
 
-export type AreaTable = {
+export type WidgetAreaTable = {
     areaIdentifier: string;
     areaDisplayTitle: string;
 };
@@ -1089,8 +1068,7 @@ export type NewConversation = {
 };
 
 export type WidgetPreferences = {
-    // title: string;
-    // subtitle: string;
+
     landingHeader: string;
     chatHeader: string;
     placeholder: string;
@@ -1107,7 +1085,8 @@ export type WidgetPreferences = {
     buttonFontColor: string;
 };
 
-export type ConversationUpdate = {
+
+export type WidgetConversationUpdate = {
     ConversationId: string;
     Prompt: string;
     UserResponse: string | null;
@@ -1127,7 +1106,7 @@ export type ConversationRecordUpdate = {
     IsComplete: boolean;
 };
 
-export type PreCheckResult = {
+export type WidgetPreCheckResult = {
     isReady: boolean;
     incompleteAreas: Array<AreaTable>;
 };
@@ -1135,23 +1114,6 @@ export type PreCheckResult = {
 export type SendEmailResultResponse = {
     nextNodeId: string;
     result: boolean;
-};
-
-export type LocaleResource = {
-    name: string;
-    displayName: string;
-    currencySymbol: string;
-    supportedLocales: string[];
-    phoneFormat: string;
-    numberDecimalSeparator: string;
-    localeMap: LocaleMap;
-};
-
-export type LocaleMap = LocaleResource[];
-
-export type LocaleResponse = {
-    currentLocale: LocaleResource;
-    localeMap: LocaleResource[];
 };
 
 export interface IProgressTheChat {
@@ -1176,13 +1138,13 @@ type BaseMessage = {
     props?: any;
 };
 
-export type DynamicResponses = DynamicResponse[];
-export type DynamicResponse = {
-    [UniqueTableKey: string]: Response[];
-};
-export type Response = {
+export type SpecificResponse = {
     [nodeId: string]: string; // node.nodeId: response value;
 };
+export type DynamicResponse = {
+    [UniqueTableKey: string]: SpecificResponse[];
+};
+export type DynamicResponses = DynamicResponse[];
 
 export type KeyValue = {
     [key: string]: string; // MUST BE STRING for server
@@ -1434,14 +1396,6 @@ export interface addNumIndividuals {
     numIndividuals: number;
 }
 
-export type ContextPropertyActions =
-    | setContextProperties
-    | getContextProperties
-    | setNameContext
-    | setPhoneContext
-    | setEmailAddressContext
-    | setRegionContext
-    | addKeyValueContext
-    | setDynamiceResponses;
+export type ContextPropertyActions = setContextProperties | getContextProperties | setNameContext | setPhoneContext | setEmailAddressContext | setRegionContext | addKeyValueContext | setDynamiceResponses;
 
 export type AllActions = ContextPropertyActions | FullscreenPreviewActions | BehaviorActions | MessagesActions;

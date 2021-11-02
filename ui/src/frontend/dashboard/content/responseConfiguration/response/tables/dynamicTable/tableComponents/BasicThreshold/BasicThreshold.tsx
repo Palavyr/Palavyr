@@ -11,7 +11,7 @@ import { DisplayTableData } from "../DisplayTableData";
 import { DynamicTableTypes } from "../../DynamicTableRegistry";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { TextInput } from "@common/components/TextField/TextInput";
-import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { Align } from "@common/positioning/Align";
 
 const useStyles = makeStyles(theme => ({
     alignLeft: {

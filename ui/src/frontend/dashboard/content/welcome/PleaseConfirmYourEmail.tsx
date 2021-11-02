@@ -7,7 +7,7 @@ import { useContext, useState } from "react";
 import auth from "@auth/Auth";
 import { SessionStorage } from "@localStorage/sessionStorage";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
-import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { Align } from "@common/positioning/Align";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { PalavyrSnackbar } from "@common/components/PalavyrSnackbar";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";

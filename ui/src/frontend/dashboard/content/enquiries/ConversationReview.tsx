@@ -4,7 +4,7 @@ import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHe
 import { CompletedConversation, ConversationUpdate } from "@Palavyr-Types";
 import classNames from "classnames";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { Align } from "@common/positioning/Align";
 import React, { useContext } from "react";
 import { useCallback } from "react";
 import { useState, useEffect } from "react";

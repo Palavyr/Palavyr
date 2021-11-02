@@ -1,5 +1,5 @@
 import { CircularProgress, makeStyles } from "@material-ui/core";
-import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { Align } from "@common/positioning/Align";
 import React, { useEffect, useState } from "react";
 
 export interface CustomImageProps {

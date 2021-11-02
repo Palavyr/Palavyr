@@ -6,7 +6,7 @@ import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHea
 import { ImageRecordTableHeader } from "./ImageRecordTableHeader";
 import { ImageRecordTableBody } from "./ImageRecordTableBody";
 import { ImageReviewUpload } from "./ImageReviewUpload";
-import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { Align } from "@common/positioning/Align";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles(theme => ({

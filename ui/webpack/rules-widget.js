@@ -43,7 +43,7 @@ const createRules = () => {
                     loader: 'sass-loader',
                     options: {
                         sassOptions: {
-                            includePaths: ['widget/scss']
+                            includePaths: ['src/widget/widgetcore/scss']
                         }
                     }
                 }

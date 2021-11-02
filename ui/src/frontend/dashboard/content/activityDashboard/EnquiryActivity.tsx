@@ -1,3 +1,5 @@
+// ts-ignore
+
 import React, { useContext, useState, useEffect, useCallback } from "react";
 import { AreaNameDetails, Enquiries } from "@Palavyr-Types";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
@@ -6,6 +8,7 @@ import { DataPlot } from "./components/DataPlot";
 import { getRandomColor } from "./DailyEnquiriesWeekly";
 import colorLib from "@kurkle/color";
 import { sum } from "lodash";
+import { ChartData, ChartOptions } from "chart.js";
 
 export type Dataset = {
     data: number[];
@@ -50,11 +53,11 @@ const calculateRadarData = (areaDetails: AreaNameDetails, enquiries: Enquiries) 
         counts.push(singleArea.length);
     });
 
-    const enquiryData: EnquiryData = {
+    const enquiryData: ChartData = {
         labels: areas,
         datasets: [{ label: "Enquiries", data: counts, backgroundColor: transparentize(getRandomColor("tobyface"), 0.5) }],
     };
-    const enquiryOptions = {
+    const enquiryOptions: any = {
         elements: {
             line: {
                 borderWidth: 3,
@@ -76,8 +79,8 @@ const calculateRadarData = (areaDetails: AreaNameDetails, enquiries: Enquiries) 
 export const EnquiryActivity = () => {
     const { repository, areaNameDetails } = useContext(DashboardContext);
 
-    const [data, setData] = useState<EnquiryData>();
-    const [options, setOptions] = useState<EnquiryOptions>();
+    const [data, setData] = useState<any>();
+    const [options, setOptions] = useState<any>();
     const [loadingspinner, setLoadingSpinner] = useState<boolean>(true);
 
     const loadEnquiries = useCallback(async () => {
@@ -93,7 +96,7 @@ export const EnquiryActivity = () => {
         loadEnquiries();
     }, [loadEnquiries]);
 
-    const hasData = () => {
+    const hasData = (): boolean => {
         if (data === undefined) return false;
 
         const sumAllData = data => {
@@ -104,7 +107,7 @@ export const EnquiryActivity = () => {
             return sum(r);
         };
 
-        return data.labels && data.labels.length > 0 && data.datasets && data.datasets.length > 0 && sumAllData(data) > 0;
+        return (data.labels && data.labels.length > 0 && data.datasets && data.datasets.length > 0 && sumAllData(data) > 0) || false;
     };
 
     return (

@@ -22,7 +22,6 @@ interface IAlertInfoStatement {
 
 type StyleProps = {
     margin: number;
-    padding: number;
 }
 
 const useStyle = makeStyles(theme => ({

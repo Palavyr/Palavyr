@@ -8,7 +8,7 @@ import { BrandName } from "@landing/branding/BrandName";
 import { FooterListTitle } from "./FooterListTitle";
 import { FooterListItem } from "./FooterListItem";
 import { FooterUList } from "./FooterUList";
-import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { Align } from "@common/positioning/Align";
 import { LineSpacer } from "@common/components/typography/LineSpacer";
 
 const useStyles = makeStyles(theme => ({

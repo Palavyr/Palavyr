@@ -2,7 +2,7 @@ import { widgetUrl } from "@common/client/clientUtils";
 import { makeStyles, Typography, useTheme } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { PreCheckError } from "@Palavyr-Types";
-import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { Align } from "@common/positioning/Align";
 import React from "react";
 import { IFrame } from "./IFrame";
 

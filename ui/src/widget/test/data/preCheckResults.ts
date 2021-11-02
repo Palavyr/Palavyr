@@ -1,7 +1,6 @@
-import { PreCheckResult } from "@Palavyr-Types";
+import { WidgetPreCheckResult } from "@Palavyr-Types";
 
-export const precheckResult: PreCheckResult = {
+export const precheckResult: WidgetPreCheckResult = {
     isReady: true,
     incompleteAreas: [],
 };
-

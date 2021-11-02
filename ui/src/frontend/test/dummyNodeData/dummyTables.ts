@@ -32,6 +32,7 @@ row3.rowOrder = 2;
 
 export const MockStaticTablesMeta: StaticTableMeta = {
     id: 0,
+    perPersonInputRequired: false,
     areaIdentifier: "abc-123",
     description: "This is a good first table.",
     tableOrder: 0,

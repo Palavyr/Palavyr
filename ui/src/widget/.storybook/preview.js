@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { MemoryRouter } from "react-router";
 import { Provider } from "react-redux";
-import { PalavyrWidgetStore } from "store/store";
+import { PalavyrWidgetStore } from "@store-actions/store";
 import { widgetUrl } from "test/routes";
 import { CssBaseline, MuiThemeProvider } from "@material-ui/core";
 import { PalavyrWidgetTheme } from "../src/PalavyrWidgetTheme";

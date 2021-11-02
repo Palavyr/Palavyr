@@ -4,7 +4,7 @@ import { cloneDeep } from "lodash";
 import { Button, makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { ConversationTreeContext, DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
-import PalavyrErrorBoundary from "@common/components/Errors/PalavyrErrorBoundary";
+import PalavyrErrorBoundary from "@common/components/ErrorBoundaries/PalavyrErrorBoundary";
 import { ConversationHistoryTracker } from "./node/ConversationHistoryTracker";
 import { PalavyrLinkedList } from "./PalavyrDataStructure/PalavyrLinkedList";
 import { TreeErrorPanel } from "./MissingDynamicNodes";

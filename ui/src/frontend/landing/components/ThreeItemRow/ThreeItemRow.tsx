@@ -34,7 +34,7 @@ export const ThreeItemRow = ({ listOfThree }: IItemRow) => {
                 listOfThree.map((x: ItemRowObject, idx: number) => {
                     return (
                         <Grid item key={idx} xs={4} className={classNames(classes.colStyle, "align-center")}>
-                            <IconBox iconType={x.type} iconTitle={x.title} iconSize={"large"}>
+                            <IconBox IconJsx={x.type} iconTitle={x.title} iconSize={5}>
                                 {x.text}
                             </IconBox>
                         </Grid>

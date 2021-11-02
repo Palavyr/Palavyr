@@ -1,8 +1,8 @@
 import * as React from "react";
-import { DropdownListOptions } from "../widget/BotResponse/optionFormats/DropdownOptionsList";
+import { DropdownListOptions } from "../widgetcore/BotResponse/optionFormats/DropdownOptionsList";
 import { SelectedOption } from "@Palavyr-Types";
 import { makeStyles } from "@material-ui/core";
-import { BrandingStrip } from "widget/components/Footer/BrandingStrip";
+import { BrandingStrip } from "@widgetcore/components/Footer/BrandingStrip";
 
 interface IOptionSelector {
     options: SelectedOption[];

@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
-import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { Align } from "@common/positioning/Align";
 
 type StyleProps = {
     preview: boolean;

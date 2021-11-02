@@ -3,7 +3,7 @@ import { App } from "./App";
 import { Meta } from "@storybook/react";
 
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
-import { ConfigureMockClient } from "test/testUtils/ConfigureMockClient";
+import { ConfigureMockClient } from "widget/test/testUtils/ConfigureMockClient";
 import { precheckResult } from "@test-data/preCheckResults";
 import { widgetPreferences } from "@test-data/widgetPreferences";
 import { areas } from "@test-data/areas";

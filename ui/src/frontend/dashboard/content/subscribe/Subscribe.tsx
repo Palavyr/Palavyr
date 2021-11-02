@@ -7,7 +7,7 @@ import { SubscribeStepper } from "../purchse/SubscribeStepper";
 import { PurchaseTypes, ProductOptions, ProductOption, ProductIds, PlanStatus } from "@Palavyr-Types";
 import { PURCHASE_ROUTE } from "@constants";
 import { Lyte, Premium, Pro } from "@landing/components/pricing/Cards";
-import { SpaceEvenly } from "frontend/dashboard/layouts/positioning/SpaceEvenly";
+import { SpaceEvenly } from "@common/positioning/SpaceEvenly";
 import classnames from "classnames";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";

@@ -11,8 +11,8 @@ import {
     MARK_ALL_READ,
     MessagesActions,
 } from "@Palavyr-Types";
-import { MESSAGE_SENDER } from "widget/constants";
-import { createNewMessage, createLinkSnippet, createComponentMessage } from "widget/utils/messages";
+import { MESSAGE_SENDER } from "@widgetcore/constants";
+import { createNewMessage, createLinkSnippet, createComponentMessage } from "@widgetcore/utils/messages";
 import { createReducer } from "./createReducer";
 
 export type MessageState = {

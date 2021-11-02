@@ -1,7 +1,7 @@
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { CircularProgress, makeStyles, Typography } from "@material-ui/core";
 import { Variant } from "@material-ui/core/styles/createTypography";
-import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { Align } from "@common/positioning/Align";
 import { cloneDeep } from "lodash";
 import React, { memo, useEffect, useState } from "react";
 

@@ -1,7 +1,7 @@
 import { makeStyles, Typography } from "@material-ui/core";
 import React, { useContext, useEffect } from "react";
 import { DashboardContext } from "../DashboardContext";
-import { Align } from "../positioning/Align";
+import { Align } from "../../../../common/positioning/Align";
 import Fade from "react-reveal/Fade";
 import CloseIcon from "@material-ui/icons/Close";
 

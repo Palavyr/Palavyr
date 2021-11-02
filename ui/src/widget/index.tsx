@@ -5,14 +5,14 @@ import { CssBaseline, MuiThemeProvider } from "@material-ui/core";
 import { PalavyrWidgetTheme } from "./PalavyrWidgetTheme";
 import { Provider } from "react-redux";
 import { App } from "./App";
-import { PalavyrWidgetStore } from "store/store";
-import { TestComponent } from "test/testComponent";
+import { PalavyrWidgetStore } from "widget/store/store";
+import { TestComponent } from "widget/test/testComponent";
 import { ErrorBoundary } from "react-error-boundary";
-import { ErrorFallback } from "common/ErrorBoundaries/AppLevelErrorBoundary";
+import { ErrorFallback } from "@common/components/ErrorBoundaries/AppLevelErrorBoundary";
 
 import ReactGA from "react-ga";
-import RouteChangeTracker from "Analytics/RouteChangeTracker";
-import { googleAnalyticsTrackingId, isDevelopmentStage } from "client/clientUtils";
+import RouteChangeTracker from "@common/Analytics/RouteChangeTracker";
+import { googleAnalyticsTrackingId, isDevelopmentStage } from "@api-client/clientUtils";
 
 if (!isDevelopmentStage()) {
     ReactGA.initialize(googleAnalyticsTrackingId);

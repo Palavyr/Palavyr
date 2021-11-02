@@ -2,7 +2,7 @@ import React from "react";
 import { AppBar, Toolbar, Typography, Button, makeStyles, IconButton, Hidden, Divider } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
-import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { Align } from "@common/positioning/Align";
 import { BrandName } from "@landing/branding/BrandName";
 import MenuIcon from "@material-ui/icons/Menu";
 import { NavigationDrawer } from "./NavigationDrawer";

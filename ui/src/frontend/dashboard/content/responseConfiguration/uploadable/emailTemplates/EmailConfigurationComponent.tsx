@@ -1,7 +1,6 @@
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
 import { makeStyles, Typography } from "@material-ui/core";
 import { VariableDetail, PurchaseTypes } from "@Palavyr-Types";
-import { AxiosResponse } from "axios";
 import { EmailSubject } from "frontend/dashboard/content/settings/subject/EmailSubject";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useCallback, useContext, useEffect, useState } from "react";

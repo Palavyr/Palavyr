@@ -13,8 +13,8 @@ import { FrequencyCard } from "./FrequencyCard";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { DividerWithText } from "@common/components/DividerWithText";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
-import { Align } from "frontend/dashboard/layouts/positioning/Align";
-import { SpaceEvenly } from "frontend/dashboard/layouts/positioning/SpaceEvenly";
+import { Align } from "@common/positioning/Align";
+import { SpaceEvenly } from "@common/positioning/SpaceEvenly";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({

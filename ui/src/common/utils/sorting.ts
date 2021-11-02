@@ -1,3 +1,6 @@
+import { WidgetNodes } from "@Palavyr-Types";
+
+
 export const sortByPropertyAlphabetical = (stringPropertyGetter: (x: object) => string, array: Array<any>, reverse: boolean = false) => {
     return array.sort((a: any, b: any) => {
         const valA = stringPropertyGetter(a);
@@ -37,7 +40,7 @@ export const sortArrayOfObjects = (array: Array<Object>, reverse: boolean = fals
     });
 };
 
-function compareValues<T>(valA: T, valB: T, reverse: boolean) {
+function compareValues<T>(valA: T, valB: T, reverse: boolean = false) {
     if (valA < valB) {
         return reverse ? 1 : -1;
     }
@@ -46,3 +49,14 @@ function compareValues<T>(valA: T, valB: T, reverse: boolean) {
     }
     return 0;
 }
+
+export const sortChildrenByOptions = (children: WidgetNodes) => {
+    return children.sort((a, b) => {
+        if (a.optionPath == null || b.optionPath == null) {
+            return 0;
+        }
+        var nameA = a.optionPath.toUpperCase(); // ignore upper and lowercase
+        var nameB = b.optionPath.toUpperCase(); // ignore upper and lowercase
+        return compareValues(nameA, nameB);
+    });
+};

@@ -3,12 +3,12 @@ import { useState, useCallback, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
-import { WidgetContext } from "widget/context/WidgetContext";
-import { CollectDetailsForm } from "common/UserDetailsDialog/CollectDetailsForm";
-import { SmoothWidget } from "widget/widgets/SmoothWidget";
+import { WidgetContext } from "@widgetcore/context/WidgetContext";
+import { CollectDetailsForm } from "@widgetcore/UserDetailsDialog/CollectDetailsForm";
+import { SmoothWidget } from "@widgetcore/widgets/SmoothWidget";
 import { toggleUserDetails } from "@store-dispatcher";
-import { BookLoaderComponent, BoxesLoaderComponent } from "widget/components/Loaders/BoxLoader";
-import { SpaceEvenly } from "widget/components/Footer/SpaceEvenly";
+import { BookLoaderComponent, BoxesLoaderComponent } from "@widgetcore/components/Loaders/BoxLoader";
+import { SpaceEvenly } from "@common/positioning/WidgetSpaceEvenly";
 import { Fade } from "@material-ui/core";
 
 export const App = () => {

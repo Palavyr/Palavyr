@@ -126,8 +126,8 @@ export const DailyEnquiriesWeekly = () => {
     const { repository, areaNameDetails } = useContext(DashboardContext);
     const cls = widgetStyles();
 
-    const [data, setData] = useState<PlotData>();
-    const [options, setOptions] = useState<EnqDatasetOptions>();
+    const [data, setData] = useState<any>();
+    const [options, setOptions] = useState<any>();
     const [loadingspinner, setLoadingSpinner] = useState<boolean>(true);
 
     const loadEnquiries = useCallback(async () => {

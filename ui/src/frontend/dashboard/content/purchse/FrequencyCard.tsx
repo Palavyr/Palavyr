@@ -2,7 +2,7 @@ import React from "react";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { Card, Divider, makeStyles, Typography } from "@material-ui/core";
 import { PriceMap } from "@Palavyr-Types";
-import { Align } from "@dashboard/layouts/positioning/Align";
+import { Align } from "@common/positioning/Align";
 import { green50 } from "frontend/colorTheme/base";
 
 export interface IFrequencyCard {

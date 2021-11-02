@@ -7,7 +7,7 @@ import { GeneralSettingsLoc } from "@Palavyr-Types";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import classNames from "classnames";
-import { Align } from "../positioning/Align";
+import { Align } from "../../../../common/positioning/Align";
 import { TOPBAR_MAX_HEIGHT } from "@constants";
 
 const DETAILS_MAX_HEIGHT = TOPBAR_MAX_HEIGHT - 10;

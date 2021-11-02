@@ -8,7 +8,7 @@ import { EnquiriesHeader } from "./EnquiriesHeader";
 import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
 import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
-import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { Align } from "@common/positioning/Align";
 import { OsTypeToggle } from "../responseConfiguration/areaSettings/enableAreas/OsTypeToggle";
 import { NoDataAvailable } from "./NoDataMessage";
 import { cloneDeep } from "lodash";

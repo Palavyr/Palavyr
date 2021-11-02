@@ -1,6 +1,6 @@
 const webpack = require("webpack");
 const path = require("path");
-const common = require("./webpack.common.js");
+const common = require("./widget-webpack.common.js");
 const { merge } = require("webpack-merge");
 
 const mode = "development"

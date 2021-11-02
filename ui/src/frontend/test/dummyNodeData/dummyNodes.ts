@@ -1,9 +1,8 @@
-import { ConvoNode } from "@Palavyr-Types"
+import { ConvoNode, NodeTypeCode } from "@Palavyr-Types";
 
 export const ParentNode: ConvoNode = {
     nodeId: "xyz-1",
     nodeType: "YesNo",
-    fallback: false,
     text: "Test Text",
     nodeChildrenString: "xyz-2,xyz-3",
     isCritical: true,
@@ -11,13 +10,27 @@ export const ParentNode: ConvoNode = {
     areaIdentifier: "abc-123",
     optionPath: "",
     valueOptions: "", // an array, but bc of the dtabase we store as a string delimited by |peg|
-    id: 0
-}
+    id: 0,
+
+    isTerminalType: false,
+    isMultiOptionType: false,
+    isAnabranchType: false,
+    isAnabranchMergePoint: false,
+    isLoopbackAnchorType: false,
+    shouldRenderChildren: true,
+    shouldShowMultiOption: false,
+    nodeComponentType: "YesNo",
+    isDynamicTableNode: false,
+    isImageNode: false,
+    imageId: null,
+    resolveOrder: 0,
+    dynamicType: null,
+    nodeTypeCode: NodeTypeCode.I,
+};
 
 export const ChildNode1: ConvoNode = {
     nodeId: "xyz-2",
     nodeType: "",
-    fallback: false,
     text: "Test Text",
     nodeChildrenString: "",
     isCritical: true,
@@ -25,13 +38,26 @@ export const ChildNode1: ConvoNode = {
     areaIdentifier: "abc-123",
     optionPath: "Yes",
     valueOptions: "", // an array, but bc of the dtabase we store as a string delimited by |peg|
-    id: 0
-}
+    id: 0,
+    isTerminalType: false,
+    isMultiOptionType: false,
+    isAnabranchType: false,
+    isAnabranchMergePoint: false,
+    isLoopbackAnchorType: false,
+    shouldRenderChildren: true,
+    shouldShowMultiOption: false,
+    nodeComponentType: "YesNo",
+    isDynamicTableNode: false,
+    isImageNode: false,
+    imageId: null,
+    resolveOrder: 0,
+    dynamicType: null,
+    nodeTypeCode: NodeTypeCode.I,
+};
 
 export const ChildNode2: ConvoNode = {
     nodeId: "xyz-3",
     nodeType: "",
-    fallback: false,
     text: "Test Text",
     nodeChildrenString: "",
     isCritical: true,
@@ -39,11 +65,21 @@ export const ChildNode2: ConvoNode = {
     areaIdentifier: "abc-123",
     optionPath: "No",
     valueOptions: "", // an array, but bc of the dtabase we store as a string delimited by |peg|
-    id: 0
-}
+    id: 0,
+    isTerminalType: false,
+    isMultiOptionType: false,
+    isAnabranchType: false,
+    isAnabranchMergePoint: false,
+    isLoopbackAnchorType: false,
+    shouldRenderChildren: true,
+    shouldShowMultiOption: false,
+    nodeComponentType: "YesNo",
+    isDynamicTableNode: false,
+    isImageNode: false,
+    imageId: null,
+    resolveOrder: 0,
+    dynamicType: null,
+    nodeTypeCode: NodeTypeCode.I,
+};
 
-export const DummyConvo = [
-    ParentNode,
-    ChildNode1,
-    ChildNode2
-]
+export const DummyConvo = [ParentNode, ChildNode1, ChildNode2];

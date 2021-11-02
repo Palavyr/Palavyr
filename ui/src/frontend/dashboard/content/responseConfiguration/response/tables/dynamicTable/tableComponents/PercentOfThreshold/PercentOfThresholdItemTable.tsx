@@ -9,7 +9,7 @@ import { PercentOfThresholdModifier } from "./PercentOfThresholdModifier";
 import { PercentOfThresholdRow } from "./PercentOfThresholdRow";
 import { TextInput } from "@common/components/TextField/TextInput";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
-import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { Align } from "@common/positioning/Align";
 import { ButtonBar } from "../../components/SaveBar";
 
 interface IPercentOfThreshold {

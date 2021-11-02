@@ -61,6 +61,7 @@ export const ZoomImage = ({ alt, imgSrc, className = "" }: IZoomImage) => {
     }, [setZoomedIn]);
 
     useEffect(() => {
+
         var header = document.querySelector("header");
         if (header == null) return;
 

@@ -10,7 +10,7 @@ import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import PhoneIcon from "@material-ui/icons/Phone";
 import BrandingWatermarkIcon from "@material-ui/icons/BrandingWatermark";
 import PublicIcon from "@material-ui/icons/Public";
-import { Align } from "frontend/dashboard/layouts/positioning/Align";
+import { Align } from "@common/positioning/Align";
 import { useHistory } from "react-router-dom";
 import { GeneralSettingsLoc } from "@Palavyr-Types";
 import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";

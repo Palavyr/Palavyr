@@ -7,7 +7,7 @@ import { ChoiceList } from "./ChoiceList";
 import classNames from "classnames";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { WidgetPreferences, SelectedOption } from "@Palavyr-Types";
-import { WidgetContext } from "../../WidgetContext";
+import { WidgetContext } from "../../context/WidgetContext";
 
 const useStyles = makeStyles(() => ({
     container: {
