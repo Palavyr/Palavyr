@@ -1,6 +1,6 @@
-# Palavyr Configuration Manager
+# Palavyr
 
-The Palavyr Configuration Manager project includes 4 subprojects:
+Palavyr includes 3 subprojects:
 
 1. [Server](./server/README.md)
 2. [Website](./frontend/README.md) // customers will use this to design and program the widget
@@ -64,7 +64,7 @@ Follow this guide to get set up with development.
 Thanks for your interest in contributing!
 
 
-
+Everything after this is probably more or less obsolete.
 
 ### Stages
 
