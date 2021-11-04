@@ -88,3 +88,36 @@ Follow this guide to get set up with development.
 
 Thanks for your interest in contributing!
 
+## Legal
+
+By joining the Palavyr Org and cloning this repository, you agree that:
+
+ 1. You will not distribute this software under any circumstances without the express permission of Paul Gradie.
+ 2. If you contribute to the code base, your efforts will be duely recognized if this application every goes on to make any moolah. Cause thats the point yo. :D
+
+## Project Composition breakdown
+
+This analysis uses github.com/AlDanial/cloc
+
+```
+-------------------------------------------------------------------------------
+Language                     files    blank lines       comments  lines of code
+-------------------------------------------------------------------------------
+SQL                            172           9930              0          76718
+C#                             850          17993            816          62047
+TypeScript                     511           3868           1108          33137
+JSON                             9              4              0          12529
+SVG                             62             16             58           5735
+JavaScript                      20             82             48            836
+PowerShell                       9            241            127            745
+HTML                             8             19              0            458
+Sass                            14             88              6            452
+Markdown                         4            300              0            386
+MSBuild script                   6             20              0            267
+XML                              4              4             16             76
+Bourne Shell                     1             19             17             32
+CSS                              1              0              7             21
+-------------------------------------------------------------------------------
+SUM:                          1671          32584           2203         193439
+-------------------------------------------------------------------------------
+```
