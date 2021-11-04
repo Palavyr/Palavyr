@@ -74,11 +74,12 @@ Follow this guide to get set up with development.
 
         `./SetDevelopmentalSecrets.ps1`
 
-7. Start the DB migrator
+7.  Build the server (in an IDE or using `dotnet build`)
+
+8. Start the DB migrator
 
     `dotnet run --project Palavyr.Data.Migrator`
 
-8.  Build the server (in an IDE or using `dotnet build`)
 
 9.  Run the server (via IDE or using `dotnet run --project Palavyr.API`)
 
