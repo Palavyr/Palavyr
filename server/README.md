@@ -1,20 +1,10 @@
-# Configuration Manager Server
+# Palavyr Server
 
-This is the server that powers the Palavyr configuration manager. Its an asp.net core console app written in C# that is intended to run on IIS windows server 2019.
+Palavyr Server supports the Chat Bot Designer website as well as the Chat Bot Widget. This server can be used solely to support the widget and the website in dev. The server is intended to be run as a separate instances when supporting the widget and the website in production.
 
-# Setup
+For the server to run, it needs access to S3, SES, the STRIPE CLI (if you wish to execute against stripe) as well as the PalavyrPDFServer.
 
-Postgres install
-
-Refresh the server
-
-```bash
-    curl --location --request PUT 'https://localhost:5001/api/setup' --header 'action: secretDevAccess' --header 'accountId: dashboardDev'
-```
-
-```powershell
-    Invoke-WebRequest -URI https://localhost:5001/api/setup -Header  -Method Post
-```
+To set the credentials for accessing AWS, ask Paul to generate some aws credentials for you. Then set these as .net secrets using the ./utilities/setDevelopmentalSecrets.ps1 powershell script.
 
 ## Running the Stripe CLI tool
 
@@ -37,12 +27,3 @@ The way this works:
 stripe listen --forward-to https://localhost:5001/api/payments/payments-webhook --skip-verify
 stripe trigger invoice.payment_succeeded
 ```
-
-### Updating tools
-
-##### update dotnet-ef
-
-    dotnet tool update --global dotnet-ef --version 3.1.0
-
-#### Getting EF CORE TO REROLL MIGRATIONS
-https://stackoverflow.com/questions/54443131/force-dbup-to-rerun-new-scripts-during-development

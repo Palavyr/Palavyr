@@ -224,3 +224,11 @@ https://docs.hangfire.io/en/latest/deployment-to-production/making-aspnet-app-al
 Products are stored in stripe. We currently keep the product ID in the frontend. Should put this in the server.
 METADATA: MUST BE SET
 
+### Updating tools
+
+##### update dotnet-ef
+
+    dotnet tool update --global dotnet-ef --version 3.1.0
+
+#### Getting EF CORE TO REROLL MIGRATIONS
+https://stackoverflow.com/questions/54443131/force-dbup-to-rerun-new-scripts-during-development

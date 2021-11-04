@@ -67,5 +67,6 @@ Storybook is currently used to visually test some of the components. Soon jest t
 
     npm run storybook
 
-Testing is currently scant and needs to soon become a major focus.
+Heads up - this might be broken at the moment. There have been a lot of structural changes to Palavyr and I  haven't updated Storybook in a while.
 
+Testing in general is currently scant.
