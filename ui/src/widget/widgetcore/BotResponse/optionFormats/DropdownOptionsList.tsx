@@ -1,5 +1,6 @@
 import * as React from "react";
-import { SelectedOption, WidgetPreferences } from "@common/types/globalTypes-widget";
+import { SelectedOption, WidgetPreferences } from "@Palavyr-Types";
+
 import { useHistory, useLocation } from "react-router-dom";
 import { makeStyles, Card, Box } from "@material-ui/core";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
