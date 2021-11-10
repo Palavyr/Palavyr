@@ -39,17 +39,8 @@ namespace Palavyr.Core.Services.EmailService.SmtpEmail
             SMTP_USERNAME = configuration.GetSmtpUsername();
             SMTP_PASSWORD = configuration.GetSmtpPassword();
 
-            // if (determineCurrentOperatingSystem.IsWindows())
-            // {
-            HOST = "email-smtp.us-east-1.amazonaws.com";
-            // HOST = "vpce-0020313e0bb2eb5d9-unsdfj2g.email-smtp.us-east-1.vpce.amazonaws.com";
-            // }
-            // else
-            // {
-            //     HOST = "vpce-0020313e0bb2eb5d9-unsdfj2g.email-smtp.us-east-1.vpce.amazonaws.com";
-            // }
-            // PORT = 587;
-            PORT = 25;
+            HOST = "com.amazonaws.us-east-1.email-smtp";
+            PORT = 465;
 
             smtpClient = new SmtpClient(HOST, PORT);
             smtpClient.Credentials = new NetworkCredential(SMTP_USERNAME, SMTP_PASSWORD);

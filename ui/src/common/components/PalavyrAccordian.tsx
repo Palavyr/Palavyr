@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 
 export interface PalavyrAccordianProps {
     title: string;
-    children: React.ReactNode;
+    children?: React.ReactNode;
     initialState?: boolean;
     titleVariant?: Variant;
     actions?: React.ReactNode;

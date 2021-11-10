@@ -2,7 +2,8 @@ import { Fade, makeStyles, Snackbar, SnackbarOrigin, useTheme } from "@material-
 import { green, red, yellow } from "@material-ui/core/colors";
 import { Alert, Color } from "@material-ui/lab";
 import { SetState, SnackbarPositions } from "@Palavyr-Types";
-import React, { useEffect } from "react";
+import React from "react";
+import { useEffect } from "react";
 
 
 export interface PalavyrSnackbarProps {

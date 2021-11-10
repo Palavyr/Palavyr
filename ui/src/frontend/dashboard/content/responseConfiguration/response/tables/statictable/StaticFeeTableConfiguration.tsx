@@ -24,7 +24,7 @@ interface IFeeConfiguration {
     children: React.ReactNode;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     buttonContainer: {
         width: "100%",
         display: "flex",
@@ -88,16 +88,18 @@ export const StaticTableConfiguration = ({ title, staticTables, tableSaver, tabl
 
     return (
         <PalavyrAccordian title={title} initialState={true} actions={actions}>
-            {children}
-            {staticTables.length === 0 && (
-                <Typography align="center" color="secondary" style={{ padding: "0.8rem" }} variant="h5">
-                    No static fee tables configured for this area.
-                </Typography>
-            )}
-            {sortByPropertyNumeric((x: StaticTableMeta) => x.tableOrder, staticTables).map((table: StaticTableMeta, index: number) => (
-                <StaticFeeTable staticTableMetas={staticTables} staticTableMeta={table} tableModifier={modifier} key={index} />
-            ))}
-            <div className={cls.buttonContainer}>{addTableButton}</div>
+            <>
+                {children}
+                {staticTables.length === 0 && (
+                    <Typography align="center" color="secondary" style={{ padding: "0.8rem" }} variant="h5">
+                        No static fee tables configured for this area.
+                    </Typography>
+                )}
+                {sortByPropertyNumeric((x: StaticTableMeta) => x.tableOrder, staticTables).map((table: StaticTableMeta, index: number) => (
+                    <StaticFeeTable staticTableMetas={staticTables} staticTableMeta={table} tableModifier={modifier} key={index} />
+                ))}
+                <div className={cls.buttonContainer}>{addTableButton}</div>
+            </>
         </PalavyrAccordian>
     );
 };

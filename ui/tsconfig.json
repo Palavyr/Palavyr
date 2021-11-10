@@ -24,7 +24,7 @@
         "lib": ["dom", "dom.iterable", "esnext"],
         "baseUrl": "src",
         "paths": {
-            "@Palavyr-Types": ["common/types/global.ts"], //["common/types/globalTypes-widget.ts", "common/types/globalTypes-frontend.ts"],
+            "@Palavyr-Types": ["common/types/global.ts"],
             "@api-client/*": ["common/client/*"],
             "@common/*": ["common/*"],
             "@material/*": ["common/components/material/*"],
