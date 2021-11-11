@@ -36,6 +36,7 @@ const useStyles = makeStyles(() => ({
         width: "100%",
         wordBreak: "normal",
         minHeight: "18%",
+
     },
     selectListBgColor: (prefs: WidgetPreferences) => ({
         backgroundColor: prefs.selectListColor,
@@ -75,6 +76,7 @@ const useStyles = makeStyles(() => ({
         border: "2px dashed black",
     },
 }));
+
 
 export interface DropdownListProps {
     options: SelectedOption[];

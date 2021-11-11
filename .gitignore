@@ -245,3 +245,4 @@ widget/build/*
 *.cache
 
 *PalavyrPdfServer*
+ui/dist*
