@@ -38,11 +38,13 @@ namespace Palavyr.Core.Services.EmailService.SmtpEmail
             this.determineCurrentOperatingSystem = determineCurrentOperatingSystem;
             SMTP_USERNAME = configuration.GetSmtpUsername();
             SMTP_PASSWORD = configuration.GetSmtpPassword();
-
+            Console.WriteLine("------------------------------------------------------****************************");
+            Console.WriteLine(SMTP_PASSWORD);
             HOST = "email-smtp.us-east-1.amazonaws.com";
             PORT = 587;
 
             smtpClient = new SmtpClient(HOST, PORT);
+            smtpClient.UseDefaultCredentials = false;
             smtpClient.Credentials = new NetworkCredential(SMTP_USERNAME, SMTP_PASSWORD);
             smtpClient.EnableSsl = true;
         }

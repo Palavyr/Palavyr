@@ -14,6 +14,7 @@ namespace Palavyr.API
 {
     public class Startup
     {
+        
         private readonly IConfiguration configuration;
         private readonly IWebHostEnvironment env;
         private readonly ErrorHandler errorHandler = new ErrorHandler();
