@@ -40,6 +40,7 @@ namespace Palavyr.Core.Services.EmailService.SmtpEmail
             SMTP_PASSWORD = configuration.GetSmtpPassword();
             Console.WriteLine("------------------------------------------------------****************************");
             Console.WriteLine(SMTP_PASSWORD);
+            Console.WriteLine("LOOKY HERE");
             HOST = "email-smtp.us-east-1.amazonaws.com";
             PORT = 587;
 
