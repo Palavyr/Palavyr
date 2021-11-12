@@ -36,8 +36,8 @@ namespace Palavyr.Core.Services.EmailService.SmtpEmail
         {
             this.configuration = configuration;
             this.determineCurrentOperatingSystem = determineCurrentOperatingSystem;
-            SMTP_USERNAME = configuration.GetSmtpUsername();
-            SMTP_PASSWORD = configuration.GetSmtpPassword();
+            SMTP_USERNAME = "AKIAUO46JKWBFUZOZNUN";//configuration.GetSmtpUsername();
+            SMTP_PASSWORD = "BIemitGlUo2ZQ7zQz9yZHzyh2wXSNS6Tq0p/zi028VAa";//configuration.GetSmtpPassword();
             Console.WriteLine("------------------------------------------------------****************************");
             Console.WriteLine($"LOOKY HERE: {SMTP_USERNAME}");
             Console.WriteLine($"LOOKY HERE toooo: {SMTP_PASSWORD}");
