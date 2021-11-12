@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.Environment;
-// using Palavyr.Core.Data.CompanyData;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Services.AccountServices;
 using Stripe;
@@ -19,7 +18,6 @@ namespace Palavyr.Core.Services.StripeServices
 
         private readonly IPalavyrAccessChecker accessChecker;
 
-        // private readonly IAllowedUsers allowedUsers;
         private bool IsTest => StripeConfiguration.ApiKey.ToLowerInvariant().Contains("test");
 
         private CustomerService customerService;
@@ -28,13 +26,11 @@ namespace Palavyr.Core.Services.StripeServices
             ILogger<StripeCustomerService> logger,
             IDetermineCurrentEnvironment determineCurrentEnvironment,
             IPalavyrAccessChecker accessChecker
-            // IAllowedUsers allowedUsers
         )
         {
             this.logger = logger;
             this.determineCurrentEnvironment = determineCurrentEnvironment;
             this.accessChecker = accessChecker;
-            // this.allowedUsers = allowedUsers;
             var stripeClient = new StripeClient(StripeConfiguration.ApiKey);
             this.customerService = new CustomerService(stripeClient);
         }

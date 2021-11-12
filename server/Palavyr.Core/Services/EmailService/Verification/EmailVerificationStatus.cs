@@ -18,6 +18,7 @@ namespace Palavyr.Core.Services.EmailService.Verification
         {
             this.requestEmailVerification = requestEmailVerification;
             this.emailClient = emailClient;
+            // this.emailClient = TimeSpan.FromSeconds(60);
         }
 
         public async Task<(bool, IdentityVerificationAttributes)> RequestEmailVerificationStatus(string emailAddress)

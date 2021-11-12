@@ -38,9 +38,7 @@ namespace Palavyr.Core.Services.EmailService.SmtpEmail
             this.determineCurrentOperatingSystem = determineCurrentOperatingSystem;
             SMTP_USERNAME = "AKIAUO46JKWBFUZOZNUN";//configuration.GetSmtpUsername();
             SMTP_PASSWORD = "BIemitGlUo2ZQ7zQz9yZHzyh2wXSNS6Tq0p/zi028VAa";//configuration.GetSmtpPassword();
-            Console.WriteLine("------------------------------------------------------****************************");
-            Console.WriteLine($"LOOKY HERE: {SMTP_USERNAME}");
-            Console.WriteLine($"LOOKY HERE toooo: {SMTP_PASSWORD}");
+
             HOST = "email-smtp.us-east-1.amazonaws.com";
             PORT = 587;
 
