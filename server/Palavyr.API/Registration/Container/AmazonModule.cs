@@ -60,6 +60,7 @@ namespace Palavyr.API.Registration.Container
                 RetryMode = RequestRetryMode.Standard,
                 MaxErrorRetry = 5,
                 RegionEndpoint = RegionEndpoint.USEast1,
+                ProxyHost = "email-smtp.us-east-1.amazonaws.com"
             };
 
             base.Load(builder);
