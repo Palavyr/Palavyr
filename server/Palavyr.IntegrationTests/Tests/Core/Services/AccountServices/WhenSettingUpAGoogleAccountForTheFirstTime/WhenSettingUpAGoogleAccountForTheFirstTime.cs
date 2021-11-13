@@ -31,7 +31,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
         {
         }
 
-        [Fact]
+        // [Fact]
         public async Task EverythingLooksNormal()
         {
             var testAccount = "Test-account-123";

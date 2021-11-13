@@ -26,7 +26,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
         {
         }
 
-        [Fact]
+        // [Fact]
         public async Task AnUnauthenticatedResultIsReturned()
         {
             var testEmail = IntegrationConstants.EmailAddress;
