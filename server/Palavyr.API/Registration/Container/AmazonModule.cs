@@ -51,7 +51,8 @@ namespace Palavyr.API.Registration.Container
                 Timeout = TimeSpan.FromSeconds(10),
                 RetryMode = RequestRetryMode.Standard,
                 MaxErrorRetry = 5,
-                RegionEndpoint = RegionEndpoint.USEast1
+                RegionEndpoint = RegionEndpoint.USEast1,
+                ForcePathStyle = true
             };
 
             var sesConfig = new AmazonSimpleEmailServiceConfig()
@@ -60,7 +61,9 @@ namespace Palavyr.API.Registration.Container
                 RetryMode = RequestRetryMode.Standard,
                 MaxErrorRetry = 5,
                 RegionEndpoint = RegionEndpoint.USEast1,
-                ProxyHost = "email-smtp.us-east-1.amazonaws.com"
+                ProxyHost = "email-smtp.us-east-1.amazonaws.com",
+                ProxyPort = 587
+                
             };
 
             base.Load(builder);
