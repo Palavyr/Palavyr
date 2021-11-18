@@ -26,7 +26,6 @@ Write-Host "Powershell version: $PSVersionTable.PSVersion";
 
 $serverPath = ($PSCommandPath).Replace("utilities\SetDevelopmentSecrets.ps1", "")
 
-# $server = "dev-palavyr-database.clznnuwhyqf6.us-east-1.rds.amazonaws.com";
 $server = "127.0.0.1";
 $port = "5432";
 $api = Join-Path -Path $serverPath -ChildPath "Palavyr.API";

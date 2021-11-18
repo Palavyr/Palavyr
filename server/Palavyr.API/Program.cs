@@ -23,7 +23,10 @@ namespace Palavyr.API
             var host = Host
                 .CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
+                .ConfigureWebHostDefaults(webBuilder => webBuilder
+                    .UseKestrel()
+                    .UseIISIntegration()
+                    .UseStartup<Startup>())
                 .ConfigureLogging(
                     (hostingContext, logging) =>
                     {
