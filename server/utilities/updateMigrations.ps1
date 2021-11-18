@@ -1,4 +1,4 @@
-param([string]$name, [string]$version, [switch]$supressmigration)
+param([string]$name, [switch]$supressmigration)
 
 $env:ASPNETCORE_ENVIRONMENT = "Development"
 
@@ -53,7 +53,7 @@ Write-Host "ONLY RUN THIS IN DEV TO PRODUCE MIGRATION SCRIPTS!!"
 # If you've applied changes to the tables, you can manually delete columns.
 
 ############################################################
-##Funcctions
+##Functions
 function CheckDirForExistingVersions($path) {
     if (Test-Path $path) {
         $files = Get-ChildItem $path
@@ -68,6 +68,34 @@ function CheckDirForExistingVersions($path) {
         Write-Host "Perhaps $path does not exist..."
     }
 }
+
+function GetNextMigrationScriptVersion() {
+    $dataMigratorDirectory = "./Palavyr.Data.Migrator/Scripts/Account"; # use account because no particular reason
+
+    [int[]]$allVersions = @();
+
+    $files = get-childitem $dataMigratorDirectory;
+    foreach ($file in $files) {
+        $numberString = ($file.Name.Split("-")[0].Replace("Script", "")).TrimStart("0");
+        $version = [int]$numberString;
+        $allVersions += $version;
+    }
+    $sortedVersions = $allVersions | Sort-Object -descending;
+    $latestVersion = $sortedVersions[0];
+
+    $nextVersion = $latestVersion + 1;
+
+    $latestVersionAsString = $([string]$latestVersion).PadLeft(4, "0");
+    $nextVersionAsString = $([string]$nextVersion).PadLeft(4, "0");
+
+    Write-Host "The current migration Script version is $latestVersionAsString";
+    Write-Host "The next version is: $nextVersionAsString"
+
+    return $nextVersionAsString;
+}
+
+$nextMigrationScriptVersion = GetNextMigrationScriptVersion();
+
 
 ##
 $Dir = ".\\Palavyr.Data.Migrator\\Scripts"
@@ -139,8 +167,8 @@ Write-Host "`r`nExporting migrations as SQL Scripts..."
 
 if ($AccountsResult) {
     Write-Host "`r`nExporting Accounts Migrations as SQL Scripts..."
-    Write-Host "`r`nExporting To: $accountsOutput\\$version-accounts_migration-$name.sql"
-    dotnet ef migrations script --project .\\Palavyr.Core --startup-project .\\Palavyr.API --context AccountsContext --output "$accountsOutput\\Script$version-accounts_migration-$name.sql" --idempotent
+    Write-Host "`r`nExporting To: $accountsOutput\\$nextMigrationScriptVersion-accounts_migration-$name.sql"
+    dotnet ef migrations script --project .\\Palavyr.Core --startup-project .\\Palavyr.API --context AccountsContext --output "$accountsOutput\\Script$nextMigrationScriptVersion-accounts_migration-$name.sql" --idempotent
 }
 else {
     Write-Host "`r`nNot creating sql script for Accounts DB - no new migrations.";
@@ -148,8 +176,8 @@ else {
 
 if ($ConfigResult) {
     Write-Host "`r`nExporting Configuration Migrations as SQL Scripts..."
-    Write-Host "`r`nExporting To: $configOutput\\$version-configuration_migration-$name.sql"
-    dotnet ef migrations script --project .\\Palavyr.Core --startup-project .\\Palavyr.API --context DashContext --output "$configOutput\\Script$version-configuration_migration-$name.sql" --idempotent
+    Write-Host "`r`nExporting To: $configOutput\\$nextMigrationScriptVersion-configuration_migration-$name.sql"
+    dotnet ef migrations script --project .\\Palavyr.Core --startup-project .\\Palavyr.API --context DashContext --output "$configOutput\\Script$nextMigrationScriptVersion-configuration_migration-$name.sql" --idempotent
 }
 else {
     Write-Host "`r`nNotCreating sql script for Config DB - no new migrations."
@@ -157,17 +185,17 @@ else {
 
 if ($ConvoResult) {
     Write-Host "`r`nExporting Conversation Migrations as SQL Scripts..."
-    Write-Host "`r`nExporting To: $convoOutput\\$version-convo_migration-$name.sql"
-    dotnet ef migrations script --project .\\Palavyr.Core --startup-project .\\Palavyr.API --context ConvoContext --output "$convoOutput\\Script$version-convo_migration-$name.sql" --idempotent
+    Write-Host "`r`nExporting To: $convoOutput\\$nextMigrationScriptVersion-convo_migration-$name.sql"
+    dotnet ef migrations script --project .\\Palavyr.Core --startup-project .\\Palavyr.API --context ConvoContext --output "$convoOutput\\Script$nextMigrationScriptVersion-convo_migration-$name.sql" --idempotent
 }
 else {
     Write-Host "`r`nNotCreating sql script for Config DB - no new migrations."
-
 }
 
 if ($supressmigration) {
     Write-Host "`r`nSkipping applying the migrations. You will need to run ./startMigrator.ps1 manually to apply these migrations. Finished."
-} else {
+}
+else {
     Write-Host "`r`nMigrating the local database using DBUP!`r`n"
     & "$PSScriptRoot\\StartMigrator.ps1"
     Write-Host "`r`n`r`nAll set! You can check these new scripts into Git and deploy them with the server!`r`n"
