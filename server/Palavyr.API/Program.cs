@@ -24,8 +24,7 @@ namespace Palavyr.API
                 .CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder => webBuilder
-                    .UseKestrel()
-                    .UseIISIntegration()
+                    .UseIIS()
                     .UseStartup<Startup>())
                 .ConfigureLogging(
                     (hostingContext, logging) =>

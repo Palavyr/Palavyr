@@ -5,8 +5,6 @@
         <StartupObject>Palavyr.API.Program</StartupObject>
         <UserSecretsId>c9137c3e-9ca5-4416-b421-63fd6712e942</UserSecretsId>
         <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
-      <AWSProjectType>Lambda</AWSProjectType>
-
     </PropertyGroup>
 
     <ItemGroup>
