@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Data.Migrations.ConvoMigrations;
 using Palavyr.Core.Data.Setup.SeedData.DataCreators;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
@@ -36,7 +35,7 @@ namespace Palavyr.Core.Data.Setup.SeedData
             DefaultDynamicTables = CreateDefaultDynamicTable.CreateDefaultTable(TableTag, accountId, areaIdentifier, dynamicTableId);
             DefaultDynamicTableMetas = CreateDefaultDynamicTable.CreateDefaultMeta(TableTag, accountId, dynamicTableId, areaIdentifier);
             WidgetPreference = WidgetPreference.CreateDefault(accountId);
-            Areas = new List<Area>()
+            Areas = new List<Area>
             {
                 CreateDefaultArea.CreateDefault(
                     areaIdentifier,
