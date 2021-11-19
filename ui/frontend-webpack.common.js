@@ -12,7 +12,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = (ENV) => {
 
-    const envPath = ENV.production ? ".env.production" : ".env.development";
+    const envPath = ENV.production ? ".env.frontend.production" : ".env.frontend.development";
     console.log("Building in.... " + envPath)
     const title = ENV.production ? "Palavyr Prod" : "Palavyr Dev";
 

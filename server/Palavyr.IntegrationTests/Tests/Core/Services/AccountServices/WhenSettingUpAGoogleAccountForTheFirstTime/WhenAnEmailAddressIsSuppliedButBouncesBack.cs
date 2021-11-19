@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.Auth;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,7 @@ using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Shouldly;
+using Test.Common.Random;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -25,11 +27,11 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
         public WhenAnEmailAddressIsSuppliedButBouncesBack(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
         }
+        private string testEmail = $"{A.RandomName()}@gmail.com";
 
         // [Fact]
         public async Task AnUnauthenticatedResultIsReturned()
         {
-            var testEmail = IntegrationConstants.EmailAddress;
             var testAccount = IntegrationConstants.AccountId;
             var jwtToken = "jwt-token";
             var introId = "24323";
@@ -78,6 +80,10 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             
             var cleanup = Container.GetService<IRequestEmailVerification>();
             await cleanup.DeleteEmailIdentityAsync(testEmail);
+
+            var stripeCleanup = Container.GetService<StripeCustomerService>();
+            var customerIds = (await stripeCleanup.GetCustomerByEmailAddress(testEmail, CancellationToken.None)).Select(x => x.Id);
+            stripeCleanup.DeleteStripeTestCustomers(customerIds.ToList());
         }
     }
 }

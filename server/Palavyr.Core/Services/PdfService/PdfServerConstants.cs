@@ -8,7 +8,7 @@ namespace Palavyr.Core.Services.PdfService
     {
         public static string PdfServiceUrl(string host, string? port = null)
         {
-            var result = port == null ? $"{host}/api/v1/create-pdf-on-s3" : $"{host}:{port}/api/v1/create-pdf-on-s3";
+            var result = string.IsNullOrEmpty(port) ? $"{host}/api/v1/create-pdf-on-s3" : $"{host}:{port}/api/v1/create-pdf-on-s3";
             Console.WriteLine(result);
             return result;
         }

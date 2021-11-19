@@ -47,15 +47,18 @@ namespace Palavyr.Core.Services.PdfService
             var port = configuration.GetPdfServerPort();
             var requestBody = SerializeRequestObject(requestObject);
 
+            var pdfServerUri = PdfServerConstants.PdfServiceUrl(host, port);
+            logger.LogDebug($"Attempting to post to pdf service at {pdfServerUri}");
+            
             HttpResponseMessage response;
             try
             {
-                response = await httpClient.PostAsync(PdfServerConstants.PdfServiceUrl(host, port), requestBody);
+                response = await httpClient.PostAsync(pdfServerUri, requestBody);
             }
             catch (HttpRequestException ex)
             {
                 logger.LogCritical($"Failed to convert and write the HTML to PDF using the express server.");
-                logger.LogCritical($"Attempted to use url: {PdfServerConstants.PdfServiceUrl(host, port)}");
+                logger.LogCritical($"Attempted to use url: {pdfServerUri}");
                 logger.LogCritical($"Encountered Error: {ex.Message}");
                 throw new MicroserviceException("The PDF service was unreachable.", ex);
             }

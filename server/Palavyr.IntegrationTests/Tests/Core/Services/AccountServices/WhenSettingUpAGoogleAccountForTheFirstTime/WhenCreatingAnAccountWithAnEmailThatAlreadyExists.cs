@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.Auth;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,13 +9,13 @@ using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AuthenticationServices;
-using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Shouldly;
+using Stripe;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -26,7 +27,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
         {
         }
 
-        // [Fact]
+        [Fact]
         public async Task AnUnAuthenticatedResultIsReturned()
         {
             var testEmail = IntegrationConstants.EmailAddress;
@@ -80,6 +81,11 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             
             var cleanup = Container.GetService<IRequestEmailVerification>();
             await cleanup.DeleteEmailIdentityAsync(testEmail);
+
+            var stripeCleanup = Container.GetService<StripeCustomerService>();
+            var customerIds = (await stripeCleanup.GetCustomerByEmailAddress(testEmail, CancellationToken.None)).Select(x => x.Id);
+            stripeCleanup.DeleteStripeTestCustomers(customerIds.ToList());
+         
         }
     }
 }

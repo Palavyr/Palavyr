@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -91,6 +92,10 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             
             var cleanup = Container.GetService<IRequestEmailVerification>();
             await cleanup.DeleteEmailIdentityAsync(testEmail);
+            
+            var stripeCleanup = Container.GetService<StripeCustomerService>();
+            var customerIds = (await stripeCleanup.GetCustomerByEmailAddress(testEmail, CancellationToken.None)).Select(x => x.Id);
+            stripeCleanup.DeleteStripeTestCustomers(customerIds.ToList());
         }
     }
 }

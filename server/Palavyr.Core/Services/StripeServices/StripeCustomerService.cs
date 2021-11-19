@@ -20,7 +20,7 @@ namespace Palavyr.Core.Services.StripeServices
 
         private bool IsTest => StripeConfiguration.ApiKey.ToLowerInvariant().Contains("test");
 
-        private CustomerService customerService;
+        public CustomerService customerService;
 
         public StripeCustomerService(
             ILogger<StripeCustomerService> logger,
@@ -97,11 +97,16 @@ namespace Palavyr.Core.Services.StripeServices
 
             foreach (var customerId in customerIds)
             {
-                var customer = await customerService.GetAsync(customerId, new CustomerGetOptions());
-                if (accessChecker.IsATestStripeEmail(customer.Email))
-                {
-                    await customerService.DeleteAsync(customer.Id);
-                }
+                await DeleteSingleLiveStripeCustomer(customerId);
+            }
+        }
+
+        public async Task DeleteSingleStripeTestCustomer(string customerId)
+        {
+            var customer = await customerService.GetAsync(customerId, new CustomerGetOptions());
+            if (accessChecker.IsATestStripeEmail(customer.Email))
+            {
+                await customerService.DeleteAsync(customer.Id);
             }
         }
 
