@@ -1,4 +1,6 @@
-﻿#nullable enable
+﻿using System;
+
+#nullable enable
 
 namespace Palavyr.Core.Services.PdfService
 {
@@ -6,7 +8,9 @@ namespace Palavyr.Core.Services.PdfService
     {
         public static string PdfServiceUrl(string host, string? port = null)
         {
-            return port == null ? $"http://{host}/api/v1/create-pdf-on-s3" : $"http://{host}:{port}/api/v1/create-pdf-on-s3";
+            var result = port == null ? $"{host}/api/v1/create-pdf-on-s3" : $"{host}:{port}/api/v1/create-pdf-on-s3";
+            Console.WriteLine(result);
+            return result;
         }
         
         
