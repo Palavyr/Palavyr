@@ -54,7 +54,7 @@ Write-Host "ONLY RUN THIS IN DEV TO PRODUCE MIGRATION SCRIPTS!!"
 
 ############################################################
 ##Functions
-function CheckDirForExistingVersions($path) {
+function CheckDirForExistingVersions($path, $version) {
     if (Test-Path $path) {
         $files = Get-ChildItem $path
         foreach ($fi in $files) {
@@ -103,9 +103,9 @@ $accountsOutput = "$Dir\\Account"
 $configOutput = "$Dir\\Config"
 $convoOutput = "$Dir\\Convo"
 
-CheckDirForExistingVersions($accountsOutput)
-CheckDirForExistingVersions($configOutput)
-CheckDirForExistingVersions($convoOutput)
+CheckDirForExistingVersions($accountsOutput,$nextMigrationScriptVersion)
+CheckDirForExistingVersions($configOutput, $nextMigrationScriptVersion)
+CheckDirForExistingVersions($convoOutput, $nextMigrationScriptVersion)
 
 if ($name -eq "") {
     Write-Host "Name arg is required. Choose a sensible descriptive name. Long names are okay."

@@ -121,3 +121,13 @@ CSS                              1              0              7             21
 SUM:                          1671          32584           2203         116721
 -------------------------------------------------------------------------------
 ```
+
+### Setting up instances on S3 - Production
+1. Start a windows server 2019 Base image (no containers or anything, just the base)
+2. In the Server Manager, turn off IE Enhanced Security Configuration
+3. Install the following:
+ - aspnetcore-runtime-3.1.21-win-x64
+ - dotnet-runtime-3.1.21-win-x64
+ - Octopus.Tentacle.6.1.1147-x64
+
+
