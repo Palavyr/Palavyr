@@ -1,10 +1,15 @@
-﻿using System;
+﻿#nullable enable
 
 namespace Palavyr.Core.Services.PdfService
 {
     public static class PdfServerConstants
     {
-        public static Func<string, string, string> PdfServiceUrl = (host, port) => $"http://{host}:{port}/create-pdf";
+        public static string PdfServiceUrl(string host, string? port = null)
+        {
+            return port == null ? $"http://{host}/api/v1/create-pdf-on-s3" : $"http://{host}:{port}/api/v1/create-pdf-on-s3";
+        }
+        
+        
         public const string Bucket = "bucket";
         public const string Key = "key";
         public const string Html = "html";
