@@ -47,16 +47,16 @@ export const isDevelopmentStage = () => {
     return currentEnvironment.toUpperCase() !== "Production".toUpperCase();
 };
 
-console.log("Server Url: " + serverUrl);
-console.log("Web URl: " + webUrl);
-console.log("Widget Url: " + widgetUrl);
-console.log("Google OAuthId: " + googleOAuthClientId);
-console.log("Stripe Key: " + stripeKey);
-console.log("Current Env: " + currentEnvironment);
-console.log("SoftwareVersion: " + softwareVersion);
-console.log("Landing Widget ApiKey: " + landingWidgetApiKey);
-console.log("Google analytics: " + googleAnalyticsTrackingId);
-console.log("Google Youtube api key: " + googleYoutubeApikey);
+// console.log("Server Url: " + serverUrl);
+// console.log("Web URl: " + webUrl);
+// console.log("Widget Url: " + widgetUrl);
+// console.log("Google OAuthId: " + googleOAuthClientId);
+// console.log("Stripe Key: " + stripeKey);
+// console.log("Current Env: " + currentEnvironment);
+// console.log("SoftwareVersion: " + softwareVersion);
+// console.log("Landing Widget ApiKey: " + landingWidgetApiKey);
+// console.log("Google analytics: " + googleAnalyticsTrackingId);
+// console.log("Google Youtube api key: " + googleYoutubeApikey);
 
 
 // if (softwareVersion === undefined) {
