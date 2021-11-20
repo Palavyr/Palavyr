@@ -47,52 +47,52 @@ export const isDevelopmentStage = () => {
     return currentEnvironment.toUpperCase() !== "Production".toUpperCase();
 };
 
-console.log(serverUrl);
-console.log(webUrl);
-console.log(widgetUrl);
-console.log(googleOAuthClientId);
-console.log(stripeKey);
-console.log(currentEnvironment);
-console.log(softwareVersion);
-console.log(landingWidgetApiKey);
-console.log(googleAnalyticsTrackingId);
-console.log(googleYoutubeApikey);
+console.log("Server Url: " + serverUrl);
+console.log("Web URl: " + webUrl);
+console.log("Widget Url: " + widgetUrl);
+console.log("Google OAuthId: " + googleOAuthClientId);
+console.log("Stripe Key: " + stripeKey);
+console.log("Current Env: " + currentEnvironment);
+console.log("SoftwareVersion: " + softwareVersion);
+console.log("Landing Widget ApiKey: " + landingWidgetApiKey);
+console.log("Google analytics: " + googleAnalyticsTrackingId);
+console.log("Google Youtube api key: " + googleYoutubeApikey);
 
 
-if (softwareVersion === undefined) {
-    console.log("SOFTWARE VERSION IS UNDEFINED");
-}
+// if (softwareVersion === undefined) {
+//     console.log("SOFTWARE VERSION IS UNDEFINED");
+// }
 
-if (serverUrl === undefined) {
-    console.log("SERVER URL UNDEFINED");
-}
+// if (serverUrl === undefined) {
+//     console.log("SERVER URL UNDEFINED");
+// }
 
-if (webUrl === undefined) {
-    console.log("WEB URL UNDEFINED");
-}
+// if (webUrl === undefined) {
+//     console.log("WEB URL UNDEFINED");
+// }
 
-if (widgetUrl === undefined) {
-    console.log("WIDGET URL UNDEFINED");
-}
+// if (widgetUrl === undefined) {
+//     console.log("WIDGET URL UNDEFINED");
+// }
 
-if (googleOAuthClientId === undefined) {
-    console.log("GOOGLE OAUTH CLIENT ID UNDEFINED");
-}
+// if (googleOAuthClientId === undefined) {
+//     console.log("GOOGLE OAUTH CLIENT ID UNDEFINED");
+// }
 
-if (stripeKey === undefined) {
-    console.log("STRIPE KEY UNDEFINED");
-}
+// if (stripeKey === undefined) {
+//     console.log("STRIPE KEY UNDEFINED");
+// }
 
-if (landingWidgetApiKey === undefined) {
-    console.log("LANDING WIDGET API KEY UNDEFINED");
-}
+// if (landingWidgetApiKey === undefined) {
+//     console.log("LANDING WIDGET API KEY UNDEFINED");
+// }
 
-if (googleAnalyticsTrackingId === undefined) {
-    console.log("GOOGLE_ANALYTICS_KEY UNDEFINED");
-}
+// if (googleAnalyticsTrackingId === undefined) {
+//     console.log("GOOGLE_ANALYTICS_KEY UNDEFINED");
+// }
 
-if (googleYoutubeApikey === undefined) {
-    console.log("GOOGLE_YOUTUBE_KEY UNDEFINED");
-}
+// if (googleYoutubeApikey === undefined) {
+//     console.log("GOOGLE_YOUTUBE_KEY UNDEFINED");
+// }
 
 export const SPECIAL_HEADERS = {};

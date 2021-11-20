@@ -10,7 +10,7 @@ const mode = "production";
 process.env.NODE_ENV = mode;
 
 module.exports = () => {
-    return merge(common(`.env.${mode}`), {
+    return merge(common(`.env.widget.${mode}`), {
         mode,
         devtool: "inline-source-map", // Don't really need this source map
         plugins: [
