@@ -12,7 +12,7 @@ namespace Palavyr.Core.Services.EmailService.Verification
         public Task<bool> VerifyEmailAddressAsync(string emailAddress);
         public Task<bool> DeleteEmailIdentityAsync(string emailAddress);
     }
-    
+
     public class RequestEmailVerification : IRequestEmailVerification
     {
         private ILogger<RequestEmailVerification> logger;
@@ -26,16 +26,18 @@ namespace Palavyr.Core.Services.EmailService.Verification
 
         public async Task<bool> VerifyEmailAddressAsync(string emailAddress)
         {
-            var request = new VerifyEmailAddressRequest()
-            {
-                EmailAddress = emailAddress
-            };
             logger.LogDebug("Attempting to verify email address.");
 
             bool result;
             try
             {
-                var response = await sesClient.VerifyEmailAddressAsync(request);
+                var customVerificationRequest = new SendCustomVerificationEmailRequest
+                {
+                    EmailAddress = emailAddress,
+                    TemplateName = "DefaultPalavyrVerificationTemplate"
+                };
+
+                var response = await sesClient.SendCustomVerificationEmailAsync(customVerificationRequest);
                 result = response.HttpStatusCode == HttpStatusCode.OK;
             }
             catch (Exception ex)
@@ -43,6 +45,7 @@ namespace Palavyr.Core.Services.EmailService.Verification
                 logger.LogDebug($"Exception: {ex.Message}");
                 result = false;
             }
+
             logger.LogDebug($"Email verification sent: {result.ToString()}");
             return result;
         }
@@ -64,6 +67,7 @@ namespace Palavyr.Core.Services.EmailService.Verification
                 logger.LogDebug($"Exception: {ex.Message}");
                 result = false;
             }
+
             logger.LogDebug($"Identity deletion request sent: {result.ToString()}");
             return result;
         }
