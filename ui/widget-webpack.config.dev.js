@@ -8,7 +8,7 @@ const mode = "development"
 process.env.NODE_ENV = mode;
 
 module.exports = () => {
-    return merge(common(`.env.${mode}`), {
+    return merge(common(`.env.widget.${mode}`), {
         mode,
         devServer: {
             contentBase: path.resolve(__dirname, "dist"),

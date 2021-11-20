@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import { CssBaseline, MuiThemeProvider } from "@material-ui/core";
 import { PalavyrWidgetTheme } from "./PalavyrWidgetTheme";
 import { Provider } from "react-redux";
-import { App } from "./App";
+import { WidgetApp } from "./WidgetApp";
 import { PalavyrWidgetStore } from "widget/store/store";
 import { TestComponent } from "widget/test/testComponent";
 import { ErrorBoundary } from "react-error-boundary";
@@ -25,7 +25,7 @@ ReactDOM.render(
                 <MuiThemeProvider theme={PalavyrWidgetTheme}>
                     <CssBaseline />
                     <Router>
-                        <Route exact path="/widget" component={App} />
+                        <Route exact path="/widget" component={WidgetApp} />
                         <Route exact path="/test" component={TestComponent} />
                         <RouteChangeTracker />
                     </Router>

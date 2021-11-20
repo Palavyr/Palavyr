@@ -159,7 +159,7 @@ export default responsiveFontSizes(theme);
 
 // // <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,500;1,600&family=Poppins:ital,wght@0,200;0,300;0,400;0,500;1,100;1,200;1,300&display=swap" rel="stylesheet">
 // // "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)"
-// const theme: PalavyrTheme = createMuiTheme({
+// const theme: PalavyrTheme = createTheme({
 //     palette: {
 //         // background: { default: "rgb(1,96,162)"},
 //     },
@@ -185,7 +185,7 @@ export default responsiveFontSizes(theme);
 //     },
 // });
 
-// const Backuptheme = createMuiTheme({
+// const Backuptheme = createTheme({
 //     palette: {
 //         primary: {
 //             main: primary,

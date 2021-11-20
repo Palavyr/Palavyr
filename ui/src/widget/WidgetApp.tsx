@@ -11,7 +11,7 @@ import { BookLoaderComponent, BoxesLoaderComponent } from "@widgetcore/component
 import { SpaceEvenly } from "@common/positioning/WidgetSpaceEvenly";
 import { Fade } from "@material-ui/core";
 
-export const App = () => {
+export const WidgetApp = () => {
     // const [kickoff, setKickoff] = useState<boolean>(false);
     const [chatStarted, setChatStarted] = useState<boolean>(false);
     // const userDetailsVisible = useSelector((state: GlobalState) => state.behaviorReducer.userDetailsVisible);

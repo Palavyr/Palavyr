@@ -1,5 +1,5 @@
 import * as React from "react";
-import { App } from "./App";
+import { WidgetApp } from "./WidgetApp";
 import { Meta } from "@storybook/react";
 
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
@@ -21,12 +21,12 @@ client.ConfigureGet(routes.areas(fakeKey), areas);
 client.ConfigureGet(routes.newConvo(fakeKey, areaId), convoA(areaId));
 
 export default {
-    title: "Main/App",
-    component: App,
+    title: "Main/WidgetApp",
+    component: WidgetApp,
     argTypes: {},
 } as Meta;
 
-const Template = () => <App />;
+const Template = () => <WidgetApp />;
 
 export const Primary = Template.bind({});
 Primary.args = {};
