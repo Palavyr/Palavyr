@@ -106,7 +106,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
                 session.SessionId,
                 session.ApiKey,
                 token,
-                account.EmailAddress);
+                account.EmailAddress.ToLowerInvariant());
         }
 
         public void UpdateCurrentAccountState(Account account)
@@ -192,7 +192,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
 
         private async Task<AccountReturn> RequestAccountViaDefault(LoginCredentialsRequest credentialsRequest)
         {
-            var account = await accountRepository.GetAccountByEmailOrNull(credentialsRequest.EmailAddress);
+            var account = await accountRepository.GetAccountByEmailOrNull(credentialsRequest.EmailAddress.ToLowerInvariant());
             if (account == null)
             {
                 return AccountReturn.Return(account, CouldNotFindAccount);

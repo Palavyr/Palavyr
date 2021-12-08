@@ -87,7 +87,7 @@ namespace Palavyr.Core.Models.Accounts.Schemas
         )
         {
             Password = password;
-            EmailAddress = emailAddress;
+            EmailAddress = emailAddress.ToLowerInvariant();
             DefaultEmailIsVerified = false;
             AccountId = accountId;
             ApiKey = apiKey;
@@ -112,7 +112,7 @@ namespace Palavyr.Core.Models.Accounts.Schemas
             var introId = new GuidUtils().CreateNewId();
             return new Account
             {
-                EmailAddress = emailAddress,
+                EmailAddress = emailAddress.ToLowerInvariant(),
                 Password = null,
                 AccountId = accountId,
                 ApiKey = apikey,
@@ -138,7 +138,7 @@ namespace Palavyr.Core.Models.Accounts.Schemas
         )
         {
             return new Account(
-                emailAddress, password, accountId, apiKey, null, null, false,
+                emailAddress.ToLowerInvariant(), password, accountId, apiKey, null, null, false,
                 "en-AU",
                 accountType, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
         }
@@ -157,7 +157,7 @@ namespace Palavyr.Core.Models.Accounts.Schemas
         )
         {
             return new Account(
-                emailAddress, password, accountId, apiKey, companyName, phoneNumber,
+                emailAddress.ToLowerInvariant(), password, accountId, apiKey, companyName, phoneNumber,
                 active, "en-AU", accountType, PlanTypeEnum.Free, PaymentIntervalEnum.Null, false);
         }
     }
