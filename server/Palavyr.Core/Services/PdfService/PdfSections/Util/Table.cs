@@ -72,7 +72,7 @@ namespace Palavyr.Core.Services.PdfService.PdfSections.Util
             builder.Append($@"<tbody>");
             for (var rowIndex = 0; rowIndex < rowList.Count; rowIndex++)
             {
-                var color = rowIndex % 2 == 0 ? "none" : "lightgray";
+                var color = rowIndex  == rowList.Count - 1 ? "lightgray" : "none";
                 builder.Append($@"<tr style='background-color: {color};'>");
 
                 var row = rowList[rowIndex];

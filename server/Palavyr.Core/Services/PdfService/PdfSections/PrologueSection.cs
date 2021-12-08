@@ -11,7 +11,7 @@ namespace Palavyr.Core.Services.PdfService.PdfSections
             var builder = new StringBuilder();
             
             builder.Append(
-                $@"<section id='PROLOGUE' style='padding-left: .5in; padding-right: .5in; text-align:justify;margin-bottom: 10mm;'>");
+                $@"<section id='PROLOGUE' style='padding-left: .5in; padding-right: .5in; text-align:justify; margin-bottom: 10mm;'>");
             foreach (var para in paragraphs)
             {
                 builder.Append($@"<p>{para}</p>");

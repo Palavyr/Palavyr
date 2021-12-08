@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AmazonServices;
@@ -72,8 +74,10 @@ namespace Palavyr.Core.Services.PdfService
             var fakeResponses = criticalResponses.Compile(
                 new List<Dictionary<string, string>>()
                 {
-                    new Dictionary<string, string>() {{"Example info", "Crucial response"}},
-                    new Dictionary<string, string>() {{"Selected to Include", "An insightful response"}},
+                    new Dictionary<string, string>() {{"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam"}},
+                    new Dictionary<string, string>() {{"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam"}},
+                    new Dictionary<string, string>() {{"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam"}},
+
                 });
 
             logger.LogDebug("Attempting to collect table data....");
@@ -87,7 +91,14 @@ namespace Palavyr.Core.Services.PdfService
                 areaData,
                 fakeResponses,
                 staticTables,
-                dynamicTables);
+                dynamicTables,
+                new EmailRequest()
+                {
+                    Name = "John Doe",
+                    EmailAddress = "john.doe@example.com",
+                    Phone = "555-555-555",
+                    ConversationId = Guid.NewGuid().ToString()
+                });
 
             var localTempSafeFile = temporaryPath.CreateLocalTempSafeFile();
 

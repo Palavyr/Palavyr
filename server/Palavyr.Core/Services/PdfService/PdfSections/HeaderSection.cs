@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Services.AmazonServices;
-using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.PdfService.PdfSections
 {
@@ -19,8 +18,9 @@ namespace Palavyr.Core.Services.PdfService.PdfSections
         {
             var builder = new StringBuilder();
 
+
             builder.Append(
-                @"<table style='table-layout:auto; width: 100%; border-collapse: collapse; text-align: left;'><tbody>");
+                @"<table style='table-layout:auto; border-collapse: collapse; text-align: right; float: right;'><tbody>");
             foreach (var item in items)
             {
                 var key = item.Keys.ToList()[0];
@@ -32,56 +32,31 @@ namespace Palavyr.Core.Services.PdfService.PdfSections
             return builder.ToString();
         }
 
-        private static string TwoColTableGenerator(List<Dictionary<string, string>> items)
-        {
-            var builder = new StringBuilder();
-
-            builder.Append(
-                $@"<table style='table-layout:auto; width: 100%; border-collapse:collapse; text-align: left'><tbody>");
-
-            foreach (var item in items)
-            {
-                var key = item.Keys.ToList()[0];
-                var value = item.Values.ToList()[0];
-                builder.Append(@$"<tr><th style='padding: 2mm' scope='col'>{key}:</th><td>{value}</td></tr>");
-            }
-
-            ;
-            builder.Append(@"</tbody></table>");
-            return builder.ToString();
-        }
 
         private static string CreateHeaderSection(
             string imageUri,
-            List<string> companyTable,
-            List<Dictionary<string, string>> criticalTable
+            List<string> companyTable
         )
         {
             var builder = new StringBuilder();
 
             var firstTable = companyTable.Select(el => new Dictionary<string, string>() {["th"] = el}).ToList();
-            firstTable.Add(new Dictionary<string, string>() {["th"] = DateTime.Today.ToString()});
+            firstTable.Add(new Dictionary<string, string>() {["th"] = DateTime.Now.ToString()});
 
-            builder.Append(@"<section id='HEADER' style='display: inline-block; padding-left: .5in; padding-right: .5in;'>");
-
+            builder.Append(@"<section id='HEADER' style='display: flex; flex-direction: row; padding-top: .5in; padding-left: .5in; padding-right: .5in;'>");
             if (!string.IsNullOrWhiteSpace(imageUri))
             {
-                builder.Append(@"<div style='height: 100%; float: left; text-align: center; margin-right: 10mm'>");
-                builder.Append(
-                    $@"<img src='{imageUri}' style='width: 200px; height: 200px; vertical-align: middle; margin-left: 5mm'>");
-                builder.Append($@"</div>");
+                builder.Append($@"<img src='{imageUri}' style='margin-left: 2rem; width: 200px; height: 200px; object-fit: contain;'>");
             }
 
-            builder.Append($@"<div style='max-height: 100%; float: right;'>");
             builder.Append(SingleColTableGenerator(firstTable));
-            builder.Append(TwoColTableGenerator(criticalTable));
-            builder.Append($@"</div>");
+
             builder.Append("</section>");
 
             return builder.ToString();
         }
 
-        public static string GetHeader(Account account, CriticalResponses response, ILinkCreator linkCreator, string userDataBucket)
+        public static string GetHeader(Account account, ILinkCreator linkCreator, string userDataBucket, string emailAddress)
         {
             var imageLocation = account.AccountLogoUri ?? "";
             var logoUri = "";
@@ -89,16 +64,16 @@ namespace Palavyr.Core.Services.PdfService.PdfSections
             {
                 logoUri = linkCreator.GenericCreatePreSignedUrl(imageLocation, userDataBucket);
             }
-            
+
             var companyDetails = new List<string>()
             {
-                "<h2>" + account.CompanyName + "</h2>", account.PhoneNumber, account.EmailAddress
+                $"<h2 style='padding-bottom: -20px;'>{account.CompanyName}</h2><h4 style='margin-top: -4rem;' >{account.PhoneNumber}</h4>", " ", emailAddress
             };
 
             var header = CreateHeaderSection(
-                logoUri, 
-                companyDetails,
-                response.CreateResponse());
+                logoUri,
+                companyDetails
+            );
             return header;
         }
     }

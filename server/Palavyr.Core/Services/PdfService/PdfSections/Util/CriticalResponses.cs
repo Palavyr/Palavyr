@@ -29,7 +29,7 @@ namespace Palavyr.Core.Services.PdfService.PdfSections.Util
                 foreach (var (key, val) in keyValDict)
                 {
                     response.Add(
-                        new Dictionary<string, string>()
+                        new Dictionary<string, string>
                         {
                             {key, val}
                         });

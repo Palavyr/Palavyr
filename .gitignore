@@ -246,3 +246,5 @@ widget/build/*
 
 *PalavyrPdfServer*
 ui/dist*
+
+*HTMLTEST.html
