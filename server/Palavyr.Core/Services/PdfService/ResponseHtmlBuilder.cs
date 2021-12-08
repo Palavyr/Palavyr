@@ -23,7 +23,13 @@ namespace Palavyr.Core.Services.PdfService
             this.configuration = configuration;
         }
 
-        public string BuildResponseHtml(Account account, Area previewData, CriticalResponses criticalResponses, List<Table> staticTables, List<Table> dynamicTables, EmailRequest emailRequest)
+        public string BuildResponseHtml(
+            Account account,
+            Area previewData,
+            CriticalResponses criticalResponses,
+            List<Table> staticTables,
+            List<Table> dynamicTables,
+            EmailRequest emailRequest)
         {
             var previewBuilder = new StringBuilder();
 
@@ -49,8 +55,6 @@ namespace Palavyr.Core.Services.PdfService
             previewBuilder.Append(@"</div></body></html>");
 
             var html = previewBuilder.ToString();
-
-            File.WriteAllText("C:\\Users\\paule\\code\\HTMLTEST.html", html);
 
             return html;
         }
