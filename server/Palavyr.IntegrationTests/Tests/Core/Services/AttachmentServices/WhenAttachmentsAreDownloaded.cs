@@ -32,7 +32,18 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
             public async Task DownloadMetasLookCorrect()
             {
                 var retriever = Container.GetService<IAttachmentRetriever>();
-                var result = await retriever.RetrieveAttachmentFiles(IntegrationConstants.AccountId, IntegrationConstants.DefaultArea, null, default);
+                var downloadRequests = new List<S3SDownloadRequestMeta>();
+                foreach (var meta in s3Metas)
+                {
+                    downloadRequests.Add(
+                        new S3SDownloadRequestMeta()
+                        {
+                            FileNameWithExtension = meta.SafeName + ".pdf",
+                            S3Key = meta.Key
+                        });
+                }
+
+                var result = await retriever.RetrieveAttachmentFiles(IntegrationConstants.AccountId, IntegrationConstants.DefaultArea, downloadRequests, default);
 
                 // assert
                 result.Length.ShouldBe(5);
@@ -82,7 +93,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
             public async Task NoAttachmentsAreReturned()
             {
                 var retriever = Container.GetService<IAttachmentRetriever>();
-                var result = await retriever.RetrieveAttachmentFiles(IntegrationConstants.AccountId, IntegrationConstants.DefaultArea, null, default);
+                var result = await retriever.RetrieveAttachmentFiles(IntegrationConstants.AccountId, IntegrationConstants.DefaultArea, new List<S3SDownloadRequestMeta>(), default);
 
                 // assert
                 result.Length.ShouldBe(0);
