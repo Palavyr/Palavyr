@@ -11,6 +11,7 @@ using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
@@ -20,16 +21,19 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         private readonly IGenericDynamicTableRepository<TwoNestedCategory> repository;
         private readonly IConfigurationRepository configurationRepository;
         private readonly IConversationOptionSplitter splitter;
+        private readonly IResponseRetriever responseRetriever;
 
         public TwoNestedCategoryCompiler(
             IGenericDynamicTableRepository<TwoNestedCategory> repository,
             IConfigurationRepository configurationRepository,
-            IConversationOptionSplitter splitter
+            IConversationOptionSplitter splitter,
+            IResponseRetriever responseRetriever
         ) : base(repository)
         {
             this.repository = repository;
             this.configurationRepository = configurationRepository;
             this.splitter = splitter;
+            this.responseRetriever = responseRetriever;
         }
 
         public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
@@ -117,6 +121,23 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var areaId = dynamicTableMeta.AreaIdentifier;
             var table = await base.repository.GetAllRows(accountId, areaId, tableId);
             return ValidationLogic(table, dynamicTableMeta.TableTag);
+        }
+
+        public async Task<List<TableRow>> CreatePreviewData(string accountId, DynamicTableMeta tableMeta, Area _, CultureInfo culture)
+        {
+            var availableTwoNested = await responseRetriever.RetrieveAllAvailableResponses<TwoNestedCategory>(accountId, tableMeta.TableId);
+            var currentRows = new List<TableRow>()
+            {
+                new TableRow(
+                    tableMeta.UseTableTagAsResponseDescription ? tableMeta.TableTag : string.Join(" & ", new[] {availableTwoNested.First().ItemName, availableTwoNested.First().InnerItemName}),
+                    availableTwoNested.First().ValueMin,
+                    availableTwoNested.First().ValueMax,
+                    false,
+                    culture,
+                    availableTwoNested.First().Range
+                )
+            };
+            return currentRows;
         }
 
         public async Task<List<TwoNestedCategory>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId)

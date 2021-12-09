@@ -13,6 +13,7 @@ using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.DynamicTableService.Thresholds;
+using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
@@ -22,17 +23,20 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         private readonly IConfigurationRepository configurationRepository;
         private readonly IConversationOptionSplitter splitter;
         private readonly IThresholdEvaluator thresholdEvaluator;
+        private readonly IResponseRetriever responseRetriever;
 
         public CategoryNestedThresholdCompiler(
             IGenericDynamicTableRepository<CategoryNestedThreshold> repository,
             IConfigurationRepository configurationRepository,
             IConversationOptionSplitter splitter,
-            IThresholdEvaluator thresholdEvaluator
+            IThresholdEvaluator thresholdEvaluator,
+            IResponseRetriever responseRetriever
         ) : base(repository)
         {
             this.configurationRepository = configurationRepository;
             this.splitter = splitter;
             this.thresholdEvaluator = thresholdEvaluator;
+            this.responseRetriever = responseRetriever;
         }
 
         public List<string> GetCategories(List<CategoryNestedThreshold> rawRows)
@@ -218,6 +222,24 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var areaId = dynamicTableMeta.AreaIdentifier;
             var table = await repository.GetAllRows(accountId, areaId, tableId);
             return ValidationLogic(table, dynamicTableMeta.TableTag);
+        }
+
+        public async Task<List<TableRow>> CreatePreviewData(string accountId, DynamicTableMeta tableMeta, Area _, CultureInfo culture)
+        {
+            var availableNestedThreshold = await responseRetriever.RetrieveAllAvailableResponses<CategoryNestedThreshold>(accountId, tableMeta.TableId);
+            var currentRows = new List<TableRow>()
+            {
+                new TableRow(
+                    tableMeta.UseTableTagAsResponseDescription ? tableMeta.TableTag : availableNestedThreshold.First().ItemName,
+                    availableNestedThreshold.First().ValueMin,
+                    availableNestedThreshold.First().ValueMax,
+                    false,
+                    culture,
+                    availableNestedThreshold.First().Range)
+            };
+
+            return currentRows;
+
         }
 
         public async Task<List<CategoryNestedThreshold>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId)

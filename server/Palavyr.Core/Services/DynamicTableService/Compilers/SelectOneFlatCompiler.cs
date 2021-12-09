@@ -13,6 +13,7 @@ using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.DynamicTableService.NodeUpdaters;
+using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
@@ -22,17 +23,20 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         private readonly IConfigurationRepository configurationRepository;
         private readonly IConversationOptionSplitter splitter;
         private readonly ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater;
+        private readonly IResponseRetriever responseRetriever;
 
         public SelectOneFlatCompiler(
             IGenericDynamicTableRepository<SelectOneFlat> repository,
             IConfigurationRepository configurationRepository,
             IConversationOptionSplitter splitter,
-            ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater
+            ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater,
+            IResponseRetriever responseRetriever
         ) : base(repository)
         {
             this.configurationRepository = configurationRepository;
             this.splitter = splitter;
             this.selectOneFlatNodeUpdater = selectOneFlatNodeUpdater;
+            this.responseRetriever = responseRetriever;
         }
 
         public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier, string accountId)
@@ -139,6 +143,14 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var areaId = dynamicTableMeta.AreaIdentifier;
             var table = await repository.GetAllRows(accountId, areaId, tableId);
             return ValidationLogic(table, dynamicTableMeta.TableTag);
+        }
+
+        public async Task<List<TableRow>> CreatePreviewData(string accountId, DynamicTableMeta tableMeta, Area area, CultureInfo culture)
+        {
+            var availableOneFlat = await responseRetriever.RetrieveAllAvailableResponses<SelectOneFlat>(accountId, tableMeta.TableId);
+            var responseParts = DynamicTableTypes.CreateSelectOneFlat().CreateDynamicResponseParts(availableOneFlat.First().TableId, availableOneFlat.First().Option);
+            var currentRows = await CompileToPdfTableRow(area.AccountId, responseParts, new List<string>() {tableMeta.TableId}, culture);
+            return currentRows;
         }
 
         public async Task<List<SelectOneFlat>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId)

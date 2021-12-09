@@ -123,7 +123,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<NodeBranchLengthCalculator>().As<INodeBranchLengthCalculator>();
 
             builder.RegisterType<DetermineCurrentOperatingSystem>().As<IDetermineCurrentOperatingSystem>();
-            builder.RegisterType<ResponseRetriever>().AsSelf().InstancePerDependency();
+            builder.RegisterType<ResponseRetriever>().As<IResponseRetriever>().InstancePerDependency();
         }
     }
 }

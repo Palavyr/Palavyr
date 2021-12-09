@@ -11,6 +11,7 @@ using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.DynamicTableService.Thresholds;
+using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
@@ -20,16 +21,19 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         private readonly IGenericDynamicTableRepository<BasicThreshold> repository;
         private readonly IConfigurationRepository configurationRepository;
         private readonly IThresholdEvaluator thresholdEvaluator;
+        private readonly IResponseRetriever responseRetriever;
 
         public BasicThresholdCompiler(
             IGenericDynamicTableRepository<BasicThreshold> repository,
             IConfigurationRepository configurationRepository,
-            IThresholdEvaluator thresholdEvaluator
+            IThresholdEvaluator thresholdEvaluator,
+            IResponseRetriever responseRetriever
         ) : base(repository)
         {
             this.repository = repository;
             this.configurationRepository = configurationRepository;
             this.thresholdEvaluator = thresholdEvaluator;
+            this.responseRetriever = responseRetriever;
         }
 
         public async Task UpdateConversationNode(DashContext dashContext, DynamicTable table, string tableId, string areaIdentifier, string accountId)
@@ -139,7 +143,15 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var thresholds = await base.repository.GetAllRows(accountId, areaId, tableId);
             return ValidationLogic(thresholds, dynamicTableMeta.TableTag);
         }
-        
+
+        public async Task<List<TableRow>> CreatePreviewData(string accountId, DynamicTableMeta tableMeta, Area area, CultureInfo culture)
+        {
+            var availableBasicThreshold = await responseRetriever.RetrieveAllAvailableResponses<BasicThreshold>(accountId, tableMeta.TableId);
+            var responseParts = DynamicTableTypes.CreateBasicThreshold().CreateDynamicResponseParts(availableBasicThreshold.First().TableId, availableBasicThreshold.First().Threshold.ToString());
+            var currentRows = await CompileToPdfTableRow(area.AccountId, responseParts, new List<string>() {tableMeta.TableId}, culture);
+            return currentRows;
+        }
+
         public async Task<List<BasicThreshold>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId)
         {
             return await GetAllRowsMatchingResponseId(accountId, dynamicResponseId);

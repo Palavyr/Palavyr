@@ -23,5 +23,6 @@ namespace Palavyr.Core.Services.DynamicTableService
 
         PricingStrategyValidationResult ValidatePricingStrategyPreSave(DynamicTable dynamicTable);
         Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta);
+        Task<List<TableRow>> CreatePreviewData(string accountId, DynamicTableMeta tableMeta, Area area, CultureInfo culture);
     }
 }

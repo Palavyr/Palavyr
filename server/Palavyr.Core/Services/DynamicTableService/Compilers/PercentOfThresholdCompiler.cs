@@ -11,6 +11,7 @@ using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.DynamicTableService.Thresholds;
+using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
 namespace Palavyr.Core.Services.DynamicTableService.Compilers
@@ -19,15 +20,18 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
     {
         private readonly IConfigurationRepository configurationRepository;
         private readonly IThresholdEvaluator thresholdEvaluator;
+        private readonly IResponseRetriever responseRetriever;
 
         public PercentOfThresholdCompiler(
             IGenericDynamicTableRepository<PercentOfThreshold> repository,
             IConfigurationRepository configurationRepository,
-            IThresholdEvaluator thresholdEvaluator
+            IThresholdEvaluator thresholdEvaluator,
+            IResponseRetriever responseRetriever
         ) : base(repository)
         {
             this.configurationRepository = configurationRepository;
             this.thresholdEvaluator = thresholdEvaluator;
+            this.responseRetriever = responseRetriever;
         }
 
         public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier, string accountId)
@@ -168,6 +172,14 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var areaId = dynamicTableMeta.AreaIdentifier;
             var table = await repository.GetAllRows(accountId, areaId, tableId);
             return ValidationLogic(table, dynamicTableMeta.TableTag);
+        }
+
+        public async Task<List<TableRow>> CreatePreviewData(string accountId, DynamicTableMeta tableMeta, Area area, CultureInfo culture)
+        {
+            var availablePercentOfThreshold = await responseRetriever.RetrieveAllAvailableResponses<PercentOfThreshold>(accountId, tableMeta.TableId);
+            var responseParts = DynamicTableTypes.CreatePercentOfThreshold().CreateDynamicResponseParts(availablePercentOfThreshold.First().TableId, availablePercentOfThreshold.First().Threshold.ToString());
+            var currentRows = await CompileToPdfTableRow(area.AccountId, responseParts, new List<string>() {tableMeta.TableId}, culture);
+            return currentRows;
         }
 
         public async Task<List<PercentOfThreshold>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId)
