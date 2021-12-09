@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Exceptions;
+using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
@@ -14,6 +16,7 @@ using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AmazonServices.S3Service;
+using Palavyr.Core.Services.DynamicTableService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Services.PdfService.PdfServer;
 using Palavyr.Core.Services.TemporaryPaths;
@@ -34,6 +37,7 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IS3KeyResolver s3KeyResolver;
         private readonly ITemporaryPath temporaryPath;
         private readonly ICriticalResponses criticalResponses;
+        private readonly DynamicTableCompilerRetriever compilerRetriever;
 
         public PreviewResponseGenerator(
             IConfiguration configuration,
@@ -47,7 +51,8 @@ namespace Palavyr.Core.Services.PdfService
             IGenericDynamicTableRepository<SelectOneFlat> genericDynamicTableRepository,
             IS3KeyResolver s3KeyResolver,
             ITemporaryPath temporaryPath,
-            ICriticalResponses criticalResponses
+            ICriticalResponses criticalResponses,
+            DynamicTableCompilerRetriever compilerRetriever
         )
         {
             this.configuration = configuration;
@@ -62,6 +67,7 @@ namespace Palavyr.Core.Services.PdfService
             this.s3KeyResolver = s3KeyResolver;
             this.temporaryPath = temporaryPath;
             this.criticalResponses = criticalResponses;
+            this.compilerRetriever = compilerRetriever;
         }
 
         public async Task<FileLink> CreatePdfResponsePreviewAsync(string accountId, string areaId, CultureInfo culture, CancellationToken cancellationToken)
@@ -77,7 +83,6 @@ namespace Palavyr.Core.Services.PdfService
                     new Dictionary<string, string>() {{"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam"}},
                     new Dictionary<string, string>() {{"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam"}},
                     new Dictionary<string, string>() {{"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.?", "Ut enim ad minim veniam"}},
-
                 });
 
             logger.LogDebug("Attempting to collect table data....");
@@ -118,22 +123,38 @@ namespace Palavyr.Core.Services.PdfService
             var rows = new List<TableRow>();
             foreach (var tableMeta in dynamicTableMetas)
             {
-                if (tableMeta.TableType == DynamicTableTypes.CreateSelectOneFlat().TableType)
+                var dynamicCompiler = compilerRetriever.RetrieveCompiler(tableMeta.TableType);
+
+                DynamicResponseParts responseParts;
+
+                switch (tableMeta.TableType)
                 {
-                    var tableRows = await genericDynamicTableRepository.GetAllRows(accountId, area.AreaIdentifier, tableMeta.TableId);
+                    case nameof(DynamicTableTypes.BasicThreshold):
+                        responseParts = DynamicTableTypes.CreateBasicThreshold().CreateDynamicResponseParts("A product", "200.50");
+                        break;
 
-                    var randomTableRow = tableRows[0]; // TODO: allow this to be specified via frontend
-                    const bool perPerson = false; // TODO: Allow to specify true
-                    var row = new TableRow(
-                        randomTableRow.Option,
-                        randomTableRow.ValueMin,
-                        randomTableRow.ValueMax,
-                        perPerson,
-                        culture,
-                        randomTableRow.Range);
+                    case nameof(DynamicTableTypes.SelectOneFlat):
+                        responseParts = DynamicTableTypes.CreateSelectOneFlat().CreateDynamicResponseParts("A Category", "450.00");
+                        break;
 
-                    rows.Add(row);
+                    case nameof(DynamicTableTypes.CategoryNestedThreshold):
+                        responseParts = DynamicTableTypes.CreateCategoryNestedThreshold().CreateDynamicResponseParts("A category - A threshold", "500.00");
+                        break;
+
+                    case nameof(DynamicTableTypes.PercentOfThreshold):
+                        responseParts = DynamicTableTypes.CreatePercentOfThreshold().CreateDynamicResponseParts("A product", "130.00");
+                        break;
+
+                    case nameof(DynamicTableTypes.TwoNestedCategory):
+                        responseParts = DynamicTableTypes.CreateTwoNestedCategory().CreateDynamicResponseParts("Outer Category - Inner Category", "220.00");
+                        break;
+
+                    default:
+                        throw new DomainException("Dynamic Table Type not identified");
                 }
+
+                var currentRows = await dynamicCompiler.CompileToPdfTableRow(area.AccountId, responseParts, new List<string>() {tableMeta.TableId}, culture);
+                rows.AddRange(currentRows);
             }
 
             var table = new Table("Variable estimates determined by your responses", rows, culture);

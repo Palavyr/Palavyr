@@ -1,11 +1,22 @@
 ﻿using System.Collections.Generic;
+using Palavyr.Core.Models.Aliases;
 
 namespace Palavyr.Core.Models.Configuration.Constant
 {
     public abstract class DynamicType
     {
+        public readonly string tableType;
+
         public string TableType { get; set; }
         public string PrettyName { get; set; }
+
+        public DynamicResponseParts CreateDynamicResponseParts(string key, string value)
+        {
+            return new DynamicResponseParts
+            {
+                new DynamicResponsePart() {{key, value}}
+            };
+        }
     }
 
     public static class DynamicTableTypes
@@ -17,6 +28,7 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public static BasicThreshold CreateBasicThreshold() => new BasicThreshold();
         public static TwoNestedCategory CreateTwoNestedCategory() => new TwoNestedCategory();
         public static CategoryNestedThreshold CreateCategoryNestedThreshold() => new CategoryNestedThreshold();
+
         public static List<DynamicType> GetDynamicTableTypes()
         {
             return new List<DynamicType>
@@ -69,13 +81,15 @@ namespace Palavyr.Core.Models.Configuration.Constant
 
         public class BasicThreshold : DynamicType
         {
+            public static readonly string tableType = nameof(BasicThreshold);
+
             public BasicThreshold()
             {
                 PrettyName = "Simple Threshold";
-                TableType = nameof(BasicThreshold);
+                TableType = tableType;
             }
-        }
 
-        // We can define new DynamicTypes here
+            // We can define new DynamicTypes here
+        }
     }
 }

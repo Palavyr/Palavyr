@@ -31,7 +31,7 @@ namespace Palavyr.Core.Services.PdfService
                 {
                     var minFee = meta.PerPersonInputRequired ? dbRow.Fee.Min * numIndividuals : dbRow.Fee.Min;
                     var maxFee = meta.PerPersonInputRequired ? dbRow.Fee.Max * numIndividuals : dbRow.Fee.Max;
-                    var perPerson = !meta.PerPersonInputRequired; // if we collect num individuals, then we don't want to show the text for it. 
+                    var perPerson = !meta.PerPersonInputRequired && dbRow.PerPerson; // if we collect num individuals, then we don't want to show the text for it. 
                     var row = new TableRow(
                         dbRow.Description,
                         minFee,

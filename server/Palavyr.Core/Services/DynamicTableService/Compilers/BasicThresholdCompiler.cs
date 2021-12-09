@@ -67,7 +67,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
             var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(allRows.First().TableId);
 
-            var itemsToCreateRowsFor = allRows.Select(row => row.ItemName).Distinct();
+            var itemsToCreateRowsFor = allRows.Where(x => !string.IsNullOrWhiteSpace(x.ItemName)).Select(row => row.ItemName).Distinct();
 
             var tableRows = new List<TableRow>();
 

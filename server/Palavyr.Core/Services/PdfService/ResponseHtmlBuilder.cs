@@ -6,7 +6,6 @@ using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.PdfService.PdfSections;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
-using System.IO;
 using Palavyr.Core.Models.Resources.Requests;
 using Account = Palavyr.Core.Models.Accounts.Schemas.Account;
 
