@@ -27,8 +27,8 @@ export const ComponentRegistry: Registry = {
     EndWithoutEmail: components.makeEndWithoutEmail,
 
     Selection: components.makeSelectOptions,
-    // Selection: components.makeCollectDetails
     CollectDetails: components.makeCollectDetails,
+    ProvideInfoWithPdfLink: components.makeProvideInfoWithPdfLink,
 };
 
 export const ConvoContextProperties = {

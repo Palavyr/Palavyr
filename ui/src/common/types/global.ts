@@ -567,7 +567,6 @@ export type IncompleteArea = {
 
 export type IncompleteAreas = IncompleteArea[];
 
-
 export type VariableDetail = {
     name: string;
     pattern: string;
@@ -1068,7 +1067,6 @@ export type NewConversation = {
 };
 
 export type WidgetPreferences = {
-
     landingHeader: string;
     chatHeader: string;
     placeholder: string;
@@ -1084,7 +1082,6 @@ export type WidgetPreferences = {
     buttonColor: string;
     buttonFontColor: string;
 };
-
 
 export type WidgetConversationUpdate = {
     ConversationId: string;
@@ -1114,6 +1111,7 @@ export type WidgetPreCheckResult = {
 export type SendEmailResultResponse = {
     nextNodeId: string;
     result: boolean;
+    pdfLink?: string;
 };
 
 export interface IProgressTheChat {
@@ -1161,6 +1159,7 @@ export type ContextProperties = {
     dynamicResponses: DynamicResponses;
     numIndividuals: number | null;
     widgetPreferences: WidgetPreferences | null;
+    pdfLink: string | null;
 };
 
 export interface IMessage extends BaseMessage {
@@ -1199,6 +1198,7 @@ export interface ContextState {
     dynamicResponses: DynamicResponses;
     numIndividuals: number | null;
     widgetPreferences: WidgetPreferences | null;
+    pdfLink: string | null;
 }
 
 export interface MessagesState {
@@ -1255,6 +1255,12 @@ export const SET_REGION_CONTEXT = "CONTEXT_PROPERTIES/SET_REGION";
 export const SET_KEYVALUE_CONTEXT = "CONTEXT_PROPERTIES/SET_KEYVALUE";
 export const SET_DYNAMICRESPONSE_CONTEXT = "CONTEXT_PROPERTIES/SET_DYNAMICRESPONSE";
 export const SET_DYNAMICRESPONSES_CONTEXT = "CONTEXT_PROPERTIES/SET_DYNAMICRESPONSES";
+export const SET_PDF_LINK = "CONTEXT_PROPERTIES/SET_PDF_LINK";
+
+export interface SetPdfLink {
+    type: typeof SET_PDF_LINK;
+    pdfLink: string;
+}
 
 export interface OpenUserDetails {
     type: typeof OPEN_USER_DETAILS;

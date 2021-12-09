@@ -26,6 +26,8 @@ namespace Palavyr.Core.Models.Configuration.Constant
 
             public static string Selection => DefaultNodeTypeOptions.Selection.StringName;
             public static string CollectDetails => DefaultNodeTypeOptions.CollectDetails.StringName;
+
+            public static string ProvideInfoWithPdfLink => DefaultNodeTypeOptions.ProvideInfoWithPdfLink.StringName;
         }
 
         public static List<NodeTypeOption> IntroNodeOptionList =>
@@ -598,5 +600,32 @@ namespace Palavyr.Core.Models.Configuration.Constant
                 NodeTypeCode = NodeTypeCode.I;
             }
         }
+        
+        
+        public class ProvideInfoWithPdfLink : NodeTypeOption
+        {
+            public new static string StringName => nameof(ProvideInfoWithPdfLink);
+
+            public ProvideInfoWithPdfLink()
+            {
+                Text = "Provide Info With Pdf Link";
+                Value = StringName;
+                PathOptions = new List<string>() {"Continue"};
+                ValueOptions = new List<string>() {"Continue"};
+                IsMultiOptionType = false;
+                IsTerminalType = false;
+                GroupName = InfoProvide;
+                ShouldRenderChildren = true;
+                ShouldShowMultiOption = false;
+                IsAnabranchType = false;
+                IsAnabranchMergePoint = false;
+                IsDynamicType = false;
+                NodeComponentType = NodeComponentTypes.ProvideInfo;
+                IsCurrency = false;
+                IsMultiOptionEditable = false;
+                NodeTypeCode = NodeTypeCode.II;
+            }
+        }
+
     }
 }

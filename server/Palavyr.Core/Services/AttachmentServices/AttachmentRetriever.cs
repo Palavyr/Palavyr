@@ -9,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AmazonServices.S3Service;
@@ -20,7 +19,9 @@ namespace Palavyr.Core.Services.AttachmentServices
     public interface IAttachmentRetriever
     {
         Task<FileLink[]> RetrieveAttachmentLinks(string account, string areaId, CancellationToken cancellationToken);
-        Task<IHaveBeenDownloadedFromS3[]> RetrieveAttachmentFiles(string account, string areaId, S3SDownloadRequestMeta[]? additionalFiles, CancellationToken cancellationToken);
+        Task<IHaveBeenDownloadedFromS3[]> RetrieveAttachmentFiles(string account, string areaId, List<S3SDownloadRequestMeta> s3DownloadRequestMetas, CancellationToken cancellationToken);
+        Task<List<S3SDownloadRequestMeta>> RetrievePdfUris(string areaId, CancellationToken cancellationToken);
+
     }
 
     public class AttachmentRetriever : IAttachmentRetriever
@@ -68,11 +69,10 @@ namespace Palavyr.Core.Services.AttachmentServices
 
             return fileLinks.ToArray();
         }
+        
 
-
-        public async Task<IHaveBeenDownloadedFromS3[]> RetrieveAttachmentFiles(string accountId, string areaId, S3SDownloadRequestMeta[]? additionalFiles, CancellationToken cancellationToken)
+        public async Task<List<S3SDownloadRequestMeta>> RetrievePdfUris(string areaId, CancellationToken cancellationToken)
         {
-            var userDataBucket = configuration.GetUserDataBucket();
             var metas = await dashContext.FileNameMaps
                 .Where(x => x.AreaIdentifier == areaId)
                 .Select(
@@ -81,13 +81,15 @@ namespace Palavyr.Core.Services.AttachmentServices
                         S3Key = x.S3Key,
                         FileNameWithExtension = x.RiskyName
                     }).ToListAsync(cancellationToken);
+            return metas;
+        }
 
-            if (additionalFiles != null)
-            {
-                metas.AddRange(additionalFiles);
-            }
-
-            var localFilePaths = await s3Retriever.DownloadObjectsFromS3(userDataBucket, metas, cancellationToken);
+        
+        
+        public async Task<IHaveBeenDownloadedFromS3[]> RetrieveAttachmentFiles(string accountId, string areaId, List<S3SDownloadRequestMeta> s3DownloadRequestMetas,  CancellationToken cancellationToken)
+        {
+            var userDataBucket = configuration.GetUserDataBucket();
+            var localFilePaths = await s3Retriever.DownloadObjectsFromS3(userDataBucket, s3DownloadRequestMetas, cancellationToken);
             if (localFilePaths == null)
             {
                 throw new AmazonS3Exception("Unable to download to server!");

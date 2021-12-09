@@ -8,6 +8,7 @@ import {
     SET_KEYVALUE_CONTEXT,
     SET_NAME_CONTEXT,
     SET_NUM_INDIVIDUALS_CONTEXT,
+    SET_PDF_LINK,
     SET_PHONE_CONTEXT,
     SET_REGION_CONTEXT,
     SET_WIDGETPREFERENCES_CONTEXT,
@@ -22,6 +23,7 @@ export const defaultContextProperties: ContextProperties = {
     region: "",
     numIndividuals: null,
     widgetPreferences: null,
+    pdfLink: null
 };
 
 const reducer = {
@@ -34,6 +36,7 @@ const reducer = {
     [SET_KEYVALUE_CONTEXT]: (state: ContextState, { keyValue }): ContextState => ({ ...state, keyValues: [...state.keyValues, keyValue] }),
     [SET_DYNAMICRESPONSES_CONTEXT]: (state: ContextState, { dynamicResponseObject }): ContextState => ({ ...state, dynamicResponses: dynamicResponseObject }),
     [SET_WIDGETPREFERENCES_CONTEXT]: (state: ContextState, { widgetPreferences }): ContextState => ({ ...state, widgetPreferences: widgetPreferences }),
+    [SET_PDF_LINK]: (state: ContextState, { pdfLink }): ContextState => ({ ...state, pdfLink: pdfLink }),
 };
 
 export const contextReducer = (state: ContextProperties = defaultContextProperties, action: ContextPropertyActions) => {

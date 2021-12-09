@@ -95,7 +95,7 @@ namespace Palavyr.Core.Models
                 "",
                 "",
                 accountId,
-                DefaultNodeTypeOptions.ProvideInfo.StringName,
+                DefaultNodeTypeOptions.ProvideInfoWithPdfLink.StringName,
                 NodeTypeCode.II,
                 false,
                 false,

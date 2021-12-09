@@ -120,9 +120,10 @@ export function setDynamicResponses(dynamicResponseObject: DynamicResponses) {
     PalavyrWidgetStore.dispatch(actions._setDynamicResponses(dynamicResponseObject));
 }
 
-// export function getWidgetPreferences() {
-//     return getContextProperties().widgetPreferences;
-// }
+export function setPdfLink(pdfLink: string) {
+    PalavyrWidgetStore.dispatch(actions._setPdfLink(pdfLink));
+}
+
 
 export function getContextProperties(): ContextProperties {
     const context = PalavyrWidgetStore.getState().contextReducer as ContextProperties;

@@ -1,16 +1,19 @@
+#nullable enable
 namespace Palavyr.Core.Models.Resources.Responses
 {
     public class SendEmailResultResponse
     {
         public string NextNodeId { get; set; }
         public bool Result { get; set; }
+        public string? PdfLink { get; set; }
         
-        public static SendEmailResultResponse CreateSuccess(string nextNodeId)
+        public static SendEmailResultResponse CreateSuccess(string nextNodeId, string? pdfLink)
         {
             return new SendEmailResultResponse()
             {
                 NextNodeId = nextNodeId,
-                Result = true
+                Result = true,
+                PdfLink = pdfLink
             };
         }
 

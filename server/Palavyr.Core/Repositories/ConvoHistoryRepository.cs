@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -18,9 +19,9 @@ namespace Palavyr.Core.Repositories
             this.logger = logger;
         }
 
-        public async Task CommitChangesAsync()
+        public async Task CommitChangesAsync(CancellationToken cancellationToken = default) // todo: remove default 
         {
-            await convoContext.SaveChangesAsync();
+            await convoContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task CreateNewConversationRecord(ConversationRecord newConversationRecord)

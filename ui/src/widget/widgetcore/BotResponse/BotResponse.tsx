@@ -1,6 +1,6 @@
 import React from "react";
 import format from "date-fns/format";
-import { makeStyles, Table } from "@material-ui/core";
+import { Link, makeStyles, Table, Typography } from "@material-ui/core";
 import classNames from "classnames";
 import { HtmlTextMessage } from "@widgetcore/BotResponse/HtmlTextMessage";
 import { SingleRowSingleCell } from "@widgetcore/BotResponse/TableCell";
@@ -38,6 +38,30 @@ const useStyles = makeStyles(theme => ({
     marginTop: {
         marginTop: "1rem",
     },
+    pdfLinkContainer: {
+        display: "flex",
+        justifyContent: "flex-center",
+        alignItems: "center",
+        padding: ".5rem",
+        margin: "0.5rem",
+        color: "black",
+        textAlign: "center",
+        backgroundColor: "lightgrey",
+        textDecoration: "none",
+        "&:hover": {
+            background: "gray",
+            color: "white",
+            borderRadius: "10px",
+        },
+    },
+    link: {
+        textDecoration: "none",
+        textAlign: "center",
+        "&:active": {
+            textDecoration: "none",
+        },
+
+    },
 }));
 
 export interface BotResponseProps {
@@ -45,9 +69,10 @@ export interface BotResponseProps {
     input?: React.ReactNode;
     button?: React.ReactNode;
     buttons?: React.ReactNode;
+    pdfLink?: string | null;
 }
 
-export const BotResponse = ({ message, input, button, buttons }: BotResponseProps) => {
+export const BotResponse = ({ message, input, button, buttons, pdfLink = null }: BotResponseProps) => {
     const cls = useStyles();
     return (
         <div className={cls.container}>
@@ -61,6 +86,15 @@ export const BotResponse = ({ message, input, button, buttons }: BotResponseProp
                             </Fade>
                         </SingleRowSingleCell>
                     )}
+                    {pdfLink && (
+                        <div className={cls.pdfLinkContainer}>
+                            <Typography style={{ textDecoration: "none" }} align="center">
+                                <a href={pdfLink} target="_blank" className={cls.link}>
+                                    Click to view your estimate now
+                                </a>
+                            </Typography>
+                        </div>
+                    )}
                     <Fade right>
                         <span className={classNames("rcw-timestamp", cls.timeStamp)}>{format(new Date(), "hh:mm")}</span>
                     </Fade>
@@ -72,9 +106,7 @@ export const BotResponse = ({ message, input, button, buttons }: BotResponseProp
                 )}
                 {button && (
                     <SingleRowSingleCell align="right">
-                        <Fade bottom>
-                            <div className={cls.marginTop}>{button}</div>
-                        </Fade>
+                        <div className={cls.marginTop}>{button}</div>
                     </SingleRowSingleCell>
                 )}
                 {buttons && (

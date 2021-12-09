@@ -42,15 +42,11 @@ export const responseAction = async (
         if (node.isDynamicTableNode && node.dynamicType) {
             setDynamicResponse(node.dynamicType, node.nodeId, response.toString());
 
-            // CONFIRM THIS IS THE RIGHT PLACE
-            // we have some kind of dynamic table node that may or may not
             const contextProperties: ContextProperties = getContextProperties();
             const dynamicResponses = contextProperties[ConvoContextProperties.dynamicResponses] as DynamicResponses;
 
-            // const tableId = extractDynamicTypeGuid(node.dynamicType);
             const currentDynamicResponseState = dynamicResponses.filter(x => Object.keys(x)[0] === node.dynamicType)[0];
 
-            // send the dynamic responses, the
             const tooComplicated = await client.Widget.Post.InternalCheck(node, response, currentDynamicResponseState);
             if (tooComplicated) {
                 child = nodeList.filter(x => x.nodeType === "TooComplicated")[0];

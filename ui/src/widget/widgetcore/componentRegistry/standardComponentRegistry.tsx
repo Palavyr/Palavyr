@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core";
 import { responseAction } from "@widgetcore/BotResponse/utils/responseAction";
 import { ConvoContextProperties } from "./registry";
 import { AreaTable, IProgressTheChat, SelectedOption, WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
-import { setNumIndividualsContext, getContextProperties, openUserDetails, getNameContext, getEmailAddressContext } from "@store-dispatcher";
+import { setNumIndividualsContext, getContextProperties, openUserDetails, getNameContext, getEmailAddressContext, setPdfLink } from "@store-dispatcher";
 import { ResponseButton } from "@widgetcore/BotResponse/ResponseButton";
 import { splitValueOptionsByDelimiter } from "@widgetcore/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "@widgetcore/UserDetailsDialog/ChatLoadingSpinner";
@@ -157,6 +157,20 @@ export class StandardComponents {
             }, []);
 
             return <BotResponse message={node.text} />;
+        };
+    }
+
+    public makeProvideInfoWithPdfLink({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+        const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
+        const context = getContextProperties();
+        const pdfLink = context.pdfLink;
+
+        return () => {
+            useEffect(() => {
+                responseAction(node, child, nodeList, client, convoId, null);
+            }, []);
+
+            return <BotResponse message={node.text} pdfLink={pdfLink} />;
         };
     }
 
@@ -465,6 +479,9 @@ export class StandardComponents {
             if (response.result) {
                 const completeConvo = assembleEmailRecordData(convoId, areaId, name, email, phone, locale);
                 await client.Widget.Post.UpdateConvoRecord(completeConvo);
+                if (response.pdfLink !== null && response.pdfLink !== "" && response.pdfLink !== undefined) {
+                    setPdfLink(response.pdfLink);
+                }
             }
             return response;
         };

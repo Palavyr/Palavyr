@@ -42,6 +42,7 @@ import {
     SET_NUM_INDIVIDUALS_CONTEXT,
     SET_PHONE_CONTEXT,
     SET_REGION_CONTEXT,
+    SET_PDF_LINK,
     ToggleChat,
     ToggleInputDisabled,
     ToggleMsgLoader,
@@ -52,9 +53,15 @@ import {
     TOGGLE_USER_DETAILS,
     WidgetPreferences,
     SET_WIDGETPREFERENCES_CONTEXT,
+    SetPdfLink,
 } from "@Palavyr-Types";
 
 import { ElementType } from "react";
+
+export const _setPdfLink = (pdfLink: string): SetPdfLink => ({
+    type: SET_PDF_LINK,
+    pdfLink,
+});
 
 export const _openUserDetails = (): OpenUserDetails => {
     return {

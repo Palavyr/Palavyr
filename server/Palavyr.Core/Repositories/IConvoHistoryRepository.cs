@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Palavyr.Core.Models.Conversation.Schemas;
 
 namespace Palavyr.Core.Repositories
 {
     public interface IConvoHistoryRepository
     {
-        Task CommitChangesAsync();
+        Task CommitChangesAsync(CancellationToken cancellationToken = default);
         
         Task CreateNewConversationRecord(ConversationRecord newConversationRecord);
 
