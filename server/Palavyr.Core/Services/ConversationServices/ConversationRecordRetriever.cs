@@ -43,7 +43,8 @@ namespace Palavyr.Core.Services.ConversationServices
                 return new List<Enquiry>().ToArray();
             }
 
-            return FormatEnquiresForDashboard(conversationRecords, accountId);
+            var formatted = FormatEnquiresForDashboard(conversationRecords, accountId);
+            return formatted;
         }
 
         private Enquiry[] FormatEnquiresForDashboard(ConversationRecord[] conversationRecords, string accountId)

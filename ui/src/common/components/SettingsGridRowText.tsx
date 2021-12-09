@@ -1,10 +1,12 @@
 import * as React from "react";
-import { Paper, Grid, TextField, makeStyles, Typography, Divider } from "@material-ui/core";
+import { Paper, Grid, TextField, makeStyles, Typography } from "@material-ui/core";
 import { useState } from "react";
 import { SinglePurposeButton } from "./SinglePurposeButton";
 import NumberFormat from "react-number-format";
 import { PalavyrSnackbar } from "./PalavyrSnackbar";
+import classNames from "classnames";
 
+const cn = classNames;
 export interface ISettingsGridRow {
     onClick: (data: any) => Promise<boolean | null | undefined | void>;
     placeholder?: string;
@@ -16,6 +18,7 @@ export interface ISettingsGridRow {
     fullWidth?: boolean;
     locale?: string;
     successText?: string;
+    classNames?: string;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -53,6 +56,7 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({
     currentValue,
     clearVal = false,
     buttonText = "Update",
+    classNames = ''
 }: ISettingsGridRow) => {
     const [inputVal, setInputVal] = useState<string>();
     const [inputValStatus, setInputValStatus] = useState<string | null>(null);
@@ -64,7 +68,7 @@ export const SettingsGridRowText: React.FC<ISettingsGridRow> = ({
     }
     return (
         <>
-            <Paper className={cls.paper}>
+            <Paper className={cn(cls.paper, classNames)}>
                 {alertNode}
                 <Grid className={cls.row} container>
                     {placeholder && (

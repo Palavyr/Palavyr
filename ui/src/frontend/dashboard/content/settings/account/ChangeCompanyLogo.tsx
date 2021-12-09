@@ -147,7 +147,6 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
     return (
         <SettingsWrapper>
             <AreaConfigurationHeader title="Change your company logo" subtitle="Update your company logo. This is used in the response email and pdf sent to customers." />
-            {/* <Divider /> */}
             <Paper className={cls.paper}>
                 <Alert style={{ marginBottom: "1.4rem" }} severity={companyLogo === "" ? "error" : "success"}>
                     <AlertTitle>

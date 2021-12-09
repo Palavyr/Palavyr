@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useContext } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { Grid, makeStyles, Typography, useTheme } from "@material-ui/core";
+import { Button, Dialog, Grid, makeStyles, Typography, useTheme } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { AlertDetails, Settings } from "@Palavyr-Types";
 import { Alert, AlertTitle } from "@material-ui/lab";
@@ -10,7 +10,7 @@ import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHea
 import { OsTypeToggle } from "./enableAreas/OsTypeToggle";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     alert: {
         borderTop: `2px solid ${theme.palette.common.black}`,
         borderBottom: `2px solid ${theme.palette.common.black}`,
@@ -21,6 +21,18 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "center",
         textAlign: "left",
     },
+    paperColor: {
+        backgroundColor: theme.palette.common.white,
+    },
+
+    buttonHover: {
+
+        '&:hover': {
+            backgroundColor: theme.palette.error.main,
+            color: theme.palette.warning.light
+        }
+
+    }
 }));
 
 export const AreaSettings = () => {
@@ -41,12 +53,12 @@ export const AreaSettings = () => {
     const [alertDetails, setAlertDetails] = useState<AlertDetails>({ title: "", message: "" });
     const [isEnabledState, setIsEnabledState] = useState<boolean | null>(null);
 
-    const classes = useStyles();
+    const cls = useStyles();
     const history = useHistory();
 
     const loadSettings = useCallback(async () => {
         const areas = await repository.Area.GetAreas();
-        const areaData = areas.filter((x) => x.areaIdentifier === areaIdentifier)[0];
+        const areaData = areas.filter(x => x.areaIdentifier === areaIdentifier)[0];
 
         setSettings({
             emailAddress: areaData.areaSpecificEmail,
@@ -125,6 +137,9 @@ export const AreaSettings = () => {
 
     const theme = useTheme();
 
+    const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
+    // I'll refactor this later. . .
     return loaded ? (
         <>
             <AreaConfigurationHeader title="Area Settings" subtitle={`Modify settings that are specific to this area (${settings.areaName}).`} />
@@ -132,7 +147,7 @@ export const AreaSettings = () => {
 
             <Grid container spacing={3} justify="center">
                 <Grid item xs={12}>
-                    <Alert className={classNames(classes.alert, classes.alertTitle)} variant="filled" severity="info">
+                    <Alert className={classNames(cls.alert, cls.alertTitle)} variant="filled" severity="info">
                         <AlertTitle>
                             <Typography variant="h5">Important Settings</Typography>
                         </AlertTitle>
@@ -141,9 +156,10 @@ export const AreaSettings = () => {
                 </Grid>
                 <Grid item xs={5}>
                     <SettingsGridRowText
+                        classNames={cls.paperColor}
                         fullWidth
                         alertNode={
-                            <Alert className={classes.alert} severity={settings.areaTitle === "Change this in the area Settings." || settings.areaTitle === "" ? "error" : "success"}>
+                            <Alert className={cls.alert} severity={settings.areaTitle === "Change this in the area Settings." || settings.areaTitle === "" ? "error" : "success"}>
                                 <AlertTitle>
                                     <Typography variant="h5">Update Widget Display Name</Typography>
                                 </AlertTitle>
@@ -159,10 +175,11 @@ export const AreaSettings = () => {
 
                 <Grid item xs={5}>
                     <SettingsGridRowText
+                        classNames={cls.paperColor}
                         fullWidth
                         inputType="email"
                         alertNode={
-                            <Alert className={classes.alert} severity={emailSeverity()}>
+                            <Alert className={cls.alert} severity={emailSeverity()}>
                                 <AlertTitle>
                                     <Typography variant="h5">{settings.isVerified ? "Email Verified" : "Verify the email used to send responses for this area"}</Typography>
                                 </AlertTitle>
@@ -181,7 +198,7 @@ export const AreaSettings = () => {
 
             <Grid container spacing={3} justify="center">
                 <Grid item xs={12}>
-                    <Alert className={classNames(classes.alert, classes.alertTitle)} style={{ backgroundColor: theme.palette.warning.dark }} variant="filled" severity="warning">
+                    <Alert className={classNames(cls.alert, cls.alertTitle)} style={{ backgroundColor: theme.palette.warning.dark }} variant="filled" severity="warning">
                         <AlertTitle>
                             <Typography variant="h5">Dashboard Specific Options</Typography>
                         </AlertTitle>
@@ -191,9 +208,10 @@ export const AreaSettings = () => {
 
                 <Grid item xs={5}>
                     <SettingsGridRowText
+                        classNames={cls.paperColor}
                         fullWidth
                         alertNode={
-                            <Alert className={classes.alert} severity={settings.areaName ? "success" : "warning"}>
+                            <Alert className={cls.alert} severity={settings.areaName ? "success" : "warning"}>
                                 <AlertTitle>
                                     <Typography variant="h5">Update Dashboard Display Name</Typography>
                                 </AlertTitle>
@@ -210,7 +228,7 @@ export const AreaSettings = () => {
             <br></br>
             <Grid container spacing={3} justify="center">
                 <Grid item xs={12}>
-                    <Alert className={classNames(classes.alert, classes.alertTitle)} severity="error" variant="filled">
+                    <Alert className={classNames(cls.alert, cls.alertTitle)} severity="error" variant="filled">
                         <AlertTitle>
                             <Typography variant="h5">DANGER ZONE</Typography>
                         </AlertTitle>
@@ -219,22 +237,27 @@ export const AreaSettings = () => {
                 </Grid>
                 <Grid item xs={5}>
                     <SettingsGridRowText
+                        classNames={cls.paperColor}
                         successText="Area Deleted"
                         alertNode={
-                            <Alert className={classes.alert} severity="error">
+                            <Alert className={cls.alert} severity="error">
                                 <AlertTitle>
                                     <Typography variant="h5">Permanently DELETE</Typography>
                                 </AlertTitle>
                                 CAREFUL! Use this option to delete this area (and all associated data) forever.
                             </Alert>
                         }
-                        onClick={handleAreaDelete}
+                        onClick={async () => await Promise.resolve(setDialogOpen(true))}
                         clearVal={false}
                         buttonText="Permanently Delete"
                     />
                 </Grid>
             </Grid>
             {alertState && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />}
+            <Dialog PaperProps={{ style: { margin: "2rem", padding: "2rem" } }} style={{ margin: "2rem", padding: "2rem" }} open={dialogOpen} onClose={() => setDialogOpen(false)}>
+                <Typography variant="h4">Are you sure you want to delete this area??</Typography>
+                <Button className={cls.buttonHover} onClick={handleAreaDelete}>PERMANENTLY DELETE</Button>
+            </Dialog>
         </>
     ) : null;
 };

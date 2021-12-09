@@ -2,7 +2,6 @@ import React, { memo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { List, Collapse, makeStyles, Badge } from "@material-ui/core";
 import InboxIcon from "@material-ui/icons/Inbox";
-import CompareIcon from "@material-ui/icons/Compare";
 import { DashboardContext } from "../../DashboardContext";
 import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
 import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
@@ -57,7 +56,7 @@ export const ReviewSection = memo(({ isActive, menuOpen }: ReviewSectionProps) =
                 <SidebarLinkItem
                     toolTipText="Chat bot activity"
                     menuOpen={menuOpen}
-                    className={"activity-sidebar-tour"}
+                    className="activity-sidebar-tour"
                     text="Activity"
                     isActive={isActive}
                     onClick={dashboardOnClick}
