@@ -33,7 +33,7 @@ namespace Palavyr.Core.Services.EmailService.Verification
             {
                 var customVerificationRequest = new SendCustomVerificationEmailRequest
                 {
-                    EmailAddress = emailAddress,
+                    EmailAddress = emailAddress.ToLowerInvariant(),
                     TemplateName = "DefaultPalavyrVerificationTemplate"
                 };
 
@@ -54,7 +54,7 @@ namespace Palavyr.Core.Services.EmailService.Verification
         {
             var deletionRequest = new DeleteIdentityRequest()
             {
-                Identity = emailAddress
+                Identity = emailAddress.ToLowerInvariant()
             };
             bool result;
             try

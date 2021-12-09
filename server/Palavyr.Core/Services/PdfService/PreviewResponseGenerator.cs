@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
@@ -23,6 +25,24 @@ using Palavyr.Core.Services.TemporaryPaths;
 
 namespace Palavyr.Core.Services.PdfService
 {
+    public class ResponseRetriever
+    {
+        private readonly ILifetimeScope lifetimeScope;
+
+        public ResponseRetriever(ILifetimeScope lifetimeScope)
+        {
+            this.lifetimeScope = lifetimeScope;
+        }
+
+        public async Task<List<TEntity>> RetrieveAllAvailableResponses<TEntity>(string accountId, string dynamicResponseId) where TEntity : class
+        {
+            var repository = (IGenericDynamicTableRepository<TEntity>) lifetimeScope.Resolve(typeof(IGenericDynamicTableRepository<TEntity>));
+            var rows = await repository.GetAllRowsMatchingDynamicResponseId(dynamicResponseId);
+            return rows;
+        }
+    }
+
+
     public class PreviewResponseGenerator : IPreviewResponseGenerator
     {
         private readonly IConfiguration configuration;
@@ -38,6 +58,7 @@ namespace Palavyr.Core.Services.PdfService
         private readonly ITemporaryPath temporaryPath;
         private readonly ICriticalResponses criticalResponses;
         private readonly DynamicTableCompilerRetriever compilerRetriever;
+        private readonly ResponseRetriever responseRetriever;
 
         public PreviewResponseGenerator(
             IConfiguration configuration,
@@ -52,7 +73,8 @@ namespace Palavyr.Core.Services.PdfService
             IS3KeyResolver s3KeyResolver,
             ITemporaryPath temporaryPath,
             ICriticalResponses criticalResponses,
-            DynamicTableCompilerRetriever compilerRetriever
+            DynamicTableCompilerRetriever compilerRetriever,
+            ResponseRetriever responseRetriever
         )
         {
             this.configuration = configuration;
@@ -68,6 +90,7 @@ namespace Palavyr.Core.Services.PdfService
             this.temporaryPath = temporaryPath;
             this.criticalResponses = criticalResponses;
             this.compilerRetriever = compilerRetriever;
+            this.responseRetriever = responseRetriever;
         }
 
         public async Task<FileLink> CreatePdfResponsePreviewAsync(string accountId, string areaId, CultureInfo culture, CancellationToken cancellationToken)
@@ -123,37 +146,69 @@ namespace Palavyr.Core.Services.PdfService
             var rows = new List<TableRow>();
             foreach (var tableMeta in dynamicTableMetas)
             {
-                var dynamicCompiler = compilerRetriever.RetrieveCompiler(tableMeta.TableType);
-
                 DynamicResponseParts responseParts;
+                List<TableRow> currentRows;
+                var dynamicCompiler = compilerRetriever.RetrieveCompiler(tableMeta.TableType);
 
                 switch (tableMeta.TableType)
                 {
                     case nameof(DynamicTableTypes.BasicThreshold):
-                        responseParts = DynamicTableTypes.CreateBasicThreshold().CreateDynamicResponseParts("A product", "200.50");
+
+                        var availableBasicThreshold = await responseRetriever.RetrieveAllAvailableResponses<BasicThreshold>(accountId, tableMeta.TableId);
+                        responseParts = DynamicTableTypes.CreateBasicThreshold().CreateDynamicResponseParts(availableBasicThreshold.First().TableId, availableBasicThreshold.First().Threshold.ToString());
+                        currentRows = await dynamicCompiler.CompileToPdfTableRow(area.AccountId, responseParts, new List<string>() {tableMeta.TableId}, culture);
                         break;
 
                     case nameof(DynamicTableTypes.SelectOneFlat):
-                        responseParts = DynamicTableTypes.CreateSelectOneFlat().CreateDynamicResponseParts("A Category", "450.00");
+
+                        var availableOneFlat = await responseRetriever.RetrieveAllAvailableResponses<SelectOneFlat>(accountId, tableMeta.TableId);
+                        responseParts = DynamicTableTypes.CreateSelectOneFlat().CreateDynamicResponseParts(availableOneFlat.First().TableId, availableOneFlat.First().Option);
+                        currentRows = await dynamicCompiler.CompileToPdfTableRow(area.AccountId, responseParts, new List<string>() {tableMeta.TableId}, culture);
+
                         break;
 
                     case nameof(DynamicTableTypes.CategoryNestedThreshold):
-                        responseParts = DynamicTableTypes.CreateCategoryNestedThreshold().CreateDynamicResponseParts("A category - A threshold", "500.00");
+                        var availableNestedThreshold = await responseRetriever.RetrieveAllAvailableResponses<CategoryNestedThreshold>(accountId, tableMeta.TableId);
+                        currentRows = new List<TableRow>()
+                        {
+                            new TableRow(
+                                tableMeta.UseTableTagAsResponseDescription ? tableMeta.TableTag : availableNestedThreshold.First().ItemName,
+                                availableNestedThreshold.First().ValueMin,
+                                availableNestedThreshold.First().ValueMax,
+                                false,
+                                culture,
+                                availableNestedThreshold.First().Range)
+                        };
+
                         break;
 
                     case nameof(DynamicTableTypes.PercentOfThreshold):
-                        responseParts = DynamicTableTypes.CreatePercentOfThreshold().CreateDynamicResponseParts("A product", "130.00");
+                        var availablePercentOfThreshold = await responseRetriever.RetrieveAllAvailableResponses<PercentOfThreshold>(accountId, tableMeta.TableId);
+                        responseParts = DynamicTableTypes.CreatePercentOfThreshold().CreateDynamicResponseParts(availablePercentOfThreshold.First().TableId, availablePercentOfThreshold.First().Threshold.ToString());
+                        currentRows = await dynamicCompiler.CompileToPdfTableRow(area.AccountId, responseParts, new List<string>() {tableMeta.TableId}, culture);
                         break;
 
                     case nameof(DynamicTableTypes.TwoNestedCategory):
-                        responseParts = DynamicTableTypes.CreateTwoNestedCategory().CreateDynamicResponseParts("Outer Category - Inner Category", "220.00");
+
+                        var availableTwoNested = await responseRetriever.RetrieveAllAvailableResponses<TwoNestedCategory>(accountId, tableMeta.TableId);
+                        currentRows = new List<TableRow>()
+                        {
+                            new TableRow(
+                                tableMeta.UseTableTagAsResponseDescription ? tableMeta.TableTag : string.Join(" & ", new[] {availableTwoNested.First().ItemName, availableTwoNested.First().InnerItemName}),
+                                availableTwoNested.First().ValueMin,
+                                availableTwoNested.First().ValueMax,
+                                false,
+                                culture,
+                                availableTwoNested.First().Range
+                            )
+                        };
                         break;
 
                     default:
                         throw new DomainException("Dynamic Table Type not identified");
                 }
 
-                var currentRows = await dynamicCompiler.CompileToPdfTableRow(area.AccountId, responseParts, new List<string>() {tableMeta.TableId}, culture);
+                // var currentRows = await dynamicCompiler.CompileToPdfTableRow(area.AccountId, responseParts, new List<string>() {tableMeta.TableId}, culture);
                 rows.AddRange(currentRows);
             }
 

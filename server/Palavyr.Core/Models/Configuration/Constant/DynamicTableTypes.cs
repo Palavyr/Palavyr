@@ -10,11 +10,11 @@ namespace Palavyr.Core.Models.Configuration.Constant
         public string TableType { get; set; }
         public string PrettyName { get; set; }
 
-        public DynamicResponseParts CreateDynamicResponseParts(string key, string value)
+        public DynamicResponseParts CreateDynamicResponseParts(string nodeId, string responseValue)
         {
             return new DynamicResponseParts
             {
-                new DynamicResponsePart() {{key, value}}
+                new DynamicResponsePart() {{nodeId, responseValue}}
             };
         }
     }

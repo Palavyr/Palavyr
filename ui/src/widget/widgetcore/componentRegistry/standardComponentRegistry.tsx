@@ -243,6 +243,7 @@ export class StandardComponents {
                     input={
                         <TextInput
                             label=""
+                            type="number"
                             inputPropsClassName={cls.textField}
                             inputLabelPropsClassName={cls.textLabel}
                             onChange={event => {

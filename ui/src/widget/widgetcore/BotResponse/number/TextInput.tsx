@@ -11,6 +11,7 @@ export const TextInput = ({ inputPropsClassName, inputLabelPropsClassName, ...re
     return (
         <TextField
             InputProps={{
+                type: rest.type,
                 className: inputPropsClassName,
                 disableUnderline: true,
                 style: { borderBottom: "1px solid black" },
@@ -21,7 +22,6 @@ export const TextInput = ({ inputPropsClassName, inputLabelPropsClassName, ...re
             fullWidth
             multiline
             label={rest.label ? rest.label : "Provide text"}
-            type={rest.type ? rest.type : "text"}
             {...rest}
         />
     );

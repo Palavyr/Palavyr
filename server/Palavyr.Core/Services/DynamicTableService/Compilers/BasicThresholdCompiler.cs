@@ -57,13 +57,13 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return Task.CompletedTask;
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
         {
             var dynamicResponseId = GetSingleResponseId(dynamicResponseIds);
-            var responseValue = GetSingleResponseValue(dynamicResponse, dynamicResponseIds);
+            var responseValue = GetSingleResponseValue(dynamicResponseParts, dynamicResponseIds);
 
             var responseValueAsDouble = double.Parse(responseValue);
-            var allRows = await repository.GetAllRowsMatchingDynamicResponseId(accountId, dynamicResponseId);
+            var allRows = await RetrieveAllAvailableResponses(accountId, dynamicResponseId);
 
             var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(allRows.First().TableId);
 
@@ -95,7 +95,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
         public async Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents _)
         {
-            var thresholds = await Repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
+            var thresholds = await base.repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
             var currentResponseAsDouble = double.Parse(response);
             var isTooComplicated = thresholdEvaluator.EvaluateForFallback(currentResponseAsDouble, thresholds);
             return isTooComplicated;
@@ -136,8 +136,13 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var tableId = dynamicTableMeta.TableId;
             var accountId = dynamicTableMeta.AccountId;
             var areaId = dynamicTableMeta.AreaIdentifier;
-            var thresholds = await Repository.GetAllRows(accountId, areaId, tableId);
+            var thresholds = await base.repository.GetAllRows(accountId, areaId, tableId);
             return ValidationLogic(thresholds, dynamicTableMeta.TableTag);
+        }
+        
+        public async Task<List<BasicThreshold>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId)
+        {
+            return await GetAllRowsMatchingResponseId(accountId, dynamicResponseId);
         }
     }
 }

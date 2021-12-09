@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Palavyr.Core.Models.Aliases;
-using Palavyr.Core.Services.DynamicTableService.Compilers;
 
 namespace Palavyr.Core.Services.DynamicTableService
 {

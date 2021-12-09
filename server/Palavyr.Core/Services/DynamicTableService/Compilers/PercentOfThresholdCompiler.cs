@@ -55,13 +55,13 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return Task.CompletedTask;
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
         {
             var dynamicResponseId = GetSingleResponseId(dynamicResponseIds);
-            var responseValue = GetSingleResponseValue(dynamicResponse, dynamicResponseIds);
+            var responseValue = GetSingleResponseValue(dynamicResponseParts, dynamicResponseIds);
 
             var responseValueAsDouble = double.Parse(responseValue);
-            var allRows = await Repository.GetAllRowsMatchingDynamicResponseId(accountId, dynamicResponseId);
+            var allRows = await RetrieveAllAvailableResponses(accountId, dynamicResponseId);
             var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(allRows[0].TableId);
 
             var itemIds = allRows.Select(item => item.ItemId).Distinct().ToArray();
@@ -100,11 +100,11 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
             return tableRows;
         }
-
+        
         public async Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents _)
         {
             var currentResponseAsDouble = double.Parse(response);
-            var records = await Repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
+            var records = await repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
             var uniqueItemIds = records.Select(x => x.ItemId).Distinct();
 
             var isTooComplicated = false;
@@ -166,8 +166,13 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var tableId = dynamicTableMeta.TableId;
             var accountId = dynamicTableMeta.AccountId;
             var areaId = dynamicTableMeta.AreaIdentifier;
-            var table = await Repository.GetAllRows(accountId, areaId, tableId);
+            var table = await repository.GetAllRows(accountId, areaId, tableId);
             return ValidationLogic(table, dynamicTableMeta.TableTag);
+        }
+
+        public async Task<List<PercentOfThreshold>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId)
+        {
+            return await GetAllRowsMatchingResponseId(accountId, dynamicResponseId);
         }
     }
 }

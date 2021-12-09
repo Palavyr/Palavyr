@@ -11,18 +11,18 @@ namespace Palavyr.Core.Services.DynamicTableService
 {
     public abstract class BaseCompiler<TEntity> where TEntity : class, IDynamicTable<TEntity>
     {
-        protected readonly IGenericDynamicTableRepository<TEntity> Repository;
+        protected readonly IGenericDynamicTableRepository<TEntity> repository;
 
         public BaseCompiler(IGenericDynamicTableRepository<TEntity> repository)
         {
-            Repository = repository;
+            this.repository = repository;
         }
 
         protected async Task<List<TEntity>> GetTableRows(DynamicTableMeta dynamicTableMeta)
         {
             var (accountId, areaId, tableId) = dynamicTableMeta;
-            var rows = await Repository.GetAllRows(accountId, areaId, tableId);
-            
+            var rows = await repository.GetAllRows(accountId, areaId, tableId);
+
             var indexArray = new List<int> { };
             var orderedEntities = new List<TEntity>() { };
 
@@ -70,13 +70,21 @@ namespace Palavyr.Core.Services.DynamicTableService
             return dynamicResponse.Single(x => x.ContainsKey(responseId)).Values.ToList().Single();
         }
 
-        protected async Task<List<string>> GetResponsesOrderedByResolveOrder(DynamicResponseParts dynamicResponse)
+        protected async Task<List<string>> GetResponsesOrderedByResolveOrder(DynamicResponseParts dynamicResponseParts)
         {
-            var responseKeys = dynamicResponse.SelectMany(row => row.Keys).ToList();
-            return (await Repository.GetConversationNodeByIds(responseKeys))
-                .OrderBy(x => x.ResolveOrder)
+            var responseKeys = dynamicResponseParts.SelectMany(row => row.Keys).ToList();
+            var nodes = await repository.GetConversationNodeByIds(responseKeys);
+            var sorted = nodes.OrderBy(x => x.ResolveOrder)
                 .Select(x => x.NodeId)
                 .ToList();
+
+            return sorted;
+        }
+        
+        protected async Task<List<TEntity>> GetAllRowsMatchingResponseId(string accountId, string dynamicResponseId)
+        {
+            return await repository
+                .GetAllRowsMatchingDynamicResponseId(accountId, dynamicResponseId);
         }
     }
 }

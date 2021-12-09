@@ -102,15 +102,15 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             );
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
         {
             // dynamicResponseIds is dynamic table keys
             var responseId = GetSingleResponseId(dynamicResponseIds);
-            var records = await Repository.GetAllRowsMatchingDynamicResponseId(accountId, responseId);
+            var records = await repository.GetAllRowsMatchingDynamicResponseId(accountId, responseId);
 
-            var orderedResponseIds = await GetResponsesOrderedByResolveOrder(dynamicResponse);
-            var category = GetResponseByResponseId(orderedResponseIds[0], dynamicResponse);
-            var amount = GetResponseByResponseId(orderedResponseIds[1], dynamicResponse);
+            var orderedResponseIds = await GetResponsesOrderedByResolveOrder(dynamicResponseParts);
+            var category = GetResponseByResponseId(orderedResponseIds[0], dynamicResponseParts);
+            var amount = GetResponseByResponseId(orderedResponseIds[1], dynamicResponseParts);
 
             var itemRows = records.Where(rec => rec.ItemName == category);
 
@@ -141,14 +141,14 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
             var convoNodeIds = CollectNodeIds(dynamicResponseComponents);
 
-            var convoNodes = await Repository.GetConversationNodeByIds(convoNodeIds);
+            var convoNodes = await repository.GetConversationNodeByIds(convoNodeIds);
             var categoryNode = convoNodes.Single(x => x.ResolveOrder == 0);
 
             var categoryResponse = dynamicResponseComponents.Responses
                 .Single(x => x.ContainsKey(categoryNode.NodeId!))
                 .Values.Single();
 
-            var records = await Repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
+            var records = await repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
 
             var categoryThresholds = records
                 .Where(rec => rec.ItemName == categoryResponse);
@@ -216,8 +216,13 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var tableId = dynamicTableMeta.TableId;
             var accountId = dynamicTableMeta.AccountId;
             var areaId = dynamicTableMeta.AreaIdentifier;
-            var table = await Repository.GetAllRows(accountId, areaId, tableId);
+            var table = await repository.GetAllRows(accountId, areaId, tableId);
             return ValidationLogic(table, dynamicTableMeta.TableTag);
+        }
+
+        public async Task<List<CategoryNestedThreshold>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId)
+        {
+            return await GetAllRowsMatchingResponseId(accountId, dynamicResponseId);
         }
 
         List<string> CollectNodeIds(DynamicResponseComponents dynamicResponseComponents)

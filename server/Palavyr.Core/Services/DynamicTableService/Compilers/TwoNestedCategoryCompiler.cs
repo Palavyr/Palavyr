@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Aliases;
@@ -33,15 +32,15 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             this.splitter = splitter;
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponse, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
         {
             var responseId = GetSingleResponseId(dynamicResponseIds);
-            var records = await repository.GetAllRowsMatchingDynamicResponseId(accountId, responseId);
+            var records = await RetrieveAllAvailableResponses(accountId, responseId);
 
             // itemName
-            var orderedResponseIds = await GetResponsesOrderedByResolveOrder(dynamicResponse);
-            var outerCategory = GetResponseByResponseId(orderedResponseIds[0], dynamicResponse);
-            var innerCategory = GetResponseByResponseId(orderedResponseIds[1], dynamicResponse);
+            var orderedResponseIds = await GetResponsesOrderedByResolveOrder(dynamicResponseParts);
+            var outerCategory = GetResponseByResponseId(orderedResponseIds[0], dynamicResponseParts);
+            var innerCategory = GetResponseByResponseId(orderedResponseIds[1], dynamicResponseParts);
 
             var result = records.Single(rec => rec.ItemName == outerCategory && rec.InnerItemName == innerCategory);
             var dynamicTableMeta = await configurationRepository.GetDynamicTableMetaByTableId(result.TableId);
@@ -116,9 +115,15 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var tableId = dynamicTableMeta.TableId;
             var accountId = dynamicTableMeta.AccountId;
             var areaId = dynamicTableMeta.AreaIdentifier;
-            var table = await Repository.GetAllRows(accountId, areaId, tableId);
+            var table = await base.repository.GetAllRows(accountId, areaId, tableId);
             return ValidationLogic(table, dynamicTableMeta.TableTag);
         }
+
+        public async Task<List<TwoNestedCategory>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId)
+        {
+            return await GetAllRowsMatchingResponseId(accountId, dynamicResponseId);
+        }
+
 
         private CategoryRetriever GetInnerAndOuterCategories(List<TwoNestedCategory> rawRows)
         {
