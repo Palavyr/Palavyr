@@ -124,6 +124,8 @@ namespace Palavyr.API.Registration.Container
 
             builder.RegisterType<DetermineCurrentOperatingSystem>().As<IDetermineCurrentOperatingSystem>();
             builder.RegisterType<ResponseRetriever>().As<IResponseRetriever>().InstancePerDependency();
+
+            builder.RegisterType<SendWidgetResponseEmailHandler>().As<ISendWidgetResponseEmailHandler>().InstancePerLifetimeScope();
         }
     }
 }

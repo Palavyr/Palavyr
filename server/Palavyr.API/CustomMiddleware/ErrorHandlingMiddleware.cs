@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Amazon.S3;
+using Autofac.Core;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
@@ -89,7 +90,13 @@ namespace Palavyr.API.CustomMiddleware
                         message = microserviceException.Message;
                         break;
                     
-
+                    case DependencyResolutionException dependencyResolutionException:
+                        logger.LogDebug("A dependency wasn't registered!");
+                        logger.LogDebug(dependencyResolutionException.Message);
+                        statusCode = StatusCodes.Status500InternalServerError;
+                        message = "Sorry! We made a mistake internally! Please reach out and let us know!";
+                        break;
+                        
                     default:
                         logger.LogError("Unknown Exception");
                         logger.LogError($"{ex.Source}");

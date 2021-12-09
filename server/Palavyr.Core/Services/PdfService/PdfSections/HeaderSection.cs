@@ -44,9 +44,13 @@ namespace Palavyr.Core.Services.PdfService.PdfSections
             firstTable.Add(new Dictionary<string, string>() {["th"] = DateTime.Now.ToString()});
 
             builder.Append(@"<section id='HEADER' style='display: flex; flex-direction: row; padding-top: .5in; padding-left: .5in; padding-right: .5in;'>");
-            if (!string.IsNullOrWhiteSpace(imageUri))
+            if (!string.IsNullOrWhiteSpace(imageUri) && !string.IsNullOrEmpty(imageUri))
             {
-                builder.Append($@"<img src='{imageUri}' style='margin-left: 2rem; width: 200px; height: 200px; object-fit: contain;'>");
+                builder.Append($@"<img src='{imageUri}' style='margin-left: 2rem; width: 200px; height: 200px; object-fit: contain;' />");
+            }
+            else
+            {
+                // builder.Append("<img style='margin-left: 2rem; width: 200px; height: 200px; />");
             }
 
             builder.Append(SingleColTableGenerator(firstTable));

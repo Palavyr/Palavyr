@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Exceptions;
-using Palavyr.Core.Models.Aliases;
-using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
@@ -34,12 +29,10 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IConfigurationRepository configurationRepository;
         private readonly IAccountRepository accountRepository;
         private readonly ILinkCreator linkCreator;
-        private readonly IGenericDynamicTableRepository<SelectOneFlat> genericDynamicTableRepository;
         private readonly IS3KeyResolver s3KeyResolver;
         private readonly ITemporaryPath temporaryPath;
         private readonly ICriticalResponses criticalResponses;
         private readonly DynamicTableCompilerRetriever compilerRetriever;
-        private readonly ResponseRetriever responseRetriever;
 
         public PreviewResponseGenerator(
             IConfiguration configuration,
@@ -50,12 +43,10 @@ namespace Palavyr.Core.Services.PdfService
             IConfigurationRepository configurationRepository,
             IAccountRepository accountRepository,
             ILinkCreator linkCreator,
-            IGenericDynamicTableRepository<SelectOneFlat> genericDynamicTableRepository,
             IS3KeyResolver s3KeyResolver,
             ITemporaryPath temporaryPath,
             ICriticalResponses criticalResponses,
-            DynamicTableCompilerRetriever compilerRetriever,
-            ResponseRetriever responseRetriever
+            DynamicTableCompilerRetriever compilerRetriever
         )
         {
             this.configuration = configuration;
@@ -66,12 +57,10 @@ namespace Palavyr.Core.Services.PdfService
             this.configurationRepository = configurationRepository;
             this.accountRepository = accountRepository;
             this.linkCreator = linkCreator;
-            this.genericDynamicTableRepository = genericDynamicTableRepository;
             this.s3KeyResolver = s3KeyResolver;
             this.temporaryPath = temporaryPath;
             this.criticalResponses = criticalResponses;
             this.compilerRetriever = compilerRetriever;
-            this.responseRetriever = responseRetriever;
         }
 
         public async Task<FileLink> CreatePdfResponsePreviewAsync(string accountId, string areaId, CultureInfo culture, CancellationToken cancellationToken)
@@ -119,7 +108,6 @@ namespace Palavyr.Core.Services.PdfService
             return fileLink;
         }
 
-        /// Only use for the preview (will generate a sensible row result given the type of dynamic table logged in the area table
         private async Task<List<Table>> CollectPreviewDynamicTables(Area area, string accountId, CultureInfo culture)
         {
             var dynamicTableMetas = area.DynamicTableMetas;

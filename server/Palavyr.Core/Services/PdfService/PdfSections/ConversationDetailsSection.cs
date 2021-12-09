@@ -50,7 +50,7 @@ namespace Palavyr.Core.Services.PdfService.PdfSections
             {
                 var key = item.Keys.ToList()[0];
                 var value = item.Values.ToList()[0];
-                builder.Append(@$"<tr><td style='padding: 2mm' font-size: 10pt; scope='col'>{key}:</td><td style='font-size: 12pt;' >{value}</td></tr>");
+                builder.Append(@$"<tr><td style='padding: 2mm' font-size: 10pt; scope='col'>{key}</td><td style='font-size: 12pt;' >{value}</td></tr>");
             }
 
             builder.Append(@"</tbody></table>");
