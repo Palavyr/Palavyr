@@ -1,7 +1,7 @@
 import { ConvoNode, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
 import { v4 as uuid } from "uuid";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
-import { IPalavyrNode, IPalavyrLinkedList, INodeReferences } from "../../Contracts";
+import { IPalavyrNode, IPalavyrLinkedList, INodeReferences } from "@Palavyr-Types";
 import { DEFAULT_NODE_TEXT } from "@constants";
 
 export class NodeCreator {
@@ -29,7 +29,7 @@ export class NodeCreator {
     public addDefaultRootNode(palavyrLinkedList: IPalavyrLinkedList, repository: PalavyrRepository, restOfTree: INodeReferences, defaultText?: string) {
         const defaultNode = this.createDefaultNode("Continue");
         defaultNode.isRoot = true;
-        const newPalavyrNode = palavyrLinkedList.convertToPalavyrNode(repository, defaultNode, palavyrLinkedList.setTreeWithHistory, true);
+        const newPalavyrNode = palavyrLinkedList.convertToPalavyrNode(repository, defaultNode, palavyrLinkedList.updateTree, true);
         if (defaultText) {
             newPalavyrNode.userText = defaultText;
         }

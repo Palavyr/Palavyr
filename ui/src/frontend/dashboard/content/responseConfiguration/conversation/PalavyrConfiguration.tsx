@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { Action, ConvoNode, NodeTypeOptions, SetState, TreeErrors } from "@Palavyr-Types";
+import React, { useState, useEffect } from "react";
+import { Action, ConvoNode, IPalavyrLinkedList, NodeTypeOptions, SetState, TreeErrors } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { Button, makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
@@ -63,61 +63,39 @@ const useStyles = makeStyles(theme => ({
     },
     floatingSave: (props: StyleProps) => ({
         position: "fixed",
-        bottom: props.useNewEditor ? 190 : 50,
-        right: 10,
+        bottom: 0,
+        right: 25,
         zIndex: 99999,
     }),
     toggle: {
         position: "fixed",
-        top: "120px",
+        top: "70px",
         right: "15px",
         zIndex: 99999,
     },
 }));
 
-// if (nodeList.length > 0) {
-//     (async () => {
-//         const treeErrors = await repository.Conversations.GetErrors(areaIdentifier, nodeList);
-//         setTreeErrors(treeErrors);
-//     })();
-// }
-
-export const ConversationConfigurationPage = () => {
-    const errorCheckCallback = async (setTreeErrors: SetState<TreeErrors>, repository: PalavyrRepository, areaIdentifier: string, nodeList: ConvoNode[]) => {
-        const treeErrors = await repository.Conversations.GetErrors(areaIdentifier, nodeList);
-        setTreeErrors(treeErrors);
-    };
-    return <StructuredConvoTree isIntroduction={false} errorCheckCallback={errorCheckCallback} />;
-};
-
-export const IntroConversationConfigurationPage = () => {
-    const errorCheckCallback = async (setTreeErrors: SetState<TreeErrors>, repository: PalavyrRepository, areaIdentifier: string, nodeList: ConvoNode[]) => {
-        const treeErrors = await repository.Conversations.GetIntroErrors(areaIdentifier, nodeList);
-        setTreeErrors(treeErrors);
-    };
-    return <StructuredConvoTree isIntroduction={true} errorCheckCallback={errorCheckCallback} />;
-};
-
 interface StructuredConvoTreeProps {
-    isIntroduction: boolean;
     errorCheckCallback(setTreeErrors: SetState<TreeErrors>, repository: PalavyrRepository, areaIdentifier: string, nodeList: ConvoNode[]): Promise<void>;
+    historyTracker: ConversationHistoryTracker;
+    nodeTypeOptions: NodeTypeOptions;
+    loadNodes(): void;
+
+    useNewEditor: boolean;
+    setUseNewEditor: SetState<boolean>;
+    treeErrors: TreeErrors | undefined;
+    setTreeErrors: SetState<TreeErrors | undefined>;
+
+    onSave(): void;
 }
-export const StructuredConvoTree = ({ isIntroduction = false, errorCheckCallback }: StructuredConvoTreeProps) => {
+
+export const StructuredConvoTree = ({ setUseNewEditor, useNewEditor, setTreeErrors, treeErrors, errorCheckCallback, historyTracker, loadNodes, nodeTypeOptions, onSave }: StructuredConvoTreeProps) => {
     const { planTypeMeta, repository, handleDrawerClose } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const [, setLoaded] = useState<boolean>(false);
+    const [refresh, setRefresh] = useState<boolean>(false);
 
-    const [nodeTypeOptions, setNodeTypeOptions] = useState<NodeTypeOptions>([]);
-    const [treeErrors, setTreeErrors] = useState<TreeErrors>();
-
-    const [conversationHistory, setConversationHistory] = useState<PalavyrLinkedList[]>([]);
-    const [conversationHistoryPosition, setConversationHistoryPosition] = useState<number>(0);
     const [showDebugData, setShowDebugData] = useState<boolean>(false);
-
-    const [linkedNodeList, setLinkedNodes] = useState<PalavyrLinkedList>();
-    const historyTracker = new ConversationHistoryTracker(setConversationHistory, setConversationHistoryPosition, setLinkedNodes);
-
-    const [useNewEditor, setUseNewEditor] = useState<boolean>(true);
     const [paddingBuffer, setPaddingBuffer] = useState<number>(1);
 
     const cls = useStyles({ useNewEditor });
@@ -125,7 +103,6 @@ export const StructuredConvoTree = ({ isIntroduction = false, errorCheckCallback
     window.onbeforeunload = e => enableBodyScroll($(MAIN_DIV));
 
     const toggleUseNewEditor = () => {
-
         if (useNewEditor) {
             enableBodyScroll($`#${MAIN_CONTENT_DIV_ID}`);
         } else {
@@ -137,30 +114,9 @@ export const StructuredConvoTree = ({ isIntroduction = false, errorCheckCallback
         setUseNewEditor(newSettings);
     };
 
-    const setTreeWithHistory = (updatedNodeList: PalavyrLinkedList) => {
-        const freshNodeList = cloneDeep(updatedNodeList);
-        historyTracker.addConversationHistoryToQueue(freshNodeList, conversationHistoryPosition, conversationHistory);
-        setLinkedNodes(freshNodeList);
-    };
-
-    const loadNodes = useCallback(async () => {
-        if (planTypeMeta) {
-            const nodes = await repository.Conversations.GetConversation(areaIdentifier);
-
-            let nodeTypeOptions: NodeTypeOptions;
-            if (isIntroduction) {
-                nodeTypeOptions = await repository.Conversations.GetIntroNodeOptionsList();
-            } else {
-                nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
-            }
-
-            const nodesLinkedList = new PalavyrLinkedList(nodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions, repository);
-            setNodeTypeOptions(nodeTypeOptions);
-            setLinkedNodes(nodesLinkedList);
-
-            setConversationHistory([cloneDeep(nodesLinkedList)]);
-        }
-    }, [areaIdentifier, planTypeMeta]);
+    useEffect(() => {
+        setRefresh(!refresh);
+    }, [historyTracker.linkedNodeList]);
 
     useEffect(() => {
         if (useNewEditor) {
@@ -190,8 +146,8 @@ export const StructuredConvoTree = ({ isIntroduction = false, errorCheckCallback
     }, [areaIdentifier, loadNodes]);
 
     useEffect(() => {
-        if (linkedNodeList) {
-            const nodeList = linkedNodeList.compileToConvoNodes();
+        if (historyTracker.linkedNodeList) {
+            const nodeList = historyTracker.linkedNodeList.compileToConvoNodes();
             if (nodeList.length > 0) {
                 (async () => {
                     await errorCheckCallback(setTreeErrors, repository, areaIdentifier, nodeList);
@@ -201,141 +157,107 @@ export const StructuredConvoTree = ({ isIntroduction = false, errorCheckCallback
         return () => {
             setTreeErrors(undefined);
         };
-    }, [areaIdentifier, linkedNodeList]);
+    }, [areaIdentifier, historyTracker.linkedNodeList]);
+
+    const resetTree = async () => {
+        if (historyTracker.linkedNodeList && planTypeMeta) {
+            const head = historyTracker.linkedNodeList.retrieveCleanHeadNode().compileConvoNode(areaIdentifier);
+            const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
+            const newList = new PalavyrLinkedList([head], areaIdentifier, () => null, nodeTypeOptions, repository);
+            historyTracker.initializeConversation(newList);
+        }
+    };
 
     const toggleDebugData = () => {
         setShowDebugData(!showDebugData);
-        setLinkedNodes(cloneDeep(linkedNodeList));
     };
 
-    const onSave = async () => {
-        if (isIntroduction) {
-            if (linkedNodeList && planTypeMeta) {
-                const compiledNodes = linkedNodeList.compileToConvoNodes();
-                const updatedConvoNodes = await repository.Settings.Account.updateIntroduction(areaIdentifier, compiledNodes);
-                let nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
-                nodeTypeOptions = nodeTypeOptions.filter(x => x.value === "ProvideInfo");
-
-                const updatedLinkedList = new PalavyrLinkedList(updatedConvoNodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions, repository);
-                historyTracker.addConversationHistoryToQueue(updatedLinkedList, conversationHistoryPosition, conversationHistory);
-                setLinkedNodes(updatedLinkedList);
-                // window.location.reload(); // TODO: Just fix the perf problem. Clicking to many things loads too many listeners, which locks the whole browser on save.
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if (linkedNodeList && planTypeMeta) {
-                const compiledNodes = linkedNodeList.compileToConvoNodes();
-                const updatedConvoNodes = await repository.Conversations.ModifyConversation(compiledNodes, areaIdentifier);
-                const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
-                const updatedLinkedList = new PalavyrLinkedList(updatedConvoNodes, areaIdentifier, setTreeWithHistory, nodeTypeOptions, repository);
-                historyTracker.addConversationHistoryToQueue(updatedLinkedList, conversationHistoryPosition, conversationHistory);
-                setLinkedNodes(updatedLinkedList);
-                // window.location.reload(); // TODO: Just fix the perf problem. Clicking to many things loads too many listeners, which locks the whole browser on save.
-                return true;
-            } else {
-                return false;
-            }
-        }
-    };
-
-    const resetTree = async () => {
-        if (linkedNodeList && planTypeMeta) {
-            const head = linkedNodeList.retrieveCleanHeadNode().compileConvoNode(areaIdentifier);
-            const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
-            const newList = new PalavyrLinkedList([head], areaIdentifier, () => null, nodeTypeOptions, repository);
-            setTreeWithHistory(newList);
-        }
-    };
-
-    const stepBack = () => {
-        historyTracker.stepConversationBackOneStep(conversationHistoryPosition, conversationHistory);
-    };
-
-    const stepForward = () => {
-        historyTracker.stepConversationForwardOneStep(conversationHistoryPosition, conversationHistory);
-    };
-
-    let actions: Action[] = [
-        { icon: <SaveIcon />, name: "Save", onClick: onSave },
-        {
-            icon: <RedoIcon />,
-            name: "Redo",
-            onClick: stepForward,
-        },
-        {
-            icon: <UndoIcon />,
-            name: "Undo",
-            onClick: stepBack,
-        },
-    ];
-
-    if (!useNewEditor) {
-        const additionalEditorActions: Action[] = [
+    const getActions = () => {
+        let actions: Action[] = [
+            { icon: <SaveIcon />, name: "Save", onClick: onSave },
             {
-                icon: <RemoveIcon />,
-                name: "Spacing -",
-                onClick: () => {
-                    if (paddingBuffer > 0.5) setPaddingBuffer(paddingBuffer - 0.5);
-                },
+                icon: <RedoIcon />,
+                name: "Redo",
+                onClick: () => historyTracker.stepConversationForwardOneStep(),
             },
             {
-                icon: <AddIcon />,
-                name: "Spacing +",
-                onClick: () => {
-                    if (paddingBuffer < 10) setPaddingBuffer(paddingBuffer + 0.5);
-                },
+                icon: <UndoIcon />,
+                name: "Undo",
+                onClick: () => historyTracker.stepConversationBackOneStep(),
             },
         ];
-        actions = [...actions, ...additionalEditorActions];
-    }
 
-    if (isDevelopmentStage()) {
-        const additionalActions: Action[] = [{ icon: <BugReportIcon />, name: "Debug", onClick: toggleDebugData }, { icon: <RotateLeftIcon />, name: "Reset Tree", onClick: resetTree }];
-        actions = [...actions, ...additionalActions];
-    }
+        if (!useNewEditor) {
+            const additionalEditorActions: Action[] = [
+                {
+                    icon: <RemoveIcon />,
+                    name: "Spacing -",
+                    onClick: () => {
+                        if (paddingBuffer > 0.5) setPaddingBuffer(paddingBuffer - 0.5);
+                    },
+                },
+                {
+                    icon: <AddIcon />,
+                    name: "Spacing +",
+                    onClick: () => {
+                        if (paddingBuffer < 10) setPaddingBuffer(paddingBuffer + 0.5);
+                    },
+                },
+            ];
+            actions = [...actions, ...additionalEditorActions];
+        }
 
+        if (isDevelopmentStage()) {
+            const additionalActions: Action[] = [
+                { icon: <BugReportIcon />, name: "Debug", onClick: toggleDebugData },
+                { icon: <RotateLeftIcon />, name: "Reset Tree", onClick: resetTree },
+            ];
+            actions = [...actions, ...additionalActions];
+        }
+        return actions;
+    };
     return (
-        <div>
-            <ConversationTreeContext.Provider value={{ nodeTypeOptions, setNodes: setTreeWithHistory, conversationHistory, historyTracker, conversationHistoryPosition, showDebugData, useNewEditor }}>
-                {!useNewEditor && treeErrors && (
-                    <AreaConfigurationHeader
-                        divider={treeErrors.anyErrors}
-                        title="Chat Editor"
-                        subtitle="Use this editor to create the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
-                    />
-                )}
-                <div className={cls.conversation}>
-                    <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
-                </div>
-                <div className={cls.toggle}>
-                    {useNewEditor ? (
-                        <Button size="small" variant="contained" color="primary" onClick={toggleUseNewEditor}>
-                            Use Classic Editor
-                        </Button>
-                    ) : (
-                        <Button size="small" variant="contained" color="primary" onClick={toggleUseNewEditor}>
-                            Use Cool New Editor
-                        </Button>
-                    )}
-                </div>
-                <div className={cls.floatingSave}>
-                    <PalavyrSpeedDial actions={actions} />
-                </div>
-                <PalavyrErrorBoundary>
-                    {linkedNodeList !== undefined &&
-                        (useNewEditor ? (
-                            <div className={cls.newTreeWrap}>
-                                <PalavyrFlow initialElements={cloneDeep(linkedNodeList.compileToNodeFlow())} />
-                            </div>
+        <>
+            {!useNewEditor && treeErrors && (
+                <AreaConfigurationHeader
+                    divider={treeErrors.anyErrors}
+                    title="Chat Editor"
+                    subtitle="Use this editor to create the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."
+                />
+            )}
+            <div>
+                <ConversationTreeContext.Provider value={{ nodeTypeOptions, historyTracker, showDebugData, useNewEditor }}>
+                    <div className={cls.conversation}>
+                        <div className={cls.treeErrorContainer}>{treeErrors && <TreeErrorPanel treeErrors={treeErrors} />}</div>
+                    </div>
+                    <div className={cls.toggle}>
+                        {useNewEditor ? (
+                            <Button size="small" variant="contained" color="primary" onClick={toggleUseNewEditor}>
+                                Use Classic Editor
+                            </Button>
                         ) : (
-                            <div className={cls.treeWrap}>
-                                <ConfigurationNode currentNode={linkedNodeList.rootNode} pBuffer={paddingBuffer} />
-                            </div>
-                        ))}
-                </PalavyrErrorBoundary>
-            </ConversationTreeContext.Provider>
-        </div>
+                            <Button size="small" variant="contained" color="primary" onClick={toggleUseNewEditor}>
+                                Use Cool New Editor
+                            </Button>
+                        )}
+                    </div>
+                    <div className={cls.floatingSave}>
+                        <PalavyrSpeedDial actions={getActions()} />
+                    </div>
+                    <PalavyrErrorBoundary>
+                        {historyTracker.linkedNodeList !== undefined &&
+                            (useNewEditor ? (
+                                <div className={cls.newTreeWrap}>
+                                    <PalavyrFlow initialElements={cloneDeep(historyTracker.linkedNodeList.compileToNodeFlow())} />
+                                </div>
+                            ) : (
+                                <div className={cls.treeWrap}>
+                                    <ConfigurationNode currentNode={historyTracker.linkedNodeList.rootNode} pBuffer={paddingBuffer} />
+                                </div>
+                            ))}
+                    </PalavyrErrorBoundary>
+                </ConversationTreeContext.Provider>
+            </div>
+        </>
     );
 };

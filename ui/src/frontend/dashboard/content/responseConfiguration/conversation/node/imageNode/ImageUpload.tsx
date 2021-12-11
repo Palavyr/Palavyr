@@ -5,7 +5,7 @@ import { Upload } from "frontend/dashboard/content/responseConfiguration/uploada
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { IPalavyrNode } from "../../Contracts";
+import { IPalavyrNode } from "@Palavyr-Types";
 import { useNodeInterfaceStyles } from "../../nodeInterfaceStyles";
 import { SelectFromExistingImages } from "./SelectFromExistingImages";
 

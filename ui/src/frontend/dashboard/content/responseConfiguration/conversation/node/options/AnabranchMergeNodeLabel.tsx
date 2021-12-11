@@ -1,6 +1,6 @@
 import { Typography } from "@material-ui/core";
 import React from "react";
-import { NodeOptionalProps } from "../../Contracts";
+import { NodeOptionalProps } from "@Palavyr-Types";
 
 export const AnabranchMergeNodeLabel = ({ node }: NodeOptionalProps) => {
     const shouldShow = node.isPalavyrAnabranchEnd;

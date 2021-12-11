@@ -1,6 +1,6 @@
 import React from "react";
 import { PalavyrCheckbox } from "@common/components/PalavyrCheckBox";
-import { NodeOptionalProps } from "../../Contracts";
+import { NodeOptionalProps } from "@Palavyr-Types";
 
 export const ShowResponseInPdf = ({ node }: NodeOptionalProps) => {
     const shouldShow = () => {

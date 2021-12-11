@@ -53,7 +53,7 @@ import { DeleteAccountHelp } from "frontend/dashboard/content/help/DeleteAccount
 import { ConversationReview } from "frontend/dashboard/content/enquiries/ConversationReview";
 import { ConversationReviewHelp } from "frontend/dashboard/content/help/ConversationReviewHelp";
 import { ConfirmYourResetLink } from "@landing/components/passwordReset/ConfirmYourResetLink";
-import { RESET_PASSWORD_FORM, RESET_PASSWORD_VERIFY, RESET_PASSWORD_SUCCESS, MAIN_CONTENT_DIV_ID } from "@constants";
+import { RESET_PASSWORD_FORM, RESET_PASSWORD_VERIFY, RESET_PASSWORD_SUCCESS } from "@constants";
 import { RenderPasswordDialog } from "@landing/components/passwordReset/SubmitNewPassword";
 import { RenderResetSuccess } from "@landing/components/passwordReset/PasswordResetSuccess";
 import { EnableAreas } from "frontend/dashboard/content/responseConfiguration/areaSettings/enableAreas/EnableAreas";
@@ -64,7 +64,8 @@ import { ImageReview } from "frontend/dashboard/content/images/ImageReview";
 import { ImageReviewHelp } from "frontend/dashboard/content/help/ImageReviewHelp";
 import { PleaseSubscribe } from "frontend/dashboard/content/purchse/pleaseSubscribe/PleaseSubscribe";
 import { PleaseSubscribeHelp } from "frontend/dashboard/content/help/PleaseSubscribeHelp";
-import { ConversationConfigurationPage, IntroConversationConfigurationPage, StructuredConvoTree } from "frontend/dashboard/content/responseConfiguration/conversation/PalavyrConfiguration";
+import { ConversationConfigurationPage } from "frontend/dashboard/content/responseConfiguration/conversation/ConversationConfigurationPage";
+import { IntroConversationConfigurationPage } from "frontend/dashboard/content/responseConfiguration/conversation/IntroConversationConfigurationPage";
 import { TutorialPage } from "@landing/tutorialPage/TutorialPage";
 import { TermsOfUsePage } from "@legal/terms-of-use/TermsOfUsePage";
 import { PrivacyPolicyPage } from "@legal/privacy-policy/PrivacyPolicy";
@@ -78,7 +79,6 @@ import { BlogPost } from "@landing/blog/components/BlogPost";
 import { BlogPage } from "@landing/blog/BlogPage";
 import { OurStoryPage } from "@landing/ourStory/OutStoryPage";
 import { OurTeamPage } from "@landing/ourTeam/OurTeamPage";
-import { GA4R } from "ga-4-react";
 import { WidgetDesignerPage } from "frontend/dashboard/content/designer/WidgetDesigner";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {

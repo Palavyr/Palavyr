@@ -1,5 +1,5 @@
 import { ConvoNode } from "@Palavyr-Types";
-import { ILinkedListBucket, IPalavyrNode } from "../Contracts";
+import { ILinkedListBucket, IPalavyrNode } from "@Palavyr-Types";
 
 export class LinkedListBucket implements ILinkedListBucket {
     public linkedListBucket: IPalavyrNode[] = [];

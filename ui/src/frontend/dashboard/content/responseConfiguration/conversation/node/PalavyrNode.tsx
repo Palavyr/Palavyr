@@ -1,7 +1,7 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { ConvoNode, NodeTypeOptions, ValueOptionDelimiter, LineMap, AnabranchContext, LineLink, NodeTypeCode, LoopbackContext } from "@Palavyr-Types";
-import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "../Contracts";
+import { INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "@Palavyr-Types";
 import { NodeReferences } from "./PalavyrNodeReferences";
 import { NodeConfigurer } from "./actions/NodeConfigurer";
 import { NodeCreator } from "./actions/NodeCreator";

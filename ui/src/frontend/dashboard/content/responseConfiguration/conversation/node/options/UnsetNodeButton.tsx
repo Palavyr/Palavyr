@@ -1,7 +1,7 @@
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { ConversationTreeContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext } from "react";
-import { NodeOptionalProps } from "../../Contracts";
+import { NodeOptionalProps } from "@Palavyr-Types";
 
 export const UnsetNodeButton = ({ node }: NodeOptionalProps) => {
     const shouldShow = node.nodeIsSet() && (node.isTerminal || node.childNodeReferences.AllChildrenUnset() || node.nodeType === "Loopback") && !node.isPalavyrAnabranchEnd;

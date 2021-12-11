@@ -2,7 +2,7 @@ import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { ConvoNode, NodeTypeOptions } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
-import { ILinkedListBucket, INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "../Contracts";
+import { ILinkedListBucket, INodeReferences, IPalavyrLinkedList, IPalavyrNode } from "@Palavyr-Types";
 import { LinkedListBucket } from "./LinkedListBucket";
 import { NodeConfigurer } from "../node/actions/NodeConfigurer";
 import { NodeCreator } from "../node/actions/NodeCreator";
@@ -14,19 +14,19 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     public areaId: string;
     public rootNode: IPalavyrNode;
     private head: ConvoNode;
-    public setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void;
-    private repository: PalavyrRepository;
+    public updateTree: (updatedTree: IPalavyrLinkedList) => void;
+    public repository: PalavyrRepository;
     private configurer: NodeConfigurer = new NodeConfigurer();
     private nodeCreator: NodeCreator = new NodeCreator();
 
     /**
      * List object for interacting with the list. This will have methods for performing insertions, deletions, additions, subtractions, etc
      */
-    constructor(nodeList: ConvoNode[], areaId: string, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, nodeTypeOptions: NodeTypeOptions, repository: PalavyrRepository) {
+    constructor(nodeList: ConvoNode[], areaId: string, updateTree: (updatedTree: IPalavyrLinkedList) => void, nodeTypeOptions: NodeTypeOptions, repository: PalavyrRepository) {
         this.areaId = areaId;
         this.repository = repository;
         this.head = this.getRootNode(nodeList);
-        this.setTreeWithHistory = setTreeWithHistory;
+        this.updateTree = updateTree;
         this.assembleDoubleLinkedMultiBranchLinkedList(nodeList, nodeTypeOptions);
     }
 
@@ -55,7 +55,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     }
 
     private assembleDoubleLinkedMultiBranchLinkedList(nodeList: ConvoNode[], nodeTypeOptions: NodeTypeOptions) {
-        const headNode = this.convertToPalavyrNode(this.repository, this.head, this.setTreeWithHistory, true);
+        const headNode = this.convertToPalavyrNode(this.repository, this.head, this.updateTree, true);
         this.configurer.configure(headNode, null, nodeTypeOptions);
         this.rootNode = headNode;
         this.recursivelyAssembleLinkedList(headNode, this.head.nodeChildrenString, nodeList, nodeTypeOptions);
@@ -73,7 +73,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
 
             if (existingNode === null) {
                 const childConvoNode = this._getNodeById(childId, nodeList);
-                const newNode = this.convertToPalavyrNode(this.repository, childConvoNode, this.setTreeWithHistory, index === 0);
+                const newNode = this.convertToPalavyrNode(this.repository, childConvoNode, this.updateTree, index === 0);
 
                 newNode.addNewNodeReferenceAndConfigure(newNode, parentNode, nodeTypeOptions);
                 this.recursivelyAssembleLinkedList(newNode, childConvoNode.nodeChildrenString, nodeList, nodeTypeOptions);
@@ -94,8 +94,8 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
         }
     }
 
-    public convertToPalavyrNode(repository: PalavyrRepository, rawNode: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftMostBranch: boolean) {
-        return new PalavyrNode(this, repository, rawNode, setTreeWithHistory, leftMostBranch);
+    public convertToPalavyrNode(repository: PalavyrRepository, rawNode: ConvoNode, updateTree: (updatedTree: IPalavyrLinkedList) => void, leftMostBranch: boolean) {
+        return new PalavyrNode(this, repository, rawNode, updateTree, leftMostBranch);
     }
 
     compileToConvoNodes(): ConvoNode[] {
@@ -155,7 +155,8 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
                 this.configurer.configure(node, leftmostParent, nodeTypeOptions);
             }
         });
-        this.setTreeWithHistory(this);
+        const update = this as IPalavyrLinkedList;
+        this.updateTree(update);
     }
 
     insert(): void {
@@ -167,7 +168,8 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     resetRootNode(): void {
         const restOfTree = this.rootNode.childNodeReferences;
         const currentText = this.rootNode.userText;
-        this.nodeCreator.addDefaultRootNode(this, this.repository, restOfTree, currentText);
+        const update = this as IPalavyrLinkedList;
+        this.nodeCreator.addDefaultRootNode(update, this.repository, restOfTree, currentText);
     }
 
     compileToNodeFlow() {

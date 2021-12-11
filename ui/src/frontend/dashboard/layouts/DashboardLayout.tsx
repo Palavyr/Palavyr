@@ -47,11 +47,9 @@ type StyleProps = {
     helpOpen: boolean;
 };
 
-const useStyles = makeStyles((theme: Theme) =>({
-
+const useStyles = makeStyles((theme: Theme) => ({
     root: {
         display: "flex",
-
     },
     menuButton: {
         marginRight: 36,
@@ -125,8 +123,8 @@ const useStyles = makeStyles((theme: Theme) =>({
     },
     drawerFiller: {
         backgroundColor: theme.palette.primary.main,
-        flexGrow: 1
-    }
+        flexGrow: 1,
+    },
 }));
 
 interface IDashboardLayout {
@@ -136,7 +134,6 @@ interface IDashboardLayout {
 }
 
 export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayout) => {
-
     const theme = useTheme();
 
     const history = useHistory();
@@ -224,9 +221,9 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     }, [areaIdentifier]);
 
     useEffect(() => {
-        const menuStateString = Cookies.get(MENU_DRAWER_STATE_COOKIE_NAME)
-        if (menuStateString !== undefined){
-            if (menuStateString === "true"){
+        const menuStateString = Cookies.get(MENU_DRAWER_STATE_COOKIE_NAME);
+        if (menuStateString !== undefined) {
+            if (menuStateString === "true") {
                 setMenuOpen(true);
             } else if (menuStateString === "false") {
                 setMenuOpen(false);
@@ -250,12 +247,12 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     };
 
     const handleDrawerClose: () => void = () => {
-        Cookies.set(MENU_DRAWER_STATE_COOKIE_NAME, "false")
+        Cookies.set(MENU_DRAWER_STATE_COOKIE_NAME, "false");
         setMenuOpen(false);
     };
 
     const handleDrawerOpen: () => void = () => {
-        Cookies.set(MENU_DRAWER_STATE_COOKIE_NAME, "true")
+        Cookies.set(MENU_DRAWER_STATE_COOKIE_NAME, "true");
         setMenuOpen(true);
     };
 
@@ -306,99 +303,103 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     };
 
     return (
-    <>
-        {welcomeTourActive && <IntroSteps initialize={welcomeTourActive} steps={welcomeTourSteps} onBlur={welcomeTourOnBlur} />}
-        <DashboardContext.Provider
-            value={{
-                reRenderDashboard,
-                accountTypeNeedsPassword,
-                successOpen,
-                setSuccessOpen,
-                successText,
-                setSuccessText,
-                warningOpen,
-                setWarningOpen,
-                warningText,
-                setWarningText,
-                errorOpen,
-                errorText,
-                setErrorOpen,
-                setErrorText,
-                snackPosition,
-                setSnackPosition,
-                setIsLoading: setIsLoading,
-                currencySymbol: currencySymbol,
-                checkAreaCount,
-                areaName: currentViewName,
-                areaNameDetails: areaNameDetails,
-                setViewName: setViewName,
-                unseenNotifications: unseenNotifications,
-                setUnseenNotifications: setUnseenNotifications,
-                planTypeMeta: planTypeMeta,
-                panelErrors,
-                setPanelErrors,
-                repository,
-                handleDrawerClose,
-                handleDrawerOpen,
-                menuOpen
-            }}
-        >
-            <div className={cls.root}>
-                <CssBaseline />
-                <DashboardHeader
-                    open={menuOpen}
-                    unseenNotifications={unseenNotifications}
-                    handleDrawerOpen={handleDrawerOpen}
-                    handleHelpDrawerOpen={handleHelpDrawerOpen}
-                    helpOpen={helpOpen}
-                    title={currentViewName}
-                    isLoading={isLoading}
-                    dashboardAreasLoading={dashboardAreasLoading}
-                />
-                <Drawer
-                    variant="permanent"
-                    className={classNames(cls.drawer, {
-                        [cls.drawerOpen]: menuOpen,
-                        [cls.drawerClose]: !menuOpen,
-                    })}
-                    classes={{
-                        paper: classNames({
-                            [cls.drawerOpen]: menuOpen,
-                            [cls.drawerClose]: !menuOpen,
-                        }),
+        <>
+            {welcomeTourActive && <IntroSteps initialize={welcomeTourActive} steps={welcomeTourSteps} onBlur={welcomeTourOnBlur} />}
+            {planTypeMeta && (
+                <DashboardContext.Provider
+                    value={{
+                        reRenderDashboard,
+                        accountTypeNeedsPassword,
+                        successOpen,
+                        setSuccessOpen,
+                        successText,
+                        setSuccessText,
+                        warningOpen,
+                        setWarningOpen,
+                        warningText,
+                        setWarningText,
+                        errorOpen,
+                        errorText,
+                        setErrorOpen,
+                        setErrorText,
+                        snackPosition,
+                        setSnackPosition,
+                        setIsLoading: setIsLoading,
+                        currencySymbol: currencySymbol,
+                        checkAreaCount,
+                        areaName: currentViewName,
+                        areaNameDetails: areaNameDetails,
+                        setViewName: setViewName,
+                        unseenNotifications: unseenNotifications,
+                        setUnseenNotifications: setUnseenNotifications,
+                        planTypeMeta: planTypeMeta,
+                        panelErrors,
+                        setPanelErrors,
+                        repository,
+                        handleDrawerClose,
+                        handleDrawerOpen,
+                        menuOpen,
                     }}
                 >
-                <div className={classNames(cls.toolbar, cls.menuDrawerPaper)}>
-                    <Typography className={cls.name} variant="h4">
-                        Palavyr.com
-                    </Typography>
-                    <IconButton onClick={handleDrawerClose}>{theme.direction === "rtl" ? <ChevronRightIcon style={{color: "white"}} /> : <ChevronLeftIcon style={{color: "white"}}  />}</IconButton>
-                </div>
-                <Divider />
-                <SideBarMenu areaNameDetails={areaNameDetails} menuOpen={menuOpen} />
-                <div className={cls.drawerFiller}></div>
-                </Drawer>
-                <ContentLoader open={menuOpen}>{children}</ContentLoader>
-                <Drawer
-                    className={cls.helpDrawer}
-                    variant="persistent"
-                    anchor="right"
-                    open={helpOpen}
-                    classes={{
-                        paper: cls.helpDrawerPaper,
-                    }}
-                >
-                    <IconButton onClick={handleHelpDrawerClose}>{theme.direction === "rtl" ? <ChevronLeftIcon /> : <ChevronRightIcon />}</IconButton>
-                    <Divider />
-                    {helpComponent}
-                </Drawer>
-                {planTypeMeta && (areaNameDetails.length < planTypeMeta.allowedAreas ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
-                <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
-                {successOpen && <PalavyrSnackbar position={snackPosition} successText={successText} successOpen={successOpen} setSuccessOpen={setSuccessOpen} />}
-                {warningOpen && <PalavyrSnackbar position={snackPosition} warningText={warningText} warningOpen={warningOpen} setWarningOpen={setWarningOpen} />}
-                {errorOpen && <PalavyrSnackbar position={snackPosition} errorText={errorText} errorOpen={errorOpen} setErrorOpen={setErrorOpen} />}
-            </div>
-        </DashboardContext.Provider>
-    </>
-    )
+                    <div className={cls.root}>
+                        <CssBaseline />
+                        <DashboardHeader
+                            open={menuOpen}
+                            unseenNotifications={unseenNotifications}
+                            handleDrawerOpen={handleDrawerOpen}
+                            handleHelpDrawerOpen={handleHelpDrawerOpen}
+                            helpOpen={helpOpen}
+                            title={currentViewName}
+                            isLoading={isLoading}
+                            dashboardAreasLoading={dashboardAreasLoading}
+                        />
+                        <Drawer
+                            variant="permanent"
+                            className={classNames(cls.drawer, {
+                                [cls.drawerOpen]: menuOpen,
+                                [cls.drawerClose]: !menuOpen,
+                            })}
+                            classes={{
+                                paper: classNames({
+                                    [cls.drawerOpen]: menuOpen,
+                                    [cls.drawerClose]: !menuOpen,
+                                }),
+                            }}
+                        >
+                            <div className={classNames(cls.toolbar, cls.menuDrawerPaper)}>
+                                <Typography className={cls.name} variant="h4">
+                                    Palavyr.com
+                                </Typography>
+                                <IconButton onClick={handleDrawerClose}>
+                                    {theme.direction === "rtl" ? <ChevronRightIcon style={{ color: "white" }} /> : <ChevronLeftIcon style={{ color: "white" }} />}
+                                </IconButton>
+                            </div>
+                            <Divider />
+                            <SideBarMenu areaNameDetails={areaNameDetails} menuOpen={menuOpen} />
+                            <div className={cls.drawerFiller}></div>
+                        </Drawer>
+                        <ContentLoader open={menuOpen}>{children}</ContentLoader>
+                        <Drawer
+                            className={cls.helpDrawer}
+                            variant="persistent"
+                            anchor="right"
+                            open={helpOpen}
+                            classes={{
+                                paper: cls.helpDrawerPaper,
+                            }}
+                        >
+                            <IconButton onClick={handleHelpDrawerClose}>{theme.direction === "rtl" ? <ChevronLeftIcon /> : <ChevronRightIcon />}</IconButton>
+                            <Divider />
+                            {helpComponent}
+                        </Drawer>
+                        {planTypeMeta && (areaNameDetails.length < planTypeMeta.allowedAreas ? <AddNewAreaModal open={modalState} handleClose={closeModal} setNewArea={setNewArea} /> : null)}
+                        <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />
+                        {successOpen && <PalavyrSnackbar position={snackPosition} successText={successText} successOpen={successOpen} setSuccessOpen={setSuccessOpen} />}
+                        {warningOpen && <PalavyrSnackbar position={snackPosition} warningText={warningText} warningOpen={warningOpen} setWarningOpen={setWarningOpen} />}
+                        {errorOpen && <PalavyrSnackbar position={snackPosition} errorText={errorText} errorOpen={errorOpen} setErrorOpen={setErrorOpen} />}
+                    </div>
+                </DashboardContext.Provider>
+            )}
+        </>
+    );
 };

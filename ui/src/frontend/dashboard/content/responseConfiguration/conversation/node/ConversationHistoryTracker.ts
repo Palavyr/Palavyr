@@ -1,63 +1,93 @@
-import { IConversationHistoryTracker, SetState } from "@Palavyr-Types";
+import { IPalavyrLinkedList } from "@Palavyr-Types";
+import { IConversationHistoryTracker, NodeTypeOptions, SetState } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
-import { PalavyrLinkedList } from "../PalavyrDataStructure/PalavyrLinkedList";
-
-export type SetConversationHistory = SetState<PalavyrLinkedList[]>;
-export type SetConversation = SetState<PalavyrLinkedList>;
-export type SetConversationHistoryPosition = SetState<number>;
 
 export class ConversationHistoryTracker implements IConversationHistoryTracker {
-    private MaxConversationHistory = 50; // the number of times you can hit the back button
+    private maxConversationHistory: number = 50; // the number of times you can hit the back button
+    private currentPosition: number = 0;
+    private conversationHistory: IPalavyrLinkedList[] = [];
 
-    setConversationHistory: SetConversationHistory;
-    setConversationHistoryPosition: SetConversationHistoryPosition;
-    setNodes: SetConversation;
+    private setLinkedNodes: React.Dispatch<React.SetStateAction<IPalavyrLinkedList | undefined>>;
 
-    constructor(onSetHistory: SetConversationHistory, onSetHistoryPosition: SetConversationHistoryPosition, onSetNodes: SetConversation) {
-        this.setConversationHistory = onSetHistory;
-        this.setConversationHistoryPosition = onSetHistoryPosition;
-        this.setNodes = onSetNodes;
+    public linkedNodeList: IPalavyrLinkedList;
+    public nodeTypeOptions: NodeTypeOptions;
+
+    constructor(setLinkedNodes: SetState<IPalavyrLinkedList>, linkedNodeList: IPalavyrLinkedList | undefined, nodeTypeOptions: NodeTypeOptions) {
+        this.setLinkedNodes = setLinkedNodes;
+        this.nodeTypeOptions = nodeTypeOptions;
+        if (linkedNodeList) {
+            this.linkedNodeList = linkedNodeList;
+        }
     }
 
-    // Maybe can set the historyPosition as internal state too.
-    addConversationHistoryToQueue(dirtyConversationRecord: PalavyrLinkedList, conversationHistoryPosition: number, conversationHistory: PalavyrLinkedList[]) {
-        const newPos = conversationHistoryPosition + 1;
+    private setConversationHistory = (newHistory: IPalavyrLinkedList[]) => {
+        this.conversationHistory = newHistory;
+    };
+
+    public initializeConversation(conversation: IPalavyrLinkedList) {
+        this.currentPosition = 0;
+
+        this.setConversationHistory([cloneDeep(conversation)]);
+        this.resetLinkedNodes(conversation);
+    }
+
+    public addConversationHistoryToQueue(dirtyConversationRecord: IPalavyrLinkedList) {
+        this.currentPosition += 1;
+        console.log(this.conversationHistory.length);
+
         const newConversationRecord = dirtyConversationRecord;
-        if (conversationHistory.length < this.MaxConversationHistory) {
-            if (newPos < conversationHistory.length - 1) {
-                this.setConversationHistory([...conversationHistory.slice(0, newPos), newConversationRecord]);
+
+        let newHistory: IPalavyrLinkedList[];
+        if (this.conversationHistory.length < this.maxConversationHistory) {
+            if (this.currentPosition < this.conversationHistory.length - 1) {
+                newHistory = [...this.conversationHistory.slice(0, this.currentPosition), newConversationRecord];
+                this.setConversationHistory(newHistory);
             } else {
-                this.setConversationHistory([...conversationHistory, newConversationRecord]);
+                newHistory = [...this.conversationHistory, newConversationRecord];
+                this.setConversationHistory(newHistory);
             }
         } else {
-            if (newPos < this.MaxConversationHistory) {
-                this.setConversationHistory([...conversationHistory.slice(0, newPos), newConversationRecord]);
+            if (this.currentPosition < this.maxConversationHistory) {
+                newHistory = [...this.conversationHistory.slice(0, this.currentPosition), newConversationRecord];
+                this.setConversationHistory(newHistory);
             } else {
-                this.setConversationHistory([...conversationHistory.slice(1), newConversationRecord]);
+                newHistory = [...this.conversationHistory.slice(1), newConversationRecord];
+                this.setConversationHistory(newHistory);
             }
         }
-
-        this.setConversationHistoryPosition(newPos);
+        this.resetLinkedNodes(newConversationRecord);
     }
 
-    stepConversationBackOneStep(conversationHistoryPosition: number, conversationHistory: PalavyrLinkedList[]) {
-        if (conversationHistoryPosition === 0) {
+    public stepConversationBackOneStep() {
+        if (this.currentPosition === 0) {
             alert("Currently at the beginning the history.");
             return;
         }
-        const newPosition = conversationHistoryPosition - 1;
-        this.setConversationHistoryPosition(newPosition);
-        const oneBack = conversationHistory[newPosition];
-        this.setNodes(cloneDeep(oneBack));
+        this.currentPosition -= 1;
+        console.log(`Back Current Position: ${this.currentPosition}`);
+        this.refreshConversation();
     }
 
-    stepConversationForwardOneStep(conversationHistoryPosition: number, conversationHistory: PalavyrLinkedList[]) {
-        const newPosition = conversationHistoryPosition + 1;
-        if (newPosition <= conversationHistory.length - 1) {
-            this.setNodes(cloneDeep(conversationHistory[newPosition]));
-            this.setConversationHistoryPosition(newPosition);
-        } else {
-            alert("Currently at the end of the history.");
+    public stepConversationForwardOneStep() {
+        if (this.currentPosition === this.conversationHistory.length - 1) {
+            alert("This is the latest version.");
+            return;
         }
+
+        this.currentPosition += 1;
+        console.log(`Forward Current Position: ${this.currentPosition}`);
+        this.refreshConversation();
+    }
+
+    public refreshConversation() {
+        console.log("Refreshing Conversation");
+        const linkedNodeList = this.conversationHistory[this.currentPosition];
+        this.resetLinkedNodes(linkedNodeList);
+    }
+
+    private resetLinkedNodes(linkedNodeList: IPalavyrLinkedList) {
+        console.log("Resetting Linked Nodes");
+        this.linkedNodeList = linkedNodeList;
+        this.setLinkedNodes(cloneDeep(linkedNodeList));
     }
 }

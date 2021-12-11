@@ -1,7 +1,7 @@
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { ConversationTreeContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext } from "react";
-import { IPalavyrNode } from "../../Contracts";
+import { IPalavyrNode } from "@Palavyr-Types";
 
 export interface IDeleteMyself {
     node: IPalavyrNode;

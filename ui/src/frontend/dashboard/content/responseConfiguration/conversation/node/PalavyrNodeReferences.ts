@@ -1,5 +1,5 @@
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
-import { INodeReferences, IPalavyrNode } from "../Contracts";
+import { INodeReferences, IPalavyrNode } from "@Palavyr-Types";
 
 export class NodeReferences implements INodeReferences {
     private nodeReferences: IPalavyrNode[] = [];

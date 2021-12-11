@@ -2,7 +2,7 @@ import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import { AlertType, NodeOption, NodeTypeOptions, ConvoNode } from "@Palavyr-Types";
 import { ConversationTreeContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
-import { IPalavyrNode } from "../../Contracts";
+import { IPalavyrNode } from "@Palavyr-Types";
 import NodeChanger from "../actions/NodeChanger";
 import NodeTypeOptionConfigurer from "../actions/NodeTypeOptionConfigurer";
 import { CustomNodeSelect } from "../nodeInterface/nodeSelector/CustomNodeSelect";
