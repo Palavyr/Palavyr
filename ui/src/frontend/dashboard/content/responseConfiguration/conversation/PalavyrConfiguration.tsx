@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Action, ConvoNode, IPalavyrLinkedList, NodeTypeOptions, SetState, TreeErrors } from "@Palavyr-Types";
+import { Action, ConvoNode, IPalavyrLinkedList, NodeTypeOptions, PlanTypeMeta, SetState, TreeErrors } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
 import { Button, makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
@@ -80,7 +80,7 @@ interface StructuredConvoTreeProps {
     historyTracker: ConversationHistoryTracker;
     nodeTypeOptions: NodeTypeOptions;
     loadNodes(): void;
-
+    planTypeMeta: PlanTypeMeta;
     useNewEditor: boolean;
     setUseNewEditor: SetState<boolean>;
     treeErrors: TreeErrors | undefined;
@@ -89,8 +89,19 @@ interface StructuredConvoTreeProps {
     onSave(): void;
 }
 
-export const StructuredConvoTree = ({ setUseNewEditor, useNewEditor, setTreeErrors, treeErrors, errorCheckCallback, historyTracker, loadNodes, nodeTypeOptions, onSave }: StructuredConvoTreeProps) => {
-    const { planTypeMeta, repository, handleDrawerClose } = useContext(DashboardContext);
+export const StructuredConvoTree = ({
+    planTypeMeta,
+    setUseNewEditor,
+    useNewEditor,
+    setTreeErrors,
+    treeErrors,
+    errorCheckCallback,
+    historyTracker,
+    loadNodes,
+    nodeTypeOptions,
+    onSave,
+}: StructuredConvoTreeProps) => {
+    const { repository, handleDrawerClose } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const [, setLoaded] = useState<boolean>(false);
     const [refresh, setRefresh] = useState<boolean>(false);
@@ -142,13 +153,11 @@ export const StructuredConvoTree = ({ setUseNewEditor, useNewEditor, setTreeErro
     }, [areaIdentifier, loadNodes]);
 
     useEffect(() => {
-        if (historyTracker.linkedNodeList) {
-            const nodeList = historyTracker.linkedNodeList.compileToConvoNodes();
-            if (nodeList.length > 0) {
-                (async () => {
-                    await errorCheckCallback(setTreeErrors, repository, areaIdentifier, nodeList);
-                })();
-            }
+        const nodeList = historyTracker.linkedNodeList.compileToConvoNodes();
+        if (nodeList.length > 0) {
+            (async () => {
+                await errorCheckCallback(setTreeErrors, repository, areaIdentifier, nodeList);
+            })();
         }
         return () => {
             setTreeErrors(undefined);
@@ -156,12 +165,10 @@ export const StructuredConvoTree = ({ setUseNewEditor, useNewEditor, setTreeErro
     }, [areaIdentifier, historyTracker.linkedNodeList]);
 
     const resetTree = async () => {
-        if (historyTracker.linkedNodeList && planTypeMeta) {
-            const head = historyTracker.linkedNodeList.retrieveCleanHeadNode().compileConvoNode(areaIdentifier);
-            const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
-            const newList = new PalavyrLinkedList([head], areaIdentifier, () => null, nodeTypeOptions, repository);
-            historyTracker.initializeConversation(newList);
-        }
+        const head = historyTracker.linkedNodeList.retrieveCleanHeadNode().compileConvoNode(areaIdentifier);
+        const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
+        const newList = new PalavyrLinkedList([head], areaIdentifier, () => null, nodeTypeOptions, repository);
+        historyTracker.initializeConversation(newList);
     };
 
     const toggleDebugData = () => {
@@ -238,7 +245,7 @@ export const StructuredConvoTree = ({ setUseNewEditor, useNewEditor, setTreeErro
                         )}
                     </div>
                     <div className={cls.floatingSave}>
-                        <PalavyrSpeedDial actions={getActions()} />
+                        <PalavyrSpeedDial actions={getActions()} startState={true} />
                     </div>
                     <PalavyrErrorBoundary>
                         {historyTracker.linkedNodeList !== undefined &&

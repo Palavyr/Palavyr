@@ -62,8 +62,9 @@ export const ConversationConfigurationPage = () => {
 
     return (
         <>
-            {historyTracker && linkedNodeList && (
+            {historyTracker && historyTracker.linkedNodeList && linkedNodeList && planTypeMeta && (
                 <StructuredConvoTree
+                    planTypeMeta={planTypeMeta}
                     useNewEditor={useNewEditor}
                     treeErrors={treeErrors}
                     setTreeErrors={setTreeErrors}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -24,12 +24,17 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export interface PalavyrSpeedDialProps {
     actions: Action[];
+    startState?: boolean;
 }
 
-export const PalavyrSpeedDial = ({ actions }: PalavyrSpeedDialProps) => {
+export const PalavyrSpeedDial = ({ actions, startState = false }: PalavyrSpeedDialProps) => {
     const cls = useStyles();
     const [open, setOpen] = React.useState(false);
     const [hidden, setHidden] = React.useState(false);
+
+    useEffect(() => {
+        setOpen(startState);
+    }, []);
 
     const handleVisibility = () => {
         setHidden(prevHidden => !prevHidden);
