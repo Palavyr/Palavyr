@@ -1,8 +1,6 @@
 import React from "react";
-import { makeStyles, Typography, useTheme } from "@material-ui/core";
-import { TwoItemRow } from "./components/TwoItemRow/TwoItemRow";
+import { makeStyles, useTheme } from "@material-ui/core";
 import { PricingSection } from "./components/pricing/PricingSection";
-import { rowOne, rowTwo, rowThree } from "./components/landingContent/twoItemRowContent";
 import AOS from "aos";
 import { GreenStrip } from "./components/sliver/ThinStrip";
 import { landingWidgetApiKey, widgetUrl } from "@common/client/clientUtils";
@@ -10,7 +8,6 @@ import { IFrame } from "frontend/dashboard/content/demo/IFrame";
 import { Align } from "@common/positioning/Align";
 import { LandingWrapper } from "./components/LandingWrapper";
 import { LangingPageTitleContent } from "./branding/headerTitleContent/LandingPageTitleContent";
-import { LineSpacer } from "@common/components/typography/LineSpacer";
 import { ComponentLandingSpotlight, LandingSpotlight } from "./components/ConversationDesignerCallout/ConversationDesignerCallout";
 import LandingImageOne from "./landingImages/editor-1.gif";
 import PricingImageOne from "./landingImages/pricing-1.gif";
@@ -95,12 +92,12 @@ export const LandingPage = () => {
                     <GreenStrip /> */}
                     <ComponentLandingSpotlight text="Elegent and Classic">
                         {/* <div className={cls.strip} style={{ backgroundColor: theme.palette.primary.light }}> */}
-                            {/* <Typography align="center" variant="h3" style={{ color: theme.palette.common.white }}>
+                        {/* <Typography align="center" variant="h3" style={{ color: theme.palette.common.white }}>
                                 Try it out!
                             </Typography> */}
-                            <Align>
-                                <IFrame widgetUrl={widgetUrl} apiKey={landingWidgetApiKey} iframeRefreshed={true} preCheckErrors={[]} demo={false} shadow={true} />
-                            </Align>
+                        <Align>
+                            <IFrame widgetUrl={widgetUrl} apiKey={landingWidgetApiKey} iframeRefreshed={true} preCheckErrors={[]} demo={false} shadow={true} />
+                        </Align>
                         {/* </div>   */}
                     </ComponentLandingSpotlight>
                     <GreenStrip />

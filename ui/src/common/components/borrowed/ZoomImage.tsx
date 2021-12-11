@@ -3,7 +3,7 @@ import { Portal, Backdrop, makeStyles } from "@material-ui/core";
 import ScrollbarSize from "@material-ui/core/Tabs/ScrollbarSize";
 import classNames from "classnames";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     backdrop: {
         zIndex: theme.zIndex.modal,
         backgroundColor: "rgba(0, 0, 0, 0.8)",
@@ -61,7 +61,6 @@ export const ZoomImage = ({ alt, imgSrc, className = "" }: IZoomImage) => {
     }, [setZoomedIn]);
 
     useEffect(() => {
-
         var header = document.querySelector("header");
         if (header == null) return;
 

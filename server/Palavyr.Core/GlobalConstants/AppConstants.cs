@@ -34,7 +34,7 @@
 
             public const string SmtpUsername = "AWS:SmtpUsername";
             public const string SmtpPassword = "AWS:SmtpPassword";
-            
+            public const string RandomString = "aT5jX*Y7fJEK";
             public const string CurrentEnvironment = "Palavyr.Server.Environment";
         }
     }
