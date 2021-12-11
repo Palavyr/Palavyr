@@ -47,7 +47,7 @@ export const PalavyrSpeedDial = ({ actions }: PalavyrSpeedDialProps) => {
         <div className={cls.root}>
             <SpeedDial direction="left" ariaLabel="palavyr-speed-dial" className={cls.speedDial} hidden={hidden} icon={<SpeedDialIcon />} onClick={onClose} onOpen={onOpen} open={open}>
                 {actions.map(action => (
-                    <SpeedDialAction key={action.name} icon={action.icon} tooltipTitle={action.name} tooltipPlacement="top" onClick={action.onClick} />
+                    <SpeedDialAction key={action.name} icon={action.icon} tooltipTitle={action.name} tooltipPlacement="top" onClick={async () => await action.onClick()} />
                 ))}
             </SpeedDial>
         </div>

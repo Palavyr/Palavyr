@@ -115,10 +115,6 @@ export const StructuredConvoTree = ({ setUseNewEditor, useNewEditor, setTreeErro
     };
 
     useEffect(() => {
-        setRefresh(!refresh);
-    }, [historyTracker.linkedNodeList]);
-
-    useEffect(() => {
         if (useNewEditor) {
             window.scrollTo(0, 0);
         } else {
@@ -210,7 +206,7 @@ export const StructuredConvoTree = ({ setUseNewEditor, useNewEditor, setTreeErro
         if (isDevelopmentStage()) {
             const additionalActions: Action[] = [
                 { icon: <BugReportIcon />, name: "Debug", onClick: toggleDebugData },
-                { icon: <RotateLeftIcon />, name: "Reset Tree", onClick: resetTree },
+                { icon: <RotateLeftIcon />, name: "Reset Tree", onClick: async () => await resetTree() },
             ];
             actions = [...actions, ...additionalActions];
         }

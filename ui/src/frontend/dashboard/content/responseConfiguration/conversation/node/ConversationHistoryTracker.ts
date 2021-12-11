@@ -26,7 +26,6 @@ export class ConversationHistoryTracker implements IConversationHistoryTracker {
 
     public initializeConversation(conversation: IPalavyrLinkedList) {
         this.currentPosition = 0;
-
         this.setConversationHistory([cloneDeep(conversation)]);
         this.resetLinkedNodes(conversation);
     }
