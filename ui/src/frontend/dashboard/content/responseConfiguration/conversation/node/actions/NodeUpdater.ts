@@ -1,5 +1,5 @@
 import { NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
-import { IPalavyrNode } from "../../Contracts";
+import { IPalavyrNode } from "@Palavyr-Types";
 import NodeChanger from "./NodeChanger";
 
 export class NodeUpdater {

@@ -1,5 +1,5 @@
 import React from "react";
-import { IPalavyrNode } from "../../Contracts";
+import { IPalavyrNode } from "@Palavyr-Types";
 import { AnabranchMergeCheckBox } from "../options/AnabranchMergeCheckBox";
 import { AnabranchMergeNodeLabel } from "../options/AnabranchMergeNodeLabel";
 import { DeleteMyself } from "../options/DeleteMyself";

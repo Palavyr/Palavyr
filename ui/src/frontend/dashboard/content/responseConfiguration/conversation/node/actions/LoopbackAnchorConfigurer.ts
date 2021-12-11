@@ -1,4 +1,4 @@
-import { IPalavyrNode, INodeReferences } from "../../Contracts";
+import { IPalavyrNode, INodeReferences } from "@Palavyr-Types";
 
 class LoopbackAnchorConfigurer {
     constructor() {}

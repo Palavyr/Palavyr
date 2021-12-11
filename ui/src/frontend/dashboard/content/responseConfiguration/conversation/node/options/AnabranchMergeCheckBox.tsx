@@ -4,7 +4,7 @@ import { ConversationTreeContext } from "frontend/dashboard/layouts/DashboardCon
 import React, { useContext, useState } from "react";
 import { useEffect } from "react";
 import { PalavyrCheckbox } from "@common/components/PalavyrCheckBox";
-import { IPalavyrNode, NodeOptionalProps } from "../../Contracts";
+import { IPalavyrNode, NodeOptionalProps } from "@Palavyr-Types";
 import AnabranchConfigurer from "../actions/AnabranchConfigurer";
 
 const onChange = (event: { target: { checked: boolean } }, setAnabranchMergeChecked: SetState<boolean>, node: IPalavyrNode, nodeTypeOptions: NodeTypeOptions) => {

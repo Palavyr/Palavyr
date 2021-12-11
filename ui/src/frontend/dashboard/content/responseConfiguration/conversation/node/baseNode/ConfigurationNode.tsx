@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core";
 import { LineLink } from "@Palavyr-Types";
 import classNames from "classnames";
 import React, { useEffect, useState } from "react";
-import { IPalavyrNode } from "../../Contracts";
+import { IPalavyrNode } from "@Palavyr-Types";
 import { SteppedLineTo } from "../../PalavyrNodeLines/SteppedLines";
 import { NodeInterface } from "./NodeInterface";
 

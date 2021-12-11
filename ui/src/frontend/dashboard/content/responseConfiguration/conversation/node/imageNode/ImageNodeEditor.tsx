@@ -1,7 +1,7 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { Dialog, DialogTitle, DialogContent, Divider, Typography, responsiveFontSizes } from "@material-ui/core";
 import React, { useCallback, useEffect, useState } from "react";
-import { IPalavyrNode } from "../../Contracts";
+import { IPalavyrNode } from "@Palavyr-Types";
 import { CustomImage } from "./CustomImage";
 import { ImageUpload } from "./ImageUpload";
 

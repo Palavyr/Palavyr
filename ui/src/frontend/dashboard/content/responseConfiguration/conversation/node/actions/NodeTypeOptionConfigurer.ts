@@ -1,5 +1,5 @@
 import { NodeOption, NodeTypeCode, NodeTypeOptions } from "@Palavyr-Types";
-import { INodeReferences, IPalavyrNode } from "../../Contracts";
+import { INodeReferences, IPalavyrNode } from "@Palavyr-Types";
 
 class NodeTypeOptionConfigurer {
     constructor() {}

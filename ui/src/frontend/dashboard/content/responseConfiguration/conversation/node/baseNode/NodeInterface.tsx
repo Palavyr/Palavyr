@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { ConversationTreeContext, DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useState } from "react";
 import { useContext } from "react";
-import { IPalavyrNode } from "../../Contracts";
+import { IPalavyrNode } from "@Palavyr-Types";
 import { useNodeInterfaceStyles } from "../../nodeInterfaceStyles";
 import { ImageNodeEditor } from "../imageNode/ImageNodeEditor";
 import { ImageNodeFace } from "../imageNode/ImageNodeFace";

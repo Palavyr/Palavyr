@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import { makeStyles } from "@material-ui/core";
-import { IPalavyrNode } from "../../Contracts";
+import { IPalavyrNode } from "@Palavyr-Types";
 import { ConversationTreeContext, DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { NodeTypeOptions } from "@Palavyr-Types";
 

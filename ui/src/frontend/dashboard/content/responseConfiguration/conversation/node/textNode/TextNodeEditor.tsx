@@ -3,7 +3,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, makeStyles } from "@
 import { NodeTypeOptions } from "@Palavyr-Types";
 import { ConversationTreeContext, DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext, useEffect, useState } from "react";
-import { INodeReferences, IPalavyrNode } from "../../Contracts";
+import { INodeReferences, IPalavyrNode } from "@Palavyr-Types";
 import NodeUpdater from "../actions/NodeUpdater";
 import { MultiChoiceTextEditor } from "./MutichoiceTextEditor";
 import { HtmlTextEditor } from "./TextEditor";

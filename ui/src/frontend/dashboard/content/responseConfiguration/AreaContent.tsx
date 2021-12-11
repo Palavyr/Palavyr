@@ -130,7 +130,6 @@ export const AreaContentInner = ({ setLoaded, children }: IAreaContentInner) => 
                                     className={classNames(`${tab.tourClassName}`, cls.tabtext)}
                                     onClick={() => {
                                         const spot = (tab.label as string).replace(" ", "").toLowerCase();
-                                        console.log(spot);
                                         const loz = sendTo(spot, index);
                                         return loz;
                                     }}

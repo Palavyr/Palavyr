@@ -35,19 +35,19 @@ export const PalavyrSpeedDial = ({ actions }: PalavyrSpeedDialProps) => {
         setHidden(prevHidden => !prevHidden);
     };
 
-    const handleOpen = () => {
-        setOpen(true);
+    const onOpen = () => {
+        setOpen(!open);
     };
 
-    const handleClose = () => {
+    const onClose = () => {
         setOpen(false);
     };
 
     return (
         <div className={cls.root}>
-            <SpeedDial direction={"left"} ariaLabel="palavyr-speed-dial" className={cls.speedDial} hidden={hidden} icon={<SpeedDialIcon />} onClose={handleClose} onOpen={handleOpen} open={open}>
+            <SpeedDial direction="left" ariaLabel="palavyr-speed-dial" className={cls.speedDial} hidden={hidden} icon={<SpeedDialIcon />} onClick={onClose} onOpen={onOpen} open={open}>
                 {actions.map(action => (
-                    <SpeedDialAction key={action.name} icon={action.icon} tooltipTitle={action.name} tooltipPlacement="top" onClick={action.onClick} />
+                    <SpeedDialAction key={action.name} icon={action.icon} tooltipTitle={action.name} tooltipPlacement="top" onClick={async () => await action.onClick()} />
                 ))}
             </SpeedDial>
         </div>

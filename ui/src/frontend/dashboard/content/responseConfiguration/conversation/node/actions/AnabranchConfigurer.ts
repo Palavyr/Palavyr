@@ -1,5 +1,5 @@
 import { SetState, NodeTypeOptions, NodeTypeCode } from "@Palavyr-Types";
-import { IPalavyrNode, INodeReferences } from "../../Contracts";
+import { IPalavyrNode, INodeReferences } from "@Palavyr-Types";
 import NodeTypeOptionConfigurer from "./NodeTypeOptionConfigurer";
 
 class AnabranchConfigurer {
