@@ -178,16 +178,17 @@ export const StructuredConvoTree = ({
     const getActions = () => {
         let actions: Action[] = [
             { icon: <SaveIcon />, name: "Save", onClick: onSave },
-            {
-                icon: <RedoIcon />,
-                name: "Redo",
-                onClick: () => historyTracker.stepConversationForwardOneStep(),
-            },
-            {
-                icon: <UndoIcon />,
-                name: "Undo",
-                onClick: () => historyTracker.stepConversationBackOneStep(),
-            },
+            // TODO: Major TODO!! The undo/redo buttons are not working.
+            // {
+            //     icon: <RedoIcon />,
+            //     name: "Redo",
+            //     onClick: () => historyTracker.stepConversationForwardOneStep(),
+            // },
+            // {
+            //     icon: <UndoIcon />,
+            //     name: "Undo",
+            //     onClick: () => historyTracker.stepConversationBackOneStep(),
+            // },
         ];
 
         if (!useNewEditor) {

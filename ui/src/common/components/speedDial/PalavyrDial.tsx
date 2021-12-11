@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Backdrop from "@material-ui/core/Backdrop";
+import { makeStyles, createStyles, Theme, useTheme } from "@material-ui/core/styles";
 import SpeedDial from "@material-ui/lab/SpeedDial";
 import SpeedDialIcon from "@material-ui/lab/SpeedDialIcon";
 import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
@@ -12,12 +10,16 @@ const useStyles = makeStyles((theme: Theme) =>
         root: {
             height: 380,
             transform: "translateZ(0px)",
+
             flexGrow: 1,
         },
         speedDial: {
             position: "absolute",
             bottom: theme.spacing(2),
-            right: theme.spacing(2),
+            right: "0rem",
+        },
+        fabprops: {
+            "&:hover": {},
         },
     })
 );
@@ -30,29 +32,57 @@ export interface PalavyrSpeedDialProps {
 export const PalavyrSpeedDial = ({ actions, startState = false }: PalavyrSpeedDialProps) => {
     const cls = useStyles();
     const [open, setOpen] = React.useState(false);
-    const [hidden, setHidden] = React.useState(false);
 
     useEffect(() => {
         setOpen(startState);
     }, []);
 
-    const handleVisibility = () => {
-        setHidden(prevHidden => !prevHidden);
-    };
-
     const onOpen = () => {
         setOpen(!open);
     };
 
-    const onClose = () => {
+    const onClose = e => {
+        e.preventDefault();
+
         setOpen(false);
     };
-
+    const [popperOpen, setPopperOpen] = React.useState(false);
+    const theme = useTheme();
     return (
         <div className={cls.root}>
-            <SpeedDial direction="left" ariaLabel="palavyr-speed-dial" className={cls.speedDial} hidden={hidden} icon={<SpeedDialIcon />} onClick={onClose} onOpen={onOpen} open={open}>
+            <SpeedDial
+                FabProps={{ style: { backgroundColor: theme.palette.secondary.main } }}
+                direction="left"
+                hidden={true}
+                ariaLabel="palavyspeed-dial"
+                className={cls.speedDial}
+                icon={<SpeedDialIcon />}
+                onClick={onClose}
+                onOpen={onOpen}
+                open={true}
+            >
                 {actions.map(action => (
-                    <SpeedDialAction key={action.name} icon={action.icon} tooltipTitle={action.name} tooltipPlacement="top" onClick={async () => await action.onClick()} />
+                    <SpeedDialAction
+                        FabProps={{ style: { marginLeft: "1.6rem" } }}
+                        PopperProps={{
+                            open: popperOpen,
+                        }}
+                        onMouseEnter={() => {
+                            setPopperOpen(true);
+                            setTimeout(() => {
+                                setPopperOpen(false);
+                            }, 2000);
+                        }}
+                        onMouseLeave={() => {
+                            setPopperOpen(false);
+                        }}
+                        onClose={() => null}
+                        key={action.name}
+                        icon={action.icon}
+                        tooltipTitle={action.name}
+                        tooltipPlacement="top"
+                        onClick={async () => await action.onClick()}
+                    />
                 ))}
             </SpeedDial>
         </div>

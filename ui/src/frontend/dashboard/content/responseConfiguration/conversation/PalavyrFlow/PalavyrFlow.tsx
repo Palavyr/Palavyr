@@ -58,8 +58,9 @@ const getLayoutedElements = (elements, direction = "TB") => {
 };
 
 const useStyles = makeStyles(theme => ({
-    minimap: { marginBottom: "4rem", marginRight: "2rem" },
+    minimap: { marginBottom: "6.5rem", marginRight: "2rem" },
     controls: { marginBottom: "4rem" },
+
 }));
 
 export const PalavyrFlow = ({ initialElements }: PalavyrFlowProps) => {
