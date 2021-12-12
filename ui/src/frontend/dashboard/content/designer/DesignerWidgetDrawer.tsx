@@ -1,8 +1,10 @@
 import { Drawer, makeStyles } from "@material-ui/core";
 import { WidgetPreferences } from "@Palavyr-Types";
+import { WidgetContext } from "@widgetcore/context/WidgetContext";
+import { SmoothWidget } from "@widgetcore/widgets/SmoothWidget";
 import React from "react";
-import { WidgetContext } from "./fakeWidgetNew/components/context/WidgetContext";
-import { SmoothWidget } from "./fakeWidgetNew/components/widgets/SmoothWidget";
+import { Provider } from "react-redux";
+import { PalavyrWidgetStore } from "widget/store/store";
 
 const drawerWidth = 400;
 
@@ -17,7 +19,6 @@ const useStyles = makeStyles(theme => ({
     drawerPaper: {
         width: drawerWidth,
         backgroundColor: theme.palette.background.default,
-        // borderLeft: `5px solid ${theme.palette.primary.main}`,
     },
     // necessary for content to be below app bar
     toolbar: theme.mixins.toolbar,
@@ -50,9 +51,11 @@ export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawer
             <div className={cls.toolbar} />
             <div className={cls.widget}>
                 {widgetPreferences && (
-                    <WidgetContext.Provider value={{ preferences: widgetPreferences, chatStarted: true, setChatStarted: () => null, setConvoId: () => null, convoId: "demo" }}>
-                        <SmoothWidget />
-                    </WidgetContext.Provider>
+                    <Provider store={PalavyrWidgetStore}>
+                        <WidgetContext.Provider value={{ preferences: widgetPreferences, chatStarted: true, setChatStarted: () => null, setConvoId: () => null, convoId: "demo" }}>
+                            <SmoothWidget fakeApiKey="123" />
+                        </WidgetContext.Provider>
+                    </Provider>
                 )}
             </div>
         </Drawer>

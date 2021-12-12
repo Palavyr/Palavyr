@@ -167,7 +167,7 @@ const WidgetSassRule = () => {
                 loader: "sass-loader",
                 options: {
                     sassOptions: {
-                        includePaths: ["src/frontend/dashboard/content/designer/fakeWidgetNew/components/scss/", "**/*"],
+                        includePaths: ["src/widget/widgetcore/scss/", "**/*"],
                     },
                 },
             },

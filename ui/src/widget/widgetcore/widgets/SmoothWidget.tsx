@@ -3,45 +3,51 @@ import * as React from "react";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { renderNextComponent } from "@widgetcore/BotResponse/utils/renderNextComponent";
-import { GlobalState, WidgetNodes } from "@Palavyr-Types";
-import { useDispatch } from "react-redux";
-
-import { useSelector } from "react-redux";
-import cn from "classnames";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { _openFullscreenPreview } from "@store-actions";
 import { getRootNode } from "@widgetcore/BotResponse/utils/utils";
-import { Conversation } from "@widgetcore/components/Conversation/Conversation";
+import { ConvoHeader } from "@widgetcore/components/ConvoHeader/ConvoHeader";
+import { Messages } from "@widgetcore/components/Messages/Messages";
+import { BrandingStrip } from "@widgetcore/components/Footer/BrandingStrip";
+import classNames from "classnames";
 import "./style.scss";
 
-export interface WidgetProps {}
+export interface WidgetProps {
+    designMode?: boolean;
+}
 
-export const SmoothWidget = ({}: WidgetProps) => {
+export const SmoothWidget = ({ designMode }: WidgetProps) => {
     const location = useLocation();
-    const secretKey = new URLSearchParams(location.search).get("key");
+
+    let secretKey: string | undefined | null;
+    if (designMode) {
+        secretKey = "123";
+    } else {
+        secretKey = new URLSearchParams(location.search).get("key");
+    }
     const client = new PalavyrWidgetRepository(secretKey);
-    const dispatch = useDispatch();
 
     const initializeIntroduction = async () => {
         const intro = await client.Widget.Get.IntroSequence();
-
         const rootNode = getRootNode(intro);
         renderNextComponent(rootNode, intro, client, null);
     };
 
+    const initializeDesignMode = async () => {
+
+
+    }
+
     useEffect(() => {
         (async () => {
-            await initializeIntroduction();
+            if (designMode) {
+            } else {
+                await initializeIntroduction();
+            }
         })();
 
         return () => {};
     }, []);
-
-    const fullScreenMode = true;
-    const { showChat, visible } = useSelector((state: GlobalState) => ({
-        showChat: state.behaviorReducer.showChat,
-        visible: true,
-    }));
 
     const messageRef = useRef<HTMLDivElement | null>(null);
 
@@ -50,33 +56,6 @@ export const SmoothWidget = ({}: WidgetProps) => {
         return () => {
             messageRef.current = null;
         };
-    }, [showChat]);
-
-    const eventHandle = evt => {
-        if (evt.target && evt.target.className === "rcw-message-img") {
-            const { src, alt, naturalWidth, naturalHeight } = evt.target as HTMLImageElement;
-            const obj = {
-                src: src,
-                alt: alt,
-                width: naturalWidth,
-                height: naturalHeight,
-            };
-            dispatch(_openFullscreenPreview(obj));
-        }
-    };
-
-    /**
-     * Previewer needs to prevent body scroll behavior when fullScreenMode is true
-     */
-    useEffect(() => {
-        const target = messageRef?.current;
-        target?.addEventListener("click", eventHandle, false);
-
-        return () => {
-            target?.removeEventListener("click", eventHandle);
-        };
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -84,8 +63,10 @@ export const SmoothWidget = ({}: WidgetProps) => {
     }, []);
 
     return (
-        <div className={cn("rcw-widget-container", "rcw-full-screen")}>
-            <Conversation className={"active"} showTimeStamp={true} />
+        <div className={classNames("rcw-conversation-container", "active")} aria-live="polite">
+            <ConvoHeader titleAvatar={""} />
+            <Messages profileAvatar={""} showTimeStamp={true} />
+            <BrandingStrip />
         </div>
     );
 };

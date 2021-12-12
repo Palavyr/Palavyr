@@ -5,7 +5,6 @@ import {
     WidgetConversationUpdate,
     DynamicResponse,
     KeyValues,
-    LocaleResource,
     LocaleResponse,
     NewConversation,
     PreCheckResult,

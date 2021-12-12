@@ -36,12 +36,12 @@
             "@protected-routes": ["frontend/routes/ProtectedRoute.tsx"],
             "@landing/*": ["frontend/landing/*"],
             "@constants": ["frontend/constants.ts"],
-            "@frontend": ["frontend/*"],
+            "@frontend/*": ["frontend/*"],
             "@localStorage/*": ["frontend/localStorage/*"],
             "@dashboard/*": ["frontend/dashboard/*"],
-
             "@scss/*": ["frontend/dashboard/content/designer/fakeWidgetNew/components/scss/*", "widget/scss/*"],
             "@auth/*": ["frontend/auth/*"],
+
             "@store-actions": ["widget/store/actions/actions"],
             "@store-dispatcher": ["widget/store/dispatcher"],
             "@test-data/*": ["widget/test/data/*"],
