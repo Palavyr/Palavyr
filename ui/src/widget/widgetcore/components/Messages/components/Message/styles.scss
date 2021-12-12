@@ -15,7 +15,8 @@
 .rcw-client {
   display: flex;
   flex-direction: column;
-  margin-left: auto;
+  align-items: flex-end;
+  padding: 1rem;
 
   .rcw-message-text {
     @include message-bubble($turqois-2);

@@ -9,8 +9,21 @@ import { setDynamicResponse } from "./setDynamicResponse";
 
 const WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN = 22;
 
+export const extractContent = (inputTextWithHtml: string, space: boolean = true) => {
+    var span= document.createElement('span');
+    span.innerHTML= inputTextWithHtml;
+    if(space) {
+      var children= span.querySelectorAll('*');
+      for(var i = 0 ; i < children.length ; i++) {
+        if(children[i].textContent)
+          children[i].textContent+= ' ';
+      }
+    }
+    return [span.textContent || span.innerText].toString().replace(/ +/g,' ');
+  };
+
 export const computeReadingTime = (node: WidgetNodeResource) => {
-    const typicalReadingSpeed = (node: WidgetNodeResource) => floor((node.text.length / WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN) * 1000, 0);
+    const typicalReadingSpeed = (node: WidgetNodeResource) => floor((extractContent(node.text).length / WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN) * 1000, 0);
     const timeout = min([18000, max([2000, typicalReadingSpeed(node)])]);
 
     return timeout;

@@ -217,6 +217,8 @@ export class StandardComponents {
                     buttons={
                         <>
                             {children.map((child: WidgetNodeResource) => {
+                                console.log(child.optionPath);
+
                                 return (
                                     <>
                                         {child.optionPath && (
@@ -225,7 +227,7 @@ export class StandardComponents {
                                                 key={child.nodeId}
                                                 text={child.optionPath}
                                                 onClick={() => {
-                                                    var response = child.optionPath;
+                                                    const response = child.optionPath;
                                                     responseAction(node, child, nodeList, client, convoId, response);
                                                     setDisabled(true);
                                                 }}

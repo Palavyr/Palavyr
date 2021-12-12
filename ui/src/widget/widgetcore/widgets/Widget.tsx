@@ -9,19 +9,20 @@ import { getRootNode } from "@widgetcore/BotResponse/utils/utils";
 import { ConvoHeader } from "@widgetcore/components/ConvoHeader/ConvoHeader";
 import { Messages } from "@widgetcore/components/Messages/Messages";
 import { BrandingStrip } from "@widgetcore/components/Footer/BrandingStrip";
-import { shortStaticConvoSequence } from "@frontend/dashboard/content/designer/dummy_conversations";
 
 import { WidgetNodeResource } from "@Palavyr-Types";
 import { makeStyles } from "@material-ui/core";
+import { designerData } from "@frontend/dashboard/content/designer/data/designerData";
+import { addResponseMessage, addUserMessage, dropMessages } from "@store-dispatcher";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
+        // display: "flex",
+        // flexDirection: "column",
+        // height: "100%",
         width: "100%",
-        backgroundColor: theme.palette.background.default,
-        overflow: "hidden",
+        height: "100%",
+        overflowY: "hidden",
     },
 }));
 
@@ -45,21 +46,20 @@ export const Widget = ({ designMode }: WidgetProps) => {
     };
 
     const initializeDesignMode = async () => {
-        const conversation = shortStaticConvoSequence("area52") as WidgetNodeResource[];
-        for (const message of conversation) {
-            renderNextComponent(message, conversation, client, null);
-        }
+        const conversation = designerData as WidgetNodeResource[];
+        renderNextComponent(conversation[0], conversation, client, null);
     };
+    const initialize = React.useCallback(async () => {
+        dropMessages();
+        if (designMode) {
+            initializeDesignMode();
+        } else {
+            await initializeIntroduction();
+        }
+    }, []);
 
     useEffect(() => {
-        (async () => {
-            if (designMode) {
-                initializeDesignMode();
-            } else {
-                await initializeIntroduction();
-            }
-        })();
-
+        initialize();
         return () => {};
     }, []);
 
@@ -72,19 +72,14 @@ export const Widget = ({ designMode }: WidgetProps) => {
         };
     }, []);
 
-    useEffect(() => {
-        document.body.setAttribute("style", `overflow: "hidden"`);
-    }, []);
 
     return (
-        <div className={cls.root}>
-            <div>
+        <div style={{ height: "100%", width: "100%", minHeight: '100%' }}>
+            <div className={cls.root}>
                 <ConvoHeader titleAvatar={""} />
+                <Messages profileAvatar={""} showTimeStamp={true} />
+                <BrandingStrip />
             </div>
-            <div style={{ flexGrow: 1 }}>
-                <Messages profileAvatar={""} showTimeStamp={true} messageRef={messageRef} />
-            </div>
-            <BrandingStrip />
         </div>
     );
 };

@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 export const BrandingStrip = () => {
     const cls = useStyles();
     return (
-        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }} className={cls.spacer}>
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", position: 'static', bottom: '0px' }} className={cls.spacer}>
             <div style={{ alignItems: "center", display: "flex" }}>
                 <Typography className={cls.wrapper} variant="caption">
                     Crafted with{" "}

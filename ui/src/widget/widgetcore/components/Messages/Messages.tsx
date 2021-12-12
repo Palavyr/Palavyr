@@ -13,24 +13,25 @@ import { WidgetContext } from "@widgetcore/context/WidgetContext";
 type Props = {
     showTimeStamp: boolean;
     profileAvatar?: string;
-    messageRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
 const useStyles = makeStyles(theme => ({
-    face: {
-        height: "4rem",
-    },
     messageTube: (prefs: WidgetPreferences) => ({
         backgroundColor: prefs.chatBubbleColor,
-        height: "100%",
         overflowY: "scroll",
-        paddingTop: "15px",
-        paddingBottom: "2rem",
-        // "-webkit-overflow-scrolling": "touch",
+        flexGrow: 1,
+    }),
+    messageTubeContainer: (prefs: WidgetPreferences) => ({
+        height: "100%",
+        minHeight: "100%",
+        paddingTop: "4rem",
+        backgroundColor: prefs.chatBubbleColor,
+        paddingLeft: "0.8rem",
+        paddingRight: "0.8rem",
     }),
 }));
 
-export const Messages = ({ profileAvatar, showTimeStamp, messageRef }: Props) => {
+export const Messages = ({ profileAvatar, showTimeStamp }: Props) => {
     const { preferences } = useContext(WidgetContext);
     const cls = useStyles({ ...preferences });
 
@@ -38,15 +39,18 @@ export const Messages = ({ profileAvatar, showTimeStamp, messageRef }: Props) =>
         messages: state.messagesReducer.messages,
         typing: state.behaviorReducer.messageLoader,
     }));
+    useEffect(() => {
+        document.body.setAttribute("style", `overflow: "hidden"`);
+    }, []);
 
-    // const messageRef = useRef<HTMLDivElement | null>(null);
+    const messageRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         scrollToBottom(messageRef.current);
     }, [messages, typing]);
 
     return (
-        <div id="messages" className={cls.messageTube} ref={messageRef}>
+        <div id="messages" className={cls.messageTubeContainer} ref={messageRef}>
             {messages?.map((message, index) => (
                 <div className={cls.messageTube} key={`${index}-${format(message.timestamp, "hh:mm")}`}>
                     {getComponentToRender(message, showTimeStamp)}

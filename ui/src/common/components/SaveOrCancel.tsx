@@ -26,9 +26,10 @@ export interface ISaveOrCancel {
     position?: "left" | "right" | "center";
     useSaveIcon?: boolean;
     buttonType?: "button" | "submit";
+    zIndex?: number;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     saveButton: {
         border: `1px solid ${theme.palette.primary}`,
         borderRadius: "10px",
@@ -81,6 +82,7 @@ export const SaveOrCancel = ({
     deleteText = "Delete",
     useSaveIcon = true,
     buttonType = "button",
+    zIndex = 1,
 }: ISaveOrCancel) => {
     const cls = useStyles();
     const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -94,11 +96,12 @@ export const SaveOrCancel = ({
         <>
             {
                 <Button
+                    style={{ zIndex: zIndex }}
                     type={buttonType}
                     startIcon={isSaving ? <CircularProgress size={20} /> : useSaveIcon ? <SaveIcon /> : <></>}
                     variant="outlined"
                     className={classNames(cls.button, cls.saveButton)}
-                    onClick={async (e) => {
+                    onClick={async e => {
                         setIsSaving(true);
                         setTimeout(async () => {
                             if (onSave) {
@@ -128,6 +131,7 @@ export const SaveOrCancel = ({
             }
             {onCancel && (
                 <Button
+                    style={{ zIndex: zIndex }}
                     variant="outlined"
                     className={classNames(cls.button, cls.cancelButton)}
                     onClick={async () => {
@@ -144,6 +148,7 @@ export const SaveOrCancel = ({
             )}
             {onDelete && (
                 <Button
+                    style={{ zIndex: zIndex }}
                     startIcon={<DeleteOutlineIcon />}
                     variant="outlined"
                     className={classNames(cls.button, cls.delButton)}

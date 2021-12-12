@@ -12,12 +12,20 @@ export const getOrderedChildNodes = (childrenIDs: string, nodeList: WidgetNodes)
     const children: WidgetNodes = [];
     ids.forEach((id: string) => {
         const node = nodeList.filter(node => node.nodeId === id)[0]; // each ID should only refer to 1 existing node.
-        children.push(node);
+        if (node) children.push(node);
     });
     return children;
 };
 
-export const assembleEmailRecordData = (conversationId: string, areaIdentifier: string, name: string, email: string, PhoneNumber: string, locale: string, fallback: boolean = false): Partial<ConversationRecordUpdate> => {
+export const assembleEmailRecordData = (
+    conversationId: string,
+    areaIdentifier: string,
+    name: string,
+    email: string,
+    PhoneNumber: string,
+    locale: string,
+    fallback: boolean = false
+): Partial<ConversationRecordUpdate> => {
     return {
         ConversationId: conversationId,
         AreaIdentifier: areaIdentifier,
@@ -25,7 +33,7 @@ export const assembleEmailRecordData = (conversationId: string, areaIdentifier: 
         Email: email,
         PhoneNumber: PhoneNumber,
         Fallback: fallback,
-        Locale: locale
+        Locale: locale,
     };
 };
 

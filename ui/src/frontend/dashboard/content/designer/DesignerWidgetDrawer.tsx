@@ -23,10 +23,12 @@ const useStyles = makeStyles(theme => ({
     // necessary for content to be below app bar
     toolbar: theme.mixins.toolbar,
     widget: {
-        padding: "1rem",
+        // padding: "1rem",
+        flexGrow: 1,
         width: "100%",
-        height: "90%",
+        height: "100%",
         background: "none",
+        overflow: "hidden"
     },
     drawerRight: { height: "100%", backgroundColor: theme.palette.background.default },
 }));

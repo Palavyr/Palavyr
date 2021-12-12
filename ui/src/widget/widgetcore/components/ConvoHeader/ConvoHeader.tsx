@@ -42,7 +42,9 @@ const useStyles = makeStyles(theme => ({
         boxShadow: "none",
         textAlign: "left",
         wordWrap: "break-word",
+
         padding: "0rem",
+        paddingLeft: "1rem",
         width: "100%",
         wordBreak: "normal",
         minHeight: "60px",

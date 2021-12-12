@@ -1,54 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="description" content="Palavyr: The small business platform for building chatbots." />
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,400;0,500;1,600&family=Poppins:ital,wght@0,200;0,300;0,400;0,500;1,100;1,200;1,300&family=Rubik:wght@700&display=swap"
-            rel="stylesheet"
-        />
 
-        <link rel="icon" href="favicon.ico" />
-        <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="manifest" href="/manifest.json" />
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Palavyr: The small business platform for building chatbots." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="trueg" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,400;0,500;1,600&family=Poppins:ital,wght@0,200;0,300;0,400;0,500;1,100;1,200;1,300&family=Rubik:wght@700&display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap"
+        rel="stylesheet" />
 
-        <title>Palavyr</title>
-        <style>
-            html {
-                scroll-behavior: smooth;
-                outline: none;
-                height: 100%;
-                font-size: 100%;
-                font-family: "Syne Mono", monospace;
-            }
+    <script async src="https://www.googletagmanager.com/gtag/js?id=#{Palavyr.Google.Analytics.Configuration}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag('js', new Date());
+    </script>
 
-            body {
-                margin: 0;
-                font-family: "Syne Mono", monospace;
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
-                height: 100%;
-                overflow: auto;
-            }
 
-            code {
-                font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
-            }
+    <link rel="icon" href="favicon.ico" />
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/manifest.json" />
 
-            *:focus {
-                outline: none;
-            }
-        </style>
-    </head>
+    <title>Palavyr</title>
+    <style>
+        html {
+            scroll-behavior: smooth;
+            outline: none;
+            height: 100%;
+            font-size: 100%;
+            font-family: "Syne Mono", monospace;
+        }
 
-    <body>
-        <noscript>You need to enable JavaScript to run this app.</noscript>
-        <div id="root"></div>
-    </body>
+        body {
+            margin: 0;
+            font-family: "Syne Mono", monospace;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            height: 100%;
+            overflow: auto;
+        }
+
+        code {
+            font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+        }
+
+        *:focus {
+            outline: none;
+        }
+    </style>
+</head>
+
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+</body>
+
 </html>

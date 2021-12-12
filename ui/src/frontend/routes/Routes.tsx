@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Redirect, Route, Switch, useLocation } from "react-router-dom";
 import { LandingPage } from "@landing/Landing";
 import { ProtectedRoute } from "@protected-routes";
 import { DashboardLayout } from "frontend/dashboard/layouts/DashboardLayout";
@@ -80,15 +80,16 @@ import { BlogPage } from "@landing/blog/BlogPage";
 import { OurStoryPage } from "@landing/ourStory/OutStoryPage";
 import { OurTeamPage } from "@landing/ourTeam/OurTeamPage";
 import { WidgetDesignerPage } from "frontend/dashboard/content/designer/WidgetDesigner";
+import { pageview } from "@common/Analytics/gtag";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
+        const location = useLocation();
+        pageview(location.pathname);
         return (
             <AuthContext.Provider value={{ isActive: Auth.accountIsActive, isAuthenticated: Auth.accountIsAuthenticated }}>
                 <DashboardLayout helpComponent={helpComponent}>
-                    {/* <GA4R code="G-9RFNBGK7HW"> */}
                     <ContentComponent />
-                    {/* </GA4R> */}
                 </DashboardLayout>
             </AuthContext.Provider>
         );

@@ -46,7 +46,7 @@
     "markdown-it-sanitizer": "^0.4.3",
     "markdown-it-sup": "^1.0.0",
     "material-ui-dropzone": "^3.3.1",
-    "palavyr-iframe-widget": "^0.1.6",
+    "palavyr-chat-widget": "^0.1.12",
     "react": "^16.8.6",
     "react-app-polyfill": "^1.0.6",
     "react-awesome-loaders": "^0.1.37",
