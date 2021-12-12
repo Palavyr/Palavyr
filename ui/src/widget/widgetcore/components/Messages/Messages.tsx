@@ -8,13 +8,12 @@ import { scrollToBottom } from "@widgetcore/utils/messages";
 import { getComponentToRender } from "@widgetcore/BotResponse/utils/getComponentToRender";
 import { makeStyles } from "@material-ui/core";
 
-import "./styles.scss";
-import classNames from "classnames";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 
 type Props = {
     showTimeStamp: boolean;
     profileAvatar?: string;
+    messageRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
 const useStyles = makeStyles(theme => ({
@@ -23,36 +22,37 @@ const useStyles = makeStyles(theme => ({
     },
     messageTube: (prefs: WidgetPreferences) => ({
         backgroundColor: prefs.chatBubbleColor,
+        height: "100%",
+        overflowY: "scroll",
+        paddingTop: "15px",
+        paddingBottom: "2rem",
+        // "-webkit-overflow-scrolling": "touch",
     }),
 }));
 
-export const Messages = ({ profileAvatar, showTimeStamp }: Props) => {
+export const Messages = ({ profileAvatar, showTimeStamp, messageRef }: Props) => {
     const { preferences } = useContext(WidgetContext);
+    const cls = useStyles({ ...preferences });
 
-    const { messages, typing, showChat } = useSelector((state: GlobalState) => ({
+    const { messages, typing } = useSelector((state: GlobalState) => ({
         messages: state.messagesReducer.messages,
         typing: state.behaviorReducer.messageLoader,
-        showChat: state.behaviorReducer.showChat,
     }));
+
+    // const messageRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         scrollToBottom(messageRef.current);
-    }, [messages, showChat, typing]);
-
-    const messageRef = useRef<HTMLDivElement | null>(null);
-
-    const cls = useStyles({ ...preferences });
+    }, [messages, typing]);
 
     return (
-        <>
-            <div id="messages" className={classNames("rcw-messages-container", cls.messageTube)} ref={messageRef} style={{ paddingBottom: "2rem" }}>
-                {messages?.map((message, index) => (
-                    <div className={classNames("rcw-message", cls.messageTube)} key={`${index}-${format(message.timestamp, "hh:mm")}`}>
-                        {getComponentToRender(message, showTimeStamp)}
-                    </div>
-                ))}
-                {typing && <Loader typing={typing} />}
-            </div>
-        </>
+        <div id="messages" className={cls.messageTube} ref={messageRef}>
+            {messages?.map((message, index) => (
+                <div className={cls.messageTube} key={`${index}-${format(message.timestamp, "hh:mm")}`}>
+                    {getComponentToRender(message, showTimeStamp)}
+                </div>
+            ))}
+            {typing && <Loader typing={typing} />}
+        </div>
     );
 };

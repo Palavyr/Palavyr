@@ -4,7 +4,7 @@ import { StandardComponents } from "./standardComponentRegistry";
 import { WidgetNodeResource, WidgetNodes } from "@Palavyr-Types";
 import { ConfigureMockClient } from "../../test/testUtils/ConfigureMockClient";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
-import { convoA } from "@test-data/conversationNodes";
+import { convoA } from "@frontend/dashboard/content/designer/dummy_conversations";
 import { MessageWrapper } from "../BotResponse/utils/MessageWrapper";
 
 const registry = new StandardComponents();

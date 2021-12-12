@@ -5,7 +5,7 @@ import { WidgetPreferences } from "@Palavyr-Types";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { CollectDetailsForm } from "@widgetcore/UserDetailsDialog/CollectDetailsForm";
-import { SmoothWidget } from "@widgetcore/widgets/SmoothWidget";
+import { Widget } from "@widgetcore/widgets/Widget";
 
 export const WidgetApp = () => {
     const [chatStarted, setChatStarted] = useState<boolean>(false);
@@ -50,7 +50,7 @@ export const WidgetApp = () => {
                     {isReady ? (
                         <>
                             <CollectDetailsForm setKickoff={() => null} />
-                            <SmoothWidget />
+                            <Widget />
                         </>
                     ) : (
                         <NotReady />

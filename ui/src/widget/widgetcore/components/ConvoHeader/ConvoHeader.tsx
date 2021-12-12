@@ -1,7 +1,6 @@
 import { Card, Fade, makeStyles, Tooltip } from "@material-ui/core";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import FaceIcon from "@material-ui/icons/Face";
-import "./style.scss";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "../../context/WidgetContext";
 import { openUserDetails } from "@store-dispatcher";
@@ -15,7 +14,6 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: props.headerColor,
         color: props.headerFontColor,
         textAlign: "left",
-        minWidth: 275,
         padding: "0rem",
         wordWrap: "break-word",
         borderRadius: "0px",
@@ -51,6 +49,13 @@ const useStyles = makeStyles(theme => ({
     },
     paper: {
         boxShadow: "none",
+    },
+    avatar: {
+        width: "40px",
+        height: "40px",
+        borderRadius: "100%",
+        marginRight: "10px",
+        verticalAlign: "middle",
     },
 }));
 
@@ -93,7 +98,7 @@ export const ConvoHeader = ({ titleAvatar }: ConvoHeaderProps) => {
                     </Tooltip>
                 </Fade>
             )}
-            {titleAvatar && <img src={titleAvatar} className="avatar" alt="profile" />}
+            {titleAvatar && <img src={titleAvatar} className="pcw-avatar" alt="profile" />}
             <div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: preferences.chatHeader }} />
         </Card>
     );

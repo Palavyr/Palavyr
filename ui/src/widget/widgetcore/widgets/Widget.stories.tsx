@@ -1,58 +1,60 @@
-import React, { useEffect } from "react";
+export const dummy =  () => null;
 
-import { Meta, Story } from "@storybook/react";
-import { Widget, WidgetProps } from "./Widget";
-import { getSelectedOption, options } from "@test-data/options";
-import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
-import { ConfigureMockClient } from "widget/test/testUtils/ConfigureMockClient";
-import { newConversation } from "@test-data/newConversation";
-import { addResponseMessage, addUserMessage, closeUserDetails, dropMessages, toggleWidget } from "@store-dispatcher";
-import { shortStaticConvoSequence } from "@test-data/conversationNodes";
+// import React, { useEffect } from "react";
 
-const fakeKey = "secret-key";
-const areaId = "abc123";
-const routes = new PalavyrWidgetRepository(fakeKey).Routes;
+// import { Meta, Story } from "@storybook/react";
+// import { getSelectedOption, options } from "@test-data/options";
+// import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
+// import { ConfigureMockClient } from "widget/test/testUtils/ConfigureMockClient";
+// import { newConversation } from "@test-data/newConversation";
+// import { addResponseMessage, addUserMessage, closeUserDetails, dropMessages, toggleWidget } from "@store-dispatcher";
+// import { shortStaticConvoSequence } from "@frontend/dashboard/content/designer/dummy_conversations";
+// import { Widget, WidgetProps } from "./Widget";
 
-const conf = new ConfigureMockClient();
-conf.ConfigureGet(routes.newConvo(fakeKey, areaId), newConversation(areaId));
+// const fakeKey = "secret-key";
+// const areaId = "abc123";
+// const routes = new PalavyrWidgetRepository(fakeKey).Routes;
 
-export default {
-    title: "Widget/Widget",
-    component: Widget,
-    argTypes: {},
-} as Meta;
+// const conf = new ConfigureMockClient();
+// conf.ConfigureGet(routes.newConvo(fakeKey, areaId), newConversation(areaId));
 
-export const ChatStart: Story<WidgetProps> = (args: WidgetProps) => {
-    useEffect(() => {
-        closeUserDetails();
-        dropMessages();
-        return () => {
-            dropMessages();
-        };
-    });
-    return <Widget {...args} />;
-};
-ChatStart.args = {
-    option: getSelectedOption(areaId)
-};
+// export default {
+//     title: "Widget/Widget",
+//     component: Widget,
+//     argTypes: {},
+// } as Meta;
 
-export const PopulatedChat: Story<WidgetProps> = (args: WidgetProps) => {
-    useEffect(() => {
-        dropMessages();
-        closeUserDetails();
-        shortStaticConvoSequence(areaId).forEach(convoNode => {
-            if (convoNode.userResponse !== undefined){
-                addUserMessage(convoNode.userResponse)
-            } else {
-                addResponseMessage(convoNode.text)
-            }
-        });
-        return () => {
-            dropMessages();
-        };
-    });
-    return <Widget {...args} />;
-};
-PopulatedChat.args = {
-    option: getSelectedOption(areaId),
-};
+// export const ChatStart: Story<WidgetProps> = (args: WidgetProps) => {
+//     useEffect(() => {
+//         closeUserDetails();
+//         dropMessages();
+//         return () => {
+//             dropMessages();
+//         };
+//     });
+//     return <Widget {...args} />;
+// };
+// ChatStart.args = {
+//     option: getSelectedOption(areaId)
+// };
+
+// export const PopulatedChat: Story<WidgetProps> = (args: WidgetProps) => {
+//     useEffect(() => {
+//         dropMessages();
+//         closeUserDetails();
+//         shortStaticConvoSequence(areaId).forEach(convoNode => {
+//             if (convoNode.userResponse !== undefined){
+//                 addUserMessage(convoNode.userResponse)
+//             } else {
+//                 addResponseMessage(convoNode.text)
+//             }
+//         });
+//         return () => {
+//             dropMessages();
+//         };
+//     });
+//     return <Widget {...args} />;
+// };
+// PopulatedChat.args = {
+//     option: getSelectedOption(areaId),
+// };

@@ -1,5 +1,5 @@
 import { NewConversation } from "@Palavyr-Types";
-import { convoA } from "./conversationNodes";
+import { convoA } from "../../../frontend/dashboard/content/designer/dummy_conversations";
 import { widgetPreferences } from "./widgetPreferences";
 
 export const newConversation = (areaId: string): NewConversation => {

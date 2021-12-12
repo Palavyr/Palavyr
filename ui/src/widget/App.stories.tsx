@@ -7,7 +7,7 @@ import { ConfigureMockClient } from "widget/test/testUtils/ConfigureMockClient";
 import { precheckResult } from "@test-data/preCheckResults";
 import { widgetPreferences } from "@test-data/widgetPreferences";
 import { areas } from "@test-data/areas";
-import { convoA } from "@test-data/conversationNodes";
+import { convoA } from "@frontend/dashboard/content/designer/dummy_conversations";
 
 const fakeKey = "secret-key";
 const isDemo = false;

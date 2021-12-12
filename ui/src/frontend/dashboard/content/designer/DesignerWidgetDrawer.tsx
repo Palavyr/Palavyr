@@ -1,7 +1,7 @@
 import { Drawer, makeStyles } from "@material-ui/core";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
-import { SmoothWidget } from "@widgetcore/widgets/SmoothWidget";
+import { Widget } from "@widgetcore/widgets/Widget";
 import React from "react";
 import { Provider } from "react-redux";
 import { PalavyrWidgetStore } from "widget/store/store";
@@ -11,7 +11,7 @@ const drawerWidth = 400;
 const useStyles = makeStyles(theme => ({
     drawer: {
         width: drawerWidth,
-        // flexShrink: 0,
+        flexShrink: 0,
         overflowY: "hidden",
     },
     drawerRoot: { borderLeft: "5px solid grey" },
@@ -53,7 +53,7 @@ export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawer
                 {widgetPreferences && (
                     <Provider store={PalavyrWidgetStore}>
                         <WidgetContext.Provider value={{ preferences: widgetPreferences, chatStarted: true, setChatStarted: () => null, setConvoId: () => null, convoId: "demo" }}>
-                            <SmoothWidget fakeApiKey="123" />
+                            <Widget designMode />
                         </WidgetContext.Provider>
                     </Provider>
                 )}
