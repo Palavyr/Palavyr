@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { renderNextComponent } from "@widgetcore/BotResponse/utils/renderNextComponent";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
@@ -13,16 +13,13 @@ import { BrandingStrip } from "@widgetcore/components/Footer/BrandingStrip";
 import { WidgetNodeResource } from "@Palavyr-Types";
 import { makeStyles } from "@material-ui/core";
 import { designerData } from "@frontend/dashboard/content/designer/data/designerData";
-import { addResponseMessage, addUserMessage, dropMessages } from "@store-dispatcher";
+import { dropMessages } from "@store-dispatcher";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        // display: "flex",
-        // flexDirection: "column",
-        // height: "100%",
-        width: "100%",
+        display: "flex",
+        flexFlow: "column",
         height: "100%",
-        overflowY: "hidden",
     },
 }));
 
@@ -63,23 +60,16 @@ export const Widget = ({ designMode }: WidgetProps) => {
         return () => {};
     }, []);
 
-    const messageRef = useRef<HTMLDivElement | null>(null);
-
-    useEffect(() => {
-        messageRef.current = document.getElementById("messages") as HTMLDivElement;
-        return () => {
-            messageRef.current = null;
-        };
-    }, []);
-
-
     return (
-        <div style={{ height: "100%", width: "100%", minHeight: '100%' }}>
-            <div className={cls.root}>
-                <ConvoHeader titleAvatar={""} />
-                <Messages profileAvatar={""} showTimeStamp={true} />
-                <BrandingStrip />
-            </div>
+        <div className={cls.root}>
+            <ConvoHeader titleAvatar={""} />
+            <Messages profileAvatar={""} showTimeStamp={true} />
+            <BrandingStrip />
         </div>
     );
 };
+
+// a react component where the inner row is a scrolling area, and the outer rows are fixed size
+// the inner row is the main chat area, and the outer rows are the header and footer
+// the header and footer are fixed size, and are always visible
+// the inner row is scrollable, and is always visible

@@ -20,6 +20,11 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: "#264B94",
         color: "white",
         justifyItems: "center",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        flex: "0 1 40px",
+        zIndex: 1000,
     },
     replayIcon: {
         color: theme.palette.common.white,
@@ -37,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 export const BrandingStrip = () => {
     const cls = useStyles();
     return (
-        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", position: 'static', bottom: '0px' }} className={cls.spacer}>
+        <div className={cls.spacer}>
             <div style={{ alignItems: "center", display: "flex" }}>
                 <Typography className={cls.wrapper} variant="caption">
                     Crafted with{" "}

@@ -22,12 +22,13 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
     }),
     messageTubeContainer: (prefs: WidgetPreferences) => ({
-        height: "100%",
-        minHeight: "100%",
+        // height: "100%",
+        // minHeight: "100%",
         paddingTop: "4rem",
         backgroundColor: prefs.chatBubbleColor,
         paddingLeft: "0.8rem",
         paddingRight: "0.8rem",
+        flex: "1 1 auto"
     }),
 }));
 

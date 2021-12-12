@@ -17,6 +17,12 @@ const useStyles = makeStyles(theme => ({
         padding: "0rem",
         wordWrap: "break-word",
         borderRadius: "0px",
+        flex: "0 1 auto",
+        /* The above is shorthand for:
+        flex-grow: 0,
+        flex-shrink: 1,
+        flex-basis: auto
+        */
     }),
     flexProperty: {
         flexDirection: "column",
