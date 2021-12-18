@@ -7,7 +7,8 @@ import { Provider } from "react-redux";
 import { PalavyrWidgetStore } from "widget/store/store";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
 import classNames from "classnames";
-import '@widgetcore/widget/widget.module.scss';
+import "@widgetcore/widget/widget.module.scss";
+import PalavyrChatWidget from "palavyr-chat-widget";
 
 const drawerWidth = 400;
 
@@ -16,6 +17,12 @@ const useStyles = makeStyles(theme => ({
         width: drawerWidth,
         flexShrink: 0,
         overflowY: "hidden",
+        display: "flex",
+        textAlign: "center",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+
     },
     drawerRoot: { borderLeft: "5px solid grey" },
 
@@ -28,6 +35,7 @@ const useStyles = makeStyles(theme => ({
     widget: {
         height: "100%",
         overflowY: "hidden",
+        width: "100%"
     },
     drawerRight: { height: "100%", backgroundColor: theme.palette.background.default },
 }));
@@ -39,6 +47,19 @@ export interface DesignerWidgetDrawerProps {
 export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawerProps) => {
     const cls = useStyles();
     const wcls = useWidgetStyles();
+
+    const DrawerWidget = (
+        <Provider store={PalavyrWidgetStore}>
+            <div className={classNames(cls.widget, wcls.pwbox)}>
+                {widgetPreferences && (
+                    <WidgetContext.Provider value={{ preferences: widgetPreferences, chatStarted: true, setChatStarted: () => null, setConvoId: () => null, convoId: "demo" }}>
+                        <WidgetLayout />
+                    </WidgetContext.Provider>
+                )}
+            </div>
+        </Provider>
+    );
+
     return (
         <Drawer
             className={cls.drawer}
@@ -51,15 +72,7 @@ export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawer
             anchor="right"
         >
             <div className={cls.toolbar} />
-            <Provider store={PalavyrWidgetStore}>
-                <div className={classNames(cls.widget, wcls.pwbox)}>
-                    {widgetPreferences && (
-                        <WidgetContext.Provider value={{ preferences: widgetPreferences, chatStarted: true, setChatStarted: () => null, setConvoId: () => null, convoId: "demo" }}>
-                            <WidgetLayout />
-                        </WidgetContext.Provider>
-                    )}
-                </div>
-            </Provider>
+            <PalavyrChatWidget className={cls.widget} startOpen fixedPosition={false} alternateContent={DrawerWidget} style={{ height: "80vh" }} />
         </Drawer>
     );
 };

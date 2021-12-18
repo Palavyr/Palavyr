@@ -4,26 +4,14 @@ import { WidgetLayout } from "./WidgetLayout";
 import "@widgetcore/widget/widget.module.scss";
 
 export const useWidgetStyles = makeStyles(theme => ({
-    // root: {
-    //     display: "flex",
-    //     flexDirection: "column",
-    //     minHeight: "100%",
-    //     height: "100%",
-    //     // flexFlow: "column",
-    //     // height: "100vh",
-    //     overflowY: 'hidden'
-    // },
-
     pwbox: {
         display: "flex",
         flexFlow: "column",
         height: "100vh",
-        overflowY: 'hidden'
+        overflowY: "hidden",
     },
 
-    pwrow: {
-        border: "1px dotted grey",
-    },
+    pwrow: {},
 
     pheader: {
         flex: "0 1 auto",
@@ -37,10 +25,11 @@ export const useWidgetStyles = makeStyles(theme => ({
     },
     pfooter: {
         display: "flex",
-        flex: "0 1 40px",
+        flex: "0 1 30px",
+        flexFlow: "row",
+        justifyContent: "space-between",
     },
 }));
-
 
 export interface WidgetProps {
     designMode?: boolean;

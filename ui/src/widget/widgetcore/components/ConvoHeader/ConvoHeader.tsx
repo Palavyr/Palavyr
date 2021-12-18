@@ -96,7 +96,7 @@ export const ConvoHeader = ({ titleAvatar }: ConvoHeaderProps) => {
     const cls = useStyles(preferences);
     const wcls = useWidgetStyles();
     return (
-        <div className={classNames(wcls.pwrow, wcls.pheader)}>
+        <div className={classNames(wcls.pwrow, wcls.pheader, cls.header)}>
             {chatStarted && (
                 <Fade in>
                     <Tooltip open={tipOpen} title="Update your contact details" placement="left">

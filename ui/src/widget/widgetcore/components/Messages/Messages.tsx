@@ -24,17 +24,17 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: prefs.chatBubbleColor,
         overflowY: "hidden",
     }),
-    // messageTubeContainer: (prefs: WidgetPreferences) => ({
-    //     overflowY: "scroll",
-    //     // minHeight: "100%",
-    //     paddingTop: "2rem",
-    //     backgroundColor: prefs.chatBubbleColor,
-    //     paddingLeft: "0.8rem",
-    //     paddingRight: "0.8rem",
-    //     display: "flex",
-    //     flexDirection: "column",
-    //     // flex: "1 1 auto"
-    // }),
+    messageTubeContainer: (prefs: WidgetPreferences) => ({
+        // overflowY: "scroll",
+        //// minHeight: "100%",
+        paddingTop: "2rem",
+        backgroundColor: prefs.chatBubbleColor,
+        paddingLeft: "0.8rem",
+        paddingRight: "0.8rem",
+        // display: "flex",
+        // flexDirection: "column",
+        //// flex: "1 1 auto"
+    }),
 }));
 
 export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
@@ -57,7 +57,7 @@ export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
     }, [messages, typing]);
 
     return (
-        <div id="messages" className={classNames(wcls.pwrow, wcls.pcontent)} ref={messageRef}>
+        <div id="messages" className={classNames(wcls.pwrow, wcls.pcontent, cls.messageTubeContainer)} ref={messageRef}>
             {messages?.map((message, index) => (
                 <div className={cls.message} key={`${index}-${format(message.timestamp, "hh:mm")}`}>
                     {getComponentToRender(message, showTimeStamp)}

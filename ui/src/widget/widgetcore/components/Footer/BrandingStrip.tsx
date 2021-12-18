@@ -22,10 +22,6 @@ const useStyles = makeStyles(theme => ({
         width: "100%",
         backgroundColor: "#264B94",
         color: "white",
-        justifyItems: "center",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
         zIndex: 1000,
     },
     replayIcon: {
@@ -39,13 +35,14 @@ const useStyles = makeStyles(theme => ({
     iconRoot: {
         width: "100%",
         textAlign: "right",
+
     },
 }));
 export const BrandingStrip = () => {
     const cls = useStyles();
     const wcls = useWidgetStyles();
     return (
-        <div className={classNames(wcls.pwrow, wcls.pfooter)}>
+        <div className={classNames(wcls.pwrow, wcls.pfooter, cls.spacer)}>
             <div style={{ alignItems: "center", display: "flex" }}>
                 <Typography className={cls.wrapper} variant="caption">
                     Crafted with{" "}
@@ -54,7 +51,7 @@ export const BrandingStrip = () => {
                     </strong>
                 </Typography>
             </div>
-            <div style={{ height: "100%", alignItems: "center", display: "flex" }}>
+            <div style={{ paddingLeft: "3rem", height: "100%", alignItems: "center", display: "flex" }}>
                 <ReplayIcon classes={{ root: cls.iconRoot }} className={cls.replayIcon} onClick={() => window.location.reload()} />
             </div>
         </div>

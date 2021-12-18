@@ -52,5 +52,5 @@ export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, preCheckErrors, dem
         }
     }, [iframeRefreshed]);
 
-    return <PalavyrChatWidget className={cls.frame}  startOpen={true} fixedPosition={false} src={url} id={iframeId} />;
+    return <PalavyrChatWidget className={cls.frame}  startOpen={true} fixedPosition={false} src={url} id={iframeId} style={{zIndex: 0}} />;
 };
