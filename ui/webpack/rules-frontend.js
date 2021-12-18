@@ -1,6 +1,5 @@
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const autoprefixer = require("autoprefixer");
 
 const TypeScriptLoaderRule = () => {
     return {
@@ -116,37 +115,6 @@ const ScssLoaderRule = () => {
     };
 };
 
-const WidgetSassRule = () => {
-    return {
-        test: /\.scss$/,
-        exclude: /node_modules/,
-        use: [
-            "style-loader",
-            "css-loader",
-            {
-                loader: "postcss-loader",
-                options: {
-                    ident: "postcss",
-                    plugins: () => [
-                        require("postcss-flexbugs-fixes"), // eslint-disable-line
-                        autoprefixer({
-                            browsers: [">1%", "last 4 versions", "Firefox ESR", "not ie <9"],
-                            flexbox: "no-2009",
-                        }),
-                    ],
-                },
-            },
-            {
-                loader: "sass-loader",
-                options: {
-                    sassOptions: {
-                        includePaths: ["src/**/*", "node_modules/palavyr-chat-widget/src/**/*"],
-                    },
-                },
-            },
-        ],
-    };
-};
 
 module.exports = {
     NewFileLoaderRule,
@@ -159,5 +127,4 @@ module.exports = {
     StylesLoader,
     URLLoaderRule,
     ScssLoaderRule,
-    WidgetSassRule,
 };

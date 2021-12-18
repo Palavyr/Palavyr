@@ -55,7 +55,6 @@ module.exports = ENV => {
                 BabelLoaderRule(), // IN USE
                 URLLoaderRule(), // IN USE
                 ScssLoaderRule(),
-                // WidgetSassRule(),
                 //new rule here
             ],
         },
