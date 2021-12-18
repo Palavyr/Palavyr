@@ -1,57 +1,114 @@
-@import 'common';
-@import 'variables/colors';
+@mixin message-bubble($color) {
+    background-color: $color;
+    border-radius: 10px;
+    padding: 15px;
+    max-width: 215px;
+    text-align: left;
+}
+
+// Full screen mixins
+
+@mixin widget-container-fs {
+    height: 100vh;
+    margin: 0;
+    max-width: none;
+    width: 100%;
+}
+
+@mixin header-fs {
+    border-radius: 0;
+    flex-shrink: 0;
+    position: relative;
+}
+
+@mixin title-fs {
+    padding: 0 0 15px 0;
+}
+
+@mixin close-button-fs {
+    background-color: #35cce6;
+    border: 0;
+    display: block;
+    position: absolute;
+    right: 10px;
+    top: 20px;
+    width: 40px;
+}
+
+@mixin close-fs {
+    width: 20px;
+    height: 20px;
+}
+
+@mixin messages-container-fs {
+    height: 100%;
+    max-height: none;
+}
+
+@mixin conversation-container-fs {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+@mixin launcher-fs {
+    bottom: 0;
+    margin: 20px;
+    position: fixed;
+    right: 0;
+}
 
 .rcw-message {
-  margin: 10px;
-  display: flex;
-  word-wrap: break-word;
+    margin: 10px;
+    display: flex;
+    word-wrap: break-word;
 }
 
 .rcw-timestamp {
-  font-size: 10px;
-  margin-top: 0px;
+    font-size: 10px;
+    margin-top: 0px;
 }
 
 .rcw-client {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 1rem;
 
-  .rcw-message-text {
-    @include message-bubble($turqois-2);
-  }
+    .rcw-message-text {
+        @include message-bubble(#a3eaf7);
+    }
 
-  .rcw-timestamp {
-    align-self: flex-end;
-  }
+    .rcw-timestamp {
+        align-self: flex-end;
+    }
 }
 
 .rcw-response {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 
-  .rcw-message-text {
-    @include message-bubble($grey-2);
-  }
+    .rcw-message-text {
+        @include message-bubble(#f4f7f9);
+    }
 }
 
 /* For markdown elements created with default styles */
 .rcw-message-text {
-  p {
-    margin: 0;
-  }
+    p {
+        margin: 0;
+    }
 
-  img {
-    width: 100%;
-    object-fit: contain;
-  }
+    img {
+        width: 100%;
+        object-fit: contain;
+    }
 }
 
 .rcw-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 100%;
-  margin-right: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    margin-right: 10px;
 }

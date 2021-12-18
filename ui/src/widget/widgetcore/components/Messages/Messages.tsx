@@ -10,31 +10,37 @@ import { makeStyles } from "@material-ui/core";
 
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 
-type Props = {
+import "@widgetcore/widget/widget.module.scss";
+import { useWidgetStyles } from "@widgetcore/widget/Widget";
+import classNames from "classnames";
+
+export interface MessageProps {
     showTimeStamp: boolean;
     profileAvatar?: string;
-};
+}
 
 const useStyles = makeStyles(theme => ({
-    messageTube: (prefs: WidgetPreferences) => ({
+    message: (prefs: WidgetPreferences) => ({
         backgroundColor: prefs.chatBubbleColor,
-        overflowY: "scroll",
-        flexGrow: 1,
+        overflowY: "hidden",
     }),
-    messageTubeContainer: (prefs: WidgetPreferences) => ({
-        // height: "100%",
-        // minHeight: "100%",
-        paddingTop: "4rem",
-        backgroundColor: prefs.chatBubbleColor,
-        paddingLeft: "0.8rem",
-        paddingRight: "0.8rem",
-        flex: "1 1 auto"
-    }),
+    // messageTubeContainer: (prefs: WidgetPreferences) => ({
+    //     overflowY: "scroll",
+    //     // minHeight: "100%",
+    //     paddingTop: "2rem",
+    //     backgroundColor: prefs.chatBubbleColor,
+    //     paddingLeft: "0.8rem",
+    //     paddingRight: "0.8rem",
+    //     display: "flex",
+    //     flexDirection: "column",
+    //     // flex: "1 1 auto"
+    // }),
 }));
 
-export const Messages = ({ profileAvatar, showTimeStamp }: Props) => {
+export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
     const { preferences } = useContext(WidgetContext);
     const cls = useStyles({ ...preferences });
+    const wcls = useWidgetStyles();
 
     const { messages, typing } = useSelector((state: GlobalState) => ({
         messages: state.messagesReducer.messages,
@@ -51,9 +57,9 @@ export const Messages = ({ profileAvatar, showTimeStamp }: Props) => {
     }, [messages, typing]);
 
     return (
-        <div id="messages" className={cls.messageTubeContainer} ref={messageRef}>
+        <div id="messages" className={classNames(wcls.pwrow, wcls.pcontent)} ref={messageRef}>
             {messages?.map((message, index) => (
-                <div className={cls.messageTube} key={`${index}-${format(message.timestamp, "hh:mm")}`}>
+                <div className={cls.message} key={`${index}-${format(message.timestamp, "hh:mm")}`}>
                     {getComponentToRender(message, showTimeStamp)}
                 </div>
             ))}

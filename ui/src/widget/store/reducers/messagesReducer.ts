@@ -12,7 +12,7 @@ import {
     MessagesActions,
 } from "@Palavyr-Types";
 import { MESSAGE_SENDER } from "@widgetcore/constants";
-import { createNewMessage, createLinkSnippet, createComponentMessage } from "@widgetcore/utils/messages";
+import { createNewMessage, createComponentMessage } from "@widgetcore/utils/messages";
 import { createReducer } from "./createReducer";
 
 export type MessageState = {
@@ -33,8 +33,6 @@ const reducer = {
         messages: [...state.messages, createNewMessage(text, MESSAGE_SENDER.RESPONSE, id)],
         badgeCount: state.badgeCount + 1,
     }),
-
-    [ADD_NEW_LINK_SNIPPET]: (state: MessagesState, { link, id }) => ({ ...state, messages: [...state.messages, createLinkSnippet(link, id)] }),
 
     [ADD_COMPONENT_MESSAGE]: (state: MessagesState, { component, props, showAvatar, id }) => ({ ...state, messages: [...state.messages, createComponentMessage(component, props, showAvatar, id)] }),
 

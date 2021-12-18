@@ -1,4 +1,4 @@
-export const widgetPreferences = {
+export const testWidgetPreferences = {
     placeholder: "Not Used",
     selectListColor: "#A6F0F0",
     headerColor: "#8CCBE5",

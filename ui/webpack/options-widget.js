@@ -3,8 +3,8 @@ const manifestOptions = {
 }
 
 const htmlOptions = {
-    template: './public/index.html',
-    filename: 'index.html',
+    template: './public/widget-index.html',
+    filename: 'widget-index.html',
     favicon: 'public/favicon.ico',
     title: "Palavyr Widget"
 }

@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="Palavyr: The small business platform for building chatbots." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="trueg" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" />
     <link
         href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,400;0,500;1,600&family=Poppins:ital,wght@0,200;0,300;0,400;0,500;1,100;1,200;1,300&family=Rubik:wght@700&family=Fjalla+One&family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap"
         rel="stylesheet" />
@@ -28,29 +28,24 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="manifest" href="/manifest.json" />
 
-    <title>Palavyr</title>
+    <title>Palavyr Widget</title>
     <style>
-        html {
+        html,
+        body {
             scroll-behavior: smooth;
             outline: none;
             height: 100%;
             width: 100%;
             margin: 0;
             font-size: 100%;
-            overflow: 'hidden';
-        }
-
-        body {
-            margin: 0;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            height: 100%;
         }
 
-        #innerBody {
-            all: inherit;
-            overflow: auto;
-        }
+        /* body {
+            margin: 0;
+            height: 100%;
+        } */
 
         code {
             font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
@@ -64,7 +59,7 @@
 
 <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="widgetroot"></div>
 </body>
 
 </html>

@@ -1,8 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import { PreCheckError } from "@Palavyr-Types";
 import React, { useEffect, useState } from "react";
-import { Widget } from "palavyr-chat-widget";
-import "palavyr-chat-widget/dist/styles.css";
+import PalavyrChatWidget from "palavyr-chat-widget";
 
 type StyleProps = {
     errors: boolean;
@@ -45,10 +44,13 @@ export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, preCheckErrors, dem
 
     useEffect(() => {
         if (iframeRefreshed != state) {
+            const iframe = document.getElementById(iframeId) as Iframe;
+            if (iframe) {
+                iframe.src = url;
+            }
             setState(iframeRefreshed);
-            (document.getElementById(iframeId)! as Iframe).src = url;
         }
     }, [iframeRefreshed]);
 
-    return <Widget className={cls.frame} title={demo ? "demo" : "widget"} src={url} id={iframeId} />;
+    return <PalavyrChatWidget className={cls.frame}  startOpen={true} fixedPosition={false} src={url} id={iframeId} />;
 };

@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
-
 const path = require("path");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const ManifestPlugin = require("webpack-manifest-plugin");
@@ -8,11 +6,9 @@ const Dotenv = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
+const autoprefixer = require("autoprefixer");
 
 const webpack = require("webpack");
-
-const { createRules } = require("./webpack/rules-widget");
-const { manifestOptions, htmlOptions } = require(path.resolve(__dirname, "./webpack/options-widget"));
 
 module.exports = envPath => {
     console.log("Building in: " + envPath);
@@ -20,11 +16,18 @@ module.exports = envPath => {
         plugins: [
             new Dotenv({ path: envPath }),
             new ForkTsCheckerWebpackPlugin(),
-            new HtmlWebpackPlugin(htmlOptions),
+            new HtmlWebpackPlugin({
+                template: "./public/index.html",
+                filename: "index.html",
+                favicon: "public/favicon.ico",
+                title: "Palavyr Widget",
+            }),
             new webpack.ProvidePlugin({
                 React: "react",
             }),
-            new ManifestPlugin(manifestOptions),
+            new ManifestPlugin({
+                fileName: "manifest.json",
+            }),
             new CleanWebpackPlugin(),
             new CopyPlugin({
                 patterns: [
@@ -49,6 +52,58 @@ module.exports = envPath => {
             plugins: [new TsconfigPathsPlugin()],
             extensions: [".tsx", ".ts", ".js"],
         },
-        module: { rules: createRules() },
+        module: {
+            rules: [
+                {
+                    test: /\.ts(x?)$/,
+                    exclude: /node_modules/,
+                    use: ["babel-loader", "ts-loader"],
+                },
+                {
+                    enforce: "pre",
+                    test: /\.js$/,
+                    loader: "source-map-loader",
+                },
+                {
+                    test: /\.js$/,
+                    loader: "babel-loader",
+                    exclude: /node_modules/,
+                },
+                {
+                    test: /\.scss$/,
+                    exclude: /node_modules/,
+                    use: [
+                        "style-loader",
+                        "css-loader",
+                        {
+                            loader: "postcss-loader",
+                            options: {
+                                ident: "postcss",
+                                plugins: () => [
+                                    require("postcss-flexbugs-fixes"), // eslint-disable-line
+                                    autoprefixer({
+                                        browsers: [">1%", "last 4 versions", "Firefox ESR", "not ie <9"],
+                                        flexbox: "no-2009",
+                                    }),
+                                ],
+                            },
+                        },
+                        "sass-loader",
+                        // {
+                        //     loader: "sass-loader",
+                        //     options: {
+                        //         sassOptions: {
+                        //             includePaths: ["src/widget/widgetcore/scss", "src/**/*.scss", "node_modules/palavyr-chat-widget/src/**/*.scss"],
+                        //         },
+                        //     },
+                        // },
+                    ],
+                },
+                {
+                    test: /\.(jpg|png|gif|svg)$/,
+                    use: "url-loader",
+                },
+            ],
+        },
     };
 };

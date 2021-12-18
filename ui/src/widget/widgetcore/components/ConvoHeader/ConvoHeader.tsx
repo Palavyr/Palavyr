@@ -4,6 +4,9 @@ import FaceIcon from "@material-ui/icons/Face";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "../../context/WidgetContext";
 import { openUserDetails } from "@store-dispatcher";
+import classNames from "classnames";
+import '@widgetcore/widget/widget.module.scss';
+import { useWidgetStyles } from "@widgetcore/widget/Widget";
 
 export interface ConvoHeaderProps {
     titleAvatar?: string;
@@ -14,15 +17,11 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: props.headerColor,
         color: props.headerFontColor,
         textAlign: "left",
-        padding: "0rem",
+        padding: ".5rem",
         wordWrap: "break-word",
         borderRadius: "0px",
-        flex: "0 1 auto",
-        /* The above is shorthand for:
-        flex-grow: 0,
-        flex-shrink: 1,
-        flex-basis: auto
-        */
+        minHeight: "60px",
+        // flex: "0 1 auto",
     }),
     flexProperty: {
         flexDirection: "column",
@@ -46,14 +45,12 @@ const useStyles = makeStyles(theme => ({
 
     headerBehavior: {
         boxShadow: "none",
-        textAlign: "left",
+        // textAlign: "left",
         wordWrap: "break-word",
-
-        padding: "0rem",
-        paddingLeft: "1rem",
+        // padding: "0rem",
         width: "100%",
         wordBreak: "normal",
-        minHeight: "60px",
+        // minHeight: "60px",
     },
     paper: {
         boxShadow: "none",
@@ -97,8 +94,9 @@ export const ConvoHeader = ({ titleAvatar }: ConvoHeaderProps) => {
     }, [chatStarted]);
 
     const cls = useStyles(preferences);
+    const wcls = useWidgetStyles();
     return (
-        <Card className={cls.header} classes={{ root: cls.paper }}>
+        <div className={classNames(wcls.pwrow, wcls.pheader)}>
             {chatStarted && (
                 <Fade in>
                     <Tooltip open={tipOpen} title="Update your contact details" placement="left">
@@ -107,7 +105,7 @@ export const ConvoHeader = ({ titleAvatar }: ConvoHeaderProps) => {
                 </Fade>
             )}
             {titleAvatar && <img src={titleAvatar} className="pcw-avatar" alt="profile" />}
-            <div className={cls.headerBehavior} dangerouslySetInnerHTML={{ __html: preferences.chatHeader }} />
-        </Card>
+            <div className={classNames(cls.headerBehavior, "palavyr-header")} dangerouslySetInnerHTML={{ __html: preferences.chatHeader }} />
+        </div>
     );
 };

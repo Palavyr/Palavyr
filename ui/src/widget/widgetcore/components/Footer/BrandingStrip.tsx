@@ -1,6 +1,9 @@
 import { makeStyles, Typography } from "@material-ui/core";
 import React from "react";
 import ReplayIcon from "@material-ui/icons/Replay";
+import "@widgetcore/widget/widget.module.scss";
+import classNames from "classnames";
+import { useWidgetStyles } from "@widgetcore/widget/Widget";
 
 const useStyles = makeStyles(theme => ({
     leadingText: {},
@@ -23,7 +26,6 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
-        flex: "0 1 40px",
         zIndex: 1000,
     },
     replayIcon: {
@@ -41,8 +43,9 @@ const useStyles = makeStyles(theme => ({
 }));
 export const BrandingStrip = () => {
     const cls = useStyles();
+    const wcls = useWidgetStyles();
     return (
-        <div className={cls.spacer}>
+        <div className={classNames(wcls.pwrow, wcls.pfooter)}>
             <div style={{ alignItems: "center", display: "flex" }}>
                 <Typography className={cls.wrapper} variant="caption">
                     Crafted with{" "}

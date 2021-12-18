@@ -5,7 +5,7 @@ import { WidgetPreferences } from "@Palavyr-Types";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { CollectDetailsForm } from "@widgetcore/UserDetailsDialog/CollectDetailsForm";
-import { Widget } from "@widgetcore/widgets/Widget";
+import { Widget } from "@widgetcore/widget/Widget";
 
 export const WidgetApp = () => {
     const [chatStarted, setChatStarted] = useState<boolean>(false);
@@ -44,7 +44,7 @@ export const WidgetApp = () => {
     }, [runAppPrecheck]);
 
     return (
-        <>
+        <div style={{height: "100%", width :"100%"}}>
             {preferences && (
                 <WidgetContext.Provider value={{ preferences, chatStarted, setChatStarted, setConvoId, convoId }}>
                     {isReady ? (
@@ -57,7 +57,7 @@ export const WidgetApp = () => {
                     )}
                 </WidgetContext.Provider>
             )}
-        </>
+        </div>
     );
 };
 

@@ -23,13 +23,13 @@
         "strictPropertyInitialization": false,
         "lib": ["dom", "dom.iterable", "esnext"],
         "baseUrl": "src",
+        "typeRoots": ["node_modules/@types", "node_modules/palavyr-chat-widget"],
         "paths": {
             "@Palavyr-Types": ["common/types/global.ts"],
             "@api-client/*": ["common/client/*"],
             "@common/*": ["common/*"],
             "@material/*": ["common/components/material/*"],
             "@legal/*": ["common/legal/*"],
-
             "@components/*": ["frontend/components/*"],
             "@conversation/*": ["frontend/dashboard/layouts/content/responseConfiguration/conversation/*"],
             "@public-routes": ["frontend/routes/Routes.tsx"],
@@ -50,6 +50,6 @@
         }
     },
     "include": ["src/**/*", "src/**/*.d.ts", "customTypes/*.d.ts"],
-    "exclude": ["node_modules", "lib"],
+    "exclude": ["node_modules", "dist"],
     "typeRoots": ["src/customTypes"]
 }

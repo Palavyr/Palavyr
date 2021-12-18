@@ -9,15 +9,17 @@ import { ErrorFallback } from "@common/components/ErrorBoundaries/ErrorFallback"
 
 const App = () => {
     return (
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <BrowserRouter>
-                <MuiThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <Routes />
-                </MuiThemeProvider>
-                {/* <RouteChangeTracker /> */}
-            </BrowserRouter>
-        </ErrorBoundary>
+        <div id="innerbody">
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <BrowserRouter>
+                    <MuiThemeProvider theme={theme}>
+                        <CssBaseline />
+                        <Routes />
+                    </MuiThemeProvider>
+                    {/* <RouteChangeTracker /> */}
+                </BrowserRouter>
+            </ErrorBoundary>
+        </div>
     );
 };
 

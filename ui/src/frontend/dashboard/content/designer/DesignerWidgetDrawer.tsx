@@ -1,10 +1,13 @@
 import { Drawer, makeStyles } from "@material-ui/core";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
-import { Widget } from "@widgetcore/widgets/Widget";
+import { WidgetLayout } from "@widgetcore/widget/WidgetLayout";
 import React from "react";
 import { Provider } from "react-redux";
 import { PalavyrWidgetStore } from "widget/store/store";
+import { useWidgetStyles } from "@widgetcore/widget/Widget";
+import classNames from "classnames";
+import '@widgetcore/widget/widget.module.scss';
 
 const drawerWidth = 400;
 
@@ -23,12 +26,8 @@ const useStyles = makeStyles(theme => ({
     // necessary for content to be below app bar
     toolbar: theme.mixins.toolbar,
     widget: {
-        // padding: "1rem",
-        flexGrow: 1,
-        width: "100%",
         height: "100%",
-        background: "none",
-        overflow: "hidden"
+        overflowY: "hidden",
     },
     drawerRight: { height: "100%", backgroundColor: theme.palette.background.default },
 }));
@@ -39,6 +38,7 @@ export interface DesignerWidgetDrawerProps {
 
 export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawerProps) => {
     const cls = useStyles();
+    const wcls = useWidgetStyles();
     return (
         <Drawer
             className={cls.drawer}
@@ -51,15 +51,15 @@ export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawer
             anchor="right"
         >
             <div className={cls.toolbar} />
-            <div className={cls.widget}>
-                {widgetPreferences && (
-                    <Provider store={PalavyrWidgetStore}>
+            <Provider store={PalavyrWidgetStore}>
+                <div className={classNames(cls.widget, wcls.pwbox)}>
+                    {widgetPreferences && (
                         <WidgetContext.Provider value={{ preferences: widgetPreferences, chatStarted: true, setChatStarted: () => null, setConvoId: () => null, convoId: "demo" }}>
-                            <Widget designMode />
+                            <WidgetLayout />
                         </WidgetContext.Provider>
-                    </Provider>
-                )}
-            </div>
+                    )}
+                </div>
+            </Provider>
         </Drawer>
     );
 };

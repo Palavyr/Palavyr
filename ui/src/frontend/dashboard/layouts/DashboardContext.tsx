@@ -1,7 +1,7 @@
 import { IAuthContext, IConversationTreeContext, IDashboardContext } from "@Palavyr-Types";
 import React from "react";
 
-export const AuthContext = React.createContext({ isActive: false, isAuthenticated: false } as IAuthContext);
+export const AuthContext = React.createContext<IAuthContext>({ isActive: false, isAuthenticated: false });
 export const DashboardContext = React.createContext({
     unseenNotifications: 0,
     successOpen: false,
