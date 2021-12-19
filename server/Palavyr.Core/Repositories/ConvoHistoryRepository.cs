@@ -36,6 +36,7 @@ namespace Palavyr.Core.Repositories
 
         public async Task<ConversationRecord> UpdateConversationRecord(ConversationRecord newConversationRecord)
         {
+            await Task.CompletedTask;
             var updatedRecord = convoContext.Update(newConversationRecord);
             return updatedRecord.Entity;
         }

@@ -50,14 +50,13 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFail
                 // then we freeze their account because they owe us money. From there, they can pay their bill, and then cancel if they prefer
                 // to not use the service.
                 var endDate = account.CurrentPeriodEnd;
-                var subject = "Your recent payment to Palavyr.com failed. :(";
                 var htmlBody = EmailPaymentFailed.GetPaymentFailedEmailHtml(endDate);
-                 var textBody = EmailPaymentFailed.GetPaymentFailedEmailText(endDate);
+                var textBody = EmailPaymentFailed.GetPaymentFailedEmailText(endDate);
                 await emailClient.SendEmail(
                     EmailConstants.PalavyrMainEmailAddress,
-                    account.EmailAddress, 
-                    EmailConstants.PalavyrPaymentFailedSubject, 
-                    htmlBody, 
+                    account.EmailAddress,
+                    EmailConstants.PalavyrPaymentFailedSubject,
+                    htmlBody,
                     textBody);
             }
 
@@ -75,7 +74,7 @@ namespace Palavyr.Core.Services.StripeServices.StripeWebhookHandlers.PaymentFail
             // them a week or something?)
 
             // TODO Email the user and inform them that the payment failed. There will be a 2 day grace period before we cancel.
-            // The cancel date will be the date provided by the stripe invoice paid webhook + 2 days worth (TODO: Add 2 days in the 
+            // The cancel date will be the date provided by the stripe invoice paid webhook + 2 days worth (TODO: Add 2 days in the
             // invoice paid controller.
         }
     }

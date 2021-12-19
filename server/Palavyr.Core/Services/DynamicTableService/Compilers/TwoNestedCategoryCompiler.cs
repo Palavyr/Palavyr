@@ -18,7 +18,6 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 {
     public class TwoNestedCategoryCompiler : BaseCompiler<TwoNestedCategory>, IDynamicTablesCompiler
     {
-        private readonly IGenericDynamicTableRepository<TwoNestedCategory> repository;
         private readonly IConfigurationRepository configurationRepository;
         private readonly IConversationOptionSplitter splitter;
         private readonly IResponseRetriever responseRetriever;
@@ -30,7 +29,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             IResponseRetriever responseRetriever
         ) : base(repository)
         {
-            this.repository = repository;
+            // this.repository = repository;
             this.configurationRepository = configurationRepository;
             this.splitter = splitter;
             this.responseRetriever = responseRetriever;

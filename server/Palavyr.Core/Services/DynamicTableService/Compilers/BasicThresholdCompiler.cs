@@ -18,7 +18,6 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 {
     public class BasicThresholdCompiler : BaseCompiler<BasicThreshold>, IDynamicTablesCompiler
     {
-        private readonly IGenericDynamicTableRepository<BasicThreshold> repository;
         private readonly IConfigurationRepository configurationRepository;
         private readonly IThresholdEvaluator thresholdEvaluator;
         private readonly IResponseRetriever responseRetriever;
@@ -30,7 +29,6 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             IResponseRetriever responseRetriever
         ) : base(repository)
         {
-            this.repository = repository;
             this.configurationRepository = configurationRepository;
             this.thresholdEvaluator = thresholdEvaluator;
             this.responseRetriever = responseRetriever;

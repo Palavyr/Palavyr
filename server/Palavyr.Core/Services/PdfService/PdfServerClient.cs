@@ -49,7 +49,7 @@ namespace Palavyr.Core.Services.PdfService
 
             var pdfServerUri = PdfServerConstants.PdfServiceUrl(host, port);
             logger.LogDebug($"Attempting to post to pdf service at {pdfServerUri}");
-            
+
             HttpResponseMessage response;
             try
             {
@@ -83,7 +83,7 @@ namespace Palavyr.Core.Services.PdfService
 
                 if (!found)
                 {
-                    Task.Delay(500);
+                    await Task.Delay(500);
                 }
 
                 count++;

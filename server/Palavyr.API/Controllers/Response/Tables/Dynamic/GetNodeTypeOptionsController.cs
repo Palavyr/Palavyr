@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -36,13 +37,14 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 
             return fullNodeTypeOptionsList.ToArray();
         }
-        
+
         [HttpGet("configure-intro/{introId}/node-type-options")]
-        public async Task<NodeTypeOption[]> GetIntro([FromHeader] string accountId, [FromRoute] string introId)
+        public async Task<NodeTypeOption[]> GetIntro([FromHeader] string accountId, [FromRoute] string introId, CancellationToken cancellationToken)
         {
+            await Task.CompletedTask;
             var introOptionList = DefaultNodeTypeOptions.IntroNodeOptionList;
             return introOptionList.ToArray();
-        }        
-        
+        }
+
     }
 }

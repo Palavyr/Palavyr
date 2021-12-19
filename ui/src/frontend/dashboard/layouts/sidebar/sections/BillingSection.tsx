@@ -19,9 +19,9 @@ export interface BillingSectionProps {
     menuOpen: boolean;
 }
 
-export const BillingSection = memo(({ isActive, menuOpen }: BillingSectionProps) => {
+export const BillingSection = ({ isActive, menuOpen }: BillingSectionProps) => {
     const [billingOpen, setBillingOpen] = useState<boolean>(false);
-    const { setViewName, planTypeMeta } = useContext(DashboardContext);
+    const { repository, setViewName, planTypeMeta } = useContext(DashboardContext);
 
     const cls = useStyles();
     const history = useHistory();
@@ -31,7 +31,6 @@ export const BillingSection = memo(({ isActive, menuOpen }: BillingSectionProps)
     };
 
     const createCustomerPortalSession = async () => {
-        const { repository } = useContext(DashboardContext);
         const returnUrl = `${webUrl}/dashboard`;
         const customerId = await repository.Purchase.Customer.GetCustomerId();
         console.log(customerId);
@@ -67,4 +66,4 @@ export const BillingSection = memo(({ isActive, menuOpen }: BillingSectionProps)
             </Collapse>
         </List>
     );
-});
+};

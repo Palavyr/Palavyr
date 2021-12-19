@@ -20,8 +20,7 @@ const useStyles = makeStyles(theme => ({
         textDecoration: "none",
     },
     sidebarText: {
-        // fontWeight: "normal",
-        // fontSize: "14px",
+
     },
 }));
 

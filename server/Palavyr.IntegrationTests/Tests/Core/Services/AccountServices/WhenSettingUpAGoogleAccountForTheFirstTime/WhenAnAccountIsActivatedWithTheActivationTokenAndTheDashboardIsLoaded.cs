@@ -35,7 +35,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
         // [Fact]
         public async Task OnlyOneStripeAccountWithThisEmailIsCreated()
         {
-            // should check the actual test stripe account that we only have once instance of this email in the test data. Then don't forget to delete the 
+            // should check the actual test stripe account that we only have once instance of this email in the test data. Then don't forget to delete the
             var testAccount = "Test-account-123";
             var jwtToken = "jwt-token";
             var testConfirmationToken = "123456";
@@ -110,13 +110,13 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             // confirm that only one account exists with this email address on stripe
             var customers = await customerService.ListCustomers(CancellationToken.None);
             customers.Where(x => x.Id == account.StripeCustomerId).Count().ShouldBe(1);
-            
+
             var cleanup = Container.GetService<IRequestEmailVerification>();
             await cleanup.DeleteEmailIdentityAsync(testEmail);
-            
+
             var stripeCleanup = Container.GetService<StripeCustomerService>();
             var customerIds = (await stripeCleanup.GetCustomerByEmailAddress(testEmail, CancellationToken.None)).Select(x => x.Id);
-            stripeCleanup.DeleteStripeTestCustomers(customerIds.ToList());
+            await stripeCleanup.DeleteStripeTestCustomers(customerIds.ToList());
         }
     }
 }

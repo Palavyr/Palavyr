@@ -107,6 +107,8 @@ namespace Palavyr.Core.Services.DynamicTableService.NodeUpdaters
 
             node.NodeChildrenString = splitter.JoinNodeChildrenArray(newNodeChildren);
 
+            await Task.CompletedTask;
+
             return conversationNodes;
         }
 
@@ -124,6 +126,9 @@ namespace Palavyr.Core.Services.DynamicTableService.NodeUpdaters
             node.TruncateChildIdsAt(0, splitter);
             var singleChild = conversationNodes.Single(x => x.NodeId == node.NodeChildrenString);
             singleChild.OptionPath = "Continue";
+
+            await Task.CompletedTask;
+
             return conversationNodes;
         }
     }

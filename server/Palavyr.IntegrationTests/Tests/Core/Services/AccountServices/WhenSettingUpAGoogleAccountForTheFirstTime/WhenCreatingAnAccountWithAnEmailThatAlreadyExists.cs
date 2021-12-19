@@ -78,14 +78,14 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             var result = await accountSetupService.CreateNewAccountViaGoogleAsync(googleCredentials, CancellationToken.None);
             result.Authenticated.ShouldBeFalse();
             result.Message.ShouldBe("Account already exists");
-            
+
             var cleanup = Container.GetService<IRequestEmailVerification>();
             await cleanup.DeleteEmailIdentityAsync(testEmail);
 
             var stripeCleanup = Container.GetService<StripeCustomerService>();
             var customerIds = (await stripeCleanup.GetCustomerByEmailAddress(testEmail, CancellationToken.None)).Select(x => x.Id);
-            stripeCleanup.DeleteStripeTestCustomers(customerIds.ToList());
-         
+            await stripeCleanup.DeleteStripeTestCustomers(customerIds.ToList());
+
         }
     }
 }

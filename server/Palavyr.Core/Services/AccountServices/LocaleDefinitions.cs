@@ -2,20 +2,19 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Exceptions;
 
 namespace Palavyr.Core.Services.AccountServices
 {
     public class LocaleResource
     {
-        public string Name { get; set; } // en-US
-        public string DisplayName { get; set; } // French (France)
-        public string CurrencySymbol { get; set; } // $
+        public string Name { get; set; } = null!; // en-US
+        public string DisplayName { get; set; } = null!; // French (France)
+        public string CurrencySymbol { get; set; } = null!; // $
         public int NumberDecimalDigits { get; set; } // 3
-        public string NumberDecimalSeparator { get; set; } // ,
-        public string PhoneFormat { get; set; }
-        public string[] SupportedLocales { get; set; }
+        public string NumberDecimalSeparator { get; set; } = null!; // ,
+        public string PhoneFormat { get; set; } = null!;
+        public string[] SupportedLocales { get; set; } = null!;
     }
 
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿#nullable enable
+using Microsoft.Extensions.Configuration;
 using Palavyr.Core.GlobalConstants;
 
 namespace Palavyr.Core.Common.ExtensionMethods

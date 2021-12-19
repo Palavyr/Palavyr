@@ -34,6 +34,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
         // [Fact]
         public async Task EverythingLooksNormal()
         {
+            await Task.CompletedTask;
             var testAccount = "Test-account-123";
             var jwtToken = "jwt-token";
             var introId = "24323";
@@ -101,13 +102,14 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             account.PlanType.ShouldBe(Account.PlanTypeEnum.Free);
             account.ShowSeenEnquiries.ShouldBeFalse();
             account.StripeCustomerId.ShouldBeNull();
-            
+
             var cleanup = Container.GetService<IRequestEmailVerification>();
             await cleanup.DeleteEmailIdentityAsync(testEmail);
-            
+
             var stripeCleanup = Container.GetService<StripeCustomerService>();
             var customerIds = (await stripeCleanup.GetCustomerByEmailAddress(testEmail, CancellationToken.None)).Select(x => x.Id);
-            stripeCleanup.DeleteStripeTestCustomers(customerIds.ToList());
+
+            await stripeCleanup.DeleteStripeTestCustomers(customerIds.ToList());
         }
     }
 }

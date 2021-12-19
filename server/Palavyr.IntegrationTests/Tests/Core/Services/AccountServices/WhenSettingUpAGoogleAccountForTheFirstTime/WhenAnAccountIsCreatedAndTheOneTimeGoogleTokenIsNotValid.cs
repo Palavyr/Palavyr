@@ -34,7 +34,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
         // [Fact]
         public async Task AnUnAuthenticatedResultIsReturned()
         {
-            // should check the actual test stripe account that we only have once instance of this email in the test data. Then don't forget to delete the 
+            // should check the actual test stripe account that we only have once instance of this email in the test data. Then don't forget to delete the
             var testAccount = "Test-account-123";
             var jwtToken = "jwt-token";
             var testConfirmationToken = "123456";
@@ -89,13 +89,13 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             var result = await accountSetupService.CreateNewAccountViaGoogleAsync(googleCredentials, CancellationToken.None);
             result.Authenticated.ShouldBeFalse();
             result.Message.ShouldBe("Could not validate the Google Authentication token");
-            
+
             var cleanup = Container.GetService<IRequestEmailVerification>();
             await cleanup.DeleteEmailIdentityAsync(testEmail);
-            
+
             var stripeCleanup = Container.GetService<StripeCustomerService>();
             var customerIds = (await stripeCleanup.GetCustomerByEmailAddress(testEmail, CancellationToken.None)).Select(x => x.Id);
-            stripeCleanup.DeleteStripeTestCustomers(customerIds.ToList());
+            await stripeCleanup.DeleteStripeTestCustomers(customerIds.ToList());
         }
     }
 }
