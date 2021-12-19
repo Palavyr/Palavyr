@@ -54,14 +54,14 @@ export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: 
         ];
     };
 
-    const colors = ["#000000", "#264653", "#2A9D8F", "#E9C46A", "#F4A261", "#E9C46A", "#118AB2", "#83C5BE", "#FFE8D6",  "#FFDDD2", "#E29578", "#006D77", "#FFFFFF", "#F1FAEE", "#EDF6F9", "#FDFFB6"];
+    const colors = ["#000000", "#264653", "#2A9D8F", "#E9C46A", "#F4A261", "#E9C46A", "#118AB2", "#83C5BE", "#FFE8D6", "#FFDDD2", "#E29578", "#006D77", "#FFFFFF", "#F1FAEE", "#EDF6F9", "#FDFFB6"];
     return (
         <>
             <div className={cls.gridList}>
                 {widgetPreferences &&
                     rowOne(widgetPreferences).map((picker: ColorPickerType, index: number) => {
                         return (
-                            <div key={index}>
+                            <div key={`${picker.variable}-${index}`}>
                                 <PalavyrText align="center" variant="body1" className={cls.pickerTitle} gutterBottom>
                                     {picker.name}
                                 </PalavyrText>
@@ -86,7 +86,7 @@ export const WidgetColorOptions = ({ widgetPreferences, setWidgetPreferences }: 
                 {widgetPreferences &&
                     rowTwo(widgetPreferences).map((picker: ColorPickerType, index: number) => {
                         return (
-                            <div key={9999 - index}>
+                            <div key={`${index}-${picker.variable}`}>
                                 <PalavyrText align="center" variant="body1" className={cls.pickerTitle} gutterBottom>
                                     {picker.name}
                                 </PalavyrText>

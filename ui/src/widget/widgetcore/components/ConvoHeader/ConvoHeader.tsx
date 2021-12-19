@@ -1,12 +1,12 @@
-import { Card, Fade, makeStyles, Tooltip } from "@material-ui/core";
+import { Fade, makeStyles, Tooltip } from "@material-ui/core";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import FaceIcon from "@material-ui/icons/Face";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "../../context/WidgetContext";
 import { openUserDetails } from "@store-dispatcher";
 import classNames from "classnames";
-import '@widgetcore/widget/widget.module.scss';
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
+import "@widgetcore/widget/widget.module.scss";
 
 export interface ConvoHeaderProps {
     titleAvatar?: string;
@@ -16,12 +16,12 @@ const useStyles = makeStyles(theme => ({
     header: (props: WidgetPreferences) => ({
         backgroundColor: props.headerColor,
         color: props.headerFontColor,
+        fontFamily: props.fontFamily,
         textAlign: "left",
         padding: ".5rem",
         wordWrap: "break-word",
         borderRadius: "0px",
         minHeight: "60px",
-        // flex: "0 1 auto",
     }),
     flexProperty: {
         flexDirection: "column",
@@ -45,12 +45,11 @@ const useStyles = makeStyles(theme => ({
 
     headerBehavior: {
         boxShadow: "none",
-        // textAlign: "left",
+        paddingLeft: "0.8rem",
+        paddingRight: "0.8rem",
         wordWrap: "break-word",
-        // padding: "0rem",
         width: "100%",
         wordBreak: "normal",
-        // minHeight: "60px",
     },
     paper: {
         boxShadow: "none",

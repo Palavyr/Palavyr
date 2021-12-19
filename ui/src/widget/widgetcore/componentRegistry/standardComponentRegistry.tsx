@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export class StandardComponents {
-    public makeSelectOptions({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    public makeSelectOptions({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         return () => {
             const [selectedOption, setSelectedOption] = useState<SelectedOption | null>(null);
             const [options, setOptions] = useState<Array<SelectedOption>>();
@@ -69,10 +69,15 @@ export class StandardComponents {
             }, []);
 
             useEffect(() => {
+                if (designer) {
+                    setOpen(true);
+                }
                 loadAreas();
             }, [loadAreas]);
 
             const onChange = async (_: any, newOption: SelectedOption) => {
+                if (designer) return;
+
                 const newConversation = await client.Widget.Get.NewConversation(newOption.areaId, { Name: getNameContext(), Email: getEmailAddressContext() });
                 const nodes = newConversation.conversationNodes;
                 const convoId = newConversation.conversationId;
@@ -104,8 +109,8 @@ export class StandardComponents {
                 <BotResponse
                     message={node.text}
                     input={
-                        <div style={{ marginTop: "2rem", marginBottom: "2rem", width: "100%" }}>
-                            <ChoiceList disabled={disabled} onChange={onChange} setOpen={setOpen} options={options} open={open} />
+                        <div style={{ marginTop: ".5rem", marginBottom: "2rem", width: "100%" }}>
+                            <ChoiceList disabled={disabled} onChange={onChange} setOpen={setOpen} options={options} open={designer ? designer : open} />
                         </div>
                     }
                 />
@@ -113,7 +118,7 @@ export class StandardComponents {
         };
     }
 
-    public makeCollectDetails({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    public makeCollectDetails({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
@@ -125,12 +130,19 @@ export class StandardComponents {
             const [detailsSet, setDetailsSet] = useState<boolean>(false);
 
             const onFormSubmit = (e: { preventDefault: () => void }) => {
+                if (designer) return;
                 e.preventDefault();
                 setDisabled(true);
                 setChatStarted(true);
                 setConvoId(convoId);
                 responseAction(node, child, nodeList, client, convoId, null);
             };
+
+            useEffect(() => {
+                if (designer) {
+                    setDisabled(true);
+                }
+            }, []);
 
             return (
                 <BotResponse
@@ -149,10 +161,11 @@ export class StandardComponents {
         };
     }
 
-    public makeProvideInfo({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    public makeProvideInfo({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         return () => {
             useEffect(() => {
+                if (designer) return;
                 responseAction(node, child, nodeList, client, convoId, null);
             }, []);
 
@@ -160,13 +173,14 @@ export class StandardComponents {
         };
     }
 
-    public makeProvideInfoWithPdfLink({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    public makeProvideInfoWithPdfLink({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         const context = getContextProperties();
-        const pdfLink = context.pdfLink;
+        const pdfLink = designer ? " " : context.pdfLink;
 
         return () => {
             useEffect(() => {
+                if (designer) return;
                 responseAction(node, child, nodeList, client, convoId, null);
             }, []);
 
@@ -174,30 +188,27 @@ export class StandardComponents {
         };
     }
 
-    public makeMultipleChoiceContinueButtons({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    public makeMultipleChoiceContinueButtons({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0]; // only one should exist
         const valueOptions = splitValueOptionsByDelimiter(node.valueOptions);
 
         return () => {
             const [disabled, setDisabled] = useState<boolean>(false);
+
+            const onClick = (valueOption: string) => {
+                if (designer) return;
+                const response = valueOption;
+                responseAction(node, child, nodeList, client, convoId, response);
+                setDisabled(true);
+            };
+
             return (
                 <BotResponse
                     message={node.text}
                     buttons={
                         <div style={{ display: "flex", flexDirection: "row", width: "100%", justifyContent: "flex-start" }}>
                             {valueOptions.map((valueOption: string, index: number) => {
-                                return (
-                                    <ResponseButton
-                                        disabled={disabled}
-                                        key={valueOption + "-" + index}
-                                        text={valueOption}
-                                        onClick={() => {
-                                            const response = valueOption;
-                                            responseAction(node, child, nodeList, client, convoId, response);
-                                            setDisabled(true);
-                                        }}
-                                    />
-                                );
+                                return <ResponseButton disabled={disabled} key={valueOption + "-" + index} text={valueOption} onClick={() => onClick(valueOption)} />;
                             })}
                         </div>
                     }
@@ -206,35 +217,26 @@ export class StandardComponents {
         };
     }
 
-    public makeMultipleChoiceAsPathButtons({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    public makeMultipleChoiceAsPathButtons({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const children = getOrderedChildNodes(node.nodeChildrenString, nodeList);
 
         return () => {
             const [disabled, setDisabled] = useState<boolean>(false);
+
+            const onClick = (child: WidgetNodeResource) => {
+                if (designer) return;
+                const response = child.optionPath;
+                responseAction(node, child, nodeList, client, convoId, response);
+                setDisabled(true);
+            };
+
             return (
                 <BotResponse
                     message={node.text}
                     buttons={
                         <>
                             {children.map((child: WidgetNodeResource) => {
-                                console.log(child.optionPath);
-
-                                return (
-                                    <>
-                                        {child.optionPath && (
-                                            <ResponseButton
-                                                disabled={disabled}
-                                                key={child.nodeId}
-                                                text={child.optionPath}
-                                                onClick={() => {
-                                                    const response = child.optionPath;
-                                                    responseAction(node, child, nodeList, client, convoId, response);
-                                                    setDisabled(true);
-                                                }}
-                                            />
-                                        )}
-                                    </>
-                                );
+                                return <>{child.optionPath && <ResponseButton disabled={disabled} key={child.nodeId} text={child.optionPath} onClick={() => onClick(child)} />}</>;
                             })}
                         </>
                     }
@@ -243,7 +245,7 @@ export class StandardComponents {
         };
     }
 
-    public makeTakeNumber({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    public makeTakeNumber({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         let child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
@@ -253,37 +255,30 @@ export class StandardComponents {
 
             const { preferences } = useContext(WidgetContext);
             const cls = useStyles(preferences);
+
+            const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+                setResponse(parseNumericResponse(event.target.value));
+                setDisabled(false);
+            };
+
+            const onClick = async () => {
+                if (designer) return;
+                responseAction(node, child, nodeList, client, convoId, response);
+                setDisabled(true);
+                setInputDisabled(true);
+            };
+
             return (
                 <BotResponse
                     message={node.text}
-                    input={
-                        <TextInput
-                            label=""
-                            type="number"
-                            inputPropsClassName={cls.textField}
-                            inputLabelPropsClassName={cls.textLabel}
-                            onChange={event => {
-                                setResponse(parseNumericResponse(event.target.value));
-                                setDisabled(false);
-                            }}
-                        />
-                    }
-                    button={
-                        <ResponseButton
-                            disabled={disabled}
-                            onClick={async () => {
-                                responseAction(node, child, nodeList, client, convoId, response);
-                                setDisabled(true);
-                                setInputDisabled(true);
-                            }}
-                        />
-                    }
+                    input={<TextInput label="" type="number" inputPropsClassName={cls.textField} inputLabelPropsClassName={cls.textLabel} onChange={onChange} />}
+                    button={<ResponseButton disabled={disabled} onClick={onClick} />}
                 />
             );
         };
     }
 
-    makeTakeCurrency({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    makeTakeCurrency({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
@@ -292,6 +287,14 @@ export class StandardComponents {
             const [response, setResponse] = useState<number>(0);
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
+
+            const onClick = () => {
+                if (designer) return;
+                responseAction(node, child, nodeList, client, convoId, response.toString());
+                setDisabled(true);
+                setInputDisabled(true);
+            };
+
             return (
                 <BotResponse
                     message={node.text}
@@ -321,22 +324,13 @@ export class StandardComponents {
                             }}
                         />
                     }
-                    button={
-                        <ResponseButton
-                            disabled={disabled}
-                            onClick={() => {
-                                responseAction(node, child, nodeList, client, convoId, response.toString());
-                                setDisabled(true);
-                                setInputDisabled(true);
-                            }}
-                        />
-                    }
+                    button={<ResponseButton disabled={disabled} onClick={onClick} />}
                 />
             );
         };
     }
 
-    makeShowImage({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    makeShowImage({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
@@ -345,21 +339,23 @@ export class StandardComponents {
 
             useEffect(() => {
                 (async () => {
+                    if (designer) return;
                     const presignedUrl = await client.Widget.Get.NodeImage(node.nodeId);
                     setLink(presignedUrl);
                     setLoaded(false);
                 })();
 
                 setTimeout(() => {
+                    if (designer) return;
                     responseAction(node, child, nodeList, client, convoId, null);
-                }, 4500);
+                }, 2500);
             }, []);
 
             return <CustomImage imageLink={link} />;
         };
     }
 
-    makeTakeText({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    makeTakeText({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
@@ -369,6 +365,15 @@ export class StandardComponents {
 
             const { preferences } = useContext(WidgetContext);
             const cls = useStyles(preferences);
+
+            const onClick = () => {
+                if (designer) return;
+                setResponse(response);
+                responseAction(node, child, nodeList, client, convoId, response);
+                setDisabled(true);
+                setInputDisabled(true);
+            };
+
             return (
                 <BotResponse
                     message={node.text}
@@ -383,24 +388,13 @@ export class StandardComponents {
                             }}
                         />
                     }
-                    button={
-                        <ResponseButton
-                            disabled={disabled || response === ""}
-                            text="Submit"
-                            onClick={() => {
-                                setResponse(response);
-                                responseAction(node, child, nodeList, client, convoId, response);
-                                setDisabled(true);
-                                setInputDisabled(true);
-                            }}
-                        />
-                    }
+                    button={<ResponseButton disabled={disabled || response === ""} text="Submit" onClick={onClick} />}
                 />
             );
         };
     }
 
-    makeTakeNumberIndividuals({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    makeTakeNumberIndividuals({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
@@ -410,6 +404,16 @@ export class StandardComponents {
 
             const { preferences } = useContext(WidgetContext);
             const cls = useStyles(preferences);
+
+            const onClick = () => {
+                if (designer) return;
+                if (response) {
+                    responseAction(node, child, nodeList, client, convoId, response.toString());
+                    setNumIndividualsContext(response);
+                    setDisabled(true);
+                    setInputDisabled(true);
+                }
+            };
 
             return (
                 <BotResponse
@@ -434,25 +438,13 @@ export class StandardComponents {
                             }}
                         />
                     }
-                    button={
-                        <ResponseButton
-                            disabled={disabled}
-                            onClick={() => {
-                                if (response) {
-                                    responseAction(node, child, nodeList, client, convoId, response.toString());
-                                    setNumIndividualsContext(response);
-                                    setDisabled(true);
-                                    setInputDisabled(true);
-                                }
-                            }}
-                        />
-                    }
+                    button={<ResponseButton disabled={disabled} onClick={onClick} />}
                 />
             );
         };
     }
 
-    makeSendEmail({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    makeSendEmail({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const areaId = nodeList[0].areaIdentifier;
 
         const sendEmail = async () => {
@@ -491,35 +483,30 @@ export class StandardComponents {
         return () => {
             const [disabled, setDisabled] = useState<boolean>(false);
             const [loading, setLoading] = useState<boolean>(false);
+
+            const onClick = async () => {
+                if (designer) return;
+
+                setDisabled(true);
+                setLoading(true);
+                const response = await sendEmail();
+                const child = nodeList.filter((x: WidgetNodeResource) => x.nodeId === response.nextNodeId)[0];
+                responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
+            };
             return (
                 <>
-                    <BotResponse
-                        message={node.text}
-                        button={
-                            <ResponseButton
-                                text="Send my email"
-                                variant="contained"
-                                disabled={disabled}
-                                onClick={async () => {
-                                    setDisabled(true);
-                                    setLoading(true);
-                                    const response = await sendEmail();
-                                    const child = nodeList.filter((x: WidgetNodeResource) => x.nodeId === response.nextNodeId)[0];
-                                    responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
-                                }}
-                            />
-                        }
-                    />
+                    <BotResponse message={node.text} button={<ResponseButton text="Send my email" variant="contained" disabled={disabled} onClick={onClick} />} />
                     <ChatLoadingSpinner loading={loading} />
                 </>
             );
         };
     }
 
-    makeRestart({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    makeRestart({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         return () => {
             useEffect(() => {
                 (async () => {
+                    if (designer) return;
                     await client.Widget.Post.UpdateConvoRecord({ IsComplete: true, ConversationId: convoId });
                 })();
             }, []);
@@ -527,26 +514,23 @@ export class StandardComponents {
         };
     }
 
-    makeSendEmailFailedFirstAttempt = ({ node, nodeList, client, convoId }: IProgressTheChat) => {
+    makeSendEmailFailedFirstAttempt = ({ node, nodeList, client, convoId, designer }: IProgressTheChat) => {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
             const [loading, setLoading] = useState<boolean>(false);
-
+            const onClick = async () => {
+                if (designer) return;
+                setLoading(true);
+                responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
+            };
             return (
                 <>
                     <BotResponse
                         message={node.text}
                         button={
                             <>
-                                <ResponseButton
-                                    text="Send my email"
-                                    variant="contained"
-                                    onClick={async () => {
-                                        setLoading(true);
-                                        responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
-                                    }}
-                                />
+                                <ResponseButton text="Send my email" variant="contained" onClick={onClick} />
                                 <ResponseButton text="Check your details" variant="contained" onClick={() => openUserDetails()} />
                             </>
                         }
@@ -557,7 +541,7 @@ export class StandardComponents {
         };
     };
 
-    makeSendFallbackEmail({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    makeSendFallbackEmail({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const areaId = nodeList[0].areaIdentifier;
 
         return () => {
@@ -579,37 +563,32 @@ export class StandardComponents {
                 }
                 return response;
             };
+
+            const onClick = async () => {
+                if (designer) return;
+                setLoading(true);
+                const response = await sendFallbackEmail();
+                const child = nodeList.filter((x: WidgetNodeResource) => x.nodeId === response.nextNodeId)[0];
+                responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
+                setDisabled(true);
+            };
+
             return (
                 <>
-                    <BotResponse
-                        message={node.text}
-                        button={
-                            <ResponseButton
-                                text="Send my email"
-                                variant="contained"
-                                disabled={disabled}
-                                onClick={async () => {
-                                    setLoading(true);
-                                    const response = await sendFallbackEmail();
-                                    const child = nodeList.filter((x: WidgetNodeResource) => x.nodeId === response.nextNodeId)[0];
-                                    responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
-                                    setDisabled(true);
-                                }}
-                            />
-                        }
-                    />
+                    <BotResponse message={node.text} button={<ResponseButton text="Send my email" variant="contained" disabled={disabled} onClick={onClick} />} />
                     <ChatLoadingSpinner loading={loading} />
                 </>
             );
         };
     }
 
-    makeEndWithoutEmail({ node, nodeList, client, convoId }: IProgressTheChat): React.ElementType<{}> {
+    makeEndWithoutEmail({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
             useEffect(() => {
                 setTimeout(async () => {
+                    if (designer) return;
                     responseAction(node, child, nodeList, client, convoId, null);
                 }, 1500);
             }, []);

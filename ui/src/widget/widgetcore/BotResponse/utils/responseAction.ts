@@ -10,23 +10,21 @@ import { setDynamicResponse } from "./setDynamicResponse";
 const WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN = 22;
 
 export const extractContent = (inputTextWithHtml: string, space: boolean = true) => {
-    var span= document.createElement('span');
-    span.innerHTML= inputTextWithHtml;
-    if(space) {
-      var children= span.querySelectorAll('*');
-      for(var i = 0 ; i < children.length ; i++) {
-        if(children[i].textContent)
-          children[i].textContent+= ' ';
-      }
+    var span = document.createElement("span");
+    span.innerHTML = inputTextWithHtml;
+    if (space) {
+        var children = span.querySelectorAll("*");
+        for (var i = 0; i < children.length; i++) {
+            if (children[i].textContent) children[i].textContent += " ";
+        }
     }
-    return [span.textContent || span.innerText].toString().replace(/ +/g,' ');
-  };
+    return [span.textContent || span.innerText].toString().replace(/ +/g, " ");
+};
 
-export const computeReadingTime = (node: WidgetNodeResource) => {
+export const computeReadingTime = (node: WidgetNodeResource): number => {
     const typicalReadingSpeed = (node: WidgetNodeResource) => floor((extractContent(node.text).length / WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN) * 1000, 0);
     const timeout = min([18000, max([2000, typicalReadingSpeed(node)])]);
-
-    return timeout;
+    return timeout as number;
 };
 
 const stripHtml = html => {
@@ -45,7 +43,8 @@ export const responseAction = async (
     client: PalavyrWidgetRepository,
     convoId: string,
     response: string | null,
-    callback: (() => void) | null = null
+    callback: (() => void) | null = null,
+    timeout: number | null = null
 ) => {
     if (response) {
         if (node.isCritical) {
@@ -73,7 +72,10 @@ export const responseAction = async (
         }
     }
 
-    const timeout = computeReadingTime(child);
+    if (timeout === null) {
+        timeout = computeReadingTime(child);
+    }
+
     if (callback) callback();
 
     if (convoId !== null) {
@@ -93,6 +95,6 @@ export const responseAction = async (
         setTimeout(() => {
             renderNextComponent(child, nodeList, client, convoId); // convoId should come from redux store in the future
             toggleMsgLoader();
-        }, timeout);
+        }, timeout ?? 2000);
     }, 2000);
 };

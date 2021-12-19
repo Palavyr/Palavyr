@@ -1,14 +1,19 @@
 import { Drawer, makeStyles } from "@material-ui/core";
-import { WidgetPreferences } from "@Palavyr-Types";
+import { WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { WidgetLayout } from "@widgetcore/widget/WidgetLayout";
-import React from "react";
+import React, { useContext } from "react";
 import { Provider } from "react-redux";
 import { PalavyrWidgetStore } from "widget/store/store";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
 import classNames from "classnames";
-import "@widgetcore/widget/widget.module.scss";
 import PalavyrChatWidget from "palavyr-chat-widget";
+import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
+import { ComponentRegistry } from "@widgetcore/componentRegistry/registry";
+import { renderCustomComponent } from "@store-dispatcher";
+import { DashboardContext } from "@frontend/dashboard/layouts/DashboardContext";
+
+import "@widgetcore/widget/widget.module.scss";
 
 const drawerWidth = 400;
 
@@ -17,27 +22,26 @@ const useStyles = makeStyles(theme => ({
         width: drawerWidth,
         flexShrink: 0,
         overflowY: "hidden",
-        display: "flex",
-        textAlign: "center",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-
     },
-    drawerRoot: { borderLeft: "5px solid grey" },
+    drawerRoot: {
+        borderLeft: "5px solid grey",
+    },
 
     drawerPaper: {
         width: drawerWidth,
         backgroundColor: theme.palette.background.default,
+        display: "flex",
+        textAlign: "center",
+        flexDirection: "column",
+        justifyContent: "center",
     },
     // necessary for content to be below app bar
     toolbar: theme.mixins.toolbar,
     widget: {
         height: "100%",
-        overflowY: "hidden",
-        width: "100%"
+        width: "100%",
     },
-    drawerRight: { height: "100%", backgroundColor: theme.palette.background.default },
+    drawerRight: { height: "100%", width: drawerWidth, backgroundColor: theme.palette.background.default },
 }));
 
 export interface DesignerWidgetDrawerProps {
@@ -47,13 +51,39 @@ export interface DesignerWidgetDrawerProps {
 export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawerProps) => {
     const cls = useStyles();
     const wcls = useWidgetStyles();
+    const { repository } = useContext(DashboardContext);
+
+    const initializer = async () => {
+        const apiKey = await repository.Settings.Account.getApiKey();
+        const client = new PalavyrWidgetRepository(apiKey);
+        const render = (componentType: string, text: string, nodeId: string, nodeChildrenString: string) => {
+            const node = { text, nodeId, nodeChildrenString } as WidgetNodeResource;
+            const componentMaker = ComponentRegistry[componentType];
+            renderCustomComponent(componentMaker({ node, nodeList: [], client, convoId: "test-123", designer: true }));
+        };
+
+        render("ProvideInfo", "You can use this display to customize your widget.", "1", "2");
+
+        const node = { text: "Here are some example buttons", nodeId: "2", nodeChildrenString: "3,4" } as WidgetNodeResource;
+        const nodeList = [
+            { nodeId: "3", optionPath: "Yes" },
+            { nodeId: "4", optionPath: "No" },
+        ];
+        const componentMaker = ComponentRegistry["MultipleChoiceAsPath"];
+        renderCustomComponent(componentMaker({ node, nodeList, client, convoId: "test-123", designer: true }));
+
+        render("Selection", "Here is your intent selector.", "5", "6");
+        render("CollectDetails", "Here is your details collector.", "6", "7");
+        render("ProvideInfoWithPdfLink", "Here is your pdf link.", "7", "8");
+        render("ProvideInfo", "Thanks so much for using Palavyr!", "8", "9");
+    };
 
     const DrawerWidget = (
         <Provider store={PalavyrWidgetStore}>
             <div className={classNames(cls.widget, wcls.pwbox)}>
                 {widgetPreferences && (
                     <WidgetContext.Provider value={{ preferences: widgetPreferences, chatStarted: true, setChatStarted: () => null, setConvoId: () => null, convoId: "demo" }}>
-                        <WidgetLayout />
+                        <WidgetLayout initializer={initializer} />
                     </WidgetContext.Provider>
                 )}
             </div>
@@ -72,7 +102,7 @@ export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawer
             anchor="right"
         >
             <div className={cls.toolbar} />
-            <PalavyrChatWidget className={cls.widget} startOpen fixedPosition={false} alternateContent={DrawerWidget} style={{ height: "80vh" }} />
+            <PalavyrChatWidget className={cls.widget} startOpen fixedPosition={false} alternateContent={DrawerWidget} style={{ height: "90vh" }} />
         </Drawer>
     );
 };

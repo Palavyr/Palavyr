@@ -72,7 +72,7 @@ export interface BotResponseProps {
     pdfLink?: string | null;
 }
 
-export const BotResponse = ({ message, input, button, buttons, pdfLink = null }: BotResponseProps) => {
+export const BotResponse = ({ message, input, button, buttons, pdfLink = null}: BotResponseProps) => {
     const cls = useStyles();
     return (
         <div className={cls.container}>

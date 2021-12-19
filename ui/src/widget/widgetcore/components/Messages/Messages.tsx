@@ -25,15 +25,10 @@ const useStyles = makeStyles(theme => ({
         overflowY: "hidden",
     }),
     messageTubeContainer: (prefs: WidgetPreferences) => ({
-        // overflowY: "scroll",
-        //// minHeight: "100%",
         paddingTop: "2rem",
         backgroundColor: prefs.chatBubbleColor,
         paddingLeft: "0.8rem",
         paddingRight: "0.8rem",
-        // display: "flex",
-        // flexDirection: "column",
-        //// flex: "1 1 auto"
     }),
 }));
 
