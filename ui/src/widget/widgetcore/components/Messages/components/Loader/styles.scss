@@ -1,5 +1,3 @@
-@import 'variables/colors';
-
 .loader {
   margin: 10px;
   display: none;
@@ -14,7 +12,6 @@
   height: 4px;
   width: 4px;
   border-radius: 50%;
-  // background: $grey-0;
   margin-right: 2px;
   animation: bounce 0.5s ease infinite alternate;
 

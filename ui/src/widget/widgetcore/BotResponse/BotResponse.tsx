@@ -72,7 +72,7 @@ export interface BotResponseProps {
     pdfLink?: string | null;
 }
 
-export const BotResponse = ({ message, input, button, buttons, pdfLink = null }: BotResponseProps) => {
+export const BotResponse = ({ message, input, button, buttons, pdfLink = null}: BotResponseProps) => {
     const cls = useStyles();
     return (
         <div className={cls.container}>
@@ -112,7 +112,7 @@ export const BotResponse = ({ message, input, button, buttons, pdfLink = null }:
                 {buttons && (
                     <Fade bottom>
                         <div className={classNames(cls.marginTop)} style={{ marginRight: "0.3rem", width: "100%" }}>
-                            <div style={{ flexWrap: "wrap", display: "flex", flexDirection: "row", width: "100%", justifyContent: "left" }}>{buttons}</div>
+                            <div style={{ flexWrap: "wrap", display: "flex", flexDirection: "row", width: "100%", justifyContent: "evenly" }}>{buttons}</div>
                         </div>
                     </Fade>
                 )}

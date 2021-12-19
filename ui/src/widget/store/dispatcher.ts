@@ -12,15 +12,11 @@ export function addResponseMessage(text: string, id?: string) {
     PalavyrWidgetStore.dispatch(actions._addResponseMessage(text, id));
 }
 
-export function addLinkSnippet(link: LinkParams, id?: string) {
-    PalavyrWidgetStore.dispatch(actions._addLinkSnippet(link, id));
-}
-
 export function toggleMsgLoader() {
     PalavyrWidgetStore.dispatch(actions._toggleMsgLoader());
 }
 
-export function renderCustomComponent(component: ElementType, props: any, showAvatar = false, id?: string) {
+export function renderCustomComponent(component: ElementType, props: any = {}, showAvatar = false, id?: string) {
     PalavyrWidgetStore.dispatch(actions._renderCustomComponent(component, props, showAvatar, id));
 }
 

@@ -1,7 +1,6 @@
 import { ElementType } from "react";
-import { CustomCompMessage, IMessage, Link, LinkParams } from "@Palavyr-Types";
+import { CustomCompMessage, IMessage } from "@Palavyr-Types";
 import { Message } from "@widgetcore/components/Messages/components/Message/Message";
-import { Snippet } from "@widgetcore/components/Messages/components/Snippet/Snippet";
 
 import { MESSAGES_TYPES, MESSAGE_SENDER, MESSAGE_BOX_SCROLL_DURATION } from "../constants";
 
@@ -15,21 +14,6 @@ export const createNewMessage = (text: string, sender: string, id?: string): IMe
         showAvatar: sender === MESSAGE_SENDER.RESPONSE,
         customId: id,
         unread: sender === MESSAGE_SENDER.RESPONSE,
-    };
-};
-
-export const createLinkSnippet = (link: LinkParams, id?: string): Link => {
-    return {
-        type: MESSAGES_TYPES.SNIPPET.LINK,
-        component: Snippet,
-        title: link.title,
-        link: link.link,
-        target: link.target || "_blank",
-        sender: MESSAGE_SENDER.RESPONSE,
-        timestamp: new Date(),
-        showAvatar: true,
-        customId: id,
-        unread: true,
     };
 };
 
@@ -66,7 +50,8 @@ export const scrollWithSlowMotion = (target: any, scrollStart: any, scroll: numb
         let stepScroll = sinEaseOut(timestamp - start, 0, scroll, MESSAGE_BOX_SCROLL_DURATION);
         let total = scrollStart + stepScroll;
         target.scrollTop = total;
-        if (total < scrollStart + scroll + 100) { // I ADDED 100 HERE TO TRY AND MAKE THIS SCROLL TO THE BOTTOM WITH AUTOCOMPLETE
+        if (total < scrollStart + scroll + 100) {
+            // I ADDED 100 HERE TO TRY AND MAKE THIS SCROLL TO THE BOTTOM WITH AUTOCOMPLETE
             raf(step);
         }
     };

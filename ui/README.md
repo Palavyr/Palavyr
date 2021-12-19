@@ -1,3 +1,5 @@
+### This Readme is well out of date. I haven't had time to bring it up to speed, but will soon hopefully
+
 # Palavyr Chat Bot Designer and Customer Widget
 
 The Frontend for the configuration manager is where users can configure their conversations, as well as the responses that are sent once a customer completes their enquiry via the widget. Users can configure decision trees, provide detailed or itemized fee estimates, and configure the emails that are sent in reponse to a successful convrsation.

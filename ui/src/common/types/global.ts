@@ -1115,6 +1115,7 @@ export interface IProgressTheChat {
     nodeList: WidgetNodes;
     client: PalavyrWidgetRepository;
     convoId: string;
+    designer?: boolean;
 }
 
 export type Nullable<T> = T | null;

@@ -76,7 +76,7 @@ export const WidgetDesignerPage = () => {
                     <div className={cls.content}>
                         <div style={{ position: "fixed" }}>
                             <Align direction={"flex-end"}>
-                                <SaveOrCancel size="large" onSave={saveWidgetPreferences} />
+                                <SaveOrCancel zIndex={3000} size="large" onSave={saveWidgetPreferences} />
                             </Align>
                         </div>
                         <ColorSelectors widgetPreferences={widgetPreferences} setWidgetPreferences={setWidgetPreferences} />

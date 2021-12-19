@@ -7,6 +7,19 @@
     "**/*.scss",
     "**/*.sass"
   ],
+  "scripts": {
+    "start": "npm install --no-save && webpack-dev-server --open --config frontend-webpack.config.dev.js --hot --progress --env.development",
+    "build": "webpack --config frontend-webpack.config.prod.js --env.production",
+    "test": "jest --coverage",
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook -s public",
+    "startfull-widget": "npm install --no-save && webpack-dev-server --config widget-webpack.config.dev.js",
+    "start-widget": "npm install --no-save && webpack-dev-server --config widget-webpack.config.dev.js",
+    "build-widget": "webpack --config widget-webpack.config.prod.js",
+    "test-widget": "jest --coverage",
+    "storybook-widget": "start-storybook -p 6006",
+    "build-storybook-widget": "build-storybook"
+  },
   "dependencies": {
     "@ckeditor/ckeditor5-alignment": "^29.1.0",
     "@ckeditor/ckeditor5-build-classic": "^29.1.0",
@@ -46,7 +59,7 @@
     "markdown-it-sanitizer": "^0.4.3",
     "markdown-it-sup": "^1.0.0",
     "material-ui-dropzone": "^3.3.1",
-    "palavyr-iframe-widget": "^0.1.6",
+    "palavyr-chat-widget": "^0.3.2",
     "react": "^16.8.6",
     "react-app-polyfill": "^1.0.6",
     "react-awesome-loaders": "^0.1.37",
@@ -77,19 +90,6 @@
     "styled-components": "^4.0.0",
     "uuid": "^8.3.2",
     "uuidv4": "^6.2.2"
-  },
-  "scripts": {
-    "start": "npm install --no-save && webpack-dev-server --open --config frontend-webpack.config.dev.js --hot --progress --env.development",
-    "build": "webpack --config frontend-webpack.config.prod.js --env.production",
-    "test": "jest --coverage",
-    "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public",
-    "startfull-widget": "npm install --no-save && webpack-dev-server --config widget-webpack.config.dev.js",
-    "start-widget": "npm install --no-save && webpack-dev-server --config widget-webpack.config.dev.js",
-    "build-widget": "webpack --config widget-webpack.config.prod.js",
-    "test-widget": "jest --coverage",
-    "storybook-widget": "start-storybook -p 6006",
-    "build-storybook-widget": "build-storybook"
   },
   "browserslist": {
     "production": [
@@ -214,7 +214,7 @@
     "redux-devtools-extension": "^2.13.9",
     "resolve": "1.15.0",
     "resolve-url-loader": "3.1.1",
-    "sass": "^1.37.5",
+    "sass": "^1.45.0",
     "sass-loader": "^10.2.0",
     "semver": "6.3.0",
     "source-map-loader": "^0.2.4",

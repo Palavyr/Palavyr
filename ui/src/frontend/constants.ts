@@ -1,7 +1,7 @@
 import { webUrl } from "@common/client/clientUtils";
 
 // Options
-export const SUPPORTED_FONTS = ["Architects Daughter"];
+export const SUPPORTED_FONTS = ["Architects Daughter", "Fjalla One", "Source Sans Pro"];
 
 // IDs
 export const MAIN_CONTENT_DIV_ID = "main-content-div";

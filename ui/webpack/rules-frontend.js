@@ -1,6 +1,5 @@
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const autoprefixer = require("autoprefixer");
 
 const TypeScriptLoaderRule = () => {
     return {
@@ -32,26 +31,15 @@ const SVGRule = () => {
     };
 };
 
-const LiteLoadSVGs = () => {
+const StylesLoader = () => {
     return {
-        test: /\.svg$/,
+        test: /\.css$/i,
         use: [
-            {
-                loader: "babel-loader",
-            },
-            {
-                loader: "react-svg-loader",
-                query: {
-                    svgo: {
-                        // pretty: true,
-                        plugins: [{ removeStyleElement: false }],
-                    },
-                },
-                options: {
-                    jsx: true, // true outputs JSX tags
-                },
-            },
+            MiniCssExtractPlugin.loader,
+            // 'style-loader',
+            "css-loader",
         ],
+        exclude: path.resolve(__dirname, "/node_modules"),
     };
 };
 
@@ -70,13 +58,16 @@ const BabelLoaderRule = () => {
     };
 };
 
-const StylesLoader = () => {
+const URLLoaderRule = () => {
     return {
-        test: /\.css$/i,
+        test: /\.(png|jpg|gif)$/i,
         use: [
-            MiniCssExtractPlugin.loader,
-            // 'style-loader',
-            "css-loader",
+            {
+                loader: "url-loader",
+                options: {
+                    limit: 8192,
+                },
+            },
         ],
         exclude: path.resolve(__dirname, "/node_modules"),
     };
@@ -98,28 +89,6 @@ const CSSModules = () => {
     };
 };
 
-const URLLoaderRule = () => {
-    return {
-        test: /\.(png|jpg|gif)$/i,
-        use: [
-            {
-                loader: "url-loader",
-                options: {
-                    limit: 8192,
-                },
-            },
-        ],
-        exclude: path.resolve(__dirname, "/node_modules"),
-    };
-};
-
-const MUILoaderRule = () => {
-    return {
-        test: /\.css$/,
-        use: ["css-to-mui-loader"],
-    };
-};
-
 const CSSMinify = () => {
     return {
         test: /\.css$/i,
@@ -134,51 +103,22 @@ const ScssLoaderRule = () => {
             // Creates `style` nodes from JS strings
             "style-loader",
             // Translates CSS into CommonJS
-            // "css-loader",
+            "css-loader",
             // Compiles Sass to CSS
-            // "sass-loader",
+            {
+                loader: "sass-loader",
+                options: {
+                    implementation: require("sass"),
+                },
+            },
         ],
     };
 };
 
-const WidgetSassRule = () => {
-    return {
-        test: /\.scss$/,
-        exclude: /node_modules/,
-        use: [
-            {
-                loader: "style-loader",
-            },
-            "css-loader",
-            {
-                loader: "postcss-loader",
-                options: {
-                    ident: "postcss",
-                    plugins: () => [
-                        require("postcss-flexbugs-fixes"), // eslint-disable-line
-                        autoprefixer({
-                            browsers: [">1%", "last 4 versions", "Firefox ESR", "not ie <9"],
-                            flexbox: "no-2009",
-                        }),
-                    ],
-                },
-            },
-            {
-                loader: "sass-loader",
-                options: {
-                    sassOptions: {
-                        includePaths: ["src/frontend/dashboard/content/designer/fakeWidgetNew/components/scss/", "**/*"],
-                    },
-                },
-            },
-        ],
-    };
-};
 
 module.exports = {
     NewFileLoaderRule,
     SVGRLoader,
-    LiteLoadSVGs,
     CSSModules,
     CSSMinify,
     TypeScriptLoaderRule,
@@ -186,7 +126,5 @@ module.exports = {
     BabelLoaderRule,
     StylesLoader,
     URLLoaderRule,
-    MUILoaderRule,
     ScssLoaderRule,
-    WidgetSassRule,
 };

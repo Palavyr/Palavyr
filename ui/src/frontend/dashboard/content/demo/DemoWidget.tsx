@@ -22,7 +22,6 @@ export interface DemoWidgetProps {
 }
 
 export const PalavyrDemoWidget = ({ preCheckErrors, apiKey, iframeRefreshed }: DemoWidgetProps) => {
-    const cls = useStyles();
     const theme = useTheme();
     return (
         <div>

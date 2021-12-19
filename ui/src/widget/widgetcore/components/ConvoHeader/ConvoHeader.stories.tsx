@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Meta, Story } from "@storybook/react";
 import { ConvoHeader, ConvoHeaderProps } from "./ConvoHeader";
-import { widgetPreferences } from '@test-data/widgetPreferences';
+import { testWidgetPreferences } from '@test-data/widgetPreferences';
 
 
 export default {
@@ -18,6 +18,6 @@ Primary.args = {
     title: "A good title",
     subtitle: "A great sub-title",
     titleAvatar: undefined,
-    headerColor: widgetPreferences.headerColor,
-    headerFontColor: widgetPreferences.headerFontColor
+    headerColor: testWidgetPreferences.headerColor,
+    headerFontColor: testWidgetPreferences.headerFontColor
 };

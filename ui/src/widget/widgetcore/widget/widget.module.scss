@@ -1,0 +1,24 @@
+.palavyr-widget-box {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+.palavyr-widget-box .palavyr-row {
+    border: 1px dotted grey;
+}
+
+.palavyr-widget-box .palavyr-row.palavyr-header {
+    flex: 0 1 auto;
+}
+
+.palavyr-widget-box .palavyr-row.palavyr-content {
+    display: flex;
+    flex-flow: column;
+    flex: 1 1 auto;
+    overflow-y: auto;
+}
+
+.palavyr-widget-box .palavyr-row.palavyr-footer {
+    flex: 0 1 40px;
+}

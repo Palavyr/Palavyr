@@ -1,6 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import { PreCheckError } from "@Palavyr-Types";
 import React, { useEffect, useState } from "react";
+import PalavyrChatWidget from "palavyr-chat-widget";
 
 type StyleProps = {
     errors: boolean;
@@ -32,6 +33,8 @@ type Iframe = HTMLElement & {
     src: string;
 };
 
+const iframeId = "chatDemoIframe";
+
 //https://www.thoughtco.com/targeting-links-in-frames-3468670
 export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, preCheckErrors, demo = true, shadow = false }: IIframe) => {
     const [state, setState] = useState<boolean | null>(null);
@@ -41,10 +44,13 @@ export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, preCheckErrors, dem
 
     useEffect(() => {
         if (iframeRefreshed != state) {
+            const iframe = document.getElementById(iframeId) as Iframe;
+            if (iframe) {
+                iframe.src = url;
+            }
             setState(iframeRefreshed);
-            (document.getElementById("chatDemoIframe")! as Iframe).src = url;
         }
     }, [iframeRefreshed]);
 
-    return <iframe id="chatDemoIframe" title={demo ? "demo" : "widget"} className={cls.frame} src={url}></iframe>;
+    return <PalavyrChatWidget className={cls.frame}  startOpen={true} fixedPosition={false} src={url} id={iframeId} style={{zIndex: 0}} />;
 };

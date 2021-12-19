@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core";
 import { SetState, WidgetPreferences } from "@Palavyr-Types";
 import { Align } from "@common/positioning/Align";
 import React from "react";
-import { WidgetColorOptions } from "../ColorOptions";
+import { WidgetColorOptions } from "../WidgetColorOptions";
 
 const useStyles = makeStyles(theme => ({
     colorstext: {

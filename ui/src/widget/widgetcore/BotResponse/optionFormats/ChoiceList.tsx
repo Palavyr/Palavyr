@@ -59,7 +59,7 @@ export const ChoiceList = ({ options, disabled, onChange, setOpen = null, open =
 
     const PopperComponent = ({ children, ...rest }: { children: React.ReactNode } & PopperProps) => {
         return (
-            <Popper style={{ boxShadow: "none", backgroundColor: "green" }} {...rest}>
+            <Popper popperOptions={{ placement: "top" }} style={{ boxShadow: "none", backgroundColor: "green" }} {...rest}>
                 {children}
             </Popper>
         );

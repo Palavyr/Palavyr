@@ -10,6 +10,8 @@ import "./styles.scss";
 import { IMessage } from "@Palavyr-Types";
 import { makeStyles } from "@material-ui/core";
 import classNames from "classnames";
+import { MESSAGE_SENDER } from "@widgetcore/constants";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 const useStyles = makeStyles(theme => ({
     timeStamp: {
@@ -27,19 +29,10 @@ export type MessageProps = {
 
 // User Uses this message component
 export const Message = ({ message, showTimeStamp = true }: MessageProps) => {
-    const sanitizedHTML = markdownIt()
-        .use(markdownItClass, {
-            img: ["rcw-message-img"],
-        })
-        .use(markdownItSup)
-        .use(markdownItSanitizer)
-        .use(markdownItLinkAttributes, { attrs: { target: "_blank", rel: "noopener" } })
-        .render(message.text);
-
     const cls = useStyles();
     return (
-        <div className={`rcw-${message.sender}`}>
-            <div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
+        <div className={`rcw-${MESSAGE_SENDER.CLIENT}`}>
+            <PalavyrText>{message.text}</PalavyrText>
             {showTimeStamp && <span className={classNames("rcw-timestamp", cls.timeStamp)}>{format(message.timestamp, "hh:mm")}</span>}
         </div>
     );

@@ -23,25 +23,25 @@
         "strictPropertyInitialization": false,
         "lib": ["dom", "dom.iterable", "esnext"],
         "baseUrl": "src",
+        "typeRoots": ["node_modules/@types", "node_modules/palavyr-chat-widget"],
         "paths": {
             "@Palavyr-Types": ["common/types/global.ts"],
             "@api-client/*": ["common/client/*"],
             "@common/*": ["common/*"],
             "@material/*": ["common/components/material/*"],
             "@legal/*": ["common/legal/*"],
-
             "@components/*": ["frontend/components/*"],
             "@conversation/*": ["frontend/dashboard/layouts/content/responseConfiguration/conversation/*"],
             "@public-routes": ["frontend/routes/Routes.tsx"],
             "@protected-routes": ["frontend/routes/ProtectedRoute.tsx"],
             "@landing/*": ["frontend/landing/*"],
             "@constants": ["frontend/constants.ts"],
-            "@frontend": ["frontend/*"],
+            "@frontend/*": ["frontend/*"],
             "@localStorage/*": ["frontend/localStorage/*"],
             "@dashboard/*": ["frontend/dashboard/*"],
-
             "@scss/*": ["frontend/dashboard/content/designer/fakeWidgetNew/components/scss/*", "widget/scss/*"],
             "@auth/*": ["frontend/auth/*"],
+
             "@store-actions": ["widget/store/actions/actions"],
             "@store-dispatcher": ["widget/store/dispatcher"],
             "@test-data/*": ["widget/test/data/*"],
@@ -50,6 +50,6 @@
         }
     },
     "include": ["src/**/*", "src/**/*.d.ts", "customTypes/*.d.ts"],
-    "exclude": ["node_modules", "lib"],
+    "exclude": ["node_modules", "dist"],
     "typeRoots": ["src/customTypes"]
 }
