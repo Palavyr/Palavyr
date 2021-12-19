@@ -18,7 +18,8 @@ const useStyles = makeStyles(theme => ({
         },
     },
     spacer: {
-        height: "30px",
+        minHeight: "30px",
+
         width: "100%",
         backgroundColor: "#264B94",
         color: "white",

@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
         padding: ".5rem",
         wordWrap: "break-word",
         borderRadius: "0px",
-        minHeight: "60px",
+        minHeight: "auto",
     }),
     flexProperty: {
         flexDirection: "column",
