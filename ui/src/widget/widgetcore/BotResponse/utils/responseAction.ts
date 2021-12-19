@@ -43,8 +43,7 @@ export const responseAction = async (
     client: PalavyrWidgetRepository,
     convoId: string,
     response: string | null,
-    callback: (() => void) | null = null,
-    timeout: number | null = null
+    callback: (() => void) | null = null
 ) => {
     if (response) {
         if (node.isCritical) {
@@ -72,9 +71,7 @@ export const responseAction = async (
         }
     }
 
-    if (timeout === null) {
-        timeout = computeReadingTime(child);
-    }
+    const timeout = computeReadingTime(child);
 
     if (callback) callback();
 
@@ -95,6 +92,6 @@ export const responseAction = async (
         setTimeout(() => {
             renderNextComponent(child, nodeList, client, convoId); // convoId should come from redux store in the future
             toggleMsgLoader();
-        }, timeout ?? 2000);
+        }, timeout);
     }, 2000);
 };

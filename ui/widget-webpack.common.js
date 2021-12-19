@@ -89,14 +89,6 @@ module.exports = envPath => {
                             },
                         },
                         "sass-loader",
-                        // {
-                        //     loader: "sass-loader",
-                        //     options: {
-                        //         sassOptions: {
-                        //             includePaths: ["src/widget/widgetcore/scss", "src/**/*.scss", "node_modules/palavyr-chat-widget/src/**/*.scss"],
-                        //         },
-                        //     },
-                        // },
                     ],
                 },
                 {

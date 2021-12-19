@@ -1,7 +1,6 @@
 const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { manifestOptions, htmlOptions } = require(path.resolve(__dirname, "./webpack/options-frontend"));
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const ManifestPlugin = require("webpack-manifest-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
@@ -23,8 +22,15 @@ module.exports = ENV => {
             new MiniCssExtractPlugin(),
             new Dotenv({ path: envPath }),
             new CleanWebpackPlugin(), //for < v2 versions of CleanWebpackPlugin
-            new ManifestPlugin(manifestOptions),
-            new HtmlWebpackPlugin(htmlOptions),
+            new ManifestPlugin({
+                fileName: "manifest.json",
+            }),
+            new HtmlWebpackPlugin({
+                template: "./public/index.html",
+                filename: "index.html",
+                // favicon: 'public/favicon.ico',
+                title: "Palavyr Configuration Portal",
+            }),
             new ForkTsCheckerWebpackPlugin(),
             new CopyPlugin({
                 patterns: [
