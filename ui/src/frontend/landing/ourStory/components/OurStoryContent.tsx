@@ -29,8 +29,8 @@ export const OurStoryContent = () => {
             </Typography>
             <TitleCopy>Where we come from</TitleCopy>
             <Typography paragraph>
-                Palavyr is owned an operated out of Melbourne, Australia by an American who lives there with his Aussie wife and soon-to-be-born son. The ulterior motive for creating is to support his family so
-                that his son might have a bright future, and he and his wife a comfortable retirement.
+                Palavyr is owned and operated out of Melbourne, Australia by an American who lives there with his Aussie wife and son. The ulterior motive for creating is to support his family so
+                that his son might have a bright future, and he and his wife a comfortable life together.
             </Typography>
         </>
     );
