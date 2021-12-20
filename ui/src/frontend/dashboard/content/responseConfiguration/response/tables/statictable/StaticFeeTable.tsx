@@ -9,7 +9,7 @@ import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import Fade from "react-reveal/Fade";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     staticFees: {
         margin: "1.2rem",
         background: theme.palette.secondary.light,
@@ -74,7 +74,7 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                     rows={2}
                     value={staticTableMetas[staticTableMeta.tableOrder].description}
                     label="Table Description"
-                    onChange={(event) => {
+                    onChange={event => {
                         tableModifier.setTableDescription(staticTableMetas, staticTableMeta.tableOrder, event.target.value);
                     }}
                 />
@@ -166,6 +166,10 @@ export const StaticFeeTable = ({ staticTableMetas, staticTableMeta, tableModifie
                     >
                         Remove Table
                     </Button>
+                    <FormControlLabel
+                        label="Show Totals"
+                        control={<Checkbox checked={staticTableMeta.includeTotals} onChange={() => tableModifier.toggleShowTotals(staticTableMetas, staticTableMeta.tableOrder)} />}
+                    />
                     {anyStaticTableRowsWithPerIndividualSet(staticTableMeta) && (
                         <FormControlLabel
                             label="Require num individuals"

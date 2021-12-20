@@ -3,6 +3,12 @@ param([string]$name, [switch]$supressmigration)
 $env:ASPNETCORE_ENVIRONMENT = "Development"
 
 
+if ($name.Trim() -eq "")
+{
+    Write-Host "Please provide a name for the new project"
+    exit 1
+}
+
 Write-Host "Run this script from the server directory (next to the project)"
 Write-Host "ONLY RUN THIS IN DEV TO PRODUCE MIGRATION SCRIPTS!!"
 ## This script is used to produce a unified migration script for each of contexts used with Palavyr ##
@@ -54,18 +60,19 @@ Write-Host "ONLY RUN THIS IN DEV TO PRODUCE MIGRATION SCRIPTS!!"
 
 ############################################################
 ##Functions
-function CheckDirForExistingVersions($path, $version) {
-    if (Test-Path $path) {
-        $files = Get-ChildItem $path
+function CheckDirForExistingVersions([string]$directory_path, [string]$currentVersion) {
+    if (Test-Path $directory_path) {
+        $files = (Get-ChildItem $directory_path)
         foreach ($fi in $files) {
-            if ($fi.Name.Split("-")[0] -eq $version) {
-                Write-Host "Version $version already used in $path"
+            if ($fi.Name.Split("-")[0] -eq $currentVersion) {
+                Write-Host "Version $currentVersion already used in $directory_path"
                 exit
             }
         }
     }
     else {
-        Write-Host "Perhaps $path does not exist..."
+        Write-Host "Perhaps $directory_path does not exist..."
+        exit
     }
 }
 
@@ -94,8 +101,7 @@ function GetNextMigrationScriptVersion() {
     return $nextVersionAsString;
 }
 
-$nextMigrationScriptVersion = GetNextMigrationScriptVersion();
-
+$nextMigrationScriptVersion = GetNextMigrationScriptVersion;
 
 ##
 $Dir = ".\\Palavyr.Data.Migrator\\Scripts"
@@ -103,9 +109,9 @@ $accountsOutput = "$Dir\\Account"
 $configOutput = "$Dir\\Config"
 $convoOutput = "$Dir\\Convo"
 
-CheckDirForExistingVersions($accountsOutput,$nextMigrationScriptVersion)
-CheckDirForExistingVersions($configOutput, $nextMigrationScriptVersion)
-CheckDirForExistingVersions($convoOutput, $nextMigrationScriptVersion)
+CheckDirForExistingVersions $accountsOutput $nextMigrationScriptVersion
+CheckDirForExistingVersions $configOutput $nextMigrationScriptVersion
+CheckDirForExistingVersions $convoOutput $nextMigrationScriptVersion
 
 if ($name -eq "") {
     Write-Host "Name arg is required. Choose a sensible descriptive name. Long names are okay."

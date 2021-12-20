@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -76,7 +77,7 @@ namespace Palavyr.Core.Services.PdfService.PdfSections.Util
             builder.Append($@"<tbody>");
             for (var rowIndex = 0; rowIndex < rowList.Count; rowIndex++)
             {
-                var color = rowIndex == rowList.Count - 1 ? "lightgray" : "none";
+                var color = rowIndex == rowList.Count - 1 && IncludeTotals ? "lightgray" : "none";
                 builder.Append($@"<tr style='background-color: {color};'>");
 
                 var row = rowList[rowIndex];
@@ -97,6 +98,7 @@ namespace Palavyr.Core.Services.PdfService.PdfSections.Util
             return builder.ToString();
         }
 
+        [Obsolete]
         public static Table MergeTables(List<Table> tables, CultureInfo culture, string newDescription = null)
         {
             var rows = new List<TableRow>() { };

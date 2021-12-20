@@ -110,7 +110,7 @@ export class StandardComponents {
                     message={node.text}
                     input={
                         <div style={{ marginTop: ".5rem", marginBottom: "2rem", width: "100%" }}>
-                            <ChoiceList disabled={disabled} onChange={onChange} setOpen={setOpen} options={options} open={designer ? designer : open} />
+                            <ChoiceList disabled={disabled} onChange={onChange} setOpen={setOpen} options={options} open={open} />
                         </div>
                     }
                 />

@@ -60,7 +60,7 @@ namespace Palavyr.Core.Services.PdfService.PdfServer
     public static class PdfPaperDefaults
     {
         public const string PaperOrientation = "portrait";
-        public static string PaperFormat => DetermineOS.IsLinux() ? "A3" : "A4";
+        public static string PaperFormat = "A3"; //PaperFormat => DetermineOS.IsLinux() ? "A3" : "A4";
         public const string PaperBorder = ".3in";
         public const string PaperFooterHeight = "14mm";
         public const string ZoomFactor = "2.0";
