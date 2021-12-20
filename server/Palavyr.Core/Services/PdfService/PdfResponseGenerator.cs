@@ -65,7 +65,7 @@ namespace Palavyr.Core.Services.PdfService
             var account = await accountRepository.GetAccount(accountId, cancellationToken);
 
             var staticTables = await staticTableCompiler.CollectStaticTables(accountId, areaData, culture, emailRequest.NumIndividuals, cancellationToken); // ui always sends a number - 1 or greater.
-            var dynamicTables = await dynamicTablesCompiler.CompileTablesToPdfRows(accountId, emailRequest.DynamicResponses, culture);
+            var dynamicTables = await dynamicTablesCompiler.CompileTablesToPdfRows(accountId, emailRequest.DynamicResponses, culture, areaData.IncludeDynamicTableTotals);
 
             var html = responseHtmlBuilder.BuildResponseHtml(account, areaData, criticalResponses, staticTables, dynamicTables, emailRequest);
 

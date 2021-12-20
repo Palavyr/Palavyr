@@ -13,7 +13,8 @@ namespace Palavyr.Core.Services.DynamicTableService
         Task<List<Table>> CompileTablesToPdfRows(
             string accountId,
             DynamicResponses dynamicResponses,
-            CultureInfo culture
+            CultureInfo culture,
+            bool includeTotals
         );
 
         Task<List<NodeTypeOption>> CompileTablesToConfigurationNodes(

@@ -31,7 +31,8 @@ namespace Palavyr.Core.Services.DynamicTableService
         public async Task<List<Table>> CompileTablesToPdfRows(
             string accountId,
             DynamicResponses dynamicResponses,
-            CultureInfo culture
+            CultureInfo culture,
+            bool includeTotals
         )
         {
             var tableRows = new List<TableRow>();
@@ -59,7 +60,7 @@ namespace Palavyr.Core.Services.DynamicTableService
                 tableRows.AddRange(rows);
             }
 
-            var table = new Table("Variable estimates determined by your responses", tableRows, culture);
+            var table = new Table("Variable estimates determined by your responses", tableRows, culture, includeTotals);
             return new List<Table>() {table};
         }
 

@@ -18,6 +18,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public bool ValuesAsPaths { get; set; } = false; // for tables that specify various options, whether or not to use each option to create a new tree path.
         public bool UseTableTagAsResponseDescription { get; set; } = false;
         
+        
         public static DynamicTableMeta CreateNew(
             string tableTag,
             string prettyName,
