@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -11,22 +12,24 @@ namespace Palavyr.Core.Services.PdfService.PdfSections.Util
         private List<TableRow> Rows { get; set; } = new List<TableRow>();
         private TableRow TotalsRow { get; set; }
         public CultureInfo Culture { get; set; }
-        
-        public Table(string caption, List<TableRow> rows, CultureInfo culture)
+        public bool IncludeTotals { get; set; }
+
+        public Table(string caption, List<TableRow> rows, CultureInfo culture, bool includeTotals = true)
         {
             Caption = caption;
             Rows = rows;
             Culture = culture;
             TotalsRow = SumTableRows(rows, culture);
+            IncludeTotals = includeTotals;
         }
 
-        public int Length => Rows.Count; 
-        
+        public int Length => Rows.Count;
+
         private TableRow SumTableRows(List<TableRow> rows, CultureInfo culture)
         {
             var useRange = rows.Select(row => row.Range).Any(r => r);
             var usePerPerson = rows.Select(row => row.PerIndividual).Any(r => r == "Per Person"); // TODO: This should be a bool, but row holds it as parsed string
-            
+
             var minTotal = 0.00;
             var maxTotal = 0.00;
             foreach (var row in rows)
@@ -39,6 +42,7 @@ namespace Palavyr.Core.Services.PdfService.PdfSections.Util
                 {
                     maxTotal += row.Min;
                 }
+
                 minTotal += row.Min;
             }
 
@@ -48,13 +52,14 @@ namespace Palavyr.Core.Services.PdfService.PdfSections.Util
         }
 
 
-        public string GenerateTableHtml(bool includeTotals = true)
+        public string GenerateTableHtml()
         {
             var rowList = Rows.Select(x => x).ToList();
-            if (includeTotals)
+            if (IncludeTotals)
             {
                 rowList.Add(TotalsRow);
-            }            
+            }
+
             var builder = new StringBuilder();
             builder.Append($@"<div style='margin-bottom: 10mm'>"); // TODO this goes with each table
             builder.Append(
@@ -72,7 +77,7 @@ namespace Palavyr.Core.Services.PdfService.PdfSections.Util
             builder.Append($@"<tbody>");
             for (var rowIndex = 0; rowIndex < rowList.Count; rowIndex++)
             {
-                var color = rowIndex  == rowList.Count - 1 ? "lightgray" : "none";
+                var color = rowIndex == rowList.Count - 1 && IncludeTotals ? "lightgray" : "none";
                 builder.Append($@"<tr style='background-color: {color};'>");
 
                 var row = rowList[rowIndex];
@@ -80,11 +85,12 @@ namespace Palavyr.Core.Services.PdfService.PdfSections.Util
                 {
                     row.Description, row.RowValue, row.PerIndividual
                 };
-                
+
                 foreach (var col in columns)
                 {
                     builder.Append($@"<td style='padding: 2mm' scope='col'>{col}</td>");
                 }
+
                 builder.Append($@"</tr>");
             }
 
@@ -92,6 +98,7 @@ namespace Palavyr.Core.Services.PdfService.PdfSections.Util
             return builder.ToString();
         }
 
+        [Obsolete]
         public static Table MergeTables(List<Table> tables, CultureInfo culture, string newDescription = null)
         {
             var rows = new List<TableRow>() { };
@@ -99,9 +106,10 @@ namespace Palavyr.Core.Services.PdfService.PdfSections.Util
             {
                 rows.AddRange(table.Rows);
             }
+
             // tables could be length zero
             var firstTableDescription = newDescription ?? ((tables.Count > 0) ? tables[0].Caption : "");
-            return new Table(firstTableDescription, rows, culture);
+            return new Table(firstTableDescription, rows, culture, false);
         }
     }
 }

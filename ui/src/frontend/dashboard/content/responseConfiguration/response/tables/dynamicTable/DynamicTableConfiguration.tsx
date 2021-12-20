@@ -1,8 +1,7 @@
-import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import React, { useState, useCallback, useEffect, Suspense, useContext } from "react";
 import { DynamicTableMetas, TableNameMap } from "@Palavyr-Types";
 import { cloneDeep } from "lodash";
-import { Typography, Button } from "@material-ui/core";
+import { Typography, Button, FormControlLabel, Checkbox } from "@material-ui/core";
 import { SingleDynamicFeeTable } from "./SingleDynamicFeeTable";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { isDevelopmentStage } from "@common/client/clientUtils";
@@ -18,7 +17,7 @@ export interface IDynamicTable {
 }
 
 export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: IDynamicTable) => {
-    const { repository } = useContext(DashboardContext);
+    const { repository, planTypeMeta, setSuccessOpen } = useContext(DashboardContext);
 
     const [loaded, setLoaded] = useState<boolean>(false);
     const [parentState, changeParentState] = useState<boolean>(false);
@@ -26,15 +25,17 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
     const [tableMetas, setTableMetas] = useState<DynamicTableMetas>([]);
     const [availableTables, setAvailableTables] = useState<Array<string>>([]);
     const [tableNameMap, setTableNameMap] = useState<TableNameMap>({});
-    const { planTypeMeta } = useContext(DashboardContext);
+    const [showTotals, setShowTotals] = useState<boolean | null>(null);
 
     const loadTableData = useCallback(async () => {
         const dynamicTableMetas = await repository.Configuration.Tables.Dynamic.getDynamicTableMetas(areaIdentifier);
         const tableNameMap = await repository.Configuration.Tables.Dynamic.getDynamicTableTypes();
+        const showTotals = await repository.Area.getShowDynamicTotals(areaIdentifier);
 
         // map that provides e.g. Select One Flat: SelectOneFlat. used to derive the pretty names
         const availableTablePrettyNames = Object.keys(tableNameMap);
 
+        setShowTotals(showTotals);
         setTableMetas(cloneDeep(dynamicTableMetas));
         setAvailableTables(availableTablePrettyNames);
         setTableNameMap(tableNameMap);
@@ -44,7 +45,7 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
 
     const addDynamicTable = async () => {
         // We always add the default dynamic table - the Select One Flat table
-        var newMeta = await repository.Configuration.Tables.Dynamic.createDynamicTable(areaIdentifier);
+        const newMeta = await repository.Configuration.Tables.Dynamic.createDynamicTable(areaIdentifier);
         tableMetas.push(newMeta);
         setTableMetas(cloneDeep(tableMetas));
         changeParentState(!parentState); // TODO: Reload the tables...
@@ -60,22 +61,32 @@ export const DynamicTableConfiguration = ({ title, areaIdentifier, children }: I
         };
     }, [areaIdentifier, loadTableData]);
 
-    const actions =
-        planTypeMeta && tableMetas.length >= planTypeMeta.allowedDynamicTables ? (
-            <>
-                <Typography display="inline">
-                    <strong>Upgrade your subscription to add more dynamic tables</strong>
-                </Typography>
-                <Button disabled={true} startIcon={<AddBoxIcon />} variant="contained" color="primary" onClick={addDynamicTable}>
+    const changeShowTotals = async (e: { target: { checked: any } }) => {
+        const newShowTotals = e.target.checked;
+        const shouldShow = await repository.Area.setShowDynamicTotals(areaIdentifier, newShowTotals);
+        setShowTotals(shouldShow);
+        setSuccessOpen(true);
+    };
+
+    const actions = (
+        <>
+            {showTotals !== null && <FormControlLabel label="Show Totals" control={<Checkbox disabled={showTotals === null} checked={showTotals} onChange={changeShowTotals} />} />}
+            {planTypeMeta && tableMetas.length >= planTypeMeta.allowedDynamicTables ? (
+                <>
+                    <Typography display="inline">
+                        <strong>Upgrade your subscription to add more dynamic tables</strong>
+                    </Typography>
+                    <Button disabled={true} startIcon={<AddBoxIcon />} variant="contained" color="primary" onClick={addDynamicTable}>
+                        <Typography>Add Pricing Strategy</Typography>
+                    </Button>
+                </>
+            ) : (
+                <Button startIcon={<AddBoxIcon />} variant="contained" color="primary" onClick={addDynamicTable}>
                     <Typography>Add Pricing Strategy</Typography>
                 </Button>
-            </>
-        ) : (
-            <Button startIcon={<AddBoxIcon />} variant="contained" color="primary" onClick={addDynamicTable}>
-                <Typography>Add Pricing Strategy</Typography>
-            </Button>
-        );
-
+            )}
+        </>
+    );
     return (
         <PalavyrAccordian title={title} initialState={true} actions={actions}>
             {children}

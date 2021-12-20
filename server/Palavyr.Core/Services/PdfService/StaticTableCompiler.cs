@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 
@@ -42,7 +41,7 @@ namespace Palavyr.Core.Services.PdfService
                     rows.Add(row);
                 }
 
-                var table = new Table(meta.Description, rows, culture);
+                var table = new Table(meta.Description, rows, culture, meta.IncludeTotals);
                 tables.Add(table);
             }
 

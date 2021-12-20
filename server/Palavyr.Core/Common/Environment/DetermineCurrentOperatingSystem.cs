@@ -20,4 +20,20 @@ namespace Palavyr.Core.Common.Environment
             return RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
         }
     }
+
+    public static class DetermineOS
+    {
+        public static bool IsWindows()
+        {
+            var d = new DetermineCurrentOperatingSystem();
+            return d.IsWindows();
+        }
+
+        public static bool IsLinux()
+        {
+            var d = new DetermineCurrentOperatingSystem();
+            return d.IsLinux();
+        }
+        
+    }
 }

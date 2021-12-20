@@ -4,7 +4,6 @@ import {
     DynamicTableMeta,
     StaticTableMetas,
     StaticTableMetaTemplate,
-    ConvoTableRow,
     Areas,
     Prices,
     EmailVerificationResponse,
@@ -20,7 +19,6 @@ import {
     PreCheckResult,
     WidgetPreferences,
     VariableDetail,
-    LocaleResource,
     ProductIds,
     TableData,
     TableNameMap,
@@ -28,7 +26,6 @@ import {
     StaticTableRow,
     PlanTypeMeta,
     DynamicTableData,
-    YoutubePlaylistItemsResponse,
     VideoMap,
     PlaylistItemsResource,
     EnquiryActivtyResource,
@@ -123,6 +120,8 @@ export class PalavyrRepository {
 
         deleteArea: (areaIdentifier: string) => this.client.delete<void>(`areas/delete/${areaIdentifier}`, CacheIds.Areas),
         toggleSendPdfResponse: (areaIdentifier: string) => this.client.post<boolean, {}>(`area/send-pdf/${areaIdentifier}`),
+        getShowDynamicTotals: (areaIdentifier: string) => this.client.get<boolean>(`area/dynamic-totals/${areaIdentifier}`),
+        setShowDynamicTotals: (areaIdentifier: string, shouldShow: boolean) => this.client.put<boolean, {}>(`area/dynamic-totals/${areaIdentifier}`, { ShowDynamicTotals: shouldShow }),
     };
 
     public Configuration = {

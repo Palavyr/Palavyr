@@ -17,7 +17,7 @@ export class StaticTablesModifier {
     }
 
     _getIDs_(metas: StaticTableMetas) {
-        return metas.map((meta) => meta.tableOrder).sort();
+        return metas.map(meta => meta.tableOrder).sort();
     }
 
     _getrowOrders_(list: StaticTableRows) {
@@ -104,7 +104,7 @@ export class StaticTablesModifier {
     }
 
     delTable(staticTableMetas: StaticTableMetas, tableOrder: number) {
-        staticTableMetas = staticTableMetas.filter((t) => t.tableOrder !== tableOrder);
+        staticTableMetas = staticTableMetas.filter(t => t.tableOrder !== tableOrder);
         staticTableMetas = this._rectifyIDs_(staticTableMetas);
         this.setTableMetas(staticTableMetas);
     }
@@ -125,7 +125,7 @@ export class StaticTablesModifier {
     }
 
     delRow(staticTableMetas: StaticTableMetas, tableOrder: number, rowOrder: number) {
-        staticTableMetas[tableOrder].staticTableRows = this._rectifyrowOrders_(staticTableMetas[tableOrder].staticTableRows.filter((r) => r.rowOrder !== rowOrder));
+        staticTableMetas[tableOrder].staticTableRows = this._rectifyrowOrders_(staticTableMetas[tableOrder].staticTableRows.filter(r => r.rowOrder !== rowOrder));
 
         this.setTableMetas(staticTableMetas);
     }
@@ -212,5 +212,10 @@ export class StaticTablesModifier {
     setPerPersonRequired(staticTableMetas: StaticTableMetas, tableOrder: number, value: boolean) {
         staticTableMetas[tableOrder].perPersonInputRequired = value;
         // this.setTableMetas(staticTableMetas);
+    }
+
+    toggleShowTotals(staticTableMetas: StaticTableMetas, tableOrder: number) {
+        staticTableMetas[tableOrder].includeTotals = !staticTableMetas[tableOrder].includeTotals;
+        this.setTableMetas(staticTableMetas);
     }
 }

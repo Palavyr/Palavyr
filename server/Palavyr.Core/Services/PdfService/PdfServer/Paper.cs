@@ -1,4 +1,5 @@
 ﻿using System;
+using Palavyr.Core.Common.Environment;
 
 namespace Palavyr.Core.Services.PdfService.PdfServer
 {
@@ -59,7 +60,7 @@ namespace Palavyr.Core.Services.PdfService.PdfServer
     public static class PdfPaperDefaults
     {
         public const string PaperOrientation = "portrait";
-        public const string PaperFormat = "A3";
+        public static string PaperFormat = "A3"; //PaperFormat => DetermineOS.IsLinux() ? "A3" : "A4";
         public const string PaperBorder = ".3in";
         public const string PaperFooterHeight = "14mm";
         public const string ZoomFactor = "2.0";

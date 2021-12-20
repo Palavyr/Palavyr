@@ -9,7 +9,6 @@ namespace Palavyr.API.Controllers.Areas
 {
     
     [Authorize]
-
     public class ModifyAreaResponseNameController : PalavyrBaseController
     {
 

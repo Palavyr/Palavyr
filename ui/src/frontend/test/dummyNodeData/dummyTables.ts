@@ -17,6 +17,8 @@ export const MockStaticTableRow: StaticTableRow = {
     perPerson: true,
     tableOrder: 0,
     areaIdentifier: "abc-123",
+    includeTotals: true
+
 }
 
 const row1 = cloneDeep(MockStaticTableRow);
@@ -36,6 +38,7 @@ export const MockStaticTablesMeta: StaticTableMeta = {
     areaIdentifier: "abc-123",
     description: "This is a good first table.",
     tableOrder: 0,
+    includeTotals: true,
     staticTableRows: [
         row1,
         row2,

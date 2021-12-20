@@ -146,10 +146,10 @@ export type AreaTable = {
     awaitingVerification: boolean;
     subject: string;
     isEnabled: boolean;
-
     useAreaFallbackEmail: boolean;
     fallbackSubject: string;
     fallbackEmailTemplate: string;
+    includeDynamicTableTotals: boolean;
 };
 
 export type StaticTableMetas = Array<StaticTableMeta>;
@@ -161,6 +161,7 @@ export type StaticTableMetaTemplate = {
     areaIdentifier: string;
     staticTableRows: StaticTableRows;
     perPersonInputRequired: boolean;
+    includeTotals: boolean
 };
 
 export type StaticTableMeta = StaticTableMetaTemplate & {
@@ -176,6 +177,7 @@ export type StaticTableRow = {
     perPerson: boolean;
     tableOrder: number;
     areaIdentifier: string;
+    includeTotals: boolean;
 };
 
 export type StaticFee = {
