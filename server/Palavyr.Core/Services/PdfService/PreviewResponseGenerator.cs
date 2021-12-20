@@ -120,7 +120,7 @@ namespace Palavyr.Core.Services.PdfService
                 rows.AddRange(newRows);
             }
 
-            var table = new Table("Variable estimates determined by your responses", rows, culture, false);
+            var table = new Table("Variable estimates determined by your responses", rows, culture, area.IncludeDynamicTableTotals);
             return new List<Table>() {table};
         }
     }

@@ -10,6 +10,10 @@ using Palavyr.Core.Services.EmailService.Verification;
 
 namespace Palavyr.API.Controllers.Areas
 {
+    // TODO: Wtf is going on in this controller. This must be really old.
+    // I Don't think this is even being used any more by the client.
+    
+    [Obsolete]
     [Authorize]
     public class GetAreaByIdController : PalavyrBaseController
     {
@@ -31,6 +35,7 @@ namespace Palavyr.API.Controllers.Areas
             this.logger = logger;
         }
 
+        [Obsolete]
         ///https://docs.aws.amazon.com/sdkfornet/v3/apidocs/index.html
         /// The verification status of an email address is "Pending" until the email address owner clicks the link within the verification email that Amazon SES sent to that address. If the email address owner clicks the link within 24 hours, the verification status of the email address changes to "Success". If the link is not clicked within 24 hours, the verification status changes to "Failed." In that case, if you still want to verify the email address, you must restart the verification process from the beginning.
         [HttpGet("areas/{areaId}")]
