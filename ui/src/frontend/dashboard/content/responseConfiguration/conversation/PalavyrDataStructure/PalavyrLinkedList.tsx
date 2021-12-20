@@ -73,6 +73,9 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
 
             if (existingNode === null) {
                 const childConvoNode = this._getNodeById(childId, nodeList);
+                if (childConvoNode === null || childConvoNode === undefined) {
+                    throw new Error("Could not find node with id: " + childId);
+                }
                 const newNode = this.convertToPalavyrNode(this.repository, childConvoNode, this.updateTree, index === 0);
 
                 newNode.addNewNodeReferenceAndConfigure(newNode, parentNode, nodeTypeOptions);

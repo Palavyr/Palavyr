@@ -27,6 +27,7 @@ const MockStaticTableRow: StaticTableRow = {
     perPerson: false,
     tableOrder: 0,
     areaIdentifier: "abc-123",
+    includeTotals: true,
 };
 
 const MockStaticTablesMeta: StaticTableMeta = {
@@ -36,6 +37,7 @@ const MockStaticTablesMeta: StaticTableMeta = {
     tableOrder: 0,
     staticTableRows: [MockStaticTableRow, MockStaticTableRow],
     perPersonInputRequired: false,
+    includeTotals: true,
 };
 
 // TODO: Mock api call to get data

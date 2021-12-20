@@ -46,7 +46,7 @@ export const BrandingStrip = () => {
         <div className={classNames(wcls.pwrow, wcls.pfooter, cls.spacer)}>
             <div style={{ alignItems: "center", display: "flex" }}>
                 <Typography className={cls.wrapper} variant="caption">
-                    Crafted with{" "}
+                    Powered by{" "}
                     <strong className={cls.brand} onClick={() => window.open("https://www.palavyr.com")}>
                         Palavyr
                     </strong>
