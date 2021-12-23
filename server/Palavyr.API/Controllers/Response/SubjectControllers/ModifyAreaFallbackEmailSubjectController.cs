@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -5,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
@@ -12,29 +14,27 @@ namespace Palavyr.API.Controllers.Response.SubjectControllers
 
     public class ModifyAreaFallbackEmailSubjectController : PalavyrBaseController
     {
-        private readonly DashContext dashContext;
+        private readonly IConfigurationRepository configurationRepository;
         private readonly ILogger<ModifyAreaFallbackEmailSubjectController> logger;
 
         public ModifyAreaFallbackEmailSubjectController(
-            DashContext dashContext,
+            IConfigurationRepository configurationRepository,
             ILogger<ModifyAreaFallbackEmailSubjectController> logger
         )
         {
-            this.dashContext = dashContext;
+            this.configurationRepository = configurationRepository;
             this.logger = logger;
         }
 
         [HttpPut("email/fallback/subject/{areaId}")]
-        public async Task<string> Modify([FromHeader] string accountId, string areaId, [FromBody] SubjectText subjectText)
+        public async Task<string> Modify(string areaId, [FromBody] SubjectText subjectText, CancellationToken cancellationToken)
         {
-            var curArea = await dashContext
-                .Areas
-                .SingleAsync(row => row.AreaIdentifier == areaId && row.AccountId == accountId);
+            var curArea = await configurationRepository.GetAreaById(areaId);
 
             if (subjectText.Subject != curArea.FallbackSubject)
             {
                 curArea.FallbackSubject = subjectText.Subject;
-                await dashContext.SaveChangesAsync();
+                await configurationRepository.CommitChangesAsync();
             }
 
             return curArea.FallbackSubject;

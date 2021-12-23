@@ -13,8 +13,8 @@ namespace Palavyr.Core.Services.ConversationServices
 {
     public interface IConversationRecordRetriever
     {
-        Task<Enquiry[]> RetrieveConversationRecords(string accountId);
-        Enquiry MapConvoWithEmailToResponse(ConversationRecord conversationRecord, string accountId);
+        Task<Enquiry[]> RetrieveConversationRecords();
+        Enquiry MapConvoWithEmailToResponse(ConversationRecord conversationRecord);
     }
 
     public class ConversationRecordRecordRetriever : IConversationRecordRetriever
@@ -33,9 +33,9 @@ namespace Palavyr.Core.Services.ConversationServices
 
         // Completed means that we've reached the end - the user let all of the messages play out
         // A subset of these will have emails
-        public async Task<Enquiry[]> RetrieveConversationRecords(string accountId)
+        public async Task<Enquiry[]> RetrieveConversationRecords()
         {
-            var conversationRecords = await convoHistoryRepository.GetAllConversationRecords(accountId);
+            var conversationRecords = await convoHistoryRepository.GetAllConversationRecords();
 
 
             if (conversationRecords.Count() == 0)
@@ -43,11 +43,11 @@ namespace Palavyr.Core.Services.ConversationServices
                 return new List<Enquiry>().ToArray();
             }
 
-            var formatted = FormatEnquiresForDashboard(conversationRecords, accountId);
+            var formatted = FormatEnquiresForDashboard(conversationRecords);
             return formatted;
         }
 
-        private Enquiry[] FormatEnquiresForDashboard(ConversationRecord[] conversationRecords, string accountId)
+        private Enquiry[] FormatEnquiresForDashboard(ConversationRecord[] conversationRecords)
         {
             var enquiries = new List<Enquiry>();
 
@@ -55,7 +55,7 @@ namespace Palavyr.Core.Services.ConversationServices
             {
                 try
                 {
-                    var completeEnquiry = MapConvoWithEmailToResponse(conversationRecord, accountId);
+                    var completeEnquiry = MapConvoWithEmailToResponse(conversationRecord);
                     enquiries.Add(completeEnquiry);
                 }
                 catch (Exception ex)
@@ -68,7 +68,7 @@ namespace Palavyr.Core.Services.ConversationServices
             return enquiries.ToArray();
         }
 
-        public Enquiry MapConvoWithEmailToResponse(ConversationRecord conversationRecord, string accountId)
+        public Enquiry MapConvoWithEmailToResponse(ConversationRecord conversationRecord)
         {
             var fileId = conversationRecord.ResponsePdfId;
             FileLinkReference? linkReference;

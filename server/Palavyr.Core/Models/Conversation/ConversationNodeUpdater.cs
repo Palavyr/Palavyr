@@ -3,32 +3,36 @@ using System.Threading;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Models.Conversation
 {
     public class ConversationNodeUpdater : IConversationNodeUpdater
     {
+        private readonly IHoldAnAccountId accountIdHolder;
         private readonly IConfigurationRepository configurationRepository;
         private readonly IOrphanRemover orphanRemover;
 
         public ConversationNodeUpdater(
+            IHoldAnAccountId accountIdHolder,
             IConfigurationRepository configurationRepository,
             IOrphanRemover orphanRemover
         )
         {
+            this.accountIdHolder = accountIdHolder;
             this.configurationRepository = configurationRepository;
             this.orphanRemover = orphanRemover;
         }
 
-        public async Task<List<ConversationNode>> UpdateConversation(string accountId, string areaId, List<ConversationNode> updatedConvo, CancellationToken cancellationToken)
+        public async Task<List<ConversationNode>> UpdateConversation(string areaId, List<ConversationNode> updatedConvo, CancellationToken cancellationToken)
         {
-            var mappedUpdates = MapUpdate(accountId, updatedConvo);
+            var mappedUpdates = MapUpdate(updatedConvo);
             var deOrphanedAreaConvo = orphanRemover.RemoveOrphanedNodes(mappedUpdates);
-            var updated = await configurationRepository.UpdateConversation(accountId, areaId, deOrphanedAreaConvo, cancellationToken);
+            var updated = await configurationRepository.UpdateConversation(areaId, deOrphanedAreaConvo);
             return updated;
         }
 
-        private List<ConversationNode> MapUpdate(string accountId, List<ConversationNode> nodeUpdates)
+        private List<ConversationNode> MapUpdate(List<ConversationNode> nodeUpdates)
         {
             var mappedTransactions = new List<ConversationNode>();
             foreach (var node in nodeUpdates)
@@ -41,7 +45,7 @@ namespace Palavyr.Core.Models.Conversation
                     node.NodeChildrenString,
                     node.OptionPath,
                     node.ValueOptions,
-                    accountId,
+                    accountIdHolder.AccountId,
                     node.NodeComponentType,
                     node.NodeTypeCode,
                     node.IsRoot,

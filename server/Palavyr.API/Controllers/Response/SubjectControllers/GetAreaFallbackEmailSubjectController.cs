@@ -3,28 +3,29 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
+using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
 
     public class GetAreaFallbackEmailSubjectController : PalavyrBaseController
     {
-        private DashContext dashContext;
         private ILogger<GetAreaFallbackEmailSubjectController> logger;
+        private readonly IConfigurationRepository configurationRepository;
 
         public GetAreaFallbackEmailSubjectController(
             ILogger<GetAreaFallbackEmailSubjectController> logger,
-            DashContext dashContext
+            IConfigurationRepository configurationRepository
         )
         {
             this.logger = logger;
-            this.dashContext = dashContext;
+            this.configurationRepository = configurationRepository;
         }
 
         [HttpGet("email/fallback/subject/{areaId}")]
-        public async Task<string> Modify([FromHeader] string accountId, [FromRoute] string areaId)
+        public async Task<string> Modify([FromRoute] string areaId)
         {
-            var area = await dashContext.Areas.SingleAsync(row => row.AreaIdentifier == areaId && row.AccountId == accountId);
+            var area = await configurationRepository.GetAreaById(areaId);
             var subject = area.FallbackSubject;
             return subject;
         }

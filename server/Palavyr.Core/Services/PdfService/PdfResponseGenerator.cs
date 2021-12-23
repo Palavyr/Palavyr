@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
@@ -54,25 +53,23 @@ namespace Palavyr.Core.Services.PdfService
             EmailRequest emailRequest,
             CultureInfo culture,
             string identifier,
-            string accountId,
-            string areaId,
-            CancellationToken cancellationToken
+            string areaId
         )
         {
             if (emailRequest.NumIndividuals <= 0) throw new Exception("Num individuals must be 1 or more.");
 
-            var areaData = await configurationRepository.GetAreaComplete(accountId, areaId);
-            var account = await accountRepository.GetAccount(accountId, cancellationToken);
+            var areaData = await configurationRepository.GetAreaComplete(areaId);
+            var account = await accountRepository.GetAccount();
 
-            var staticTables = await staticTableCompiler.CollectStaticTables(accountId, areaData, culture, emailRequest.NumIndividuals, cancellationToken); // ui always sends a number - 1 or greater.
-            var dynamicTables = await dynamicTablesCompiler.CompileTablesToPdfRows(accountId, emailRequest.DynamicResponses, culture, areaData.IncludeDynamicTableTotals);
+            var staticTables = await staticTableCompiler.CollectStaticTables(areaData, culture, emailRequest.NumIndividuals); // ui always sends a number - 1 or greater.
+            var dynamicTables = await dynamicTablesCompiler.CompileTablesToPdfRows(emailRequest.DynamicResponses, culture, areaData.IncludeDynamicTableTotals);
 
             var html = responseHtmlBuilder.BuildResponseHtml(account, areaData, criticalResponses, staticTables, dynamicTables, emailRequest);
 
             html = responseCustomizer.Customize(html, emailRequest, account);
 
             var userDataBucket = configuration.GetUserDataBucket();
-            var s3Key = s3KeyResolver.ResolveResponsePdfKey(accountId, identifier);
+            var s3Key = s3KeyResolver.ResolveResponsePdfKey(identifier);
             var pdfServerResponse = await htmlToPdfClient.GeneratePdfFromHtml(html, userDataBucket, s3Key, identifier, Paper.CreateDefault(identifier)); // TODO: Make this configurable via the DBs
             return pdfServerResponse;
         }

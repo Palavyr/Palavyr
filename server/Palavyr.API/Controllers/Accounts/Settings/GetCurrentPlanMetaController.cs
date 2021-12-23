@@ -21,10 +21,9 @@ namespace Palavyr.API.Controllers.Accounts.Settings
 
         [HttpGet(Route)]
         public async Task<PlanTypeMeta> GetCurrentPlan(
-            [FromHeader] string accountId,
             CancellationToken cancellationToken)
         {
-            var currentPlan = await businessRules.GetPlanTypeMeta(accountId, cancellationToken);
+            var currentPlan = await businessRules.GetPlanTypeMeta();
             return currentPlan;
         }
     }

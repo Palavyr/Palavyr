@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Sessions;
 
 
 namespace Palavyr.Core.Services.AmazonServices.S3Service
@@ -18,11 +19,13 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
     {
         private readonly IAmazonS3 s3Client;
         private readonly ILogger<S3Deleter> logger;
+        private readonly ITransportACancellationToken cancellationTokenTransport;
 
-        public S3Deleter(IAmazonS3 s3Client, ILogger<S3Deleter> logger)
+        public S3Deleter(IAmazonS3 s3Client, ILogger<S3Deleter> logger, ITransportACancellationToken cancellationTokenTransport)
         {
             this.s3Client = s3Client;
             this.logger = logger;
+            this.cancellationTokenTransport = cancellationTokenTransport;
         }
 
         public async Task<bool> DeleteObjectFromS3Async(string bucket, string fileKey)
@@ -37,7 +40,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
 
             try
             {
-                var response = await s3Client.DeleteObjectAsync(deleteRequest);
+                var response = await s3Client.DeleteObjectAsync(deleteRequest, cancellationTokenTransport.CancellationToken);
                 logger.LogInformation($"Response: {response}");
                 logger.LogInformation($"Deleted {fileKey} from {bucket}");
 
@@ -69,7 +72,7 @@ namespace Palavyr.Core.Services.AmazonServices.S3Service
 
             try
             {
-                var response = await s3Client.DeleteObjectsAsync(deleteRequest);
+                var response = await s3Client.DeleteObjectsAsync(deleteRequest, cancellationTokenTransport.CancellationToken);
                 logger.LogInformation($"Response: {response}");
                 logger.LogInformation($"Deleted {string.Join(", ", fileKeys)} from {bucket}");
 

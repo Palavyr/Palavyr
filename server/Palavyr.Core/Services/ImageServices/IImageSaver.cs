@@ -7,6 +7,6 @@ namespace Palavyr.Core.Services.ImageServices
 {
     public interface IImageSaver
     {
-        Task<FileLink> SaveImage(string accountId, IFormFile imageFile, CancellationToken cancellationToken);
+        Task<FileLink> SaveImage(IFormFile imageFile, CancellationToken cancellationToken);
     }
 }

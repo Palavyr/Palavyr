@@ -21,12 +21,11 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
 
         [HttpPost("widget-config/widget-active-state")]
         public async Task<bool> ModifyWidgetActiveState(
-            [FromHeader] string accountId,
             [FromQuery] bool state
         )
         {
             logger.LogDebug("Modifying widget preference");
-            var widgetPrefs = await configurationRepository.GetWidgetPreferences(accountId);
+            var widgetPrefs = await configurationRepository.GetWidgetPreferences();
             widgetPrefs.WidgetState = state;
             await configurationRepository.CommitChangesAsync();
             return state;

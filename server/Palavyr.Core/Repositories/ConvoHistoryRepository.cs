@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Conversation.Schemas;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Repositories
 {
@@ -12,11 +13,13 @@ namespace Palavyr.Core.Repositories
     {
         private readonly ConvoContext convoContext;
         private readonly ILogger<ConvoHistoryRepository> logger;
+        private readonly IHoldAnAccountId accountIdHolder;
 
-        public ConvoHistoryRepository(ConvoContext convoContext, ILogger<ConvoHistoryRepository> logger)
+        public ConvoHistoryRepository(ConvoContext convoContext, ILogger<ConvoHistoryRepository> logger, IHoldAnAccountId accountIdHolder)
         {
             this.convoContext = convoContext;
             this.logger = logger;
+            this.accountIdHolder = accountIdHolder;
         }
 
         public async Task CommitChangesAsync(CancellationToken cancellationToken = default) // todo: remove default 
@@ -41,11 +44,11 @@ namespace Palavyr.Core.Repositories
             return updatedRecord.Entity;
         }
 
-        public async Task<ConversationRecord[]> GetAllConversationRecords(string accountId)
+        public async Task<ConversationRecord[]> GetAllConversationRecords()
         {
             return await convoContext
                 .ConversationRecords
-                .Where(row => row.AccountId == accountId)
+                .Where(row => row.AccountId == accountIdHolder.AccountId)
                 .ToArrayAsync();
         }
 

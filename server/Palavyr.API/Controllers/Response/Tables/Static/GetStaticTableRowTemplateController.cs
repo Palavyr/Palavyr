@@ -1,21 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Models.Configuration.Schemas;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Controllers.Response.Tables.Static
 {
     public class GetStaticTableRowTemplateController : PalavyrBaseController
     {
-        public GetStaticTableRowTemplateController()
+        private readonly IHoldAnAccountId accountIdHolder;
+
+        public GetStaticTableRowTemplateController(IHoldAnAccountId accountIdHolder)
         {
+            this.accountIdHolder = accountIdHolder;
         }
 
         [HttpGet("response/configuration/{areaId}/static/tables/{tableId}/row/template")]
         public StaticTableRow Get(
-            [FromHeader] string accountId,
             [FromRoute] string areaId,
             [FromRoute] string tableId)
         {
-            return StaticTableRow.CreateStaticTableRowTemplate(int.Parse(tableId), areaId, accountId);
+            return StaticTableRow.CreateStaticTableRowTemplate(int.Parse(tableId), areaId, accountIdHolder.AccountId);
         }
     }
 }

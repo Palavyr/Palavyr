@@ -20,10 +20,9 @@ namespace Palavyr.API.Controllers.Enquiries
 
         [HttpGet("enquiry-insights")]
         public async Task<EnquiryInsightsResource[]> Get(
-            [FromHeader]
-            string accountId)
+)
         {
-            return await enquiryInsightComputer.GetEnquiryInsights(accountId);
+            return await enquiryInsightComputer.GetEnquiryInsights();
         }
     }
 

@@ -9,6 +9,7 @@ using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Controllers.Conversation.Images
 {
@@ -16,18 +17,18 @@ namespace Palavyr.API.Controllers.Conversation.Images
     {
         private readonly GuidFinder guidFinder;
         private readonly DashContext dashContext;
+        private readonly IHoldAnAccountId accountIdHolder;
         private const string Route = "images";
 
-        public GetImagesController(GuidFinder guidFinder, DashContext dashContext)
+        public GetImagesController(GuidFinder guidFinder, DashContext dashContext, IHoldAnAccountId accountIdHolder)
         {
             this.guidFinder = guidFinder;
             this.dashContext = dashContext;
+            this.accountIdHolder = accountIdHolder;
         }
 
         [HttpGet(Route)]
         public async Task<FileLink[]> GetImages(
-            [FromHeader]
-            string accountId,
             [FromQuery]
             string imageIds,
             CancellationToken cancellationToken) // should be comma separated
@@ -45,11 +46,11 @@ namespace Palavyr.API.Controllers.Conversation.Images
                     guidFinder.FindFirstGuidSuffix(id);
                 }
 
-                records = await dashContext.Images.Where(x => x.AccountId == accountId && ids.Contains(x.ImageId)).ToListAsync(cancellationToken);
+                records = await dashContext.Images.Where(x => x.AccountId == accountIdHolder.AccountId && ids.Contains(x.ImageId)).ToListAsync(cancellationToken);
             }
             else
             {
-                records = await dashContext.Images.Where(x => x.AccountId == accountId).ToListAsync(cancellationToken);
+                records = await dashContext.Images.Where(x => x.AccountId == accountIdHolder.AccountId).ToListAsync(cancellationToken);
             }
 
             return records.ToFileLinks();

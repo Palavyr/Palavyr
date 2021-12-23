@@ -18,21 +18,20 @@ namespace Palavyr.API.Controllers.Conversation.Images
 
         [HttpPost(Route)]
         public async Task Post(
-            [FromHeader]
-            string accountId,
+
             string imageId,
             string nodeId,
             CancellationToken cancellationToken
         )
         {
             // asserts this image exists
-            var image = await repository.GetImageById(imageId, cancellationToken);
+            var image = await repository.GetImageById(imageId);
             var convoNode = await repository.GetConversationNodeById(nodeId);
 
             if (convoNode != null)
             {
                 convoNode.ImageId = image.ImageId;
-                await repository.CommitChangesAsync(cancellationToken);
+                await repository.CommitChangesAsync();
             }
         }
     }

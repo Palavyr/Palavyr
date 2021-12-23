@@ -26,15 +26,14 @@ namespace Palavyr.API.Controllers.WidgetLive
 
         [HttpGet(Route)]
         public async Task<string> GetImageUrl(
-            [FromHeader]
-            string accountId,
+
             [FromRoute]
             string nodeId,
             CancellationToken cancellationToken
         )
         {
             var convoNode = await repository.GetConversationNodeById(nodeId);
-            var image = await repository.GetImageById(convoNode.ImageId, cancellationToken);
+            var image = await repository.GetImageById(convoNode.ImageId);
             if (image.S3Key == null)
             {
                 throw new DomainException("Failed to set the file key for this image.");

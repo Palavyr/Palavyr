@@ -25,10 +25,9 @@ namespace Palavyr.API.Controllers.Enquiries
 
         [HttpGet("enquiries/link/{fileId}")]
         public string Get(
-            [FromHeader] string accountId,
             [FromRoute] string fileId)
         {
-            var s3Key = s3KeyResolver.ResolveResponsePdfKey(accountId, fileId);
+            var s3Key = s3KeyResolver.ResolveResponsePdfKey(fileId);
             var previewBucket = configuration.GetUserDataBucket();
             var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(s3Key, previewBucket);
             return preSignedUrl;

@@ -25,11 +25,9 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
 
         [HttpGet("account/settings/email")]
-        public async Task<AccountEmailSettingsResponse> Get(
-            [FromHeader] string accountId,
-            CancellationToken cancellationToken)
+        public async Task<AccountEmailSettingsResponse> Get()
         {
-            var account = await accountRepository.GetAccount(accountId, cancellationToken);
+            var account = await accountRepository.GetAccount();
             if (string.IsNullOrWhiteSpace(account.EmailAddress)) throw new Exception($"Default email for account id {account.AccountId} not found. Account corruption.");
 
             var verificationResponse = await emailVerificationStatus.GetVerificationResponse(account.EmailAddress);

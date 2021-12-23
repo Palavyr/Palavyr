@@ -20,8 +20,7 @@ namespace Palavyr.API.Controllers.WidgetLive
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
         [HttpPost("widget/area/{areaId}/email/send")]
         public async Task<SendEmailResultResponse> SendEmail(
-            [FromHeader]
-            string accountId,
+
             [FromRoute]
             string areaId,
             [FromBody]
@@ -29,7 +28,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             CancellationToken cancellationToken
         )
         {
-            var resultResponse = await sendWidgetResponseEmailHandler.HandleSendWidgetResponseEmail(emailRequest, accountId, areaId, cancellationToken);
+            var resultResponse = await sendWidgetResponseEmailHandler.HandleSendWidgetResponseEmail(emailRequest, areaId, cancellationToken);
             return resultResponse;
         }
     }

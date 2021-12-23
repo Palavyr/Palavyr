@@ -44,7 +44,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
             var newImageId = StaticGuidUtils.CreateNewId();
             var extension = Path.GetExtension(riskyName);
             var safeName = string.Join("", newImageId, extension.ToLowerInvariant());
-            var s3Key = resolver.ResolveImageKey(accountId, safeName);
+            var s3Key = resolver.ResolveImageKey(safeName);
             return new Image(newImageId, safeName, riskyName, accountId, s3Key);
         }
 

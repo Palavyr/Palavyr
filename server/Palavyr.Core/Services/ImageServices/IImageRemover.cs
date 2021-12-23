@@ -6,6 +6,6 @@ namespace Palavyr.Core.Services.ImageServices
 {
     public interface IImageRemover
     {
-        Task<FileLink[]> RemoveImages(string[] ids, string accountId, CancellationToken cancellationToken);
+        Task<FileLink[]> RemoveImages(string[] ids, CancellationToken cancellationToken);
     }
 }

@@ -1,20 +1,25 @@
 #nullable enable
+using System.Linq;
 using Autofac;
+using Autofac.Core;
+using Autofac.Extensions.DependencyInjection;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.API.Registration.Configuration;
 using Palavyr.API.Registration.Container;
+using Palavyr.Core.Mediator;
 using Palavyr.Core.Services.AccountServices;
 
 namespace Palavyr.API
 {
     public class Startup
     {
-        
         private readonly IConfiguration configuration;
         private readonly IWebHostEnvironment env;
         private readonly ErrorHandler errorHandler = new ErrorHandler();
@@ -38,6 +43,11 @@ namespace Palavyr.API
             builder.RegisterModule(new GeneralModule());
             builder.RegisterModule(new StripeModule(configuration));
             builder.RegisterModule(new RepositoriesModule());
+
+            var controllersTypesInAssembly = typeof(Startup).Assembly.GetExportedTypes()
+                .Where(type => typeof(ControllerBase).IsAssignableFrom(type)).ToArray();
+
+            builder.RegisterTypes(controllersTypesInAssembly).PropertiesAutowired();
         }
 
         public static void RegisterStores(IServiceCollection services, IConfiguration configuration)
@@ -54,12 +64,13 @@ namespace Palavyr.API
         public static void SetServices(IServiceCollection services, IConfiguration config, IWebHostEnvironment environ)
         {
             services.AddHttpContextAccessor();
+            services.AddMvcCore().AddControllersAsServices().AddAuthorization();
             CorsConfiguration.ConfigureCorsService(services, environ);
-            services.AddControllers();
             Configurations.ConfigureStripe(config);
             RegisterStores(services, config);
             ServiceRegistry.RegisterHealthChecks(services);
             ServiceRegistry.RegisterIisConfiguration(services, environ);
+            ServiceRegistry.RegisterMediator(services);
         }
 
         public void Configure(
@@ -68,11 +79,12 @@ namespace Palavyr.API
         )
         {
             PalavyrAccessChecker.AssertEnvironmentsDoNoOverlap();
-            
+
+
             // var logger = loggerFactory.CreateLogger("Error Handler");
             // app.UseRequestResponseLogging(); // THIS STUPID THING IS DISPOSING THE RESPONSE BODY!!!
             app.UseHttpsRedirection();
-            
+
             app.UseRouting();
             app.UseCors();
             // app.UseExceptionHandler(
@@ -85,10 +97,11 @@ namespace Palavyr.API
             //             });
             //     });
             app.UseMiddleware<ErrorHandlingMiddleware>();
+
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMiddleware<SetCancellationTokenTransport>();
             app.UseMiddleware<SetHeadersMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
-
 
             app.UseEndpoints(
                 endpoints =>

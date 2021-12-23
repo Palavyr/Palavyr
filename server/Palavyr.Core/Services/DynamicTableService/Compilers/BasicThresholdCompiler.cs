@@ -34,12 +34,12 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             this.responseRetriever = responseRetriever;
         }
 
-        public async Task UpdateConversationNode(DashContext dashContext, DynamicTable table, string tableId, string areaIdentifier, string accountId)
+        public async Task UpdateConversationNode(DashContext dashContext, DynamicTable table, string tableId, string areaIdentifier)
         {
             await Task.CompletedTask;
         }
 
-        public Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
+        public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
         {
             var nodeTypeOption = NodeTypeOption.Create(
                 dynamicTableMeta.MakeUniqueIdentifier(),
@@ -56,16 +56,16 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                 dynamicType: dynamicTableMeta.MakeUniqueIdentifier()
             );
             nodes.AddAdditionalNode(nodeTypeOption);
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
         {
             var dynamicResponseId = GetSingleResponseId(dynamicResponseIds);
             var responseValue = GetSingleResponseValue(dynamicResponseParts, dynamicResponseIds);
 
             var responseValueAsDouble = double.Parse(responseValue);
-            var allRows = await RetrieveAllAvailableResponses(accountId, dynamicResponseId);
+            var allRows = await RetrieveAllAvailableResponses(dynamicResponseId);
 
             var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(allRows.First().TableId);
 
@@ -97,7 +97,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
         public async Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents _)
         {
-            var thresholds = await base.repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
+            var thresholds = await repository.GetAllRowsMatchingDynamicResponseId(node.DynamicType);
             var currentResponseAsDouble = double.Parse(response);
             var isTooComplicated = thresholdEvaluator.EvaluateForFallback(currentResponseAsDouble, thresholds);
             return isTooComplicated;
@@ -136,23 +136,22 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
         {
             var tableId = dynamicTableMeta.TableId;
-            var accountId = dynamicTableMeta.AccountId;
             var areaId = dynamicTableMeta.AreaIdentifier;
-            var thresholds = await base.repository.GetAllRows(accountId, areaId, tableId);
+            var thresholds = await repository.GetAllRows(areaId, tableId);
             return ValidationLogic(thresholds, dynamicTableMeta.TableTag);
         }
 
-        public async Task<List<TableRow>> CreatePreviewData(string accountId, DynamicTableMeta tableMeta, Area area, CultureInfo culture)
+        public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area area, CultureInfo culture)
         {
-            var availableBasicThreshold = await responseRetriever.RetrieveAllAvailableResponses<BasicThreshold>(accountId, tableMeta.TableId);
+            var availableBasicThreshold = await responseRetriever.RetrieveAllAvailableResponses<BasicThreshold>(tableMeta.TableId);
             var responseParts = DynamicTableTypes.CreateBasicThreshold().CreateDynamicResponseParts(availableBasicThreshold.First().TableId, availableBasicThreshold.First().Threshold.ToString());
-            var currentRows = await CompileToPdfTableRow(area.AccountId, responseParts, new List<string>() {tableMeta.TableId}, culture);
+            var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() {tableMeta.TableId}, culture);
             return currentRows;
         }
 
-        public async Task<List<BasicThreshold>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId)
+        public async Task<List<BasicThreshold>> RetrieveAllAvailableResponses(string dynamicResponseId)
         {
-            return await GetAllRowsMatchingResponseId(accountId, dynamicResponseId);
+            return await GetAllRowsMatchingResponseId(dynamicResponseId);
         }
     }
 }

@@ -8,6 +8,7 @@ using Palavyr.Core.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Palavyr.Core.Models;
 using Palavyr.Core.Services.AuthenticationServices;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
@@ -28,13 +29,10 @@ namespace Palavyr.API.Controllers.Accounts.Settings
 
 
         [HttpGet("account/settings/intro-sequence")]
-        public async Task<ConversationNode[]> Get(
-            [FromHeader]
-            string accountId,
-            CancellationToken cancellationToken)
+        public async Task<ConversationNode[]> Get()
         {
-            var account = await accountRepository.GetAccount(accountId, cancellationToken);
-            var introConvo = await configurationRepository.GetIntroductionSequence(account.IntroductionId, cancellationToken);
+            var account = await accountRepository.GetAccount();
+            var introConvo = await configurationRepository.GetIntroductionSequence(account.IntroductionId);
             var intro = EndingSequence.CleanTheIntroConvoEnding(introConvo);
             return intro;
         }
@@ -45,31 +43,31 @@ namespace Palavyr.API.Controllers.Accounts.Settings
     {
         private readonly IConfigurationRepository configurationRepository;
         private readonly IAccountRepository repository;
+        private readonly IHoldAnAccountId accountIdHolder;
 
         public GetIntroductionIdController(
             IConfigurationRepository configurationRepository,
-            IAccountRepository repository
+            IAccountRepository repository,
+            IHoldAnAccountId accountIdHolder
         )
         {
             this.configurationRepository = configurationRepository;
             this.repository = repository;
+            this.accountIdHolder = accountIdHolder;
         }
 
         [HttpGet("account/settings/intro-id")]
-        public async Task<string> Get(
-            [FromHeader]
-            string accountId,
-            CancellationToken cancellationToken)
+        public async Task<string> Get()
         {
-            var account = await repository.GetAccount(accountId, cancellationToken);
+            var account = await repository.GetAccount();
             if (account.IntroductionId == null || string.IsNullOrEmpty(account.IntroductionId))
             {
                 var newId = new GuidUtils().CreateNewId();
                 account.IntroductionId = newId;
                 await repository.CommitChangesAsync();
 
-                var introSequence = ConversationNode.CreateDefaultRootNode(newId, accountId);
-                await configurationRepository.CreateIntroductionSequence(introSequence, cancellationToken);
+                var introSequence = ConversationNode.CreateDefaultRootNode(newId,  accountIdHolder.AccountId);
+                await configurationRepository.CreateIntroductionSequence(introSequence);
                 await configurationRepository.CommitChangesAsync();
                 return newId;
             }
@@ -79,18 +77,16 @@ namespace Palavyr.API.Controllers.Accounts.Settings
 
         [HttpPost("account/settings/intro-id")]
         public async Task<ConversationNode[]> Post(
-            [FromHeader]
-            string accountId,
             [FromBody]
-            ConversationNodeDto update,
-            CancellationToken cancellationToken)
+            ConversationNodeDto update)
         {
-            var account = await repository.GetAccount(accountId, cancellationToken);
+            var account = await repository.GetAccount();
+            var accountId = accountIdHolder.AccountId;
             foreach (var node in update.Transactions)
             {
                 node.AccountId = accountId;
             }
-            var updatedConvo = await configurationRepository.UpdateIntroductionSequence(account.IntroductionId, update.Transactions, cancellationToken);
+            var updatedConvo = await configurationRepository.UpdateIntroductionSequence(account.IntroductionId, update.Transactions);
             return updatedConvo;
         }
     }

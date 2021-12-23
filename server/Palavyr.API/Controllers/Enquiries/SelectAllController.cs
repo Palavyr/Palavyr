@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Palavyr.Core.Repositories;
 
 
@@ -19,11 +17,9 @@ namespace Palavyr.API.Controllers.Enquiries
         }
 
         [HttpPost("enquiries/selectall")]
-        public async Task SelectAll(
-            [FromHeader]
-            string accountId)
+        public async Task SelectAll()
         {
-            var allRecords = await convoHistoryRepository.GetAllConversationRecords(accountId);
+            var allRecords = await convoHistoryRepository.GetAllConversationRecords();
             foreach (var conversationRecord in allRecords)
             {
                 conversationRecord.Seen = true;
@@ -35,11 +31,9 @@ namespace Palavyr.API.Controllers.Enquiries
 
 
         [HttpPost("enquiries/unselectall")]
-        public async Task UnSelectAll(
-            [FromHeader]
-            string accountId)
+        public async Task UnSelectAll()
         {
-            var allRecords = await convoHistoryRepository.GetAllConversationRecords(accountId);
+            var allRecords = await convoHistoryRepository.GetAllConversationRecords();
             foreach (var conversationRecord in allRecords)
             {
                 conversationRecord.Seen = false;

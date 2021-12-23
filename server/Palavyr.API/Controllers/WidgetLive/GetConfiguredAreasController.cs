@@ -26,11 +26,11 @@ namespace Palavyr.API.Controllers.WidgetLive
         }
 
         [HttpGet("widget/areas")]
-        public async Task<List<Area>> Get([FromHeader] string accountId)
+        public async Task<List<Area>> Get()
         {
             logger.LogDebug("Collecting configured areas for live-widget");
 
-            var activeAreas = await configurationRepository.GetActiveAreas(accountId);
+            var activeAreas = await configurationRepository.GetActiveAreas();
             return activeAreas;
         }
     }

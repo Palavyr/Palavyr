@@ -12,12 +12,13 @@ using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Services.AmazonServices;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.TemporaryPaths;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.AttachmentServices
 {
     public interface IAttachmentSaver
     {
-        Task<FileLink> SaveAttachment(string accountId, string areaId, IFormFile attachmentFile);
+        Task<FileLink> SaveAttachment(string areaId, IFormFile attachmentFile);
     }
 
     public class AttachmentSaver : IAttachmentSaver
@@ -31,6 +32,7 @@ namespace Palavyr.Core.Services.AttachmentServices
         private readonly ITemporaryPath temporaryPath;
         private readonly ILocalIo localIo;
         private readonly IGuidUtils guidUtils;
+        private readonly IHoldAnAccountId accountIdHolder;
 
         public AttachmentSaver(
             IS3Saver s3Saver,
@@ -41,7 +43,8 @@ namespace Palavyr.Core.Services.AttachmentServices
             ILinkCreator linkCreator,
             ITemporaryPath temporaryPath,
             ILocalIo localIo,
-            IGuidUtils guidUtils
+            IGuidUtils guidUtils,
+            IHoldAnAccountId accountIdHolder
         )
         {
             this.s3Saver = s3Saver;
@@ -53,16 +56,17 @@ namespace Palavyr.Core.Services.AttachmentServices
             this.temporaryPath = temporaryPath;
             this.localIo = localIo;
             this.guidUtils = guidUtils;
+            this.accountIdHolder = accountIdHolder;
         }
 
-        public async Task<FileLink> SaveAttachment(string accountId, string areaId, IFormFile attachmentFile)
+        public async Task<FileLink> SaveAttachment(string areaId, IFormFile attachmentFile)
         {
             var userDataBucket = configuration.GetUserDataBucket();
             var safeFileName = guidUtils.CreateNewId();
             var riskyFileName = attachmentFile.FileName;
-            var s3AttachmentKey = s3KeyResolver.ResolveAttachmentKey(accountId, areaId, safeFileName);
+            var s3AttachmentKey = s3KeyResolver.ResolveAttachmentKey(areaId, safeFileName);
 
-            var fileNameMap = FileNameMap.CreateFileMap(safeFileName, riskyFileName, s3AttachmentKey, accountId, areaId);
+            var fileNameMap = FileNameMap.CreateFileMap(safeFileName, riskyFileName, s3AttachmentKey, accountIdHolder.AccountId, areaId);
             var localTempSafeFile = temporaryPath.CreateLocalTempSafeFile();
 
             await localIo.SaveFile(localTempSafeFile.S3Key, attachmentFile);

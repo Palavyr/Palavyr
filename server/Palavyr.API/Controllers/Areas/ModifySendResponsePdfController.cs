@@ -18,14 +18,13 @@ namespace Palavyr.API.Controllers.Areas
 
         [HttpPost(Route)]
         public async Task<bool> Post(
-            [FromHeader] string accountId,
             [FromRoute] string areaId,
             CancellationToken cancellationToken)
         {
-            var area = await configurationRepository.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(areaId);
             var newState = !area.SendPdfResponse;
             area.SendPdfResponse = newState;
-            await configurationRepository.CommitChangesAsync(cancellationToken);
+            await configurationRepository.CommitChangesAsync();
             return newState;
         }
     }

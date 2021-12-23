@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.GlobalConstants;
+using Palavyr.Core.Repositories;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.CustomMiddleware
 {
@@ -26,23 +29,25 @@ namespace Palavyr.API.CustomMiddleware
             this.logger = logger;
         }
 
-        public async Task InvokeAsync(HttpContext context, IWebHostEnvironment env, AccountsContext accountContext)
+        public async Task InvokeAsync(HttpContext context, IWebHostEnvironment env, AccountsContext accountContext, IMediator mediator, IAccountRepository accountRepository)
         {
+            // This must co
+
             logger.LogDebug("Settings magic string headers...");
             var action = context.Request.Headers[ApplicationConstants.MagicUrlStrings.Action].ToString();
 
             if (action == ApplicationConstants.MagicUrlStrings.SessionAction)
             {
                 logger.LogDebug("Session action detected. Searching for the session Id...");
-                var sessionId = context.Request.Headers[ApplicationConstants.MagicUrlStrings.SessionId].ToString();
-                if (!string.IsNullOrWhiteSpace(sessionId))
+                var sessionId = context.Request.Headers[ApplicationConstants.MagicUrlStrings.SessionId].ToString().Trim();
+                if (!string.IsNullOrEmpty(sessionId))
                 {
                     logger.LogDebug("Session Id found - performing looking in the persistence store...");
-                    var session = accountContext.Sessions.SingleOrDefault(row => row.SessionId == sessionId);
+                    var session = await accountRepository.GetSessionOrNull(sessionId);
                     if (session != null)
                     {
                         logger.LogDebug("Session found. Assigning account Id to the Request Header.");
-                        context.Request.Headers[ApplicationConstants.MagicUrlStrings.AccountId] = session.AccountId;
+                        await mediator.Publish(new SetAccountEvent(session.AccountId), context.RequestAborted);
                     }
                 }
             }
@@ -62,6 +67,33 @@ namespace Palavyr.API.CustomMiddleware
 
             await next(context);
             Console.WriteLine("On the way out!");
+        }
+    }
+
+
+    public class SetAccountEvent : INotification
+    {
+        public string SessionAccountId { get; }
+
+        public SetAccountEvent(string sessionAccountId)
+        {
+            SessionAccountId = sessionAccountId;
+        }
+    }
+
+    public class SetAccountHandler : INotificationHandler<SetAccountEvent>
+    {
+        private readonly IHoldAnAccountId accountIdHolder;
+
+        public SetAccountHandler(IHoldAnAccountId accountIdHolder)
+        {
+            this.accountIdHolder = accountIdHolder;
+        }
+
+        public async Task Handle(SetAccountEvent notification, CancellationToken cancellationToken)
+        {
+            accountIdHolder.Assign(notification.SessionAccountId);
+            await Task.CompletedTask;
         }
     }
 }

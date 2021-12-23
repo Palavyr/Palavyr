@@ -32,11 +32,10 @@ namespace Palavyr.API.Controllers.Accounts
 
         [HttpPost("configure-conversations/ensure-db-valid")]
         public async Task Ensure(
-            [FromHeader]
-            string accountId,
+
             CancellationToken cancellationToken)
         {
-            var preferences = await configurationRepository.GetWidgetPreferences(accountId);
+            var preferences = await configurationRepository.GetWidgetPreferences();
             
             if (string.IsNullOrWhiteSpace(preferences.ChatHeader))
             {

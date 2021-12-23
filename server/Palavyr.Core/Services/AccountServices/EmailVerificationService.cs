@@ -11,13 +11,14 @@ using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.StripeServices;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.AccountServices
 {
     public interface IEmailVerificationService
     {
         Task<bool> ConfirmEmailAddressAsync(string authToken, CancellationToken cancellationToken);
-        Task<bool> SendConfirmationTokenEmail(string emailAddress, string accountId, CancellationToken cancellationToken);
+        Task<bool> SendConfirmationTokenEmail(string emailAddress, CancellationToken cancellationToken);
     }
 
     public class EmailVerificationService : IEmailVerificationService
@@ -28,6 +29,7 @@ namespace Palavyr.Core.Services.AccountServices
         private readonly ISesEmail emailClient;
         private readonly IGuidUtils guidUtils;
         private readonly IEmailVerificationStatus emailVerificationStatus;
+        private readonly IHoldAnAccountId accountIdHolder;
         private StripeCustomerService stripeCustomerService;
 
         public EmailVerificationService(
@@ -37,7 +39,8 @@ namespace Palavyr.Core.Services.AccountServices
             IRequestEmailVerification requestEmailVerification,
             ISesEmail emailClient,
             IGuidUtils guidUtils,
-            IEmailVerificationStatus emailVerificationStatus
+            IEmailVerificationStatus emailVerificationStatus,
+            IHoldAnAccountId accountIdHolder
         )
         {
             this.stripeCustomerService = stripeCustomerService;
@@ -47,6 +50,7 @@ namespace Palavyr.Core.Services.AccountServices
             this.emailClient = emailClient;
             this.guidUtils = guidUtils;
             this.emailVerificationStatus = emailVerificationStatus;
+            this.accountIdHolder = accountIdHolder;
         }
 
         public async Task<bool> ConfirmEmailAddressAsync(string authToken, CancellationToken cancellationToken)
@@ -100,12 +104,12 @@ namespace Palavyr.Core.Services.AccountServices
             return false;
         }
 
-        public async Task<bool> SendConfirmationTokenEmail(string emailAddress, string accountId, CancellationToken cancellationToken)
+        public async Task<bool> SendConfirmationTokenEmail(string emailAddress, CancellationToken cancellationToken)
         {
             // prepare the account confirmation email
             logger.LogDebug("Provide an account setup confirmation token");
             var confirmationToken = guidUtils.CreateShortenedGuid(1);
-            await accountsContext.EmailVerifications.AddAsync(EmailVerification.CreateNew(confirmationToken, emailAddress, accountId));
+            await accountsContext.EmailVerifications.AddAsync(EmailVerification.CreateNew(confirmationToken, emailAddress, accountIdHolder.AccountId));
             await accountsContext.SaveChangesAsync(cancellationToken);
 
             logger.LogDebug($"Sending emails from {EmailConstants.PalavyrMainEmailAddress}");

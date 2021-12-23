@@ -20,7 +20,7 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
         }
 
         [HttpPost("payments/customer-portal")]
-        public async Task<string> Create([FromHeader] string accountId, [FromBody] CustomerPortalRequest request)
+        public async Task<string> Create([FromBody] CustomerPortalRequest request)
         {
             var portalUrl = await stripeCustomerManagementPortalService.FormCustomerSubscriptionManagementPortalUrl(request.CustomerId, request.ReturnUrl);
             return portalUrl;

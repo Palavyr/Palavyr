@@ -7,12 +7,13 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
 using Palavyr.Core.Services.AmazonServices.S3Service;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.Deletion
 {
     public interface IAreaDeleter
     {
-        Task DeleteArea(string accountId, string areaId, CancellationToken cancellationToken);
+        Task DeleteArea(string areaId, CancellationToken cancellationToken);
     }
 
     public class AreaDeleter : IAreaDeleter
@@ -21,24 +22,27 @@ namespace Palavyr.Core.Services.Deletion
         private readonly IS3Deleter s3Deleter;
         private readonly IConfiguration configuration;
         private readonly ILogger<IAreaDeleter> logger;
+        private readonly IHoldAnAccountId accountIdHolder;
 
         public AreaDeleter(
             DashContext dashContext,
             IS3Deleter s3Deleter,
             IConfiguration configuration,
-            ILogger<IAreaDeleter> logger
+            ILogger<IAreaDeleter> logger, 
+            IHoldAnAccountId accountIdHolder
         )
         {
             this.dashContext = dashContext;
             this.s3Deleter = s3Deleter;
             this.configuration = configuration;
             this.logger = logger;
+            this.accountIdHolder = accountIdHolder;
         }
 
-        public async Task DeleteArea(string accountId, string areaId, CancellationToken cancellationToken)
+        public async Task DeleteArea(string areaId, CancellationToken cancellationToken)
         {
-            await DeleteS3Data(accountId, areaId, cancellationToken);
-            DeleteDatabaseEntries(accountId, areaId);
+            await DeleteS3Data(accountIdHolder.AccountId, areaId, cancellationToken);
+            DeleteDatabaseEntries( accountIdHolder.AccountId, areaId);
 
             try
             {
@@ -47,7 +51,7 @@ namespace Palavyr.Core.Services.Deletion
             catch
             {
                 logger.LogCritical($"Area Data NOT Deleted.");
-                logger.LogCritical($"Unable to delete the area folder for {accountId} under areaId {areaId}.");
+                logger.LogCritical($"Unable to delete the area folder for {accountIdHolder.AccountId} under areaId {areaId}.");
             }
         }
 

@@ -39,7 +39,7 @@ namespace Palavyr.Core.Services.AccountServices
             await CreateNewSubscription(accountId, apiKey);
             await InstallSeedData(accountId, emailAddress, introId);
 
-            var result = await emailVerificationService.SendConfirmationTokenEmail(emailAddress, accountId, cancellationToken);
+            var result = await emailVerificationService.SendConfirmationTokenEmail(emailAddress, cancellationToken);
             return result;
         }
 

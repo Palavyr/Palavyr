@@ -27,10 +27,10 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         }
 
         [HttpGet("configure-conversations/{areaId}/node-type-options")]
-        public async Task<NodeTypeOption[]> Get([FromHeader] string accountId, [FromRoute] string areaId)
+        public async Task<NodeTypeOption[]> Get([FromRoute] string areaId)
         {
-            var dynamicTableMetas = await configurationRepository.GetDynamicTableMetas(accountId, areaId);
-            var dynamicTableData = await dynamicTableCompilerOrchestrator.CompileTablesToConfigurationNodes(dynamicTableMetas, accountId, areaId);
+            var dynamicTableMetas = await configurationRepository.GetDynamicTableMetas(areaId);
+            var dynamicTableData = await dynamicTableCompilerOrchestrator.CompileTablesToConfigurationNodes(dynamicTableMetas, areaId);
             var defaultNodeTypeOptions = DefaultNodeTypeOptions.DefaultNodeTypeOptionsList;
 
             var fullNodeTypeOptionsList = defaultNodeTypeOptions.AddAdditionalNodes(dynamicTableData);
@@ -39,7 +39,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         }
 
         [HttpGet("configure-intro/{introId}/node-type-options")]
-        public async Task<NodeTypeOption[]> GetIntro([FromHeader] string accountId, [FromRoute] string introId, CancellationToken cancellationToken)
+        public async Task<NodeTypeOption[]> GetIntro([FromRoute] string introId, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
             var introOptionList = DefaultNodeTypeOptions.IntroNodeOptionList;

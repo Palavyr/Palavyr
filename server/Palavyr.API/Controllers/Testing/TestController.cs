@@ -1,10 +1,14 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Palavyr.Core.Mediator;
 
 namespace Palavyr.API.Controllers.Testing
 {
+    [AllowAnonymous]
     public class TestController : PalavyrBaseController
     {
         private readonly TestDataProvider testDataProvider;
@@ -14,11 +18,9 @@ namespace Palavyr.API.Controllers.Testing
             this.testDataProvider = testDataProvider;
         }
 
-        [AllowAnonymous]
         [HttpGet("test")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ResponseCache(Duration = 300)]        
-        public IReadOnlyCollection<string> Test()
+        public async Task<IReadOnlyCollection<string>> Test()// Task<IReadOnlyCollection<string>> Test()
         {
             var testData = testDataProvider.ProvideData();
             return testData;

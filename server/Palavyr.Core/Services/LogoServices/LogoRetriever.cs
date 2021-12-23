@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
@@ -10,7 +9,7 @@ namespace Palavyr.Core.Services.LogoServices
 {
     public interface ILogoRetriever
     {
-        Task<string?> GetLogo(string accountId, CancellationToken cancellationToken);
+        Task<string?> GetLogo();
     }
 
     public class LogoRetriever : ILogoRetriever
@@ -30,9 +29,9 @@ namespace Palavyr.Core.Services.LogoServices
             this.linkCreator = linkCreator;
         }
 
-        public async Task<string?> GetLogo(string accountId, CancellationToken cancellationToken)
+        public async Task<string?> GetLogo()
         {
-            var account = await accountRepository.GetAccount(accountId, cancellationToken);
+            var account = await accountRepository.GetAccount();
             var s3Key = account.AccountLogoUri;
             var userDataBucket = configuration.GetUserDataBucket();
 

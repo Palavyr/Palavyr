@@ -53,7 +53,7 @@ namespace Palavyr.Core.Services.StripeServices
                     tolerance: 150
                 );
                 
-                if (accountRepository.SignedStripePayloadExists(signedPayload))
+                if (await accountRepository.SignedStripePayloadExists(signedPayload))
                 {
                     throw new Exception($"Webhook already processed and recorded in the Webhook Records Table: {eventPayload.Data}");
                 }

@@ -19,13 +19,11 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
 
         [HttpPut("widget-config/preferences")]
         public async Task<WidgetPreference> SaveWidgetPreferences(
-            [FromHeader]
-            string accountId,
             [FromBody]
             WidgetPreference preferences
         )
         {
-            var prefs = await configurationRepository.GetWidgetPreferences(accountId);
+            var prefs = await configurationRepository.GetWidgetPreferences();
 
             if (!string.IsNullOrWhiteSpace(preferences.SelectListColor))
             {
@@ -99,7 +97,7 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
 
             await configurationRepository.CommitChangesAsync();
 
-            return await configurationRepository.GetWidgetPreferences(accountId);
+            return await configurationRepository.GetWidgetPreferences();
         }
     }
 }

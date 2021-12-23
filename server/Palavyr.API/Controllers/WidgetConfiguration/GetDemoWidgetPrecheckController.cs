@@ -27,12 +27,12 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
         }
 
         [HttpGet("widget-config/demo/pre-check")]
-        public async Task<PreCheckResult> Get([FromHeader] string accountId)
+        public async Task<PreCheckResult> Get()
         {
-            var widgetPrefs = await configurationRepository.GetWidgetPreferences(accountId);
-            var areas = await configurationRepository.GetActiveAreasWithConvoAndDynamicAndStaticTables(accountId);
+            var widgetPrefs = await configurationRepository.GetWidgetPreferences();
+            var areas = await configurationRepository.GetActiveAreasWithConvoAndDynamicAndStaticTables();
 
-            var result = await widgetStatusChecker.ExecuteWidgetStatusCheck(accountId, areas, widgetPrefs, true, logger);
+            var result = await widgetStatusChecker.ExecuteWidgetStatusCheck(areas, widgetPrefs, true, logger);
             logger.LogDebug($"Pre-check run successful.");
             logger.LogDebug($"Ready result:{result.IsReady}");
             logger.LogDebug($"Incomplete areas: {result.PreCheckErrors.Select(x => x.AreaName).ToList()}");

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Models.Configuration.Constant;
@@ -15,7 +14,6 @@ namespace Palavyr.Core.Models
     public interface IWidgetStatusChecker
     {
         Task<PreCheckResult> ExecuteWidgetStatusCheck(
-            string accountId,
             List<Area> areas,
             WidgetPreference widgetPreferences,
             bool demo,
@@ -51,7 +49,6 @@ namespace Palavyr.Core.Models
         }
 
         public async Task<PreCheckResult> ExecuteWidgetStatusCheck(
-            string accountId,
             List<Area> areas,
             WidgetPreference widgetPreferences,
             bool demo,
@@ -63,11 +60,11 @@ namespace Palavyr.Core.Models
             // user may simply wish to collect 'num individuals'
 
             logger.LogDebug("Collected areas.... running pre-check");
-            var result = await StatusCheck(accountId, areas, widgetState, demo, logger);
+            var result = await StatusCheck(areas, widgetState, demo, logger);
             return result;
         }
 
-        private async Task<PreCheckResult> StatusCheck(string accountId, List<Area> areas, bool widgetState, bool demo, ILogger logger)
+        private async Task<PreCheckResult> StatusCheck(List<Area> areas, bool widgetState, bool demo, ILogger logger)
         {
             logger.LogDebug("Attempting RunConversationsPreCheck...");
 
@@ -85,7 +82,7 @@ namespace Palavyr.Core.Models
                 AreaName = generalName
             };
 
-            var allRequiredIntroNodesArePresent = await AllIntroRequiredIntroNodesArePresent(accountId, introError);
+            var allRequiredIntroNodesArePresent = await AllIntroRequiredIntroNodesArePresent(introError);
             if (!allRequiredIntroNodesArePresent)
             {
                 isReady = false;
@@ -173,13 +170,13 @@ namespace Palavyr.Core.Models
         }
 
 
-        private async Task<bool> AllIntroRequiredIntroNodesArePresent(string accountId, PreCheckError error)
+        private async Task<bool> AllIntroRequiredIntroNodesArePresent(PreCheckError error)
         {
             var isReady = true;
-            var account = await accountRepository.GetAccount(accountId, CancellationToken.None);
+            var account = await accountRepository.GetAccount();
             var introId = account.IntroductionId;
 
-            var introSequence = await configurationRepository.GetIntroductionSequence(introId, CancellationToken.None);
+            var introSequence = await configurationRepository.GetIntroductionSequence(introId);
             if (!introSequence.Select(x => x.NodeType).Contains(DefaultNodeTypeOptions.Selection.StringName))
             {
                 isReady = false;

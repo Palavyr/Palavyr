@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Data;
@@ -17,8 +18,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic.Meta
 
         [HttpPut("tables/dynamic/modify")]
         public async Task<IActionResult> Modify(
-            [FromHeader] string accountId,
-            [FromBody] DynamicTableMeta dynamicTableMeta)
+            [FromBody] DynamicTableMeta dynamicTableMeta, CancellationToken cancellationToken)
         {
             if (dynamicTableMeta.Id == null)
             {

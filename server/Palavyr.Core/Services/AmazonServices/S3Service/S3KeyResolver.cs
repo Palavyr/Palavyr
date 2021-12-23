@@ -1,42 +1,50 @@
 ﻿using System.IO;
 using Palavyr.Core.Common.ExtensionMethods.PathExtensions;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.AmazonServices.S3Service
 {
     public interface IS3KeyResolver
     {
-        string ResolveAttachmentKey(string accountId, string areaId, string safeFileName);
-        string ResolvePreviewKey(string accountId, string safeFileName);
-        string ResolveLogoKey(string account, string safeFileName, string fileExtension);
-        string ResolveResponsePdfKey(string account, string safeFileName);
-        string ResolveImageKey(string account, string safeName);
+        string ResolveAttachmentKey(string areaId, string safeFileName);
+        string ResolvePreviewKey(string safeFileName);
+        string ResolveLogoKey(string safeFileName, string fileExtension);
+        string ResolveResponsePdfKey(string safeFileName);
+        string ResolveImageKey(string safeName);
     }
 
     public class S3KeyResolver : IS3KeyResolver
     {
-        public string ResolveAttachmentKey(string accountId, string areaId, string safeFileName)
+        private readonly IHoldAnAccountId accountId;
+
+        public S3KeyResolver(IHoldAnAccountId accountId)
         {
-            return Path.Combine(accountId, "AreaData", areaId, "Attachments", safeFileName + ".pdf").ConvertToUnix();
+            this.accountId = accountId;
         }
 
-        public string ResolvePreviewKey(string accountId, string safeFileName)
+        public string ResolveAttachmentKey(string areaId, string safeFileName)
         {
-            return Path.Combine(accountId, "Previews", safeFileName + ".pdf").ConvertToUnix();
+            return Path.Combine(accountId.AccountId, "AreaData", areaId, "Attachments", safeFileName + ".pdf").ConvertToUnix();
         }
 
-        public string ResolveLogoKey(string account, string safeFileName, string fileExtension)
+        public string ResolvePreviewKey(string safeFileName)
         {
-            return Path.Combine(account, "Logos", safeFileName + fileExtension).ConvertToUnix();
+            return Path.Combine(accountId.AccountId, "Previews", safeFileName + ".pdf").ConvertToUnix();
         }
 
-        public string ResolveResponsePdfKey(string account, string safeFileName)
+        public string ResolveLogoKey(string safeFileName, string fileExtension)
         {
-            return Path.Combine(account, "Responses", safeFileName + ".pdf").ConvertToUnix();
+            return Path.Combine(accountId.AccountId, "Logos", safeFileName + fileExtension).ConvertToUnix();
         }
 
-        public string ResolveImageKey(string account, string safeName) // safename includes extension
+        public string ResolveResponsePdfKey(string safeFileName)
         {
-            return Path.Combine(account, "Images", safeName).ConvertToUnix();
+            return Path.Combine(accountId.AccountId, "Responses", safeFileName + ".pdf").ConvertToUnix();
+        }
+
+        public string ResolveImageKey(string safeName) // safename includes extension
+        {
+            return Path.Combine(accountId.AccountId, "Images", safeName).ConvertToUnix();
         }
     }
 }

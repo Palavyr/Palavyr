@@ -21,9 +21,9 @@ namespace Palavyr.API.Controllers.Enquiries
         }
 
         [HttpGet("enquiries")]
-        public async Task<Enquiry[]> Get([FromHeader] string accountId)
+        public async Task<Enquiry[]> Get()
         {
-            return await conversationRecordRetriever.RetrieveConversationRecords(accountId);
+            return await conversationRecordRetriever.RetrieveConversationRecords();
         }
     }
 }

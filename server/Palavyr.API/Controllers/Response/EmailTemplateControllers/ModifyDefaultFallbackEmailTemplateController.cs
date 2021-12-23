@@ -1,32 +1,34 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
+using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
 {
 
     public class ModifyDefaultFallbackEmailTemplateController : PalavyrBaseController
     {
-        private AccountsContext accountContext;
         private ILogger<ModifyDefaultFallbackEmailTemplateController> logger;
+        private readonly IAccountRepository accountRepository;
 
         public ModifyDefaultFallbackEmailTemplateController(
             ILogger<ModifyDefaultFallbackEmailTemplateController> logger,
-            AccountsContext accountContext
+            IAccountRepository accountRepository
         )
         {
             this.logger = logger;
-            this.accountContext = accountContext;
+            this.accountRepository = accountRepository;
         }
 
         [HttpPut("email/fallback/default-email-template")]
-        public async Task<string> Modify([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] DefaultEmailTemplateRequest request)
+        public async Task<string> Modify([FromRoute] string areaId, [FromBody] DefaultEmailTemplateRequest request)
         {
-            var account = await accountContext.Accounts.SingleAsync(row => row.AccountId == accountId);
+            var account = await accountRepository.GetAccount();
             account.GeneralFallbackEmailTemplate = request.EmailTemplate;
-            await accountContext.SaveChangesAsync();
+            await accountRepository.CommitChangesAsync();
             return account.GeneralFallbackEmailTemplate;
         }
     }

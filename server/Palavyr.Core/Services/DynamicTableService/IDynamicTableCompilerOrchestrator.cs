@@ -11,17 +11,12 @@ namespace Palavyr.Core.Services.DynamicTableService
     public interface IDynamicTableCompilerOrchestrator
     {
         Task<List<Table>> CompileTablesToPdfRows(
-            string accountId,
             DynamicResponses dynamicResponses,
             CultureInfo culture,
             bool includeTotals
         );
 
-        Task<List<NodeTypeOption>> CompileTablesToConfigurationNodes(
-            IEnumerable<DynamicTableMeta> dynamicTableMetas,
-            string accountId,
-            string areaId
-        );
+        Task<List<NodeTypeOption>> CompileTablesToConfigurationNodes(IEnumerable<DynamicTableMeta> dynamicTableMetas, string areaId);
 
         Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents);
         Task<List<PricingStrategyValidationResult>> ValidatePricingStrategies(List<DynamicTableMeta> pricingStrategyMetas);

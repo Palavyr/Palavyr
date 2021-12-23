@@ -25,12 +25,11 @@ namespace Palavyr.API.Controllers.Areas
 
         [HttpDelete("areas/delete/{areaId}")]
         public async Task Delete(
-            [FromHeader] string accountId,
             [FromRoute] string areaId,
             CancellationToken cancellationToken
         )
         {
-            await areaDeleter.DeleteArea(accountId, areaId, cancellationToken);
+            await areaDeleter.DeleteArea(areaId, cancellationToken);
         }
     }
 }

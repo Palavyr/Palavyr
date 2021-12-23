@@ -26,16 +26,15 @@ namespace Palavyr.API.Controllers.Attachments
         [ActionName("Decode")]
         public async Task<FileLink[]> SaveMany(
             [FromRoute] string areaId,
-            [FromHeader] string accountId,
             [FromForm(Name = "files")] IList<IFormFile> attachmentFiles,
             CancellationToken cancellationToken
         )
         {
             foreach (var attachmentFile in attachmentFiles)
             {
-                await attachmentSaver.SaveAttachment(accountId, areaId, attachmentFile);
+                await attachmentSaver.SaveAttachment(areaId, attachmentFile);
             }
-            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(accountId, areaId, cancellationToken);
+            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(areaId, cancellationToken);
             return attachmentFileLinks;
         }
     }

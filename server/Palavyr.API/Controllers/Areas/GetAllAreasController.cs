@@ -22,10 +22,10 @@ namespace Palavyr.API.Controllers.Areas
         }
         
         [HttpGet("areas")]
-        public async Task<List<Area>> Get([FromHeader] string accountId)
+        public async Task<List<Area>> Get()
         {
             logger.LogDebug("Return all areas");
-            var areas = await configurationRepository.GetAllAreasShallow(accountId);
+            var areas = await configurationRepository.GetAllAreasShallow();
             return areas;
         }
     }

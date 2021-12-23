@@ -75,7 +75,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
                 new GuidUtils(),
                 registrationMaker
             );
-            emailVerificationService.SendConfirmationTokenEmail(testEmail, testAccount, CancellationToken.None).Returns(true);
+            emailVerificationService.SendConfirmationTokenEmail(testEmail, CancellationToken.None).Returns(true);
             jwtService.GenerateJwtTokenAfterAuthentication(testEmail).Returns(jwtToken);
 
             var credentialsResult = await accountSetupService.CreateNewAccountViaGoogleAsync(googleCredentials, CancellationToken.None);

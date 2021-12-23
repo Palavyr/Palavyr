@@ -20,14 +20,13 @@ namespace Palavyr.API.Controllers.WidgetLive
             this.responseEmailSender = responseEmailSender;
         }
 
-        public async Task<SendEmailResultResponse> HandleSendWidgetResponseEmail(EmailRequest emailRequest, string accountId, string areaId, CancellationToken cancellationToken)
+        public async Task<SendEmailResultResponse> HandleSendWidgetResponseEmail(EmailRequest emailRequest, string areaId, CancellationToken cancellationToken)
         {
             var convoRecord = await convoRepository.GetConversationRecordById(emailRequest.ConversationId);
             var updatedRecord = convoRecord.ApplyEmailRequest(emailRequest);
             await convoRepository.UpdateConversationRecord(updatedRecord);
 
             var resultResponse = await responseEmailSender.SendEmail(
-                accountId,
                 areaId,
                 emailRequest,
                 cancellationToken

@@ -16,12 +16,9 @@ namespace Palavyr.API.Controllers.Enquiries
         }
 
         [HttpPut(Route)]
-        public async Task<bool> Put(
-            [FromHeader]
-            string accountId,
-            CancellationToken cancellationToken)
+        public async Task<bool> Put()
         {
-            var account = await repository.GetAccount(accountId, cancellationToken);
+            var account = await repository.GetAccount();
 
             var newValue = !account.ShowSeenEnquiries;
             account.ShowSeenEnquiries = newValue;

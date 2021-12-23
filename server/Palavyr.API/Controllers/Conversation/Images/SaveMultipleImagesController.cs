@@ -22,8 +22,7 @@ namespace Palavyr.API.Controllers.Conversation.Images
         [HttpPost(Route)]
         [ActionName("Decode")]
         public async Task<FileLink[]> SaveMany(
-            [FromHeader]
-            string accountId,
+
             [FromForm(Name = "files")]
             List<IFormFile> imageFiles,
             CancellationToken cancellationToken)
@@ -31,7 +30,7 @@ namespace Palavyr.API.Controllers.Conversation.Images
             var imageFileLinks = new List<FileLink>();
             foreach (var imageFile in imageFiles)
             {
-                var fileLink = await imageSaver.SaveImage(accountId, imageFile, cancellationToken);
+                var fileLink = await imageSaver.SaveImage(imageFile, cancellationToken);
                 imageFileLinks.Add(fileLink);
             }
 

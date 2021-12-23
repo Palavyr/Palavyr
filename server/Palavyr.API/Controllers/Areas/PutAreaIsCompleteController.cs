@@ -17,9 +17,9 @@ namespace Palavyr.API.Controllers.Areas
         }
 
         [HttpPut("areas/{areaId}/area-toggle")]
-        public async Task<bool> Put([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] PutAreaIsCompleteRequest request)
+        public async Task<bool> Put([FromRoute] string areaId, [FromBody] PutAreaIsCompleteRequest request)
         {
-            var area = await configurationRepository.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(areaId);
             area.IsEnabled = request.IsEnabled;
             await configurationRepository.CommitChangesAsync();
             return area.IsEnabled;

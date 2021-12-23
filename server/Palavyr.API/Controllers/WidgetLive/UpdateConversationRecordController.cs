@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,11 +24,9 @@ namespace Palavyr.API.Controllers.WidgetLive
 
         [HttpPost("widget/record")]
         public async Task<IActionResult> Post(
-            [FromHeader]
-            string accountId,
-            ConversationRecordUpdate convo)
+            ConversationRecordUpdate convo, CancellationToken cancellationToken)
         {
-            await updateHandler.UpdateConversationRecord(accountId, convo);
+            await updateHandler.UpdateConversationRecord(convo);
             return NoContent();
         }
     }

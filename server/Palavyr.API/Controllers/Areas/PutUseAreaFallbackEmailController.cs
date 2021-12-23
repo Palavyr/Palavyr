@@ -15,9 +15,9 @@ namespace Palavyr.API.Controllers.Areas
         }
 
         [HttpPut("areas/{areaId}/use-fallback-email-toggle")]
-        public async Task<bool> Put([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] PutUseAreaFallbackRequest request)
+        public async Task<bool> Put([FromRoute] string areaId, [FromBody] PutUseAreaFallbackRequest request)
         {
-            var area = await configurationRepository.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(areaId);
             area.UseAreaFallbackEmail = request.UseFallback;
             await configurationRepository.CommitChangesAsync();
             return area.UseAreaFallbackEmail;

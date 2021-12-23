@@ -46,7 +46,7 @@ namespace Palavyr.API.Controllers.Authentication.PasswordReset
             var accountId = account.AccountId;
             var apiKey = account.ApiKey;
 
-            await accountRepository.CreateAndAddNewSession(token, accountId, apiKey);
+            await accountRepository.CreateAndAddNewSession(token, apiKey);
 
             var link = request.ResetPasswordLinkTemplate + token;
 

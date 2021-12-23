@@ -24,13 +24,12 @@ namespace Palavyr.API.Controllers.Attachments
         [HttpPost("attachments/{areaId}/save-one")]
         [ActionName("Decode")]
         public async Task<FileLink[]> SaveSingle(
-            [FromHeader] string accountId,
             [FromRoute] string areaId,
             [FromForm(Name = "files")] IFormFile attachmentFile,
             CancellationToken cancellationToken)
         {
-            await attachmentSaver.SaveAttachment(accountId, areaId, attachmentFile);
-            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(accountId, areaId, cancellationToken);
+            await attachmentSaver.SaveAttachment(areaId, attachmentFile);
+            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(areaId, cancellationToken);
             return attachmentFileLinks;
         }
     }

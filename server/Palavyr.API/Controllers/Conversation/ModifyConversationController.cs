@@ -25,13 +25,12 @@ namespace Palavyr.API.Controllers.Conversation
 
         [HttpPut("configure-conversations/{areaId}")]
         public async Task<List<ConversationNode>> Modify(
-            [FromHeader] string accountId,
             [FromRoute] string areaId,
             [FromBody] ConversationNodeDto update,
             CancellationToken cancellationToken
             )
         {
-            var updatedConvo = await conversationNodeUpdater.UpdateConversation(accountId, areaId, update.Transactions, cancellationToken);
+            var updatedConvo = await conversationNodeUpdater.UpdateConversation(areaId, update.Transactions, cancellationToken);
             return updatedConvo;
         }
     }

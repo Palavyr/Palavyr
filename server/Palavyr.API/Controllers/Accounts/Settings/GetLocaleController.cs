@@ -1,10 +1,12 @@
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
+using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AuthenticationServices;
 
@@ -12,43 +14,36 @@ namespace Palavyr.API.Controllers.Accounts.Settings
 {
     public class GetLocaleController : PalavyrBaseController
     {
-        private AccountsContext accountsContext;
+        private readonly IAccountRepository accountRepository;
         private ILogger<GetLocaleController> logger;
         private readonly LocaleDefinitions localeDefinitions;
 
-        public GetLocaleController(AccountsContext accountsContext, ILogger<GetLocaleController> logger, LocaleDefinitions localeDefinitions)
+        public GetLocaleController(IAccountRepository accountRepository, ILogger<GetLocaleController> logger, LocaleDefinitions localeDefinitions)
         {
+            this.accountRepository = accountRepository;
             this.logger = logger;
             this.localeDefinitions = localeDefinitions;
-            this.accountsContext = accountsContext;
         }
 
 
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
         [HttpGet("account/settings/locale/widget")]
-        public async Task<LocaleResponse> GetForWidget(
-            [FromHeader]
-            string accountId)
+        public async Task<LocaleResponse> GetForWidget(CancellationToken cancellationToken)
         {
-            // var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
-            // var localeMeta = localeDefinitions.Parse(account.Locale);
-            // return localeMeta;
-            var localeResponse = await GetLocaleResponse(accountId);
+            var localeResponse = await GetLocaleResponse();
             return localeResponse;
         }
 
         [HttpGet("account/settings/locale")]
-        public async Task<LocaleResponse> Get(
-            [FromHeader]
-            string accountId)
+        public async Task<LocaleResponse> Get(CancellationToken cancellationToken)
         {
-            var localeResponse = await GetLocaleResponse(accountId);
+            var localeResponse = await GetLocaleResponse();
             return localeResponse;
         }
 
-        private async Task<LocaleResponse> GetLocaleResponse(string accountId)
+        private async Task<LocaleResponse> GetLocaleResponse()
         {
-            var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
+            var account = await accountRepository.GetAccount();
             var localeMeta = localeDefinitions.Parse(account.Locale);
             var culture = new CultureInfo(localeMeta.Name);
 

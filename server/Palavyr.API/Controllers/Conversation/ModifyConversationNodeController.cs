@@ -23,8 +23,7 @@ namespace Palavyr.API.Controllers.Conversation
 
         [HttpPut("configure-conversations/{areaId}/nodes/{nodeId}")]
         public async Task<List<ConversationNode>> Modify(
-            [FromHeader]
-            string accountId,
+
             [FromRoute]
             string nodeId,
             [FromRoute]
@@ -32,7 +31,7 @@ namespace Palavyr.API.Controllers.Conversation
             [FromBody]
             ConversationNode newNode)
         {
-            var updatedConversation = await configurationRepository.UpdateConversationNode(accountId, areaId, nodeId, newNode);
+            var updatedConversation = await configurationRepository.UpdateConversationNode(areaId, nodeId, newNode);
             await configurationRepository.CommitChangesAsync();
             return updatedConversation;
         }

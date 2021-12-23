@@ -21,13 +21,12 @@ namespace Palavyr.API.Controllers.Conversation.Images
         [HttpPost(Route)]
         [ActionName("Decode")]
         public async Task<FileLink[]> SaveSingle(
-            [FromHeader]
-            string accountId,
+
             [FromForm(Name = "files")]
             IFormFile imageFile,
             CancellationToken cancellationToken)
         {
-            var fileLink = await imageSaver.SaveImage(accountId, imageFile, cancellationToken);
+            var fileLink = await imageSaver.SaveImage(imageFile, cancellationToken);
             return new[] {fileLink};
         }
     }

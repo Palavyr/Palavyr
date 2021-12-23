@@ -51,19 +51,17 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
 
         [HttpPost("checkout/create-checkout-session")]
         public async Task<string> CreateSession(
-            [FromHeader] string accountId,
-            [FromBody] CreateCheckoutSessionRequest request,
-            CancellationToken cancellationToken
+            [FromBody] CreateCheckoutSessionRequest request
         )
         {
-            var account = await accountRepository.GetAccount(accountId, cancellationToken);
+            var account = await accountRepository.GetAccount();
             if (account.StripeCustomerId == null)
             {
                 throw new Exception("Account and Stripe customer Id must be set");
             }
 
             var sessionId = await stripeCheckoutService.CreateCheckoutSessionId(account.StripeCustomerId, request.SuccessUrl, request.CancelUrl, request.PriceId);
-            await accountRepository.CreateAndAddNewSession(sessionId, accountId, account.ApiKey);
+            await accountRepository.CreateAndAddNewSession(sessionId, account.ApiKey);
             await accountRepository.CommitChangesAsync();
             return sessionId;
         }

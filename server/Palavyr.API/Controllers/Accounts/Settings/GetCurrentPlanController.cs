@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
@@ -21,13 +22,11 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
 
         [HttpGet("account/settings/current-plan")]
-        public async Task<PlanStatus> GetCurrentPlan(
-            [FromHeader]
-            string accountId,
-            CancellationToken cancellationToken)
+        public async Task<PlanStatus> GetCurrentPlan()
         {
-            var account = await accountRepository.GetAccount(accountId, cancellationToken);
-            var planStatus = await planTypeRetriever.GetCurrentPlanType(accountId, cancellationToken);
+            var account = await accountRepository.GetAccount();
+
+            var planStatus = await planTypeRetriever.GetCurrentPlanType();
             return new PlanStatus()
             {
                 HasUpgraded = account.HasUpgraded,
