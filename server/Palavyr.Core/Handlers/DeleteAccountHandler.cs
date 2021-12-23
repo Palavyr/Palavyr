@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Repositories.Delete;
 
-namespace Palavyr.API.Controllers.Accounts
+namespace Palavyr.Core.Handlers
 {
     public class DeleteAccountHandler: IRequestHandler<DeleteAccountRequest>
     {
