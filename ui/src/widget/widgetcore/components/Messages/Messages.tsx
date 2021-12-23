@@ -13,6 +13,7 @@ import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import "@widgetcore/widget/widget.module.scss";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
 import classNames from "classnames";
+import { useAppContext } from "widget/hook";
 
 export interface MessageProps {
     showTimeStamp: boolean;
@@ -33,14 +34,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
+    const { messages, loading } = useAppContext();
     const { preferences } = useContext(WidgetContext);
     const cls = useStyles({ ...preferences });
     const wcls = useWidgetStyles();
 
-    const { messages, typing } = useSelector((state: GlobalState) => ({
-        messages: state.messagesReducer.messages,
-        typing: state.behaviorReducer.messageLoader,
-    }));
+
     useEffect(() => {
         document.body.setAttribute("style", `overflow: "hidden"`);
     }, []);
@@ -49,7 +48,7 @@ export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
 
     useEffect(() => {
         scrollToBottom(messageRef.current);
-    }, [messages, typing]);
+    }, [messages, loading]);
 
     return (
         <div id="messages" className={classNames(wcls.pwrow, wcls.pcontent, cls.messageTubeContainer)} ref={messageRef}>
@@ -58,7 +57,7 @@ export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
                     {getComponentToRender(message, showTimeStamp)}
                 </div>
             ))}
-            {typing && <Loader typing={typing} />}
+            {loading && <Loader typing={loading} />}
             <div style={{ height: "3rem" }} />
         </div>
     );

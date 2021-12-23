@@ -3,10 +3,10 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import FaceIcon from "@material-ui/icons/Face";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "../../context/WidgetContext";
-import { openUserDetails } from "@store-dispatcher";
 import classNames from "classnames";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
 import "@widgetcore/widget/widget.module.scss";
+import { useAppContext } from "widget/hook";
 
 export interface ConvoHeaderProps {
     titleAvatar?: string;
@@ -66,8 +66,8 @@ const useStyles = makeStyles(theme => ({
 export const ConvoHeader = ({ titleAvatar }: ConvoHeaderProps) => {
     const [tipOpen, setTipOpen] = useState<boolean>(false);
     const ref = useRef<HTMLDivElement>(null);
-
     const { preferences, chatStarted } = useContext(WidgetContext);
+
     useEffect(() => {
         if (chatStarted) {
             setTipOpen(true);
@@ -94,6 +94,9 @@ export const ConvoHeader = ({ titleAvatar }: ConvoHeaderProps) => {
 
     const cls = useStyles(preferences);
     const wcls = useWidgetStyles();
+
+    const { openUserDetails } = useAppContext();
+
     return (
         <div className={classNames(wcls.pwrow, wcls.pheader, cls.header)}>
             {chatStarted && (

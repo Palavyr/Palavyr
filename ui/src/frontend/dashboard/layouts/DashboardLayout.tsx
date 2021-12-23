@@ -191,7 +191,6 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     }, []);
 
     const loadAreas = useCallback(async () => {
-        ga4?.pageview(location.pathname);
         setDashboardAreasLoading(true);
 
         const planTypeMeta = await repository.Settings.Subscriptions.getCurrentPlanMeta();
