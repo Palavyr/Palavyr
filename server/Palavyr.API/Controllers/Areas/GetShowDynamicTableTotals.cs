@@ -17,28 +17,24 @@ namespace Palavyr.API.Controllers.Areas
 
         [HttpGet("area/dynamic-totals/{areaId}")]
         public async Task<bool> Get(
-            [FromHeader]
-            string accountId,
             string areaId,
             CancellationToken cancellationToken)
         {
-            var area = await configurationRepository.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(areaId);
             return area.IncludeDynamicTableTotals;
         }
 
         [HttpPut("area/dynamic-totals/{areaId}")]
         public async Task<bool> Post(
-            [FromHeader]
-            string accountId,
             [FromRoute]
             string areaId,
             [FromBody]
             ShouldShow request,
             CancellationToken cancellationToken)
         {
-            var area = await configurationRepository.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(areaId);
             area.IncludeDynamicTableTotals = request.ShowDynamicTotals;
-            await configurationRepository.CommitChangesAsync(cancellationToken);
+            await configurationRepository.CommitChangesAsync();
             return area.IncludeDynamicTableTotals;
         }
     }

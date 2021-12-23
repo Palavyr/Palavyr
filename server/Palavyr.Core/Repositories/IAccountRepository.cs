@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.Core.Sessions;
 

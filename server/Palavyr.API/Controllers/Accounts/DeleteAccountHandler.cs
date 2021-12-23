@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Exceptions;
+using Palavyr.Core.Repositories;
 using Palavyr.Core.Repositories.Delete;
 
 namespace Palavyr.API.Controllers.Accounts
@@ -13,28 +13,25 @@ namespace Palavyr.API.Controllers.Accounts
         private readonly IDashDeleter dashDeleter;
         private readonly IConvoDeleter convoDeleter;
         private readonly ILogger<DeleteAccountHandler> logger;
+        private readonly IAccountRepository accountRepository;
 
         public DeleteAccountHandler(
             IAccountDeleter accountDeleter,
             IDashDeleter dashDeleter,
             IConvoDeleter convoDeleter,
-            ILogger<DeleteAccountHandler> logger
+            ILogger<DeleteAccountHandler> logger,
+            IAccountRepository accountRepository
             )
         {
             this.accountDeleter = accountDeleter;
             this.dashDeleter = dashDeleter;
             this.convoDeleter = convoDeleter;
             this.logger = logger;
+            this.accountRepository = accountRepository;
         }
-        public async Task<Unit> Handle(DeleteAccountRequest request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DeleteAccountRequest request, CancellationToken _)
         {
-            var accountId = request.AccountId;
-            if (accountId == null)
-            {
-                throw new DomainException("Please log out and log in again before trying to delete your account");
-            }
-
-            logger.LogInformation($"Deleting details for account: {accountId}");
+            logger.LogInformation($"Deleting details for account: {accountRepository.AccountIdHolder.AccountId}");
 
             logger.LogInformation("Deleting from the convo database...");
             convoDeleter.DeleteAccount();
@@ -54,6 +51,5 @@ namespace Palavyr.API.Controllers.Accounts
 
     public class DeleteAccountRequest : IRequest<Unit>
     {
-        public string AccountId { get; set; }
     }
 }
