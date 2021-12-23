@@ -24,8 +24,7 @@ namespace Palavyr.API.Controllers.Conversation
         }
         
         [HttpGet("configure-conversations/{areaId}")]
-        public async Task<List<ConversationNode>> Get( 
-            [FromRoute] string areaId)
+        public async Task<List<ConversationNode>> Get([FromRoute] string areaId)
         {
             var conversation = await configurationRepository.GetAreaConversationNodes(areaId);
             return conversation;
