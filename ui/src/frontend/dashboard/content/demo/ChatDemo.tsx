@@ -72,7 +72,7 @@ export const ChatDemoPage = () => {
                 </Grid>
             </Grid>
             <div className={cls.reloadButton}>
-                <SinglePurposeButton classes={cls.button} variant="outlined" color="primary" buttonText="Reload" onClick={() => window.location.reload()} />
+                <SinglePurposeButton classes={cls.button} variant="outlined" color="primary" buttonText="Reload" onClick={() => reloadIframe(!iframeRefreshed)} />
             </div>
         </Paper>
     );
