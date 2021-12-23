@@ -7,6 +7,6 @@ namespace Palavyr.API.Controllers.WidgetLive
 {
     public interface ISendWidgetResponseEmailHandler
     {
-        Task<SendEmailResultResponse> HandleSendWidgetResponseEmail(EmailRequest emailRequest, string accountId, string areaId, CancellationToken cancellationToken);
+        Task<SendEmailResultResponse> HandleSendWidgetResponseEmail(EmailRequest emailRequest, string areaId, CancellationToken cancellationToken);
     }
 }

@@ -14,6 +14,7 @@ using Palavyr.Core.Services.EmailService;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.StripeServices;
+using Palavyr.Core.Sessions;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods.ClientExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
@@ -75,7 +76,12 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             var verifyLogger = Substitute.For<ILogger<EmailVerificationService>>();
             var emailVerificationStatus = Substitute.For<IEmailVerificationStatus>();
             emailVerificationStatus.CheckVerificationStatus(testEmail).Returns(true);
-            var emailVerificationService = new EmailVerificationService(AccountsContext, verifyLogger, customerService, requestVerification, emailClient, guidUtils, emailVerificationStatus);
+            
+            var accountIdHolder = new AccountIdHolder();
+            accountIdHolder.Assign(testAccount);
+
+            
+            var emailVerificationService = new EmailVerificationService(AccountsContext, verifyLogger, customerService, requestVerification, emailClient, guidUtils, emailVerificationStatus, accountIdHolder);
 
             var accessChecker = Substitute.For<IPalavyrAccessChecker>();
             var accessLogger = Substitute.For<ILogger<AccountRegistrationMaker>>();

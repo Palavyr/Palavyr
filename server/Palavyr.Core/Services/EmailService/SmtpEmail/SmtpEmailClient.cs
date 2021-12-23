@@ -5,7 +5,6 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.Environment;
-using Palavyr.Core.Common.ExtensionMethods;
 
 namespace Palavyr.Core.Services.EmailService.SmtpEmail
 {

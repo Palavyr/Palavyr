@@ -34,12 +34,12 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             this.responseRetriever = responseRetriever;
         }
 
-        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier, string accountId)
+        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier)
         {
             await Task.CompletedTask;
         }
 
-        public Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
+        public async Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes)
         {
             nodes.AddAdditionalNode(
                 NodeTypeOption.Create(
@@ -56,16 +56,16 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
                     dynamicType: dynamicTableMeta.MakeUniqueIdentifier(),
                     shouldRenderChildren: true
                 ));
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
         {
             var dynamicResponseId = GetSingleResponseId(dynamicResponseIds);
             var responseValue = GetSingleResponseValue(dynamicResponseParts, dynamicResponseIds);
 
             var responseValueAsDouble = double.Parse(responseValue);
-            var allRows = await RetrieveAllAvailableResponses(accountId, dynamicResponseId);
+            var allRows = await RetrieveAllAvailableResponses(dynamicResponseId);
             var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(allRows[0].TableId);
 
             var itemIds = allRows.Select(item => item.ItemId).Distinct().ToArray();
@@ -168,23 +168,22 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
         {
             var tableId = dynamicTableMeta.TableId;
-            var accountId = dynamicTableMeta.AccountId;
             var areaId = dynamicTableMeta.AreaIdentifier;
-            var table = await repository.GetAllRows(accountId, areaId, tableId);
+            var table = await repository.GetAllRows(areaId, tableId);
             return ValidationLogic(table, dynamicTableMeta.TableTag);
         }
 
-        public async Task<List<TableRow>> CreatePreviewData(string accountId, DynamicTableMeta tableMeta, Area area, CultureInfo culture)
+        public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area area, CultureInfo culture)
         {
-            var availablePercentOfThreshold = await responseRetriever.RetrieveAllAvailableResponses<PercentOfThreshold>(accountId, tableMeta.TableId);
+            var availablePercentOfThreshold = await responseRetriever.RetrieveAllAvailableResponses<PercentOfThreshold>(tableMeta.TableId);
             var responseParts = DynamicTableTypes.CreatePercentOfThreshold().CreateDynamicResponseParts(availablePercentOfThreshold.First().TableId, availablePercentOfThreshold.First().Threshold.ToString());
-            var currentRows = await CompileToPdfTableRow(area.AccountId, responseParts, new List<string>() {tableMeta.TableId}, culture);
+            var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() {tableMeta.TableId}, culture);
             return currentRows;
         }
 
-        public async Task<List<PercentOfThreshold>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId)
+        public async Task<List<PercentOfThreshold>> RetrieveAllAvailableResponses(string dynamicResponseId)
         {
-            return await GetAllRowsMatchingResponseId(accountId, dynamicResponseId);
+            return await GetAllRowsMatchingResponseId(dynamicResponseId);
         }
     }
 }

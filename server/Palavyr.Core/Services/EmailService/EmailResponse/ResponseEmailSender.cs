@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -14,19 +13,19 @@ using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AmazonServices;
-using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.AttachmentServices;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.PdfService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Services.TemporaryPaths;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.EmailService.EmailResponse
 {
     public interface IResponseEmailSender
     {
-        Task<SendEmailResultResponse> SendEmail(string accountId, string areaId, EmailRequest emailRequest, CancellationToken cancellationToken);
-        Task<SendEmailResultResponse> SendFallbackEmail(string accountId, string areaId, EmailRequest emailRequest, CancellationToken cancellationToken);
+        Task<SendEmailResultResponse> SendEmail(string areaId, EmailRequest emailRequest, CancellationToken cancellationToken);
+        Task<SendEmailResultResponse> SendFallbackEmail(string areaId, EmailRequest emailRequest, CancellationToken cancellationToken);
     }
 
     public class ResponseEmailSender : IResponseEmailSender
@@ -40,12 +39,11 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
         private readonly IPdfResponseGenerator pdfResponseGenerator;
         private readonly ICompileSenderDetails compileSenderDetails;
         private readonly ISesEmail client;
-        private readonly IS3Saver s3Saver;
         private readonly IConfiguration configuration;
-        private readonly IS3KeyResolver s3KeyResolver;
         private readonly ILocaleDefinitions localeDefinitions;
         private readonly ILinkCreator linkCreator;
         private readonly IConvoHistoryRepository convoHistoryRepository;
+        private readonly IHoldAnAccountId accountIdHolder;
 
         public ResponseEmailSender(
             ILogger<ResponseEmailSender> logger,
@@ -57,12 +55,11 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             IPdfResponseGenerator pdfResponseGenerator,
             ICompileSenderDetails compileSenderDetails,
             ISesEmail client,
-            IS3Saver s3Saver,
             IConfiguration configuration,
-            IS3KeyResolver s3KeyResolver,
             ILocaleDefinitions localeDefinitions,
             ILinkCreator linkCreator,
-            IConvoHistoryRepository convoHistoryRepository
+            IConvoHistoryRepository convoHistoryRepository,
+            IHoldAnAccountId accountIdHolder
         )
         {
             this.logger = logger;
@@ -74,24 +71,23 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             this.pdfResponseGenerator = pdfResponseGenerator;
             this.compileSenderDetails = compileSenderDetails;
             this.client = client;
-            this.s3Saver = s3Saver;
             this.configuration = configuration;
-            this.s3KeyResolver = s3KeyResolver;
             this.localeDefinitions = localeDefinitions;
             this.linkCreator = linkCreator;
             this.convoHistoryRepository = convoHistoryRepository;
+            this.accountIdHolder = accountIdHolder;
         }
 
-        public async Task<SendEmailResultResponse> SendEmail(string accountId, string areaId, EmailRequest emailRequest, CancellationToken cancellationToken)
+        public async Task<SendEmailResultResponse> SendEmail(string areaId, EmailRequest emailRequest, CancellationToken cancellationToken)
         {
             var responses = criticalResponses.Compile(emailRequest.KeyValues);
             logger.LogDebug("Compiled successfully");
 
-            var culture = await GetCulture(accountId, cancellationToken);
+            var culture = await GetCulture();
             var localTempPath = temporaryPath.CreateLocalTempSafeFile(emailRequest.ConversationId);
             logger.LogDebug("culture and local temp path gotten");
 
-            var area = await configurationRepository.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(areaId);
             logger.LogDebug($"{area.AreaIdentifier} found");
 
             var additionalFiles = new List<S3SDownloadRequestMeta>();
@@ -105,9 +101,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                     emailRequest,
                     culture,
                     localTempPath.FileStem,
-                    accountId,
-                    areaId,
-                    cancellationToken
+                    areaId
                 );
                 pdfLink = linkCreator.GenericCreatePreSignedUrl(pdfServerResponse.S3Key, configuration.GetUserDataBucket());
                 additionalFiles.Add(pdfServerResponse.ToS3DownloadRequestMeta());
@@ -118,16 +112,16 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 
             }
 
-            var senderDetails = await compileSenderDetails.Compile(accountId, areaId, emailRequest, cancellationToken);
+            var senderDetails = await compileSenderDetails.Compile(areaId, emailRequest);
 
-            var s3DownloadRequestMetas = await attachmentRetriever.RetrievePdfUris(accountId, cancellationToken);
+            var s3DownloadRequestMetas = await attachmentRetriever.RetrievePdfUris(areaId, cancellationToken);
             
             if (additionalFiles != null)
             {
                 s3DownloadRequestMetas.AddRange(additionalFiles);
             }
             
-            var attachments = await attachmentRetriever.RetrieveAttachmentFiles(accountId, areaId, s3DownloadRequestMetas, cancellationToken);
+            var attachments = await attachmentRetriever.RetrieveAttachmentFiles(areaId, s3DownloadRequestMetas, cancellationToken);
             
             
             logger.LogDebug("Sending Email...");
@@ -142,22 +136,22 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             return responseResult;
         }
 
-        public async Task<SendEmailResultResponse> SendFallbackEmail(string accountId, string areaId, EmailRequest emailRequest, CancellationToken cancellationToken)
+        public async Task<SendEmailResultResponse> SendFallbackEmail(string areaId, EmailRequest emailRequest, CancellationToken cancellationToken)
         {
-            var sendAttachmentsOnFallback = await SendAttachmentsWhenFallback(accountId, areaId);
+            var sendAttachmentsOnFallback = await SendAttachmentsWhenFallback(areaId);
 
             IHaveBeenDownloadedFromS3[] attachments;
             if (sendAttachmentsOnFallback)
             {
-                var metas = await attachmentRetriever.RetrievePdfUris(accountId, cancellationToken);
-                attachments = await attachmentRetriever.RetrieveAttachmentFiles(accountId, areaId,  metas, cancellationToken);
+                var metas = await attachmentRetriever.RetrievePdfUris(areaId, cancellationToken);
+                attachments = await attachmentRetriever.RetrieveAttachmentFiles(areaId,  metas, cancellationToken);
             }
             else
             {
                 attachments = new IHaveBeenDownloadedFromS3[] { };
             }
 
-            var senderDetails = await compileSenderDetails.Compile(accountId, areaId, emailRequest, cancellationToken);
+            var senderDetails = await compileSenderDetails.Compile(areaId, emailRequest);
             var responseResult = await Send(senderDetails, attachments.Select(x => x.TempFilePath).ToArray());
             foreach (var attachment in attachments)
             {
@@ -167,7 +161,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             return responseResult;
         }
 
-        private async Task<SendEmailResultResponse> Send(CompileSenderDetails.CompiledSenderDetails details, string[] attachments, string? pdfUri = null)
+        private async Task<SendEmailResultResponse> Send(CompileSenderDetails.CompiledSenderDetails details, string[] attachments, string? pdfUri = null, CancellationToken cancellationToken = default)
         {
             bool ok;
             if (attachments.Length == 0)
@@ -191,16 +185,16 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
                 : SendEmailResultResponse.CreateFailure(EndingSequence.EmailFailedNodeId);
         }
 
-        private async Task<CultureInfo> GetCulture(string accountId, CancellationToken cancellationToken)
+        private async Task<CultureInfo> GetCulture()
         {
-            var account = await accountRepository.GetAccount(accountId, cancellationToken);
+            var account = await accountRepository.GetAccount();
             var locale = account.Locale ?? localeDefinitions.DefaultLocale.Name;
             return new CultureInfo(locale);
         }
 
-        private async Task<bool> SendAttachmentsWhenFallback(string accountId, string areaId)
+        private async Task<bool> SendAttachmentsWhenFallback(string areaId)
         {
-            var account = await configurationRepository.GetAreaById(accountId, areaId);
+            var account = await configurationRepository.GetAreaById(areaId);
             return account.SendAttachmentsOnFallback;
         }
     }

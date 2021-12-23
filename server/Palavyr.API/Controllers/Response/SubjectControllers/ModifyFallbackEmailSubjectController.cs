@@ -1,9 +1,10 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
@@ -12,20 +13,21 @@ namespace Palavyr.API.Controllers.Response.SubjectControllers
     {
         private AccountsContext accountsContext;
         private ILogger<ModifyFallbackEmailSubjectController> logger;
+        private readonly IAccountRepository accountRepository;
 
         public ModifyFallbackEmailSubjectController(
             ILogger<ModifyFallbackEmailSubjectController> logger,
-            AccountsContext accountsContext
+            IAccountRepository accountRepository
         )
         {
             this.logger = logger;
-            this.accountsContext = accountsContext;
+            this.accountRepository = accountRepository;
         }
 
         [HttpPut("email/fallback/default-subject")]
-        public async Task<string> Modify([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] SubjectText request)
+        public async Task<string> Modify([FromRoute] string areaId, [FromBody] SubjectText request)
         {
-            var account = await accountsContext.Accounts.SingleAsync(row => row.AccountId == accountId);
+            var account = await accountRepository.GetAccount();
             account.GeneralFallbackSubject = request.Subject;
             await accountsContext.SaveChangesAsync();
             return account.GeneralFallbackSubject;

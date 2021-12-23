@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Palavyr.API.Controllers
 {
     [Route("api")]
     [ApiController]
-    public class PalavyrBaseController : ControllerBase
+    public abstract class PalavyrBaseController : ControllerBase
     {
+        public IMediator Mediator { get; set; }
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.UniqueIdentifiers;
@@ -15,64 +14,70 @@ namespace Palavyr.Core.Repositories.Delete
         private readonly AccountsContext accountsContext;
         private readonly StripeCustomerService stripeCustomerService;
         private readonly ILogger<AccountDeleter> logger;
+        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly CancellationTokenTransport cancellationTokenTransport;
 
         public AccountDeleter(
             AccountsContext accountsContext,
             StripeCustomerService stripeCustomerService,
             IRemoveStaleSessions removeStaleSessions,
             ILogger<AccountDeleter> logger,
-            IGuidUtils guidUtils
+            IGuidUtils guidUtils,
+            IHoldAnAccountId accountIdHolder,
+            CancellationTokenTransport cancellationTokenTransport
         )
-            : base(accountsContext, logger, removeStaleSessions, guidUtils)
+            : base(accountsContext, logger, removeStaleSessions, guidUtils, accountIdHolder, cancellationTokenTransport)
         {
             this.accountsContext = accountsContext;
             this.stripeCustomerService = stripeCustomerService;
             this.logger = logger;
+            this.accountIdHolder = accountIdHolder;
+            this.cancellationTokenTransport = cancellationTokenTransport;
         }
 
-        public async Task DeleteAccount(string accountId, CancellationToken cancellationToken)
+        public async Task DeleteAccount()
         {
-            await DeleteAccountRecord(accountId, cancellationToken);
-            DeleteEmailVerifications(accountId);
-            DeleteSessionsByAccount(accountId);
-            DeleteSubscriptionsByAccount(accountId);
-            await DeleteStripeIntegration(accountId, cancellationToken);
+            await DeleteAccountRecord();
+            DeleteEmailVerifications();
+            DeleteSessionsByAccount();
+            DeleteSubscriptionsByAccount();
+            await DeleteStripeIntegration();
         }
 
-        public async Task DeleteStripeIntegration(string accountId, CancellationToken cancellationToken)
+        public async Task DeleteStripeIntegration()
         {
-            var account = await GetAccount(accountId, cancellationToken);
+            var account = await GetAccount();
             if (!string.IsNullOrEmpty(account.StripeCustomerId))
             {
                 await stripeCustomerService.DeleteSingleLiveStripeCustomer(account.StripeCustomerId);
             }
         }
 
-        public async Task DeleteAccountRecord(string accountId, CancellationToken cancellationToken)
+        public async Task DeleteAccountRecord()
         {
-            logger.LogInformation($"Deleting the account record for {accountId}");
-            var account = await GetAccount(accountId, cancellationToken);
+            logger.LogInformation($"Deleting the account record for {accountIdHolder.AccountId}");
+            var account = await GetAccount();
             accountsContext.Accounts.Remove(account);
         }
 
-        public void DeleteEmailVerifications(string accountId)
+        public void DeleteEmailVerifications()
         {
-            logger.LogInformation($"Deleting email verifications from {accountId}");
-            var emailVerifications = accountsContext.EmailVerifications.Where(row => row.AccountId == accountId);
+            logger.LogInformation($"Deleting email verifications from {accountIdHolder.AccountId}");
+            var emailVerifications = accountsContext.EmailVerifications.Where(row => row.AccountId == accountIdHolder.AccountId);
             accountsContext.EmailVerifications.RemoveRange(emailVerifications);
         }
 
-        public void DeleteSessionsByAccount(string accountId)
+        public void DeleteSessionsByAccount()
         {
-            logger.LogInformation($"Deleting active sessions for {accountId}");
-            var sessions = accountsContext.Sessions.Where(row => row.AccountId == accountId);
+            logger.LogInformation($"Deleting active sessions for {accountIdHolder.AccountId}");
+            var sessions = accountsContext.Sessions.Where(row => row.AccountId == accountIdHolder.AccountId);
             accountsContext.Sessions.RemoveRange(sessions);
         }
 
-        public void DeleteSubscriptionsByAccount(string accountId)
+        public void DeleteSubscriptionsByAccount()
         {
-            logger.LogInformation($"Deleting subscriptions for {accountId}");
-            var subs = accountsContext.Subscriptions.Where(row => row.AccountId == accountId);
+            logger.LogInformation($"Deleting subscriptions for {accountIdHolder.AccountId}");
+            var subs = accountsContext.Subscriptions.Where(row => row.AccountId == accountIdHolder.AccountId);
             accountsContext.Subscriptions.RemoveRange(subs);
         }
     }

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
 using Palavyr.Core.Services.AmazonServices.S3Service;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Repositories.Delete
 {
@@ -15,26 +16,30 @@ namespace Palavyr.Core.Repositories.Delete
         private readonly DashContext dashContext;
         private readonly IS3Deleter s3Deleter;
         private readonly ILogger<DashDeleter> logger;
+        private readonly IHoldAnAccountId accountIdHolder;
 
         public DashDeleter(
             IConfiguration configuration,
             DashContext dashContext,
             IS3Deleter s3Deleter,
-            ILogger<DashDeleter> logger
-        ) : base(dashContext, logger)
+            ILogger<DashDeleter> logger,
+            IHoldAnAccountId accountIdHolder,
+            ITransportACancellationToken cancellationTokenTransport
+        ) : base(dashContext, logger, accountIdHolder, cancellationTokenTransport)
         {
             this.configuration = configuration;
             this.dashContext = dashContext;
             this.s3Deleter = s3Deleter;
             this.logger = logger;
+            this.accountIdHolder = accountIdHolder;
         }
 
-        public async Task DeleteAccount(string accountId)
+        public async Task DeleteAccount()
         {
             var userDataBucket = configuration.GetUserDataBucket();
             try
             {
-                var s3Keys = dashContext.FileNameMaps.Where(x => x.AccountId == accountId).Select(x => x.S3Key).ToArray();
+                var s3Keys = dashContext.FileNameMaps.Where(x => x.AccountId == accountIdHolder.AccountId).Select(x => x.S3Key).ToArray();
                 if (s3Keys.Length > 0)
                 {
                     await s3Deleter.DeleteObjectsFromS3Async(userDataBucket, s3Keys);
@@ -47,7 +52,7 @@ namespace Palavyr.Core.Repositories.Delete
 
             try
             {
-                var s3Keys = dashContext.Images.Where(x => x.AccountId == accountId).Select(x => x.S3Key).ToArray();
+                var s3Keys = dashContext.Images.Where(x => x.AccountId == accountIdHolder.AccountId).Select(x => x.S3Key).ToArray();
                 if (s3Keys.Length > 0)
                 {
                     await s3Deleter.DeleteObjectsFromS3Async(userDataBucket, s3Keys);
@@ -59,119 +64,119 @@ namespace Palavyr.Core.Repositories.Delete
             }
 
 
-            DeleteAreasByAccount(accountId);
-            DeleteConvoNodesByAccount(accountId);
-            DeleteDynamicTableMetasByAccount(accountId);
-            DeleteFileNameMapsByAccount(accountId);
-            DeleteStaticFeesByAccount(accountId);
-            DeleteStaticTableMetasByAccount(accountId);
-            DeleteStaticTableRowsByAccount(accountId);
-            DeleteWidgetPreferencesByAccount(accountId);
-            DeleteImagesByAccount(accountId);
+            DeleteAreasByAccount();
+            DeleteConvoNodesByAccount();
+            DeleteDynamicTableMetasByAccount();
+            DeleteFileNameMapsByAccount();
+            DeleteStaticFeesByAccount();
+            DeleteStaticTableMetasByAccount();
+            DeleteStaticTableRowsByAccount();
+            DeleteWidgetPreferencesByAccount();
+            DeleteImagesByAccount();
 
             //dynamic tables
-            DeleteSelectOneFlatsByAccount(accountId);
-            DeletePercentOfThresholdByAccount(accountId);
-            DeleteBasicThresholdByAccount(accountId);
-            DeleteCategoryNestedThresholdByAccount(accountId);
-            DeleteTwoNestedCategoriesByAccount(accountId);
+            DeleteSelectOneFlatsByAccount();
+            DeletePercentOfThresholdByAccount();
+            DeleteBasicThresholdByAccount();
+            DeleteCategoryNestedThresholdByAccount();
+            DeleteTwoNestedCategoriesByAccount();
         }
 
-        public void DeleteImagesByAccount(string accountId)
+        public void DeleteImagesByAccount()
         {
-            logger.LogInformation($"Deleted Images for {accountId}");
-            var images = dashContext.Images.Where(row => row.AccountId == accountId);
+            logger.LogInformation($"Deleted Images for {accountIdHolder.AccountId}");
+            var images = dashContext.Images.Where(row => row.AccountId == accountIdHolder.AccountId);
             dashContext.RemoveRange(images);
         }
 
-        public void DeleteAreasByAccount(string accountId)
+        public void DeleteAreasByAccount()
         {
-            logger.LogInformation($"Deleted areas for {accountId}");
-            var areas = dashContext.Areas.Where(row => row.AccountId == accountId);
+            logger.LogInformation($"Deleted areas for {accountIdHolder.AccountId}");
+            var areas = dashContext.Areas.Where(row => row.AccountId == accountIdHolder.AccountId);
             dashContext.Areas.RemoveRange(areas);
         }
 
-        public void DeleteConvoNodesByAccount(string accountId)
+        public void DeleteConvoNodesByAccount()
         {
-            logger.LogInformation($"Deleting convo nodes for {accountId}");
-            var convoNodes = dashContext.ConversationNodes.Where(row => row.AccountId == accountId);
+            logger.LogInformation($"Deleting convo nodes for {accountIdHolder.AccountId}");
+            var convoNodes = dashContext.ConversationNodes.Where(row => row.AccountId == accountIdHolder.AccountId);
             dashContext.ConversationNodes.RemoveRange(convoNodes);
         }
 
-        public void DeleteDynamicTableMetasByAccount(string accountId)
+        public void DeleteDynamicTableMetasByAccount()
         {
-            logger.LogInformation($"Deleting dynamic table metas for {accountId}");
-            var dynamicTableMetas = dashContext.DynamicTableMetas.Where(row => row.AccountId == accountId);
+            logger.LogInformation($"Deleting dynamic table metas for {accountIdHolder.AccountId}");
+            var dynamicTableMetas = dashContext.DynamicTableMetas.Where(row => row.AccountId == accountIdHolder.AccountId);
             dashContext.DynamicTableMetas.RemoveRange(dynamicTableMetas);
         }
 
-        public void DeleteFileNameMapsByAccount(string accountId)
+        public void DeleteFileNameMapsByAccount()
         {
-            logger.LogInformation($"Deleting file name maps for {accountId}");
-            var nameMaps = dashContext.FileNameMaps.Where(row => row.AccountId == accountId);
+            logger.LogInformation($"Deleting file name maps for {accountIdHolder.AccountId}");
+            var nameMaps = dashContext.FileNameMaps.Where(row => row.AccountId == accountIdHolder.AccountId);
             dashContext.FileNameMaps.RemoveRange(nameMaps);
         }
 
-        public void DeleteSelectOneFlatsByAccount(string accountId)
+        public void DeleteSelectOneFlatsByAccount()
         {
-            logger.LogInformation($"Deleting selectOneFlat records for {accountId}");
-            var selectOneFlats = dashContext.SelectOneFlats.Where(row => row.AccountId == accountId);
+            logger.LogInformation($"Deleting selectOneFlat records for {accountIdHolder.AccountId}");
+            var selectOneFlats = dashContext.SelectOneFlats.Where(row => row.AccountId == accountIdHolder.AccountId);
             dashContext.SelectOneFlats.RemoveRange(selectOneFlats);
         }
 
-        public void DeletePercentOfThresholdByAccount(string accountId)
+        public void DeletePercentOfThresholdByAccount()
         {
-            logger.LogInformation($"Deleting percentOfThreshold for {accountId}");
-            var percentOfThreshold = dashContext.PercentOfThresholds.Where(row => row.AccountId == accountId);
+            logger.LogInformation($"Deleting percentOfThreshold for {accountIdHolder.AccountId}");
+            var percentOfThreshold = dashContext.PercentOfThresholds.Where(row => row.AccountId == accountIdHolder.AccountId);
             dashContext.PercentOfThresholds.RemoveRange(percentOfThreshold);
         }
 
-        public void DeleteTwoNestedCategoriesByAccount(string accountId)
+        public void DeleteTwoNestedCategoriesByAccount()
         {
-            logger.LogInformation($"Deleting TwoNestedCategories for {accountId}");
-            var twoNested = dashContext.TwoNestedCategories.Where(row => row.AccountId == accountId);
+            logger.LogInformation($"Deleting TwoNestedCategories for {accountIdHolder.AccountId}");
+            var twoNested = dashContext.TwoNestedCategories.Where(row => row.AccountId == accountIdHolder.AccountId);
             dashContext.TwoNestedCategories.RemoveRange(twoNested);
         }
 
-        public void DeleteCategoryNestedThresholdByAccount(string accountId)
+        public void DeleteCategoryNestedThresholdByAccount()
         {
-            logger.LogInformation($"Deleting percentOfThreshold for {accountId}");
-            var categoryNested = dashContext.CategoryNestedThresholds.Where(row => row.AccountId == accountId);
+            logger.LogInformation($"Deleting percentOfThreshold for {accountIdHolder.AccountId}");
+            var categoryNested = dashContext.CategoryNestedThresholds.Where(row => row.AccountId == accountIdHolder.AccountId);
             dashContext.CategoryNestedThresholds.RemoveRange(categoryNested);
         }
 
-        public void DeleteBasicThresholdByAccount(string accountId)
+        public void DeleteBasicThresholdByAccount()
         {
-            logger.LogInformation($"Deleting percentOfThreshold for {accountId}");
-            var basicThreshold = dashContext.BasicThresholds.Where(row => row.AccountId == accountId);
+            logger.LogInformation($"Deleting percentOfThreshold for {accountIdHolder.AccountId}");
+            var basicThreshold = dashContext.BasicThresholds.Where(row => row.AccountId == accountIdHolder.AccountId);
             dashContext.BasicThresholds.RemoveRange(basicThreshold);
         }
 
-        public void DeleteStaticFeesByAccount(string accountId)
+        public void DeleteStaticFeesByAccount()
         {
-            logger.LogInformation($"Removing static fees for {accountId}");
-            var staticFees = dashContext.StaticFees.Where(row => row.AccountId == accountId);
+            logger.LogInformation($"Removing static fees for {accountIdHolder.AccountId}");
+            var staticFees = dashContext.StaticFees.Where(row => row.AccountId == accountIdHolder.AccountId);
             dashContext.StaticFees.RemoveRange(staticFees);
         }
 
-        public void DeleteStaticTableMetasByAccount(string accountId)
+        public void DeleteStaticTableMetasByAccount()
         {
-            logger.LogInformation($"Removing static table metas for {accountId}");
-            var staticTableMetas = dashContext.StaticTablesMetas.Where(row => row.AccountId == accountId);
+            logger.LogInformation($"Removing static table metas for {accountIdHolder.AccountId}");
+            var staticTableMetas = dashContext.StaticTablesMetas.Where(row => row.AccountId == accountIdHolder.AccountId);
             dashContext.StaticTablesMetas.RemoveRange(staticTableMetas);
         }
 
-        public void DeleteStaticTableRowsByAccount(string accountId)
+        public void DeleteStaticTableRowsByAccount()
         {
-            logger.LogInformation($"Deleting static table rows for {accountId}");
-            var staticTableRows = dashContext.StaticTablesRows.Where(row => row.AccountId == accountId);
+            logger.LogInformation($"Deleting static table rows for {accountIdHolder.AccountId}");
+            var staticTableRows = dashContext.StaticTablesRows.Where(row => row.AccountId == accountIdHolder.AccountId);
             dashContext.StaticTablesRows.RemoveRange(staticTableRows);
         }
 
-        public void DeleteWidgetPreferencesByAccount(string accountId)
+        public void DeleteWidgetPreferencesByAccount()
         {
-            logger.LogInformation($"Deleting widget preferences for {accountId}");
-            var prefs = dashContext.WidgetPreferences.Where(row => row.AccountId == accountId);
+            logger.LogInformation($"Deleting widget preferences for {accountIdHolder.AccountId}");
+            var prefs = dashContext.WidgetPreferences.Where(row => row.AccountId == accountIdHolder.AccountId);
             dashContext.WidgetPreferences.RemoveRange(prefs);
         }
     }

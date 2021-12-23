@@ -59,7 +59,7 @@ export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
                 </div>
             ))}
             {typing && <Loader typing={typing} />}
-            <div style={{height: "2.5rem"}}></div>
+            <div style={{ height: "3rem" }} />
         </div>
     );
 };

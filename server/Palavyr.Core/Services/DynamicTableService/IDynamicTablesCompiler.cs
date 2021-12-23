@@ -12,17 +12,15 @@ namespace Palavyr.Core.Services.DynamicTableService
 {
     public interface IDynamicTablesCompiler
     {
-        Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier, string accountId);
+        Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier);
 
-        Task CompileToConfigurationNodes(
-            DynamicTableMeta dynamicTableMeta,
-            List<NodeTypeOption> nodes);
+        Task CompileToConfigurationNodes(DynamicTableMeta dynamicTableMeta, List<NodeTypeOption> nodes);
 
-        Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture);
+        Task<List<TableRow>> CompileToPdfTableRow(DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture);
         Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents);
 
         PricingStrategyValidationResult ValidatePricingStrategyPreSave(DynamicTable dynamicTable);
         Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta);
-        Task<List<TableRow>> CreatePreviewData(string accountId, DynamicTableMeta tableMeta, Area area, CultureInfo culture);
+        Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area area, CultureInfo culture);
     }
 }

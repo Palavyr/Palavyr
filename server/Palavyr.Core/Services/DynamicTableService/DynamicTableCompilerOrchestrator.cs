@@ -5,21 +5,25 @@ using Palavyr.Core.Models.Aliases;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.DynamicTableService
 {
     public class DynamicTableCompilerOrchestrator : IDynamicTableCompilerOrchestrator
     {
-        private readonly DynamicResponseComponentExtractor dynamicResponseComponentExtractor;
-        private readonly DynamicTableCompilerRetriever dynamicTableCompilerRetriever;
+        private readonly IDynamicResponseComponentExtractor dynamicResponseComponentExtractor;
+        private readonly IDynamicTableCompilerRetriever dynamicTableCompilerRetriever;
+        private readonly IHoldAnAccountId accountIdHolder;
 
         public DynamicTableCompilerOrchestrator(
-            DynamicResponseComponentExtractor dynamicResponseComponentExtractor,
-            DynamicTableCompilerRetriever dynamicTableCompilerRetriever
+            IDynamicResponseComponentExtractor dynamicResponseComponentExtractor,
+            IDynamicTableCompilerRetriever dynamicTableCompilerRetriever,
+            IHoldAnAccountId accountIdHolder
         )
         {
             this.dynamicResponseComponentExtractor = dynamicResponseComponentExtractor;
             this.dynamicTableCompilerRetriever = dynamicTableCompilerRetriever;
+            this.accountIdHolder = accountIdHolder;
         }
 
         public async Task<bool> PerformInternalCheck(ConversationNode node, string response, DynamicResponseComponents dynamicResponseComponents)
@@ -29,7 +33,6 @@ namespace Palavyr.Core.Services.DynamicTableService
         }
 
         public async Task<List<Table>> CompileTablesToPdfRows(
-            string accountId,
             DynamicResponses dynamicResponses,
             CultureInfo culture,
             bool includeTotals
@@ -51,7 +54,6 @@ namespace Palavyr.Core.Services.DynamicTableService
                 // List<TableRow> rows;
                 // rows = await compiler.CompileToPdfTableRow(accountId, responses, dynamicTableKeys, culture);
                 var rows = await dynamicResponseComponents.Compiler.CompileToPdfTableRow(
-                    accountId,
                     dynamicResponseComponents.Responses,
                     dynamicResponseComponents.DynamicTableKeys,
                     culture
@@ -61,14 +63,10 @@ namespace Palavyr.Core.Services.DynamicTableService
             }
 
             var table = new Table("Variable estimates determined by your responses", tableRows, culture, includeTotals);
-            return new List<Table>() {table};
+            return new List<Table>() { table };
         }
 
-        public async Task<List<NodeTypeOption>> CompileTablesToConfigurationNodes(
-            IEnumerable<DynamicTableMeta> dynamicTableMetas,
-            string accountId,
-            string areaId
-        )
+        public async Task<List<NodeTypeOption>> CompileTablesToConfigurationNodes(IEnumerable<DynamicTableMeta> dynamicTableMetas, string areaId)
         {
             var nodes = new List<NodeTypeOption>() { };
             foreach (var dynamicTableMeta in dynamicTableMetas)
@@ -86,8 +84,8 @@ namespace Palavyr.Core.Services.DynamicTableService
             foreach (var pricingStrategy in pricingStrategyMetas)
             {
                 var compiler = dynamicTableCompilerRetriever.RetrieveCompiler(pricingStrategy.TableType);
-                var validationResult =  await compiler.ValidatePricingStrategyPostSave(pricingStrategy);
-                validationResults.Add(validationResult);   
+                var validationResult = await compiler.ValidatePricingStrategyPostSave(pricingStrategy);
+                validationResults.Add(validationResult);
             }
 
             return validationResults;

@@ -8,6 +8,7 @@ using Palavyr.Core.Models.Conversation.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AuthenticationServices;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
@@ -16,22 +17,23 @@ namespace Palavyr.API.Controllers.WidgetLive
     {
         private readonly IConfigurationRepository configurationRepository;
         private readonly IConvoHistoryRepository convoRepository;
+        private readonly IHoldAnAccountId accountIdHolder;
         private ILogger<CreateNewConversationHistoryController> logger;
 
         public CreateNewConversationHistoryController(
             IConfigurationRepository configurationRepository,
             IConvoHistoryRepository convoRepository,
+            IHoldAnAccountId accountIdHolder,
             ILogger<CreateNewConversationHistoryController> logger)
         {
             this.configurationRepository = configurationRepository;
             this.convoRepository = convoRepository;
+            this.accountIdHolder = accountIdHolder;
             this.logger = logger;
         }
 
         [HttpPost("widget/{areaId}/create")]
         public async Task<NewConversation> Create(
-            [FromHeader]
-            string accountId,
             [FromRoute]
             string areaId,
             [FromBody]
@@ -39,16 +41,16 @@ namespace Palavyr.API.Controllers.WidgetLive
         )
         {
             logger.LogDebug("Fetching nodes...");
-            var standardNodes = await configurationRepository.GetAreaConversationNodes(accountId, areaId);
-            var completeConversation = EndingSequence.AttachEndingSequenceToNodeList(standardNodes, areaId, accountId);
+            var standardNodes = await configurationRepository.GetAreaConversationNodes(areaId);
+            var completeConversation = EndingSequence.AttachEndingSequenceToNodeList(standardNodes, areaId, accountIdHolder.AccountId);
 
             logger.LogDebug("Creating new conversation for user with apikey: {apiKey}");
             var widgetNodes = completeConversation.MapConversationToWidgetNodes();
 
             var newConvo = NewConversation.CreateNew(widgetNodes);
 
-            var area = await configurationRepository.GetAreaById(accountId, areaId);
-            var newConversationRecord = ConversationRecord.CreateDefault(newConvo.ConversationId, accountId, area.AreaName, areaId);
+            var area = await configurationRepository.GetAreaById(areaId);
+            var newConversationRecord = ConversationRecord.CreateDefault(newConvo.ConversationId, accountIdHolder.AccountId, area.AreaName, areaId);
 
             if (!string.IsNullOrEmpty(recordUpdate.Email))
             {

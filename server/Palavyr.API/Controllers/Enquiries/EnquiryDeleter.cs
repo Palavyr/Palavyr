@@ -11,8 +11,8 @@ namespace Palavyr.API.Controllers.Enquiries
 {
     public interface IEnquiryDeleter
     {
-        Task DeleteEnquiry(string accountId, string fileId, CancellationToken cancellationToken);
-        Task DeleteEnquiries(string accountId, string[] fileReferences, CancellationToken cancellationToken);   
+        Task DeleteEnquiry(string fileId, CancellationToken cancellationToken);
+        Task DeleteEnquiries(string[] fileReferences, CancellationToken cancellationToken);   
     }
 
     public class EnquiryDeleter : IEnquiryDeleter
@@ -35,28 +35,27 @@ namespace Palavyr.API.Controllers.Enquiries
             this.convoContext = convoContext;
         }
 
-
-        public async Task DeleteEnquiry(string accountId, string conversationId, CancellationToken cancellationToken)
+        public async Task DeleteEnquiry(string conversationId, CancellationToken cancellationToken)
         {
-            await DeleteFromS3(accountId, conversationId);
+            await DeleteFromS3(conversationId);
             TrackDeleteFromDb(conversationId);
             await convoContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task DeleteEnquiries(string accountId, string[] fileReferences, CancellationToken cancellationToken)
+        public async Task DeleteEnquiries(string[] fileReferences, CancellationToken cancellationToken)
         {
             foreach (var fileReference in fileReferences)
             {
-                await DeleteEnquiry(accountId, fileReference, cancellationToken);
+                await DeleteEnquiry(fileReference, cancellationToken);
             }
 
             await convoContext.SaveChangesAsync(cancellationToken);
         }
 
-        private async Task DeleteFromS3(string accountId, string fileReference)
+        private async Task DeleteFromS3(string fileReference)
         {
             // Delete from S3
-            var s3Key = s3KeyResolver.ResolveResponsePdfKey(accountId, fileReference);
+            var s3Key = s3KeyResolver.ResolveResponsePdfKey(fileReference);
             var userDataBucket = configuration.GetUserDataBucket();
             var success = await s3Deleter.DeleteObjectFromS3Async(userDataBucket, s3Key);
             if (!success)

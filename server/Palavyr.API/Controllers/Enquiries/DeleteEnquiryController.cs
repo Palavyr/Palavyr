@@ -22,12 +22,11 @@ namespace Palavyr.API.Controllers.Enquiries
 
         [HttpPut("enquiries/selected")]
         public async Task<Enquiry[]> DeleteSelected(
-            [FromHeader] string accountId,
             DeleteEnquiriesRequest request,
             CancellationToken cancellationToken)
         {
-            await enquiryDeleter.DeleteEnquiries(accountId, request.FileReferences, cancellationToken);
-            return await conversationRecordRetriever.RetrieveConversationRecords(accountId);
+            await enquiryDeleter.DeleteEnquiries(request.FileReferences, cancellationToken);
+            return await conversationRecordRetriever.RetrieveConversationRecords();
         }
     }
 

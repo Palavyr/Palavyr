@@ -7,6 +7,7 @@ using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Repositories;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
@@ -14,11 +15,13 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
     {
         private readonly IConfigurationRepository configurationRepository;
         private ILogger<CreateDynamicTableController> logger;
+        private readonly IHoldAnAccountId accountIdHolder;
 
-        public CreateDynamicTableController(IConfigurationRepository configurationRepository, ILogger<CreateDynamicTableController> logger)
+        public CreateDynamicTableController(IConfigurationRepository configurationRepository, ILogger<CreateDynamicTableController> logger, IHoldAnAccountId accountIdHolder)
         {
             this.configurationRepository = configurationRepository;
             this.logger = logger;
+            this.accountIdHolder = accountIdHolder;
         }
 
         // One controller for getting each table type. A separate call to get the type. Each table has a different
@@ -29,10 +32,9 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 
         [HttpPost("tables/dynamic/{areaId}")]
         public async Task<DynamicTableMeta> Create(
-            [FromHeader] string accountId,
             [FromRoute] string areaId)
         {
-            var area = await configurationRepository.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(areaId);
 
             var dynamicTables = area.DynamicTableMetas.ToList();
 
@@ -45,12 +47,12 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
                 DynamicTableTypes.DefaultTable.TableType,
                 tableId,
                 areaId,
-                accountId);
+                accountIdHolder.AccountId);
 
             dynamicTables.Add(newTableMeta);
             area.DynamicTableMetas = dynamicTables;
 
-            await configurationRepository.SetDefaultDynamicTable(accountId, areaId, tableId);
+            await configurationRepository.SetDefaultDynamicTable(areaId, tableId);
             await configurationRepository.CommitChangesAsync();
 
             return newTableMeta;

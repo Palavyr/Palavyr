@@ -15,9 +15,9 @@ namespace Palavyr.API.Controllers.Response
         }
         
         [HttpGet("response/configuration/{areaId}")]
-        public async Task<Area> Get([FromHeader] string accountId, [FromRoute] string areaId)
+        public async Task<Area> Get([FromRoute] string areaId)
         {
-            var areaWithAllData = await configurationRepository.GetAreaComplete(accountId, areaId);
+            var areaWithAllData = await configurationRepository.GetAreaComplete(areaId);
             return areaWithAllData;
         }
     }

@@ -25,12 +25,11 @@ namespace Palavyr.API.Controllers.Areas
 
         [HttpPut("areas/update/display-title/{areaId}")]
         public async Task<string> Modify(
-            [FromHeader] string accountId,
             [FromBody] AreaDisplayTitleText areaDisplayTitleText,
             string areaId
         )
         {
-            var area = await configurationRepository.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(areaId);
             if (areaDisplayTitleText.AreaDisplayTitle != null)
             {
                 area.AreaDisplayTitle = areaDisplayTitleText.AreaDisplayTitle;

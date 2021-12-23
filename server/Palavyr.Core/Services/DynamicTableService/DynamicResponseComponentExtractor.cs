@@ -6,11 +6,16 @@ using Palavyr.Core.Models.Configuration.Constant;
 
 namespace Palavyr.Core.Services.DynamicTableService
 {
-    public class DynamicResponseComponentExtractor
+    public interface IDynamicResponseComponentExtractor
     {
-        private readonly DynamicTableCompilerRetriever dynamicTableCompilerRetriever;
+        DynamicResponseComponents ExtractDynamicTableComponents(DynamicResponse dynamicResponse);
+    }
 
-        public DynamicResponseComponentExtractor(DynamicTableCompilerRetriever dynamicTableCompilerRetriever)
+    public class DynamicResponseComponentExtractor : IDynamicResponseComponentExtractor
+    {
+        private readonly IDynamicTableCompilerRetriever dynamicTableCompilerRetriever;
+
+        public DynamicResponseComponentExtractor(IDynamicTableCompilerRetriever dynamicTableCompilerRetriever)
         {
             this.dynamicTableCompilerRetriever = dynamicTableCompilerRetriever;
         }

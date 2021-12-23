@@ -7,8 +7,9 @@ using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.AmazonServices;
+using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AmazonServices.S3Service;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.ImageServices
 {
@@ -17,30 +18,34 @@ namespace Palavyr.Core.Services.ImageServices
         private readonly IConfiguration configuration;
         private readonly IS3KeyResolver s3KeyResolver;
         private readonly IS3Saver s3Saver;
+        private readonly IConfigurationRepository configurationRepository;
         private readonly DashContext dashContext;
-        private readonly ILinkCreator linkCreator;
+        private readonly IHoldAnAccountId accountIdHolder;
 
         public ImageSaver(
             IConfiguration configuration,
             IS3KeyResolver s3KeyResolver,
             IS3Saver s3Saver,
+            IConfigurationRepository configurationRepository,
             DashContext dashContext,
-            ILinkCreator linkCreator)
+            IHoldAnAccountId accountIdHolder)
         {
             this.configuration = configuration;
             this.s3KeyResolver = s3KeyResolver;
             this.s3Saver = s3Saver;
+            this.configurationRepository = configurationRepository;
             this.dashContext = dashContext;
-            this.linkCreator = linkCreator;
+            this.accountIdHolder = accountIdHolder;
         }
 
-        public async Task<FileLink> SaveImage(string accountId, IFormFile imageFile, CancellationToken cancellationToken)
+        public async Task<FileLink> SaveImage(IFormFile imageFile, CancellationToken cancellationToken)
         {
             var userDataBucket = configuration.GetUserDataBucket();
-            var newImage = Image.CreateImageRecord(imageFile.FileName, s3KeyResolver, accountId);
+            
+            
+            var newImage = Image.CreateImageRecord(imageFile.FileName, s3KeyResolver, accountIdHolder.AccountId);
 
             await s3Saver.StreamObjectToS3(userDataBucket, imageFile, newImage.S3Key);
-            // var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(newImage.S3Key, userDataBucket, DateTime.Now.AddDays(6.5));
 
             // add to the databases
             await dashContext.Images.AddAsync(newImage);

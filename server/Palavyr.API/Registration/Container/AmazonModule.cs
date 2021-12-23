@@ -8,6 +8,7 @@ using Autofac;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.ExtensionMethods;
+using Palavyr.Core.Mediator;
 using Palavyr.Core.Services.EmailService.SmtpEmail;
 
 //https://stackoverflow.com/questions/59200028/registering-more-amazons3client-with-configurations-on-autofac

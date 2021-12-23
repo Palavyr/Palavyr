@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
+using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
 {
@@ -11,23 +12,21 @@ namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
     {
         private DashContext dashContext;
         private ILogger<ModifyAreaEmailTemplateController> logger;
+        private IConfigurationRepository configurationRepository;
 
         public ModifyAreaEmailTemplateController(
             ILogger<ModifyAreaEmailTemplateController> logger,
-            DashContext dashContext
+            IConfigurationRepository configurationRepository
         )
         {
             this.logger = logger;
-            this.dashContext = dashContext;
+            this.configurationRepository = configurationRepository;
         }
 
         [HttpPut("email/{areaId}/email-template")]
-        public async Task<string> Modify([FromHeader] string accountId, [FromRoute] string areaId, [FromBody] EmailTemplateRequest request)
+        public async Task<string> Modify([FromRoute] string areaId, [FromBody] EmailTemplateRequest request)
         {
-            var currentArea = dashContext
-                .Areas
-                .Where(row => row.AccountId == accountId)
-                .Single(row => row.AreaIdentifier == areaId);
+            var currentArea = await configurationRepository.GetAreaById(areaId);
             currentArea.EmailTemplate = request.EmailTemplate;
             await dashContext.SaveChangesAsync();
             return currentArea.EmailTemplate;

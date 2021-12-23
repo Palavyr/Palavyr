@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Services.AccountServices.PlanTypes;
@@ -18,7 +17,7 @@ namespace Palavyr.Core.Services.PdfService
             this.businessRules = businessRules;
         }
 
-        public async Task<List<Table>> CollectStaticTables(string accountId, Area areaData, CultureInfo culture, int numIndividuals, CancellationToken cancellationToken)
+        public async Task<List<Table>> CollectStaticTables(Area areaData, CultureInfo culture, int numIndividuals)
         {
             var tables = new List<Table>();
             var tableMetas = areaData.StaticTablesMetas;
@@ -45,7 +44,7 @@ namespace Palavyr.Core.Services.PdfService
                 tables.Add(table);
             }
 
-            var numberStaticTablesAllowed = await businessRules.GetAllowedStaticTables(accountId, cancellationToken);
+            var numberStaticTablesAllowed = await businessRules.GetAllowedStaticTables();
             return tables.Take(numberStaticTablesAllowed).ToList();
         }
     }

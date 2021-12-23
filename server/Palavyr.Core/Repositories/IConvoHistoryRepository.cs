@@ -12,7 +12,7 @@ namespace Palavyr.Core.Repositories
 
         Task<ConversationRecord> GetConversationRecordById(string conversationId);
         Task<ConversationRecord> UpdateConversationRecord(ConversationRecord newConversationRecord);
-        Task<ConversationRecord[]> GetAllConversationRecords(string accountId);
+        Task<ConversationRecord[]> GetAllConversationRecords();
         Task<ConversationHistory[]> GetConversationById(string conversationId);
 
     }

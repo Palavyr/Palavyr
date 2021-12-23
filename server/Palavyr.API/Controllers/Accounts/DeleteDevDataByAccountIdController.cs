@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Repositories.Delete;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Controllers.Accounts
 {
@@ -15,13 +16,15 @@ namespace Palavyr.API.Controllers.Accounts
         private readonly IDashDeleter dashDeleter;
         private readonly IConvoDeleter convoDeleter;
         private readonly IDetermineCurrentEnvironment determineCurrentEnvironment;
+        private readonly IHoldAnAccountId accountIdHolder;
 
         public DeleteDevDataByAccountIdController(
             ILogger<DeleteDevDataByAccountIdController> logger,
             IAccountDeleter accountDeleter,
             IDashDeleter dashDeleter,
             IConvoDeleter convoDeleter,
-            IDetermineCurrentEnvironment determineCurrentEnvironment
+            IDetermineCurrentEnvironment determineCurrentEnvironment, 
+            IHoldAnAccountId accountIdHolder
         )
         {
             this.logger = logger;
@@ -29,6 +32,7 @@ namespace Palavyr.API.Controllers.Accounts
             this.dashDeleter = dashDeleter;
             this.convoDeleter = convoDeleter;
             this.determineCurrentEnvironment = determineCurrentEnvironment;
+            this.accountIdHolder = accountIdHolder;
         }
 
         [HttpDelete("dev/{devKey}/{accountId}")]
@@ -48,13 +52,13 @@ namespace Palavyr.API.Controllers.Accounts
             logger.LogInformation($"Deleting details for account: {accountId}");
 
             logger.LogInformation("Deleting from the convo database...");
-            convoDeleter.DeleteAccount(accountId);
+            convoDeleter.DeleteAccount();
 
             logger.LogInformation("Deleting from the dash database...");
-            await dashDeleter.DeleteAccount(accountId);
+            await dashDeleter.DeleteAccount();
 
             logger.LogDebug("Deleting from the Accounts database...");
-            await accountDeleter.DeleteAccount(accountId, cancellationToken);
+            await accountDeleter.DeleteAccount();
 
             await accountDeleter.CommitChangesAsync();
             await dashDeleter.CommitChangesAsync();

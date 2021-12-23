@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
@@ -14,35 +16,30 @@ namespace Palavyr.API.Controllers.Response.SubjectControllers
 
     public class ModifyAreaEmailSubjectController : PalavyrBaseController
     {
-
-        private readonly DashContext dashContext;
+        private readonly IConfigurationRepository repository;
         private readonly ILogger<ModifyAreaEmailSubjectController> logger;
 
         public ModifyAreaEmailSubjectController(
-            DashContext dashContext,
+            IConfigurationRepository repository,
             ILogger<ModifyAreaEmailSubjectController> logger
         )
         {
-            this.dashContext = dashContext;
+            this.repository = repository;
             this.logger = logger;
         }
 
         [HttpPut("email/subject/{areaId}")]
         public async Task<string> Modify(
-            [FromHeader] string accountId,
             [FromBody] SubjectText subjectText,
-            string areaId
+            string areaId,
+            CancellationToken cancellationToken
         )
         {
-            var curArea = await dashContext
-                .Areas
-                .Where(row => row.AccountId == accountId)
-                .SingleAsync(row => row.AreaIdentifier == areaId);
-
+            var curArea = await repository.GetAreaById(areaId);
             if (subjectText.Subject != curArea.Subject)
             {
                 curArea.Subject = subjectText.Subject;
-                await dashContext.SaveChangesAsync();
+                await repository.CommitChangesAsync();
             }
             return subjectText.Subject;
         }

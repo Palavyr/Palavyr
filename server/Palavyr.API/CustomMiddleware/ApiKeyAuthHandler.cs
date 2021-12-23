@@ -2,6 +2,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +27,7 @@ namespace Palavyr.API.CustomMiddleware
         private readonly AccountsContext accountsContext;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly ILogger<ApiKeyAuthenticationHandler> logger;
+        private readonly IMediator mediator;
 
         public ApiKeyAuthenticationHandler(
             AccountsContext accountsContext,
@@ -34,11 +36,13 @@ namespace Palavyr.API.CustomMiddleware
             ILoggerFactory loggerFactory,
             ILogger<ApiKeyAuthenticationHandler> logger,
             UrlEncoder encoder,
-            ISystemClock clock) : base(options, loggerFactory, encoder, clock)
+            ISystemClock clock,
+            IMediator mediator) : base(options, loggerFactory, encoder, clock)
         {
             this.accountsContext = accountsContext;
             httpContextAccessor = contextAccessor;
             this.logger = logger;
+            this.mediator = mediator;
         }
         
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -56,7 +60,7 @@ namespace Palavyr.API.CustomMiddleware
             var found = httpContext.Request.Query.TryGetValue("key", out var apiKey);
             if (!found)
             {
-                return await Task.FromResult(AuthenticateResult.Fail("Could not find API Key in url. Check formatting."));
+                return await Task.FromResult(AuthenticateResult.Fail("Could not find the API Key in url."));
             }
             
             var account = accountsContext.Accounts.SingleOrDefault(row => row.ApiKey == apiKey.ToString());
@@ -70,10 +74,9 @@ namespace Palavyr.API.CustomMiddleware
                 return await Task.FromResult(AuthenticateResult.Fail(
                     "Account is not activated. Check your email for an activation code to use with the dashboard."));
             }
-            
-            // set the account id in the header
-            httpContext.Request.Headers[ApplicationConstants.MagicUrlStrings.AccountId] = account.AccountId;
-            
+
+            await mediator.Publish(new SetAccountEvent(account.AccountId));
+
             // account found - apikey is legit. Now make a claim ticket...
             var claims = new[] {new Claim(ClaimTypes.SerialNumber, apiKey.ToString())};
             var claimsIdentity = new ClaimsIdentity(claims, nameof(ApiKeyAuthenticationHandler));

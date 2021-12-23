@@ -1,42 +1,26 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.WidgetConfiguration
 {
     public class GetWidgetActiveStateController : PalavyrBaseController
     {
-        private DashContext dashContext;
-        private ILogger<GetWidgetPreferencesController> logger;
+        private readonly IMediator mediator;
 
-        public GetWidgetActiveStateController(DashContext dashContext, ILogger<GetWidgetPreferencesController> logger)
+        public GetWidgetActiveStateController(IMediator mediator)
         {
-            this.logger = logger;
-            this.dashContext = dashContext;
+            this.mediator = mediator;
         }
 
+
         [HttpGet("widget-config/widget-active-state")]
-        public async Task<bool> GetWidgetActiveState(
-            [FromHeader]
-            string accountId)
+        public async Task<bool> GetWidgetActiveState(CancellationToken cancellationToken)
         {
-            logger.LogDebug("Retrieving widget state.");
-            var widgetPreferences = await dashContext.WidgetPreferences.SingleOrDefaultAsync(row => row.AccountId == accountId);
-
-            logger.LogDebug(widgetPreferences.HeaderColor);
-            if (widgetPreferences != null)
-            {
-                if (widgetPreferences.WidgetState != null)
-                {
-                    return widgetPreferences.WidgetState;
-                }
-
-                return false;
-            }
-
-            return false;
+            var response = await mediator.Send(new GetWidgetActiveStateRequest());
+            return response.ActiveState;
         }
     }
 }

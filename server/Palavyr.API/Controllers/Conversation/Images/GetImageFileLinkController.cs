@@ -20,9 +20,7 @@ namespace Palavyr.API.Controllers.Conversation.Images
         }
 
         [HttpPost("images/link")]
-        public string Get(
-            [FromHeader] string accountId,
-            [FromBody] ImageS3LinkRequest request)
+        public string Get([FromBody] ImageS3LinkRequest request)
         {
             var previewBucket = configuration.GetUserDataBucket();
             var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(request.S3Key, previewBucket);

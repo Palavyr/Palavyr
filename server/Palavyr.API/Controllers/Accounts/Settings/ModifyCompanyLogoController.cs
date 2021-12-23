@@ -23,23 +23,19 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         [HttpPut("account/settings/logo")]
         [ActionName("Decode")]
         public async Task<string> Modify(
-            [FromHeader] string accountId,
             [FromForm(Name = "files")] IFormFile file,
             CancellationToken cancellationToken
             )
         {
-            await logoDeleter.DeleteLogo(accountId, cancellationToken);
-            var preSignedUrl = await logoSaver.SaveLogo(accountId, file, cancellationToken);
+            await logoDeleter.DeleteLogo();
+            var preSignedUrl = await logoSaver.SaveLogo(file);
             return preSignedUrl;
         }
 
         [HttpDelete("account/settings/logo")]
-        public async Task Delete(
-            [FromHeader]
-            string accountId,
-            CancellationToken cancellationToken)
+        public async Task Delete(CancellationToken cancellationToken)
         {
-            await logoDeleter.DeleteLogo(accountId, cancellationToken);
+            await logoDeleter.DeleteLogo();
         }
     }
 }

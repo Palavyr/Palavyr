@@ -1,31 +1,31 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
+using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Accounts.Setup
 {
 
     public class GetAccountActiveStatusController : PalavyrBaseController
     {
-        private AccountsContext accountsContext;
         private ILogger<GetAccountActiveStatusController> logger;
+        private IAccountRepository accountRepository;
 
         public GetAccountActiveStatusController(
             ILogger<GetAccountActiveStatusController> logger,
-            AccountsContext accountsContext
+            IAccountRepository accountRepository
         )
         {
-            this.accountsContext = accountsContext;
             this.logger = logger;
+            this.accountRepository = accountRepository;
         }
 
         [HttpGet("account/is-active")]
-        public async Task<bool> CheckIsActive([FromHeader] string accountId)
+        public async Task<bool> CheckIsActive()
         {
             logger.LogDebug("Activation controller hit! Again!");
-            var account = await accountsContext.Accounts.SingleOrDefaultAsync(row => row.AccountId == accountId);
+            var account = await accountRepository.GetAccount();
             var isActive = account.Active;
             return isActive;
         }

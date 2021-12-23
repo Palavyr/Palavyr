@@ -16,11 +16,10 @@ namespace Palavyr.API.Controllers.Response
 
         [HttpPut("response/configuration/{areaId}/prologue")]
         public async Task<string> UpdatePrologue(
-            [FromHeader] string accountId,
             [FromRoute] string areaId,
             [FromBody] PrologueReceiver prologueReceiver)
         {
-            var area = await configurationRepository.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(areaId);
             area.Prologue = prologueReceiver.Prologue;
             await configurationRepository.CommitChangesAsync();
             return prologueReceiver.Prologue;

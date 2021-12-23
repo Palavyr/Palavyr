@@ -1,43 +1,42 @@
 ﻿using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
+using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AmazonServices.S3Service;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.LogoServices
 {
     public interface ILogoDeleter
     {
-        Task DeleteLogo(string accountId, CancellationToken cancellationToken);
+        Task DeleteLogo();
     }
 
     public class LogoDeleter : ILogoDeleter
     {
         private readonly IConfiguration configuration;
-        private readonly DashContext dashContext;
-        private readonly AccountsContext accountsContext;
+        private readonly IAccountRepository accountRepository;
+
         private readonly IS3Deleter s3Deleter;
 
         public LogoDeleter(
             IConfiguration configuration,
-            DashContext dashContext,
-            AccountsContext accountsContext,
+            IAccountRepository accountRepository,
             IS3Deleter s3Deleter
         )
         {
             this.configuration = configuration;
-            this.dashContext = dashContext;
-            this.accountsContext = accountsContext;
+            this.accountRepository = accountRepository;
             this.s3Deleter = s3Deleter;
         }
 
-        public async Task DeleteLogo(string accountId, CancellationToken cancellationToken)
+        public async Task DeleteLogo()
         {
-            var account = await accountsContext.Accounts.SingleAsync(x => x.AccountId == accountId);
+            var account = await accountRepository.GetAccount();
 
             var s3Key = account.AccountLogoUri;
             if (!string.IsNullOrWhiteSpace(s3Key))
@@ -51,7 +50,7 @@ namespace Palavyr.Core.Services.LogoServices
             }
             
             account.AccountLogoUri = "";
-            await accountsContext.SaveChangesAsync(cancellationToken);
+            await accountRepository.CommitChangesAsync();
         }
     }
 }

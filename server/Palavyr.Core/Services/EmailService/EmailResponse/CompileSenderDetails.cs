@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
@@ -8,7 +7,7 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
 {
     public interface ICompileSenderDetails
     {
-        Task<CompileSenderDetails.CompiledSenderDetails> Compile(string accountId, string areaId, EmailRequest emailRequest, CancellationToken cancellationToken);
+        Task<CompileSenderDetails.CompiledSenderDetails> Compile(string areaId, EmailRequest emailRequest);
     }
 
     public class CompileSenderDetails : ICompileSenderDetails
@@ -28,10 +27,10 @@ namespace Palavyr.Core.Services.EmailService.EmailResponse
             this.responseCustomizer = responseCustomizer;
         }
 
-        public async Task<CompiledSenderDetails> Compile(string accountId, string areaId, EmailRequest emailRequest, CancellationToken cancellationToken)
+        public async Task<CompiledSenderDetails> Compile(string areaId, EmailRequest emailRequest)
         {
-            var account = await accountRepository.GetAccount(accountId, cancellationToken);
-            var area = await configurationRepository.GetAreaById(accountId, areaId);
+            var account = await accountRepository.GetAccount();
+            var area = await configurationRepository.GetAreaById(areaId);
             var fromAddress = string.IsNullOrWhiteSpace(area.AreaSpecificEmail) ? account.EmailAddress : area.AreaSpecificEmail;
 
             var subject = area.UseAreaFallbackEmail ? account.GeneralFallbackSubject : area.Subject;

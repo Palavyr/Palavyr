@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -16,6 +15,7 @@ using Palavyr.Core.Services.DynamicTableService;
 using Palavyr.Core.Services.PdfService.PdfSections.Util;
 using Palavyr.Core.Services.PdfService.PdfServer;
 using Palavyr.Core.Services.TemporaryPaths;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.PdfService
 {
@@ -32,7 +32,8 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IS3KeyResolver s3KeyResolver;
         private readonly ITemporaryPath temporaryPath;
         private readonly ICriticalResponses criticalResponses;
-        private readonly DynamicTableCompilerRetriever compilerRetriever;
+        private readonly IDynamicTableCompilerRetriever compilerRetriever;
+        private readonly IHoldAnAccountId accountIdHolder;
 
         public PreviewResponseGenerator(
             IConfiguration configuration,
@@ -46,7 +47,8 @@ namespace Palavyr.Core.Services.PdfService
             IS3KeyResolver s3KeyResolver,
             ITemporaryPath temporaryPath,
             ICriticalResponses criticalResponses,
-            DynamicTableCompilerRetriever compilerRetriever
+            IDynamicTableCompilerRetriever compilerRetriever,
+            IHoldAnAccountId accountIdHolder
         )
         {
             this.configuration = configuration;
@@ -61,14 +63,15 @@ namespace Palavyr.Core.Services.PdfService
             this.temporaryPath = temporaryPath;
             this.criticalResponses = criticalResponses;
             this.compilerRetriever = compilerRetriever;
+            this.accountIdHolder = accountIdHolder;
         }
 
-        public async Task<FileLink> CreatePdfResponsePreviewAsync(string accountId, string areaId, CultureInfo culture, CancellationToken cancellationToken)
+        public async Task<FileLink> CreatePdfResponsePreviewAsync(string areaId, CultureInfo culture)
         {
             var previewBucket = configuration.GetPreviewBucket();
 
-            var areaData = await configurationRepository.GetAreaComplete(accountId, areaId);
-            var userAccount = await accountRepository.GetAccount(accountId, cancellationToken);
+            var areaData = await configurationRepository.GetAreaComplete(areaId);
+            var userAccount = await accountRepository.GetAccount();
 
             var fakeResponses = criticalResponses.Compile(
                 new List<Dictionary<string, string>>()
@@ -80,8 +83,8 @@ namespace Palavyr.Core.Services.PdfService
 
             logger.LogDebug("Attempting to collect table data....");
 
-            var staticTables = await staticTableCompiler.CollectStaticTables(accountId, areaData, culture, 2, cancellationToken); // ui always sends a number - 1 or greater.
-            var dynamicTables = await CollectPreviewDynamicTables(areaData, accountId, culture);
+            var staticTables = await staticTableCompiler.CollectStaticTables(areaData, culture, 2); // ui always sends a number - 1 or greater.
+            var dynamicTables = await CollectPreviewDynamicTables(areaData, culture);
 
             logger.LogDebug($"Generating PDF Html string to send to express server...");
             var html = responseHtmlBuilder.BuildResponseHtml(
@@ -100,7 +103,7 @@ namespace Palavyr.Core.Services.PdfService
 
             var localTempSafeFile = temporaryPath.CreateLocalTempSafeFile();
 
-            var s3Key = s3KeyResolver.ResolvePreviewKey(accountId, localTempSafeFile.FileStem);
+            var s3Key = s3KeyResolver.ResolvePreviewKey(localTempSafeFile.FileStem);
             await htmlToPdfClient.GeneratePdfFromHtml(html, previewBucket, s3Key, localTempSafeFile.FileStem, Paper.CreateDefault(localTempSafeFile.FileStem));
 
             var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(s3Key, previewBucket);
@@ -108,7 +111,8 @@ namespace Palavyr.Core.Services.PdfService
             return fileLink;
         }
 
-        private async Task<List<Table>> CollectPreviewDynamicTables(Area area, string accountId, CultureInfo culture)
+        private async Task<List<Table>> CollectPreviewDynamicTables(Area area, CultureInfo culture
+        )
         {
             var dynamicTableMetas = area.DynamicTableMetas;
 
@@ -116,7 +120,7 @@ namespace Palavyr.Core.Services.PdfService
             foreach (var tableMeta in dynamicTableMetas)
             {
                 var dynamicCompiler = compilerRetriever.RetrieveCompiler(tableMeta.TableType);
-                var newRows = await dynamicCompiler.CreatePreviewData(accountId, tableMeta, area, culture);
+                var newRows = await dynamicCompiler.CreatePreviewData(tableMeta, area, culture);
                 rows.AddRange(newRows);
             }
 

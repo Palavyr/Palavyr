@@ -1,9 +1,15 @@
 ﻿using System;
+using System.Reflection;
 using Autofac;
 
 namespace Palavyr.Core.Services.DynamicTableService
 {
-    public class DynamicTableCompilerRetriever
+    public interface IDynamicTableCompilerRetriever
+    {
+        IDynamicTablesCompiler RetrieveCompiler(string dynamicTableTypeName);
+    }
+
+    public class DynamicTableCompilerRetriever : IDynamicTableCompilerRetriever
     {
         private readonly ILifetimeScope lifetimeScope;
 
@@ -14,9 +20,7 @@ namespace Palavyr.Core.Services.DynamicTableService
 
         public IDynamicTablesCompiler RetrieveCompiler(string dynamicTableTypeName)
         {
-            var compilerType = typeof(DynamicTableCompilerRetriever)
-                .Assembly
-                .GetType($"Palavyr.Core.Services.DynamicTableService.Compilers.{dynamicTableTypeName}Compiler");
+            var compilerType = Assembly.GetExecutingAssembly().GetType($"Palavyr.Core.Services.DynamicTableService.Compilers.{dynamicTableTypeName}Compiler");
             
             if (compilerType == null)
             {

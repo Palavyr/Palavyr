@@ -3,6 +3,7 @@ using Palavyr.API.Controllers.Enquiries;
 using Palavyr.API.Controllers.Response.Tables.Dynamic;
 using Palavyr.API.Controllers.Testing;
 using Palavyr.API.Controllers.WidgetLive;
+using Palavyr.API.CustomMiddleware;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
@@ -59,7 +60,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<PreviewResponseGenerator>().As<IPreviewResponseGenerator>();
             builder.RegisterType<PdfResponseGenerator>().As<IPdfResponseGenerator>();
             builder.RegisterType<StaticTableCompiler>().As<IStaticTableCompiler>();
-            builder.RegisterType<DynamicTableCompilerRetriever>().AsSelf();
+            builder.RegisterType<DynamicTableCompilerRetriever>().As<IDynamicTableCompilerRetriever>();
 
             builder.RegisterGeneric(typeof(GenericDynamicTableRepository<>)).As(typeof(IGenericDynamicTableRepository<>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(DynamicTableCommandHandler<>)).As(typeof(IDynamicTableCommandHandler<>)).InstancePerLifetimeScope();
@@ -74,7 +75,6 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<S3Saver>().As<IS3Saver>();
             builder.RegisterType<S3Deleter>().As<IS3Deleter>();
 
-            builder.RegisterType<INodeGetter>().AsSelf();
             builder.RegisterType<ConversationOptionSplitter>().As<IConversationOptionSplitter>().SingleInstance();
             builder.RegisterType<WidgetStatusChecker>().As<IWidgetStatusChecker>();
             builder.RegisterType<MissingNodeCalculator>().AsSelf().InstancePerLifetimeScope();
@@ -84,8 +84,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<NodeCounter>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<GuidFinder>().AsSelf().SingleInstance();
             builder.RegisterType<ThresholdEvaluator>().As<IThresholdEvaluator>();
-            builder.RegisterType<NodeOrderChecker>().AsSelf();
-            builder.RegisterType<DynamicResponseComponentExtractor>().AsSelf();
+            builder.RegisterType<NodeOrderChecker>().As<INodeOrderChecker>();
+            builder.RegisterType<DynamicResponseComponentExtractor>().As<IDynamicResponseComponentExtractor>();
             builder.RegisterType<LinkCreator>().As<ILinkCreator>();
             builder.RegisterType<AttachmentSaver>().As<IAttachmentSaver>();
             builder.RegisterType<S3KeyResolver>().As<IS3KeyResolver>();
@@ -104,7 +104,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<ConversationRecordRecordRetriever>().As<IConversationRecordRetriever>();
             builder.RegisterType<CompletedConversationModifier>().As<ICompletedConversationModifier>();
             builder.RegisterType<RemoveStaleSessions>().As<IRemoveStaleSessions>();
-            builder.RegisterType<SafeFileNameCreator>().AsSelf();
+            builder.RegisterType<SafeFileNameCreator>().As<ISafeFileNameCreator>();
             builder.RegisterType<LocalIo>().As<ILocalIo>();
             builder.RegisterType<PdfServerClient>().As<IPdfServerClient>();
             builder.RegisterType<ImageSaver>().As<IImageSaver>();
@@ -116,16 +116,36 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<DetermineCurrentEnvironment>().As<IDetermineCurrentEnvironment>();
             builder.RegisterType<ConversationNodeUpdater>().As<IConversationNodeUpdater>();
             builder.RegisterType<SelectOneFlatNodeUpdater>().As<ISelectOneFlatNodeUpdater>();
+            builder.RegisterType<NodeGetter>().As<INodeGetter>();
             builder.RegisterType<UpdateConversationRecordHandler>().As<IUpdateConversationRecordHandler>();
             builder.RegisterType<LocaleDefinitions>().As<ILocaleDefinitions>();
             builder.RegisterType<EnquiryInsightComputer>().As<IEnquiryInsightComputer>();
-            builder.RegisterType<NodeGetter>().As<INodeGetter>();
             builder.RegisterType<NodeBranchLengthCalculator>().As<INodeBranchLengthCalculator>();
 
             builder.RegisterType<DetermineCurrentOperatingSystem>().As<IDetermineCurrentOperatingSystem>();
             builder.RegisterType<ResponseRetriever>().As<IResponseRetriever>().InstancePerDependency();
 
             builder.RegisterType<SendWidgetResponseEmailHandler>().As<ISendWidgetResponseEmailHandler>().InstancePerLifetimeScope();
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            ///////!!! SPECIAL DANGER ZONE !!!//////////
+            builder.RegisterType<AccountIdHolder>().As<IHoldAnAccountId>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE
+            builder.RegisterType<CancellationTokenTransport>().As<ITransportACancellationToken>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE
+            ///////////// ///////////// ////////// ////////// ////////// /////////// ///////////// ///////////// ////////// ////////// ////////// /////////// 
+
         }
     }
 }

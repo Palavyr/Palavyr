@@ -2,8 +2,8 @@
 {
     public interface IConvoDeleter : IConvoHistoryRepository
     {
-        void DeleteAccount(string accountId);
-        void DeleteAllConversationRecordsByAccount(string accountId);
-        void DeleteAllCompletedConversationsByAccount(string accountId);
+        void DeleteAccount();
+        void DeleteAllConversationRecordsByAccount();
+        void DeleteAllCompletedConversationsByAccount();
     }
 }

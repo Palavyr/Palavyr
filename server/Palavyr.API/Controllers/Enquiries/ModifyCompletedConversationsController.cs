@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -22,9 +23,9 @@ namespace Palavyr.API.Controllers.Enquiries
         }
 
         [HttpPut("enquiries/update/{conversationId}")]
-        public async Task<Enquiry[]> UpdateCompletedConversation([FromHeader] string accountId, string conversationId)
+        public async Task<Enquiry[]> UpdateCompletedConversation(string conversationId,CancellationToken cancellationToken)
         {
-            var modifiedCompletedConversation = await completedConversationModifier.ModifyCompletedConversation(accountId, conversationId);
+            var modifiedCompletedConversation = await completedConversationModifier.ModifyCompletedConversation(conversationId);
             return modifiedCompletedConversation;
         }
     }

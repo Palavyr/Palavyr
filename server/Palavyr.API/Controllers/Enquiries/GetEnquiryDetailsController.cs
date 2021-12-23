@@ -25,7 +25,7 @@ namespace Palavyr.API.Controllers.Enquiries
         }
 
         [HttpGet("enquiries/review/{conversationId}")]
-        public async Task<ConversationHistory[]> Get([FromHeader] string accountId, [FromRoute] string conversationId, CancellationToken cancellationToken)
+        public async Task<ConversationHistory[]> Get([FromRoute] string conversationId, CancellationToken cancellationToken)
         {
             logger.LogDebug("Collecting Conversation for viewing...");
             var convoRows = await convoContext

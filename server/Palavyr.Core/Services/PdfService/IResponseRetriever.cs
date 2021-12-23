@@ -5,6 +5,6 @@ namespace Palavyr.Core.Services.PdfService
 {
     public interface IResponseRetriever
     {
-        Task<List<TEntity>> RetrieveAllAvailableResponses<TEntity>(string accountId, string dynamicResponseId) where TEntity : class;
+        Task<List<TEntity>> RetrieveAllAvailableResponses<TEntity>(string dynamicResponseId) where TEntity : class;
     }
 }

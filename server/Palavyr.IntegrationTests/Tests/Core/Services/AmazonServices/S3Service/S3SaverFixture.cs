@@ -39,7 +39,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
             var accountId = A.RandomName();
             var areaId = A.RandomName();
             var fileName = A.RandomName();
-            var s3Key = s3KeyResolver.ResolveAttachmentKey(accountId, areaId, fileName);
+            var s3Key = s3KeyResolver.ResolveAttachmentKey(areaId, fileName);
             
             try
             {
@@ -67,7 +67,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
             var accountId = A.RandomName();
             var areaId = A.RandomName();
             var fileName = A.RandomName();
-            var s3Key = s3KeyResolver.ResolveAttachmentKey(accountId, areaId, fileName);
+            var s3Key = s3KeyResolver.ResolveAttachmentKey(areaId, fileName);
 
             Should.Throw<AmazonS3Exception>(async () => await s3Saver.StreamObjectToS3("Palavyr-does-not-exist", formFile, s3Key));
 

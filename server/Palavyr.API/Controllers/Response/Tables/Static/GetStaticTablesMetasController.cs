@@ -20,9 +20,9 @@ namespace Palavyr.API.Controllers.Response.Tables.Static
         }
         
         [HttpGet("response/configuration/{areaId}/static/tables")]
-        public async Task<List<StaticTablesMeta>> GetStaticTablesMetas([FromHeader] string accountId, string areaId)
+        public async Task<List<StaticTablesMeta>> GetStaticTablesMetas(string areaId)
         {
-            var staticTables = await configurationRepository.GetStaticTables(accountId, areaId);
+            var staticTables = await configurationRepository.GetStaticTables(areaId);
             return staticTables;
         }
     }

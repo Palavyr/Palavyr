@@ -18,14 +18,14 @@ namespace Palavyr.API.Controllers.Conversation
         private readonly IConfigurationRepository configurationRepository;
         private readonly RequiredNodeCalculator requiredNodeCalculator;
         private readonly MissingNodeCalculator missingNodeCalculator;
-        private readonly NodeOrderChecker nodeOrderChecker;
+        private readonly INodeOrderChecker nodeOrderChecker;
 
         public GetMissingNodesController(
             ILogger<GetMissingNodesController> logger,
             IConfigurationRepository configurationRepository,
             RequiredNodeCalculator requiredNodeCalculator,
             MissingNodeCalculator missingNodeCalculator,
-            NodeOrderChecker nodeOrderChecker
+            INodeOrderChecker nodeOrderChecker
         )
         {
             this.configurationRepository = configurationRepository;
@@ -39,12 +39,10 @@ namespace Palavyr.API.Controllers.Conversation
         public async Task<TreeErrorsResponse> Get(
             [FromRoute]
             string areaId,
-            [FromHeader]
-            string accountId,
             [FromBody]
             ConversationNodeDto currentNodes)
         {
-            var area = await configurationRepository.GetAreaComplete(accountId, areaId);
+            var area = await configurationRepository.GetAreaComplete(areaId);
 
             var dynamicTableMetas = area.DynamicTableMetas;
             var staticTableMetas = area.StaticTablesMetas;
@@ -59,8 +57,7 @@ namespace Palavyr.API.Controllers.Conversation
         public async Task<TreeErrorsResponse> GetIntro(
             [FromRoute]
             string introId,
-            [FromHeader]
-            string accountId,
+
             [FromBody]
             ConversationNodeDto currentNodes)
         {

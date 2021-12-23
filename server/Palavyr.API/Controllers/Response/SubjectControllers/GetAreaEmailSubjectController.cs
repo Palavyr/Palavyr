@@ -1,31 +1,32 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
+using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
 
     public class GetAreaEmailSubjectController : PalavyrBaseController
     {
-
-        private DashContext dashContext;
         private ILogger<GetAreaEmailSubjectController> logger;
+        private readonly IConfigurationRepository configurationRepository;
 
         public GetAreaEmailSubjectController(
             ILogger<GetAreaEmailSubjectController> logger,
-            DashContext dashContext
+            IConfigurationRepository configurationRepository
         )
         {
             this.logger = logger;
-            this.dashContext = dashContext;
+            this.configurationRepository = configurationRepository;
         }
 
         [HttpGet("email/subject/{areaId}")]
-        public async Task<string> Modify([FromHeader] string accountId, [FromRoute] string areaId)
+        public async Task<string> Modify([FromRoute] string areaId, CancellationToken cancellationToken)
         {
-            var area = await dashContext.Areas.SingleAsync(row => row.AreaIdentifier == areaId && row.AccountId == accountId);
+            var area = await configurationRepository.GetAreaById(areaId);
             var subject = area.Subject;
             return subject;
         }

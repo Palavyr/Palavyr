@@ -17,9 +17,9 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
         
         [HttpGet("account/needs-password")]
-        public async Task<bool> Get([FromHeader] string accountId, CancellationToken cancellationToken)
+        public async Task<bool> Get()
         {
-            var account = await accountRepository.GetAccount(accountId, cancellationToken);
+            var account = await accountRepository.GetAccount();
             return NeedsPassword.Contains((int)(account.AccountType));
         }
         

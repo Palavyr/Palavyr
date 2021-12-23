@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Data;
+using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.Authentication.PasswordReset
@@ -11,28 +12,28 @@ namespace Palavyr.API.Controllers.Authentication.PasswordReset
 
     public class ResetMyPasswordController : PalavyrBaseController
     {
-        private readonly AccountsContext accountsContext;
+        private readonly IAccountRepository accountRepository;
 
-        public ResetMyPasswordController(AccountsContext accountsContext)
+        public ResetMyPasswordController(IAccountRepository accountRepository)
         {
-            this.accountsContext = accountsContext;
+            this.accountRepository = accountRepository;
         }
 
 
         [HttpPost("authentication/reset-my-password")]
-        public async Task<ResetMyPasswordResponse> Post([FromHeader] string accountId, [FromBody] ResetMyPasswordRequest request)
+        public async Task<ResetMyPasswordResponse> Post([FromBody] ResetMyPasswordRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.Password))
             {
                 return new ResetMyPasswordResponse("Email address and password must both be set.", false);
             }
 
-            var account = accountsContext.Accounts.Single(row => row.AccountId == accountId);
+            var account = await accountRepository.GetAccount();
             
             // TODO: Consider password validation?
             account.Password = PasswordHashing.CreateHashedPassword(request.Password);
-            await accountsContext.SaveChangesAsync();
-
+            await accountRepository.CommitChangesAsync();
+            
             return new ResetMyPasswordResponse("Successfully reset your password. Return to the homepage to login with your new password.", true);
         }
 

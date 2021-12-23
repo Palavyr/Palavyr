@@ -1,29 +1,28 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
+using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
     public class GetCustomerIdController : PalavyrBaseController
     {
         private readonly ILogger<GetCustomerIdController> logger;
-        private readonly AccountsContext accountsContext;
+        private readonly IAccountRepository accountRepository;
 
         public GetCustomerIdController(
             ILogger<GetCustomerIdController> logger,
-            AccountsContext accountsContext
+            IAccountRepository accountRepository
         )
         {
             this.logger = logger;
-            this.accountsContext = accountsContext;
+            this.accountRepository = accountRepository;
         }
 
         [HttpGet("payments/customer-id")]
-        public async Task<string> Get([FromHeader] string accountId)
+        public async Task<string> Get()
         {
-            var account = await accountsContext.Accounts.SingleAsync(row => row.AccountId == accountId);
+            var account = await accountRepository.GetAccount();
             return account.StripeCustomerId;
         }
     }

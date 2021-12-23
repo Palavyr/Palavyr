@@ -14,7 +14,7 @@ namespace Palavyr.Core.Services.PdfService
             this.lifetimeScope = lifetimeScope;
         }
 
-        public async Task<List<TEntity>> RetrieveAllAvailableResponses<TEntity>(string accountId, string dynamicResponseId) where TEntity : class
+        public async Task<List<TEntity>> RetrieveAllAvailableResponses<TEntity>(string dynamicResponseId) where TEntity : class
         {
             var repository = (IGenericDynamicTableRepository<TEntity>) lifetimeScope.Resolve(typeof(IGenericDynamicTableRepository<TEntity>));
             var rows = await repository.GetAllRowsMatchingDynamicResponseId(dynamicResponseId);

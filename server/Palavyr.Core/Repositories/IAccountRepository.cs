@@ -1,20 +1,22 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Palavyr.Core.Models.Accounts.Schemas;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Repositories
 {
     public interface IAccountRepository
     {
+        public IHoldAnAccountId AccountIdHolder { get; }
+
         Task CommitChangesAsync();
-        Task<Account> GetAccount(string accountId, CancellationToken cancellationToken);
-        Task<Account> GetAccountOrNull(string accountId);
+        Task<Account> GetAccount();
+        Task<Account> GetAccountOrNull();
         Task<Account> GetAccountByEmailOrNull(string emailAddress);
         Task<Account> GetAccountByEmailAddressOrNull(string emailAddress);
-        Task<Session> CreateAndAddNewSession(string token, string accountId, string apiKey);
+        Task<Session> CreateAndAddNewSession(string token, string apiKey);
         Task<Session> CreateAndAddNewSession(Account account);
         Task<Session> GetSessionOrNull(string token);
         Task RemoveSession(string sessionId);
-        bool SignedStripePayloadExists(string signedPayload);
+        Task<bool> SignedStripePayloadExists(string signedPayload);
     }
 }

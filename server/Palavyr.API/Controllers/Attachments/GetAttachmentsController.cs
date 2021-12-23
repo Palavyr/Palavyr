@@ -19,11 +19,10 @@ namespace Palavyr.API.Controllers.Attachments
 
         [HttpGet("attachments/{areaId}")]
         public async Task<FileLink[]> Get(
-            [FromHeader] string accountId,
             [FromRoute] string areaId,
             CancellationToken cancellationToken)
         {
-            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(accountId, areaId, cancellationToken);
+            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(areaId, cancellationToken);
             return attachmentFileLinks;
         }
     }

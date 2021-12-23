@@ -23,10 +23,10 @@ namespace Palavyr.API.Controllers.WidgetLive
         }
 
         [HttpGet("widget/widget-active-state")]
-        public async Task<bool> GetWidgetActiveState([FromHeader] string accountId)
+        public async Task<bool> GetWidgetActiveState()
         {
             logger.LogDebug("Retrieving widget state.");
-            var widgetPreferences = await configurationRepository.GetWidgetPreferences(accountId);
+            var widgetPreferences = await configurationRepository.GetWidgetPreferences();
             return widgetPreferences.WidgetState;
         }
     }

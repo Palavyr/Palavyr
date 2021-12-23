@@ -178,7 +178,6 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     compileToNodeFlow() {
         const nodeElements: Partial<FlowNode>[] = [];
         const edgeElements: Edge[] = [];
-        console.log("Compiled to flow");
         const nodeFlowCallback = (node: IPalavyrNode, index: number) => {
             //convert node into Handle
             nodeElements.push({

@@ -1,21 +1,23 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
+using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
 {
 
     public class GetAreaFallbackEmailTemplateController : PalavyrBaseController
     {
+        private readonly IConfigurationRepository configurationRepository;
         private ILogger<GetAreaFallbackEmailTemplateController> logger;
-        private DashContext dashContext;
 
-        public GetAreaFallbackEmailTemplateController(DashContext dashContext, ILogger<GetAreaFallbackEmailTemplateController> logger)
+        public GetAreaFallbackEmailTemplateController(IConfigurationRepository configurationRepository, ILogger<GetAreaFallbackEmailTemplateController> logger)
         {
-            this.dashContext = dashContext;
+            this.configurationRepository = configurationRepository;
             this.logger = logger;
         }
         
@@ -26,12 +28,9 @@ namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
         /// <param name="areaId"></param>
         /// <returns></returns>
         [HttpGet("email/fallback/{areaId}/email-template")]
-        public async Task<string> Get([FromHeader] string accountId, string areaId)
+        public async Task<string> Get(string areaId, CancellationToken cancellationToken)
         {
-            var area = await dashContext
-                .Areas
-                .Where(row => row.AccountId == accountId)
-                .SingleOrDefaultAsync(row => row.AreaIdentifier == areaId);
+            var area = await configurationRepository.GetAreaById(areaId);
             var emailTemplate = area.FallbackEmailTemplate;
             return emailTemplate;
         }

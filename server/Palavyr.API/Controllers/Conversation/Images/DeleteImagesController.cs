@@ -5,6 +5,7 @@ using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Services.ImageServices;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Controllers.Conversation.Images
 {
@@ -22,8 +23,7 @@ namespace Palavyr.API.Controllers.Conversation.Images
 
         [HttpDelete(Route)]
         public async Task<FileLink[]> DeleteImageById(
-            [FromHeader]
-            string accountId,
+
             [FromQuery]
             string imageIds,
             CancellationToken cancellationToken
@@ -44,7 +44,7 @@ namespace Palavyr.API.Controllers.Conversation.Images
                 guidFinder.FindFirstGuidSuffix(id);
             }
 
-            var fileLinks = await imageRemover.RemoveImages(ids, accountId, cancellationToken);
+            var fileLinks = await imageRemover.RemoveImages(ids, cancellationToken);
             return fileLinks;
         }
     }

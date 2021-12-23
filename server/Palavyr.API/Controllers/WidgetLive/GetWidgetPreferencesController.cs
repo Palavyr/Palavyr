@@ -22,9 +22,9 @@ namespace Palavyr.API.Controllers.WidgetLive
         }
 
         [HttpGet("widget/preferences")]
-        public async Task<WidgetPreference> FetchPreferences([FromHeader] string accountId)
+        public async Task<WidgetPreference> FetchPreferences()
         {
-            return await configurationRepository.GetWidgetPreferences(accountId);
+            return await configurationRepository.GetWidgetPreferences();
         }
     }
 }

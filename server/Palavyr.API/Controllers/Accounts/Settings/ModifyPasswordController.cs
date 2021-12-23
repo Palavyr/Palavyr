@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -20,9 +19,9 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
         
         [HttpPut("account/settings/password")]
-        public async Task<bool> UpdatePassword([FromHeader] string accountId, AccountDetails accountDetails, CancellationToken cancellationToken)
+        public async Task<bool> UpdatePassword(AccountDetails accountDetails)
         {
-            var account = await accountRepository.GetAccount(accountId, cancellationToken);
+            var account = await accountRepository.GetAccount();
             var oldHashedPassword = accountDetails.OldPassword;
             if (oldHashedPassword != accountDetails.Password)
             {

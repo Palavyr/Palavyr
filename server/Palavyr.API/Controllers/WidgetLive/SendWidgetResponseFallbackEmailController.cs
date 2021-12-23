@@ -23,14 +23,12 @@ namespace Palavyr.API.Controllers.WidgetLive
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
         [HttpPost("widget/area/{areaId}/email/fallback/send")]
         public async Task<SendEmailResultResponse> SendEmail(
-            [FromHeader] string accountId,
             [FromRoute] string areaId,
             [FromBody] EmailRequest emailRequest,
             CancellationToken cancellationToken
         )
         {
             var fallbackResultResponse = await responseEmailSender.SendFallbackEmail(
-                accountId,
                 areaId,
                 emailRequest,
                 cancellationToken

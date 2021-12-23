@@ -12,7 +12,7 @@ namespace Palavyr.API.Controllers.Response
         }
 
         [HttpGet("email/variables")]
-        public List<ResponseVariable> Get([FromHeader] string accountId)
+        public List<ResponseVariable> Get()
         {
             return ResponseVariableDefinition.GetAvailableVariables();
         }

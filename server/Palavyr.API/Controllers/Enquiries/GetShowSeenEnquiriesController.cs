@@ -15,11 +15,9 @@ namespace Palavyr.API.Controllers.Enquiries
         }
 
         [HttpGet(Route)]
-        public async Task<bool> Get(
-            [FromHeader]
-            string accountId, CancellationToken cancellationToken)
+        public async Task<bool> Get()
         {
-            var account = await repository.GetAccount(accountId, cancellationToken);
+            var account = await repository.GetAccount();
             var show = account.ShowSeenEnquiries;
             return show;
         }

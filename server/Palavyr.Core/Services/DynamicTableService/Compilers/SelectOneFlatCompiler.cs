@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.ExtensionMethods;
@@ -31,6 +30,8 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             IConversationOptionSplitter splitter,
             ISelectOneFlatNodeUpdater selectOneFlatNodeUpdater,
             IResponseRetriever responseRetriever
+            
+
         ) : base(repository)
         {
             this.configurationRepository = configurationRepository;
@@ -39,18 +40,18 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             this.responseRetriever = responseRetriever;
         }
 
-        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier, string accountId)
+        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier)
         {
             var currentSelectOneFlatUpdate = table.SelectOneFlat;
 
             var tableMeta = await context.DynamicTableMetas.SingleOrDefaultAsync(x => x.TableId == tableId);
 
-            var conversationNodes = await context.ConversationNodes.Where(x => x.AreaIdentifier == areaIdentifier).ToListAsync(CancellationToken.None);
+            var conversationNodes = await configurationRepository.GetAreaConversationNodes(areaIdentifier);
             var node = conversationNodes.SingleOrDefault(x => x.IsDynamicTableNode && splitter.GetTableIdFromDynamicNodeType(x.NodeType) == tableId);
 
             if (node != null && currentSelectOneFlatUpdate != null)
             {
-                await selectOneFlatNodeUpdater.UpdateConversationNode(context, currentSelectOneFlatUpdate, tableMeta, node, conversationNodes, accountId, areaIdentifier);
+                await selectOneFlatNodeUpdater.UpdateConversationNode(context, currentSelectOneFlatUpdate, tableMeta, node, conversationNodes, areaIdentifier);
             }
 
             // do not save the context changes here. Following the unit of work pattern,we collect all changes, validate, and then save/commit..
@@ -80,12 +81,12 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             nodes.AddAdditionalNode(nodeTypeOption);
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
         {
             var dynamicResponseId = GetSingleResponseId(dynamicResponseIds);
             var responseValue = GetSingleResponseValue(dynamicResponseParts, dynamicResponseIds);
 
-            var record = await RetrieveAllAvailableResponses(accountId, dynamicResponseId);
+            var record = await RetrieveAllAvailableResponses(dynamicResponseId);
 
             var option = record.Single(tableRow => tableRow.Option == responseValue);
             var dynamicMeta = await configurationRepository.GetDynamicTableMetaByTableId(option.TableId);
@@ -139,23 +140,22 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
         {
             var tableId = dynamicTableMeta.TableId;
-            var accountId = dynamicTableMeta.AccountId;
             var areaId = dynamicTableMeta.AreaIdentifier;
-            var table = await repository.GetAllRows(accountId, areaId, tableId);
+            var table = await repository.GetAllRows(areaId, tableId);
             return ValidationLogic(table, dynamicTableMeta.TableTag);
         }
 
-        public async Task<List<TableRow>> CreatePreviewData(string accountId, DynamicTableMeta tableMeta, Area area, CultureInfo culture)
+        public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area area, CultureInfo culture)
         {
-            var availableOneFlat = await responseRetriever.RetrieveAllAvailableResponses<SelectOneFlat>(accountId, tableMeta.TableId);
+            var availableOneFlat = await responseRetriever.RetrieveAllAvailableResponses<SelectOneFlat>(tableMeta.TableId);
             var responseParts = DynamicTableTypes.CreateSelectOneFlat().CreateDynamicResponseParts(availableOneFlat.First().TableId, availableOneFlat.First().Option);
-            var currentRows = await CompileToPdfTableRow(area.AccountId, responseParts, new List<string>() {tableMeta.TableId}, culture);
+            var currentRows = await CompileToPdfTableRow(responseParts, new List<string>() {tableMeta.TableId}, culture);
             return currentRows;
         }
 
-        public async Task<List<SelectOneFlat>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId)
+        public async Task<List<SelectOneFlat>> RetrieveAllAvailableResponses(string dynamicResponseId)
         {
-            return await GetAllRowsMatchingResponseId(accountId, dynamicResponseId);
+            return await GetAllRowsMatchingResponseId(dynamicResponseId);
         }
     }
 }

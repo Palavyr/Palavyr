@@ -7,6 +7,7 @@ using Palavyr.Core.Models.Configuration.Constant;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
 using Palavyr.Core.Models.Conversation;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.Core.Services.DynamicTableService.NodeUpdaters
 {
@@ -18,7 +19,6 @@ namespace Palavyr.Core.Services.DynamicTableService.NodeUpdaters
             DynamicTableMeta tableMeta,
             ConversationNode node,
             List<ConversationNode> conversationNodes,
-            string accountId,
             string areaIdentifier
         );
     }
@@ -27,14 +27,17 @@ namespace Palavyr.Core.Services.DynamicTableService.NodeUpdaters
     {
         private readonly IConversationOptionSplitter splitter;
         private readonly IConversationNodeUpdater nodeUpdater;
+        private readonly IHoldAnAccountId accountIdHolder;
 
         public SelectOneFlatNodeUpdater(
             IConversationOptionSplitter splitter,
-            IConversationNodeUpdater nodeUpdater
+            IConversationNodeUpdater nodeUpdater,
+            IHoldAnAccountId accountIdHolder
         )
         {
             this.splitter = splitter;
             this.nodeUpdater = nodeUpdater;
+            this.accountIdHolder = accountIdHolder;
         }
 
         public async Task UpdateConversationNode(
@@ -43,21 +46,20 @@ namespace Palavyr.Core.Services.DynamicTableService.NodeUpdaters
             DynamicTableMeta tableMeta,
             ConversationNode node,
             List<ConversationNode> conversationNodes,
-            string accountId,
             string areaIdentifier
         )
         {
             List<ConversationNode> updatedNodes;
             if (tableMeta.ValuesAsPaths)
             {
-                updatedNodes = await ConvertToAsPaths(currentSelectOneFlatUpdate, node, areaIdentifier, accountId, conversationNodes);
+                updatedNodes = await ConvertToAsPaths(currentSelectOneFlatUpdate, node, areaIdentifier, accountIdHolder.AccountId, conversationNodes);
             }
             else
             {
                 updatedNodes = await ConvertToAsContinue(node, conversationNodes);
             }
 
-            await nodeUpdater.UpdateConversation(accountId, areaIdentifier, updatedNodes, CancellationToken.None);
+            await nodeUpdater.UpdateConversation(areaIdentifier, updatedNodes, CancellationToken.None);
         }
 
         private async Task<List<ConversationNode>> ConvertToAsPaths(List<SelectOneFlat> currentSelectOneFlatUpdate, ConversationNode node, string areaIdentifier, string accountId, List<ConversationNode> conversationNodes)

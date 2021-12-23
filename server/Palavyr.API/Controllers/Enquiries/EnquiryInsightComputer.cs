@@ -10,13 +10,12 @@ namespace Palavyr.API.Controllers.Enquiries
 {
     public interface IEnquiryInsightComputer
     {
-        Task<EnquiryInsightsResource[]> GetEnquiryInsights(string accountId);
+        Task<EnquiryInsightsResource[]> GetEnquiryInsights();
     }
 
     public class EnquiryInsightComputer : IEnquiryInsightComputer
     {
         private readonly IConvoHistoryRepository convoHistoryRepository;
-        private readonly IConversationRecordRetriever conversationRecordRetriever;
         private readonly IConfigurationRepository configurationRepository;
         private readonly INodeBranchLengthCalculator nodeBranchLengthCalculator;
 
@@ -28,16 +27,15 @@ namespace Palavyr.API.Controllers.Enquiries
         )
         {
             this.convoHistoryRepository = convoHistoryRepository;
-            this.conversationRecordRetriever = conversationRecordRetriever;
             this.configurationRepository = configurationRepository;
             this.nodeBranchLengthCalculator = nodeBranchLengthCalculator;
         }
 
-        public async Task<EnquiryInsightsResource[]> GetEnquiryInsights(string accountId)
+        public async Task<EnquiryInsightsResource[]> GetEnquiryInsights()
         {
             var resources = new List<EnquiryInsightsResource>();
-            var allRecords = await convoHistoryRepository.GetAllConversationRecords(accountId);
-            var allIntents = await configurationRepository.GetAllAreasShallow(accountId);
+            var allRecords = await convoHistoryRepository.GetAllConversationRecords();
+            var allIntents = await configurationRepository.GetAllAreasShallow();
             foreach (var intent in allIntents)
             {
                 var intentRecords = allRecords.Where(x => x.AreaIdentifier == intent.AreaIdentifier).ToArray();
@@ -72,7 +70,7 @@ namespace Palavyr.API.Controllers.Enquiries
                 var convo = await convoHistoryRepository.GetConversationById(intentRecord.ConversationId);
                 if (convo.Length == 0) continue;
 
-                var totalConvo = await configurationRepository.GetAreaConversationNodes(intentRecord.AccountId, intentRecord.AreaIdentifier);
+                var totalConvo = await configurationRepository.GetAreaConversationNodes(intentRecord.AreaIdentifier);
 
                 var terminalNodes = totalConvo.Where(x => x.IsTerminalType).ToList();
                 var lengthOfLongestBranch = nodeBranchLengthCalculator.GetLengthOfLongestTerminatingPath(totalConvo.ToArray(), terminalNodes.ToArray());

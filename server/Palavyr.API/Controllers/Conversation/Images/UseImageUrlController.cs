@@ -7,29 +7,31 @@ using Palavyr.Core.Data;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Responses;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Controllers.Conversation.Images
 {
     public class UseImageUrlController : PalavyrBaseController
     {
         private readonly DashContext dashContext;
+        private readonly IHoldAnAccountId accountIdHolder;
         private const string Route = "images/use-link/{nodeId}";
 
-        public UseImageUrlController(DashContext dashContext)
+        public UseImageUrlController(DashContext dashContext, IHoldAnAccountId accountIdHolder)
         {
             this.dashContext = dashContext;
+            this.accountIdHolder = accountIdHolder;
         }
 
 
         [HttpPost(Route)]
         public async Task<FileLink[]> SaveImageUrl(
-            [FromHeader] string accountId,
             string nodeId,
             [FromBody] UrlRequest request,
             CancellationToken cancellationToken
         )
         {
-            var image = Image.CreateImageUrlRecord(request.Url, accountId);
+            var image = Image.CreateImageUrlRecord(request.Url, accountIdHolder.AccountId);
             dashContext.Images.Add(image);
          
             

@@ -21,17 +21,17 @@ namespace Palavyr.Core.Services.ImageServices
             this.configuration = configuration;
         }
 
-        public async Task<FileLink[]> RemoveImages(string[] ids, string accountId, CancellationToken cancellationToken)
+        public async Task<FileLink[]> RemoveImages(string[] ids, CancellationToken cancellationToken)
         {
-            await repository.RemoveImagesByIds(ids, s3Deleter, configuration.GetUserDataBucket(), cancellationToken);
-            var convoNodesReferencingImageId = await repository.GetConvoNodesByImageIds(ids, cancellationToken);
+            await repository.RemoveImagesByIds(ids, s3Deleter, configuration.GetUserDataBucket());
+            var convoNodesReferencingImageId = await repository.GetConvoNodesByImageIds(ids);
             foreach (var node in convoNodesReferencingImageId)
             {
                 node.ImageId = null;
             }
 
-            await repository.CommitChangesAsync(cancellationToken);
-            var links = await repository.GetImagesByAccountId(accountId, cancellationToken);
+            await repository.CommitChangesAsync();
+            var links = await repository.GetImagesByAccountId();
             return links.ToFileLinks();
         }
     }

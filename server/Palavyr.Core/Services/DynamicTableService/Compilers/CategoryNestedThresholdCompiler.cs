@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Palavyr.Core.Common.ExtensionMethods;
@@ -46,12 +47,12 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return categories;
         }
 
-        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier, string accountId)
+        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier)
         {
             var update = table.CategoryNestedThreshold;
             var category = GetCategories(update);
 
-            var nodes = (await context.ConversationNodes.ToListAsync())
+            var nodes = (await configurationRepository.GetAllConversationNodes())
                 .Where(x => x.IsDynamicTableNode && splitter.GetTableIdFromDynamicNodeType(x.NodeType) == tableId)
                 .OrderBy(x => x.ResolveOrder).ToList();
             if (nodes.Count > 0)
@@ -106,11 +107,11 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             );
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
         {
             // dynamicResponseIds is dynamic table keys
             var responseId = GetSingleResponseId(dynamicResponseIds);
-            var records = await repository.GetAllRowsMatchingDynamicResponseId(accountId, responseId);
+            var records = await repository.GetAllRowsMatchingDynamicResponseId(responseId);
 
             var orderedResponseIds = await GetResponsesOrderedByResolveOrder(dynamicResponseParts);
             var category = GetResponseByResponseId(orderedResponseIds[0], dynamicResponseParts);
@@ -160,6 +161,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             var isTooComplicated = thresholdEvaluator.EvaluateForFallback(currentResponseAsDouble, categoryThresholds);
             return isTooComplicated;
         }
+
 
         private PricingStrategyValidationResult ValidationLogic(List<CategoryNestedThreshold> table, string tableTag)
         {
@@ -218,15 +220,14 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
         {
             var tableId = dynamicTableMeta.TableId;
-            var accountId = dynamicTableMeta.AccountId;
             var areaId = dynamicTableMeta.AreaIdentifier;
-            var table = await repository.GetAllRows(accountId, areaId, tableId);
+            var table = await repository.GetAllRows(areaId, tableId);
             return ValidationLogic(table, dynamicTableMeta.TableTag);
         }
 
-        public async Task<List<TableRow>> CreatePreviewData(string accountId, DynamicTableMeta tableMeta, Area _, CultureInfo culture)
+        public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area _, CultureInfo culture)
         {
-            var availableNestedThreshold = await responseRetriever.RetrieveAllAvailableResponses<CategoryNestedThreshold>(accountId, tableMeta.TableId);
+            var availableNestedThreshold = await responseRetriever.RetrieveAllAvailableResponses<CategoryNestedThreshold>(tableMeta.TableId);
             var currentRows = new List<TableRow>()
             {
                 new TableRow(
@@ -242,9 +243,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
 
         }
 
-        public async Task<List<CategoryNestedThreshold>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId)
+        public async Task<List<CategoryNestedThreshold>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId, CancellationToken cancellationToken)
         {
-            return await GetAllRowsMatchingResponseId(accountId, dynamicResponseId);
+            return await GetAllRowsMatchingResponseId(dynamicResponseId);
         }
 
         List<string> CollectNodeIds(DynamicResponseComponents dynamicResponseComponents)

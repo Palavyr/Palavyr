@@ -21,10 +21,10 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic.Meta
         }
 
         [HttpGet("tables/dynamic/type/{areaId}")]
-        public async Task<DynamicTableMeta[]> Get([FromHeader] string accountId, string areaId)
+        public async Task<DynamicTableMeta[]> Get(string areaId)
         {
             logger.LogDebug("Retrieve Dynamic Table Metas");
-            var tableTypes = await configurationRepository.GetDynamicTableMetas(accountId, areaId);
+            var tableTypes = await configurationRepository.GetDynamicTableMetas(areaId);
             return tableTypes.ToArray();
         }
     }

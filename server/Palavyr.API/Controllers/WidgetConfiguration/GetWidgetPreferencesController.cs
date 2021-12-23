@@ -19,9 +19,9 @@ namespace Palavyr.API.Controllers.WidgetConfiguration
         }
 
         [HttpGet("widget-config/preferences")]
-        public async Task<WidgetPreference> GetWidgetPreferences([FromHeader] string accountId)
+        public async Task<WidgetPreference> GetWidgetPreferences()
         {
-            return await configurationRepository.GetWidgetPreferences(accountId);
+            return await configurationRepository.GetWidgetPreferences();
         }
     }
 }

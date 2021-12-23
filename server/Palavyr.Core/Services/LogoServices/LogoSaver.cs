@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +14,7 @@ namespace Palavyr.Core.Services.LogoServices
 {
     public interface ILogoSaver
     {
-        Task<string> SaveLogo(string accountId, IFormFile logoFile, CancellationToken cancellationToken);
+        Task<string> SaveLogo(IFormFile logoFile);
     }
 
     public class LogoSaver : ILogoSaver
@@ -47,7 +46,7 @@ namespace Palavyr.Core.Services.LogoServices
             this.localIo = localIo;
         }
 
-        public async Task<string> SaveLogo(string accountId, IFormFile logoFile, CancellationToken cancellationToken)
+        public async Task<string> SaveLogo(IFormFile logoFile)
         {
             var userDataBucket = configuration.GetSection(ApplicationConstants.ConfigSections.UserDataSection).Value;
             var localSafePath = temporaryPath.CreateLocalTempSafeFile();
@@ -55,9 +54,9 @@ namespace Palavyr.Core.Services.LogoServices
             var pathExtension = Path.GetExtension(logoFile.FileName);
             if (pathExtension == null) throw new Exception("File type could not be identified");
 
-            var logoKey = s3KeyResolver.ResolveLogoKey(accountId, localSafePath.FileStem, pathExtension);
+            var logoKey = s3KeyResolver.ResolveLogoKey(localSafePath.FileStem, pathExtension);
 
-            var account = await accountRepository.GetAccount(accountId, cancellationToken);
+            var account = await accountRepository.GetAccount();
             account.AccountLogoUri = logoKey;
             await accountRepository.CommitChangesAsync();
 

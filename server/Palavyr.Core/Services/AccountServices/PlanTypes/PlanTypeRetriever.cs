@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Accounts.Schemas;
@@ -18,9 +17,9 @@ namespace Palavyr.Core.Services.AccountServices.PlanTypes
             this.logger = logger;
         }
 
-        public async Task<string> GetCurrentPlanType(string accountId, CancellationToken cancellationToken)
+        public async Task<string> GetCurrentPlanType()
         {
-            var account = await repository.GetAccount(accountId, cancellationToken);
+            var account = await repository.GetAccount();
             string planStatus;
             switch (account.PlanType)
             {

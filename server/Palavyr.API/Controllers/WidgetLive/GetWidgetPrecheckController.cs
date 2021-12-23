@@ -7,6 +7,7 @@ using Palavyr.Core.Models;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AuthenticationServices;
+using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
@@ -16,33 +17,36 @@ namespace Palavyr.API.Controllers.WidgetLive
         private readonly IConfigurationRepository configurationRepository;
         private readonly IWidgetStatusChecker widgetStatusChecker;
         private ILogger<GetWidgetPreCheckController> logger;
+        private readonly IHoldAnAccountId accountId;
 
         public GetWidgetPreCheckController(
             IConfigurationRepository configurationRepository,
             IWidgetStatusChecker widgetStatusChecker,
-            ILogger<GetWidgetPreCheckController> logger
+            ILogger<GetWidgetPreCheckController> logger,
+            IHoldAnAccountId accountId
         )
         {
             this.configurationRepository = configurationRepository;
             this.widgetStatusChecker = widgetStatusChecker;
             this.logger = logger;
+            this.accountId = accountId;
         }
 
         [HttpGet("widget/pre-check")]
-        public async Task<PreCheckResult> Get([FromHeader] string accountId, [FromQuery] bool demo)
+        public async Task<PreCheckResult> Get([FromQuery] bool demo)
         {
             logger.LogDebug($"Was the demo query param found? {demo}");
             logger.LogDebug("Running live widget pre-check...");
             logger.LogDebug("Checking if account ID exists...");
-            if (accountId == null)
+            if (accountId.AccountId == null)
             {
                 return PreCheckResult.CreateApiKeyResult(false);
             }
 
-            var widgetPrefs = await configurationRepository.GetWidgetPreferences(accountId);
-            var areas = await configurationRepository.GetActiveAreasWithConvoAndDynamicAndStaticTables(accountId);
+            var widgetPrefs = await configurationRepository.GetWidgetPreferences();
+            var areas = await configurationRepository.GetActiveAreasWithConvoAndDynamicAndStaticTables();
 
-            var result = await widgetStatusChecker.ExecuteWidgetStatusCheck(accountId, areas, widgetPrefs, demo, logger);
+            var result = await widgetStatusChecker.ExecuteWidgetStatusCheck(areas, widgetPrefs, demo, logger);
             logger.LogDebug($"Pre-check run successful.");
             logger.LogDebug($"Ready result:{result.IsReady}");
             logger.LogDebug($"Incomplete areas: {result.PreCheckErrors.Select(x => x.AreaName).ToList()} ");

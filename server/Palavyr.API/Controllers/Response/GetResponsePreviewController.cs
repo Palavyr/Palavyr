@@ -30,17 +30,17 @@ namespace Palavyr.API.Controllers.Response
         }
 
         [HttpGet("preview/estimate/{areaId}")]
-        public async Task<FileLink> GetConfigurationPreview([FromHeader] string accountId, string areaId, CancellationToken cancellationToken)
+        public async Task<FileLink> GetConfigurationPreview(string areaId)
         {
             logger.LogDebug("Attempting to generate a new preview");
-            var account = await accountRepository.GetAccount(accountId, cancellationToken);
+            var account = await accountRepository.GetAccount();
             var locale = account.Locale;
             var culture = new CultureInfo(locale);
 
             FileLink fileLink;
             try
             {
-                fileLink = await previewPdfGenerator.CreatePdfResponsePreviewAsync(accountId, areaId, culture, cancellationToken);
+                fileLink = await previewPdfGenerator.CreatePdfResponsePreviewAsync(areaId, culture);
                 logger.LogDebug("Successfully created a Response preview!");
                 logger.LogDebug($"File Link: {fileLink.Link}");
                 logger.LogDebug($"File Id: {fileLink.FileId}");

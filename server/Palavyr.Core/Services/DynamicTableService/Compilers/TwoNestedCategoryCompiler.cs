@@ -29,16 +29,15 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             IResponseRetriever responseRetriever
         ) : base(repository)
         {
-            // this.repository = repository;
             this.configurationRepository = configurationRepository;
             this.splitter = splitter;
             this.responseRetriever = responseRetriever;
         }
 
-        public async Task<List<TableRow>> CompileToPdfTableRow(string accountId, DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
+        public async Task<List<TableRow>> CompileToPdfTableRow(DynamicResponseParts dynamicResponseParts, List<string> dynamicResponseIds, CultureInfo culture)
         {
             var responseId = GetSingleResponseId(dynamicResponseIds);
-            var records = await RetrieveAllAvailableResponses(accountId, responseId);
+            var records = await RetrieveAllAvailableResponses(responseId);
 
             // itemName
             var orderedResponseIds = await GetResponsesOrderedByResolveOrder(dynamicResponseParts);
@@ -116,15 +115,14 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
         public async Task<PricingStrategyValidationResult> ValidatePricingStrategyPostSave(DynamicTableMeta dynamicTableMeta)
         {
             var tableId = dynamicTableMeta.TableId;
-            var accountId = dynamicTableMeta.AccountId;
             var areaId = dynamicTableMeta.AreaIdentifier;
-            var table = await base.repository.GetAllRows(accountId, areaId, tableId);
+            var table = await repository.GetAllRows(areaId, tableId);
             return ValidationLogic(table, dynamicTableMeta.TableTag);
         }
 
-        public async Task<List<TableRow>> CreatePreviewData(string accountId, DynamicTableMeta tableMeta, Area _, CultureInfo culture)
+        public async Task<List<TableRow>> CreatePreviewData(DynamicTableMeta tableMeta, Area _, CultureInfo culture)
         {
-            var availableTwoNested = await responseRetriever.RetrieveAllAvailableResponses<TwoNestedCategory>(accountId, tableMeta.TableId);
+            var availableTwoNested = await responseRetriever.RetrieveAllAvailableResponses<TwoNestedCategory>(tableMeta.TableId);
             var currentRows = new List<TableRow>()
             {
                 new TableRow(
@@ -139,9 +137,9 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             return currentRows;
         }
 
-        public async Task<List<TwoNestedCategory>> RetrieveAllAvailableResponses(string accountId, string dynamicResponseId)
+        public async Task<List<TwoNestedCategory>> RetrieveAllAvailableResponses(string dynamicResponseId)
         {
-            return await GetAllRowsMatchingResponseId(accountId, dynamicResponseId);
+            return await GetAllRowsMatchingResponseId(dynamicResponseId);
         }
 
 
@@ -162,7 +160,7 @@ namespace Palavyr.Core.Services.DynamicTableService.Compilers
             };
         }
 
-        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier, string accountId)
+        public async Task UpdateConversationNode(DashContext context, DynamicTable table, string tableId, string areaIdentifier)
         {
             var update = table.TwoNestedCategory;
 

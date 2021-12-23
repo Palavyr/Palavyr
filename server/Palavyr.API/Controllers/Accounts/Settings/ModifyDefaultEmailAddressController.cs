@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.Data;
 using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.StripeServices;
 
@@ -19,6 +21,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         private ILogger<ModifyDefaultEmailAddressController> logger;
         private AccountsContext accountsContext;
         private readonly IRequestEmailVerification requestEmailVerification;
+        private readonly IAccountRepository accountRepository;
         private IAmazonSimpleEmailService sesClient;
         private StripeCustomerService stripeCustomerService;
 
@@ -30,7 +33,8 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             StripeCustomerService stripeCustomerService,
             ILogger<ModifyDefaultEmailAddressController> logger,
             IAmazonSimpleEmailService sesClient,
-            IRequestEmailVerification requestEmailVerification
+            IRequestEmailVerification requestEmailVerification,
+            IAccountRepository accountRepository
         )
         {
             this.logger = logger;
@@ -38,17 +42,13 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             this.accountsContext = accountsContext;
             this.stripeCustomerService = stripeCustomerService;
             this.requestEmailVerification = requestEmailVerification;
+            this.accountRepository = accountRepository;
         }
         
         [HttpPut("account/settings/email")]
-        public async Task<IActionResult> Modify(
-            [FromHeader] string accountId,
-            [FromBody] EmailVerificationRequest emailRequest
-        )
+        public async Task<IActionResult> Modify([FromBody] EmailVerificationRequest emailRequest)
         {
-            var account = await accountsContext
-                .Accounts
-                .SingleOrDefaultAsync(row => row.AccountId == accountId);
+            var account = await accountRepository.GetAccount();
 
             // First check if email is already verified or has attempted to be verified
             var identityRequest = new GetIdentityVerificationAttributesRequest()

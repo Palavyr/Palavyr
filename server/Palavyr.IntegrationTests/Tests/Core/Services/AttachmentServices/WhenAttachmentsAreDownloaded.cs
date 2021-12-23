@@ -43,7 +43,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
                         });
                 }
 
-                var result = await retriever.RetrieveAttachmentFiles(IntegrationConstants.AccountId, IntegrationConstants.DefaultArea, downloadRequests, default);
+                var result = await retriever.RetrieveAttachmentFiles(IntegrationConstants.DefaultArea, downloadRequests, default);
 
                 // assert
                 result.Length.ShouldBe(5);
@@ -93,7 +93,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
             public async Task NoAttachmentsAreReturned()
             {
                 var retriever = Container.GetService<IAttachmentRetriever>();
-                var result = await retriever.RetrieveAttachmentFiles(IntegrationConstants.AccountId, IntegrationConstants.DefaultArea, new List<S3SDownloadRequestMeta>(), default);
+                var result = await retriever.RetrieveAttachmentFiles(IntegrationConstants.DefaultArea, new List<S3SDownloadRequestMeta>(), default);
 
                 // assert
                 result.Length.ShouldBe(0);

@@ -2,22 +2,23 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Areas
 {
-    
+
     [Authorize]
-    public class ModifyAreaResponseNameController : PalavyrBaseController
+
+    public class ModifyIntentNameController : PalavyrBaseController
     {
 
         private readonly IConfigurationRepository configurationRepository;
-        private readonly ILogger<ModifyAreaResponseNameController> logger;
+        private readonly ILogger<ModifyIntentNameController> logger;
 
-        public ModifyAreaResponseNameController(
+        public ModifyIntentNameController(
             IConfigurationRepository configurationRepository,
-            ILogger<ModifyAreaResponseNameController> logger
+            ILogger<ModifyIntentNameController> logger
         )
         {
             this.configurationRepository = configurationRepository;
@@ -26,12 +27,11 @@ namespace Palavyr.API.Controllers.Areas
 
         [HttpPut("areas/update/name/{areaId}")]
         public async Task<string> Modify(
-            [FromHeader] string accountId,
-            [FromBody] AreaNameText areaNameText,
+            [FromBody] UpdateAreaNameRequest areaNameText,
             string areaId
         )
         {
-            var area = await configurationRepository.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(areaId);
             if (areaNameText.AreaName != area.AreaName)
             {
                 area.AreaName = areaNameText.AreaName;

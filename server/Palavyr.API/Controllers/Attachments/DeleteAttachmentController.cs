@@ -27,7 +27,6 @@ namespace Palavyr.API.Controllers.Attachments
 
         [HttpDelete("attachments/{areaId}/file-link")]
         public async Task<FileLink[]> Delete(
-            [FromHeader] string accountId,
             [FromRoute] string areaId,
             [FromBody] DeleteAttachmentRequest request,
             CancellationToken cancellationToken)
@@ -36,7 +35,7 @@ namespace Palavyr.API.Controllers.Attachments
             
             // this is currently pretty slow -- we should be caching the presigned URLs and only refreshing them once they are invalid.
             // this will always refresh the pre-signed URLs (not a huge problem, but still).
-            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(accountId, areaId, cancellationToken);
+            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(areaId, cancellationToken);
             return attachmentFileLinks;
         }
     }

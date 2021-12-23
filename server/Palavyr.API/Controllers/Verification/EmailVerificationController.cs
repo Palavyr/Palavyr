@@ -27,12 +27,11 @@ namespace Palavyr.API.Controllers.Verification
 
         [HttpPost("verification/email/{areaId}")]
         public async Task<EmailVerificationResponse> RequestNewEmailVerification(
-            [FromHeader] string accountId,
             [FromRoute] string areaId,
             [FromBody] EmailVerificationRequest emailRequest
         )
         {
-            var area = await configurationRepository.GetAreaById(accountId, areaId);
+            var area = await configurationRepository.GetAreaById(areaId);
             var verificationResponse = await emailVerificationStatus.GetVerificationResponse(emailRequest.EmailAddress);
 
             area.EmailIsVerified = verificationResponse.IsVerified();

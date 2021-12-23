@@ -18,8 +18,8 @@ namespace Palavyr.Core.Services.AttachmentServices
 {
     public interface IAttachmentRetriever
     {
-        Task<FileLink[]> RetrieveAttachmentLinks(string account, string areaId, CancellationToken cancellationToken);
-        Task<IHaveBeenDownloadedFromS3[]> RetrieveAttachmentFiles(string account, string areaId, List<S3SDownloadRequestMeta> s3DownloadRequestMetas, CancellationToken cancellationToken);
+        Task<FileLink[]> RetrieveAttachmentLinks(string areaId, CancellationToken cancellationToken);
+        Task<IHaveBeenDownloadedFromS3[]> RetrieveAttachmentFiles(string areaId, List<S3SDownloadRequestMeta> s3DownloadRequestMetas, CancellationToken cancellationToken);
         Task<List<S3SDownloadRequestMeta>> RetrievePdfUris(string areaId, CancellationToken cancellationToken);
 
     }
@@ -47,7 +47,7 @@ namespace Palavyr.Core.Services.AttachmentServices
             this.businessRules = businessRules;
         }
 
-        public async Task<FileLink[]> RetrieveAttachmentLinks(string account, string areaId, CancellationToken cancellationToken)
+        public async Task<FileLink[]> RetrieveAttachmentLinks(string areaId, CancellationToken cancellationToken)
         {
             var userDataBucket = configuration.GetUserDataBucket();
             var metas = await dashContext.FileNameMaps
@@ -86,7 +86,7 @@ namespace Palavyr.Core.Services.AttachmentServices
 
         
         
-        public async Task<IHaveBeenDownloadedFromS3[]> RetrieveAttachmentFiles(string accountId, string areaId, List<S3SDownloadRequestMeta> s3DownloadRequestMetas,  CancellationToken cancellationToken)
+        public async Task<IHaveBeenDownloadedFromS3[]> RetrieveAttachmentFiles(string areaId, List<S3SDownloadRequestMeta> s3DownloadRequestMetas,  CancellationToken cancellationToken)
         {
             var userDataBucket = configuration.GetUserDataBucket();
             var localFilePaths = await s3Retriever.DownloadObjectsFromS3(userDataBucket, s3DownloadRequestMetas, cancellationToken);
@@ -95,7 +95,7 @@ namespace Palavyr.Core.Services.AttachmentServices
                 throw new AmazonS3Exception("Unable to download to server!");
             }
 
-            var totalAttachmentsAllowed = await businessRules.GetAllowedAttachments(accountId, cancellationToken);
+            var totalAttachmentsAllowed = await businessRules.GetAllowedAttachments();
             return localFilePaths.Take(totalAttachmentsAllowed).ToArray();
         }
     }
