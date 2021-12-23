@@ -60,7 +60,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<PreviewResponseGenerator>().As<IPreviewResponseGenerator>();
             builder.RegisterType<PdfResponseGenerator>().As<IPdfResponseGenerator>();
             builder.RegisterType<StaticTableCompiler>().As<IStaticTableCompiler>();
-            builder.RegisterType<DynamicTableCompilerRetriever>().AsSelf();
+            builder.RegisterType<DynamicTableCompilerRetriever>().As<IDynamicTableCompilerRetriever>();
 
             builder.RegisterGeneric(typeof(GenericDynamicTableRepository<>)).As(typeof(IGenericDynamicTableRepository<>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(DynamicTableCommandHandler<>)).As(typeof(IDynamicTableCommandHandler<>)).InstancePerLifetimeScope();
@@ -84,8 +84,8 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<NodeCounter>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<GuidFinder>().AsSelf().SingleInstance();
             builder.RegisterType<ThresholdEvaluator>().As<IThresholdEvaluator>();
-            builder.RegisterType<NodeOrderChecker>().AsSelf();
-            builder.RegisterType<DynamicResponseComponentExtractor>().AsSelf();
+            builder.RegisterType<NodeOrderChecker>().As<INodeOrderChecker>();
+            builder.RegisterType<DynamicResponseComponentExtractor>().As<IDynamicResponseComponentExtractor>();
             builder.RegisterType<LinkCreator>().As<ILinkCreator>();
             builder.RegisterType<AttachmentSaver>().As<IAttachmentSaver>();
             builder.RegisterType<S3KeyResolver>().As<IS3KeyResolver>();
@@ -104,7 +104,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<ConversationRecordRecordRetriever>().As<IConversationRecordRetriever>();
             builder.RegisterType<CompletedConversationModifier>().As<ICompletedConversationModifier>();
             builder.RegisterType<RemoveStaleSessions>().As<IRemoveStaleSessions>();
-            builder.RegisterType<SafeFileNameCreator>().AsSelf();
+            builder.RegisterType<SafeFileNameCreator>().As<ISafeFileNameCreator>();
             builder.RegisterType<LocalIo>().As<ILocalIo>();
             builder.RegisterType<PdfServerClient>().As<IPdfServerClient>();
             builder.RegisterType<ImageSaver>().As<IImageSaver>();

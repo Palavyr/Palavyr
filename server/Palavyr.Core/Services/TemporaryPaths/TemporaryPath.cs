@@ -16,9 +16,9 @@ namespace Palavyr.Core.Services.TemporaryPaths
     public class TemporaryPath : ITemporaryPath
     {
         private readonly ILogger<TemporaryPath> logger;
-        private readonly SafeFileNameCreator safeFileNameCreator;
+        private readonly ISafeFileNameCreator safeFileNameCreator;
 
-        public TemporaryPath(ILogger<TemporaryPath> logger, SafeFileNameCreator safeFileNameCreator)
+        public TemporaryPath(ILogger<TemporaryPath> logger, ISafeFileNameCreator safeFileNameCreator)
         {
             this.logger = logger;
             this.safeFileNameCreator = safeFileNameCreator;

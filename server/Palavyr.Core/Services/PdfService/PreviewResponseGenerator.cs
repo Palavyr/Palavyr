@@ -32,7 +32,7 @@ namespace Palavyr.Core.Services.PdfService
         private readonly IS3KeyResolver s3KeyResolver;
         private readonly ITemporaryPath temporaryPath;
         private readonly ICriticalResponses criticalResponses;
-        private readonly DynamicTableCompilerRetriever compilerRetriever;
+        private readonly IDynamicTableCompilerRetriever compilerRetriever;
         private readonly IHoldAnAccountId accountIdHolder;
 
         public PreviewResponseGenerator(
@@ -47,7 +47,7 @@ namespace Palavyr.Core.Services.PdfService
             IS3KeyResolver s3KeyResolver,
             ITemporaryPath temporaryPath,
             ICriticalResponses criticalResponses,
-            DynamicTableCompilerRetriever compilerRetriever,
+            IDynamicTableCompilerRetriever compilerRetriever,
             IHoldAnAccountId accountIdHolder
         )
         {

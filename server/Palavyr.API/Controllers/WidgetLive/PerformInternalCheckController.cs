@@ -14,11 +14,11 @@ namespace Palavyr.API.Controllers.WidgetLive
     public class PerformInternalCheckController : PalavyrBaseController
     {
         private readonly ILogger<PerformInternalCheckController> logger;
-        private readonly DynamicResponseComponentExtractor dynamicResponseComponentExtractor;
+        private readonly IDynamicResponseComponentExtractor dynamicResponseComponentExtractor;
 
         public PerformInternalCheckController(
             ILogger<PerformInternalCheckController> logger,
-            DynamicResponseComponentExtractor dynamicResponseComponentExtractor
+            IDynamicResponseComponentExtractor dynamicResponseComponentExtractor
             )
         {
             this.logger = logger;

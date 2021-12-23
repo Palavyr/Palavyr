@@ -28,13 +28,13 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
     {
         private ILogger<TEntity> logger;
         private readonly IGenericDynamicTableRepository<TEntity> genericDynamicTableRepository;
-        private readonly DynamicTableCompilerRetriever retriever;
+        private readonly IDynamicTableCompilerRetriever retriever;
         private readonly IConfigurationRepository configurationRepository;
         private readonly IAccountRepository accountRepository;
 
         public DynamicTableCommandHandler(
             IGenericDynamicTableRepository<TEntity> genericDynamicTableRepository,
-            DynamicTableCompilerRetriever retriever,
+            IDynamicTableCompilerRetriever retriever,
             IConfigurationRepository configurationRepository,
             IAccountRepository accountRepository,
             ILogger<TEntity> logger

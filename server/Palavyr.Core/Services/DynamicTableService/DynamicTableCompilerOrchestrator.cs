@@ -11,13 +11,13 @@ namespace Palavyr.Core.Services.DynamicTableService
 {
     public class DynamicTableCompilerOrchestrator : IDynamicTableCompilerOrchestrator
     {
-        private readonly DynamicResponseComponentExtractor dynamicResponseComponentExtractor;
-        private readonly DynamicTableCompilerRetriever dynamicTableCompilerRetriever;
+        private readonly IDynamicResponseComponentExtractor dynamicResponseComponentExtractor;
+        private readonly IDynamicTableCompilerRetriever dynamicTableCompilerRetriever;
         private readonly IHoldAnAccountId accountIdHolder;
 
         public DynamicTableCompilerOrchestrator(
-            DynamicResponseComponentExtractor dynamicResponseComponentExtractor,
-            DynamicTableCompilerRetriever dynamicTableCompilerRetriever,
+            IDynamicResponseComponentExtractor dynamicResponseComponentExtractor,
+            IDynamicTableCompilerRetriever dynamicTableCompilerRetriever,
             IHoldAnAccountId accountIdHolder
         )
         {

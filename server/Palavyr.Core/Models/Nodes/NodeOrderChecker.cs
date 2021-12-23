@@ -6,7 +6,12 @@ using Palavyr.Core.Models.Configuration.Schemas;
 
 namespace Palavyr.Core.Models.Nodes
 {
-    public class NodeOrderChecker
+    public interface INodeOrderChecker
+    {
+        NodeOrderCheckResult AllDynamicTypesAreOrderedCorrectlyByResolveOrder(ConversationNode[] nodeList);
+    }
+
+    public class NodeOrderChecker : INodeOrderChecker
     {
         private readonly INodeGetter nodeGetter;
         private readonly GuidFinder guidFinder;

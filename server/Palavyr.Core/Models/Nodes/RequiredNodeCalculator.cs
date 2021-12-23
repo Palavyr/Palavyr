@@ -9,9 +9,9 @@ namespace Palavyr.Core.Models.Nodes
 {
     public class RequiredNodeCalculator
     {
-        private readonly DynamicTableCompilerRetriever dynamicTableCompilerRetriever;
+        private readonly IDynamicTableCompilerRetriever dynamicTableCompilerRetriever;
 
-        public RequiredNodeCalculator(DynamicTableCompilerRetriever dynamicTableCompilerRetriever)
+        public RequiredNodeCalculator(IDynamicTableCompilerRetriever dynamicTableCompilerRetriever)
         {
             this.dynamicTableCompilerRetriever = dynamicTableCompilerRetriever;
         }

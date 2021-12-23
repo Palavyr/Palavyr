@@ -8,7 +8,13 @@ namespace Palavyr.Core.Services.TemporaryPaths
         Png
     }
 
-    public class SafeFileNameCreator
+    public interface ISafeFileNameCreator
+    {
+        SafeFileName CreateSafeFileName(ExtensionTypes extension = ExtensionTypes.Pdf);
+        SafeFileName CreateSafeFileName(string fileStem, ExtensionTypes extension = ExtensionTypes.Pdf);
+    }
+
+    public class SafeFileNameCreator : ISafeFileNameCreator
     {
         private readonly IGuidUtils guidUtils;
 

@@ -25,7 +25,7 @@ namespace Palavyr.Core.Models
         private readonly IDynamicTableCompilerOrchestrator orchestrator;
         private readonly RequiredNodeCalculator requiredNodeCalculator;
         private readonly MissingNodeCalculator missingNodeCalculator;
-        private readonly NodeOrderChecker nodeOrderChecker;
+        private readonly INodeOrderChecker nodeOrderChecker;
         private readonly IAccountRepository accountRepository;
         private readonly IConfigurationRepository configurationRepository;
 
@@ -36,7 +36,7 @@ namespace Palavyr.Core.Models
             IDynamicTableCompilerOrchestrator orchestrator,
             RequiredNodeCalculator requiredNodeCalculator,
             MissingNodeCalculator missingNodeCalculator,
-            NodeOrderChecker nodeOrderChecker,
+            INodeOrderChecker nodeOrderChecker,
             IAccountRepository accountRepository,
             IConfigurationRepository configurationRepository)
         {
