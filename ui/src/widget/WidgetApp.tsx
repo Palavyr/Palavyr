@@ -65,7 +65,7 @@ export const WidgetApp = () => {
 export const NotReady = () => {
     return (
         <div style={{ textAlign: "center", paddingTop: "3rem" }}>
-            <span>Not ready</span>
+            <span id="palavyr-widget-not-ready">Not ready</span>
         </div>
     );
 };

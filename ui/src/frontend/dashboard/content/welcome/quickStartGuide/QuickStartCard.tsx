@@ -2,7 +2,7 @@ import { Card, Divider, makeStyles, Typography } from "@material-ui/core";
 import classNames from "classnames";
 import React from "react";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     sectionDiv: {
         width: "100%",
         display: "flex",
@@ -11,14 +11,14 @@ const useStyles = makeStyles((theme) => ({
     },
     card: {
         width: "50%",
-        margin: "4rem",
-        padding: "3rem",
+        marginBottom: "4rem",
+        // padding: "3rem",
         color: "white",
-        background: theme.palette.secondary.main,
+        background: theme.palette.primary.dark,
     },
     highlight: {
         "&:hover": {
-            background: theme.palette.primary.dark,
+            background: theme.palette.secondary.main,
             color: theme.palette.getContrastText(theme.palette.primary.dark),
         },
     },
@@ -27,26 +27,45 @@ const useStyles = makeStyles((theme) => ({
             cursor: "pointer",
         },
     },
+    rowNumber: {
+        fontSize: "28pt",
+        fontWeight: "bolder",
+        fontFamily: "Poppins",
+        textAlign: "center",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "relative",
+        top: "1rem",
+        left: "1rem",
+        width: "2rem",
+        height: "2rem",
+        color: theme.palette.secondary.main,
+    },
 }));
 
 export interface QuickStartCardProps {
     title: string;
     content: string;
     onClick?(): void;
+    rowNumber?: number;
 }
 
-export const QuickStartCard = ({ title, content, onClick = () => null }: QuickStartCardProps) => {
+export const QuickStartCard = ({ title, content, onClick = () => null, rowNumber }: QuickStartCardProps) => {
     const cls = useStyles();
     return (
         <div className={cls.sectionDiv}>
             <Card className={classNames(cls.card, cls.highlight, cls.clickable)} onClick={() => onClick()}>
-                <Typography align="center" gutterBottom variant="h4">
-                    {title}
-                    <Divider variant="middle" />
-                </Typography>
-                <Typography variant="body1" align="center" gutterBottom>
-                    {content}
-                </Typography>
+                {rowNumber && <div className={cls.rowNumber}>{rowNumber}</div>}
+                <div style={{ padding: "3rem", paddingTop: "1rem", paddingLeft: "4rem" }}>
+                    <Typography align="center" gutterBottom variant="h4">
+                        {title}
+                        <Divider variant="middle" />
+                    </Typography>
+                    <Typography variant="h6" align="center" gutterBottom>
+                        {content}
+                    </Typography>
+                </div>
             </Card>
         </div>
     );

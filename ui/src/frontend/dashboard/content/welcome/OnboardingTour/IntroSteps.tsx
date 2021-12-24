@@ -55,7 +55,7 @@ export const IntroSteps = ({ steps, onBlur, initialize = true }: IIntroSteps) =>
                 onRequestClose={() => setStepsEnabled(!stepsEnabled)}
                 badgeContent={(curr, tot) => `${curr} of ${tot}`}
                 lastStepNextButton={<HighlightOffIcon />}
-                maskSpace={5}
+                maskSpace={0}
                 startAt={0} // set to 1 after cookie is set and they reopen
             >
                 {currentStep === 0 ? (

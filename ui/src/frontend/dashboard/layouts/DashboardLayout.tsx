@@ -92,7 +92,6 @@ const useStyles = makeStyles((theme: Theme) => ({
             ...theme.mixins.toolbar,
         };
     },
-
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
@@ -140,7 +139,6 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     const theme = useTheme();
 
     const history = useHistory();
-    const location = useLocation();
     const { areaIdentifier } = useParams<{ contentType: string; areaIdentifier: string }>();
 
     const [areaNameDetails, setAreaNameDetails] = useState<AreaNameDetails>([]);
