@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core";
-import React from "react";
+import { WidgetContext } from "@widgetcore/context/WidgetContext";
+import React, { useContext } from "react";
 import NumberFormat from "react-number-format";
-import { useAppContext } from "widget/hook";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserPhone, INVALID_PHONE } from "../UserDetailsCheck";
 
@@ -33,8 +33,7 @@ const useStyles = makeStyles(theme => ({
 
 export const PhoneForm = ({ phonePattern, status, setStatus }: PhoneFormProps) => {
     const cls = useStyles();
-    const { phoneNumber, setPhoneNumber } = useAppContext();
-
+    const { context } = useContext(WidgetContext);
     return (
         <NumberFormat
             style={status === INVALID_PHONE ? { border: "3px solid red" } : {}}
@@ -45,14 +44,14 @@ export const PhoneForm = ({ phonePattern, status, setStatus }: PhoneFormProps) =
             format={phonePattern}
             mask={MASKCHAR}
             type="tel"
-            value={phoneNumber}
+            value={context.phoneNumber}
             onBlur={() => {
-                if (!checkUserPhone(phoneNumber, setStatus, MASKCHAR)) {
+                if (!checkUserPhone(context.phoneNumber, setStatus, MASKCHAR)) {
                     setStatus(INVALID_PHONE);
                 }
             }}
             onValueChange={values => {
-                setPhoneNumber(values.formattedValue);
+                context.setPhoneNumber(values.formattedValue);
                 if (status === INVALID_PHONE) {
                     setStatus("");
                 }

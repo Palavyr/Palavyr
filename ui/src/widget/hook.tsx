@@ -59,31 +59,34 @@ export const useAppContext = (): IAppContext => {
 
     useEffect(() => {
         setAppContext(defaultAppContext);
-    }, [AppContext]);
+    }, []);
 
     const addNewUserMessage = (message: IMessage) => {
+        AppContext.messages.push(message);
         setAppContext({
             ...AppContext,
-            messages: [...AppContext.messages, message],
+            messages: AppContext.messages,
         });
     };
 
     const addNewBotMessage = (message: CustomCompMessage) => {
         // MAKE SURE TO ATTACH SELECTION CUSTOM ID WHEN HITTING THE SELECTION COMPONENT SO WE CAN TRUNCATE BY IT
+        AppContext.messages.push(message);
         setAppContext({
             ...AppContext,
-            messages: [...AppContext.messages, message],
+            messages: AppContext.messages,
             badgeCount: AppContext.badgeCount + 1,
         });
     };
 
     const resetToSelector = () => {
         const messages = AppContext.messages;
-        const indexOfSelector = messages.findIndex(m => m.customId === "Selection");
+        const indexOfSelector = messages.findIndex(m => m.nodeType === "Selection");
+        const truncated = messages.slice(0, indexOfSelector);
 
         setAppContext({
             ...AppContext,
-            messages: [],
+            messages: truncated,
             badgeCount: 0,
         });
     };

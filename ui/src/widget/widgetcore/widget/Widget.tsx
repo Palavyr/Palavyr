@@ -6,7 +6,7 @@ import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
 import { getRootNode } from "@widgetcore/BotResponse/utils/utils";
 import { renderNextBotMessage } from "@widgetcore/BotResponse/utils/renderNextComponent";
 import "@widgetcore/widget/widget.module.scss";
-import { useAppContext } from "widget/hook";
+import { IAppContext } from "widget/hook";
 
 export const useWidgetStyles = makeStyles(theme => ({
     pwbox: {
@@ -42,9 +42,8 @@ export const Widget = () => {
         secretKey = "123";
     }
     const client = new PalavyrWidgetRepository(secretKey);
-    const context = useAppContext();
 
-    const initializer = async () => {
+    const initializer = async (context: IAppContext) => {
         const intro = await client.Widget.Get.IntroSequence();
         const rootNode = getRootNode(intro);
         renderNextBotMessage(context, rootNode, intro, client, null);

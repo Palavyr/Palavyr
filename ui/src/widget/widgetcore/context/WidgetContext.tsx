@@ -1,7 +1,9 @@
 import { SetState, WidgetPreferences } from "@Palavyr-Types";
 import React from "react";
+import { IAppContext } from "widget/hook";
 
 export interface IWidgetContext {
+    context: IAppContext;
     preferences: WidgetPreferences;
     chatStarted: boolean;
     setChatStarted: SetState<boolean>;

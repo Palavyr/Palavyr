@@ -17,7 +17,6 @@ import { renderNextBotMessage } from "../BotResponse/utils/renderNextComponent";
 import { ChoiceList } from "@widgetcore/BotResponse/optionFormats/ChoiceList";
 import { MiniContactForm } from "@widgetcore/UserDetailsDialog/CollectDetailsForm";
 import { CurrencyTextField } from "@widgetcore/BotResponse/numbers/CurrencyTextField";
-import { useAppContext } from "widget/hook";
 
 const useStyles = makeStyles(theme => ({
     tableCell: {
@@ -54,9 +53,7 @@ const useStyles = makeStyles(theme => ({
 export class StandardComponents {
     public makeSelectOptions({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         return () => {
-            const context = useAppContext();
-
-            const [selectedOption, setSelectedOption] = useState<SelectedOption | null>(null);
+            const { context } = useContext(WidgetContext);
             const [options, setOptions] = useState<Array<SelectedOption>>();
             const [disabled, setDisabled] = useState<boolean>(false);
             const [open, setOpen] = useState<boolean>(false);
@@ -124,14 +121,12 @@ export class StandardComponents {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
-            const { setChatStarted, setConvoId } = useContext(WidgetContext);
+            const { setChatStarted, setConvoId, context } = useContext(WidgetContext);
 
             const [disabled, setDisabled] = useState<boolean>(false);
 
             const [status, setStatus] = useState<string | null>(null);
             const [detailsSet, setDetailsSet] = useState<boolean>(false);
-
-            const context = useAppContext();
 
             const onFormSubmit = (e: { preventDefault: () => void }) => {
                 if (designer) return;
@@ -168,7 +163,8 @@ export class StandardComponents {
     public makeProvideInfo({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         return () => {
-            const context = useAppContext();
+            const { context } = useContext(WidgetContext);
+
             useEffect(() => {
                 if (designer) return;
                 responseAction(context, node, child, nodeList, client, convoId, null);
@@ -182,7 +178,8 @@ export class StandardComponents {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
-            const context = useAppContext();
+            const { context } = useContext(WidgetContext);
+
             useEffect(() => {
                 if (designer) return;
                 responseAction(context, node, child, nodeList, client, convoId, null);
@@ -198,7 +195,7 @@ export class StandardComponents {
 
         return () => {
             const [disabled, setDisabled] = useState<boolean>(false);
-            const context = useAppContext();
+            const { context } = useContext(WidgetContext);
 
             const onClick = (valueOption: string) => {
                 if (designer) return;
@@ -227,7 +224,7 @@ export class StandardComponents {
 
         return () => {
             const [disabled, setDisabled] = useState<boolean>(false);
-            const context = useAppContext();
+            const { context } = useContext(WidgetContext);
 
             const onClick = (child: WidgetNodeResource) => {
                 if (designer) return;
@@ -255,10 +252,10 @@ export class StandardComponents {
         let child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
+            const { context } = useContext(WidgetContext);
             const [response, setResponse] = useState<string>("");
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
-            const context = useAppContext();
 
             const { preferences } = useContext(WidgetContext);
             const cls = useStyles(preferences);
@@ -289,12 +286,11 @@ export class StandardComponents {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
-            const { preferences } = useContext(WidgetContext);
+            const { preferences, context } = useContext(WidgetContext);
             const cls = useStyles(preferences);
             const [response, setResponse] = useState<number>(0);
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
-            const context = useAppContext();
 
             const onClick = () => {
                 if (designer) return;
@@ -344,7 +340,7 @@ export class StandardComponents {
         return () => {
             const [loaded, setLoaded] = useState<boolean>(false);
             const [link, setLink] = useState<string>("");
-            const context = useAppContext();
+            const { context } = useContext(WidgetContext);
 
             useEffect(() => {
                 (async () => {
@@ -372,9 +368,8 @@ export class StandardComponents {
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
 
-            const { preferences } = useContext(WidgetContext);
+            const { preferences, context } = useContext(WidgetContext);
             const cls = useStyles(preferences);
-            const context = useAppContext();
 
             const onClick = () => {
                 if (designer) return;
@@ -412,9 +407,8 @@ export class StandardComponents {
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
 
-            const { preferences } = useContext(WidgetContext);
+            const { preferences, context } = useContext(WidgetContext);
             const cls = useStyles(preferences);
-            const context = useAppContext();
 
             const onClick = () => {
                 if (designer) return;
@@ -459,7 +453,7 @@ export class StandardComponents {
         const areaId = nodeList[0].areaIdentifier;
 
         return () => {
-            const context = useAppContext();
+            const { context } = useContext(WidgetContext);
 
             const sendEmail = async () => {
                 const email = context.AppContext[ConvoContextProperties.emailAddress];
@@ -515,6 +509,8 @@ export class StandardComponents {
 
     makeRestart({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         return () => {
+            const { context } = useContext(WidgetContext);
+
             useEffect(() => {
                 (async () => {
                     if (designer) return;
@@ -530,8 +526,7 @@ export class StandardComponents {
 
         return () => {
             const [loading, setLoading] = useState<boolean>(false);
-            const { openUserDetails } = useAppContext();
-            const context = useAppContext();
+            const { context } = useContext(WidgetContext);
 
             const onClick = async () => {
                 if (designer) return;
@@ -545,7 +540,7 @@ export class StandardComponents {
                         button={
                             <>
                                 <ResponseButton text="Send my email" variant="contained" onClick={onClick} />
-                                <ResponseButton text="Check your details" variant="contained" onClick={() => openUserDetails()} />
+                                <ResponseButton text="Check your details" variant="contained" onClick={() => context.openUserDetails()} />
                             </>
                         }
                     />
@@ -561,7 +556,7 @@ export class StandardComponents {
         return () => {
             const [disabled, setDisabled] = useState<boolean>(false);
             const [loading, setLoading] = useState<boolean>(false);
-            const context = useAppContext();
+            const { context } = useContext(WidgetContext);
 
             const sendFallbackEmail = async () => {
                 const email = context.AppContext[ConvoContextProperties.emailAddress];
@@ -599,7 +594,7 @@ export class StandardComponents {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
-            const context = useAppContext();
+            const { context } = useContext(WidgetContext);
 
             useEffect(() => {
                 setTimeout(async () => {

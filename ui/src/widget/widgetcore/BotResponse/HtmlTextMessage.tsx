@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core";
 import classNames from "classnames";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
-import { useAppContext } from "widget/hook";
 
 const useStyles = makeStyles(theme => ({
     outer: (widgetPreferences: WidgetPreferences) => ({
@@ -20,9 +19,11 @@ export interface IHtmlTextMessage {
     className: string;
 }
 export const HtmlTextMessage = ({ message, className, showTimeStamp = true }: IHtmlTextMessage) => {
-    const { preferences } = useContext(WidgetContext);
+    const {
+        preferences,
+        context: { name },
+    } = useContext(WidgetContext);
     const cls = useStyles(preferences);
-    const { name } = useAppContext();
 
     return (
         <div className={classNames(cls.outer, className)}>

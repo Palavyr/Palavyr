@@ -1,6 +1,6 @@
 import { TextInput } from "@widgetcore/BotResponse/number/TextInput";
-import React, { Dispatch, SetStateAction } from "react";
-import { useAppContext } from "widget/hook";
+import { WidgetContext } from "@widgetcore/context/WidgetContext";
+import React, { Dispatch, SetStateAction, useContext } from "react";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserEmail, checkUserName, INVALID_EMAIL, INVALID_PHONE } from "../UserDetailsCheck";
 
@@ -10,8 +10,9 @@ export interface EmailFormProps extends BaseFormProps {
 }
 
 export const EmailForm = ({ status, setStatus, setDetailsSet, disabled }: EmailFormProps) => {
-
-    const { name, emailAddress, setEmailAddress, phoneNumber, setPhoneNumber } = useAppContext();
+    const {
+        context: { name, emailAddress, setEmailAddress, phoneNumber, setPhoneNumber },
+    } = useContext(WidgetContext);
     const checkUserDetailsAreSet = () => {
         const userNameResult = checkUserName(name, setStatus);
         const userEmailResult = checkUserEmail(emailAddress, setStatus);

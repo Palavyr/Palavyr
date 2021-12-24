@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { memo, useContext, useEffect, useMemo, useRef } from "react";
 import format from "date-fns/format";
 import { Loader } from "./components/Loader/Loader";
-import { WidgetPreferences } from "@Palavyr-Types";
+import { CustomCompMessage, IMessage, WidgetPreferences } from "@Palavyr-Types";
 import { scrollToBottom } from "@widgetcore/utils/messages";
 import { getComponentToRender } from "@widgetcore/BotResponse/utils/getComponentToRender";
 import { makeStyles } from "@material-ui/core";
@@ -11,7 +11,6 @@ import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import "@widgetcore/widget/widget.module.scss";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
 import classNames from "classnames";
-import { useAppContext } from "widget/hook";
 
 export interface MessageProps {
     showTimeStamp: boolean;
@@ -31,12 +30,16 @@ const useStyles = makeStyles(theme => ({
     }),
 }));
 
-export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
-    const { messages, loading } = useAppContext();
+const MessageSlice = memo(({ message, showTimeStamp }: { message: IMessage | CustomCompMessage; showTimeStamp: boolean }) => {
     const { preferences } = useContext(WidgetContext);
     const cls = useStyles({ ...preferences });
-    const wcls = useWidgetStyles();
+    return <div className={cls.message}>{getComponentToRender(message, showTimeStamp)}</div>;
+});
 
+export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
+    const { preferences, context } = useContext(WidgetContext);
+    const cls = useStyles({ ...preferences });
+    const wcls = useWidgetStyles();
 
     useEffect(() => {
         document.body.setAttribute("style", `overflow: "hidden"`);
@@ -46,16 +49,18 @@ export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
 
     useEffect(() => {
         scrollToBottom(messageRef.current);
-    }, [messages, loading]);
+    }, [context.messages, context.loading]);
+
+    useEffect(() => {
+        if (context.messages.length > 0) {
+            scrollToBottom(messageRef.current);
+        }
+    }, [context.messages, context.loading]);
 
     return (
         <div id="messages" className={classNames(wcls.pwrow, wcls.pcontent, cls.messageTubeContainer)} ref={messageRef}>
-            {messages?.map((message, index) => (
-                <div className={cls.message} key={`${index}-${format(message.timestamp, "hh:mm")}`}>
-                    {getComponentToRender(message, showTimeStamp)}
-                </div>
-            ))}
-            {loading && <Loader typing={loading} />}
+            {context.messages.length > 0 && context.messages.map((message, index) => <MessageSlice message={message} showTimeStamp={showTimeStamp} key={`${index}-${format(message.timestamp, "hh:mm")}`} />)}
+            {context.loading && <Loader typing={context.loading} />}
             <div style={{ height: "3rem" }} />
         </div>
     );

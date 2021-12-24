@@ -15,12 +15,15 @@ export const renderNextBotMessage = (context: IAppContext, node: WidgetNodeResou
             showAvatar: true,
             customId: convoId ?? "",
             unread: true,
+            specialId: "",
+            nodeType: "",
         };
         return context.addNewBotMessage(botMessage);
     }
 
     const makeNextComponent = ComponentRegistry[node.nodeComponentType];
     const component = makeNextComponent({ node, nodeList, client, convoId });
+
     const botMessage = {
         type: "bot",
         component,
@@ -30,6 +33,7 @@ export const renderNextBotMessage = (context: IAppContext, node: WidgetNodeResou
         showAvatar: true,
         customId: convoId ?? "",
         unread: true,
+        nodeType: node.nodeComponentType,
     };
     context.addNewBotMessage(botMessage);
 };

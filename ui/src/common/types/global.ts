@@ -1131,6 +1131,7 @@ type BaseMessage = {
     unread: boolean;
     customId?: string;
     props?: any;
+    nodeType: string;
 };
 
 export type SpecificResponse = {

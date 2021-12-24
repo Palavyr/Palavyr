@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserName, INVALID_NAME } from "../UserDetailsCheck";
 import { TextInput } from "@widgetcore/BotResponse/number/TextInput";
-import { useAppContext } from "widget/hook";
+import { WidgetContext } from "@widgetcore/context/WidgetContext";
 
 export interface NameFormProps extends BaseFormProps {
     disabled: boolean;
@@ -21,8 +21,9 @@ const useStyles = makeStyles(theme => ({
 
 export const NameForm = ({ status, setStatus, disabled }: NameFormProps) => {
     const cls = useStyles();
-    const { name, setName } = useAppContext();
-
+    const {
+        context: { name, setName },
+    } = useContext(WidgetContext);
     return (
         <TextInput
             disabled={disabled}

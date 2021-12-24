@@ -15,7 +15,6 @@ import { INVALID_PHONE, INVALID_EMAIL, INVALID_NAME } from "./UserDetailsCheck";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { useContext } from "react";
-import { useAppContext } from "widget/hook";
 
 export interface CollectDetailsFormProps {
     setKickoff: SetState<boolean>;
@@ -60,21 +59,18 @@ const useStyles = makeStyles(theme => ({
 export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const client = new PalavyrWidgetRepository(secretKey);
-
-    const { userDetailsVisible, setRegion, closeUserDetails, name, emailAddress, phoneNumber, region } = useAppContext();
-
     const [options, setOptions] = useState<LocaleMap>([]);
     const [phonePattern, setphonePattern] = useState<string>("");
     const [detailsSet, setDetailsSet] = useState<boolean>(false);
 
-    const { chatStarted, setChatStarted, convoId } = useContext(WidgetContext);
+    const { chatStarted, setChatStarted, convoId, context} = useContext(WidgetContext);
 
     useEffect(() => {
         (async () => {
             const { currentLocale: locale, localeMap } = await client.Widget.Get.Locale();
             setphonePattern(locale.phoneFormat);
             setOptions(localeMap);
-            setRegion(locale.name);
+            context.setRegion(locale.name);
         })();
     }, []);
 
@@ -83,7 +79,7 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
 
     const onChange = (event: any, newOption: LocaleResource) => {
         setphonePattern(newOption.phoneFormat);
-        setRegion(newOption.name);
+        context.setRegion(newOption.name);
     };
 
     const onFormSubmit = async (e: { preventDefault: () => void }) => {
@@ -92,9 +88,9 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
         setChatStarted(true);
 
         if (convoId) {
-            await client.Widget.Post.UpdateConvoRecord({ Name: name, Email: emailAddress, PhoneNumber: phoneNumber, Locale: region, ConversationId: convoId });
+            await client.Widget.Post.UpdateConvoRecord({ Name: context.name, Email: context.emailAddress, PhoneNumber: context.phoneNumber, Locale: context.region, ConversationId: convoId });
         }
-        closeUserDetails();
+        context.closeUserDetails();
     };
 
     const formProps = {
@@ -104,7 +100,7 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
 
     return (
         <Dialog
-            open={userDetailsVisible && chatStarted}
+            open={context.userDetailsVisible && chatStarted}
             className={cls.baseDialogCollectionForm}
             classes={{
                 root: cls.dialogBackgroundCollectionForm,

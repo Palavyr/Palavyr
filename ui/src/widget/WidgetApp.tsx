@@ -6,16 +6,17 @@ import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository"
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { CollectDetailsForm } from "@widgetcore/UserDetailsDialog/CollectDetailsForm";
 import { Widget } from "@widgetcore/widget/Widget";
+import { useAppContext } from "./hook";
 
 export const WidgetApp = () => {
     const [chatStarted, setChatStarted] = useState<boolean>(false);
     const [convoId, setConvoId] = useState<string | null>(null);
     const [isReady, setIsReady] = useState<boolean | null>(null);
     const [preferences, setWidgetPrefs] = useState<WidgetPreferences>();
-
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const isDemo = new URLSearchParams(useLocation().search).get("demo");
 
+    const context = useAppContext();
     const Client = new PalavyrWidgetRepository(secretKey);
 
     const runAppPrecheck = useCallback(async () => {
@@ -27,7 +28,7 @@ export const WidgetApp = () => {
         }
         setTimeout(() => {
             setIsReady(preCheckResult.isReady);
-        }, 5000);
+        }, 2000);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -44,9 +45,9 @@ export const WidgetApp = () => {
     }, [runAppPrecheck]);
 
     return (
-        <div style={{height: "100%", width :"100%"}}>
+        <div style={{ height: "100%", width: "100%" }}>
             {preferences && (
-                <WidgetContext.Provider value={{ preferences, chatStarted, setChatStarted, setConvoId, convoId }}>
+                <WidgetContext.Provider value={{ context, preferences, chatStarted, setChatStarted, setConvoId, convoId }}>
                     {isReady ? (
                         <>
                             <CollectDetailsForm setKickoff={() => null} />

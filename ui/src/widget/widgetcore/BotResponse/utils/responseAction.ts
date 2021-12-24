@@ -111,5 +111,6 @@ export const createUserResponseComponent = (text: string, id: string | null): IM
         showAvatar: true,
         customId: id ?? "",
         unread: false,
+        nodeType: "user-response"
     };
 };
