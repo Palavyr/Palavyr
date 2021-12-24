@@ -11,13 +11,10 @@ import { ErrorFallback } from "@common/components/ErrorBoundaries/AppLevelErrorB
 import ReactGA from "react-ga";
 import RouteChangeTracker from "@common/Analytics/RouteChangeTracker";
 import { googleAnalyticsTrackingId, isDevelopmentStage } from "@api-client/clientUtils";
-import { BehaviorState, ContextProperties, ContextState, MessagesState } from "@Palavyr-Types";
 
 if (!isDevelopmentStage()) {
     ReactGA.initialize(googleAnalyticsTrackingId);
 }
-
-export interface AppContext extends BehaviorState, ContextState, MessagesState {}
 
 ReactDOM.render(
     <React.StrictMode>

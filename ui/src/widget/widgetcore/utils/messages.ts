@@ -1,34 +1,4 @@
-import { ElementType } from "react";
-import { CustomCompMessage, IMessage } from "@Palavyr-Types";
-import { Message } from "@widgetcore/components/Messages/components/Message/Message";
-
-import { MESSAGES_TYPES, MESSAGE_SENDER, MESSAGE_BOX_SCROLL_DURATION } from "../constants";
-
-export const createNewMessage = (text: string, sender: string, id?: string): IMessage => {
-    return {
-        type: MESSAGES_TYPES.TEXT,
-        component: Message,
-        text,
-        sender,
-        timestamp: new Date(),
-        showAvatar: sender === MESSAGE_SENDER.RESPONSE,
-        customId: id,
-        unread: sender === MESSAGE_SENDER.RESPONSE,
-    };
-};
-
-export const createComponentMessage = (component: ElementType, props: any, showAvatar: boolean, id?: string): CustomCompMessage => {
-    return {
-        type: MESSAGES_TYPES.CUSTOM_COMPONENT,
-        component,
-        props,
-        sender: MESSAGE_SENDER.RESPONSE,
-        timestamp: new Date(),
-        showAvatar,
-        customId: id,
-        unread: true,
-    };
-};
+import { MESSAGE_BOX_SCROLL_DURATION } from "../constants";
 
 export const sinEaseOut = (timestamp: any, begining: any, change: any, duration: any) => {
     return change * ((timestamp = timestamp / duration - 1) * timestamp * timestamp + 1) + begining;

@@ -4,8 +4,9 @@ import { WidgetLayout } from "./WidgetLayout";
 import { useLocation } from "react-router-dom";
 import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
 import { getRootNode } from "@widgetcore/BotResponse/utils/utils";
-import { renderNextComponent } from "@widgetcore/BotResponse/utils/renderNextComponent";
+import { renderNextBotMessage } from "@widgetcore/BotResponse/utils/renderNextComponent";
 import "@widgetcore/widget/widget.module.scss";
+import { useAppContext } from "widget/hook";
 
 export const useWidgetStyles = makeStyles(theme => ({
     pwbox: {
@@ -41,11 +42,12 @@ export const Widget = () => {
         secretKey = "123";
     }
     const client = new PalavyrWidgetRepository(secretKey);
+    const context = useAppContext();
 
     const initializer = async () => {
         const intro = await client.Widget.Get.IntroSequence();
         const rootNode = getRootNode(intro);
-        renderNextComponent(rootNode, intro, client, null);
+        renderNextBotMessage(context, rootNode, intro, client, null);
     };
 
     return (

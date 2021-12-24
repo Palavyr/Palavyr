@@ -1,9 +1,7 @@
 import { makeStyles } from "@material-ui/core";
-import { getPhoneContext, setPhoneContext } from "@store-dispatcher";
 import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
 import NumberFormat from "react-number-format";
+import { useAppContext } from "widget/hook";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserPhone, INVALID_PHONE } from "../UserDetailsCheck";
 
@@ -35,14 +33,11 @@ const useStyles = makeStyles(theme => ({
 
 export const PhoneForm = ({ phonePattern, status, setStatus }: PhoneFormProps) => {
     const cls = useStyles();
+    const { phoneNumber, setPhoneNumber } = useAppContext();
 
-    const [phoneState, setPhoneState] = useState<string>("");
-    useEffect(() => {
-        setPhoneState(getPhoneContext());
-    }, []);
     return (
         <NumberFormat
-            style={ status === INVALID_PHONE ? {border: "3px solid red"} : {}}
+            style={status === INVALID_PHONE ? { border: "3px solid red" } : {}}
             placeholder="Phone number (optional)"
             onError={() => setStatus(INVALID_PHONE)}
             error={status === INVALID_PHONE ? "WOW" : ""}
@@ -50,16 +45,14 @@ export const PhoneForm = ({ phonePattern, status, setStatus }: PhoneFormProps) =
             format={phonePattern}
             mask={MASKCHAR}
             type="tel"
-            value={phoneState}
+            value={phoneNumber}
             onBlur={() => {
-                const phonenumber = getPhoneContext();
-                if (!checkUserPhone(phonenumber, setStatus, MASKCHAR)) {
+                if (!checkUserPhone(phoneNumber, setStatus, MASKCHAR)) {
                     setStatus(INVALID_PHONE);
                 }
             }}
             onValueChange={values => {
-                setPhoneContext(values.formattedValue);
-                setPhoneState(values.formattedValue);
+                setPhoneNumber(values.formattedValue);
                 if (status === INVALID_PHONE) {
                     setStatus("");
                 }

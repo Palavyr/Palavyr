@@ -10,13 +10,12 @@ import { NameForm } from "./FormInputs/NameForm";
 import { EmailForm } from "./FormInputs/EmailForm";
 import { LocaleSelector } from "./FormInputs/LocaleSelector";
 import { PhoneForm } from "./FormInputs/PhoneForm";
-import { useSelector } from "react-redux";
-import { GlobalState, LocaleMap, LocaleResource, SetState } from "@Palavyr-Types";
-import { setRegionContext, closeUserDetails, getNameContext, getEmailAddressContext, getPhoneContext, getRegionContext } from "@store-dispatcher";
+import { LocaleMap, LocaleResource, SetState } from "@Palavyr-Types";
 import { INVALID_PHONE, INVALID_EMAIL, INVALID_NAME } from "./UserDetailsCheck";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { useContext } from "react";
+import { useAppContext } from "widget/hook";
 
 export interface CollectDetailsFormProps {
     setKickoff: SetState<boolean>;
@@ -61,7 +60,8 @@ const useStyles = makeStyles(theme => ({
 export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
     const secretKey = new URLSearchParams(useLocation().search).get("key");
     const client = new PalavyrWidgetRepository(secretKey);
-    const userDetailsVisible = useSelector((state: GlobalState) => state.behaviorReducer.userDetailsVisible);
+
+    const { userDetailsVisible, setRegion, closeUserDetails, name, emailAddress, phoneNumber, region } = useAppContext();
 
     const [options, setOptions] = useState<LocaleMap>([]);
     const [phonePattern, setphonePattern] = useState<string>("");
@@ -74,7 +74,7 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
             const { currentLocale: locale, localeMap } = await client.Widget.Get.Locale();
             setphonePattern(locale.phoneFormat);
             setOptions(localeMap);
-            setRegionContext(locale.name);
+            setRegion(locale.name);
         })();
     }, []);
 
@@ -83,7 +83,7 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
 
     const onChange = (event: any, newOption: LocaleResource) => {
         setphonePattern(newOption.phoneFormat);
-        setRegionContext(newOption.name);
+        setRegion(newOption.name);
     };
 
     const onFormSubmit = async (e: { preventDefault: () => void }) => {
@@ -91,13 +91,8 @@ export const CollectDetailsForm = ({ setKickoff }: CollectDetailsFormProps) => {
         setKickoff(true);
         setChatStarted(true);
 
-        const name = getNameContext();
-        const email = getEmailAddressContext();
-        const phone = getPhoneContext();
-        const locale = getRegionContext();
-
         if (convoId) {
-            await client.Widget.Post.UpdateConvoRecord({ Name: name, Email: email, PhoneNumber: phone, Locale: locale, ConversationId: convoId });
+            await client.Widget.Post.UpdateConvoRecord({ Name: name, Email: emailAddress, PhoneNumber: phoneNumber, Locale: region, ConversationId: convoId });
         }
         closeUserDetails();
     };

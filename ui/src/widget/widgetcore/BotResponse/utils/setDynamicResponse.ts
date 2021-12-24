@@ -1,10 +1,8 @@
-import { getDynamicResponsesContext, setDynamicResponses } from "@store-dispatcher";
 import { cloneDeep, findIndex } from "lodash";
+import { IAppContext } from "widget/hook";
 
-export const setDynamicResponse = (dynamicType: string, nodeId: string, response: string) => {
-    const context = getDynamicResponsesContext();
-
-    let dynamicResponseContext = cloneDeep(context);
+export const setDynamicResponse = (context: IAppContext, dynamicType: string, nodeId: string, response: string) => {
+    let dynamicResponseContext = cloneDeep(context.dynamicResponses);
 
     const currentResponseTypeIndex = findIndex(dynamicResponseContext, (resp: Object) => {
         return Object.keys(resp).includes(dynamicType);
@@ -15,5 +13,5 @@ export const setDynamicResponse = (dynamicType: string, nodeId: string, response
     } else {
         dynamicResponseContext[currentResponseTypeIndex][dynamicType].push({ [nodeId]: response });
     }
-    setDynamicResponses(dynamicResponseContext);
+    context.setDynamicResponses(dynamicResponseContext);
 };

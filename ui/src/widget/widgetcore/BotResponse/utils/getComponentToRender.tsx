@@ -1,12 +1,12 @@
 import React from "react";
-import { IMessage, Link, CustomCompMessage } from "@Palavyr-Types";
+import { IMessage, CustomCompMessage } from "@Palavyr-Types";
 import { MessageWrapper } from "./MessageWrapper";
 import { MESSAGES_TYPES } from "@widgetcore/constants";
 
-export const getComponentToRender = (message: IMessage | Link | CustomCompMessage, showTimeStamp: boolean) => {
-    if (message.type === MESSAGES_TYPES.CUSTOM_COMPONENT) {
+export const getComponentToRender = (message: IMessage | CustomCompMessage, showTimeStamp: boolean) => {
+    if (message.type === "Bot") {
         // for the custom components
-        const PalavyrComponent = message.component;
+        const PalavyrComponent = message.component as CustomCompMessage["component"];
         return (
             <MessageWrapper>
                 <PalavyrComponent {...message.props} />

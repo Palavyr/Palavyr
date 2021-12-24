@@ -1,4 +1,3 @@
-import { toggleUserDetails } from "@store-dispatcher";
 import { Meta, Story } from "@storybook/react";
 import React, { useEffect } from "react";
 import { widgetUrl } from "widget/test/routes";
@@ -20,9 +19,9 @@ export default {
 
 const Template: Story<CollectDetailsFormProps> = args => {
     useEffect(() => {
-        toggleUserDetails();
+        // toggleUserDetails();
         return () => {
-            toggleUserDetails();
+            // toggleUserDetails();
         };
     });
 

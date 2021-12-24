@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { ConvoHeader } from "@widgetcore/components/ConvoHeader/ConvoHeader";
 import { Messages } from "@widgetcore/components/Messages/Messages";
 import { BrandingStrip } from "@widgetcore/components/Footer/BrandingStrip";
-import { dropMessages } from "@store-dispatcher";
+import { useAppContext } from "widget/hook";
 
 export interface WidgetLayoutProps {
     titleAvatar?: string;
@@ -12,6 +12,8 @@ export interface WidgetLayoutProps {
     initializer(): void;
 }
 export const WidgetLayout = ({ initializer, titleAvatar = "", profileAvatar = "", designMode = false }: WidgetLayoutProps) => {
+    const { dropMessages } = useAppContext();
+
     const initialize = React.useCallback(async () => {
         dropMessages();
         initializer();

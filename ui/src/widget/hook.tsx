@@ -1,6 +1,29 @@
-import { ContextProperties, MessagesState, BehaviorState, DynamicResponses, KeyValues, IMessage, CustomCompMessage } from "@Palavyr-Types";
+import { ContextProperties, DynamicResponses, KeyValues, IMessage, CustomCompMessage, WidgetPreferences } from "@Palavyr-Types";
 import { useEffect, useState } from "react";
-import { AppContext } from "widget";
+
+export interface BehaviorState {
+    disabledInput: boolean;
+    loading: boolean;
+    userDetailsVisible: boolean;
+}
+
+export interface ContextState {
+    name: string;
+    emailAddress: string;
+    phoneNumber: string;
+    region: string;
+    keyValues: KeyValues;
+    dynamicResponses: DynamicResponses;
+    numIndividuals: number | null;
+    widgetPreferences: WidgetPreferences | null;
+    pdfLink: string | null;
+}
+export interface MessagesState {
+    messages: (IMessage | CustomCompMessage)[];
+    badgeCount: number;
+}
+
+export interface AppContext extends BehaviorState, ContextState, MessagesState {}
 
 const defaultContextProperties: ContextProperties = {
     dynamicResponses: [],
@@ -31,7 +54,7 @@ const defaultAppContext: AppContext = {
     ...defaultMessages,
 };
 
-export const useAppContext = () => {
+export const useAppContext = (): IAppContext => {
     const [AppContext, setAppContext] = useState<AppContext>(defaultAppContext);
 
     useEffect(() => {
@@ -208,7 +231,65 @@ export const useAppContext = () => {
         dropMessages,
         setBadgeCount,
         markAllAsRead,
+
         messages: AppContext.messages,
         loading: AppContext.loading,
+        phoneNumber: AppContext.phoneNumber,
+        emailAddress: AppContext.emailAddress,
+        name: AppContext.name,
+        region: AppContext.region,
+        numIndividuals: AppContext.numIndividuals,
+        widgetPreferences: AppContext.widgetPreferences,
+        pdfLink: AppContext.pdfLink,
+        dynamicResponses: AppContext.dynamicResponses,
+        keyValues: AppContext.keyValues,
+        disabledInput: AppContext.disabledInput,
+        userDetailsVisible: AppContext.userDetailsVisible,
+        badgeCount: AppContext.badgeCount,
+
+        AppContext,
     };
 };
+
+export interface IAppContext {
+    toggleInputDisable: () => void;
+    toggleMessageLoader: () => void;
+    toggleUserDetails: () => void;
+    openUserDetails: () => void;
+    closeUserDetails: () => void;
+
+    setContextProperties: (properties: ContextProperties) => void;
+    setNumIndividuals: (numIndividuals: number) => void;
+    setName: (name: string) => void;
+    setPhoneNumber: (phoneNumber: string) => void;
+    setEmailAddress: (emailAddress: string) => void;
+    setRegion: (region: string) => void;
+    setWidgetPreferences: (widgetPreferences: any) => void;
+    setPdfLink: (pdfLink: string) => void;
+    setDynamicResponses: (dynamicResponses: DynamicResponses) => void;
+    setKeyValues: (keyValues: KeyValues) => void;
+
+    addNewUserMessage: (message: IMessage) => void;
+    addNewBotMessage: (message: CustomCompMessage) => void;
+    resetToSelector: () => void;
+    dropMessages: () => void;
+    setBadgeCount: (badgeCount: number) => void;
+    markAllAsRead: () => void;
+
+    messages: (IMessage | CustomCompMessage)[];
+    loading: boolean;
+    phoneNumber: string;
+    emailAddress: string;
+    name: string;
+    region: string;
+    numIndividuals: number | null;
+    widgetPreferences: WidgetPreferences | null;
+    pdfLink: string | null;
+    dynamicResponses: DynamicResponses;
+    keyValues: KeyValues;
+    disabledInput: boolean;
+    userDetailsVisible: boolean;
+    badgeCount: number;
+
+    AppContext: AppContext;
+}

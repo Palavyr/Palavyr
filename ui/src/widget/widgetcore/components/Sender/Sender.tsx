@@ -1,6 +1,4 @@
-import { GlobalState } from "@Palavyr-Types";
-import React, { useRef, useEffect } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
 import "./style.scss";
 
 const send = require("assets/send_button.svg") as string;
@@ -15,21 +13,13 @@ type Props = {
 };
 
 export const Sender = ({ sendMessage, placeholder, disabledInput, autofocus, onTextInputChange, buttonAlt }: Props) => {
-    const showChat = useSelector((state: GlobalState) => state.behaviorReducer.showChat);
-    const inputRef = useRef(null);
-
-    useEffect(() => {
-        // @ts-ignore
-        if (showChat) inputRef.current?.focus();
-    }, [showChat]);
-
     return (
         <form className="rcw-sender" onSubmit={sendMessage}>
             <input
                 type="text"
                 className="rcw-new-message"
                 name="message"
-                ref={inputRef}
+                // ref={inputRef}
                 placeholder={placeholder}
                 disabled={disabledInput}
                 autoFocus={autofocus}

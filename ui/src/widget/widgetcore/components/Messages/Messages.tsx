@@ -1,9 +1,7 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
 import format from "date-fns/format";
 import { Loader } from "./components/Loader/Loader";
-import { WidgetPreferences, GlobalState } from "@Palavyr-Types";
-import { _markAllMessagesRead, _setBadgeCount } from "@store-actions";
+import { WidgetPreferences } from "@Palavyr-Types";
 import { scrollToBottom } from "@widgetcore/utils/messages";
 import { getComponentToRender } from "@widgetcore/BotResponse/utils/getComponentToRender";
 import { makeStyles } from "@material-ui/core";

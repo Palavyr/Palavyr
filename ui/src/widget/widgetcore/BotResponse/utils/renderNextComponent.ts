@@ -1,23 +1,35 @@
-
 import { WidgetNodeResource, WidgetNodes } from "@Palavyr-Types";
-import { renderCustomComponent } from "@store-dispatcher";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 import { dummyFailComponent } from "@widgetcore/componentRegistry/DummyComponentDev";
 import { ComponentRegistry } from "@widgetcore/componentRegistry/registry";
+import { IAppContext } from "widget/hook";
 
-export const renderNextComponent = (
-    node: WidgetNodeResource,
-    nodeList: WidgetNodes,
-    client: PalavyrWidgetRepository,
-    convoId: string | null,
-) => {
-    //TODO: make this impossible by geting the configuration right
-
+export const renderNextBotMessage = (context: IAppContext, node: WidgetNodeResource, nodeList: WidgetNodes, client: PalavyrWidgetRepository, convoId: string | null) => {
     if (node.nodeType === "" || node.nodeType === null || node.nodeChildrenString === "" || node.nodeChildrenString === null || node === undefined) {
-        return renderCustomComponent(dummyFailComponent, {}, false);
+        const botMessage = {
+            type: "bot",
+            component: dummyFailComponent,
+            props: {},
+            sender: "bot-response",
+            timestamp: new Date(),
+            showAvatar: true,
+            customId: convoId ?? "",
+            unread: true,
+        };
+        return context.addNewBotMessage(botMessage);
     }
-    const makeNextComponent = ComponentRegistry[node.nodeComponentType];
 
-    const nextComponent = makeNextComponent({ node, nodeList, client, convoId });
-    return renderCustomComponent(nextComponent, {}, false);
+    const makeNextComponent = ComponentRegistry[node.nodeComponentType];
+    const component = makeNextComponent({ node, nodeList, client, convoId });
+    const botMessage = {
+        type: "bot",
+        component,
+        props: {},
+        sender: "bot-response",
+        timestamp: new Date(),
+        showAvatar: true,
+        customId: convoId ?? "",
+        unread: true,
+    };
+    context.addNewBotMessage(botMessage);
 };
