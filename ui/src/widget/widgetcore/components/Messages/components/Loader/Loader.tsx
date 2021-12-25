@@ -30,6 +30,7 @@ export const Loader = ({ typing }: Props) => {
     return (
         <div className={cn("loader", { active: typing })}>
             <Box boxShadow={0} className={cls.loaderContainer}>
+                <i style={{fontSize: "10px", marginRight: ".5rem"}}>Typing</i>{"   "}
                 <span className={cn("loader-dots", cls.dotColor)}></span>
                 <span className={cn("loader-dots", cls.dotColor)}></span>
                 <span className={cn("loader-dots", cls.dotColor)}></span>

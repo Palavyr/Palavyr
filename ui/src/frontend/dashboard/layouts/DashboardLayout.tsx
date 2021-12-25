@@ -81,15 +81,17 @@ const useStyles = makeStyles((theme: Theme) => ({
             width: theme.spacing(9) + 1,
         },
     },
-    toolbar: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "flex-end",
-        padding: theme.spacing(0, 1),
-        // necessary for content to be below app bar
-        ...theme.mixins.toolbar,
+    toolbar: () => {
+        // console.log(theme.mixins.toolbar)
+        return {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            padding: theme.spacing(0, 1),
+            // necessary for content to be below app bar
+            ...theme.mixins.toolbar,
+        };
     },
-
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
@@ -137,7 +139,6 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     const theme = useTheme();
 
     const history = useHistory();
-    const location = useLocation();
     const { areaIdentifier } = useParams<{ contentType: string; areaIdentifier: string }>();
 
     const [areaNameDetails, setAreaNameDetails] = useState<AreaNameDetails>([]);
@@ -191,7 +192,6 @@ export const DashboardLayout = ({ helpComponent, ga4, children }: IDashboardLayo
     }, []);
 
     const loadAreas = useCallback(async () => {
-        ga4?.pageview(location.pathname);
         setDashboardAreasLoading(true);
 
         const planTypeMeta = await repository.Settings.Subscriptions.getCurrentPlanMeta();

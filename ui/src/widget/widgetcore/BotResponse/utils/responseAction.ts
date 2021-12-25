@@ -1,11 +1,12 @@
-import { WidgetNodeResource, WidgetConversationUpdate, WidgetNodes, ContextProperties, DynamicResponses } from "@Palavyr-Types";
-import { addKeyValue, addUserMessage, getContextProperties, toggleMsgLoader } from "@store-dispatcher";
+import { WidgetNodeResource, WidgetConversationUpdate, WidgetNodes, ContextProperties, DynamicResponses, KeyValue, UserMessageData } from "@Palavyr-Types";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 
 import { floor, max, min } from "lodash";
 import { ConvoContextProperties } from "@widgetcore/componentRegistry/registry";
-import { renderNextComponent } from "./renderNextComponent";
+import { renderNextBotMessage } from "./renderBotMessage";
 import { setDynamicResponse } from "./setDynamicResponse";
+import { IAppContext } from "widget/hook";
+import { UserMeess } from "@widgetcore/components/Messages/components/Message/Message";
 
 const WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN = 22;
 
@@ -37,26 +38,24 @@ const stripHtml = html => {
 };
 
 export const responseAction = async (
+    context: IAppContext,
     node: WidgetNodeResource,
     child: WidgetNodeResource,
     nodeList: WidgetNodes,
     client: PalavyrWidgetRepository,
     convoId: string,
-    response: string | null,
+    response: string | null = null,
     callback: (() => void) | null = null
 ) => {
     if (response) {
         if (node.isCritical) {
-            addKeyValue({ [node.text]: response.toString() }); // TODO: make unique
+            const keyValue = { [node.text]: response.toString() } as KeyValue;
+            context.setKeyValues([...context.AppContext.keyValues, keyValue]);
         }
 
         if (node.isDynamicTableNode && node.dynamicType) {
-            setDynamicResponse(node.dynamicType, node.nodeId, response.toString());
-
-            const contextProperties: ContextProperties = getContextProperties();
-            const dynamicResponses = contextProperties[ConvoContextProperties.dynamicResponses] as DynamicResponses;
-
-            const currentDynamicResponseState = dynamicResponses.filter(x => Object.keys(x)[0] === node.dynamicType)[0];
+            const updatedDynamicResponses = setDynamicResponse(context.dynamicResponses, node.dynamicType, node.nodeId, response.toString());
+            const currentDynamicResponseState = updatedDynamicResponses.filter(x => Object.keys(x)[0] === node.dynamicType)[0];
 
             const tooComplicated = await client.Widget.Post.InternalCheck(node, response, currentDynamicResponseState);
             if (tooComplicated) {
@@ -64,11 +63,14 @@ export const responseAction = async (
             }
         }
 
+        let userText: string;
         if (child.optionPath !== null && child.optionPath !== "" && child.optionPath !== "Continue") {
-            addUserMessage(child.optionPath);
+            userText = child.optionPath;
         } else {
-            addUserMessage(response);
+            userText = response;
         }
+        const userResponse = createUserResponseComponent(userText, convoId);
+        context.addNewUserMessage(userResponse);
     }
 
     const timeout = computeReadingTime(child);
@@ -88,10 +90,29 @@ export const responseAction = async (
     }
 
     setTimeout(() => {
-        toggleMsgLoader();
+        context.enableMessageLoader();
         setTimeout(() => {
-            renderNextComponent(child, nodeList, client, convoId); // convoId should come from redux store in the future
-            toggleMsgLoader();
+            renderNextBotMessage(context, child, nodeList, client, convoId);
+            context.disableMessageLoader();
         }, timeout);
     }, 2000);
+};
+
+export const CSS_LINKER_and_NODE_TYPE = {
+    BOT: "bot-response",
+    USER: "user-response",
+}
+
+export const createUserResponseComponent = (text: string, id: string | null): UserMessageData => {
+    return {
+        type: "user",
+        component: UserMeess,
+        text,
+        sender: CSS_LINKER_and_NODE_TYPE.USER,
+        timestamp: new Date(),
+        showAvatar: true,
+        customId: id ?? "",
+        unread: false,
+        nodeType: CSS_LINKER_and_NODE_TYPE.USER
+    };
 };

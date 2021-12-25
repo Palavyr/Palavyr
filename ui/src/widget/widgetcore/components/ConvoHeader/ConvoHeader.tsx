@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import FaceIcon from "@material-ui/icons/Face";
 import { WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "../../context/WidgetContext";
-import { openUserDetails } from "@store-dispatcher";
 import classNames from "classnames";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
 import "@widgetcore/widget/widget.module.scss";
@@ -66,8 +65,8 @@ const useStyles = makeStyles(theme => ({
 export const ConvoHeader = ({ titleAvatar }: ConvoHeaderProps) => {
     const [tipOpen, setTipOpen] = useState<boolean>(false);
     const ref = useRef<HTMLDivElement>(null);
+    const { preferences, chatStarted, context} = useContext(WidgetContext);
 
-    const { preferences, chatStarted } = useContext(WidgetContext);
     useEffect(() => {
         if (chatStarted) {
             setTipOpen(true);
@@ -94,12 +93,14 @@ export const ConvoHeader = ({ titleAvatar }: ConvoHeaderProps) => {
 
     const cls = useStyles(preferences);
     const wcls = useWidgetStyles();
+
+
     return (
         <div className={classNames(wcls.pwrow, wcls.pheader, cls.header)}>
             {chatStarted && (
                 <Fade in>
                     <Tooltip open={tipOpen} title="Update your contact details" placement="left">
-                        <FaceIcon ref={ref as any} className={cls.settingsIcon} onClick={openUserDetails} />
+                        <FaceIcon ref={ref as any} className={cls.settingsIcon} onClick={context.openUserDetails} />
                     </Tooltip>
                 </Fade>
             )}

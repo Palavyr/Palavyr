@@ -1,19 +1,21 @@
-import { Drawer, makeStyles } from "@material-ui/core";
+import { Drawer, makeStyles, useTheme } from "@material-ui/core";
 import { WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { WidgetLayout } from "@widgetcore/widget/WidgetLayout";
 import React, { useContext } from "react";
-import { Provider } from "react-redux";
-import { PalavyrWidgetStore } from "widget/store/store";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
 import classNames from "classnames";
 import PalavyrChatWidget from "palavyr-chat-widget";
 import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
 import { ComponentRegistry } from "@widgetcore/componentRegistry/registry";
-import { renderCustomComponent } from "@store-dispatcher";
 import { DashboardContext } from "@frontend/dashboard/layouts/DashboardContext";
 
 import "@widgetcore/widget/widget.module.scss";
+import { IAppContext, useAppContext } from "widget/hook";
+import { useWindowDimensions } from "@common/hooks/useWindowDimensions";
+import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { MessageTypes } from "@widgetcore/components/Messages/Messages";
+import { CSS_LINKER_and_NODE_TYPE } from "@widgetcore/BotResponse/utils/responseAction";
 
 const drawerWidth = 400;
 
@@ -48,47 +50,82 @@ export interface DesignerWidgetDrawerProps {
     widgetPreferences: WidgetPreferences;
 }
 
+const render = (componentType: string, text: string, nodeId: string, nodeChildrenString: string, context: IAppContext, client: PalavyrWidgetRepository) => {
+    const node = { text, nodeId, nodeChildrenString } as WidgetNodeResource;
+    const component = ComponentRegistry[componentType]({ node, nodeList: [], client, convoId: "test-123", designer: true });
+    const message = {
+        type: MessageTypes.BOT,
+        component,
+        props: {},
+        sender: CSS_LINKER_and_NODE_TYPE.BOT,
+        timestamp: new Date(),
+        showAvatar: true,
+        customId: "",
+        unread: true,
+        nodeType: "",
+        specialId: "",
+    };
+    context.addNewBotMessage(message);
+};
+const initializer = async (context: IAppContext, repository: PalavyrRepository) => {
+    const apiKey = await repository.Settings.Account.getApiKey();
+    const client = new PalavyrWidgetRepository(apiKey);
+
+    render("ProvideInfo", "You can use this display to customize your widget.", "1", "2", context, client);
+
+    // Special Snowflake button code
+    const node = { text: "Here are some example buttons", nodeId: "2", nodeChildrenString: "3,4" } as WidgetNodeResource;
+    const nodeList = [
+        { nodeId: "3", optionPath: "Yes" },
+        { nodeId: "4", optionPath: "No" },
+    ];
+    const component = ComponentRegistry["MultipleChoiceAsPath"]({ node, nodeList, client, convoId: "test-123", designer: true });
+    const m = {
+        type: MessageTypes.BOT,
+        component,
+        props: {},
+        sender: CSS_LINKER_and_NODE_TYPE.BOT,
+        timestamp: new Date(),
+        showAvatar: true,
+        customId: "",
+        unread: true,
+        nodeType: "",
+        specialId: "",
+    };
+    context.addNewBotMessage(m);
+
+    render("Selection", "Here is your intent selector.", "5", "6", context, client);
+    render("CollectDetails", "Here is your details collector.", "6", "7", context, client);
+    render("ProvideInfoWithPdfLink", "Here is your pdf link.", "7", "8", context, client);
+    render("ProvideInfo", "Thanks so much for using Palavyr!", "8", "9", context, client);
+};
+
 export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawerProps) => {
     const cls = useStyles();
     const wcls = useWidgetStyles();
-    const { repository } = useContext(DashboardContext);
-
-    const initializer = async () => {
-        const apiKey = await repository.Settings.Account.getApiKey();
-        const client = new PalavyrWidgetRepository(apiKey);
-        const render = (componentType: string, text: string, nodeId: string, nodeChildrenString: string) => {
-            const node = { text, nodeId, nodeChildrenString } as WidgetNodeResource;
-            const componentMaker = ComponentRegistry[componentType];
-            renderCustomComponent(componentMaker({ node, nodeList: [], client, convoId: "test-123", designer: true }));
-        };
-
-        render("ProvideInfo", "You can use this display to customize your widget.", "1", "2");
-
-        const node = { text: "Here are some example buttons", nodeId: "2", nodeChildrenString: "3,4" } as WidgetNodeResource;
-        const nodeList = [
-            { nodeId: "3", optionPath: "Yes" },
-            { nodeId: "4", optionPath: "No" },
-        ];
-        const componentMaker = ComponentRegistry["MultipleChoiceAsPath"];
-        renderCustomComponent(componentMaker({ node, nodeList, client, convoId: "test-123", designer: true }));
-
-        render("Selection", "Here is your intent selector.", "5", "6");
-        render("CollectDetails", "Here is your details collector.", "6", "7");
-        render("ProvideInfoWithPdfLink", "Here is your pdf link.", "7", "8");
-        render("ProvideInfo", "Thanks so much for using Palavyr!", "8", "9");
-    };
+    const theme = useTheme();
+    const context = useAppContext();
 
     const DrawerWidget = (
-        <Provider store={PalavyrWidgetStore}>
-            <div className={classNames(cls.widget, wcls.pwbox)}>
-                {widgetPreferences && (
-                    <WidgetContext.Provider value={{ preferences: widgetPreferences, chatStarted: true, setChatStarted: () => null, setConvoId: () => null, convoId: "demo" }}>
-                        <WidgetLayout initializer={initializer} />
-                    </WidgetContext.Provider>
-                )}
-            </div>
-        </Provider>
+        <div className={classNames(cls.widget, wcls.pwbox)}>
+            {widgetPreferences && (
+                <WidgetContext.Provider value={{ preferences: widgetPreferences, chatStarted: true, setChatStarted: () => null, setConvoId: () => null, convoId: "demo", context }}>
+                    <WidgetLayout initializer={initializer} />
+                </WidgetContext.Provider>
+            )}
+        </div>
     );
+
+    const { height: windowHeight } = useWindowDimensions();
+
+    let chatHeight: number;
+    if (theme.mixins.toolbar.minHeight) {
+        chatHeight = windowHeight - parseInt(theme.mixins.toolbar.minHeight.toString());
+    } else if (theme.mixins.toolbar.height) {
+        chatHeight = windowHeight - parseInt(theme.mixins.toolbar.height.toString());
+    } else {
+        chatHeight = windowHeight;
+    }
 
     return (
         <Drawer
@@ -102,7 +139,7 @@ export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawer
             anchor="right"
         >
             <div className={cls.toolbar} />
-            <PalavyrChatWidget className={cls.widget} startOpen fixedPosition={false} alternateContent={DrawerWidget} style={{ height: "90vh" }} />
+            <PalavyrChatWidget className={cls.widget} startOpen fixedPosition={false} alternateContent={DrawerWidget} style={{ height: `${chatHeight}px` }} />
         </Drawer>
     );
 };

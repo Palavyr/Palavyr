@@ -1,8 +1,6 @@
-import { getNameContext, getEmailAddressContext, setPhoneContext, setEmailAddressContext } from "@store-dispatcher";
 import { TextInput } from "@widgetcore/BotResponse/number/TextInput";
-import React, { Dispatch, SetStateAction } from "react";
-import { useState } from "react";
-import { useEffect } from "react";
+import { WidgetContext } from "@widgetcore/context/WidgetContext";
+import React, { Dispatch, SetStateAction, useContext } from "react";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserEmail, checkUserName, INVALID_EMAIL, INVALID_PHONE } from "../UserDetailsCheck";
 
@@ -12,15 +10,15 @@ export interface EmailFormProps extends BaseFormProps {
 }
 
 export const EmailForm = ({ status, setStatus, setDetailsSet, disabled }: EmailFormProps) => {
+    const {
+        context: { name, emailAddress, setEmailAddress, phoneNumber, setPhoneNumber },
+    } = useContext(WidgetContext);
     const checkUserDetailsAreSet = () => {
-        const name = getNameContext();
-        const emailAddress = getEmailAddressContext();
-
         const userNameResult = checkUserName(name, setStatus);
         const userEmailResult = checkUserEmail(emailAddress, setStatus);
 
         if (status === INVALID_PHONE) {
-            setPhoneContext("");
+            setPhoneNumber("");
         }
 
         if (!userNameResult || !userEmailResult) {
@@ -29,11 +27,6 @@ export const EmailForm = ({ status, setStatus, setDetailsSet, disabled }: EmailF
         return true;
     };
 
-    const [emailState, setEmailState] = useState<string>("");
-    useEffect(() => {
-        setEmailState(getEmailAddressContext());
-    }, []);
-
     return (
         <TextInput
             disabled={disabled}
@@ -41,7 +34,7 @@ export const EmailForm = ({ status, setStatus, setDetailsSet, disabled }: EmailF
             error={status === INVALID_EMAIL}
             required
             fullWidth
-            value={emailState}
+            value={emailAddress}
             label="Email Address"
             autoComplete="off"
             type="email"
@@ -49,8 +42,7 @@ export const EmailForm = ({ status, setStatus, setDetailsSet, disabled }: EmailF
                 setDetailsSet(checkUserDetailsAreSet());
             }}
             onChange={e => {
-                setEmailAddressContext(e.target.value);
-                setEmailState(e.target.value);
+                setEmailAddress(e.target.value);
                 if (status === INVALID_EMAIL) {
                     setStatus("");
                 }

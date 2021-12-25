@@ -14,6 +14,9 @@ const useStyles = makeStyles(theme => ({
     alert: {
         borderTop: `2px solid ${theme.palette.common.black}`,
         borderBottom: `2px solid ${theme.palette.common.black}`,
+        "& .MuiGrid-grid-xs-3": {
+            padding: "0px",
+        },
     },
     alertTitle: {
         display: "flex",
@@ -22,17 +25,15 @@ const useStyles = makeStyles(theme => ({
         textAlign: "left",
     },
     paperColor: {
-        backgroundColor: theme.palette.common.white,
+        backgroundColor: theme.palette.grey[300],
     },
 
     buttonHover: {
-
-        '&:hover': {
+        "&:hover": {
             backgroundColor: theme.palette.error.main,
-            color: theme.palette.warning.light
-        }
-
-    }
+            color: theme.palette.warning.light,
+        },
+    },
 }));
 
 export const AreaSettings = () => {
@@ -146,14 +147,7 @@ export const AreaSettings = () => {
             {isEnabledState !== null && <OsTypeToggle controlledState={isEnabledState} onChange={onAreaEnabledToggleChange} enabledLabel="Area Enabled" disabledLabel="Area Disabled" />}
 
             <Grid container spacing={3} justify="center">
-                <Grid item xs={12}>
-                    <Alert className={classNames(cls.alert, cls.alertTitle)} variant="filled" severity="info">
-                        <AlertTitle>
-                            <Typography variant="h5">Important Settings</Typography>
-                        </AlertTitle>
-                        These options affect the appearance and behavior of the widget.
-                    </Alert>
-                </Grid>
+                <SettingsBanner title="Widget Settings" subtitle="These options affect the appearance and behavior of the widget." />
                 <Grid item xs={5}>
                     <SettingsGridRowText
                         classNames={cls.paperColor}
@@ -198,12 +192,7 @@ export const AreaSettings = () => {
 
             <Grid container spacing={3} justify="center">
                 <Grid item xs={12}>
-                    <Alert className={classNames(cls.alert, cls.alertTitle)} style={{ backgroundColor: theme.palette.warning.dark }} variant="filled" severity="warning">
-                        <AlertTitle>
-                            <Typography variant="h5">Dashboard Specific Options</Typography>
-                        </AlertTitle>
-                        These options only affect what you see in the dashboard.
-                    </Alert>
+                    <SettingsBanner title="Dashboard Options" subtitle="These options only affect what you see in the dashboard" />
                 </Grid>
 
                 <Grid item xs={5}>
@@ -228,12 +217,7 @@ export const AreaSettings = () => {
             <br></br>
             <Grid container spacing={3} justify="center">
                 <Grid item xs={12}>
-                    <Alert className={classNames(cls.alert, cls.alertTitle)} severity="error" variant="filled">
-                        <AlertTitle>
-                            <Typography variant="h5">DANGER ZONE</Typography>
-                        </AlertTitle>
-                        WAIT! These options are permanent.
-                    </Alert>
+                    <SettingsBanner bgColor={theme.palette.error.main} title="DANGER ZONE" subtitle="CAUTION! These options cause permanent, irreversable changes." />
                 </Grid>
                 <Grid item xs={5}>
                     <SettingsGridRowText
@@ -256,8 +240,25 @@ export const AreaSettings = () => {
             {alertState && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />}
             <Dialog PaperProps={{ style: { margin: "2rem", padding: "2rem" } }} style={{ margin: "2rem", padding: "2rem" }} open={dialogOpen} onClose={() => setDialogOpen(false)}>
                 <Typography variant="h4">Are you sure you want to delete this area??</Typography>
-                <Button className={cls.buttonHover} onClick={handleAreaDelete}>PERMANENTLY DELETE</Button>
+                <Button className={cls.buttonHover} onClick={handleAreaDelete}>
+                    PERMANENTLY DELETE
+                </Button>
             </Dialog>
         </>
     ) : null;
+};
+
+export const SettingsBanner = ({ title, subtitle, bgColor }: { bgColor?: string; title: string; subtitle: string }) => {
+    const cls = useStyles();
+    const theme = useTheme();
+    return (
+        <Grid item xs={12} className={classNames(cls.alert, cls.alertTitle)} style={{ paddingTop: "3rem", paddingBottom: "3rem", marginTop: "2rem", background: bgColor ?? theme.palette.primary.main }}>
+            <div style={{ width: "100%", display: "flex", flexDirection: "column", textAlign: "center" }}>
+                <Typography display="inline" variant="h5">
+                    {title}
+                </Typography>
+                <Typography display="inline">{subtitle}</Typography>
+            </div>
+        </Grid>
+    );
 };

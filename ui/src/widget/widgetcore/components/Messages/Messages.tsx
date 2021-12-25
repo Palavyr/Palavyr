@@ -1,14 +1,12 @@
-import React, { useContext, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import React, { memo, useContext, useEffect, useMemo, useRef } from "react";
 import format from "date-fns/format";
 import { Loader } from "./components/Loader/Loader";
-import { WidgetPreferences, GlobalState } from "@Palavyr-Types";
-import { _markAllMessagesRead, _setBadgeCount } from "@store-actions";
+import { BotMessageData, UserMessageData, WidgetPreferences } from "@Palavyr-Types";
 import { scrollToBottom } from "@widgetcore/utils/messages";
-import { getComponentToRender } from "@widgetcore/BotResponse/utils/getComponentToRender";
 import { makeStyles } from "@material-ui/core";
 
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
+import { MessageWrapper } from "../../BotResponse/utils/MessageWrapper";
 
 import "@widgetcore/widget/widget.module.scss";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
@@ -32,15 +30,38 @@ const useStyles = makeStyles(theme => ({
     }),
 }));
 
-export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
+export const MessageTypes = {
+    BOT: "bot",
+    USER: "user",
+};
+
+export const getComponentToRender = (message: UserMessageData | BotMessageData, showTimeStamp: boolean) => {
+    if (message.type === MessageTypes.BOT) {
+        const MessageComponent = message.component as BotMessageData["component"];
+        return (
+            <MessageWrapper>
+                <MessageComponent {...message.props} />
+            </MessageWrapper>
+        );
+    } else if (message.type === MessageTypes.USER) {
+        const MessageComponent = message.component;
+        return <MessageComponent message={message} showTimeStamp={showTimeStamp} />;
+    } else {
+        throw new Error("Unknown message type");
+    }
+};
+
+const MessageSlice = memo(({ message, showTimeStamp }: { message: UserMessageData | BotMessageData; showTimeStamp: boolean }) => {
     const { preferences } = useContext(WidgetContext);
+    const cls = useStyles({ ...preferences });
+    return <div className={cls.message}>{getComponentToRender(message, showTimeStamp)}</div>;
+});
+
+export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
+    const { preferences, context } = useContext(WidgetContext);
     const cls = useStyles({ ...preferences });
     const wcls = useWidgetStyles();
 
-    const { messages, typing } = useSelector((state: GlobalState) => ({
-        messages: state.messagesReducer.messages,
-        typing: state.behaviorReducer.messageLoader,
-    }));
     useEffect(() => {
         document.body.setAttribute("style", `overflow: "hidden"`);
     }, []);
@@ -49,17 +70,19 @@ export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
 
     useEffect(() => {
         scrollToBottom(messageRef.current);
-    }, [messages, typing]);
+    }, [context.messages, context.loading]);
+
+    useEffect(() => {
+        if (context.messages.length > 0) {
+            scrollToBottom(messageRef.current);
+        }
+    }, [context.messages, context.loading]);
 
     return (
         <div id="messages" className={classNames(wcls.pwrow, wcls.pcontent, cls.messageTubeContainer)} ref={messageRef}>
-            {messages?.map((message, index) => (
-                <div className={cls.message} key={`${index}-${format(message.timestamp, "hh:mm")}`}>
-                    {getComponentToRender(message, showTimeStamp)}
-                </div>
-            ))}
-            {typing && <Loader typing={typing} />}
-            <div style={{ height: "3rem" }} />
+            {context.messages.length > 0 && context.messages.map((message, index) => <MessageSlice message={message} showTimeStamp={showTimeStamp} key={`${index}-${format(message.timestamp, "hh:mm")}`} />)}
+            {context.loading && <Loader typing={context.loading} />}
+            <div style={{ height: "6rem" }} />
         </div>
     );
 };

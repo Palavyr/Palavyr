@@ -11,7 +11,7 @@ import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHea
 import { QuickStartCard } from "./QuickStartCard";
 import { useHistory } from "react-router-dom";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     background: {
         paddingTop: "3rem",
         background: theme.palette.background.default,
@@ -58,7 +58,6 @@ export const QuickStartGuide = () => {
     const history = useHistory();
     setViewName("Welcome!");
 
-
     const [todos, setTodos] = useState<TodosAsBoolean>();
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -94,18 +93,20 @@ export const QuickStartGuide = () => {
 
     return (
         <>
-
             {todos && !allClear(todos) && <OnboardingTodo todos={todos} />}
             <Divider />
             <AreaConfigurationHeader divider title="Quick Start Guide" subtitle="Follow the steps to learn about how Palavyr works and what you should do to get started." />
+            <div style={{ height: "2rem" }} />
             <QuickStartCard
-                title="1. Click to create your first area"
-                content="You can check out the default area to see how you might use Palavyr. Be sure to disable or delete this area before you go live with the widget."
+                rowNumber={1}
+                title="Create your first intent"
+                content="Each intent that shows up in the chatbot is created individually. When you create intents for your chatbot, consider how your business is modelled and how your customers are likely to interact with it."
                 onClick={checkAreaCount}
             />
-            <QuickStartCard title="2. Configure your new area" content="In your area, follow the tabs in the order they are provided (from left to right). At the end, you can preview your response PDF." />
+            <QuickStartCard rowNumber={2} title="Configure your new intent" content="In your intent configuration, simply follow the tabs in the order they are provided (from left to right)." />
             <QuickStartCard
-                title="3. Add the widget to your site"
+                rowNumber={3}
+                title="Add the widget to your site"
                 content="When you are ready to use your configured widget, simply paste the provided code into your website's html."
                 onClick={sendToGetWidgetPage}
             />

@@ -17,6 +17,7 @@ const useStyles = makeStyles(theme => ({
         border: "0px",
         background: "#FFFFFF",
         boxShadow: props.shadow ? theme.shadows[10] : "none",
+        zIndex: 0,
     }),
 }));
 

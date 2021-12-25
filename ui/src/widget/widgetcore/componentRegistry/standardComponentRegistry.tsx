@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core";
 import { responseAction } from "@widgetcore/BotResponse/utils/responseAction";
 import { ConvoContextProperties } from "./registry";
 import { AreaTable, IProgressTheChat, SelectedOption, WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
-import { setNumIndividualsContext, getContextProperties, openUserDetails, getNameContext, getEmailAddressContext, setPdfLink } from "@store-dispatcher";
 import { ResponseButton } from "@widgetcore/BotResponse/ResponseButton";
 import { splitValueOptionsByDelimiter } from "@widgetcore/utils/valueOptionSplitter";
 import { ChatLoadingSpinner } from "@widgetcore/UserDetailsDialog/ChatLoadingSpinner";
@@ -14,7 +13,7 @@ import { TextInput } from "@widgetcore/BotResponse/number/TextInput";
 import { BotResponse } from "../BotResponse/BotResponse";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { useCallback } from "react";
-import { renderNextComponent } from "../BotResponse/utils/renderNextComponent";
+import { renderNextBotMessage } from "../BotResponse/utils/renderBotMessage";
 import { ChoiceList } from "@widgetcore/BotResponse/optionFormats/ChoiceList";
 import { MiniContactForm } from "@widgetcore/UserDetailsDialog/CollectDetailsForm";
 import { CurrencyTextField } from "@widgetcore/BotResponse/numbers/CurrencyTextField";
@@ -54,7 +53,7 @@ const useStyles = makeStyles(theme => ({
 export class StandardComponents {
     public makeSelectOptions({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         return () => {
-            const [selectedOption, setSelectedOption] = useState<SelectedOption | null>(null);
+            const { context } = useContext(WidgetContext);
             const [options, setOptions] = useState<Array<SelectedOption>>();
             const [disabled, setDisabled] = useState<boolean>(false);
             const [open, setOpen] = useState<boolean>(false);
@@ -73,12 +72,13 @@ export class StandardComponents {
                     setOpen(true);
                 }
                 loadAreas();
+                context.enableReset()
             }, [loadAreas]);
 
             const onChange = async (_: any, newOption: SelectedOption) => {
                 if (designer) return;
 
-                const newConversation = await client.Widget.Get.NewConversation(newOption.areaId, { Name: getNameContext(), Email: getEmailAddressContext() });
+                const newConversation = await client.Widget.Get.NewConversation(newOption.areaId, { Name: context.name, Email: context.emailAddress });
                 const nodes = newConversation.conversationNodes;
                 const convoId = newConversation.conversationId;
                 const rootNode = getRootNode(nodes);
@@ -91,7 +91,7 @@ export class StandardComponents {
                 //
                 //
 
-                renderNextComponent(rootNode, nodes, client, convoId);
+                renderNextBotMessage(context, rootNode, nodes, client, convoId);
             };
 
             // const renderThatDoesntCheckOUtResponse = (node, messageResponse, nodeList, client, convoId) => {
@@ -122,7 +122,7 @@ export class StandardComponents {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
-            const { setChatStarted, setConvoId } = useContext(WidgetContext);
+            const { setChatStarted, setConvoId, context } = useContext(WidgetContext);
 
             const [disabled, setDisabled] = useState<boolean>(false);
 
@@ -135,7 +135,7 @@ export class StandardComponents {
                 setDisabled(true);
                 setChatStarted(true);
                 setConvoId(convoId);
-                responseAction(node, child, nodeList, client, convoId, null);
+                responseAction(context, node, child, nodeList, client, convoId, null);
             };
 
             useEffect(() => {
@@ -164,9 +164,11 @@ export class StandardComponents {
     public makeProvideInfo({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
         return () => {
+            const { context } = useContext(WidgetContext);
+
             useEffect(() => {
                 if (designer) return;
-                responseAction(node, child, nodeList, client, convoId, null);
+                responseAction(context, node, child, nodeList, client, convoId, null);
             }, []);
 
             return <BotResponse message={node.text} />;
@@ -175,16 +177,16 @@ export class StandardComponents {
 
     public makeProvideInfoWithPdfLink({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
-        const context = getContextProperties();
-        const pdfLink = designer ? " " : context.pdfLink;
 
         return () => {
+            const { context } = useContext(WidgetContext);
+
             useEffect(() => {
                 if (designer) return;
-                responseAction(node, child, nodeList, client, convoId, null);
+                responseAction(context, node, child, nodeList, client, convoId, null);
             }, []);
 
-            return <BotResponse message={node.text} pdfLink={pdfLink} />;
+            return <BotResponse message={node.text} pdfLink={designer ? " " : context.pdfLink} />;
         };
     }
 
@@ -194,11 +196,12 @@ export class StandardComponents {
 
         return () => {
             const [disabled, setDisabled] = useState<boolean>(false);
+            const { context } = useContext(WidgetContext);
 
             const onClick = (valueOption: string) => {
                 if (designer) return;
                 const response = valueOption;
-                responseAction(node, child, nodeList, client, convoId, response);
+                responseAction(context, node, child, nodeList, client, convoId, response);
                 setDisabled(true);
             };
 
@@ -222,11 +225,12 @@ export class StandardComponents {
 
         return () => {
             const [disabled, setDisabled] = useState<boolean>(false);
+            const { context } = useContext(WidgetContext);
 
             const onClick = (child: WidgetNodeResource) => {
                 if (designer) return;
                 const response = child.optionPath;
-                responseAction(node, child, nodeList, client, convoId, response);
+                responseAction(context, node, child, nodeList, client, convoId, response);
                 setDisabled(true);
             };
 
@@ -249,6 +253,7 @@ export class StandardComponents {
         let child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
+            const { context } = useContext(WidgetContext);
             const [response, setResponse] = useState<string>("");
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
@@ -263,7 +268,7 @@ export class StandardComponents {
 
             const onClick = async () => {
                 if (designer) return;
-                responseAction(node, child, nodeList, client, convoId, response);
+                responseAction(context, node, child, nodeList, client, convoId, response);
                 setDisabled(true);
                 setInputDisabled(true);
             };
@@ -282,7 +287,7 @@ export class StandardComponents {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
-            const { preferences } = useContext(WidgetContext);
+            const { preferences, context } = useContext(WidgetContext);
             const cls = useStyles(preferences);
             const [response, setResponse] = useState<number>(0);
             const [disabled, setDisabled] = useState<boolean>(true);
@@ -290,7 +295,7 @@ export class StandardComponents {
 
             const onClick = () => {
                 if (designer) return;
-                responseAction(node, child, nodeList, client, convoId, response.toString());
+                responseAction(context, node, child, nodeList, client, convoId, response.toString());
                 setDisabled(true);
                 setInputDisabled(true);
             };
@@ -336,6 +341,7 @@ export class StandardComponents {
         return () => {
             const [loaded, setLoaded] = useState<boolean>(false);
             const [link, setLink] = useState<string>("");
+            const { context } = useContext(WidgetContext);
 
             useEffect(() => {
                 (async () => {
@@ -347,7 +353,7 @@ export class StandardComponents {
 
                 setTimeout(() => {
                     if (designer) return;
-                    responseAction(node, child, nodeList, client, convoId, null);
+                    responseAction(context, node, child, nodeList, client, convoId, null);
                 }, 2500);
             }, []);
 
@@ -363,13 +369,13 @@ export class StandardComponents {
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
 
-            const { preferences } = useContext(WidgetContext);
+            const { preferences, context } = useContext(WidgetContext);
             const cls = useStyles(preferences);
 
             const onClick = () => {
                 if (designer) return;
                 setResponse(response);
-                responseAction(node, child, nodeList, client, convoId, response);
+                responseAction(context, node, child, nodeList, client, convoId, response);
                 setDisabled(true);
                 setInputDisabled(true);
             };
@@ -402,16 +408,16 @@ export class StandardComponents {
             const [disabled, setDisabled] = useState<boolean>(true);
             const [inputDisabled, setInputDisabled] = useState<boolean>(false);
 
-            const { preferences } = useContext(WidgetContext);
+            const { preferences, context } = useContext(WidgetContext);
             const cls = useStyles(preferences);
 
             const onClick = () => {
                 if (designer) return;
                 if (response) {
-                    responseAction(node, child, nodeList, client, convoId, response.toString());
-                    setNumIndividualsContext(response);
+                    context.setNumIndividuals(response);
                     setDisabled(true);
                     setInputDisabled(true);
+                    responseAction(context, node, child, nodeList, client, convoId, response.toString());
                 }
             };
 
@@ -447,40 +453,40 @@ export class StandardComponents {
     makeSendEmail({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         const areaId = nodeList[0].areaIdentifier;
 
-        const sendEmail = async () => {
-            const contextProperties = getContextProperties();
-            const email = contextProperties[ConvoContextProperties.emailAddress];
-            const name = contextProperties[ConvoContextProperties.name];
-            const phone = contextProperties[ConvoContextProperties.phoneNumber];
-            const locale = contextProperties[ConvoContextProperties.region];
-
-            let numIndividuals = contextProperties[ConvoContextProperties.numIndividuals];
-            let dynamicResponses = contextProperties[ConvoContextProperties.dynamicResponses];
-            let keyvalues = contextProperties[ConvoContextProperties.keyValues];
-
-            if (!keyvalues) {
-                keyvalues = [];
-            }
-            if (!dynamicResponses) {
-                dynamicResponses = [];
-            }
-
-            if (!numIndividuals) {
-                numIndividuals = 1;
-            }
-
-            const response = await client.Widget.Send.ConfirmationEmail(areaId, email, name, phone, numIndividuals, dynamicResponses, keyvalues, convoId);
-            if (response.result) {
-                const completeConvo = assembleEmailRecordData(convoId, areaId, name, email, phone, locale);
-                await client.Widget.Post.UpdateConvoRecord(completeConvo);
-                if (response.pdfLink !== null && response.pdfLink !== "" && response.pdfLink !== undefined) {
-                    setPdfLink(response.pdfLink);
-                }
-            }
-            return response;
-        };
-
         return () => {
+            const { context } = useContext(WidgetContext);
+
+            const sendEmail = async () => {
+                const email = context.AppContext[ConvoContextProperties.emailAddress];
+                const name = context.AppContext[ConvoContextProperties.name];
+                const phone = context.AppContext[ConvoContextProperties.phoneNumber];
+                const locale = context.AppContext[ConvoContextProperties.region];
+
+                let numIndividuals = context.AppContext[ConvoContextProperties.numIndividuals];
+                let dynamicResponses = context.AppContext[ConvoContextProperties.dynamicResponses];
+                let keyvalues = context.AppContext[ConvoContextProperties.keyValues];
+
+                if (!keyvalues) {
+                    keyvalues = [];
+                }
+                if (!dynamicResponses) {
+                    dynamicResponses = [];
+                }
+
+                if (!numIndividuals) {
+                    numIndividuals = 1;
+                }
+
+                const response = await client.Widget.Send.ConfirmationEmail(areaId, email, name, phone, numIndividuals, dynamicResponses, keyvalues, convoId);
+                if (response.result) {
+                    const completeConvo = assembleEmailRecordData(convoId, areaId, name, email, phone, locale);
+                    await client.Widget.Post.UpdateConvoRecord(completeConvo);
+                    if (response.pdfLink !== null && response.pdfLink !== "" && response.pdfLink !== undefined) {
+                        context.setPdfLink(response.pdfLink);
+                    }
+                }
+                return response;
+            };
             const [disabled, setDisabled] = useState<boolean>(false);
             const [loading, setLoading] = useState<boolean>(false);
 
@@ -491,7 +497,7 @@ export class StandardComponents {
                 setLoading(true);
                 const response = await sendEmail();
                 const child = nodeList.filter((x: WidgetNodeResource) => x.nodeId === response.nextNodeId)[0];
-                responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
+                responseAction(context, node, child, nodeList, client, convoId, null, () => setLoading(false));
             };
             return (
                 <>
@@ -504,6 +510,8 @@ export class StandardComponents {
 
     makeRestart({ node, nodeList, client, convoId, designer }: IProgressTheChat): React.ElementType<{}> {
         return () => {
+            const { context } = useContext(WidgetContext);
+
             useEffect(() => {
                 (async () => {
                     if (designer) return;
@@ -519,10 +527,12 @@ export class StandardComponents {
 
         return () => {
             const [loading, setLoading] = useState<boolean>(false);
+            const { context } = useContext(WidgetContext);
+
             const onClick = async () => {
                 if (designer) return;
                 setLoading(true);
-                responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
+                responseAction(context, node, child, nodeList, client, convoId, null, () => setLoading(false));
             };
             return (
                 <>
@@ -531,7 +541,7 @@ export class StandardComponents {
                         button={
                             <>
                                 <ResponseButton text="Send my email" variant="contained" onClick={onClick} />
-                                <ResponseButton text="Check your details" variant="contained" onClick={() => openUserDetails()} />
+                                <ResponseButton text="Check your details" variant="contained" onClick={() => context.openUserDetails()} />
                             </>
                         }
                     />
@@ -547,14 +557,13 @@ export class StandardComponents {
         return () => {
             const [disabled, setDisabled] = useState<boolean>(false);
             const [loading, setLoading] = useState<boolean>(false);
+            const { context } = useContext(WidgetContext);
 
             const sendFallbackEmail = async () => {
-                const contextProperties = getContextProperties();
-
-                const email = contextProperties[ConvoContextProperties.emailAddress];
-                const name = contextProperties[ConvoContextProperties.name];
-                const phone = contextProperties[ConvoContextProperties.phoneNumber];
-                const locale = contextProperties[ConvoContextProperties.region];
+                const email = context.AppContext[ConvoContextProperties.emailAddress];
+                const name = context.AppContext[ConvoContextProperties.name];
+                const phone = context.AppContext[ConvoContextProperties.phoneNumber];
+                const locale = context.AppContext[ConvoContextProperties.region];
 
                 const response = await client.Widget.Send.FallbackEmail(areaId, email, name, phone, convoId);
                 if (response.result) {
@@ -569,7 +578,7 @@ export class StandardComponents {
                 setLoading(true);
                 const response = await sendFallbackEmail();
                 const child = nodeList.filter((x: WidgetNodeResource) => x.nodeId === response.nextNodeId)[0];
-                responseAction(node, child, nodeList, client, convoId, null, () => setLoading(false));
+                responseAction(context, node, child, nodeList, client, convoId, null, () => setLoading(false));
                 setDisabled(true);
             };
 
@@ -586,10 +595,12 @@ export class StandardComponents {
         const child = getOrderedChildNodes(node.nodeChildrenString, nodeList)[0];
 
         return () => {
+            const { context } = useContext(WidgetContext);
+
             useEffect(() => {
                 setTimeout(async () => {
                     if (designer) return;
-                    responseAction(node, child, nodeList, client, convoId, null);
+                    responseAction(context, node, child, nodeList, client, convoId, null);
                 }, 1500);
             }, []);
 

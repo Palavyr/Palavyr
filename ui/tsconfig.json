@@ -42,8 +42,6 @@
             "@scss/*": ["frontend/dashboard/content/designer/fakeWidgetNew/components/scss/*", "widget/scss/*"],
             "@auth/*": ["frontend/auth/*"],
 
-            "@store-actions": ["widget/store/actions/actions"],
-            "@store-dispatcher": ["widget/store/dispatcher"],
             "@test-data/*": ["widget/test/data/*"],
             "@widgetcore/*": ["widget/widgetcore/*"]
 

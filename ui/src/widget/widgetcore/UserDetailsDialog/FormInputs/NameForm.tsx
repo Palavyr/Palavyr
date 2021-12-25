@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core";
 import { BaseFormProps } from "../CollectDetailsForm";
 import { checkUserName, INVALID_NAME } from "../UserDetailsCheck";
-import { getNameContext, setNameContext } from "@store-dispatcher";
 import { TextInput } from "@widgetcore/BotResponse/number/TextInput";
+import { WidgetContext } from "@widgetcore/context/WidgetContext";
 
 export interface NameFormProps extends BaseFormProps {
     disabled: boolean;
@@ -12,7 +12,7 @@ export interface NameFormProps extends BaseFormProps {
 const useStyles = makeStyles(theme => ({
     input: {
         color: theme.palette.common.black,
-        borderBottom: "1px solid gray"
+        borderBottom: "1px solid gray",
     },
     label: {
         color: theme.palette.common.black,
@@ -20,13 +20,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const NameForm = ({ status, setStatus, disabled }: NameFormProps) => {
-    const [nameState, setNameState] = useState<string>("");
     const cls = useStyles();
-
-    useEffect(() => {
-        setNameState(getNameContext());
-    }, []);
-
+    const {
+        context: { name, setName },
+    } = useContext(WidgetContext);
     return (
         <TextInput
             disabled={disabled}
@@ -37,17 +34,15 @@ export const NameForm = ({ status, setStatus, disabled }: NameFormProps) => {
             required
             fullWidth
             label="Name"
-            value={nameState}
+            value={name}
             autoFocus
             autoComplete="off"
             type="text"
             onBlur={() => {
-                const reduxName = getNameContext();
-                if (!checkUserName(reduxName, setStatus)) setStatus(INVALID_NAME);
+                if (!checkUserName(name, setStatus)) setStatus(INVALID_NAME);
             }}
             onChange={event => {
-                setNameContext(event.target.value);
-                setNameState(event.target.value);
+                setName(event.target.value);
                 if (status === INVALID_NAME) {
                     setStatus("");
                 }
