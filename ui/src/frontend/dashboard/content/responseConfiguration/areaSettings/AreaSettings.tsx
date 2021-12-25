@@ -14,6 +14,9 @@ const useStyles = makeStyles(theme => ({
     alert: {
         borderTop: `2px solid ${theme.palette.common.black}`,
         borderBottom: `2px solid ${theme.palette.common.black}`,
+        "& .MuiGrid-grid-xs-3": {
+            padding: "0px",
+        },
     },
     alertTitle: {
         display: "flex",
@@ -22,7 +25,7 @@ const useStyles = makeStyles(theme => ({
         textAlign: "left",
     },
     paperColor: {
-        backgroundColor: theme.palette.common.white,
+        backgroundColor: theme.palette.grey[300],
     },
 
     buttonHover: {
@@ -144,7 +147,7 @@ export const AreaSettings = () => {
             {isEnabledState !== null && <OsTypeToggle controlledState={isEnabledState} onChange={onAreaEnabledToggleChange} enabledLabel="Area Enabled" disabledLabel="Area Disabled" />}
 
             <Grid container spacing={3} justify="center">
-                <SettingsBanner title="Important Settings" subtitle="These options affect the appearance and behavior of the widget." />
+                <SettingsBanner title="Widget Settings" subtitle="These options affect the appearance and behavior of the widget." />
                 <Grid item xs={5}>
                     <SettingsGridRowText
                         classNames={cls.paperColor}
@@ -189,7 +192,7 @@ export const AreaSettings = () => {
 
             <Grid container spacing={3} justify="center">
                 <Grid item xs={12}>
-                    <SettingsBanner title="Dashboard Specific Options" subtitle="These options only affect what you see in the dashboard" />
+                    <SettingsBanner title="Dashboard Options" subtitle="These options only affect what you see in the dashboard" />
                 </Grid>
 
                 <Grid item xs={5}>
@@ -214,7 +217,7 @@ export const AreaSettings = () => {
             <br></br>
             <Grid container spacing={3} justify="center">
                 <Grid item xs={12}>
-                    <SettingsBanner title="DANGER ZONE" subtitle="CAUTION! These options cause permanent, irreversable changes." />
+                    <SettingsBanner bgColor={theme.palette.error.main} title="DANGER ZONE" subtitle="CAUTION! These options cause permanent, irreversable changes." />
                 </Grid>
                 <Grid item xs={5}>
                     <SettingsGridRowText
@@ -245,11 +248,11 @@ export const AreaSettings = () => {
     ) : null;
 };
 
-export const SettingsBanner = ({ title, subtitle }: { title: string; subtitle: string }) => {
+export const SettingsBanner = ({ title, subtitle, bgColor }: { bgColor?: string; title: string; subtitle: string }) => {
     const cls = useStyles();
     const theme = useTheme();
     return (
-        <Grid item xs={12} className={classNames(cls.alert, cls.alertTitle)} style={{ paddingTop: "3rem", paddingBottom: "3rem", marginTop: "2rem", background: theme.palette.primary.main }}>
+        <Grid item xs={12} className={classNames(cls.alert, cls.alertTitle)} style={{ paddingTop: "3rem", paddingBottom: "3rem", marginTop: "2rem", background: bgColor ?? theme.palette.primary.main }}>
             <div style={{ width: "100%", display: "flex", flexDirection: "column", textAlign: "center" }}>
                 <Typography display="inline" variant="h5">
                     {title}

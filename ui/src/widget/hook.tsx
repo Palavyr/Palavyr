@@ -5,6 +5,7 @@ export interface BehaviorState {
     disabledInput: boolean;
     loading: boolean;
     userDetailsVisible: boolean;
+    resetEnabled: boolean;
 }
 
 export interface ContextState {
@@ -46,6 +47,7 @@ const defaultBehavior: BehaviorState = {
     disabledInput: true,
     loading: false,
     userDetailsVisible: false,
+    resetEnabled: false,
 };
 
 const defaultAppContext: AppContext = {
@@ -57,15 +59,15 @@ const defaultAppContext: AppContext = {
 export const useAppContext = (): IAppContext => {
     const [AppContext, setAppContext] = useState<AppContext>(defaultAppContext);
 
-    useEffect(() => {
-        setAppContext(defaultAppContext);
-    }, []);
+    // useEffect(() => {
+    //     setAppContext(defaultAppContext);
+    // }, []);
 
     const addNewUserMessage = (message: IMessage) => {
         AppContext.messages.push(message);
         setAppContext({
             ...AppContext,
-            messages: AppContext.messages,
+            messages: [...AppContext.messages],
         });
     };
 
@@ -74,15 +76,23 @@ export const useAppContext = (): IAppContext => {
         AppContext.messages.push(message);
         setAppContext({
             ...AppContext,
-            messages: AppContext.messages,
+            messages: [...AppContext.messages],
             badgeCount: AppContext.badgeCount + 1,
+        });
+    };
+
+    const enableReset = () => {
+        console.log("enableReset");
+        setAppContext({
+            ...AppContext,
+            resetEnabled: true,
         });
     };
 
     const resetToSelector = () => {
         const messages = AppContext.messages;
         const indexOfSelector = messages.findIndex(m => m.nodeType === "Selection");
-        const truncated = messages.slice(0, indexOfSelector);
+        const truncated = messages.slice(0, indexOfSelector + 1);
 
         setAppContext({
             ...AppContext,
@@ -125,6 +135,19 @@ export const useAppContext = (): IAppContext => {
         setAppContext({
             ...AppContext,
             loading: !AppContext.loading,
+        });
+    };
+    const enableMessageLoader = () => {
+        setAppContext({
+            ...AppContext,
+            loading: true,
+        });
+    };
+
+    const disableMessageLoader = () => {
+        setAppContext({
+            ...AppContext,
+            loading: false
         });
     };
 
@@ -213,6 +236,9 @@ export const useAppContext = (): IAppContext => {
     return {
         toggleInputDisable,
         toggleMessageLoader,
+        enableMessageLoader,
+        disableMessageLoader,
+
         toggleUserDetails,
         openUserDetails,
         closeUserDetails,
@@ -234,6 +260,7 @@ export const useAppContext = (): IAppContext => {
         dropMessages,
         setBadgeCount,
         markAllAsRead,
+        enableReset,
 
         messages: AppContext.messages,
         loading: AppContext.loading,
@@ -249,14 +276,20 @@ export const useAppContext = (): IAppContext => {
         disabledInput: AppContext.disabledInput,
         userDetailsVisible: AppContext.userDetailsVisible,
         badgeCount: AppContext.badgeCount,
-
+        resetEnabled: AppContext.resetEnabled,
         AppContext,
     };
 };
 
 export interface IAppContext {
     toggleInputDisable: () => void;
+
     toggleMessageLoader: () => void;
+    enableMessageLoader: () => void;
+    disableMessageLoader: () => void;
+
+
+
     toggleUserDetails: () => void;
     openUserDetails: () => void;
     closeUserDetails: () => void;
@@ -278,6 +311,7 @@ export interface IAppContext {
     dropMessages: () => void;
     setBadgeCount: (badgeCount: number) => void;
     markAllAsRead: () => void;
+    enableReset(): void;
 
     messages: (IMessage | CustomCompMessage)[];
     loading: boolean;
@@ -293,6 +327,6 @@ export interface IAppContext {
     disabledInput: boolean;
     userDetailsVisible: boolean;
     badgeCount: number;
-
+    resetEnabled: boolean;
     AppContext: AppContext;
 }

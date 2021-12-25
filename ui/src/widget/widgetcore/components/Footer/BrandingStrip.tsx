@@ -5,6 +5,7 @@ import "@widgetcore/widget/widget.module.scss";
 import classNames from "classnames";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
+import { IAppContext } from "widget/hook";
 
 const useStyles = makeStyles(theme => ({
     leadingText: {},
@@ -39,11 +40,9 @@ const useStyles = makeStyles(theme => ({
         textAlign: "right",
     },
 }));
-export const BrandingStrip = () => {
+export const BrandingStrip = ({ context }: {context: IAppContext }) => {
     const cls = useStyles();
     const wcls = useWidgetStyles();
-
-    const { context } = useContext(WidgetContext);
     return (
         <div className={classNames(wcls.pwrow, wcls.pfooter, cls.spacer)}>
             <div style={{ alignItems: "center", display: "flex" }}>
@@ -55,7 +54,8 @@ export const BrandingStrip = () => {
                 </Typography>
             </div>
             <div style={{ paddingLeft: "3rem", height: "100%", alignItems: "center", display: "flex" }}>
-                <ReplayIcon classes={{ root: cls.iconRoot }} className={cls.replayIcon} onClick={() => context.resetToSelector()} />
+                {context.resetEnabled && <ReplayIcon classes={{ root: cls.iconRoot }} className={cls.replayIcon} onClick={context.resetToSelector} />}
+                {!context.resetEnabled && <ReplayIcon classes={{ root: cls.iconRoot }} className={cls.replayIcon} onClick={() => window.location.reload()} />}
             </div>
         </div>
     );

@@ -13,7 +13,7 @@ import { TextInput } from "@widgetcore/BotResponse/number/TextInput";
 import { BotResponse } from "../BotResponse/BotResponse";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { useCallback } from "react";
-import { renderNextBotMessage } from "../BotResponse/utils/renderNextComponent";
+import { renderNextBotMessage } from "../BotResponse/utils/renderBotMessage";
 import { ChoiceList } from "@widgetcore/BotResponse/optionFormats/ChoiceList";
 import { MiniContactForm } from "@widgetcore/UserDetailsDialog/CollectDetailsForm";
 import { CurrencyTextField } from "@widgetcore/BotResponse/numbers/CurrencyTextField";
@@ -72,6 +72,7 @@ export class StandardComponents {
                     setOpen(true);
                 }
                 loadAreas();
+                context.enableReset()
             }, [loadAreas]);
 
             const onChange = async (_: any, newOption: SelectedOption) => {

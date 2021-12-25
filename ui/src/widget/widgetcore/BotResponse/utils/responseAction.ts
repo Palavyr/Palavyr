@@ -3,7 +3,7 @@ import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository"
 
 import { floor, max, min } from "lodash";
 import { ConvoContextProperties } from "@widgetcore/componentRegistry/registry";
-import { renderNextBotMessage } from "./renderNextComponent";
+import { renderNextBotMessage } from "./renderBotMessage";
 import { setDynamicResponse } from "./setDynamicResponse";
 import { IAppContext } from "widget/hook";
 import { Message } from "@widgetcore/components/Messages/components/Message/Message";
@@ -54,11 +54,8 @@ export const responseAction = async (
         }
 
         if (node.isDynamicTableNode && node.dynamicType) {
-            setDynamicResponse(context, node.dynamicType, node.nodeId, response.toString());
-
-            const dynamicResponses = context.AppContext[ConvoContextProperties.dynamicResponses] as DynamicResponses;
-
-            const currentDynamicResponseState = dynamicResponses.filter(x => Object.keys(x)[0] === node.dynamicType)[0];
+            const updatedDynamicResponses = setDynamicResponse(context.dynamicResponses, node.dynamicType, node.nodeId, response.toString());
+            const currentDynamicResponseState = updatedDynamicResponses.filter(x => Object.keys(x)[0] === node.dynamicType)[0];
 
             const tooComplicated = await client.Widget.Post.InternalCheck(node, response, currentDynamicResponseState);
             if (tooComplicated) {
@@ -93,10 +90,10 @@ export const responseAction = async (
     }
 
     setTimeout(() => {
-        context.toggleMessageLoader();
+        context.enableMessageLoader();
         setTimeout(() => {
             renderNextBotMessage(context, child, nodeList, client, convoId);
-            context.toggleMessageLoader();
+            context.disableMessageLoader();
         }, timeout);
     }, 2000);
 };

@@ -61,7 +61,7 @@ export const Messages = ({ profileAvatar, showTimeStamp }: MessageProps) => {
         <div id="messages" className={classNames(wcls.pwrow, wcls.pcontent, cls.messageTubeContainer)} ref={messageRef}>
             {context.messages.length > 0 && context.messages.map((message, index) => <MessageSlice message={message} showTimeStamp={showTimeStamp} key={`${index}-${format(message.timestamp, "hh:mm")}`} />)}
             {context.loading && <Loader typing={context.loading} />}
-            <div style={{ height: "3rem" }} />
+            <div style={{ height: "6rem" }} />
         </div>
     );
 };

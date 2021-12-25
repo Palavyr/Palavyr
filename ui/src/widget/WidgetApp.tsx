@@ -7,6 +7,7 @@ import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { CollectDetailsForm } from "@widgetcore/UserDetailsDialog/CollectDetailsForm";
 import { Widget } from "@widgetcore/widget/Widget";
 import { useAppContext } from "./hook";
+import { Dialog } from "@material-ui/core";
 
 export const WidgetApp = () => {
     const [chatStarted, setChatStarted] = useState<boolean>(false);
@@ -50,7 +51,10 @@ export const WidgetApp = () => {
                 <WidgetContext.Provider value={{ context, preferences, chatStarted, setChatStarted, setConvoId, convoId }}>
                     {isReady ? (
                         <>
+                            <AreYouSureYouWantToGoBack />
+
                             <CollectDetailsForm setKickoff={() => null} />
+
                             <Widget />
                         </>
                     ) : (
@@ -67,5 +71,16 @@ export const NotReady = () => {
         <div style={{ textAlign: "center", paddingTop: "3rem" }}>
             <span id="palavyr-widget-not-ready">Not ready</span>
         </div>
+    );
+};
+
+export const AreYouSureYouWantToGoBack = () => {
+    const [open, setOpen] = useState(false);
+    return (
+        <Dialog open={open}>
+            <div style={{ textAlign: "center", paddingTop: "3rem" }}>
+                <span id="palavyr-widget-not-ready">Are you sure you want to go back?</span>
+            </div>
+        </Dialog>
     );
 };

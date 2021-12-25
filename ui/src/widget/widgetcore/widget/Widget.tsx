@@ -4,7 +4,7 @@ import { WidgetLayout } from "./WidgetLayout";
 import { useLocation } from "react-router-dom";
 import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
 import { getRootNode } from "@widgetcore/BotResponse/utils/utils";
-import { renderNextBotMessage } from "@widgetcore/BotResponse/utils/renderNextComponent";
+import { renderNextBotMessage } from "@widgetcore/BotResponse/utils/renderBotMessage";
 import "@widgetcore/widget/widget.module.scss";
 import { IAppContext } from "widget/hook";
 

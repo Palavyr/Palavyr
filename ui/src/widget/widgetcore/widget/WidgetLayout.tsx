@@ -11,10 +11,9 @@ import { DashboardContext } from "@frontend/dashboard/layouts/DashboardContext";
 export interface WidgetLayoutProps {
     titleAvatar?: string;
     profileAvatar?: string;
-    designMode?: boolean;
     initializer(context: IAppContext, repository: PalavyrRepository): void;
 }
-export const WidgetLayout = ({ initializer, titleAvatar = "", profileAvatar = "", designMode = false }: WidgetLayoutProps) => {
+export const WidgetLayout = ({ initializer, titleAvatar = "", profileAvatar = "" }: WidgetLayoutProps) => {
     const { context } = useContext(WidgetContext);
     const { repository } = useContext(DashboardContext);
 
@@ -31,7 +30,7 @@ export const WidgetLayout = ({ initializer, titleAvatar = "", profileAvatar = ""
         <>
             <ConvoHeader titleAvatar={titleAvatar} />
             <Messages profileAvatar={profileAvatar} showTimeStamp={true} />
-            <BrandingStrip />
+            <BrandingStrip context={context} />
         </>
     );
 };
