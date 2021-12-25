@@ -36,16 +36,15 @@ export const MessageTypes = {
 };
 
 export const getComponentToRender = (message: UserMessageData | BotMessageData, showTimeStamp: boolean) => {
-    const MessageComponent = message.component as React.FC;
     if (message.type === MessageTypes.BOT) {
-        // const PalavyrComponent = message.component as BotMessageData["component"];
+        const MessageComponent = message.component as BotMessageData["component"];
         return (
             <MessageWrapper>
                 <MessageComponent {...message.props} />
             </MessageWrapper>
         );
     } else if (message.type === MessageTypes.USER) {
-        // const IMessageComponent = message.component;
+        const MessageComponent = message.component;
         return <MessageComponent message={message} showTimeStamp={showTimeStamp} />;
     } else {
         throw new Error("Unknown message type");

@@ -98,16 +98,21 @@ export const responseAction = async (
     }, 2000);
 };
 
+export const CSS_LINKER_and_NODE_TYPE = {
+    BOT: "bot-response",
+    USER: "user-response",
+}
+
 export const createUserResponseComponent = (text: string, id: string | null): UserMessageData => {
     return {
         type: "user",
         component: UserMeess,
         text,
-        sender: "user-response",
+        sender: CSS_LINKER_and_NODE_TYPE.USER,
         timestamp: new Date(),
         showAvatar: true,
         customId: id ?? "",
         unread: false,
-        nodeType: "user-response"
+        nodeType: CSS_LINKER_and_NODE_TYPE.USER
     };
 };

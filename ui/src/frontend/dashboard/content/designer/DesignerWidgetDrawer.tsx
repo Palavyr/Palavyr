@@ -14,6 +14,8 @@ import "@widgetcore/widget/widget.module.scss";
 import { IAppContext, useAppContext } from "widget/hook";
 import { useWindowDimensions } from "@common/hooks/useWindowDimensions";
 import { PalavyrRepository } from "@api-client/PalavyrRepository";
+import { MessageTypes } from "@widgetcore/components/Messages/Messages";
+import { CSS_LINKER_and_NODE_TYPE } from "@widgetcore/BotResponse/utils/responseAction";
 
 const drawerWidth = 400;
 
@@ -52,10 +54,10 @@ const render = (componentType: string, text: string, nodeId: string, nodeChildre
     const node = { text, nodeId, nodeChildrenString } as WidgetNodeResource;
     const component = ComponentRegistry[componentType]({ node, nodeList: [], client, convoId: "test-123", designer: true });
     const message = {
-        type: "bot",
+        type: MessageTypes.BOT,
         component,
         props: {},
-        sender: "bot-response",
+        sender: CSS_LINKER_and_NODE_TYPE.BOT,
         timestamp: new Date(),
         showAvatar: true,
         customId: "",
@@ -79,10 +81,10 @@ const initializer = async (context: IAppContext, repository: PalavyrRepository) 
     ];
     const component = ComponentRegistry["MultipleChoiceAsPath"]({ node, nodeList, client, convoId: "test-123", designer: true });
     const m = {
-        type: "Bot",
+        type: MessageTypes.BOT,
         component,
         props: {},
-        sender: "bot-response",
+        sender: CSS_LINKER_and_NODE_TYPE.BOT,
         timestamp: new Date(),
         showAvatar: true,
         customId: "",

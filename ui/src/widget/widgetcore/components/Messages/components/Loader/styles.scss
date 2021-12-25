@@ -1,7 +1,8 @@
 .loader {
-  margin: 10px;
+  // margin: 10px;
   display: none;
 
+  margin-left: -.5rem;
   &.active {
     display: flex;
   }
@@ -11,8 +12,10 @@
   display: inline-block;
   height: 4px;
   width: 4px;
+  margin-bottom: 3px;
+
   border-radius: 50%;
-  margin-right: 2px;
+  margin-right: 6px;
   animation: bounce 0.5s ease infinite alternate;
 
   &:nth-child(1) {
