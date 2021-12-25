@@ -1,4 +1,4 @@
-import { ContextProperties, DynamicResponses, KeyValues, IMessage, CustomCompMessage, WidgetPreferences } from "@Palavyr-Types";
+import { ContextProperties, DynamicResponses, KeyValues, UserMessageData, BotMessageData, WidgetPreferences } from "@Palavyr-Types";
 import { useEffect, useState } from "react";
 
 export interface BehaviorState {
@@ -20,7 +20,7 @@ export interface ContextState {
     pdfLink: string | null;
 }
 export interface MessagesState {
-    messages: (IMessage | CustomCompMessage)[];
+    messages: (UserMessageData | BotMessageData)[];
     badgeCount: number;
 }
 
@@ -63,7 +63,7 @@ export const useAppContext = (): IAppContext => {
     //     setAppContext(defaultAppContext);
     // }, []);
 
-    const addNewUserMessage = (message: IMessage) => {
+    const addNewUserMessage = (message: UserMessageData) => {
         AppContext.messages.push(message);
         setAppContext({
             ...AppContext,
@@ -71,7 +71,7 @@ export const useAppContext = (): IAppContext => {
         });
     };
 
-    const addNewBotMessage = (message: CustomCompMessage) => {
+    const addNewBotMessage = (message: BotMessageData) => {
         // MAKE SURE TO ATTACH SELECTION CUSTOM ID WHEN HITTING THE SELECTION COMPONENT SO WE CAN TRUNCATE BY IT
         AppContext.messages.push(message);
         setAppContext({
@@ -214,7 +214,7 @@ export const useAppContext = (): IAppContext => {
         });
     };
 
-    const setWidgetPreferences = (widgetPreferences: any) => {
+    const setWidgetPreferences = (widgetPreferences: WidgetPreferences) => {
         setAppContext({
             ...AppContext,
             widgetPreferences,
@@ -305,15 +305,15 @@ export interface IAppContext {
     setDynamicResponses: (dynamicResponses: DynamicResponses) => void;
     setKeyValues: (keyValues: KeyValues) => void;
 
-    addNewUserMessage: (message: IMessage) => void;
-    addNewBotMessage: (message: CustomCompMessage) => void;
+    addNewUserMessage: (message: UserMessageData) => void;
+    addNewBotMessage: (message: BotMessageData) => void;
     resetToSelector: () => void;
     dropMessages: () => void;
     setBadgeCount: (badgeCount: number) => void;
     markAllAsRead: () => void;
     enableReset(): void;
 
-    messages: (IMessage | CustomCompMessage)[];
+    messages: (UserMessageData | BotMessageData)[];
     loading: boolean;
     phoneNumber: string;
     emailAddress: string;

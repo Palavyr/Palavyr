@@ -1133,6 +1133,13 @@ type BaseMessage = {
     props?: any;
     nodeType: string;
 };
+export interface UserMessageData extends BaseMessage {
+    text: string;
+}
+
+export interface BotMessageData extends BaseMessage {
+    props: any;
+}
 
 export type SpecificResponse = {
     [nodeId: string]: string; // node.nodeId: response value;
@@ -1159,26 +1166,6 @@ export type ContextProperties = {
     widgetPreferences: WidgetPreferences | null;
     pdfLink: string | null;
 };
-
-export interface IMessage extends BaseMessage {
-    text: string;
-}
-
-export interface Link extends BaseMessage {
-    title: string;
-    link: string;
-    target: string;
-}
-
-export interface LinkParams {
-    link: string;
-    title: string;
-    target?: string;
-}
-
-export interface CustomCompMessage extends BaseMessage {
-    props: any;
-}
 
 export interface ImageState {
     src: string;

@@ -1,4 +1,4 @@
-import { WidgetNodeResource, WidgetConversationUpdate, WidgetNodes, ContextProperties, DynamicResponses, KeyValue, IMessage } from "@Palavyr-Types";
+import { WidgetNodeResource, WidgetConversationUpdate, WidgetNodes, ContextProperties, DynamicResponses, KeyValue, UserMessageData } from "@Palavyr-Types";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
 
 import { floor, max, min } from "lodash";
@@ -6,7 +6,7 @@ import { ConvoContextProperties } from "@widgetcore/componentRegistry/registry";
 import { renderNextBotMessage } from "./renderBotMessage";
 import { setDynamicResponse } from "./setDynamicResponse";
 import { IAppContext } from "widget/hook";
-import { Message } from "@widgetcore/components/Messages/components/Message/Message";
+import { UserMeess } from "@widgetcore/components/Messages/components/Message/Message";
 
 const WORDS_READ_PER_MINUTE_FOR_A_TYPICAL_HUMAN = 22;
 
@@ -98,10 +98,10 @@ export const responseAction = async (
     }, 2000);
 };
 
-export const createUserResponseComponent = (text: string, id: string | null): IMessage => {
+export const createUserResponseComponent = (text: string, id: string | null): UserMessageData => {
     return {
         type: "user",
-        component: Message,
+        component: UserMeess,
         text,
         sender: "user-response",
         timestamp: new Date(),

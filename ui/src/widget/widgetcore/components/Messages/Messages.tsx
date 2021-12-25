@@ -1,12 +1,12 @@
 import React, { memo, useContext, useEffect, useMemo, useRef } from "react";
 import format from "date-fns/format";
 import { Loader } from "./components/Loader/Loader";
-import { CustomCompMessage, IMessage, WidgetPreferences } from "@Palavyr-Types";
+import { BotMessageData, UserMessageData, WidgetPreferences } from "@Palavyr-Types";
 import { scrollToBottom } from "@widgetcore/utils/messages";
-import { getComponentToRender } from "@widgetcore/BotResponse/utils/getComponentToRender";
 import { makeStyles } from "@material-ui/core";
 
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
+import { MessageWrapper } from "../../BotResponse/utils/MessageWrapper";
 
 import "@widgetcore/widget/widget.module.scss";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
@@ -30,7 +30,29 @@ const useStyles = makeStyles(theme => ({
     }),
 }));
 
-const MessageSlice = memo(({ message, showTimeStamp }: { message: IMessage | CustomCompMessage; showTimeStamp: boolean }) => {
+export const MessageTypes = {
+    BOT: "bot",
+    USER: "user",
+};
+
+export const getComponentToRender = (message: UserMessageData | BotMessageData, showTimeStamp: boolean) => {
+    const MessageComponent = message.component as React.FC;
+    if (message.type === MessageTypes.BOT) {
+        // const PalavyrComponent = message.component as BotMessageData["component"];
+        return (
+            <MessageWrapper>
+                <MessageComponent {...message.props} />
+            </MessageWrapper>
+        );
+    } else if (message.type === MessageTypes.USER) {
+        // const IMessageComponent = message.component;
+        return <MessageComponent message={message} showTimeStamp={showTimeStamp} />;
+    } else {
+        throw new Error("Unknown message type");
+    }
+};
+
+const MessageSlice = memo(({ message, showTimeStamp }: { message: UserMessageData | BotMessageData; showTimeStamp: boolean }) => {
     const { preferences } = useContext(WidgetContext);
     const cls = useStyles({ ...preferences });
     return <div className={cls.message}>{getComponentToRender(message, showTimeStamp)}</div>;
