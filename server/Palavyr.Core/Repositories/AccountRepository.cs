@@ -19,13 +19,13 @@ namespace Palavyr.Core.Repositories
         private readonly ITransportACancellationToken ctTransport;
         public IHoldAnAccountId AccountIdHolder { get; private set; }
 
-        public AccountRepository(AccountsContext accountsContext, ILogger<AccountRepository> logger, IRemoveStaleSessions removeStaleSessions, IGuidUtils guidUtils, IHoldAnAccountId accountIdHolder, ITransportACancellationToken cancellationToken)
+        public AccountRepository(AccountsContext accountsContext, ILogger<AccountRepository> logger, IRemoveStaleSessions removeStaleSessions, IGuidUtils guidUtils, IHoldAnAccountId accountIdHolder, ITransportACancellationToken ctTransport)
         {
             this.accountsContext = accountsContext;
             this.logger = logger;
             this.removeStaleSessions = removeStaleSessions;
             this.guidUtils = guidUtils;
-            this.ctTransport = cancellationToken;
+            this.ctTransport = ctTransport;
             AccountIdHolder = accountIdHolder;
             
         }

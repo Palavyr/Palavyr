@@ -50,7 +50,8 @@ namespace Palavyr.Core.Services.AttachmentServices
         public async Task<FileLink[]> RetrieveAttachmentLinks(string areaId, CancellationToken cancellationToken)
         {
             var userDataBucket = configuration.GetUserDataBucket();
-            var metas = await dashContext.FileNameMaps
+            var metas = await dashContext
+                .FileNameMaps
                 .Where(x => x.AreaIdentifier == areaId)
                 .Select(
                     x => new AttachmentMeta
@@ -58,7 +59,8 @@ namespace Palavyr.Core.Services.AttachmentServices
                         SafeFileId = x.SafeName,
                         S3Key = x.S3Key,
                         RiskyName = x.RiskyName
-                    }).ToListAsync(cancellationToken);
+                    })
+                .ToListAsync(cancellationToken);
 
             var fileLinks = new List<FileLink>();
             foreach (var meta in metas)
@@ -69,7 +71,6 @@ namespace Palavyr.Core.Services.AttachmentServices
 
             return fileLinks.ToArray();
         }
-        
 
         public async Task<List<S3SDownloadRequestMeta>> RetrievePdfUris(string areaId, CancellationToken cancellationToken)
         {

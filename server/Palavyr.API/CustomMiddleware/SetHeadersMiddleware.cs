@@ -31,8 +31,6 @@ namespace Palavyr.API.CustomMiddleware
 
         public async Task InvokeAsync(HttpContext context, IWebHostEnvironment env, AccountsContext accountContext, IMediator mediator, IAccountRepository accountRepository)
         {
-            // This must co
-
             logger.LogDebug("Settings magic string headers...");
             var action = context.Request.Headers[ApplicationConstants.MagicUrlStrings.Action].ToString();
 

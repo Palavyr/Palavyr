@@ -15,7 +15,7 @@ namespace Palavyr.Core.Repositories.Delete
         private readonly StripeCustomerService stripeCustomerService;
         private readonly ILogger<AccountDeleter> logger;
         private readonly IHoldAnAccountId accountIdHolder;
-        private readonly CancellationTokenTransport cancellationTokenTransport;
+        private readonly CancellationTokenTransport ctTransportTransport;
 
         public AccountDeleter(
             AccountsContext accountsContext,
@@ -24,15 +24,15 @@ namespace Palavyr.Core.Repositories.Delete
             ILogger<AccountDeleter> logger,
             IGuidUtils guidUtils,
             IHoldAnAccountId accountIdHolder,
-            CancellationTokenTransport cancellationTokenTransport
+            CancellationTokenTransport ctTransportTransport
         )
-            : base(accountsContext, logger, removeStaleSessions, guidUtils, accountIdHolder, cancellationTokenTransport)
+            : base(accountsContext, logger, removeStaleSessions, guidUtils, accountIdHolder, ctTransportTransport)
         {
             this.accountsContext = accountsContext;
             this.stripeCustomerService = stripeCustomerService;
             this.logger = logger;
             this.accountIdHolder = accountIdHolder;
-            this.cancellationTokenTransport = cancellationTokenTransport;
+            this.ctTransportTransport = ctTransportTransport;
         }
 
         public async Task DeleteAccount()

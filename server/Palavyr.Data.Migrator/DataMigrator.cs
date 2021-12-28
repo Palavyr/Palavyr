@@ -5,6 +5,7 @@ using Amazon.Lambda.Core;
 using DbUp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
