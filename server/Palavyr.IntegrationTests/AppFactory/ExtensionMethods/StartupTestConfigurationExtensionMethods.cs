@@ -1,11 +1,8 @@
 ﻿using System.Threading;
 using Autofac;
 using Microsoft.Extensions.DependencyInjection;
-using Palavyr.API;
-using Palavyr.API.Registration.Container;
 using Palavyr.Core.Sessions;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
-using Palavyr.IntegrationTests.AppFactory.TestStartup;
 
 namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
 {
@@ -13,12 +10,6 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
     {
         public static ContainerBuilder CallStartupTestContainerConfiguration(this ContainerBuilder builder)
         {
-            var configuration = TestConfiguration.GetTestConfiguration();
-            builder.RegisterModule(new AmazonModule(configuration));
-            builder.RegisterModule(new GeneralModule());
-            builder.RegisterModule(new StripeModule(configuration));
-            builder.RegisterModule(new RepositoriesModule());
-            
             builder.Register(
                 c =>
                 {
@@ -45,7 +36,7 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
             {
                 EnvironmentName = "Development"
             };
-            new IntegrationTestStartup().SetServices(services, config, env);
+            // new IntegrationTestStartup().SetServices(services, config, env);
             return services;
         }
     }
