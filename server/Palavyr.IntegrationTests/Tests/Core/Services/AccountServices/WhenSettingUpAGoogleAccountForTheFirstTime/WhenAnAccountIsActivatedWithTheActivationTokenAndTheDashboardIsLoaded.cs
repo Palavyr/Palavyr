@@ -77,7 +77,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             var emailVerificationStatus = Substitute.For<IEmailVerificationStatus>();
             emailVerificationStatus.CheckVerificationStatus(testEmail).Returns(true);
             
-            var accountIdHolder = new AccountIdHolder();
+            var accountIdHolder = new AccountIdTransport();
             accountIdHolder.Assign(testAccount);
 
             

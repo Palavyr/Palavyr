@@ -142,7 +142,7 @@ namespace Palavyr.API.Registration.Container
             
             
             ///////!!! SPECIAL DANGER ZONE !!!//////////
-            builder.RegisterType<AccountIdHolder>().As<IHoldAnAccountId>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE
+            builder.RegisterType<AccountIdTransport>().As<IHoldAnAccountId>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE
             builder.RegisterType<CancellationTokenTransport>().As<ITransportACancellationToken>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE
             ///////////// ///////////// ////////// ////////// ////////// /////////// ///////////// ///////////// ////////// ////////// ////////// /////////// 
 
