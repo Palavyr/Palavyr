@@ -1,7 +1,7 @@
 import { Divider, makeStyles, Typography } from "@material-ui/core";
 import React from "react";
 
-interface IAreaConfigurationHeader {
+interface HeaderStripProps {
     title: string;
     subtitle?: string;
     divider?: boolean;
@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const AreaConfigurationHeader = ({ title, subtitle, divider = false, light = false, gutterBottom = false }: IAreaConfigurationHeader) => {
+export const HeaderStrip = ({ title, subtitle, divider = false, light = false, gutterBottom = false }: HeaderStripProps) => {
     const cls = useStyles({ light });
     return (
         <>

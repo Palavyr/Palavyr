@@ -35,16 +35,16 @@ export const PricingCardBody = ({
     return (
         <>
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="PDF Response" value={response} />
-            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Per Area Email" value={perAreaEmail} />
+            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Per Intent Email" value={perAreaEmail} />
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Enquiries Dashboard" value={enquiriesDashboard} />
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Image Upload" value={imageUpload} />
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Email Notifications" value={emailNotifications} />
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Inline Email Editor" value={inlineEmailEditor} />
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="SMS Notifications" value={smsNotifications} />
-            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Attachments per Area" value={attachmentsPerArea} />
+            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Attachments per Intent" value={attachmentsPerArea} />
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Static Fee Tables" value={staticFeeTables} />
             <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Pricing Strategies" value={dynamicFeeTables} />
-            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Number of Areas" value={numberOfAreas} />
+            <PricingCardTableRow textStyle={textStyle} rowStyle={rowStyle} itemName="Number of Intents" value={numberOfAreas} />
         </>
     );
 };

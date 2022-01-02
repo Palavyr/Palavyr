@@ -6,7 +6,7 @@ import React, { useContext } from "react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Auth from "@auth/Auth";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { SettingsWrapper } from "../SettingsWrapper";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import Cookies from "js-cookie";
@@ -49,7 +49,7 @@ export const DeleteAccount = () => {
 
     return (
         <SettingsWrapper>
-            <AreaConfigurationHeader title="Delete your account" subtitle="Caution - account deletion is permanent." />
+            <HeaderStrip title="Delete your account" subtitle="Caution - account deletion is permanent." />
             <Divider />
             <SettingsGridRowText
                 onClick={async () => await Promise.resolve(setDialogOpen(true))}

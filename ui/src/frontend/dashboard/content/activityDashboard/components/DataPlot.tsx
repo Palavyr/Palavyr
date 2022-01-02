@@ -1,4 +1,4 @@
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { makeStyles, CircularProgress, Card } from "@material-ui/core";
 import { Align } from "@common/positioning/Align";
 import React from "react";
@@ -54,7 +54,7 @@ export const DataPlot = ({ title, subtitle = "", hasData, loadingSpinner, childr
     ) : (
         <>
             <div style={{ height: "2rem" }}></div>
-            <AreaConfigurationHeader title={title} subtitle={subtitle} divider />
+            <HeaderStrip title={title} subtitle={subtitle} divider />
             {hasData() ? children : <NoActivityComponent />}
             <div style={{ height: "4rem" }}></div>
         </>

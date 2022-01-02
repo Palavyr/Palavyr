@@ -5,7 +5,7 @@ import { Upload } from "../Upload";
 import { AttachmentList } from "./AttachmentList";
 import { AttachmentPreview } from "./AttachmentPreview";
 import { useParams } from "react-router-dom";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { useContext } from "react";
 
@@ -78,7 +78,7 @@ export const AttachmentConfiguration = () => {
 
     return (
         <>
-            <AreaConfigurationHeader title="Attachments" subtitle="Upload PDF and word documents you wish to send to your potential clients." />
+            <HeaderStrip title="Attachments" subtitle="Upload PDF and word documents you wish to send to your potential clients." />
             <Upload
                 initialState={attachmentList.length === 0}
                 modalState={modalState}

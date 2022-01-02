@@ -15,7 +15,7 @@ import $ from "jquery";
 import { MAIN_CONTENT_DIV_ID, USE_NEW_EDITOR_COOKIE_NAME } from "@constants";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import Cookies from "js-cookie";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import UndoIcon from "@material-ui/icons/Undo";
 import RedoIcon from "@material-ui/icons/Redo";
 import { isDevelopmentStage } from "@common/client/clientUtils";
@@ -223,7 +223,7 @@ export const StructuredConvoTree = ({
     return (
         <>
             {!useNewEditor && treeErrors && (
-                <AreaConfigurationHeader
+                <HeaderStrip
                     divider={treeErrors.anyErrors}
                     title="Chat Editor"
                     subtitle="Use this editor to create the personalized conversation flow you will provide to your potential customers. Consider planning this before implementing since you cannot modify the type of node at the beginning of the conversation without affect the nodes below."

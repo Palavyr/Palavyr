@@ -7,6 +7,8 @@ import PaymentIcon from "@material-ui/icons/Payment";
 import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
 import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
 import { webUrl } from "@common/client/clientUtils";
+import SettingsIcon from "@material-ui/icons/Settings";
+import { GeneralSettingsLoc } from "@Palavyr-Types";
 
 const useStyles = makeStyles(theme => ({
     icon: {
@@ -14,13 +16,13 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export interface BillingSectionProps {
+export interface AccountSectionProps {
     isActive: boolean;
     menuOpen: boolean;
 }
 
-export const BillingSection = ({ isActive, menuOpen }: BillingSectionProps) => {
-    const [billingOpen, setBillingOpen] = useState<boolean>(false);
+export const AccountSection = ({ isActive, menuOpen }: AccountSectionProps) => {
+    const [billingOpen, setBillingOpen] = useState<boolean>(true);
     const { repository, setViewName, planTypeMeta } = useContext(DashboardContext);
 
     const cls = useStyles();
@@ -39,10 +41,24 @@ export const BillingSection = ({ isActive, menuOpen }: BillingSectionProps) => {
         window.open(portalUrl, "_blank");
     };
 
+    const generalSettingsOnClick = () => {
+        setViewName("General Settings");
+        history.push(`/dashboard/settings/email?tab=${GeneralSettingsLoc.email}`);
+    };
+
     return (
         <List>
-            <SidebarSectionHeader menuOpen={menuOpen} className={"billing-sidebar-tour"} title="Billing" onClick={() => setBillingOpen(!billingOpen)} currentState={billingOpen} />
+            <SidebarSectionHeader menuOpen={menuOpen} className={"billing-sidebar-tour"} title="Account" onClick={() => setBillingOpen(!billingOpen)} currentState={billingOpen} />
             <Collapse in={billingOpen} timeout="auto" unmountOnExit>
+                <SidebarLinkItem
+                    toolTipText=" General Settings"
+                    menuOpen={menuOpen}
+                    className={"settings-sidebar-tour"}
+                    text="Settings"
+                    isActive={isActive}
+                    onClick={generalSettingsOnClick}
+                    IconComponent={<SettingsIcon className={cls.icon} />}
+                />
                 {planTypeMeta && planTypeMeta.isFreePlan && (
                     <SidebarLinkItem
                         toolTipText="Purchase A Subscription"
@@ -57,7 +73,7 @@ export const BillingSection = ({ isActive, menuOpen }: BillingSectionProps) => {
                     <SidebarLinkItem
                         toolTipText="Manage Your Subscription"
                         menuOpen={menuOpen}
-                        text="Manage"
+                        text="Subscription"
                         isActive={isActive || !planTypeMeta.isFreePlan}
                         onClick={createCustomerPortalSession}
                         IconComponent={<PaymentIcon className={cls.icon} />}

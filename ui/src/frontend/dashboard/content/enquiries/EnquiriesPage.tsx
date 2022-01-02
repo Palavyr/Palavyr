@@ -5,7 +5,7 @@ import { sortByPropertyNumeric } from "@common/utils/sorting";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { EnquiriesTableRow } from "./EnquiriesRow";
 import { EnquiriesHeader } from "./EnquiriesHeader";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { ColoredButton } from "@common/components/borrowed/ColoredButton";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
 import { Align } from "@common/positioning/Align";
@@ -92,7 +92,7 @@ export const EnquiresPage = () => {
     };
     return (
         <div className={cls.container}>
-            <AreaConfigurationHeader title="Enquiries" subtitle="Review your recent enquiries. Use the 'History' link to view the conversation. Use the 'PDF' link to view the response PDF that was sent." />
+            <HeaderStrip title="Enquiries" subtitle="Review your recent enquiries. Use the 'History' link to view the conversation. Use the 'PDF' link to view the response PDF that was sent." />
             {showSeen !== null && <OsTypeToggle controlledState={showSeen} onChange={toggleShowSeen} enabledLabel="Show Seen Enquiries" disabledLabel="Hide Seen Enquiries" />}
             <TableContainer component={Paper}>
                 <Table>

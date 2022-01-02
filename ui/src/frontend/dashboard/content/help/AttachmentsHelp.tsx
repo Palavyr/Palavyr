@@ -9,7 +9,7 @@ export const AttachmentsHelp = () => {
             <HelpTitle title="Response Attachments" />
             <HelpSubtitle subtitle="" />
             <HelpDetails>
-                <span>This section is used to upload PDF attachments that will be sent alongside the pdf response from this area. </span>
+                <span>This section is used to upload PDF attachments that will be sent alongside the pdf response from this intent. </span>
                 <span>
                     <h4>Uploads</h4>
                     We currently only support uploading PDF attachments under 2MB. You can use as many pages as you'd like per PDF. (So for example, if you're limited to a single attachment, you <i>could</i> combine all of your attachments into a

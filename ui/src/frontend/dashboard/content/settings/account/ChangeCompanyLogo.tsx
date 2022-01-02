@@ -1,5 +1,5 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { PalavyrAlert } from "@common/components/PalavyrAlert";
 import { getAnchorOrigin } from "@common/components/PalavyrSnackbar";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
@@ -146,7 +146,7 @@ const ChangeLogoImageInner = ({ fileUpload, setFileUpload }: ChangeLogoImageInne
 
     return (
         <SettingsWrapper>
-            <AreaConfigurationHeader title="Change your company logo" subtitle="Update your company logo. This is used in the response email and pdf sent to customers." />
+            <HeaderStrip title="Change your company logo" subtitle="Update your company logo. This is used in the response email and pdf sent to customers." />
             <Paper className={cls.paper}>
                 <Alert style={{ marginBottom: "1.4rem" }} severity={companyLogo === "" ? "error" : "success"}>
                     <AlertTitle>

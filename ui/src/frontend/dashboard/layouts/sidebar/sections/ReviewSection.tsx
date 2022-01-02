@@ -77,10 +77,10 @@ export const ReviewSection = memo(({ isActive, menuOpen }: ReviewSectionProps) =
                 </SidebarLinkItem>
 
                 <SidebarLinkItem
-                    toolTipText="Widget Designer"
+                    toolTipText="Style Designer"
                     menuOpen={menuOpen}
                     className={"widget-designer-tour"}
-                    text="Chat Designer"
+                    text="Style Designer"
                     isActive={isActive}
                     onClick={designerOnClick}
                     IconComponent={<BrushIcon className={cls.icon} />}

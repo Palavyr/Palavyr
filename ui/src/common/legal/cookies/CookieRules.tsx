@@ -97,7 +97,7 @@ export const CookieRules = ({ onClose, open }: ICookieRules) => {
                     fact. This prevents you from having to log in every single time you
                     visit a new page. These cookies are typically removed or cleared when
                     you log out to ensure that you can only access restricted features and
-                    areas when logged in.
+                    intents when logged in.
         </Typography>
                 <Typography paragraph>Site preferences cookies:</Typography>
                 <Typography paragraph>

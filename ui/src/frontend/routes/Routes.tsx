@@ -14,7 +14,6 @@ import { ConversationHelp } from "frontend/dashboard/content/help/ConversationHe
 import { EmailHelp } from "frontend/dashboard/content/help/EmailHelp";
 import { ResponseConfigurationHelp } from "frontend/dashboard/content/help/ResponseConfigurationHelp";
 import { AttachmentsHelp } from "frontend/dashboard/content/help/AttachmentsHelp";
-import { AreaSettingsHelp } from "frontend/dashboard/content/help/AreaSettingsHelp";
 import { PreviewHelp } from "frontend/dashboard/content/help/PreviewHelp";
 import { PleaseConfirmYourEmail } from "frontend/dashboard/content/welcome/PleaseConfirmYourEmail";
 import { Purchase } from "frontend/dashboard/content/purchse/Purchase";
@@ -34,7 +33,7 @@ import { ResponseConfiguration } from "frontend/dashboard/content/responseConfig
 import { AttachmentConfiguration } from "frontend/dashboard/content/responseConfiguration/uploadable/attachments/AttachmentConfiguration";
 import { AreaSettings } from "frontend/dashboard/content/responseConfiguration/areaSettings/AreaSettings";
 import { ConfigurationPreview } from "frontend/dashboard/content/responseConfiguration/previews/ConfigurationPreview";
-import { AreaContent } from "frontend/dashboard/content/responseConfiguration/AreaContent";
+import { IntentContent } from "@frontend/dashboard/content/responseConfiguration/IntentContent";
 import { ChangeCompanyName } from "frontend/dashboard/content/settings/account/ChangeCompanyName";
 import { ChangePhoneNumber } from "frontend/dashboard/content/settings/account/ChangePhoneNumber";
 import { ChangeLogoImage } from "frontend/dashboard/content/settings/account/ChangeCompanyLogo";
@@ -81,6 +80,7 @@ import { OurStoryPage } from "@landing/ourStory/OutStoryPage";
 import { OurTeamPage } from "@landing/ourTeam/OurTeamPage";
 import { WidgetDesignerPage } from "frontend/dashboard/content/designer/WidgetDesigner";
 import { pageview } from "@common/Analytics/gtag";
+import { IntentSettingsHelp } from "@frontend/dashboard/content/help/IntentSettingsHelp";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -97,7 +97,7 @@ const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Elem
     return ComponentWithHelp;
 };
 
-const withAreaTabs = (ContentComponent: JSX.Element[] | JSX.Element): (() => JSX.Element) => () => <AreaContent>{ContentComponent}</AreaContent>;
+const withAreaTabs = (ContentComponent: JSX.Element[] | JSX.Element): (() => JSX.Element) => () => <IntentContent>{ContentComponent}</IntentContent>;
 const withSettingsTabs = (ContentComponent: JSX.Element[] | JSX.Element): (() => JSX.Element) => () => <SettingsContent>{ContentComponent}</SettingsContent>;
 
 const convertTitleToUriCompatible = (rawTitle: string) => {
@@ -169,7 +169,7 @@ export const Routes = () => {
                 <ProtectedRoute exact path="/dashboard/editor/conversation/:areaIdentifier" component={withLayout(withAreaTabs(<ConversationConfigurationPage />), <ConversationHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/conversation/intro/:areaIdentifier" component={withLayout(IntroConversationConfigurationPage, <ConversationHelp />)} />
 
-                <ProtectedRoute exact path="/dashboard/editor/settings/:areaIdentifier" component={withLayout(withAreaTabs(<AreaSettings />), <AreaSettingsHelp />)} />
+                <ProtectedRoute exact path="/dashboard/editor/settings/:areaIdentifier" component={withLayout(withAreaTabs(<AreaSettings />), <IntentSettingsHelp />)} />
                 <ProtectedRoute exact path="/dashboard/editor/pricingpreview/:areaIdentifier" component={withLayout(withAreaTabs(<ConfigurationPreview />), <PreviewHelp />)} />
 
                 <ProtectedRoute exact path="/dashboard/set-areas" component={withLayout(EnableAreas, <SetAreasHelp />)} />

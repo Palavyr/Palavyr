@@ -5,7 +5,7 @@ import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import classNames from "classnames";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { SaveOrCancel } from "@common/components/SaveOrCancel";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { SettingsWrapper } from "../SettingsWrapper";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
@@ -63,7 +63,7 @@ export const ChangePassword = () => {
 
     return (
         <SettingsWrapper>
-            <AreaConfigurationHeader title="Change your password" subtitle="Update the password you use to log in." />
+            <HeaderStrip title="Change your password" subtitle="Update the password you use to log in." />
             <Divider />
             <Paper className={cls.paper}>
                 <Alert>

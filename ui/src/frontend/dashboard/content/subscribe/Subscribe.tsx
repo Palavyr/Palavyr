@@ -9,7 +9,7 @@ import { PURCHASE_ROUTE } from "@constants";
 import { Lyte, Premium, Pro } from "@landing/components/pricing/Cards";
 import { SpaceEvenly } from "@common/positioning/SpaceEvenly";
 import classnames from "classnames";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
@@ -88,7 +88,7 @@ export const Subscribe = () => {
 
     return (
         <>
-            <AreaConfigurationHeader title="Select a subscription plan" subtitle="You won't be charged yet." divider />
+            <HeaderStrip title="Select a subscription plan" subtitle="You won't be charged yet." divider />
             <SubscribeStepper activeStep={0} />
             {planTypeMeta !== null && (
                 <div className={cls.body}>

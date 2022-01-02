@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState, useContext } from "react";
 import { Typography, Card, makeStyles, Divider } from "@material-ui/core";
 import { serverUrl, widgetUrl } from "@common/client/clientUtils";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { ZoomImage } from "@common/components/borrowed/ZoomImage";
 import Styles from "./minimalStyles.png";
@@ -37,7 +37,7 @@ export const GetWidget = () => {
 
     return (
         <>
-            <AreaConfigurationHeader title="Get the Widget" subtitle="Use the following code snippets to integrate the widget into your side. We are currently working on a widget api, so stay tuned!" />
+            <HeaderStrip title="Get the Widget" subtitle="Use the following code snippets to integrate the widget into your side. We are currently working on a widget api, so stay tuned!" />
             <Card className={cls.outerCard}>
                 <Typography gutterBottom variant="h5">
                     Add the configured widget to your website

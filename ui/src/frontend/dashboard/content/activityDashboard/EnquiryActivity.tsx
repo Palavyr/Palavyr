@@ -114,7 +114,7 @@ export const EnquiryActivity = () => {
         <DataPlot
             title="Activity Per Area"
             subtitle="Learn which areas are seeing the most amount of traffic"
-            hasData={hasData} //{ /*&& sum(data.datasets[0].data) > 0 */}
+            hasData={hasData}
             loadingSpinner={loadingspinner}
         >
             <Radar data={data} options={options} />

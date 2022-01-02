@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect, useContext } from "react";
 import { Divider, makeStyles } from "@material-ui/core";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { SettingsWrapper } from "../SettingsWrapper";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
@@ -43,7 +43,7 @@ export const ChangeCompanyName = () => {
 
     return (
         <SettingsWrapper>
-            <AreaConfigurationHeader title="Change your company name" subtitle="Update your company name. This is used in the response email and pdf sent to customers." />
+            <HeaderStrip title="Change your company name" subtitle="Update your company name. This is used in the response email and pdf sent to customers." />
             <Divider />
             <SettingsGridRowText
                 fullWidth

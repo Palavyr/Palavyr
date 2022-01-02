@@ -31,8 +31,8 @@ export const EmailHelp = () => {
                 </p>
                 <span>
                     <h4>Fallback Email</h4>
-                    <p>You have the option to specify an area specific fallback email in cases where your Palavyr ends with a 'Too Complicated' conversation node. This email will be sent as is without any attachments.</p>
-                    <p>If you have opted to not send an area specific email, then the default fallback email will be used, so be sure to set this email in the general settings.</p>
+                    <p>You have the option to specify an intent specific fallback email in cases where your Palavyr ends with a 'Too Complicated' conversation node. This email will be sent as is without any attachments.</p>
+                    <p>If you have opted to not send an intent specific email, then the default fallback email will be used, so be sure to set this email in the general settings.</p>
                 </span>
             </HelpDetails>
         </>

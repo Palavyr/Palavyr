@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { List, ListItem, ListItemIcon, ListItemText, Drawer, withStyles, IconButton, Typography, withWidth, isWidthUp, Toolbar, useTheme, makeStyles, Button } from "@material-ui/core";
+import { List, ListItem, ListItemIcon, Drawer, IconButton, Typography, withWidth, isWidthUp, Toolbar, useTheme, makeStyles, Button } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import { IHaveWidth } from "@Palavyr-Types";
 import { DrawerProps } from "@material-ui/core";

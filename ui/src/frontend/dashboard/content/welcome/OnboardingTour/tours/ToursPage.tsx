@@ -1,4 +1,4 @@
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { EDITOR_TOUR_COOKIE_NAME, WELCOME_TOUR_COOKIE_NAME } from "@constants";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import React, { useContext } from "react";
@@ -35,9 +35,15 @@ export const ToursPage = () => {
 
     return (
         <>
-            <AreaConfigurationHeader divider title="Palavyr Product Tours" subtitle="Click any of the following tours to restart the product tours." />
-            <QuickStartCard title="Welcome Tour" content="This tour will cover the basic navigation components of Palavyr, such as the sections in the side bar navigator." onClick={enableGettingStartedTour} />
-            <QuickStartCard title="Area Editor Tour" content="This tour will cover basic navigation of the Area Editor." onClick={enableAreaEditorTour} />
+            <HeaderStrip divider title="Palavyr Product Tours" subtitle="Click any of the following tours to restart the product tours." />
+            <div style={{ marginTop: "3rem" }}>
+                <QuickStartCard
+                    title="Welcome Tour"
+                    content="This tour will cover the basics of Palavyr."
+                    onClick={enableGettingStartedTour}
+                />
+                <QuickStartCard title="Intent Editor Tour" content="This tour will cover basics of the Intent Editor." onClick={enableAreaEditorTour} />
+            </div>
         </>
     );
 };

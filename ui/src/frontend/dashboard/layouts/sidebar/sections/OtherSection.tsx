@@ -2,10 +2,10 @@ import React, { memo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { List, Collapse, makeStyles } from "@material-ui/core";
 import Auth from "@auth/Auth";
-import SettingsIcon from "@material-ui/icons/Settings";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import { GeneralSettingsLoc } from "@Palavyr-Types";
+// import SettingsIcon from "@material-ui/icons/Settings";
+// import { GeneralSettingsLoc } from "@Palavyr-Types";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import { DashboardContext } from "../../DashboardContext";
 import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
@@ -36,10 +36,10 @@ export const OtherSection = memo(({ isActive, menuOpen }: OtherSectionProps) => 
         history.push("/dashboard/welcome");
     };
 
-    const generalSettingsOnClick = () => {
-        setViewName("General Settings");
-        history.push(`/dashboard/settings/email?tab=${GeneralSettingsLoc.email}`);
-    };
+    // const generalSettingsOnClick = () => {
+    //     setViewName("General Settings");
+    //     history.push(`/dashboard/settings/email?tab=${GeneralSettingsLoc.email}`);
+    // };
 
     const getWidgetOnClick = () => {
         setViewName("Get Widget");
@@ -57,7 +57,7 @@ export const OtherSection = memo(({ isActive, menuOpen }: OtherSectionProps) => 
         <List>
             <SidebarSectionHeader menuOpen={menuOpen} className={"other-sidebar-tour"} title="Other" onClick={() => setOtherOpen(!otherOpen)} currentState={otherOpen} />
             <Collapse in={otherOpen} timeout="auto" unmountOnExit>
-                <SidebarLinkItem
+                {/* <SidebarLinkItem
                     toolTipText=" General Settings"
                     menuOpen={menuOpen}
                     className={"settings-sidebar-tour"}
@@ -65,7 +65,7 @@ export const OtherSection = memo(({ isActive, menuOpen }: OtherSectionProps) => 
                     isActive={isActive}
                     onClick={generalSettingsOnClick}
                     IconComponent={<SettingsIcon className={cls.icon} />}
-                />
+                /> */}
                 <SidebarLinkItem
                     toolTipText="How To Get The Widget"
                     menuOpen={menuOpen}

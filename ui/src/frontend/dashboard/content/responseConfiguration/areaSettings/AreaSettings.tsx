@@ -6,7 +6,7 @@ import { AlertDetails, Settings } from "@Palavyr-Types";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
 import classNames from "classnames";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { OsTypeToggle } from "./enableAreas/OsTypeToggle";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
@@ -143,7 +143,7 @@ export const AreaSettings = () => {
     // I'll refactor this later. . .
     return loaded ? (
         <>
-            <AreaConfigurationHeader title="Area Settings" subtitle={`Modify settings that are specific to this area (${settings.areaName}).`} />
+            <HeaderStrip title="Area Settings" subtitle={`Modify settings that are specific to this area (${settings.areaName}).`} />
             {isEnabledState !== null && <OsTypeToggle controlledState={isEnabledState} onChange={onAreaEnabledToggleChange} enabledLabel="Area Enabled" disabledLabel="Area Disabled" />}
 
             <Grid container spacing={3} justify="center">

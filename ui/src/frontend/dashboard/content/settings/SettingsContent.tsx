@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
-import { areaTabProps, PanelRange } from "@common/ContentUtils";
+import { intentTabProps, PanelRange } from "@common/ContentUtils";
 import { makeStyles } from "@material-ui/core";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
@@ -85,14 +85,14 @@ const SettingsContentInner = ({ setLoaded, children }: ISettingsContentInner) =>
         <div className={cls.root}>
             <AppBar position="static" className={cls.appbar}>
                 <Tabs centered value={tab} aria-label="simple tabs">
-                    <Tab onClick={() => sendTo(GeneralSettingsLoc.email)} className={cls.tabtext} icon={<MailOutlineIcon className={cls.icon} />} label="Email Address" {...areaTabProps(0)} />
-                    <Tab onClick={() => sendTo(GeneralSettingsLoc.companyName)} className={cls.tabtext} icon={<PermIdentityIcon className={cls.icon} />} label="Company Name" {...areaTabProps(1)} />
-                    <Tab onClick={() => sendTo(GeneralSettingsLoc.phoneNumber)} className={cls.tabtext} icon={<PhoneIcon className={cls.icon} />} label="Phone Number" {...areaTabProps(2)} />
-                    <Tab onClick={() => sendTo(GeneralSettingsLoc.companyLogo)} className={cls.tabtext} icon={<BrandingWatermarkIcon className={cls.icon} />} label="Company Logo" {...areaTabProps(3)} />
-                    <Tab onClick={() => sendTo(GeneralSettingsLoc.locale)} className={cls.tabtext} icon={<PublicIcon className={cls.icon} />} label="Locale" {...areaTabProps(4)} />
-                    <Tab onClick={() => sendTo(GeneralSettingsLoc.default_email_template)} className={cls.tabtext} icon={<SubjectIcon className={cls.icon} />} label="Fallback Email" {...areaTabProps(5)} />
-                    <Tab onClick={() => sendTo(GeneralSettingsLoc.deleteaccount)} className={cls.tabtext} icon={<DeleteSweepIcon className={cls.icon} />} label="Delete" {...areaTabProps(6)} />
-                    {accountTypeNeedsPassword && <Tab onClick={() => sendTo(GeneralSettingsLoc.password)} className={cls.passtabtext} icon={<LockOpenIcon className={cls.passicon} />} label="Password" {...areaTabProps(7)} />}
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.email)} className={cls.tabtext} icon={<MailOutlineIcon className={cls.icon} />} label="Email Address" {...intentTabProps(0)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.companyName)} className={cls.tabtext} icon={<PermIdentityIcon className={cls.icon} />} label="Company Name" {...intentTabProps(1)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.phoneNumber)} className={cls.tabtext} icon={<PhoneIcon className={cls.icon} />} label="Phone Number" {...intentTabProps(2)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.companyLogo)} className={cls.tabtext} icon={<BrandingWatermarkIcon className={cls.icon} />} label="Company Logo" {...intentTabProps(3)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.locale)} className={cls.tabtext} icon={<PublicIcon className={cls.icon} />} label="Locale" {...intentTabProps(4)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.default_email_template)} className={cls.tabtext} icon={<SubjectIcon className={cls.icon} />} label="Fallback Email" {...intentTabProps(5)} />
+                    <Tab onClick={() => sendTo(GeneralSettingsLoc.deleteaccount)} className={cls.tabtext} icon={<DeleteSweepIcon className={cls.icon} />} label="Delete" {...intentTabProps(6)} />
+                    {accountTypeNeedsPassword && <Tab onClick={() => sendTo(GeneralSettingsLoc.password)} className={cls.passtabtext} icon={<LockOpenIcon className={cls.passicon} />} label="Password" {...intentTabProps(7)} />}
                 </Tabs>
             </AppBar>
             <Align>{children}</Align>

@@ -21,7 +21,7 @@ export const TabPanel = ({ value, index, children }: ITabPanel) => {
     );
 };
 
-export const areaTabProps = (index: PanelRange) => {
+export const intentTabProps = (index: PanelRange) => {
     return {
         id: `simple-tab-${index}`,
         "aria-controls": `simple-tabpanel-${index}`,

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { makeStyles, Grid } from "@material-ui/core";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { DailyEnquiriesWeekly } from "../DailyEnquiriesWeekly";
@@ -64,9 +64,8 @@ export const ActivityDashboardPage = () => {
 
     return (
         <div className={cls.root}>
-            <AreaConfigurationHeader
+            <HeaderStrip
                 divider
-                light
                 title="Widget Activity Dashboard"
                 subtitle="Review the activity of your chatbot! This page is early release, but we've made a couple plots availble as a sneak peak for you!"
             />

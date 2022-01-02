@@ -13,7 +13,7 @@ export const ChatDemoHeader = () => {
     return (
         <>
             <PalavyrText gutterBottom align="center" variant="h4" className={cls.customizetext}>
-                Try out your widget
+                Test your chat bot!
             </PalavyrText>
         </>
     );

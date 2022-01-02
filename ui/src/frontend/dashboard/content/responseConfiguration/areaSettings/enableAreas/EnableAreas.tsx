@@ -1,4 +1,4 @@
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@material-ui/core";
@@ -59,7 +59,7 @@ export const EnableAreas = () => {
 
     return (
         <>
-            <AreaConfigurationHeader
+            <HeaderStrip
                 title="Enable or disable your Areas"
                 subtitle="Use these toggles to enable or disable your configured areas. If an area is disabled, it will not appear in your chat widget."
             />

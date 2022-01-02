@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { FileLink } from "@Palavyr-Types";
 import { makeStyles, Paper } from "@material-ui/core";
 import { useParams } from "react-router-dom";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { Align } from "@common/positioning/Align";
@@ -47,7 +47,7 @@ export const ConfigurationPreview = () => {
 
     return (
         <>
-            <AreaConfigurationHeader title="Response PDF Preview" subtitle="Preview the response PDF that will be produced for this area." />
+            <HeaderStrip title="Response PDF Preview" subtitle="Preview the response PDF that will be produced for this intent." />
             <Align>
                 <div className={cls.buttonWrap}>
                     <SinglePurposeButton size="large" buttonText="Reload" variant="contained" color="primary" onClick={() => reload()} />

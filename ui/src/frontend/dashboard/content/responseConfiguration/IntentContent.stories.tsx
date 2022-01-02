@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { Meta } from '@storybook/react/types-6-0';
-import { AreaContent, IAreaContent } from './AreaContent';
+import { IntentContent, IntentContentProps } from './IntentContent';
 
 
 export default {
     title: "Dashboard/AreaContent",
-    component: AreaContent
+    component: IntentContent
 } as Meta;
 
 
-const Template = (args: IAreaContent) => <AreaContent {...args} />;
+const Template = (args: IntentContentProps) => <IntentContent {...args} />;
 export const Primary = Template.bind({});
 Primary.args = {
     areaIdentifier: "abc-123",

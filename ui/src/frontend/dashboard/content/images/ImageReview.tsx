@@ -2,7 +2,7 @@ import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { CircularProgress, Grid, makeStyles, Table, TableContainer } from "@material-ui/core";
 import { FileLink } from "@Palavyr-Types";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { ImageRecordTableHeader } from "./ImageRecordTableHeader";
 import { ImageRecordTableBody } from "./ImageRecordTableBody";
 import { ImageReviewUpload } from "./ImageReviewUpload";
@@ -48,7 +48,7 @@ export const ImageReview = () => {
     return (
         <div style={{ marginBottom: "5rem" }}>
             <div>
-                <AreaConfigurationHeader title="Review the images you've uploaded" subtitle="Add or remove stored images. These are accessible within the Palavy designer." />
+                <HeaderStrip title="Review the images you've uploaded" subtitle="Add or remove stored images. These are accessible within the Palavy designer." />
             </div>
             <ImageReviewUpload setImageRecords={setImageRecords} numImages={imageRecords === undefined || imageRecords === null ? 1 : imageRecords.length} />
             <Grid container style={{ width: "100%" }}>
@@ -61,7 +61,7 @@ export const ImageReview = () => {
                     </TableContainer>
                 </Grid>
                 <Grid item xs={6}>
-                    {!currentPreview && <AreaConfigurationHeader title="No preview selected" />}
+                    {!currentPreview && <HeaderStrip title="No preview selected" />}
                     {showSpinner && (
                         <Align>
                             <CircularProgress style={{ padding: ".5rem", margin: "1rem" }} />

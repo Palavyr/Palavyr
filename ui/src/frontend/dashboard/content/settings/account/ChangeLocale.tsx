@@ -3,7 +3,7 @@ import { Divider, makeStyles, MenuItem, Typography } from "@material-ui/core";
 import { SettingsGridRowList } from "@common/components/SettingsGridRowList";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { LocaleMap, LocaleResource } from "@Palavyr-Types";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { SettingsWrapper } from "../SettingsWrapper";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
@@ -68,7 +68,7 @@ export const ChangeLocale = () => {
         <>
             {localeMap && (
                 <SettingsWrapper>
-                    <AreaConfigurationHeader title="Change your locale" subtitle="The locale affects the currency symbol used." />
+                    <HeaderStrip title="Change your locale" subtitle="The locale affects the currency symbol used." />
                     <Divider />
                     <SettingsGridRowList
                         onChange={handleLocaleChange}

@@ -7,7 +7,7 @@ import { ExpandableTextBox } from "@common/components/ExpandableTextBox";
 import { DynamicTableConfiguration } from "./tables/dynamicTable/DynamicTableConfiguration";
 import { StaticTableConfiguration } from "./tables/statictable/StaticFeeTableConfiguration";
 import { useParams } from "react-router-dom";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { OsTypeToggle } from "../areaSettings/enableAreas/OsTypeToggle";
 import { useContext } from "react";
@@ -123,13 +123,13 @@ export const ResponseConfiguration = () => {
 
     return (
         <>
-            <AreaConfigurationHeader title="Your Response PDF" subtitle="Use this editor to configure the fee tables, as well as associated information, that will be sent in the response PDF for this area." />
+            <HeaderStrip title="Your Response PDF" subtitle="Use this editor to configure the fee tables, as well as associated information, that will be sent in the response PDF for this intent." />
             {sendPdfWithResponse !== null && (
                 <OsTypeToggle controlledState={sendPdfWithResponse} onChange={onToggleSendPdfWithResponse} enabledLabel="Send response Pdf with email" disabledLabel="Do not send response Pdf with email" />
             )}
 
             <ExpandableTextBox title="Introductory statement" updatableValue={prologue} onChange={updatePrologue} onSave={savePrologue}>
-                <AreaConfigurationHeader
+                <HeaderStrip
                     divider
                     light
                     title="Create an introduction for your response PDF"
@@ -138,7 +138,7 @@ export const ResponseConfiguration = () => {
             </ExpandableTextBox>
 
             <DynamicTableConfiguration title="Pricing Strategies" areaIdentifier={areaIdentifier}>
-                <AreaConfigurationHeader
+                <HeaderStrip
                     divider
                     light
                     title="Configure a dynamic pricing strategy"
@@ -147,7 +147,7 @@ export const ResponseConfiguration = () => {
             </DynamicTableConfiguration>
 
             <StaticTableConfiguration areaIdentifier={areaIdentifier} title="Static Fees" staticTables={staticTables} tableSaver={tableSaver} tableCanceler={tableCanceler} modifier={staticTablesModifier}>
-                <AreaConfigurationHeader
+                <HeaderStrip
                     divider
                     light
                     title="Configure a static fee table"
@@ -156,7 +156,7 @@ export const ResponseConfiguration = () => {
             </StaticTableConfiguration>
 
             <ExpandableTextBox title="Ending statement" updatableValue={epilogue} onChange={updateEpilogue} onSave={saveEpilogue}>
-                <AreaConfigurationHeader
+                <HeaderStrip
                     divider
                     light
                     title="Create an ending statement for your response PDF"

@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { makeStyles } from "@material-ui/core";
 import { VariableDetail } from "@Palavyr-Types";
 import { EmailConfigurationComponent } from "frontend/dashboard/content/responseConfiguration/uploadable/emailTemplates/EmailConfigurationComponent";
@@ -33,7 +33,7 @@ export const DefaultEmailTemplate = () => {
     return (
         <div className={cls.root}>
             <Align>
-                <AreaConfigurationHeader title="Default Email Response" subtitle="Use this editor to create an HTML email template that will be sent as the email response for this area." />
+                <HeaderStrip title="Default Email Response" subtitle="Use this editor to create an HTML email template that will be sent as the email response for this intent." />
             </Align>
             {variableDetails && (
                 <EmailConfigurationComponent

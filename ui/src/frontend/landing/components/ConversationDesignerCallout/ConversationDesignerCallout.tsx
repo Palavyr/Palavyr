@@ -1,4 +1,4 @@
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { ZoomImage } from "@common/components/borrowed/ZoomImage";
 import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 import { makeStyles } from "@material-ui/core";

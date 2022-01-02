@@ -47,7 +47,7 @@ export const Post1 = (
         <TitleCopy>Configurable Email Responses</TitleCopy>
         <BlogCopy>
             There are few experiences online that are more frustrating than interacting with a chatbot that does. basically. nothing. Engagement shouldn't end with users finishing a chat and then deciding to
-            scoot off to another website. When you use Palavyr, you also get the ability to send follow up emails. These emails can cary a lot of punch. Not only can you send a unique email for each chat area
+            scoot off to another website. When you use Palavyr, you also get the ability to send follow up emails. These emails can cary a lot of punch. Not only can you send a unique email for each chat intent
             you configure, you can also send attachments with cost estimates.
         </BlogCopy>
         <BlogCopy>

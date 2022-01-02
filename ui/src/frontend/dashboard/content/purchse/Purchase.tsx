@@ -12,7 +12,7 @@ import { SubscribeStepper } from "./SubscribeStepper";
 import { FrequencyCard } from "./FrequencyCard";
 import { sortByPropertyAlphabetical } from "@common/utils/sorting";
 import { DividerWithText } from "@common/components/DividerWithText";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { Align } from "@common/positioning/Align";
 import { SpaceEvenly } from "@common/positioning/SpaceEvenly";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
@@ -93,7 +93,7 @@ const PurchaseInner = () => {
     return (
         <div className={cls.container}>
             {productId !== null && productId !== "null" ? (
-                <AreaConfigurationHeader title="Billing Frequency" subtitle="Select your preferred billing frequency. This will take to an external website (Stripe.com) for your purchase." />
+                <HeaderStrip title="Billing Frequency" subtitle="Select your preferred billing frequency. This will take to an external website (Stripe.com) for your purchase." />
             ) : (
                 <></>
             )}

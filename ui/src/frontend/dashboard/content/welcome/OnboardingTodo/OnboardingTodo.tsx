@@ -3,7 +3,7 @@ import { makeStyles, Typography } from "@material-ui/core";
 import { TodosAsBoolean } from "@Palavyr-Types";
 import { SpaceEvenly } from "@common/positioning/SpaceEvenly";
 import { TodoCard } from "./TodoCard";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 
 const useStyles = makeStyles((theme) => ({
     list: {
@@ -32,7 +32,7 @@ export const OnboardingTodo = ({ todos }: OnboardingTodoProps) => {
 
     return (
         <>
-            <AreaConfigurationHeader title="Quick Start To Do List" subtitle="Don't forget to set these important settings" />
+            <HeaderStrip title="Quick Start To Do List" subtitle="Don't forget to set these important settings" />
             <div className={cls.sectionDiv}>
                 <SpaceEvenly vertical center>
                     {!todos?.isVerified && (

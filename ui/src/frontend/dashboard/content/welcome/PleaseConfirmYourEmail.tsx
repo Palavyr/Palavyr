@@ -6,7 +6,7 @@ import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircul
 import { useContext, useState } from "react";
 import auth from "@auth/Auth";
 import { SessionStorage } from "@localStorage/sessionStorage";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { Align } from "@common/positioning/Align";
 import { isNullOrUndefinedOrWhitespace } from "@common/utils";
 import { PalavyrSnackbar } from "@common/components/PalavyrSnackbar";
@@ -96,7 +96,7 @@ export const PleaseConfirmYourEmail = () => {
         <>
             <div className={classNames(cls.contentRoot, cls.centerText)}>
                 <div style={{ width: "100%" }}>
-                    <AreaConfigurationHeader title="Confirm your email" subtitle={`Please provide the access token emailed to: ${emailAddress}`} />
+                    <HeaderStrip title="Confirm your email" subtitle={`Please provide the access token emailed to: ${emailAddress}`} />
                     <Align>
                         <Card className={cls.card}>
                             <FormControl fullWidth className={cls.margin} variant="outlined">

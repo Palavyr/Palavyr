@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect, useContext } from "react";
 import { Divider } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { Settings, VariableDetail } from "@Palavyr-Types";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { OsTypeToggle } from "../../areaSettings/enableAreas/OsTypeToggle";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 import { EmailConfigurationComponent } from "./EmailConfigurationComponent";
@@ -54,9 +54,9 @@ export const EmailConfiguration = () => {
 
     return (
         <>
-            <AreaConfigurationHeader title="Email Response" subtitle="Use this editor to create an HTML email template that will be sent as the email response for this area." />
+            <HeaderStrip title="Email Response" subtitle="Use this editor to create an HTML email template that will be sent as the email response for this intent." />
             {useAreaFallbackEmail !== null && (
-                <OsTypeToggle controlledState={useAreaFallbackEmail} onChange={onUseAreaFallbackEmailToggle} enabledLabel="Use Area Fallback Email" disabledLabel="Use General Fallback Email" />
+                <OsTypeToggle controlledState={useAreaFallbackEmail} onChange={onUseAreaFallbackEmailToggle} enabledLabel="Use Intent Fallback Email" disabledLabel="Use General Fallback Email" />
             )}
             {variableDetails && (
                 <EmailConfigurationComponent
@@ -70,7 +70,7 @@ export const EmailConfiguration = () => {
             <Divider />
             {useAreaFallbackEmail && (
                 <>
-                    <AreaConfigurationHeader
+                    <HeaderStrip
                         title="Fallback Email Response"
                         subtitle="Use this editor to create a fallback email response that is specific to this area. For example, this email is sent if a 'Too Complicated' node is encountered during the chat."
                     />

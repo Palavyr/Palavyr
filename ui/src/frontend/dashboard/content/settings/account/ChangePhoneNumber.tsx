@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect, useContext } from "react";
 import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { Divider, makeStyles } from "@material-ui/core";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { SettingsWrapper } from "../SettingsWrapper";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
@@ -44,7 +44,7 @@ export const ChangePhoneNumber = () => {
 
     return (
         <SettingsWrapper>
-            <AreaConfigurationHeader
+            <HeaderStrip
                 title="Change your Primary Phone Number"
                 subtitle="Update your primary phone number. This is the primary contact phone number provided in the response email and pdf sent to customers."
             />

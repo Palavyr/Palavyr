@@ -17,14 +17,14 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export interface ConfigureSectionProps {
+export interface IntentsSectionProps {
     isActive: boolean;
     currentPage: string;
     areaNameDetails: AreaNameDetails;
     menuOpen: boolean;
 }
 
-export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails, menuOpen }: ConfigureSectionProps) => {
+export const IntentsSection = memo(({ isActive, currentPage, areaNameDetails, menuOpen }: IntentsSectionProps) => {
     const [configureOpen, setConfigureOpen] = useState<boolean>(true);
     const { checkAreaCount, planTypeMeta, repository } = React.useContext(DashboardContext);
 
@@ -42,7 +42,7 @@ export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails, 
 
     return (
         <List className={classNames("configure-tour")}>
-            <SidebarSectionHeader menuOpen={menuOpen} title="Configure" onClick={() => setConfigureOpen(!configureOpen)} currentState={configureOpen} />
+            <SidebarSectionHeader menuOpen={menuOpen} title="Intents" onClick={() => setConfigureOpen(!configureOpen)} currentState={configureOpen} />
             <SidebarLinkItem
                 toolTipText="Introduction Sequence"
                 menuOpen={menuOpen}
@@ -53,19 +53,19 @@ export const ConfigureSection = memo(({ isActive, currentPage, areaNameDetails, 
                 IconComponent={<InsertEmoticonIcon className={cls.icon} />}
             />
             <SidebarLinkItem
-                toolTipText="Add New Area"
+                toolTipText="Add New Intent"
                 menuOpen={menuOpen}
                 className={"add-new-area-tour"}
-                text="Add New Area"
+                text="Add New Intent"
                 isActive={isActive}
                 onClick={checkAreaCount}
                 IconComponent={<AddCircleOutlineIcon className={cls.icon} />}
             />
             <SidebarLinkItem
-                toolTipText="Enable / Disable Areas"
+                toolTipText="Enable / Disable Intents"
                 menuOpen={menuOpen}
                 className={"enable-disable-area-tour"}
-                text="Enable / Disable Areas"
+                text="Enable / Disable Intents"
                 isActive={isActive}
                 onClick={enableAreasOnClick}
                 IconComponent={<PowerSettingsNewIcon className={cls.icon} />}

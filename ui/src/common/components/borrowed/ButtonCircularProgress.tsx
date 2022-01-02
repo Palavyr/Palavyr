@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { CircularProgress, Box, makeStyles } from "@material-ui/core";
 
 

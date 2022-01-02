@@ -4,7 +4,7 @@ import { SettingsGridRowText } from "@common/components/SettingsGridRowText";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { AlertDetails } from "@Palavyr-Types";
 import { CustomAlert } from "@common/components/customAlert/CutomAlert";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { SettingsWrapper } from "../SettingsWrapper";
 import { DashboardContext } from "frontend/dashboard/layouts/DashboardContext";
 
@@ -77,7 +77,7 @@ export const ChangeEmail = () => {
     return (
         <>
             <SettingsWrapper>
-                <AreaConfigurationHeader title="Primary Email" subtitle="Change the primary email address used to send emails to your customers. This is also the email address used for billing." />
+                <HeaderStrip title="Primary Email" subtitle="Change the primary email address used to send emails to your customers. This is also the email address used for billing." />
                 <Divider />
                 <SettingsGridRowText
                     fullWidth
@@ -89,7 +89,7 @@ export const ChangeEmail = () => {
                                 <>
                                     <Typography variant="body1" gutterBottom>
                                         Your primary email address has already been verified. This address will be used as the 'From' address when sending email responses from your widget, unless you specify a
-                                        different email in the area settings.
+                                        different email in the intent settings.
                                     </Typography>
                                     <Typography paragraph variant="body1">
                                         You can submit a new email to be used for responses at any time. This requires responding to a verification email being sent to your email address by Amazon Web Services.

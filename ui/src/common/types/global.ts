@@ -975,53 +975,6 @@ export type BlogPostRouteMeta = BlogPostRecord & {
     params: string;
 };
 
-/////////////////////////////////////////////////////////////
-////////////// WIDGET DIRECT COPY FOR NOW ////////////////////
-// export type SelectedOption = {
-//     areaDisplay: string;
-//     areaId: string;
-// };
-
-// export interface IMessage extends BaseMessage {
-//     text: string;
-// }
-
-// export interface Link extends BaseMessage {
-//     title: string;
-//     link: string;
-//     target: string;
-// }
-
-// export interface LinkParams {
-//     link: string;
-//     title: string;
-//     target?: string;
-// }
-
-// export interface CustomCompMessage extends BaseMessage {
-//     props: any;
-// }
-
-// export type Registry = {
-//     [key: string]: any;
-// };
-
-// export type WidgetNodeResource = {
-//     areaIdentifier: string;
-//     nodeId: string;
-//     text: string;
-//     nodeType: string;
-//     nodeChildrenString: string;
-//     isRoot: boolean;
-//     isCritical: boolean;
-//     optionPath: string | null;
-//     valueOptions: string; // needs to be split by ","
-//     nodeComponentType: string;
-//     isDynamicTableNode: boolean;
-//     dynamicType: string | null;
-//     resolveOrder: number | null;
-// };
-
 ////////////////// Widget
 
 export type SecretKey = string | null;

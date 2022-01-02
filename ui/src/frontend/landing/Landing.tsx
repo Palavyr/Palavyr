@@ -70,35 +70,10 @@ export const LandingPage = () => {
             TitleContent={<LangingPageTitleContent />}
             MainContent={
                 <>
-                    {/* <div className={cls.body}>
-                        <TwoItemRow dataList={rowOne} />
-                        <TwoItemRow dataList={rowTwo} />
-                        <TwoItemRow dataList={rowThree} />
-                    </div> */}
-                    {/* <GreenStrip /> */}
-                    {/* <div className={cls.strip} style={{ backgroundColor: theme.palette.primary.main, color: theme.palette.common.white }}>
-                        <Typography gutterBottom align="center" variant="h2">
-                            Elegant
-                        </Typography>
-                        <br></br>
-                        <Typography variant="h5" gutterBottom align="center">
-                            Palavyr is a no-code chat bot building platform used to build chatbots that say what you want them to say.
-                        </Typography>
-                        <LineSpacer numLines={1} />
-                        <Typography variant="h5" gutterBottom align="center">
-                            You craft the chats, configure your pricing strategies, and stylize the widget (which is embedded into your website).
-                        </Typography>
-                    </div>
-                    <GreenStrip /> */}
                     <ComponentLandingSpotlight text="Elegent and Classic">
-                        {/* <div className={cls.strip} style={{ backgroundColor: theme.palette.primary.light }}> */}
-                        {/* <Typography align="center" variant="h3" style={{ color: theme.palette.common.white }}>
-                                Try it out!
-                            </Typography> */}
                         <Align>
                             <IFrame widgetUrl={widgetUrl} apiKey={landingWidgetApiKey} iframeRefreshed={true} preCheckErrors={[]} demo={false} shadow={true} />
                         </Align>
-                        {/* </div>   */}
                     </ComponentLandingSpotlight>
                     <GreenStrip />
 

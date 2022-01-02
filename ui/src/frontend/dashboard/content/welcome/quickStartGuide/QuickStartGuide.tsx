@@ -7,7 +7,7 @@ import { TodosAsBoolean } from "@Palavyr-Types";
 import { allClear, convertTodos } from "../OnboardingTodo/onboardingUtils";
 import { SessionStorage } from "@localStorage/sessionStorage";
 import { CacheIds } from "@api-client/FrontendAxiosClient";
-import { AreaConfigurationHeader } from "@common/components/AreaConfigurationHeader";
+import { HeaderStrip } from "@common/components/HeaderStrip";
 import { QuickStartCard } from "./QuickStartCard";
 import { useHistory } from "react-router-dom";
 
@@ -95,7 +95,7 @@ export const QuickStartGuide = () => {
         <>
             {todos && !allClear(todos) && <OnboardingTodo todos={todos} />}
             <Divider />
-            <AreaConfigurationHeader divider title="Quick Start Guide" subtitle="Follow the steps to learn about how Palavyr works and what you should do to get started." />
+            <HeaderStrip divider title="Quick Start Guide" subtitle="Follow the steps to learn about how Palavyr works and what you should do to get started." />
             <div style={{ height: "2rem" }} />
             <QuickStartCard
                 rowNumber={1}
@@ -103,7 +103,7 @@ export const QuickStartGuide = () => {
                 content="Each intent that shows up in the chatbot is created individually. When you create intents for your chatbot, consider how your business is modelled and how your customers are likely to interact with it."
                 onClick={checkAreaCount}
             />
-            <QuickStartCard rowNumber={2} title="Configure your new intent" content="In your intent configuration, simply follow the tabs in the order they are provided (from left to right)." />
+            <QuickStartCard rowNumber={2} title="Configure your new intent" content="In your intent configuration, simply follow the tabs from left to right." />
             <QuickStartCard
                 rowNumber={3}
                 title="Add the widget to your site"

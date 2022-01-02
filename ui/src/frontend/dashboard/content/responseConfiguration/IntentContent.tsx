@@ -1,4 +1,4 @@
-import { PanelRange, areaTabProps } from "@common/ContentUtils";
+import { PanelRange, intentTabProps } from "@common/ContentUtils";
 import React, { useState, useEffect } from "react";
 import { AppBar, Tabs, Tab, makeStyles, Tooltip } from "@material-ui/core";
 import { useHistory, useParams } from "react-router-dom";
@@ -16,11 +16,11 @@ import classNames from "classnames";
 import Cookies from "js-cookie";
 import { EDITOR_TOUR_COOKIE_NAME } from "@constants";
 
-export interface IAreaContent {
+export interface IntentContentProps {
     children: JSX.Element[] | JSX.Element;
 }
 
-export interface IAreaContentInner extends IAreaContent {
+export interface IntentContentInnerProps extends IntentContentProps {
     setLoaded: SetState<boolean>;
 }
 
@@ -38,12 +38,12 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const AreaContent = ({ children }: IAreaContent) => {
+export const IntentContent = ({ children }: IntentContentProps) => {
     const [, setLoaded] = useState<boolean>(false);
-    return <AreaContentInner setLoaded={setLoaded} children={children} />;
+    return <IntentContentInner setLoaded={setLoaded} children={children} />;
 };
 
-export const AreaContentInner = ({ setLoaded, children }: IAreaContentInner) => {
+export const IntentContentInner = ({ setLoaded, children }: IntentContentInnerProps) => {
     const history = useHistory();
     const cls = useStyles();
 
@@ -134,7 +134,7 @@ export const AreaContentInner = ({ setLoaded, children }: IAreaContentInner) => 
                                         return loz;
                                     }}
                                     icon={tab.icon}
-                                    {...areaTabProps(index as PanelRange)}
+                                    {...intentTabProps(index as PanelRange)}
                                 />
                             </Tooltip>
                         );

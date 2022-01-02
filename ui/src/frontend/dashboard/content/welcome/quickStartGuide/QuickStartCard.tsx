@@ -28,17 +28,18 @@ const useStyles = makeStyles(theme => ({
         },
     },
     rowNumber: {
-        fontSize: "28pt",
+        fontSize: "24pt",
         fontWeight: "bolder",
         fontFamily: "Poppins",
         textAlign: "center",
         display: "flex",
+        flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
         position: "relative",
         top: "1rem",
-        left: "1rem",
-        width: "2rem",
+        left: ".5rem",
+        width: "7ch",
         height: "2rem",
         color: theme.palette.secondary.main,
     },
@@ -56,7 +57,7 @@ export const QuickStartCard = ({ title, content, onClick = () => null, rowNumber
     return (
         <div className={cls.sectionDiv}>
             <Card className={classNames(cls.card, cls.highlight, cls.clickable)} onClick={() => onClick()}>
-                {rowNumber && <div className={cls.rowNumber}>{rowNumber}</div>}
+                {rowNumber && <div className={cls.rowNumber}>Step{" "}{rowNumber}</div>}
                 <div style={{ padding: "3rem", paddingTop: "1rem", paddingLeft: "4rem" }}>
                     <Typography align="center" gutterBottom variant="h4">
                         {title}
