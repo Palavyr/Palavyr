@@ -239,7 +239,7 @@ export const AreaSettings = () => {
             </Grid>
             {alertState && <CustomAlert setAlert={setAlertState} alertState={alertState} alert={alertDetails} />}
             <Dialog PaperProps={{ style: { margin: "2rem", padding: "2rem" } }} style={{ margin: "2rem", padding: "2rem" }} open={dialogOpen} onClose={() => setDialogOpen(false)}>
-                <Typography variant="h4">Are you sure you want to delete this area??</Typography>
+                <Typography variant="h4">Are you sure you want to delete this intent??</Typography>
                 <Button className={cls.buttonHover} onClick={handleAreaDelete}>
                     PERMANENTLY DELETE
                 </Button>

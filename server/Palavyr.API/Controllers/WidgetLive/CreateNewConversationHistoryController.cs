@@ -63,9 +63,7 @@ namespace Palavyr.API.Controllers.WidgetLive
             }
 
             await convoRepository.CreateNewConversationRecord(newConversationRecord);
-
             await convoRepository.CommitChangesAsync();
-            await configurationRepository.CommitChangesAsync();
 
             return newConvo;
         }

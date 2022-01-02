@@ -17,10 +17,10 @@ namespace Palavyr.Core.Repositories
         Task<List<ConversationNode>> GetAreaConversationNodes(string areaId);
         Task<List<ConversationNode>> UpdateConversation(string areaId, List<ConversationNode> convoUpdate);
         Task<ConversationNode> UpdateConversationNodeText(string areaId, string nodeId, string nodeTextUpdate);
+        Task<List<ConversationNode>> UpdateConversationNode(string areaId, string nodeId, ConversationNode newNode);
 
         Task<Area> GetAreaWithConversationNodes(string areaId);
         Task RemoveConversationNodeById(string nodeId);
-        Task<List<ConversationNode>> UpdateConversationNode(string areaId, string nodeId, ConversationNode newNode);
         void RemoveNodeRangeByIds(List<string> nodeIds);
         Task<Area> GetAreaComplete(string areaId);
         Task<List<StaticTablesMeta>> GetStaticTables(string areaId);

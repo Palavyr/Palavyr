@@ -1,7 +1,6 @@
 #nullable enable
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -164,14 +163,12 @@ namespace Palavyr.Core.Repositories
             await dashContext.ConversationNodes.AddRangeAsync(update, cancellationTokenTransport.CancellationToken);
             await dashContext.SaveChangesAsync(cancellationTokenTransport.CancellationToken);
             return update.ToArray();
-
         }
 
         public async Task<ConversationNode[]> GetIntroductionSequence(string introId)
         {
             var currentIntroduction = await dashContext.ConversationNodes.Where(x => x.AreaIdentifier == introId).ToArrayAsync(cancellationTokenTransport.CancellationToken);
             return currentIntroduction;
-
         }
 
         public async Task<List<ConversationNode>> UpdateConversation(string areaId, List<ConversationNode> convoUpdate)
