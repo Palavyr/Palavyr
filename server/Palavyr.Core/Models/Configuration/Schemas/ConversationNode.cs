@@ -33,7 +33,7 @@ namespace Palavyr.Core.Models.Configuration.Schemas
         public bool IsDynamicTableNode { get; set; }
         public bool IsMultiOptionEditable { get; set; }
         public bool IsImageNode { get; set; }
-        public string? ImageId { get; set; } // no extension on this
+        public string? ImageId { get; set; } // no extension on this (don't add .png)
 
         public string? OptionPath { get; set; }
         public string? ValueOptions { get; set; }

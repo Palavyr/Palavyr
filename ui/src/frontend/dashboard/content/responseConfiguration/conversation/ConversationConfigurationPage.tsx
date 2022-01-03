@@ -24,7 +24,7 @@ export const ConversationConfigurationPage = () => {
             const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
 
             const tracker = new ConversationHistoryTracker(setLinkedNodes, linkedNodeList, nodeTypeOptions);
-            const initialList = new PalavyrLinkedList(nodes, areaIdentifier, (treeUpdate: PalavyrLinkedList) => tracker.addConversationHistoryToQueue(treeUpdate), nodeTypeOptions, repository);
+            const initialList = new PalavyrLinkedList(nodes, areaIdentifier, (treeUpdate: PalavyrLinkedList) => tracker.addConversationHistoryToQueue(treeUpdate), nodeTypeOptions, repository, []);
             tracker.initializeConversation(initialList);
 
             setNodeTypeOptions(nodeTypeOptions);
@@ -51,7 +51,8 @@ export const ConversationConfigurationPage = () => {
                 areaIdentifier,
                 (treeUpdate: PalavyrLinkedList) => historyTracker.addConversationHistoryToQueue(treeUpdate),
                 nodeTypeOptions,
-                repository
+                repository,
+                [] // Yes this is tech debt. I"m sorry future Paul or whoever works on this next :/
             );
             historyTracker.addConversationHistoryToQueue(updatedLinkedList);
             return true;

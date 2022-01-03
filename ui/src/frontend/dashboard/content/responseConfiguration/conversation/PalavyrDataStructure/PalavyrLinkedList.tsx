@@ -7,7 +7,7 @@ import { LinkedListBucket } from "./LinkedListBucket";
 import { NodeConfigurer } from "../node/actions/NodeConfigurer";
 import { NodeCreator } from "../node/actions/NodeCreator";
 import { PalavyrNode } from "../node/PalavyrNode";
-import { Edge, ElementId, HandleType, Node as FlowNode, Position } from "react-flow-renderer";
+import { Edge, Node as FlowNode, Position } from "react-flow-renderer";
 
 export class PalavyrLinkedList implements IPalavyrLinkedList {
     private linkedListBucket: ILinkedListBucket = new LinkedListBucket();
@@ -19,12 +19,15 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     private configurer: NodeConfigurer = new NodeConfigurer();
     private nodeCreator: NodeCreator = new NodeCreator();
 
+    private sortableNodeTypes: string[];
+
     /**
      * List object for interacting with the list. This will have methods for performing insertions, deletions, additions, subtractions, etc
      */
-    constructor(nodeList: ConvoNode[], areaId: string, updateTree: (updatedTree: IPalavyrLinkedList) => void, nodeTypeOptions: NodeTypeOptions, repository: PalavyrRepository) {
+    constructor(nodeList: ConvoNode[], areaId: string, updateTree: (updatedTree: IPalavyrLinkedList) => void, nodeTypeOptions: NodeTypeOptions, repository: PalavyrRepository, sortableNodeTypes: string[]) {
         this.areaId = areaId;
         this.repository = repository;
+        this.sortableNodeTypes = sortableNodeTypes;
         this.head = this.getRootNode(nodeList);
         this.updateTree = updateTree;
         this.assembleDoubleLinkedMultiBranchLinkedList(nodeList, nodeTypeOptions);
@@ -98,7 +101,7 @@ export class PalavyrLinkedList implements IPalavyrLinkedList {
     }
 
     public convertToPalavyrNode(repository: PalavyrRepository, rawNode: ConvoNode, updateTree: (updatedTree: IPalavyrLinkedList) => void, leftMostBranch: boolean) {
-        return new PalavyrNode(this, repository, rawNode, updateTree, leftMostBranch);
+        return new PalavyrNode(this, repository, rawNode, updateTree, leftMostBranch, this.sortableNodeTypes);
     }
 
     compileToConvoNodes(): ConvoNode[] {

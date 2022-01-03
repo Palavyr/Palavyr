@@ -66,7 +66,18 @@ export class PalavyrNode implements IPalavyrNode {
     public isLoopbackStart: boolean;
     public loopbackContext: LoopbackContext;
 
-    constructor(containerList: IPalavyrLinkedList, repository: PalavyrRepository, node: ConvoNode, setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void, leftmostBranch: boolean) {
+    public sortableNodeTypes: string[];
+
+    constructor(
+        containerList: IPalavyrLinkedList,
+        repository: PalavyrRepository,
+        node: ConvoNode,
+        setTreeWithHistory: (updatedTree: IPalavyrLinkedList) => void,
+        leftmostBranch: boolean,
+        sortableNodeTypes: string[]
+    ) {
+        this.sortableNodeTypes = sortableNodeTypes;
+
         this.repository = repository;
         this.palavyrLinkedList = containerList;
 
@@ -112,7 +123,7 @@ export class PalavyrNode implements IPalavyrNode {
         } else {
             const currentText = this.userText;
             this.childNodeReferences.Clear();
-            this.parentNodeReferences.forEach((parentNode) => {
+            this.parentNodeReferences.forEach(parentNode => {
                 parentNode.childNodeReferences.removeReference(this);
                 this.nodeCreator.addDefaultChild([parentNode], this.optionPath, nodeTypeOptions, currentText);
                 parentNode.sortChildReferences();
@@ -142,7 +153,7 @@ export class PalavyrNode implements IPalavyrNode {
     }
 
     public sortChildReferences() {
-        if (!this.isPalavyrAnabranchStart && !this.isLoopbackAnchorType && this.nodeType !== "MultipleChoiceAsPath") {
+        if (this.sortableNodeTypes.includes(this.nodeType)) {
             this.childNodeReferences.OrderByOptionPath();
         }
     }

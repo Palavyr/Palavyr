@@ -24,7 +24,7 @@ export const IntroConversationConfigurationPage = () => {
         const nodeTypeOptions = await repository.Conversations.GetIntroNodeOptionsList();
 
         const tracker = new ConversationHistoryTracker(setLinkedNodes, linkedNodeList, nodeTypeOptions);
-        const initialList = new PalavyrLinkedList(nodes, areaIdentifier, (treeUpdate: IPalavyrLinkedList) => tracker.addConversationHistoryToQueue(treeUpdate), nodeTypeOptions, repository);
+        const initialList = new PalavyrLinkedList(nodes, areaIdentifier, (treeUpdate: IPalavyrLinkedList) => tracker.addConversationHistoryToQueue(treeUpdate), nodeTypeOptions, repository, []);
         tracker.initializeConversation(initialList);
 
         setNodeTypeOptions(nodeTypeOptions);
@@ -52,7 +52,8 @@ export const IntroConversationConfigurationPage = () => {
                 areaIdentifier,
                 (updatedTree: IPalavyrLinkedList) => historyTracker.addConversationHistoryToQueue(updatedTree),
                 nodeTypeOptions,
-                repository
+                repository,
+                []
             );
             historyTracker.addConversationHistoryToQueue(updatedLinkedList);
             return true;

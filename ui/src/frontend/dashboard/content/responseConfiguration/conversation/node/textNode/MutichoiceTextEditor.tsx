@@ -1,5 +1,4 @@
 import { PalavyrHtmlTextEditor } from "@common/components/PalavyrTextEditor";
-import { TextField } from "@material-ui/core";
 import { SetState } from "@Palavyr-Types";
 import React from "react";
 import { MultiChoiceOptions } from "./MultiChoiceOptions";

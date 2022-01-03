@@ -1,7 +1,7 @@
 import { PanelRange, intentTabProps } from "@common/ContentUtils";
 import React, { useState, useEffect } from "react";
 import { AppBar, Tabs, Tab, makeStyles, Tooltip } from "@material-ui/core";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
 import FilterFramesIcon from "@material-ui/icons/FilterFrames";
 import SubjectIcon from "@material-ui/icons/Subject";
@@ -36,6 +36,15 @@ const useStyles = makeStyles(theme => ({
     tabtext: {
         color: theme.palette.getContrastText(theme.palette.primary.main),
     },
+    tabbehavior: {
+        pointer: "cursor",
+        "&:hover": {
+            backgroundColor: theme.palette.primary.dark,
+        },
+    },
+    active: {
+        backgroundColor: theme.palette.success.main,
+    },
 }));
 
 export const IntentContent = ({ children }: IntentContentProps) => {
@@ -45,7 +54,7 @@ export const IntentContent = ({ children }: IntentContentProps) => {
 
 export const IntentContentInner = ({ setLoaded, children }: IntentContentInnerProps) => {
     const history = useHistory();
-    const cls = useStyles();
+    const location = useLocation();
 
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
 
@@ -53,6 +62,7 @@ export const IntentContentInner = ({ setLoaded, children }: IntentContentInnerPr
     const rawTab = searchParams.get("tab");
     const tab = rawTab ? (parseInt(rawTab) as PanelRange) : 0;
 
+    const cls = useStyles();
     const { isActive } = React.useContext(AuthContext);
 
     const sendTo = (loc: string, dest: number) => {
@@ -84,7 +94,7 @@ export const IntentContentInner = ({ setLoaded, children }: IntentContentInnerPr
         });
     };
 
-    const orderedTables = [
+    const tabMetas = [
         {
             tourClassName: "response-editor-tab-tour",
             icon: <FilterFramesIcon className={cls.icon} />,
@@ -122,18 +132,20 @@ export const IntentContentInner = ({ setLoaded, children }: IntentContentInnerPr
         <div className={cls.root}>
             {editorTour && <IntroSteps initialize={editorTour} onBlur={editorTourOnBlur} steps={editorTourSteps} />}
             <AppBar position="static" className={cls.appbar}>
-                <Tabs className={"editor-tabs-tour"} centered value={tab}>
-                    {orderedTables.map((tab, index) => {
+                <Tabs className={"editor-tabs-tour"} centered value={tab} TabIndicatorProps={{ style: { height: "0px" } }}>
+                    {tabMetas.map((tabMeta, index) => {
                         return (
-                            <Tooltip key={tab.label} title={tab.label}>
+                            <Tooltip key={tabMeta.label} title={tabMeta.label}>
                                 <Tab
-                                    className={classNames(`${tab.tourClassName}`, cls.tabtext)}
+                                    className={classNames(`${tabMeta.tourClassName}`, cls.tabtext, cls.tabbehavior, {
+                                        [cls.active]: index === tab,
+                                    })}
                                     onClick={() => {
-                                        const spot = (tab.label as string).replace(" ", "").toLowerCase();
+                                        const spot = (tabMeta.label as string).replace(" ", "").toLowerCase();
                                         const loz = sendTo(spot, index);
                                         return loz;
                                     }}
-                                    icon={tab.icon}
+                                    icon={tabMeta.icon}
                                     {...intentTabProps(index as PanelRange)}
                                 />
                             </Tooltip>

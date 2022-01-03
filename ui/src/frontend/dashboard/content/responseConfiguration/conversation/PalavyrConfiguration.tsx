@@ -104,7 +104,6 @@ export const StructuredConvoTree = ({
     const { repository, handleDrawerClose } = useContext(DashboardContext);
     const { areaIdentifier } = useParams<{ areaIdentifier: string }>();
     const [, setLoaded] = useState<boolean>(false);
-    const [refresh, setRefresh] = useState<boolean>(false);
 
     const [showDebugData, setShowDebugData] = useState<boolean>(false);
     const [paddingBuffer, setPaddingBuffer] = useState<number>(1);
@@ -167,7 +166,8 @@ export const StructuredConvoTree = ({
     const resetTree = async () => {
         const head = historyTracker.linkedNodeList.retrieveCleanHeadNode().compileConvoNode(areaIdentifier);
         const nodeTypeOptions = await repository.Conversations.GetNodeOptionsList(areaIdentifier, planTypeMeta);
-        const newList = new PalavyrLinkedList([head], areaIdentifier, () => null, nodeTypeOptions, repository);
+
+        const newList = new PalavyrLinkedList([head], areaIdentifier, () => null, nodeTypeOptions, repository, []);
         historyTracker.initializeConversation(newList);
     };
 
