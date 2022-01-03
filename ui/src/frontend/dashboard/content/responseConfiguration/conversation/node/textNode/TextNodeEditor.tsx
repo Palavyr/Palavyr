@@ -40,7 +40,7 @@ export const TextNodeEditor = ({ isMultiOptionType, shouldShowMultiOption, isAna
         setText(userText);
         const referenceOptions = childNodeReferences.collectPathOptions();
         setOptions(referenceOptions);
-    }, [childNodeReferences.references]);
+    }, [currentNode.nodeType]);
 
     const addOptionOnClick = () => {
         options.push("");
