@@ -89,7 +89,7 @@ export const TextNodeEditor = ({ isMultiOptionType, shouldShowMultiOption, isAna
                     customSaveMessage="Node Text Updated"
                     customCancelMessage="Changes cancelled"
                     useSaveIcon={false}
-                    saveText="Update Node Text"
+                    saveText="Update Node"
                     onSave={async () => {
                         await handleTextOnlyUpdate(text);
                         if (isMultiOptionType) {
