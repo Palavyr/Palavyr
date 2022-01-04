@@ -6,7 +6,7 @@ import OctopusLogo from "./octopusLogo.svg";
 import classNames from "classnames";
 import { LineSpacer } from "@common/components/typography/LineSpacer";
 
-const useStylesBottom = makeStyles((theme) => ({
+const useStylesBottom = makeStyles(theme => ({
     socialIcon: {
         fill: theme.palette.common.white,
         backgroundColor: "#33383b",
