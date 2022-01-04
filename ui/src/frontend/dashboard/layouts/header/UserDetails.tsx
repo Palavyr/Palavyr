@@ -95,7 +95,7 @@ export const UserDetails = React.memo(() => {
     return (
         <Tooltip TransitionComponent={Fade} title={<Typography>{email}</Typography>} placement="right" classes={{ tooltip: cls.toolTipInternal }} interactive>
             <div onClick={userOnClick} className={cls.logwrapper}>
-                {loading ? <CircularProgress /> : details}
+                {loading ? <CircularProgress style={{ padding: "0.5rem" }} /> : details}
             </div>
         </Tooltip>
     );

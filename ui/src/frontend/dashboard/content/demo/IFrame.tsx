@@ -1,24 +1,13 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, useTheme } from "@material-ui/core";
 import { PreCheckError } from "@Palavyr-Types";
 import React, { useEffect, useState } from "react";
 import PalavyrChatWidget from "palavyr-chat-widget";
 
-type StyleProps = {
-    errors: boolean;
-    shadow: boolean;
-};
 const useStyles = makeStyles(theme => ({
-    frame: (props: StyleProps) => ({
-        marginTop: props.errors ? "0rem" : "2rem",
-        marginBottom: props.errors ? "0rem" : "2rem",
-        height: "660px",
-        width: "420px",
-        borderRadius: "9px",
-        border: "0px",
-        background: "#FFFFFF",
-        boxShadow: props.shadow ? theme.shadows[10] : "none",
-        zIndex: 0,
-    }),
+    frame: {
+        height: "100%",
+        width: "100%",
+    },
 }));
 
 interface IIframe {
@@ -39,9 +28,22 @@ const iframeId = "chatDemoIframe";
 //https://www.thoughtco.com/targeting-links-in-frames-3468670
 export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, preCheckErrors, demo = true, shadow = false }: IIframe) => {
     const [state, setState] = useState<boolean | null>(null);
-    const cls = useStyles({ errors: preCheckErrors.length > 0, shadow });
+    const cls = useStyles();
 
     const url = `${widgetUrl}/widget?key=${apiKey}&demo=${demo}`;
+    const theme = useTheme();
+
+    const containerStyles = {
+        marginTop: preCheckErrors.length > 0 ? "0rem" : "2rem",
+        marginBottom: preCheckErrors.length > 0 ? "0rem" : "2rem",
+        height: "660px",
+        width: "420px",
+        borderRadius: "9px",
+        border: "0px",
+        background: "#FFFFFF",
+        boxShadow: shadow ? theme.shadows[10] : "none",
+        zIndex: 0,
+    };
 
     useEffect(() => {
         if (iframeRefreshed != state) {
@@ -53,5 +55,5 @@ export const IFrame = ({ widgetUrl, apiKey, iframeRefreshed, preCheckErrors, dem
         }
     }, [iframeRefreshed]);
 
-    return <PalavyrChatWidget className={cls.frame}  startOpen={true} fixedPosition={false} src={url} id={iframeId} style={{zIndex: 0}} />;
+    return <PalavyrChatWidget IframeProps={{ className: cls.frame, id: iframeId }} fixedPosition={false} src={url} containerStyles={containerStyles} />;
 };

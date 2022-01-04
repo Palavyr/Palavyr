@@ -2,13 +2,12 @@ import { Drawer, makeStyles, useTheme } from "@material-ui/core";
 import { WidgetNodeResource, WidgetPreferences } from "@Palavyr-Types";
 import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { WidgetLayout } from "@widgetcore/widget/WidgetLayout";
-import React, { useContext } from "react";
+import React from "react";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
 import classNames from "classnames";
 import PalavyrChatWidget from "palavyr-chat-widget";
 import { PalavyrWidgetRepository } from "@api-client/PalavyrWidgetRepository";
 import { ComponentRegistry } from "@widgetcore/componentRegistry/registry";
-import { DashboardContext } from "@frontend/dashboard/layouts/DashboardContext";
 
 import "@widgetcore/widget/widget.module.scss";
 import { IAppContext, useAppContext } from "widget/hook";
@@ -139,7 +138,7 @@ export const DesignerWidgetDrawer = ({ widgetPreferences }: DesignerWidgetDrawer
             anchor="right"
         >
             <div className={cls.toolbar} />
-            <PalavyrChatWidget className={cls.widget} startOpen fixedPosition={false} alternateContent={DrawerWidget} style={{ height: `${chatHeight}px` }} />
+            <PalavyrChatWidget IframeProps={{ className: cls.widget }} startOpen fixedPosition={false} alternateContent={DrawerWidget} containerStyles={{ height: `${chatHeight}px` }} />
         </Drawer>
     );
 };
