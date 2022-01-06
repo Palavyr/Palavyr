@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
 using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.Core.Services.AttachmentServices;
 using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
+using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.IntegrationTests.DataCreators;
 using Shouldly;
@@ -78,6 +80,12 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
 
                 await base.DisposeAsync();
             }
+
+            public override ContainerBuilder CustomizeContainer(ContainerBuilder builder)
+            {
+                builder.AddAccountIdAndCancellationToken();
+                return base.CustomizeContainer(builder);
+            }
         }
 
         public class WhileOnAFreePlan : FreePlanIntegrationFixture
@@ -127,6 +135,12 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
                 }
 
                 await base.DisposeAsync();
+            }
+
+            public override ContainerBuilder CustomizeContainer(ContainerBuilder builder)
+            {
+                builder.AddAccountIdAndCancellationToken();
+                return base.CustomizeContainer(builder);
             }
         }
     }

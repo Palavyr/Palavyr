@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Palavyr.API.Controllers.Accounts.Settings;
+using Palavyr.Core.Exceptions;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,8 +21,8 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Setting
         [Fact]
         public async Task GetApiKeyFails()
         {
-            var response = await Client.GetStringAsync(Route);
-            Assert.Equal("No Api Key Found", response);
+            Should.ThrowAsync<DomainException>(
+                async () => { await Client.GetAsync(Route); });
         }
     }
 }

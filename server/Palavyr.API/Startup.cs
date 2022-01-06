@@ -1,9 +1,6 @@
 #nullable enable
 using System.Linq;
 using Autofac;
-using Autofac.Core;
-using Autofac.Extensions.DependencyInjection;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using Palavyr.API.CustomMiddleware;
 using Palavyr.API.Registration.Configuration;
 using Palavyr.API.Registration.Container;
-using Palavyr.Core.Mediator;
 using Palavyr.Core.Services.AccountServices;
 
 namespace Palavyr.API
@@ -64,7 +60,8 @@ namespace Palavyr.API
         public static void SetServices(IServiceCollection services, IConfiguration config, IWebHostEnvironment environ)
         {
             services.AddHttpContextAccessor();
-            services.AddMvcCore().AddControllersAsServices().AddAuthorization();
+            services.AddControllers().AddControllersAsServices();
+            // services.AddMvcCore().AddControllersAsServices().AddAuthorization();
             CorsConfiguration.ConfigureCorsService(services, environ);
             Configurations.ConfigureStripe(config);
             RegisterStores(services, config);
@@ -100,7 +97,7 @@ namespace Palavyr.API
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseMiddleware<SetCancellationTokenTransport>();
+            app.UseMiddleware<SetCancellationTokenTransportMiddleware>();
             app.UseMiddleware<SetHeadersMiddleware>(); // MUST come after UseAuthentication to ensure we are setting these headers on authenticated requests
 
             app.UseEndpoints(

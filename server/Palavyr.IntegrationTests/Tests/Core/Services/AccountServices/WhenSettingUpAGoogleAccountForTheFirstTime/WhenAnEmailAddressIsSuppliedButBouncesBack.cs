@@ -29,7 +29,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
         }
         private string testEmail = $"{A.RandomName()}@gmail.com";
 
-        // [Fact]
+        [Fact]
         public async Task AnUnauthenticatedResultIsReturned()
         {
             var testAccount = IntegrationConstants.AccountId;

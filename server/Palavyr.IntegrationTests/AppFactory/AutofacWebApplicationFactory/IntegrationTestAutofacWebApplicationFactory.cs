@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Palavyr.API;
 using Palavyr.IntegrationTests.AppFactory.TestStartup;
 using Test.Common;
 
@@ -9,7 +10,7 @@ namespace Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory
     {
         protected override IHostBuilder CreateHostBuilder()
         {
-            return Host.CreateDefaultBuilder().ConfigureWebHostDefaults(x => x.UseStartup<IntegrationTestStartup>());
+            return Host.CreateDefaultBuilder().ConfigureWebHostDefaults(x => x.UseStartup<Startup>());
         }
     }
 }

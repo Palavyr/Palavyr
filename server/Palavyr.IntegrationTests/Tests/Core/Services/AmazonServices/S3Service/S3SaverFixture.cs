@@ -1,14 +1,15 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Amazon.S3;
+using Autofac;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Palavyr.Core.Sessions;
+using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Shouldly;
 using Test.Common.ExtensionsMethods;
@@ -24,6 +25,8 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
         private IS3Retriever s3Retriever;
         private IS3Saver s3Saver;
         private string testUserDataBucket;
+        private IHoldAnAccountId accountIdTransport;
+        private ITransportACancellationToken cancellationTokenTransport;
 
         public S3SaverFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
@@ -36,11 +39,10 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
             using var stream = File.OpenRead(tempFile);
             var formFile = new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name));
 
-            var accountId = A.RandomName();
             var areaId = A.RandomName();
             var fileName = A.RandomName();
             var s3Key = s3KeyResolver.ResolveAttachmentKey(areaId, fileName);
-            
+
             try
             {
                 await s3Saver.StreamObjectToS3(testUserDataBucket, formFile, s3Key);
@@ -58,13 +60,10 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
         [Fact]
         public async Task WhenTheSaverFailsToUploadAFile_AFalseValueIsReturned()
         {
-            
-            
             var tempFile = Path.GetTempFileName();
             using var stream = File.OpenRead(tempFile);
             var formFile = new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name));
 
-            var accountId = A.RandomName();
             var areaId = A.RandomName();
             var fileName = A.RandomName();
             var s3Key = s3KeyResolver.ResolveAttachmentKey(areaId, fileName);
@@ -73,6 +72,12 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
 
             var result = await s3Retriever.CheckIfFileExists(testUserDataBucket, s3Key);
             result.ShouldBe(false);
+        }
+
+        public override ContainerBuilder CustomizeContainer(ContainerBuilder builder)
+        {
+            builder.AddAccountIdAndCancellationToken();
+            return base.CustomizeContainer(builder);
         }
 
         public Task InitializeAsync()

@@ -5,12 +5,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Palavyr.API.CustomMiddleware
 {
-    public class SetCancellationTokenTransport
+    public class SetCancellationTokenTransportMiddleware
     {
         private readonly RequestDelegate next;
-        private ILogger<SetCancellationTokenTransport> logger;
+        private ILogger<SetCancellationTokenTransportMiddleware> logger;
 
-        public SetCancellationTokenTransport(RequestDelegate next, ILogger<SetCancellationTokenTransport> logger)
+        public SetCancellationTokenTransportMiddleware(RequestDelegate next, ILogger<SetCancellationTokenTransportMiddleware> logger)
         {
             this.next = next;
             this.logger = logger;

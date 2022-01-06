@@ -22,15 +22,13 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 
         protected sealed override void CreateContext()
         {
-            Factory.Server.BaseAddress = new Uri(IntegrationConstants.BaseUri);
             var dbRoot = new InMemoryDatabaseRoot();
             WebHostFactory = Factory
                 .WithWebHostBuilder(
                     builder =>
                     {
                         builder
-                            .ConfigureTestContainer<ContainerBuilder>(builder => CustomizeContainer(builder.CallStartupTestContainerConfiguration()))
-                            .ConfigureTestServices(services => services.CallStartupServicesConfiguration().AddMvcCore().AddApplicationPart(typeof(Startup).Assembly))
+                            .ConfigureTestContainer<ContainerBuilder>(builder => CustomizeContainer(builder))
                             .ConfigureInMemoryDatabase(dbRoot)
                             .ConfigureAppConfiguration(
                                 (context, configBuilder) => { configBuilder.AddConfiguration(TestConfiguration.GetTestConfiguration()); })

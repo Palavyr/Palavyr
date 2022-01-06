@@ -1,36 +1,29 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
-using Palavyr.Core.Sessions;
+using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
 
     public class GetApiKeyController : PalavyrBaseController
     {
-        private AccountsContext accountsContext;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private IAccountRepository accountRepository;
         private ILogger<GetApiKeyController> logger;
 
         public const string Uri = "account/settings/api-key";
 
-        public GetApiKeyController(IHoldAnAccountId accountIdHolder, AccountsContext accountsContext, ILogger<GetApiKeyController> logger)
+        public GetApiKeyController(IAccountRepository accountRepository, ILogger<GetApiKeyController> logger)
         {
-            this.accountIdHolder = accountIdHolder;
             this.logger = logger;
-            this.accountsContext = accountsContext;
+            this.accountRepository = accountRepository;
             
         }
 
         [HttpGet(Uri)]
         public async Task<string> Get()
         {
-            var account = await accountsContext
-                .Accounts
-                .SingleOrDefaultAsync(
-                    row => row.AccountId == accountIdHolder.AccountId);
+            var account = await accountRepository.GetAccount();
             return account?.ApiKey ?? "No Api Key Found";
         }
     }

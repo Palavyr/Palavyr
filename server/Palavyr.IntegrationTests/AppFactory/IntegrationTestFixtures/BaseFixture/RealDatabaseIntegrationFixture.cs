@@ -22,19 +22,23 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 
         protected sealed override void CreateContext()
         {
-            Factory.Server.BaseAddress = new Uri(IntegrationConstants.BaseUri);
             WebHostFactory = Factory
                 .WithWebHostBuilder(
                     builder =>
                     {
                         builder
-                            .ConfigureTestContainer<ContainerBuilder>(builder => CustomizeContainer(builder.CallStartupTestContainerConfiguration()))
-                            .ConfigureTestServices(services => services.CallStartupServicesConfiguration().AddMvcCore().AddApplicationPart(typeof(Startup).Assembly))
-                            .ConfigureAndCreateRealTestDatabase()
                             .ConfigureAppConfiguration(
                                 (context, configBuilder) => { configBuilder.AddConfiguration(TestConfiguration.GetTestConfiguration()); })
+                            // .ConfigureTestServices(services => services.CallStartupServicesConfiguration().AddMvcCore().AddApplicationPart(typeof(Startup).Assembly))
+                            .ConfigureTestContainer<ContainerBuilder>(builder =>
+                            {
+                                CustomizeContainer(builder);
+                            })
+                            .ConfigureAndCreateRealTestDatabase()
                             .UseTestServer();
                     });
+            // WebHostFactory.Server.BaseAddress =  new Uri(IntegrationConstants.BaseUri);
+
         }
 
         public virtual async Task InitializeAsync()

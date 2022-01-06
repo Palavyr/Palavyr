@@ -31,7 +31,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
         {
         }
 
-        // [Fact]
+        [Fact]
         public async Task AnUnAuthenticatedResultIsReturned()
         {
             // should check the actual test stripe account that we only have once instance of this email in the test data. Then don't forget to delete the
