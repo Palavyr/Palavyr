@@ -11,12 +11,9 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
     {
         public static void AddRealDatabaseContexts(this IServiceCollection services)
         {
-            var accountId = StaticGuidUtils.CreateShortenedGuid(5);
-            var dashId = StaticGuidUtils.CreateShortenedGuid(5);
-            var convoId = StaticGuidUtils.CreateShortenedGuid(5);
-            services.AddDbContext<AccountsContext>(opt => { opt.UseNpgsql(IntegrationConstants.AccountDbConnString(accountId)); });
-            services.AddDbContext<DashContext>(opt => { opt.UseNpgsql(IntegrationConstants.DashDbConnString(dashId)); });
-            services.AddDbContext<ConvoContext>(opt => { opt.UseNpgsql(IntegrationConstants.ConvoDbConnString(convoId)); });
+            services.AddDbContext<AccountsContext>(opt => { opt.UseNpgsql(IntegrationConstants.AccountDbConnString); });
+            services.AddDbContext<DashContext>(opt => { opt.UseNpgsql(IntegrationConstants.DashDbConnString); });
+            services.AddDbContext<ConvoContext>(opt => { opt.UseNpgsql(IntegrationConstants.ConvoDbConnString); });
         }
 
         public static void CreateDatabases(this IServiceCollection services)

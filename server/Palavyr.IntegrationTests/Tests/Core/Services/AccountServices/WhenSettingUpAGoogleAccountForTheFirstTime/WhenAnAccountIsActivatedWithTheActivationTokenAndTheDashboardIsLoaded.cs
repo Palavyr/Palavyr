@@ -18,6 +18,7 @@ using Palavyr.Core.Sessions;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods.ClientExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Shouldly;
 using Test.Common.Random;
 using Xunit;
@@ -25,7 +26,7 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSettingUpAGoogleAccountForTheFirstTime
 {
-    public class WhenAnAccountIsActivatedWithTheActivationTokenAndTheDashboardIsLoaded : BareRealDatabaseIntegrationFixture
+    public class WhenAnAccountIsActivatedWithTheActivationTokenAndTheDashboardIsLoaded : RealDatabaseIntegrationFixture
     {
         private string testEmail = $"{A.RandomName()}@gmail.com";
 

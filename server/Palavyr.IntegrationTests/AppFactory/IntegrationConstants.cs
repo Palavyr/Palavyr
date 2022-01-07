@@ -16,8 +16,8 @@
         public const string BasePath = "api/";
         public static string BaseUri => Localhost + BasePath;
         
-        public static string AccountDbConnString(string id) => $"Server={Host};Port={Port};Database=PalavyrIntegrationTestAccounts-{id};User Id={DbUser};Password={DbPassword}";
-        public static string DashDbConnString(string id) => $"Server={Host};Port={Port};Database=PalavyrIntegrationTestConfiguration-{id};User Id={DbUser};Password={DbPassword}";
-        public static string ConvoDbConnString(string id) => $"Server={Host};Port={Port};Database=PalavyrIntegrationTestConversations-{id};User Id={DbUser};Password={DbPassword}";
+        public static string AccountDbConnString = $"Server={Host};Port={Port};Database=PalavyrIntegrationTestAccounts;User Id={DbUser};Password={DbPassword}";
+        public static string DashDbConnString = $"Server={Host};Port={Port};Database=PalavyrIntegrationTestConfiguration;User Id={DbUser};Password={DbPassword}";
+        public static string ConvoDbConnString = $"Server={Host};Port={Port};Database=PalavyrIntegrationTestConversations;User Id={DbUser};Password={DbPassword}";
     }
 }

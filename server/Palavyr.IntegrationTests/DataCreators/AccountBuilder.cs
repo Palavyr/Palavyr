@@ -99,7 +99,8 @@ namespace Palavyr.IntegrationTests.DataCreators
             defaultAccount.PlanType = this.planType ?? Account.PlanTypeEnum.Free;
 
             await test.AccountsContext.AddAsync(defaultAccount);
-            test.AccountsContext.SeedSession(IntegrationConstants.AccountId, null);
+            var session = Session.CreateNew(IntegrationConstants.SessionId, accountId, apiKey);
+            await test.AccountsContext.Sessions.AddAsync(session);
             await test.AccountsContext.SaveChangesAsync();
             return defaultAccount;
         }

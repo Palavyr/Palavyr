@@ -1,32 +1,10 @@
 ﻿using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Data;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 
 namespace Palavyr.IntegrationTests.AppFactory
 {
     public static class DbSetupAndTeardown
     {
-
-
-        public static void DisposeDbsByReset(this RealDatabaseIntegrationFixture fixture)
-        {
-            var services = fixture.Factory.Services;
-            var accountContext = services.GetService<AccountsContext>();
-            var dashContext = services.GetService<DashContext>();
-            var convoContext = services.GetService<ConvoContext>();
-            ResetDbs(accountContext, dashContext, convoContext);
-        }
-        
-        public static void DisposeByDelete(this RealDatabaseIntegrationFixture fixture)
-        {
-            var services = fixture.Factory.Services;
-            var accountContext = services.GetService<AccountsContext>();
-            var dashContext = services.GetService<DashContext>();
-            var convoContext = services.GetService<ConvoContext>();
-            DeleteDbs(accountContext, dashContext, convoContext);
-        }
-
         public static void ResetDbs(AccountsContext accountContext, DashContext dashContext, ConvoContext convoContext)
         {
             accountContext.ResetAccountDb();
@@ -70,10 +48,11 @@ namespace Palavyr.IntegrationTests.AppFactory
             dashContext.WidgetPreferences.RemoveRange(prefs);
             dashContext.DynamicTableMetas.RemoveRange(dynTables);
             dashContext.FileNameMaps.RemoveRange(nameMaps);
-            dashContext.PercentOfThresholds.RemoveRange(perc);
-            dashContext.SelectOneFlats.RemoveRange(select);
             dashContext.StaticTablesMetas.RemoveRange(staticMetas);
             dashContext.StaticTablesRows.RemoveRange(staticRows);
+
+            dashContext.SelectOneFlats.RemoveRange(select);
+            dashContext.PercentOfThresholds.RemoveRange(perc);
             dashContext.BasicThresholds.RemoveRange(basic);
             dashContext.CategoryNestedThresholds.RemoveRange(categoryNested);
             dashContext.TwoNestedCategories.RemoveRange(twoNested);
@@ -94,13 +73,6 @@ namespace Palavyr.IntegrationTests.AppFactory
             accountsContext.Subscriptions.RemoveRange(subs);
             accountsContext.EmailVerifications.RemoveRange(emailVerifications);
             accountsContext.StripeWebHookRecords.RemoveRange(stripeWebhooks);
-        }
-
-        public static void DeleteDbs(AccountsContext accountContext, DashContext dashContext, ConvoContext convoContext)
-        {
-            accountContext.Database.EnsureDeleted();
-            dashContext.Database.EnsureDeleted();
-            convoContext.Database.EnsureDeleted();
         }
     }
 }

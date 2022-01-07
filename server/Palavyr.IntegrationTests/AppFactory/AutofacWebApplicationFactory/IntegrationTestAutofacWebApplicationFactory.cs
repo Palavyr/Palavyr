@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Palavyr.API;
-using Palavyr.IntegrationTests.AppFactory.TestStartup;
 using Test.Common;
 
 namespace Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory

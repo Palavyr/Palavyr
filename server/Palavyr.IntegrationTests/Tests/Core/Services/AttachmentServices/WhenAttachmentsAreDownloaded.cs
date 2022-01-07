@@ -1,6 +1,5 @@
 ﻿#nullable enable
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +20,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
 {
     public class WhenAttachmentsAreDownloaded
     {
-        public class WhileOnAProPlan : ProPlanIntegrationFixture
+        public class WhileOnAProPlan : RealDatabaseIntegrationFixture
         {
             private List<TempS3FileMeta> s3Metas = null!;
             private string RiskyName => $"ThisRiskyName-{StaticGuidUtils.CreateShortenedGuid(1)}.pdf";
@@ -53,6 +52,8 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
 
             public override async Task InitializeAsync()
             {
+                await this.SetupProAccount();
+
                 var s3TempCreator = Container.GetService<ICreateS3TempFile>();
 
                 s3Metas = await s3TempCreator.CreateTempFilesOnS3(5);
@@ -88,7 +89,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
             }
         }
 
-        public class WhileOnAFreePlan : FreePlanIntegrationFixture
+        public class WhileOnAFreePlan : InMemoryIntegrationFixture
         {
             private List<TempS3FileMeta> s3Metas = null!;
             private string RiskyName => $"ThisRiskyName-{StaticGuidUtils.CreateShortenedGuid(1)}.pdf";
@@ -103,12 +104,13 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
                 var retriever = Container.GetService<IAttachmentRetriever>();
                 var result = await retriever.RetrieveAttachmentFiles(IntegrationConstants.DefaultArea, new List<S3SDownloadRequestMeta>(), default);
 
-                // assert
                 result.Length.ShouldBe(0);
             }
 
             public override async Task InitializeAsync()
             {
+                await this.SetupFreeAccount();
+
                 var s3TempCreator = Container.GetService<ICreateS3TempFile>();
 
                 s3Metas = await s3TempCreator.CreateTempFilesOnS3(5);
@@ -122,8 +124,6 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
                         .WithRiskyName(RiskyName)
                         .Build();
                 }
-
-                await base.InitializeAsync();
             }
 
             public override async Task DisposeAsync()

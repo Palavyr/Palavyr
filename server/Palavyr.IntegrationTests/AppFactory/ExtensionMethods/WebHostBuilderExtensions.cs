@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Palavyr.API;
-using Palavyr.Core.Data;
 using Palavyr.IntegrationTests.AppFactory.TestAuthentication;
 
 // We using 3.1 but...
@@ -17,20 +16,6 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
 {
     public static class WebHostBuilderExtensions
     {
-        public static IWebHostBuilder ConfigureAuthentication(this IWebHostBuilder builder)
-        {
-            return builder
-                .ConfigureTestServices(
-                    services =>
-                    {
-                        services
-                            .AddAuthentication("Test")
-                            .AddScheme<TestAuthenticationSchemeOptions, TestAuthenticationHandler>(
-                                "Test",
-                                opt => { }
-                            );
-                    });
-        }
 
         public static IWebHostBuilder ConfigureInMemoryDatabase(this IWebHostBuilder builder, InMemoryDatabaseRoot dbRoot)
         {

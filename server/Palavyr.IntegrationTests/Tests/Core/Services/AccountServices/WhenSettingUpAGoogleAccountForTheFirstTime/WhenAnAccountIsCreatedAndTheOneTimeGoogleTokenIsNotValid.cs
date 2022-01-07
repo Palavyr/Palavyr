@@ -16,6 +16,7 @@ using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Shouldly;
 using Test.Common.Random;
 using Xunit;
@@ -23,7 +24,7 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSettingUpAGoogleAccountForTheFirstTime
 {
-    public class WhenAnAccountIsCreatedAndTheOneTimeGoogleTokenIsNotValid : BareRealDatabaseIntegrationFixture
+    public class WhenAnAccountIsCreatedAndTheOneTimeGoogleTokenIsNotValid : RealDatabaseIntegrationFixture
     {
         private string testEmail = $"{A.RandomName()}@gmail.com";
 
