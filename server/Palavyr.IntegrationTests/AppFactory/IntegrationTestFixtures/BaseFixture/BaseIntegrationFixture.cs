@@ -19,8 +19,12 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture
 {
-    public abstract class BaseIntegrationFixture : IClassFixture<IntegrationTestAutofacWebApplicationFactory>
+    public abstract class BaseIntegrationFixture : IClassFixture<IntegrationTestAutofacWebApplicationFactory>, IAsyncLifetime
     {
+        public readonly string AccountId = Guid.NewGuid().ToString();
+        public readonly string ApiKey = Guid.NewGuid().ToString();
+        
+        
         public ITestOutputHelper TestOutputHelper { get; set; }
         public readonly IntegrationTestAutofacWebApplicationFactory Factory;
 
@@ -39,8 +43,6 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
             Factory = factory;
         }
 
-        protected abstract void CreateContext();
-
         public virtual ContainerBuilder CustomizeContainer(ContainerBuilder builder)
         {
             builder.RegisterType<CreateS3TempFile>().As<ICreateS3TempFile>();
@@ -56,6 +58,16 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
                 var customerService = Container.GetService<StripeCustomerService>();
                 await customerService.DeleteStripeTestCustomers(customerId);
             }
+        }
+
+        public virtual async Task InitializeAsync()
+        {
+            await Task.CompletedTask;
+        }
+
+        public virtual async Task DisposeAsync()
+        {
+            await DeleteTestStripeCustomers();
         }
     }
 }

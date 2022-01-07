@@ -9,12 +9,12 @@ using Palavyr.Core.Common.UniqueIdentifiers;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Services.AccountServices;
 using Palavyr.Core.Services.AuthenticationServices;
-using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Shouldly;
 using Test.Common.Random;
 using Xunit;
@@ -22,7 +22,7 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSettingUpAGoogleAccountForTheFirstTime
 {
-    public class WhenAnEmailAddressIsSuppliedButBouncesBack : BareRealDatabaseIntegrationFixture
+    public class WhenAnEmailAddressIsSuppliedButBouncesBack : RealDatabaseIntegrationFixture
     {
         public WhenAnEmailAddressIsSuppliedButBouncesBack(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
@@ -32,7 +32,6 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
         [Fact]
         public async Task AnUnauthenticatedResultIsReturned()
         {
-            var testAccount = IntegrationConstants.AccountId;
             var jwtToken = "jwt-token";
             var introId = "24323";
 
@@ -58,9 +57,9 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
                 Email = testEmail
             };
             authService.ValidateGoogleTokenId(googleCredentials.OneTimeCode).Returns(fakePayload);
-            newAccountUtils.GetNewAccountId().Returns(testAccount);
+            newAccountUtils.GetNewAccountId().Returns(AccountId);
             var registrationMaker = Substitute.For<IAccountRegistrationMaker>();
-            registrationMaker.TryRegisterAccountAndSendEmailVerificationToken(testAccount, "123", testEmail, introId, CancellationToken.None).ReturnsForAnyArgs(false);
+            registrationMaker.TryRegisterAccountAndSendEmailVerificationToken(AccountId, "123", testEmail, introId, CancellationToken.None).ReturnsForAnyArgs(false);
 
             var accountSetupService = new AccountSetupService(
                 DashContext,

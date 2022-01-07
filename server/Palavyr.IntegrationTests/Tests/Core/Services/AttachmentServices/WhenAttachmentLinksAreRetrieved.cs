@@ -27,7 +27,6 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AttachmentServices
         {
             // arrange
             await this.CreateFileNameMapBuilder()
-                .WithAccountId(IntegrationConstants.AccountId)
                 .WithAreaIdentifier(IntegrationConstants.DefaultArea)
                 .WithSafeName("safe-name.pdf")
                 .WithS3Key("thisis/the/key.pdf")

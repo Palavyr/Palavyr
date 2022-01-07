@@ -10,6 +10,7 @@ using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using Palavyr.Core.Sessions;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Shouldly;
 using Test.Common.ExtensionsMethods;
@@ -76,7 +77,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
 
         public override ContainerBuilder CustomizeContainer(ContainerBuilder builder)
         {
-            builder.AddAccountIdAndCancellationToken();
+            builder.AddAccountIdAndCancellationToken("123");
             return base.CustomizeContainer(builder);
         }
 

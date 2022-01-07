@@ -18,6 +18,7 @@ using Palavyr.Core.Sessions;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods.ClientExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Shouldly;
 using Test.Common.Random;
 using Xunit;
@@ -25,7 +26,7 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSettingUpAGoogleAccountForTheFirstTime
 {
-    public class WhenAnAccountIsActivatedWithTheActivationTokenAndTheDashboardIsLoaded : BareRealDatabaseIntegrationFixture
+    public class WhenAnAccountIsActivatedWithTheActivationTokenAndTheDashboardIsLoaded : RealDatabaseIntegrationFixture
     {
         private string testEmail = $"{A.RandomName()}@gmail.com";
 
@@ -37,7 +38,6 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
         public async Task OnlyOneStripeAccountWithThisEmailIsCreated()
         {
             // should check the actual test stripe account that we only have once instance of this email in the test data. Then don't forget to delete the
-            var testAccount = "Test-account-123";
             var jwtToken = "jwt-token";
             var testConfirmationToken = "123456";
 
@@ -70,7 +70,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
                 EmailConfirmationHtml.GetConfirmationEmailBodyText(testEmail, testConfirmationToken)
             ).Returns(true);
             authService.ValidateGoogleTokenId(googleCredentials.OneTimeCode).Returns(fakePayload);
-            newAccountUtils.GetNewAccountId().Returns(testAccount);
+            newAccountUtils.GetNewAccountId().Returns(AccountId);
 
             var requestVerification = Substitute.For<IRequestEmailVerification>();
             var verifyLogger = Substitute.For<ILogger<EmailVerificationService>>();
@@ -78,7 +78,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             emailVerificationStatus.CheckVerificationStatus(testEmail).Returns(true);
             
             var accountIdHolder = new AccountIdTransport();
-            accountIdHolder.Assign(testAccount);
+            accountIdHolder.Assign(AccountId);
 
             
             var emailVerificationService = new EmailVerificationService(AccountsContext, verifyLogger, customerService, requestVerification, emailClient, guidUtils, emailVerificationStatus, accountIdHolder);
@@ -100,7 +100,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             );
 
             await accountSetupService.CreateNewAccountViaGoogleAsync(googleCredentials, CancellationToken.None);
-            AccountsContext.Accounts.Single(x => x.AccountId == testAccount).Active.ShouldBeFalse();
+            AccountsContext.Accounts.Single(x => x.AccountId == AccountId).Active.ShouldBeFalse();
 
             // Send token
             var route = $"account/confirmation/{testConfirmationToken}/action/setup";
@@ -108,7 +108,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             result.EnsureSuccessStatusCode();
 
 
-            var account = AccountsContext.Accounts.Single(x => x.AccountId == testAccount);
+            var account = AccountsContext.Accounts.Single(x => x.AccountId == AccountId);
             await AccountsContext.Entry(account).ReloadAsync();
             account.Active.ShouldBeTrue();
             account.StripeCustomerId.ShouldNotBeEmpty();

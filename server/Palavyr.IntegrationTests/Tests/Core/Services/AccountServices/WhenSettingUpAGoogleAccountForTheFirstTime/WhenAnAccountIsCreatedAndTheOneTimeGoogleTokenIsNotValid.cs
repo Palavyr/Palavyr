@@ -16,6 +16,7 @@ using Palavyr.Core.Services.EmailService.Verification;
 using Palavyr.Core.Services.StripeServices;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
+using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Shouldly;
 using Test.Common.Random;
 using Xunit;
@@ -23,7 +24,7 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSettingUpAGoogleAccountForTheFirstTime
 {
-    public class WhenAnAccountIsCreatedAndTheOneTimeGoogleTokenIsNotValid : BareRealDatabaseIntegrationFixture
+    public class WhenAnAccountIsCreatedAndTheOneTimeGoogleTokenIsNotValid : RealDatabaseIntegrationFixture
     {
         private string testEmail = $"{A.RandomName()}@gmail.com";
 
@@ -35,7 +36,6 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
         public async Task AnUnAuthenticatedResultIsReturned()
         {
             // should check the actual test stripe account that we only have once instance of this email in the test data. Then don't forget to delete the
-            var testAccount = "Test-account-123";
             var jwtToken = "jwt-token";
             var testConfirmationToken = "123456";
             var introId = "24323";
@@ -69,10 +69,10 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             ).Returns(true);
 
             authService.ValidateGoogleTokenId(googleCredentials.OneTimeCode).ReturnsNull();
-            newAccountUtils.GetNewAccountId().Returns(testAccount);
+            newAccountUtils.GetNewAccountId().Returns(AccountId);
 
             var registrationMaker = Substitute.For<IAccountRegistrationMaker>();
-            registrationMaker.TryRegisterAccountAndSendEmailVerificationToken(testAccount, "123", testEmail, introId, CancellationToken.None).ReturnsForAnyArgs(true);
+            registrationMaker.TryRegisterAccountAndSendEmailVerificationToken(AccountId, "123", testEmail, introId, CancellationToken.None).ReturnsForAnyArgs(true);
 
             var accountSetupService = new AccountSetupService(
                 DashContext,

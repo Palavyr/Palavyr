@@ -23,7 +23,7 @@ using Xunit.Abstractions;
 
 namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSettingUpAGoogleAccountForTheFirstTime
 {
-    public class WhenCreatingANewAccountAndItHasNotYetBeenActivated : BareRealDatabaseIntegrationFixture
+    public class WhenCreatingANewAccountAndItHasNotYetBeenActivated : RealDatabaseIntegrationFixture
     {
         private string testEmail = $"{A.RandomName()}@gmail.com";
 
@@ -35,7 +35,6 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
         public async Task EverythingLooksNormal()
         {
             await Task.CompletedTask;
-            var testAccount = "Test-account-123";
             var jwtToken = "jwt-token";
             var introId = "24323";
 
@@ -58,11 +57,11 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             var guidFinder = new GuidFinder();
 
             authService.ValidateGoogleTokenId(googleCredentials.OneTimeCode).Returns(fakePayload);
-            newAccountUtils.GetNewAccountId().Returns(testAccount);
+            newAccountUtils.GetNewAccountId().Returns(AccountId);
             var customerService = Container.GetService<StripeCustomerService>();
 
             var registrationMaker = Substitute.For<IAccountRegistrationMaker>();
-            registrationMaker.TryRegisterAccountAndSendEmailVerificationToken(testAccount, "123", testEmail, introId, CancellationToken.None).ReturnsForAnyArgs(true);
+            registrationMaker.TryRegisterAccountAndSendEmailVerificationToken(AccountId, "123", testEmail, introId, CancellationToken.None).ReturnsForAnyArgs(true);
 
             var accountSetupService = new AccountSetupService(
                 DashContext,
@@ -87,7 +86,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
             account.ShouldNotBeNull();
             credentialsResult.ApiKey.ShouldBe(account.ApiKey);
 
-            account.AccountId.ShouldBe(testAccount);
+            account.AccountId.ShouldBe(AccountId);
             account.AccountType.ShouldBe(AccountType.Google);
             account.Active.ShouldBeFalse();
             guidFinder.FindFirstGuidSuffix(account.ApiKey).ShouldNotBeEmpty();
