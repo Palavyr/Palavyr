@@ -16,7 +16,7 @@ namespace PalavyrServer.UnitTests.Models.Schemas
 
             var testStaticTablesMetas = StaticTablesMeta.CreateDefaultMetas(testAreaId, testAccountId);
             
-            var result = StaticTablesMeta.BindTemplateList(testStaticTablesMetas, "test-account").First();
+            var result = StaticTablesMeta.BindTemplateList(testStaticTablesMetas, testAccountId).First();
             
             result.AccountId.ShouldBe(testAccountId);
             result.AreaIdentifier.ShouldBe(testAreaId);
