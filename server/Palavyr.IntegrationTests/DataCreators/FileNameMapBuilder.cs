@@ -46,12 +46,6 @@ namespace Palavyr.IntegrationTests.DataCreators
             return this;
         }
 
-        public FileNameMapBuilder WithAccountId(string id)
-        {
-            this.accountId = id;
-            return this;
-        }
-
         public FileNameMapBuilder WithAreaIdentifier(string id)
         {
             this.areaIdentifier = id;
@@ -63,12 +57,11 @@ namespace Palavyr.IntegrationTests.DataCreators
             var safename = this.safeName ?? A.RandomName();
             var s3Key = this.s3Key ?? A.RandomName();
             var riskyname = this.riskyName ?? A.RandomName();
-            var accountId = this.accountId ?? A.RandomName();
             var areaId = this.areaIdentifier ?? A.RandomName();
 
             var resource = new FileNameMap
             {
-                AccountId = accountId,
+                AccountId = test.AccountId,
                 AreaIdentifier = areaId,
                 RiskyName = riskyname,
                 S3Key = s3Key,

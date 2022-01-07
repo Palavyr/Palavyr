@@ -77,7 +77,7 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
 
         public override ContainerBuilder CustomizeContainer(ContainerBuilder builder)
         {
-            builder.AddAccountIdAndCancellationToken();
+            builder.AddAccountIdAndCancellationToken("123");
             return base.CustomizeContainer(builder);
         }
 

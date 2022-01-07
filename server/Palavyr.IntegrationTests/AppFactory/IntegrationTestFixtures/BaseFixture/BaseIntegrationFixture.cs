@@ -21,6 +21,10 @@ namespace Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixtur
 {
     public abstract class BaseIntegrationFixture : IClassFixture<IntegrationTestAutofacWebApplicationFactory>, IAsyncLifetime
     {
+        public readonly string AccountId = Guid.NewGuid().ToString();
+        public readonly string ApiKey = Guid.NewGuid().ToString();
+        
+        
         public ITestOutputHelper TestOutputHelper { get; set; }
         public readonly IntegrationTestAutofacWebApplicationFactory Factory;
 

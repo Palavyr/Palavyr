@@ -6,19 +6,19 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
 {
     public static class ContainerBuilderExtensionMethods
     {
-        public static ContainerBuilder AddAccountIdAndCancellationToken(this ContainerBuilder containerBuilder)
+        public static ContainerBuilder AddAccountIdAndCancellationToken(this ContainerBuilder containerBuilder, string accountId)
         {
-            containerBuilder.AddAccountId().AddCancellationToken();
+            containerBuilder.AddAccountId(accountId).AddCancellationToken();
             return containerBuilder;
         }
 
-        public static ContainerBuilder AddAccountId(this ContainerBuilder containerBuilder)
+        public static ContainerBuilder AddAccountId(this ContainerBuilder containerBuilder, string accountId)
         {
             containerBuilder.Register(
                 c =>
                 {
                     var holder = new AccountIdTransport();
-                    holder.Assign(IntegrationConstants.AccountId);
+                    holder.Assign(accountId);
                     return holder;
                 }).As<IHoldAnAccountId>().InstancePerLifetimeScope();
             return containerBuilder;

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Palavyr.Core.Models.Accounts.Schemas;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Palavyr.IntegrationTests.DataCreators;
 
@@ -6,40 +7,40 @@ namespace Palavyr.IntegrationTests.AppFactory.ExtensionMethods
 {
     public static class TestAccountSetupExtensionMethods
     {
-        public static async Task SetupProAccount(this BaseIntegrationFixture baseIntegrationFixture)
+        public static async Task<Account> SetupProAccount(this BaseIntegrationFixture baseIntegrationFixture)
         {
-            await baseIntegrationFixture
+            return await baseIntegrationFixture
                 .CreateDefaultAccountAndSessionBuilder()
                 .WithDefaultPassword()
-                .WithDefaultAccountId()
+                .WithAccountId(baseIntegrationFixture.AccountId)
                 .WithDefaultAccountType()
-                .WithDefaultApiKey()
+                .WithApiKey(baseIntegrationFixture.ApiKey)
                 .WithDefaultEmailAddress()
                 .WithProPlan()
                 .Build();
         }
 
-        public static async Task SetupLyteAccount(this BaseIntegrationFixture baseIntegrationFixture)
+        public static async Task<Account> SetupLyteAccount(this BaseIntegrationFixture baseIntegrationFixture)
         {
-            await baseIntegrationFixture
+            return await baseIntegrationFixture
                 .CreateDefaultAccountAndSessionBuilder()
                 .WithDefaultPassword()
-                .WithDefaultAccountId()
+                .WithAccountId(baseIntegrationFixture.AccountId)
                 .WithDefaultAccountType()
-                .WithDefaultApiKey()
+                .WithApiKey(baseIntegrationFixture.ApiKey)
                 .WithDefaultEmailAddress()
                 .WithLytePlan()
                 .Build();
         }
 
-        public static async Task SetupFreeAccount(this BaseIntegrationFixture baseIntegrationFixture)
+        public static async Task<Account> SetupFreeAccount(this BaseIntegrationFixture baseIntegrationFixture)
         {
-            await baseIntegrationFixture
+            return await baseIntegrationFixture
                 .CreateDefaultAccountAndSessionBuilder()
                 .WithDefaultPassword()
-                .WithDefaultAccountId()
+                .WithAccountId(baseIntegrationFixture.AccountId)
                 .WithDefaultAccountType()
-                .WithDefaultApiKey()
+                .WithApiKey(baseIntegrationFixture.ApiKey)
                 .WithDefaultEmailAddress()
                 .WithFreePlan()
                 .Build();

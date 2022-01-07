@@ -1,10 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Palavyr.API.Controllers.Accounts.Settings;
-using Palavyr.IntegrationTests.AppFactory;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
-using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -34,7 +32,7 @@ namespace Palavyr.IntegrationTests.Tests.Api.ControllerFixtures.Accounts.Setting
         public async Task GetApiKeySuccess()
         {
             var response = await Client.GetStringAsync(Route);
-            Assert.Equal(response, IntegrationConstants.ApiKey);
+            Assert.Equal(response, ApiKey);
         }
     }
 }

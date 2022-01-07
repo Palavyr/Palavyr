@@ -37,7 +37,6 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
         public async Task AnUnAuthenticatedResultIsReturned()
         {
             var testEmail = IntegrationConstants.EmailAddress;
-            var testAccount = IntegrationConstants.AccountId;
             var jwtToken = "jwt-token";
             var introId = "24323";
 
@@ -63,10 +62,10 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AccountServices.WhenSetti
                 Email = testEmail
             };
             authService.ValidateGoogleTokenId(googleCredentials.OneTimeCode).Returns(fakePayload);
-            newAccountUtils.GetNewAccountId().Returns(testAccount);
+            newAccountUtils.GetNewAccountId().Returns(AccountId);
 
             var registrationMaker = Substitute.For<IAccountRegistrationMaker>();
-            registrationMaker.TryRegisterAccountAndSendEmailVerificationToken(testAccount, "123", testEmail, introId, CancellationToken.None).ReturnsForAnyArgs(true);
+            registrationMaker.TryRegisterAccountAndSendEmailVerificationToken(AccountId, "123", testEmail, introId, CancellationToken.None).ReturnsForAnyArgs(true);
 
             var accountSetupService = new AccountSetupService(
                 DashContext,

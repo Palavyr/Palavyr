@@ -31,9 +31,9 @@ namespace Palavyr.IntegrationTests.DataCreators
             this.test = test;
         }
 
-        public DefaultAccountAndSessionBuilder WithDefaultAccountId()
+        public DefaultAccountAndSessionBuilder WithAccountId(string accountId)
         {
-            this.accountId = IntegrationConstants.AccountId;
+            this.accountId = accountId;
             return this;
         }
 
@@ -55,9 +55,9 @@ namespace Palavyr.IntegrationTests.DataCreators
             return this;
         }
 
-        public DefaultAccountAndSessionBuilder WithDefaultApiKey()
+        public DefaultAccountAndSessionBuilder WithApiKey(string apiKey)
         {
-            this.apikey = IntegrationConstants.ApiKey;
+            this.apikey = apiKey;
             return this;
         }
 
@@ -92,14 +92,13 @@ namespace Palavyr.IntegrationTests.DataCreators
             var pass = this.password ?? "123456";
             var id = this.accountId ?? "account-123";
             var accType = this.accountType ?? AccountType.Default;
-            var apiKey = this.apikey ?? "";
 
-            var defaultAccount = Account.CreateAccount(email, pass, id, apiKey, accType);
+            var defaultAccount = Account.CreateAccount(email, pass, id, test.ApiKey, accType);
 
             defaultAccount.PlanType = this.planType ?? Account.PlanTypeEnum.Free;
 
-            await test.AccountsContext.AddAsync(defaultAccount);
-            var session = Session.CreateNew(IntegrationConstants.SessionId, accountId, apiKey);
+            await test.AccountsContext.Accounts.AddAsync(defaultAccount);
+            var session = Session.CreateNew(IntegrationConstants.SessionId, test.AccountId, test.ApiKey);
             await test.AccountsContext.Sessions.AddAsync(session);
             await test.AccountsContext.SaveChangesAsync();
             return defaultAccount;

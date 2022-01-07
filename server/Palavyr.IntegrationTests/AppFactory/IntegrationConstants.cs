@@ -1,10 +1,10 @@
-﻿namespace Palavyr.IntegrationTests.AppFactory
+﻿using System;
+
+namespace Palavyr.IntegrationTests.AppFactory
 {
     public static class IntegrationConstants
     {
         public const string SessionId = "abc123treu";
-        public const string ApiKey = "fgsa-sagasf-asfsf";
-        public const string AccountId = "345jhgk435";
         public const string DefaultArea = "area-234";
         public const string EmailAddress = "test@gmail.com";
         public const string Password = "12345";
