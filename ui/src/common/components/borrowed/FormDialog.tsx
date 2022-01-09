@@ -1,17 +1,11 @@
 import React from "react";
-import { Dialog, DialogContent, Box, makeStyles } from "@material-ui/core";
-import { DialogTitleWithCloseIcon } from "./DialogTitleWithCloseIcon";
-
+import { DialogContent, Box, makeStyles, Card } from "@material-ui/core";
+import { LoginAndRegisterButtons } from "./DialogTitleWithCloseIcon";
 
 export interface IFormDialog {
-    open: boolean,
-    onClose: any,
-    headline: string,
-    loading: boolean,
-    onFormSubmit: any,
-    content: React.ReactElement,
-    actions: React.ReactElement,
-    hideBackdrop: boolean
+    onFormSubmit: any;
+    content: React.ReactElement;
+    actions: React.ReactElement;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -21,50 +15,36 @@ const useStyles = makeStyles(theme => ({
         alignItems: "center",
         paddingBottom: theme.spacing(3),
         maxWidth: 420,
-
     },
     actions: {
-        marginTop: theme.spacing(2)
+        marginTop: theme.spacing(2),
     },
     dialogPaperScrollPaper: {
-        maxHeight: "none"
+        maxHeight: "none",
     },
     dialogContent: {
         paddingTop: 0,
-        paddingBottom: 0
-    }
+        paddingBottom: 0,
+    },
+    card: {
+        boxShadow: "none",
+    },
 }));
 
-
-export const FormDialog = ({ open, onClose, loading, headline, onFormSubmit, content, actions, hideBackdrop }: IFormDialog) => {
-
-    const classes = useStyles();
+export const FormCard = ({ onFormSubmit, content, actions }: IFormDialog) => {
+    const cls = useStyles();
 
     return (
-        <Dialog
-            open={open}
-            onClose={onClose}
-            disableBackdropClick={loading}
-            disableEscapeKeyDown={loading}
-            classes={{
-                paper: classes.dialogPaper,
-                paperScrollPaper: classes.dialogPaperScrollPaper
-            }}
-            hideBackdrop={hideBackdrop ? hideBackdrop : false}
-        >
-            <DialogTitleWithCloseIcon
-                title={headline}
-                onClose={onClose}
-                disabled={loading}
-            />
-            <DialogContent className={classes.dialogContent}>
+        <Card className={cls.card}>
+            <LoginAndRegisterButtons />
+            <DialogContent className={cls.dialogContent}>
                 <form onSubmit={onFormSubmit}>
                     <div>{content}</div>
-                    <Box width="100%" className={classes.actions}>
+                    <Box width="100%" className={cls.actions}>
                         {actions}
                     </Box>
                 </form>
             </DialogContent>
-        </Dialog>
+        </Card>
     );
-}
+};

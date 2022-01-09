@@ -5,7 +5,7 @@ import { Align } from "@common/positioning/Align";
 import React from "react";
 import { PrivacyPolicyContent } from "./PrivacyPolicyContent";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     primaryText: {
         color: theme.palette.success.main,
     },
@@ -25,27 +25,27 @@ export const PrivacyPolicyPage = () => {
 
     return (
         <LandingWrapper
-            TitleContent={
-                <TitleContent
-                    title={
-                        <Typography align="center" variant="h2" className={cls.primaryText}>
-                            Privacy Policy
-                        </Typography>
-                    }
-                    subtitle={
-                        <Typography align="center" variant="h6" className={cls.secondaryText}>
-                            We know this can a little boring to read, but its important. Thanks for understanding :)
-                        </Typography>
-                    }
-                />
-            }
-            MainContent={
-                <Align>
-                    <Paper className={cls.content}>
-                        <PrivacyPolicyContent />
-                    </Paper>
-                </Align>
-            }
+        // TitleContent={
+        //     <TitleContent
+        //         title={
+        //             <Typography align="center" variant="h2" className={cls.primaryText}>
+        //                 Privacy Policy
+        //             </Typography>
+        //         }
+        //         subtitle={
+        //             <Typography align="center" variant="h6" className={cls.secondaryText}>
+        //                 We know this can a little boring to read, but its important. Thanks for understanding :)
+        //             </Typography>
+        //         }
+        //     />
+        // }
+        // MainContent={
+        //     <Align>
+        //         <Paper className={cls.content}>
+        //             <PrivacyPolicyContent />
+        //         </Paper>
+        //     </Align>
+        // }
         />
     );
 };

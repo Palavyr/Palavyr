@@ -1,61 +1,38 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { LandingPageDialogSelector } from "@landing/components/dialogSelector/LandingPageDialogSelector";
 import { Header } from "@landing/components/header/Header";
-import { GreenStrip } from "@landing/components/sliver/ThinStrip";
 import { makeStyles } from "@material-ui/core";
-import { CHANGE_PASSWORD, REGISTER, TERMS_OF_SERVICE } from "@constants";
+import { CHANGE_PASSWORD, LOGIN, REGISTER, TERMS_OF_SERVICE } from "@constants";
 import { DialogTypes } from "@landing/components/dialogSelector/dialogTypes";
 import { YellowStrip } from "@common/components/YellowStrip";
-import { Footer } from "@landing/components/footer/Footer";
-import { Sliver } from "@landing/components/sliver/Sliver";
-import { BottomStrip } from "@landing/components/footer/BottomStrip";
+import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
         backgroundColor: theme.palette.common.white,
         overflowX: "hidden",
-    },
-    primaryText: {
-        color: theme.palette.success.main,
-    },
-    secondaryText: {
-        color: theme.palette.success.dark,
-    },
-    button: {
-        width: "18rem",
-        alignSelf: "center",
-        backgroundColor: theme.palette.background.default,
-        color: theme.palette.common.black,
-        "&:hover": {
-            backgroundColor: theme.palette.success.light,
-            color: theme.palette.common.black,
-        },
-    },
-    contentPadding: {
-        paddingTop: "2rem",
-        paddingBottom: "3rem",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-    },
-    media: {
-        width: "825px",
-        height: "508px",
-        boxShadow: theme.shadows[10],
-    },
-    mediaSpan: {
-        display: "flex",
-        justifyContent: "center",
+        height: "100%",
     },
 }));
 
-export interface ILandingWrapper {
-    TitleContent?: React.ReactNode;
-    MainContent: React.ReactNode;
-}
+export interface ILandingWrapper {}
 
-export const LandingWrapper = ({ TitleContent, MainContent }: ILandingWrapper) => {
+export const LandingWrapper = ({}: ILandingWrapper) => {
     const cls = useStyles();
+
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.pathname === "/") {
+            setDialogOpen(LOGIN);
+        } else if (location.pathname === "/login") {
+            setDialogOpen(LOGIN);
+        } else if (location.pathname === "/signup") {
+            setDialogOpen(REGISTER);
+        }
+
+        return () => {};
+    }, []);
 
     const [dialogOpen, setDialogOpen] = useState<DialogTypes>(null);
     const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
@@ -90,14 +67,6 @@ export const LandingWrapper = ({ TitleContent, MainContent }: ILandingWrapper) =
 
     return (
         <div className={cls.wrapper}>
-            <LandingPageDialogSelector
-                openLoginDialog={openLoginDialog}
-                dialogOpen={dialogOpen}
-                onClose={closeDialog}
-                openTermsDialog={openTermsDialog}
-                openRegisterDialog={openRegisterDialog}
-                openChangePasswordDialog={openChangePasswordDialog}
-            />
             <YellowStrip />
             <Header
                 openRegisterDialog={openRegisterDialog}
@@ -105,14 +74,18 @@ export const LandingWrapper = ({ TitleContent, MainContent }: ILandingWrapper) =
                 handleMobileDrawerOpen={handleMobileDrawerOpen}
                 handleMobileDrawerClose={handleMobileDrawerClose}
                 mobileDrawerOpen={isMobileDrawerOpen}
-            >
-                {TitleContent}
-            </Header>
-            <GreenStrip />
-            {MainContent}
-            <Sliver />
-            <Footer openLoginDialog={openLoginDialog} openRegisterDialog={openRegisterDialog} openTermsDialog={openTermsDialog} />
-            <BottomStrip />
+            ></Header>
+            <YellowStrip />
+            <div style={{ height: "100%", margin: "0 auto", flexGrow: 1, maxWidth: "424px", marginTop: "2rem", marginBottom: "2rem" }}>
+                <LandingPageDialogSelector
+                    openLoginDialog={openLoginDialog}
+                    dialogOpen={dialogOpen}
+                    onClose={closeDialog}
+                    openTermsDialog={openTermsDialog}
+                    openRegisterDialog={openRegisterDialog}
+                    openChangePasswordDialog={openChangePasswordDialog}
+                />
+            </div>
         </div>
     );
 };

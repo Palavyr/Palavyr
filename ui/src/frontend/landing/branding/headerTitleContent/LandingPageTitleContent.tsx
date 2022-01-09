@@ -5,6 +5,7 @@ import { SubtitleTypography } from "./components/SubtitleTypography";
 import { TitleTypography } from "./components/TitleTypography";
 import Fade from "react-reveal/Fade";
 import BorrowedCarousel from "common/components/carousel/carousel";
+import { LoginDialog } from "@landing/login/LoginDialog";
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -21,34 +22,15 @@ const useStyles = makeStyles(theme => ({
 
 export interface LandingPageTitleContentProps {}
 
-export const LangingPageTitleContent = ({  }: LandingPageTitleContentProps) => {
-    const items = [
-        <Fade bottom>
-            <TitleTypography>Chat Bot</TitleTypography>
-        </Fade>,
-        <Fade bottom>
-            <TitleTypography>Personal Concierge</TitleTypography>
-        </Fade>,
-        <Fade bottom>
-            <TitleTypography>Engagement Tool</TitleTypography>
-        </Fade>,
-        <Fade bottom>
-            <TitleTypography>Automatic Lead Generator</TitleTypography>
-        </Fade>,
-    ];
-
+export const LoginPageTitleContent = ({}: LandingPageTitleContentProps) => {
     return (
-        <Fade>
-            <TitleContent
-                title={
-                    <>
-                        <TitleTypography>Build Your own </TitleTypography>
-                        <BorrowedCarousel timeout={1050}>{items.map(x => x)}</BorrowedCarousel>
-                    </>
-                }
-                subtitle={<SubtitleTypography>Simple. No programing required</SubtitleTypography>}
-            ></TitleContent>
-            ;
-        </Fade>
+        <TitleContent
+        // title={
+        //     <>
+        //         {/* <LoginDialog /> */}
+        //     </>
+        // }
+        // subtitle={<SubtitleTypography>Simple. No programing required</SubtitleTypography>}
+        ></TitleContent>
     );
 };

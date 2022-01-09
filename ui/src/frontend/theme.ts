@@ -2,7 +2,7 @@ import { responsiveFontSizes, Theme } from "@material-ui/core";
 import { createTheme } from "@material-ui/core/styles";
 
 const palette = {
-    background: { default: "#F2F2F2" },
+    background: { default: "white" },
     primary: {
         main: "#264B94",
     },
