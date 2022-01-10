@@ -1,8 +1,7 @@
 import React from "react";
 import { makeStyles, useTheme } from "@material-ui/core";
 import AOS from "aos";
-import { LandingWrapper } from "./components/LandingWrapper";
-import { LoginPageTitleContent } from "./branding/headerTitleContent/LandingPageTitleContent";
+import { LandingPage } from "./components/LandingPage";
 
 AOS.init({
     duration: 1000,
@@ -55,5 +54,5 @@ export const LoginPage = () => {
     const cls = useStyles();
     const theme = useTheme();
 
-    return <LandingWrapper />;
+    return <LandingPage />;
 };

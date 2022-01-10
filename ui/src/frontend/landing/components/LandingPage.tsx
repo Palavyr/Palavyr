@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { LandingPageDialogSelector } from "@landing/components/dialogSelector/LandingPageDialogSelector";
 import { Header } from "@landing/components/header/Header";
 import { makeStyles } from "@material-ui/core";
-import { CHANGE_PASSWORD, LOGIN, REGISTER, TERMS_OF_SERVICE } from "@constants";
+import { CHANGE_PASSWORD, LOGIN, PRIVACY_POLICY, REGISTER, TERMS_OF_SERVICE } from "@constants";
 import { DialogTypes } from "@landing/components/dialogSelector/dialogTypes";
 import { YellowStrip } from "@common/components/YellowStrip";
 import { useLocation } from "react-router-dom";
@@ -15,9 +15,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export interface ILandingWrapper {}
-
-export const LandingWrapper = ({}: ILandingWrapper) => {
+export const LandingPage = () => {
     const cls = useStyles();
 
     const location = useLocation();
@@ -57,6 +55,10 @@ export const LandingWrapper = ({}: ILandingWrapper) => {
         setDialogOpen(TERMS_OF_SERVICE);
     }, [setDialogOpen]);
 
+    const openPrivacyDialog = useCallback(() => {
+        setDialogOpen(PRIVACY_POLICY);
+    }, [setDialogOpen]);
+
     const handleMobileDrawerOpen = useCallback(() => {
         setIsMobileDrawerOpen(true);
     }, [setIsMobileDrawerOpen]);
@@ -82,6 +84,7 @@ export const LandingWrapper = ({}: ILandingWrapper) => {
                     dialogOpen={dialogOpen}
                     onClose={closeDialog}
                     openTermsDialog={openTermsDialog}
+                    openPrivacyDialog={openPrivacyDialog}
                     openRegisterDialog={openRegisterDialog}
                     openChangePasswordDialog={openChangePasswordDialog}
                 />

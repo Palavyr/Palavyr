@@ -38,10 +38,11 @@ export type RegisterFormStatusTypes = "passwordsDontMatch" | "passwordTooShort" 
 export interface IRegisterDialog {
     setStatus: (status: RegisterFormStatusTypes) => void;
     openTermsDialog: any;
+    openPrivacyDialog: any;
     status: string | null;
 }
 
-export const RegisterDialog = ({ openTermsDialog, status, setStatus }: IRegisterDialog) => {
+export const RegisterDialog = ({ openTermsDialog, openPrivacyDialog, status, setStatus }: IRegisterDialog) => {
     const theme = useTheme();
     const classes = useStyles();
     const history = useHistory();
@@ -120,8 +121,22 @@ export const RegisterDialog = ({ openTermsDialog, status, setStatus }: IRegister
                         }
                     }}
                 >
-                    {" "}
-                    terms of service
+                    {" terms of service"}
+                </span>
+                {" and "}
+                <span
+                    className={classes.link}
+                    onClick={isLoading ? null : openPrivacyDialog}
+                    tabIndex={0}
+                    role="button"
+                    onKeyDown={event => {
+                        // For screenreaders listen to space and enter events
+                        if ((!isLoading && event.keyCode === 13) || event.keyCode === 32) {
+                            open();
+                        }
+                    }}
+                >
+                    {"privacy policy"}
                 </span>
             </Typography>
         );
