@@ -1,8 +1,6 @@
 import React from "react";
-import { AppBar, Toolbar, makeStyles, IconButton, Hidden } from "@material-ui/core";
-import { Align } from "@common/positioning/Align";
+import { AppBar, Toolbar, makeStyles } from "@material-ui/core";
 import { BrandName } from "@landing/branding/BrandName";
-import MenuIcon from "@material-ui/icons/Menu";
 import { NavigationDrawer } from "./NavigationDrawer";
 
 const useStyles = makeStyles(theme => ({
@@ -10,58 +8,15 @@ const useStyles = makeStyles(theme => ({
         border: "0px solid white",
     },
     appBar: {
-        marginTop: "1.5rem",
-        height: "6rem",
         position: "sticky",
         boxShadow: "0 0 black",
-        marginBottom: "3rem",
+        marginTop: "2rem",
+        marginBottom: "2rem",
     },
     toolbar: {
         height: "100%",
         display: "flex",
-
         justifyContent: "center",
-    },
-    newAccountButton: {
-        color: theme.palette.common.white,
-        backgroundColor: theme.palette.success.dark,
-        marginRight: "1rem",
-        "&:hover": {
-            color: theme.palette.success.dark,
-            backgroundColor: theme.palette.common.white,
-        },
-    },
-    loginButton: {
-        marginRight: "1rem",
-        border: "0px",
-    },
-    menuButton: {
-        color: "white",
-        border: "white",
-    },
-    menuButtonText: {
-        color: theme.palette.common.white,
-        "&:hover": {
-            color: theme.palette.success.main,
-        },
-    },
-
-    noDecoration: {
-        textDecoration: "none !important",
-    },
-    navButtons: {
-        display: "flex",
-        justifyContent: "space-evenly",
-        verticalAlign: "middle",
-    },
-    smallContainer: {
-        marginTop: "2rem",
-        marginBotton: "1rem",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        textAlign: "center",
-        width: "100%",
     },
 }));
 

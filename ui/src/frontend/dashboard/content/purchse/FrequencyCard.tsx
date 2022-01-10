@@ -3,7 +3,6 @@ import { SinglePurposeButton } from "@common/components/SinglePurposeButton";
 import { Card, Divider, makeStyles, Typography } from "@material-ui/core";
 import { PriceMap } from "@Palavyr-Types";
 import { Align } from "@common/positioning/Align";
-import { green50 } from "frontend/colorTheme/base";
 
 export interface IFrequencyCard {
     title: string;
@@ -32,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     },
     buttonHover: {
         "&:hover": {
-            backgroundColor: green50
+            backgroundColor: theme.palette.success.main,
         }
     }
 }));
