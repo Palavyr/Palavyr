@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { Meta } from '@storybook/react/types-6-0';
-import { FormDialog, IFormDialog } from './FormDialog';
+import { FormCard, IFormDialog } from './FormDialog';
 import { Button } from '@material-ui/core';
 
 
 export default {
     title: "Common/Borrowed/FormDialog",
-    component: FormDialog
+    component: FormCard
 } as Meta;
 
 
-const Template = (args: IFormDialog) => <FormDialog {...args} />;
+const Template = (args: IFormDialog) => <FormCard {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {

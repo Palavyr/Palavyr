@@ -1,5 +1,5 @@
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
-import { COULD_NOT_FIND_SERVER, GOOGLE_ACCOUNT_NOT_FOUND, INVALID_EMAIL, INVALID_GOOGLE_TOKEN, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, NOT_A_GOOGLE_ACCOUNT, VERIFICATION_EMAIL_SEND } from "@constants";
+import { COULD_NOT_FIND_SERVER, INVALID_EMAIL, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, VERIFICATION_EMAIL_SEND } from "@constants";
 import { PalavyrLinkedList } from "frontend/dashboard/content/responseConfiguration/conversation/PalavyrDataStructure/PalavyrLinkedList";
 import React, { Dispatch, ElementType, SetStateAction } from "react";
 import { PalavyrWidgetRepository } from "@common/client/PalavyrWidgetRepository";
@@ -475,16 +475,7 @@ export type RequiredDetails = {
     prettyName: string;
 };
 
-export type FormStatusTypes =
-    | typeof INVALID_EMAIL
-    | typeof NOT_A_DEFAULT_ACCOUNT
-    | typeof INVALID_PASSWORD
-    | typeof INVALID_GOOGLE_TOKEN
-    | typeof NOT_A_GOOGLE_ACCOUNT
-    | typeof GOOGLE_ACCOUNT_NOT_FOUND
-    | typeof COULD_NOT_FIND_SERVER
-    | typeof VERIFICATION_EMAIL_SEND
-    | null;
+export type FormStatusTypes = typeof INVALID_EMAIL | typeof NOT_A_DEFAULT_ACCOUNT | typeof INVALID_PASSWORD | typeof COULD_NOT_FIND_SERVER | typeof VERIFICATION_EMAIL_SEND | null;
 
 export type PlanType = "Free" | "Lyte" | "Premium" | "Pro";
 

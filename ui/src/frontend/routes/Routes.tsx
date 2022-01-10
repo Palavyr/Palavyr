@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Redirect, Route, Switch, useLocation } from "react-router-dom";
-import { LandingPage } from "@landing/Landing";
+import { LoginPage } from "@landing/LoginPage";
 import { ProtectedRoute } from "@protected-routes";
 import { DashboardLayout } from "frontend/dashboard/layouts/DashboardLayout";
 import { Success } from "frontend/dashboard/content/purchse/success/Success";
@@ -65,22 +65,14 @@ import { PleaseSubscribe } from "frontend/dashboard/content/purchse/pleaseSubscr
 import { PleaseSubscribeHelp } from "frontend/dashboard/content/help/PleaseSubscribeHelp";
 import { ConversationConfigurationPage } from "frontend/dashboard/content/responseConfiguration/conversation/ConversationConfigurationPage";
 import { IntroConversationConfigurationPage } from "frontend/dashboard/content/responseConfiguration/conversation/IntroConversationConfigurationPage";
-import { TutorialPage } from "@landing/tutorialPage/TutorialPage";
-import { TermsOfUsePage } from "@legal/terms-of-use/TermsOfUsePage";
-import { PrivacyPolicyPage } from "@legal/privacy-policy/PrivacyPolicy";
 import { ActivityDashboardPage } from "frontend/dashboard/content/activityDashboard/components/ActivityDashboardPage";
 import { ActivityDashboardHelp } from "frontend/dashboard/content/help/DataDashboardHelp";
 import { ToursPage } from "frontend/dashboard/content/welcome/OnboardingTour/tours/ToursPage";
 import { ToursPageHelp } from "frontend/dashboard/content/help/ToursPageHelp";
-import { blogPosts } from "@landing/blog/blogPosts";
-import { BlogPostRouteMeta } from "@Palavyr-Types";
-import { BlogPost } from "@landing/blog/components/BlogPost";
-import { BlogPage } from "@landing/blog/BlogPage";
-import { OurStoryPage } from "@landing/ourStory/OutStoryPage";
-import { OurTeamPage } from "@landing/ourTeam/OurTeamPage";
 import { WidgetDesignerPage } from "frontend/dashboard/content/designer/WidgetDesigner";
 import { pageview } from "@common/Analytics/gtag";
 import { IntentSettingsHelp } from "@frontend/dashboard/content/help/IntentSettingsHelp";
+import { SignupPage } from "@landing/SignupPage";
 
 const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Element[] | JSX.Element) => {
     const ComponentWithHelp = () => {
@@ -100,62 +92,17 @@ const withLayout = (ContentComponent: () => JSX.Element, helpComponent: JSX.Elem
 const withAreaTabs = (ContentComponent: JSX.Element[] | JSX.Element): (() => JSX.Element) => () => <IntentContent>{ContentComponent}</IntentContent>;
 const withSettingsTabs = (ContentComponent: JSX.Element[] | JSX.Element): (() => JSX.Element) => () => <SettingsContent>{ContentComponent}</SettingsContent>;
 
-const convertTitleToUriCompatible = (rawTitle: string) => {
-    let title = rawTitle;
-    title = title.toLowerCase();
-    /* Remove unwanted characters, only accept alphanumeric and space */
-    title = title.replace(/[^A-Za-z0-9 ]/g, "");
-    /* Replace multi spaces with a single space */
-    title = title.replace(/\s{2,}/g, " ");
-    /* Replace space with a '-' symbol */
-    title = title.replace(/\s/g, "-");
-    return title;
-};
-
-const createPostUrl = (title: string) => {
-    return `/blog/post/${title}`;
-};
-
-const createPostParam = (id: number) => {
-    return `?id=${id}`;
-};
-
 export const Routes = () => {
-    const blogPostRouteMetas: BlogPostRouteMeta[] = blogPosts.map(blogPost => {
-        const titleSlug = convertTitleToUriCompatible(blogPost.title);
-        const url = createPostUrl(titleSlug);
-        const params = createPostParam(blogPost.id);
-
-        return {
-            ...blogPost,
-            url,
-            params,
-        };
-    });
     return (
         <Router>
             <Switch>
-                <Route exact path="/" component={LandingPage} />
-                <Route exact path="/tutorial" component={TutorialPage} />
-                <Route exact path="/privacy-policy" component={PrivacyPolicyPage} />
-                <Route exact path="/terms-of-use" component={TermsOfUsePage} />
-                <Route exact path="/our-story" component={OurStoryPage} />
-                <Route exact path="/team" component={OurTeamPage} />
+                <Route exact path="/" component={LoginPage} />
+                <Route exact path="/login" component={LoginPage} />
+                <Route exact path="/signup" component={SignupPage} />
+
                 <Route exact path={RESET_PASSWORD_VERIFY} component={ConfirmYourResetLink} />
                 <Route exact path={RESET_PASSWORD_FORM} component={RenderPasswordDialog} />
                 <Route exact path={RESET_PASSWORD_SUCCESS} component={RenderResetSuccess} />
-
-                {blogPostRouteMetas.map((post: BlogPostRouteMeta) => {
-                    return (
-                        <Route
-                            key={post.url}
-                            exact
-                            path={post.url}
-                            render={() => <BlogPost date={post.date} title={post.title} url={post.url} img={post.src} content={post.content} otherArticles={blogPostRouteMetas.filter(m => m.id !== post.id)} />}
-                        />
-                    );
-                })}
-                <Route exact path="/blog" render={() => <BlogPage blogPosts={blogPostRouteMetas} />} />
 
                 <ProtectedRoute exact path="/dashboard" component={withLayout(QuickStartGuide, <QuickStartGuideHelp />)} />
                 <ProtectedRoute exact path="/dashboard/welcome" component={withLayout(QuickStartGuide, <QuickStartGuideHelp />)} />

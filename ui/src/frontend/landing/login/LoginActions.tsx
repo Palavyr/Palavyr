@@ -48,7 +48,7 @@ export const LoginActions = ({ isLoading, openChangePasswordDialog }: ILoginActi
                 disabled={isLoading}
                 size="large"
             >
-                Login
+                Log in
           {isLoading && <ButtonCircularProgress />}
             </Button>
             <Typography

@@ -2,15 +2,11 @@ import { makeStyles } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { NavBar } from "../navbar/NavBar";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     container: {
-        paddingLeft: "15%",
-        paddingRight: "15%",
         display: "flex",
-        flexDirection: "column",
         justifyContent: "center",
         backgroundColor: theme.palette.primary.dark,
-        paddingBottom: "3rem",
         textAlign: "center",
     },
     card: {

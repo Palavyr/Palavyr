@@ -2,14 +2,10 @@ import * as React from "react";
 import { TextField, FormControlLabel, Checkbox, Typography, makeStyles } from "@material-ui/core";
 import { VisibilityPasswordTextField } from "./VisibilityPasswordTextField";
 import { HighlightedInformation } from "./HighlightedInformation";
-import { DividerWithText } from "../DividerWithText";
-import { FormStatusTypes, GoogleAuthResponse } from "@Palavyr-Types";
-import { COULD_NOT_FIND_SERVER, GOOGLE_ACCOUNT_NOT_FOUND, INVALID_EMAIL, INVALID_GOOGLE_TOKEN, INVALID_PASSWORD, NOT_A_DEFAULT_ACCOUNT, NOT_A_GOOGLE_ACCOUNT } from "@constants";
+import { FormStatusTypes } from "@Palavyr-Types";
+import { INVALID_EMAIL, INVALID_PASSWORD } from "@constants";
 import { useEffect } from "react";
 import { SessionStorage } from "@localStorage/sessionStorage";
-import { GoogleLoginResponse, useGoogleLogin } from "react-google-login";
-import { googleOAuthClientId } from "@common/client/clientUtils";
-import GoogleLogin from "react-google-login";
 
 export interface IFormDialogContent {
     loginEmail: string;
@@ -20,10 +16,6 @@ export interface IFormDialogContent {
     isPasswordVisible: boolean;
     setIsPasswordVisible: any;
     status: FormStatusTypes;
-    responseGoogleSuccess(res: GoogleAuthResponse): void;
-    responseGoogleFailure(res: GoogleAuthResponse): void;
-    onGoogleSuccess(response: GoogleLoginResponse): void;
-    onGoogleFailure(error: any): void;
     rememberMe: boolean;
     setRememberMe(rememberMe: boolean): void;
 }
@@ -43,20 +35,7 @@ const useStyles = makeStyles({
     },
 });
 
-export const FormDialogContent = ({
-    rememberMe,
-    setRememberMe,
-    loginEmail,
-    setLoginEmail,
-    loginPassword,
-    setLoginPassword,
-    isPasswordVisible,
-    setIsPasswordVisible,
-    onGoogleSuccess,
-    onGoogleFailure,
-    setStatus,
-    status,
-}: IFormDialogContent) => {
+export const FormDialogContent = ({ rememberMe, setRememberMe, loginEmail, setLoginEmail, loginPassword, setLoginPassword, isPasswordVisible, setIsPasswordVisible, setStatus, status }: IFormDialogContent) => {
     const cls = useStyles();
 
     useEffect(() => {
@@ -66,18 +45,6 @@ export const FormDialogContent = ({
 
     return (
         <>
-            {/* <div className={cls.centeredItems}>
-                <GoogleLogin onSuccess={async (response: GoogleLoginResponse) => await onGoogleSuccess(response)} onFailure={onGoogleFailure} clientId={googleOAuthClientId} isSignedIn={false} theme="dark" />
-                <br></br>
-                {status === COULD_NOT_FIND_SERVER && <span className={cls.errorText}>Could not find server.</span>}
-                {status === INVALID_GOOGLE_TOKEN && <span className={cls.errorText}>Session Expired. Please wait a few minutes, and then try to log in again.</span>}
-                {status === NOT_A_GOOGLE_ACCOUNT && <span className={cls.errorText}>Email found, but should be used with standard login form (below).</span>}
-                {status === GOOGLE_ACCOUNT_NOT_FOUND && <span className={cls.errorText}>No account with this email address was found.</span>}
-            </div>
-            <br></br>
-            <DividerWithText text="OR" />
-            <br></br> */}
-            {/* <div className={cls.centeredItems}>{status === NOT_A_DEFAULT_ACCOUNT && <span className={cls.errorText}>Email found, but is associated with google login (above).</span>}</div> */}
             <TextField
                 variant="outlined"
                 margin="normal"
@@ -89,7 +56,7 @@ export const FormDialogContent = ({
                 autoFocus
                 autoComplete="off"
                 type="email"
-                onChange={(e) => {
+                onChange={e => {
                     setLoginEmail(e.target.value);
                     if (status === INVALID_EMAIL) {
                         setStatus(null);
@@ -107,7 +74,7 @@ export const FormDialogContent = ({
                 label="Password"
                 value={loginPassword}
                 autoComplete="off"
-                onChange={(e) => {
+                onChange={e => {
                     setLoginPassword(e.target.value);
                     if (status === INVALID_PASSWORD) {
                         setStatus(null);

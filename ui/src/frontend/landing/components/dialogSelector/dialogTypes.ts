@@ -1,1 +1,1 @@
-export type DialogTypes = "login" | "termsOfService" | "changePassword" | "register" | null;
+export type DialogTypes = "login" | "termsOfService" | "changePassword" | "register" | "privacypolicy" | null;
