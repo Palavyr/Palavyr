@@ -8,7 +8,6 @@ using Palavyr.Core.Services.AmazonServices.S3Service;
 using Palavyr.IntegrationTests.AppFactory.AutofacWebApplicationFactory;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
-using Palavyr.Core.Sessions;
 using Palavyr.IntegrationTests.AppFactory.ExtensionMethods;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures;
 using Palavyr.IntegrationTests.AppFactory.IntegrationTestFixtures.BaseFixture;
@@ -26,8 +25,6 @@ namespace Palavyr.IntegrationTests.Tests.Core.Services.AmazonServices.S3Service
         private IS3Retriever s3Retriever;
         private IS3Saver s3Saver;
         private string testUserDataBucket;
-        private IHoldAnAccountId accountIdTransport;
-        private ITransportACancellationToken cancellationTokenTransport;
 
         public S3SaverFixture(ITestOutputHelper testOutputHelper, IntegrationTestAutofacWebApplicationFactory factory) : base(testOutputHelper, factory)
         {
