@@ -26,11 +26,6 @@ const useStyles = makeStyles(theme => ({
         color: "white",
         backgroundColor: "#3e5f82",
     },
-    googlebutton: {
-        textAlign: "center",
-        width: "100%",
-        marginBottom: "1rem",
-    },
 }));
 
 export type RegisterFormStatusTypes = "passwordsDontMatch" | "passwordTooShort" | "invalidEmail" | typeof ACCOUNT_ALREADY_EXISTS | null;

@@ -305,31 +305,6 @@ export type SessionState = {
     extraQueryParams: ExtraQueryParams;
 };
 
-export type GoogleAuthObject = {
-    expires_at: number;
-    expires_in: number;
-    first_issued_at: number;
-    id_token: string;
-    idpId: string;
-    login_hint: string;
-    session_state: SessionState;
-    token_type: string; // Bearer
-};
-
-export type GoogleProfileObj = {
-    getEmail(): string;
-    getFamilyName(): string;
-    getGivenName(): string;
-    getImageUrl(): string;
-    getName(): string;
-};
-
-export type GoogleAuthResponse = {
-    getBasicProfile(): GoogleProfileObj;
-    getAuthResponse(): GoogleAuthObject;
-    getId(): string;
-};
-
 export type Images = Array<string>;
 export type StripeProduct = {
     id: string;

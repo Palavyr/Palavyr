@@ -23,11 +23,6 @@ import { FormDialogContent } from "@common/components/borrowed/FormDialogContent
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 
-export type GoogleResponse = {
-    tokenId: string;
-    googleId: string;
-};
-
 interface ILoginDialog {
     status: FormStatusTypes;
     setStatus: any;

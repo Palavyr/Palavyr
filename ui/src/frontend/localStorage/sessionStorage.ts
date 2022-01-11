@@ -7,10 +7,8 @@ class SessionStorageAccess {
     private SessionString: string = "sessionId";
     private JwtTokenString: string = "Authorization";
     private EmailString: string = "emailAddress";
-    private googleImage: string = "googleImage";
     private loginType: string = "loginType";
     private active: string = "rkjh45lh435lkh";
-    public GoogleLoginType: string = "google";
     public DefaultLoginType: string = "default";
 
     private _setItem(key: string, val: boolean | string) {
@@ -89,13 +87,6 @@ class SessionStorageAccess {
         this._setItem(this.JwtTokenString, jwtToken);
     }
 
-    setGoogleImage(imageUrl: string) {
-        this._setItem(this.googleImage, imageUrl);
-    }
-
-    setGoogleLoginType() {
-        this._setItem(this.loginType, this.GoogleLoginType);
-    }
     setDefaultLoginType() {
         this._setItem(this.loginType, this.DefaultLoginType);
     }
@@ -120,7 +111,6 @@ class SessionStorageAccess {
         this._setItem(this.SessionString, "");
         this._setItem(this.JwtTokenString, "");
         this._setItem(this.loginType, "");
-        this._setItem(this.googleImage, "");
         this._setItem(this.active, false);
     }
 
@@ -134,10 +124,6 @@ class SessionStorageAccess {
 
     getJwtToken() {
         return this._getItem(this.JwtTokenString);
-    }
-
-    getGoogleImage() {
-        return this._getItem(this.googleImage);
     }
 
     setImageData(imageId: string, presignedUrl: string, fileName: string, fileId: string) {

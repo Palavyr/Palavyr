@@ -5,7 +5,6 @@ import theme from "./theme";
 import { Routes } from "@public-routes";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "@common/components/ErrorBoundaries/ErrorFallback";
-// import RouteChangeTracker from "googleAnalytics/RouteChangeTracker";
 
 const App = () => {
     return (
@@ -16,7 +15,6 @@ const App = () => {
                         <CssBaseline />
                         <Routes />
                     </MuiThemeProvider>
-                    {/* <RouteChangeTracker /> */}
                 </BrowserRouter>
             </ErrorBoundary>
         </div>

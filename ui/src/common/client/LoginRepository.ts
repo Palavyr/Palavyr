@@ -16,12 +16,6 @@ export class LoginRepository {
                 EmailAddress: email,
                 Password: password,
             }),
-
-        RequestLoginWithGoogleToken: async (oneTimeCode: string, tokenId: string) =>
-            this.client.post<Credentials, {}>("authentication/login", {
-                OneTimeCode: oneTimeCode,
-                TokenId: tokenId,
-            }),
     };
 
     public Status = {
@@ -30,11 +24,6 @@ export class LoginRepository {
 
     public Account = {
         registerNewAccount: async (EmailAddress: string, Password: string) => this.client.post<Credentials, {}>(`account/create/default`, { EmailAddress, Password }),
-        registerNewAccountWithGoogle: async (oneTimeCode: string, tokenId: string) =>
-            this.client.post<Credentials, {}>("account/create/google", {
-                OneTimeCode: oneTimeCode,
-                TokenId: tokenId,
-            }),
     };
 
     public Reset = {

@@ -24,11 +24,6 @@ const useStyles = makeStyles(theme => ({
             cursor: "pointer",
         },
     },
-    googleImage: {
-        borderRadius: "50%",
-        maxHeight: `${DETAILS_MAX_HEIGHT}px`,
-        padding: ".5rem",
-    },
     toolTipInternal: {
         backgroundColor: theme.palette.primary.light,
         maxWidgth: "none",
@@ -54,20 +49,12 @@ export const UserDetails = React.memo(() => {
     const history = useHistory();
 
     const email = SessionStorage.getEmailAddress();
-    const googleImage = SessionStorage.getGoogleImage();
     const [loading, setLoading] = useState<boolean>(true);
 
     const { planTypeMeta, setViewName } = React.useContext(DashboardContext);
 
     let details: JSX.Element;
-    if (googleImage && email) {
-        details = (
-            <Align verticalCenter>
-                <img src={googleImage} alt="" className={classNames(cls.googleImage, cls.itemAlign)} />
-                {planTypeMeta && <Typography className={classNames(cls.text, cls.itemAlign)}>Subscription: {planTypeMeta.planType}</Typography>}
-            </Align>
-        );
-    } else if (email) {
+    if (email) {
         details = (
             <Align verticalCenter>
                 <span className={cls.default}>
@@ -81,6 +68,7 @@ export const UserDetails = React.memo(() => {
     } else {
         details = <Typography>Please Log In</Typography>;
     }
+
     const userOnClick = () => {
         setViewName("General Settings");
         history.push(`/dashboard/settings/email?tab=${GeneralSettingsLoc.email}`);
