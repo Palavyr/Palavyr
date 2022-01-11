@@ -29,7 +29,7 @@ export const BrandName = () => {
     const cls = useStyles();
     return (
         <div className={cls.logowrap}>
-            <div className={cls.logotypography} onClick={() => history.push("/")}>
+            <div className={cls.logotypography} onClick={() => history.push("https://www.palavyr.com/")}>
                 <Typography variant="body2" className={cls.brandText} display="inline">
                     Palavyr
                 </Typography>

@@ -76,7 +76,7 @@ export const LandingPage = () => {
                 handleMobileDrawerOpen={handleMobileDrawerOpen}
                 handleMobileDrawerClose={handleMobileDrawerClose}
                 mobileDrawerOpen={isMobileDrawerOpen}
-            ></Header>
+            />
             <YellowStrip />
             <div style={{ height: "100%", margin: "0 auto", flexGrow: 1, maxWidth: "424px", marginTop: "2rem", marginBottom: "2rem" }}>
                 <LandingPageDialogSelector
