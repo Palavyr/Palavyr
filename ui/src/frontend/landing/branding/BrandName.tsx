@@ -1,6 +1,5 @@
 import { makeStyles, Typography } from "@material-ui/core";
 import React from "react";
-import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     logowrap: {
@@ -25,11 +24,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const BrandName = () => {
-    const history = useHistory();
     const cls = useStyles();
 
-    const onClick = () => history.push("https://www.palavyr.com/");
-
+    const onClick = () => (window.location.href = "https://www.palavyr.com/");
     return (
         <div className={cls.logowrap}>
             <div className={cls.logotypography} onClick={onClick}>
