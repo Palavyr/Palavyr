@@ -2,7 +2,7 @@ import { makeStyles, Typography } from "@material-ui/core";
 import React from "react";
 import { useHistory } from "react-router-dom";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     logowrap: {
         display: "flex",
         flexDirection: "row",
@@ -27,10 +27,13 @@ const useStyles = makeStyles((theme) => ({
 export const BrandName = () => {
     const history = useHistory();
     const cls = useStyles();
+
+    const onClick = () => history.push("https://www.palavyr.com/");
+
     return (
         <div className={cls.logowrap}>
-            <div className={cls.logotypography} onClick={() => history.push("https://www.palavyr.com/")}>
-                <Typography variant="body2" className={cls.brandText} display="inline">
+            <div className={cls.logotypography} onClick={onClick}>
+                <Typography variant="body2" className={cls.brandText} display="inline" onClick={onClick}>
                     Palavyr
                 </Typography>
             </div>
