@@ -29,7 +29,6 @@ export const redirectToHomeWhenSessionNotEstablished = async (history: History<u
 export const webUrl = process.env.WEB_URL as string;
 export const serverUrl = process.env.API_URL as string;
 export const widgetUrl = process.env.WIDGET_URL as string;
-export const googleOAuthClientId = process.env.GOOGLE_OAUTH as string;
 export const stripeKey = process.env.STRIPE_KEY as string;
 export const currentEnvironment = process.env.CURRENTENV as string;
 export const softwareVersion = process.env.VERSION as string;
@@ -46,53 +45,5 @@ export enum Environments {
 export const isDevelopmentStage = () => {
     return currentEnvironment.toUpperCase() !== "Production".toUpperCase();
 };
-
-// console.log("Server Url: " + serverUrl);
-// console.log("Web URl: " + webUrl);
-// console.log("Widget Url: " + widgetUrl);
-// console.log("Google OAuthId: " + googleOAuthClientId);
-// console.log("Stripe Key: " + stripeKey);
-// console.log("Current Env: " + currentEnvironment);
-// console.log("SoftwareVersion: " + softwareVersion);
-// console.log("Landing Widget ApiKey: " + landingWidgetApiKey);
-// console.log("Google analytics: " + googleAnalyticsTrackingId);
-// console.log("Google Youtube api key: " + googleYoutubeApikey);
-
-
-// if (softwareVersion === undefined) {
-//     console.log("SOFTWARE VERSION IS UNDEFINED");
-// }
-
-// if (serverUrl === undefined) {
-//     console.log("SERVER URL UNDEFINED");
-// }
-
-// if (webUrl === undefined) {
-//     console.log("WEB URL UNDEFINED");
-// }
-
-// if (widgetUrl === undefined) {
-//     console.log("WIDGET URL UNDEFINED");
-// }
-
-// if (googleOAuthClientId === undefined) {
-//     console.log("GOOGLE OAUTH CLIENT ID UNDEFINED");
-// }
-
-// if (stripeKey === undefined) {
-//     console.log("STRIPE KEY UNDEFINED");
-// }
-
-// if (landingWidgetApiKey === undefined) {
-//     console.log("LANDING WIDGET API KEY UNDEFINED");
-// }
-
-// if (googleAnalyticsTrackingId === undefined) {
-//     console.log("GOOGLE_ANALYTICS_KEY UNDEFINED");
-// }
-
-// if (googleYoutubeApikey === undefined) {
-//     console.log("GOOGLE_YOUTUBE_KEY UNDEFINED");
-// }
 
 export const SPECIAL_HEADERS = {};

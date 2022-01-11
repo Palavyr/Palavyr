@@ -1,14 +1,12 @@
-import * as React from 'react';
-import { Button, Typography, makeStyles } from '@material-ui/core';
-import classNames from 'classnames';
-import { ButtonCircularProgress } from '@common/components/borrowed/ButtonCircularProgress';
-
+import * as React from "react";
+import { Button, Typography, makeStyles } from "@material-ui/core";
+import classNames from "classnames";
+import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
 
 export interface ILoginActions {
     isLoading: boolean;
     openChangePasswordDialog: any;
 }
-
 
 const useStyles = makeStyles(theme => ({
     forgotPassword: {
@@ -29,44 +27,28 @@ const useStyles = makeStyles(theme => ({
     loginbutton: {
         color: "white",
         backgroundColor: "#3e5f82",
-
-    }
+    },
 }));
 
-
 export const LoginActions = ({ isLoading, openChangePasswordDialog }: ILoginActions) => {
-
     const classes = useStyles();
 
     return (
         <>
-            <Button
-                className={classes.loginbutton}
-                type="submit"
-                fullWidth
-                variant="contained"
-                disabled={isLoading}
-                size="large"
-            >
+            <Button className={classes.loginbutton} type="submit" fullWidth variant="contained" disabled={isLoading} size="large">
                 Log in
-          {isLoading && <ButtonCircularProgress />}
+                {isLoading && <ButtonCircularProgress />}
             </Button>
             <Typography
                 align="center"
-                className={classNames(
-                    classes.forgotPassword,
-                    isLoading ? classes.disabledText : null
-                )}
+                className={classNames(classes.forgotPassword, isLoading ? classes.disabledText : null)}
                 color="primary"
                 onClick={isLoading ? null : openChangePasswordDialog}
                 tabIndex={0}
                 role="button"
-                onKeyDown={(event) => {
+                onKeyDown={event => {
                     // For screenreaders listen to space and enter events
-                    if (
-                        (!isLoading && event.keyCode === 13) ||
-                        event.keyCode === 32
-                    ) {
+                    if ((!isLoading && event.keyCode === 13) || event.keyCode === 32) {
                         openChangePasswordDialog();
                     }
                 }}
@@ -74,5 +56,5 @@ export const LoginActions = ({ isLoading, openChangePasswordDialog }: ILoginActi
                 Forgot Password?
             </Typography>
         </>
-    )
-}
+    );
+};

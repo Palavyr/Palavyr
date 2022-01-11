@@ -4,14 +4,10 @@ import { List, Collapse, makeStyles } from "@material-ui/core";
 import Auth from "@auth/Auth";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-// import SettingsIcon from "@material-ui/icons/Settings";
-// import { GeneralSettingsLoc } from "@Palavyr-Types";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import { DashboardContext } from "../../DashboardContext";
 import { SidebarSectionHeader } from "./sectionComponents/SidebarSectionHeader";
 import { SidebarLinkItem } from "./sectionComponents/SideBarLinkItem";
-import { GoogleLogout } from "react-google-login";
-import { googleOAuthClientId } from "@common/client/clientUtils";
 import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
 
 const useStyles = makeStyles(theme => ({
@@ -36,11 +32,6 @@ export const OtherSection = memo(({ isActive, menuOpen }: OtherSectionProps) => 
         history.push("/dashboard/welcome");
     };
 
-    // const generalSettingsOnClick = () => {
-    //     setViewName("General Settings");
-    //     history.push(`/dashboard/settings/email?tab=${GeneralSettingsLoc.email}`);
-    // };
-
     const getWidgetOnClick = () => {
         setViewName("Get Widget");
         history.push("/dashboard/getwidget");
@@ -51,21 +42,12 @@ export const OtherSection = memo(({ isActive, menuOpen }: OtherSectionProps) => 
         history.push("/dashboard/tour");
     };
 
-    const logoutOnClick = () => Auth.PerformLogout(() => history.push("/"));
+    const logoutOnClick = async () => await Auth.PerformLogout(() => history.push("/"));
 
     return (
         <List>
             <SidebarSectionHeader menuOpen={menuOpen} className={"other-sidebar-tour"} title="Other" onClick={() => setOtherOpen(!otherOpen)} currentState={otherOpen} />
             <Collapse in={otherOpen} timeout="auto" unmountOnExit>
-                {/* <SidebarLinkItem
-                    toolTipText=" General Settings"
-                    menuOpen={menuOpen}
-                    className={"settings-sidebar-tour"}
-                    text="Settings"
-                    isActive={isActive}
-                    onClick={generalSettingsOnClick}
-                    IconComponent={<SettingsIcon className={cls.icon} />}
-                /> */}
                 <SidebarLinkItem
                     toolTipText="How To Get The Widget"
                     menuOpen={menuOpen}
@@ -94,23 +76,7 @@ export const OtherSection = memo(({ isActive, menuOpen }: OtherSectionProps) => 
                     IconComponent={<EmojiPeopleIcon className={cls.icon} />}
                 />
             </Collapse>
-            <GoogleLogout
-                onLogoutSuccess={logoutOnClick}
-                clientId={googleOAuthClientId}
-                render={renderProps => {
-                    return (
-                        <SidebarLinkItem
-                            toolTipText="Log out"
-                            menuOpen={menuOpen}
-                            text="Log out"
-                            isActive={true}
-                            onClick={renderProps.onClick}
-                            disabled={renderProps.disabled}
-                            IconComponent={<ExitToAppIcon className={cls.icon} />}
-                        />
-                    );
-                }}
-            />
+            <SidebarLinkItem toolTipText="Log out" menuOpen={menuOpen} text="Log out" isActive={true} onClick={logoutOnClick} IconComponent={<ExitToAppIcon className={cls.icon} />} />
         </List>
     );
 });

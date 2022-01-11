@@ -1,7 +1,6 @@
 import { SessionStorage } from "@localStorage/sessionStorage";
 import { LoginRepository } from "@common/client/LoginRepository";
 import { PalavyrRepository } from "@common/client/PalavyrRepository";
-import { googleOAuthClientId } from "@common/client/clientUtils";
 import { Credentials } from "@Palavyr-Types";
 import { LogoutRepository } from "@common/client/LogoutRepository";
 
@@ -30,11 +29,6 @@ class Auth {
             console.log("Error trying to reach the server.");
             return null;
         }
-    }
-
-    async registerWithGoogle(oneTimeCode: string, tokenId: string, callback: () => void, errorCallback: (response) => void) {
-        const authenticationResponse = await this.loginClient.Account.registerNewAccountWithGoogle(oneTimeCode, tokenId);
-        return await this.processAuthenticationResponse(authenticationResponse, callback, errorCallback);
     }
 
     private async processAuthenticationResponse(authenticationResponse: Credentials, successRedirectToDashboard: () => any, errorCallback: (response: Credentials) => any): Promise<boolean> {
@@ -70,16 +64,6 @@ class Auth {
         }
     }
 
-    async loginWithGoogle(oneTimeCode: string, tokenId: string, successRedirectToDashboard: () => void, errorCallback: (response: Credentials) => void): Promise<boolean | null> {
-        try {
-            const authenticationResponse = await this.loginClient.Login.RequestLoginWithGoogleToken(oneTimeCode, tokenId);
-            return await this.processAuthenticationResponse(authenticationResponse, successRedirectToDashboard, errorCallback);
-        } catch {
-            console.log("Error attempting to reach the server.");
-            return Promise.resolve(null);
-        }
-    }
-
     async loginFromMemory(callback: any) {
         const token = SessionStorage.getJwtToken();
         if (token) {
@@ -101,27 +85,12 @@ class Auth {
         await callback();
     }
 
-    async googleLogout(callback: () => any) {
-        try {
-            window.gapi.load("auth2", () => {
-                window.gapi.auth2.init({ client_id: googleOAuthClientId, fetch_basic_profile: true });
-                window.gapi.auth2.getAuthInstance().then((auth2) => {
-                    auth2.signOut().then(async () => {
-                        auth2.disconnect().then(await this.logout(callback));
-                    });
-                });
-            });
-        } catch {
-            await this.logout(callback);
-        }
-    }
-
     isAuthenticated() {
         return this.authenticated;
     }
 
-    PerformLogout(logoutCallback: any) {
-        this.logout(logoutCallback);
+    async PerformLogout(logoutCallback: any) {
+        await this.logout(logoutCallback);
     }
 
     ClearAuthentication() {
