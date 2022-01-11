@@ -1011,7 +1011,7 @@ export type WidgetConversationUpdate = {
 
 export type ConversationRecordUpdate = {
     ConversationId: string;
-    AreaIdentifier: string;
+    IntentId: string;
     Name: string;
     Email: string;
     PhoneNumber: string;

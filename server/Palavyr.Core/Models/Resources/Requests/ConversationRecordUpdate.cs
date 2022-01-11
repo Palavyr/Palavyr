@@ -6,7 +6,7 @@ namespace Palavyr.Core.Models.Resources.Requests
     public class ConversationRecordUpdate
     {
         public string ConversationId { get; set; }
-        public string AreaIdentifier { get; set; }
+        public string IntentId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
@@ -18,7 +18,7 @@ namespace Palavyr.Core.Models.Resources.Requests
         
         private ConversationRecordUpdate(
             string conversationId,
-            string areaIdentifier,
+            string intentId,
             string name,
             string email,
             string phone,
@@ -26,7 +26,7 @@ namespace Palavyr.Core.Models.Resources.Requests
         )
         {
             ConversationId = conversationId;
-            AreaIdentifier = areaIdentifier;
+            IntentId = intentId;
             Name = name;
             Email = email;
             PhoneNumber = phone;

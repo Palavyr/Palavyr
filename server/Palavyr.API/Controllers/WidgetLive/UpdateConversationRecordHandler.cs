@@ -30,7 +30,7 @@ namespace Palavyr.API.Controllers.WidgetLive
 
         public async Task UpdateConversationRecord(ConversationRecordUpdate convo)
         {
-            var areaId = convo.AreaIdentifier;
+            var areaId = convo.IntentId;
             var email = convo.Email;
             var name = convo.Name;
             var phone = convo.PhoneNumber;
@@ -41,7 +41,7 @@ namespace Palavyr.API.Controllers.WidgetLive
 
             if (!string.IsNullOrEmpty(areaId)) // we set this already when we create the convo, but here we use it to indicate if we've sent an email.
             {
-                var area = await configurationRepository.GetAreaById(convo.AreaIdentifier);
+                var area = await configurationRepository.GetAreaById(convo.IntentId);
                 record.EmailTemplateUsed = area.EmailTemplate;
             }
 

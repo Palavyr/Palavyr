@@ -31,7 +31,7 @@ export class PalavyrWidgetRepository {
         widgetPreferences: (secretKey: SecretKey) => `widget/preferences?key=${secretKey}`,
         locale: (secretKey: SecretKey) => `account/settings/locale/widget?key=${secretKey}`,
         areas: (secretKey: SecretKey) => `widget/areas?key=${secretKey}`,
-        newConvo: (secretKey: SecretKey, areaId: string) => `widget/${areaId}/create?key=${secretKey}`,
+        newConversationHistory: (secretKey: SecretKey) => `widget/create?key=${secretKey}`,
         updateConvoHistory: (secretKey: SecretKey) => `widget/conversation?key=${secretKey}`,
         updateConvoRecord: (secretKey: SecretKey) => `widget/record?key=${secretKey}`,
         confirmationEmail: (secretKey: SecretKey, areaIdentifier: string) => `widget/area/${areaIdentifier}/email/send?key=${secretKey}`,
@@ -47,8 +47,8 @@ export class PalavyrWidgetRepository {
             WidgetPreferences: async () => this.client.get<WidgetPreferences>(this.Routes.widgetPreferences(this.secretKey)),
             Locale: async () => this.client.get<LocaleResponse>(this.Routes.locale(this.secretKey)),
             Areas: async () => this.client.get<Array<AreaTable>>(this.Routes.areas(this.secretKey)),
-            NewConversation: async (areaId: string, recordUpdateDto: Partial<ConversationRecordUpdate>) =>
-                this.client.post<NewConversation, {}>(this.Routes.newConvo(this.secretKey, areaId), recordUpdateDto),
+            NewConversationHistory: async (recordUpdateDto: Partial<ConversationRecordUpdate>) =>
+                this.client.post<NewConversation, {}>(this.Routes.newConversationHistory(this.secretKey), recordUpdateDto),
             NodeImage: async (nodeId: string) => this.client.get<string>(this.Routes.nodeImage(this.secretKey, nodeId)),
             IntroSequence: async () => this.client.get<WidgetNodes>(this.Routes.getIntroSequence(this.secretKey)),
         },
