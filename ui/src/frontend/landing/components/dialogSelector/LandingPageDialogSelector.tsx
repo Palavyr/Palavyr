@@ -19,6 +19,7 @@ export interface ILandingPageDialogSelector {
     onClose(): void;
 }
 
+// TODO: Refactor this to use pages. This current logic is legacy from the template I used
 export const LandingPageDialogSelector = ({ dialogOpen, openPrivacyDialog, openTermsDialog, openRegisterDialog, openLoginDialog, openChangePasswordDialog, onClose }: ILandingPageDialogSelector) => {
     const [loginStatus, setLoginStatus] = useState<FormStatusTypes>(null);
     const [registerStatus, setRegisterStatus] = useState<string | null>(null);

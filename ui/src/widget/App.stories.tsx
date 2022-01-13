@@ -11,14 +11,14 @@ import { convoA } from "@frontend/dashboard/content/designer/dummy_conversations
 
 const fakeKey = "secret-key";
 const isDemo = false;
-const areaId = "abc123";
+const intentId = "abc123";
 const routes = new PalavyrWidgetRepository(fakeKey).Routes;
 
 const client = new ConfigureMockClient();
 client.ConfigureGet(routes.precheck(fakeKey, isDemo), precheckResult);
 client.ConfigureGet(routes.widgetPreferences(fakeKey), testWidgetPreferences);
 client.ConfigureGet(routes.areas(fakeKey), areas);
-client.ConfigureGet(routes.newConvo(fakeKey, areaId), convoA(areaId));
+client.ConfigureGet(routes.newConversationHistory(fakeKey), convoA(intentId));
 
 export default {
     title: "Main/WidgetApp",

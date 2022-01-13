@@ -368,25 +368,4 @@ export class PalavyrRepository {
         UnselectAll: async () => this.client.post(`enquiries/selectall`),
         SelectAll: async () => this.client.post(`enquiries/unselectall`),
     };
-
-    public Youtube = {
-        GetVideoMap: async (): Promise<VideoMap[]> => {
-            const playlistId = "PL8zxShANCblyyabbAD7EQS-isVCI3EaF_";
-            const playlistItemsUrl = (apikey: string, playlistId: string) =>
-                `https://www.googleapis.com/youtube/v3/playlistItems?key=${apikey}&maxResults=50&part=contentDetails,snippet&playlistId=${playlistId}`;
-            const playlistItemsResponse = await fetch(playlistItemsUrl(googleYoutubeApikey, playlistId));
-            const data = await playlistItemsResponse.json();
-
-            const videoMetas = data.items
-                .map((x: PlaylistItemsResource) => {
-                    return {
-                        videoId: x.contentDetails.videoId,
-                        title: x.snippet.title,
-                        description: x.snippet.description,
-                    };
-                })
-                .filter((x: VideoMap) => x.title !== "Private video");
-            return videoMetas;
-        },
-    };
 }

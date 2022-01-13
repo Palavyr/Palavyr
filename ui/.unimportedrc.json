@@ -1,0 +1,16 @@
+{
+    "entry": [
+        "src/frontend/index.tsx",
+        "src/widget/index.tsx"
+    ],
+    "extensions": [
+        ".tsx",
+        ".jsx",
+        ".js",
+        ".ts"
+    ],
+    "ignorePatterns": [
+        "**/node_modules/**",
+        "private/**"
+    ]
+}

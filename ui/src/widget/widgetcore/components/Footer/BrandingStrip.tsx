@@ -1,10 +1,9 @@
 import { makeStyles, Typography } from "@material-ui/core";
-import React, { useContext } from "react";
+import React from "react";
 import ReplayIcon from "@material-ui/icons/Replay";
 import "@widgetcore/widget/widget.module.scss";
 import classNames from "classnames";
 import { useWidgetStyles } from "@widgetcore/widget/Widget";
-import { WidgetContext } from "@widgetcore/context/WidgetContext";
 import { IAppContext } from "widget/hook";
 
 const useStyles = makeStyles(theme => ({
@@ -40,7 +39,7 @@ const useStyles = makeStyles(theme => ({
         textAlign: "right",
     },
 }));
-export const BrandingStrip = ({ context }: {context: IAppContext }) => {
+export const BrandingStrip = ({ context }: { context: IAppContext }) => {
     const cls = useStyles();
     const wcls = useWidgetStyles();
     return (

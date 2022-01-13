@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef } from "react";
 import { makeStyles, useTheme, TextField, FormControlLabel, Checkbox, Typography, FormHelperText, Button } from "@material-ui/core";
-import { FormCard } from "@common/components/borrowed/FormDialog";
+import { FormCard } from "@common/components/borrowed/FormCard";
 import { VisibilityPasswordTextField } from "@common/components/borrowed/VisibilityPasswordTextField";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
 import { useHistory } from "react-router-dom";
@@ -22,9 +22,20 @@ const useStyles = makeStyles(theme => ({
             color: theme.palette.primary.dark,
         },
     },
-    registerbutton: {
+    submitButton: {
+        color: theme.palette.common.white,
+        borderRadius: "4px",
+        backgroundColor: theme.palette.secondary.main,
+        "&:hover": {
+            backgroundColor: theme.palette.primary.dark,
+            color: "white",
+            borderRadius: "4px",
+        },
+    },
+    loadingButton: {
+        backgroundColor: theme.palette.primary.dark,
         color: "white",
-        backgroundColor: "#3e5f82",
+        borderRadius: "4px",
     },
 }));
 
@@ -39,7 +50,7 @@ export interface IRegisterDialog {
 
 export const RegisterDialog = ({ openTermsDialog, openPrivacyDialog, status, setStatus }: IRegisterDialog) => {
     const theme = useTheme();
-    const classes = useStyles();
+    const cls = useStyles();
     const history = useHistory();
 
     const [isLoading, setIsLoading] = useState(false);
@@ -105,7 +116,7 @@ export const RegisterDialog = ({ openTermsDialog, openPrivacyDialog, status, set
             <Typography variant="body1">
                 I agree to the
                 <span
-                    className={classes.link}
+                    className={cls.link}
                     onClick={isLoading ? null : openTermsDialog}
                     tabIndex={0}
                     role="button"
@@ -120,7 +131,7 @@ export const RegisterDialog = ({ openTermsDialog, openPrivacyDialog, status, set
                 </span>
                 {" and "}
                 <span
-                    className={classes.link}
+                    className={cls.link}
                     onClick={isLoading ? null : openPrivacyDialog}
                     tabIndex={0}
                     role="button"
@@ -218,15 +229,14 @@ export const RegisterDialog = ({ openTermsDialog, openPrivacyDialog, status, set
                     />
                     {hasTermsOfServiceError && (
                         <FormHelperText error style={{ display: "block", marginTop: theme.spacing(-1) }}>
-                            In order to create an account, you have to accept our terms of service.
+                            In order to create an account, you must accept our terms of service.
                         </FormHelperText>
                     )}
                 </>
             }
             actions={
-                <Button className={classes.registerbutton} type="submit" fullWidth variant="contained" size="large" disabled={isLoading}>
-                    Register
-                    {isLoading && <ButtonCircularProgress />}
+                <Button className={isLoading ? cls.loadingButton : cls.submitButton} type="submit" fullWidth variant="contained" size="large" disabled={isLoading}>
+                    {isLoading ? <ButtonCircularProgress /> : "Submit"}
                 </Button>
             }
         />

@@ -1,11 +1,6 @@
 import React from "react";
 import { makeStyles, useTheme } from "@material-ui/core";
-import AOS from "aos";
 import { LandingPage } from "./components/LandingPage";
-
-AOS.init({
-    duration: 1000,
-});
 
 const useStyles = makeStyles(theme => ({
     wrapper: {

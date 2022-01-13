@@ -78,7 +78,7 @@ export class StandardComponents {
             const onChange = async (_: any, newOption: SelectedOption) => {
                 if (designer) return;
 
-                const newConversation = await client.Widget.Get.NewConversation(newOption.areaId, { Name: context.name, Email: context.emailAddress });
+                const newConversation = await client.Widget.Get.NewConversationHistory({IntentId: newOption.areaId, Name: context.name, Email: context.emailAddress });
                 const nodes = newConversation.conversationNodes;
                 const convoId = newConversation.conversationId;
                 const rootNode = getRootNode(nodes);

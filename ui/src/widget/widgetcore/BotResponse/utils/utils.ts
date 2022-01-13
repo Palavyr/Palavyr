@@ -28,7 +28,7 @@ export const assembleEmailRecordData = (
 ): Partial<ConversationRecordUpdate> => {
     return {
         ConversationId: conversationId,
-        AreaIdentifier: areaIdentifier,
+        IntentId: areaIdentifier,
         Name: name,
         Email: email,
         PhoneNumber: PhoneNumber,

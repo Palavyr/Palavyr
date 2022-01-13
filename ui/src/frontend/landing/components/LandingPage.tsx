@@ -15,6 +15,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+// Refactor this as well to use pages. This is so silly. Works, but yeah.
 export const LandingPage = () => {
     const cls = useStyles();
 
@@ -28,8 +29,6 @@ export const LandingPage = () => {
         } else if (location.pathname === "/signup") {
             setDialogOpen(REGISTER);
         }
-
-        return () => {};
     }, []);
 
     const [dialogOpen, setDialogOpen] = useState<DialogTypes>(null);
