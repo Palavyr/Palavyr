@@ -7,11 +7,12 @@ namespace Palavyr.API.Controllers.Accounts
 {
     public class DeleteAccountController : PalavyrBaseController
     {
+        public const string Route = "account/delete-account";
         public DeleteAccountController()
         {
         }
 
-        [HttpPost("account/delete-account")]
+        [HttpPost(Route)]
         public async Task DeleteAccount(CancellationToken cancellationToken)
         {
             await Mediator.Send(new DeleteAccountRequest(), cancellationToken);
