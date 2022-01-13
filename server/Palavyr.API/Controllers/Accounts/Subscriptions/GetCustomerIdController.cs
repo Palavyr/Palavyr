@@ -1,29 +1,27 @@
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
     public class GetCustomerIdController : PalavyrBaseController
     {
-        private readonly ILogger<GetCustomerIdController> logger;
-        private readonly IAccountRepository accountRepository;
+        private readonly IMediator mediator;
+        public const string Route = "payments/customer-id";
 
         public GetCustomerIdController(
-            ILogger<GetCustomerIdController> logger,
-            IAccountRepository accountRepository
+            IMediator mediator
         )
         {
-            this.logger = logger;
-            this.accountRepository = accountRepository;
+            this.mediator = mediator;
         }
 
-        [HttpGet("payments/customer-id")]
+        [HttpGet(Route)]
         public async Task<string> Get()
         {
-            var account = await accountRepository.GetAccount();
-            return account.StripeCustomerId;
+            var response = await mediator.Send(new GetStripeCustomerIdRequest());
+            return response.Response;
         }
     }
 }
