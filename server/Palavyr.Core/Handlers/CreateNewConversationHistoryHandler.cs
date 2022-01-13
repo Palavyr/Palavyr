@@ -31,7 +31,7 @@ namespace Palavyr.Core.Handlers
         }
         public async Task<CreateNewConversationHistoryResponse> Handle(CreateNewConversationHistoryRequest recordUpdate, CancellationToken cancellationToken)
         {
-            var (name, intentId, email) = recordUpdate;
+            var (intentId, name, email) = recordUpdate;
             
             logger.LogDebug("Fetching nodes...");
             var standardNodes = await configurationRepository.GetAreaConversationNodes(intentId);

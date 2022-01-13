@@ -1,7 +1,8 @@
 import * as React from "react";
-import { Button, Typography, makeStyles } from "@material-ui/core";
+import { Button, makeStyles } from "@material-ui/core";
 import classNames from "classnames";
 import { ButtonCircularProgress } from "@common/components/borrowed/ButtonCircularProgress";
+import { PalavyrText } from "@common/components/typography/PalavyrTypography";
 
 export interface ILoginActions {
     isLoading: boolean;
@@ -13,9 +14,11 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(2),
         color: theme.palette.primary.main,
         cursor: "pointer",
+
         "&:enabled:hover": {
             color: theme.palette.primary.dark,
         },
+
         "&:enabled:focus": {
             color: theme.palette.primary.dark,
         },
@@ -24,24 +27,29 @@ const useStyles = makeStyles(theme => ({
         cursor: "auto",
         color: theme.palette.text.disabled,
     },
-    loginbutton: {
-        color: "white",
-        backgroundColor: "#3e5f82",
+    submitButton: {
+        color: theme.palette.common.white,
+        borderRadius: "4px",
+        backgroundColor: theme.palette.secondary.main,
+        "&:hover": {
+            backgroundColor: theme.palette.primary.dark,
+            color: "white",
+            borderRadius: "4px",
+        },
     },
 }));
 
 export const LoginActions = ({ isLoading, openChangePasswordDialog }: ILoginActions) => {
-    const classes = useStyles();
-
+    const cls = useStyles();
     return (
         <>
-            <Button className={classes.loginbutton} type="submit" fullWidth variant="contained" disabled={isLoading} size="large">
-                Log in
+            <Button className={cls.submitButton} type="submit" fullWidth variant="contained" size="large">
+                Submit
                 {isLoading && <ButtonCircularProgress />}
             </Button>
-            <Typography
+            <PalavyrText
                 align="center"
-                className={classNames(classes.forgotPassword, isLoading ? classes.disabledText : null)}
+                className={classNames(cls.forgotPassword, isLoading ? cls.disabledText : null)}
                 color="primary"
                 onClick={isLoading ? null : openChangePasswordDialog}
                 tabIndex={0}
@@ -54,7 +62,7 @@ export const LoginActions = ({ isLoading, openChangePasswordDialog }: ILoginActi
                 }}
             >
                 Forgot Password?
-            </Typography>
+            </PalavyrText>
         </>
     );
 };

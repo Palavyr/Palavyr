@@ -66,7 +66,7 @@ export class PalavyrWidgetRepository {
 
         Send: {
             ConfirmationEmail: async (
-                areaIdentifier: string,
+                intentId: string,
                 emailAddress: string,
                 name: string,
                 phone: string,
@@ -75,7 +75,7 @@ export class PalavyrWidgetRepository {
                 keyValues: KeyValues,
                 convoId: string
             ) =>
-                this.client.post<SendEmailResultResponse, {}>(this.Routes.confirmationEmail(this.secretKey, areaIdentifier), {
+                this.client.post<SendEmailResultResponse, {}>(this.Routes.confirmationEmail(this.secretKey, intentId), {
                     ConversationId: convoId,
                     EmailAddress: emailAddress,
                     DynamicResponses: dynamicResponses,

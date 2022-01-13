@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Meta } from '@storybook/react/types-6-0';
-import { FormCard, IFormDialog } from './FormDialog';
+import { FormCard, IFormDialog } from './FormCard';
 import { Button } from '@material-ui/core';
 
 

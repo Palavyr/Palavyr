@@ -1,10 +1,9 @@
 import React from "react";
 import Auth from "@auth/Auth";
-import { FormCard } from "@common/components/borrowed/FormDialog";
+import { FormCard } from "@common/components/borrowed/FormCard";
 import { LoginActions } from "@landing/login/LoginActions";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { makeStyles } from "@material-ui/core";
 import { Credentials, FormStatusTypes } from "@Palavyr-Types";
 import { SessionStorage } from "@localStorage/sessionStorage";
 import {
@@ -28,12 +27,6 @@ interface ILoginDialog {
     setStatus: any;
     openChangePasswordDialog: () => void;
 }
-
-const useStyles = makeStyles(theme => ({
-    background: {
-        background: "linear-gradient(354deg, rgba(1,30,109,1) 10%, rgba(0,212,255,1) 100%)",
-    },
-}));
 
 export const LoginDialog = ({ status, setStatus, openChangePasswordDialog }: ILoginDialog) => {
     const [isLoading, setIsLoading] = useState(false);

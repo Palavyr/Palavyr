@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DialogTitle, Box, useTheme, Button, makeStyles } from "@material-ui/core";
+import { useHistory, useLocation } from "react-router-dom";
 import { PalavyrText } from "../typography/PalavyrTypography";
-import { useHistory } from "react-router-dom";
-import { Align } from "@common/positioning/Align";
 import classNames from "classnames";
 
 export interface LoginAndRegisterButtonsProps {
     disablePadding?: boolean;
     paddingBottom?: number;
 }
+
+type StyleProps = {
+    loginDisabled: boolean;
+    registerDisabled: boolean;
+};
 
 const useStyles = makeStyles(theme => ({
     navButtons: {
@@ -29,12 +33,21 @@ const useStyles = makeStyles(theme => ({
             boxShadow: theme.shadows[5],
         },
     },
+    registerButton: (props: StyleProps) => ({
+        borderBottom: props.registerDisabled ? "5px solid black" : "none",
+    }),
+    loginButton: (props: StyleProps) => ({
+        borderBottom: props.loginDisabled ? "5px solid black" : "none",
+    }),
 }));
 
 export const LoginAndRegisterButtons = ({ paddingBottom, disablePadding }: LoginAndRegisterButtonsProps) => {
     const theme = useTheme();
     const history = useHistory();
-    const cls = useStyles();
+    const loginDisabled = useLocationBasedButtonState(["/login", "/"]);
+    const registerDisabled = useLocationBasedButtonState(["/signup"]);
+    const cls = useStyles({ loginDisabled, registerDisabled });
+
     var dialogTitleStyles = {
         paddingBottom: paddingBottom ? (paddingBottom && disablePadding ? 0 : paddingBottom) : theme.spacing(3),
         paddingTop: disablePadding ? 0 : theme.spacing(2),
@@ -54,12 +67,12 @@ export const LoginAndRegisterButtons = ({ paddingBottom, disablePadding }: Login
     return (
         <DialogTitle style={dialogTitleStyles}>
             <Box display="flex" justifyContent="space-around">
-                <Button disableElevation variant="contained" className={cls.button} size="medium" onClick={() => history.push("/login")}>
+                <Button disabled={loginDisabled} disableElevation variant="contained" className={classNames(cls.button, cls.loginButton)} size="medium" onClick={() => history.push("/login")}>
                     <PalavyrText variant="h5" className={cls.menuButtonText}>
                         Log In
                     </PalavyrText>
                 </Button>
-                <Button disableElevation variant="contained" className={cls.button} size="medium" onClick={() => history.push("/signup")}>
+                <Button disabled={registerDisabled} disableElevation variant="contained" className={classNames(cls.button, cls.registerButton)} size="medium" onClick={() => history.push("/signup")}>
                     <PalavyrText variant="h5" className={cls.menuButtonText}>
                         Sign Up
                     </PalavyrText>
@@ -67,4 +80,15 @@ export const LoginAndRegisterButtons = ({ paddingBottom, disablePadding }: Login
             </Box>
         </DialogTitle>
     );
+};
+
+const useLocationBasedButtonState = (paths: string[]) => {
+    const [disabled, setDisabled] = useState(false);
+    const location = useLocation();
+
+    useEffect(() => {
+        setDisabled(paths.includes(location.pathname));
+    }, [location]);
+
+    return disabled;
 };
