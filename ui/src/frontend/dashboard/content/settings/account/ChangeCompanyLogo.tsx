@@ -1,4 +1,3 @@
-import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { HeaderStrip } from "@common/components/HeaderStrip";
 import { PalavyrAlert } from "@common/components/PalavyrAlert";
 import { getAnchorOrigin } from "@common/components/PalavyrSnackbar";

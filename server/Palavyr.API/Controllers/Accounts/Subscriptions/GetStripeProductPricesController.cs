@@ -1,9 +1,10 @@
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers;
 using Stripe;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
@@ -11,27 +12,19 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
     [AllowAnonymous]
     public class GetStripeProductPricesController : PalavyrBaseController
     {
-        private ILogger<GetStripeProductPricesController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "products/prices/get-prices/{productId}";
 
-        public GetStripeProductPricesController(
-            ILogger<GetStripeProductPricesController> logger
-        )
+        public GetStripeProductPricesController(IMediator mediator)
         {
-            this.logger = logger;
+            this.mediator = mediator;
         }
 
-        [HttpGet("products/prices/get-prices/{productId}")]
-        public async Task<List<Price>> Get(string productId)
+        [HttpGet(Route)]
+        public async Task<List<Price>> Get([FromHeader] GetStripeProductPricesRequest request, CancellationToken cancellationToken)
         {
-            logger.LogDebug("Getting product price by id");
-            var options = new PriceListOptions
-            {
-                Product = productId
-            };
-            var service = new PriceService();
-            var prices = await service.ListAsync(options);
-            var usablePrices = prices.Where(row => row.Active).ToList();
-            return usablePrices;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
     }
 }

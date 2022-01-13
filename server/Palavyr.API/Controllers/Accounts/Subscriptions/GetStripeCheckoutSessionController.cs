@@ -1,28 +1,27 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Stripe;
+using Palavyr.Core.Handlers;
 using Stripe.Checkout;
 
 namespace Palavyr.API.Controllers.Accounts.Subscriptions
 {
-
     public class GetStripeCheckoutSessionController : PalavyrBaseController
     {
-        private ILogger<GetStripeCheckoutSessionController> logger;
-        private readonly IStripeClient client = new StripeClient(StripeConfiguration.ApiKey);
+        private readonly IMediator mediator;
+        public const string Route = "payments/checkout-session";
 
-        public GetStripeCheckoutSessionController(ILogger<GetStripeCheckoutSessionController> logger) 
+        public GetStripeCheckoutSessionController(IMediator mediator)
         {
-            this.logger = logger;
+            this.mediator = mediator;
         }
 
-        [HttpGet("payments/checkout-session")]
-        public async Task<Session> Get(string sessionId)
+        [HttpGet(Route)]
+        public async Task<Session> Get(string sessionId, CancellationToken cancellationToken)
         {
-            var service = new SessionService(this.client);
-            var session = await service.GetAsync(sessionId);
-            return session;
+            var response = await mediator.Send(new GetStripeCheckoutSessionRequest() { SessionId = sessionId });
+            return response.Response;
         }
     }
 }
