@@ -6,8 +6,8 @@ namespace Palavyr.Core.Sessions
 {
     public interface IHoldAnAccountId
     {
-        public string? AccountId { get; set; }
-        public void Assign(string? accountId);
+        public string AccountId { get; set; }
+        public void Assign(string accountId);
     }
 
     public class AccountIdTransport : IHoldAnAccountId

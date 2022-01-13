@@ -1,30 +1,27 @@
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-
     public class GetApiKeyController : PalavyrBaseController
     {
-        private IAccountRepository accountRepository;
-        private ILogger<GetApiKeyController> logger;
-
+        private readonly IMediator mediator;
         public const string Uri = "account/settings/api-key";
 
-        public GetApiKeyController(IAccountRepository accountRepository, ILogger<GetApiKeyController> logger)
+        public GetApiKeyController(IMediator mediator)
         {
-            this.logger = logger;
-            this.accountRepository = accountRepository;
-            
+            this.mediator = mediator;
         }
 
         [HttpGet(Uri)]
         public async Task<string> Get()
         {
-            var account = await accountRepository.GetAccount();
-            return account?.ApiKey ?? "No Api Key Found";
+            var response = await mediator.Send(new GetApiKeyRequest());
+            return response.Response;
         }
     }
 }

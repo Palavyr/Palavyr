@@ -1,43 +1,26 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Repositories;
-using Palavyr.Core.Services.AccountServices.PlanTypes;
-using Palavyr.Core.Sessions;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
     public class GetCurrentPlanController : PalavyrBaseController
     {
-        private readonly IPlanTypeRetriever planTypeRetriever;
-        private readonly IAccountRepository accountRepository;
-        private ILogger<GetCurrentPlanController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "account/settings/current-plan";
 
-        public GetCurrentPlanController(IPlanTypeRetriever planTypeRetriever, IAccountRepository accountRepository, ILogger<GetCurrentPlanController> logger)
+        public GetCurrentPlanController(IMediator mediator)
         {
-            this.planTypeRetriever = planTypeRetriever;
-            this.accountRepository = accountRepository;
-            this.logger = logger;
+            this.mediator = mediator;
         }
 
-        [HttpGet("account/settings/current-plan")]
-        public async Task<PlanStatus> GetCurrentPlan()
+        [HttpGet(Route)]
+        public async Task<PlanStatus> Get(CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
-
-            var planStatus = await planTypeRetriever.GetCurrentPlanType();
-            return new PlanStatus()
-            {
-                HasUpgraded = account.HasUpgraded,
-                Status = planStatus
-            };
-        }
-
-        public class PlanStatus
-        {
-            public string Status { get; set; }
-            public bool HasUpgraded { get; set; }
+            var response = await mediator.Send(new GetCurrentPlanRequest());
+            return response.Response;
         }
     }
 }

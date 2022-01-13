@@ -1,27 +1,26 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-
     public class GetCompanyNameController : PalavyrBaseController
     {
-        private readonly IAccountRepository accountRepository;
-        private ILogger<GetCompanyNameController> logger;
-        public GetCompanyNameController(IAccountRepository accountRepository, ILogger<GetCompanyNameController> logger)
+        public const string Route = "account/settings/company-name";
+        private readonly IMediator mediator;
+
+        public GetCompanyNameController(IMediator mediator)
         {
-            this.accountRepository = accountRepository;
-            this.logger = logger;
+            this.mediator = mediator;
         }
-        
-        [HttpGet("account/settings/company-name")]
-        public async Task<string> Get()
+
+        [HttpGet(Route)]
+        public async Task<string> Get(CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
-            return account.CompanyName ?? "";
+            var response = await mediator.Send(new GetCompanyNameRequest(), cancellationToken);
+            return response.Response;
         }
     }
 }

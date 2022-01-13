@@ -1,29 +1,28 @@
-#nullable enable
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Services.LogoServices;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
     public class GetCompanyLogoController : PalavyrBaseController
     {
-        private readonly ILogoRetriever logoRetriever;
+        private readonly IMediator mediator;
+        public const string Route = "account/settings/logo";
 
         public GetCompanyLogoController(
-            ILogoRetriever logoRetriever
-        )
+            IMediator mediator)
         {
-            this.logoRetriever = logoRetriever;
+            this.mediator = mediator;
         }
 
-        [HttpGet("account/settings/logo")]
+        [HttpGet(Route)]
         public async Task<string?> Get(
-
             CancellationToken cancellationToken)
         {
-            var preSignedUrl = await logoRetriever.GetLogo();
-            return preSignedUrl;
+            var response = await mediator.Send(new GetCompanyLogoRequest(), cancellationToken);
+            return response.Response;
         }
     }
 }
