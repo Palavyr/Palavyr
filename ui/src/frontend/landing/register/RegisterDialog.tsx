@@ -32,6 +32,11 @@ const useStyles = makeStyles(theme => ({
             borderRadius: "4px",
         },
     },
+    loadingButton: {
+        backgroundColor: theme.palette.primary.dark,
+        color: "white",
+        borderRadius: "4px",
+    },
 }));
 
 export type RegisterFormStatusTypes = "passwordsDontMatch" | "passwordTooShort" | "invalidEmail" | typeof ACCOUNT_ALREADY_EXISTS | null;
@@ -230,9 +235,8 @@ export const RegisterDialog = ({ openTermsDialog, openPrivacyDialog, status, set
                 </>
             }
             actions={
-                <Button className={cls.submitButton} type="submit" fullWidth variant="contained" size="large" disabled={isLoading}>
-                    Submit
-                    {isLoading && <ButtonCircularProgress />}
+                <Button className={isLoading ? cls.loadingButton : cls.submitButton} type="submit" fullWidth variant="contained" size="large" disabled={isLoading}>
+                    {isLoading ? <ButtonCircularProgress /> : "Submit"}
                 </Button>
             }
         />

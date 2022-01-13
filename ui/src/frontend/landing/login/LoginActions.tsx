@@ -37,15 +37,19 @@ const useStyles = makeStyles(theme => ({
             borderRadius: "4px",
         },
     },
+    loadingButton: {
+        backgroundColor: theme.palette.primary.dark,
+        color: "white",
+        borderRadius: "4px",
+    },
 }));
 
 export const LoginActions = ({ isLoading, openChangePasswordDialog }: ILoginActions) => {
     const cls = useStyles();
     return (
         <>
-            <Button className={cls.submitButton} type="submit" fullWidth variant="contained" size="large">
-                Submit
-                {isLoading && <ButtonCircularProgress />}
+            <Button className={isLoading ? cls.loadingButton : cls.submitButton} type="submit" fullWidth variant="contained" size="large">
+                {isLoading ? <ButtonCircularProgress /> : "Submit"}
             </Button>
             <PalavyrText
                 align="center"
