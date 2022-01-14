@@ -20,7 +20,7 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
         [HttpGet(Route)]
         public async Task<Session> Get(string sessionId, CancellationToken cancellationToken)
         {
-            var response = await mediator.Send(new GetStripeCheckoutSessionRequest() { SessionId = sessionId });
+            var response = await mediator.Send(new GetStripeCheckoutSessionRequest() { SessionId = sessionId }, cancellationToken);
             return response.Response;
         }
     }

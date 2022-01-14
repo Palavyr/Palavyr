@@ -17,10 +17,10 @@ namespace Palavyr.Core.Models.Resources.Requests
         public string? TokenId { get; set; }
     }
 
-    public class PhoneNumberSettingsRequest
-    {
-        public string? PhoneNumber { get; set; }
-    }
+    // public class PhoneNumberSettingsRequest
+    // {
+    //     public string? PhoneNumber { get; set; }
+    // }
 
     public class CompanyNameSettingsRequest
     {

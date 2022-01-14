@@ -21,7 +21,7 @@ namespace Palavyr.API.Controllers.Accounts.Subscriptions
         }
 
         [HttpGet(Route)]
-        public async Task<List<Price>> Get([FromHeader] GetStripeProductPricesRequest request, CancellationToken cancellationToken)
+        public async Task<List<Price>> Get([FromRoute] GetStripeProductPricesRequest request, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(request, cancellationToken);
             return response.Response;

@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +19,9 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         }
 
         [HttpGet(Uri)]
-        public async Task<string> Get()
+        public async Task<string> Get(CancellationToken cancellationToken)
         {
-            var response = await mediator.Send(new GetApiKeyRequest());
+            var response = await mediator.Send(new GetApiKeyRequest(), cancellationToken);
             return response.Response;
         }
     }

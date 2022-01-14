@@ -7,6 +7,7 @@ using Palavyr.API.CustomMiddleware;
 using Palavyr.Core.Common.Environment;
 using Palavyr.Core.Common.FileSystemTools;
 using Palavyr.Core.Common.UniqueIdentifiers;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models;
 using Palavyr.Core.Models.Conversation;
 using Palavyr.Core.Models.Nodes;
@@ -127,6 +128,7 @@ namespace Palavyr.API.Registration.Container
 
             builder.RegisterType<SendWidgetResponseEmailHandler>().As<ISendWidgetResponseEmailHandler>().InstancePerLifetimeScope();
 
+            builder.RegisterType<CurrentLocaleAndLocalMapRetriever>().As<ICurrentLocaleAndLocalMapRetriever>().InstancePerLifetimeScope();
             
             
             
@@ -139,7 +141,7 @@ namespace Palavyr.API.Registration.Container
             
             
             
-            
+            // Experimental
             
             ///////!!! SPECIAL DANGER ZONE !!!//////////
             builder.RegisterType<AccountIdTransport>().As<IHoldAnAccountId>().InstancePerLifetimeScope(); // DONT CHANGE THE LIFETIME SCOPE OF THIS TYPE

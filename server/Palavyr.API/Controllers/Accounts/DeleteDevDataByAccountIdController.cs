@@ -16,7 +16,6 @@ namespace Palavyr.API.Controllers.Accounts
         private readonly IDashDeleter dashDeleter;
         private readonly IConvoDeleter convoDeleter;
         private readonly IDetermineCurrentEnvironment determineCurrentEnvironment;
-        private readonly IHoldAnAccountId accountIdHolder;
 
         public DeleteDevDataByAccountIdController(
             ILogger<DeleteDevDataByAccountIdController> logger,
@@ -24,7 +23,6 @@ namespace Palavyr.API.Controllers.Accounts
             IDashDeleter dashDeleter,
             IConvoDeleter convoDeleter,
             IDetermineCurrentEnvironment determineCurrentEnvironment, 
-            IHoldAnAccountId accountIdHolder
         )
         {
             this.logger = logger;
@@ -32,7 +30,6 @@ namespace Palavyr.API.Controllers.Accounts
             this.dashDeleter = dashDeleter;
             this.convoDeleter = convoDeleter;
             this.determineCurrentEnvironment = determineCurrentEnvironment;
-            this.accountIdHolder = accountIdHolder;
         }
 
         [HttpDelete("dev/{devKey}/{accountId}")]

@@ -25,7 +25,7 @@ namespace Palavyr.Core.Handlers
             var account = await accountRepository.GetAccount();
 
             var planStatus = await planTypeRetriever.GetCurrentPlanType();
-            var currentPlan = new PlanStatus()
+            var currentPlan = new PlanStatus
             {
                 HasUpgraded = account.HasUpgraded,
                 Status = planStatus

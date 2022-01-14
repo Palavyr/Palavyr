@@ -1,33 +1,26 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
-using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
-
     public class ModifyPhoneNumberController : PalavyrBaseController
     {
-        private readonly IAccountRepository accountRepository;
-        private ILogger<ModifyPhoneNumberController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "account/settings/phone-number";
 
-        public ModifyPhoneNumberController(IAccountRepository accountRepository, ILogger<ModifyPhoneNumberController> logger)
+        public ModifyPhoneNumberController(IMediator mediator)
         {
-            this.accountRepository = accountRepository;
-            this.logger = logger;
+            this.mediator = mediator;
         }
-        
-        [HttpPut("account/settings/phone-number")]
-        public async Task<string> Modify(PhoneNumberSettingsRequest settings)
+
+        [HttpPut(Route)]
+        public async Task<string> Modify(ModifyPhoneNumberRequest request, CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
-            account.PhoneNumber = settings.PhoneNumber ?? "";
-            await accountRepository.CommitChangesAsync();
-            return account.PhoneNumber;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
     }
 }

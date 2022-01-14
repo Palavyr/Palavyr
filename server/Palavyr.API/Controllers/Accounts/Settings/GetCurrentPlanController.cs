@@ -19,7 +19,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
         [HttpGet(Route)]
         public async Task<PlanStatus> Get(CancellationToken cancellationToken)
         {
-            var response = await mediator.Send(new GetCurrentPlanRequest());
+            var response = await mediator.Send(new GetCurrentPlanRequest(), cancellationToken);
             return response.Response;
         }
     }

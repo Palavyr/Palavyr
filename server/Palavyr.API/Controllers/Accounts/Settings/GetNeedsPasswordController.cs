@@ -1,27 +1,27 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Accounts.Settings
 {
     public class GetNeedsPasswordController : PalavyrBaseController
     {
-        private readonly IAccountRepository accountRepository;
-        private static readonly int[] NeedsPassword = new []{ 0 };
+        private readonly IMediator mediator;
+        public const string Route = "account/needs-password";
 
-        public GetNeedsPasswordController(IAccountRepository accountRepository)
+
+        public GetNeedsPasswordController(IMediator mediator)
         {
-            this.accountRepository = accountRepository;
+            this.mediator = mediator;
         }
-        
-        [HttpGet("account/needs-password")]
-        public async Task<bool> Get()
+
+        [HttpGet(Route)]
+        public async Task<bool> Get(CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount();
-            return NeedsPassword.Contains((int)(account.AccountType));
+            var response = await mediator.Send(new GetNeedsPasswordRequest(), cancellationToken);
+            return response.Response;
         }
-        
     }
 }
