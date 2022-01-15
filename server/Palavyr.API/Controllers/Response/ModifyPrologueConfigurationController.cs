@@ -1,28 +1,29 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Response
 {
     public class ModifyPrologueConfigurationController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IMediator mediator;
+        public const string Route = "response/configuration/prologue";
 
-        public ModifyPrologueConfigurationController(IConfigurationRepository configurationRepository)
+        public ModifyPrologueConfigurationController(IMediator mediator)
         {
-            this.configurationRepository = configurationRepository;
+            this.mediator = mediator;
         }
 
-        [HttpPut("response/configuration/{areaId}/prologue")]
+        [HttpPut(Route)]
         public async Task<string> UpdatePrologue(
-            [FromRoute] string areaId,
-            [FromBody] PrologueReceiver prologueReceiver)
+            [FromBody]
+            ModifyPrologueConfigurationRequest request,
+            CancellationToken cancellationToken)
         {
-            var area = await configurationRepository.GetAreaById(areaId);
-            area.Prologue = prologueReceiver.Prologue;
-            await configurationRepository.CommitChangesAsync();
-            return prologueReceiver.Prologue;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
     }
 }

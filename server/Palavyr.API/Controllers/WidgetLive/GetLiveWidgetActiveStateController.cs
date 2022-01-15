@@ -1,33 +1,29 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
-
     public class GetLiveWidgetActiveStateController : PalavyrBaseController
     {
-        private IConfigurationRepository configurationRepository;
-        private ILogger<GetLiveWidgetActiveStateController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "widget/widget-active-state";
 
-        public GetLiveWidgetActiveStateController(
-            IConfigurationRepository configurationRepository,
-            ILogger<GetLiveWidgetActiveStateController> logger)
+        public GetLiveWidgetActiveStateController(IMediator mediator)
         {
-            this.configurationRepository = configurationRepository;
-            this.logger = logger;
+            this.mediator = mediator;
         }
 
-        [HttpGet("widget/widget-active-state")]
-        public async Task<bool> GetWidgetActiveState()
+        [HttpGet(Route)]
+        public async Task<bool> GetWidgetActiveState(CancellationToken cancellationToken)
         {
-            logger.LogDebug("Retrieving widget state.");
-            var widgetPreferences = await configurationRepository.GetWidgetPreferences();
-            return widgetPreferences.WidgetState;
+            var response = await mediator.Send(new GetLiveWidgetActiveStateRequest(), cancellationToken);
+            return response.Response;
         }
     }
 }

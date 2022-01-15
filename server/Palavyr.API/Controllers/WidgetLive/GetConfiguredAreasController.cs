@@ -1,37 +1,32 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
-
     public class GetConfiguredAreasController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private ILogger<GetConfiguredAreasController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "widget/intents";
 
-        public GetConfiguredAreasController(
-            IConfigurationRepository configurationRepository,
-            ILogger<GetConfiguredAreasController> logger
-        )
+
+        public GetConfiguredAreasController(IMediator mediator)
         {
-            this.configurationRepository = configurationRepository;
-            this.logger = logger;
+            this.mediator = mediator;
         }
 
-        [HttpGet("widget/areas")]
-        public async Task<List<Area>> Get()
+        [HttpGet(Route)]
+        public async Task<List<Area>> Get(CancellationToken cancellationToken)
         {
-            logger.LogDebug("Collecting configured areas for live-widget");
-
-            var activeAreas = await configurationRepository.GetActiveAreas();
-            return activeAreas;
+            var response = await mediator.Send(new GetConfiguredIntentsRequest(), cancellationToken);
+            return response.Response;
         }
     }
 }

@@ -1,39 +1,38 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Conversation
 {
     public class ModifyConversationNodeController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private ILogger<ModifyConversationNodeController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "configure-conversations/{areaId}/nodes/{nodeId}";
+
 
         public ModifyConversationNodeController(
-            IConfigurationRepository configurationRepository,
-            ILogger<ModifyConversationNodeController> logger
+            IMediator mediator
         )
         {
-            this.configurationRepository = configurationRepository;
-            this.logger = logger;
+            this.mediator = mediator;
         }
 
-        [HttpPut("configure-conversations/{areaId}/nodes/{nodeId}")]
+        [HttpPut(Route)]
         public async Task<List<ConversationNode>> Modify(
-
             [FromRoute]
             string nodeId,
             [FromRoute]
             string areaId,
             [FromBody]
-            ConversationNode newNode)
+            ConversationNode newNode,
+            CancellationToken cancellationToken)
         {
-            var updatedConversation = await configurationRepository.UpdateConversationNode(areaId, nodeId, newNode);
-            await configurationRepository.CommitChangesAsync();
-            return updatedConversation;
+            var response = await mediator.Send(new ModifyConversationNodeRequest(nodeId, areaId, newNode), cancellationToken);
+            return response.Response;
         }
     }
 }

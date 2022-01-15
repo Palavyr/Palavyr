@@ -17,7 +17,7 @@ const routes = new PalavyrWidgetRepository(fakeKey).Routes;
 const client = new ConfigureMockClient();
 client.ConfigureGet(routes.precheck(fakeKey, isDemo), precheckResult);
 client.ConfigureGet(routes.widgetPreferences(fakeKey), testWidgetPreferences);
-client.ConfigureGet(routes.areas(fakeKey), areas);
+client.ConfigureGet(routes.intents(fakeKey), areas);
 client.ConfigureGet(routes.newConversationHistory(fakeKey), convoA(intentId));
 
 export default {

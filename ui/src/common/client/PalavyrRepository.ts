@@ -123,9 +123,9 @@ export class PalavyrRepository {
     };
 
     public Configuration = {
-        getEstimateConfiguration: async (areaIdentifier: string) => this.client.get<ResponseConfigurationType>(`response/configuration/${areaIdentifier}`),
-        updatePrologue: async (areaIdentifier: string, prologue: string) => this.client.put<string, {}>(`response/configuration/${areaIdentifier}/prologue`, { prologue: prologue }),
-        updateEpilogue: async (areaIdentifier: string, epilogue: string) => this.client.put<string, {}>(`response/configuration/${areaIdentifier}/epilogue`, { epilogue: epilogue }),
+        getEstimateConfiguration: async (intentId: string) => this.client.get<ResponseConfigurationType>(`response/configuration/${intentId}`),
+        updatePrologue: async (intentId: string, prologue: string) => this.client.put<string, {}>(`response/configuration/prologue`, { prologue: prologue, IntentId: intentId}),
+        updateEpilogue: async (intentId: string, epilogue: string) => this.client.put<string, {}>(`response/configuration/epilogue`, { epilogue: epilogue, IntentId: intentId}),
 
         WidgetState: {
             GetWidgetState: async () => this.client.get<boolean>(`widget-config/widget-active-state`),
@@ -168,16 +168,16 @@ export class PalavyrRepository {
                 },
             },
             Static: {
-                updateStaticTablesMetas: async (areaIdentifier: string, staticTablesMetas: StaticTableMetas) =>
-                    this.client.put<StaticTableMetas, {}>(`response/configuration/${areaIdentifier}/static/tables/save`, staticTablesMetas),
-                getStaticTablesMetaTemplate: async (areaIdentifier: string) => this.client.get<StaticTableMetaTemplate>(`response/configuration/${areaIdentifier}/static/tables/template`),
+                updateStaticTablesMetas: async (intentId: string, staticTablesMetas: StaticTableMetas) =>
+                    this.client.put<StaticTableMetas, {}>(`response/configuration/static/tables/save`, {StaticTableMetaUpdate: staticTablesMetas, IntentId: intentId}),
+                getStaticTablesMetaTemplate: async (intentId: string) => this.client.get<StaticTableMetaTemplate>(`response/configuration/${intentId}/static/tables/template`),
                 getStaticTableRowTemplate: async (areaIdentifier: string, tableOrder: number) =>
                     this.client.get<StaticTableRow>(`response/configuration/${areaIdentifier}/static/tables/${tableOrder}/row/template`),
             },
         },
 
         Preview: {
-            fetchPreview: async (areaIdentifier: string) => this.client.get<FileLink>(`preview/estimate/${areaIdentifier}`),
+            fetchPreview: async (intentId: string) => this.client.get<FileLink>(`preview/estimate/${intentId}`),
         },
 
         Email: {
@@ -276,9 +276,9 @@ export class PalavyrRepository {
             this.client.put<ConvoNode[], {}>(`configure-conversations`, { Transactions: nodelist, IntentId: intentId }, [CacheIds.PalavyrConfiguration, intentId].join("-") as CacheIds),
         ModifyConversationNode: async (nodeId: string, areaIdentifier: string, updatedNode: ConvoNode) =>
             this.client.put<ConvoNode[], {}>(`configure-conversations/${areaIdentifier}/nodes/${nodeId}`, updatedNode, [CacheIds.PalavyrConfiguration, areaIdentifier].join("-") as CacheIds),
-        ModifyConversationNodeText: async (nodeId: string, areaIdentifier: string, updatedNodeText: string) => {
-            const result = await this.client.put<ConvoNode | null, {}>(`configure-conversations/${areaIdentifier}/nodes/${nodeId}/text`, { UpdatedNodeText: updatedNodeText });
-            SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, areaIdentifier].join("-"));
+        ModifyConversationNodeText: async (nodeId: string, intentId: string, updatedNodeText: string) => {
+            const result = await this.client.put<ConvoNode | null, {}>(`configure-conversations/nodes/text`, { UpdatedNodeText: updatedNodeText, IntentId: intentId, NodeId: nodeId });
+            SessionStorage.clearCacheValue([CacheIds.PalavyrConfiguration, intentId].join("-"));
             if (isNullOrUndefinedOrWhitespace(result)) {
                 return Promise.resolve(null);
             }

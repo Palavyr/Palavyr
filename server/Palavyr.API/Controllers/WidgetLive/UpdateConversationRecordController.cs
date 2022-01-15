@@ -1,9 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Resources.Requests;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.WidgetLive
@@ -11,23 +11,20 @@ namespace Palavyr.API.Controllers.WidgetLive
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
     public class UpdateConversationRecordController : PalavyrBaseController
     {
-        private ILogger<UpdateConversationRecordController> logger;
-        private readonly IUpdateConversationRecordHandler updateHandler;
+        private readonly IMediator mediator;
+        public const string Route = "widget/record";
 
-        public UpdateConversationRecordController(
-            ILogger<UpdateConversationRecordController> logger,
-            IUpdateConversationRecordHandler updateHandler)
+        public UpdateConversationRecordController(IMediator mediator)
         {
-            this.logger = logger;
-            this.updateHandler = updateHandler;
+            this.mediator = mediator;
         }
 
-        [HttpPost("widget/record")]
-        public async Task<IActionResult> Post(
-            ConversationRecordUpdate convo, CancellationToken cancellationToken)
+        [HttpPost(Route)]
+        public async Task Post(
+            UpdateConversationRecordRequest request,
+            CancellationToken cancellationToken)
         {
-            await updateHandler.UpdateConversationRecord(convo);
-            return NoContent();
+            await mediator.Publish(request, cancellationToken);
         }
     }
 }

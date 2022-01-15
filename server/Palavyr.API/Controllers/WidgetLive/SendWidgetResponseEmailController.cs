@@ -1,7 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Services.AuthenticationServices;
@@ -10,17 +12,17 @@ namespace Palavyr.API.Controllers.WidgetLive
 {
     public class SendWidgetResponseEmailController : PalavyrBaseController
     {
-        private readonly ISendWidgetResponseEmailHandler sendWidgetResponseEmailHandler;
+        private readonly IMediator mediator;
+        public const string Route = "widget/area/{areaId}/email/send";
 
-        public SendWidgetResponseEmailController(ISendWidgetResponseEmailHandler sendWidgetResponseEmailHandler)
+        public SendWidgetResponseEmailController(IMediator mediator)
         {
-            this.sendWidgetResponseEmailHandler = sendWidgetResponseEmailHandler;
+            this.mediator = mediator;
         }
 
         [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
-        [HttpPost("widget/area/{areaId}/email/send")]
+        [HttpPost(Route)]
         public async Task<SendEmailResultResponse> SendEmail(
-
             [FromRoute]
             string areaId,
             [FromBody]
@@ -28,8 +30,8 @@ namespace Palavyr.API.Controllers.WidgetLive
             CancellationToken cancellationToken
         )
         {
-            var resultResponse = await sendWidgetResponseEmailHandler.HandleSendWidgetResponseEmail(emailRequest, areaId, cancellationToken);
-            return resultResponse;
+            var response = await mediator.Send(new SendWidgetResponseEmailRequest(emailRequest, areaId), cancellationToken);
+            return response.Response;
         }
     }
 }

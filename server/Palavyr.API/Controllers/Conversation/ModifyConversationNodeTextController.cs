@@ -1,43 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Conversation
 {
     public class ModifyConversationNodeTextController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private ILogger<ModifyConversationNodeTextController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "configure-conversations/nodes/text";
 
-        public ModifyConversationNodeTextController(
-            IConfigurationRepository configurationRepository,
-            ILogger<ModifyConversationNodeTextController> logger
-        )
+        public ModifyConversationNodeTextController(IMediator mediator)
         {
-            this.configurationRepository = configurationRepository;
-            this.logger = logger;
+            this.mediator = mediator;
         }
 
-        [HttpPut("configure-conversations/{areaId}/nodes/{nodeId}/text")]
+        [HttpPut(Route)]
         public async Task<ConversationNode> Modify(
-
-            [FromRoute]
-            string nodeId,
-            [FromRoute]
-            string areaId,
             [FromBody]
-            UpdatedNodeTextRequest nodeTextUpdate)
+            ModifyConversationNodeTextRequest request,
+            CancellationToken cancellationToken)
         {
-            var updatedConversationNode = await configurationRepository.UpdateConversationNodeText(areaId, nodeId, nodeTextUpdate.UpdatedNodeText);
-            return updatedConversationNode;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
-    }
-
-    public class UpdatedNodeTextRequest
-    {
-        public string UpdatedNodeText { get; set; }
     }
 }

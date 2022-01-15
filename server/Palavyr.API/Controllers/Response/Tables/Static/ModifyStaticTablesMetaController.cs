@@ -1,47 +1,31 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
-using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Controllers.Response.Tables.Static
 {
     public class ModifyStaticTablesMetaController : PalavyrBaseController
     {
-        private ILogger<ModifyStaticTablesMetaController> logger;
-        private readonly IHoldAnAccountId accountIdHolder;
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IMediator mediator;
+        public const string Route = "response/configuration/static/tables/save";
 
-        public ModifyStaticTablesMetaController(
-            IConfigurationRepository configurationRepository,
-            ILogger<ModifyStaticTablesMetaController> logger,
-            IHoldAnAccountId accountIdHolder
+        public ModifyStaticTablesMetaController(IMediator mediator
         )
         {
-            this.configurationRepository = configurationRepository;
-            this.logger = logger;
-            this.accountIdHolder = accountIdHolder;
+            this.mediator = mediator;
         }
 
-        [HttpPut("response/configuration/{areaId}/static/tables/save")]
+        [HttpPut(Route)]
         public async Task<List<StaticTablesMeta>> Modify(
-            string areaId,
-            [FromBody] List<StaticTablesMeta> staticTableMetas
+            ModifyStaticTablesMetaRequest request, CancellationToken cancellationToken
         )
         {
-            var metasToDelete = await configurationRepository.GetStaticTables(areaId);
-            await configurationRepository.RemoveStaticTables(metasToDelete);
-
-            var clearedMetas = StaticTablesMeta.BindTemplateList(staticTableMetas, accountIdHolder.AccountId);
-            var area = await configurationRepository.GetAreaById(areaId);
-            area.StaticTablesMetas = clearedMetas;
-
-            await configurationRepository.CommitChangesAsync();
-
-            var tables = await configurationRepository.GetStaticTables(areaId);
-            return tables;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
     }
 }

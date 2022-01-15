@@ -41,22 +41,5 @@ namespace Palavyr.Core.Models.Conversation.Schemas
                 AccountId = accountId
             };
         }
-
-        public ConversationHistory CreateFromPartial(string accountId)
-        {
-            var timeStamp = DateTime.UtcNow;
-            
-            return new ConversationHistory
-            {
-                ConversationId = ConversationId,
-                Prompt = Prompt,
-                UserResponse = UserResponse,
-                NodeId = NodeId,
-                NodeCritical = NodeCritical,
-                NodeType = NodeType,
-                TimeStamp = timeStamp,
-                AccountId = accountId
-            };
-        }
     }
 }

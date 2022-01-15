@@ -1,30 +1,31 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.AuthenticationServices;
 
 namespace Palavyr.API.Controllers.WidgetLive
 {
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
-
     public class GetWidgetPreferencesController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private ILogger<GetWidgetPreferencesController> logger;
+        private readonly IMediator mediator;
 
-        public GetWidgetPreferencesController(IConfigurationRepository configurationRepository,  ILogger<GetWidgetPreferencesController> logger)
+        public const string Route = "widget/preferences";
+
+        public GetWidgetPreferencesController(IMediator mediator)
         {
-            this.configurationRepository = configurationRepository;
-            this.logger = logger;
+            this.mediator = mediator;
         }
 
-        [HttpGet("widget/preferences")]
-        public async Task<WidgetPreference> FetchPreferences()
+        [HttpGet(Route)]
+        public async Task<WidgetPreference> Get(CancellationToken cancellationToken)
         {
-            return await configurationRepository.GetWidgetPreferences();
+            var response = await mediator.Send(new GetWidgetPreferencesRequest(), cancellationToken);
+            return response.Response;
         }
     }
 }

@@ -1,25 +1,27 @@
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Services.StripeServices;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Services.StripeServices.Products;
 
 namespace Palavyr.API.Controllers.Payments.Products
 {
     public class GetProductIdsController : PalavyrBaseController
     {
-        private readonly IProductRegistry productRegistry;
-        private ILogger<GetProductIdsController> logger;
-        public GetProductIdsController(IProductRegistry productRegistry, ILogger<GetProductIdsController> logger)
+        private readonly IMediator mediator;
+        public const string Route = "products/all";
+
+        public GetProductIdsController(IMediator mediator)
         {
-            this.productRegistry = productRegistry;
-            this.logger = logger;
+            this.mediator = mediator;
         }
-        
-        [HttpGet("products/all")]
-        public ProductIds GetProducts()
+
+        [HttpGet(Route)]
+        public async Task<ProductIds> Get(CancellationToken cancellationToken)
         {
-            var products = productRegistry.GetProductIds();
-            return products;
+            var response = await mediator.Send(new GetProductIdsRequest(), cancellationToken);
+            return response.Response;
         }
     }
 }

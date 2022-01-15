@@ -1,5 +1,8 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
 
@@ -7,23 +10,25 @@ namespace Palavyr.API.Controllers.Response
 {
     public class ModifyEpilogueConfigurationController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IMediator mediator;
 
-        public ModifyEpilogueConfigurationController(IConfigurationRepository configurationRepository)
+        public const string Route = "response/configuration/epilogue";
+
+
+        public ModifyEpilogueConfigurationController(IMediator mediator)
         {
-            this.configurationRepository = configurationRepository;
+            this.mediator = mediator;
         }
 
-        [HttpPut("response/configuration/{areaId}/epilogue")]
+        [HttpPut(Route)]
         public async Task<string> Modify(
-            [FromRoute] string areaId,
-            [FromBody] EpilogueReceiver epilogueReceiver
+            [FromBody]
+            ModifyEpilogueConfigurationRequest request,
+            CancellationToken cancellationToken
         )
         {
-            var area = await configurationRepository.GetAreaById(areaId);
-            area.Epilogue = epilogueReceiver.Epilogue;
-            await configurationRepository.CommitChangesAsync();
-            return epilogueReceiver.Epilogue;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
     }
 }

@@ -1,17 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
 
-namespace Palavyr.API.Controllers.WidgetLive
+namespace Palavyr.Core.Handlers
 {
-    public interface IUpdateConversationRecordHandler
-    {
-        Task UpdateConversationRecord(ConversationRecordUpdate convo);
-    }
-
-
-    public class UpdateConversationRecordHandler : IUpdateConversationRecordHandler
+    public class UpdateConversationRecordHandler : INotificationHandler<UpdateConversationRecordRequest>
     {
         private readonly ILogger<UpdateConversationRecordHandler> logger;
         private readonly IConfigurationRepository configurationRepository;
@@ -20,28 +15,27 @@ namespace Palavyr.API.Controllers.WidgetLive
         public UpdateConversationRecordHandler(
             ILogger<UpdateConversationRecordHandler> logger,
             IConfigurationRepository configurationRepository,
-            IConvoHistoryRepository convoHistoryRepository
-        )
+            IConvoHistoryRepository convoHistoryRepository)
         {
             this.logger = logger;
             this.configurationRepository = configurationRepository;
             this.convoHistoryRepository = convoHistoryRepository;
         }
 
-        public async Task UpdateConversationRecord(ConversationRecordUpdate convo)
+        public async Task Handle(UpdateConversationRecordRequest request, CancellationToken cancellationToken)
         {
-            var areaId = convo.IntentId;
-            var email = convo.Email;
-            var name = convo.Name;
-            var phone = convo.PhoneNumber;
-            var fallback = convo.Fallback;
-            var isComplete = convo.IsComplete;
+            var areaId = request.IntentId;
+            var email = request.Email;
+            var name = request.Name;
+            var phone = request.PhoneNumber;
+            var fallback = request.Fallback;
+            var isComplete = request.IsComplete;
 
-            var record = await convoHistoryRepository.GetConversationRecordById(convo.ConversationId);
+            var record = await convoHistoryRepository.GetConversationRecordById(request.ConversationId);
 
             if (!string.IsNullOrEmpty(areaId)) // we set this already when we create the convo, but here we use it to indicate if we've sent an email.
             {
-                var area = await configurationRepository.GetAreaById(convo.IntentId);
+                var area = await configurationRepository.GetAreaById(request.IntentId);
                 record.EmailTemplateUsed = area.EmailTemplate;
             }
 
@@ -72,8 +66,25 @@ namespace Palavyr.API.Controllers.WidgetLive
 
             await configurationRepository.CommitChangesAsync();
             await convoHistoryRepository.CommitChangesAsync();
-            
-            ;
         }
+    }
+
+
+    public class UpdateConversationRecordResponse
+    {
+        public UpdateConversationRecordResponse(string response) => Response = response;
+        public string Response { get; set; }
+    }
+
+    public class UpdateConversationRecordRequest : INotification
+    {
+        public string ConversationId { get; set; }
+        public string IntentId { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Locale { get; set; }
+        public bool Fallback { get; set; }
+        public bool IsComplete { get; set; }
     }
 }
