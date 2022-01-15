@@ -1,51 +1,35 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Exceptions;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Services.ImageServices;
-using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Controllers.Conversation.Images
 {
     public class DeleteImagesController : PalavyrBaseController
     {
+        private readonly IMediator mediator;
         private readonly IImageRemover imageRemover;
         private readonly GuidFinder guidFinder;
         private const string Route = "images";
 
-        public DeleteImagesController(IImageRemover imageRemover, GuidFinder guidFinder)
+        public DeleteImagesController(IMediator mediator)
         {
-            this.imageRemover = imageRemover;
-            this.guidFinder = guidFinder;
+            this.mediator = mediator;
         }
 
         [HttpDelete(Route)]
         public async Task<FileLink[]> DeleteImageById(
-
             [FromQuery]
             string imageIds,
             CancellationToken cancellationToken
         )
         {
-            // TODO: https://www.strathweb.com/2017/07/customizing-query-string-parameter-binding-in-asp-net-core-mvc/
-            if (!Request.QueryString.HasValue)
-            {
-                throw new DomainException("Image deletion failed. No image id was provided.");
-            }
-
-            var ids = imageIds.Split(',');
-
-            // ids should be guids
-            foreach (var id in ids)
-            {
-                // This throws if a GUID is not found.
-                guidFinder.FindFirstGuidSuffix(id);
-            }
-
-            var fileLinks = await imageRemover.RemoveImages(ids, cancellationToken);
-            return fileLinks;
+            var response = await mediator.Send(new DeleteImagesRequest(imageIds.Split(",")), cancellationToken);
+            return response.Response;
         }
     }
 }

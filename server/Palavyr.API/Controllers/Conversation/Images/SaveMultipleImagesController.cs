@@ -1,22 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.ImageServices;
 
 namespace Palavyr.API.Controllers.Conversation.Images
 {
     // This should be refactored and we only ever accept arrays of filelinks
     public class SaveMultipleImagesController : PalavyrBaseController
     {
-        private readonly IImageSaver imageSaver;
+        private readonly IMediator mediator;
         private const string Route = "images/save-many";
 
-        public SaveMultipleImagesController(IImageSaver imageSaver)
+        public SaveMultipleImagesController(IMediator mediator)
         {
-            this.imageSaver = imageSaver;
+            this.mediator = mediator;
         }
 
         [HttpPost(Route)]
@@ -27,14 +28,8 @@ namespace Palavyr.API.Controllers.Conversation.Images
             List<IFormFile> imageFiles,
             CancellationToken cancellationToken)
         {
-            var imageFileLinks = new List<FileLink>();
-            foreach (var imageFile in imageFiles)
-            {
-                var fileLink = await imageSaver.SaveImage(imageFile, cancellationToken);
-                imageFileLinks.Add(fileLink);
-            }
-
-            return imageFileLinks.ToArray();
+            var response = await mediator.Send(new SaveMultipleImagesRequest(imageFiles), cancellationToken);
+            return response.Response;
         }
     }
 }

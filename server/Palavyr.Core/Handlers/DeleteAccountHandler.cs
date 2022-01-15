@@ -7,7 +7,7 @@ using Palavyr.Core.Repositories.Delete;
 
 namespace Palavyr.Core.Handlers
 {
-    public class DeleteAccountHandler: IRequestHandler<DeleteAccountRequest>
+    public class DeleteAccountHandler: INotificationHandler<DeleteAccountNotification>
     {
         private readonly IAccountDeleter accountDeleter;
         private readonly IDashDeleter dashDeleter;
@@ -29,7 +29,7 @@ namespace Palavyr.Core.Handlers
             this.logger = logger;
             this.accountRepository = accountRepository;
         }
-        public async Task<Unit> Handle(DeleteAccountRequest request, CancellationToken _)
+        public async Task Handle(DeleteAccountNotification notification, CancellationToken _)
         {
             logger.LogInformation($"Deleting details for account: {accountRepository.AccountIdHolder.AccountId}");
 
@@ -45,11 +45,10 @@ namespace Palavyr.Core.Handlers
             await accountDeleter.CommitChangesAsync();
             await dashDeleter.CommitChangesAsync();
             await convoDeleter.CommitChangesAsync();
-            return default;
         }
     }
 
-    public class DeleteAccountRequest : IRequest<Unit>
+    public class DeleteAccountNotification : INotification
     {
     }
 }

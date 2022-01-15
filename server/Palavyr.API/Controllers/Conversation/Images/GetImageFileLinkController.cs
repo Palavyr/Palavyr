@@ -1,35 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Palavyr.Core.Common.ExtensionMethods;
-using Palavyr.Core.Services.AmazonServices;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Conversation.Images
 {
     public class GetImageFileLinkController : PalavyrBaseController
     {
-        private readonly IConfiguration configuration;
-        private readonly ILinkCreator linkCreator;
+        private readonly IMediator mediator;
+        public const string Route = "images/link";
+
 
         public GetImageFileLinkController(
-            IConfiguration configuration,
-            ILinkCreator linkCreator
+            IMediator mediator
         )
         {
-            this.configuration = configuration;
-            this.linkCreator = linkCreator;
+            this.mediator = mediator;
         }
 
-        [HttpPost("images/link")]
-        public string Get([FromBody] ImageS3LinkRequest request)
+        [HttpPost(Route)]
+        public async Task<string> Get([FromBody] GetImageFileLinkRequest request, CancellationToken cancellationToken)
         {
-            var previewBucket = configuration.GetUserDataBucket();
-            var preSignedUrl = linkCreator.GenericCreatePreSignedUrl(request.S3Key, previewBucket);
-            return preSignedUrl;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
-    }
-
-    public class ImageS3LinkRequest
-    {
-        public string S3Key { get; set; }
     }
 }

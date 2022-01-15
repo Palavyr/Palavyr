@@ -5,17 +5,18 @@ using Google.Apis.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Palavyr.Core.GlobalConstants;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Accounts.Schemas;
-using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Models.Resources.Responses;
 using Palavyr.Core.Repositories;
+
 
 namespace Palavyr.Core.Services.AuthenticationServices
 {
     public interface IAuthService
     {
-        public Task<Credentials> PerformLoginAction(LoginCredentialsRequest loginCredentialsRequest);
-        public Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenId(string? accessToken);
+        public Task<Credentials> PerformLoginAction(CreateLoginRequest loginCredentialsRequest);
+        // public Task<GoogleJsonWebSignature.Payload?> ValidateGoogleTokenId(string? accessToken);
     }
 
     public class AuthService : IAuthService
@@ -80,7 +81,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
             CouldNot
         }
 
-        public async Task<Credentials> PerformLoginAction(LoginCredentialsRequest loginCredentialsRequest)
+        public async Task<Credentials> PerformLoginAction(CreateLoginRequest loginCredentialsRequest)
         {
             logger.LogDebug("Requesting account using login credentials...");
             var (account, message) = await RequestAccount(loginCredentialsRequest);
@@ -146,7 +147,7 @@ namespace Palavyr.Core.Services.AuthenticationServices
             }
         }
 
-        private async Task<AccountReturn> RequestAccount(LoginCredentialsRequest loginCredentialsRequest)
+        private async Task<AccountReturn> RequestAccount(CreateLoginRequest loginCredentialsRequest)
         {
             logger.LogDebug("Determining login type...");
             var loginType = DetermineLoginType(loginCredentialsRequest);
@@ -155,43 +156,43 @@ namespace Palavyr.Core.Services.AuthenticationServices
             return loginType switch
             {
                 (LoginType.Default) => await RequestAccountViaDefault(loginCredentialsRequest),
-                (LoginType.Google) => await RequestAccountViaGoogle(loginCredentialsRequest),
+                // (LoginType.Google) => await RequestAccountViaGoogle(loginCredentialsRequest),
                 LoginType.Error => AccountReturn.Return(null, null),
                 _ => AccountReturn.Return(null, message: null)
             };
         }
 
-        private async Task<AccountReturn> RequestAccountViaGoogle(LoginCredentialsRequest credentialRequest)
-        {
-            logger.LogDebug("Requesting account via Google...");
-            var payload = await ValidateGoogleTokenId(credentialRequest.OneTimeCode);
-            if (payload == null)
-            {
-                logger.LogError(CouldNotValidateGoogleAuthToken);
-                logger.LogError($"OneTimeCode: {credentialRequest.OneTimeCode}");
+        // private async Task<AccountReturn> RequestAccountViaGoogle(CreateLoginRequest credentialRequest)
+        // {
+        //     logger.LogDebug("Requesting account via Google...");
+        //     var payload = await ValidateGoogleTokenId(credentialRequest.OneTimeCode);
+        //     if (payload == null)
+        //     {
+        //         logger.LogError(CouldNotValidateGoogleAuthToken);
+        //         logger.LogError($"OneTimeCode: {credentialRequest.OneTimeCode}");
+        //
+        //         return AccountReturn.Return(null, CouldNotValidateGoogleAuthToken);
+        //     }
+        //
+        //     if (payload.Subject != credentialRequest.TokenId)
+        //     {
+        //         return AccountReturn.Return(null, CouldNotValidateGoogleAuthToken);
+        //     }
+        //
+        //     // now verify the user exists in the Accounts database
+        //     var account = await accountRepository.GetAccountByEmailOrNull(payload.Email);
+        //     if (account == null)
+        //     {
+        //         return AccountReturn.Return(null, CouldNotFindAccountWithGoogle);
+        //     }
+        //
+        //     if (account.AccountType != AccountType.Google)
+        //         return AccountReturn.Return(null, "Google " + DifferentAccountType);
+        //
+        //     return AccountReturn.Return(account, null);
+        // }
 
-                return AccountReturn.Return(null, CouldNotValidateGoogleAuthToken);
-            }
-
-            if (payload.Subject != credentialRequest.TokenId)
-            {
-                return AccountReturn.Return(null, CouldNotValidateGoogleAuthToken);
-            }
-
-            // now verify the user exists in the Accounts database
-            var account = await accountRepository.GetAccountByEmailOrNull(payload.Email);
-            if (account == null)
-            {
-                return AccountReturn.Return(null, CouldNotFindAccountWithGoogle);
-            }
-
-            if (account.AccountType != AccountType.Google)
-                return AccountReturn.Return(null, "Google " + DifferentAccountType);
-
-            return AccountReturn.Return(account, null);
-        }
-
-        private async Task<AccountReturn> RequestAccountViaDefault(LoginCredentialsRequest credentialsRequest)
+        private async Task<AccountReturn> RequestAccountViaDefault(CreateLoginRequest credentialsRequest)
         {
             var account = await accountRepository.GetAccountByEmailOrNull(credentialsRequest.EmailAddress.ToLowerInvariant());
             if (account == null)
@@ -221,11 +222,11 @@ namespace Palavyr.Core.Services.AuthenticationServices
             return jwtAuthService.GenerateJwtTokenAfterAuthentication(account.EmailAddress);
         }
 
-        private LoginType DetermineLoginType(LoginCredentialsRequest loginCredentialsRequest)
+        private LoginType DetermineLoginType(CreateLoginRequest loginCredentialsRequest)
         {
-            if (!string.IsNullOrWhiteSpace(loginCredentialsRequest.OneTimeCode) &&
-                !string.IsNullOrWhiteSpace(loginCredentialsRequest.TokenId))
-                return LoginType.Google;
+            // if (!string.IsNullOrWhiteSpace(loginCredentialsRequest.OneTimeCode) &&
+            //     !string.IsNullOrWhiteSpace(loginCredentialsRequest.TokenId))
+            //     return LoginType.Google;
             if (!string.IsNullOrWhiteSpace(loginCredentialsRequest.EmailAddress) &&
                 !string.IsNullOrWhiteSpace(loginCredentialsRequest.Password))
                 return LoginType.Default;

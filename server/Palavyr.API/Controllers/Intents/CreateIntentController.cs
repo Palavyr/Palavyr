@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Schemas;
@@ -8,9 +9,11 @@ namespace Palavyr.API.Controllers.Areas
 {
     public class CreateAreaController : PalavyrBaseController
     {
-        public const string Route = "areas/create";
-        public CreateAreaController()
+        private readonly IMediator mediator;
+        public const string Route = "intents/create";
+        public CreateAreaController(IMediator mediator)
         {
+            this.mediator = mediator;
         }
 
         [HttpPost(Route)]
@@ -19,7 +22,7 @@ namespace Palavyr.API.Controllers.Areas
             CreateAreaRequest request,
             CancellationToken cancellationToken)
         {
-            var response = await Mediator.Send(request, cancellationToken);
+            var response = await mediator.Send(request, cancellationToken);
             return response.Response;
         }
     }

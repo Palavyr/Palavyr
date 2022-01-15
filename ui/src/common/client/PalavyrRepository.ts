@@ -26,8 +26,6 @@ import {
     StaticTableRow,
     PlanTypeMeta,
     DynamicTableData,
-    VideoMap,
-    PlaylistItemsResource,
     EnquiryActivtyResource,
     LocaleResponse,
 } from "@Palavyr-Types";
@@ -101,7 +99,7 @@ export class PalavyrRepository {
             this.client.put<boolean, {}>(`intents/use-fallback-email-toggle`, { UseFallback: useAreaFallbackEmailUpdate, IntentId: intentId }),
         GetAreas: async () => this.client.get<Areas>("areas", CacheIds.Areas),
         createArea: async (areaName: string) => {
-            const newArea = await this.client.post<AreaTable, {}>(`areas/create`, { AreaName: areaName });
+            const newArea = await this.client.post<AreaTable, {}>(`intents/create`, { AreaName: areaName });
             const areas = SessionStorage.getCacheValue(CacheIds.Areas) as Areas;
             areas.push(newArea);
             SessionStorage.setCacheValue(CacheIds.Areas, areas);
@@ -118,7 +116,7 @@ export class PalavyrRepository {
             return result;
         },
 
-        deleteArea: (areaIdentifier: string) => this.client.delete<void>(`areas/delete/${areaIdentifier}`, CacheIds.Areas),
+        deleteArea: (intentId: string) => this.client.delete<void>(`intents/delete/${intentId}`, CacheIds.Areas),
         toggleSendPdfResponse: (areaIdentifier: string) => this.client.post<boolean, {}>(`area/send-pdf/${areaIdentifier}`),
         getShowDynamicTotals: (intentId: string) => this.client.get<boolean>(`area/dynamic-totals/${intentId}`),
         setShowDynamicTotals: (intentId: string, shouldShow: boolean) => this.client.put<boolean, {}>(`area/dynamic-totals`, { ShowDynamicTotals: shouldShow, IntentId: intentId }),

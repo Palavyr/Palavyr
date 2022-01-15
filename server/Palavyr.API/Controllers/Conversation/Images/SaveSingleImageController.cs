@@ -1,33 +1,33 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.ImageServices;
 
 namespace Palavyr.API.Controllers.Conversation.Images
 {
     public class SaveSingleImageController : PalavyrBaseController
     {
-        private readonly IImageSaver imageSaver;
+        private readonly IMediator mediator;
 
         private const string Route = "images/save-one";
 
-        public SaveSingleImageController(IImageSaver imageSaver)
+        public SaveSingleImageController(IMediator mediator)
         {
-            this.imageSaver = imageSaver;
+            this.mediator = mediator;
         }
 
         [HttpPost(Route)]
         [ActionName("Decode")]
         public async Task<FileLink[]> SaveSingle(
-
             [FromForm(Name = "files")]
             IFormFile imageFile,
             CancellationToken cancellationToken)
         {
-            var fileLink = await imageSaver.SaveImage(imageFile, cancellationToken);
-            return new[] {fileLink};
+            var response = await mediator.Send(new SaveSingleImageRequest(imageFile), cancellationToken);
+            return response.Response;
         }
     }
 }

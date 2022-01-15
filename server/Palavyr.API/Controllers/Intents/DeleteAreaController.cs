@@ -1,33 +1,29 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Amazon.SimpleEmail;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers;
-using Palavyr.Core.Services.Deletion;
 
 namespace Palavyr.API.Controllers.Areas
 {
     public class DeleteAreaController : PalavyrBaseController
     {
-        private readonly IAreaDeleter areaDeleter;
-        private IAmazonSimpleEmailService client { get; set; }
+        private readonly IMediator mediator;
+        public const string Route = "intents/delete/{intentId}";
 
-        public DeleteAreaController(
-        )
+        public DeleteAreaController(IMediator mediator)
         {
-            this.client = client;
-            this.areaDeleter = areaDeleter;
+            this.mediator = mediator;
         }
 
-
-        [HttpDelete("areas/delete/{areaId}")]
+        [HttpDelete(Route)]
         public async Task Delete(
             [FromRoute]
             DeleteAreaRequest request,
             CancellationToken cancellationToken
         )
         {
-            await Mediator.Send(request, cancellationToken);
+            await mediator.Send(request, cancellationToken);
         }
     }
 }
