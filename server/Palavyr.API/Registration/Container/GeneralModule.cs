@@ -118,16 +118,13 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<ConversationNodeUpdater>().As<IConversationNodeUpdater>();
             builder.RegisterType<SelectOneFlatNodeUpdater>().As<ISelectOneFlatNodeUpdater>();
             builder.RegisterType<NodeGetter>().As<INodeGetter>();
-            builder.RegisterType<UpdateConversationRecordHandler>().As<IUpdateConversationRecordHandler>();
             builder.RegisterType<LocaleDefinitions>().As<ILocaleDefinitions>();
             builder.RegisterType<EnquiryInsightComputer>().As<IEnquiryInsightComputer>();
             builder.RegisterType<NodeBranchLengthCalculator>().As<INodeBranchLengthCalculator>();
 
             builder.RegisterType<DetermineCurrentOperatingSystem>().As<IDetermineCurrentOperatingSystem>();
             builder.RegisterType<ResponseRetriever>().As<IResponseRetriever>().InstancePerDependency();
-
-            builder.RegisterType<SendWidgetResponseEmailHandler>().As<ISendWidgetResponseEmailHandler>().InstancePerLifetimeScope();
-
+            
             builder.RegisterType<CurrentLocaleAndLocalMapRetriever>().As<ICurrentLocaleAndLocalMapRetriever>().InstancePerLifetimeScope();
             
             

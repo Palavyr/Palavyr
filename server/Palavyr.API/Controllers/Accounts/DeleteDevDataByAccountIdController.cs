@@ -22,7 +22,7 @@ namespace Palavyr.API.Controllers.Accounts
             IAccountDeleter accountDeleter,
             IDashDeleter dashDeleter,
             IConvoDeleter convoDeleter,
-            IDetermineCurrentEnvironment determineCurrentEnvironment, 
+            IDetermineCurrentEnvironment determineCurrentEnvironment 
         )
         {
             this.logger = logger;

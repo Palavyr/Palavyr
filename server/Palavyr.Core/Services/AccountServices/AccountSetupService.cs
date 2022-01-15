@@ -57,56 +57,6 @@ namespace Palavyr.Core.Services.AccountServices
             this.accountRegistrationMaker = accountRegistrationMaker;
         }
 
-
-        public async Task<Credentials> CreateNewAccountViaGoogleAsync(GoogleRegistrationDetails googleRegistration, CancellationToken cancellationToken)
-        {
-            logger.LogDebug("Creating an account using Google registration.");
-            logger.LogDebug("Attempting to authenticate the google onetime code.");
-
-            var payload = await authService.ValidateGoogleTokenId(googleRegistration.OneTimeCode);
-            if (payload == null)
-            {
-                logger.LogDebug("Failed to authenticate the onetime code.");
-                logger.LogDebug($"OneTimeCode: {googleRegistration.OneTimeCode}");
-                return Credentials.CreateUnauthenticatedResponse(CouldNotValidateGoogleAuthToken);
-            }
-            
-            logger.LogDebug("Checking if Email already exists as non-google account.");
-            if (AccountExists(payload.Email))
-            {
-                logger.LogDebug($"Account for email address {payload.Email} already exists");
-                return Credentials.CreateUnauthenticatedResponse(AccountAlreadyExists);
-            }
-
-            logger.LogDebug("Creating New Account Details...");
-            var accountId = newAccountUtils.GetNewAccountId();
-            var apiKey = Guid.NewGuid().ToString();
-
-            var account = Account.CreateGoogleAccount(apiKey, payload.Email, accountId);
-            logger.LogDebug("Adding new account via GOOGLE...");
-            await accountsContext.Accounts.AddAsync(account);
-
-            var existingCustomers = await stripeCustomerService.GetCustomerByEmailAddress(payload.Email, cancellationToken);
-            if (existingCustomers.Count() > 0)
-            {
-                throw new DomainException($"A customer with this email address already exists {payload.Email}.");
-            }
-
-            var introId = account.IntroductionId;
-            var ok = await accountRegistrationMaker.TryRegisterAccountAndSendEmailVerificationToken(accountId, apiKey, payload.Email, introId, cancellationToken);
-            logger.LogDebug("Send Email result was " + (ok ? "OK" : " a FAIL"));
-
-            if (!ok) return Credentials.CreateUnauthenticatedResponse(EmailAddressNotFound);
-
-            var token = CreateNewJwtToken(account);
-            var session = CreateNewSession(account);
-            await accountsContext.Sessions.AddAsync(session);
-
-            await accountsContext.SaveChangesAsync();
-            await dashContext.SaveChangesAsync();
-            return Credentials.CreateAuthenticatedResponse(session.SessionId, session.ApiKey, token, account.EmailAddress);
-        }
-
         private string CreateNewJwtToken(Account account)
         {
             return jwtAuthService.GenerateJwtTokenAfterAuthentication(account.EmailAddress);
