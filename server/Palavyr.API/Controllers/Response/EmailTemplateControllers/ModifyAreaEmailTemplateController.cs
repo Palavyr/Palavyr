@@ -7,7 +7,6 @@ using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
 {
-
     public class ModifyAreaEmailTemplateController : PalavyrBaseController
     {
         private DashContext dashContext;
@@ -28,7 +27,7 @@ namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
         {
             var currentArea = await configurationRepository.GetAreaById(areaId);
             currentArea.EmailTemplate = request.EmailTemplate;
-            await dashContext.SaveChangesAsync();
+            await configurationRepository.CommitChangesAsync();
             return currentArea.EmailTemplate;
         }
     }
