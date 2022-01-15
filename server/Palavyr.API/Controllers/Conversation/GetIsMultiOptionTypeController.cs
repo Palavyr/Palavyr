@@ -1,61 +1,29 @@
-using System;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Data;
-using Palavyr.Core.Models.Configuration.Constant;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Conversation
 {
     public class GetIsMultiOptionTypeController : PalavyrBaseController
     {
-        private ILogger<GetIsMultiOptionTypeController> logger;
-        private readonly GuidFinder guidFinder;
-        private DashContext dashContext;
+        private readonly IMediator mediator;
+        public const string Route = "configure-conversations/check-multi-option/{nodeType}";
+        
 
         public GetIsMultiOptionTypeController(
-            ILogger<GetIsMultiOptionTypeController> logger,
-            GuidFinder guidFinder,
-            DashContext dashContext
+            IMediator mediator
         )
         {
-            this.logger = logger;
-            this.guidFinder = guidFinder;
-            this.dashContext = dashContext;
+            this.mediator = mediator;
         }
 
-        [HttpGet("configure-conversations/check-multi-option/{nodeType}")]
-        public async Task<bool> Get(string nodeType)
+        [HttpGet(Route)]
+        public async Task<bool> Get(string nodeType, CancellationToken cancellationToken)
         {
-            foreach (var defaultNodeType in DefaultNodeTypeOptions.DefaultNodeTypeOptionsList)
-            {
-                if (nodeType.StartsWith(defaultNodeType.Value))
-                {
-                    return defaultNodeType.IsMultiOptionType;
-                }
-            }
-
-            // node is a dynamic table node type
-            // Comes in as e.g. SelectOneFlat-234234-324-2342-324
-            foreach (var dynamicTableType in DynamicTableTypes.GetDynamicTableTypes())
-            {
-                if (nodeType.StartsWith(dynamicTableType.TableType))
-                {
-                    var tableId = guidFinder.FindFirstGuidSuffix(nodeType);
-                    var table = await dashContext
-                        .DynamicTableMetas
-                        .SingleOrDefaultAsync(row => row.TableId == tableId);
-                    if (table != null)
-                    {
-                        var isMultiOption = table.ValuesAsPaths;
-                        return isMultiOption;
-                    }
-                }
-            }
-
-            throw new Exception("NodeType not found.");
+            var response = await mediator.Send(new GetIsMultiOptionTypeRequest(nodeType), cancellationToken);
+            return response.Response;
         }
     }
 }

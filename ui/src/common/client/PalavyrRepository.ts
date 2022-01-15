@@ -229,7 +229,7 @@ export class PalavyrRepository {
                 SessionStorage.setCacheValue(CacheIds.Images, currentCache);
                 return result;
             },
-            // saveImageUrl: async (url: string, nodeId: string) => this.client.post<FileLink[], {}>(`images/use-link/${nodeId}`, { Url: url }),
+            // saveImageUrl: async (url: string, nodeId: string) => this.client.post<FileLink[], {}>(`images/use-link/`, { Url: url, NodeId: nodeId }),
             getImages: async (imageIds?: string[]) => {
                 if (imageIds !== undefined && imageIds.length > 0) {
                     // if specifying 1 image
