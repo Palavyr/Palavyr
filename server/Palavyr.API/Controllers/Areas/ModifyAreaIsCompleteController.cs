@@ -3,27 +3,24 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Handlers;
-using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Areas
 {
-
-    public class PutUseAreaFallbackEmailController : PalavyrBaseController
+    public class ModifyAreaIsCompleteController : PalavyrBaseController
     {
         private readonly IMediator mediator;
-        private readonly IConfigurationRepository configurationRepository;
+        public const string Route = "areas/area-toggle";
 
-        public PutUseAreaFallbackEmailController(IMediator mediator)
+        public ModifyAreaIsCompleteController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
-        [HttpPut("intents/use-fallback-email-toggle")]
-        public async Task<bool> Put(ModifyUseAreaFallbackEmailRequest request, CancellationToken cancellationToken)
+        [HttpPut(Route)]
+        public async Task<bool> Put(ModifyIntentIsCompleteRequest request, CancellationToken cancellationToken)
         {
             var response = await mediator.Send(request, cancellationToken);
             return response.Response;
-
         }
     }
 }

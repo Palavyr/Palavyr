@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { PalavyrRepository } from "@common/client/PalavyrRepository";
 import { FileLink } from "@Palavyr-Types";
 import { Upload } from "../Upload";
 import { AttachmentList } from "./AttachmentList";
@@ -36,7 +35,7 @@ export const AttachmentConfiguration = () => {
     };
 
     const loadAttachments = useCallback(async () => {
-        const fileLinks = await repository.Configuration.Attachments.fetchAttachmentLinks(areaIdentifier);
+        const fileLinks = await repository.Configuration.Attachments.GetAttachmentLinks(areaIdentifier);
         setAttachmentList(fileLinks);
         setLoaded(true);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -61,7 +60,7 @@ export const AttachmentConfiguration = () => {
             files.forEach((file: File) => {
                 formData.append("files", file);
             });
-            const fileLinks = await repository.Configuration.Attachments.saveManyAttachments(areaIdentifier, formData);
+            const fileLinks = await repository.Configuration.Attachments.saveMultipleAttachments(areaIdentifier, formData);
             setAttachmentList(fileLinks);
         } else {
             const fileLinks = [];

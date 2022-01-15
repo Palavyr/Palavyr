@@ -50,8 +50,8 @@ namespace Palavyr.Core.Handlers
 
     public class CreateAreaResponse
     {
-        public readonly Area NewArea;
+        public readonly Area Response;
 
-        public CreateAreaResponse(Area newArea) => NewArea = newArea;
+        public CreateAreaResponse(Area response) => Response = response;
     }
 }

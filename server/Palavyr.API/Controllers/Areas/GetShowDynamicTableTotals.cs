@@ -1,46 +1,29 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Areas
 {
-    public class GetSingleAreaShallow : PalavyrBaseController
+    public class GetShowDynamicTableTotals : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IMediator mediator;
+        public const string Route = "area/dynamic-totals/{intentId}";
 
-        public GetSingleAreaShallow(ILogger<GetSingleAreaShallow> logger, IConfigurationRepository configurationRepository)
+        public GetShowDynamicTableTotals(IMediator mediator)
         {
-            this.configurationRepository = configurationRepository;
+            this.mediator = mediator;
         }
 
-        [HttpGet("area/dynamic-totals/{areaId}")]
+        [HttpGet(Route)]
         public async Task<bool> Get(
-            string areaId,
-            CancellationToken cancellationToken)
-        {
-            var area = await configurationRepository.GetAreaById(areaId);
-            return area.IncludeDynamicTableTotals;
-        }
-
-        [HttpPut("area/dynamic-totals/{areaId}")]
-        public async Task<bool> Post(
             [FromRoute]
-            string areaId,
-            [FromBody]
-            ShouldShow request,
+            string intentId,
             CancellationToken cancellationToken)
         {
-            var area = await configurationRepository.GetAreaById(areaId);
-            area.IncludeDynamicTableTotals = request.ShowDynamicTotals;
-            await configurationRepository.CommitChangesAsync();
-            return area.IncludeDynamicTableTotals;
+            var response = await mediator.Send(new GetShowDynamicTotalsHandlerRequest(intentId), cancellationToken);
+            return response.Response;
         }
-    }
-
-    public class ShouldShow
-    {
-        public bool ShowDynamicTotals { get; set; }
     }
 }

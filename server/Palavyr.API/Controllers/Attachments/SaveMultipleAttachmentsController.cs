@@ -1,41 +1,39 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.AttachmentServices;
 
 namespace Palavyr.API.Controllers.Attachments
 {
     public class SaveMultipleAttachmentsController : PalavyrBaseController
     {
-        private readonly IAttachmentSaver attachmentSaver;
-        private readonly IAttachmentRetriever attachmentRetriever;
+        private readonly IMediator mediator;
+        public const string Route = "attachments/{intentId}/save-many";
+
 
         public SaveMultipleAttachmentsController(
-            IAttachmentSaver attachmentSaver,
-            IAttachmentRetriever attachmentRetriever
+            IMediator mediator
         )
         {
-            this.attachmentSaver = attachmentSaver;
-            this.attachmentRetriever = attachmentRetriever;
+            this.mediator = mediator;
         }
 
-        [HttpPost("attachments/{areaId}/save-many")]
+        [HttpPost(Route)]
         [ActionName("Decode")]
         public async Task<FileLink[]> SaveMany(
-            [FromRoute] string areaId,
-            [FromForm(Name = "files")] IList<IFormFile> attachmentFiles,
+            [FromRoute]
+            string intentId,
+            [FromForm(Name = "files")]
+            IList<IFormFile> attachmentFiles,
             CancellationToken cancellationToken
         )
         {
-            foreach (var attachmentFile in attachmentFiles)
-            {
-                await attachmentSaver.SaveAttachment(areaId, attachmentFile);
-            }
-            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(areaId, cancellationToken);
-            return attachmentFileLinks;
+            var response = await mediator.Send(new SaveMultipleAttachmentsRequest(intentId, attachmentFiles), cancellationToken);
+            return response.Response;
         }
     }
 }

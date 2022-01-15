@@ -92,13 +92,13 @@ export class PalavyrRepository {
     };
 
     public Area = {
-        UpdateIsEnabled: async (areaToggleStateUpdate: boolean, areaIdentifier: string) => {
-            const update = this.client.put<boolean, {}>(`areas/${areaIdentifier}/area-toggle`, { IsEnabled: areaToggleStateUpdate });
+        UpdateIsEnabled: async (areaToggleStateUpdate: boolean, intentId: string) => {
+            const update = this.client.put<boolean, {}>(`areas/area-toggle`, { IsEnabled: areaToggleStateUpdate, IntentId: intentId });
             SessionStorage.clearCacheValue(CacheIds.Areas);
             return update;
         },
-        UpdateUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, areaIdentifier: string) =>
-            this.client.put<boolean, {}>(`areas/${areaIdentifier}/use-fallback-email-toggle`, { UseFallback: useAreaFallbackEmailUpdate }),
+        UpdateUseAreaFallbackEmail: async (useAreaFallbackEmailUpdate: boolean, intentId: string) =>
+            this.client.put<boolean, {}>(`intents/use-fallback-email-toggle`, { UseFallback: useAreaFallbackEmailUpdate, IntentId: intentId }),
         GetAreas: async () => this.client.get<Areas>("areas", CacheIds.Areas),
         createArea: async (areaName: string) => {
             const newArea = await this.client.post<AreaTable, {}>(`areas/create`, { AreaName: areaName });
@@ -120,8 +120,8 @@ export class PalavyrRepository {
 
         deleteArea: (areaIdentifier: string) => this.client.delete<void>(`areas/delete/${areaIdentifier}`, CacheIds.Areas),
         toggleSendPdfResponse: (areaIdentifier: string) => this.client.post<boolean, {}>(`area/send-pdf/${areaIdentifier}`),
-        getShowDynamicTotals: (areaIdentifier: string) => this.client.get<boolean>(`area/dynamic-totals/${areaIdentifier}`),
-        setShowDynamicTotals: (areaIdentifier: string, shouldShow: boolean) => this.client.put<boolean, {}>(`area/dynamic-totals/${areaIdentifier}`, { ShowDynamicTotals: shouldShow }),
+        getShowDynamicTotals: (intentId: string) => this.client.get<boolean>(`area/dynamic-totals/${intentId}`),
+        setShowDynamicTotals: (intentId: string, shouldShow: boolean) => this.client.put<boolean, {}>(`area/dynamic-totals`, { ShowDynamicTotals: shouldShow, IntentId: intentId }),
     };
 
     public Configuration = {
@@ -203,7 +203,7 @@ export class PalavyrRepository {
         },
 
         Attachments: {
-            fetchAttachmentLinks: async (areaIdentifier: string) => this.client.get<FileLink[]>(`attachments/${areaIdentifier}`, CacheIds.Attachments),
+            GetAttachmentLinks: async (intentId: string) => this.client.get<FileLink[]>(`attachments/${intentId}`, CacheIds.Attachments),
             removeAttachment: async (areaIdentifier: string, fileId: string) => this.client.delete<FileLink[]>(`attachments/${areaIdentifier}/file-link`, CacheIds.Attachments, { data: { fileId: fileId } }),
 
             saveSingleAttachment: async (areaIdentifier: string, formData: FormData) =>
@@ -213,8 +213,8 @@ export class PalavyrRepository {
                         "Content-Type": "multipart/form-data",
                     },
                 }),
-            saveManyAttachments: async (areaIdentifier: string, formData: FormData) =>
-                this.client.post<FileLink[], {}>(`attachments/${areaIdentifier}/save-many`, formData, CacheIds.Attachments, {
+            saveMultipleAttachments: async (intentId: string, formData: FormData) =>
+                this.client.post<FileLink[], {}>(`attachments/${intentId}/save-many`, formData, CacheIds.Attachments, {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "multipart/form-data",

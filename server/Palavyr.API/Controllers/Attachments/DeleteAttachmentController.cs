@@ -1,48 +1,32 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.AttachmentServices;
 
 namespace Palavyr.API.Controllers.Attachments
 {
     public class DeleteAttachmentController : PalavyrBaseController
     {
-        private ILogger<DeleteAttachmentController> logger;
-
-        private readonly IAttachmentDeleter attachmentDeleter;
-        private readonly IAttachmentRetriever attachmentRetriever;
+        private readonly IMediator mediator;
+        public const string Route = "attachments/file-link";
 
         public DeleteAttachmentController(
-            ILogger<DeleteAttachmentController> logger,
-            IAttachmentDeleter attachmentDeleter,
-            IAttachmentRetriever attachmentRetriever
+            IMediator mediator
         )
         {
-            this.logger = logger;
-            this.attachmentDeleter = attachmentDeleter;
-            this.attachmentRetriever = attachmentRetriever;
+            this.mediator = mediator;
         }
 
-        [HttpDelete("attachments/{areaId}/file-link")]
+        [HttpDelete(Route)]
         public async Task<FileLink[]> Delete(
-            [FromRoute] string areaId,
-            [FromBody] DeleteAttachmentRequest request,
+            [FromBody]
+            DeleteAttachmentRequest request,
             CancellationToken cancellationToken)
         {
-            await attachmentDeleter.DeleteAttachment(request.FileId, cancellationToken);
-            
-            // this is currently pretty slow -- we should be caching the presigned URLs and only refreshing them once they are invalid.
-            // this will always refresh the pre-signed URLs (not a huge problem, but still).
-            var attachmentFileLinks = await attachmentRetriever.RetrieveAttachmentLinks(areaId, cancellationToken);
-            return attachmentFileLinks;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
-    }
-
-    public class DeleteAttachmentRequest
-    {
-        [FromBody]
-        public string FileId { get; set; }
     }
 }
