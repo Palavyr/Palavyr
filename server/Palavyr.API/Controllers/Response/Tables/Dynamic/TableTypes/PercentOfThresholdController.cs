@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic.TableTypes
 {
@@ -7,6 +8,6 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic.TableTypes
     [ApiController]
     public class PercentOfThresholdController : DynamicControllerBase<PercentOfThreshold>
     {
-        public PercentOfThresholdController(IDynamicTableCommandHandler<PercentOfThreshold> handler) : base(handler) { }
+        public PercentOfThresholdController(IDynamicTableCommandExecutor<PercentOfThreshold> executor) : base(executor) { }
     }
 }

@@ -191,12 +191,12 @@ export class PalavyrRepository {
             SaveAreaFallbackEmailTemplate: async (areaIdentifier: string, EmailTemplate: string) => this.client.put<string, {}>(`email/fallback/${areaIdentifier}/email-template`, { EmailTemplate }),
             SaveDefaultFallbackEmailTemplate: async (EmailTemplate: string) => this.client.put<string, {}>(`email/fallback/default-email-template`, { EmailTemplate }),
 
-            GetAreaSubject: (areaIdentifier: string) => this.client.get<string>(`email/subject/${areaIdentifier}`),
+            GetAreaSubject: (intentId: string) => this.client.get<string>(`email/subject/${intentId}`),
             GetAreaFallbackSubject: (areaIdentifier: string) => this.client.get<string>(`email/fallback/subject/${areaIdentifier}`),
             GetDefaultFallbackSubject: async () => this.client.get<string>(`email/default-fallback-subject`),
 
-            SaveAreaSubject: (areaIdentifier: string, subject: string) => this.client.put<string, {}>(`email/subject/${areaIdentifier}`, { Subject: subject }),
-            SaveAreaFallbackSubject: (areaIdentifier: string, subject: string) => this.client.put<string, {}>(`email/fallback/subject/${areaIdentifier}`, { Subject: subject }),
+            SaveAreaSubject: (intentId: string, subject: string) => this.client.put<string, {}>(`email/subject`, { Subject: subject, IntentId: intentId }),
+            SaveAreaFallbackSubject: (intentId: string, subject: string) => this.client.put<string, {}>(`email/fallback/subject`, { Subject: subject, IntentId: intentId }),
             SaveDefaultFallbackSubject: async (subject: string) => this.client.put<string, {}>(`email/fallback/default-subject`, { Subject: subject }),
         },
 

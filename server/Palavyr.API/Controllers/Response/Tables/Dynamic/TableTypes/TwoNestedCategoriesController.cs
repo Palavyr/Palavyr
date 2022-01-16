@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Palavyr.Core.Models.Configuration.Schemas.DynamicTables;
+using Palavyr.Core.Services.DynamicTableService;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic.TableTypes
 {
@@ -7,7 +8,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic.TableTypes
     [ApiController]
     public class TwoNestedCategoriesController : DynamicControllerBase<TwoNestedCategory>
     {
-        public TwoNestedCategoriesController(IDynamicTableCommandHandler<TwoNestedCategory> handler) : base(handler)
+        public TwoNestedCategoriesController(IDynamicTableCommandExecutor<TwoNestedCategory> executor) : base(executor)
         {
         }
     }

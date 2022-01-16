@@ -1,34 +1,29 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
-
     public class GetAreaEmailSubjectController : PalavyrBaseController
     {
-        private ILogger<GetAreaEmailSubjectController> logger;
-        private readonly IConfigurationRepository configurationRepository;
+        private readonly IMediator mediator;
+
+        public const string Route = "email/subject/{intentId}";
 
         public GetAreaEmailSubjectController(
-            ILogger<GetAreaEmailSubjectController> logger,
-            IConfigurationRepository configurationRepository
+            IMediator mediator
         )
         {
-            this.logger = logger;
-            this.configurationRepository = configurationRepository;
+            this.mediator = mediator;
         }
 
-        [HttpGet("email/subject/{areaId}")]
-        public async Task<string> Modify([FromRoute] string areaId, CancellationToken cancellationToken)
+        [HttpGet(Route)]
+        public async Task<string> Get([FromRoute] string intentId, CancellationToken cancellationToken)
         {
-            var area = await configurationRepository.GetAreaById(areaId);
-            var subject = area.Subject;
-            return subject;
+            var response = await mediator.Send(new GetAreaEmailSubjectRequest(intentId), cancellationToken);
+            return response.Response;
         }
     }
 }

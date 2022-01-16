@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Palavyr.API.Controllers.Response.Tables.Dynamic
+namespace Palavyr.Core.Services.DynamicTableService
 {
     public class DynamicTableRequest
     {

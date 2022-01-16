@@ -6,9 +6,8 @@ using Palavyr.Core.Exceptions;
 using Palavyr.Core.Models.Configuration.Schemas;
 using Palavyr.Core.Models.Resources.Requests;
 using Palavyr.Core.Repositories;
-using Palavyr.Core.Services.DynamicTableService;
 
-namespace Palavyr.API.Controllers.Response.Tables.Dynamic
+namespace Palavyr.Core.Services.DynamicTableService
 {
     public class DynamicTableData<TEntity> where TEntity : class, IDynamicTable<TEntity>, new()
     {
@@ -16,7 +15,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         public bool IsInUse { get; set; }
     }
 
-    public interface IDynamicTableCommandHandler<TEntity> where TEntity : class, IDynamicTable<TEntity>, new()
+    public interface IDynamicTableCommandExecutor<TEntity> where TEntity : class, IDynamicTable<TEntity>, new()
     {
         Task DeleteDynamicTable(DynamicTableRequest request);
         Task<DynamicTableData<TEntity>> GetDynamicTableRows(DynamicTableRequest request); // TODO: return new object with 'is in use in palavyr tree'
@@ -24,7 +23,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         Task<List<TEntity>> SaveDynamicTable(DynamicTableRequest request, DynamicTable dynamicTable);
     }
 
-    public class DynamicTableCommandHandler<TEntity> : IDynamicTableCommandHandler<TEntity> where TEntity : class, IDynamicTable<TEntity>, new()
+    public class DynamicTableCommandExecutor<TEntity> : IDynamicTableCommandExecutor<TEntity> where TEntity : class, IDynamicTable<TEntity>, new()
     {
         private ILogger<TEntity> logger;
         private readonly IGenericDynamicTableRepository<TEntity> genericDynamicTableRepository;
@@ -32,7 +31,7 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         private readonly IConfigurationRepository configurationRepository;
         private readonly IAccountRepository accountRepository;
 
-        public DynamicTableCommandHandler(
+        public DynamicTableCommandExecutor(
             IGenericDynamicTableRepository<TEntity> genericDynamicTableRepository,
             IDynamicTableCompilerRetriever retriever,
             IConfigurationRepository configurationRepository,

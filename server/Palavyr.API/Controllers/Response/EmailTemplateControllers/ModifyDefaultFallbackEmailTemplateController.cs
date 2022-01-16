@@ -1,9 +1,6 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
 using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Response.EmailTemplateControllers

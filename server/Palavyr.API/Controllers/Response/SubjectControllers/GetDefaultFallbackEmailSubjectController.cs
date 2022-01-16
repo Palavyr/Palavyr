@@ -1,34 +1,29 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
     public class GetDefaultFallbackEmailSubjectController : PalavyrBaseController
     {
-        private AccountsContext accountsContext;
-        private ILogger<GetDefaultFallbackEmailSubjectController> logger;
-        private readonly IAccountRepository accountRepository;
+        private readonly IMediator mediator;
+        public const string Route = "email/default-fallback-subject";
+
 
         public GetDefaultFallbackEmailSubjectController(
-            ILogger<GetDefaultFallbackEmailSubjectController> logger,
-            IAccountRepository accountRepository
+            IMediator mediator
         )
         {
-            this.logger = logger;
-            this.accountRepository = accountRepository;
+            this.mediator = mediator;
         }
 
-        [HttpGet("email/default-fallback-subject")]
-        public async Task<string> Modify([FromRoute] string areaId)
+        [HttpGet(Route)]
+        public async Task<string> Modify(CancellationToken cancellationToken)
         {
-            var account = await accountRepository.GetAccount(); 
-            var subject = account.GeneralFallbackSubject;
-            return subject;
+            var response = await mediator.Send(new GetDefaultFallbackEmailSubjectRequest(), cancellationToken);
+            return response.Response;
         }
     }
 }

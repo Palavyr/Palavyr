@@ -64,7 +64,7 @@ namespace Palavyr.API.Registration.Container
             builder.RegisterType<DynamicTableCompilerRetriever>().As<IDynamicTableCompilerRetriever>();
 
             builder.RegisterGeneric(typeof(GenericDynamicTableRepository<>)).As(typeof(IGenericDynamicTableRepository<>)).InstancePerLifetimeScope();
-            builder.RegisterGeneric(typeof(DynamicTableCommandHandler<>)).As(typeof(IDynamicTableCommandHandler<>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(DynamicTableCommandExecutor<>)).As(typeof(IDynamicTableCommandExecutor<>)).InstancePerLifetimeScope();
 
             builder.RegisterType<JwtAuthenticationService>().As<IJwtAuthenticationService>();
             builder.RegisterType<AccountSetupService>().As<IAccountSetupService>();

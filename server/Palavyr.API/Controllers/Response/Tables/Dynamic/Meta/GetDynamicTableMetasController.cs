@@ -1,31 +1,30 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic.Meta
 {
     public class GetDynamicTableMetasController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private ILogger<GetDynamicTableMetasController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "tables/dynamic/type/{intentId}";
+
 
         public GetDynamicTableMetasController(
-            IConfigurationRepository configurationRepository,
-            ILogger<GetDynamicTableMetasController> logger
+            IMediator mediator
         )
         {
-            this.configurationRepository = configurationRepository;
-            this.logger = logger;
+            this.mediator = mediator;
         }
 
-        [HttpGet("tables/dynamic/type/{areaId}")]
-        public async Task<DynamicTableMeta[]> Get(string areaId)
+        [HttpGet(Route)]
+        public async Task<DynamicTableMeta[]> Get(string intentId, CancellationToken cancellationToken)
         {
-            logger.LogDebug("Retrieve Dynamic Table Metas");
-            var tableTypes = await configurationRepository.GetDynamicTableMetas(areaId);
-            return tableTypes.ToArray();
+            var response = await mediator.Send(new GetDynamicTableMetasRequest(intentId), cancellationToken);
+            return response.Response;
         }
     }
 }

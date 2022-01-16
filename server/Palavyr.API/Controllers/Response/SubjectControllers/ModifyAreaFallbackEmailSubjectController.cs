@@ -1,43 +1,28 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
-using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Response.SubjectControllers
 {
-    [Authorize]
-
     public class ModifyAreaFallbackEmailSubjectController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private readonly ILogger<ModifyAreaFallbackEmailSubjectController> logger;
+        private readonly IMediator mediator;
+        public const string Route = "email/fallback/subject/{intentId}";
 
         public ModifyAreaFallbackEmailSubjectController(
-            IConfigurationRepository configurationRepository,
-            ILogger<ModifyAreaFallbackEmailSubjectController> logger
+            IMediator mediator
         )
         {
-            this.configurationRepository = configurationRepository;
-            this.logger = logger;
+            this.mediator = mediator;
         }
 
-        [HttpPut("email/fallback/subject/{areaId}")]
-        public async Task<string> Modify(string areaId, [FromBody] SubjectText subjectText, CancellationToken cancellationToken)
+        [HttpPut(Route)]
+        public async Task<string> Modify([FromBody] ModifyAreaFallbackEmailSubjectRequest request, CancellationToken cancellationToken)
         {
-            var curArea = await configurationRepository.GetAreaById(areaId);
-
-            if (subjectText.Subject != curArea.FallbackSubject)
-            {
-                curArea.FallbackSubject = subjectText.Subject;
-                await configurationRepository.CommitChangesAsync();
-            }
-
-            return curArea.FallbackSubject;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
     }
 }

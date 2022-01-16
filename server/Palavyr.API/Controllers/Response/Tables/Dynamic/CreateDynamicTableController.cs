@@ -1,27 +1,21 @@
-﻿using System;
-using System.Linq;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Common.UniqueIdentifiers;
-using Palavyr.Core.Models.Configuration.Constant;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Configuration.Schemas;
-using Palavyr.Core.Repositories;
-using Palavyr.Core.Sessions;
 
 namespace Palavyr.API.Controllers.Response.Tables.Dynamic
 {
     public class CreateDynamicTableController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private ILogger<CreateDynamicTableController> logger;
-        private readonly IHoldAnAccountId accountIdHolder;
+        private readonly IMediator mediator;
+        public const string Route = "tables/dynamic/{intentId}";
 
-        public CreateDynamicTableController(IConfigurationRepository configurationRepository, ILogger<CreateDynamicTableController> logger, IHoldAnAccountId accountIdHolder)
+
+        public CreateDynamicTableController(IMediator mediator)
         {
-            this.configurationRepository = configurationRepository;
-            this.logger = logger;
-            this.accountIdHolder = accountIdHolder;
+            this.mediator = mediator;
         }
 
         // One controller for getting each table type. A separate call to get the type. Each table has a different
@@ -30,32 +24,14 @@ namespace Palavyr.API.Controllers.Response.Tables.Dynamic
         // isn't that big of a deal since we'll only have dozens of types probably. If we make money, then we can switch
         // to a generic pattern. Its just too complex to implement right now.
 
-        [HttpPost("tables/dynamic/{areaId}")]
+        [HttpPost(Route)]
         public async Task<DynamicTableMeta> Create(
-            [FromRoute] string areaId)
+            [FromRoute]
+            string intentId,
+            CancellationToken cancellationToken)
         {
-            var area = await configurationRepository.GetAreaById(areaId);
-
-            var dynamicTables = area.DynamicTableMetas.ToList();
-
-            var tableId = Guid.NewGuid().ToString();
-            var tableTag = "Default-" + StaticGuidUtils.CreatePseudoRandomString(5);
-
-            var newTableMeta = DynamicTableMeta.CreateNew(
-                tableTag,
-                DynamicTableTypes.DefaultTable.PrettyName,
-                DynamicTableTypes.DefaultTable.TableType,
-                tableId,
-                areaId,
-                accountIdHolder.AccountId);
-
-            dynamicTables.Add(newTableMeta);
-            area.DynamicTableMetas = dynamicTables;
-
-            await configurationRepository.SetDefaultDynamicTable(areaId, tableId);
-            await configurationRepository.CommitChangesAsync();
-
-            return newTableMeta;
+            var response = await mediator.Send(new CreateDynamicTableRequest(intentId), cancellationToken);
+            return response.Response;
         }
     }
 }

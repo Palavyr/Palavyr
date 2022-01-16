@@ -8,11 +8,7 @@
         public string GroupName { get; set; }
         public string ParentGroup { get; set; }
     }
-
-    public class SubjectText
-    {
-        public string Subject { get; set; }
-    }
+    
 
     public class AreaDisplayTitleText
     {
