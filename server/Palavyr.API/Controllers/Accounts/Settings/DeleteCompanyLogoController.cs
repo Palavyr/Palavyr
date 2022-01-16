@@ -20,7 +20,7 @@ namespace Palavyr.API.Controllers.Accounts.Settings
             this.mediator = mediator;
         }
 
-        [HttpPut()]
+        [HttpPut(Route)]
         [ActionName("Decode")]
         public async Task<string> Modify(
             [FromForm(Name = "files")]
