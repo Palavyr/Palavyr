@@ -7,7 +7,7 @@ using Palavyr.Core.Models.Resources.Responses;
 
 namespace Palavyr.API.Controllers.Conversation
 {
-    public class GetMissingIntroductionSequenceTreeErrors
+    public class GetMissingIntroductionSequenceTreeErrors : PalavyrBaseController
     {
         public const string Route = "configure-conversations/intro/tree-errors";
         private readonly IMediator mediator;
