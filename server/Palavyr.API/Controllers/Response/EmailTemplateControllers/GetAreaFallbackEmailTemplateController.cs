@@ -1,39 +1,28 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
 {
-
     public class GetAreaFallbackEmailTemplateController : PalavyrBaseController
     {
-        private readonly IConfigurationRepository configurationRepository;
-        private ILogger<GetAreaFallbackEmailTemplateController> logger;
+        private readonly IMediator mediator;
 
-        public GetAreaFallbackEmailTemplateController(IConfigurationRepository configurationRepository, ILogger<GetAreaFallbackEmailTemplateController> logger)
+        public const string Route = "email/fallback/{intentId}/email-template";
+
+
+        public GetAreaFallbackEmailTemplateController(IMediator mediator)
         {
-            this.configurationRepository = configurationRepository;
-            this.logger = logger;
+            this.mediator = mediator;
         }
-        
-        /// <summary>
-        /// This controller should only be used for getting the template for the editor. I.e. NO variable substitution.
-        /// </summary>
-        /// <param name="accountId"></param>
-        /// <param name="areaId"></param>
-        /// <returns></returns>
-        [HttpGet("email/fallback/{areaId}/email-template")]
-        public async Task<string> Get(string areaId, CancellationToken cancellationToken)
+
+        [HttpGet(Route)]
+        public async Task<string> Get(string intentId, CancellationToken cancellationToken)
         {
-            var area = await configurationRepository.GetAreaById(areaId);
-            var emailTemplate = area.FallbackEmailTemplate;
-            return emailTemplate;
+            var response = await mediator.Send(new GetAreaFallbackEmailTemplateRequest(intentId), cancellationToken);
+            return response.Response;
         }
-        
     }
 }

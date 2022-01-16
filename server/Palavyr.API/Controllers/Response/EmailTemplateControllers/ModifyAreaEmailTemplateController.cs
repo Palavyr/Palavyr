@@ -1,39 +1,29 @@
-﻿using System.Linq;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Response.EmailTemplateControllers
 {
     public class ModifyAreaEmailTemplateController : PalavyrBaseController
     {
-        private DashContext dashContext;
-        private ILogger<ModifyAreaEmailTemplateController> logger;
-        private IConfigurationRepository configurationRepository;
+        private readonly IMediator mediator;
+        public const string Route = "email/email-template";
+
 
         public ModifyAreaEmailTemplateController(
-            ILogger<ModifyAreaEmailTemplateController> logger,
-            IConfigurationRepository configurationRepository
+            IMediator mediator
         )
         {
-            this.logger = logger;
-            this.configurationRepository = configurationRepository;
+            this.mediator = mediator;
         }
 
-        [HttpPut("email/{areaId}/email-template")]
-        public async Task<string> Modify([FromRoute] string areaId, [FromBody] EmailTemplateRequest request)
+        [HttpPut(Route)]
+        public async Task<string> Modify([FromBody] ModifyAreaEmailTemplateRequest request, CancellationToken cancellationToken)
         {
-            var currentArea = await configurationRepository.GetAreaById(areaId);
-            currentArea.EmailTemplate = request.EmailTemplate;
-            await configurationRepository.CommitChangesAsync();
-            return currentArea.EmailTemplate;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
-    }
-
-    public class EmailTemplateRequest
-    {
-        public string EmailTemplate { get; set; }
     }
 }

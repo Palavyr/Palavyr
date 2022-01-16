@@ -187,8 +187,8 @@ export class PalavyrRepository {
             GetAreaFallbackEmailTemplate: async (areaIdentifier: string) => this.client.get<string>(`email/fallback/${areaIdentifier}/email-template`),
             GetDefaultFallbackEmailTemplate: async () => this.client.get<string>(`email/fallback/default-email-template`),
 
-            SaveAreaEmailTemplate: async (areaIdentifier: string, EmailTemplate: string) => this.client.put<string, {}>(`email/${areaIdentifier}/email-template`, { EmailTemplate }),
-            SaveAreaFallbackEmailTemplate: async (areaIdentifier: string, EmailTemplate: string) => this.client.put<string, {}>(`email/fallback/${areaIdentifier}/email-template`, { EmailTemplate }),
+            SaveAreaEmailTemplate: async (intentId: string, EmailTemplate: string) => this.client.put<string, {}>(`email/email-template`, { EmailTemplate, IntentId: intentId }),
+            SaveAreaFallbackEmailTemplate: async (intentId: string, EmailTemplate: string) => this.client.put<string, {}>(`email/fallback/email-template`, { EmailTemplate, IntentId: intentId }),
             SaveDefaultFallbackEmailTemplate: async (EmailTemplate: string) => this.client.put<string, {}>(`email/fallback/default-email-template`, { EmailTemplate }),
 
             GetAreaSubject: (intentId: string) => this.client.get<string>(`email/subject/${intentId}`),
@@ -284,8 +284,7 @@ export class PalavyrRepository {
             }
             return Promise.resolve(result);
         },
-        // TODO: Deprecate eventually
-        // EnsureDBIsValid: async () => this.client.post(`configure-conversations/ensure-db-valid`),
+
     };
 
     public WidgetDemo = {
