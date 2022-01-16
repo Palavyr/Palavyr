@@ -10,13 +10,13 @@ using Palavyr.Core.Services.AuthenticationServices;
 namespace Palavyr.API.Controllers.WidgetLive
 {
     [Authorize(AuthenticationSchemes = AuthenticationSchemeNames.ApiKeyScheme)]
-    public class GetWidgetPreferencesController : PalavyrBaseController
+    public class GetLiveWidgetPreferencesController : PalavyrBaseController
     {
         private readonly IMediator mediator;
 
         public const string Route = "widget/preferences";
 
-        public GetWidgetPreferencesController(IMediator mediator)
+        public GetLiveWidgetPreferencesController(IMediator mediator)
         {
             this.mediator = mediator;
         }

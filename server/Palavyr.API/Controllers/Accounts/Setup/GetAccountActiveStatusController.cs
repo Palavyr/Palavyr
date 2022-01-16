@@ -1,33 +1,28 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Accounts.Setup
 {
-
     public class GetAccountActiveStatusController : PalavyrBaseController
     {
-        private ILogger<GetAccountActiveStatusController> logger;
-        private IAccountRepository accountRepository;
+        private readonly IMediator mediator;
+        public const string Route = "account/is-active";
+
 
         public GetAccountActiveStatusController(
-            ILogger<GetAccountActiveStatusController> logger,
-            IAccountRepository accountRepository
-        )
+            IMediator mediator)
         {
-            this.logger = logger;
-            this.accountRepository = accountRepository;
+            this.mediator = mediator;
         }
 
-        [HttpGet("account/is-active")]
-        public async Task<bool> CheckIsActive()
+        [HttpGet(Route)]
+        public async Task<bool> CheckIsActive(CancellationToken cancellationToken)
         {
-            logger.LogDebug("Activation controller hit! Again!");
-            var account = await accountRepository.GetAccount();
-            var isActive = account.Active;
-            return isActive;
+            var response = await mediator.Send(new GetAccountActiveStatusRequest(), cancellationToken);
+            return response.Response;
         }
     }
 }

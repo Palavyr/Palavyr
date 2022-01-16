@@ -37,9 +37,9 @@ namespace Palavyr.Core.Handlers
 
     public class GetWidgetActiveStateResponse
     {
-        public bool ActiveState { get; }
+        public bool Response { get; }
 
-        public GetWidgetActiveStateResponse(bool activeState) => ActiveState = activeState;
+        public GetWidgetActiveStateResponse(bool response) => Response = response;
     }
 
 }

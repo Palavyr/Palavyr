@@ -337,8 +337,8 @@ export class PalavyrRepository {
             CheckNeedsPassword: async () => this.client.get<boolean>(`account/needs-password`),
         },
         EmailVerification: {
-            RequestEmailVerification: async (emailAddress: string, areaIdentifier: string) =>
-                this.client.post<EmailVerificationResponse, {}>(`verification/email/${areaIdentifier}`, { EmailAddress: emailAddress }),
+            RequestEmailVerification: async (emailAddress: string, intentId: string) =>
+                this.client.post<EmailVerificationResponse, {}>(`verification/email`, { EmailAddress: emailAddress, IntentId: intentId}),
             CheckEmailVerificationStatus: async (emailAddress: string) => this.client.post<boolean, {}>(`verification/email/status`, { EmailAddress: emailAddress }),
         },
     };

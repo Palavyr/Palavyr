@@ -1,32 +1,34 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Models.Resources.Requests.Registration;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Resources.Responses;
-using Palavyr.Core.Services.AccountServices;
 
 namespace Palavyr.API.Controllers.Accounts.Setup
 {
     public class CreateNewAccountDefaultController : PalavyrBaseController
     {
-        private readonly IAccountSetupService setupService;
+        private readonly IMediator mediator;
+        public const string Route = "account/create/default";
 
         public CreateNewAccountDefaultController(
-            IAccountSetupService setupService
+            IMediator mediator
         )
         {
-            this.setupService = setupService;
+            this.mediator = mediator;
         }
 
         [AllowAnonymous]
-        [HttpPost("account/create/default")]
+        [HttpPost(Route)]
         public async Task<Credentials> Create(
-            [FromBody] AccountDetails newAccountDetails,
+            [FromBody]
+            CreateNewAccountDefaultRequest request,
             CancellationToken cancellationToken)
         {
-            var credentials = await setupService.CreateNewAccountViaDefaultAsync(newAccountDetails, cancellationToken);
-            return credentials;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
     }
 }

@@ -1,31 +1,28 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Models.Resources.Requests;
-using Palavyr.Core.Services.EmailService.Verification;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Verification
 {
-
     public class CheckEmailVerificationStatusController : PalavyrBaseController
     {
-        private readonly IEmailVerificationStatus emailVerificationStatus;
-        private ILogger<CheckEmailVerificationStatusController> logger;
+        private readonly IMediator mediator;
 
-        public CheckEmailVerificationStatusController(
-            IEmailVerificationStatus emailVerificationStatus,
-            ILogger<CheckEmailVerificationStatusController> logger)
+        public const string Route = "verification/email/status";
+
+
+        public CheckEmailVerificationStatusController(IMediator mediator)
         {
-            this.emailVerificationStatus = emailVerificationStatus;
-            this.logger = logger;
+            this.mediator = mediator;
         }
 
-        [HttpPost("verification/email/status")]
-        public async Task<bool> RequestNewEmailVerification([FromBody] EmailVerificationRequest emailRequest)
+        [HttpPost(Route)]
+        public async Task<bool> RequestNewEmailVerification([FromBody] CheckEmailVerificationStatusRequest request, CancellationToken cancellationToken)
         {
-            logger.LogDebug($"Checking email status for {emailRequest.EmailAddress}");
-            var verificationStatus = await emailVerificationStatus.CheckVerificationStatus(emailRequest.EmailAddress);
-            return verificationStatus;
+            var response = await mediator.Send(request, cancellationToken);
+            return response.Response;
         }
     }
 }
