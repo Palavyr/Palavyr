@@ -6,7 +6,7 @@ using Palavyr.Core.Models.Nodes;
 using Palavyr.Core.Repositories;
 using Palavyr.Core.Services.ConversationServices;
 
-namespace Palavyr.API.Controllers.Enquiries
+namespace Palavyr.Core.Services.EnquiryServices
 {
     public interface IEnquiryInsightComputer
     {

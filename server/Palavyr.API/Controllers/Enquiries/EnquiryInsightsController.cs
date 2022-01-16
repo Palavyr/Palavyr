@@ -1,39 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Palavyr.Core.Handlers;
+using Palavyr.Core.Services.EnquiryServices;
 
 namespace Palavyr.API.Controllers.Enquiries
 {
     public class EnquiryInsightsController : PalavyrBaseController
     {
-        private readonly ILogger<IEnquiryInsightComputer> logger;
-        private readonly IEnquiryInsightComputer enquiryInsightComputer;
+        private readonly IMediator mediator;
+
+        public const string Route = "enquiry-insights";
+
 
         public EnquiryInsightsController(
-            ILogger<IEnquiryInsightComputer>logger,
-            IEnquiryInsightComputer enquiryInsightComputer)
+            IMediator mediator)
         {
-            this.logger = logger;
-            this.enquiryInsightComputer = enquiryInsightComputer;
+            this.mediator = mediator;
         }
 
-        [HttpGet("enquiry-insights")]
-        public async Task<EnquiryInsightsResource[]> Get(
-)
+        [HttpGet(Route)]
+        public async Task<EnquiryInsightsResource[]> Get(CancellationToken cancellationToken)
         {
-            return await enquiryInsightComputer.GetEnquiryInsights();
+            var response = await mediator.Send(new EnquiryInsightsRequest(), cancellationToken);
+            return response.Response;
         }
-    }
-
-    public class EnquiryInsightsResource
-    {
-        public string IntentName { get; set; }
-        public string IntentIdentifier { get; set; }
-        public int NumRecords { get; set; }
-        public int SentEmailCount { get; set; }
-        public int Completed { get; set; }
-        public double AverageIntentCompletion { get; set; }
-        public List<double> IntentCompletePerIntent { get; set; }
     }
 }

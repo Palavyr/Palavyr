@@ -1,40 +1,30 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Palavyr.Core.Data;
+using Palavyr.Core.Handlers;
 using Palavyr.Core.Models.Conversation.Schemas;
 
 namespace Palavyr.API.Controllers.Enquiries
 {
-
-    public class GetCompleteConversationDetails : PalavyrBaseController
+    public class GetCompleteConversationDetailsController : PalavyrBaseController
     {
-        private readonly ILogger<GetCompleteConversationDetails> logger;
-        private readonly ConvoContext convoContext;
+        private readonly IMediator mediator;
+        public const string Route = "enquiries/review/{conversationId}";
 
-        public GetCompleteConversationDetails(
-            ILogger<GetCompleteConversationDetails> logger,
-            ConvoContext convoContext 
+
+        public GetCompleteConversationDetailsController(
+            IMediator mediator
         )
         {
-            this.logger = logger;
-            this.convoContext = convoContext;
+            this.mediator = mediator;
         }
 
-        [HttpGet("enquiries/review/{conversationId}")]
+        [HttpGet(Route)]
         public async Task<ConversationHistory[]> Get([FromRoute] string conversationId, CancellationToken cancellationToken)
         {
-            logger.LogDebug("Collecting Conversation for viewing...");
-            var convoRows = await convoContext
-                .ConversationHistories
-                .Where(row => row.ConversationId == conversationId)
-                .ToListAsync(cancellationToken);
-
-            convoRows.Sort((x, y) => x.Id > y.Id ? 1 : -1);
-            return convoRows.ToArray();
+            var response = await mediator.Send(new GetCompleteConversationDetailsRequest(conversationId), cancellationToken);
+            return response.Response;
         }
     }
 }

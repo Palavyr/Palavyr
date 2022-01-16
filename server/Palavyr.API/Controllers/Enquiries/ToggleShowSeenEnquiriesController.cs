@@ -1,29 +1,26 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Palavyr.Core.Repositories;
+using Palavyr.Core.Handlers;
 
 namespace Palavyr.API.Controllers.Enquiries
 {
     public class ToggleShowSeenEnquiriesController : PalavyrBaseController
     {
-        private readonly IAccountRepository repository;
+        private readonly IMediator mediator;
         public const string Route = "enquiries/toggle-show";
 
-        public ToggleShowSeenEnquiriesController(IAccountRepository repository)
+        public ToggleShowSeenEnquiriesController(IMediator mediator)
         {
-            this.repository = repository;
+            this.mediator = mediator;
         }
 
         [HttpPut(Route)]
-        public async Task<bool> Put()
+        public async Task<bool> Put(CancellationToken cancellationToken)
         {
-            var account = await repository.GetAccount();
-
-            var newValue = !account.ShowSeenEnquiries;
-            account.ShowSeenEnquiries = newValue;
-            await repository.CommitChangesAsync();
-            return newValue;
+            var response = await mediator.Send(new ToggleShowSeenEnquiriesRequest(), cancellationToken);
+            return response.Response;
         }
     }
 }

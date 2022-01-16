@@ -7,7 +7,7 @@ using Palavyr.Core.Common.ExtensionMethods;
 using Palavyr.Core.Data;
 using Palavyr.Core.Services.AmazonServices.S3Service;
 
-namespace Palavyr.API.Controllers.Enquiries
+namespace Palavyr.Core.Services.EnquiryServices
 {
     public interface IEnquiryDeleter
     {

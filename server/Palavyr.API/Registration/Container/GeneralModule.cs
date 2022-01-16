@@ -28,6 +28,7 @@ using Palavyr.Core.Services.DynamicTableService.Thresholds;
 using Palavyr.Core.Services.EmailService.EmailResponse;
 using Palavyr.Core.Services.EmailService.ResponseEmailTools;
 using Palavyr.Core.Services.EmailService.Verification;
+using Palavyr.Core.Services.EnquiryServices;
 using Palavyr.Core.Services.ImageServices;
 using Palavyr.Core.Services.LogoServices;
 using Palavyr.Core.Services.PdfService;
