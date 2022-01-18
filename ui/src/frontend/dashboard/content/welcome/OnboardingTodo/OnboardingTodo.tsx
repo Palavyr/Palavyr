@@ -37,15 +37,15 @@ export const OnboardingTodo = ({ todos }: OnboardingTodoProps) => {
                 <SpaceEvenly vertical center>
                     {!todos?.isVerified && (
                         <TodoCard
-                            link="/dashboard/settings/email?tab=1"
+                            link="/dashboard/settings/email?tab=0"
                             text={`Set your default email: ${todos?.emailAddress} - ${
                                 todos?.awaitingVerification ? "Check your email to verify you address" : "Trigger an email verification in your settings."
                             }`}
                         />
                     )}
-                    {!todos?.name && <TodoCard link="/dashboard/settings/companyName?tab=2" text="Set your company name" />}
-                    {!todos?.phoneNumber && <TodoCard link="/dashboard/settings/phoneNumber?tab=3" text="Set your default contact phone number" />}
-                    {!todos?.logoUri && <TodoCard link="/dashboard/settings/companyLogo?tab=4" text="Set your company logo" />}
+                    {!todos?.name && <TodoCard link="/dashboard/settings/companyName?tab=1" text="Set your company name" />}
+                    {!todos?.phoneNumber && <TodoCard link="/dashboard/settings/phoneNumber?tab=2" text="Set your default contact phone number" />}
+                    {!todos?.logoUri && <TodoCard link="/dashboard/settings/companyLogo?tab=3" text="Set your company logo" />}
                 </SpaceEvenly>
             </div>
         </>
